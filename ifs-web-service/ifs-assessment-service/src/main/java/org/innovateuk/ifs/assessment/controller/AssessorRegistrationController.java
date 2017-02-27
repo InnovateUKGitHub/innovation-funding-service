@@ -6,6 +6,7 @@ import org.innovateuk.ifs.assessment.form.registration.AssessorRegistrationForm;
 import org.innovateuk.ifs.assessment.model.registration.AssessorRegistrationBecomeAnAssessorModelPopulator;
 import org.innovateuk.ifs.assessment.model.registration.AssessorRegistrationModelPopulator;
 import org.innovateuk.ifs.assessment.service.AssessorService;
+import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -14,6 +15,7 @@ import org.innovateuk.ifs.invite.service.EthnicityRestService;
 import org.innovateuk.ifs.user.resource.EthnicityResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -62,12 +64,16 @@ public class AssessorRegistrationController {
     private AssessorRegistrationModelPopulator yourDetailsModelPopulator;
 
     @Autowired
+    private CompetitionInviteRestService compeitionInviteRestService;
+
+    @Autowired
     @Qualifier("mvcValidator")
     private Validator validator;
 
     @RequestMapping(value = "/{inviteHash}/start", method = RequestMethod.GET)
     public String becomeAnAssessor(Model model,
                                    @PathVariable("inviteHash") String inviteHash) {
+
         model.addAttribute("model", becomeAnAssessorModelPopulator.populateModel(inviteHash));
         return "registration/become-assessor";
     }
@@ -103,8 +109,29 @@ public class AssessorRegistrationController {
             });
 
             return validationHandler.
-                    failNowOrSucceedWith(failureView, () -> format("redirect:/invite-accept/competition/%s/accept", inviteHash));
+                    failNowOrSucceedWith(failureView, () -> format("redirect:/registration/%s/register/account-created", inviteHash));
         });
+    }
+
+    @RequestMapping(value = "/{inviteHash}/register/account-created")
+    public String accountCreated(Model model, @PathVariable("inviteHash") String inviteHash, @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+        boolean userIsLoggedIn = loggedInUser != null;
+
+        // the user is already logged in, take them back to the invite
+        if (userIsLoggedIn) {
+            return format("redirect:/invite/competition/%s", inviteHash);
+        }
+
+        return compeitionInviteRestService.checkExistingUser(inviteHash).andOnSuccessReturn(userExists -> {
+            if (!userExists) {
+                // reached here without creating an assessor, redirect back to the invite
+                return format("redirect:/invite/competition/%s", inviteHash);
+            }
+            else {
+                model.addAttribute("competitionInviteHash", inviteHash);
+                return "registration/account-created";
+            }
+        }).getSuccessObjectOrThrowException();
     }
 
     @RequestMapping(value = "/{inviteHash}/register", params = "manual-address", method = RequestMethod.POST)

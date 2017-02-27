@@ -7,17 +7,17 @@ import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 
 public interface ApplicationSummaryService {
 
-	ApplicationSummaryPageResource findByCompetitionId(Long competitionId, String sortField, Integer pageNumber, Integer pageSize);
+	ApplicationSummaryPageResource findByCompetitionId(Long competitionId, String sortField, Integer pageNumber, Integer pageSize, String filter);
 
 	CompetitionSummaryResource getCompetitionSummaryByCompetitionId(Long competitionId);
 
-	ApplicationSummaryPageResource getSubmittedApplicationSummariesByCompetitionId(Long competitionId, String sortField, Integer pageNumber, Integer pageSize);
+	ApplicationSummaryPageResource getSubmittedApplicationSummariesByCompetitionId(Long competitionId, String sortField, Integer pageNumber, Integer pageSize, String filter);
 
-	ApplicationSummaryPageResource getNotSubmittedApplicationSummariesByCompetitionId(Long competitionId, String sortField, Integer pageNumber, Integer pageSize);
+	ApplicationSummaryPageResource getNotSubmittedApplicationSummariesByCompetitionId(Long competitionId, String sortField, Integer pageNumber, Integer pageSize, String filter);
 
-	ApplicationSummaryPageResource getApplicationsRequiringFeedbackByCompetitionId(Long competitionId, String sortField, Integer pageNumber, Integer pageSize);
+	ApplicationSummaryPageResource getApplicationsRequiringFeedbackByCompetitionId(Long competitionId, String sortField, Integer pageNumber, Integer pageSize, String filter);
 
-	ApplicationSummaryPageResource getWithFundingDecisionApplications(Long competitionId, String sortField, Integer pageNumber, Integer pageSize);
+	ApplicationSummaryPageResource getWithFundingDecisionApplications(Long competitionId, String sortField, Integer pageNumber, Integer pageSize, String filter);
 
 	Long getApplicationsRequiringFeedbackCountByCompetitionId(Long competitionId);
 
