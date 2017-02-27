@@ -9,4 +9,13 @@ import java.util.List;
  */
 public class InviteAssessorsInviteViewModel extends InviteAssessorsViewModel<InvitedAssessorRowViewModel> {
 
+    private List<InnovationSectorResource> innovationSectorOptions;
+
+    public List<InnovationSectorResource> getInnovationSectorOptions() {
+        return innovationSectorOptions;
+    }
+
+    public void setInnovationSectorOptions(List<InnovationSectorResource> innovationSectorOptions) {
+        this.innovationSectorOptions = innovationSectorOptions;
+    }
 }
