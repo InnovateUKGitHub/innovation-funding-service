@@ -1,10 +1,7 @@
 package org.innovateuk.ifs.application.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
@@ -27,7 +24,7 @@ public class ApplicationSummaryController {
     @Autowired
     private CompetitionSummaryService competitionSummaryService;
 
-    @RequestMapping("/findByCompetition/{competitionId}")
+    @GetMapping("/findByCompetition/{competitionId}")
     public RestResult<ApplicationSummaryPageResource> getApplicationSummaryByCompetitionId(
             @PathVariable("competitionId") long competitionId,
             @RequestParam(value = "sort", required = false) String sortBy,
@@ -37,12 +34,12 @@ public class ApplicationSummaryController {
         return applicationSummaryService.getApplicationSummariesByCompetitionId(competitionId, sortBy, pageIndex, pageSize).toGetResponse();
     }
 
-    @RequestMapping("/getCompetitionSummary/{id}")
+    @GetMapping("/getCompetitionSummary/{id}")
     public RestResult<CompetitionSummaryResource> getCompetitionSummary(@PathVariable("id") Long id) {
         return competitionSummaryService.getCompetitionSummaryByCompetitionId(id).toGetResponse();
     }
 
-    @RequestMapping("/findByCompetition/{competitionId}/submitted")
+    @GetMapping("/findByCompetition/{competitionId}/submitted")
     public RestResult<ApplicationSummaryPageResource> getSubmittedApplicationSummariesByCompetitionId(
             @PathVariable("competitionId") long competitionId,
             @RequestParam(value = "sort", required = false) String sortBy,
@@ -52,7 +49,7 @@ public class ApplicationSummaryController {
         return applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(competitionId, sortBy, pageIndex, pageSize).toGetResponse();
     }
 
-    @RequestMapping("/findByCompetition/{competitionId}/not-submitted")
+    @GetMapping("/findByCompetition/{competitionId}/not-submitted")
     public RestResult<ApplicationSummaryPageResource> getNotSubmittedApplicationSummariesByCompetitionId(
             @PathVariable("competitionId") long competitionId,
             @RequestParam(value = "sort", required = false) String sortBy,
@@ -62,7 +59,7 @@ public class ApplicationSummaryController {
         return applicationSummaryService.getNotSubmittedApplicationSummariesByCompetitionId(competitionId, sortBy, pageIndex, pageSize).toGetResponse();
     }
 
-    @RequestMapping("/findByCompetition/{competitionId}/feedback-required")
+    @GetMapping("/findByCompetition/{competitionId}/feedback-required")
     public RestResult<ApplicationSummaryPageResource> getFeedbackRequiredApplicationSummariesByCompetitionId(
             @PathVariable("competitionId") long competitionId,
             @RequestParam(value = "sort", required = false) String sortBy,
@@ -72,7 +69,7 @@ public class ApplicationSummaryController {
         return applicationSummaryService.getFeedbackRequiredApplicationSummariesByCompetitionId(competitionId, sortBy, pageIndex, pageSize).toGetResponse();
     }
 
-    @RequestMapping("/findByCompetition/{competitionId}/with-funding-decision")
+    @GetMapping("/findByCompetition/{competitionId}/with-funding-decision")
     public RestResult<ApplicationSummaryPageResource> getWithFundingDecisionApplicationSummariesByCompetitionId(
             @PathVariable("competitionId") long competitionId,
             @RequestParam(value = "sort", required = false) String sortBy,

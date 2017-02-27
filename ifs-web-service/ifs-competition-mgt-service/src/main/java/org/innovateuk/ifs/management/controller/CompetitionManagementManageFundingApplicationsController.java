@@ -45,7 +45,6 @@ public class CompetitionManagementManageFundingApplicationsController {
                                ValidationHandler validationHandler) {
         return validationHandler.failNowOrSucceedWith(queryFailureView(competitionId), () -> {
                     model.addAttribute("model", manageFundingApplicationsModelPopulator.populate(query, competitionId));
-                    model.addAttribute("keyStatistics", competitionInFlightModelPopulator.populateModel(competitionId));
                     model.addAttribute("form", new SelectApplicationsForEmailForm());
                     return MANAGE_FUNDING_APPLICATIONS_VIEW;
                 }
@@ -90,7 +89,6 @@ public class CompetitionManagementManageFundingApplicationsController {
     private Supplier<String> idsFailureView(long competitionId, ManageFundingApplicationsQueryForm query, Model model) {
         return () -> {
             model.addAttribute("model", manageFundingApplicationsModelPopulator.populate(query, competitionId));
-            model.addAttribute("keyStatistics", competitionInFlightModelPopulator.populateModel(competitionId));
             return "comp-mgt-manage-funding-applications";
         };
     }
