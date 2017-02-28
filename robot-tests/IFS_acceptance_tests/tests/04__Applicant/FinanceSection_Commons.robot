@@ -56,7 +56,7 @@ Mark application details as incomplete
     the user clicks the button/link       link=Application details
     the user clicks the button/link       jQuery=button:contains("Edit")
     the user clicks the button/link       jQuery=button:contains("Save and return to application overview")
-    the user should see the element       jQuery=#section-1 li:nth-child(1) span:contains("Completed")
+    the user should see the element       jQuery=li:contains("Application details") > .action-required
 
 
 the Application details are completed
@@ -85,7 +85,7 @@ the user marks the finances as complete
     the user checks Your Funding section     ${Application}
     the user should see all finance subsections complete
     the user clicks the button/link  link=Application Overview
-    the user should see the element  jQuery=img.complete[alt*="finances"]
+    the user should see the element  jQuery=li:contains("Your finances") > .task-status-complete
 
 the user fills in the project costs
     the user clicks the button/link  link=Your project costs
