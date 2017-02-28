@@ -1,13 +1,10 @@
 package org.innovateuk.ifs.project.bankdetails.resource;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.List;
-
-import static org.innovateuk.ifs.application.resource.ApplicationResource.formatter;
 
 /**
  * A resource object wrapping bank detail statuses for all partners
@@ -38,22 +35,12 @@ public class ProjectBankDetailsStatusSummary {
         this.competitionId = competitionId;
     }
 
-    @JsonIgnore
-    public String getFormattedCompetitionId() {
-        return formatter.format(competitionId);
-    }
-
     public Long getProjectId() {
         return projectId;
     }
 
     public void setProjectId(Long projectId) {
         this.projectId = projectId;
-    }
-
-    @JsonIgnore
-    public String getFormattedProjectId() {
-        return formatter.format(projectId);
     }
 
     public List<BankDetailsStatusResource> getBankDetailsStatusResources() {
