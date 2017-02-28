@@ -29,13 +29,7 @@ IFS.core.collapsible = (function () {
       inst.nextUntil('h2,h3').wrapAll('<div id="' + id + '" aria-hidden="' + !loadstate + '">')
 
         // Add the button inside the <h2> so both the heading and button semantics are read
-      // inst.wrapInner('<button aria-expanded="' + loadstate + '" aria-controls="' + id + '" type="button">')
-      // Add a role of button to the h2
-      inst.attr({
-        'role': 'button',
-        'aria-expanded': loadstate,
-        'aria-controls': id
-      })
+      inst.wrapInner('<button aria-expanded="' + loadstate + '" aria-controls="' + id + '" type="button">')
       index++
     },
     toggleCollapsible: function (el) {
