@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.threads.attachment.resource.AttachmentResource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,7 +21,7 @@ public interface ProjectFinanceAttachmentService extends AttachmentsService<Atta
     @Override
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'PF_ATTACHMENT_UPLOAD')")
     ServiceResult<AttachmentResource> upload(String contentType, String contentLength, String originalFilename,
-                                             Long projectId, HttpServletRequest request);
+                                             @P("projectId") final Long projectId, HttpServletRequest request);
 
     @Override
     @PreAuthorize("hasPermission(#attachmentId, 'org.innovateuk.threads.attachment.resource.AttachmentResource', 'PF_ATTACHMENT_DELETE')")

@@ -80,18 +80,19 @@ public class ProjectFinanceAttachmentControllerTest extends BaseControllerMockMV
     @Test
     public void testUpload() throws Exception {
         final Long id = 22L;
+        final Long projectId = 77L;
         final AttachmentResource attachmentResource = new AttachmentResource(id, "randomFile.pdf", "application/pdf", 1234);
         when(projectFinanceAttachmentServiceMock.upload(eq("application/pdf"), eq("1234"), eq("randomFile.pdf"),
-                eq(77L), any(HttpServletRequest.class))).thenReturn(serviceSuccess(attachmentResource));
+                eq(projectId), any(HttpServletRequest.class))).thenReturn(serviceSuccess(attachmentResource));
 
-        mockMvc.perform(post("/project/finance/attachments/upload")
+        mockMvc.perform(post("/project/finance/attachments/{projectId}/upload", projectId)
                 .param("filename", "randomFile.pdf")
                 .headers(createFileUploadHeader("application/pdf", 1234)))
                 .andExpect(content().json(toJson(attachmentResource)))
                 .andExpect(status().isCreated());
 
         verify(projectFinanceAttachmentServiceMock).upload(eq("application/pdf"), eq("1234"), eq("randomFile.pdf"),
-                eq(77L), any(HttpServletRequest.class));
+                eq(projectId), any(HttpServletRequest.class));
     }
 
 

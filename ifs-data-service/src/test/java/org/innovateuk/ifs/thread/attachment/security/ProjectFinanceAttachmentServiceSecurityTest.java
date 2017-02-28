@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.project.finance.security.AttachmentPermissionsRules;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
 import org.innovateuk.ifs.threads.attachments.security.AttachmentLookupStrategy;
 import org.innovateuk.ifs.threads.attachments.service.ProjectFinanceAttachmentService;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletRequest;
 
+import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.*;
@@ -24,6 +26,7 @@ public class ProjectFinanceAttachmentServiceSecurityTest extends BaseServiceSecu
 
     private AttachmentPermissionsRules attachmentPermissionsRules;
     private AttachmentLookupStrategy attachmentLookupStrategy;
+    private ProjectLookupStrategy projectLookupStrategy;
 
     @Override
     protected Class<? extends ProjectFinanceAttachmentService> getClassUnderTest() {
@@ -34,11 +37,13 @@ public class ProjectFinanceAttachmentServiceSecurityTest extends BaseServiceSecu
     public void lookupPermissionRules() {
         attachmentPermissionsRules = getMockPermissionRulesBean(AttachmentPermissionsRules.class);
         attachmentLookupStrategy = getMockPermissionEntityLookupStrategiesBean(AttachmentLookupStrategy.class);
+        projectLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ProjectLookupStrategy.class);
     }
 
     @Test
     public void test_upload() throws Exception {
         final QueryResource queryResource = new QueryResource(null, null, null, null, null, false, null);
+        when(projectLookupStrategy.getProjectResource(77L)).thenReturn(newProjectResource().withId(77L).build());
         assertAccessDenied(
                 () -> classUnderTest.upload("application.pdf", "3234", "filename.pdf", 77L, null),
                 () -> {

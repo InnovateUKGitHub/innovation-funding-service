@@ -388,7 +388,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         MockMultipartFile uploadedFile = new MockMultipartFile("attachment", "testFile.pdf", "application/pdf", "My content!".getBytes());
         AttachmentResource attachment = new AttachmentResource(1L, "name", "mediaType", 2L);
 
-        when(financeCheckServiceMock.uploadFile("application/pdf", 11, "testFile.pdf", "My content!".getBytes()))
+        when(financeCheckServiceMock.uploadFile(77L, "application/pdf", 11, "testFile.pdf", "My content!".getBytes()))
                 .thenReturn(ServiceResult.serviceSuccess(attachment));
         when(financeCheckServiceMock.getAttachment(1L)).thenReturn(ServiceResult.serviceSuccess(attachment));
 

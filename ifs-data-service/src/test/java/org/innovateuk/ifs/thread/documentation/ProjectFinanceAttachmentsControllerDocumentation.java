@@ -93,16 +93,18 @@ public class ProjectFinanceAttachmentsControllerDocumentation extends BaseContro
     @Test
     public void upload() throws Exception {
         final Long id = 22L;
+        final Long projectId = 77L;
         final AttachmentResource attachmentResource = new AttachmentResource(id, "randomFile.pdf", "application/pdf", 1234);
         when(projectFinanceAttachmentServiceMock.upload(eq("application/pdf"), eq("1234"), eq("randomFile.pdf"),
-                eq(77L), any(HttpServletRequest.class))).thenReturn(serviceSuccess(attachmentResource));
+                eq(projectId), any(HttpServletRequest.class))).thenReturn(serviceSuccess(attachmentResource));
 
-        mockMvc.perform(post("/project/finance/attachments/upload")
+        mockMvc.perform(post("/project/finance/attachments/{projectId}/upload", projectId)
                 .param("filename", attachmentResource.name)
                 .headers(createFileUploadHeader("application/pdf", 1234)))
                 .andExpect(content().json(toJson(attachmentResource)))
                 .andExpect(status().isCreated())
                 .andDo(document.document(
+                        pathParameters(parameterWithName("projectId").description("The Id of the Project under which this Attachment is being uploaded.")),
                         requestParameters(parameterWithName("filename").description("The filename of the file being uploaded")),
                         requestHeaders(
                                 headerWithName("Content-Type").description("The Content Type of the file being uploaded e.g. application/pdf")
@@ -111,7 +113,7 @@ public class ProjectFinanceAttachmentsControllerDocumentation extends BaseContro
                 ));
 
         verify(projectFinanceAttachmentServiceMock).upload(eq("application/pdf"), eq("1234"), eq("randomFile.pdf"),
-                eq(77L), any(HttpServletRequest.class));
+                eq(projectId), any(HttpServletRequest.class));
     }
 
     @Override
