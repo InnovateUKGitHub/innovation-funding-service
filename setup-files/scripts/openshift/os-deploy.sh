@@ -131,4 +131,4 @@ if [[ ${TARGET} != "production" ]]
 then
     shibInit
 fi
-#cleanUp
+cleanUp
