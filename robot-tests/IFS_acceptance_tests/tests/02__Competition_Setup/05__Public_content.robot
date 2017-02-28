@@ -231,7 +231,7 @@ The guest user is able to download the file in the Summary
     [Tags]  Pending
     # TODO Pending due to INFUND-8536
 
-The guest user can see upated date information
+The guest user can see updated date information
    [Documentation]    INFUND-7489
    [Tags]
    [Setup]    the month is converted to text
@@ -316,6 +316,11 @@ the user can add and remove multiple event groups
     And the user clicks the button/link         jQuery=button:contains("Save and return")
     Then the user should see a summary error    Please enter a valid date.
     And the user should see a summary error     Please enter valid content.
+    And the user enters text to a text field    id=dates-0-day      60
+    And the user enters text to a text field    id=dates-0-month    -6
+    And the user clicks the button/link         jQuery=button:contains("Save and return")
+    Then the user should see a summary error    must be between 1 and 31
+    And the user should see a summary error     must be between 1 and 12
     When the user enters text to a text field   id=dates-0-day      12
     And the user enters text to a text field    id=dates-0-month    12
     And the user enters text to a text field    id=dates-0-year     ${nextyear}
