@@ -88,9 +88,10 @@ the user marks the finances as complete
     the user should see the element  jQuery=img.complete[alt*="finances"]
 
 the user fills in the project costs
+    [Arguments]     ${Application_name}
     the user clicks the button/link  link=Your project costs
     the user fills in Labour
-    the user fills in Overhead costs
+    the user fills in Overhead costs  ${Application_name}
     the user fills in Material
     the user fills in Capital usage
     the user fills in Subcontracting costs
@@ -122,6 +123,15 @@ the user fills in Labour
     the user clicks the button/link            jQuery=#form-input-20 button:contains("Labour")
 
 the user fills in Overhead costs
+    [Arguments]     ${Application_name}
+    Run Keyword If  '${Application_name}'=="A new innovation"   the user choose calculate overhead option
+    Run Keyword If  '${Application_name}'!=="A new innovation"    the user fills in Overhead costs
+
+the user choose calculate overhead option
+
+
+the user fills in Overhead costs
+    # overheads option : 20% Labour
     the user clicks the button/link    jQuery=#form-input-20 button:contains("Overhead costs")
     the user clicks the button/link    css=label[data-target="overhead-default-percentage"]
     the user clicks the button/link    jQuery=#form-input-20 button:contains("Overhead costs")

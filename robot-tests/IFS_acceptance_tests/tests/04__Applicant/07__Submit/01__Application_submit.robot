@@ -16,6 +16,7 @@ Suite Setup       new account complete all but one
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant  Pending
 Resource          ../../../resources/defaultResources.robot
+Resource          ../FinanceSection_Commons.robot
 
 *** Variables ***
 
