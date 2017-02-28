@@ -80,7 +80,7 @@ the applicant completes the application details
 
 the user marks the finances as complete
     [Arguments]  ${Application}
-    the user fills in the project costs
+    the user fills in the project costs     ${Application}
     the user fills in the organisation information  ${Application}
     the user checks Your Funding section     ${Application}
     the user should see all finance subsections complete
@@ -125,7 +125,7 @@ the user fills in Labour
 the user fills in Overhead costs
     [Arguments]     ${Application_name}
     Run Keyword If  '${Application_name}'=="A new innovative solution"    the user choose Calculate overheads option
-    Run Keyword If  '${Application_name}'!=="A new innovative solution"     the user fills in Overhead costs
+    Run Keyword If  '${Application_name}'!=="A new innovative solution"     the user choose 20% overheads option
 
 the user choose Calculate overheads option
     When the user clicks the button/link     jQuery=label:contains("Calculate overheads")
@@ -134,7 +134,7 @@ the user choose Calculate overheads option
     and the user uploads the file       id=overheadfile   ${excel_file}
     and the user enters text to a text field    jQuery=input[id^="cost-overheads"][value="0"]   4000
 
-the user fills in Overhead costs
+the user choose 20% overheads option
     # overheads option : 20% Labour
     the user clicks the button/link    jQuery=#form-input-20 button:contains("Overhead costs")
     the user clicks the button/link    css=label[data-target="overhead-default-percentage"]

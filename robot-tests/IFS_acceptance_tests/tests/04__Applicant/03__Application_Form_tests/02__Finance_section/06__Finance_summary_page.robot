@@ -49,7 +49,7 @@ Contribution to project and funding sought should not be negative number
     [Tags]
     [Setup]  log in as a different user    &{lead_applicant_credentials}
     When the user navigates to Your-finances page       Providing sustainable childcare
-    and the user fills in the project costs
+    and the user fills in the project costs       Providing sustainable childcare
     and the user fills in the organisation information       Providing sustainable childcare
     and the user checks your funding section for the project      Providing sustainable childcare
     Then the contribution to project and funding sought should be 0 and not a negative number
