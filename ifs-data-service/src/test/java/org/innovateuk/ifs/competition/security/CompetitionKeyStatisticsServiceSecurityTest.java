@@ -2,10 +2,7 @@ package org.innovateuk.ifs.competition.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.CompetitionClosedKeyStatisticsResource;
-import org.innovateuk.ifs.competition.resource.CompetitionInAssessmentKeyStatisticsResource;
-import org.innovateuk.ifs.competition.resource.CompetitionOpenKeyStatisticsResource;
-import org.innovateuk.ifs.competition.resource.CompetitionReadyToOpenKeyStatisticsResource;
+import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.transactional.CompetitionKeyStatisticsService;
 import org.junit.Test;
 
@@ -40,6 +37,11 @@ public class CompetitionKeyStatisticsServiceSecurityTest extends BaseServiceSecu
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getInAssessmentKeyStatisticsByCompetition(1L), COMP_ADMIN, PROJECT_FINANCE);
     }
 
+    @Test
+    public void getFundedKeyStatisticsByCompetition() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getFundedKeyStatisticsByCompetition(1L), COMP_ADMIN, PROJECT_FINANCE);
+    }
+
     public static class TestCompetitionKeyStatisticsService implements CompetitionKeyStatisticsService {
         @Override
         public ServiceResult<CompetitionReadyToOpenKeyStatisticsResource> getReadyToOpenKeyStatisticsByCompetition(long competitionId) {
@@ -58,6 +60,11 @@ public class CompetitionKeyStatisticsServiceSecurityTest extends BaseServiceSecu
 
         @Override
         public ServiceResult<CompetitionInAssessmentKeyStatisticsResource> getInAssessmentKeyStatisticsByCompetition(long competitionId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<CompetitionFundedKeyStatisticsResource> getFundedKeyStatisticsByCompetition(long competitionId) {
             return null;
         }
     }

@@ -368,10 +368,10 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
 
         List<AssessorDashboardPendingInviteViewModel> expectedPendingInvitesModel = participantResources.stream().map(competitionParticipantResource ->
                 new AssessorDashboardPendingInviteViewModel(
-                competitionParticipantResource.getInvite().getHash(),
-                competitionParticipantResource.getCompetitionName(),
-                competitionParticipantResource.getAssessorAcceptsDate().toLocalDate(),
-                competitionParticipantResource.getAssessorDeadlineDate().toLocalDate())).collect(Collectors.toList());
+                        competitionParticipantResource.getInvite().getHash(),
+                        competitionParticipantResource.getCompetitionName(),
+                        competitionParticipantResource.getAssessorAcceptsDate().toLocalDate(),
+                        competitionParticipantResource.getAssessorDeadlineDate().toLocalDate())).collect(Collectors.toList());
 
         AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource);
 

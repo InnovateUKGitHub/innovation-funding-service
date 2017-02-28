@@ -34,6 +34,7 @@ import static org.innovateuk.ifs.competition.resource.CompetitionStatus.FUNDERS_
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -78,16 +79,17 @@ public class CompetitionManagementFundingControllerTest {
         when(applicationSummarySortFieldService.sortFieldForSubmittedApplications(null)).thenReturn("sortfield");
 
         ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource();
-        when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20)).thenReturn(summary);
+        when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20, null)).thenReturn(summary);
 
-        mockMvc.perform(get("/competition/{competitionId}/funding?tab=notSubmitted", COMPETITION_ID))
+        mockMvc.perform(get("/competition/{competitionId}/funding?tab=submitted", COMPETITION_ID))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt-funders-panel"))
                 .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
                 .andExpect(model().attribute("results", summary))
                 .andExpect(model().attribute("activeSortField", "sortfield"));
 
-        verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20);
+
+        verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20, null);
         verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
     }
 
@@ -99,7 +101,7 @@ public class CompetitionManagementFundingControllerTest {
         when(applicationSummarySortFieldService.sortFieldForNotSubmittedApplications(null)).thenReturn("sortfield");
 
         ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource();
-        when(applicationSummaryService.getNotSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20)).thenReturn(summary);
+        when(applicationSummaryService.getNotSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20, null)).thenReturn(summary);
 
         mockMvc.perform(get("/competition/{competitionId}/funding?tab=notSubmitted", COMPETITION_ID))
                 .andExpect(status().isOk())
@@ -109,7 +111,7 @@ public class CompetitionManagementFundingControllerTest {
                 .andExpect(model().attribute("activeTab", "notSubmitted"))
                 .andExpect(model().attribute("activeSortField", "sortfield"));
 
-        verify(applicationSummaryService).getNotSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20);
+        verify(applicationSummaryService).getNotSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20, null);
         verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
     }
 
@@ -121,7 +123,7 @@ public class CompetitionManagementFundingControllerTest {
         when(applicationSummarySortFieldService.sortFieldForSubmittedApplications(null)).thenReturn("sortfield");
 
         ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource();
-        when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20)).thenReturn(summary);
+        when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20, null)).thenReturn(summary);
 
         when(assessorFeedbackService.feedbackUploaded(COMPETITION_ID)).thenReturn(false);
 
@@ -134,7 +136,7 @@ public class CompetitionManagementFundingControllerTest {
                 .andExpect(model().attribute("activeSortField", "sortfield"))
                 .andExpect(model().attribute("canPublishAssessorFeedback", false));
 
-        verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20);
+        verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20, null);
         verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
         verify(assessorFeedbackService).feedbackUploaded(COMPETITION_ID);
     }
@@ -185,7 +187,7 @@ public class CompetitionManagementFundingControllerTest {
         when(applicationFundingDecisionService.saveApplicationFundingDecisionData(COMPETITION_ID, fundingDecision, applicationIds)).thenReturn(ServiceResult.serviceSuccess());
 
         ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource();
-        when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20)).thenReturn(summary);
+        when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20, null)).thenReturn(summary);
 
         mockMvc.perform(post("/competition/{competitionId}/funding", COMPETITION_ID)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -213,7 +215,7 @@ public class CompetitionManagementFundingControllerTest {
         when(applicationFundingDecisionService.saveApplicationFundingDecisionData(COMPETITION_ID, fundingDecision, applicationIds)).thenReturn(ServiceResult.serviceSuccess());
 
         ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource();
-        when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20)).thenReturn(summary);
+        when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20, null)).thenReturn(summary);
 
         mockMvc.perform(post("/competition/{competitionId}/funding", COMPETITION_ID)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -241,7 +243,7 @@ public class CompetitionManagementFundingControllerTest {
         when(applicationFundingDecisionService.saveApplicationFundingDecisionData(COMPETITION_ID, fundingDecision, applicationIds)).thenReturn(ServiceResult.serviceSuccess());
 
         ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource();
-        when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20)).thenReturn(summary);
+        when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20, null)).thenReturn(summary);
 
         mockMvc.perform(post("/competition/{competitionId}/funding", COMPETITION_ID)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -262,7 +264,7 @@ public class CompetitionManagementFundingControllerTest {
         ApplicationSummaryResource app9 = app(9L);
         ApplicationSummaryResource app10 = app(10L);
         applicationSummaries.setContent(asList(app8, app9, app10));
-        when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(123L, null, 0, Integer.MAX_VALUE)).thenReturn(applicationSummaries);
+        when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(123L, null, 0, Integer.MAX_VALUE, null)).thenReturn(applicationSummaries);
     }
 
     private ApplicationSummaryResource app(Long id) {
