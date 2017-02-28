@@ -5,7 +5,6 @@
     </head>
 
     <body class="app-dashboard">
-        <th:block th:insert="fragments/modals :: modal-overlay" />
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
@@ -13,14 +12,22 @@
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Application team',linkClass='link-back',linkUrl=@{/application/{applicationId}/team(applicationId=${model.applicationId})}" />
 
-            <h1 class="heading-xlarge">Add organisation</h1>
+            <div class="page-title">
+                <th:block th:insert="fragments/elements :: application-title (applicationId=${model.applicationId},applicationName=${model.applicationName})" />
+                <h1 class="heading-xlarge">Add organisation</h1>
+            </div>
 
             <p>Add applicants or organisations to your application. Before you can invite an organisation you will need to add at least one individual from that organisation.
                 If an organisation only has one individual you wish to remove, you must add a replacement individual before you can remove the first one.</p>
 
             <form th:action="@{/application/{applicationId}/team/addOrganisation(applicationId=${model.applicationId})}" th:object="${form}" method="post" novalidate="novalidate">
-                <div class="form-group">
-                    <label class="form-label-bold" for="organisationName">Organisation name</label>
+                <div th:class="${#fields.hasErrors('organisationName')}? 'form-group error':'form-group'">
+                    <label class="form-label-bold" for="organisationName">
+                        Organisation name
+                        <span th:if="${#fields.hasErrors('organisationName')}" th:remove="tag">
+                            <span class="error-message"  th:each="err : ${#fields.errors('organisationName')}" th:text="${err}" />
+                        </span>
+                    </label>
                     <input class="form-control width-full" type="text" th:field="*{organisationName}" />
                 </div>
 
@@ -29,23 +36,33 @@
                     <table class="table-overflow">
                         <thead>
                             <tr>
-                                <th class="width-30-percent" id="new-applicant-name" scope="col">Applicant name</th>
-                                <th class="width-55-percent" id="new-applicant-email" scope="col">Email</th>
-                                <td class="width-15-percent alignright"></td>
+                                <th class="width-30-percent" scope="col">Applicant name</th>
+                                <th class="width-55-percent" scope="col">Email</th>
+                                <th class="width-15-percent alignright" scope="col"><span class="visually-hidden">Actions</span></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr th:each="applicant, applicantStat : *{applicants}">
                                 <td>
+                                    <label th:for="'applicants'+${applicantStat.index}+'.name'">
+                                        <span class="visually-hidden">Name</span>
+                                        <th:block th:if="${#fields.hasErrors('applicants[__${applicantStat.index}__].name')}" th:remove="tag">
+                                            <span class="error-message"  th:each="err : ${#fields.errors('applicants[__${applicantStat.index}__].name')}" th:text="${err}">Please enter a name</span>
+                                        </th:block>
+                                    </label>
                                     <input type="text"
-                                           aria-labelledby="new-applicant-name"
                                            th:field="*{applicants[__${applicantStat.index}__].name}"
                                            required="required"
                                            class="form-control width-full">
                                 </td>
                                 <td>
+                                    <label th:for="'applicants'+${applicantStat.index}+'.email'">
+                                        <span class="visually-hidden">Email</span>
+                                        <th:block th:if="${#fields.hasErrors('applicants[__${applicantStat.index}__].email')}" th:remove="tag">
+                                            <span class="error-message"  th:each="err : ${#fields.errors('applicants[__${applicantStat.index}__].email')}" th:text="${err}">Please enter a name</span>
+                                        </th:block>
+                                    </label>
                                     <input type="text"
-                                           aria-labelledby="new-applicant-email"
                                            th:field="*{applicants[__${applicantStat.index}__].email}"
                                            required="required"
                                            class="form-control width-full">
@@ -59,12 +76,9 @@
                 <p><button class="add-another-row buttonlink" name="addApplicant" type="submit">Add new applicant</button></p>
 
                 <p>
-                    <!-- TODO need a non-js version of this confirmation page -->
-                    <a href="#" data-js-modal="modal-new-organisation" class="button">Add organisation and invite applicants</a>
+                    <button class="button" name="add_partner" value="add_partner" type="submit">Add organisation and invite applicants</button>
                     <a th:href="@{/application/{applicationId}/team(applicationId=${model.applicationId})}" class="button button-clear">Cancel</a>
                 </p>
-
-                <th:block th:insert="fragments/modals :: modal-new-organisation" />
             </form>
 
             <th:block th:insert="fragments/layout :: main-content-end" />
