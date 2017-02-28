@@ -19,57 +19,24 @@
             </h1>
 
             <p class="extra-margin">Assign assessors to applications. You will need to confirm assignments before assessors are notified.</p>
+            <form method="GET">
+                <div class="search-filters extra-margin">
 
-            <!--/* INFUND-7055
-            <div class="search-filters extra-margin">
-                <form action="#" method="GET">
                     <fieldset>
+                        <legend class="heading-medium">Filter applications</legend>
                         <div class="grid-row">
-                            <div class="column-half">
-                                <div class="form-group">
-                                    <label class="form-label" for="filterInnovationArea">Innovation area</label>
-
-                                    <select class="form-control" id="filterInnovationArea" name="filterInnovationArea">
-                                        <option selected="selected">---</option>
-                                    </select>
-                                </div>
+                            <div class="column-two-thirds">
+                                <label class="form-label" for="filterSearch">Search by application number</label>
+                                <input type="text" class="form-control" id="filterSearch" name="filterSearch" th:value="${model.filter}"/>
+                                <a href="?">Clear all filters</a>
                             </div>
-
-                            <div class="column-half">
-                                <div class="form-group">
-                                    <label class="form-label" for="filterSearch">Skill areas</label>
-                                    <input type="text" class="form-control" id="filterSearch" name="filterSearch">
-                                </div>
-                                <div class="column-half extra-margin">
-                                    <button class="button button-clear">Clear filters</button>
-                                </div>
-                                <div class="column-half">
-                                    <div class="alignright">
-                                        <button type="submit" class="button no-margin">Filter</button>
-                                    </div>
-                                </div>
+                            <div class="column-third">
+                                <button class="button">Filter</button>
                             </div>
                         </div>
                     </fieldset>
-                </form>
-            </div>
-
-            <div class="grid-row sorting">
-                <div class="column-half">
-                    <span class="heading-large">20</span> applications
                 </div>
-
-                <div class="column-half alignright">
-                    <label for="inviteFilter">Sort by
-                        <select class="form-control" id="inviteFilter" name="inviteFilter">
-                            <option value="">All</option>
-                        </select>
-                    </label>
-                    <button class="button button-secondary button-small" type="submit">Sort</button>
-                </div>
-            </div>
-            */-->
-
+            </form>
             <div class="table-overflow">
                 <table>
                     <thead>
@@ -100,7 +67,7 @@
                     </tbody>
                 </table>
             </div>
-
+            <div th:include="fragments/elements :: general-pagination(pagination=${model.pagination})" th:remove="tag"/>
             <th:block th:insert="fragments/layout :: main-content-end" />
         </main>
 

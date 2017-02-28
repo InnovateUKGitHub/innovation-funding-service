@@ -13,11 +13,16 @@
             <th:block th:insert="fragments/assessment :: assessment-header-deadline-sub (linkTitle='Back to your assessment overview',linkClass='link-back',linkUrl=@{${navigation.overviewUrl}},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft})" />
 
             <div class="page-title">
-                <th:block th:insert="fragments/elements :: application-title (applicationId=${model.application.id},applicationName=${model.application.applicationDisplayName})" />
+                <th:block th:insert="fragments/elements :: application-title (applicationId=${model.applicationId},applicationName=${model.applicationName})" />
                 <h1 class="heading-xlarge" th:text="${model.questionShortName}" />
             </div>
 
-            <th:block th:insert="fragments/assessment :: application_details (currentApplication=${model.application}, applicationOrganisations=${applicationOrganisations}, pendingOrganisationNames=${pendingOrganisationNames}, leadOrganisation=${leadOrganisation})" />
+            <th:block th:insert="fragments/assessment :: application_details (applicationName=${model.applicationName},
+                applicationStartDate=${model.applicationStartDate},
+                applicationDurationInMonths=${model.applicationDurationInMonths},
+                applicationOrganisations=${applicationOrganisations},
+                pendingOrganisationNames=${pendingOrganisationNames},
+                leadOrganisation=${leadOrganisation})" />
 
             <th:block th:insert="fragments/assessment :: assessment-pagination" />
 

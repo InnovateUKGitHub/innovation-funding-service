@@ -39,13 +39,13 @@
             <div class="column-two-thirds">
                 <p class="extra-margin-bottom" th:text="${model.totalResults == 1 ? '1 competition found' : model.totalResults+' competitions found' }"></p>
                 <th:block th:if="${model.totalResults == 0}">
-                    <p class="extra-margin-bottom">
+                    <div class="extra-margin-bottom">
                         <h2 class="heading-large">Please try:</h2>
                         <ul class="list list-bullet">
                             <li>searching again using different words</li>
                             <li>removing your filters</li>
                         </ul>
-                    </p>
+                    </div>
                 </th:block>
                 <ul th:unless="${model.totalResults == 0}">
                    <li th:each="(publicContentItem, iteration : ${model.publicContentItems})">
