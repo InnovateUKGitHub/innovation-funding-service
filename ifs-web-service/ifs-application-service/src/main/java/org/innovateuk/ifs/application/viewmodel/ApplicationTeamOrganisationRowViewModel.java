@@ -10,13 +10,13 @@ import java.util.List;
  */
 public class ApplicationTeamOrganisationRowViewModel {
 
-    private long id;
+    private Long id;
     private String name;
     private boolean lead;
     private List<ApplicationTeamApplicantRowViewModel> applicants;
     private boolean editable;
 
-    public ApplicationTeamOrganisationRowViewModel(long id,
+    public ApplicationTeamOrganisationRowViewModel(Long id,
                                                    String name,
                                                    boolean lead,
                                                    List<ApplicationTeamApplicantRowViewModel> applicants,
@@ -28,7 +28,7 @@ public class ApplicationTeamOrganisationRowViewModel {
         this.editable = editable;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
