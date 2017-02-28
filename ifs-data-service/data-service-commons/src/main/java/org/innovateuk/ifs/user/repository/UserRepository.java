@@ -47,9 +47,8 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
 
     /**
      * We have to explicitly join {@link User} and Profile due to the relational mapping
-     * on {@link User} being removed.
-     * Fun fact: This join was not possible without using a cartesian product
-     * before Hibernate 5.1 (nearly 12 years to implement).
+     * on {@link User} being removed. This join was not possible without using a
+     * cartesian product before Hibernate 5.1 (nearly 12 years to implement).
      * <p>
      * Unfortunately, due to this explicit join, we cannot leverage Spring JPAs {@link Specification}
      * as we have to use the {@link Query} annotation to create this query.
@@ -57,7 +56,7 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
      * We should try to be clever with how we write the query. Otherwise, we will have to have
      * multiple repository methods that have different parameters (and this will get out of hand quickly).
      * <p>
-     * TODO: Try to keep any other required filtering parameters in this query.
+     * Try to keep any other required filtering parameters in this query.
      */
     @Query("SELECT user " +
             "FROM User user " +

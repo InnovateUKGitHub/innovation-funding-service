@@ -743,11 +743,10 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
         addTestAssessors();
 
-        long competitionId = 1L;
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "firstName"));
         Optional<Long> innovationArea = Optional.of(5L);
 
-        AvailableAssessorPageResource availableAssessorPageResource = controller.getAvailableAssessors(competitionId, pageable, innovationArea)
+        AvailableAssessorPageResource availableAssessorPageResource = controller.getAvailableAssessors(competition.getId(), pageable, innovationArea)
                 .getSuccessObjectOrThrowException();
 
         assertEquals(20, availableAssessorPageResource.getSize());
@@ -770,11 +769,10 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
         addTestAssessors();
 
-        long competitionId = 1L;
         Pageable pageable = new PageRequest(1, 2, new Sort(ASC, "firstName"));
         Optional<Long> innovationArea = Optional.of(5L);
 
-        AvailableAssessorPageResource availableAssessorPageResource = controller.getAvailableAssessors(competitionId, pageable, innovationArea)
+        AvailableAssessorPageResource availableAssessorPageResource = controller.getAvailableAssessors(competition.getId(), pageable, innovationArea)
                 .getSuccessObjectOrThrowException();
 
         assertEquals(2, availableAssessorPageResource.getSize());
@@ -795,10 +793,9 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
         addTestAssessors();
 
-        long competitionId = 1L;
         Pageable pageable = new PageRequest(0, 6, new Sort(ASC, "firstName"));
 
-        AvailableAssessorPageResource availableAssessorPageResource = controller.getAvailableAssessors(competitionId, pageable, empty())
+        AvailableAssessorPageResource availableAssessorPageResource = controller.getAvailableAssessors(competition.getId(), pageable, empty())
                 .getSuccessObjectOrThrowException();
 
         assertEquals(6, availableAssessorPageResource.getSize());
@@ -806,6 +803,55 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         assertEquals(1, availableAssessorPageResource.getTotalPages());
         assertEquals(6, availableAssessorPageResource.getTotalElements());
         assertEquals(6, availableAssessorPageResource.getContent().size());
+    }
+
+    @Test
+    public void getAvailableAssessors_sortsFirstAndLastName() throws Exception {
+        loginCompAdmin();
+
+        Role assessorRole = roleRepository.findOneByName(UserRoleType.ASSESSOR.getName());
+        InnovationArea innovationArea = innovationAreaRepository.findOne(INNOVATION_AREA_ID);
+
+        List<Profile> profiles = newProfile()
+                .withId()
+                .withInnovationArea(innovationArea)
+                .build(4);
+
+        List<Profile> savedProfiles = Lists.newArrayList(profileRepository.save(profiles));
+
+        Long[] profileIds = simpleMap(savedProfiles, Profile::getId).toArray(new Long[savedProfiles.size()]);
+
+        List<User> users = newUser()
+                .withId()
+                .withUid("uid1", "uid2", "uid3", "uid4")
+                .withFirstName("Robert", "Robert", "Alexis", "Alexis")
+                .withLastName("Stark", "Salt", "Kinney", "Colon")
+                .withRoles(singletonList(assessorRole))
+                .withProfileId(profileIds)
+                .build(4);
+
+        userRepository.save(users);
+        flushAndClearSession();
+
+        Pageable pageable = new PageRequest(0, 10, new Sort(ASC, "firstName", "lastName"));
+
+        AvailableAssessorPageResource availableAssessorPageResource = controller.getAvailableAssessors(competition.getId(), pageable, empty())
+                .getSuccessObjectOrThrowException();
+
+        assertEquals(10, availableAssessorPageResource.getSize());
+        assertEquals(0, availableAssessorPageResource.getNumber());
+        assertEquals(1, availableAssessorPageResource.getTotalPages());
+        assertEquals(6, availableAssessorPageResource.getTotalElements());
+
+        List<AvailableAssessorResource> items = availableAssessorPageResource.getContent();
+
+        assertEquals(6, items.size());
+        assertEquals("Alexis Colon", items.get(0).getName());
+        assertEquals("Alexis Kinney", items.get(1).getName());
+        assertEquals("Felix Wilson", items.get(2).getName());
+        assertEquals("Professor Plum", items.get(3).getName());
+        assertEquals("Robert Salt", items.get(4).getName());
+        assertEquals("Robert Stark", items.get(5).getName());
     }
 
     private void addTestAssessors() {
