@@ -70,8 +70,8 @@ public class FinanceCheckServiceImpl implements FinanceCheckService {
     }
 
     @Override
-    public ServiceResult<AttachmentResource> uploadFile(String contentType, long contentLength, String originalFilename, byte[] bytes) {
-        return attachmentRestService.upload(contentType, contentLength, originalFilename, bytes).toServiceResult();
+    public ServiceResult<AttachmentResource> uploadFile(Long projectId, String contentType, long contentLength, String originalFilename, byte[] bytes) {
+        return attachmentRestService.upload(projectId, contentType, contentLength, originalFilename, bytes).toServiceResult();
     }
 
     @Override

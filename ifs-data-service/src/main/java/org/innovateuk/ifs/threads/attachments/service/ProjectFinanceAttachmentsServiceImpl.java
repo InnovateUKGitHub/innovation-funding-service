@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.threads.attachments.service;
 
-import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.BasicFileAndContents;
@@ -58,11 +57,12 @@ public class ProjectFinanceAttachmentsServiceImpl implements ProjectFinanceAttac
     }
 
     @Override
-    public ServiceResult<AttachmentResource> upload(String contentType, String contentLength, String originalFilename, HttpServletRequest request) {
-        return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier)
-                -> fileService.createFile(fileAttributes.toFileEntryResource(), inputStreamSupplier)
-                .andOnSuccess(created -> save(new Attachment(loggedInUserSupplier.get(), created.getRight()))
-                        .andOnSuccessReturn(mapper::mapToResource))).toServiceResult();
+    public ServiceResult<AttachmentResource> upload(String contentType, String contentLength, String originalFilename,
+                                                    Long projectId, HttpServletRequest request) {
+        return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, request,
+                (fileAttributes, inputStreamSupplier) -> fileService.createFile(fileAttributes.toFileEntryResource(), inputStreamSupplier)
+                        .andOnSuccess(created -> save(new Attachment(loggedInUserSupplier.get(), created.getRight()))
+                                .andOnSuccessReturn(mapper::mapToResource))).toServiceResult();
     }
 
     private ServiceResult<Attachment> save(Attachment attachment) {

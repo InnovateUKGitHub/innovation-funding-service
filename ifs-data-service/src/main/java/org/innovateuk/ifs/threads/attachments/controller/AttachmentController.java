@@ -37,13 +37,14 @@ public abstract class AttachmentController<R> {
         return service.findOne(attachmentId).toGetResponse();
     }
 
-    @RequestMapping(value = "/upload", method = POST, produces = "application/json")
-    public RestResult<R> uploadFile(
-            @RequestHeader(value = "Content-Type", required = false) String contentType,
-            @RequestHeader(value = "Content-Length", required = false) String contentLength,
-            @RequestParam(value = "filename", required = false) String originalFilename,
-            HttpServletRequest request) {
-        return service.upload(contentType, contentLength, originalFilename, request).toPostCreateResponse();
+    @RequestMapping(value = "/{projectId}/upload", method = POST, produces = "application/json")
+    public RestResult<R> uploadFile(@RequestHeader(value = "Content-Type", required = false) String contentType,
+                                    @RequestHeader(value = "Content-Length", required = false) String contentLength,
+                                    @RequestParam(value = "filename", required = false) String originalFilename,
+                                    @PathVariable("projectId") Long projectId,
+                                    HttpServletRequest request)
+    {
+        return service.upload(contentType, contentLength, originalFilename, projectId, request).toPostCreateResponse();
     }
 
     @RequestMapping(value = "/{attachmentId}", method = DELETE, produces = "application/json")

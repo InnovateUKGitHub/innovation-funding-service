@@ -256,7 +256,8 @@ public class ProjectFinanceChecksController {
 
         return validationHandler.performActionOrBindErrorsToField("attachment", view, view, () -> {
             MultipartFile file = form.getAttachment();
-            ServiceResult<AttachmentResource> result = financeCheckService.uploadFile(file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
+            ServiceResult<AttachmentResource> result = financeCheckService.uploadFile(projectId, file.getContentType(),
+                    file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
             if(result.isSuccess()) {
                 attachments.add(result.getSuccessObject().id);
                 saveAttachmentsToCookie(response, attachments, projectId, organisationId, queryId);

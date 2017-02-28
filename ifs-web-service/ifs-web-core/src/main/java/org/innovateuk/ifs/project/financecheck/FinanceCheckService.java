@@ -30,7 +30,7 @@ public interface FinanceCheckService {
 
     FinanceCheckEligibilityResource getFinanceCheckEligibilityDetails(Long projectId, Long organisationId);
 
-    ServiceResult<AttachmentResource> uploadFile(String contentType, long contentLength, String originalFilename, byte[] bytes);
+    ServiceResult<AttachmentResource> uploadFile(Long projectId, String contentType, long contentLength, String originalFilename, byte[] bytes);
 
     ServiceResult<Void> deleteFile(Long fileId);
 

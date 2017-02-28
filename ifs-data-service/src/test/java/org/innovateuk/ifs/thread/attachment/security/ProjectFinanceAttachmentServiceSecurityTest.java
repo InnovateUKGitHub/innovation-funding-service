@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.project.finance.security.AttachmentPermissionsRules;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.threads.attachments.security.AttachmentLookupStrategy;
 import org.innovateuk.ifs.threads.attachments.service.ProjectFinanceAttachmentService;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -39,9 +40,9 @@ public class ProjectFinanceAttachmentServiceSecurityTest extends BaseServiceSecu
     public void test_upload() throws Exception {
         final QueryResource queryResource = new QueryResource(null, null, null, null, null, false, null);
         assertAccessDenied(
-                () -> classUnderTest.upload("application.pdf", "3234", "filename.pdf", null),
+                () -> classUnderTest.upload("application.pdf", "3234", "filename.pdf", 77L, null),
                 () -> {
-                    verify(attachmentPermissionsRules).onlyProjectFinanceAndFinanceContactCanUploadAttachments(isA(AttachmentResource.class), isA(UserResource.class));
+                    verify(attachmentPermissionsRules).onlyProjectFinanceAndFinanceContactCanUploadAttachments(isA(ProjectResource.class), isA(UserResource.class));
                     verifyNoMoreInteractions(attachmentPermissionsRules);
                 });
     }
@@ -87,7 +88,8 @@ public class ProjectFinanceAttachmentServiceSecurityTest extends BaseServiceSecu
     public static class TestProjectFinanceAttachmentService implements ProjectFinanceAttachmentService {
 
         @Override
-        public ServiceResult<AttachmentResource> upload(String contentType, String contentLength, String originalFilename, HttpServletRequest request) {
+        public ServiceResult<AttachmentResource> upload(String contentType, String contentLength, String originalFilename,
+                                                        Long projectId, HttpServletRequest request) {
             return ServiceResult.serviceSuccess(new AttachmentResource(33L, "name",
                     "application/pdf", 2345));
         }

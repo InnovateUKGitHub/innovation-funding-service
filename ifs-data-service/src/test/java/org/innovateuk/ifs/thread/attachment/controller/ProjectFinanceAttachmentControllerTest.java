@@ -82,7 +82,7 @@ public class ProjectFinanceAttachmentControllerTest extends BaseControllerMockMV
         final Long id = 22L;
         final AttachmentResource attachmentResource = new AttachmentResource(id, "randomFile.pdf", "application/pdf", 1234);
         when(projectFinanceAttachmentServiceMock.upload(eq("application/pdf"), eq("1234"), eq("randomFile.pdf"),
-                any(HttpServletRequest.class))).thenReturn(serviceSuccess(attachmentResource));
+                eq(77L), any(HttpServletRequest.class))).thenReturn(serviceSuccess(attachmentResource));
 
         mockMvc.perform(post("/project/finance/attachments/upload")
                 .param("filename", "randomFile.pdf")
@@ -91,7 +91,7 @@ public class ProjectFinanceAttachmentControllerTest extends BaseControllerMockMV
                 .andExpect(status().isCreated());
 
         verify(projectFinanceAttachmentServiceMock).upload(eq("application/pdf"), eq("1234"), eq("randomFile.pdf"),
-                any(HttpServletRequest.class));
+                eq(77L), any(HttpServletRequest.class));
     }
 
 

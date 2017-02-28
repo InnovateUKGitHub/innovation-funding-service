@@ -3,6 +3,8 @@ package org.innovateuk.ifs.thread.attachment.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.project.finance.security.AttachmentPermissionsRules;
+import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.threads.attachments.domain.Attachment;
 import org.innovateuk.ifs.threads.domain.Query;
 import org.innovateuk.ifs.threads.security.ProjectFinanceQueryPermissionRules;
@@ -32,6 +34,7 @@ import static org.mockito.Mockito.when;
 
 public class ProjectFinanceAttachmentPermissionRulesTest extends BasePermissionRulesTest<AttachmentPermissionsRules> {
     private AttachmentResource attachmentResource;
+    private ProjectResource projectResource;
     private UserResource projectFinanceUser;
     private UserResource financeContactUser;
     private UserResource intruder;
@@ -41,6 +44,7 @@ public class ProjectFinanceAttachmentPermissionRulesTest extends BasePermissionR
 
     @Before
     public void setUp() throws Exception {
+        projectResource = newProjectResource().withId(77L).build();
         attachmentResource = new AttachmentResource(9283L, "fileName", "application/json", 1024);
         projectFinanceUser = projectFinanceUser();
         financeContactUser = getUserWithRole(FINANCE_CONTACT);
@@ -57,16 +61,17 @@ public class ProjectFinanceAttachmentPermissionRulesTest extends BasePermissionR
 
     @Test
     public void testThatOnlyProjectFinanceAndFinanceContactUsersCanUploadAttachments() throws Exception {
-        assertTrue(rules.onlyProjectFinanceAndFinanceContactCanUploadAttachments(attachmentResource, projectFinanceUser));
+        assertTrue(rules.onlyProjectFinanceAndFinanceContactCanUploadAttachments(projectResource, projectFinanceUser));
         when(projectUserRepositoryMock.findByUserIdAndRole(financeContactUser.getId(), PROJECT_FINANCE_CONTACT))
                 .thenReturn(newProjectUser().withUser(newUser().withId(financeContactUser.getId()).build()).build(1));
-        assertTrue(rules.onlyProjectFinanceAndFinanceContactCanUploadAttachments(attachmentResource, financeContactUser));
+        assertTrue(rules.onlyProjectFinanceAndFinanceContactCanUploadAttachments(projectResource, financeContactUser));
     }
 
     @Test
     public void testThatANonProjectFinanceOrFinanceContactUserCanNotUploadAttachments() throws Exception {
-        when(projectUserRepositoryMock.findByUserIdAndRole(intruder.getId(), PROJECT_FINANCE_CONTACT)).thenReturn(emptyList());
-        assertFalse(rules.onlyProjectFinanceAndFinanceContactCanUploadAttachments(attachmentResource, intruder));
+        when(projectUserRepositoryMock.findByProjectIdAndRoleAndUserId(projectResource.getId(), PROJECT_FINANCE_CONTACT, intruder.getId()))
+                .thenReturn(null);
+        assertFalse(rules.onlyProjectFinanceAndFinanceContactCanUploadAttachments(projectResource, intruder));
     }
 
     @Test

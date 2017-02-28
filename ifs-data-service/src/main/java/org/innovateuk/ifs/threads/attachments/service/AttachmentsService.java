@@ -10,7 +10,7 @@ import java.io.IOException;
 public interface AttachmentsService<T> {
     ServiceResult<T> findOne(Long attachmentId);
 
-    ServiceResult<T> upload(String contentType, String contentLength, String originalFilename,
+    ServiceResult<T> upload(String contentType, String contentLength, String originalFilename, Long contextId,
                             HttpServletRequest request);
 
     ServiceResult<Void> delete(Long attachmentId);

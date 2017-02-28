@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface AttachmentRestService {
     RestResult<AttachmentResource> find(Long fileId);
 
-    RestResult<AttachmentResource> upload(String contentType, long contentLength,
+    RestResult<AttachmentResource> upload(Long contextId, String contentType, long contentLength,
                                           String originalFilename, byte[] bytes);
 
     RestResult<Void> delete(Long id);

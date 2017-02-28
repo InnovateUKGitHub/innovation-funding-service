@@ -18,8 +18,9 @@ public interface ProjectFinanceAttachmentService extends AttachmentsService<Atta
     ServiceResult<AttachmentResource> findOne(Long attachmentId);
 
     @Override
-    @PostAuthorize("hasPermission(returnObject, 'PF_ATTACHMENT_UPLOAD')")
-    ServiceResult<AttachmentResource> upload(String contentType, String contentLength, String originalFilename, HttpServletRequest request);
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'PF_ATTACHMENT_UPLOAD')")
+    ServiceResult<AttachmentResource> upload(String contentType, String contentLength, String originalFilename,
+                                             Long projectId, HttpServletRequest request);
 
     @Override
     @PreAuthorize("hasPermission(#attachmentId, 'org.innovateuk.threads.attachment.resource.AttachmentResource', 'PF_ATTACHMENT_DELETE')")

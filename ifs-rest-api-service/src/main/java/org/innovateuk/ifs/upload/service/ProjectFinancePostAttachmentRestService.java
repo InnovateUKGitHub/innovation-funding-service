@@ -20,10 +20,10 @@ public class ProjectFinancePostAttachmentRestService extends BaseRestService imp
     }
 
     @Override
-    public RestResult<AttachmentResource> upload(String contentType, long contentLength,
+    public RestResult<AttachmentResource> upload(Long projectId, String contentType, long contentLength,
                                                     String originalFilename, byte[] bytes)
     {
-        String url =  baseURL + "/upload?filename=" + originalFilename;
+        String url =  baseURL + "/" + projectId + "/upload?filename=" + originalFilename;
         return postWithRestResult(url, bytes, createFileUploadHeader(contentType, contentLength), AttachmentResource.class);
     }
 

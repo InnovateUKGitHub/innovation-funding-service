@@ -227,7 +227,7 @@ public class FinanceChecksQueriesController {
 
         return validationHandler.performActionOrBindErrorsToField("attachment", view, view, () -> {
             MultipartFile file = form.getAttachment();
-            ServiceResult<AttachmentResource> result = financeCheckService.uploadFile(file.getContentType(),
+            ServiceResult<AttachmentResource> result = financeCheckService.uploadFile(projectId, file.getContentType(),
                     file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
             result.ifSuccessful( uploadedAttachment -> {
                 attachments.add(result.getSuccessObject().id);
