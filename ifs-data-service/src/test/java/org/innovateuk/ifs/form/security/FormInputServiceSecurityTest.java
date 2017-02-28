@@ -3,7 +3,10 @@ package org.innovateuk.ifs.form.security;
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
-import org.innovateuk.ifs.form.resource.*;
+import org.innovateuk.ifs.form.resource.FormInputResource;
+import org.innovateuk.ifs.form.resource.FormInputResponseCommand;
+import org.innovateuk.ifs.form.resource.FormInputResponseResource;
+import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.transactional.FormInputService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -23,7 +26,6 @@ import static org.mockito.Mockito.verify;
 public class FormInputServiceSecurityTest extends BaseServiceSecurityTest<FormInputService> {
 
     private FormInputResponsePermissionRules formInputResponsePermissionRules;
-
 
     @Before
     public void lookupPermissionRules() {
@@ -62,6 +64,26 @@ public class FormInputServiceSecurityTest extends BaseServiceSecurityTest<FormIn
                 () -> classUnderTest.saveQuestionResponse(formInputResponseCommand),
                 () -> verify(formInputResponsePermissionRules).aConsortiumMemberCanUpdateAFormInputResponse(isA(FormInputResponseCommand.class), isA(UserResource.class))
         );
+    }
+
+    @Test
+    public void findResponseByApplicationIdAndQuestionName() {
+        assertAccessDenied(
+                () -> classUnderTest.findResponseByApplicationIdAndQuestionName(1L, "name"),
+                () -> {
+                    verify(formInputResponsePermissionRules)
+                            .consortiumCanSeeTheInputResponsesForApplicationWhenSharedBetweenOrganisations(
+                                    isA(FormInputResponseResource.class), isA(UserResource.class));
+                    verify(formInputResponsePermissionRules)
+                            .assessorCanSeeTheInputResponsesInApplicationsForOrganisationsTheyAssess(
+                                    isA(FormInputResponseResource.class), isA(UserResource.class));
+                    verify(formInputResponsePermissionRules)
+                            .internalUserCanSeeFormInputResponsesForApplications(
+                                    isA(FormInputResponseResource.class), isA(UserResource.class));
+                    verify(formInputResponsePermissionRules)
+                            .consortiumCanSeeTheInputResponsesForTheirOrganisationAndApplication(
+                                    isA(FormInputResponseResource.class), isA(UserResource.class));
+                });
     }
 
     @Override
@@ -106,6 +128,12 @@ public class FormInputServiceSecurityTest extends BaseServiceSecurityTest<FormIn
         @Override
         public ServiceResult<List<FormInputResponseResource>> findResponsesByFormInputIdAndApplicationId(Long formInputId, Long applicationId) {
             return serviceSuccess(newFormInputResponseResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
+        }
+
+        @Override
+        public ServiceResult<FormInputResponseResource> findResponseByApplicationIdAndQuestionName(long applicationId,
+                                                                                                   String questionName) {
+            return serviceSuccess(newFormInputResponseResource().build());
         }
 
         @Override

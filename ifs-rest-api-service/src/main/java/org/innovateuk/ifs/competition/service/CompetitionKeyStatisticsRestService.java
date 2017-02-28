@@ -1,11 +1,10 @@
 package org.innovateuk.ifs.competition.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.competition.resource.*;
 
 /**
- * Interface for retrieving {@link CompetitionKeyStatisticsResource}
+ * Interface for retrieving key statistics about competitions
  */
 public interface CompetitionKeyStatisticsRestService {
     RestResult<CompetitionReadyToOpenKeyStatisticsResource> getReadyToOpenKeyStatisticsByCompetition(long competitionId);

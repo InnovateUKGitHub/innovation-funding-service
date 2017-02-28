@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.assessment.viewmodel;
 
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.List;
 
@@ -10,23 +10,32 @@ import java.util.List;
  */
 public class AssessmentSummaryViewModel {
 
-    private Long assessmentId;
+    private long assessmentId;
+    private long applicationId;
+    private String applicationName;
     private long daysLeft;
     private long daysLeftPercentage;
-    private CompetitionResource competition;
-    private ApplicationResource application;
     private List<AssessmentSummaryQuestionViewModel> questionsForScoreOverview;
     private List<AssessmentSummaryQuestionViewModel> questionsForReview;
     private int totalScoreGiven;
     private int totalScorePossible;
     private int totalScorePercentage;
 
-    public AssessmentSummaryViewModel(Long assessmentId, long daysLeft, long daysLeftPercentage, CompetitionResource competition, ApplicationResource application, List<AssessmentSummaryQuestionViewModel> questionsForScoreOverview, List<AssessmentSummaryQuestionViewModel> questionsForReview, int totalScoreGiven, int totalScorePossible, int totalScorePercentage) {
+    public AssessmentSummaryViewModel(long assessmentId,
+                                      long applicationId,
+                                      String applicationName,
+                                      long daysLeft,
+                                      long daysLeftPercentage,
+                                      List<AssessmentSummaryQuestionViewModel> questionsForScoreOverview,
+                                      List<AssessmentSummaryQuestionViewModel> questionsForReview,
+                                      int totalScoreGiven,
+                                      int totalScorePossible,
+                                      int totalScorePercentage) {
         this.assessmentId = assessmentId;
+        this.applicationId = applicationId;
+        this.applicationName = applicationName;
         this.daysLeft = daysLeft;
         this.daysLeftPercentage = daysLeftPercentage;
-        this.competition = competition;
-        this.application = application;
         this.questionsForScoreOverview = questionsForScoreOverview;
         this.questionsForReview = questionsForReview;
         this.totalScoreGiven = totalScoreGiven;
@@ -34,83 +43,85 @@ public class AssessmentSummaryViewModel {
         this.totalScorePercentage = totalScorePercentage;
     }
 
-    public Long getAssessmentId() {
+    public long getAssessmentId() {
         return assessmentId;
     }
 
-    public void setAssessmentId(Long assessmentId) {
-        this.assessmentId = assessmentId;
+    public long getApplicationId() {
+        return applicationId;
+    }
+
+    public String getApplicationName() {
+        return applicationName;
     }
 
     public long getDaysLeft() {
         return daysLeft;
     }
 
-    public void setDaysLeft(long daysLeft) {
-        this.daysLeft = daysLeft;
-    }
-
     public long getDaysLeftPercentage() {
         return daysLeftPercentage;
-    }
-
-    public void setDaysLeftPercentage(long daysLeftPercentage) {
-        this.daysLeftPercentage = daysLeftPercentage;
-    }
-
-    public CompetitionResource getCompetition() {
-        return competition;
-    }
-
-    public void setCompetition(CompetitionResource competition) {
-        this.competition = competition;
-    }
-
-    public ApplicationResource getApplication() {
-        return application;
-    }
-
-    public void setApplication(ApplicationResource application) {
-        this.application = application;
     }
 
     public List<AssessmentSummaryQuestionViewModel> getQuestionsForScoreOverview() {
         return questionsForScoreOverview;
     }
 
-    public void setQuestionsForScoreOverview(List<AssessmentSummaryQuestionViewModel> questionsForScoreOverview) {
-        this.questionsForScoreOverview = questionsForScoreOverview;
-    }
-
     public List<AssessmentSummaryQuestionViewModel> getQuestionsForReview() {
         return questionsForReview;
-    }
-
-    public void setQuestionsForReview(List<AssessmentSummaryQuestionViewModel> questionsForReview) {
-        this.questionsForReview = questionsForReview;
     }
 
     public int getTotalScoreGiven() {
         return totalScoreGiven;
     }
 
-    public void setTotalScoreGiven(int totalScoreGiven) {
-        this.totalScoreGiven = totalScoreGiven;
-    }
-
     public int getTotalScorePossible() {
         return totalScorePossible;
-    }
-
-    public void setTotalScorePossible(int totalScorePossible) {
-        this.totalScorePossible = totalScorePossible;
     }
 
     public int getTotalScorePercentage() {
         return totalScorePercentage;
     }
 
-    public void setTotalScorePercentage(int totalScorePercentage) {
-        this.totalScorePercentage = totalScorePercentage;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        AssessmentSummaryViewModel that = (AssessmentSummaryViewModel) o;
+
+        return new EqualsBuilder()
+                .append(assessmentId, that.assessmentId)
+                .append(applicationId, that.applicationId)
+                .append(daysLeft, that.daysLeft)
+                .append(daysLeftPercentage, that.daysLeftPercentage)
+                .append(totalScoreGiven, that.totalScoreGiven)
+                .append(totalScorePossible, that.totalScorePossible)
+                .append(totalScorePercentage, that.totalScorePercentage)
+                .append(applicationName, that.applicationName)
+                .append(questionsForScoreOverview, that.questionsForScoreOverview)
+                .append(questionsForReview, that.questionsForReview)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(assessmentId)
+                .append(applicationId)
+                .append(applicationName)
+                .append(daysLeft)
+                .append(daysLeftPercentage)
+                .append(questionsForScoreOverview)
+                .append(questionsForReview)
+                .append(totalScoreGiven)
+                .append(totalScorePossible)
+                .append(totalScorePercentage)
+                .toHashCode();
     }
 }

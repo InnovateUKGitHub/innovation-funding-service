@@ -7,6 +7,7 @@ public abstract class CategoryResource {
     private Long id;
     private String name;
     private String description;
+    private Integer priority;
 
     public CategoryResource() {
     }
@@ -31,6 +32,14 @@ public abstract class CategoryResource {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Integer getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
     }
 
     public abstract CategoryType getType();

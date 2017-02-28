@@ -69,7 +69,7 @@ public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource,
         return withArray((submittedDate, application) -> setField("submittedDate", submittedDate, application), submittedDates);
     }
 
-    public ApplicationResourceBuilder withDuration(Long... durations) {
+    public ApplicationResourceBuilder withDurationInMonths(Long... durations) {
         return withArray((duration, application) -> setField("durationInMonths", duration, application), durations);
     }
 

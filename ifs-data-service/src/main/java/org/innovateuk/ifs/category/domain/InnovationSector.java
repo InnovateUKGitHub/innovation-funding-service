@@ -11,7 +11,7 @@ import java.util.List;
 public class InnovationSector extends ParentCategory<InnovationArea> {
 
     @OneToMany(mappedBy = "sector", cascade = CascadeType.ALL)
-    @OrderBy("name ASC")
+    @OrderBy("priority ASC")
     private List<InnovationArea> children;
 
     public InnovationSector() {

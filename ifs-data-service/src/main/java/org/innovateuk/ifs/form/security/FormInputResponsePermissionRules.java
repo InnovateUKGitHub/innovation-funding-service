@@ -92,7 +92,7 @@ public class FormInputResponsePermissionRules {
     private boolean checkQuestionStatuses(List<QuestionStatus> questionStatuses, UserResource user) {
         Question question = questionStatuses.get(0).getQuestion();
         if (question.getMultipleStatuses()) {
-            return checkIfQuestionIsMarkedByUser(questionStatuses, user);
+            return !checkIfAnyMarkedQuestionByUser(questionStatuses, user);
         } else {
             return !checkIfQuestionIsMarked(questionStatuses);
         }
@@ -122,7 +122,7 @@ public class FormInputResponsePermissionRules {
         return isMarked;
     }
 
-    private boolean checkIfQuestionIsMarkedByUser(List<QuestionStatus> questionStatuses, UserResource user) {
+    private boolean checkIfAnyMarkedQuestionByUser(List<QuestionStatus> questionStatuses, UserResource user) {
         return questionStatuses.stream()
                 .anyMatch(questionStatus -> isMarkedAsComplete(questionStatus) && questionStatus.getMarkedAsCompleteBy().getUser().getId().equals(user.getId()));
     }

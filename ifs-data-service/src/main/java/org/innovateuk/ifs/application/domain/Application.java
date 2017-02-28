@@ -2,7 +2,6 @@ package org.innovateuk.ifs.application.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.category.domain.ApplicationInnovationAreaLink;
 import org.innovateuk.ifs.category.domain.ApplicationResearchCategoryLink;
 import org.innovateuk.ifs.category.domain.InnovationArea;
@@ -43,6 +42,8 @@ public class Application implements ProcessActivity {
     private Boolean resubmission;
     private String previousApplicationNumber;
     private String previousApplicationTitle;
+    private LocalDateTime manageFundingEmailDate;
+
     @Min(0)
     private Long durationInMonths; // in months
     @Min(0)
@@ -106,10 +107,6 @@ public class Application implements ProcessActivity {
 
     protected boolean canEqual(Object other) {
         return other instanceof Application;
-    }
-
-    public String getFormattedId() {
-        return ApplicationResource.formatter.format(id);
     }
 
     public void setId(Long id) {
@@ -186,6 +183,14 @@ public class Application implements ProcessActivity {
                 this.processRoles.add(processRole);
             }
         }
+    }
+
+    public LocalDateTime getManageFundingEmailDate() {
+        return manageFundingEmailDate;
+    }
+
+    public void setManageFundingEmailDate(LocalDateTime manageFundingEmailDate) {
+        this.manageFundingEmailDate = manageFundingEmailDate;
     }
 
     public LocalDate getStartDate() {
