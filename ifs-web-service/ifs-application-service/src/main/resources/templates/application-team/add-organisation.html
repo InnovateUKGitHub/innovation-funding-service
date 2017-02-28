@@ -51,7 +51,8 @@
                                     <input type="text"
                                            th:field="*{applicants[__${applicantStat.index}__].name}"
                                            required="required"
-                                           class="form-control width-full">
+                                           class="form-control width-full"
+                                           th:errorclass="field-error">
                                 </td>
                                 <td>
                                     <label th:for="'applicants'+${applicantStat.index}+'.email'">
@@ -63,7 +64,8 @@
                                     <input type="text"
                                            th:field="*{applicants[__${applicantStat.index}__].email}"
                                            required="required"
-                                           class="form-control width-full">
+                                           class="form-control width-full"
+                                           th:errorclass="field-error">
                                 </td>
                                 <td class="alignright"><button class="add-another-row buttonlink" th:value="${applicantStat.index}" name="removeApplicant" type="submit">Remove</button></td>
                             </tr>
