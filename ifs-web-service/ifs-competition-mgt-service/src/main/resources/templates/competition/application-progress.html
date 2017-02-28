@@ -90,8 +90,8 @@
                                    th:href="${removeActionNonJs}"
                                    th:attr="data-modal-form-action=${removeAction}"
                                    th:with="
-                                   removeAction=@{/competition/{competitionId}/application/{applicationId}/assessors/withdraw/{assessmentId}(competitionId=${model.competitionId},applicationId=${model.applicationId},assessmentId=${assessor.assessmentId},filterInnovationArea=${model.filterInnovationArea})},
-                                   removeActionNonJs=@{/competition/{competitionId}/application/{applicationId}/assessors/withdraw/{assessmentId}/confirm(competitionId=${model.competitionId},applicationId=${model.applicationId},assessmentId=${assessor.assessmentId},filterInnovationArea=${model.filterInnovationArea})}"
+                                   removeAction=@{/competition/{cId}/application/{apId}/assessors/withdraw/{asId}(cId=${model.competitionId},apId=${model.applicationId},asId=${assessor.assessmentId},filterInnovationArea=${model.filterInnovationArea})},
+                                   removeActionNonJs=@{/competition/{cId}/application/{apId}/assessors/withdraw/{asId}/confirm(cId=${model.competitionId},apId=${model.applicationId},asId=${assessor.assessmentId},filterInnovationArea=${model.filterInnovationArea})}"
                                    th:unless="${assessor.submitted}">Remove</a>
                             </td>
                         </tr>

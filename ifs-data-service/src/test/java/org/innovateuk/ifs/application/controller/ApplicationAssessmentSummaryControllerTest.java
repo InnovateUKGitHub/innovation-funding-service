@@ -56,7 +56,7 @@ public class ApplicationAssessmentSummaryControllerTest extends BaseControllerMo
     }
 
     @Test
-    public void getAvailableAssessorsWithParams() throws Exception {
+    public void getAvailableAssessors_WithParams() throws Exception {
         ApplicationAssessorPageResource expected = new ApplicationAssessorPageResource();
 
         Long applicationId = 1L;

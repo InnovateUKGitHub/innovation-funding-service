@@ -39,8 +39,14 @@ public interface CompetitionParticipantRepository extends CrudRepository<Competi
     @Query("SELECT cp FROM CompetitionParticipant cp WHERE cp.competition.id = :compId " +
             "AND cp.role = :role " +
             "AND cp.status = :status " +
-            "AND NOT EXISTS (SELECT 'found' FROM Assessment a WHERE a.participant.user = cp.user AND a.target.id = :appId) " +
-            "AND (:innovationAreaId is null OR EXISTS (SELECT 'area' FROM Profile p JOIN p.innovationAreas ia WHERE p.id = cp.user.profileId AND ia.category.id = :innovationAreaId ))")
+            "AND NOT EXISTS " +
+                "(SELECT 'found' FROM Assessment a WHERE " +
+                "a.participant.user = cp.user " +
+                "AND a.target.id = :appId) " +
+            "AND (:innovationAreaId is null OR EXISTS " +
+                "(SELECT 'area' FROM Profile p JOIN p.innovationAreas ia WHERE " +
+                "p.id = cp.user.profileId " +
+                "AND ia.category.id = :innovationAreaId ))")
     Page<CompetitionParticipant> findParticipantsWithoutAssessments(@Param("compId") Long competitionId,
                                                                     @Param("role") CompetitionParticipantRole role,
                                                                     @Param("status") ParticipantStatus status,
