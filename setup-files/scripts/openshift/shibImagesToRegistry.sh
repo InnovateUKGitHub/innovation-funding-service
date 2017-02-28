@@ -1,8 +1,8 @@
 #!/bin/bash
 
-LDAP_VERSION=0.2.1
-IDP_VERSION=0.3.2
-SP_VERSION=0.3.2
+LDAP_VERSION=0.4.0
+IDP_VERSION=0.4.1
+SP_VERSION=0.4.0
 
 REGISTRY=docker-registry-default.apps.prod.ifs-test-clusters.com
 
@@ -13,6 +13,7 @@ if [ -z shibImages ]; then
 fi
 cd shibImages
 
+eval `ssh-agent -s`
 
 if [ -z $(docker images -q innovateuk/ifs-shib-sp:${SP_VERSION}) ]
 then
@@ -52,7 +53,7 @@ fi
 
 docker tag innovateuk/ifs-shib-idp:${IDP_VERSION} ${REGISTRY}/innovateuk/ifs-shib-idp:${IDP_VERSION}
 docker tag innovateuk/ifs-ldap:${LDAP_VERSION} ${REGISTRY}/innovateuk/ifs-ldap:${LDAP_VERSION}
-docker tag innovateuk/ifs-shib-idp:${SP_VERSION} ${REGISTRY}/innovateuk/ifs-shib-sp:${SP_VERSION}
+docker tag innovateuk/ifs-shib-sp:${SP_VERSION} ${REGISTRY}/innovateuk/ifs-shib-sp:${SP_VERSION}
 
 docker push ${REGISTRY}/innovateuk/ifs-shib-idp:${IDP_VERSION}
 docker push ${REGISTRY}/innovateuk/ifs-ldap:${LDAP_VERSION}

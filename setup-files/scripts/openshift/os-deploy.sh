@@ -63,11 +63,6 @@ function deploy() {
     if [[ ${TARGET} == "local" ]]
     then
         oc adm policy add-scc-to-user anyuid -n $PROJECT -z default
-    elif [[ ${TARGET} == "remote" ]]
-    then
-        chmod 600 setup-files/scripts/openshift/ifs
-        ssh-add setup-files/scripts/openshift/ifs
-        ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ec2-user@52.56.119.142 "oc adm policy add-scc-to-user anyuid -n $PROJECT -z default"
     fi
 
     if [[ ${TARGET} == "production" ]]
@@ -116,22 +111,8 @@ function createProject() {
     done
 }
 
-function checkRemoteConfig() {
-
-    if [  ! -f setup-files/scripts/openshift/ifs ]; then
-        echo "ifs certificate not found."; exit 1;
-    fi
-}
-
-
 # Entry point
 cleanUp
-
-if [[ ${TARGET} == "remote" ]]
-then
-    checkRemoteConfig
-fi
-
 cloneConfig
 tailorAppInstance
 createProject
