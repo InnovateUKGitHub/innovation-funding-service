@@ -56,7 +56,7 @@
       </tr>
     </tbody>
   </table>
-  <th:block th:with="showResearchParticipation=${true}" th:insert="fragments/finance :: research_participation" />
+  <th:block th:with="showResearchParticipation=${true},maxResearchPercentage=${model.financeCheckSummaryResource.competitionMaximumResearchPercentage},researchParticipationPercentage=${model.financeCheckSummaryResource.researchParticipationPercentage}" th:insert="project/financecheck/fragments/finance :: research_participation" />
   <h3 class="heading-medium">Progress</h3>
   <table class="table-progress">
       <thead>
