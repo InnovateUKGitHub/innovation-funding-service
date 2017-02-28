@@ -17,8 +17,7 @@
                 <h1 class="heading-xlarge">Add organisation</h1>
             </div>
 
-            <p>Add applicants or organisations to your application. Before you can invite an organisation you will need to add at least one individual from that organisation.
-                If an organisation only has one individual you wish to remove, you must add a replacement individual before you can remove the first one.</p>
+            <p>Add organisations to your application team. If you wish to remove a sole member of an organisation, you must add a replacement member first.</p>
 
             <form th:action="@{/application/{applicationId}/team/addOrganisation(applicationId=${model.applicationId})}" th:object="${form}" method="post" novalidate="novalidate">
                 <div th:class="${#fields.hasErrors('organisationName')}? 'form-group error':'form-group'">
@@ -32,7 +31,6 @@
                 </div>
 
                 <fieldset class="extra-margin-top">
-                    <legend class="heading-medium">New applicant</legend>
                     <table class="table-overflow">
                         <thead>
                             <tr>
