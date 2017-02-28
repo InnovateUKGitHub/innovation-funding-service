@@ -24,7 +24,7 @@ import javax.validation.Valid;
 @RequestMapping(ApplicationFormController.APPLICATION_BASE_URL+"{applicationId}/form/question/{questionId}/innovation-area")
 @PreAuthorize("hasAuthority('applicant')")
 public class InnovationAreaController {
-    static String APPLICATION_SAVED_MESSAGE = "applicationSaved";
+    private static String APPLICATION_SAVED_MESSAGE = "applicationSaved";
 
     @Autowired
     private ApplicationInnovationAreaPopulator innovationAreaPopulator;

@@ -2,24 +2,27 @@ package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.InnovationSector;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
+import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.category.builder.InnovationSectorBuilder.newInnovationSector;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class ApplicationInnovationAreaServiceImplTest extends BaseServiceUnitTest<ApplicationInnovationAreaService> {
@@ -39,25 +42,28 @@ public class ApplicationInnovationAreaServiceImplTest extends BaseServiceUnitTes
        InnovationSector innovationSector = newInnovationSector().withChildren(innovationAreas).build();
        Competition competition = newCompetition().withInnovationSector(innovationSector).build();
 
+       List<InnovationAreaResource> expectedInnovationAreas = newInnovationAreaResource().withId(1L,2L,3L).build(3);
+
        Application application = newApplication()
                .withId(1L)
                .withCompetition(competition).build();
 
        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
+       when(innovationAreaMapperMock.mapToResource(innovationAreas)).thenReturn(expectedInnovationAreas);
 
-       ServiceResult<List<InnovationArea>> result = service.getAvailableInnovationAreas(applicationId);
+       ServiceResult<List<InnovationAreaResource>> result = service.getAvailableInnovationAreas(applicationId);
 
        assertTrue(result.isSuccess());
-       assertEquals(innovationAreas, result.getSuccessObject());
+       assertEquals(expectedInnovationAreas, result.getSuccessObject());
     }
 
     @Test
-    public void getAvailableInnovationAreas_applictionDoesNotExistShouldResultInError() throws Exception {
+    public void getAvailableInnovationAreas_applicationDoesNotExistShouldResultInError() throws Exception {
         Long applicationId = 1L;
 
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(null);
 
-        ServiceResult<List<InnovationArea>> result = service.getAvailableInnovationAreas(1L);
+        ServiceResult<List<InnovationAreaResource>> result = service.getAvailableInnovationAreas(1L);
 
         assertTrue(result.isFailure());
         assertEquals(result.getFailure().getErrors().get(0).getErrorKey(), CommonFailureKeys.GENERAL_NOT_FOUND.getErrorKey());
@@ -72,7 +78,7 @@ public class ApplicationInnovationAreaServiceImplTest extends BaseServiceUnitTes
 
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
 
-        ServiceResult<List<InnovationArea>> result = service.getAvailableInnovationAreas(1L);
+        ServiceResult<List<InnovationAreaResource>> result = service.getAvailableInnovationAreas(1L);
 
         assertTrue(result.isFailure());
         assertEquals(CommonFailureKeys.GENERAL_NOT_FOUND.getErrorKey(), result.getFailure().getErrors().get(0).getErrorKey());
@@ -90,7 +96,7 @@ public class ApplicationInnovationAreaServiceImplTest extends BaseServiceUnitTes
 
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
 
-        ServiceResult<List<InnovationArea>> result = service.getAvailableInnovationAreas(1L);
+        ServiceResult<List<InnovationAreaResource>> result = service.getAvailableInnovationAreas(1L);
 
         assertTrue(result.isFailure());
         assertEquals(CommonFailureKeys.GENERAL_NOT_FOUND.getErrorKey(), result.getFailure().getErrors().get(0).getErrorKey());
@@ -109,7 +115,7 @@ public class ApplicationInnovationAreaServiceImplTest extends BaseServiceUnitTes
 
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
 
-        ServiceResult<List<InnovationArea>> result = service.getAvailableInnovationAreas(1L);
+        ServiceResult<List<InnovationAreaResource>> result = service.getAvailableInnovationAreas(1L);
 
         assertTrue(result.isFailure());
         assertEquals(CommonFailureKeys.GENERAL_NOT_FOUND.getErrorKey(), result.getFailure().getErrors().get(0).getErrorKey());
@@ -131,7 +137,7 @@ public class ApplicationInnovationAreaServiceImplTest extends BaseServiceUnitTes
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
         when(applicationRepositoryMock.save(expectedApplication)).thenReturn(expectedApplication);
 
-        ServiceResult<Application> result = service.setInnovationArea(applicationId, innovationAreaIdOne);
+        ServiceResult<ApplicationResource> result = service.setInnovationArea(applicationId, innovationAreaIdOne);
 
         assertTrue(result.isSuccess());
 
@@ -148,7 +154,7 @@ public class ApplicationInnovationAreaServiceImplTest extends BaseServiceUnitTes
         Application expectedApplication = newApplication().withId(applicationId).withInnovationArea(innovationArea).build();
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(null);
 
-        ServiceResult<Application> result = service.setInnovationArea(applicationId ,innovationAreaId);
+        ServiceResult<ApplicationResource> result = service.setInnovationArea(applicationId ,innovationAreaId);
 
         assertTrue(result.isFailure());
 
@@ -169,7 +175,7 @@ public class ApplicationInnovationAreaServiceImplTest extends BaseServiceUnitTes
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
         when(applicationRepositoryMock.save(expectedApplication)).thenReturn(expectedApplication);
 
-        ServiceResult<Application> result = service.setInnovationArea(applicationId ,innovationAreaId);
+        ServiceResult<ApplicationResource> result = service.setInnovationArea(applicationId ,innovationAreaId);
 
         assertTrue(result.isFailure());
         verify(applicationRepositoryMock, times(0)).save(any(Application.class));
@@ -194,7 +200,7 @@ public class ApplicationInnovationAreaServiceImplTest extends BaseServiceUnitTes
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
         when(applicationRepositoryMock.save(expectedApplication)).thenReturn(expectedApplication);
 
-        ServiceResult<Application> result = service.setInnovationArea(applicationId, disallowedInnovationAreaId);
+        ServiceResult<ApplicationResource> result = service.setInnovationArea(applicationId, disallowedInnovationAreaId);
 
         assertTrue(result.isFailure());
 
@@ -209,10 +215,13 @@ public class ApplicationInnovationAreaServiceImplTest extends BaseServiceUnitTes
         Application application = newApplication().withId(applicationId).build();
 
         Application expectedApplication = newApplication().withId(applicationId).withNoInnovationAreaApplicable(true).build();
+        ApplicationResource expectedApplicationResource = newApplicationResource().withId(applicationId).withNoInnovationAreaApplicable(true).build();
+
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
         when(applicationRepositoryMock.save(any(Application.class))).thenReturn(expectedApplication);
+        when(applicationMapperMock.mapToResource(expectedApplication)).thenReturn(expectedApplicationResource);
 
-        ServiceResult<Application> result = service.setNoInnovationAreaApplies(applicationId);
+        ServiceResult<ApplicationResource> result = service.setNoInnovationAreaApplies(applicationId);
 
         assertTrue(result.isSuccess());
         assertNull(result.getSuccessObject().getInnovationArea());
