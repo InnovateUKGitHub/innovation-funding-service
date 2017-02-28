@@ -52,6 +52,7 @@ docker-compose -f ../../../docker-compose-services.yml exec -T ldap /usr/local/b
 for user in $(mysql ifs -uroot -ppassword -hifs-database -N -s -e "select email from user;" 2>/dev/null)
 do
     addUserToShibboleth ${user} &
+    sleep 1
 done
 wait
 cat <<'END'
