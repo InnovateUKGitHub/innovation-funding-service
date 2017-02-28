@@ -3,6 +3,7 @@ package org.innovateuk.ifs.competitionsetup.service;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
@@ -16,6 +17,7 @@ import org.innovateuk.ifs.competitionsetup.service.modelpopulator.CompetitionSet
 import org.innovateuk.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSectionSaver;
 import org.innovateuk.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSubsectionSaver;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -23,6 +25,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 @Service
@@ -209,7 +212,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 	public ServiceResult<Void> setCompetitionAsReadyToOpen(Long competitionId) {
 		CompetitionResource competitionResource = competitionService.getById(competitionId);
 		if (competitionResource.getCompetitionStatus() == CompetitionStatus.READY_TO_OPEN) {
-            return null;
+            return serviceFailure(new Error("competition.setup.is.already.ready.to.open", HttpStatus.BAD_REQUEST));
 		}
 
 		if (isCompetitionReadyToOpen(competitionResource)) {
