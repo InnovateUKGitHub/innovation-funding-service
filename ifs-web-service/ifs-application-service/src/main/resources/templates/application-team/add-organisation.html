@@ -23,9 +23,9 @@
                 <div th:class="${#fields.hasErrors('organisationName')}? 'form-group error':'form-group'">
                     <label class="form-label-bold" for="organisationName">
                         Organisation name
-                        <span th:if="${#fields.hasErrors('organisationName')}" th:remove="tag">
-                            <span class="error-message"  th:each="err : ${#fields.errors('organisationName')}" th:text="${err}" />
-                        </span>
+                        <th:block th:if="${#fields.hasErrors('organisationName')}">
+                            <span class="error-message" th:each="err : ${#fields.errors('organisationName')}" th:text="${err}" />
+                        </th:block>
                     </label>
                     <input class="form-control width-full" type="text" th:field="*{organisationName}" />
                 </div>
@@ -44,7 +44,7 @@
                                 <td>
                                     <label th:for="'applicants'+${applicantStat.index}+'.name'">
                                         <span class="visually-hidden">Name</span>
-                                        <th:block th:if="${#fields.hasErrors('applicants[__${applicantStat.index}__].name')}" th:remove="tag">
+                                        <th:block th:if="${#fields.hasErrors('applicants[__${applicantStat.index}__].name')}">
                                             <span class="error-message"  th:each="err : ${#fields.errors('applicants[__${applicantStat.index}__].name')}" th:text="${err}">Please enter a name</span>
                                         </th:block>
                                     </label>
@@ -57,7 +57,7 @@
                                 <td>
                                     <label th:for="'applicants'+${applicantStat.index}+'.email'">
                                         <span class="visually-hidden">Email</span>
-                                        <th:block th:if="${#fields.hasErrors('applicants[__${applicantStat.index}__].email')}" th:remove="tag">
+                                        <th:block th:if="${#fields.hasErrors('applicants[__${applicantStat.index}__].email')}">
                                             <span class="error-message"  th:each="err : ${#fields.errors('applicants[__${applicantStat.index}__].email')}" th:text="${err}">Please enter a name</span>
                                         </th:block>
                                     </label>

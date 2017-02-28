@@ -17,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -57,7 +58,7 @@ public class ApplicationTeamAddOrganisationController {
     @RequestMapping(value = "/addOrganisation", method = RequestMethod.POST)
     public String submitAddOrganisation(Model model,
                                         @PathVariable("applicationId") long applicationId,
-                                        @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamAddOrganisationForm form,
+                                        @Valid @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamAddOrganisationForm form,
                                         @SuppressWarnings("unused") BindingResult bindingResult,
                                         ValidationHandler validationHandler) {
 
@@ -65,7 +66,7 @@ public class ApplicationTeamAddOrganisationController {
 
         ApplicationResource applicationResource = applicationService.getById(applicationId);
 
-        Supplier<String> failureView = () -> getAddOrganisation(model, applicationId, form);
+        Supplier<String> failureView = () -> getAddOrganisation(model, applicationResource.getId(), form);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ServiceResult<InviteResultsResource> updateResult = inviteRestService.createInvitesByInviteOrganisation(

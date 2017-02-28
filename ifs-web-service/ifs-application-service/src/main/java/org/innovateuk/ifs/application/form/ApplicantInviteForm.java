@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
  */
 public class ApplicantInviteForm {
 
-    @NotEmpty(message = "{validation.field.must.not.be.blank}")
+    @NotEmpty(message = "{validation.standard.name.required}")
     private String name;
 
     @NotEmpty(message = "{validation.invite.email.required}")
