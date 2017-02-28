@@ -5,8 +5,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 
-import java.util.List;
-
 public class ApplicationTeamManagementViewModel {
 
     private long applicationId;
@@ -14,11 +12,12 @@ public class ApplicationTeamManagementViewModel {
     private UserResource leadApplicant;
     private OrganisationResource leadOrganisation;
     private OrganisationResource selectedOrganisation;
-    private List<ApplicationTeamManagementOrganisationRowViewModel> organisations;
+    private ApplicationTeamManagementOrganisationViewModel organisation;
     private UserResource authenticatedUser;
     private Long authenticatedUserOrganisation;
+    private long selectedOrgIndex;
 
-    public ApplicationTeamManagementViewModel(long applicationId, String applicationName, UserResource leadApplicant, OrganisationResource leadOrganisation, OrganisationResource selectedOrganisation, UserResource authenticatedUser, Long authenticatedUserOrganisation, List<ApplicationTeamManagementOrganisationRowViewModel> organisations) {
+    public ApplicationTeamManagementViewModel(long applicationId, String applicationName, UserResource leadApplicant, OrganisationResource leadOrganisation, OrganisationResource selectedOrganisation, UserResource authenticatedUser, Long authenticatedUserOrganisation, ApplicationTeamManagementOrganisationViewModel organisation, long selectedOrgIndex) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
         this.leadApplicant = leadApplicant;
@@ -26,7 +25,8 @@ public class ApplicationTeamManagementViewModel {
         this.selectedOrganisation = selectedOrganisation;
         this.authenticatedUser = authenticatedUser;
         this.authenticatedUserOrganisation = authenticatedUserOrganisation;
-        this.organisations = organisations;
+        this.organisation = organisation;
+        this.selectedOrgIndex = selectedOrgIndex;
     }
 
     public long getApplicationId() {
@@ -69,12 +69,12 @@ public class ApplicationTeamManagementViewModel {
         this.selectedOrganisation = selectedOrganisation;
     }
 
-    public List<ApplicationTeamManagementOrganisationRowViewModel> getOrganisations() {
-        return organisations;
+    public ApplicationTeamManagementOrganisationViewModel getOrganisation() {
+        return organisation;
     }
 
-    public void setOrganisations(List<ApplicationTeamManagementOrganisationRowViewModel> organisations) {
-        this.organisations = organisations;
+    public void setOrganisation(ApplicationTeamManagementOrganisationViewModel organisations) {
+        this.organisation = organisation;
     }
 
     public UserResource getAuthenticatedUser() {
@@ -93,6 +93,10 @@ public class ApplicationTeamManagementViewModel {
         this.authenticatedUserOrganisation = authenticatedUserOrganisation;
     }
 
+    public long getSelectedOrgIndex() {
+        return selectedOrgIndex;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -103,13 +107,14 @@ public class ApplicationTeamManagementViewModel {
 
         return new EqualsBuilder()
                 .append(applicationId, that.applicationId)
-                .append(authenticatedUserOrganisation, that.authenticatedUserOrganisation)
+                .append(selectedOrgIndex, that.selectedOrgIndex)
                 .append(applicationName, that.applicationName)
                 .append(leadApplicant, that.leadApplicant)
                 .append(leadOrganisation, that.leadOrganisation)
                 .append(selectedOrganisation, that.selectedOrganisation)
-                .append(organisations, that.organisations)
+                .append(organisation, that.organisation)
                 .append(authenticatedUser, that.authenticatedUser)
+                .append(authenticatedUserOrganisation, that.authenticatedUserOrganisation)
                 .isEquals();
     }
 
@@ -121,9 +126,10 @@ public class ApplicationTeamManagementViewModel {
                 .append(leadApplicant)
                 .append(leadOrganisation)
                 .append(selectedOrganisation)
-                .append(organisations)
+                .append(organisation)
                 .append(authenticatedUser)
                 .append(authenticatedUserOrganisation)
+                .append(selectedOrgIndex)
                 .toHashCode();
     }
 }

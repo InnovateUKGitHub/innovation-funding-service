@@ -166,7 +166,7 @@ public class ApplicationTeamManagementController {
                     applicationService.updateStatus(application.getId(), ApplicationStatusConstants.OPEN.getId());
                     return ApplicationController.redirectToApplication(application);
                 }
-                return format("redirect:/application/%d/contributors", applicationId);
+                return format("redirect:/application/%d/team", applicationId);
             } else {
                 saveFormValuesToCookie(response, contributorsForm, applicationId);
             }

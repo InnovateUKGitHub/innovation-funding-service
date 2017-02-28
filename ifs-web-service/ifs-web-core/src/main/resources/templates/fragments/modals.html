@@ -490,18 +490,14 @@
 
         <div class="grid-row extra-margin">
             <form method="post" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${contributorsForm}" id="submit-add-collaborator-form">
-                <th:block th:each="organisationInviteForm, organisationStats: ${contributorsForm.organisations}" th:attr="data-invite-org=${organisationStats.index}">
-                    <th:block th:if="${selectedOrganisation!= null and organisationInviteForm.organisationId == selectedOrganisation.id}">
-                        <input type="hidden" class="form-control width-full" th:field="*{organisations[__${organisationStats.index}__].organisationId}" />
-                        <input type="hidden" class="form-control width-full" th:field="*{organisations[__${organisationStats.index}__].organisationInviteId}" />
-                        <div class="column-half">
-                            <button type="button" class="js-close buttonlink large">Cancel</button>
-                        </div>
-                        <div class="column-half alignright-button">
-                            <button class="button large" name="save_contributors" value="save_contributors" type="submit">Update organisation</button>
-                        </div>
-                    </th:block>
-                </th:block>
+                <input type="hidden" class="form-control width-full" th:field="${contributorsForm.organisations[__${model.selectedOrgIndex}__].organisationId}" />
+                <input type="hidden" class="form-control width-full" th:field="${contributorsForm.organisations[__${model.selectedOrgIndex}__].organisationInviteId}" />
+                <div class="column-half">
+                    <button type="button" class="js-close buttonlink large">Cancel</button>
+                </div>
+                <div class="column-half alignright-button">
+                    <button class="button large" name="save_contributors" value="save_contributors" type="submit">Update organisation</button>
+                </div>
             </form>
         </div>
     </div>
@@ -536,19 +532,15 @@
         <hr />
 
         <form method="post" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${contributorsForm}" id="submit-delete-organisation-form">
-            <th:block th:each="organisationInviteForm, organisationStats: ${contributorsForm.organisations}" th:attr="data-invite-org=${organisationStats.index}">
-                <th:block th:if="${selectedOrganisation != null and organisationInviteForm.organisationId == selectedOrganisation.id}">
-                    <input type="hidden" class="form-control width-full" th:field="*{organisations[__${organisationStats.index}__].organisationId}" />
-                    <input type="hidden" class="form-control width-full" th:field="*{organisations[__${organisationStats.index}__].organisationInviteId}" />
+            <input type="hidden" class="form-control width-full" th:field="${contributorsForm.organisations[__${model.selectedOrgIndex}__].organisationId}" />
+            <input type="hidden" class="form-control width-full" th:field="${contributorsForm.organisations[__${model.selectedOrgIndex}__].organisationInviteId}" />
 
-                    <div class="column-half">
-                        <button type="button" class="js-close buttonlink large">Cancel</button>
-                    </div>
-                    <div class="column-half alignright-button">
-                        <button class="button large" name="remove_person" value="remove_person" type="submit">Delete organisation</button>
-                    </div>
-                </th:block>
-            </th:block>
+            <div class="column-half">
+                <button type="button" class="js-close buttonlink large">Cancel</button>
+            </div>
+            <div class="column-half alignright-button">
+                <button class="button large" name="remove_person" value="remove_person" type="submit">Delete organisation</button>
+            </div>
         </form>
     </div>
 </th:block>

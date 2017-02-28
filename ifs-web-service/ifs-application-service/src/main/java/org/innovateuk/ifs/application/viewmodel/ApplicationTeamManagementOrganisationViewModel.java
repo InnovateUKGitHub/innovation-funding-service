@@ -5,14 +5,14 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.List;
 
-public class ApplicationTeamManagementOrganisationRowViewModel {
+public class ApplicationTeamManagementOrganisationViewModel {
 
     private long id;
     private String name;
     private boolean lead;
     private List<ApplicationTeamManagementApplicantRowViewModel> applicants;
 
-    public ApplicationTeamManagementOrganisationRowViewModel(long id, String name, boolean lead, List<ApplicationTeamManagementApplicantRowViewModel> applicants) {
+    public ApplicationTeamManagementOrganisationViewModel(long id, String name, boolean lead, List<ApplicationTeamManagementApplicantRowViewModel> applicants) {
         this.id = id;
         this.name = name;
         this.lead = lead;
@@ -45,7 +45,7 @@ public class ApplicationTeamManagementOrganisationRowViewModel {
             return false;
         }
 
-        ApplicationTeamManagementOrganisationRowViewModel that = (ApplicationTeamManagementOrganisationRowViewModel) o;
+        ApplicationTeamManagementOrganisationViewModel that = (ApplicationTeamManagementOrganisationViewModel) o;
 
         return new EqualsBuilder()
                 .append(id, that.id)

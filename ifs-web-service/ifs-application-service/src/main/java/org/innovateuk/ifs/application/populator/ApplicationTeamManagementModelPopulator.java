@@ -6,7 +6,7 @@ import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.viewmodel.ApplicationTeamManagementApplicantRowViewModel;
-import org.innovateuk.ifs.application.viewmodel.ApplicationTeamManagementOrganisationRowViewModel;
+import org.innovateuk.ifs.application.viewmodel.ApplicationTeamManagementOrganisationViewModel;
 import org.innovateuk.ifs.application.viewmodel.ApplicationTeamManagementViewModel;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
@@ -49,27 +49,29 @@ public class ApplicationTeamManagementModelPopulator {
         OrganisationResource leadOrganisation = organisationService.getOrganisationById(leadApplicantProcessRole.getOrganisationId());
         UserResource leadApplicant = userService.findById(leadApplicantProcessRole.getUser());
         OrganisationResource selectedOrganisation = organisationId != null ? organisationService.getOrganisationById(organisationId) : null;
+        long selectedOrgIndex = 0;
 
         return new ApplicationTeamManagementViewModel(application.getId(), application.getApplicationDisplayName(), leadApplicant,
                 leadOrganisation, selectedOrganisation, user, authenticatedUserOrganisationId,
-                getOrganisationViewModels(application));
+                getOrganisationViewModel(application, selectedOrganisation.getId()), selectedOrgIndex);
     }
 
-    private List<ApplicationTeamManagementOrganisationRowViewModel> getOrganisationViewModels(ApplicationResource application) {
+    private ApplicationTeamManagementOrganisationViewModel getOrganisationViewModel(ApplicationResource application, Long selectedOrgId) {
         OrganisationResource leadOrganisation = getLeadOrganisation(application);
 
         List<InviteOrganisationResource> inviteOrganisationResources = getOrganisationInvites(application, leadOrganisation.getId());
 
-        List<ApplicationTeamManagementOrganisationRowViewModel> organisationRowViewModelsForInvites = inviteOrganisationResources
+        List<ApplicationTeamManagementOrganisationViewModel> organisationRowViewModelsForInvites = inviteOrganisationResources
                 .stream().map(inviteOrganisationResource -> getOrganisationViewModel(inviteOrganisationResource,
                         leadOrganisation.getId())).collect(toList());
 
-        if (!organisationInvitesContainsLeadOrganisation(
-                inviteOrganisationResources, leadOrganisation.getId())) {
+        if (!organisationInvitesContainsLeadOrganisation(inviteOrganisationResources, leadOrganisation.getId())) {
             organisationRowViewModelsForInvites = appendLeadOrganisation(organisationRowViewModelsForInvites, leadOrganisation);
         }
 
-        return appendLeadApplicant(organisationRowViewModelsForInvites, application);
+        List<ApplicationTeamManagementOrganisationViewModel> allOrganisations = appendLeadApplicant(organisationRowViewModelsForInvites, application);
+
+        return allOrganisations.stream().filter(org -> org.getId() == selectedOrgId).findFirst().get();
     }
 
     private boolean organisationInvitesContainsLeadOrganisation(List<InviteOrganisationResource> inviteOrganisationResources,
@@ -85,26 +87,26 @@ public class ApplicationTeamManagementModelPopulator {
         return inviteOrganisationResources;
     }
 
-    private List<ApplicationTeamManagementOrganisationRowViewModel> appendLeadOrganisation(
-            List<ApplicationTeamManagementOrganisationRowViewModel> organisationRowViewModels, OrganisationResource leadOrganisation) {
-        organisationRowViewModels.add(0, new ApplicationTeamManagementOrganisationRowViewModel(leadOrganisation.getId(),
+    private List<ApplicationTeamManagementOrganisationViewModel> appendLeadOrganisation(
+            List<ApplicationTeamManagementOrganisationViewModel> organisationRowViewModels, OrganisationResource leadOrganisation) {
+        organisationRowViewModels.add(0, new ApplicationTeamManagementOrganisationViewModel(leadOrganisation.getId(),
                 leadOrganisation.getName(), true, new ArrayList<>()));
         return organisationRowViewModels;
     }
 
-    private List<ApplicationTeamManagementOrganisationRowViewModel> appendLeadApplicant(
-                List<ApplicationTeamManagementOrganisationRowViewModel> organisationRowViewModels,
+    private List<ApplicationTeamManagementOrganisationViewModel> appendLeadApplicant(
+                List<ApplicationTeamManagementOrganisationViewModel> organisationRowViewModels,
                 ApplicationResource applicationResource) {
 
-        organisationRowViewModels.stream().filter(ApplicationTeamManagementOrganisationRowViewModel::isLead).findFirst().ifPresent(
+        organisationRowViewModels.stream().filter(ApplicationTeamManagementOrganisationViewModel::isLead).findFirst().ifPresent(
                 applicationTeamOrganisationRowViewModel -> applicationTeamOrganisationRowViewModel.getApplicants().add(0,
                         getLeadApplicantViewModel(getLeadApplicant(applicationResource))));
         return organisationRowViewModels;
     }
 
-    private ApplicationTeamManagementOrganisationRowViewModel getOrganisationViewModel(InviteOrganisationResource inviteOrganisationResource, long leadOrganisationId) {
+    private ApplicationTeamManagementOrganisationViewModel getOrganisationViewModel(InviteOrganisationResource inviteOrganisationResource, long leadOrganisationId) {
         boolean lead = leadOrganisationId == inviteOrganisationResource.getOrganisation();
-        return new ApplicationTeamManagementOrganisationRowViewModel(inviteOrganisationResource.getOrganisation(),
+        return new ApplicationTeamManagementOrganisationViewModel(inviteOrganisationResource.getOrganisation(),
                 getOrganisationName(inviteOrganisationResource), lead, inviteOrganisationResource.getInviteResources()
                 .stream().map(this::getApplicantViewModel).collect(toList()));
     }
