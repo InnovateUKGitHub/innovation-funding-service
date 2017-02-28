@@ -41,7 +41,7 @@ public class ProjectFinanceAttachmentRestServiceTest extends BaseRestServiceUnit
         setupFileUploadWithRestResultExpectations(url, AttachmentResource.class,
                 fileContentString, contentType, fileContent.length, expected, CREATED);
 
-        final AttachmentResource response = service.upload(contentType, fileContent.length, originalFilename, fileContent).getSuccessObject();
+        final AttachmentResource response = service.upload(77L, contentType, fileContent.length, originalFilename, fileContent).getSuccessObject();
         assertSame(expected, response);
     }
 

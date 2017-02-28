@@ -51,7 +51,6 @@ public class ProjectResourceTest {
         assertEquals(projectResource.getName(), name);
         assertEquals(projectResource.getDurationInMonths(), duration);
         assertEquals(projectResource.getApplication(), applicationResource.getId());
-        assertEquals(projectResource.getFormattedId(), "00000001");
         assertEquals(projectResource.getProjectUsers(), projectUsers);
     }
 
