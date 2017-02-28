@@ -68,4 +68,10 @@ public class FormInputResponseServiceImpl implements FormInputResponseService {
     public RestResult<List<FormInputResponseResource>> getByFormInputIdAndApplication(Long formInputId, Long applicationId) {
         return responseRestService.getByFormInputIdAndApplication(formInputId, applicationId);
     }
+
+    @Override
+    public FormInputResponseResource getByApplicationIdAndQuestionName(long applicationId, String questionName) {
+        return responseRestService.getByApplicationIdAndQuestionName(applicationId, questionName)
+                .getSuccessObjectOrThrowException();
+    }
 }
