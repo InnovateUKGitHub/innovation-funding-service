@@ -490,8 +490,8 @@
 
         <div class="grid-row extra-margin">
             <form method="post" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${contributorsForm}" id="submit-add-collaborator-form">
-                <input type="hidden" class="form-control width-full" th:field="${contributorsForm.organisations[__${model.selectedOrgIndex}__].organisationId}" />
-                <input type="hidden" class="form-control width-full" th:field="${contributorsForm.organisations[__${model.selectedOrgIndex}__].organisationInviteId}" />
+                <input type="hidden" class="form-control width-full" th:field="${contributorsForm.organisations[0].organisationId}" />
+                <input type="hidden" class="form-control width-full" th:field="${contributorsForm.organisations[0].organisationInviteId}" />
                 <div class="column-half">
                     <button type="button" class="js-close buttonlink large">Cancel</button>
                 </div>
@@ -532,8 +532,8 @@
         <hr />
 
         <form method="post" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${contributorsForm}" id="submit-delete-organisation-form">
-            <input type="hidden" class="form-control width-full" th:field="${contributorsForm.organisations[__${model.selectedOrgIndex}__].organisationId}" />
-            <input type="hidden" class="form-control width-full" th:field="${contributorsForm.organisations[__${model.selectedOrgIndex}__].organisationInviteId}" />
+            <input type="hidden" class="form-control width-full" th:field="${contributorsForm.organisations[0].organisationId}" />
+            <input type="hidden" class="form-control width-full" th:field="${contributorsForm.organisations[0].organisationInviteId}" />
 
             <div class="column-half">
                 <button type="button" class="js-close buttonlink large">Cancel</button>

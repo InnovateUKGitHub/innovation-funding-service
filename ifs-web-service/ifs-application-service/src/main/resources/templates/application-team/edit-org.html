@@ -38,8 +38,8 @@
             </ul>
         </div>
 
-                <input type="hidden" class="form-control width-full" th:field="${contributorsForm.organisations[__${model.selectedOrgIndex}__].organisationId}" />
-                <input type="hidden" class="form-control width-full" th:field="${contributorsForm.organisations[__${model.selectedOrgIndex}__].organisationInviteId}" />
+                <input type="hidden" class="form-control width-full" th:field="${contributorsForm.organisations[0].organisationId}" />
+                <input type="hidden" class="form-control width-full" th:field="${contributorsForm.organisations[0].organisationInviteId}" />
 
 
                 <h2 class="heading-medium">
@@ -65,24 +65,24 @@
                         </td>
                     </tr>
 
-                    <tr th:each="user, userStats: ${contributorsForm.organisations[__${model.selectedOrgIndex}__].invites}">
-                        <td th:class="${#fields.hasErrors('organisations[__${model.selectedOrgIndex}__].invites[__${userStats.index}__].personName') ? 'form-group error' : 'form-group'}" th:unless="${user.getInviteStatus() != null}">
+                    <tr th:each="user, userStats: ${contributorsForm.organisations[0].invites}">
+                        <td th:class="${#fields.hasErrors('organisations[0].invites[__${userStats.index}__].personName') ? 'form-group error' : 'form-group'}" th:unless="${user.getInviteStatus() != null}">
                             <label th:for="'organisations'+${model.selectedOrgIndex}+'.invites'+${userStats.index}+'.personName'">
                                 <span class="visuallyhidden">Name</span>
-                                <th:block th:if="${#fields.hasErrors('organisations[__${model.selectedOrgIndex}__].invites[__${userStats.index}__].personName')}" th:remove="tag">
-                                    <span class="error-message"  th:each="err : ${#fields.errors('organisations[__${model.selectedOrgIndex}__].invites[__${userStats.index}__].personName')}" th:text="${err}">Please enter a name</span>
+                                <th:block th:if="${#fields.hasErrors('organisations[0].invites[__${userStats.index}__].personName')}" th:remove="tag">
+                                    <span class="error-message"  th:each="err : ${#fields.errors('organisations[0].invites[__${userStats.index}__].personName')}" th:text="${err}">Please enter a name</span>
                                 </th:block>
                             </label>
-                            <input type="text" class="form-control width-full" placeholder="name" th:errorclass="field-error" th:field="*{organisations[__${model.selectedOrgIndex}__].invites[__${userStats.index}__].personName}" />
+                            <input type="text" class="form-control width-full" placeholder="name" th:errorclass="field-error" th:field="*{organisations[0].invites[__${userStats.index}__].personName}" />
                         </td>
-                        <td th:unless="${user.getInviteStatus() != null}" th:class="${#fields.hasErrors('organisations[__${model.selectedOrgIndex}__].invites[__${userStats.index}__].email') ? 'form-group error' : 'form-group'}">
+                        <td th:unless="${user.getInviteStatus() != null}" th:class="${#fields.hasErrors('organisations[0].invites[__${userStats.index}__].email') ? 'form-group error' : 'form-group'}">
                             <label th:for="'organisations'+${model.selectedOrgIndex}+'.invites'+${userStats.index}+'.email'">
                                 <span class="visuallyhidden">email</span>
-                                <th:block th:if="${#fields.hasErrors('organisations[__${model.selectedOrgIndex}__].invites[__${userStats.index}__].email')}" th:remove="tag">
-                                    <span class="error-message"  th:each="err : ${#fields.errors('organisations[__${model.selectedOrgIndex}__].invites[__${userStats.index}__].email')}" th:text="${err}">Please enter an email</span>
+                                <th:block th:if="${#fields.hasErrors('organisations[0].invites[__${userStats.index}__].email')}" th:remove="tag">
+                                    <span class="error-message"  th:each="err : ${#fields.errors('organisations[0].invites[__${userStats.index}__].email')}" th:text="${err}">Please enter an email</span>
                                 </th:block>
                             </label>
-                            <input type="email" class="form-control width-full" placeholder="name@company.co.uk" th:errorclass="field-error" th:field="*{organisations[__${model.selectedOrgIndex}__].invites[__${userStats.index}__].email}" />
+                            <input type="email" class="form-control width-full" placeholder="name@company.co.uk" th:errorclass="field-error" th:field="*{organisations[0].invites[__${userStats.index}__].email}" />
                         </td>
                         <td class="form-group " th:if="${user.getInviteStatus() != null}">
                             <span th:text="${user.personName}"></span>

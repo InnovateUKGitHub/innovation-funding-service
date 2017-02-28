@@ -34,8 +34,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
+import static java.util.stream.Collectors.toList;
 
 /**
  * This controller will handle all requests that are related to the management of application participants
@@ -90,7 +92,7 @@ public class ApplicationTeamManagementController {
 
         List<InviteOrganisationResource> savedInvites = getSavedInviteOrganisations(application);
         Long authenticatedUserOrganisationId = getAuthenticatedUserOrganisationId(user, savedInvites);
-        addSavedInvitesToForm(contributorsForm, leadOrganisation, savedInvites);
+        addSavedInvitesToForm(contributorsForm, leadOrganisation, savedInvites, organisationId);
         mergeAndValidateCookieData(request, response, bindingResult, contributorsForm, applicationId, application, leadApplicant);
 
         model.addAttribute("model", applicationTeamManagementModelPopulator.populateModel(applicationId, organisationId, user, authenticatedUserOrganisationId));
@@ -273,7 +275,7 @@ public class ApplicationTeamManagementController {
     /**
      * Add the invites from the database, to the ContributorsForm object.
      */
-    private void addSavedInvitesToForm(ContributorsForm contributorsForm, OrganisationResource leadOrganisation, List<InviteOrganisationResource> savedInvites) {
+    private void addSavedInvitesToForm(ContributorsForm contributorsForm, OrganisationResource leadOrganisation, List<InviteOrganisationResource> savedInvites, Long organisationId) {
         OrganisationInviteForm leadOrganisationInviteForm = new OrganisationInviteForm();
         leadOrganisationInviteForm.setOrganisationName(leadOrganisation.getName());
         leadOrganisationInviteForm.setOrganisationId(leadOrganisation.getId());
@@ -295,6 +297,11 @@ public class ApplicationTeamManagementController {
                     invitedOrgForm.setOrganisationInviteId(inviteOrg.getId());
                     contributorsForm.getOrganisations().add(invitedOrgForm);
                 });
+
+        // Reduce the contributors form org list to selected org
+        List<OrganisationInviteForm> selectedOrganisation = contributorsForm.getOrganisations()
+                .stream().filter(org -> org.getOrganisationId().equals(organisationId)).collect(toList());
+        contributorsForm.setOrganisations(selectedOrganisation);
     }
 
     private void addPersonRow(ContributorsForm contributorsForm, String organisationIndex) {
