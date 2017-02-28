@@ -42,24 +42,27 @@ public class PageableMatcher extends ArgumentMatcher<Pageable> {
             return false;
         }
 
-        if (arg.getSort() != null) {
-            List<Order> sortList = Lists.newArrayList(arg.getSort().iterator());
+        if (arg.getSort() == null) {
+            return true;
+        }
 
-            if (sortList.size() != sortFields.length) {
+        List<Order> sortList = Lists.newArrayList(arg.getSort().iterator());
+
+        if (sortList.size() != sortFields.length) {
+            return false;
+        }
+
+        for (int i = 0; i < sortFields.length; i++) {
+            Sort sortField = sortFields[i];
+            Order order = sortList.get(i);
+            if (!sortField.getDirection().equals(order.getDirection())) {
                 return false;
             }
-
-            for (int i = 0; i < sortFields.length; i++) {
-                Sort sortField = sortFields[i];
-                Order order = sortList.get(i);
-                if (!sortField.getDirection().equals(order.getDirection())) {
-                    return false;
-                }
-                if (!sortField.getField().equals(order.getProperty())) {
-                    return false;
-                }
+            if (!sortField.getField().equals(order.getProperty())) {
+                return false;
             }
         }
+
         return true;
     }
 
