@@ -464,7 +464,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         AttachmentResource attachment = new AttachmentResource(1L, "name", "mediaType", 2L);
         FileEntryResource fileEntry = new FileEntryResource(1L, "name", "mediaType", 2L);
 
-        when(financeCheckServiceMock.uploadFile(uploadedFile.getContentType(), uploadedFile.getSize(), uploadedFile.getOriginalFilename(), uploadedFile.getBytes())).thenReturn(ServiceResult.serviceSuccess(attachment));
+        when(financeCheckServiceMock.uploadFile(projectId, uploadedFile.getContentType(), uploadedFile.getSize(), uploadedFile.getOriginalFilename(), uploadedFile.getBytes())).thenReturn(ServiceResult.serviceSuccess(attachment));
         when(financeCheckServiceMock.getAttachmentInfo(1L)).thenReturn(ServiceResult.serviceSuccess(fileEntry));
 
         when(projectService.getById(projectId)).thenReturn(project);
