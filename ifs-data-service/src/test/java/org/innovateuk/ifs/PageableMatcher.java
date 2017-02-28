@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import org.mockito.ArgumentMatcher;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort.Order;
 
 import java.util.List;
 
@@ -41,7 +42,11 @@ public class PageableMatcher extends ArgumentMatcher<Pageable> {
             return false;
         }
 
-        List<org.springframework.data.domain.Sort.Order> sortList = Lists.newArrayList(arg.getSort().iterator());
+        if (arg.getSort() == null) {
+            return true;
+        }
+
+        List<Order> sortList = Lists.newArrayList(arg.getSort().iterator());
 
         if (sortList.size() != sortFields.length) {
             return false;
@@ -49,7 +54,7 @@ public class PageableMatcher extends ArgumentMatcher<Pageable> {
 
         for (int i = 0; i < sortFields.length; i++) {
             Sort sortField = sortFields[i];
-            org.springframework.data.domain.Sort.Order order = sortList.get(i);
+            Order order = sortList.get(i);
             if (!sortField.getDirection().equals(order.getDirection())) {
                 return false;
             }
