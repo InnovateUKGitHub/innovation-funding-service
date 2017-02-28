@@ -46,31 +46,25 @@ public class AssessmentSummaryModelPopulator {
     private QuestionService questionService;
 
     @Autowired
-    private ApplicationService applicationService;
-
-    @Autowired
     private CompetitionService competitionService;
 
     public AssessmentSummaryViewModel populateModel(AssessmentResource assessment) {
-        ApplicationResource application = getApplication(assessment.getApplication());
-        CompetitionResource competition = getCompetition(application.getCompetition());
+        CompetitionResource competition = getCompetition(assessment.getCompetition());
 
-        List<AssessmentSummaryQuestionViewModel> questions = getQuestions(assessment.getId(), competition.getId());
+        List<AssessmentSummaryQuestionViewModel> questions = getQuestions(assessment.getId(), assessment.getCompetition());
         List<AssessmentSummaryQuestionViewModel> questionsForScoreOverview = getQuestionsForScoreOverview(questions);
 
         int totalScoreGiven = getTotalScoreGiven(questions);
         int totalScorePossible = getTotalScorePossible(questions);
         int totalScorePercentage = totalScorePossible == 0 ? 0 : Math.round(totalScoreGiven * 100.0f / totalScorePossible);
 
-        return new AssessmentSummaryViewModel(assessment.getId(), competition.getAssessmentDaysLeft(), competition.getAssessmentDaysLeftPercentage(), competition, application, questionsForScoreOverview, questions, totalScoreGiven, totalScorePossible, totalScorePercentage);
+        return new AssessmentSummaryViewModel(assessment.getId(), assessment.getApplication(),
+                assessment.getApplicationName(), competition.getAssessmentDaysLeft(),
+                competition.getAssessmentDaysLeftPercentage(), questionsForScoreOverview, questions, totalScoreGiven, totalScorePossible, totalScorePercentage);
     }
 
     private CompetitionResource getCompetition(Long competitionId) {
         return competitionService.getById(competitionId);
-    }
-
-    private ApplicationResource getApplication(Long applicationId) {
-        return applicationService.getById(applicationId);
     }
 
     private List<AssessmentSummaryQuestionViewModel> getQuestions(Long assessmentId, Long competitionId) {

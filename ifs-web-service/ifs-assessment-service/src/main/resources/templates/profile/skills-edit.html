@@ -72,7 +72,7 @@
                 </div>
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('assessorType')}? error">
-                    <fieldset class="inline">
+                    <fieldset>
                         <legend>
                             <span class="heading-medium">Assessor type</span>
                             <span th:if="${#fields.hasErrors('assessorType')}" th:remove="tag">
@@ -80,7 +80,9 @@
                             </span>
                         </legend>
                         <p class="form-hint">Please select your current area of work. If you are working in both areas please select the most dominant.</p>
-                        <label class="block-label selection-button-radio" th:each="type : ${T(org.innovateuk.ifs.user.resource.BusinessType).values()}">
+                        <label class="block-label selection-button-radio"
+                               th:for="${#ids.next('assessorType')}"
+                               th:each="type : ${T(org.innovateuk.ifs.user.resource.BusinessType).values()}">
                             <input th:field="*{assessorType}"
                                    th:value="${type}"
                                    type="radio"
@@ -92,7 +94,7 @@
                 </div>
 
                 <button class="button button-large" type="submit">Save and return to assessor dashboard</button>
-                <a th:href="@{/profile/skills}">Cancel</a>
+                <a class="button button-clear" th:href="@{/profile/skills}">Cancel</a>
             </form>
 
             <th:block th:insert="fragments/layout :: main-content-end" />
