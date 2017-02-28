@@ -44,7 +44,7 @@ public class ApplicationCountSummaryServiceImpl extends BaseTransactionalService
     @Override
     public ServiceResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionId(Long competitionId, int pageIndex, int pageSize, Optional<String> filter) {
 
-        String filterStr = filter.map(this::prepareFilterString).orElse("");
+        String filterStr = filter.map(this::prepareFilterString).orElse("%");
         Pageable pageable = new PageRequest(pageIndex, pageSize);
         Page<ApplicationStatistics> applicationStatistics = applicationStatisticsRepository.findByCompetition(competitionId, filterStr, pageable);
 

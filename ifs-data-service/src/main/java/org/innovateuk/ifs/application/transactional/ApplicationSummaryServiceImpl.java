@@ -72,7 +72,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 
     @Override
     public ServiceResult<ApplicationSummaryPageResource> getApplicationSummariesByCompetitionId(Long competitionId, String sortBy, int pageIndex, int pageSize, Optional<String> filter) {
-        String filterStr = filter.map(this::prepareFilterString).orElse("");
+        String filterStr = filter.map(this::prepareFilterString).orElse("%");
         return applicationSummaries(sortBy, pageIndex, pageSize,
                 pageable -> applicationRepository.findByCompetitionIdAndIdLike(competitionId, filterStr,pageable),
                 () -> applicationRepository.findByCompetitionIdAndIdLike(competitionId, filterStr));
@@ -81,7 +81,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
     @Override
     public ServiceResult<ApplicationSummaryPageResource> getSubmittedApplicationSummariesByCompetitionId(
             Long competitionId, String sortBy, int pageIndex, int pageSize, Optional<String> filter) {
-        String filterStr = filter.map(this::prepareFilterString).orElse("");
+        String filterStr = filter.map(this::prepareFilterString).orElse("%");
         return applicationSummaries(sortBy, pageIndex, pageSize,
                 pageable -> applicationRepository.findByCompetitionIdAndApplicationStatusIdInAndIdLike(competitionId, SUBMITTED_STATUS_IDS, filterStr, pageable),
                 () -> applicationRepository.findByCompetitionIdAndApplicationStatusIdInAndIdLike(competitionId, SUBMITTED_STATUS_IDS, filterStr));
