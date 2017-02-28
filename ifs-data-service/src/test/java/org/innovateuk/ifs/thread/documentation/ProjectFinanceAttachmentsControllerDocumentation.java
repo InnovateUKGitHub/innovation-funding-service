@@ -25,6 +25,8 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -98,14 +100,13 @@ public class ProjectFinanceAttachmentsControllerDocumentation extends BaseContro
         mockMvc.perform(post("/project/finance/attachments/upload")
                 .param("filename", attachmentResource.name)
                 .headers(createFileUploadHeader("application/pdf", 1234)))
-//                .andExpect(content().json(toJson(attachmentResource)))
-//                .andExpect(status().isCreated())
+                .andExpect(content().json(toJson(attachmentResource)))
+                .andExpect(status().isCreated())
                 .andDo(document.document(
                         requestParameters(parameterWithName("filename").description("The filename of the file being uploaded")),
-//                        requestHeaders(
-//                                headerWithName("Content-Type").description("The Content Type of the file being uploaded e.g. application/pdf"),
-//                                headerWithName("Content-Length").description("The Content Length of the binary file data being uploaded in bytes")
-//                        ),
+                        requestHeaders(
+                                headerWithName("Content-Type").description("The Content Type of the file being uploaded e.g. application/pdf")
+                        ),
                         responseFields(attachmentFields())
                 ));
 

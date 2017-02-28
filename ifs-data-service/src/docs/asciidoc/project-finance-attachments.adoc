@@ -2,20 +2,17 @@
 === Upload Attachment
 ==== Request
 include::{snippets}/project/finance/attachments/upload/request-parameters.adoc[]
+include::{snippets}/project/finance/attachments/upload/request-headers.adoc[]
 
 ==== Response
 include::{snippets}/project/finance/attachments/upload/response-fields.adoc[]
 
-//==== Curl Example
-//include::{snippets}/project/finance/attachments/upload/curl-request.adoc[]
 
 === Find Attachment by Id
 ==== Request
-//include::{snippets}/project/finance/attachments/find-one/http-request.adoc[]
 include::{snippets}/project/finance/attachments/find-one/path-parameters.adoc[]
 
 ==== Response
-//include::{snippets}/project/finance/attachments/find-all/http-response.adoc[]
 include::{snippets}/project/finance/attachments/find-one/response-fields.adoc[]
 
 //==== Curl Example

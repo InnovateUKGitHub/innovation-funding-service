@@ -26,7 +26,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 public abstract class AttachmentController<R> {
 
-    AttachmentsService<R> service;
+    private final AttachmentsService<R> service;
 
     public AttachmentController(AttachmentsService<R> service) {
         this.service = service;

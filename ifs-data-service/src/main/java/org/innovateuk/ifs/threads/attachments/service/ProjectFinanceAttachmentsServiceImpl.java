@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.threads.attachments.service;
 
+import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.BasicFileAndContents;
@@ -14,19 +15,20 @@ import org.innovateuk.ifs.threads.attachments.repository.AttachmentRepository;
 import org.innovateuk.threads.attachment.resource.AttachmentResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-import java.io.IOException;
 
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.file.controller.FileControllerUtils.handleFileDownload;
 import static org.innovateuk.ifs.file.controller.FileControllerUtils.handleFileUpload;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
+/**
+ * This class contains methods to upload, find, download and delete {@link AttachmentResource}s
+ * under the context of Project Finance Threads, i.e., Queries or Notes.
+ */
 @Service
 @Transactional
 public class ProjectFinanceAttachmentsServiceImpl implements ProjectFinanceAttachmentService {

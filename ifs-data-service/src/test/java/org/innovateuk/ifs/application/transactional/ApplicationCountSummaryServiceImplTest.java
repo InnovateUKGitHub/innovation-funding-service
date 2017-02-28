@@ -46,7 +46,6 @@ public class ApplicationCountSummaryServiceImplTest extends BaseServiceUnitTest<
     }
 
     @Test
-    @Ignore //TODO NUNO : remove @Ignore
     public void getApplicationCountSummariesByCompetitionId() {
         Long competitionId = 1L;
         Role leadApplicationRole = newRole()

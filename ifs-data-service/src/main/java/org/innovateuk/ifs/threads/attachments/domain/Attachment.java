@@ -2,12 +2,17 @@ package org.innovateuk.ifs.threads.attachments.domain;
 
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.threads.attachment.resource.AttachmentResource;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
+/**
+ * This class serves as a Wrapper around a {@link FileEntry}, adding attributes such as the User who
+ * has uploaded this file and the date it was uploaded, while also giving a richer contextual naming.
+ */
 @Entity
 public class Attachment {
     @Id

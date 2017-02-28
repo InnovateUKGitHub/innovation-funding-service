@@ -805,6 +805,12 @@ public final class CollectionFunctions {
         return collectionToMatch.stream().allMatch(predicate);
     }
 
+    /**
+     * A method that a list of length n with t the value of every element.
+     * @param int n - times to replicate t
+     * @param <T>
+     * @return
+     */
     public static <T> List<T> nOf(int n, T t) {
         return range(0, n).mapToObj(x -> t).collect(Collectors.toList());
     }
