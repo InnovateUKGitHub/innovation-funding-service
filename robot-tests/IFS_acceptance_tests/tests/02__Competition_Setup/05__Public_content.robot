@@ -102,7 +102,7 @@ Summary: User enters valid values and saves
     When the user enters valid data in the summary details
     And the user clicks the button/link        jQuery=button:contains("+ add new section")
     When the user enters text to a text field  css=#heading-0  A nice new Heading
-    And the user enters text to a text field   jQuery=.editor:eq(1)  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco ullamco
+    Then the user enters text to a text field   jQuery=.editor:eq(1)  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco ullamco
     And the user uploads the file              css=#file-upload-0  ${valid_pdf}
     When the user clicks the button/link       jQuery=button:contains("Save and return")
     Then the user should be redirected to the correct page  ${public_content_overview}
@@ -227,7 +227,7 @@ Guest user can see the updated Summary information
 The guest user is able to download the file in the Summary
     [Documentation]  INFUND-7486
     [Tags]  Pending
-    # Pending due to INFUND-8536
+    # TODO Pending due to INFUND-8536
 
 
 *** Keywords ***
