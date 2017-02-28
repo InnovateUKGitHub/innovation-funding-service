@@ -56,12 +56,15 @@ Competition information and search: server side validation
     Then the user should see a summary error        Please enter a valid set of keywords.
 
 Competition information and search: Valid values
-    [Documentation]    INFUND-6915
+    [Documentation]    INFUND-6915, INFUND-8363
     [Tags]  HappyPath
     When the user enters text to a text field       id=short-description        Short public description
     And the user enters text to a text field        id=funding-range            Up to £1million
     And the user enters text to a text field        id=eligibility-summary      Summary of eligiblity
-    And the user enters text to a text field        id=keywords                 Search, Testing, Robot
+    When the user enters text to a text field       id=keywords  hellohellohellohellohellohellohellohellohellohellou
+    And the user clicks the button/link             jQuery=button:contains("Save and return")
+    Then the user should see the element            jQuery=.error-summary-list:contains("Each keyword must be less than 50 characters long.")
+    And the user enters text to a text field        id=keywords  Search, Testing, Robot
     And the user clicks the button/link             jQuery=.button:contains("Save and return")
     Then the user should see the element            jQuery=li:nth-of-type(1) img.complete
 

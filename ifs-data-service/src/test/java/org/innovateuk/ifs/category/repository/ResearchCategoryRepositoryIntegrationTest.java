@@ -71,6 +71,7 @@ public class ResearchCategoryRepositoryIntegrationTest
         List<ResearchCategory> innovationAreas = newResearchCategory()
                 .with(id(null))
                 .withName("bbb", "aaa", "ccc")
+                .withPriority(2, 1, 3)
                 .build(3);
 
         repository.save(innovationAreas);
@@ -81,7 +82,7 @@ public class ResearchCategoryRepositoryIntegrationTest
                 .withName("aaa", "bbb", "ccc")
                 .build(3);
 
-        List<ResearchCategory> actual = repository.findAllByOrderByNameAsc();
+        List<ResearchCategory> actual = repository.findAllByOrderByPriorityAsc();
 
         assertEquals(expectedInnovationAreas, actual);
     }

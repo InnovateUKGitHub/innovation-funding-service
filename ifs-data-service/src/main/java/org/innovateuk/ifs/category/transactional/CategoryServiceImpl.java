@@ -45,19 +45,19 @@ public class CategoryServiceImpl extends BaseTransactionalService implements Cat
 
     @Override
     public ServiceResult<List<InnovationAreaResource>> getInnovationAreas() {
-        return find(innovationAreaRepository.findAllByOrderByNameAsc(), notFoundError(InnovationArea.class))
+        return find(innovationAreaRepository.findAllByOrderByPriorityAsc(), notFoundError(InnovationArea.class))
                 .andOnSuccessReturn(innovationAreaMapper::mapToResource);
     }
 
     @Override
     public ServiceResult<List<InnovationSectorResource>> getInnovationSectors() {
-        return find(innovationSectorRepository.findAllByOrderByNameAsc(), notFoundError(InnovationSector.class))
+        return find(innovationSectorRepository.findAllByOrderByPriorityAsc(), notFoundError(InnovationSector.class))
                 .andOnSuccessReturn(innovationSectorMapper::mapToResource);
     }
 
     @Override
     public ServiceResult<List<ResearchCategoryResource>> getResearchCategories() {
-        return find(researchCategoryRepository.findAllByOrderByNameAsc(), notFoundError(ResearchCategory.class))
+        return find(researchCategoryRepository.findAllByOrderByPriorityAsc(), notFoundError(ResearchCategory.class))
                 .andOnSuccessReturn(researchCategoryMapper::mapToResource);
     }
 

@@ -45,11 +45,11 @@
 
 
 <!-- =================== Application details ============================== -->
-<div th:fragment="application_details (currentApplication, applicationOrganisations, pendingOrganisationNames, leadOrganisation)" th:remove="tag">
+<div th:fragment="application_details (applicationName, applicationStartDate, applicationDurationInMonths, applicationOrganisations, pendingOrganisationNames, leadOrganisation)" th:remove="tag">
     <div class="grid-row">
         <div class="column-half">
             <h3 class="heading-small">Project title</h3>
-            <p th:text="${currentApplication.name}" />
+            <p th:text="${applicationName}" />
             <h3 class="heading-small">Lead organisation</h3>
             <p th:text="${leadOrganisation.name}" />
             <h3 class="heading-small">Partners</h3>
@@ -66,9 +66,9 @@
         <div class="column-half">
             <h3 class="heading-small">Project timescales</h3>
             <p>Project start date:<br/>
-            <span th:if="${currentApplication.getStartDate() != null}" th:text="${#temporals.format(currentApplication.getStartDate(), 'd/M/yyyy')}" th:remove="tag" />
+            <span th:if="${applicationStartDate}" th:text="${#temporals.format(applicationStartDate, 'd/M/yyyy')}" th:remove="tag" />
             </p>
-            <p>Duration:<br/><span th:remove="tag" th:text="${currentApplication.getDurationInMonths()}" /> months</p>
+            <p>Duration:<br/><span th:remove="tag" th:text="${applicationDurationInMonths}" /> months</p>
         </div>
     </div>
 </div>

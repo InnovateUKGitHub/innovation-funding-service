@@ -8,31 +8,41 @@ import org.innovateuk.ifs.assessment.model.RejectAssessmentModelPopulator;
 import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.service.AssessmentService;
+import org.innovateuk.ifs.assessment.viewmodel.AssessmentAssignmentViewModel;
 import org.innovateuk.ifs.assessment.viewmodel.RejectAssessmentViewModel;
-import org.innovateuk.ifs.form.resource.FormInputResponseResource;
+import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.*;
+import org.mockito.InOrder;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 
+import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
 import static java.lang.String.format;
+import static java.util.Arrays.asList;
 import static java.util.Collections.nCopies;
-import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static java.util.Comparator.comparingLong;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.CONFLICT_OF_INTEREST;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.idBasedValues;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ASSESSMENT_REJECTION_FAILED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
+import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
+import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -61,26 +71,63 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
     }
 
     @Test
-    public void viewAssessmentAssignment() throws Exception {
-        Long assessmentId = 1L;
-        Long applicationId = 2L;
-        Long formInput = 11L;
-        Long competitionId = 3L;
+    public void viewAssignment() throws Exception {
+        long assessmentId = 1L;
+        long applicationId = 2L;
+        long competitionId = 3L;
 
-        FormInputResponseResource applicantResponse =
-                newFormInputResponseResource()
-                        .withFormInputs(formInput)
-                        .with(idBasedValues("Value "))
-                        .build();
+        when(assessmentService.getAssignableById(assessmentId)).thenReturn(newAssessmentResource()
+                .withApplication(applicationId)
+                .withApplicationName("Application name")
+                .withCompetition(competitionId)
+                .build());
 
-        when(assessmentService.getAssignableById(assessmentId)).thenReturn(newAssessmentResource().withApplication(applicationId).build());
-        when(competitionService.getById(competitionId)).thenReturn(newCompetitionResource().build());
-        when(applicationService.getById(applicationId)).thenReturn(newApplicationResource().withId(applicationId).withCompetition(competitionId).build());
-        when(formInputResponseService.getByFormInputIdAndApplication(formInput, applicationId)).thenReturn(restSuccess(singletonList(applicantResponse)));
+        when(formInputResponseService.getByApplicationIdAndQuestionName(applicationId, "Project summary"))
+                .thenReturn(newFormInputResponseResource()
+                        .withValue("Project summary")
+                        .build());
+
+        OrganisationResource collaboratorOrganisation1 = newOrganisationResource().build();
+        OrganisationResource collaboratorOrganisation2 = newOrganisationResource().build();
+        OrganisationResource leadOrganisation = newOrganisationResource().build();
+
+        OrganisationResource otherOrganisation = newOrganisationResource().build();
+
+        List<ProcessRoleResource> processRoleResources = newProcessRoleResource()
+                .withOrganisation(collaboratorOrganisation1.getId(),
+                        leadOrganisation.getId(),
+                        collaboratorOrganisation2.getId(),
+                        otherOrganisation.getId())
+                .withRoleName(COLLABORATOR.getName(), LEADAPPLICANT.getName(), COLLABORATOR.getName(), ASSESSOR.getName())
+                .build(4);
+
+        when(processRoleService.findProcessRolesByApplicationId(applicationId)).thenReturn(processRoleResources);
+        when(organisationRestService.getOrganisationById(collaboratorOrganisation1.getId())).thenReturn(restSuccess(collaboratorOrganisation1));
+        when(organisationRestService.getOrganisationById(collaboratorOrganisation2.getId())).thenReturn(restSuccess(collaboratorOrganisation2));
+        when(organisationRestService.getOrganisationById(leadOrganisation.getId())).thenReturn(restSuccess(leadOrganisation));
+
+        SortedSet<OrganisationResource> partners = new TreeSet<>(comparingLong(OrganisationResource::getId));
+        partners.add(collaboratorOrganisation1);
+        partners.add(leadOrganisation);
+        partners.add(collaboratorOrganisation2);
+
+        AssessmentAssignmentViewModel expectedViewModel = new AssessmentAssignmentViewModel(assessmentId,
+                competitionId,
+                "Application name",
+                partners, leadOrganisation, "Project summary");
 
         mockMvc.perform(get("/{assessmentId}/assignment", assessmentId))
                 .andExpect(status().isOk())
-                .andExpect(view().name("assessment/assessment-invitation"));
+                .andExpect(model().attribute("model", expectedViewModel))
+                .andExpect(view().name("assessment/assessment-invitation")).andReturn();
+
+        InOrder inOrder = inOrder(assessmentService, formInputResponseService, processRoleService, organisationRestService);
+        inOrder.verify(assessmentService).getAssignableById(assessmentId);
+        inOrder.verify(formInputResponseService).getByApplicationIdAndQuestionName(applicationId, "Project summary");
+        inOrder.verify(processRoleService).findProcessRolesByApplicationId(applicationId);
+        asList(collaboratorOrganisation1, collaboratorOrganisation2, leadOrganisation).forEach(organisationResource ->
+                inOrder.verify(organisationRestService).getOrganisationById(organisationResource.getId()));
+        inOrder.verifyNoMoreInteractions();
     }
 
     @Test

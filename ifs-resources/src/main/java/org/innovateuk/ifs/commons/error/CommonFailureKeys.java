@@ -57,6 +57,11 @@ public enum CommonFailureKeys implements ErrorTemplate {
     COMPETITION_NO_TEMPLATE(CONFLICT),
 
     /**
+     * Applications
+     */
+    ASSIGNEE_SHOULD_BE_APPLICANT(BAD_REQUEST),
+
+    /**
      * Public content
      */
     PUBLIC_CONTENT_NOT_COMPLETE_TO_PUBLISH(BAD_REQUEST),
