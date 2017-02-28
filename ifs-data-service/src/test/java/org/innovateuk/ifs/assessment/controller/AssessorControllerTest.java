@@ -9,6 +9,7 @@ import org.innovateuk.ifs.commons.rest.RestErrorResponse;
 import org.innovateuk.ifs.invite.domain.CompetitionInvite;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.user.domain.User;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -115,8 +116,6 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
         verify(assessorServiceMock, never()).registerAssessorByHash(isA(String.class), isA(UserRegistrationResource.class));
     }
 
-
-
     @Test
     public void registerAssessorByHash_emptyFields() throws Exception {
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
@@ -128,7 +127,6 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
                 .andExpect(status().isNotAcceptable())
                 .andReturn();
 
-        Error titleError = fieldError("title", null, "validation.standard.title.selectionrequired", "");
         Error firstNameError = fieldError("firstName", null, "validation.standard.firstname.required", "");
         Error lastNameError = fieldError("lastName", null, "validation.standard.lastname.required", "");
         Error phoneNumberError = fieldError("phoneNumber", null, "validation.standard.phonenumber.required", "");
@@ -138,7 +136,7 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
         Error passwordError = fieldError("password", null, "validation.standard.password.required", "");
         Error addressError = fieldError("address", null, "validation.standard.address.required", "");
 
-        verifyResponseErrors(result, titleError, firstNameError, lastNameError, phoneNumberError, genderError, disabilityError, ethnicityError, passwordError, addressError);
+        verifyResponseErrors(result, firstNameError, lastNameError, phoneNumberError, genderError, disabilityError, ethnicityError, passwordError, addressError);
 
         verify(assessorServiceMock, never()).registerAssessorByHash(isA(String.class), isA(UserRegistrationResource.class));
     }

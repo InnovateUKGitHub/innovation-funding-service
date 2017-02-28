@@ -10,7 +10,24 @@ public class AssessmentFeedbackViewModelTest {
     public void testGetAppendixFileDescription() throws Exception {
         String questionShortName = "Technical approach";
 
-        AssessmentFeedbackViewModel assessmentFeedbackViewModel = new AssessmentFeedbackViewModel(0L, 0L, null, null, null, null, questionShortName, null, null, null, null, false, false, null);
+        AssessmentFeedbackViewModel assessmentFeedbackViewModel = new AssessmentFeedbackViewModel(0L,
+                0L,
+                0L,
+                0L,
+                null,
+                0L,
+                null,
+                questionShortName,
+                null,
+                null,
+                null,
+                null,
+                false,
+                false,
+                false,
+                null,
+                null
+        );
 
         assertEquals("View technical approach appendix", assessmentFeedbackViewModel.getAppendixFileDescription());
     }

@@ -37,7 +37,7 @@ Competition link should navigate to the applications
     Then The user should see the text in the page    Applications for assessment
 
 Calculation of the applications for assessment should be correct
-    Then the total calculation in dashboard should be correct    Applications for assessment    //div/form/ul/li
+    Then the total calculation in dashboard should be correct    Applications for assessment    //div/form/div/ul/li
 
 Details of the competition are visible
     [Documentation]    INFUND-3723
@@ -67,7 +67,7 @@ Accept an application for assessment
     ...    INFUND-4128
     [Tags]    HappyPath
     Then the user should see the element    jQuery=.in-progress li:nth-child(1):contains("Intelligent water system"):contains("Pending")
-    When The user clicks the button/link    jQuery=.in-progress li:nth-child(1) a:contains("accept / reject assessment")
+    When The user clicks the button/link    jQuery=.in-progress li:nth-child(1) a:contains("Accept or reject")
     And the user should see the text in the page    Accept application
     And The user clicks the button/link    jQuery=button:contains("Accept")
     Then the user should be redirected to the correct page    ${Assessor_application_dashboard}
@@ -83,8 +83,11 @@ Reject an application for assessment
     [Setup]    Log in as a different user    paul.plum@gmail.com    Passw0rd
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the user should see the element    jQuery=.in-progress li:nth-child(1):contains("Park living"):contains("Pending")
-    When The user clicks the button/link    jQuery=.in-progress li:nth-child(1) a:contains("accept / reject assessment")
+    When The user clicks the button/link    jQuery=.in-progress li:nth-child(1) a:contains("Accept or reject")
     And the user should see the text in the page    Accept application
+    And The user clicks the button/link    jQuery=a:contains("Reject")
+    And the user clicks the button/link    jQuery=button:contains(Cancel)
+    And the user should not see the element    id=rejectComment
     And The user clicks the button/link    jQuery=a:contains("Reject")
     And the user clicks the button/link    jQuery=.button:contains("Reject")
     Then the user should see an error    Please enter a reason.
@@ -121,9 +124,9 @@ the application for assessment should be removed
     The user should not see the element    link=Park living
 
 The order of the applications should be correct according to the status
-    element should contain    css=li:nth-child(1) .grid-row    Pending
-    element should contain    css=li:nth-child(2) .grid-row    Pending
-    element should contain    css=li:nth-child(3) .grid-row    Pending
-    element should contain    css=.boxed-list li:nth-child(4)    Accepted
-    element should contain    css=.boxed-list li:nth-child(5)    Accepted
-    element should contain    css=.boxed-list li:nth-child(6)    Accepted
+    element should contain    css=li:nth-child(1) .msg-deadline-waiting    Pending
+    element should contain    css=li:nth-child(2) .msg-deadline-waiting    Pending
+    element should contain    css=li:nth-child(3) .msg-deadline-waiting    Pending
+    element should contain    css=.progress-list li:nth-child(4) .msg-progress    Accepted
+    element should contain    css=.progress-list li:nth-child(5) .msg-progress    Accepted
+    element should contain    css=.progress-list li:nth-child(6) .msg-progress    Accepted

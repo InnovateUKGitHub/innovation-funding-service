@@ -23,7 +23,7 @@
                 <div class="grid-row">
                     <div class="column-half">
                         <p class="heading-small no-margin">Title:</p>
-                        <p th:text="${model.application.name}"></p>
+                        <p th:text="${model.applicationName}"></p>
                     </div>
                     <div class="column-half">
                         <p class="heading-small no-margin">Partners:</p>
@@ -48,7 +48,7 @@
             </ul>
 
             <form th:action="@{/{assessmentId}/assignment/accept(assessmentId=${model.assessmentId})}" method="POST">
-                <h2 class="heading-medium">Are you available to assess this application?</h2>
+                <h2 class="heading-medium">Are you able to assess this application?</h2>
                 <button class="button large extra-margin" type="submit">Accept</button>
                 <a class="button button-warning large extra-margin" th:href="@{/{assessmentId}/assignment/reject/confirm(assessmentId=${assessmentId})}" data-js-modal="reject-assessment-modal">Reject</a>
             </form>

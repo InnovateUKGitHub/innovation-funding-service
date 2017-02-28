@@ -22,7 +22,7 @@
             <form th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" >
 
             <fieldset>
-                <legend class="heading-medium">Project address</legend>
+                <legend><span class="heading-medium">Project address</span></legend>
                 <p class="form-hint">Please select the address where the majority of work will be carried out.</p>
 
                 <th:block th:insert="project/fragments :: select-address" th:with="form=${form}" />

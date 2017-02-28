@@ -50,8 +50,7 @@ Create assessor account: server-side validations
     [Tags]    HappyPath
     Given the user clicks the button/link    jQuery=.button:contains("Create account")
     When the user clicks the button/link    jQuery=button:contains("Continue")
-    Then the user should see an error    Please select a title.
-    And the user should see an error    Please enter a first name.
+    Then the user should see an error    Please enter a first name.
     And the user should see an error    Please enter a last name.
     And the user should see an error    Please select a gender.
     And the user should see an error    Please select an ethnicity.
@@ -68,8 +67,6 @@ Create assessor account: server-side validations
 Create assessor account: client-side validations
     [Documentation]    INFUND-1478
     [Tags]    HappyPath
-    When the user selects the radio button    title    title2
-    Then the user should not see the validation error in the create assessor form    Please select a title.
     When The user enters text to a text field    id=firstName    Thomas
     Then the user should not see the validation error in the create assessor form    Please enter a first name.
     When The user enters text to a text field    id=lastName    Fister
@@ -102,6 +99,8 @@ Create assessor account: Postcode lookup and save
     And The user enters text to a text field    id=password    Passw0rd123
     And The user enters text to a text field    id=retypedPassword    Passw0rd123
     And the user clicks the button/link    jQuery=button:contains("Continue")
+    Then the user should see the text in the page    Your account has been created
+    And the user clicks the button/link    jQuery=a:contains("Sign into your account")
     Then the user should be redirected to the correct page    ${LOGGED_OUT_URL_FRAGMENT}
 
 Create assessor account: Accepted competitions should be displayed in dashboard
@@ -119,7 +118,7 @@ Innovation area on assessor profile for invited user
     [Tags]
     [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
     Given the user clicks the button/link    link=${OPEN_COMPETITION_NAME}
-    And the user clicks the button/link    jQuery=a:contains("Invite assessors")
+    And the user clicks the button/link    jQuery=a:contains("Invite assessors to assess the competition")
     When the user clicks the button/link    link=Thomas Fister
     Then the user should see the text in the page    Emerging and enabling technologies
     And the user should see the text in the page    Earth Observation

@@ -199,6 +199,7 @@ include::silstub.adoc[]
 include::project.adoc[]
 include::project-grant-offer.adoc[]
 include::bank-details.adoc[]
+include::project-finance-queries.adoc[]
 
 [[applicationCountSummary]]
 == ApplicationCountSummary
@@ -207,3 +208,7 @@ include::applicationCountSummary.adoc[]
 [[competitionKeyStatistics]]
 == CompetitionKeyStatistics
 include::competitionKeyStatistics.adoc[]
+
+[[applicationSummary]]
+== ApplicationSummary
+include::application-summary.adoc[]

@@ -45,11 +45,11 @@
 
 
 <!-- =================== Application details ============================== -->
-<div th:fragment="application_details (currentApplication, applicationOrganisations, pendingOrganisationNames, leadOrganisation)" th:remove="tag">
+<div th:fragment="application_details (applicationName, applicationStartDate, applicationDurationInMonths, applicationOrganisations, pendingOrganisationNames, leadOrganisation)" th:remove="tag">
     <div class="grid-row">
         <div class="column-half">
             <h3 class="heading-small">Project title</h3>
-            <p th:text="${currentApplication.name}" />
+            <p th:text="${applicationName}" />
             <h3 class="heading-small">Lead organisation</h3>
             <p th:text="${leadOrganisation.name}" />
             <h3 class="heading-small">Partners</h3>
@@ -66,9 +66,9 @@
         <div class="column-half">
             <h3 class="heading-small">Project timescales</h3>
             <p>Project start date:<br/>
-            <span th:if="${currentApplication.getStartDate() != null}" th:text="${#temporals.format(currentApplication.getStartDate(), 'd/M/yyyy')}" th:remove="tag" />
+            <span th:if="${applicationStartDate}" th:text="${#temporals.format(applicationStartDate, 'd/M/yyyy')}" th:remove="tag" />
             </p>
-            <p>Duration:<br/><span th:remove="tag" th:text="${currentApplication.getDurationInMonths()}" /> months</p>
+            <p>Duration:<br/><span th:remove="tag" th:text="${applicationDurationInMonths}" /> months</p>
         </div>
     </div>
 </div>
@@ -166,7 +166,8 @@
                 <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, rejectComment)})" />
             </div>
         </div>
-        <button class="button large button-warning extra-margin" name="submit-app-details">Reject</button>
+        <button class="button large button-warning" name="submit-app-details">Reject</button>
+        <button class="js-close button buttonlink large" type="button">Cancel</button>
     </form>
 </div>
 
@@ -230,7 +231,10 @@
                 <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, rejectComment)})" />
             </div>
         </div>
-        <button class="button large button-warning extra-margin" name="submit-app-details">Reject</button>
+        <div>
+            <button class="button large button-warning" name="submit-app-details">Reject</button>
+            <button class="js-close button buttonlink large" type="button">Cancel</button>
+        </div>
     </form>
 </div>
 
