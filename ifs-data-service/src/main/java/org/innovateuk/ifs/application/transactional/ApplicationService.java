@@ -6,9 +6,9 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryId;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
-import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -74,7 +74,6 @@ public interface ApplicationService {
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'APPLICATION_SUBMITTED_NOTIFICATION')")
     ServiceResult<Void> sendNotificationApplicationSubmitted(@P("applicationId") Long application);
 
-    @SecuredBySpring(value = "TODO", description = "TODO")
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<ApplicationResource>> getApplicationsByCompetitionIdAndUserId(final Long competitionId,
                                                                                      final Long userId,
@@ -86,10 +85,15 @@ public interface ApplicationService {
     @PreAuthorize("hasPermission(#id, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<ObjectNode> applicationReadyForSubmit(final Long id);
 
-    @SecuredBySpring(value = "TODO", description = "TODO")
+    @SecuredBySpring(value = "READ", description = "Only those with either comp admin or project finance roles can read the applications")
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
 	ServiceResult<List<Application>> getApplicationsByCompetitionIdAndStatus(Long competitionId, Collection<Long> applicationStatusId);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<BigDecimal> getProgressPercentageBigDecimalByApplicationId(Long applicationId);
+
+    @SecuredBySpring(value = "NOTIFY_APPLICANTS_OF_FEEDBACK",
+            description = "Comp admins and project finance users can notify applicants that their feedback is released")
+    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
+    ServiceResult<Void> notifyApplicantsByCompetition(Long competitionId);
 }

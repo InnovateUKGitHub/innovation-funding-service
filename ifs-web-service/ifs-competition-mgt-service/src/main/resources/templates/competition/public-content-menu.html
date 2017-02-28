@@ -12,7 +12,8 @@
     <th:block th:insert="fragments/layout :: main-content-start" />
     <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${form}" method="post">
         <!-- Link back -->
-        <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Competition setup',linkClass='link-back',linkUrl=@{/competition/setup/{competitionId}(competitionId=${model.competition.id})}"  th:remove="tag"></div>
+        <div th:unless="${model.competition.nonIfs}" th:include="fragments/layout :: header-sub" th:with="linkTitle='Competition setup',linkClass='link-back',linkUrl=@{/competition/setup/{competitionId}(competitionId=${model.competition.id})}"  th:remove="tag"></div>
+        <div th:if="${model.competition.nonIfs}" th:include="fragments/layout :: header-sub" th:with="linkTitle='Back to Non-IFS competition details',linkClass='link-back',linkUrl=@{/non-ifs-competition/setup/{competitionId}(competitionId=${model.competition.id})}"  th:remove="tag"></div>
 
         <div class="page-title">
             <th:block th:insert="fragments/elements :: competition-title (competition=${model.competition})" />
@@ -54,7 +55,8 @@
                 <small th:text="${'Last published ' + publishDay + ' ' + publishTime}"></small></p>
             <div class="grid-row">
                 <div class="column-half">
-                    <a th:href="@{/competition/setup/{competitionId}(competitionId=${model.competition.id})}" class="button">Return to setup overview</a>
+                    <a th:unless="${model.competition.nonIfs}" th:href="@{/competition/setup/{competitionId}(competitionId=${model.competition.id})}" class="button">Return to setup overview</a>
+                    <a th:if="${model.competition.nonIfs}" th:href="@{/non-ifs-competition/setup/{competitionId}(competitionId=${model.competition.id})}" class="button">Return to non-IFS competition details</a>
                 </div>
                 <div class="column-half alignright">
                     <button th:unless="${model.hasBeenPublished()}" class="button-secondary no-margin" th:disabled="${model.disablePublishButton()}" name="publish">Publish public content</button>

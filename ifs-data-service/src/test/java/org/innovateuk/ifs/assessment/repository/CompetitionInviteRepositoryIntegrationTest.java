@@ -44,7 +44,7 @@ public class CompetitionInviteRepositoryIntegrationTest extends BaseRepositoryIn
     @Before
     public void setup() {
         competition = competitionRepository.save( newCompetition().withName("competition").build() );
-        innovationArea = innovationAreaRepository.save( newInnovationArea().withName("innovation area").build() );
+        innovationArea = innovationAreaRepository.save(newInnovationArea().withName("innovation area").build() );
     }
 
     @Test

@@ -4,7 +4,6 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.service.AssessmentService;
 import org.innovateuk.ifs.assessment.viewmodel.AssessmentFeedbackApplicationDetailsViewModel;
@@ -31,7 +30,13 @@ public class AssessmentFeedbackApplicationDetailsModelPopulator {
         AssessmentResource assessment = assessmentService.getById(assessmentId);
         ApplicationResource application = applicationService.getById(assessment.getApplication());
         CompetitionResource competition = competitionService.getById(assessment.getCompetition());
-        return new AssessmentFeedbackApplicationDetailsViewModel(competition.getAssessmentDaysLeft(), competition.getAssessmentDaysLeftPercentage(), competition, application, question.getShortName());
+        return new AssessmentFeedbackApplicationDetailsViewModel(assessment.getApplication(),
+                assessment.getApplicationName(),
+                application.getStartDate(),
+                application.getDurationInMonths(),
+                competition.getAssessmentDaysLeft(),
+                competition.getAssessmentDaysLeftPercentage(),
+                question.getShortName());
     }
 
 }

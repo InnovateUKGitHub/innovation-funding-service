@@ -274,7 +274,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
         when(financeCheckServiceMock.deleteFile(1L)).thenReturn(ServiceResult.serviceSuccess());
 
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/new-query/cancel?query_section=Eligibility")
-                    .cookie(ck))
+                .cookie(ck))
                 .andExpect(redirectedUrlPattern("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query?query_section=Eligibility**"))
                 .andReturn();
 

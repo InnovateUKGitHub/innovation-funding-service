@@ -54,6 +54,10 @@ public class ProcessRoleResourceBuilder extends BaseBuilder<ProcessRoleResource,
         }, roles);
     }
 
+    public ProcessRoleResourceBuilder withRoleName(String... roleNames) {
+        return withArray((roleName, processRoleResource) -> processRoleResource.setRoleName(roleName), roleNames);
+    }
+
     public ProcessRoleResourceBuilder withOrganisation(Long... organisations) {
         return withArray((organisation, processRoleResource) -> setField("organisationId", organisation, processRoleResource), organisations);
     }
