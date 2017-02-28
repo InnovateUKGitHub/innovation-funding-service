@@ -6,6 +6,8 @@ Documentation     INFUND-6914 Create 'Public content' menu page for "Front Door"
 ...               INFUND-7602 Add / Remove sections for Competition setup > Public content
 ...
 ...               INFUND-7486 Create Competition > Summary tab for external "Front Door" view of competition summary
+...
+...               INFUND-7489 Create 'Competition' > 'Dates' tab for external "Front Door" view of competition dates
 Suite Setup       Custom suite setup
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin
@@ -229,6 +231,16 @@ The guest user is able to download the file in the Summary
     [Tags]  Pending
     # TODO Pending due to INFUND-8536
 
+The guest user can see upated date information
+   [Documentation]    INFUND-7489
+   [Tags]
+   [Setup]    the month is converted to text
+   Given the user clicks the button/link    link=Dates
+   And the user should see the element    jQuery=dt:contains("1 February ${nextyear}") + dd:contains("Competition opens")
+   And the user should see the element    jQuery=dt:contains(${newdate}) + dd:contains("Competition closes")
+   And the user should see the element    jQuery=dt:contains(${newdate}) + dd:contains("Applicants notified")
+   And the user should see the element    jQuery=dt:contains("12 December ${nextyear}") + dd:contains("Content 1")
+   And the user should see the element    jQuery=dt:contains("20 December ${nextyear}") + dd:contains("Content 2")
 
 *** Keywords ***
 Custom suite setup
@@ -344,3 +356,8 @@ the user visits
 the user should see all sections completed
     :FOR  ${i}  IN RANGE  1  8
     \    the user should see the element  jQuery=li:nth-child(${i}) img.complete
+
+the month is converted to text
+    ${fulldate} =  Catenate    ${nextyear}  ${month}   ${day}
+    ${newdate} =    Convert Date     ${fulldate}    result_format=%-d %B %Y    exclude_millis=true
+    set suite variable    ${newdate}
