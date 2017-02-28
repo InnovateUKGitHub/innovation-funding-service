@@ -40,7 +40,7 @@ public class AttachmentPermissionsRules {
     private ProjectUserRepository projectUserRepository;
 
 
-    @PermissionRule(value = "PF_ATTACHMENT_UPLOAD", description = "Only Project Finance  Finance Contacts can upload attachments")
+    @PermissionRule(value = "PF_ATTACHMENT_UPLOAD", description = "Only Project Finance and Finance Contacts can upload attachments.")
     public boolean onlyProjectFinanceAndFinanceContactCanUploadAttachments(final AttachmentResource attachment, final UserResource user) {
         return isProjectFinanceUser(user) || isFinanceContactInAnyProject(user);
     }
@@ -65,7 +65,7 @@ public class AttachmentPermissionsRules {
                 .orElse(false);
     }
 
-    @PermissionRule(value = "PF_ATTACHMENT_DOWNLOAD", description = "Project Finance users can download any Attachment")
+    @PermissionRule(value = "PF_ATTACHMENT_DOWNLOAD", description = "Project Finance users can download any Attachment.")
     public boolean projectFinanceUsersCanDownloadAnyAttachment(AttachmentResource attachment, UserResource user) {
         return isProjectFinanceUser(user);
     }
@@ -80,7 +80,8 @@ public class AttachmentPermissionsRules {
                 || userCanAccessQueryLinkedToTheAttachment(user, attachmentResource);
     }
 
-    @PermissionRule(value = "PF_ATTACHMENT_DELETE", description = "Project Finance users can download any Attachment")
+    @PermissionRule(value = "PF_ATTACHMENT_DELETE", description = "Project Finance and Finance Contact users can delete " +
+            "any of their Attachment they have uploaded if still orphan.")
     public boolean onlyTheUploaderOfAnAttachmentCanDeleteItIfStillOrphan(AttachmentResource attachment, UserResource user) {
         return attachmentMapper.mapToDomain(attachment).wasUploadedBy(user.getId()) && attachmentIsStillOrphan(attachment);
     }
