@@ -153,7 +153,7 @@ Special Project Finance role (email step)
 the new application should be visible in the dashboard page
     the user clicks the button/link    link= My dashboard
     the user should see the text in the page    ${test_title}
-    the user should see the text in the page    Application number: 0000
+    the user should see the text in the page    Application number:
 
 the user clicks the Not on company house link
     the user clicks the button/link    name=not-in-company-house

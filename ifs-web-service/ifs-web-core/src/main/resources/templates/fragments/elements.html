@@ -72,17 +72,17 @@
 
 <!-- =========================== Element: Application Title =========================== -->
 <th:block th:fragment="application-title (applicationId, applicationName) ">
-    <p class="subtitle" th:text="${#numbers.formatInteger(applicationId,8)} + ': ' + ${applicationName} "/>
+    <p class="subtitle" th:text="${applicationId} + ': ' + ${applicationName} "/>
 </th:block>
 
 <!-- =========================== Element: Competition Title =========================== -->
 <th:block th:fragment="competition-title (competition) ">
-    <p class="subtitle" th:text="${#numbers.formatInteger(competition.id,8)} + ': ' + ${competition.name == null ? 'No competition title defined' : competition.name} "/>
+    <p class="subtitle" th:text="${competition.id} + ': ' + ${competition.name == null ? 'No competition title defined' : competition.name} "/>
 </th:block>
 
 <!-- =========================== Element: Project Title =========================== -->
 <th:block th:fragment="project-title (projectId, projectName) ">
-    <p class="subtitle" th:text="${#numbers.formatInteger(projectId,8)} + ': ' + ${projectName} "/>
+    <p class="subtitle" th:text="${projectId} + ': ' + ${projectName} "/>
 </th:block>
 
 <!-- =========================== Element: Competition Closing soon? =========================== -->
