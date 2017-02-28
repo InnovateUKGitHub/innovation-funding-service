@@ -50,8 +50,11 @@ public class QuestionServiceImplTest extends BaseServiceUnitTest<QuestionService
         Long assigneeId = 3L;
         Long assignedById = 4L;
 
-        service.assign(questionId, applicationId, assigneeId, assignedById);
+        when(questionRestService.assign(questionId, applicationId, assigneeId, assignedById)).thenReturn(restSuccess());
 
+        ServiceResult<Void> result = service.assign(questionId, applicationId, assigneeId, assignedById);
+
+        assertTrue(result.isSuccess());
         verify(questionRestService).assign(questionId, applicationId, assigneeId, assignedById);
     }
 

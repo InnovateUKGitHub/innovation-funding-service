@@ -124,6 +124,11 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     @Override
+    public void releaseFeedback(Long competitionId) {
+        competitionsRestService.releaseFeedback(competitionId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
     public PublicContentItemResource getPublicContentOfCompetition(Long competitionId) {
         return publicContentItemRestService.getItemByCompetitionId(competitionId).getSuccessObjectOrThrowException();
     }

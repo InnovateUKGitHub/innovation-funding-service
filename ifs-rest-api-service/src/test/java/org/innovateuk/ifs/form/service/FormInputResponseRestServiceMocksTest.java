@@ -3,11 +3,8 @@ package org.innovateuk.ifs.form.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
-import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
-import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
-
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.junit.Assert;
 import org.junit.Test;
@@ -16,16 +13,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.formInputResponseListType;
-
+import static java.lang.String.format;
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.formInputResponseListType;
+import static org.innovateuk.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
 
-/**
- *
- */
 public class FormInputResponseRestServiceMocksTest extends BaseRestServiceUnitTest<FormInputResponseRestServiceImpl> {
 
     private static final String formInputResponseRestURL = "/forminputresponse";
@@ -37,7 +32,7 @@ public class FormInputResponseRestServiceMocksTest extends BaseRestServiceUnitTe
     }
 
     @Test
-    public void test_getResponsesByApplicationId() {
+    public void getResponsesByApplicationId() {
         List<FormInputResponseResource> returnedResponses = Arrays.asList(1,2,3).stream().map(i -> new FormInputResponseResource()).collect(Collectors.toList());
 
 
@@ -48,7 +43,7 @@ public class FormInputResponseRestServiceMocksTest extends BaseRestServiceUnitTe
     }
 
     @Test
-    public void test_saveQuestionResponse() {
+    public void saveQuestionResponse() {
 
         ObjectNode entityUpdates = new ObjectMapper().createObjectNode().
                 put("userId", 123L).put("applicationId", 456L).
@@ -66,12 +61,23 @@ public class FormInputResponseRestServiceMocksTest extends BaseRestServiceUnitTe
     }
 
     @Test
-    public void test_getByFormInputIdAndApplication(){
+    public void getByFormInputIdAndApplication(){
         List<FormInputResponseResource> returnedResponses = Arrays.asList(1,2,3).stream().map(i -> new FormInputResponseResource()).collect(Collectors.toList());
 
         setupGetWithRestResultExpectations(formInputResponseRestURL + "/findResponseByFormInputIdAndApplicationId/456/123", formInputResponseListType(), returnedResponses);
 
         List<FormInputResponseResource> responses = service.getByFormInputIdAndApplication(456L, 123L).getSuccessObject();
         assertEquals(returnedResponses, responses);
+    }
+
+    @Test
+    public void getByApplicationIdAndQuestionName() {
+        long applicationId = 1L;
+        String questionName = "name";
+
+        FormInputResponseResource expected = newFormInputResponseResource().build();
+        setupGetWithRestResultExpectations(format("%s/%s/%s/%s", formInputResponseRestURL, "findByApplicationIdAndQuestionName", applicationId, questionName), FormInputResponseResource.class, expected);
+        FormInputResponseResource actual = service.getByApplicationIdAndQuestionName(applicationId, questionName).getSuccessObject();
+        assertEquals(expected, actual);
     }
 }

@@ -1,13 +1,9 @@
 package org.innovateuk.ifs.assessment.model;
 
 import org.innovateuk.ifs.application.UserApplicationRole;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.service.AssessmentService;
 import org.innovateuk.ifs.assessment.viewmodel.AssessmentAssignmentViewModel;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -31,12 +27,6 @@ public class AssessmentAssignmentModelPopulator {
     private AssessmentService assessmentService;
 
     @Autowired
-    private ApplicationService applicationService;
-
-    @Autowired
-    private CompetitionService competitionService;
-
-    @Autowired
     private ProcessRoleService processRoleService;
 
     @Autowired
@@ -47,17 +37,12 @@ public class AssessmentAssignmentModelPopulator {
 
     public AssessmentAssignmentViewModel populateModel(Long assessmentId) {
         AssessmentResource assessment = assessmentService.getAssignableById(assessmentId);
-        ApplicationResource application = getApplication(assessment.getApplication());
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
-        List<ProcessRoleResource> processRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
-        String projectSummary = getProjectSummary(application);
+        String projectSummary = getProjectSummary(assessment);
+        List<ProcessRoleResource> processRoles = processRoleService.findProcessRolesByApplicationId(assessment.getApplication());
         SortedSet<OrganisationResource> collaborators = getApplicationOrganisations(processRoles);
         OrganisationResource leadPartner = getApplicationLeadOrganisation(processRoles).orElse(null);
-        return new AssessmentAssignmentViewModel(assessmentId, competition.getId(), application, collaborators, leadPartner, projectSummary);
-    }
-
-    private ApplicationResource getApplication(final Long applicationId) {
-        return applicationService.getById(applicationId);
+        return new AssessmentAssignmentViewModel(assessmentId, assessment.getCompetition(), assessment.getApplicationName(),
+                collaborators, leadPartner, projectSummary);
     }
 
     private Optional<OrganisationResource> getApplicationLeadOrganisation(List<ProcessRoleResource> userApplicationRoles) {
@@ -79,10 +64,9 @@ public class AssessmentAssignmentModelPopulator {
                 .collect(Collectors.toCollection(supplier));
     }
 
-    private String getProjectSummary(ApplicationResource application) {
-        Long projectSummaryFormInputId = 11L;
-
-        List<FormInputResponseResource> projectSummaryResponse = formInputResponseService.getByFormInputIdAndApplication(projectSummaryFormInputId, application.getId()).getSuccessObject();
-        return projectSummaryResponse.size() > 0 ? projectSummaryResponse.get(0).getValue() : "";
+    private String getProjectSummary(AssessmentResource assessmentResource) {
+        FormInputResponseResource formInputResponseResource = formInputResponseService
+                .getByApplicationIdAndQuestionName(assessmentResource.getApplication(), "Project summary");
+        return formInputResponseResource.getValue();
     }
 }

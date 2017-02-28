@@ -53,7 +53,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void test_getById() throws Exception {
+    public void getById() throws Exception {
         CompetitionResource competitionResource = newCompetitionResource().withId(1L).build();
 
         when(competitionsRestService.getCompetitionById(1L)).thenReturn(restSuccess(competitionResource));
@@ -63,7 +63,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void test_create() throws Exception {
+    public void create() throws Exception {
         CompetitionResource competitionResource = newCompetitionResource().withId(1L).build();
 
         when(competitionsRestService.create()).thenReturn(restSuccess(competitionResource));
@@ -74,7 +74,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
 
     @Test
-    public void test_createNonIfs() throws Exception {
+    public void createNonIfs() throws Exception {
         CompetitionResource competitionResource = newCompetitionResource().withId(1L).build();
 
         when(competitionsRestService.createNonIfs()).thenReturn(restSuccess(competitionResource));
@@ -84,7 +84,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void test_getAllCompetitions() throws Exception {
+    public void getAllCompetitions() throws Exception {
         CompetitionResource comp1 = newCompetitionResource().withName("Competition 1").withId(1L).build();
 
         CompetitionResource comp2 = newCompetitionResource().withName("Competition 2").withId(2L).build();
@@ -99,7 +99,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void test_getAllCompetitionsNotInSetup() throws Exception {
+    public void getAllCompetitionsNotInSetup() throws Exception {
         CompetitionResource comp1 = newCompetitionResource().withName("Competition 1").withId(1L).withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
 
         CompetitionResource comp2 = newCompetitionResource().withName("Competition 2").withId(2L).build();
@@ -113,7 +113,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void test_getAllCompetitionTypes() throws Exception {
+    public void getAllCompetitionTypes() throws Exception {
         CompetitionTypeResource type1 = newCompetitionTypeResource().withStateAid(false).withName("Type 1").withId(1L).build();
 
         CompetitionTypeResource type2 = newCompetitionTypeResource().withStateAid(false).withName("Type 2").withId(2L).build();
@@ -129,7 +129,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void test_generateCompetitionCode() throws Exception {
+    public void generateCompetitionCode() throws Exception {
         final String expected = "201606-01";
         when(competitionsRestService.generateCompetitionCode(1L, LocalDateTime.of(2016, 06, 16, 0, 0, 0))).thenReturn(restSuccess(expected));
 
@@ -139,7 +139,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
 
     @Test
-    public void test_initApplicationFormByCompetitionType() throws Exception {
+    public void initApplicationFormByCompetitionType() throws Exception {
         Long competitionId = Long.MAX_VALUE;
         Long competitionTypeId = Long.MIN_VALUE;
         when(competitionsRestService.initApplicationForm(competitionId, competitionTypeId)).thenReturn(restSuccess());
@@ -148,7 +148,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void test_markAsSetup() throws Exception {
+    public void markAsSetup() throws Exception {
         Long competitionId = Long.MAX_VALUE;
         when(competitionsRestService.markAsSetup(competitionId)).thenReturn(restSuccess());
 
@@ -156,7 +156,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void test_returnToSetup() throws Exception {
+    public void returnToSetup() throws Exception {
         Long competitionId = Long.MAX_VALUE;
         when(competitionsRestService.returnToSetup(competitionId)).thenReturn(restSuccess());
 
@@ -178,7 +178,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void test_closeAssessment() throws Exception {
+    public void closeAssessment() throws Exception {
         Long competitionId = Long.MAX_VALUE;
         when(competitionsRestService.closeAssessment(competitionId)).thenReturn(restSuccess());
 
@@ -187,7 +187,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void test_notifyAssessors() throws Exception {
+    public void notifyAssessors() throws Exception {
         Long competitionId = Long.MAX_VALUE;
         when(competitionsRestService.notifyAssessors(competitionId)).thenReturn(restSuccess());
 
@@ -196,7 +196,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void test_getPublicContentOfCompetition() throws Exception {
+    public void getPublicContentOfCompetition() throws Exception {
         Long competitionId = 12314L;
         PublicContentItemResource expected = newPublicContentItemResource().build();
 
@@ -205,5 +205,14 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         PublicContentItemResource result = service.getPublicContentOfCompetition(competitionId);
 
         assertEquals(expected, result);
+    }
+
+    @Test
+    public void releaseFeedback() throws Exception {
+        Long competitionId = Long.MAX_VALUE;
+        when(competitionsRestService.releaseFeedback(competitionId)).thenReturn(restSuccess());
+
+        service.releaseFeedback(competitionId);
+        verify(competitionsRestService, only()).releaseFeedback(competitionId);
     }
 }

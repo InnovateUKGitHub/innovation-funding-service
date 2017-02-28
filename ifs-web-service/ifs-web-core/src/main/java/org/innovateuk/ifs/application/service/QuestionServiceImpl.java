@@ -1,3 +1,4 @@
+
 package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.application.resource.QuestionResource;
@@ -34,8 +35,8 @@ public class QuestionServiceImpl implements QuestionService {
     private QuestionStatusRestService questionStatusRestService;
 
     @Override
-    public void assign(Long questionId, Long applicationId, Long assigneeId, Long assignedById) {
-        questionRestService.assign(questionId, applicationId, assigneeId, assignedById);
+    public ServiceResult<Void> assign(Long questionId, Long applicationId, Long assigneeId, Long assignedById) {
+        return questionRestService.assign(questionId, applicationId, assigneeId, assignedById).toServiceResult();
     }
 
     @Override
@@ -165,7 +166,7 @@ public class QuestionServiceImpl implements QuestionService {
             Long questionId = extractQuestionProcessRoleIdFromAssignSubmit(request);
             Long assigneeId = extractAssigneeProcessRoleIdFromAssignSubmit(request);
 
-            assign(questionId, applicationId, assigneeId, assignedBy.getId());
+            assign(questionId, applicationId, assigneeId, assignedBy.getId()).getSuccessObjectOrThrowException();
         }
     }
 

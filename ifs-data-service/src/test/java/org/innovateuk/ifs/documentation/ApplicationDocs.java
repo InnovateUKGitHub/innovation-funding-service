@@ -40,7 +40,7 @@ public class ApplicationDocs {
             .withName("application name")
             .withStartDate(LocalDate.now())
             .withSubmittedDate(LocalDateTime.now())
-            .withDuration(1L)
+            .withDurationInMonths(1L)
             .withApplicationStatus(ApplicationStatusConstants.OPEN)
             .withCompetition(1L)
             .withCompetitionName("competition name")

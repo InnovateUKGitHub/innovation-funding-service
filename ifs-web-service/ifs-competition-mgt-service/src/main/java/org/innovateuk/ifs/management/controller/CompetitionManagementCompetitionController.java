@@ -47,4 +47,10 @@ public class CompetitionManagementCompetitionController {
         competitionService.notifyAssessors(competitionId).getSuccessObjectOrThrowException();
         return "redirect:/competition/" + competitionId;
     }
+
+    @RequestMapping(value = "/{competitionId}/release-feedback", method = RequestMethod.POST)
+    public String releaseFeedback(@PathVariable("competitionId") Long competitionId) {
+        competitionService.releaseFeedback(competitionId);
+        return "redirect:/dashboard/project-setup";
+    }
 }
