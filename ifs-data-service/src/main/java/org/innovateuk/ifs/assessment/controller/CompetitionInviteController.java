@@ -60,7 +60,7 @@ public class CompetitionInviteController {
     @RequestMapping(value = "/getAvailableAssessors/{competitionId}", method = RequestMethod.GET)
     public RestResult<AvailableAssessorPageResource> getAvailableAssessors(
             @PathVariable long competitionId,
-            @PageableDefault(size = 20, sort = "firstName,lastName", direction = Sort.Direction.ASC) Pageable pageable,
+            @PageableDefault(size = 20, sort = {"firstName", "lastName"}, direction = Sort.Direction.ASC) Pageable pageable,
             @RequestParam Optional<Long> innovationArea
     ) {
         return competitionInviteService.getAvailableAssessors(competitionId, pageable, innovationArea).toGetResponse();
