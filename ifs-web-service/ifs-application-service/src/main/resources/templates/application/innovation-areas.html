@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+    <head>
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Innovation Areas'" />
+    </head>
+
+    <body th:with="context='applicant'" class="app-dashboard">
+        <th:block th:insert="fragments/layout :: body-start" />
+        <th:block th:insert="fragments/layout :: global-header" />
+
+        <main id="content">
+            <th:block th:insert="fragments/layout :: main-content-start" />
+                <div class="sub-header">
+                    <nav>
+                        <a class="link-back" th:href="@{/application/__${model.applicationId}__/form/question/__${model.questionId}__}">Project details</a>
+                    </nav>
+                </div>
+
+                <div class="page-title">
+                    <p class="subtitle">Competition title</p>
+                    <h1 class="heading-xlarge">Innovation areas</h1>
+                </div>
+                <div class="panel">
+                    Choose the primary innovation area for your project. This will help us to select suitable assessors for your application, if you need help choosing, read our <a href="#">guidance on the innovation areas.</a>
+                </div>
+            <form method="post" th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}">
+                <fieldset class="inline">
+                    <div th:each="innovationArea : ${model.availableInnovationAreas}" class="form-block inline">
+                        <label class="block-label selection-button-radio">
+                            <input type="radio" name="innovationAreaChoice" th:value="${innovationArea.id}" th:checked="(${model.selectedInnovationAreaId} == ${innovationArea.id})" required="required">
+                            <th:block th:text="${innovationArea.name}"/>
+                            <th:block th:text="${innovationArea.description}"/>
+                        </label>
+                    </div>
+
+                    <div>
+                        or
+                    </div>
+
+                    <div class="form-block inline">
+                        <label class="block-label selection-button-radio">
+                            <input type="radio" name="innovationAreaChoice" value="NOT_APPLICABLE" th:checked="${model.noInnovationAreaApplicable}" required="required">
+                            My innovation area is not listed
+                        </label>
+                    </div>
+                </fieldset>
+                <button class="button button-large" name="save-innovation-area" type="submit">Save</button>
+                <a th:href="@{/application/__${model.applicationId}__/form/question/__${model.questionId}__}" name="cancel" class="buttonlink">Cancel</a>
+            </form>
+            <th:block th:insert="fragments/layout :: main-content-end" />
+        </main>
+
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
+    </body>
+</html>

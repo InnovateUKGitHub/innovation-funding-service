@@ -1,9 +1,13 @@
 package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.mapper.ApplicationMapper;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.category.domain.InnovationArea;
+import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,23 +35,29 @@ public class ApplicationInnovationAreaServiceImpl extends BaseTransactionalServi
     @Autowired
     private InnovationAreaRepository innovationAreaRepository;
 
+    @Autowired
+    private ApplicationMapper applicationMapper;
+
+    @Autowired
+    private InnovationAreaMapper innovationAreaMapper;
+
     @Override
-    public ServiceResult<Application> setInnovationArea(Long applicationId, Long innovationAreaId) {
+    public ServiceResult<ApplicationResource> setInnovationArea(Long applicationId, Long innovationAreaId) {
         return findApplication(applicationId).andOnSuccess(application ->
                 findInnovationAreaInAllowedList(application, innovationAreaId).andOnSuccess(innovationArea ->
-                        saveApplicationWithInnovationArea(application, innovationArea)));
+                        saveApplicationWithInnovationArea(application, innovationArea))).andOnSuccess(applicationResource -> serviceSuccess(applicationMapper.mapToResource(applicationResource)));
     }
 
     @Override
-    public ServiceResult<Application> setNoInnovationAreaApplies(Long applicationId) {
+    public ServiceResult<ApplicationResource> setNoInnovationAreaApplies(Long applicationId) {
         return findApplication(applicationId).andOnSuccess(application ->
-                saveWithNoInnovationAreaApplies(application));
+                saveWithNoInnovationAreaApplies(application)).andOnSuccess(applicationResource -> serviceSuccess(applicationMapper.mapToResource(applicationResource)));
     }
 
     @Override
-    public ServiceResult<List<InnovationArea>> getAvailableInnovationAreas(Long applicationdId) {
+    public ServiceResult<List<InnovationAreaResource>> getAvailableInnovationAreas(Long applicationdId) {
         return findApplication(applicationdId).andOnSuccess(application ->
-                getAllowedInnovationAreas(application));
+                getAllowedInnovationAreas(application)).andOnSuccess(areas -> serviceSuccess(innovationAreaMapper.mapToResource(areas)));
     }
 
     private ServiceResult<InnovationArea> findInnovationAreaInAllowedList(Application application, Long innovationAreaId) {

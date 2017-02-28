@@ -126,6 +126,22 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return !applicantProcessRoles.isEmpty();
     }
 
+    @PermissionRule(value = "READ_AVAILABLE_INNOVATION_AREAS", description = "A user can view the Innovation Areas that are available to their application")
+    public boolean application (final Long applicationId, final UserResource user) {
+        ApplicationResource applicationResource = new ApplicationResource();
+        applicationResource.setId(applicationId);
+
+        return usersConnectedToTheApplicationCanView(applicationResource, user);
+    }
+
+    @PermissionRule(value = "UPDATE_INNOVATION_AREA", description = "A user can update their applications Innovation Area")
+    public boolean applicantCanUpdateApplicationResource(Long applicationId, UserResource user) {
+        ApplicationResource applicationResource = new ApplicationResource();
+        applicationResource.setId(applicationId);
+
+        return applicantCanUpdateApplicationResource(applicationId, user);
+    }
+
     @PermissionRule(
             value = "UPLOAD_ASSESSOR_FEEDBACK",
             description = "An Internal user can upload Assessor Feedback documentation for an Application whilst " +
