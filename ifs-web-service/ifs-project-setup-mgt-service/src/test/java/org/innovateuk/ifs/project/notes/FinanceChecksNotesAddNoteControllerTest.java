@@ -217,7 +217,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
         MockMultipartFile uploadedFile = new MockMultipartFile("attachment", "testFile.pdf", "application/pdf", "My content!".getBytes());
         AttachmentResource attachment = new AttachmentResource(1L, "name", "mediaType", 2L);
 
-        when(financeCheckServiceMock.uploadFile(77L, "application/pdf", 11, "testFile.pdf", "My content!".getBytes())).thenReturn(ServiceResult.serviceSuccess(attachment));
+        when(financeCheckServiceMock.uploadFile(projectId, "application/pdf", 11, "testFile.pdf", "My content!".getBytes())).thenReturn(ServiceResult.serviceSuccess(attachment));
         when(financeCheckServiceMock.getAttachment(1L)).thenReturn(ServiceResult.serviceSuccess(attachment));
 
         MvcResult result = mockMvc.perform(
@@ -232,7 +232,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
         assertEquals(URLEncoder.encode(JsonUtil.getSerializedObject(expectedAttachmentIds), CharEncoding.UTF_8),
                 getDecryptedCookieValue(result.getResponse().getCookies(), "finance_checks_notes_new_note_attachments_"+projectId+"_"+applicantOrganisationId));
 
-        verify(financeCheckServiceMock).uploadFile("application/pdf", 11, "testFile.pdf", "My content!".getBytes());
+        verify(financeCheckServiceMock).uploadFile(projectId, "application/pdf", 11, "testFile.pdf", "My content!".getBytes());
 
     }
 
