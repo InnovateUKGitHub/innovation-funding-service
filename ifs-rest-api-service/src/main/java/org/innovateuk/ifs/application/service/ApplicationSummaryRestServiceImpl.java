@@ -1,21 +1,14 @@
 package org.innovateuk.ifs.application.service;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.util.StringUtils;
 
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import static java.util.Collections.singletonList;
 
@@ -58,7 +51,7 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
 	
 	private RestResult<ApplicationSummaryPageResource> getApplicationSummaryPage(String url, Integer pageNumber, Integer pageSize, String sortField, String filter) {
 
-		String urlWithParams = addSort(url, sortField, pageNumber, pageSize,filter);
+		String urlWithParams = buildUri(url, sortField, pageNumber, pageSize,filter);
 		return getWithRestResult(urlWithParams, ApplicationSummaryPageResource.class);
 	}
 
@@ -77,21 +70,12 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
 		this.applicationSummaryRestUrl = applicationSummaryRestUrl;
 	}
 
-	protected String addSort(String url, String sortField, Integer pageNumber, Integer pageSize, String filter) {
+	protected String buildUri(String url, String sortField, Integer pageNumber, Integer pageSize, String filter) {
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-		if(pageNumber != null) {
-			params.put("page", singletonList(pageNumber.toString()));
-		}
-		if(pageSize != null) {
-			params.put("size", singletonList(pageSize.toString()));
-		}
-		if(!StringUtils.isEmpty(sortField)){
-			params.put("sort", singletonList(sortField));
-		}
 		if (filter != null) {
 			params.put("filter", singletonList(filter));
 		}
-		return UriComponentsBuilder.fromPath(url).queryParams(params).toUriString();
+		return buildPaginationUri(url, pageNumber, pageSize, sortField, params);
 	}
 
 }

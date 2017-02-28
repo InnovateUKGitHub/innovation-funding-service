@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.form.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
-import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +15,6 @@ import static org.junit.Assert.*;
 public class FormInputResponseRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<FormInputResponseRepository> {
 
     @Autowired
-    private FormInputRepository formInputRepository;
-
-    @Autowired
-    private ApplicationRepository applicationRepository;
-
-    @Autowired
     private FormInputResponseRepository repository;
 
     @Override
@@ -31,7 +24,7 @@ public class FormInputResponseRepositoryIntegrationTest extends BaseRepositoryIn
     }
 
     @Test
-    public void test_findOne() {
+    public void findOne() {
         FormInputResponse response = repository.findOne(1L);
         assertEquals(Long.valueOf(1), response.getId());
         assertTrue(response.getValue().startsWith("Within the Industry"));
@@ -45,7 +38,7 @@ public class FormInputResponseRepositoryIntegrationTest extends BaseRepositoryIn
     }
 
     @Test
-    public void test_findByApplicationIdAndFormInputId() {
+    public void findByApplicationIdAndFormInputId() {
         // test that we can find responses to form input "1" for certain applications
         assertEquals(1, repository.findByApplicationIdAndFormInputId(1L, 1L).size());
         assertEquals(0, repository.findByApplicationIdAndFormInputId(2L, 1L).size());
@@ -68,7 +61,7 @@ public class FormInputResponseRepositoryIntegrationTest extends BaseRepositoryIn
     }
 
     @Test
-    public void test_findByApplicationIdAndUpdateByAndFormInputId() {
+    public void findByApplicationIdAndUpdateByAndFormInputId() {
         // test that we can find processrole "1"'s response to form input "1" for certain applications
         long processRoleId = 1L;
         assertNotNull(repository.findByApplicationIdAndUpdatedByIdAndFormInputId(1L, processRoleId, 1L));
@@ -101,7 +94,7 @@ public class FormInputResponseRepositoryIntegrationTest extends BaseRepositoryIn
     }
 
     @Test
-    public void test_findByUpdateBy() {
+    public void findByUpdatedById() {
         // test that we can find processrole "1"'s responses to any applications
         long processRoleId = 1L;
         List<FormInputResponse> responses = repository.findByUpdatedById(processRoleId);
@@ -122,8 +115,31 @@ public class FormInputResponseRepositoryIntegrationTest extends BaseRepositoryIn
 
 
     @Test
-    public void test_findOne_nonExistentInput() {
+    public void findOne_nonExistentInput() {
         assertEquals(null, repository.findOne(Long.MAX_VALUE));
     }
 
+    @Test
+    public void findOneByApplicationIdAndFormInputQuestionName() {
+        FormInputResponse response = repository.findOneByApplicationIdAndFormInputQuestionName(1L, "Project Summary");
+        assertEquals(15L, response.getId().longValue());
+        assertTrue(response.getValue().startsWith("The Project aims to identify,"));
+        assertEquals(Integer.valueOf(90), response.getWordCount());
+        assertEquals(Integer.valueOf(400 - 90), response.getWordCountLeft());
+        assertEquals(18, response.getUpdateDate().getDayOfMonth());
+        assertEquals(9, response.getUpdateDate().getMonthValue());
+        assertEquals(2015, response.getUpdateDate().getYear());
+        assertEquals("steve.smith@empire.com", response.getUpdatedBy().getUser().getEmail());
+        assertEquals("Project summary", response.getFormInput().getDescription());
+    }
+
+    @Test
+    public void findOneByApplicationIdAndFormInputQuestionName_nonExistentApplication() {
+        assertNull(repository.findOneByApplicationIdAndFormInputQuestionName(Long.MAX_VALUE, "Project Summary"));
+    }
+
+    @Test
+    public void findOneByApplicationIdAndFormInputQuestionName_nonExistentQuestion() {
+        assertNull(repository.findOneByApplicationIdAndFormInputQuestionName(1L, "Not exists"));
+    }
 }

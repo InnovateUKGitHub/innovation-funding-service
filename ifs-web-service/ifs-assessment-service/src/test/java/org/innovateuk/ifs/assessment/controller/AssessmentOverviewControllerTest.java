@@ -22,7 +22,6 @@ import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationSize;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -35,6 +34,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -64,7 +64,8 @@ import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -94,14 +95,6 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
     @Override
     protected AssessmentOverviewController supplyControllerUnderTest() {
         return new AssessmentOverviewController();
-    }
-
-    @Before
-    public void setUp() {
-        super.setUp();
-
-        this.setupCompetition();
-        this.setupApplicationWithRoles();
     }
 
     @Test
@@ -300,33 +293,45 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
-    public void assessmentFinance() throws Exception {
-        AssessmentResource assessment = newAssessmentResource().withId(1L).withApplication(1L).build();
-        CompetitionResource competition = newCompetitionResource()
-                .withId(1L)
-                .withAssessorAcceptsDate(now().minusDays(2))
-                .withAssessorDeadlineDate(now().plusDays(4))
+    public void getFinancesSummary() throws Exception {
+        setupCompetition();
+        setupApplicationWithRoles();
+
+        LocalDateTime now = now();
+
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withAssessorAcceptsDate(now.minusDays(2))
+                .withAssessorDeadlineDate(now.plusDays(4))
                 .build();
-        ApplicationResource app = applications.get(0);
-        when(competitionService.getById(app.getCompetition())).thenReturn(competition);
-        when(assessmentService.getById(assessment.getId())).thenReturn(assessment);
+
+        ApplicationResource applicationResource = applications.get(0);
+
+        AssessmentResource assessmentResource = newAssessmentResource()
+                .withApplication(applicationResource.getId())
+                .withApplicationName("Application name")
+                .withCompetition(competitionResource.getId())
+                .build();
+
+        when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
+        when(assessmentService.getById(assessmentResource.getId())).thenReturn(assessmentResource);
 
         SortedSet<OrganisationResource> orgSet = setupOrganisations();
-        List<ApplicationFinanceResource> appFinanceList = setupFinances(app, orgSet);
+        List<ApplicationFinanceResource> appFinanceList = setupFinances(applicationResource, orgSet);
         OrganisationFinanceOverview organisationFinanceOverview = newOrganisationFinanceOverviewBuilder()
-                .withApplicationId(app.getId())
+                .withApplicationId(applicationResource.getId())
                 .withOrganisationFinances(appFinanceList)
                 .build();
 
-        mockMvc.perform(get("/" + assessment.getId() + "/finances"))
+        AssessmentFinancesSummaryViewModel expectedViewModel = new AssessmentFinancesSummaryViewModel(
+                assessmentResource.getId(), applicationResource.getId(), "Application name", 3, 50);
+
+        mockMvc.perform(get("/{assessmentId}/finances", assessmentResource.getId()))
                 .andExpect(status().isOk())
-                .andExpect(view().name("assessment/application-finances-summary"))
-                .andExpect(model().attribute("currentApplication", app))
-                .andExpect(model().attribute("currentCompetition", competitionService.getById(app.getCompetition())))
-                .andExpect(model().attribute("assessmentId", assessment.getId()))
+                .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(model().attribute("applicationOrganisations", orgSet))
                 .andExpect(model().attribute("organisationFinances", organisationFinanceOverview.getFinancesByOrganisation()))
-                .andExpect(model().attribute("financeTotal", organisationFinanceOverview.getTotal()));
+                .andExpect(model().attribute("financeTotal", organisationFinanceOverview.getTotal()))
+                .andExpect(view().name("assessment/application-finances-summary"));
     }
 
     @Test

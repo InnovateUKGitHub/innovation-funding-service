@@ -13,7 +13,7 @@
             <th:block th:insert="fragments/assessment :: assessment-header-deadline-sub (linkTitle='Back to your assessment overview',linkClass='link-back',linkUrl=@{/{id}(id=${model.assessmentId})},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft})" />
 
             <div class="page-title">
-                <th:block th:insert="fragments/elements :: application-title (applicationId=${model.application.id},applicationName=${model.application.applicationDisplayName})" />
+                <th:block th:insert="fragments/elements :: application-title (applicationId=${model.applicationId},applicationName=${model.applicationName})" />
                 <h1 class="heading-xlarge" th:text="${'Assessment summary'}" />
             </div>
 
@@ -152,7 +152,7 @@
 
                 <p class="icon-info">You will still be able to edit after you have saved this assessment. Saved assessments are submitted through your dashboard.</p>
 
-                <input type="hidden" id="application_id" th:value="${model.application.id}" />
+                <input type="hidden" id="application_id" th:value="${model.applicationId}" />
 
                 <div class="alignright">
                     <button type="submit" class="button button-large" name="submit-section">Save assessment</button>
