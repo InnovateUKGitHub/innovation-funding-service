@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
+import org.innovateuk.ifs.application.resource.ApplicationCountSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource;
+import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -20,12 +22,12 @@ public class ApplicationCountSummaryRestServiceTest extends BaseRestServiceUnitT
 
     @Test
     public void getApplicationCountSummariesByCompetitionId() {
-        String expectedUrl = "/applicationCountSummary/findByCompetitionId/1";
-        List<ApplicationCountSummaryResource> summaryResources = Collections.emptyList();
+        String expectedUrl = "/applicationCountSummary/findByCompetitionId/1?page=2&size=3&filter=filter";
+        ApplicationCountSummaryPageResource pageResource = new ApplicationCountSummaryPageResource();
 
-        setupGetWithRestResultExpectations(expectedUrl, applicationCountSummaryResourceListType(), summaryResources, OK);
+        setupGetWithRestResultExpectations(expectedUrl, ApplicationCountSummaryPageResource.class, pageResource, OK);
 
-        List<ApplicationCountSummaryResource> result = service.getApplicationCountSummariesByCompetitionId(1L).getSuccessObject();
-        Assert.assertEquals(summaryResources, result);
+        ApplicationCountSummaryPageResource result = service.getApplicationCountSummariesByCompetitionId(1L, 2, 3, "filter").getSuccessObject();
+        Assert.assertEquals(pageResource, result);
     }
 }
