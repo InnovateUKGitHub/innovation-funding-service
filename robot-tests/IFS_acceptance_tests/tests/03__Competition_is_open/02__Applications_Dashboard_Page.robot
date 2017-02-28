@@ -8,6 +8,8 @@ Documentation     INFUND-2135 As a Competition Administrator I want to be able t
 ...               INFUND-7367 Competition management: Applications dashboard
 ...
 ...               INFUND-7369 Competition management: View list of all applications
+...
+...               INFUND-8010 Filter, sorting and pagination on 'All applications' dashboard
 Suite Setup       Log in as user    &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
@@ -23,7 +25,7 @@ Application Dashboard
     [Tags]    HappyPath
     Given the user clicks the button/link    link=${OPEN_COMPETITION_NAME}
     When the user clicks the button/link    jQuery=a:contains("Applications - All, submitted")
-    Then The user should see the element    jQuery=a:contains(Submitted applications)
+    Then The user should see the element    jQuery=a:contains("Submitted applications")
     And The user should see the element    link=All applications
 
 List of all Applications
@@ -46,39 +48,26 @@ All Applications page: calculation in the table header
     Then the table header matches correctly
 
 The applications can be sorted by application number
-    [Documentation]    INFUND-2135: listing of applications for an open competition
-    [Tags]    HappyPath    Pending
-    #TODO UPDATE THIS IN SPRINT 21
-    When the application list is sorted by    Application number
+    [Documentation]    INFUND-8010
+    [Tags]    HappyPath
+    When the application list is sorted by    Application no.
     Then the applications should be sorted by column    1
 
-The applications can be sorted by project title
-    [Documentation]    INFUND-2135: listing of applications for an open competition
-    [Tags]    Pending
-    #TODO UPDATE THIS IN SPRINT 22
-    When the application list is sorted by    Project title
-    Then the applications should be sorted by column    2
-
-The applications can be sorted by project lead
-    [Documentation]    INFUND-2300: listing of applications for an open competition
-    [Tags]    Pending
-    #TODO UPDATE THIS IN SPRINT 22
-    When the application list is sorted by    Lead
-    Then the applications should be sorted by column    4
-
 The applications can be sorted by lead applicant
-    [Documentation]    INFUND-3006
-    [Tags]    Pending
-    #TODO UPDATE THIS IN SPRINT 22
-    When the application list is sorted by    Lead Name
+    [Documentation]    INFUND-8010
+    [Tags]
+    When the application list is sorted by    Lead
     Then the applications should be sorted by column    3
 
-The applications can be sorted by percentage complete
-    [Documentation]    INFUND-2300: listing of applications for an open competition
-    [Tags]    Pending
-    #TODO UPDATE THIS IN SPRINT 22
-    When the application list is sorted by    Percentage complete
-    Then the applications should be sorted in reverse order by column    6
+Filter on application number
+    [Documentation]    INFUND-8010
+    [Tags]    HappyPath
+    Given the user enters text to a text field    id=filterSearch    14
+    When the user clicks the button/link    jQuery=button:contains("Filter")
+    Then the user should see the text in the page    Using natural gas to heat homes
+    And the user should not see the text in the page    A novel solution to an old problem
+    And the user clicks the button/link    jQuery=a:contains("Clear all filters")
+    And the user should see the text in the page    A novel solution to an old problem
 
 All Applications page: Key Statistics
     [Documentation]    INFUND-2259
