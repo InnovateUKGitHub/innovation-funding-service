@@ -108,7 +108,7 @@ the user has read only view once section is marked complete
 
 the user fills in Labour
     the user clicks the button/link            jQuery=#form-input-20 button:contains("Labour")
-    the user should see the element            css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input
+    the user should see the element            css=#labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input
     the user clears the text from the element  css=[name^="labour-labourDaysYearly"]
     the user enters text to a text field       css=[name^="labour-labourDaysYearly"]    230
     the user enters text to a text field       css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input    test

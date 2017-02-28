@@ -147,7 +147,7 @@ Overheads section read only view should contain calculate overheads sheet
     then the user fills in the project costs         ${New_innovation_solution}
     and the user clicks the button/link     link=Your project costs
     When the user clicks the button/link     jQuery=button:contains("Overhead costs")
-    then the user should see the element      link=${excel_file}
+    then the user should see the element      jQuery=a:contains(${excel_file})
 
 *** Keywords ***
 Custom Suite Setup

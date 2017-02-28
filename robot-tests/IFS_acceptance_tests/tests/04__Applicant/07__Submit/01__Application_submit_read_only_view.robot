@@ -18,7 +18,7 @@ Applicant submits the application
     [Setup] Login as lead applicant
     When The user navigates to the page     dashboard
     and the user clicks the button/link       ${New_innovation_solution}
-    then the applicant completes the application details       Application details
+    then the applicant completes the application details    Application details
     and user marks the finances as complete
     when the user clicks the button/link     link=Review and submit
     then the user should not see the element     css=input
