@@ -1,154 +1,157 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
-<head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Notes'" />
-</head>
+    <head>
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Notes'" />
+    </head>
 
-<body th:with="context='project-management'" class="note-form">
+    <body th:with="context='project-management'" class="note-form">
+        <th:block th:insert="fragments/layout :: body-start" />
+        <th:block th:insert="fragments/layout :: global-header" />
 
-<th:block th:insert="fragments/layout :: body-start" />
-<th:block th:insert="fragments/layout :: global-header" />
+        <main id="content" th:with="baseUrl=@{${model.baseUrl}(projectId=${model.projectId},organisationId=${model.organisationId})}">
+            <th:block th:insert="fragments/layout :: main-content-start" />
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})},currentCompetition=null"  />
 
-<main id="content" th:with="baseUrl=@{${model.baseUrl}(projectId=${model.projectId},organisationId=${model.organisationId})}">
-    <th:block th:insert="fragments/layout :: main-content-start" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})},currentCompetition=null"  />
+            <div class="page-title">
+                <th:block th:insert="fragments/elements :: project-title (projectId=${model.projectId}, projectName=${model.projectName})" />
+                <h1 class="heading-xlarge">
+                    <th:block th:text="${model.organisationName}" />
+                    <small th:if="${model.leadPartnerOrganisation}">(Lead Partner)</small>
+                </h1>
+            </div>
 
-    <div class="page-title">
-        <th:block th:insert="fragments/elements :: project-title (projectId=${model.projectId}, projectName=${model.projectName})" />
-        <h1 class="heading-xlarge">
-            <th:block th:text="${model.organisationName}" />
-            <small th:if="${model.leadPartnerOrganisation}">(Lead Partner)</small>
-        </h1>
-    </div>
-
-    <h2 class="heading-medium">Review notes</h2>
-    <p>
-        Use this section to make notes related to the finance checks. Notes can only be seen by the internal team. After the finance checks are completed, this section will no longer be editable.
-    </p>
-    <div class="grid-row extra-margin-top">
-        <div class="column-half">
-            <a id="post-new-note" th:href="@{{baseUrl}/new-note(baseUrl=${baseUrl})}" class="button button-large" th:test="${baseUrl}">Create a new note</a>
-        </div>
-    </div>
-
-    <div class="error-summary" th:if="${nonFormErrors != null} and ${not #lists.isEmpty(nonFormErrors)}">
-        <h2 class="heading-medium error-summary-heading">There was a problem saving your comment.</h2>
-        Please review
-        <ul class="error-summary-list">
-            <th:block th:each="err : ${nonFormErrors}">
-                <li th:each="errMsg : ${err.codes}" th:text="#{${errMsg}}"></li>
-            </th:block>
-        </ul>
-    </div>
-
-    <hr />
-
-    <th:block th:each="note : ${model.getNotes()}">
-        <h2 class="heading-medium non-margin-bottom" th:text="${note.title}">Note Title</h2>
-        <th:block th:each="(post, iteration : ${note.viewModelPosts})">
-            <th:block th:if="${iteration.index == 0}">
-                <p class="heading-small no-margin">
-                    <th:block th:text="${post.username}">Created by user</th:block>
-                    <small th:text="${#temporals.format(post.createdOn, 'dd/MM/yyyy HH:mm')}">Date and Time</small>
-                </p>
-                <p th:text="${post.body}"></p>
-                <legend th:if="${post.attachments.size() > 0}" class="heading-small">Supporting documentation</legend>
-                <th:block th:each="attachment : ${post.attachments}">
-                    <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name}">file</a><br />
-                </th:block>
-            </th:block>
-            <th:block th:unless="${iteration.index == 0}">
-                <div class="panel">
-                    <p>
-                        <strong th:text="${post.username}">Created by user</strong>
-                        <small th:text="${#temporals.format(post.createdOn, 'dd/MM/yyyy HH:mm')}">Date and Time</small>
-                    </p>
-                    <p th:text="${post.body}"></p>
-                    <h3 th:if="${post.attachments.size() > 0}" class="heading-small">Supporting documentation</h3>
-                    <th:block th:each="attachment : ${post.attachments}">
-                        <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name}">file</a><br />
-                    </th:block>
-                </div>
-            </th:block>
-        </th:block>
-        <th:block th:if="${model.noteId == null}">
-            <hr />
-            <div class="grid-row extra-margin-top">
-                <div class="column-half"><a id="post-new-comment" th:href="@{{baseUrl}/{noteId}/new-comment(baseUrl=${baseUrl},noteId=${note.id})}" class="button button-secondary">Comment</a><br />
+            <h2 class="heading-medium">Review notes</h2>
+            <p>
+                Use this section to make notes related to the finance checks. Notes can only be seen by the internal team. After the finance checks are completed, this section will no longer be editable.
+            </p>
+            <div class="grid-row extra-margin">
+                <div class="column-half">
+                    <a id="post-new-note" th:href="@{{baseUrl}/new-note(baseUrl=${baseUrl})}" class="button button-large">Create a new note</a>
                 </div>
             </div>
-        </th:block>
-        <th:block th:if="${model.noteId != null and note.id == model.noteId}" th:with="baseUrl=@{{baseUrl}/{noteId}/new-comment(baseUrl=${baseUrl}, noteId=${model.noteId})}">
-            <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}" method="post" enctype="multipart/form-data" novalidate="novalidate">
-                <fieldset>
-                    <legend class="heading-medium">Comment</legend>
-                    <div th:class="${#fields.hasErrors('comment')}? 'form-group error':'form-group'">
-                        <label for="comment" class="form-label-bold">
-                            <span class="heading-small no-margin">Comment</span>
-                            <th:block th:if="${#fields.hasErrors('comment')}">
-                                <span>
-                                    <span class="error-message" th:each="err : ${#fields.errors('comment')}" th:text="${err}" />
-                                </span>
+
+            <div class="error-summary" th:if="${nonFormErrors != null} and ${not #lists.isEmpty(nonFormErrors)}">
+                <h2 class="heading-medium error-summary-heading">There was a problem saving your comment.</h2>
+                Please review
+                <ul class="error-summary-list">
+                    <th:block th:each="err : ${nonFormErrors}">
+                        <li th:each="errMsg : ${err.codes}" th:text="#{${errMsg}}"></li>
+                    </th:block>
+                </ul>
+            </div>
+
+            <th:block th:each="note : ${model.getNotes()}">
+                <hr />
+                <h2 class="heading-medium" th:text="${note.title}">Note Title</h2>
+                <th:block th:each="(post, iteration : ${note.viewModelPosts})">
+                    <th:block th:if="${iteration.index == 0}">
+                        <p class="heading-small no-margin">
+                            <th:block th:text="${post.username}">Created by user</th:block>
+                            <small th:text="${#temporals.format(post.createdOn, 'hh:mma dd MMMM yyyy')}">13:21 27 February 2017</small>
+                        </p>
+                        <p data-md-to-html="" class="wysiwyg-styles" th:text="${post.body}">Content of the note.</p>
+
+                        <th:block th:if="${post.attachments.size() > 0}">
+                            <h3 class="heading-small">Supporting documentation</h3>
+                            <ul class="list-bullet">
+                                <li th:each="attachment : ${post.attachments}">
+                                    <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name}">file</a><br />
+                                </li>
+                            </ul>
+                        </th:block>
+                    </th:block>
+                    <th:block th:unless="${iteration.index == 0}">
+                        <article class="panel">
+                            <p>
+                                <strong th:text="${post.username}">Created by user</strong>
+                                <small th:text="${#temporals.format(post.createdOn, 'hh:mma dd MMMM yyyy')}">Date and Time</small>
+                            </p>
+                            <p data-md-to-html="" class="wysiwyg-styles" th:text="${post.body}">Content of the comment.</p>
+                            <h3 th:if="${post.attachments.size() > 0}" class="heading-small">Supporting documentation</h3>
+                            <th:block th:each="attachment : ${post.attachments}">
+                                <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name}">file</a><br />
                             </th:block>
-                        </label>
-                        <div class="textarea-wrapped word-count">
-                            <textarea data-editor="md"
-                              required = "required"
-                              th:field="*{comment}"
-                              id="comment"
-                              name="comment"
-                              th:attr="maxlength=${model.maxNoteCharacters},
-                                       data-max_words=${model.maxNoteWords},
-                                       data-maxwordslength=${model.maxNoteWords},
-                                       data-maxwordslength-errormessage=#{validation.notesandqueries.comment.word.length.max(${model.maxNoteWords})},
-                                       data-maxlength-errormessage=#{validation.notesandqueries.comment.character.length.max(null, ${model.maxNoteCharacters})},
-                                       data-required-errormessage=#{validation.notesandqueries.comment.required}"
-                              th:classappend="${#fields.hasErrors('comment') ? 'form-control field-error' : 'form-control'}"></textarea>
-                            <div class="textarea-footer" th:with="comment=*{comment}">
-                                <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=${model.maxNoteWords}, currentWordsLeft=${#ifsUtil.wordsRemaining(model.maxNoteWords, content)})" />
-                            </div>
+                        </article>
+                    </th:block>
+                </th:block>
+                <th:block th:if="${model.noteId == null}">
+                    <div class="grid-row extra-margin">
+                        <div class="column-half">
+                            <a id="post-new-comment" th:href="@{{baseUrl}/{noteId}/new-comment(baseUrl=${baseUrl},noteId=${note.id})}" class="button button-secondary">Comment</a>
                         </div>
                     </div>
-                </fieldset>
-                <th:block th:if="${model.newAttachmentLinks.size() > 0}">
-                    <fieldset>
-                        <legend class="heading-small">Supporting documentation</legend>
-                        <th:block th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
-                            <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId)}">filename</a>
-                            <button name="removeAttachment" class="buttonlink" th:value="${attachmentId}">Remove</button><br />
-                        </th:block>
-                    </fieldset>
                 </th:block>
-                <fieldset>
-                    <div class="upload-section unstyled-view">
-                        <legend class="heading-small no-margin">Upload supporting documentation</legend>
-                        <th:block th:if="${#fields.hasErrors('attachment')}">
-                            <span>
-                                <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
-                            </span>
-                        </th:block>
-                        <input type="file" id="attachment" class="inputfile" name="attachment">
-                        <label for="attachment" class="button-secondary extra-margin">+ Upload</label>
-                        <button name="uploadAttachment" class="button-secondary" type="submit" data-for-file-upload="attachment">Save</button>
-                    </div>
-                </fieldset>
-                <hr />
-                <input type="hidden" id="action" value="postComment">
-                <div class="grid-row">
-                    <div class="column-half">
-                        <button class="button button-large no-margin">Save comment</button>
-                    </div>
-                    <div class="column-half alignright">
-                        <a th:href="@{{baseUrl}/cancel(baseUrl=${baseUrl})}">Cancel</a>
-                    </div>
-                </div>
-            </form>
-        </th:block>
-    </th:block>
 
-    <th:block th:include="fragments/layout :: main-content-end" />
-</main>
-<th:block th:include="fragments/layout :: footer" />
-<th:block th:include="fragments/layout :: body-end" />
-</body>
+                <th:block th:if="${model.noteId != null and note.id == model.noteId}" th:with="baseUrl=@{{baseUrl}/{noteId}/new-comment(baseUrl=${baseUrl}, noteId=${model.noteId})}">
+                    <h2 class="heading-medium">Add your comment</h2>
+                    <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}" method="post" enctype="multipart/form-data" novalidate="novalidate">
+                        <div th:class="${#fields.hasErrors('comment')}? 'form-group error':'form-group'">
+                            <label for="comment" class="form-label-bold">
+                                <span class="heading-small no-margin">Comment</span>
+                                <th:block th:if="${#fields.hasErrors('comment')}">
+                                    <span>
+                                        <span class="error-message" th:each="err : ${#fields.errors('comment')}" th:text="${err}" />
+                                    </span>
+                                </th:block>
+                            </label>
+                            <div class="textarea-wrapped word-count">
+                                <textarea data-editor="md"
+                                  required = "required"
+                                  th:field="*{comment}"
+                                  id="comment"
+                                  name="comment"
+                                  th:attr="maxlength=${model.maxNoteCharacters},
+                                           data-max_words=${model.maxNoteWords},
+                                           data-maxwordslength=${model.maxNoteWords},
+                                           data-maxwordslength-errormessage=#{validation.notesandqueries.comment.word.length.max(${model.maxNoteWords})},
+                                           data-maxlength-errormessage=#{validation.notesandqueries.comment.character.length.max(null, ${model.maxNoteCharacters})},
+                                           data-required-errormessage=#{validation.notesandqueries.comment.required}"
+                                  th:classappend="${#fields.hasErrors('comment') ? 'form-control field-error' : 'form-control'}"></textarea>
+                                <div class="textarea-footer" th:with="comment=*{comment}">
+                                    <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=${model.maxNoteWords}, currentWordsLeft=${#ifsUtil.wordsRemaining(model.maxNoteWords, content)})" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <th:block th:if="${model.newAttachmentLinks.size() > 0}">
+                            <h3 class="heading-small">Supporting documentation</h3>
+                            <ul>
+                                <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
+                                    <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId)}">filename</a>
+                                    <button name="removeAttachment" class="buttonlink" th:value="${attachmentId}">Remove</button><br />
+                                </li>
+                            </ul>
+                        </th:block>
+
+                        <fieldset>
+                            <div class="upload-section">
+                                <legend class="heading-small no-margin">Upload supporting documentation</legend>
+                                <th:block th:if="${#fields.hasErrors('attachment')}">
+                                    <span>
+                                        <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
+                                    </span>
+                                </th:block>
+                                <input type="file" id="attachment" class="inputfile" name="attachment">
+                                <label for="attachment" class="button-secondary extra-margin">+ Upload</label>
+                                <button name="uploadAttachment" class="button-secondary" type="submit" data-for-file-upload="attachment">Save</button>
+                            </div>
+                        </fieldset>
+
+                        <input type="hidden" id="action" value="postComment">
+                        <div class="grid-row extra-margin">
+                            <div class="column-half">
+                                <button class="button button-large no-margin">Save comment</button>
+                                <a class="button button-clear" th:href="@{{baseUrl}/cancel(baseUrl=${baseUrl})}">Cancel</a>
+                            </div>
+                        </div>
+                    </form>
+                </th:block>
+            </th:block>
+
+            <th:block th:include="fragments/layout :: main-content-end" />
+        </main>
+
+        <th:block th:include="fragments/layout :: footer" />
+        <th:block th:include="fragments/layout :: body-end" />
+    </body>
 </html>
