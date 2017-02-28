@@ -1,11 +1,11 @@
-ext.ifsDatasourceHost = "ifsprod.csfwpi01op01.eu-west-2.rds.amazonaws.com"
-ext.ifsDatasourceUrl="jdbc:mysql://ifsprod.csfwpi01op01.eu-west-2.rds.amazonaws.com:3306/ifs"
-ext.ifsDatasourceUsername="ifs"
-ext.ifsDatasourcePassword="WYvnilpLIz4aImqYmrgHN/ajuUPQlpfyBvun9XwkvgI="
+ext.ifsDatasourceHost = "ifs-database"
+ext.ifsDatasourceUrl="jdbc:mysql://ifs-database:3306/ifs"
+ext.ifsDatasourceUsername="root"
+ext.ifsDatasourcePassword="password"
 
-ext.testIfsDatasourceUrl="jdbc:mysql://ifsprod.csfwpi01op01.eu-west-2.rds.amazonaws.com:3306/ifs"
-ext.testIfsDatasourceUsername="ifs"
-ext.testIfsDatasourcePassword="WYvnilpLIz4aImqYmrgHN/ajuUPQlpfyBvun9XwkvgI="
+ext.testIfsDatasourceUrl="jdbc:mysql://ifs-database:3306/ifs_test"
+ext.testIfsDatasourceUsername="root"
+ext.testIfsDatasourcePassword="password"
 
 project.ext['flyway.url']='jdbc:mysql://ifs-database:3306?characterEncoding=utf8'
 project.ext['flyway.schemas']='ifs,ifs_test'

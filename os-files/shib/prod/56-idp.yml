@@ -29,6 +29,36 @@ items:
             value: "9443"
           - name: HTTPPORT
             value: "9080"
+          - name: LDAPURL
+            value: "ldap://ldap.org.iuk.local:389"
+          - name: LDAPUSESTARTTLS
+            value: "false"
+          - name: LDAPBASEDN
+            value: "OU=IFS,DC=prod,DC=ifs,DC=local"
+          - name: LDAPBINDDN
+            value: "CN=ifs,CN=Users,DC=prod,DC=ifs,DC=local"
+          - name: LDAPBINDDNCRED
+            value: "g8d,b33ng00d"
+          - name: LDAPUSERFILTER
+            value: "(&(mail={user})(!(employeeType=inactive)))"
+          - name: LDAPRURL
+            value: "ldap://ldap.org.iuk.local:389"
+          - name: LDAPRBASEDN
+            value: "OU=IFS,DC=prod,DC=ifs,DC=local"
+          - name: LDAPRBINDDN
+            value: "CN=ifs,CN=Users,DC=prod,DC=ifs,DC=local"
+          - name: LDAPRBINDDNCRED
+            value: "g8d,b33ng00d"
+          - name: LDAPRUSESTARTTLS
+            value: "false"
+          - name: LDAPRTRUSTCERT
+            value: "%{idp.authn.LDAP.trustCertificates:undefined}"
+          - name: LDAPRSEARCHFILTER
+            value: "(mail=$resolutionContext.principal)"
+          - name: LDAPRRETURNATTRIBUTE
+            value: "mail,uid"
+          - name: LDAPAUTHENTICATOR
+            value: "bindSearchAuthenticator"
           ports:
           - containerPort: 9443
           - containerPort: 9080

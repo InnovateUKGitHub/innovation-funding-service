@@ -23,6 +23,7 @@ function tailorAppInstance() {
     sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/*.yml
     sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/shib/*.yml
     sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/shib/*.yml
+    sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/shib/prod/*.yml
 
     sed -i.bak "s/<<IMAP-ADDRESS>>/imap-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/imap/*.yml
     sed -i.bak "s/<<ADMIN-ADDRESS>>/admin-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/*.yml
@@ -34,6 +35,7 @@ function useContainerRegistry() {
 
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/innovateuk/#g" os-files-tmp/shib/*.yml
+    sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/innovateuk/#g" os-files-tmp/shib/prod/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/robot-tests/*.yml
 
     docker tag innovateuk/data-service:1.0-SNAPSHOT \
@@ -69,7 +71,7 @@ function deploy() {
     then
         oc create -f os-files-tmp/
         oc create -f os-files-tmp/shib/5-shib.yml
-        oc create -f os-files-tmp/shib/56-idp.yml
+        oc create -f os-files-tmp/shib/prod/56-idp.yml
     else
         oc create -f os-files-tmp/imap/
         oc create -f os-files-tmp/mysql/
@@ -91,7 +93,7 @@ function blockUntilServiceIsUp() {
 }
 
 function shibInit() {
-     oc rsh $(oc get pods | awk '/ldap/ { print $1 }') /usr/local/bin/ldap-sync-from-ifs-db.sh ifsprod.csfwpi01op01.eu-west-2.rds.amazonaws.com ifs ifs WYvnilpLIz4aImqYmrgHN/ajuUPQlpfyBvun9XwkvgI=
+     oc rsh $(oc get pods | awk '/ldap/ { print $1 }') /usr/local/bin/ldap-sync-from-ifs-db.sh ifs-database
 }
 
 function cleanUp() {
