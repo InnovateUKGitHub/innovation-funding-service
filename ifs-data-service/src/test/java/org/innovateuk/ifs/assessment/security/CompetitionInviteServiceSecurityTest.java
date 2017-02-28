@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.assessment.transactional.CompetitionInviteService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.email.resource.EmailContent;
+import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -18,6 +19,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 
+import static java.lang.Boolean.TRUE;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
 import static org.innovateuk.ifs.invite.builder.CompetitionParticipantResourceBuilder.newCompetitionParticipantResource;
@@ -148,13 +150,18 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
 
     @Test
     public void getInvitationOverview() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getInvitationOverview(1L), COMP_ADMIN,PROJECT_FINANCE);
+        Pageable pageable = new PageRequest(0, 20);
+        Optional<Long> innovationArea = Optional.of(1L);
+        Optional<ParticipantStatus> status = Optional.of(ParticipantStatus.ACCEPTED);
+        Optional<Boolean> contract = Optional.of(TRUE);
+
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getInvitationOverview(1L, pageable, innovationArea, status, contract), COMP_ADMIN,PROJECT_FINANCE);
     }
 
     @Test
     public void getAvailableAssessors() {
-        Optional<Long> innovationArea = Optional.of(1L);
         Pageable pageable = new PageRequest(0, 20);
+        Optional<Long> innovationArea = Optional.of(1L);
 
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAvailableAssessors(1L, pageable, innovationArea), COMP_ADMIN, PROJECT_FINANCE);
     }
@@ -250,8 +257,13 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
             return null;
         }
 
+
         @Override
-        public ServiceResult<List<AssessorInviteOverviewResource>> getInvitationOverview(long competitionId) {
+        public ServiceResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
+                                                                                       Pageable pageable,
+                                                                                       Optional<Long> innovationArea,
+                                                                                       Optional<ParticipantStatus> status,
+                                                                                       Optional<Boolean> contract) {
             return null;
         }
 

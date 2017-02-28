@@ -13,10 +13,15 @@ import org.innovateuk.ifs.user.repository.UserRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Optional;
 
+import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
@@ -28,9 +33,12 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
+import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElement;
 import static org.innovateuk.ifs.util.CollectionFunctions.zip;
 import static org.junit.Assert.*;
+import static org.springframework.data.domain.Sort.Direction.ASC;
 
 public class CompetitionParticipantRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<CompetitionParticipantRepository> {
 
@@ -348,5 +356,33 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         assertTrue((expected.getRejectionReason() == null && actual.getRejectionReason() == null) ||
                 (expected.getRejectionReason() != null && actual.getRejectionReason() != null &&
                         expected.getRejectionReason().getId().equals(actual.getRejectionReason().getId())));
+    }
+
+    @Test
+    public void getAssessorsByCompetitionAndInnovationAreaAndStatusAndContract() throws Exception {
+        loginCompAdmin();
+
+        List<CompetitionInvite> newAssessorInvites = newCompetitionInviteWithoutId()
+                .withName("Jane Horowitz", "Anthony Hopkins")
+                .withEmail("jh@test.com", "ah@test.com")
+                .withCompetition(competition)
+                .withInnovationArea(innovationArea)
+                .withStatus(SENT)
+                .build(2);
+
+        saveNewCompetitionParticipants(newAssessorInvites);
+
+        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "user.firstName", "user.lastName"));
+
+        Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndContract(
+                competition.getId(),
+                innovationArea.getId(),
+                PENDING.getId(),
+                TRUE,
+                pageable
+        );
+
+        assertEquals(1, pagedResult.getTotalPages());
+        assertEquals(2, pagedResult.getTotalElements());
     }
 }

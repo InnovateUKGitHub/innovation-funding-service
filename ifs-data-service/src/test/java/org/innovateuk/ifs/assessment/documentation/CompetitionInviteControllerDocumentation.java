@@ -225,26 +225,26 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
         verify(competitionInviteServiceMock, only()).getCreatedInvites(competitionId, pageable);
     }
 
-    @Test
-    public void getInvitationOverview() throws Exception {
-        long competitionId = 1L;
-        List<AssessorInviteOverviewResource> expectedAssessorInviteOverviewResources = newAssessorInviteOverviewResource().build(2);
-
-        when(competitionInviteServiceMock.getInvitationOverview(competitionId)).thenReturn(serviceSuccess(expectedAssessorInviteOverviewResources));
-
-        mockMvc.perform(get("/competitioninvite/getInvitationOverview/{competitionId}", 1L))
-                .andExpect(status().isOk())
-                .andDo(document("competitioninvite/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("Id of the competition")
-                        ),
-                        responseFields(
-                                fieldWithPath("[]").description("List of overviews representing each of the assessor invites for the competition")
-                        ).andWithPrefix("[].", assessorInviteOverviewResourceFields)
-                ));
-
-        verify(competitionInviteServiceMock, only()).getInvitationOverview(competitionId);
-    }
+//    @Test
+//    public void getInvitationOverview() throws Exception {
+//        long competitionId = 1L;
+//        List<AssessorInviteOverviewResource> expectedAssessorInviteOverviewResources = newAssessorInviteOverviewResource().build(2);
+//
+//        when(competitionInviteServiceMock.getInvitationOverview(competitionId)).thenReturn(serviceSuccess(expectedAssessorInviteOverviewResources));
+//
+//        mockMvc.perform(get("/competitioninvite/getInvitationOverview/{competitionId}", 1L))
+//                .andExpect(status().isOk())
+//                .andDo(document("competitioninvite/{method-name}",
+//                        pathParameters(
+//                                parameterWithName("competitionId").description("Id of the competition")
+//                        ),
+//                        responseFields(
+//                                fieldWithPath("[]").description("List of overviews representing each of the assessor invites for the competition")
+//                        ).andWithPrefix("[].", assessorInviteOverviewResourceFields)
+//                ));
+//
+//        verify(competitionInviteServiceMock, only()).getInvitationOverview(competitionId);
+//    }
 
     @Test
     public void getInviteStatistics() throws Exception {

@@ -1031,73 +1031,127 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         inOrder.verifyNoMoreInteractions();
     }
 
-    @Test
-    public void getInvitationOverview() throws Exception {
-        long competitionId = 1L;
+//    @Test
+//    public void getInvitationOverview() throws Exception {
+//        long competitionId = 1L;
+//
+//        List<InnovationArea> innovationAreas = newInnovationArea()
+//                .withName("Earth Observation", "Internet of Things", "Data")
+//                .build(3);
+//        List<InnovationAreaResource> innovationAreaResources = newInnovationAreaResource()
+//                .withName("Earth Observation", "Internet of Things", "Data")
+//                .build(3);
+//
+//        Profile[] profiles = newProfile()
+//                .withBusinessType(BUSINESS, ACADEMIC, BUSINESS)
+//                .withInnovationArea(innovationAreas.get(0), innovationAreas.get(1), innovationAreas.get(2))
+//                .buildArray(3, Profile.class);
+//        List<User> users = newUser()
+//                .withProfileId(simpleMapArray(profiles, Profile::getId, Long.class))
+//                .build(3);
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
+//        LocalDateTime[] sentOn = {LocalDateTime.now(), LocalDateTime.now().plusMinutes(10), LocalDateTime.now().plusHours(1)};
+//
+//        List<CompetitionInvite> invites = newCompetitionInvite()
+//                .withName("John Barnes", "Dave Smith", "Richard Turner")
+//                .withStatus(SENT, SENT, SENT)
+//                .withSentOn(sentOn[0], sentOn[1], sentOn[2])
+//                .build(3);
+//
+//        List<CompetitionParticipant> competitionParticipants = newCompetitionParticipant()
+//                .withCompetition(newCompetition().build())
+//                .withUser(users.get(0), users.get(1), users.get(2))
+//                .withInvite(invites.get(0), invites.get(1), invites.get(2))
+//                .withStatus(ACCEPTED, REJECTED, PENDING)
+//                .withRejectionReason(null, newRejectionReason().withReason("Not available").build(), null)
+//                .build(3);
+//
+//        List<AssessorInviteOverviewResource> expected = newAssessorInviteOverviewResource()
+//                .withId(users.get(0).getId(), users.get(1).getId(), users.get(2).getId())
+//                .withName("John Barnes", "Dave Smith", "Richard Turner")
+//                .withBusinessType(BUSINESS, ACADEMIC, BUSINESS)
+//                .withInnovationAreas(asList(innovationAreaResources.get(0)), asList(innovationAreaResources.get(1)), asList(innovationAreaResources.get(2)))
+//                .withCompliant(false, false, false)
+//                .withStatus(ParticipantStatusResource.ACCEPTED, ParticipantStatusResource.REJECTED, ParticipantStatusResource.PENDING)
+//                .withDetails(null, "Invite declined as not available", "Invite sent: " + sentOn[2].format(formatter))
+//                .build(3);
+//
+//        when(profileRepositoryMock.findOne(profiles[0].getId())).thenReturn(profiles[0]);
+//        when(profileRepositoryMock.findOne(profiles[1].getId())).thenReturn(profiles[1]);
+//        when(profileRepositoryMock.findOne(profiles[2].getId())).thenReturn(profiles[2]);
+//        when(competitionParticipantRepositoryMock.getByCompetitionIdAndRole(competitionId, ASSESSOR)).thenReturn(competitionParticipants);
+//        when(participantStatusMapperMock.mapToResource(ACCEPTED)).thenReturn(ParticipantStatusResource.ACCEPTED);
+//        when(participantStatusMapperMock.mapToResource(REJECTED)).thenReturn(ParticipantStatusResource.REJECTED);
+//        when(participantStatusMapperMock.mapToResource(PENDING)).thenReturn(ParticipantStatusResource.PENDING);
+//        when(innovationAreaMapperMock.mapToResource(innovationAreas.get(0))).thenReturn(innovationAreaResources.get(0));
+//        when(innovationAreaMapperMock.mapToResource(innovationAreas.get(1))).thenReturn(innovationAreaResources.get(1));
+//        when(innovationAreaMapperMock.mapToResource(innovationAreas.get(2))).thenReturn(innovationAreaResources.get(2));
+//
+//        List<AssessorInviteOverviewResource> actual = service.getInvitationOverview(competitionId).getSuccessObjectOrThrowException();
+//        assertEquals(expected, actual);
+//
+//        InOrder inOrder = inOrder(competitionParticipantRepositoryMock, participantStatusMapperMock, profileRepositoryMock, innovationAreaMapperMock);
+//        inOrder.verify(competitionParticipantRepositoryMock).getByCompetitionIdAndRole(competitionId, ASSESSOR);
+//        inOrder.verify(participantStatusMapperMock, calls(3)).mapToResource(isA(ParticipantStatus.class));
+//        inOrder.verify(profileRepositoryMock).findOne(isA(Long.class));
+//        inOrder.verify(innovationAreaMapperMock).mapToResource(isA(InnovationArea.class));
+//
+//        inOrder.verifyNoMoreInteractions();
+//    }
 
-        List<InnovationArea> innovationAreas = newInnovationArea()
-                .withName("Earth Observation", "Internet of Things", "Data")
-                .build(3);
-        List<InnovationAreaResource> innovationAreaResources = newInnovationAreaResource()
-                .withName("Earth Observation", "Internet of Things", "Data")
-                .build(3);
-
-        Profile[] profiles = newProfile()
-                .withBusinessType(BUSINESS, ACADEMIC, BUSINESS)
-                .withInnovationArea(innovationAreas.get(0), innovationAreas.get(1), innovationAreas.get(2))
-                .buildArray(3, Profile.class);
-        List<User> users = newUser()
-                .withProfileId(simpleMapArray(profiles, Profile::getId, Long.class))
-                .build(3);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
-        LocalDateTime[] sentOn = {LocalDateTime.now(), LocalDateTime.now().plusMinutes(10), LocalDateTime.now().plusHours(1)};
-
-        List<CompetitionInvite> invites = newCompetitionInvite()
-                .withName("John Barnes", "Dave Smith", "Richard Turner")
-                .withStatus(SENT, SENT, SENT)
-                .withSentOn(sentOn[0], sentOn[1], sentOn[2])
-                .build(3);
-
-        List<CompetitionParticipant> competitionParticipants = newCompetitionParticipant()
-                .withCompetition(newCompetition().build())
-                .withUser(users.get(0), users.get(1), users.get(2))
-                .withInvite(invites.get(0), invites.get(1), invites.get(2))
-                .withStatus(ACCEPTED, REJECTED, PENDING)
-                .withRejectionReason(null, newRejectionReason().withReason("Not available").build(), null)
-                .build(3);
-
-        List<AssessorInviteOverviewResource> expected = newAssessorInviteOverviewResource()
-                .withId(users.get(0).getId(), users.get(1).getId(), users.get(2).getId())
-                .withName("John Barnes", "Dave Smith", "Richard Turner")
-                .withBusinessType(BUSINESS, ACADEMIC, BUSINESS)
-                .withInnovationAreas(asList(innovationAreaResources.get(0)), asList(innovationAreaResources.get(1)), asList(innovationAreaResources.get(2)))
-                .withCompliant(false, false, false)
-                .withStatus(ParticipantStatusResource.ACCEPTED, ParticipantStatusResource.REJECTED, ParticipantStatusResource.PENDING)
-                .withDetails(null, "Invite declined as not available", "Invite sent: " + sentOn[2].format(formatter))
-                .build(3);
-
-        when(profileRepositoryMock.findOne(profiles[0].getId())).thenReturn(profiles[0]);
-        when(profileRepositoryMock.findOne(profiles[1].getId())).thenReturn(profiles[1]);
-        when(profileRepositoryMock.findOne(profiles[2].getId())).thenReturn(profiles[2]);
-        when(competitionParticipantRepositoryMock.getByCompetitionIdAndRole(competitionId, ASSESSOR)).thenReturn(competitionParticipants);
-        when(participantStatusMapperMock.mapToResource(ACCEPTED)).thenReturn(ParticipantStatusResource.ACCEPTED);
-        when(participantStatusMapperMock.mapToResource(REJECTED)).thenReturn(ParticipantStatusResource.REJECTED);
-        when(participantStatusMapperMock.mapToResource(PENDING)).thenReturn(ParticipantStatusResource.PENDING);
-        when(innovationAreaMapperMock.mapToResource(innovationAreas.get(0))).thenReturn(innovationAreaResources.get(0));
-        when(innovationAreaMapperMock.mapToResource(innovationAreas.get(1))).thenReturn(innovationAreaResources.get(1));
-        when(innovationAreaMapperMock.mapToResource(innovationAreas.get(2))).thenReturn(innovationAreaResources.get(2));
-
-        List<AssessorInviteOverviewResource> actual = service.getInvitationOverview(competitionId).getSuccessObjectOrThrowException();
-        assertEquals(expected, actual);
-
-        InOrder inOrder = inOrder(competitionParticipantRepositoryMock, participantStatusMapperMock, profileRepositoryMock, innovationAreaMapperMock);
-        inOrder.verify(competitionParticipantRepositoryMock).getByCompetitionIdAndRole(competitionId, ASSESSOR);
-        inOrder.verify(participantStatusMapperMock, calls(3)).mapToResource(isA(ParticipantStatus.class));
-        inOrder.verify(profileRepositoryMock).findOne(isA(Long.class));
-        inOrder.verify(innovationAreaMapperMock).mapToResource(isA(InnovationArea.class));
-
-        inOrder.verifyNoMoreInteractions();
-    }
+//    @Test
+//    public void getInvitationOverview_notExistingUsers() throws Exception {
+//        long competitionId = 1L;
+//
+//        List<InnovationArea> innovationAreas = newInnovationArea()
+//                .withName("Earth Observation", "Internet of Things", "Data")
+//                .build(3);
+//        List<InnovationAreaResource> innovationAreaResources = newInnovationAreaResource()
+//                .withName("Earth Observation", "Internet of Things", "Data")
+//                .build(3);
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
+//        LocalDateTime[] sentOn = {LocalDateTime.now(), LocalDateTime.now().plusMinutes(10), LocalDateTime.now().plusHours(1)};
+//
+//        CompetitionInvite[] invites = newCompetitionInvite()
+//                .withName("John Barnes", "Dave Smith", "Richard Turner")
+//                .withSentOn(sentOn[0], sentOn[1], sentOn[2])
+//                .withInnovationArea(innovationAreas.get(0), innovationAreas.get(1), innovationAreas.get(2))
+//                .withStatus(SENT, SENT, SENT)
+//                .buildArray(3, CompetitionInvite.class);
+//
+//        List<CompetitionParticipant> competitionParticipants = newCompetitionParticipant()
+//                .withCompetition(newCompetition().build())
+//                .withInvite(invites)
+//                .withStatus(ACCEPTED, REJECTED, PENDING)
+//                .withRejectionReason(null, newRejectionReason().withReason("Not available").build(), null)
+//                .build(3);
+//
+//        List<AssessorInviteOverviewResource> expected = newAssessorInviteOverviewResource()
+//                .withName("John Barnes", "Dave Smith", "Richard Turner")
+//                .withInnovationAreas(asList(innovationAreaResources.get(0)), asList(innovationAreaResources.get(1)), asList(innovationAreaResources.get(2)))
+//                .withCompliant(false, false, false)
+//                .withStatus(ParticipantStatusResource.ACCEPTED, ParticipantStatusResource.REJECTED, ParticipantStatusResource.PENDING)
+//                .withDetails(null, "Invite declined as not available", "Invite sent: " + sentOn[2].format(formatter))
+//                .build(3);
+//
+//        when(competitionParticipantRepositoryMock.getByCompetitionIdAndRole(competitionId, ASSESSOR)).thenReturn(competitionParticipants);
+//        when(participantStatusMapperMock.mapToResource(ACCEPTED)).thenReturn(ParticipantStatusResource.ACCEPTED);
+//        when(participantStatusMapperMock.mapToResource(REJECTED)).thenReturn(ParticipantStatusResource.REJECTED);
+//        when(participantStatusMapperMock.mapToResource(PENDING)).thenReturn(ParticipantStatusResource.PENDING);
+//        when(innovationAreaMapperMock.mapToResource(innovationAreas.get(0))).thenReturn(innovationAreaResources.get(0));
+//        when(innovationAreaMapperMock.mapToResource(innovationAreas.get(1))).thenReturn(innovationAreaResources.get(1));
+//        when(innovationAreaMapperMock.mapToResource(innovationAreas.get(2))).thenReturn(innovationAreaResources.get(2));
+//
+//        List<AssessorInviteOverviewResource> actual = service.getInvitationOverview(competitionId).getSuccessObjectOrThrowException();
+//        assertEquals(expected, actual);
+//
+//        InOrder inOrder = inOrder(competitionParticipantRepositoryMock, participantStatusMapperMock, innovationAreaMapperMock);
+//        inOrder.verify(competitionParticipantRepositoryMock).getByCompetitionIdAndRole(competitionId, ASSESSOR);
+//        inOrder.verify(participantStatusMapperMock, calls(3)).mapToResource(isA(ParticipantStatus.class));
+//        inOrder.verify(innovationAreaMapperMock).mapToResource(isA(InnovationArea.class));
+//
+//        inOrder.verifyNoMoreInteractions();
+//    }
 
     @Test
     public void getInviteStatistics() throws Exception {
@@ -1121,60 +1175,6 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         inOrder.verify(competitionInviteRepositoryMock).countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(CREATED));
         inOrder.verify(competitionParticipantRepositoryMock).countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, ACCEPTED);
         inOrder.verify(competitionParticipantRepositoryMock).countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, REJECTED);
-        inOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
-    public void getInvitationOverview_notExistingUsers() throws Exception {
-        long competitionId = 1L;
-
-        List<InnovationArea> innovationAreas = newInnovationArea()
-                .withName("Earth Observation", "Internet of Things", "Data")
-                .build(3);
-        List<InnovationAreaResource> innovationAreaResources = newInnovationAreaResource()
-                .withName("Earth Observation", "Internet of Things", "Data")
-                .build(3);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
-        LocalDateTime[] sentOn = {LocalDateTime.now(), LocalDateTime.now().plusMinutes(10), LocalDateTime.now().plusHours(1)};
-
-        CompetitionInvite[] invites = newCompetitionInvite()
-                .withName("John Barnes", "Dave Smith", "Richard Turner")
-                .withSentOn(sentOn[0], sentOn[1], sentOn[2])
-                .withInnovationArea(innovationAreas.get(0), innovationAreas.get(1), innovationAreas.get(2))
-                .withStatus(SENT, SENT, SENT)
-                .buildArray(3, CompetitionInvite.class);
-
-        List<CompetitionParticipant> competitionParticipants = newCompetitionParticipant()
-                .withCompetition(newCompetition().build())
-                .withInvite(invites)
-                .withStatus(ACCEPTED, REJECTED, PENDING)
-                .withRejectionReason(null, newRejectionReason().withReason("Not available").build(), null)
-                .build(3);
-
-        List<AssessorInviteOverviewResource> expected = newAssessorInviteOverviewResource()
-                .withName("John Barnes", "Dave Smith", "Richard Turner")
-                .withInnovationAreas(asList(innovationAreaResources.get(0)), asList(innovationAreaResources.get(1)), asList(innovationAreaResources.get(2)))
-                .withCompliant(false, false, false)
-                .withStatus(ParticipantStatusResource.ACCEPTED, ParticipantStatusResource.REJECTED, ParticipantStatusResource.PENDING)
-                .withDetails(null, "Invite declined as not available", "Invite sent: " + sentOn[2].format(formatter))
-                .build(3);
-
-        when(competitionParticipantRepositoryMock.getByCompetitionIdAndRole(competitionId, ASSESSOR)).thenReturn(competitionParticipants);
-        when(participantStatusMapperMock.mapToResource(ACCEPTED)).thenReturn(ParticipantStatusResource.ACCEPTED);
-        when(participantStatusMapperMock.mapToResource(REJECTED)).thenReturn(ParticipantStatusResource.REJECTED);
-        when(participantStatusMapperMock.mapToResource(PENDING)).thenReturn(ParticipantStatusResource.PENDING);
-        when(innovationAreaMapperMock.mapToResource(innovationAreas.get(0))).thenReturn(innovationAreaResources.get(0));
-        when(innovationAreaMapperMock.mapToResource(innovationAreas.get(1))).thenReturn(innovationAreaResources.get(1));
-        when(innovationAreaMapperMock.mapToResource(innovationAreas.get(2))).thenReturn(innovationAreaResources.get(2));
-
-        List<AssessorInviteOverviewResource> actual = service.getInvitationOverview(competitionId).getSuccessObjectOrThrowException();
-        assertEquals(expected, actual);
-
-        InOrder inOrder = inOrder(competitionParticipantRepositoryMock, participantStatusMapperMock, innovationAreaMapperMock);
-        inOrder.verify(competitionParticipantRepositoryMock).getByCompetitionIdAndRole(competitionId, ASSESSOR);
-        inOrder.verify(participantStatusMapperMock, calls(3)).mapToResource(isA(ParticipantStatus.class));
-        inOrder.verify(innovationAreaMapperMock).mapToResource(isA(InnovationArea.class));
-
         inOrder.verifyNoMoreInteractions();
     }
 

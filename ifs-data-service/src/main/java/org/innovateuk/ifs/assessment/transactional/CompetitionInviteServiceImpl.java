@@ -12,10 +12,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.email.resource.EmailContent;
-import org.innovateuk.ifs.invite.domain.CompetitionInvite;
-import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
-import org.innovateuk.ifs.invite.domain.Participant;
-import org.innovateuk.ifs.invite.domain.RejectionReason;
+import org.innovateuk.ifs.invite.domain.*;
 import org.innovateuk.ifs.invite.mapper.ParticipantStatusMapper;
 import org.innovateuk.ifs.invite.repository.CompetitionInviteRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
@@ -266,8 +263,22 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     @Override
-    public ServiceResult<List<AssessorInviteOverviewResource>> getInvitationOverview(long competitionId) {
-        return serviceSuccess(simpleMap(competitionParticipantRepository.getByCompetitionIdAndRole(competitionId, ASSESSOR),
+    public ServiceResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
+                                                                                   Pageable pageable,
+                                                                                   Optional<Long> innovationArea,
+                                                                                   Optional<ParticipantStatus> status,
+                                                                                   Optional<Boolean> contract) {
+        Page<CompetitionParticipant> pagedResult = competitionParticipantRepository
+                .getAssessorsByCompetitionAndInnovationAreaAndStatusAndContract(
+                        competitionId,
+                        innovationArea.orElse(null),
+                        status.map(ParticipantStatus::getId).orElse(null),
+                        contract.orElse(null),
+                        pageable
+                );
+
+        List<AssessorInviteOverviewResource> inviteOverviews = simpleMap(
+                pagedResult.getContent(),
                 participant -> {
                     AssessorInviteOverviewResource assessorInviteOverview = new AssessorInviteOverviewResource();
                     assessorInviteOverview.setName(participant.getInvite().getName());
@@ -282,11 +293,21 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                         assessorInviteOverview.setCompliant(profile.isCompliant(participant.getUser()));
                         assessorInviteOverview.setInnovationAreas(simpleMap(profile.getInnovationAreas(), innovationAreaMapper::mapToResource));
                     } else {
-                        assessorInviteOverview.setInnovationAreas(asList(innovationAreaMapper.mapToResource(participant.getInvite().getInnovationArea())));
+                        assessorInviteOverview.setInnovationAreas(singletonList(
+                                innovationAreaMapper.mapToResource(participant.getInvite().getInnovationArea())
+                        ));
                     }
 
                     return assessorInviteOverview;
-                }));
+                });
+
+        return serviceSuccess(new AssessorInviteOverviewPageResource(
+                pagedResult.getTotalElements(),
+                pagedResult.getTotalPages(),
+                inviteOverviews,
+                pagedResult.getNumber(),
+                pagedResult.getSize()
+        ));
     }
 
     @Override

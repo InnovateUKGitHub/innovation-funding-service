@@ -3,6 +3,7 @@ package org.innovateuk.ifs.assessment.controller;
 import org.innovateuk.ifs.assessment.transactional.CompetitionInviteService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.email.resource.EmailContent;
+import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,8 +76,14 @@ public class CompetitionInviteController {
     }
 
     @RequestMapping(value = "/getInvitationOverview/{competitionId}", method = RequestMethod.GET)
-    public RestResult<List<AssessorInviteOverviewResource>> getInvitationOverview(@PathVariable Long competitionId) {
-        return competitionInviteService.getInvitationOverview(competitionId).toGetResponse();
+    public RestResult<AssessorInviteOverviewPageResource> getInvitationOverview(
+            @PathVariable Long competitionId,
+            @PageableDefault(size = 20, sort = {"firstName", "lastName"}, direction = Sort.Direction.ASC) Pageable pageable,
+            @RequestParam Optional<Long> innovationArea,
+            @RequestParam Optional<ParticipantStatus> status,
+            @RequestParam Optional<Boolean> contract
+    ) {
+        return competitionInviteService.getInvitationOverview(competitionId, pageable, innovationArea, status, contract).toGetResponse();
     }
 
     @RequestMapping(value = "/getInviteStatistics/{competitionId}", method = RequestMethod.GET)
