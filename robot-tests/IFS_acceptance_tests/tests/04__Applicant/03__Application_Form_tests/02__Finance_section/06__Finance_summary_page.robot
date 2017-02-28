@@ -108,7 +108,7 @@ Alert shows If the academic research participation is too high
     And the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=Review and submit
-    And the user clicks the button/link    jquery=h3:contains("Finances Summary")
+    And the user clicks the button/link    jquery=button:contains("Finances Summary")
     Then the user should see the text in the page    The participation levels of this project are not within the required range
     [Teardown]
 
@@ -122,7 +122,7 @@ Alert should not show If research participation is below the maximum level
     And the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=Review and submit
-    And the user clicks the button/link    jquery=h3:contains("Finances Summary")
+    And the user clicks the button/link    jquery=button:contains("Finances Summary")
     Then the user should see the text in the page    The participation levels of this project are within the required range
     [Teardown]
 
@@ -184,7 +184,7 @@ the red warning should be visible
 Lead enters a valid research participation value
     When The user navigates to the academic application finances
     the user clicks the button/link       link=Your project costs
-    the user clicks the button/link    jQuery=h2:contains("Labour")
+    the user clicks the button/link    jQuery=button:contains("Labour")
     the user should see the element    name=add_cost
     the user clicks the button/link    jQuery=button:contains('Add another role')
     the user should see the element    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input
