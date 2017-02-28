@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competition.controller;
 
+import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.assessment.transactional.AssessmentService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.*;
@@ -24,6 +25,8 @@ public class CompetitionController {
     private CompetitionSetupService competitionSetupService;
     @Autowired
     private AssessmentService assessmentService;
+    @Autowired
+    private ApplicationService applicationService;
 
     @GetMapping(value = "/{id}")
     public RestResult<CompetitionResource> getCompetitionById(@PathVariable("id") final Long id) {
@@ -128,6 +131,13 @@ public class CompetitionController {
     public RestResult<Void> notifyAssessors(@PathVariable("id") final long competitionId) {
         return competitionService.notifyAssessors(competitionId)
                 .andOnSuccess(() -> assessmentService.notifyAssessorsByCompetition(competitionId))
+                .toPutResponse();
+    }
+
+    @PutMapping(value = "/{id}/release-feedback")
+    public RestResult<Void> releaseFeedback(@PathVariable("id") final long competitionId) {
+        return competitionService.releaseFeedback(competitionId)
+                .andOnSuccess(() -> applicationService.notifyApplicantsByCompetition(competitionId))
                 .toPutResponse();
     }
 }
