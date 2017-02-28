@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.documentation;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.controller.ApplicationFundingDecisionController;
 import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.NotificationResource;
 import org.innovateuk.ifs.util.MapFunctions;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,6 +12,7 @@ import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
 import java.util.Map;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -61,5 +63,17 @@ public class ApplicationFundingDecisionControllerDocumentation extends BaseContr
         			.content(objectMapper.writeValueAsString(decision)))
         		.andDo( this.document.snippets());
     }
-    
+
+
+    @Test
+    public void sendNotifications() throws Exception {
+        NotificationResource notification = new NotificationResource("Subject of notification", "Body of notification message.", asList(1L, 2L, 3L));
+
+        when(applicationFundingServiceMock.notifyLeadApplicantsOfFundingDecisions(notification)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/applicationfunding/sendNotifications")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(notification)))
+                .andDo( this.document.snippets());
+    }
 }

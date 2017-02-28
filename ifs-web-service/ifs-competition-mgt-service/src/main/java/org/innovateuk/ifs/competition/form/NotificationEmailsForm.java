@@ -8,7 +8,7 @@ import java.util.List;
 public class NotificationEmailsForm {
 
     @NotEmpty (message="{validation.field.must.not.be.blank}")
-    private String summary;
+    private String subject;
 
     @NotEmpty(message="{validation.field.must.not.be.blank}")
     private String message;
@@ -16,12 +16,12 @@ public class NotificationEmailsForm {
     @NotNull
     private List<Long> ids;
 
-    public String getSummary() {
-        return summary;
+    public String getSubject() {
+        return subject;
     }
 
-    public void setSummary(String summary) {
-        this.summary = summary;
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 
     public String getMessage() {

@@ -1,15 +1,15 @@
 package org.innovateuk.ifs.application.service;
 
+import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.NotificationResource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import org.innovateuk.ifs.application.resource.FundingDecision;
 
 @Service
 public class ApplicationFundingDecisionServiceImpl implements ApplicationFundingDecisionService {
@@ -20,6 +20,11 @@ public class ApplicationFundingDecisionServiceImpl implements ApplicationFunding
 	@Override
 	public void makeApplicationFundingDecision(Long competitionId, Map<Long, FundingDecision> applicationIdToFundingDecision) {
 		applicationFundingDecisionRestService.makeApplicationFundingDecision(competitionId, applicationIdToFundingDecision).getSuccessObjectOrThrowException();
+	}
+
+	@Override
+	public void sendFundingNotifications(NotificationResource notificationResource) {
+		applicationFundingDecisionRestService.sendApplicationFundingDecisions(notificationResource).getSuccessObjectOrThrowException();
 	}
 	
 	@Override

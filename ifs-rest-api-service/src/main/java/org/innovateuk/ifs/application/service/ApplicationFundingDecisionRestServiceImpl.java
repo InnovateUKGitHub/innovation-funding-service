@@ -1,13 +1,12 @@
 package org.innovateuk.ifs.application.service;
 
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
 import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.NotificationResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
+import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 /**
  * Implementing class for {@link ApplicationFundingDecisionRestService}, for the action on deciding what applications should be funded for a given competition.
@@ -29,6 +28,10 @@ public class ApplicationFundingDecisionRestServiceImpl extends BaseRestService i
 
 	protected void setApplicationFundingDecisionRestURL(String applicationFundingDecisionRestURL) {
 		this.applicationFundingDecisionRestURL = applicationFundingDecisionRestURL;
+	}
+
+	public RestResult<Void> sendApplicationFundingDecisions(NotificationResource notificationResource) {
+		return postWithRestResult(applicationFundingDecisionRestURL + "/sendNotifications", notificationResource, Void.class);
 	}
 
 }

@@ -1,9 +1,10 @@
 package org.innovateuk.ifs.application.service;
 
+import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.NotificationResource;
+
 import java.util.List;
 import java.util.Map;
-
-import org.innovateuk.ifs.application.resource.FundingDecision;
 
 /**
  * Service for making the decision of which applications will receive funding and which will not for a given competition.
@@ -16,7 +17,14 @@ public interface ApplicationFundingDecisionService {
 	 * @param applicationIdToFundingDecision map of application ids to funding decisions
 	 */
 	void makeApplicationFundingDecision(Long competitionId, Map<Long, FundingDecision> applicationIdToFundingDecision);
-	
+
+	/**
+	 * sends a notification to the lead applicants of each of the supplied application ids,
+	 * using the subject and notification text contained in the notification resource.
+	 * @param notificationResource a notification subject, message, and the ids of the applications to be notified.
+	 */
+	void sendFundingNotifications(NotificationResource notificationResource);
+
 	/**
 	 * verifies all submitted applications represented.
 	 * @param parameterMap the submitted parameters

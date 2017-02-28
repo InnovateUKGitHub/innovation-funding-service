@@ -8,10 +8,9 @@ import org.innovateuk.ifs.util.MapFunctions;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -76,8 +75,7 @@ public class ApplicationFundingDecisionControllerTest extends BaseControllerMock
 
     @Test
     public void testSendNotifications() throws Exception {
-        List<Long> applicationIds = Arrays.asList(1L, 2L, 3L);
-        NotificationResource notification = new NotificationResource("Blah", "Blah", applicationIds);
+        NotificationResource notification = new NotificationResource("Subject of notification", "Body of notification message.", asList(1L, 2L, 3L));
 
         when(applicationFundingServiceMock.notifyLeadApplicantsOfFundingDecisions(notification)).thenReturn(serviceSuccess());
 

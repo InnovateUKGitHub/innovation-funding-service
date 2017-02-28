@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.management.controller;
 
+import org.innovateuk.ifs.application.resource.NotificationResource;
+import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.competition.form.ManageFundingApplicationsQueryForm;
 import org.innovateuk.ifs.competition.form.NotificationEmailsForm;
 import org.innovateuk.ifs.competition.form.SelectApplicationsForEmailForm;
@@ -39,6 +41,10 @@ public class CompetitionManagementManageFundingApplicationsController {
     @Autowired
     private SendNotificationsModelPopulator sendNotificationsModelPopulator;
 
+    @Autowired
+    private ApplicationFundingDecisionService applicationFundingService;
+
+
     @GetMapping(value = "/funding/send")
     public String sendNotifications(Model model,
                                @PathVariable("competitionId") Long competitionId,
@@ -61,6 +67,9 @@ public class CompetitionManagementManageFundingApplicationsController {
                                     ValidationHandler validationHandler) {
 
         form.setIds(Arrays.asList(27L, 28L));  //TODO: fix so these values come back in the form from the submit
+
+        NotificationResource notificationResource = new NotificationResource(form.getSubject(), form.getMessage(), form.getIds());
+        applicationFundingService.sendFundingNotifications(notificationResource);
 
         // failure view... (temporary - for testing purposes)
         model.addAttribute("model", sendNotificationsModelPopulator.populate(competitionId, form.getIds()));
