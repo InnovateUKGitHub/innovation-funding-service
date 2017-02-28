@@ -132,14 +132,9 @@ public class ApplicationDownloadController {
         for (Application a : applications) {
             // PREPARE APPLICATION INFORMATION
         	
-            List<FormInputResponse> projectSummary = formInputResponseRepository.findByApplicationIdAndFormInputQuestionName(a.getId(), APPLICATION_SUMMARY_QUESTION_NAME);
-            String projectSummaryString;
-            if(projectSummary.isEmpty()){
-                projectSummaryString = "";
-            } else {
-            	projectSummaryString = projectSummary.get(0).getValue();
-            }
-            
+            FormInputResponse projectSummary = formInputResponseRepository.findOneByApplicationIdAndFormInputQuestionName(a.getId(), APPLICATION_SUMMARY_QUESTION_NAME);
+            String projectSummaryString = projectSummary == null ? "" : projectSummary.getValue();
+
         	ServiceResult<BigDecimal> totalResult = applicationSummarisationService.getTotalProjectCost(a);
         	ServiceResult<BigDecimal> fundingSoughtResult = applicationSummarisationService.getFundingSought(a);
         	
