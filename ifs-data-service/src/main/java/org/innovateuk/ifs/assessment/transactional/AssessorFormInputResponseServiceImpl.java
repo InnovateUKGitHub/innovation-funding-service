@@ -72,8 +72,7 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
         int totalScope = 0;
         int totalInScope = 0;
         for (AssessorFormInputResponse response : responses) {
-            Question question = response.getFormInput().getQuestion();
-            if (question.getShortName().equals("Scope") && question.getSection().getName().equals("Project details")) {
+            if (response.getFormInput().getType() == FormInputType.ASSESSOR_APPLICATION_IN_SCOPE) {
                 totalScope++;
                 if (response.getValue().equals("true")) {
                     totalInScope++;

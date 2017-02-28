@@ -299,9 +299,6 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(assessorFormInputResponseRestService.getApplicationAssessmentAggregate(app.getId()))
                 .thenReturn(restSuccess(new ApplicationAssessmentAggregateResource(5,4)));
 
-//        model.addAttribute("scores", assessorFormInputResponseRestService.getApplicationAssessmentAggregate(applicationId).getSuccessObjectOrThrowException());
-
-
         mockMvc.perform(get("/application/" + app.getId()+"/summary"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("application-feedback-summary"))

@@ -9,6 +9,7 @@ import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.resource.FormInputResource;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -407,28 +408,16 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
         long applicationId = 7;
 
         FormInput scopeFormInput = newFormInput()
-                .withQuestion(newQuestion()
-                                .withSection(newSection().withName("Project details").build())
-                                .withShortName("Scope")
-                                .build())
-                .build();
-        FormInput scopeFormInputInOtherSection = newFormInput()
-                .withQuestion(newQuestion()
-                                .withSection(newSection().withName("Other Section").build())
-                                .withShortName("Scope")
-                                .build())
+                .withType(FormInputType.ASSESSOR_APPLICATION_IN_SCOPE)
                 .build();
         FormInput otherFormInput = newFormInput()
-                .withQuestion(newQuestion()
-                                .withSection(newSection().withName("Project details").build())
-                                .withShortName("Other")
-                                .build())
+                .withType(FormInputType.ASSESSOR_RESEARCH_CATEGORY)
                 .build();
 
         List<AssessorFormInputResponse> assessorFormInputResponses = newAssessorFormInputResponse()
-                .withFormInput(scopeFormInput, scopeFormInputInOtherSection, scopeFormInput, otherFormInput)
-                .withValue("true", "true", "false", "true")
-                .build(4);
+                .withFormInput(scopeFormInput, otherFormInput, scopeFormInput)
+                .withValue("true", "true", "false")
+                .build(3);
 
         when(assessorFormInputResponseRepositoryMock.findByAssessmentTargetId(applicationId)).thenReturn(assessorFormInputResponses);
 
