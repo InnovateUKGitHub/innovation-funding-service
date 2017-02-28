@@ -144,7 +144,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         when(spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(project.getId(), organisation2.getId())).thenReturn(serviceSuccess(
                 new SpendProfileCostCategorySummaries(
-                        singletonList(new SpendProfileCostCategorySummary(type2Cat1, new BigDecimal("300.66"), project.getDurationInMonths())),
+                        singletonList(new SpendProfileCostCategorySummary(type2Cat1, new BigDecimal("301.00"), project.getDurationInMonths())),
                         costCategoryType2)));
 
         PartnerOrganisation partnerOrganisation1 = newPartnerOrganisation().build();
@@ -164,12 +164,12 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
                 new Cost("200").withCategory(type1Cat2));
 
         List<Cost> expectedOrganisation1SpendProfileFigures = asList(
-                new Cost("34").withCategory(type1Cat1).withTimePeriod(0, MONTH, 1, MONTH),
+                new Cost("34.00").withCategory(type1Cat1).withTimePeriod(0, MONTH, 1, MONTH),
                 new Cost("33").withCategory(type1Cat1).withTimePeriod(1, MONTH, 1, MONTH),
                 new Cost("33").withCategory(type1Cat1).withTimePeriod(2, MONTH, 1, MONTH),
-                new Cost("66").withCategory(type1Cat2).withTimePeriod(0, MONTH, 1, MONTH),
-                new Cost("67").withCategory(type1Cat2).withTimePeriod(1, MONTH, 1, MONTH),
-                new Cost("67").withCategory(type1Cat2).withTimePeriod(2, MONTH, 1, MONTH));
+                new Cost("68.00").withCategory(type1Cat2).withTimePeriod(0, MONTH, 1, MONTH),
+                new Cost("66").withCategory(type1Cat2).withTimePeriod(1, MONTH, 1, MONTH),
+                new Cost("66").withCategory(type1Cat2).withTimePeriod(2, MONTH, 1, MONTH));
 
         User generatedBy = newUser().build();
         when(userRepositoryMock.findOne(loggedInUser.getId())).thenReturn(generatedBy);
@@ -183,7 +183,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
                 new Cost("301").withCategory(type2Cat1));
 
         List<Cost> expectedOrganisation2SpendProfileFigures = asList(
-                new Cost("101").withCategory(type2Cat1).withTimePeriod(0, MONTH, 1, MONTH),
+                new Cost("101.00").withCategory(type2Cat1).withTimePeriod(0, MONTH, 1, MONTH),
                 new Cost("100").withCategory(type2Cat1).withTimePeriod(1, MONTH, 1, MONTH),
                 new Cost("100").withCategory(type2Cat1).withTimePeriod(2, MONTH, 1, MONTH));
 
