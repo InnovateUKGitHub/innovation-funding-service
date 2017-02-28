@@ -49,9 +49,8 @@ public class AttachmentPermissionsRules {
     }
 
     private boolean isFinanceContactInProject(UserResource user, ProjectResource project) {
-        return ofNullable(projectUserRepository.findByProjectIdAndRoleAndUserId(project.getId(),
-                PROJECT_FINANCE_CONTACT,  user.getId())).isPresent();
-//        return !projectUserRepository.findByUserIdAndRole(user.getId(), PROJECT_FINANCE_CONTACT).isEmpty();
+        return ofNullable(projectUserRepository.findByProjectIdAndRoleAndUserId(project.getId(), PROJECT_FINANCE_CONTACT,  user.getId()))
+                    .isPresent();
     }
 
     @PermissionRule(value = "PF_ATTACHMENT_READ", description = "Project Finance users can fetch any Attachment.")
@@ -96,7 +95,7 @@ public class AttachmentPermissionsRules {
     }
 
     private Optional<Query> findQueryTheAttachmentIsLinkedTo(AttachmentResource attachment) {
-        return queryRepository.findOneThatHoldsAttachment(attachment.id).stream().findFirst();
+        return queryRepository.findDistinctThreadByPostsAttachmentsId(attachment.id).stream().findFirst();
     }
 
 }
