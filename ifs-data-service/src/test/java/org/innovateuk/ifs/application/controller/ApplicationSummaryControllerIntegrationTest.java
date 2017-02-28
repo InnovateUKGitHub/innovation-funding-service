@@ -24,7 +24,10 @@ import org.springframework.test.annotation.Rollback;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static org.innovateuk.ifs.commons.security.SecuritySetter.swapOutForUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
@@ -35,45 +38,13 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
     @Autowired
     private ApplicationService applicationService;
 
-    @Autowired
-    private ApplicationRepository applicationRepository;
-
     public static final long APPLICATION_ID = 1L;
     public static final long COMPETITION_ID = 1L;
 
-    private Long leadApplicantProcessRole;
-    private Long leadApplicantId;
-
-    private Long compAdminUserId;
-    private Long compAdminRoleId;
-
     @Before
     public void setUp() throws Exception {
-        leadApplicantId = 1L;
-        leadApplicantProcessRole = 1L;
-        List<ProcessRole> leadApplicantProccessRoles = new ArrayList<>();
-        Application application = new Application(
-                APPLICATION_ID,
-                "",
-                new ApplicationStatus(
-                        ApplicationStatusConstants.CREATED.getId(),
-                        ApplicationStatusConstants.CREATED.getName()
-                )
-        );
-        leadApplicantProccessRoles.add(
-                new ProcessRole(
-                        leadApplicantProcessRole,
-                        null,
-                        application.getId(),
-                        null,
-                        null
-                )
-        );
-        User user = new User(leadApplicantId, "steve", "smith", "steve.smith@empire.com", "", "123abc");
-        leadApplicantProccessRoles.get(0).setUser(user);
-
-        compAdminUserId = 2L;
-        compAdminRoleId = 2L;
+        Long compAdminUserId = 2L;
+        Long compAdminRoleId = 2L;
         UserResource compAdminUser = newUserResource().withId(compAdminUserId).withFirstName("jim").withLastName("kirk").withEmail("j.kirk@starfleet.org").build();
         RoleResource compAdminRole = new RoleResource(compAdminRoleId, UserRoleType.COMP_ADMIN.getName());
         compAdminUser.getRoles().add(compAdminRole);
@@ -87,7 +58,7 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
 
     @Test
     public void testApplicationOrderingOnCompletion() {
-        RestResult<ApplicationSummaryPageResource> result = controller.getApplicationSummaryByCompetitionId(COMPETITION_ID, "percentageComplete", 0, 10);
+        RestResult<ApplicationSummaryPageResource> result = controller.getApplicationSummaryByCompetitionId(COMPETITION_ID, "percentageComplete", 0, 10, of(""));
         assertTrue(result.isSuccess());
         ApplicationSummaryPageResource applicationSummaryPageResource = result.getSuccessObject();
         assertNotNull(applicationSummaryPageResource);
@@ -145,7 +116,7 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
 
     @Test
     public void testApplicationSummariesByCompetitionId() throws Exception {
-        RestResult<ApplicationSummaryPageResource> result = controller.getApplicationSummaryByCompetitionId(COMPETITION_ID, null, 0, 20);
+        RestResult<ApplicationSummaryPageResource> result = controller.getApplicationSummaryByCompetitionId(COMPETITION_ID, null, 0, 20, empty());
 
         assertTrue(result.isSuccess());
         assertEquals(0, result.getSuccessObject().getNumber());
@@ -161,8 +132,25 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
     }
 
     @Test
+    public void testApplicationSummaryiesByCompetitionIdFiltered() throws Exception {
+        RestResult<ApplicationSummaryPageResource> result = controller.getApplicationSummaryByCompetitionId(COMPETITION_ID, null, 0, 20, of("3"));
+
+        assertTrue(result.isSuccess());
+        assertEquals(0, result.getSuccessObject().getNumber());
+        assertEquals(20, result.getSuccessObject().getSize());
+        assertEquals(1, result.getSuccessObject().getTotalElements());
+        assertEquals(1, result.getSuccessObject().getTotalPages());
+        assertEquals(3, result.getSuccessObject().getContent().get(0).getId());
+        assertEquals("Submitted", result.getSuccessObject().getContent().get(0).getStatus());
+        assertEquals("Mobile Phone Data for Logistics Analytics", result.getSuccessObject().getContent().get(0).getName());
+        assertEquals("Empire Ltd", result.getSuccessObject().getContent().get(0).getLead());
+        assertEquals("Steve Smith", result.getSuccessObject().getContent().get(0).getLeadApplicant());
+        assertEquals(0, result.getSuccessObject().getContent().get(0).getCompletedPercentage());
+    }
+
+    @Test
     public void testApplicationSummariesByCompetitionIdSortedId() throws Exception {
-        RestResult<ApplicationSummaryPageResource> result = controller.getApplicationSummaryByCompetitionId(COMPETITION_ID, "id", 0, 20);
+        RestResult<ApplicationSummaryPageResource> result = controller.getApplicationSummaryByCompetitionId(COMPETITION_ID, "id", 0, 20, empty());
 
         assertTrue(result.isSuccess());
         assertEquals(0, result.getSuccessObject().getNumber());
@@ -179,7 +167,7 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
 
     @Test
     public void testApplicationSummariesByCompetitionIdSortedName() throws Exception {
-        RestResult<ApplicationSummaryPageResource> result = controller.getApplicationSummaryByCompetitionId(COMPETITION_ID, "name", 0, 20);
+        RestResult<ApplicationSummaryPageResource> result = controller.getApplicationSummaryByCompetitionId(COMPETITION_ID, "name", 0, 20, empty());
 
         assertTrue(result.isSuccess());
         assertEquals(0, result.getSuccessObject().getNumber());
@@ -193,7 +181,7 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
 
     @Test
     public void testApplicationSummariesByClosedCompetitionId() throws Exception {
-        RestResult<ApplicationSummaryPageResource> result = controller.getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, null, 0, 20);
+        RestResult<ApplicationSummaryPageResource> result = controller.getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, null, 0, 20, empty());
 
         assertTrue(result.isSuccess());
         assertEquals(0, result.getSuccessObject().getNumber());

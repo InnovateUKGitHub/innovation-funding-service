@@ -20,4 +20,5 @@ public interface FormInputResponseRestService {
     RestResult<ByteArrayResource> getFile(long formInputId, long applicationId, long processRoleId);
     RestResult<FormInputResponseFileEntryResource> getFileDetails(long formInputId, long applicationId, long processRoleId);
     RestResult<List<FormInputResponseResource>> getByFormInputIdAndApplication(long formInputId, long applicationId);
+    RestResult<FormInputResponseResource> getByApplicationIdAndQuestionName(long applicationId, String questionName);
 }

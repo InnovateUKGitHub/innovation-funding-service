@@ -237,4 +237,20 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
                         ))
                 );
     }
+
+    @Test
+    public void releaseFeedback() throws Exception {
+        final Long competitionId = 1L;
+
+        when(competitionService.releaseFeedback(competitionId)).thenReturn(serviceSuccess());
+        when(applicationServiceMock.notifyApplicantsByCompetition(competitionId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/competition/{id}/release-feedback", competitionId))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("id").description("id of the competition for the notifications")
+                        ))
+                );
+    }
 }

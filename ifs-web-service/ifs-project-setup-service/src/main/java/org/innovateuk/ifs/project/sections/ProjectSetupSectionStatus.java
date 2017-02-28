@@ -49,15 +49,20 @@ public class ProjectSetupSectionStatus {
         return EMPTY;
     }
 
-    public SectionStatus financeChecksSectionStatus(final ProjectActivityStates bankDetailsState,
-                                                    final boolean allFinanceChecksApproved) {
-        if (asList(COMPLETE, NOT_REQUIRED).contains(bankDetailsState)) {
-            if (allFinanceChecksApproved) {
-                return TICK;
-            }
-            return HOURGLASS;
+    public SectionStatus financeChecksSectionStatus(final ProjectActivityStates financeCheckState,
+                                                    final boolean allApproved,
+                                                    final SectionAccess access) {
+
+        if(financeCheckState == null || financeCheckState.equals(NOT_STARTED)) {
+            return EMPTY;
         }
-        return EMPTY;
+        if (financeCheckState.equals(COMPLETE) && allApproved) {
+            return TICK;
+        }
+        if (access.equals(SectionAccess.ACCESSIBLE) && financeCheckState.equals(ACTION_REQUIRED)) {
+            return FLAG;
+        }
+        return HOURGLASS;
     }
 
     public SectionStatus spendProfileSectionStatus(final ProjectActivityStates spendProfileState) {

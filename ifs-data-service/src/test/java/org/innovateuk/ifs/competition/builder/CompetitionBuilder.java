@@ -107,6 +107,14 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return withArraySetFieldByReflection("assessorCount", assessorCounts);
     }
 
+    public CompetitionBuilder withNonIfs(Boolean... nonIfs) {
+        return withArraySetFieldByReflection("nonIfs", nonIfs);
+    }
+
+    public CompetitionBuilder withNonIfsUrl(String... nonIfsUrl) {
+        return withArraySetFieldByReflection("nonIfsUrl", nonIfsUrl);
+    }
+
     public CompetitionBuilder withCompetitionStatus(CompetitionStatus status) {
         LocalDateTime now = LocalDateTime.now();
         if(READY_TO_OPEN.equals(status)) {

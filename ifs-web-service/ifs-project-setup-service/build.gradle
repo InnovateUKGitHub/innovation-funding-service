@@ -1,6 +1,3 @@
-if(!project.hasProperty('cloud')) {
-    apply from: "war-build.gradle";
-}
 
 jar {
     baseName = 'project-setup'
@@ -59,5 +56,3 @@ task buildDocker( type:Docker, dependsOn: build) {
         }
     }
 }
-
-
