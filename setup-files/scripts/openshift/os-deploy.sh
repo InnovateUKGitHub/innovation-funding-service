@@ -4,6 +4,11 @@ set -ex
 PROJECT=$1
 TARGET=$2
 
+if [[ ${TARGET} == "production" ]]
+then
+    PROJECT="production"
+fi
+
 if [[ (${TARGET} == "remote") ||  (${TARGET} == "production") ]]
 then
     HOST=prod.ifs-test-clusters.com
@@ -118,7 +123,10 @@ function createProject() {
 cleanUp
 cloneConfig
 tailorAppInstance
-createProject
+if [[ ${TARGET} != "production" ]]
+then
+    createProject
+fi
 
 if [[ (${TARGET} == "remote") ||  (${TARGET} == "production") ]]
 then
@@ -127,6 +135,7 @@ fi
 
 deploy
 blockUntilServiceIsUp
+
 if [[ ${TARGET} != "production" ]]
 then
     shibInit
