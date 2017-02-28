@@ -35,8 +35,6 @@ import static org.innovateuk.ifs.address.builder.AddressTypeResourceBuilder.newA
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.*;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
-import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -423,7 +421,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 .withOrganisation(organisationId)
                 .withLeadOrganisation(leadOrganisation.getId()).build(2);
 
-        when(userService.findUserByEmail(invitedUserEmail)).thenReturn(restFailure(notFoundError(UserResource.class, invitedUserEmail)));
+        when(userService.findUserByEmail(invitedUserEmail)).thenReturn(Optional.empty());
         when(projectService.getById(projectId)).thenReturn(projectResource);
         when(projectService.getLeadOrganisation(projectId)).thenReturn(leadOrganisation);
         when(projectService.saveProjectInvite(createdInvite)).thenReturn(serviceSuccess());

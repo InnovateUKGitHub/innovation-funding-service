@@ -206,14 +206,14 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 	}
 
 	@Override
-	public void setCompetitionAsReadyToOpen(Long competitionId) {
+	public ServiceResult<Void> setCompetitionAsReadyToOpen(Long competitionId) {
 		CompetitionResource competitionResource = competitionService.getById(competitionId);
 		if (competitionResource.getCompetitionStatus() == CompetitionStatus.READY_TO_OPEN) {
-			return;
+            return null;
 		}
 
 		if (isCompetitionReadyToOpen(competitionResource)) {
-			competitionService.markAsSetup(competitionId);
+			return competitionService.markAsSetup(competitionId);
 		} else {
 			LOG.error("Requesting to set a competition (id:" + competitionId + ") as Read to Open, But the competition is not ready to open yet. " +
 					"Please check all the madatory sections are done");
@@ -222,8 +222,8 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 	}
 
 	@Override
-	public void setCompetitionAsCompetitionSetup(Long competitionId) {
-		competitionService.returnToSetup(competitionId);
+	public ServiceResult<Void> setCompetitionAsCompetitionSetup(Long competitionId) {
+		return competitionService.returnToSetup(competitionId);
 	}
 
 	private List<CompetitionSetupSection> getRequiredSectionsForReadyToOpen() {

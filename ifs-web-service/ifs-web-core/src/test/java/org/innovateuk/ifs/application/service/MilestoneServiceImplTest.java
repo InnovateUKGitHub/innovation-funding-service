@@ -67,7 +67,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 
         when(milestoneRestService.create(MilestoneType.OPEN_DATE, 1L)).thenReturn(restSuccess(getNewOpenDateMilestone(milestoneDate)));
 
-        MilestoneResource foundMilestone = service.create(MilestoneType.OPEN_DATE, 1L);
+        MilestoneResource foundMilestone = service.create(MilestoneType.OPEN_DATE, 1L).getSuccessObjectOrThrowException();
 
         assertEquals(Long.valueOf(1L), foundMilestone.getId());
         assertEquals(MilestoneType.OPEN_DATE, foundMilestone.getType());

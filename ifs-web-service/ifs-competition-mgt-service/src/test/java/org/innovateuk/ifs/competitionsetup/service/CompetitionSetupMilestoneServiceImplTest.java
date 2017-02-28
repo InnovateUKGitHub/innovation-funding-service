@@ -34,13 +34,13 @@ public class CompetitionSetupMilestoneServiceImplTest {
 
 	@Test
 	public void testCreateMilestonesForCompetition() {
-        when(milestoneService.create(any(MilestoneType.class), anyLong())).thenReturn(newMilestoneResource().with(
+        when(milestoneService.create(any(MilestoneType.class), anyLong())).thenReturn(serviceSuccess(newMilestoneResource().with(
 				(integer, milestoneResource) -> {
 					milestoneResource.setType(MilestoneType.OPEN_DATE);
 				}
-		).build());
+		).build()));
 
-		List<MilestoneResource> result = service.createMilestonesForCompetition(123L);
+		List<MilestoneResource> result = service.createMilestonesForCompetition(123L).getSuccessObject();
 
         result.forEach(milestoneResource -> assertEquals(MilestoneType.OPEN_DATE, milestoneResource.getType()));
 		assertEquals(MilestoneType.presetValues().length, result.size());

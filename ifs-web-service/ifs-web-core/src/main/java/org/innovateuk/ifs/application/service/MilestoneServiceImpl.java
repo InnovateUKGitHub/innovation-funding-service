@@ -45,7 +45,7 @@ public class MilestoneServiceImpl implements MilestoneService{
     }
 
     @Override
-    public MilestoneResource create(MilestoneType type, Long competitionId) {
-        return milestoneRestService.create(type, competitionId).getSuccessObjectOrThrowException();
+    public ServiceResult<MilestoneResource> create(MilestoneType type, Long competitionId) {
+        return milestoneRestService.create(type, competitionId).toServiceResult();
     }
 }

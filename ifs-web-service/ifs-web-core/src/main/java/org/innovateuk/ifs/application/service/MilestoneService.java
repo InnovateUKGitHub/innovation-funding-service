@@ -23,5 +23,5 @@ public interface MilestoneService {
 
     ServiceResult<Void> updateMilestone(MilestoneResource milestone);
 
-    MilestoneResource create(MilestoneType type, Long competitionId);
+    ServiceResult<MilestoneResource> create(MilestoneType type, Long competitionId);
 }

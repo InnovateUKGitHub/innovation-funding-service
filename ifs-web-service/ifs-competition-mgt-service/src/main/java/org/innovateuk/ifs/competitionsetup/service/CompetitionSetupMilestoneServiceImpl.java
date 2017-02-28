@@ -21,6 +21,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+
 @Service
 public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMilestoneService {
 
@@ -28,13 +30,12 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
     private MilestoneService milestoneService;
 
     @Override
-    public List<MilestoneResource> createMilestonesForCompetition(Long competitionId) {
+    public ServiceResult<List<MilestoneResource>> createMilestonesForCompetition(Long competitionId) {
         List<MilestoneResource> newMilestones = new ArrayList<>();
-        Stream.of(MilestoneType.presetValues()).forEach(type -> {
-            MilestoneResource newMilestone = milestoneService.create(type, competitionId);
-            newMilestones.add(newMilestone);
-        });
-        return newMilestones;
+        Stream.of(MilestoneType.presetValues()).forEach(type ->
+            newMilestones.add(milestoneService.create(type, competitionId).getSuccessObjectOrThrowException())
+        );
+        return serviceSuccess(newMilestones);
     }
 
     @Override

@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public interface CompetitionSetupMilestoneService {
 
-	List<MilestoneResource> createMilestonesForCompetition(Long competitionId);
+	ServiceResult<List<MilestoneResource>> createMilestonesForCompetition(Long competitionId);
 
     ServiceResult<Void> updateMilestonesForCompetition(List<MilestoneResource> milestones, Map<String, MilestoneRowForm> milestoneEntries, Long competitionId);
 

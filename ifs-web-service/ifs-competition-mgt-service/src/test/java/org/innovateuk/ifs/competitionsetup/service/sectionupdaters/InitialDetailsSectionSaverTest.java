@@ -91,6 +91,7 @@ public class InitialDetailsSectionSaverTest {
         when(categoryService.getInnovationAreasBySector(innovationSectorId)).thenReturn(Lists.newArrayList(innovationArea));
         when(competitionService.initApplicationFormByCompetitionType(competition.getId(), competitionSetupForm.getCompetitionTypeId())).thenReturn(serviceSuccess());
         when(competitionService.update(competition)).thenReturn(serviceSuccess());
+        when(competitionSetupMilestoneService.createMilestonesForCompetition(anyLong())).thenReturn(serviceSuccess(milestones));
         when(competitionSetupMilestoneService.updateMilestonesForCompetition(anyList(), anyMap(), anyLong())).thenReturn(serviceSuccess());
 
         service.saveSection(competition, competitionSetupForm);
@@ -119,6 +120,7 @@ public class InitialDetailsSectionSaverTest {
         CompetitionResource competition = newCompetitionResource().build();
         competition.setMilestones(asList(10L));
         when(competitionService.update(competition)).thenReturn(serviceSuccess());
+        when(competitionSetupMilestoneService.createMilestonesForCompetition(anyLong())).thenReturn(serviceSuccess(asList(getMilestone())));
         when(competitionSetupMilestoneService.updateMilestonesForCompetition(anyList(), anyMap(), anyLong())).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.autoSaveSectionField(competition, null, "openingDate", "20-10-" + (LocalDateTime.now().getYear() + 1), null);
