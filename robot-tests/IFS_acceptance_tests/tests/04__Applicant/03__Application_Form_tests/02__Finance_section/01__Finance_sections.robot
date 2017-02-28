@@ -141,6 +141,7 @@ File upload mandatory for Academic partner to mark section as complete
 Overheads section read only view should contain calculate overheads sheet
     [Documentation]     INFUND-6788   INFUND-8191
     [Tags]
+    [Setup]  log in as a different user    &{lead_applicant_credentials}
     #This test applies if user has chosen the calcualte overheads option in Project costs after section is marked as complete
     When the user navigates to Your-finances page     ${New_innovation_solution}
     then the user fills in the project costs         ${New_innovation_solution}
