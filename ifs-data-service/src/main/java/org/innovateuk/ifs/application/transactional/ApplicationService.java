@@ -2,13 +2,10 @@ package org.innovateuk.ifs.application.transactional;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
-import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryId;
-import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
+import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
-import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -26,6 +23,7 @@ import java.util.function.Supplier;
  * Transactional and secure service for Application processing work
  */
 public interface ApplicationService {
+
 
     @PreAuthorize("hasAuthority('applicant') || hasAnyAuthority('applicant', 'system_registrar')")
     @SecuredBySpring(value = "CREATE",
@@ -63,6 +61,10 @@ public interface ApplicationService {
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'UPDATE')")
     ServiceResult<ApplicationResource> saveApplicationSubmitDateTime(@P("applicationId") final Long id, LocalDateTime date);
+
+    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
+    @SecuredBySpring(value = "SET_FUNDING_DECISION_EMAIL_DATE", securedType = ApplicationResource.class, description = "Comp Admins should be able to set the funding decision email date")
+    ServiceResult<ApplicationResource> addApplicationFundingEmailDateTime(@P("applicationId") final Long id);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<CompletedPercentageResource> getProgressPercentageByApplicationId(@P("applicationId") final Long applicationId);

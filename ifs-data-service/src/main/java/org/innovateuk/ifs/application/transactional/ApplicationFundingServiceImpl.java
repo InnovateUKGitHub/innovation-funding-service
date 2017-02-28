@@ -59,6 +59,9 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
     @Autowired
     private FundingDecisionMapper fundingDecisionMapper;
 
+    @Autowired
+    private ApplicationService applicationService;
+
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
@@ -128,13 +131,17 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
             Notification fundingNotification = createFundingDecisionNotification(notificationResource, aggregatedFundingTargets.getSuccessObject(), APPLICATION_FUNDING);
 
             ServiceResult<Void> fundedEmailSendResult = notificationService.sendNotification(fundingNotification, EMAIL);
+            if (fundedEmailSendResult.isSuccess()) {
+                notificationResource.getApplicationIds()
+                        .forEach(id ->
+                                applicationService.addApplicationFundingEmailDateTime(id));
+            }
 
             return processAnyFailuresOrSucceed(fundedEmailSendResult);
         } else {
             return serviceFailure(NOTIFICATIONS_UNABLE_TO_DETERMINE_NOTIFICATION_TARGETS);
         }
     }
-
 
     @Override
     public ServiceResult<Void> notifyLeadApplicantsOfFundingDecisionsOld(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
