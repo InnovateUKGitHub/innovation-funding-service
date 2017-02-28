@@ -88,9 +88,7 @@ public class AssessmentFeedbackController {
     }
 
     @RequestMapping(value = "/formInput/{formInputId}", method = RequestMethod.POST)
-    public
-    @ResponseBody
-    JsonNode updateFormInputResponse(
+    public @ResponseBody JsonNode updateFormInputResponse(
             @PathVariable("assessmentId") Long assessmentId,
             @PathVariable("formInputId") Long formInputId,
             @RequestParam("value") String value) {
@@ -164,7 +162,7 @@ public class AssessmentFeedbackController {
         AssessmentNavigationViewModel navigationViewModel = assessmentFeedbackNavigationModelPopulator.populateModel(assessmentId, question.getId());
         model.addAttribute("model", viewModel);
         model.addAttribute("navigation", navigationViewModel);
-        organisationDetailsModelPopulator.populateModel(model, viewModel.getApplication().getId());
+        organisationDetailsModelPopulator.populateModel(model, viewModel.getApplicationId());
 
         return "assessment/application-details";
     }

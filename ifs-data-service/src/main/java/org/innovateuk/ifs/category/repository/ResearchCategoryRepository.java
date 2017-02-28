@@ -18,5 +18,5 @@ public interface ResearchCategoryRepository extends CrudRepository<ResearchCateg
 
     List<ResearchCategory> findAll();
 
-    List<ResearchCategory> findAllByOrderByNameAsc();
+    List<ResearchCategory> findAllByOrderByPriorityAsc();
 }

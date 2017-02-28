@@ -10,14 +10,11 @@ import org.junit.Test;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.documentation.CategoryDocs.innovationAreaResourceBuilder;
-import static org.innovateuk.ifs.documentation.CategoryDocs.innovationSectorResourceBuilder;
-import static org.innovateuk.ifs.documentation.CategoryDocs.researchCategoryResourceBuilder;
+import static org.innovateuk.ifs.documentation.CategoryDocs.*;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
@@ -38,7 +35,7 @@ public class CategoryControllerDocumentation extends BaseControllerMockMVCTest<C
         mockMvc.perform(get("/category/findInnovationAreas"))
                 .andDo(document("category/{method-name}",
                         responseFields(
-                                fieldWithPath("[]").description("list with all innovation areas")
+                                categoryResourceFieldsWithSector("list with all innovation areas", "innovation area", "innovation sector this area belongs to")
                         )
                 ));
     }
@@ -52,7 +49,7 @@ public class CategoryControllerDocumentation extends BaseControllerMockMVCTest<C
         mockMvc.perform(get("/category/findInnovationSectors"))
                 .andDo(document("category/{method-name}",
                         responseFields(
-                                fieldWithPath("[]").description("list with all innovation sectors")
+                                categoryResourceFieldsWithChildren("list with all innovation sectors", "innovation sector", "innovation areas that belong to this sector")
                         )
                 ));
     }
@@ -66,7 +63,7 @@ public class CategoryControllerDocumentation extends BaseControllerMockMVCTest<C
         mockMvc.perform(get("/category/findResearchCategories"))
                 .andDo(document("category/{method-name}",
                         responseFields(
-                                fieldWithPath("[]").description("list with all research categories")
+                                categoryResourceFields("list with all research categories", "research category")
                         )
                 ));
     }
@@ -83,7 +80,7 @@ public class CategoryControllerDocumentation extends BaseControllerMockMVCTest<C
                                 parameterWithName("sectorId").description("sector id to filter on")
                         ),
                         responseFields(
-                                fieldWithPath("[]").description("list with all innovation areas that have the sector id")
+                                categoryResourceFieldsWithSector("list with all innovation areas that have the sector id", "innovation area", "innovation sector this area belongs to")
                         )
                 ));
     }

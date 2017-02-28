@@ -9,16 +9,15 @@ import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
 
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Collections.nCopies;
+import static org.hamcrest.Matchers.*;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.security.SecuritySetter.addBasicSecurityUser;
-import static java.util.Collections.nCopies;
-import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
 public class FormInputResponseControllerIntegrationTest extends BaseControllerIntegrationTest<FormInputResponseController> {
@@ -35,8 +34,7 @@ public class FormInputResponseControllerIntegrationTest extends BaseControllerIn
     }
 
     @Test
-    @Rollback
-    public void test_findResponsesByApplication(){
+    public void test_findResponsesByApplication() {
         Long applicationId = 1L;
         Long formInputId = 1L;
         List<FormInputResponseResource> responses = controller.findResponsesByApplication(applicationId).getSuccessObject();
@@ -49,9 +47,7 @@ public class FormInputResponseControllerIntegrationTest extends BaseControllerIn
         assertThat(response.get().getValue(), containsString("Within the Industry one issue has caused"));
     }
 
-
     @Test
-    @Rollback
     public void test_saveNotAllowed() {
 
         setLoggedInUser(getAnonUser());
@@ -78,7 +74,6 @@ public class FormInputResponseControllerIntegrationTest extends BaseControllerIn
     }
 
     @Test
-    @Rollback
     public void test_saveInvalidQuestionResponse() {
 
         ObjectMapper mapper = new ObjectMapper();
@@ -94,7 +89,6 @@ public class FormInputResponseControllerIntegrationTest extends BaseControllerIn
     }
 
     @Test
-    @Rollback
     public void test_saveWordCountExceedingQuestionResponse() {
 
         ObjectMapper mapper = new ObjectMapper();
@@ -113,7 +107,6 @@ public class FormInputResponseControllerIntegrationTest extends BaseControllerIn
     }
 
     @Test
-    @Rollback
     public void test_saveQuestionResponse() {
 
         ObjectMapper mapper = new ObjectMapper();
@@ -126,5 +119,17 @@ public class FormInputResponseControllerIntegrationTest extends BaseControllerIn
 
         ValidationMessages errors = controller.saveQuestionResponse(jsonObj).getSuccessObject();
         assertThat(errors.getErrors(), hasSize(0));
+    }
+
+    @Test
+    public void findByApplicationIdAndQuestionName() {
+        long applicationId = 1L;
+        String questionName = "Project summary";
+
+        FormInputResponseResource formInputResponseResource = controller.findByApplicationIdAndQuestionName(applicationId,
+                questionName).getSuccessObject();
+
+        assertEquals(15L, formInputResponseResource.getId().longValue());
+        assertTrue(formInputResponseResource.getValue().startsWith("The Project aims to identify,"));
     }
 }

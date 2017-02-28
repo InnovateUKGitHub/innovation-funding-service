@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.resource;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -20,6 +21,15 @@ public class ApplicationSummaryResource {
     private long duration;
     private FundingDecision fundingDecision;
     private String innovationArea;
+    private LocalDateTime manageFundingEmailDate;
+
+    public LocalDateTime getManageFundingEmailDate() {
+        return manageFundingEmailDate;
+    }
+
+    public void setManageFundingEmailDate(LocalDateTime manageFundingEmailDate) {
+        this.manageFundingEmailDate = manageFundingEmailDate;
+    }
 
     public long getId() {
         return id;
