@@ -394,6 +394,25 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 		assertEquals(0, result.getSuccessObject().getNumber());
 		assertEquals(resource, result.getSuccessObject());
 	}
+
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void findByCompetitionWithFundingDecisionApplications() throws Exception {
+
+		Page<Application> page = mock(Page.class);
+
+		ApplicationSummaryPageResource resource = mock(ApplicationSummaryPageResource.class);
+		when(applicationSummaryPageMapper.mapToResource(page)).thenReturn(resource);
+
+		when(applicationRepositoryMock.findByCompetitionIdAndFundingDecisionIsNotNull(eq(COMP_ID), argThat(new PageableMatcher(0, 20, srt("id", ASC))))).thenReturn(page);
+
+		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getWithFundingDecisionApplicationSummariesByCompetitionId(COMP_ID, "id", 0, 20);
+
+		assertTrue(result.isSuccess());
+		assertEquals(0, result.getSuccessObject().getNumber());
+		assertEquals(resource, result.getSuccessObject());
+	}
 	
 	private ApplicationSummaryResource sumLead(String lead) {
 		ApplicationSummaryResource res = new ApplicationSummaryResource();
