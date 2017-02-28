@@ -27,7 +27,7 @@ public class SendNotificationsModelPopulator {
         // TODO: Replace these lines with a new call to 'getApplicationsByIds' the ApplicationService or ApplicationSummaryService
         // List<ApplicationSummaryResource> filteredApplications = applicationSummaryService.findByIds(application_ids);
 
-        ApplicationSummaryPageResource results = applicationSummaryService.findByCompetitionId(competitionId, null, null, null);
+        ApplicationSummaryPageResource results = applicationSummaryService.findByCompetitionId(competitionId, null, null, null, null);
 
         List<ApplicationSummaryResource> applications = results.getContent();
         //Temporary: filter results down to only selected applications, listed in applicationIds

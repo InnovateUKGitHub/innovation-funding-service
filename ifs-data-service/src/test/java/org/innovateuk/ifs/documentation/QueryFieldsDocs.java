@@ -7,7 +7,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 public class QueryFieldsDocs {
 
     public static FieldDescriptor[] queryResourceFields() {
-        return new FieldDescriptor[] {
+        return new FieldDescriptor[]{
                 fieldWithPath("id").description("Query unique id if already created"),
                 fieldWithPath("contextClassPk").description("The primary key / id of the class that holds the context of this Query"),
                 fieldWithPath("posts").description("The list of posts of this Query"),

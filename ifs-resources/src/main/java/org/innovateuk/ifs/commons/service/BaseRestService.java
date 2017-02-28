@@ -9,7 +9,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.concurrent.Future;
 
@@ -213,6 +215,19 @@ public abstract class BaseRestService {
         headers.setContentLength(contentLength);
         headers.setAccept(singletonList(MediaType.parseMediaType("application/json")));
         return headers;
+    }
+
+    protected String buildPaginationUri(String url, Integer pageNumber, Integer pageSize, String sort, MultiValueMap<String, String> params, Object... uriParameters ) {
+        if(pageNumber != null) {
+            params.put("page", singletonList(pageNumber.toString()));
+        }
+        if(pageSize != null) {
+            params.put("size", singletonList(pageSize.toString()));
+        }
+        if (sort != null) {
+            params.put("sort", singletonList(sort));
+        }
+        return UriComponentsBuilder.fromPath(url).queryParams(params).buildAndExpand(uriParameters).encode().toUriString();
     }
 }
 

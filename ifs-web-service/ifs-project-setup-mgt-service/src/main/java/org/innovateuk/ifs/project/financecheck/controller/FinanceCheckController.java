@@ -94,7 +94,7 @@ public class FinanceCheckController {
                        @ModelAttribute("loggedInUser") UserResource loggedInUser,
                        Model model){
         FinanceCheckResource financeCheckResource = getFinanceCheckResource(projectId, organisationId);
-        populateExitingFinanceCheckDetailsInForm(financeCheckResource, form);
+        populateExistingFinanceCheckDetailsInForm(financeCheckResource, form);
         return doViewFinanceCheckForm(projectId, organisationId, model);
     }
 
@@ -174,7 +174,7 @@ public class FinanceCheckController {
         return "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId;
     }
 
-    private void populateExitingFinanceCheckDetailsInForm(FinanceCheckResource financeCheckResource, FinanceCheckForm form){
+    private void populateExistingFinanceCheckDetailsInForm(FinanceCheckResource financeCheckResource, FinanceCheckForm form){
         form.setCosts(simpleMap(financeCheckResource.getCostGroup().getCosts(), c -> {
             CostFormField cf = new CostFormField();
             cf.setId(c.getId());

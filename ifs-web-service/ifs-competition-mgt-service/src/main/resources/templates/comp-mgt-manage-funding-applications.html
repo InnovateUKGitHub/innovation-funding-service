@@ -25,6 +25,8 @@
         </ul>
     </div>
 
+    <div th:replace="competition/key-statistics :: key-statistics(keyStatistics=${model.keyStatistics})" />
+
     <form method="post" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}">
         <div class="grid-row sorting sorting-controls">
             <div class="column-half">
@@ -89,6 +91,7 @@
                 <button class="button button-notification extra-margin-top" type="submit">Write and send email</button>
             </div>
         </div>
+        <div th:include="fragments/elements :: general-pagination(pagination=${model.pagination})" th:remove="tag"/>
 
     </form>
 

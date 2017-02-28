@@ -6,7 +6,9 @@ import org.innovateuk.ifs.application.service.ApplicationSummaryService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.form.ManageFundingApplicationsQueryForm;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.management.viewmodel.CompetitionInFlightViewModel;
 import org.innovateuk.ifs.management.viewmodel.ManageFundingApplicationViewModel;
+import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,11 +21,16 @@ public class ManageFundingApplicationsModelPopulator {
     private ApplicationSummaryService applicationSummaryService;
 
     @Autowired
+    private CompetitionInFlightModelPopulator competitionInFlightModelPopulator;
+
+    @Autowired
     private CompetitionService competitionService;
 
-    public ManageFundingApplicationViewModel populate(ManageFundingApplicationsQueryForm queryForm, long competitionId){
-        ApplicationSummaryPageResource results = applicationSummaryService.findByCompetitionId(competitionId, queryForm.getSortField(), queryForm.getPage(), DEFAULT_PAGE_SIZE);
+    public ManageFundingApplicationViewModel populate(ManageFundingApplicationsQueryForm queryForm, long competitionId, String queryString){
+        ApplicationSummaryPageResource results = applicationSummaryService.getWithFundingDecisionApplications(competitionId, queryForm.getSortField(), queryForm.getPage(), DEFAULT_PAGE_SIZE, queryForm.getFilter());
         CompetitionResource competitionResource = competitionService.getById(competitionId);
-        return new ManageFundingApplicationViewModel(results, queryForm.getSortField(), queryForm.getSortField(), competitionId, competitionResource.getName());
+        CompetitionInFlightViewModel keyStatistics = competitionInFlightModelPopulator.populateModel(competitionId);
+        PaginationViewModel paginationViewModel = new PaginationViewModel(results, queryString);
+        return new ManageFundingApplicationViewModel(results, keyStatistics, paginationViewModel, queryForm.getSortField(), queryForm.getFilter(), competitionId, competitionResource.getName());
     }
 }

@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface InnovationSectorRepository extends CrudRepository<InnovationSector, Long> {
 
-    List<InnovationSector> findAllByOrderByNameAsc();
+    List<InnovationSector> findAllByOrderByPriorityAsc();
 
     List<InnovationSector> findAll();
 }

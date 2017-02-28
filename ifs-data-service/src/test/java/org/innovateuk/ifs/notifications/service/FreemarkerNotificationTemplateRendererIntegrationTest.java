@@ -91,38 +91,6 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
     }
 
     @Test
-    public void testFundedApplicationAssessorFeedbackAvailableEmail() throws URISyntaxException, IOException {
-
-        Map<String, Object> templateArguments = asMap(
-                "applicationName", "My Application",
-                "applicationNumber", "00000456",
-                "competitionName", "Competition 123",
-                "feedbackDate", LocalDateTime.of(2017, 6, 3, 14, 29, 00),
-                "dashboardUrl", "https://ifs-local-dev/dashboard"
-        );
-
-        assertRenderedEmailTemplateContainsExpectedLines("application_funded_assessor_feedback_published_subject.txt", templateArguments);
-        assertRenderedEmailTemplateContainsExpectedLines("application_funded_assessor_feedback_published_text_plain.txt", templateArguments);
-        assertRenderedEmailTemplateContainsExpectedLines("application_funded_assessor_feedback_published_text_html.html", templateArguments);
-    }
-
-    @Test
-    public void testUnfundedApplicationAssessorFeedbackAvailableEmail() throws URISyntaxException, IOException {
-
-        Map<String, Object> templateArguments = asMap(
-                "applicationName", "My Application",
-                "applicationNumber", "00000456",
-                "competitionName", "Competition 123",
-                "feedbackDate", LocalDateTime.of(2017, 6, 3, 14, 29, 00),
-                "dashboardUrl", "https://ifs-local-dev/dashboard"
-        );
-
-        assertRenderedEmailTemplateContainsExpectedLines("application_not_funded_assessor_feedback_published_subject.txt", templateArguments);
-        assertRenderedEmailTemplateContainsExpectedLines("application_not_funded_assessor_feedback_published_text_plain.txt", templateArguments);
-        assertRenderedEmailTemplateContainsExpectedLines("application_not_funded_assessor_feedback_published_text_html.html", templateArguments);
-    }
-
-    @Test
     public void testMonitoringOfficerAssignedEmail() throws URISyntaxException, IOException {
 
         Map<String, Object> templateArguments = asMap(

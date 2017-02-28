@@ -246,7 +246,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
                 .andReturn();
 
         FinanceChecksNotesViewModel responseViewModel = (FinanceChecksNotesViewModel) result.getModelAndView().getModel().get("model");
-        
+
         assertEquals("Org1", responseViewModel.getOrganisationName());
         assertEquals("Project1", responseViewModel.getProjectName());
         assertEquals(applicantOrganisationId, responseViewModel.getOrganisationId());
@@ -362,7 +362,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("comment"));
-        assertEquals("The comment is too long, please reduce it {0} words.", bindingResult.getFieldError("comment").getDefaultMessage());
+        assertEquals("The comment is too long, please reduce it to {0} words.", bindingResult.getFieldError("comment").getDefaultMessage());
     }
 
     @Test
@@ -455,7 +455,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
                 .andReturn();
 
         FinanceChecksNotesViewModel noteViewModel = (FinanceChecksNotesViewModel) result.getModelAndView().getModel().get("model");
-        
+
         assertEquals("Org1", noteViewModel.getOrganisationName());
         assertEquals("Project1", noteViewModel.getProjectName());
         assertEquals(applicantOrganisationId, noteViewModel.getOrganisationId());

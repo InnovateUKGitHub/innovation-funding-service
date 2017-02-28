@@ -99,6 +99,8 @@ Create assessor account: Postcode lookup and save
     And The user enters text to a text field    id=password    Passw0rd123
     And The user enters text to a text field    id=retypedPassword    Passw0rd123
     And the user clicks the button/link    jQuery=button:contains("Continue")
+    Then the user should see the text in the page    Your account has been created
+    And the user clicks the button/link    jQuery=a:contains("Sign into your account")
     Then the user should be redirected to the correct page    ${LOGGED_OUT_URL_FRAGMENT}
 
 Create assessor account: Accepted competitions should be displayed in dashboard

@@ -14,14 +14,22 @@ public class ManageFundingApplicationViewModel {
     private String filter;
     private long competitionId;
     private String competitionName;
+    private CompetitionInFlightViewModel keyStatistics;
+    private PaginationViewModel pagination;
 
 
-    public ManageFundingApplicationViewModel(ApplicationSummaryPageResource results, String sortField, String filter, long competitionId, String competitionName) {
+    public ManageFundingApplicationViewModel(ApplicationSummaryPageResource results, CompetitionInFlightViewModel keyStatistics, PaginationViewModel pagination, String sortField, String filter, long competitionId, String competitionName) {
         this.results = results;
         this.sortField = sortField;
         this.filter = filter;
         this.competitionId = competitionId;
         this.competitionName = competitionName;
+        this.keyStatistics = keyStatistics;
+        this.pagination = pagination;
+    }
+
+    public PaginationViewModel getPagination() {
+        return pagination;
     }
 
     public ApplicationSummaryPageResource getResults() {
@@ -46,5 +54,9 @@ public class ManageFundingApplicationViewModel {
 
     public List<ApplicationSummaryResource> getContent(){
         return results != null ? results.getContent() : Collections.emptyList();
+    }
+
+    public CompetitionInFlightViewModel getKeyStatistics() {
+        return keyStatistics;
     }
 }
