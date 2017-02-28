@@ -288,7 +288,7 @@ Collaborator can accept the invitation
 
 Non-lead applicant can view and edit project growth table
     [Documentation]    INFUND-6395
-    [Tags]
+    [Tags]    Pending
     # TODO Pending due to INFUND-8426
     Given the user clicks the button/link    jQuery=.button:contains("Sign in")
     When guest user log-in    ${TEST_MAILBOX_ONE}+invitepartner@gmail.com    ${correct_password}

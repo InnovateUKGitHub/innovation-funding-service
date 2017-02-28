@@ -101,7 +101,7 @@ Alert shows If the academic research participation is too high
     Given guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
     And The user navigates to the academic application finances
     And The user clicks the button/link       link=Your project costs
-    When the user enters text to a text field      id=incurred-staff    1000000000
+    When the user enters text to a text  field      id=incurred-staff    1000000000
     And Guest user log-in    &{lead_applicant_credentials}
     And the user navigates to the finance overview of the academic
     Then the user should see the text in the page    The participation levels of this project are not within the required range
