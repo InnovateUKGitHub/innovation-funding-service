@@ -65,3 +65,14 @@ include::{snippets}/competition/close-assessment/http-response.adoc[]
 
 ==== Curl Example
 include::{snippets}/competition/close-assessment/curl-request.adoc[]
+
+=== Notify applicants of feedback released
+==== Request
+include::{snippets}/competition/release-feedback/http-request.adoc[]
+include::{snippets}/competition/release-feedback/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition/release-feedback/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/competition/release-feedback/curl-request.adoc[]

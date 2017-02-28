@@ -209,3 +209,7 @@ include::applicationCountSummary.adoc[]
 [[competitionKeyStatistics]]
 == CompetitionKeyStatistics
 include::competitionKeyStatistics.adoc[]
+
+[[applicationSummary]]
+== ApplicationSummary
+include::application-summary.adoc[]

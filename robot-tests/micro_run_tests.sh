@@ -386,7 +386,6 @@ then
 else
     coloredEcho "=> Using quickTest: FALSE" blue
 
-    buildAndDeploy
     resetDB
     addTestFiles
     runTests
