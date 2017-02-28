@@ -34,8 +34,8 @@ Labour
     [Teardown]    the user clicks the button/link    jQuery=button:contains("Labour")
 
 Overhead costs
-    [Documentation]    INFUND-192, INFUND-736, INFUND-6390 , INFUND-6788
-    [Tags]     
+    [Documentation]    INFUND-192, INFUND-736, INFUND-6390 , INFUND-6788gi
+    [Tags]
     # Check for No overheads costs option
     When the user clicks the button/link    jQuery=button:contains("Overhead costs")
     And The user clicks the button/link     jQuery=label:contains("No overhead costs")
@@ -272,7 +272,6 @@ the total costs should refelct overheads
      [Arguments]    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
      the user should see the element    ${ADMIN_TOTAL}
      Textfield Value Should Be    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
-     #Element Should Contain    jQuery=button:contains("Overhead costs")    ${ADMIN_VALUE}
 
 the grant value should be correct in the finance summary page
     The user navigates to the next page
