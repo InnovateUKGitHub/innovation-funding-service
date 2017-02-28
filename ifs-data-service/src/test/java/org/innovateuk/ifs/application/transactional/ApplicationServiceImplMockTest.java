@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.transactional;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.builder.ApplicationBuilder;
 import org.innovateuk.ifs.application.builder.QuestionBuilder;
@@ -10,25 +11,32 @@ import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryId;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.builder.CompetitionBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.email.resource.EmailAddress;
+import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.resource.FileEntryResourceAssembler;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
+import org.innovateuk.ifs.notifications.resource.Notification;
+import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserRoleType;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InOrder;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 
 import java.io.File;
@@ -41,6 +49,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -51,6 +60,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
 import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
@@ -61,11 +71,12 @@ import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
-import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 /**
  * Tests for {@link ApplicationServiceImpl}
@@ -119,7 +130,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     }
 
     @Test
-    public void testCreateApplicationByApplicationNameForUserIdAndCompetitionId() {
+    public void createApplicationByApplicationNameForUserIdAndCompetitionId() {
 
         Competition competition = newCompetition().build();
         User user = newUser().build();
@@ -177,7 +188,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     }
 
     @Test
-    public void testCreateFormInputResponseFileUpload() {
+    public void createFormInputResponseFileUpload() {
 
         FileEntryResource fileEntryResource = newFileEntryResource().build();
         FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
@@ -205,7 +216,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     }
 
     @Test
-    public void testCreateFormInputResponseFileUploadButReplaceIfFileAlreadyExistsForFormInputResponse() {
+    public void createFormInputResponseFileUploadButReplaceIfFileAlreadyExistsForFormInputResponse() {
 
         FileEntryResource fileEntryResource = newFileEntryResource().with(id(987L)).build();
         FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
@@ -244,7 +255,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     }
 
     @Test
-    public void testCreateFormInputResponseFileUploadButFileServiceCallFails() {
+    public void createFormInputResponseFileUploadButFileServiceCallFails() {
 
         FileEntryResource fileEntryResource = newFileEntryResource().build();
         FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
@@ -261,7 +272,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     }
 
     @Test
-    public void testCreateFormInputResponseFileUploadWithAlreadyExistingFormInputResponse() {
+    public void createFormInputResponseFileUploadWithAlreadyExistingFormInputResponse() {
 
         FileEntryResource fileEntryResource = newFileEntryResource().build();
         FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
@@ -287,7 +298,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     }
 
     @Test
-    public void testCreateFormInputResponseFileUploadButProcessRoleNotFound() {
+    public void createFormInputResponseFileUploadButProcessRoleNotFound() {
 
         FileEntryResource fileEntryResource = newFileEntryResource().build();
         FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
@@ -310,7 +321,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     }
 
     @Test
-    public void testCreateFormInputResponseFileUploadButFormInputNotFound() {
+    public void createFormInputResponseFileUploadButFormInputNotFound() {
 
         FileEntryResource fileEntryResource = newFileEntryResource().build();
         FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
@@ -334,7 +345,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     }
 
     @Test
-    public void testCreateFormInputResponseFileUploadButApplicationNotFound() {
+    public void createFormInputResponseFileUploadButApplicationNotFound() {
 
         FileEntryResource fileEntryResource = newFileEntryResource().build();
         FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
@@ -359,7 +370,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     }
 
     @Test
-    public void testUpdateFormInputResponseFileUpload() {
+    public void updateFormInputResponseFileUpload() {
 
         FileEntryResource fileEntryResource = newFileEntryResource().with(id(999L)).build();
         FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
@@ -394,7 +405,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     }
 
     @Test
-    public void testUpdateFormInputResponseFileUploadButFileServiceCallFails() {
+    public void updateFormInputResponseFileUploadButFileServiceCallFails() {
 
         FileEntryResource fileEntryResource = newFileEntryResource().build();
         FormInputResponseFileEntryResource formInputFileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
@@ -426,7 +437,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     }
 
     @Test
-    public void testDeleteFormInputResponseFileUpload() {
+    public void deleteFormInputResponseFileUpload() {
 
         Supplier<InputStream> inputStreamSupplier = () -> null;
 
@@ -447,7 +458,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     }
 
     @Test
-    public void testDeleteFormInputResponseFileUploadButFileServiceCallFails() {
+    public void deleteFormInputResponseFileUploadButFileServiceCallFails() {
         Supplier<InputStream> inputStreamSupplier = () -> null;
 
         //when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponse);
@@ -464,7 +475,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     }
 
     @Test
-    public void testDeleteFormInputResponseFileUploadButUnableToFindFormInputResponse() {
+    public void deleteFormInputResponseFileUploadButUnableToFindFormInputResponse() {
         when(formInputResponseRepositoryMock.findByApplicationIdAndFormInputId(456L, 123L)).thenReturn(existingFormInputResponses);
         when(formInputRepositoryMock.findOne(formInputResponseFileEntryResource.getCompoundId().getFormInputId())).thenReturn(null);
         ServiceResult<FormInputResponse> result =
@@ -475,7 +486,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     }
 
     @Test
-    public void testDeleteFormInputResponseFileUploadButFileEntryNotFound() {
+    public void deleteFormInputResponseFileUploadButFileEntryNotFound() {
 
         FileEntryResource fileEntryResource = newFileEntryResource().with(id(999L)).build();
         FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
@@ -501,7 +512,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     }
 
     @Test
-    public void testGetFormInputResponseFileUpload() {
+    public void getFormInputResponseFileUpload() {
 
         FileEntry fileEntry = newFileEntry().with(id(321L)).build();
         FormInputResponse formInputResponse = newFormInputResponse().withFileEntry(fileEntry).build();
@@ -534,7 +545,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     }
 
     @Test
-    public void testGetFormInputResponseFileUploadButFileServiceCallFails() {
+    public void getFormInputResponseFileUploadButFileServiceCallFails() {
 
         FileEntry fileEntry = newFileEntry().build();
         FormInputResponse formInputResponse = newFormInputResponse().withFileEntry(fileEntry).build();
@@ -558,7 +569,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     }
 
     @Test
-    public void testGetFormInputResponseFileUploadButUnableToFindFormInputResponse() {
+    public void getFormInputResponseFileUploadButUnableToFindFormInputResponse() {
         Question question = QuestionBuilder.newQuestion().build();
         question.setMultipleStatuses(true);
         FormInput formInputLocal = newFormInput().withType(formInputType).build();
@@ -578,8 +589,8 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
     @Test
     public void applicationServiceShouldReturnApplicationByUserId() throws Exception {
-        User testUser1 = new User(1L, "test", "User1",  "email1@email.nl", "testToken123abc", "my-uid");
-        User testUser2 = new User(2L, "test", "User2",  "email2@email.nl", "testToken456def", "my-uid");
+        User testUser1 = new User(1L, "test", "User1", "email1@email.nl", "testToken123abc", "my-uid");
+        User testUser2 = new User(2L, "test", "User2", "email2@email.nl", "testToken456def", "my-uid");
 
         Application testApplication1 = new Application(null, "testApplication1Name", null, null, 1L);
         Application testApplication2 = new Application(null, "testApplication2Name", null, null, 2L);
@@ -657,7 +668,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         when(roleRepositoryMock.findOneByName(role.getName())).thenReturn(role);
         when(userRepositoryMock.findOne(userId)).thenReturn(user);
         when(processRoleRepositoryMock.findByUser(user)).thenReturn(singletonList(
-            newProcessRole().withUser(user).withOrganisationId(organisation.getId()).build()
+                newProcessRole().withUser(user).withOrganisationId(organisation.getId()).build()
         ));
         when(organisationRepositoryMock.findByUsers(user)).thenReturn(singletonList(organisation));
         when(applicationRepositoryMock.save(any(Application.class))).thenReturn(application);
@@ -777,5 +788,407 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         ServiceResult<Long> result = service.getTurnoverByApplicationId(applicationId);
 
         assertTrue(result.isFailure());
+    }
+
+    @Test
+    public void notifyApplicantsByCompetition() throws Exception {
+        Long competitionId = 1L;
+        Long applicationOneId = 2L;
+        Long applicationTwoId = 3L;
+        Long applicationThreeId = 4L;
+
+        Competition competition = newCompetition()
+                .withName("Competition")
+                .build();
+
+        List<User> users = newUser()
+                .withFirstName("John", "Jane", "Bob")
+                .withLastName("Smith", "Jones", "Davies")
+                .withEmailAddress("john@smith.com", "jane@jones.com", "bob@davie.com")
+                .build(3);
+
+        List<ProcessRole> processRoles = newProcessRole()
+                .withUser(users.get(0), users.get(1), users.get(2))
+                .withRole(newRole().withType(LEADAPPLICANT).withUrl("url").build())
+                .build(3);
+
+        List<Application> applications = newApplication()
+                .withCompetition(competition)
+                .withId(applicationOneId, applicationTwoId, applicationThreeId)
+                .withName("App1", "App2", "App3")
+                .build(3);
+
+        applications.get(0).setProcessRoles(singletonList(processRoles.get(0)));
+        applications.get(1).setProcessRoles(singletonList(processRoles.get(1)));
+        applications.get(2).setProcessRoles(singletonList(processRoles.get(2)));
+
+        processRoles.get(0).setApplicationId(applicationOneId);
+        processRoles.get(1).setApplicationId(applicationTwoId);
+        processRoles.get(2).setApplicationId(applicationThreeId);
+
+        List<NotificationTarget> notificationTargets = asList(
+                new ExternalUserNotificationTarget(users.get(0).getName(), users.get(0).getEmail()),
+                new ExternalUserNotificationTarget(users.get(1).getName(), users.get(1).getEmail()),
+                new ExternalUserNotificationTarget(users.get(2).getName(), users.get(2).getEmail())
+        );
+
+        List<EmailContent> emailContents = newEmailContentResource()
+                .build(3);
+
+        List<Notification> notifications = asList(
+                new Notification(
+                        null,
+                        singletonList(notificationTargets.get(0)),
+                        ApplicationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
+                        asMap("name", users.get(0).getName(),
+                                "applicationName", applications.get(0).getName(),
+                                "competitionName", competition.getName(),
+                                "dashboardUrl", processRoles.get(0).getRole().getUrl())
+                ),
+                new Notification(
+                        null,
+                        singletonList(notificationTargets.get(1)),
+                        ApplicationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
+                        asMap("name", users.get(1).getName(),
+                                "applicationName", applications.get(1).getName(),
+                                "competitionName", competition.getName(),
+                                "dashboardUrl", processRoles.get(1).getRole().getUrl())
+                ),
+                new Notification(
+                        null,
+                        singletonList(notificationTargets.get(2)),
+                        ApplicationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
+                        asMap("name", users.get(2).getName(),
+                                "applicationName", applications.get(2).getName(),
+                                "competitionName", competition.getName(),
+                                "dashboardUrl", processRoles.get(2).getRole().getUrl())
+                )
+        );
+
+        when(applicationRepositoryMock.findByCompetitionId(competitionId)).thenReturn(applications);
+
+        when(applicationRepositoryMock.findOne(applicationOneId)).thenReturn(applications.get(0));
+        when(applicationRepositoryMock.findOne(applicationTwoId)).thenReturn(applications.get(1));
+        when(applicationRepositoryMock.findOne(applicationThreeId)).thenReturn(applications.get(2));
+
+        when(notificationSender.renderTemplates(Matchers.eq(notifications.get(0))))
+                .thenReturn(serviceSuccess(asMap(notificationTargets.get(0), emailContents.get(0))));
+        when(notificationSender.renderTemplates(Matchers.eq(notifications.get(1))))
+                .thenReturn(serviceSuccess(asMap(notificationTargets.get(1), emailContents.get(1))));
+        when(notificationSender.renderTemplates(Matchers.eq(notifications.get(2))))
+                .thenReturn(serviceSuccess(asMap(notificationTargets.get(2), emailContents.get(2))));
+
+        when(notificationSender.sendEmailWithContent(
+                Matchers.eq(notifications.get(0)),
+                Matchers.eq(notificationTargets.get(0)),
+                Matchers.eq(emailContents.get(0))))
+                .thenReturn(serviceSuccess(
+                        singletonList(new EmailAddress(users.get(0).getEmail(), users.get(0).getName()))));
+        when(notificationSender.sendEmailWithContent(
+                Matchers.eq(notifications.get(1)),
+                Matchers.eq(notificationTargets.get(1)),
+                Matchers.eq(emailContents.get(1))))
+                .thenReturn(serviceSuccess(
+                        singletonList(new EmailAddress(users.get(1).getEmail(), users.get(1).getName()))));
+        when(notificationSender.sendEmailWithContent(
+                Matchers.eq(notifications.get(2)),
+                Matchers.eq(notificationTargets.get(2)),
+                Matchers.eq(emailContents.get(2))))
+                .thenReturn(serviceSuccess(
+                        singletonList(new EmailAddress(users.get(2).getEmail(), users.get(2).getName()))));
+
+        ServiceResult<Void> result = service.notifyApplicantsByCompetition(competitionId);
+
+        InOrder inOrder = inOrder(applicationRepositoryMock, notificationSender);
+        inOrder.verify(applicationRepositoryMock).findByCompetitionId(competitionId);
+
+        inOrder.verify(applicationRepositoryMock).findOne(applicationOneId);
+        inOrder.verify(notificationSender).renderTemplates(notifications.get(0));
+        inOrder.verify(notificationSender)
+                .sendEmailWithContent(notifications.get(0), notificationTargets.get(0), emailContents.get(0));
+
+        inOrder.verify(applicationRepositoryMock).findOne(applicationTwoId);
+        inOrder.verify(notificationSender).renderTemplates(notifications.get(1));
+        inOrder.verify(notificationSender)
+                .sendEmailWithContent(notifications.get(1), notificationTargets.get(1), emailContents.get(1));
+
+        inOrder.verify(applicationRepositoryMock).findOne(applicationThreeId);
+        inOrder.verify(notificationSender).renderTemplates(notifications.get(2));
+        inOrder.verify(notificationSender)
+                .sendEmailWithContent(notifications.get(2), notificationTargets.get(2), emailContents.get(2));
+
+        inOrder.verifyNoMoreInteractions();
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void notifyApplicantsByCompetition_oneFailure() throws Exception {
+        Long competitionId = 1L;
+        Long applicationOneId = 2L;
+        Long applicationTwoId = 3L;
+        Long applicationThreeId = 4L;
+
+        Competition competition = newCompetition()
+                .withName("Competition")
+                .build();
+
+        List<User> users = newUser()
+                .withFirstName("John", "Jane", "Bob")
+                .withLastName("Smith", "Jones", "Davies")
+                .withEmailAddress("john@smith.com", "jane@jones.com", "bob@davie.com")
+                .build(3);
+
+        List<ProcessRole> processRoles = newProcessRole()
+                .withUser(users.get(0), users.get(1), users.get(2))
+                .withRole(newRole().withType(LEADAPPLICANT).withUrl("url").build())
+                .build(3);
+
+        List<Application> applications = newApplication()
+                .withCompetition(competition)
+                .withId(applicationOneId, applicationTwoId, applicationThreeId)
+                .withName("App1", "App2", "App3")
+                .build(3);
+
+        applications.get(0).setProcessRoles(singletonList(processRoles.get(0)));
+        applications.get(1).setProcessRoles(singletonList(processRoles.get(1)));
+        applications.get(2).setProcessRoles(singletonList(processRoles.get(2)));
+
+        processRoles.get(0).setApplicationId(applicationOneId);
+        processRoles.get(1).setApplicationId(applicationTwoId);
+        processRoles.get(2).setApplicationId(applicationThreeId);
+
+        List<NotificationTarget> notificationTargets = asList(
+                new ExternalUserNotificationTarget(users.get(0).getName(), users.get(0).getEmail()),
+                new ExternalUserNotificationTarget(users.get(1).getName(), users.get(1).getEmail()),
+                new ExternalUserNotificationTarget(users.get(2).getName(), users.get(2).getEmail())
+        );
+
+        List<EmailContent> emailContents = newEmailContentResource()
+                .build(3);
+
+        List<Notification> notifications = asList(
+                new Notification(
+                        null,
+                        singletonList(notificationTargets.get(0)),
+                        ApplicationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
+                        asMap("name", users.get(0).getName(),
+                                "applicationName", applications.get(0).getName(),
+                                "competitionName", competition.getName(),
+                                "dashboardUrl", processRoles.get(0).getRole().getUrl())
+                ),
+                new Notification(
+                        null,
+                        singletonList(notificationTargets.get(1)),
+                        ApplicationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
+                        asMap("name", users.get(1).getName(),
+                                "applicationName", applications.get(1).getName(),
+                                "competitionName", competition.getName(),
+                                "dashboardUrl", processRoles.get(1).getRole().getUrl())
+                ),
+                new Notification(
+                        null,
+                        singletonList(notificationTargets.get(2)),
+                        ApplicationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
+                        asMap("name", users.get(2).getName(),
+                                "applicationName", applications.get(2).getName(),
+                                "competitionName", competition.getName(),
+                                "dashboardUrl", processRoles.get(2).getRole().getUrl())
+                )
+        );
+
+        when(applicationRepositoryMock.findByCompetitionId(competitionId)).thenReturn(applications);
+
+        when(applicationRepositoryMock.findOne(applicationOneId)).thenReturn(applications.get(0));
+        when(applicationRepositoryMock.findOne(applicationTwoId)).thenReturn(applications.get(1));
+        when(applicationRepositoryMock.findOne(applicationThreeId)).thenReturn(applications.get(2));
+
+        when(notificationSender.renderTemplates(Matchers.eq(notifications.get(0))))
+                .thenReturn(serviceSuccess(asMap(notificationTargets.get(0), emailContents.get(0))));
+        when(notificationSender.renderTemplates(Matchers.eq(notifications.get(1))))
+                .thenReturn(serviceSuccess(asMap(notificationTargets.get(1), emailContents.get(1))));
+        when(notificationSender.renderTemplates(Matchers.eq(notifications.get(2))))
+                .thenReturn(serviceSuccess(asMap(notificationTargets.get(2), emailContents.get(2))));
+
+        when(notificationSender.sendEmailWithContent(
+                Matchers.eq(notifications.get(0)),
+                Matchers.eq(notificationTargets.get(0)),
+                Matchers.eq(emailContents.get(0))))
+                .thenReturn(serviceSuccess(
+                        singletonList(new EmailAddress(users.get(0).getEmail(), users.get(0).getName()))));
+        when(notificationSender.sendEmailWithContent(
+                Matchers.eq(notifications.get(1)),
+                Matchers.eq(notificationTargets.get(1)),
+                Matchers.eq(emailContents.get(1))))
+                .thenReturn(serviceSuccess(
+                        singletonList(new EmailAddress(users.get(1).getEmail(), users.get(1).getName()))));
+        when(notificationSender.sendEmailWithContent(
+                Matchers.eq(notifications.get(2)),
+                Matchers.eq(notificationTargets.get(2)),
+                Matchers.eq(emailContents.get(2))))
+                .thenReturn(serviceFailure(new Error("error", INTERNAL_SERVER_ERROR)));
+
+        ServiceResult<Void> result = service.notifyApplicantsByCompetition(competitionId);
+
+        InOrder inOrder = inOrder(applicationRepositoryMock, notificationSender);
+        inOrder.verify(applicationRepositoryMock).findByCompetitionId(competitionId);
+
+        inOrder.verify(applicationRepositoryMock).findOne(applicationOneId);
+        inOrder.verify(notificationSender).renderTemplates(notifications.get(0));
+        inOrder.verify(notificationSender)
+                .sendEmailWithContent(notifications.get(0), notificationTargets.get(0), emailContents.get(0));
+
+        inOrder.verify(applicationRepositoryMock).findOne(applicationTwoId);
+        inOrder.verify(notificationSender).renderTemplates(notifications.get(1));
+        inOrder.verify(notificationSender)
+                .sendEmailWithContent(notifications.get(1), notificationTargets.get(1), emailContents.get(1));
+
+        inOrder.verify(applicationRepositoryMock).findOne(applicationThreeId);
+        inOrder.verify(notificationSender).renderTemplates(notifications.get(2));
+        inOrder.verify(notificationSender)
+                .sendEmailWithContent(notifications.get(2), notificationTargets.get(2), emailContents.get(2));
+
+        inOrder.verifyNoMoreInteractions();
+
+        assertTrue(result.isFailure());
+        assertEquals(1, result.getErrors().size());
+        assertEquals("error", result.getErrors().get(0).getErrorKey());
+        assertEquals(INTERNAL_SERVER_ERROR, result.getErrors().get(0).getStatusCode());
+    }
+
+    @Test
+    public void notifyApplicantsByCompetition_allFailure() throws Exception {
+        Long competitionId = 1L;
+        Long applicationOneId = 2L;
+        Long applicationTwoId = 3L;
+        Long applicationThreeId = 4L;
+
+        Competition competition = newCompetition()
+                .withName("Competition")
+                .build();
+
+        List<User> users = newUser()
+                .withFirstName("John", "Jane", "Bob")
+                .withLastName("Smith", "Jones", "Davies")
+                .withEmailAddress("john@smith.com", "jane@jones.com", "bob@davie.com")
+                .build(3);
+
+        List<ProcessRole> processRoles = newProcessRole()
+                .withUser(users.get(0), users.get(1), users.get(2))
+                .withRole(newRole().withType(LEADAPPLICANT).withUrl("url").build())
+                .build(3);
+
+        List<Application> applications = newApplication()
+                .withCompetition(competition)
+                .withId(applicationOneId, applicationTwoId, applicationThreeId)
+                .withName("App1", "App2", "App3")
+                .build(3);
+
+        applications.get(0).setProcessRoles(singletonList(processRoles.get(0)));
+        applications.get(1).setProcessRoles(singletonList(processRoles.get(1)));
+        applications.get(2).setProcessRoles(singletonList(processRoles.get(2)));
+
+        processRoles.get(0).setApplicationId(applicationOneId);
+        processRoles.get(1).setApplicationId(applicationTwoId);
+        processRoles.get(2).setApplicationId(applicationThreeId);
+
+        List<NotificationTarget> notificationTargets = asList(
+                new ExternalUserNotificationTarget(users.get(0).getName(), users.get(0).getEmail()),
+                new ExternalUserNotificationTarget(users.get(1).getName(), users.get(1).getEmail()),
+                new ExternalUserNotificationTarget(users.get(2).getName(), users.get(2).getEmail())
+        );
+
+        List<EmailContent> emailContents = newEmailContentResource()
+                .build(3);
+
+        List<Notification> notifications = asList(
+                new Notification(
+                        null,
+                        singletonList(notificationTargets.get(0)),
+                        ApplicationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
+                        asMap("name", users.get(0).getName(),
+                                "applicationName", applications.get(0).getName(),
+                                "competitionName", competition.getName(),
+                                "dashboardUrl", processRoles.get(0).getRole().getUrl())
+                ),
+                new Notification(
+                        null,
+                        singletonList(notificationTargets.get(1)),
+                        ApplicationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
+                        asMap("name", users.get(1).getName(),
+                                "applicationName", applications.get(1).getName(),
+                                "competitionName", competition.getName(),
+                                "dashboardUrl", processRoles.get(1).getRole().getUrl())
+                ),
+                new Notification(
+                        null,
+                        singletonList(notificationTargets.get(2)),
+                        ApplicationServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
+                        asMap("name", users.get(2).getName(),
+                                "applicationName", applications.get(2).getName(),
+                                "competitionName", competition.getName(),
+                                "dashboardUrl", processRoles.get(2).getRole().getUrl())
+                )
+        );
+
+        when(applicationRepositoryMock.findByCompetitionId(competitionId)).thenReturn(applications);
+
+        when(applicationRepositoryMock.findOne(applicationOneId)).thenReturn(applications.get(0));
+        when(applicationRepositoryMock.findOne(applicationTwoId)).thenReturn(applications.get(1));
+        when(applicationRepositoryMock.findOne(applicationThreeId)).thenReturn(applications.get(2));
+
+        when(notificationSender.renderTemplates(Matchers.eq(notifications.get(0))))
+                .thenReturn(serviceSuccess(asMap(notificationTargets.get(0), emailContents.get(0))));
+        when(notificationSender.renderTemplates(Matchers.eq(notifications.get(1))))
+                .thenReturn(serviceSuccess(asMap(notificationTargets.get(1), emailContents.get(1))));
+        when(notificationSender.renderTemplates(Matchers.eq(notifications.get(2))))
+                .thenReturn(serviceSuccess(asMap(notificationTargets.get(2), emailContents.get(2))));
+
+        when(notificationSender.sendEmailWithContent(
+                Matchers.eq(notifications.get(0)),
+                Matchers.eq(notificationTargets.get(0)),
+                Matchers.eq(emailContents.get(0))))
+                .thenReturn(serviceFailure(new Error("error", INTERNAL_SERVER_ERROR)));
+        when(notificationSender.sendEmailWithContent(
+                Matchers.eq(notifications.get(1)),
+                Matchers.eq(notificationTargets.get(1)),
+                Matchers.eq(emailContents.get(1))))
+                .thenReturn(serviceFailure(new Error("error", INTERNAL_SERVER_ERROR)));
+        when(notificationSender.sendEmailWithContent(
+                Matchers.eq(notifications.get(2)),
+                Matchers.eq(notificationTargets.get(2)),
+                Matchers.eq(emailContents.get(2))))
+                .thenReturn(serviceFailure(new Error("error", INTERNAL_SERVER_ERROR)));
+
+        ServiceResult<Void> result = service.notifyApplicantsByCompetition(competitionId);
+
+        InOrder inOrder = inOrder(applicationRepositoryMock, notificationSender);
+        inOrder.verify(applicationRepositoryMock).findByCompetitionId(competitionId);
+
+        inOrder.verify(applicationRepositoryMock).findOne(applicationOneId);
+        inOrder.verify(notificationSender).renderTemplates(notifications.get(0));
+        inOrder.verify(notificationSender)
+                .sendEmailWithContent(notifications.get(0), notificationTargets.get(0), emailContents.get(0));
+
+        inOrder.verify(applicationRepositoryMock).findOne(applicationTwoId);
+        inOrder.verify(notificationSender).renderTemplates(notifications.get(1));
+        inOrder.verify(notificationSender)
+                .sendEmailWithContent(notifications.get(1), notificationTargets.get(1), emailContents.get(1));
+
+        inOrder.verify(applicationRepositoryMock).findOne(applicationThreeId);
+        inOrder.verify(notificationSender).renderTemplates(notifications.get(2));
+        inOrder.verify(notificationSender)
+                .sendEmailWithContent(notifications.get(2), notificationTargets.get(2), emailContents.get(2));
+
+        inOrder.verifyNoMoreInteractions();
+
+        assertTrue(result.isFailure());
+        assertEquals(3, result.getErrors().size());
+        assertEquals("error", result.getErrors().get(0).getErrorKey());
+        assertEquals(INTERNAL_SERVER_ERROR, result.getErrors().get(0).getStatusCode());
+        assertEquals("error", result.getErrors().get(1).getErrorKey());
+        assertEquals(INTERNAL_SERVER_ERROR, result.getErrors().get(1).getStatusCode());
+        assertEquals("error", result.getErrors().get(2).getErrorKey());
+        assertEquals(INTERNAL_SERVER_ERROR, result.getErrors().get(2).getStatusCode());
     }
 }

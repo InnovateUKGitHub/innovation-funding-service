@@ -21,6 +21,8 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.email.resource.EmailAddress;
+import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.resource.FileEntryResourceAssembler;
@@ -32,6 +34,7 @@ import org.innovateuk.ifs.form.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
+import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
@@ -55,15 +58,16 @@ import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_OPEN;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_UNABLE_TO_DELETE_FILE;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.form.resource.FormInputType.*;
+
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
+import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.innovateuk.ifs.util.MathFunctions.percentage;
 
 /**
@@ -72,7 +76,8 @@ import static org.innovateuk.ifs.util.MathFunctions.percentage;
 @Service
 public class ApplicationServiceImpl extends CompetitionSetupTransactionalService implements ApplicationService {
     enum Notifications {
-        APPLICATION_SUBMITTED
+        APPLICATION_SUBMITTED,
+        APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED
     }
 
     private static final Log LOG = LogFactory.getLog(ApplicationServiceImpl.class);
@@ -102,6 +107,8 @@ public class ApplicationServiceImpl extends CompetitionSetupTransactionalService
     private ApplicationMapper applicationMapper;
     @Autowired
     private ResearchCategoryMapper researchCategoryMapper;
+    @Autowired
+    private NotificationSender notificationSender;
 
     @Override
     public ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, Long competitionId, Long userId) {
@@ -493,10 +500,43 @@ public class ApplicationServiceImpl extends CompetitionSetupTransactionalService
 
     private ServiceResult<FormInputResponse> getOnlyForApplication(Long applicationId, FormInputType formInputType) {
         Application app = applicationRepository.findOne(applicationId);
-        return getOnlyElementOrFail(formInputRepository.findByCompetitionIdAndTypeIn(app.getCompetition().getId(), asList(formInputType))).andOnSuccess( (formInput) -> {
+        return getOnlyElementOrFail(formInputRepository.findByCompetitionIdAndTypeIn(app.getCompetition().getId(), asList(formInputType))).andOnSuccess((formInput) -> {
             List<FormInputResponse> all = formInputResponseRepository.findByApplicationIdAndFormInputId(applicationId, formInput.getId());
             return getOnlyElementOrFail(all);
         });
+    }
+
+    public ServiceResult<Void> notifyApplicantsByCompetition(Long competitionId) {
+        List<ProcessRole> applicants = applicationRepository.findByCompetitionId(competitionId)
+                .stream()
+                .flatMap(x -> x.getProcessRoles().stream())
+                .filter(ProcessRole::isLeadApplicantOrCollaborator)
+                .collect(toList());
+
+        return processAnyFailuresOrSucceed(applicants
+                .stream()
+                .map(this::sendNotification)
+                .collect(toList()));
+    }
+
+    private ServiceResult<List<EmailAddress>> sendNotification(ProcessRole processRole) {
+        Application application = applicationRepository.findOne(processRole.getApplicationId());
+
+        NotificationTarget recipient =
+                new ExternalUserNotificationTarget(processRole.getUser().getName(), processRole.getUser().getEmail());
+
+        Notification notification = new Notification(
+                systemNotificationSource,
+                singletonList(recipient),
+                Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
+                asMap("name", processRole.getUser().getName(),
+                        "applicationName", application.getName(),
+                        "competitionName", application.getCompetition().getName(),
+                        "dashboardUrl", processRole.getRole().getUrl()));
+
+        EmailContent content = notificationSender.renderTemplates(notification).getSuccessObject().get(recipient);
+
+        return notificationSender.sendEmailWithContent(notification, recipient, content);
     }
 
     private BigDecimal progressPercentageForApplication(Application application) {

@@ -207,7 +207,7 @@ Lead partner can edit his spend profile with valid values
     And the user should not see the text in the page    Unable to save spend profile
     When the user enters text to a text field           css=#row-28-1    0  # Subcontracting
     And the user moves focus to the element             css=#row-28-2
-    Then the field has value                            css=#row-total-28    £ 9,722
+    Then the field has value                            css=#row-total-28    £ 9,723
     And the user should not see the text in the page    Unable to save spend profile
     Then the user clicks the button/link                jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should not see the text in the page   You cannot submit your spend profile. Your total costs are higher than the eligible project costs.
@@ -217,7 +217,7 @@ Lead Partners Spend profile summary gets updated when edited
     [Tags]    HappyPath
     Given the user navigates to the page           ${external_spendprofile_summary}/review
     Then the user should see the text in the page  Project costs for financial year
-    And the user sees the text in the element      jQuery=.grid-container table tr:nth-child(1) td:nth-child(2)    £ 16,324
+    And the user sees the text in the element      jQuery=.grid-container table tr:nth-child(1) td:nth-child(2)    £ 16,481
 
 Project Manager can see Spend Profile in Progress
     [Documentation]    done during refactoring, no ticket attached
@@ -666,7 +666,7 @@ Industrial partner receives edit rights and can submit their spend profile
     When the user goes back to the previous page
     And the user clicks the button/link    link=Project setup status
     And the user clicks the button/link    link=status of my partners
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.waiting:nth-of-type(5)
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(5)
 
 Academic partner receives edit rights and can submit their spend profile
     [Documentation]    INFUND-6977
@@ -683,7 +683,7 @@ Academic partner receives edit rights and can submit their spend profile
     When the user goes back to the previous page
     And the user clicks the button/link    link=Project setup status
     And the user clicks the button/link    link=status of my partners
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td.status.waiting:nth-of-type(5)
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(5)
 
 
 Lead partner can send the combined spend profile

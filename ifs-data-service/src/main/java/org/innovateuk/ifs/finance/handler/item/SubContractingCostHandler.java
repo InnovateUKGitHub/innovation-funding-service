@@ -13,26 +13,18 @@ import java.util.List;
  * Handles the subcontracting costs, i.e. converts the costs to be stored into the database
  * or for sending it over.
  */
-public class SubContractingCostHandler extends FinanceRowHandler {
+public class SubContractingCostHandler extends FinanceRowHandler<SubContractingCost> {
     public static final String COST_FIELD_COUNTRY = "country";
     public static final String COST_KEY = "subcontracting";
 
     @Override
-    public ApplicationFinanceRow toCost(FinanceRowItem costItem) {
-        ApplicationFinanceRow cost = null;
-        if (costItem instanceof SubContractingCost) {
-            cost = mapSubContractingCost(costItem);
-        }
-        return cost;
+    public ApplicationFinanceRow toCost(SubContractingCost costItem) {
+        return costItem != null ? mapSubContractingCost(costItem) : null;
     }
 
     @Override
-    public ProjectFinanceRow toProjectCost(FinanceRowItem costItem) {
-        ProjectFinanceRow cost = null;
-        if (costItem instanceof SubContractingCost) {
-            cost = mapSubContractingToProjectCost(costItem);
-        }
-        return cost;
+    public ProjectFinanceRow toProjectCost(SubContractingCost costItem) {
+        return mapSubContractingToProjectCost(costItem);
     }
 
     @Override
