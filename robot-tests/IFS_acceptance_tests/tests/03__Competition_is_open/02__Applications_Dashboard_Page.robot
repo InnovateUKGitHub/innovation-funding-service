@@ -74,19 +74,7 @@ All Applications page: Key Statistics
     ...
     ...    INFUND-7369
     [Tags]
-    #Calculation of the total number of Applications
-    ${TOTAL_APPLICATIONS}=    Get matching xpath count    //table/tbody/tr
-    ${TOTAL_COUNT}=    Get text    css=li:nth-child(1) > div > span
-    Should Be Equal As Integers    ${TOTAL_APPLICATIONS}    ${TOTAL_COUNT}
-    #Calculation of the Started Applications
-    ${STARTED_APPLICATIONS}=    Get matching xpath count    //*[text()="Started"]
-    ${STARTED_COUNT}=    Get text    css=li:nth-child(2) > div > span
-    Should Be Equal As Integers    ${STARTED_APPLICATIONS}    ${STARTED_COUNT}
-    #Calculation of the Submitted Applications
-    ${SUBMITTED_APPLICATIONS}=    Get matching xpath count    //*[text()="Submitted"]
-    ${SUBMITTED_COUNT}=    Get text    css=li:nth-child(4) > div > span
-    Should Be Equal As Integers    ${SUBMITTED_APPLICATIONS}    ${SUBMITTED_COUNT}
-    #TODO ADD Check for the \ beyond 50% counts when we will have test data
+    Then the totals in the Key statistics should be correct
 
 Comp admin can open the view mode of the application
     [Documentation]    INFUND-2300,INFUND-2304, INFUND-2435, INFUND-7503
@@ -290,3 +278,18 @@ The calculation for the submited applications should be correct
 The calculation of the open applications should be correct
     ${open_count}=    Get matching xpath count    //*[text()="open"]
     Run keyword if    ${open_count} != 0    open application calculations are correct
+
+Then the totals in the Key statistics should be correct
+    #Calculation of the total number of Applications
+    ${TOTAL_APPLICATIONS}=    Get matching xpath count    //table/tbody/tr
+    ${TOTAL_COUNT}=    Get text    css=li:nth-child(1) > div > span
+    Should Be Equal As Integers    ${TOTAL_APPLICATIONS}    ${TOTAL_COUNT}
+    #Calculation of the Started Applications
+    ${STARTED_APPLICATIONS}=    Get matching xpath count    //*[text()="Started"]
+    ${STARTED_COUNT}=    Get text    css=li:nth-child(2) > div > span
+    Should Be Equal As Integers    ${STARTED_APPLICATIONS}    ${STARTED_COUNT}
+    #Calculation of the Submitted Applications
+    ${SUBMITTED_APPLICATIONS}=    Get matching xpath count    //*[text()="Submitted"]
+    ${SUBMITTED_COUNT}=    Get text    css=li:nth-child(4) > div > span
+    Should Be Equal As Integers    ${SUBMITTED_APPLICATIONS}    ${SUBMITTED_COUNT}
+    #TODO ADD Check for the beyond 50% counts when we will have test data
