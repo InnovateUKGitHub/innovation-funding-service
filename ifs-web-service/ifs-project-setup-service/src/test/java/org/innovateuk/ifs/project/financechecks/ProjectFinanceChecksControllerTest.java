@@ -163,14 +163,13 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
         ProjectTeamStatusResource expectedProjectTeamStatusResource = newProjectTeamStatusResource().withPartnerStatuses(Collections.singletonList(statusResource)).build();
         ProjectResource project = newProjectResource().withId(projectId).withName(projectName).build();
         OrganisationResource partnerOrganisation = newOrganisationResource().withId(organisationId).build();
+        ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().build();
 
         when(projectService.getById(projectId)).thenReturn(project);
         when(organisationService.getOrganisationById(organisationId)).thenReturn(partnerOrganisation);
         when(projectService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
-
-        ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().build();
         when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
-        when(financeCheckServiceMock.loadQueries(projectFinanceResource.getId())).thenReturn(ServiceResult.serviceSuccess(Collections.singletonList(sampleQuery())));
+        when(financeCheckServiceMock.loadQueries(any())).thenReturn(ServiceResult.serviceSuccess(Collections.emptyList()));
 
         MvcResult result = mockMvc.perform(get("/project/123/partner-organisation/234/finance-checks")).
                 andExpect(view().name("project/finance-checks")).
