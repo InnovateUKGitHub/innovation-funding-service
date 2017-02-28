@@ -59,5 +59,9 @@ public interface CompetitionParticipantRepository extends CrudRepository<Competi
             "AND cp.role = :role " +
             "AND cp.status = :status " +
             "AND EXISTS (SELECT 'found' FROM Assessment a WHERE a.participant.user = cp.user AND a.target.id = :appId)")
-    List<CompetitionParticipant> findParticipantsWithAssessments(@Param("compId") Long competitionId, @Param("role") CompetitionParticipantRole role, @Param("status") ParticipantStatus status, @Param("appId") Long applicationId);
+    List<CompetitionParticipant> findParticipantsWithAssessments(
+            @Param("compId") Long competitionId,
+            @Param("role") CompetitionParticipantRole role,
+            @Param("status") ParticipantStatus status,
+            @Param("appId") Long applicationId);
 }
