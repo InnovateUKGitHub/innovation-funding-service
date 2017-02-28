@@ -130,10 +130,6 @@ IFS.core.tabs = (function () {
 
       var instance = jQuery(element)
 
-      // add hash to url not using default to avoid page scroll
-      // window.location.hash = instance.attr('href')
-      location.hash = 'test'
-
       // remove focusability [sic] and aria-selected
       instance.parents('[role="tablist"]').find('[role="tab"]').attr({
         'tabindex': '-1',
