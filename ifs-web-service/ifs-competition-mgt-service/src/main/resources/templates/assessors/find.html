@@ -124,19 +124,20 @@
                         */-->
 
                         <div class="column-quarter alignright">
-                            <a href="?">Clear all filters</a>
+                            <a href="?page=0">Clear all filters</a>
                             <button class="button">Filter</button>
                         </div>
                     </div>
                 </div>
             </form>
 
-            <!-- /*
+
             <div class="grid-row sorting">
                 <div class="column-half">
-                    <span class="heading-large">20</span> assessors
+                    <span class="heading-large" th:text="${model.pagination.totalCount}">20</span> assessors
                 </div>
 
+                <!--/*
                 <div class="column-half alignright">
                     <label for="inviteFilter">Sort by
                         <select class="form-control" id="inviteFilter" name="inviteFilter">
@@ -145,8 +146,8 @@
                     </label>
                     <button class="button button-secondary button-small" type="submit">Sort</button>
                 </div>
+                */-->
             </div>
-            */-->
 
             <form method="POST" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}">
                 <table>
