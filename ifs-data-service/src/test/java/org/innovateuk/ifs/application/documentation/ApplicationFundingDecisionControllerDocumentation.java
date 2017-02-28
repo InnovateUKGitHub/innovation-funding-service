@@ -14,12 +14,14 @@ import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.documentation.NotificationResourceDocs.notificationResourceFields;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 
 public class ApplicationFundingDecisionControllerDocumentation extends BaseControllerMockMVCTest<ApplicationFundingDecisionController> {
 
@@ -74,6 +76,8 @@ public class ApplicationFundingDecisionControllerDocumentation extends BaseContr
         mockMvc.perform(post("/applicationfunding/sendNotifications")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(notification)))
-                .andDo( this.document.snippets());
+                .andDo( this.document.snippets(
+                        requestFields(notificationResourceFields)
+                ));
     }
 }
