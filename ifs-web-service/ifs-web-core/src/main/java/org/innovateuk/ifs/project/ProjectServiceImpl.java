@@ -274,6 +274,11 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public ServiceResult<Void> removeSignedGrantOfferLetter(Long projectId) {
+        return projectRestService.removeSignedGrantOfferLetter(projectId).toServiceResult();
+    }
+
+    @Override
     public ServiceResult<Void> submitGrantOfferLetter(Long projectId) {
         return projectRestService.submitGrantOfferLetter(projectId).toServiceResult();
     }

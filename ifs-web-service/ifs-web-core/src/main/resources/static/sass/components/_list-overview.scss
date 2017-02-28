@@ -96,6 +96,9 @@ dl dt,
 dl dt.font-small {
 	font-weight:bold;
 }
+dl dd {
+	margin-bottom:0.5em;
+}
 
 .dl-left {
 	overflow: hidden;
@@ -133,6 +136,17 @@ ol.list-alpha {
 			content: counter(item, upper-alpha);
 			margin-left:-45px; //negative of the ol li padding
 	}
+}
+//todo clean a lot up over here
+ol.roman,
+ol.lower-alpha{
+	padding-left:25px;
+}
+ol.list.roman {
+  list-style-type: lower-roman;
+}
+ol.list.lower-alpha {
+	list-style-type: lower-alpha;
 }
 
 ol.list-counted {
@@ -272,8 +286,12 @@ ol.list-counted {
     }
 }
 
-.readonly-list{
-  dd{
-    margin-bottom: 1em;
+dl.readonly-data{
+  dt:first-of-type {
+    margin-top:0;
   }
+  dt {
+    margin-top: 1em;
+  }
+  margin-bottom:1em;
 }

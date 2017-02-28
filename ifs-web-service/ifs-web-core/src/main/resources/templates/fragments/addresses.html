@@ -7,6 +7,7 @@
             <div th:class="${#fields.hasErrors('*{addressForm.postcodeInput}') and form.addressForm.triedToSearch} ? 'form-group error' : 'form-group'">
                 <label class="form-label" for="addressForm.postcodeInput">
                     <span class="form-label-bold">Postcode</span>
+                    <span th:if="${formHint}" class="form-hint" th:text="${formHint}"></span>
                     <th:block th:if="${#fields.hasErrors('*{addressForm.postcodeInput}') and form.addressForm.triedToSearch}">
                           <span class="error-message"  th:each="err : ${#fields.errors('addressForm.postcodeInput')}" th:text="${err}" />
                     </th:block>

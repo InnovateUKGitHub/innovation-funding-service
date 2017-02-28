@@ -13,11 +13,17 @@
             <th:block th:insert="fragments/assessment :: assessment-header-deadline-sub (linkTitle='Back to your assessment overview',linkClass='link-back',linkUrl=@{${navigation.overviewUrl}},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft})" />
 
             <div class="page-title">
-                <th:block th:insert="fragments/elements :: application-title (applicationId=${model.application.id},applicationName=${model.application.applicationDisplayName})" />
+                <th:block th:insert="fragments/elements :: application-title (applicationId=${model.applicationId},applicationName=${model.applicationName})" />
                 <h1 class="heading-xlarge" th:text="${model.questionShortName}" />
             </div>
 
-            <form th:if="${responseRequired}" action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" enctype="multipart/form-data" th:object="${form}" novalidate="novalidate" data-autosave="assessorFeedback">
+            <form th:if="${responseRequired}"
+                  th:action="@{/{assessmentId}/question/{questionId}(assessmentId=${model.assessmentId},questionId=${model.questionId})}"
+                  method="post"
+                  enctype="multipart/form-data"
+                  th:object="${form}"
+                  novalidate="novalidate"
+                  data-autosave="assessorFeedback">
                 <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
 
                 <p class="form-hint" th:text="|Please review the answer provided and score the answer out of ${model.maximumScore} points.|" th:if="${model.scoreFormInputExists}" />
@@ -40,7 +46,7 @@
                     <div th:replace="fragments/assessment-types :: ${field.type.nameLower} (field=${field})" />
                 </div>
 
-                <input type="hidden" id="application_id" th:value="${model.application.id}" />
+                <input type="hidden" id="application_id" th:value="${model.applicationId}" />
 
                 <button type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to assessment overview</button>
             </form>

@@ -7,8 +7,6 @@ import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.domain.Section;
 import org.innovateuk.ifs.application.repository.GuidanceRowRepository;
 import org.innovateuk.ifs.application.repository.QuestionRepository;
-import org.innovateuk.ifs.category.resource.CategoryType;
-import org.innovateuk.ifs.category.transactional.CompetitionCategoryLinkService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.AssessorCountOption;
@@ -47,15 +45,12 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
-
 /**
  * Service for operations around the usage and processing of Competitions
  */
 @Service
 public class CompetitionSetupServiceImpl extends BaseTransactionalService implements CompetitionSetupService {
     private static final Log LOG = LogFactory.getLog(CompetitionSetupServiceImpl.class);
-    @Autowired
-    private CompetitionCategoryLinkService competitionCategoryLinkService;
     @Autowired
     private CompetitionService competitionService;
     @Autowired
@@ -113,53 +108,28 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Override
     public ServiceResult<CompetitionResource> update(Long id, CompetitionResource competitionResource) {
         Competition competition = competitionMapper.mapToDomain(competitionResource);
-        saveCategories(competitionResource);
+
         saveFunders(competitionResource);
         competition = competitionRepository.save(competition);
-        competitionService.addCategories(competition);
         return serviceSuccess(competitionMapper.mapToResource(competition));
-    }
-
-    private void saveCategories(CompetitionResource competitionResource) {
-        saveInnovationAreas(competitionResource);
-        saveInnovationSector(competitionResource);
-        saveResearchCategories(competitionResource);
     }
 
     private void saveFunders(CompetitionResource competitionResource) {
         competitionFunderService.reinsertFunders(competitionResource);
     }
 
-    private void saveInnovationSector(CompetitionResource competitionResource) {
-        Long sectorId = competitionResource.getInnovationSector();
-        saveCategoryLink(competitionResource, sectorId, CategoryType.INNOVATION_SECTOR);
-    }
-
-    private void saveInnovationAreas(CompetitionResource competitionResource) {
-        Set<Long> areaIds = competitionResource.getInnovationAreas();
-        saveCategoryLinks(competitionResource, areaIds, CategoryType.INNOVATION_AREA);
-    }
-
-    private void saveResearchCategories(CompetitionResource competitionResource) {
-        Set<Long> researchCategories = competitionResource.getResearchCategories();
-        saveCategoryLinks(competitionResource, researchCategories, CategoryType.RESEARCH_CATEGORY);
-    }
-
-    private void saveCategoryLink(CompetitionResource competitionResource, Long categoryId, CategoryType categoryType) {
-        competitionCategoryLinkService.updateCategoryLink(categoryId, categoryType, competitionMapper.mapToDomain(competitionResource));
-    }
-
-    private void saveCategoryLinks(CompetitionResource competitionResource, Set<Long> categoryIds, CategoryType categoryType) {
-        competitionCategoryLinkService.updateCategoryLinks(categoryIds, categoryType, competitionMapper.mapToDomain(competitionResource));
-    }
-
     @Override
     public ServiceResult<CompetitionResource> create() {
         Competition competition = new Competition();
         competition.setSetupComplete(false);
-        Competition savedCompetition = competitionRepository.save(competition);
-        return publicContentService.initialiseByCompetitionId(savedCompetition.getId())
-                .andOnSuccessReturn(() -> competitionMapper.mapToResource(savedCompetition));
+        return persistNewCompetition(competition);
+    }
+
+    @Override
+    public ServiceResult<CompetitionResource> createNonIfs() {
+        Competition competition = new Competition();
+        competition.setNonIfs(true);
+        return persistNewCompetition(competition);
     }
 
     @Override
@@ -353,5 +323,11 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
             guidanceRowRepository.save(row);
             return row;
         };
+    }
+
+    private ServiceResult<CompetitionResource> persistNewCompetition(Competition competition) {
+        Competition savedCompetition = competitionRepository.save(competition);
+        return publicContentService.initialiseByCompetitionId(savedCompetition.getId())
+                .andOnSuccessReturn(() -> competitionMapper.mapToResource(savedCompetition));
     }
 }

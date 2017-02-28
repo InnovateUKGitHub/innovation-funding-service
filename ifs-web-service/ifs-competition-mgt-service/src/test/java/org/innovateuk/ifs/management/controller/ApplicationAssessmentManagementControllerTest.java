@@ -1,11 +1,14 @@
 package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.resource.ApplicationCountSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationCountSummaryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.management.model.ManageApplicationsModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.ManageApplicationsViewModel;
+import org.innovateuk.ifs.management.viewmodel.PaginationLinkViewModel;
+import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -50,10 +53,13 @@ public class ApplicationAssessmentManagementControllerTest extends BaseControlle
                 .withAccepted(2L, 3L)
                 .withAssessors(3L, 4L)
                 .withSubmitted(1L, 2L).build(2);
-        when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
-        when(applicationCountSummaryRestService.getApplicationCountSummariesByCompetitionId(competitionResource.getId())).thenReturn(restSuccess(summaryResources));
 
-        ManageApplicationsViewModel model = (ManageApplicationsViewModel) mockMvc.perform(get("/assessment/competition/{competitionId}", competitionResource.getId()))
+        ApplicationCountSummaryPageResource expectedPageResource = new ApplicationCountSummaryPageResource(41, 3, summaryResources, 1, 20);
+
+        when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
+        when(applicationCountSummaryRestService.getApplicationCountSummariesByCompetitionId(competitionResource.getId(), 1,20,"filter")).thenReturn(restSuccess(expectedPageResource));
+
+        ManageApplicationsViewModel model = (ManageApplicationsViewModel) mockMvc.perform(get("/assessment/competition/{competitionId}?page=1&filterSearch=filter", competitionResource.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/manage-applications"))
                 .andExpect(model().attributeExists("model"))
@@ -72,5 +78,14 @@ public class ApplicationAssessmentManagementControllerTest extends BaseControlle
         assertEquals(4L, model.getApplications().get(1).getAssessors());
         assertEquals(2L, model.getApplications().get(1).getCompleted());
         assertEquals("Lead Org 2", model.getApplications().get(1).getLeadOrganisation());
+
+        PaginationViewModel actualPagination = model.getPagination();
+        assertEquals(1, actualPagination.getCurrentPage());
+        assertEquals(20,actualPagination.getPageSize());
+        assertEquals(3, actualPagination.getTotalPages());
+        assertEquals("1 to 20", actualPagination.getPageNames().get(0).getTitle());
+        assertEquals("21 to 40", actualPagination.getPageNames().get(1).getTitle());
+        assertEquals("41 to 41", actualPagination.getPageNames().get(2).getTitle());
+        assertEquals("?origin=MANAGE_APPLICATIONS&filterSearch=filter&page=2", actualPagination.getPageNames().get(2).getPath());
     }
 }

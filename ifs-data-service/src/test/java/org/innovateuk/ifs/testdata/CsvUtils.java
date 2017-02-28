@@ -325,6 +325,10 @@ class CsvUtils {
         List<String> collaborators;
         LocalDateTime submittedDate;
         ApplicationStatusConstants status;
+        boolean markFinancesComplete;
+        String researchCategory;
+        boolean resubmission;
+        boolean markDetailsComplete;
 
         private ApplicationLine(List<String> line) {
             int i = 0;
@@ -337,6 +341,10 @@ class CsvUtils {
             collaborators = collaboratorString != null ? asList(collaboratorString.split(",")) : emptyList();
             submittedDate = nullableDateTime(line.get(i++));
             status = ApplicationStatusConstants.getFromName(line.get(i++));
+            markFinancesComplete = nullableBoolean(line.get(i++));
+            researchCategory = nullable(line.get(i++));
+            resubmission = nullableBoolean(line.get(i++));
+            markDetailsComplete = nullableBoolean(line.get(i++));
         }
     }
 
@@ -405,6 +413,8 @@ class CsvUtils {
         FundingType fundingType;
         String projectSize;
         List<String> keywords;
+        boolean nonIfs;
+        String nonIfsUrl;
 
 
         private CompetitionLine(List<String> line) {
@@ -412,7 +422,7 @@ class CsvUtils {
             int i = 0;
             name = nullable(line.get(i++));
             description = nullable(line.get(i++));
-            type = line.get(i++);
+            type = nullable(line.get(i++));
             innovationArea = nullable(line.get(i++));
             innovationSector = nullable(line.get(i++));
             researchCategory = nullable(line.get(i++));
@@ -453,6 +463,8 @@ class CsvUtils {
             fundingType = nullableEnum(line.get(i++), FundingType::valueOf);
             projectSize = nullable(line.get(i++));
             keywords = nullableSplittableString(line.get(i++));
+            nonIfs = nullableBoolean(line.get(i++));
+            nonIfsUrl = nullable(line.get(i++));
         }
     }
 

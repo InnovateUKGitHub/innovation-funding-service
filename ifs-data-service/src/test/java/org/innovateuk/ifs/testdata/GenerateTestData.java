@@ -73,9 +73,10 @@ import static org.innovateuk.ifs.testdata.builders.PublicContentDateDataBuilder.
 import static org.innovateuk.ifs.testdata.builders.PublicContentGroupDataBuilder.newPublicContentGroupDataBuilder;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_TECHNOLOGIST;
+import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -512,7 +513,7 @@ public class GenerateTestData extends BaseIntegrationTest {
         UserResource leadApplicant = retrieveUserByEmail(line.leadApplicant);
 
         ApplicationDataBuilder baseBuilder = builder.
-                withBasicDetails(leadApplicant, line.title).
+                withBasicDetails(leadApplicant, line.title, line.researchCategory, line.resubmission).
                 withStartDate(line.startDate).
                 withDurationInMonths(line.durationInMonths);
 
@@ -531,6 +532,8 @@ public class GenerateTestData extends BaseIntegrationTest {
         if (line.status != ApplicationStatusConstants.CREATED) {
             baseBuilder = baseBuilder.beginApplication();
         }
+
+        baseBuilder = baseBuilder.markApplicationDetailsComplete(line.markDetailsComplete);
 
         if (line.submittedDate != null) {
             baseBuilder = baseBuilder.submitApplication();
@@ -558,15 +561,15 @@ public class GenerateTestData extends BaseIntegrationTest {
             if (organisationType.equals(OrganisationTypeEnum.ACADEMIC)) {
 
                 if (organisationFinances.isPresent()) {
-                    return generateAcademicFinancesFromSuppliedData(user, organisationName, organisationFinances.get());
+                    return generateAcademicFinancesFromSuppliedData(user, organisationName, organisationFinances.get(), line.markFinancesComplete);
                 } else {
-                    return generateAcademicFinances(user, organisationName);
+                    return generateAcademicFinances(user, organisationName, line.markFinancesComplete);
                 }
             } else {
                 if (organisationFinances.isPresent()) {
-                    return generateIndustrialCostsFromSuppliedData(user, organisationName, organisationFinances.get());
+                    return generateIndustrialCostsFromSuppliedData(user, organisationName, organisationFinances.get(), line.markFinancesComplete);
                 } else {
-                    return generateIndustrialCosts(user, organisationName);
+                    return generateIndustrialCosts(user, organisationName, line.markFinancesComplete);
                 }
             }
         });
@@ -574,7 +577,7 @@ public class GenerateTestData extends BaseIntegrationTest {
         return baseBuilder.withFinances(financeBuilders);
     }
 
-    private UnaryOperator<ApplicationFinanceDataBuilder> generateIndustrialCostsFromSuppliedData(String user, String organisationName, ApplicationOrganisationFinanceBlock organisationFinances) {
+    private UnaryOperator<ApplicationFinanceDataBuilder> generateIndustrialCostsFromSuppliedData(String user, String organisationName, ApplicationOrganisationFinanceBlock organisationFinances, boolean markAsComplete) {
         return finance -> {
 
             List<ApplicationFinanceRow> financeRows = organisationFinances.rows;
@@ -595,7 +598,8 @@ public class GenerateTestData extends BaseIntegrationTest {
             };
 
 
-            return baseBuilder.withIndustrialCosts(costBuilder);
+            return baseBuilder.withIndustrialCosts(costBuilder)
+                    .markAsComplete(markAsComplete);
         };
     }
 
@@ -640,7 +644,7 @@ public class GenerateTestData extends BaseIntegrationTest {
         }
     }
 
-    private UnaryOperator<ApplicationFinanceDataBuilder> generateIndustrialCosts(String user, String organisationName) {
+    private UnaryOperator<ApplicationFinanceDataBuilder> generateIndustrialCosts(String user, String organisationName, boolean markAsComplete) {
         return finance ->
                 finance.withOrganisation(organisationName).
                         withUser(user).
@@ -652,16 +656,17 @@ public class GenerateTestData extends BaseIntegrationTest {
                                         withLabourEntry("Role 1", 100, 200).
                                         withLabourEntry("Role 2", 200, 300).
                                         withLabourEntry("Role 3", 300, 365).
-                                        withAdministrationSupportCostsCustomRate(25).
+                                        withAdministrationSupportCostsNone().
                                         withMaterials("Generator", bd("5010"), 10).
                                         withCapitalUsage(12, "Depreciating Stuff", true, bd("1060"), bd("600"), 60).
                                         withSubcontractingCost("Developers", "UK", "To develop stuff", bd("45000")).
                                         withTravelAndSubsistence("To visit colleagues", 15, bd("199")).
                                         withOtherCosts("Some more costs", bd("550")).
-                                        withOrganisationSize(OrganisationSize.MEDIUM));
+                                        withOrganisationSize(OrganisationSize.MEDIUM))
+                        .markAsComplete(markAsComplete);
     }
 
-    private UnaryOperator<ApplicationFinanceDataBuilder> generateAcademicFinances(String user, String organisationName) {
+    private UnaryOperator<ApplicationFinanceDataBuilder> generateAcademicFinances(String user, String organisationName, boolean markAsComplete) {
         return finance -> finance.
                 withOrganisation(organisationName).
                 withUser(user).
@@ -676,55 +681,79 @@ public class GenerateTestData extends BaseIntegrationTest {
                         withIndirectCosts(bd("77")).
                         withExceptionsStaff(bd("88")).
                         withExceptionsOtherCosts(bd("99")).
-                        withUploadedJesForm());
+                        withUploadedJesForm())
+                .markAsComplete(markAsComplete);
     }
 
-    private UnaryOperator<ApplicationFinanceDataBuilder> generateAcademicFinancesFromSuppliedData(String user, String organisationName, ApplicationOrganisationFinanceBlock existingFinances) {
+    private UnaryOperator<ApplicationFinanceDataBuilder> generateAcademicFinancesFromSuppliedData(String user, String organisationName, ApplicationOrganisationFinanceBlock existingFinances, boolean markAsComplete) {
         return finance -> finance.
                 withOrganisation(organisationName).
                 withUser(user).
-                withAcademicCosts(costs -> costs.withTsbReference("My REF").withUploadedJesForm());
+                withAcademicCosts(costs -> costs.withTsbReference("My REF").withUploadedJesForm())
+                .markAsComplete(markAsComplete);
     }
 
     private CompetitionDataBuilder competitionBuilderWithBasicInformation(CsvUtils.CompetitionLine line, Optional<Long> existingCompetitionId) {
-        CompetitionDataBuilder basicInformation =
-                existingCompetitionId.map(id -> competitionDataBuilder.
-                        withExistingCompetition(1L).
-                        withBasicData(line.name, line.description, line.type, line.innovationArea,
-                                line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive,
-                                line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay,
-                                line.multiStream, line.collaborationLevel, line.leadApplicantType, line.researchRatio, line.resubmission).
-                        withPublicContent(line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
-                                line.competitionDescription, line.fundingType, line.projectSize, line.keywords)
-                        .withNewMilestones()
-
-                ).orElse(competitionDataBuilder.
-                        createCompetition().
-                        withBasicData(line.name, line.description, line.type, line.innovationArea,
-                                line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive,
-                                line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay,
-                                line.multiStream, line.collaborationLevel, line.leadApplicantType, line.researchRatio, line.resubmission).
-                        withPublicContent(line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
-                                line.competitionDescription, line.fundingType, line.projectSize, line.keywords).
-                        withApplicationFormFromTemplate().
-                        withNewMilestones()).
-                        withOpenDate(line.openDate).
-                        withBriefingDate(line.briefingDate).
-                        withSubmissionDate(line.submissionDate).
-                        withAllocateAssesorsDate(line.allocateAssessorDate).
-                        withAssessorBriefingDate(line.assessorBriefingDate).
-                        withAssessorAcceptsDate(line.assessorAcceptsDate).
-                        withAssessorsNotifiedDate(line.assessorsNotifiedDate).
-                        withAssessorEndDate(line.assessorEndDate).
-                        withAssessmentClosedDate(line.assessmentClosedDate).
-                        withLineDrawDate(line.drawLineDate).
-                        withAsessmentPanelDate(line.assessmentPanelDate).
-                        withPanelDate(line.panelDate).
-                        withFundersPanelDate(line.fundersPanelDate).
-                        withFundersPanelEndDate(line.fundersPanelEndDate).
-                        withReleaseFeedbackDate(line.releaseFeedback);
+        CompetitionDataBuilder basicInformation;
+                if (line.nonIfs) {
+                    basicInformation = nonIfsCompetitionDataBuilder(line);
+                } else {
+                    basicInformation = ifsCompetitionDataBuilder(line, existingCompetitionId);
+                }
 
         return line.setupComplete ? basicInformation.withSetupComplete() : basicInformation;
+    }
+
+    private CompetitionDataBuilder nonIfsCompetitionDataBuilder(CsvUtils.CompetitionLine line) {
+        return competitionDataBuilder
+                .createNonIfsCompetition()
+                .withBasicData(line.name, null, null, line.innovationArea,
+                        line.innovationSector, null, null, null,
+                        null, null, null, null, null, null, null,
+                        null, null, null, null, line.nonIfsUrl)
+                .withPublicContent(line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
+                        line.competitionDescription, line.fundingType, line.projectSize, line.keywords)
+                .withOpenDate(line.openDate)
+                .withSubmissionDate(line.submissionDate)
+                .withReleaseFeedbackDate(line.releaseFeedback);
+    }
+
+    private CompetitionDataBuilder ifsCompetitionDataBuilder(CsvUtils.CompetitionLine line, Optional<Long> existingCompetitionId) {
+        return existingCompetitionId.map(id -> competitionDataBuilder.
+                withExistingCompetition(1L).
+                withBasicData(line.name, line.description, line.type, line.innovationArea,
+                        line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive,
+                        line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay,
+                        line.multiStream, line.collaborationLevel, line.leadApplicantType, line.researchRatio, line.resubmission, null).
+                withPublicContent(line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
+                        line.competitionDescription, line.fundingType, line.projectSize, line.keywords)
+                .withNewMilestones()
+
+        ).orElse(competitionDataBuilder.
+                createCompetition().
+                withBasicData(line.name, line.description, line.type, line.innovationArea,
+                        line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive,
+                        line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay,
+                        line.multiStream, line.collaborationLevel, line.leadApplicantType, line.researchRatio, line.resubmission, null).
+                withPublicContent(line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
+                        line.competitionDescription, line.fundingType, line.projectSize, line.keywords).
+                withApplicationFormFromTemplate().
+                withNewMilestones()).
+                withOpenDate(line.openDate).
+                withBriefingDate(line.briefingDate).
+                withSubmissionDate(line.submissionDate).
+                withAllocateAssesorsDate(line.allocateAssessorDate).
+                withAssessorBriefingDate(line.assessorBriefingDate).
+                withAssessorAcceptsDate(line.assessorAcceptsDate).
+                withAssessorsNotifiedDate(line.assessorsNotifiedDate).
+                withAssessorEndDate(line.assessorEndDate).
+                withAssessmentClosedDate(line.assessmentClosedDate).
+                withLineDrawDate(line.drawLineDate).
+                withAsessmentPanelDate(line.assessmentPanelDate).
+                withPanelDate(line.panelDate).
+                withFundersPanelDate(line.fundersPanelDate).
+                withFundersPanelEndDate(line.fundersPanelEndDate).
+                withReleaseFeedbackDate(line.releaseFeedback);
     }
 
     private void freshDb() throws Exception {

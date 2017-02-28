@@ -5,7 +5,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.category.resource.CategoryType;
 
 import javax.persistence.*;
-import javax.persistence.Entity;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Abstract Category.
@@ -22,6 +23,11 @@ public abstract class Category {
     @Column(name = "type", insertable = false, updatable = false)
     @Enumerated(value = EnumType.STRING)
     private CategoryType type;
+
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<CategoryInnerLink> links = new HashSet<>();
+
+    private Integer priority = 0;
 
     Category() {
         // default constructor
@@ -53,6 +59,14 @@ public abstract class Category {
         this.name = name;
     }
 
+    public Integer getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -72,4 +86,5 @@ public abstract class Category {
                 .append(name)
                 .toHashCode();
     }
+
 }

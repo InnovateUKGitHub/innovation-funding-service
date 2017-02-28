@@ -4,20 +4,25 @@ import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.domain.Section;
+import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.QuestionType;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.transactional.UserService;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -33,11 +38,14 @@ import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newS
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ASSIGNEE_SHOULD_BE_APPLICANT;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.same;
@@ -49,7 +57,10 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
     protected QuestionService questionService = new QuestionServiceImpl();
 
     @Mock
-    SectionService sectionService;
+    private SectionService sectionService;
+
+    @Mock
+    private UserService userService;
 
     @Test
     public void getNextQuestionTest() throws Exception {
@@ -83,48 +94,49 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
         assertEquals(previousQuestionResource, questionService.getPreviousQuestion(question.getId()).getSuccessObject());
     }
 
-//    @Test
-//    public void getNextQuestionFromOtherSectionTest() throws Exception {
-//        Section nextSection = newSection().build();
-//        SectionResource nextSectionResource = newSectionResource().build();
-//        Question question = newQuestion().withCompetitionAndSectionAndPriority(newCompetition().build(), newSection().build(), 1).build();
-//        QuestionResource nextQuestion = newQuestionResource().withCompetitionAndSectionAndPriority(newCompetitionResource().build(), nextSectionResource, 2).build();
-//        QuestionResource nextQuestionResource = newQuestionResource().withCompetitionAndSectionAndPriority(newCompetitionResource().build(), nextSectionResource, 2).build();
-//
-//        when(questionRepositoryMock.findOne(question.getId())).thenReturn(question);
-//        when(sectionService.getNextSection(any(SectionResource.class))).thenReturn(serviceSuccess(nextSectionResource));
-//        when(questionRepositoryMock.findFirstByCompetitionIdAndSectionIdAndPriorityGreaterThanOrderByPriorityAsc(
-//                question.getCompetition().getId(), question.getSection().getId(), question.getPriority())).thenReturn(nextQuestion);
-//        when(questionMapperMock.mapToResource(nextQuestion)).thenReturn(nextQuestionResource);
-//
-//        // Method under test
-//        assertEquals(nextQuestionResource, questionService.getNextQuestion(question.getId()).getSuccessObject());
-//    }
+    @Test
+    public void getNextQuestionFromOtherSectionTest() throws Exception {
+        Section nextSection = newSection().build();
+        SectionResource nextSectionResource = newSectionResource().build();
+        Question question = newQuestion().withCompetitionAndSectionAndPriority(newCompetition().build(), newSection().build(), 1).build();
+        Question nextQuestion = newQuestion().withCompetitionAndSectionAndPriority(newCompetition().build(), nextSection, 2).build();
+        QuestionResource nextQuestionResource = newQuestionResource().withCompetitionAndSectionAndPriority(newCompetitionResource().build(), nextSectionResource, 2).build();
 
-//    @Test
-//    public void getPreviousQuestionFromOtherSectionTest() throws Exception {
-//        SectionResource previousSection = newSectionResource().build();
-//        SectionResource previousSectionResource = newSectionResource().build();
-//        CompetitionResource competition = newCompetitionResource().build();
-//        QuestionResource question = newQuestionResource().withCompetitionAndSectionAndPriority(competition, newSectionResource().build(), 2).build();
-//        QuestionResource previousQuestion = newQuestionResource().withCompetitionAndSectionAndPriority(competition, previousSection, 1).build();
-//        QuestionResource previousQuestionResource = newQuestionResource().withCompetitionAndSectionAndPriority(competition, previousSection, 1).build();
-//
-//        when(questionRepositoryMock.findOne(question.getId())).thenReturn(question);
-//        when(sectionService.getPreviousSection(any(SectionResource.class)))
-//                .thenReturn(serviceSuccess(previousSectionResource));
-//        when(questionRepositoryMock.findFirstByCompetitionIdAndSectionIdOrderByPriorityDesc(
-//                question.getCompetition().getId(), previousQuestion.getSection().getId()))
-//                .thenReturn(previousQuestion);
-//        when(questionRepositoryMock.findFirstByCompetitionIdAndSectionIdAndPriorityLessThanOrderByPriorityDesc(
-//                question.getCompetition().getId(), question.getSection().getId(), question.getPriority()))
-//                .thenReturn(previousQuestion);
-//        when(questionMapperMock.mapToResource(previousQuestion)).thenReturn(previousQuestionResource);
-//
-//        // Method under test
-//        assertEquals(previousQuestionResource, questionService.getPreviousQuestion(question.getId()).getSuccessObject());
-//
-//    }
+        when(questionRepositoryMock.findOne(question.getId())).thenReturn(question);
+        when(sectionService.getNextSection(any(SectionResource.class))).thenReturn(serviceSuccess(nextSectionResource));
+        when(questionRepositoryMock.findFirstByCompetitionIdAndSectionIdAndPriorityGreaterThanOrderByPriorityAsc(
+                question.getCompetition().getId(), question.getSection().getId(), question.getPriority())).thenReturn(nextQuestion);
+        when(questionMapperMock.mapToResource(nextQuestion)).thenReturn(nextQuestionResource);
+
+        // Method under test
+        assertEquals(nextQuestionResource, questionService.getNextQuestion(question.getId()).getSuccessObject());
+    }
+
+    @Test
+    public void getPreviousQuestionFromOtherSectionTest() throws Exception {
+        Section previousSection = newSection().build();
+        SectionResource previousSectionResource = newSectionResource().build();
+        Competition competition = newCompetition().build();
+        CompetitionResource competitionResource = newCompetitionResource().build();
+        Question question = newQuestion().withCompetitionAndSectionAndPriority(competition, newSection().build(), 2).build();
+        Question previousQuestion = newQuestion().withCompetitionAndSectionAndPriority(competition, previousSection, 1).build();
+        QuestionResource previousQuestionResource = newQuestionResource().withCompetitionAndSectionAndPriority(competitionResource, previousSectionResource, 1).build();
+
+        when(questionRepositoryMock.findOne(question.getId())).thenReturn(question);
+        when(sectionService.getPreviousSection(any(SectionResource.class)))
+                .thenReturn(serviceSuccess(previousSectionResource));
+        when(questionRepositoryMock.findFirstByCompetitionIdAndSectionIdOrderByPriorityDesc(
+                question.getCompetition().getId(), previousQuestion.getSection().getId()))
+                .thenReturn(previousQuestion);
+        when(questionRepositoryMock.findFirstByCompetitionIdAndSectionIdAndPriorityLessThanOrderByPriorityDesc(
+                question.getCompetition().getId(), question.getSection().getId(), question.getPriority()))
+                .thenReturn(previousQuestion);
+        when(questionMapperMock.mapToResource(previousQuestion)).thenReturn(previousQuestionResource);
+
+        // Method under test
+        assertEquals(previousQuestionResource, questionService.getPreviousQuestion(question.getId()).getSuccessObject());
+
+    }
 
     @Test
     public void getPreviousQuestionBySectionTest() throws Exception {
@@ -194,6 +206,39 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
 
         assertTrue(result.isSuccess());
         assertEquals(questionResource, result.getSuccessObject());
+    }
+
+    @Test
+    public void assignTest() throws Exception {
+        final Long applicationId = 1232L;
+        final Long questionId = 2228L;
+        final Long assigneeId = 51234L;
+        final Long assignedById = 72834L;
+        QuestionApplicationCompositeId questionApplicationCompositeId = new QuestionApplicationCompositeId(questionId, applicationId);
+
+        when(questionRepositoryMock.findOne(questionId)).thenReturn(newQuestion().build());
+        when(processRoleRepositoryMock.findOne(assigneeId)).thenReturn(newProcessRole().withUser(newUser().withId(assigneeId).build()).withApplication(newApplication().withId(applicationId).build()).build());
+        when(processRoleRepositoryMock.findOne(assignedById)).thenReturn(newProcessRole().build());
+        Competition competitionMock = mock(Competition.class);
+        when(competitionMock.getCompetitionStatus()).thenReturn(CompetitionStatus.OPEN);
+        Application application = newApplication().withCompetition(competitionMock).build();
+        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
+        when(userService.findAssignableUsers(applicationId)).thenReturn(serviceSuccess(new HashSet(newUserResource().withId(assigneeId).build(1))));
+
+        ServiceResult<Void> result = questionService.assign(questionApplicationCompositeId, assigneeId, assignedById);
+
+        assertTrue(result.isSuccess());
+
+        Long differentApplicationId = 1233L;
+        when(processRoleRepositoryMock.findOne(assigneeId))
+                .thenReturn(newProcessRole().withUser(newUser().withId(2L).build()).withApplication(newApplication().withId(differentApplicationId).build()).build());
+
+        when(userService.findAssignableUsers(applicationId)).thenReturn(serviceSuccess(new HashSet(newUserResource().withId(1L).build(1))));
+
+        ServiceResult<Void> resultTwo = questionService.assign(questionApplicationCompositeId, assigneeId, assignedById);
+
+        assertTrue(resultTwo.isFailure());
+        assertEquals(ASSIGNEE_SHOULD_BE_APPLICANT.getErrorKey(), resultTwo.getFailure().getErrors().get(0).getErrorKey());
     }
 
     @Test

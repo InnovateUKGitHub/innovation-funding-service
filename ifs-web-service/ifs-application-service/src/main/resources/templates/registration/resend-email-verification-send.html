@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Account verification email sent'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Verification email sent'" />
 </head>
 <body th:with="context='applicant'" class="create-application-eligibility">
 
@@ -11,10 +11,10 @@
 <main id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
 
-    <h1 class="heading-large">Account verification email sent</h1>
+    <h1 class="heading-large">Please verify your email address</h1>
 
-    <p>If your email address is recognised, you’ll receive an email containing a link to confirm your email address.</p>
-    <p> You can contact customer services with any queries regarding your account. This includes requests to change your registered email address. Please contact them at <a href="mailto:support@innovateuk.gov.uk">support@innovateuk.gov.uk</a></p>
+    <p>To keep your account and application secure click on the link in the email we have sent you to verify your email address.</p>
+    <p>You can contact customer services with any queries regarding your account. This includes requests to change your registered email address. Please contact them at <a href="mailto:support@innovateuk.gov.uk">support@innovateuk.gov.uk</a></p>
     <th:block th:insert="fragments/layout :: main-content-end" />
 
 </main>

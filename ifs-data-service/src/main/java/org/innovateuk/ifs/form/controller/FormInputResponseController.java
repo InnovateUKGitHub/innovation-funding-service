@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.form.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -9,8 +11,6 @@ import org.innovateuk.ifs.form.resource.FormInputResponseCommand;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.transactional.FormInputService;
 import org.innovateuk.ifs.validator.util.ValidationUtil;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -46,6 +46,12 @@ public class FormInputResponseController {
         return formInputService.findResponsesByFormInputIdAndApplicationId(formInputId, applicationId).toGetResponse();
     }
 
+    @RequestMapping("/findByApplicationIdAndQuestionName/{applicationId}/{questionName}")
+    public RestResult<FormInputResponseResource> findByApplicationIdAndQuestionName(@PathVariable long applicationId,
+                                                                                 @PathVariable String questionName) {
+        return formInputService.findResponseByApplicationIdAndQuestionName(applicationId, questionName).toGetResponse();
+    }
+
     @RequestMapping(value = "/saveQuestionResponse", method = RequestMethod.POST)
     public RestResult<ValidationMessages> saveQuestionResponse(@RequestBody JsonNode jsonObj) {
 
@@ -70,6 +76,6 @@ public class FormInputResponseController {
             return new ValidationMessages(bindingResult);
         });
 
-        return result.toPutWithBodyResponse();
+        return result.toPostWithBodyResponse();
     }
 }

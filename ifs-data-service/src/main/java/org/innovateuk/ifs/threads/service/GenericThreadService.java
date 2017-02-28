@@ -16,7 +16,7 @@ public class GenericThreadService<E extends Thread, C> implements ThreadService<
     private final ThreadRepository<E> repository;
     private final Class<C> contextClass;
 
-    public GenericThreadService(ThreadRepository<E> repository, Class<C> contextClassName) {
+    GenericThreadService(ThreadRepository<E> repository, Class<C> contextClassName) {
         this.repository = repository;
         this.contextClass = contextClassName;
     }

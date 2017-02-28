@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.competition.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.competition.controller.CompetitionController;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResult;
@@ -15,7 +14,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
-import static org.assertj.core.util.Lists.emptyList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionSearchResultItemBuilder.newCompetitionSearchResultItem;
 import static org.innovateuk.ifs.documentation.CompetitionResourceDocs.competitionResourceBuilder;
@@ -127,7 +125,7 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
     public void projectSetup() throws Exception {
         when(competitionService.findProjectSetupCompetitions()).thenReturn(serviceSuccess(newCompetitionSearchResultItem().build(2)));
 
-        mockMvc.perform(get("/competition/projectSetup"))
+        mockMvc.perform(get("/competition/project-setup"))
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         responseFields(
@@ -145,6 +143,19 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
                 .andDo(this.document.snippets(
                         responseFields(
                                 fieldWithPath("[]").description("list of upcoming competitions the authenticated user has access to")
+                        )
+                ));
+    }
+
+    @Test
+    public void nonIfs() throws Exception {
+        when(competitionService.findNonIfsCompetitions()).thenReturn(serviceSuccess(newCompetitionSearchResultItem().build(2)));
+
+        mockMvc.perform(get("/competition/non-ifs"))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        responseFields(
+                                fieldWithPath("[]").description("list of non ifs competitions the authenticated user has access to")
                         )
                 ));
     }
@@ -219,6 +230,22 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
         when(assessmentServiceMock.notifyAssessorsByCompetition(competitionId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/competition/{id}/notify-assessors", competitionId))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("id").description("id of the competition for the notifications")
+                        ))
+                );
+    }
+
+    @Test
+    public void releaseFeedback() throws Exception {
+        final Long competitionId = 1L;
+
+        when(competitionService.releaseFeedback(competitionId)).thenReturn(serviceSuccess());
+        when(applicationServiceMock.notifyApplicantsByCompetition(competitionId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/competition/{id}/release-feedback", competitionId))
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         pathParameters(

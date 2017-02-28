@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.competition.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.innovateuk.ifs.application.resource.PageResource;
+import org.innovateuk.ifs.commons.resource.PageResource;
 
 import java.util.List;
 import java.util.Map;

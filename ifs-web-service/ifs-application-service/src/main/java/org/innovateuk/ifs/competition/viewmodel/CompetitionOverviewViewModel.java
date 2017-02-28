@@ -1,6 +1,10 @@
 package org.innovateuk.ifs.competition.viewmodel;
 
+import org.innovateuk.ifs.competition.viewmodel.publiccontent.AbstractPublicSectionContentViewModel;
+import org.innovateuk.ifs.competition.viewmodel.publiccontent.SectionViewModel;
+
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * View model for the competition overview with the public content data
@@ -11,6 +15,9 @@ public class CompetitionOverviewViewModel {
     private LocalDateTime competitionCloseDate;
     private Long competitionId;
     private String shortDescription;
+    private String nonIfsUrl;
+    private List<SectionViewModel> allContentSections;
+    private AbstractPublicSectionContentViewModel currentSection;
 
     public String getCompetitionTitle() {
         return competitionTitle;
@@ -50,5 +57,29 @@ public class CompetitionOverviewViewModel {
 
     public void setShortDescription(String shortDescription) {
         this.shortDescription = shortDescription;
+    }
+
+    public List<SectionViewModel> getAllContentSections() {
+        return allContentSections;
+    }
+
+    public void setAllContentSections(List<SectionViewModel> allContentSections) {
+        this.allContentSections = allContentSections;
+    }
+
+    public void setCurrentSection(AbstractPublicSectionContentViewModel currentSection) {
+        this.currentSection = currentSection;
+    }
+
+    public AbstractPublicSectionContentViewModel getCurrentSection() {
+        return currentSection;
+    }
+
+    public String getNonIfsUrl() {
+        return nonIfsUrl;
+    }
+
+    public void setNonIfsUrl(String nonIfsUrl) {
+        this.nonIfsUrl = nonIfsUrl;
     }
 }

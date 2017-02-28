@@ -3,6 +3,7 @@ package org.innovateuk.ifs.competition.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 /**
@@ -18,6 +19,7 @@ public class CompetitionSearchResultItem {
     private CompetitionStatus competitionStatus;
     private String competitionTypeName;
     private Integer projectsCount;
+    private LocalDateTime publishDate;
 
     // for JSON marshalling
     CompetitionSearchResultItem() {
@@ -25,7 +27,7 @@ public class CompetitionSearchResultItem {
 
     public CompetitionSearchResultItem(Long id, String name, Set<String> innovationAreaNames, Integer numberOfApplications,
                                        String startDateDisplay, CompetitionStatus competitionStatus,
-                                       String competitionTypeName, Integer projectsCount) {
+                                       String competitionTypeName, Integer projectsCount, LocalDateTime publishDate) {
         this.id = id;
         this.name = name;
         this.innovationAreaNames = innovationAreaNames;
@@ -34,6 +36,7 @@ public class CompetitionSearchResultItem {
         this.competitionStatus = competitionStatus;
         this.competitionTypeName = competitionTypeName;
         this.projectsCount = projectsCount;
+        this.publishDate = publishDate;
     }
 
     public Long getId() {
@@ -100,6 +103,14 @@ public class CompetitionSearchResultItem {
         this.projectsCount = projectsCount;
     }
 
+    public LocalDateTime getPublishDate() {
+        return publishDate;
+    }
+
+    public void setPublishDate(LocalDateTime publishDate) {
+        this.publishDate = publishDate;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -110,11 +121,14 @@ public class CompetitionSearchResultItem {
 
         return new EqualsBuilder()
                 .append(id, that.id)
+                .append(name, that.name)
                 .append(innovationAreaNames, that.innovationAreaNames)
                 .append(numberOfApplications, that.numberOfApplications)
                 .append(startDateDisplay, that.startDateDisplay)
                 .append(competitionStatus, that.competitionStatus)
+                .append(competitionTypeName, that.competitionTypeName)
                 .append(projectsCount, that.projectsCount)
+                .append(publishDate, that.publishDate)
                 .isEquals();
     }
 
@@ -122,11 +136,14 @@ public class CompetitionSearchResultItem {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(id)
+                .append(name)
                 .append(innovationAreaNames)
                 .append(numberOfApplications)
                 .append(startDateDisplay)
                 .append(competitionStatus)
+                .append(competitionTypeName)
                 .append(projectsCount)
+                .append(publishDate)
                 .toHashCode();
     }
 }
