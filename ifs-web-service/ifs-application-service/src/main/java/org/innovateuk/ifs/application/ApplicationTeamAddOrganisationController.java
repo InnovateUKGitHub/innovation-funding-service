@@ -97,7 +97,8 @@ public class ApplicationTeamAddOrganisationController {
         return "application-team/add-organisation";
     }
 
-    private List<ApplicationInviteResource> createInvites(ApplicationTeamAddOrganisationForm applicationTeamAddOrganisationForm, long applicationId) {
+    private List<ApplicationInviteResource> createInvites(ApplicationTeamAddOrganisationForm applicationTeamAddOrganisationForm,
+                                                          long applicationId) {
         return applicationTeamAddOrganisationForm.getApplicants().stream()
                 .map(applicantInviteForm -> createInvite(applicantInviteForm, applicationId)).collect(toList());
     }
