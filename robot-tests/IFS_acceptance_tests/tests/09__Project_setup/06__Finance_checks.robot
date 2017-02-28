@@ -50,6 +50,20 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...               INFUND-5508 As a member of Project Finance I want to see the Finance Checks Overview table updating with approved funding amounts so that I can confirm any amended figures before generating the Spend Profile
 ...
 ...               INFUND-7574 Partner view updated finances - Finance Checks Eligibility
+...
+...               INFUND-4840 As a project finance team member I want to be able to post a query in the finance checks section so that the relevant finance contact can be given the opportunity to provide further details
+...
+...               INFUND-4843 As a partner I want to be able to respond to a query posted by project finance so that they can review the additional information requested
+...
+...               INFUND-4845 As a project finance team member I want to be able to post a note in the finance checks section so that colleagues reviewing the partner's progress can be kept informed of any further information needed to support the finance checks section
+...
+...               INFUND-4841 As a project finance team member I want to send an email to the relevant finance contact so that they can be notified when a query has been posted in finance checks
+...
+...               INFUND-7752 Internal user can further respond to an external parter's response to a query
+...
+...               INFUND-7753 Partner receives an email alerting them to a further response to an earlier query
+...
+...               INFUND-7756 Project finance can post an update to an existing note
 Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -188,7 +202,6 @@ Project finance user can still view both files
     Then the user should not see an error in the page
     And the user goes back to the previous page ignoring form submission
 
-
 Post new query server side validations
     [Documentation]    INFUND-4840
     [Tags]
@@ -279,6 +292,7 @@ Non finance contact cannot view query
     Given log in as a different user    steve.smith@empire.com    ${short_password}
     When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     Then the user should not see the element    link=Finance checks
+    #  TODO The below line can be uncommented once 8253 is done
     # And the user should not see the element    flag status for finance checks
 
 Finance checks section status updated for finance contact
@@ -287,6 +301,7 @@ Finance checks section status updated for finance contact
     Given log in as a different user    ${test_mailbox_one}+fundsuccess@gmail.com    ${short_password}
     When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     Then the user should see the element    link=Finance checks
+    #  TODO The below line can be uncommented once 8253 is done
     # And the user should see the element    flag status for finance checks
 
 
@@ -319,7 +334,7 @@ Queries show in reverse chronological order for finance contact
 Large pdf uploads not allowed for query response
     [Documentation]    INFUND-4843
     [Tags]
-    Given the user clicks the button/link    jQuery=.button:contains("Respond")
+    Given the user clicks the button/link    jQuery=.button.button-secondary:eq(0)
     When the user uploads the file     name=attachment    ${too_large_pdf}
     Then the user should see the text in the page    ${too_large_pdf_validation_error}
     [Teardown]    the user goes back to the previous page ignoring form submission
@@ -410,10 +425,19 @@ Query section now becomes read-only
     [Tags]
     When the user should not see the element    css=.editor
 
+Respond to older query
+    [Documentation]    INFUND-4843
+    [Tags]
+    Given the user clicks the button/link    jQuery=.button.button-secondary:eq(0)
+    When the user enters text to a text field    css=.editor    this is some response text for other query
+    When the user clicks the button/link    jQuery=.button:contains("Post response")
+    When the user should not see the element    css=.editor
+
 Finance checks section status changes to hourglass
     [Documentation]    INFUND-4843
     [Tags]
     When the user clicks the button/link    link=Project setup status
+    #  TODO The below line can be uncommented once 8253 is done
     # Then the user should see the element    flag status for finance checks
 
 Queries raised column updates to 'view'
@@ -421,8 +445,8 @@ Queries raised column updates to 'view'
     [Tags]
     Given log in as a different user    &{internal_finance_credentials}
     When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    # Then the user should not see the element    link=Awaiting response
-    # And the user should see the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(6)a:contains("View")
+    Then the user should not see the element    link=Awaiting response
+    And the user should see the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(6) a:contains("View")
 
 Project finance user can view the response
     [Documentation]    INFUND-4843
@@ -445,7 +469,7 @@ Project finance user can view the finance contact's uploaded files
 Project finance user can continue the conversation
     [Documentation]    INFUND-7752
     [Tags]
-    When the user clicks the button/link    jQuery=.button:contains("Respond")
+    When the user clicks the button/link    jQuery=.button.button-secondary:eq(0)
     And the user enters text to a text field    css=.editor    this is a response to a response
     And the user clicks the button/link    jQuery=.button:contains("Post response")
     Then the user should not see an error in the page
@@ -474,7 +498,6 @@ Link to notes from viability section
     Then the user should see the text in the page    Use this section to make notes related to the finance checks
     And the user should see the element    jQuery=.button:contains("Create a new note")
 
-
 Link to notes from eligibility section
     [Documentation]    INFUND-4845
     [Tags]
@@ -491,7 +514,6 @@ Link to notes from main finance checks summary page
     Then the user should see the text in the page    Use this section to make notes related to the finance checks
     And the user should see the element    jQuery=.button:contains("Create a new note")
 
-
 Large pdf uploads not allowed for notes
     [Documentation]    INFUND-4845
     [Tags]
@@ -505,7 +527,6 @@ Non pdf uploads not allowed for notes
     [Tags]
     When the user uploads the file      name=attachment    ${text_file}
     Then the user should see the text in the page    ${wrong_filetype_validation_error}
-
 
 Finance contact can upload a pdf file to notes
     [Documentation]    INFUND-4845
