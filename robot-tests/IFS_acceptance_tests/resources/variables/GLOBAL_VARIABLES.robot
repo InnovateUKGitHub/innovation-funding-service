@@ -103,6 +103,7 @@ ${OPEN_COMPETITION_LINK}    ${OPEN_COMPETITION_NAME}
 ${OPEN_COMPETITION_LINK_2}    ${OPEN_COMPETITION_NAME_2}
 ${unsuccessful_login_message}    Your sign in was unsuccessful because of the following issue(s)
 ${application_name}    Submit test application
+${New_innovation_solution}    A new innovative solution
 ${test_title}     test title
 # File related variables
 ${UPLOAD_FOLDER}    uploaded_files

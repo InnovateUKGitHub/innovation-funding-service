@@ -124,11 +124,15 @@ the user fills in Labour
 
 the user fills in Overhead costs
     [Arguments]     ${Application_name}
-    Run Keyword If  '${Application_name}'=="A new innovation"   the user choose calculate overhead option
-    Run Keyword If  '${Application_name}'!=="A new innovation"    the user fills in Overhead costs
+    Run Keyword If  '${Application_name}'=="A new innovative solution"    the user choose Calculate overheads option
+    Run Keyword If  '${Application_name}'!=="A new innovative solution"     the user fills in Overhead costs
 
-the user choose calculate overhead option
-
+the user choose Calculate overheads option
+    When the user clicks the button/link     jQuery=label:contains("Calculate overheads")
+    then the user should see the element     jQuery=h3:contains("Calculate overheads")
+    and the user should see the element     css=.button-secondary
+    and the user uploads the file       id=overheadfile   ${excel_file}
+    and the user enters text to a text field    jQuery=input[id^="cost-overheads"][value="0"]   4000
 
 the user fills in Overhead costs
     # overheads option : 20% Labour

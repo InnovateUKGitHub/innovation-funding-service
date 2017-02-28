@@ -138,6 +138,15 @@ File upload mandatory for Academic partner to mark section as complete
     and the user clicks the button/link     jQuery=button:contains("Mark as complete")
     then the user should see a field error     css=a.uploaded-file
 
+Overheads section read only view should contain calculate overheads sheet
+    [Documentation]     INFUND-6788   INFUND-8191
+    [Tags]
+    #This test applies if user has chosen the calcualte overheads option in Project costs
+    When the user navigates to Your-finances page     ${New_innovation_solution}
+    then the user fills in the project costs         ${New_innovation_solution}
+    and the user clicks the button/link     link=Your project costs
+    When the user clicks the button/link     jQuery=button:contains("Overhead costs")
+    then the user should see the element      link=${excel_file}
 
 *** Keywords ***
 Custom Suite Setup

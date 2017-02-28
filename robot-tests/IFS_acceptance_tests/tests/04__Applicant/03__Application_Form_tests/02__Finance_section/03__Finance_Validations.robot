@@ -267,15 +267,6 @@ Funding level server side
     And the user moves focus to the element      jQuery=label[data-target="other-funding-table"]
     And the user should not see the element      jQuery=.error-message
 
-Overheads calculations sheet mandatory if chosen that option
-    [Documentation]
-    [Tags]
-    When the user navigates to Your-finances page     A new
-    and the user fills in the project costs         application name
-    then the user should not see the element         remove
-    And The user should see the element         testing.xlsx
-
-
 *** Keywords ***
 user selects the admin costs
     [Arguments]    ${RADIO_BUTTON}    ${SELECTION}
