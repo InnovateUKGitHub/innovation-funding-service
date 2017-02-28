@@ -56,7 +56,7 @@ Mark application details as incomplete
     the user clicks the button/link       link=Application details
     the user clicks the button/link       jQuery=button:contains("Edit")
     the user clicks the button/link       jQuery=button:contains("Save and return to application overview")
-    the user should see the element       jQuery=img.assigned[alt*="Application details"]
+    the user should see the element       jQuery=#section-1 li:nth-child(1) span:contains("Completed")
 
 
 the Application details are completed

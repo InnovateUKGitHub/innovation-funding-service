@@ -89,7 +89,7 @@ Applicant fills in the Application Details
     And the user enters text to a text field    css=#application_details-duration    24
     When The user clicks the button/link    jQuery=button[name="mark_as_complete"]
     Then the user clicks the button/link    link=Application Overview
-    And the user should see the element    jQuery=#section-1 li:nth-child(1) .task-status-complete
+    And the user should see the element    jQuery=#section-1 li:nth-child(1) div.task-status-complete
 
 Turnover and Staff count fields
     [Documentation]    INFUND-6393
