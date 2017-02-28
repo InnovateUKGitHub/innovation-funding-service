@@ -46,7 +46,7 @@ END
 
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $BASEDIR
-echo $BASEDIR
+
 for item in $( docker-compose ps -q shib ); do
     docker cp _delete-shib-users-remote.sh ${item}:/tmp/_delete-shib-users-remote.sh
 done
