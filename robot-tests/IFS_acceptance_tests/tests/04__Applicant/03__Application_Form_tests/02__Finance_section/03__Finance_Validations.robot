@@ -59,7 +59,7 @@ Labour client side
     [Tags]
     [Setup]  Applicant navigates to the finances of the Robot application
     And the user clicks the button/link  link=Your project costs
-    Given the user clicks the button/link    jQuery=h2:contains("Labour")
+    Given the user clicks the button/link    jQuery=button:contains("Labour")
     When the user enters text to a text field    css=[name^="labour-labourDaysYearly"]    -1
     And the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input    ${EMPTY}
     Then the user should see an error           This field should be 1 or higher.
@@ -90,11 +90,11 @@ Labour server side
     And the user should see the element     jQuery=.error-summary li:contains("This field cannot be left blank")
     And the user should see the element    css=.error-summary
     [Teardown]    Run keywords    the user enters text to a text field    css=[name^="labour-labourDaysYearly"]    21
-    ...    AND    Remove row    jQuery=h2:contains("Labour")    jQuery=.labour-costs-table button:contains("Remove")
+    ...    AND    Remove row    jQuery=button:contains("Labour")    jQuery=.labour-costs-table button:contains("Remove")
 
 Admin costs client side
     [Documentation]    INFUND-844
-    Given the user clicks the button/link    jQuery=h2:contains("Overhead costs")
+    Given the user clicks the button/link    jQuery=button:contains("Overhead costs")
     Given the user clicks the button/link    jQuery=label:contains("Custom overhead costs")
     And the user enters text to a text field    css=[id$="customRate"]    ${EMPTY}
     Then the user gets the expected validation errors    This field cannot be left blank    This field cannot be left blank.    #Entered two times the same error because this keyword expects two errors
@@ -120,12 +120,12 @@ Admin costs server side
     Then the user should see an error    This field should be 1 or higher.
     And the user should see the element    css=.error-summary
     [Teardown]    Run keywords    Given the user clicks the button/link    jQuery=label:contains("20% of labour costs")
-    ...    AND    the user clicks the button/link    jQuery=h2:contains("Overhead costs")
+    ...    AND    the user clicks the button/link    jQuery=button:contains("Overhead costs")
 
 Materials client side
     [Documentation]    INFUND-844
     [Tags]    HappyPath
-    Given the user clicks the button/link    jQuery=h2:contains("Materials")
+    Given the user clicks the button/link    jQuery=button:contains("Materials")
     When the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    1234567810111213141516171819202122
     And the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    -1
     the user moves focus to the element    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(4) input
@@ -154,7 +154,7 @@ Materials server side
 
 Capital usage client side
     [Documentation]    INFUND-844
-    Given the user clicks the button/link    jQuery=h2:contains("Capital usage")
+    Given the user clicks the button/link    jQuery=button:contains("Capital usage")
     When the user enters text to a text field    css=.form-finances-capital-usage-depreciation    ${EMPTY}
     And the user enters text to a text field    css=.form-row:nth-child(1) .form-finances-capital-usage-residual-value    12121212121212121212121212121
     And the user enters text to a text field    css=.form-row:nth-child(1) .form-finances-capital-usage-npv    -1
@@ -181,11 +181,11 @@ Capital usage server side
     And the user should see an error    This field should be 1 or higher.
     And the user should see an error    This field should be 0 or higher.
     And the user should see the element    css=.error-summary
-    [Teardown]    Remove row    jQuery=h2:contains("Capital usage")    jQuery=#capital_usage button:contains("Remove")
+    [Teardown]    Remove row    jQuery=button:contains("Capital usage")    jQuery=#capital_usage button:contains("Remove")
 
 Subcontracting costs client side
     [Documentation]    INFUND-844
-    Given the user clicks the button/link    jQuery=h2:contains("Subcontracting costs")
+    Given the user clicks the button/link    jQuery=button:contains("Subcontracting costs")
     When the user enters text to a text field    css=#collapsible-4 .form-row:nth-child(1) input[id$=subcontractingCost]    ${EMPTY}
     And the user enters text to a text field    css=#collapsible-4 .form-row:nth-child(1) input[id$=name]    ${EMPTY}
     Then the user gets the expected validation errors    This field cannot be left blank.    This field should be 1 or higher.
@@ -203,7 +203,7 @@ Subcontracting costs server side
 
 Travel and subsistence client side
     [Documentation]    INFUND-844
-    Given the user clicks the button/link    jQuery=h2:contains("Travel and subsistence")
+    Given the user clicks the button/link    jQuery=button:contains("Travel and subsistence")
     When the user enters text to a text field    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    ${EMPTY}
     And the user enters text to a text field    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    0123456789101112131415161718192021
     And the user enters text to a text field    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    -1
@@ -230,7 +230,7 @@ Travel and subsistence server side
 
 Other costs client side
     [Documentation]    INFUND-844
-    Given the user clicks the button/link    jQuery=h2:contains("Other costs")
+    Given the user clicks the button/link    jQuery=button:contains("Other costs")
     When the user enters text to a text field    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    ${EMPTY}
     And the user enters text to a text field    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) textarea    ${EMPTY}
     Then the user gets the expected validation errors    This field cannot be left blank.    This field should be 1 or higher.
@@ -253,7 +253,7 @@ Other costs server side
     Then the user should see an error    This field should be 1 or higher.
     And the user should see an error    This field cannot be left blank.
     And the user should see the element    css=.error-summary
-    [Teardown]    Remove row    jQuery=h2:contains("Other costs")    jQuery=#other-costs-table button:contains("Remove")
+    [Teardown]    Remove row    jQuery=button:contains("Other costs")    jQuery=#other-costs-table button:contains("Remove")
 
 #Funding level client side is covered in 02__Org_size_validation.robot
 

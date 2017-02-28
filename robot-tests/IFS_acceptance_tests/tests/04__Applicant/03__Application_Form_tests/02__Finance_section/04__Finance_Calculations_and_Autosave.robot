@@ -31,15 +31,15 @@ Labour
     Then Totals should be correct    css=#section-total-9    £ 52,174    css=[data-mirror="#section-total-9"]    £ 52,174
     And the applicant edits the working days field
     Then Totals should be correct    css=#section-total-9    £ 48,000    css=[data-mirror="#section-total-9"]    £ 48,000
-    [Teardown]    the user clicks the button/link    jQuery=h2:contains("Labour")
+    [Teardown]    the user clicks the button/link    jQuery=button:contains("Labour")
 
 Overhead costs
     [Documentation]    INFUND-192, INFUND-736, INFUND-6390
     [Tags]
-    When the user clicks the button/link    jQuery=h2:contains("Overhead costs")
+    When the user clicks the button/link    jQuery=button:contains("Overhead costs")
     And the user clicks the button/link    jQuery=label:contains("20% of labour costs")
     Then admin costs total should be correct    id=section-total-10-default    £ 9,600
-    [Teardown]    the user clicks the button/link    jQuery=h2:contains("Overhead costs")
+    [Teardown]    the user clicks the button/link    jQuery=button:contains("Overhead costs")
 
 Materials
     [Documentation]    INFUND-192, INFUND-736, INFUND-6390
@@ -49,7 +49,7 @@ Materials
     And the user clicks the button/link    css=#material-costs-table tbody tr:nth-child(1) button
     And the user reloads the page
     Then Totals should be correct    css=#section-total-11    £ 1,000    css=[data-mirror="#section-total-11"]    £ 1,000
-    [Teardown]    the user clicks the button/link    jQuery=h2:contains("Materials")
+    [Teardown]    the user clicks the button/link    jQuery=button:contains("Materials")
 
 Capital usage
     [Documentation]    INFUND-736, INFUND-6390
@@ -60,7 +60,7 @@ Capital usage
     And the user reloads the page
     Then Totals should be correct    css=#section-total-12    £ 100    css=[data-mirror="#section-total-12"]    £ 100
     And the user clicks the button/link    css=#capital_usage [data-repeatable-row]:nth-child(1) button
-    [Teardown]    the user clicks the button/link    jQuery=h2:contains("Capital usage")
+    [Teardown]    the user clicks the button/link    jQuery=button:contains("Capital usage")
 
 Capital usage - negative total
     [Documentation]    INFUND-4879, INFUND-6390
@@ -68,7 +68,7 @@ Capital usage - negative total
     When the applicant fills the 'capital usage' field to a negative value
     Then Totals should be correct    css=#section-total-12    £ 0    css=[data-mirror="#section-total-12"]    £ 0
     And the user clicks the button/link    css=#capital_usage [data-repeatable-row]:nth-child(1) button
-    [Teardown]    the user clicks the button/link    jQuery=h2:contains("Capital usage")
+    [Teardown]    the user clicks the button/link    jQuery=button:contains("Capital usage")
 
 Subcontracting costs
     [Documentation]    INFUND-192, INFUND-736, INFUND-2303, INFUND-6390
@@ -78,7 +78,7 @@ Subcontracting costs
     And the user clicks the button/link    css=#subcontracting [data-repeatable-row]:nth-child(1) button
     And the user reloads the page
     Then Totals should be correct    css=#section-total-13    £ 100    css=[aria-controls="collapsible-4"] [data-mirror]    £ 100
-    [Teardown]    the user clicks the button/link    jQuery=h2:contains("Subcontracting costs")
+    [Teardown]    the user clicks the button/link    jQuery=button:contains("Subcontracting costs")
 
 Travel and subsistence
     [Documentation]    INFUND-736, INFUND-6390
@@ -88,7 +88,7 @@ Travel and subsistence
     And the user clicks the button/link    css=#travel-costs-table [data-repeatable-row]:nth-child(1) button
     And the user reloads the page
     Then Totals should be correct    css=#section-total-14    £ 1,000    css=[data-mirror="#section-total-14"]    £ 1,000
-    [Teardown]    the user clicks the button/link    jQuery=h2:contains("Travel and subsistence")
+    [Teardown]    the user clicks the button/link    jQuery=button:contains("Travel and subsistence")
 
 Other costs
     [Documentation]    INFUND-736, INFUND-6390
@@ -97,11 +97,11 @@ Other costs
     Then Totals should be correct    id=section-total-15    £ 200    css=[data-mirror="#section-total-15"]    £ 200
     Then the user reloads the page
     Then Totals should be correct    id=section-total-15    £ 200    css=[data-mirror="#section-total-15"]    £ 200
-    [Teardown]    the user clicks the button/link    jQuery=h2:contains("Other costs")
+    [Teardown]    the user clicks the button/link    jQuery=button:contains("Other costs")
 
 *** Keywords ***
 the Applicant fills in the Labour costs for two rows
-    the user clicks the button/link    jQuery=h2:contains("Labour")
+    the user clicks the button/link    jQuery=button:contains("Labour")
     the user should see the element    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input
     the user clears the text from the element    css=[name^="labour-labourDaysYearly"]
     the user enters text to a text field    css=[name^="labour-labourDaysYearly"]    230
@@ -119,11 +119,11 @@ the applicant edits the working days field
     the user should see the element    css=[name^="labour-labourDaysYearly"]
     the user clears the text from the element    css=[name^="labour-labourDaysYearly"]
     the user enters text to a text field    css=[name^="labour-labourDaysYearly"]    250
-    the user moves focus to the element    jQuery=h2:contains("Labour")
+    the user moves focus to the element    jQuery=button:contains("Labour")
     wait for autosave
 
 the Applicant fills the Materials fields
-    the user clicks the button/link    jQuery=h2:contains("Materials")
+    the user clicks the button/link    jQuery=button:contains("Materials")
     the user should see the element    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
     the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    10
     the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    100
@@ -134,10 +134,10 @@ the Applicant fills the Materials fields
     the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    10
     the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(3) input    100
     the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(1) input    test
-    the user moves focus to the element    jQuery=h2:contains("Materials")
+    the user moves focus to the element    jQuery=button:contains("Materials")
 
 the applicant edits the Subcontracting costs section
-    the user clicks the button/link    jQuery=h2:contains("Subcontracting costs")
+    the user clicks the button/link    jQuery=button:contains("Subcontracting costs")
     the user should see the text in the page    Subcontractor name
     the user enters text to a text field    css=#collapsible-4 .form-row:nth-child(1) input[id$=subcontractingCost]    100
     the user enters text to a text field    css=.form-row:nth-child(1) [name^="subcontracting-name"]    test1
@@ -150,10 +150,10 @@ the applicant edits the Subcontracting costs section
     the user enters text to a text field    css=.form-row:nth-child(2) [name^="subcontracting-role"]    test3
     the user enters text to a text field    css=#collapsible-4 .form-row:nth-child(2) input[id$=subcontractingCost]    100
     the user enters text to a text field    css=#collapsible-4 .form-row:nth-child(1) input[id$=name]    test
-    the user moves focus to the element    jQuery=h2:contains("Subcontracting costs")
+    the user moves focus to the element    jQuery=button:contains("Subcontracting costs")
 
 the applicant fills the 'capital usage' field
-    the user clicks the button/link    jQuery=h2:contains("Capital usage")
+    the user clicks the button/link    jQuery=button:contains("Capital usage")
     the user enters text to a text field    css=.form-row:nth-child(1) .form-finances-capital-usage-npv    1000
     the user enters text to a text field    css=.form-row:nth-child(1) .form-finances-capital-usage-npv    1000
     the user enters text to a text field    css=.form-row:nth-child(1) .form-finances-capital-usage-residual-value    900
@@ -171,10 +171,10 @@ the applicant fills the 'capital usage' field
     the user enters text to a text field    css=.form-row:nth-child(2) .form-finances-capital-usage-depreciation    10
     the user enters text to a text field    css=.form-row:nth-child(2) [name^="capital_usage-description"]    Test
     the user clicks the button/link    jQuery=.form-row:nth-child(2) label:contains(Existing)
-    the user moves focus to the element    jQuery=h2:contains("Capital usage")
+    the user moves focus to the element    jQuery=button:contains("Capital usage")
 
 the applicant fills the 'capital usage' field to a negative value
-    the user clicks the button/link    jQuery=h2:contains("Capital usage")
+    the user clicks the button/link    jQuery=button:contains("Capital usage")
     the user enters text to a text field    css=.form-row:nth-child(1) .form-finances-capital-usage-npv    1000
     the user enters text to a text field    css=.form-row:nth-child(1) .form-finances-capital-usage-npv    1000
     the user enters text to a text field    css=.form-row:nth-child(1) .form-finances-capital-usage-residual-value    9000
@@ -182,10 +182,10 @@ the applicant fills the 'capital usage' field to a negative value
     the user enters text to a text field    css=.form-finances-capital-usage-depreciation    11
     the user enters text to a text field    css=.form-row:nth-child(1) [name^="capital_usage-description"]    Test
     the user clicks the button/link    jQuery=.form-row:nth-child(1) label:contains(Existing)
-    the user moves focus to the element    jQuery=h2:contains("Capital usage")
+    the user moves focus to the element    jQuery=button:contains("Capital usage")
 
 the Applicant fills the Travel fields
-    the user clicks the button/link    jQuery=h2:contains("Travel and subsistence")
+    the user clicks the button/link    jQuery=button:contains("Travel and subsistence")
     the user should see the element    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
     the user enters text to a text field    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    10
     the user enters text to a text field    css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    100
@@ -196,10 +196,10 @@ the Applicant fills the Travel fields
     the user enters text to a text field    css=#travel-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    10
     the user enters text to a text field    css=#travel-costs-table tbody tr:nth-of-type(2) td:nth-of-type(3) input    100
     the user enters text to a text field    css=#travel-costs-table tbody tr:nth-of-type(2) td:nth-of-type(1) input    test
-    the user moves focus to the element    jQuery=h2:contains("Travel and subsistence")
+    the user moves focus to the element    jQuery=button:contains("Travel and subsistence")
 
 the applicant adds one row for the other costs
-    the user clicks the button/link    jQuery=h2:contains("Other costs")
+    the user clicks the button/link    jQuery=button:contains("Other costs")
     the user should see the element    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
     the user enters text to a text field    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    100
     the user enters text to a text field    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) textarea    test
@@ -207,7 +207,7 @@ the applicant adds one row for the other costs
     the user should see the element    css=#other-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
     the user enters text to a text field    css=#other-costs-table tbody tr:nth-of-type(2) td:nth-of-type(1) textarea    test
     the user enters text to a text field    css=#other-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    100
-    the user moves focus to the element    jQuery=h2:contains("Other costs")
+    the user moves focus to the element    jQuery=button:contains("Other costs")
 
 the total of the other funding should be correct
     the user should see the element    id=other-funding-total
@@ -254,7 +254,7 @@ Admin costs total should be correct
     [Arguments]    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
     the user should see the element    ${ADMIN_TOTAL}
     Textfield Value Should Be    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
-    Element Should Contain    jQuery=h2:contains("Overhead costs")    ${ADMIN_VALUE}
+    Element Should Contain    jQuery=button:contains("Overhead costs")    ${ADMIN_VALUE}
 
 the grant value should be correct in the finance summary page
     The user navigates to the next page

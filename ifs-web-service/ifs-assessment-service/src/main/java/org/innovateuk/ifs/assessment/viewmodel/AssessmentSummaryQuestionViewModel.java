@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.assessment.viewmodel;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 /**
  * Holder of model attributes for the questions shown as part of the Assessment Summary.
  */
@@ -15,7 +18,15 @@ public class AssessmentSummaryQuestionViewModel {
     private Boolean applicationInScope;
     private boolean complete;
 
-    public AssessmentSummaryQuestionViewModel(Long questionId, String displayLabel, String displayLabelShort, boolean scoreFormInputExists, Integer scoreGiven, Integer scorePossible, String feedback, Boolean applicationInScope, boolean complete) {
+    public AssessmentSummaryQuestionViewModel(Long questionId,
+                                              String displayLabel,
+                                              String displayLabelShort,
+                                              boolean scoreFormInputExists,
+                                              Integer scoreGiven,
+                                              Integer scorePossible,
+                                              String feedback,
+                                              Boolean applicationInScope,
+                                              boolean complete) {
         this.questionId = questionId;
         this.displayLabel = displayLabel;
         this.displayLabelShort = displayLabelShort;
@@ -31,71 +42,75 @@ public class AssessmentSummaryQuestionViewModel {
         return questionId;
     }
 
-    public void setQuestionId(Long questionId) {
-        this.questionId = questionId;
-    }
-
     public String getDisplayLabel() {
         return displayLabel;
-    }
-
-    public void setDisplayLabel(String displayLabel) {
-        this.displayLabel = displayLabel;
     }
 
     public String getDisplayLabelShort() {
         return displayLabelShort;
     }
 
-    public void setDisplayLabelShort(String displayLabelShort) {
-        this.displayLabelShort = displayLabelShort;
-    }
-
     public boolean isScoreFormInputExists() {
         return scoreFormInputExists;
-    }
-
-    public void setScoreFormInputExists(boolean scoreFormInputExists) {
-        this.scoreFormInputExists = scoreFormInputExists;
     }
 
     public Integer getScoreGiven() {
         return scoreGiven;
     }
 
-    public void setScoreGiven(Integer scoreGiven) {
-        this.scoreGiven = scoreGiven;
-    }
-
     public Integer getScorePossible() {
         return scorePossible;
-    }
-
-    public void setScorePossible(Integer scorePossible) {
-        this.scorePossible = scorePossible;
     }
 
     public String getFeedback() {
         return feedback;
     }
 
-    public void setFeedback(String feedback) {
-        this.feedback = feedback;
-    }
-
     public Boolean getApplicationInScope() {
         return applicationInScope;
-    }
-
-    public void setApplicationInScope(Boolean applicationInScope) {
-        this.applicationInScope = applicationInScope;
     }
 
     public boolean isComplete() {
         return complete;
     }
 
-    public void setComplete(boolean complete) {
-        this.complete = complete;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        AssessmentSummaryQuestionViewModel that = (AssessmentSummaryQuestionViewModel) o;
+
+        return new EqualsBuilder()
+                .append(scoreFormInputExists, that.scoreFormInputExists)
+                .append(complete, that.complete)
+                .append(questionId, that.questionId)
+                .append(displayLabel, that.displayLabel)
+                .append(displayLabelShort, that.displayLabelShort)
+                .append(scoreGiven, that.scoreGiven)
+                .append(scorePossible, that.scorePossible)
+                .append(feedback, that.feedback)
+                .append(applicationInScope, that.applicationInScope)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(questionId)
+                .append(displayLabel)
+                .append(displayLabelShort)
+                .append(scoreFormInputExists)
+                .append(scoreGiven)
+                .append(scorePossible)
+                .append(feedback)
+                .append(applicationInScope)
+                .append(complete)
+                .toHashCode();
     }
 }
