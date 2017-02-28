@@ -79,7 +79,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
     @Test
     public void testFindByCompetitionWithFilter() {
         ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
-        setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123?page=6&size=20&filter=10", ApplicationSummaryPageResource.class, responseBody);
+        setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123?filter=10&page=6&size=20", ApplicationSummaryPageResource.class, responseBody);
 
         RestResult<ApplicationSummaryPageResource> result = service.getAllApplications(123L, null, 6, 20, "10");
 
@@ -89,7 +89,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
     @Test
     public void testFindByCompetitionWithFilterAndSort() {
         ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
-        setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123?page=6&size=20&sort=id&filter=10", ApplicationSummaryPageResource.class, responseBody);
+        setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123?filter=10&page=6&size=20&sort=id", ApplicationSummaryPageResource.class, responseBody);
 
         RestResult<ApplicationSummaryPageResource> result = service.getAllApplications(123L, "id", 6, 20, "10");
 
@@ -122,7 +122,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
     @Test
     public void testFindSubmittedApplicationsByCompetitionWithFilter() {
         ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
-        setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123/submitted?page=6&size=20&filter=10", ApplicationSummaryPageResource.class, responseBody);
+        setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123/submitted?filter=10&page=6&size=20", ApplicationSummaryPageResource.class, responseBody);
 
         RestResult<ApplicationSummaryPageResource> result = service.getSubmittedApplications(Long.valueOf(123L), null, 6, 20, "10");
 
@@ -133,7 +133,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
     @Test
     public void testFindSubmittedApplicationsByCompetitionWithFilterAndSortField() {
         ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
-        setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123/submitted?page=6&size=20&sort=id&filter=10", ApplicationSummaryPageResource.class, responseBody);
+        setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123/submitted?filter=10&page=6&size=20&sort=id", ApplicationSummaryPageResource.class, responseBody);
 
         RestResult<ApplicationSummaryPageResource> result = service.getSubmittedApplications(Long.valueOf(123L), "id", 6, 20, "10");
 
