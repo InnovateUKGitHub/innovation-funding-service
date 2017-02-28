@@ -7,17 +7,17 @@ IFS.core.collapsible = (function () {
 
   return {
     settings: {
-      collapsibleEl: '.collapsible > h2, .collapsible > h3',
-      collapsibleTabs: '.tabs section > h2, .tabs section > h3'
+      collapsibleEl: '.collapsible',
+      collapsibleTabs: '.tabs section'
     },
     init: function (type) {
       s = this.settings
       s.collapsible = type === 'tabs' ? s.collapsibleTabs : s.collapsibleEl
       // if this has to be more dynamicly updated in the future we can add a custom event
-      jQuery(s.collapsible).each(function () {
+      jQuery(s.collapsible + ' > h2, ' + s.collapsible + ' > h3').each(function () {
         IFS.core.collapsible.initCollapsibleHTML(this)
       })
-      jQuery('body').on('click', s.collapsible, function () {
+      jQuery('body').on('click', s.collapsible + ' > h2 > [aria-controls], ' + s.collapsible + ' > h3 > [aria-controls]', function () {
         IFS.core.collapsible.toggleCollapsible(this)
       })
     },
@@ -82,15 +82,16 @@ IFS.core.collapsible = (function () {
     },
     destroy: function (type) {
       s.collapsible = type === 'tabs' ? s.collapsibleTabs : s.collapsibleEl
-      jQuery('body').off('click', s.collapsible)
-      jQuery(s.collapsible).each(function () {
+      jQuery('body').off('click', s.collapsible + ' > h2 > [aria-controls], ' + s.collapsible + ' > h3 > [aria-controls]')
+      jQuery(s.collapsible + ' > h2, ' + s.collapsible + ' > h3').each(function () {
         IFS.core.collapsible.destroyHTHL(this)
       })
     },
     destroyHTHL: function (el) {
       var inst = jQuery(el)
       inst.next().children(':first').unwrap()
-      inst.removeAttr('role aria-expanded aria-controls')
+      inst.find('button').contents().unwrap()
+      // inst.removeAttr('role aria-expanded aria-controls')
     }
   }
 })()
