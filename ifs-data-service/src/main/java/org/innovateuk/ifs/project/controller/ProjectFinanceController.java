@@ -41,6 +41,10 @@ public class ProjectFinanceController {
         return projectFinanceService.generateSpendProfile(projectId).toPostCreateResponse();
     }
 
+    /**
+     * This method was written to recreate Spend Profile for one of the partner organisations on Production.
+     * This method assumes that all the necessary stuff is in the database before the Spend Profile can be generated.
+     */
     @RequestMapping(value = "/{projectId}/partner-organisation/{organisationId}/user/{userId}/spend-profile/generate", method = POST)
     public RestResult<Void> generateSpendProfileForPartnerOrganisation(@PathVariable("projectId") final Long projectId,
                                                                        @PathVariable("organisationId") final Long organisationId,

@@ -749,6 +749,10 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     }
 
     @Override
+    /**
+     * This method was written to recreate Spend Profile for one of the partner organisations on Production.
+     * This method assumes that all the necessary stuff is in the database before the Spend Profile can be generated.
+     */
     public ServiceResult<Void> generateSpendProfileForPartnerOrganisation(Long projectId, Long organisationId, Long userId) {
 
         User user = userRepository.findOne(userId);
