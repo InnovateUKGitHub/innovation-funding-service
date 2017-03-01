@@ -71,7 +71,7 @@ public class ApplicationCountSummaryServiceImplTest extends BaseServiceUnitTest<
 
         ApplicationCountSummaryPageResource resource = mock(ApplicationCountSummaryPageResource.class);
 
-        when(applicationStatisticsRepositoryMock.findByCompetition(eq(competitionId),eq("filter"),argThat(new PageableMatcher(0,20)))).thenReturn(page);
+        when(applicationStatisticsRepositoryMock.findByCompetition(eq(competitionId),eq("%filter%"),argThat(new PageableMatcher(0,20)))).thenReturn(page);
         when(applicationCountSummaryPageMapperMock.mapToResource(page)).thenReturn(resource);
 
         ServiceResult<ApplicationCountSummaryPageResource> result = service.getApplicationCountSummariesByCompetitionId(competitionId,0,20, ofNullable("filter"));
