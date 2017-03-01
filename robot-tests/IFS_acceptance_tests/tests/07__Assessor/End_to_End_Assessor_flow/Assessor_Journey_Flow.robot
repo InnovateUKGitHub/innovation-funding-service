@@ -20,6 +20,7 @@ Invite a new Assessor to assess a competition
     And the user clicks the button/link    jQuery=.button:contains("Add assessors to list")
     When the user clicks the button/link    jQuery=tr:nth-child(1) .button:contains(Invite individual)
     And the user clicks the button/link    jQuery=.button:contains(Send invite)
+    And The user should see the element    jQuery=span:contains("Add a non-registered assessor to your list")
     [Teardown]    The user closes the browser
 
 Invited User gets an email to assess the competition
@@ -71,6 +72,7 @@ CompAdmin Invites assessor to assess an application
     And the user clicks the button/link    jQuery=a:contains("Allocate applications")
     And the user clicks the button/link    jQuery=a:contains("Competition")
     And the user clicks the button/link    jQuery=button:contains("Notify assessors")
+    And the element should be disabled    jQuery=button:contains("Notify assessors")
     [Teardown]    The user closes the browser
 
 Assessor is notified by Email

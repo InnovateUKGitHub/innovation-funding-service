@@ -9,7 +9,7 @@ import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
-import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
@@ -33,9 +33,7 @@ import java.util.concurrent.Future;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.calls;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Tests for FundingLevelResetHandler
@@ -79,7 +77,7 @@ public class FundingLevelResetHandlerTest {
         when(future.get()).thenReturn(processRoles);
         when(processRoleService.findAssignableProcessRoles(1L)).thenReturn(future);
         when(sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES)).thenReturn(sectionResources);
-        when(questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.FINANCE)).thenReturn(RestResult.restSuccess(questionResource));
+        when(questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.FINANCE)).thenReturn(ServiceResult.serviceSuccess(questionResource));
 
         target.resetFundingAndMarkAsIncomplete(applicationFinanceResource, competitionId, userId);
 
@@ -109,7 +107,7 @@ public class FundingLevelResetHandlerTest {
         when(future.get()).thenReturn(processRoles);
         when(processRoleService.findAssignableProcessRoles(1L)).thenReturn(future);
         when(sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES)).thenReturn(sectionResources);
-        when(questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.FINANCE)).thenReturn(RestResult.restSuccess(questionResource));
+        when(questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.FINANCE)).thenReturn(ServiceResult.serviceSuccess(questionResource));
         when(financeService.getApplicationFinanceDetails(applicationId)).thenReturn(applicationFinanceResources);
 
         target.resetFundingLevelAndMarkAsIncompleteForAllCollaborators(competitionId, applicationId);

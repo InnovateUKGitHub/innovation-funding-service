@@ -36,7 +36,7 @@ public class OrganisationServiceImpl implements OrganisationService {
 
     @Override
     public OrganisationSearchResult getCompanyHouseOrganisation(String organisationId) {
-        return companyHouseRestService.getOrganisationById(organisationId);
+        return companyHouseRestService.getOrganisationById(organisationId).getSuccessObjectOrThrowException();
     }
 
     @Override

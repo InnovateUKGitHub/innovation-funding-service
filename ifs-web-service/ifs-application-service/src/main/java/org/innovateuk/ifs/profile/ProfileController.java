@@ -1,10 +1,12 @@
 package org.innovateuk.ifs.profile;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.service.EthnicityRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.profile.form.UserDetailsForm;
@@ -13,8 +15,6 @@ import org.innovateuk.ifs.user.resource.EthnicityResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -119,7 +119,7 @@ public class ProfileController {
         final UserResource loggedInUser = userAuthenticationService.getAuthenticatedUser(request);
 
         if(!bindingResult.hasErrors()) {
-            RestResult<UserResource> updateProfileResult = updateUser(loggedInUser, userDetailsForm);
+            ServiceResult<UserResource> updateProfileResult = updateUser(loggedInUser, userDetailsForm);
 
             if (updateProfileResult.isSuccess()) {
                 destination = viewUserProfile(model, request);
@@ -154,7 +154,7 @@ public class ProfileController {
         userDetailsForm.setActionUrl("/profile/edit");
     }
 
-    private RestResult<UserResource> updateUser(final UserResource loggedInUser, UserDetailsForm userDetailsForm) {
+    private ServiceResult<UserResource> updateUser(final UserResource loggedInUser, UserDetailsForm userDetailsForm) {
         return userService.updateDetails(
                 loggedInUser.getId(),
                 loggedInUser.getEmail(),

@@ -1,11 +1,12 @@
 package org.innovateuk.ifs.competitionsetup.service;
 
+import org.apache.commons.collections4.map.LinkedMap;
 import org.innovateuk.ifs.application.service.MilestoneService;
 import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
-import org.apache.commons.collections4.map.LinkedMap;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -14,14 +15,12 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 
-import static org.innovateuk.ifs.competition.builder.MilestoneResourceBuilder.newMilestoneResource;
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.MilestoneResourceBuilder.newMilestoneResource;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -35,13 +34,13 @@ public class CompetitionSetupMilestoneServiceImplTest {
 
 	@Test
 	public void testCreateMilestonesForCompetition() {
-        when(milestoneService.create(any(MilestoneType.class), anyLong())).thenReturn(newMilestoneResource().with(
+        when(milestoneService.create(any(MilestoneType.class), anyLong())).thenReturn(serviceSuccess(newMilestoneResource().with(
 				(integer, milestoneResource) -> {
 					milestoneResource.setType(MilestoneType.OPEN_DATE);
 				}
-		).build());
+		).build()));
 
-		List<MilestoneResource> result = service.createMilestonesForCompetition(123L);
+		List<MilestoneResource> result = service.createMilestonesForCompetition(123L).getSuccessObject();
 
         result.forEach(milestoneResource -> assertEquals(MilestoneType.OPEN_DATE, milestoneResource.getType()));
 		assertEquals(MilestoneType.presetValues().length, result.size());
@@ -60,11 +59,11 @@ public class CompetitionSetupMilestoneServiceImplTest {
         MilestoneRowForm milestoneRowForm = new MilestoneRowForm(MilestoneType.SUBMISSION_DATE, LocalDateTime.MIN);
         newMilestones.put(MilestoneType.SUBMISSION_DATE.name(), milestoneRowForm);
 
-        when(milestoneService.updateMilestones(anyListOf(MilestoneResource.class))).thenReturn(Collections.emptyList());
+        when(milestoneService.updateMilestones(anyListOf(MilestoneResource.class))).thenReturn(serviceSuccess());
 
-        List<Error> result = service.updateMilestonesForCompetition(oldMilestones, newMilestones, 123L);
+        ServiceResult<Void> result = service.updateMilestonesForCompetition(oldMilestones, newMilestones, 123L);
 
-        assertTrue(result.isEmpty());
+        assertTrue(result.isSuccess());
         MilestoneRowForm newMilestone = newMilestones.get(MilestoneType.SUBMISSION_DATE.name());
         assertEquals(Integer.valueOf(LocalDate.MIN.getDayOfMonth()), newMilestone.getDay());
         assertEquals(Integer.valueOf(LocalDate.MIN.getMonthValue()), newMilestone.getMonth());
