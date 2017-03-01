@@ -16,7 +16,6 @@ import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.user.builder.OrganisationResourceBuilder;
 import org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -39,6 +38,7 @@ import java.util.Optional;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -83,7 +83,7 @@ public class ApplicationModelPopulatorTest {
         CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource().build();
         Long userId = 1L;
         Long organisationId = 3L;
-        OrganisationResource organisationResource = OrganisationResourceBuilder.newOrganisationResource()
+        OrganisationResource organisationResource = newOrganisationResource()
                 .withId(organisationId).build();
         Optional<OrganisationResource> userOrganisation = Optional.of(organisationResource);
         UserResource user = UserResourceBuilder.newUserResource()
@@ -140,6 +140,8 @@ public class ApplicationModelPopulatorTest {
         Long applicationId = 2L;
         Long userId = 3L;
         Long organisationId = 3L;
+        Long userOrganisationId = 45L;
+        OrganisationResource userOrganisation = newOrganisationResource().withId(userOrganisationId).build();
 
         UserResource user = UserResourceBuilder.newUserResource()
                 .withId(userId).build();
@@ -148,11 +150,15 @@ public class ApplicationModelPopulatorTest {
         SectionResource financeSection = SectionResourceBuilder.newSectionResource().build();
         List<QuestionResource> costsQuestions = QuestionResourceBuilder.newQuestionResource().build(2);
         String organisationType = "organisationType";
+        String parentOrganisationType = "parentOrganisationType";
         FinanceModelManager financeModelManager = mock(FinanceModelManager.class);
 
         when(sectionService.getFinanceSection(competitionId)).thenReturn(financeSection);
         when(questionService.getQuestionsBySectionIdAndType(financeSection.getId(), QuestionType.COST)).thenReturn(costsQuestions);
         when(organisationService.getOrganisationType(user.getId(), applicationId)).thenReturn(organisationType);
+        when(organisationService.getParentOrganisationType(user.getId(), applicationId)).thenReturn(parentOrganisationType);
+
+        when(organisationService.getOrganisationForUser(user.getId())).thenReturn(userOrganisation);
         when(financeHandler.getFinanceModelManager(organisationType)).thenReturn(financeModelManager);
 
         ProcessRoleResource processRole  = ProcessRoleResourceBuilder.newProcessRoleResource().withOrganisation().withUser(user).build();
@@ -165,7 +171,7 @@ public class ApplicationModelPopulatorTest {
         verifyNoMoreInteractions(model);
 
         //Verify model calls
-        verify(applicationFinanceOverviewModelManager).addFinanceDetails(model, competitionId, applicationId);
+        verify(applicationFinanceOverviewModelManager).addFinanceDetails(model, competitionId, applicationId, user.getId());
         verify(financeModelManager).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form, organisationId);
     }
 }

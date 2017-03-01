@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceOvervi
 import org.innovateuk.ifs.application.finance.viewmodel.BaseFinanceOverviewViewModel;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
+import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
@@ -37,6 +38,9 @@ public class ApplicationFinanceOverviewModelManager implements FinanceOverviewMo
     private FormInputService formInputService;
 
     @Autowired
+    private OrganisationService organisationService;
+
+    @Autowired
     public ApplicationFinanceOverviewModelManager(ApplicationFinanceRestService applicationFinanceRestService, SectionService sectionService,
                                                   FinanceService financeService, QuestionService questionService,
                                                   FileEntryRestService fileEntryRestService,
@@ -49,10 +53,11 @@ public class ApplicationFinanceOverviewModelManager implements FinanceOverviewMo
         this.formInputService = formInputService;
     }
 
-    // TODO DW - INFUND-1555 - handle rest results
-    public void addFinanceDetails(Model model, Long competitionId, Long applicationId) {
+    public void addFinanceDetails(Model model, Long competitionId, Long applicationId, Long userId) {
         addFinanceSections(competitionId, model);
         OrganisationApplicationFinanceOverviewImpl organisationFinanceOverview = new OrganisationApplicationFinanceOverviewImpl(financeService, fileEntryRestService, applicationId);
+        String organisationType = organisationService.getParentOrganisationType(userId, applicationId);
+        model.addAttribute("maySeeAcademicBreakdown", "Research".equals(organisationType));
         model.addAttribute("financeTotal", organisationFinanceOverview.getTotal());
         model.addAttribute("financeTotalPerType", organisationFinanceOverview.getTotalPerType());
         Map<Long, BaseFinanceResource> organisationFinances = organisationFinanceOverview.getFinancesByOrganisation();
@@ -62,7 +67,6 @@ public class ApplicationFinanceOverviewModelManager implements FinanceOverviewMo
         model.addAttribute("totalContribution", organisationFinanceOverview.getTotalContribution());
         model.addAttribute("totalOtherFunding", organisationFinanceOverview.getTotalOtherFunding());
         model.addAttribute("researchParticipationPercentage", applicationFinanceRestService.getResearchParticipationPercentage(applicationId).getSuccessObjectOrThrowException());
-
     }
 
     private void addFinanceSections(Long competitionId, Model model) {

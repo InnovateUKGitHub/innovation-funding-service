@@ -32,5 +32,7 @@ public interface OrganisationService {
 
     String getOrganisationType(Long userId, Long applicationId);
 
+    String getParentOrganisationType(Long userId, Long applicationId);
+
     Optional<OrganisationResource> getOrganisationForUser(Long userId, List<ProcessRoleResource> userApplicationRoles);
 }
