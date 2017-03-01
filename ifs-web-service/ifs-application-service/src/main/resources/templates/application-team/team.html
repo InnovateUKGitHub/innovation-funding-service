@@ -59,7 +59,8 @@
             </th:block>
 
             <p class="extra-margin">
-                <a th:href="@{/application/{applicationId}(applicationId=${model.applicationId})}" class="button-secondary">Return to application overview</a>
+                <a th:if="${model.applicationCanBegin}" th:href="'#'" class="button-secondary">Begin application</a>
+                <a th:unless="${model.applicationCanBegin}" th:href="@{/application/{applicationId}(applicationId=${model.applicationId})}" class="button-secondary">Return to application overview</a>
             </p>
 
             <th:block th:insert="fragments/layout :: main-content-end"/>
