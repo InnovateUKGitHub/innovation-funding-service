@@ -6,12 +6,10 @@ import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.threads.attachments.controller.ProjectFinanceAttachmentsController;
 import org.innovateuk.ifs.threads.attachments.service.ProjectFinanceAttachmentService;
 import org.innovateuk.threads.attachment.resource.AttachmentResource;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.function.Function;
@@ -36,7 +34,6 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.response
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 
 public class ProjectFinanceAttachmentsControllerDocumentation extends BaseControllerMockMVCTest<ProjectFinanceAttachmentsController> {
 
