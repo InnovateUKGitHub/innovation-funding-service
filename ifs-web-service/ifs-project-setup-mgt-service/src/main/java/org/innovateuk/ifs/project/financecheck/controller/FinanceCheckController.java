@@ -47,7 +47,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static org.innovateuk.ifs.application.resource.ApplicationResource.formatter;
 import static org.innovateuk.ifs.project.finance.resource.FinanceCheckState.APPROVED;
 import static org.innovateuk.ifs.project.util.ControllersUtil.isLeadPartner;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
@@ -65,6 +64,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 public class FinanceCheckController {
 
     private static final String FORM_ATTR_NAME = "form";
+
+    private static final String UNIVERSITY_HEI = "University (HEI)";
 
     @Autowired
     private ProjectService projectService;
@@ -94,7 +95,7 @@ public class FinanceCheckController {
                        @ModelAttribute("loggedInUser") UserResource loggedInUser,
                        Model model){
         FinanceCheckResource financeCheckResource = getFinanceCheckResource(projectId, organisationId);
-        populateExitingFinanceCheckDetailsInForm(financeCheckResource, form);
+        populateExistingFinanceCheckDetailsInForm(financeCheckResource, form);
         return doViewFinanceCheckForm(projectId, organisationId, model);
     }
 
@@ -174,7 +175,7 @@ public class FinanceCheckController {
         return "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId;
     }
 
-    private void populateExitingFinanceCheckDetailsInForm(FinanceCheckResource financeCheckResource, FinanceCheckForm form){
+    private void populateExistingFinanceCheckDetailsInForm(FinanceCheckResource financeCheckResource, FinanceCheckForm form){
         form.setCosts(simpleMap(financeCheckResource.getCostGroup().getCosts(), c -> {
             CostFormField cf = new CostFormField();
             cf.setId(c.getId());
@@ -192,10 +193,11 @@ public class FinanceCheckController {
         ProjectResource project = projectService.getById(projectId);
         ApplicationResource application = applicationService.getById(project.getApplication());
         String competitionName = application.getCompetitionName();
-        String formattedCompId = formatter.format(application.getCompetition());
 
         OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
-        boolean isResearch = OrganisationTypeEnum.isResearch(organisationResource.getOrganisationType());
+
+        //TODO - Bronnyl - Change the variable name isResearch as its misleading. Update the view model, template and update the failing test cases.
+        boolean isResearch = isUsingJesFinances(organisationResource.getOrganisationTypeName());
         Optional<ProjectUserResource> financeContact = getFinanceContact(projectId, organisationId);
 
         FinanceCheckProcessResource financeCheckStatus = financeCheckService.getFinanceCheckApprovalStatus(projectId, organisationId);
@@ -212,7 +214,7 @@ public class FinanceCheckController {
             jesFileDetailsViewModel = new FileDetailsViewModel(jesFileEntryResource);
         }
 
-        FinanceCheckViewModel financeCheckViewModel = new FinanceCheckViewModel(formattedCompId, competitionName, organisationResource.getName(),
+        FinanceCheckViewModel financeCheckViewModel = new FinanceCheckViewModel(application.getCompetition(), competitionName, organisationResource.getName(),
                 isLeadPartner, projectId, organisationId, isResearch, financeChecksApproved, approverName, approvalDate, jesFileDetailsViewModel);
 
         if (financeContact.isPresent()) { // Internal users may still view finance contact page without finance contact being set.  They will see a message warning about this on template.
@@ -221,6 +223,15 @@ public class FinanceCheckController {
         }
 
         model.addAttribute("model", financeCheckViewModel);
+    }
+
+    private boolean isUsingJesFinances(String organisationType) {
+        switch(organisationType) {
+            case UNIVERSITY_HEI:
+                return true;
+            default:
+                return false;
+        }
     }
 
     private Optional<ProjectUserResource> getFinanceContact(Long projectId, Long organisationId){

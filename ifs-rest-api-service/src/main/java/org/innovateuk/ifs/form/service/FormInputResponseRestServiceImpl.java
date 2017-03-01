@@ -15,6 +15,7 @@ import org.springframework.web.util.HtmlUtils;
 
 import java.util.List;
 
+import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.formInputResponseListType;
 
 /**
@@ -95,5 +96,11 @@ public class FormInputResponseRestServiceImpl extends BaseRestService implements
     public RestResult<List<FormInputResponseResource>> getByFormInputIdAndApplication(long formInputId, long applicationId) {
         String url = formInputResponseRestURL + "/findResponseByFormInputIdAndApplicationId/" + formInputId + "/" + applicationId;
         return getWithRestResult(url, formInputResponseListType());
+    }
+
+    @Override
+    public RestResult<FormInputResponseResource> getByApplicationIdAndQuestionName(long applicationId, String questionName) {
+        return getWithRestResult(format("%s/%s/%s/%s", formInputResponseRestURL, "findByApplicationIdAndQuestionName",
+                applicationId, questionName), FormInputResponseResource.class);
     }
 }

@@ -1,9 +1,10 @@
 package org.innovateuk.ifs.application.service;
 
+import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.commons.service.ServiceResult;
+
 import java.util.List;
 import java.util.Map;
-
-import org.innovateuk.ifs.application.resource.FundingDecision;
 
 /**
  * Service for making the decision of which applications will receive funding and which will not for a given competition.
@@ -15,7 +16,7 @@ public interface ApplicationFundingDecisionService {
 	 * @param competitionId the id of the competition
 	 * @param applicationIdToFundingDecision map of application ids to funding decisions
 	 */
-	void makeApplicationFundingDecision(Long competitionId, Map<Long, FundingDecision> applicationIdToFundingDecision);
+	ServiceResult<Void> makeApplicationFundingDecision(Long competitionId, Map<Long, FundingDecision> applicationIdToFundingDecision);
 	
 	/**
 	 * verifies all submitted applications represented.
@@ -38,7 +39,7 @@ public interface ApplicationFundingDecisionService {
 	 * @param competitionId the id of the competition
 	 * @param applicationIdToFundingDecision map of application ids to funding decisions
 	 */
-	void saveApplicationFundingDecisionData(Long competitionId, Map<Long, FundingDecision> applicationIdToFundingDecision);
+	ServiceResult<Void> saveApplicationFundingDecisionData(Long competitionId, Map<Long, FundingDecision> applicationIdToFundingDecision);
 	
 	/**
 	 * returns the appropriate FundingDecision enum value for a String used in the decision form.
