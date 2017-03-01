@@ -5,7 +5,6 @@ import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.service.CompanyHouseRestService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
@@ -82,25 +81,6 @@ public class OrganisationServiceImpl implements OrganisationService {
             return organisationResource.getOrganisationTypeName();
         }
         return "";
-    }
-
-    @Override
-    public String getParentOrganisationType(Long userId, Long applicationId) {
-        final ProcessRoleResource processRoleResource = processRoleService.findProcessRole(userId, applicationId);
-        if (processRoleResource != null && processRoleResource.getOrganisationId() != null) {
-            Long parentOrganisationTypeId = getParentOrganisationTypeId(processRoleResource.getOrganisationId());
-
-            return organisationTypeRestService.findOne(parentOrganisationTypeId).getSuccessObjectOrThrowException().getName();
-        }
-        return null;
-    }
-
-    private Long getParentOrganisationTypeId(Long organisationId) {
-        OrganisationTypeResource organisationType = organisationTypeRestService.getForOrganisationId(organisationId).getSuccessObjectOrThrowException();
-        if(null != organisationType.getParentOrganisationType()) {
-            return organisationType.getParentOrganisationType();
-        }
-        return organisationType.getId();
     }
 
     @Override
