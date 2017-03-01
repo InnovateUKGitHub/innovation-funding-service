@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Add organisation'" />
+    </head>
+
+    <body class="app-dashboard">
+        <th:block th:insert="fragments/layout :: body-start" />
+        <th:block th:insert="fragments/layout :: global-header" />
+
+        <main id="content">
+            <th:block th:insert="fragments/layout :: main-content-start" />
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Application team',linkClass='link-back',linkUrl=@{/application/{applicationId}/team(applicationId=${model.applicationId})}" />
+
+            <div class="page-title">
+                <th:block th:insert="fragments/elements :: application-title (applicationId=${model.applicationId},applicationName=${model.applicationName})" />
+                <h1 class="heading-xlarge">Add organisation</h1>
+            </div>
+
+            <p>Add organisations to your application team. If you wish to remove a sole member of an organisation, you must add a replacement member first.</p>
+
+            <form th:action="@{/application/{applicationId}/team/addOrganisation(applicationId=${model.applicationId})}" th:object="${form}" method="post" novalidate="novalidate">
+                <div th:class="${#fields.hasErrors('organisationName')}? 'form-group error':'form-group'">
+                    <label class="form-label-bold" for="organisationName">
+                        Organisation name
+                        <th:block th:if="${#fields.hasErrors('organisationName')}">
+                            <span class="error-message" th:each="err : ${#fields.errors('organisationName')}" th:text="${err}" />
+                        </th:block>
+                    </label>
+                    <input class="form-control width-full" type="text" th:field="*{organisationName}" />
+                </div>
+
+                <table class="table-overflow">
+                    <thead>
+                        <tr>
+                            <th class="width-30-percent" scope="col">Applicant name</th>
+                            <th class="width-55-percent" scope="col">Email</th>
+                            <th class="width-15-percent alignright" scope="col"><span class="visually-hidden">Actions</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="applicant, applicantStat : *{applicants}">
+                            <td>
+                                <label th:for="'applicants'+${applicantStat.index}+'.name'">
+                                    <span class="visually-hidden">Applicant name</span>
+                                    <th:block th:if="${#fields.hasErrors('applicants[__${applicantStat.index}__].name')}">
+                                        <span class="error-message"  th:each="err : ${#fields.errors('applicants[__${applicantStat.index}__].name')}" th:text="${err}">Please enter a name</span>
+                                    </th:block>
+                                </label>
+                                <input type="text"
+                                       th:field="*{applicants[__${applicantStat.index}__].name}"
+                                       required="required"
+                                       class="form-control width-full"
+                                       th:errorclass="field-error" />
+                            </td>
+                            <td>
+                                <label th:for="'applicants'+${applicantStat.index}+'.email'">
+                                    <span class="visually-hidden">Applicant email</span>
+                                    <th:block th:if="${#fields.hasErrors('applicants[__${applicantStat.index}__].email')}">
+                                        <span class="error-message"  th:each="err : ${#fields.errors('applicants[__${applicantStat.index}__].email')}" th:text="${err}">Please enter a name</span>
+                                    </th:block>
+                                </label>
+                                <input type="text"
+                                       th:field="*{applicants[__${applicantStat.index}__].email}"
+                                       required="required"
+                                       class="form-control width-full"
+                                       th:errorclass="field-error" />
+                            </td>
+                            <td class="alignright"><button class="add-another-row buttonlink" th:value="${applicantStat.index}" name="removeApplicant" type="submit">Remove</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p><button class="add-another-row buttonlink" name="addApplicant" type="submit">Add new applicant</button></p>
+
+                <p class="extra-margin">
+                    <button class="button" name="add_partner" value="add_partner" type="submit">Add organisation and invite applicants</button>
+                    <a th:href="@{/application/{applicationId}/team(applicationId=${model.applicationId})}" class="button button-clear">Cancel</a>
+                </p>
+            </form>
+
+            <th:block th:insert="fragments/layout :: main-content-end" />
+        </main>
+
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
+    </body>
+</html>

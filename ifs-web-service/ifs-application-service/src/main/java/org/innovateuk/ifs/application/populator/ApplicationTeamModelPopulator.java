@@ -69,7 +69,7 @@ public class ApplicationTeamModelPopulator {
     private boolean isNoInvitesForLeadOrganisation(List<InviteOrganisationResource> inviteOrganisationResources,
                                                    long leadOrganisationId) {
         return inviteOrganisationResources.stream().noneMatch(inviteOrganisationResource ->
-                inviteOrganisationResource.getOrganisation() == leadOrganisationId);
+                isInviteForLeadOrganisation(inviteOrganisationResource, leadOrganisationId));
     }
 
     private List<ApplicationTeamOrganisationRowViewModel> appendLeadOrganisation(
@@ -91,7 +91,7 @@ public class ApplicationTeamModelPopulator {
     private ApplicationTeamOrganisationRowViewModel getOrganisationViewModel(InviteOrganisationResource inviteOrganisationResource,
                                                                              long leadOrganisationId, long loggedInUserId,
                                                                              boolean userLeadApplicant) {
-        boolean leadOrganisation = leadOrganisationId == inviteOrganisationResource.getOrganisation();
+        boolean leadOrganisation = isInviteForLeadOrganisation(inviteOrganisationResource, leadOrganisationId);
         boolean editable = userLeadApplicant || isUserMemberOfOrganisation(loggedInUserId, inviteOrganisationResource);
         return new ApplicationTeamOrganisationRowViewModel(inviteOrganisationResource.getOrganisation(),
                 getOrganisationName(inviteOrganisationResource), leadOrganisation, inviteOrganisationResource.getInviteResources()
@@ -138,14 +138,18 @@ public class ApplicationTeamModelPopulator {
         return userId == leadApplicant.getId();
     }
 
+    private boolean isInviteForLeadOrganisation(InviteOrganisationResource inviteOrganisationResource, long leadOrganisationId) {
+        return inviteOrganisationResource.getOrganisation() != null && inviteOrganisationResource.getOrganisation() == leadOrganisationId;
+    }
+
     private boolean isUserMemberOfOrganisation(long userId, InviteOrganisationResource inviteOrganisationResource) {
         return inviteOrganisationResource.getInviteResources().stream().anyMatch(applicationInviteResource ->
                 applicationInviteResource.getUser() != null && userId == applicationInviteResource.getUser());
     }
 
-    private static Comparator<? super InviteOrganisationResource> compareByLeadOrganisationThenById(long leadOrganisationId) {
-        return (organisation1, organisation2) -> organisation1.getOrganisation() == leadOrganisationId ? -1 :
-                organisation2.getOrganisation() == leadOrganisationId ? 1 :
+    private Comparator<? super InviteOrganisationResource> compareByLeadOrganisationThenById(long leadOrganisationId) {
+        return (organisation1, organisation2) -> isInviteForLeadOrganisation(organisation1, leadOrganisationId) ? -1 :
+                isInviteForLeadOrganisation(organisation2, leadOrganisationId) ? 1 :
                         organisation1.getId().compareTo(organisation2.getId());
     }
 }
