@@ -52,9 +52,9 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     }
 
     @Override
-    public ServiceResult<Boolean> allPublicDatesComplete(Long id) {
+    public ServiceResult<Boolean> allPublicDatesComplete(Long competitionId) {
         List<Milestone> milestones = milestoneRepository
-                .findByCompetitionIdAndTypeIn(id, PUBLIC_MILESTONES);
+                .findByCompetitionIdAndTypeIn(competitionId, PUBLIC_MILESTONES);
 
         return serviceSuccess(milestones.size() == PUBLIC_MILESTONES.size() && milestones.stream().noneMatch(milestone -> milestone.getDate() == null));
     }

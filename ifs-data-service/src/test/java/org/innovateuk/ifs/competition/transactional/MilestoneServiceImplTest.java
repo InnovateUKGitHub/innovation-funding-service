@@ -175,7 +175,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 	}
 
 	@Test
-	public void allPublicDatesComplete() {
+	public void allPublicDatesCompletSuccess() {
 		List<Milestone> milestones = newMilestone().withType(MilestoneType.OPEN_DATE, MilestoneType.RELEASE_FEEDBACK, MilestoneType.SUBMISSION_DATE).withDate(LocalDateTime.now()).build(3);
 		when(milestoneRepository.findByCompetitionIdAndTypeIn(1L, asList(MilestoneType.OPEN_DATE, MilestoneType.RELEASE_FEEDBACK, MilestoneType.SUBMISSION_DATE)))
 				.thenReturn(milestones);
@@ -184,6 +184,17 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 
 		assertTrue(result.isSuccess());
 		assertTrue(result.getSuccessObject());
+	}
+	@Test
+	public void allPublicDatesCompleteFailure() {
+		List<Milestone> milestones = newMilestone().withType(MilestoneType.RELEASE_FEEDBACK, MilestoneType.SUBMISSION_DATE).withDate(null).build(2);
+		when(milestoneRepository.findByCompetitionIdAndTypeIn(1L, asList(MilestoneType.OPEN_DATE, MilestoneType.RELEASE_FEEDBACK, MilestoneType.SUBMISSION_DATE)))
+				.thenReturn(milestones);
+
+		ServiceResult<Boolean> result = service.allPublicDatesComplete(1L);
+
+		assertTrue(result.isSuccess());
+		assertFalse(result.getSuccessObject());
 	}
 
 	@Test
