@@ -39,7 +39,7 @@ public class ApplicationFundingDecisionServiceImpl implements ApplicationFunding
 	private ApplicationSummaryService applicationSummaryService;
 	
 	@Override
-	public ServiceResult<Void> saveApplicationFundingDecisionData(Long competitionId, String fundingDecision, List<Long> applicationIds) {
+	public ServiceResult<Void> saveApplicationFundingDecisionData(Long competitionId, FundingDecision fundingDecision, List<Long> applicationIds) {
 
 		if(isAllowedFundingDecision(fundingDecision)) {
 			Map<Long, FundingDecision> applicationIdToFundingDecision = createSubmittedApplicationFundingDecisionMap(applicationIds, competitionId, fundingDecision);
@@ -52,9 +52,8 @@ public class ApplicationFundingDecisionServiceImpl implements ApplicationFunding
 		return serviceSuccess();
 	}
 
-	public boolean isAllowedFundingDecision(String fundingDecisionString) {
-		Optional<FundingDecision> fundingDecision = fundingDecisionForString(fundingDecisionString);
-		if(!fundingDecision.isPresent() || fundingDecision.get().equals(FundingDecision.UNDECIDED)) {
+	public boolean isAllowedFundingDecision(FundingDecision fundingDecision) {
+		if(fundingDecision.equals(FundingDecision.UNDECIDED)) {
 			return false;
 		}
 		else {
@@ -62,7 +61,7 @@ public class ApplicationFundingDecisionServiceImpl implements ApplicationFunding
 		}
 	}
 	
-	private Optional<FundingDecision> fundingDecisionForString(String val) {
+	public Optional<FundingDecision> getFundingDecisionForString(String val) {
 		Optional<FundingDecision> fundingDecision = Optional.empty();
 
 		try {
@@ -80,14 +79,9 @@ public class ApplicationFundingDecisionServiceImpl implements ApplicationFunding
 				.stream().map(summaryResource -> summaryResource.getId()).collect(Collectors.toList());
 	}
 
-	private Map<Long, FundingDecision> createSubmittedApplicationFundingDecisionMap(List<Long> applicationIds, Long competitionId, String fundingDecisionChoice) {
-		Optional<FundingDecision> fundingDecision = fundingDecisionForString(fundingDecisionChoice);
-
+	private Map<Long, FundingDecision> createSubmittedApplicationFundingDecisionMap(List<Long> applicationIds, Long competitionId, FundingDecision fundingDecision) {
 		Map<Long, FundingDecision> applicationIdToFundingDecision = new HashMap<>();
-
-		if(fundingDecision.isPresent()) {
-			applicationIdToFundingDecision = filteredListOfFundingDecisions(applicationIds, competitionId, fundingDecision.get());
-		}
+		applicationIdToFundingDecision = filteredListOfFundingDecisions(applicationIds, competitionId, fundingDecision);
 
 		return applicationIdToFundingDecision;
 	}

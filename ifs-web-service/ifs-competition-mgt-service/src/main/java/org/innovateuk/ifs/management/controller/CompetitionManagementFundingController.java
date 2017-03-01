@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
+import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryService;
 import org.innovateuk.ifs.application.service.AssessorFeedbackService;
@@ -21,6 +22,7 @@ import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 
@@ -83,11 +85,14 @@ public class CompetitionManagementFundingController {
         if(fundingDecisionForm.getFundingDecision() != null) {
             validator.validate(fundingDecisionForm, bindingResult);
             if(!bindingResult.hasErrors()) {
-                applicationFundingDecisionService.saveApplicationFundingDecisionData(competitionId, fundingDecisionForm.getFundingDecision(), fundingDecisionForm.getApplicationIds());
+                Optional<FundingDecision> fundingDecision = applicationFundingDecisionService.getFundingDecisionForString(fundingDecisionForm.getFundingDecision());
+                if(fundingDecision.isPresent()) {
+                    applicationFundingDecisionService.saveApplicationFundingDecisionData(competitionId, fundingDecision.get(), fundingDecisionForm.getApplicationIds());
+                }
             }
         }
 
-        populateSubmittedModel(model, competitionSummary, queryForm, Integer.MAX_VALUE);
+        populateSubmittedModel(model, competitionSummary, queryForm);
 
         return "comp-mgt-funders-panel";
     }
@@ -105,7 +110,7 @@ public class CompetitionManagementFundingController {
         } else {
             boolean canPublishAssessorFeedback = assessorFeedbackService.feedbackUploaded(competitionSummary.getCompetitionId());
             model.addAttribute("canPublishAssessorFeedback", canPublishAssessorFeedback);
-            populateSubmittedModel(model, competitionSummary, queryForm, PAGE_SIZE);
+            populateSubmittedModel(model, competitionSummary, queryForm);
         }
     }
 
@@ -133,7 +138,7 @@ public class CompetitionManagementFundingController {
         model.addAttribute("activeTab", "overview");
     }
 
-    private void populateSubmittedModel(Model model, CompetitionSummaryResource competitionSummary, ApplicationSummaryQueryForm queryForm, Integer pageSize) {
+    private void populateSubmittedModel(Model model, CompetitionSummaryResource competitionSummary, ApplicationSummaryQueryForm queryForm) {
         String sort = applicationSummarySortFieldService.sortFieldForSubmittedApplications(queryForm.getSort());
         ApplicationSummaryPageResource results = applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(
                 competitionSummary.getCompetitionId(),

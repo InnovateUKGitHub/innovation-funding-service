@@ -3,6 +3,7 @@ package org.innovateuk.ifs.management.controller;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
+import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryService;
 import org.innovateuk.ifs.application.service.AssessorFeedbackService;
@@ -25,6 +26,7 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.CompetitionSummaryResourceBuilder.newCompetitionSummaryResource;
@@ -119,12 +121,10 @@ public class CompetitionManagementFundingControllerTest {
     public void getByCompetitionIdForCompetitionAssessorFeedbackSubmittedRequested() throws Exception {
         CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(ASSESSOR_FEEDBACK).build();
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
-
         when(applicationSummarySortFieldService.sortFieldForSubmittedApplications(null)).thenReturn("sortfield");
 
         ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource();
         when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20, null)).thenReturn(summary);
-
         when(assessorFeedbackService.feedbackUploaded(COMPETITION_ID)).thenReturn(false);
 
         mockMvc.perform(get("/competition/{competitionId}/funding?tab=submitted", COMPETITION_ID))
@@ -184,7 +184,8 @@ public class CompetitionManagementFundingControllerTest {
         CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(FUNDERS_PANEL).build();
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
         when(applicationSummarySortFieldService.sortFieldForSubmittedApplications(null)).thenReturn("sortfield");
-        when(applicationFundingDecisionService.saveApplicationFundingDecisionData(COMPETITION_ID, fundingDecision, applicationIds)).thenReturn(ServiceResult.serviceSuccess());
+        when(applicationFundingDecisionService.saveApplicationFundingDecisionData(COMPETITION_ID, FundingDecision.ON_HOLD, applicationIds)).thenReturn(ServiceResult.serviceSuccess());
+        when(applicationFundingDecisionService.getFundingDecisionForString(fundingDecision)).thenReturn(Optional.of(FundingDecision.ON_HOLD));
 
         ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource();
         when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20, null)).thenReturn(summary);
@@ -198,7 +199,7 @@ public class CompetitionManagementFundingControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt-funders-panel"));
 
-        verify(applicationFundingDecisionService).saveApplicationFundingDecisionData(COMPETITION_ID, fundingDecision, applicationIds);
+        verify(applicationFundingDecisionService).saveApplicationFundingDecisionData(COMPETITION_ID, FundingDecision.ON_HOLD, applicationIds);
     }
 
     @Test
@@ -212,7 +213,8 @@ public class CompetitionManagementFundingControllerTest {
         CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(FUNDERS_PANEL).build();
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
         when(applicationSummarySortFieldService.sortFieldForSubmittedApplications(null)).thenReturn("sortfield");
-        when(applicationFundingDecisionService.saveApplicationFundingDecisionData(COMPETITION_ID, fundingDecision, applicationIds)).thenReturn(ServiceResult.serviceSuccess());
+        when(applicationFundingDecisionService.saveApplicationFundingDecisionData(COMPETITION_ID, FundingDecision.ON_HOLD, applicationIds)).thenReturn(ServiceResult.serviceSuccess());
+        when(applicationFundingDecisionService.getFundingDecisionForString(fundingDecision)).thenReturn(Optional.of(FundingDecision.ON_HOLD));
 
         ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource();
         when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20, null)).thenReturn(summary);
@@ -240,7 +242,8 @@ public class CompetitionManagementFundingControllerTest {
         CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(FUNDERS_PANEL).build();
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
         when(applicationSummarySortFieldService.sortFieldForSubmittedApplications(null)).thenReturn("sortfield");
-        when(applicationFundingDecisionService.saveApplicationFundingDecisionData(COMPETITION_ID, fundingDecision, applicationIds)).thenReturn(ServiceResult.serviceSuccess());
+        when(applicationFundingDecisionService.saveApplicationFundingDecisionData(COMPETITION_ID, FundingDecision.ON_HOLD, applicationIds)).thenReturn(ServiceResult.serviceSuccess());
+        when(applicationFundingDecisionService.getFundingDecisionForString(fundingDecision)).thenReturn(Optional.of(FundingDecision.ON_HOLD));
 
         ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource();
         when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20, null)).thenReturn(summary);
@@ -254,6 +257,36 @@ public class CompetitionManagementFundingControllerTest {
                 .andExpect(view().name("comp-mgt-funders-panel"));
 
         verifyNoMoreInteractions(applicationFundingDecisionService);
+    }
+
+    @Test
+    public void applications_unlistedFundingChoiceStringShouldNotResultInServiceCall() throws Exception {
+        String fundingDecisionString = "abc";
+        List<Long> applicationIds = new ArrayList<>();
+        applicationIds.add(8L);
+        applicationIds.add(9L);
+        applicationIds.add(10L);
+
+        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(FUNDERS_PANEL).build();
+        when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
+        when(applicationSummarySortFieldService.sortFieldForSubmittedApplications(null)).thenReturn("sortfield");
+        when(applicationFundingDecisionService.saveApplicationFundingDecisionData(COMPETITION_ID, FundingDecision.ON_HOLD, applicationIds)).thenReturn(ServiceResult.serviceSuccess());
+        when(applicationFundingDecisionService.getFundingDecisionForString(fundingDecisionString)).thenReturn(Optional.empty());
+
+
+        ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource();
+        when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20, null)).thenReturn(summary);
+
+        mockMvc.perform(post("/competition/{competitionId}/funding", COMPETITION_ID)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("applicationIds", "8")
+                .param("applicationIds", "9")
+                .param("applicationIds", "10")
+                .param("fundingDecision",fundingDecisionString))
+                .andExpect(status().isOk())
+                .andExpect(view().name("comp-mgt-funders-panel"));
+
+        verify(applicationFundingDecisionService, times(0)).saveApplicationFundingDecisionData(any(), any(), any());
     }
 
 
