@@ -197,6 +197,8 @@ public class FinanceCheckController {
         String formattedCompId = formatter.format(application.getCompetition());
 
         OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
+
+        //TODO - Bronnyl - Change the variable name isResearch as its misleading. Update the view model, template and update the failing test cases.
         boolean isResearch = isUsingJesFinances(organisationResource.getOrganisationTypeName());
         Optional<ProjectUserResource> financeContact = getFinanceContact(projectId, organisationId);
 

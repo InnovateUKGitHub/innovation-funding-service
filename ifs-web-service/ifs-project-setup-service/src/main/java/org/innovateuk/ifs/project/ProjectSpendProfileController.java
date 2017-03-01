@@ -270,6 +270,7 @@ public class ProjectSpendProfileController {
 
         OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
 
+        //TODO - Bronnyl - Change the variable name isResearch as its misleading. Update the view model, template and update the failing test cases.
         boolean isResearch = isUsingJesFinances(organisationResource.getOrganisationTypeName());
         Map<Long, BigDecimal> categoryToActualTotal = spendProfileTableCalculator.calculateRowTotal(spendProfileTableResource.getMonthlyCostsPerCategoryMap());
         List<BigDecimal> totalForEachMonth = spendProfileTableCalculator.calculateMonthlyTotals(spendProfileTableResource.getMonthlyCostsPerCategoryMap(), spendProfileTableResource.getMonths().size());
