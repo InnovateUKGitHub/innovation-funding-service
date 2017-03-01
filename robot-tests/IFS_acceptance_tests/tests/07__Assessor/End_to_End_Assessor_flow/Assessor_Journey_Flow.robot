@@ -94,7 +94,7 @@ User reads the email and clicks the link to accept the assessment
 
 open email locally assessor
     [Arguments]    ${recipient}    ${subject}    ${pattern}
-    Open Mailbox    server=ifs-local-dev    port=9876    user=smtp    password=smtp    is_secure=False
+    Open Mailbox    server=${local_imap}    port=${local_imap_port}   user=smtp    password=smtp     is_secure=False
     ${email_to_test}=    wait for email    sender=${sender}    recipient=${recipient}    subject=${subject}    timeout=90
     log    ${subject}
     click the link assessor    ${email_to_test}    ${pattern}
