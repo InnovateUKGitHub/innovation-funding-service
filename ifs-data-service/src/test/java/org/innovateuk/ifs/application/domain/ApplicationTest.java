@@ -1,21 +1,21 @@
 package org.innovateuk.ifs.application.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
-import static org.junit.Assert.assertEquals;
+import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static org.junit.Assert.*;
 
 public class ApplicationTest {
     private Application application;
@@ -56,8 +56,9 @@ public class ApplicationTest {
     public void addFormInputResponse() {
     	FormInput fi = newFormInput().build();
     	FormInputResponse fir = newFormInputResponse().withFormInputs(fi).build();
+        ProcessRole pr = newProcessRole().build();
     	
-    	application.addFormInputResponse(fir);
+    	application.addFormInputResponse(fir, pr);
     	
     	assertEquals(1, application.getFormInputResponses().size());
     	assertEquals(fir, application.getFormInputResponses().get(0));
@@ -69,9 +70,11 @@ public class ApplicationTest {
     	FormInputResponse fir1 = newFormInputResponse().withFormInputs(fi1).build();
     	FormInput fi2 = newFormInput().build();
     	FormInputResponse fir2 = newFormInputResponse().withFormInputs(fi2).build();
-    	
-    	application.addFormInputResponse(fir1);
-    	application.addFormInputResponse(fir2);
+        ProcessRole pr = newProcessRole().build();
+
+
+        application.addFormInputResponse(fir1, pr);
+    	application.addFormInputResponse(fir2, pr);
     	
     	assertEquals(2, application.getFormInputResponses().size());
     	assertEquals(fir1, application.getFormInputResponses().get(0));
@@ -83,9 +86,10 @@ public class ApplicationTest {
     	FormInput fi = newFormInput().build();
     	FormInputResponse fir1 = newFormInputResponse().withFormInputs(fi).withValue("1").build();
     	FormInputResponse fir2 = newFormInputResponse().withFormInputs(fi).withValue("2").build();
+        ProcessRole pr = newProcessRole().build();
     	
-    	application.addFormInputResponse(fir1);
-    	application.addFormInputResponse(fir2);
+    	application.addFormInputResponse(fir1, pr);
+    	application.addFormInputResponse(fir2, pr);
     	
     	assertEquals(1, application.getFormInputResponses().size());
     	assertEquals(fir1, application.getFormInputResponses().get(0));
