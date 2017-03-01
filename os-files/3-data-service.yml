@@ -87,11 +87,12 @@ items:
             limits:
               memory: 1500M
           volumeMounts:
-          - mountPath: /tmp/ifs-local
+          - mountPath: /tmp/uploads
             name: dir-1
         volumes:
-        - emptyDir: {}
-          name: dir-1
+          - name: dir-1
+            persistentVolumeClaim:
+              claimName: file-upload-claim
     test: false
     triggers:
     - type: ConfigChange
