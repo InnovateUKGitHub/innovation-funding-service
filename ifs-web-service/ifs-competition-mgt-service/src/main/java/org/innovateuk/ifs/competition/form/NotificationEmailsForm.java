@@ -2,7 +2,6 @@ package org.innovateuk.ifs.competition.form;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public class NotificationEmailsForm {
@@ -13,8 +12,8 @@ public class NotificationEmailsForm {
     @NotEmpty(message="{validation.field.must.not.be.blank}")
     private String message;
 
-    @NotNull
-    private List<Long> ids;
+    @NotEmpty(message="{validation.manage.funding.applications.no.application.selected}")
+    private List<Long> applicationIds;
 
     public String getSubject() {
         return subject;
@@ -32,11 +31,11 @@ public class NotificationEmailsForm {
         this.message = message;
     }
 
-    public List<Long> getIds() {
-        return ids;
+    public List<Long> getApplicationIds() {
+        return applicationIds;
     }
 
-    public void setIds(List<Long> ids) {
-        this.ids = ids;
+    public void setApplicationIds(List<Long> applicationIds) {
+        this.applicationIds = applicationIds;
     }
 }

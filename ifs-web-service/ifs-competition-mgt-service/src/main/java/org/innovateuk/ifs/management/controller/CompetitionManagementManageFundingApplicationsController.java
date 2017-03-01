@@ -19,13 +19,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static java.net.URLEncoder.encode;
 import static java.util.stream.Collectors.toList;
 
 
@@ -36,7 +34,7 @@ public class CompetitionManagementManageFundingApplicationsController {
 
 
     private static final String MANAGE_FUNDING_APPLICATIONS_VIEW = "comp-mgt-manage-funding-applications";
-    private static final String MANAGE_FUNDING_SEND_VIEW = "comp-mgt-send-notifications";
+    private static final String FUNDING_DECISION_NOTIFICATION_VIEW = "comp-mgt-send-notifications";
 
 
     @Autowired
@@ -56,31 +54,32 @@ public class CompetitionManagementManageFundingApplicationsController {
                                @PathVariable("competitionId") Long competitionId,
                                @RequestParam("application_ids") List<Long> applicationIds) {
         NotificationEmailsForm form = new NotificationEmailsForm();
-        form.setIds(applicationIds);
+        form.setApplicationIds(applicationIds);
 
-        model.addAttribute("model", sendNotificationsModelPopulator.populate(competitionId, applicationIds));
-        model.addAttribute("form", form);
-        return MANAGE_FUNDING_SEND_VIEW;
+        return getFundingDecisionPage(model, form, competitionId);
 
     }
 
     @PostMapping(value = "/funding/send")
     public String sendNotificationsSubmit(Model model,
                                     @PathVariable("competitionId") Long competitionId,
-                                    @RequestParam("application_ids") List<Long> applicationIds,
                                     @ModelAttribute("form") @Valid NotificationEmailsForm form,
                                     BindingResult bindingResult,
                                     ValidationHandler validationHandler) {
 
-        form.setIds(Arrays.asList(27L, 28L));  //TODO: fix so these values come back in the form from the submit
+        NotificationResource notificationResource = new NotificationResource(form.getSubject(), form.getMessage(), form.getApplicationIds());
 
-        NotificationResource notificationResource = new NotificationResource(form.getSubject(), form.getMessage(), form.getIds());
-        applicationFundingService.sendFundingNotifications(notificationResource);
+        Supplier<String> failureView = () -> getFundingDecisionPage(model, form, competitionId);
+        Supplier<String> successView = () -> successfulEmailRedirect(competitionId);
 
-        // failure view... (temporary - for testing purposes)
-        model.addAttribute("model", sendNotificationsModelPopulator.populate(competitionId, form.getIds()));
+        return validationHandler.performActionOrBindErrorsToField("", failureView, successView,
+                () -> applicationFundingService.sendFundingNotifications(notificationResource));
+    }
+
+    private String getFundingDecisionPage(Model model, NotificationEmailsForm form, Long competitionId) {
+        model.addAttribute("model", sendNotificationsModelPopulator.populate(competitionId, form.getApplicationIds()));
         model.addAttribute("form", form);
-        return MANAGE_FUNDING_SEND_VIEW;
+        return FUNDING_DECISION_NOTIFICATION_VIEW;
     }
 
     @GetMapping(value = "/manage-funding-applications")
@@ -124,8 +123,12 @@ public class CompetitionManagementManageFundingApplicationsController {
         );
     }
 
-    private String rootPath(long competitionId){
+    private String getManageFundingApplicationsPage(long competitionId){
         return "/competition/" + competitionId + "/manage-funding-applications";
+    }
+
+    private String successfulEmailRedirect(long competitionId) {
+        return "redirect:" + getManageFundingApplicationsPage(competitionId);
     }
 
     private String composeEmailRedirect(long competitionId, List<Long> ids) {

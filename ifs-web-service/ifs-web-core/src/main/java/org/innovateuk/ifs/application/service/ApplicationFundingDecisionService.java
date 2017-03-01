@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.NotificationResource;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 
 import java.util.List;
 import java.util.Map;
@@ -23,7 +24,7 @@ public interface ApplicationFundingDecisionService {
 	 * using the subject and notification text contained in the notification resource.
 	 * @param notificationResource a notification subject, message, and the ids of the applications to be notified.
 	 */
-	void sendFundingNotifications(NotificationResource notificationResource);
+	ServiceResult<Void> sendFundingNotifications(NotificationResource notificationResource);
 
 	/**
 	 * verifies all submitted applications represented.

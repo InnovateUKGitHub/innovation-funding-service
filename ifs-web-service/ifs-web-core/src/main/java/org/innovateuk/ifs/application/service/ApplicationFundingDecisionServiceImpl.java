@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.NotificationResource;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +24,8 @@ public class ApplicationFundingDecisionServiceImpl implements ApplicationFunding
 	}
 
 	@Override
-	public void sendFundingNotifications(NotificationResource notificationResource) {
-		applicationFundingDecisionRestService.sendApplicationFundingDecisions(notificationResource).getSuccessObjectOrThrowException();
+	public ServiceResult<Void> sendFundingNotifications(NotificationResource notificationResource) {
+		return applicationFundingDecisionRestService.sendApplicationFundingDecisions(notificationResource).toServiceResult();
 	}
 	
 	@Override
