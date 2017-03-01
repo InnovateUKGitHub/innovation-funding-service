@@ -201,6 +201,139 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         verifyNoMoreInteractions(spendProfileRepositoryMock);
     }
 
+    //TODO - Delete this test case
+    @Test
+    public void testGenerateSpendProfileForPartnerOrganisationBeforeDeletingCommentedCode() {
+
+        Project project = newProject().
+                withId(projectId).
+                withDuration(3L).
+                withPartnerOrganisations(newPartnerOrganisation().build(2)).
+                build();
+
+        //UserResource loggedInUser = newUserResource().build();
+        //setLoggedInUser(loggedInUser);
+
+        Organisation organisation1 = newOrganisation().build();
+        //Organisation organisation2 = newOrganisation().build();
+
+        // First cost category type and everything that goes with it.
+        CostCategory type1Cat1 = newCostCategory().withName(LABOUR.getName()).build();
+        CostCategory type1Cat2 = newCostCategory().withName(MATERIALS.getName()).build();
+
+        CostCategoryType costCategoryType1 =
+                newCostCategoryType()
+                        .withName("Type 1")
+                        .withCostCategoryGroup(
+                                newCostCategoryGroup()
+                                        .withDescription("Group 1")
+                                        .withCostCategories(asList(type1Cat1, type1Cat2))
+                                        .build())
+                        .build();
+
+        //TODO - can possibly get rid of type 2
+        // Second cost category type and everything that goes with it.
+        //CostCategory type2Cat1 = newCostCategory().withName(ACADEMIC.getName()).build();
+
+/*        CostCategoryType costCategoryType2 = newCostCategoryType()
+                .withName("Type 2")
+                .withCostCategoryGroup(
+                        newCostCategoryGroup()
+                                .withDescription("Group 2")
+                                .withCostCategories(asList(type2Cat1))
+                                .build())
+                .build();*/
+
+        // set basic repository lookup expectations
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(organisationRepositoryMock.findOne(organisation1.getId())).thenReturn(organisation1);
+        //when(organisationRepositoryMock.findOne(organisation2.getId())).thenReturn(organisation2);
+        when(costCategoryRepositoryMock.findOne(type1Cat1.getId())).thenReturn(type1Cat1);
+        when(costCategoryRepositoryMock.findOne(type1Cat2.getId())).thenReturn(type1Cat2);
+        //when(costCategoryRepositoryMock.findOne(type2Cat1.getId())).thenReturn(type2Cat1);
+        when(costCategoryTypeRepositoryMock.findOne(costCategoryType1.getId())).thenReturn(costCategoryType1);
+        // when(costCategoryTypeRepositoryMock.findOne(costCategoryType2.getId())).thenReturn(costCategoryType2);
+        /*when(financeCheckProcessRepository.findOneByTargetId(project.getPartnerOrganisations().get(0).getId())).thenReturn(
+                new FinanceCheckProcess((User) null, null, new ActivityState(null, State.ACCEPTED)));
+        when(financeCheckProcessRepository.findOneByTargetId(project.getPartnerOrganisations().get(1).getId())).thenReturn(
+                new FinanceCheckProcess((User) null, null, new ActivityState(null, State.ACCEPTED)));*/
+
+        // setup expectations for getting project users to infer the partner organisations
+
+        //TODO - Guess can get rid of this too
+        /*List<ProjectUserResource> projectUsers =
+                newProjectUserResource().withOrganisation(organisation1.getId()).build(1);
+        when(projectServiceMock.getProjectUsers(projectId)).thenReturn(serviceSuccess(projectUsers));*/
+
+        // setup expectations for finding finance figures per Cost Category from which to generate the spend profile
+        when(spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(project.getId(), organisation1.getId())).thenReturn(serviceSuccess(
+                new SpendProfileCostCategorySummaries(
+                        asList(
+                                new SpendProfileCostCategorySummary(type1Cat1, new BigDecimal("100.00"), project.getDurationInMonths()),
+                                new SpendProfileCostCategorySummary(type1Cat2, new BigDecimal("200.00"), project.getDurationInMonths())),
+                        costCategoryType1)));
+
+/*        when(spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(project.getId(), organisation2.getId())).thenReturn(serviceSuccess(
+                new SpendProfileCostCategorySummaries(
+                        singletonList(new SpendProfileCostCategorySummary(type2Cat1, new BigDecimal("300.66"), project.getDurationInMonths())),
+                        costCategoryType2)));*/
+
+        //TODO - Can get rid of this too
+/*        PartnerOrganisation partnerOrganisation1 = newPartnerOrganisation().build();
+        PartnerOrganisation partnerOrganisation2 = newPartnerOrganisation().build();
+
+        when(partnerOrganisationRepositoryMock.findByProjectId(project.getId())).thenReturn(
+                asList(partnerOrganisation1, partnerOrganisation2));
+
+        ViabilityProcess viabilityProcess1 = new ViabilityProcess((User)null, partnerOrganisation1, new ActivityState(ActivityType.PROJECT_SETUP_VIABILITY, ViabilityState.APPROVED.getBackingState()));
+        ViabilityProcess viabilityProcess2 = new ViabilityProcess((User)null, partnerOrganisation2, new ActivityState(ActivityType.PROJECT_SETUP_VIABILITY, ViabilityState.APPROVED.getBackingState()));
+
+        when(viabilityWorkflowHandlerMock.getProcess(partnerOrganisation1)).thenReturn(viabilityProcess1);
+        when(viabilityWorkflowHandlerMock.getProcess(partnerOrganisation2)).thenReturn(viabilityProcess2);*/
+
+        List<Cost> expectedOrganisation1EligibleCosts = asList(
+                new Cost("100").withCategory(type1Cat1),
+                new Cost("200").withCategory(type1Cat2));
+
+        List<Cost> expectedOrganisation1SpendProfileFigures = asList(
+                new Cost("34").withCategory(type1Cat1).withTimePeriod(0, MONTH, 1, MONTH),
+                new Cost("33").withCategory(type1Cat1).withTimePeriod(1, MONTH, 1, MONTH),
+                new Cost("33").withCategory(type1Cat1).withTimePeriod(2, MONTH, 1, MONTH),
+                new Cost("66").withCategory(type1Cat2).withTimePeriod(0, MONTH, 1, MONTH),
+                new Cost("67").withCategory(type1Cat2).withTimePeriod(1, MONTH, 1, MONTH),
+                new Cost("67").withCategory(type1Cat2).withTimePeriod(2, MONTH, 1, MONTH));
+
+        Long userId = 7L;
+        User generatedBy = newUser().build();
+        when(userRepositoryMock.findOne(userId)).thenReturn(generatedBy);
+
+        Calendar generatedDate = Calendar.getInstance();
+
+        SpendProfile expectedOrganisation1Profile = new SpendProfile(organisation1, project, costCategoryType1,
+                expectedOrganisation1EligibleCosts, expectedOrganisation1SpendProfileFigures, generatedBy, generatedDate, false, ApprovalType.UNSET);
+
+        /*List<Cost> expectedOrganisation2EligibleCosts = singletonList(
+                new Cost("301").withCategory(type2Cat1));*/
+
+        /*List<Cost> expectedOrganisation2SpendProfileFigures = asList(
+                new Cost("101").withCategory(type2Cat1).withTimePeriod(0, MONTH, 1, MONTH),
+                new Cost("100").withCategory(type2Cat1).withTimePeriod(1, MONTH, 1, MONTH),
+                new Cost("100").withCategory(type2Cat1).withTimePeriod(2, MONTH, 1, MONTH));*/
+
+        /*SpendProfile expectedOrganisation2Profile = new SpendProfile(organisation2, project, costCategoryType2,
+                expectedOrganisation2EligibleCosts, expectedOrganisation2SpendProfileFigures, generatedBy, generatedDate, false, ApprovalType.UNSET);*/
+
+        when(spendProfileRepositoryMock.save(spendProfileExpectations(expectedOrganisation1Profile))).thenReturn(null);
+        //when(spendProfileRepositoryMock.save(spendProfileExpectations(expectedOrganisation2Profile))).thenReturn(null);
+
+        ServiceResult<Void> generateResult = service.generateSpendProfileForPartnerOrganisation(projectId, organisation1.getId(), userId);
+        assertTrue(generateResult.isSuccess());
+
+        verify(spendProfileRepositoryMock).save(spendProfileExpectations(expectedOrganisation1Profile));
+        //verify(spendProfileRepositoryMock).save(spendProfileExpectations(expectedOrganisation2Profile));
+        verifyNoMoreInteractions(spendProfileRepositoryMock);
+    }
+
     @Test
     public void testGenerateSpendProfileButNotAllFinanceChecksCompleted() {
 
@@ -305,6 +438,72 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         assertTrue(generateResult.isSuccess());
 
         verify(spendProfileRepositoryMock, times(2)).save(isA(SpendProfile.class));
+        verifyNoMoreInteractions(spendProfileRepositoryMock);
+    }
+
+    @Test
+    public void testGenerateSpendProfileForPartnerOrganisation() {
+
+        Project project = newProject().
+                withId(projectId).
+                withDuration(3L).
+                withPartnerOrganisations(newPartnerOrganisation().build(2)).
+                build();
+
+        Organisation organisation1 = newOrganisation().build();
+
+        CostCategory costCategoryLabour = newCostCategory().withName(LABOUR.getName()).build();
+        CostCategory costCategoryMaterials = newCostCategory().withName(MATERIALS.getName()).build();
+
+        CostCategoryType costCategoryType1 =
+                newCostCategoryType()
+                        .withName("Type 1")
+                        .withCostCategoryGroup(
+                                newCostCategoryGroup()
+                                        .withDescription("Group 1")
+                                        .withCostCategories(asList(costCategoryLabour, costCategoryMaterials))
+                                        .build())
+                        .build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(organisationRepositoryMock.findOne(organisation1.getId())).thenReturn(organisation1);
+        when(costCategoryRepositoryMock.findOne(costCategoryLabour.getId())).thenReturn(costCategoryLabour);
+        when(costCategoryRepositoryMock.findOne(costCategoryMaterials.getId())).thenReturn(costCategoryMaterials);
+        when(costCategoryTypeRepositoryMock.findOne(costCategoryType1.getId())).thenReturn(costCategoryType1);
+        when(spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(project.getId(), organisation1.getId())).thenReturn(serviceSuccess(
+                new SpendProfileCostCategorySummaries(
+                        asList(
+                                new SpendProfileCostCategorySummary(costCategoryLabour, new BigDecimal("100.00"), project.getDurationInMonths()),
+                                new SpendProfileCostCategorySummary(costCategoryMaterials, new BigDecimal("200.00"), project.getDurationInMonths())),
+                        costCategoryType1)));
+
+        List<Cost> expectedOrganisation1EligibleCosts = asList(
+                new Cost("100").withCategory(costCategoryLabour),
+                new Cost("200").withCategory(costCategoryMaterials));
+
+        List<Cost> expectedOrganisation1SpendProfileFigures = asList(
+                new Cost("34").withCategory(costCategoryLabour).withTimePeriod(0, MONTH, 1, MONTH),
+                new Cost("33").withCategory(costCategoryLabour).withTimePeriod(1, MONTH, 1, MONTH),
+                new Cost("33").withCategory(costCategoryLabour).withTimePeriod(2, MONTH, 1, MONTH),
+                new Cost("66").withCategory(costCategoryMaterials).withTimePeriod(0, MONTH, 1, MONTH),
+                new Cost("67").withCategory(costCategoryMaterials).withTimePeriod(1, MONTH, 1, MONTH),
+                new Cost("67").withCategory(costCategoryMaterials).withTimePeriod(2, MONTH, 1, MONTH));
+
+        Long userId = 7L;
+        User generatedBy = newUser().build();
+        when(userRepositoryMock.findOne(userId)).thenReturn(generatedBy);
+
+        Calendar generatedDate = Calendar.getInstance();
+
+        SpendProfile expectedOrganisation1Profile = new SpendProfile(organisation1, project, costCategoryType1,
+                expectedOrganisation1EligibleCosts, expectedOrganisation1SpendProfileFigures, generatedBy, generatedDate, false, ApprovalType.UNSET);
+
+        when(spendProfileRepositoryMock.save(spendProfileExpectations(expectedOrganisation1Profile))).thenReturn(null);
+
+        ServiceResult<Void> generateResult = service.generateSpendProfileForPartnerOrganisation(projectId, organisation1.getId(), userId);
+        assertTrue(generateResult.isSuccess());
+
+        verify(spendProfileRepositoryMock).save(spendProfileExpectations(expectedOrganisation1Profile));
         verifyNoMoreInteractions(spendProfileRepositoryMock);
     }
 
