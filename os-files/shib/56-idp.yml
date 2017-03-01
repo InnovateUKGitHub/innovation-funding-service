@@ -10,7 +10,11 @@ items:
     selector:
       deploymentconfig: idp
     strategy:
-      resources: {}
+      type: Rolling
+      rollingParams:
+        timeoutSeconds: 600
+        maxSurge: 2
+        maxUnavailable: 0
     template:
       metadata:
         labels:
