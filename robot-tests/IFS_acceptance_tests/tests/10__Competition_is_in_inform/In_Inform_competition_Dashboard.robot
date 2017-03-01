@@ -9,7 +9,7 @@ Resource          ../../resources/defaultResources.robot
 Competition Dashboard
     [Documentation]    INFUND-7365
     When The user clicks the button/link    link=${INFORM_COMPETITION_NAME}
-    Then The user should see the text in the page    00000007: Integrated delivery programme - low carbon vehicles
+    Then The user should see the text in the page    7: Integrated delivery programme - low carbon vehicles
     And The user should see the text in the page    Inform
     And The user should see the text in the page    Programme
     And The user should see the text in the page    Materials and manufacturing

@@ -6,7 +6,6 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.resource.QuestionType;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -224,7 +223,7 @@ public class QuestionServiceImplTest extends BaseServiceUnitTest<QuestionService
         QuestionResource question = new QuestionResource();
         when(questionRestService.getQuestionByCompetitionIdAndFormInputType(123L, FormInputType.TEXTAREA)).thenReturn(restSuccess(question));
 
-        RestResult<QuestionResource> result =  service.getQuestionByCompetitionIdAndFormInputType(123L, FormInputType.TEXTAREA);
+        ServiceResult<QuestionResource> result = service.getQuestionByCompetitionIdAndFormInputType(123L, FormInputType.TEXTAREA);
 
         assertTrue(result.isSuccess());
         assertEquals(question, result.getSuccessObject());

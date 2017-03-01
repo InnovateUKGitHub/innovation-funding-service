@@ -1,13 +1,17 @@
 package org.innovateuk.ifs.profile;
 
+import org.hamcrest.Matchers;
 import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.service.EthnicityRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
-import org.innovateuk.ifs.user.resource.*;
-import org.hamcrest.Matchers;
+import org.innovateuk.ifs.user.resource.Disability;
+import org.innovateuk.ifs.user.resource.Gender;
+import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -17,19 +21,18 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import javax.servlet.http.HttpServletRequest;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.BaseControllerMockMVCTest.setupMockMvc;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.address.builder.AddressTypeResourceBuilder.newAddressTypeResource;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.OPERATING;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGISTERED;
-import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
 import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.user.resource.Title.Mrs;
 import static org.innovateuk.ifs.user.resource.Title.Ms;
 import static org.mockito.Matchers.isA;
@@ -186,7 +189,7 @@ public class ProfileControllerTest extends BaseUnitTest {
 
         when(userService.updateDetails(user.getId(), user.getEmail(), "newfirstname", "newlastname",
                 "Mrs", "0987654321", "MALE", 2L,"NO"))
-                .thenReturn(restSuccess(newUserResource().build()));
+                .thenReturn(ServiceResult.serviceSuccess(newUserResource().build()));
         mockMvc.perform(post("/profile/edit")
                 .param("title", Mrs.toString())
                 .param("firstName", "newfirstname")
@@ -239,7 +242,7 @@ public class ProfileControllerTest extends BaseUnitTest {
 
         when(userService.updateDetails(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getTitle().name(),
                 user.getPhoneNumber(), user.getGender().name(), user.getEthnicity(), user.getDisability().name()))
-                .thenReturn(restSuccess(newUserResource().build()));
+                .thenReturn(ServiceResult.serviceSuccess(newUserResource().build()));
 
         mockMvc.perform(post("/profile/edit")
                 .param("title", user.getTitle().name())
@@ -275,7 +278,7 @@ public class ProfileControllerTest extends BaseUnitTest {
 
         Error error = new Error("objectName", singletonList("fieldName"), BAD_REQUEST);
         when(userService.updateDetails(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getTitle().name(),
-                user.getPhoneNumber(), user.getGender().name(), user.getEthnicity(), user.getDisability().name())).thenReturn(restFailure(error));
+                user.getPhoneNumber(), user.getGender().name(), user.getEthnicity(), user.getDisability().name())).thenReturn(ServiceResult.serviceFailure(error));
 
         mockMvc.perform(post("/profile/edit")
                 .param("title", user.getTitle().name())

@@ -138,7 +138,7 @@ public class FinanceChecksEligibilityController {
         boolean eligibilityApproved = eligibility.getEligibility() == Eligibility.APPROVED;
 
         model.addAttribute("summaryModel", new FinanceChecksEligibilityViewModel(eligibilityOverview, organisation.getName(), project.getName(),
-                application.getFormattedId(), isLeadPartnerOrganisation, project.getId(), organisation.getId(),
+                application.getId(), isLeadPartnerOrganisation, project.getId(), organisation.getId(),
                 eligibilityApproved, eligibility.getEligibilityRagStatus(), eligibility.getEligibilityApprovalUserFirstName(),
                 eligibility.getEligibilityApprovalUserLastName(), eligibility.getEligibilityApprovalDate(), false));
 

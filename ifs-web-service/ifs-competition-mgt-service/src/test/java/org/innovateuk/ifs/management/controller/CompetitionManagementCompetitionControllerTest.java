@@ -2,7 +2,9 @@ package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.management.model.CompetitionInFlightModelPopulator;
 import org.innovateuk.ifs.management.model.CompetitionInFlightStatsModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.CompetitionInFlightStatsViewModel;
@@ -184,6 +186,8 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
     @Test
     public void closeAssessment() throws Exception {
         Long competitionId = 1L;
+        when(competitionService.closeAssessment(competitionId)).thenReturn(ServiceResult.serviceSuccess());
+
         mockMvc.perform(post("/competition/{competitionId}/close-assessment", competitionId))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/competition/" + competitionId));
@@ -193,10 +197,21 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
     @Test
     public void notifyAssessors() throws Exception {
         Long competitionId = 1L;
+        when(competitionService.notifyAssessors(competitionId)).thenReturn(ServiceResult.serviceSuccess());
+
         mockMvc.perform(post("/competition/{competitionId}/notify-assessors", competitionId))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/competition/" + competitionId));
         verify(competitionService, only()).notifyAssessors(competitionId);
+    }
+
+    @Test
+    public void releaseFeedback() throws Exception {
+        Long competitionId = 1L;
+        mockMvc.perform(post("/competition/{competitionId}/release-feedback", competitionId))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/dashboard/project-setup"));
+        verify(competitionService, only()).releaseFeedback(competitionId);
     }
 
     private void assertMilestones(List<MilestoneResource> expectedMilestones, List<MilestonesRowViewModel> actualMilestones) {

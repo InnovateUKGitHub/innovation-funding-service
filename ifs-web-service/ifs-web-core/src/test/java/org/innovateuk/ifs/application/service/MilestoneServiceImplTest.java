@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
@@ -67,7 +67,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 
         when(milestoneRestService.create(MilestoneType.OPEN_DATE, 1L)).thenReturn(restSuccess(getNewOpenDateMilestone(milestoneDate)));
 
-        MilestoneResource foundMilestone = service.create(MilestoneType.OPEN_DATE, 1L);
+        MilestoneResource foundMilestone = service.create(MilestoneType.OPEN_DATE, 1L).getSuccessObjectOrThrowException();
 
         assertEquals(Long.valueOf(1L), foundMilestone.getId());
         assertEquals(MilestoneType.OPEN_DATE, foundMilestone.getType());
@@ -85,8 +85,8 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 
         when(milestoneRestService.updateMilestones(milestonesList)).thenReturn(restSuccess());
 
-        List<Error> errorList = service.updateMilestones(milestonesList);
-        assertTrue(errorList.isEmpty());
+        ServiceResult<Void> result = service.updateMilestones(milestonesList);
+        assertTrue(result.isSuccess());
     }
 
     @Test
@@ -96,8 +96,8 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 
         when(milestoneRestService.updateMilestone(milestone)).thenReturn(restSuccess());
 
-        List<Error> errors = service.updateMilestone(milestone);
-        assertTrue(errors.isEmpty());
+        ServiceResult<Void> result = service.updateMilestone(milestone);
+        assertTrue(result.isSuccess());
     }
 
     private MilestoneResource getNewOpenDateMilestone(LocalDateTime milestoneDate) {

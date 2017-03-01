@@ -19,7 +19,7 @@ Documentation     INFUND-6661 As a Competitions team member I want to be able to
 ...
 ...               INFUND-6694 As a Competitions team member I want to be able to update Milestones throughout the life of the competition
 Suite Setup       Custom suite setup
-Suite Teardown    the user moves the competition back again
+Suite Teardown    Custom suite teardown
 Force Tags        CompAdmin    MySQL
 Resource          ../../resources/defaultResources.robot
 Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
@@ -369,3 +369,7 @@ the user resets the milestone data
     The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].day    20
     The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].month    7
     The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].year    2068
+
+Custom suite teardown
+    the user moves the competition back again
+    the user closes the browser

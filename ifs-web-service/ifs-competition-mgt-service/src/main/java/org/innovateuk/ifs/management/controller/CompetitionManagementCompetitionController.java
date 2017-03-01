@@ -11,10 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import java.util.EnumSet;
-
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
-
 /**
  * This controller will handle all Competition Management requests that are related to a Competition.
  */
@@ -42,13 +38,19 @@ public class CompetitionManagementCompetitionController {
 
     @RequestMapping(value = "/{competitionId}/close-assessment", method = RequestMethod.POST)
     public String closeAssessment(@PathVariable("competitionId") Long competitionId) {
-        competitionService.closeAssessment(competitionId);
+        competitionService.closeAssessment(competitionId).getSuccessObjectOrThrowException();
         return "redirect:/competition/" + competitionId;
     }
 
     @RequestMapping(value = "/{competitionId}/notify-assessors", method = RequestMethod.POST)
     public String notifyAssessors(@PathVariable("competitionId") Long competitionId) {
-        competitionService.notifyAssessors(competitionId);
+        competitionService.notifyAssessors(competitionId).getSuccessObjectOrThrowException();
         return "redirect:/competition/" + competitionId;
+    }
+
+    @RequestMapping(value = "/{competitionId}/release-feedback", method = RequestMethod.POST)
+    public String releaseFeedback(@PathVariable("competitionId") Long competitionId) {
+        competitionService.releaseFeedback(competitionId);
+        return "redirect:/dashboard/project-setup";
     }
 }
