@@ -81,8 +81,8 @@ public class CompetitionController {
     public ResponseEntity<ByteArrayResource> getFileDetails(Model model,
                                                             @PathVariable("competitionId") Long competitionId,
                                                             @PathVariable("contentGroupId") Long contentGroupId) {
-        final ByteArrayResource resource = competitionService.downloadPublicContentAttachment(contentGroupId).getSuccessObjectOrThrowException();
-        FileEntryResource fileDetails = competitionService.getPublicContentFileDetails(contentGroupId).getSuccessObjectOrThrowException();
+        final ByteArrayResource resource = competitionService.downloadPublicContentAttachment(contentGroupId);
+        FileEntryResource fileDetails = competitionService.getPublicContentFileDetails(contentGroupId);
         return getFileResponseEntity(resource, fileDetails);
     }
 

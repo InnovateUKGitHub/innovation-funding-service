@@ -6,6 +6,8 @@ Documentation     INFUND-6914 Create 'Public content' menu page for "Front Door"
 ...               INFUND-7602 Add / Remove sections for Competition setup > Public content
 ...
 ...               INFUND-7486 Create Competition > Summary tab for external "Front Door" view of competition summary
+...
+...               INFUND-7489 Create 'Competition' > 'Dates' tab for external "Front Door" view of competition dates
 Suite Setup       Custom suite setup
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin
@@ -196,15 +198,6 @@ The user is able to edit and publish again
     When the user clicks the button/link        link=Return to setup overview
     Then the user should see the element        JQuery=p:contains("${today}")
 
-Make Competition searchable in front door page
-    [Documentation]  INFUND-6923
-    [Tags]  HappyPath
-    # Is added in HP cause is required for the next step
-    Given the user navigates to the page  ${ca_upcomingcomp}
-    And the user clicks the button/link   link=${public_content_competition_name}
-    Then the user fills in the CS Milestones  ${day}  ${month}  ${nextyear}
-    [Teardown]  the user closes the browser
-
 Guest user can filter competitions by Keywords
     [Documentation]  INFUND-6923
     [Tags]  HappyPath
@@ -229,6 +222,16 @@ The guest user is able to download the file in the Summary
     [Tags]  Pending
     # TODO Pending due to INFUND-8536
 
+The guest user can see updated date information
+   [Documentation]    INFUND-7489
+   [Tags]
+   [Setup]    the month is converted to text
+   Given the user clicks the button/link    link=Dates
+   And the user should see the element    jQuery=dt:contains("1 February ${nextyear}") + dd:contains("Competition opens")
+   And the user should see the element    jQuery=dt:contains(${newdate}) + dd:contains("Competition closes")
+   And the user should see the element    jQuery=dt:contains(${newdate}) + dd:contains("Applicants notified")
+   And the user should see the element    jQuery=dt:contains("12 December ${nextyear}") + dd:contains("Content 1")
+   And the user should see the element    jQuery=dt:contains("20 December ${nextyear}") + dd:contains("Content 2")
 
 *** Keywords ***
 Custom suite setup
@@ -252,6 +255,7 @@ User creates a new competition
     Given the user navigates to the page    ${CA_UpcomingComp}
     When the user clicks the button/link    jQuery=.button:contains("Create competition")
     When the user fills in the CS Initial details      ${competition_name}  01  02  ${nextyear}
+    And the user fills in the CS Milestones     01  02  ${nextyear}
 
 the user enters valid data in the summary details
     The user enters text to a text field    css=.editor  This is a Summary description
@@ -304,6 +308,11 @@ the user can add and remove multiple event groups
     And the user clicks the button/link         jQuery=button:contains("Save and return")
     Then the user should see a summary error    Please enter a valid date.
     And the user should see a summary error     Please enter valid content.
+    And the user enters text to a text field    id=dates-0-day      60
+    And the user enters text to a text field    id=dates-0-month    -6
+    And the user clicks the button/link         jQuery=button:contains("Save and return")
+    Then the user should see a summary error    must be between 1 and 31
+    And the user should see a summary error     must be between 1 and 12
     When the user enters text to a text field   id=dates-0-day      12
     And the user enters text to a text field    id=dates-0-month    12
     And the user enters text to a text field    id=dates-0-year     ${nextyear}
@@ -344,3 +353,8 @@ the user visits
 the user should see all sections completed
     :FOR  ${i}  IN RANGE  1  8
     \    the user should see the element  jQuery=li:nth-child(${i}) img.complete
+
+the month is converted to text
+    ${fulldate} =  Catenate    ${nextyear}  ${month}   ${day}
+    ${newdate} =    Convert Date     ${fulldate}    result_format=%-d %B %Y    exclude_millis=true
+    set suite variable    ${newdate}
