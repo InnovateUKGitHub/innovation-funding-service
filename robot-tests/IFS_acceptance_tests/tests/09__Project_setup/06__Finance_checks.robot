@@ -585,7 +585,7 @@ Finance contact can access the external view of the finance checks page
     [Setup]    Log in as a different user    ${test_mailbox_one}+fundsuccess@gmail.com    Passw0rd
     Given the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     When the user clicks the button/link    link=Finance checks
-    Then the user should see the text in the page    Innovate UK are reviewing your finances and may contact you with any queries
+    Then the user should not see the text in the page    Innovate UK are reviewing your finances and may contact you with any queries
     And the user should not see an error in the page
 
 
