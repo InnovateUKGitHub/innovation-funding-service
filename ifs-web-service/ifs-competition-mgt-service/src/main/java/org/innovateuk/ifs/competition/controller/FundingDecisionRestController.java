@@ -1,20 +1,15 @@
 package org.innovateuk.ifs.competition.controller;
 
-import java.util.Map;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.util.MapFunctions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 /**
  * This controller handles restful calls from javascript to autosave funding decisions.
@@ -34,7 +29,7 @@ public class FundingDecisionRestController {
 		Map<Long, FundingDecision> applicationIdToFundingDecision = MapFunctions.asMap(applicationId, applicationFundingDecisionService.fundingDecisionForString(decision));
 		
 		try {
-			applicationFundingDecisionService.saveApplicationFundingDecisionData(competitionId, applicationIdToFundingDecision);
+			applicationFundingDecisionService.saveApplicationFundingDecisionData(competitionId, applicationIdToFundingDecision).getSuccessObjectOrThrowException();
 		} catch (RuntimeException e) {
 			LOG.error("exception thrown when saving application funding decision data", e);
 			return MapFunctions.asMap("success", "false");

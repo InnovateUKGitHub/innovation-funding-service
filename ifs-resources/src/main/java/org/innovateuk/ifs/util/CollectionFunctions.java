@@ -9,6 +9,7 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.*;
 import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static java.util.Arrays.asList;
@@ -17,6 +18,7 @@ import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.*;
+import static java.util.stream.IntStream.range;
 
 /**
  * Utility class to provide useful reusable Functions around Collections throughout the codebase
@@ -801,5 +803,15 @@ public final class CollectionFunctions {
 
     public static <S> boolean matchAll(Collection<S> collectionToMatch, Predicate<S> predicate){
         return collectionToMatch.stream().allMatch(predicate);
+    }
+
+    /**
+     * A method that a list of length n with t the value of every element.
+     * @param int n - times to replicate t
+     * @param <T>
+     * @return
+     */
+    public static <T> List<T> nOf(int n, T t) {
+        return range(0, n).mapToObj(x -> t).collect(Collectors.toList());
     }
 }

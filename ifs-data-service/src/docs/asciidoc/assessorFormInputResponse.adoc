@@ -32,4 +32,14 @@ include::{snippets}/assessorFormInputResponse/update-assessor-form-input-respons
 ==== Curl Example
 include::{snippets}/assessorFormInputResponse/update-assessor-form-input-response/curl-request.adoc[]
 
+=== Get Application Assessment Aggregate Scores by Application
+==== Request
+include::{snippets}/assessorFormInputResponse/get-application-aggregate-scores/http-request.adoc[]
+include::{snippets}/assessorFormInputResponse/get-application-aggregate-scores/path-parameters.adoc[]
 
+==== Response
+include::{snippets}/assessorFormInputResponse/get-application-aggregate-scores/http-response.adoc[]
+include::{snippets}/assessorFormInputResponse/get-application-aggregate-scores/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/assessorFormInputResponse/get-application-aggregate-scores/curl-request.adoc[]
