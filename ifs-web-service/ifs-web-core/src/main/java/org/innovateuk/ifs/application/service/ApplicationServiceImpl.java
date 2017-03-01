@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionsRestService;
@@ -150,8 +150,8 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public void updateStatus(Long applicationId, Long statusId) {
-        applicationRestService.updateApplicationStatus(applicationId, statusId);
+    public ServiceResult<Void> updateStatus(Long applicationId, Long statusId) {
+        return applicationRestService.updateApplicationStatus(applicationId, statusId).toServiceResult();
     }
 
     @Override
@@ -169,13 +169,13 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public void save(ApplicationResource application) {
-        applicationRestService.saveApplication(application);
+    public ServiceResult<Void> save(ApplicationResource application) {
+        return applicationRestService.saveApplication(application).toServiceResult();
     }
 
     @Override
-    public RestResult<ApplicationResource> findByProcessRoleId(Long id) {
-        return applicationRestService.findByProcessRoleId(id);
+    public ServiceResult<ApplicationResource> findByProcessRoleId(Long id) {
+        return applicationRestService.findByProcessRoleId(id).toServiceResult();
     }
 
     @Override
@@ -186,7 +186,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public void removeCollaborator(Long applicationInviteId) {
-        inviteRestService.removeApplicationInvite(applicationInviteId).getSuccessObjectOrThrowException();
+    public ServiceResult<Void> removeCollaborator(Long applicationInviteId) {
+        return inviteRestService.removeApplicationInvite(applicationInviteId).toServiceResult();
     }
 }

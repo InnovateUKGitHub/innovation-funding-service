@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.transactional;
 
 import com.google.common.collect.Lists;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
+import org.innovateuk.ifs.PageableMatcher;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.mapper.ApplicationSummaryMapper;
 import org.innovateuk.ifs.application.mapper.ApplicationSummaryPageMapper;
@@ -24,6 +25,7 @@ import java.util.List;
 
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
+import static org.innovateuk.ifs.PageableMatcher.srt;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.argThat;
@@ -50,7 +52,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 	public void findByCompetitionNoSortWillSortById() throws Exception {
 
 		Page<Application> page = mock(Page.class);
-		when(applicationRepositoryMock.findByCompetitionIdAndIdLike(eq(COMP_ID), eq("%filter%"), argThat(new PageableMatcher(6, 20, srt("id", ASC))))).thenReturn(page);
+		when(applicationRepositoryMock.findByCompetitionIdAndIdLike(eq(COMP_ID), eq("filter"), argThat(new PageableMatcher(6, 20, srt("id", ASC))))).thenReturn(page);
 
 		ApplicationSummaryPageResource resource = mock(ApplicationSummaryPageResource.class);
 		when(applicationSummaryPageMapper.mapToResource(page)).thenReturn(resource);
@@ -66,7 +68,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 	public void findByCompetitionNoFilterWillFilterByEmptyString() throws Exception {
 
 		Page<Application> page = mock(Page.class);
-		when(applicationRepositoryMock.findByCompetitionIdAndIdLike(eq(COMP_ID), eq("%"), argThat(new PageableMatcher(6, 20, srt("id", ASC))))).thenReturn(page);
+		when(applicationRepositoryMock.findByCompetitionIdAndIdLike(eq(COMP_ID), eq(""), argThat(new PageableMatcher(6, 20, srt("id", ASC))))).thenReturn(page);
 
 		ApplicationSummaryPageResource resource = mock(ApplicationSummaryPageResource.class);
 		when(applicationSummaryPageMapper.mapToResource(page)).thenReturn(resource);
@@ -82,7 +84,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 	public void findByCompetitionSortById() throws Exception {
 
 		Page<Application> page = mock(Page.class);
-		when(applicationRepositoryMock.findByCompetitionIdAndIdLike(eq(COMP_ID), eq("%filter%"), argThat(new PageableMatcher(6, 20, srt("id", ASC))))).thenReturn(page);
+		when(applicationRepositoryMock.findByCompetitionIdAndIdLike(eq(COMP_ID), eq("filter"), argThat(new PageableMatcher(6, 20, srt("id", ASC))))).thenReturn(page);
 
 		ApplicationSummaryPageResource resource = mock(ApplicationSummaryPageResource.class);
 		when(applicationSummaryPageMapper.mapToResource(page)).thenReturn(resource);
@@ -98,7 +100,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 	public void findByCompetitionSortByName() throws Exception {
 
 		Page<Application> page = mock(Page.class);
-		when(applicationRepositoryMock.findByCompetitionIdAndIdLike(eq(COMP_ID), eq("%filter%"), argThat(new PageableMatcher(6, 20, srt("name", ASC), srt("id", ASC))))).thenReturn(page);
+		when(applicationRepositoryMock.findByCompetitionIdAndIdLike(eq(COMP_ID), eq("filter"), argThat(new PageableMatcher(6, 20, srt("name", ASC), srt("id", ASC))))).thenReturn(page);
 
 		ApplicationSummaryPageResource resource = mock(ApplicationSummaryPageResource.class);
 		when(applicationSummaryPageMapper.mapToResource(page)).thenReturn(resource);
@@ -121,7 +123,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 		when(applicationSummaryMapper.mapToResource(app1)).thenReturn(sum1);
 		when(applicationSummaryMapper.mapToResource(app2)).thenReturn(sum2);
 
-		when(applicationRepositoryMock.findByCompetitionIdAndIdLike(COMP_ID,"%filter%")).thenReturn(applications);
+		when(applicationRepositoryMock.findByCompetitionIdAndIdLike(COMP_ID,"filter")).thenReturn(applications);
 
 		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "lead", 0, 20, of("filter"));
 
@@ -147,9 +149,9 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 		when(applicationSummaryMapper.mapToResource(app1)).thenReturn(sum1);
 		when(applicationSummaryMapper.mapToResource(app2)).thenReturn(sum2);
 
-		when(applicationRepositoryMock.findByCompetitionIdAndIdLike(COMP_ID,"filter%")).thenReturn(applications);
+		when(applicationRepositoryMock.findByCompetitionIdAndIdLike(COMP_ID,"filter")).thenReturn(applications);
 
-		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "lead", 0, 20, of("00filter"));
+		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "lead", 0, 20, of("filter"));
 
 		assertTrue(result.isSuccess());
 		assertEquals(0, result.getSuccessObject().getNumber());
@@ -174,7 +176,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 
 		Collections.reverse(applications);
 
-		when(applicationRepositoryMock.findByCompetitionIdAndIdLike(COMP_ID,"%filter%")).thenReturn(applications);
+		when(applicationRepositoryMock.findByCompetitionIdAndIdLike(COMP_ID,"filter")).thenReturn(applications);
 
 		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "lead", 1, 20, of("filter"));
 
@@ -200,7 +202,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 		when(applicationSummaryMapper.mapToResource(app1)).thenReturn(sum1);
 		when(applicationSummaryMapper.mapToResource(app2)).thenReturn(sum2);
 
-		when(applicationRepositoryMock.findByCompetitionIdAndIdLike(COMP_ID,"%filter%")).thenReturn(applications);
+		when(applicationRepositoryMock.findByCompetitionIdAndIdLike(COMP_ID,"filter")).thenReturn(applications);
 
 		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "lead", 0, 20, of("filter"));
 
@@ -224,7 +226,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 		when(applicationSummaryMapper.mapToResource(app2)).thenReturn(sum2);
 		when(applicationSummaryMapper.mapToResource(app3)).thenReturn(sum3);
 
-		when(applicationRepositoryMock.findByCompetitionIdAndIdLike(COMP_ID,"%filter%")).thenReturn(applications);
+		when(applicationRepositoryMock.findByCompetitionIdAndIdLike(COMP_ID,"filter")).thenReturn(applications);
 
 		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "lead", 0, 20, of("filter"));
 
@@ -246,7 +248,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 		when(applicationSummaryMapper.mapToResource(app1)).thenReturn(sum1);
 		when(applicationSummaryMapper.mapToResource(app2)).thenReturn(sum2);
 
-		when(applicationRepositoryMock.findByCompetitionIdAndIdLike(COMP_ID, "%filter%")).thenReturn(applications);
+		when(applicationRepositoryMock.findByCompetitionIdAndIdLike(COMP_ID, "filter")).thenReturn(applications);
 
 		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "leadApplicant", 0, 20, of("filter"));
 
@@ -272,7 +274,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 		when(applicationSummaryMapper.mapToResource(app1)).thenReturn(sum1);
 		when(applicationSummaryMapper.mapToResource(app2)).thenReturn(sum2);
 
-		when(applicationRepositoryMock.findByCompetitionIdAndIdLike(COMP_ID, "%filter%")).thenReturn(applications);
+		when(applicationRepositoryMock.findByCompetitionIdAndIdLike(COMP_ID, "filter")).thenReturn(applications);
 
 		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "leadApplicant", 0, 20, of("filter"));
 
@@ -299,7 +301,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 
 		Collections.reverse(applications);
 
-		when(applicationRepositoryMock.findByCompetitionIdAndIdLike(COMP_ID, "%filter%")).thenReturn(applications);
+		when(applicationRepositoryMock.findByCompetitionIdAndIdLike(COMP_ID, "filter")).thenReturn(applications);
 
 		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "leadApplicant", 1, 20, of("filter"));
 
@@ -325,7 +327,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 		when(applicationSummaryMapper.mapToResource(app1)).thenReturn(sum1);
 		when(applicationSummaryMapper.mapToResource(app2)).thenReturn(sum2);
 
-		when(applicationRepositoryMock.findByCompetitionIdAndIdLike(COMP_ID,"%filter%")).thenReturn(applications);
+		when(applicationRepositoryMock.findByCompetitionIdAndIdLike(COMP_ID,"filter")).thenReturn(applications);
 
 		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "leadApplicant", 0, 20, of("filter"));
 
@@ -349,7 +351,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 		when(applicationSummaryMapper.mapToResource(app2)).thenReturn(sum2);
 		when(applicationSummaryMapper.mapToResource(app3)).thenReturn(sum3);
 
-		when(applicationRepositoryMock.findByCompetitionIdAndIdLike(COMP_ID,"%filter%")).thenReturn(applications);
+		when(applicationRepositoryMock.findByCompetitionIdAndIdLike(COMP_ID,"filter")).thenReturn(applications);
 
 		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, "leadApplicant", 0, 20, of("filter"));
 		
@@ -368,7 +370,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 		ApplicationSummaryPageResource resource = mock(ApplicationSummaryPageResource.class);
 		when(applicationSummaryPageMapper.mapToResource(page)).thenReturn(resource);
 		
-		when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusIdInAndIdLike(eq(COMP_ID), eq(Arrays.asList(3L,4L,2L)), eq("%%"), argThat(new PageableMatcher(0, 20, srt("id", ASC))))).thenReturn(page);
+		when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusIdInAndIdLike(eq(COMP_ID), eq(Arrays.asList(3L,4L,2L)), eq(""), argThat(new PageableMatcher(0, 20, srt("id", ASC))))).thenReturn(page);
 		
 		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(COMP_ID, "id", 0, 20, of(""));
 		
@@ -448,75 +450,5 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 		ApplicationSummaryResource res = sumPercentage(percentage);
 		res.setId(id);
 		return res;
-	}
-	
-	private Sort srt(String field, Direction dir){
-		Sort sort = new Sort();
-		sort.setField(field);
-		sort.setDirection(dir);
-		return sort;
-	}
-	
-	private static class PageableMatcher extends ArgumentMatcher<Pageable> {
-
-		private int expectedPage;
-		private int expectedPageSize;
-		private Sort[] sortFields;
-		
-		public PageableMatcher(int expectedPage, int expectedPageSize, Sort... sortFields) {
-			this.expectedPage = expectedPage;
-			this.expectedPageSize = expectedPageSize;
-			this.sortFields = sortFields;
-		}
-		
-		@Override
-		public boolean matches(Object argument) {
-			Pageable arg = (Pageable) argument;
-			
-			if(!(expectedPage == arg.getPageNumber())){
-				return false;
-			}
-			
-			if(!(expectedPageSize == arg.getPageSize())){
-				return false;
-			}
-			
-			List<Order> sortList = Lists.newArrayList(arg.getSort().iterator());
-			
-			if(sortList.size() != sortFields.length) {
-				return false;
-			}
-			
-			for(int i = 0; i < sortFields.length; i++) {
-				Sort sortField = sortFields[i];
-				Order order = sortList.get(i);
-				if(!sortField.getDirection().equals(order.getDirection())) {
-					return false;
-				}
-				if(!sortField.getField().equals(order.getProperty())){
-					return false;
-				}
-			}
-			
-			return true;
-		}
-	}
-	
-	private static class Sort {
-		private String field;
-		private Direction direction;
-		
-		public String getField() {
-			return field;
-		}
-		public void setField(String field) {
-			this.field = field;
-		}
-		public Direction getDirection() {
-			return direction;
-		}
-		public void setDirection(Direction direction) {
-			this.direction = direction;
-		}
 	}
 }

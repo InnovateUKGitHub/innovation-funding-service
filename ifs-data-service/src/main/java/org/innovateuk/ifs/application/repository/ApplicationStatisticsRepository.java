@@ -18,7 +18,7 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
     List<ApplicationStatistics> findByCompetition(Long competitionId);
 
     @Query("SELECT a FROM ApplicationStatistics a WHERE a.competition = :compId " +
-            "AND (str(a.id) LIKE :filter)")
+            "AND (str(a.id) LIKE CONCAT('%', :filter, '%'))")
     Page<ApplicationStatistics> findByCompetition(@Param("compId") long competitionId,
                                                   @Param("filter") String filter,
                                                   Pageable pageable);

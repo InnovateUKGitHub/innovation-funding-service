@@ -116,7 +116,7 @@ public class ApplicationTeamManagementController {
     @RequestMapping(value = "update/remove", method = RequestMethod.POST)
     public String deleteContributor(@PathVariable("applicationId") Long applicationId,
                                     @Valid @ModelAttribute RemoveContributorsForm removeContributorsForm) {
-        applicationService.removeCollaborator(removeContributorsForm.getApplicationInviteId());
+        applicationService.removeCollaborator(removeContributorsForm.getApplicationInviteId()).getSuccessObjectOrThrowException();
 
         return "redirect:/application/" + applicationId + "/contributors";
     }
