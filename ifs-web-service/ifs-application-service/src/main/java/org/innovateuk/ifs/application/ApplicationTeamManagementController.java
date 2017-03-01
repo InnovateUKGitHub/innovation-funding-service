@@ -118,7 +118,7 @@ public class ApplicationTeamManagementController {
                                     @Valid @ModelAttribute RemoveContributorsForm removeContributorsForm) {
         applicationService.removeCollaborator(removeContributorsForm.getApplicationInviteId()).getSuccessObjectOrThrowException();
 
-        return "redirect:/application/" + applicationId + "/contributors";
+        return "redirect:/application/" + applicationId + "/team";
     }
 
     /**
