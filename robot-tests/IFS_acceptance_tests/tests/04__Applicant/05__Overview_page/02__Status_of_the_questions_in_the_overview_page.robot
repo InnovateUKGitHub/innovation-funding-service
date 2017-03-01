@@ -27,7 +27,7 @@ Re-assign is possible from the overview page
     And the user clicks the button/link    link=Academic robot test application
     When the applicant assigns the Project Summary question from the overview page    Steve Smith
     Then a blue flag should be visible for the Project Summary in overview page
-    And the assign button should say Assigned to:You
+    And the assign button should say Assigned to you
 
 *** Keywords ***
 the Applicant edits the Project summary
@@ -39,8 +39,8 @@ the Applicant edits the Project summary
 the assign status should be correct for the Project Summary
     the user navigates to the page    ${DASHBOARD_URL}
     the user clicks the button/link    link=Academic robot test application
-    the user should see the element    jQuery=li:contains("Project summary") > .assign-container button strong
-    Element Should Contain    jQuery=li:contains("Project summary") > .assign-container button strong    Arsene Wenger
+    the user should see the element    jQuery=li:contains("Project summary") > .assign-container button
+    Element Should Contain    jQuery=li:contains("Project summary") > .assign-container button    Arsene Wenger
 
 the applicant assigns the Project Summary question from the overview page
     [Arguments]    ${assignee_name}
@@ -58,7 +58,7 @@ a blue flag should be visible for the Project Summary in overview page
     The user should see the element    jQuery=li:contains("Project summary") > .assign-container
 
 the blue flag should not be visible
-    the user should not see the element    jQuery=li:contains("Project summary") > .assign-container
+    the user should not see the element    jQuery=li:contains("Project summary") > .action-required
 
 the assign button should say Assigned to you
     Element Should Contain    jQuery=li:contains("Project summary") > .assign-container button strong    you
