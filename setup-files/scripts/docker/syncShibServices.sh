@@ -51,7 +51,7 @@ for item in $( docker-compose ps -q shib ); do
     docker cp _delete-shib-users-remote.sh ${item}:/tmp/_delete-shib-users-remote.sh
 done
 
-docker-compose exec -T shib /tmp/_delete-shib-users-remote.sh
+docker-compose  exec -T shib /tmp/_delete-shib-users-remote.sh
 
 mysql ifs -uroot -ppassword -hifs-database -N -s -e "select email from user;" 2>/dev/null | xargs -I{} bash -c "addUserToShibboleth {}"
 

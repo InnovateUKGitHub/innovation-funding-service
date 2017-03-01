@@ -4,6 +4,8 @@ Documentation     INFUND-6914 Create 'Public content' menu page for "Front Door"
 ...               INFUND-6916 As a Competitions team member I want to create a Public content summary page
 ...
 ...               INFUND-7602 Add / Remove sections for Competition setup > Public content
+...
+...               INFUND-7486 Create Competition > Summary tab for external "Front Door" view of competition summary
 Suite Setup       Custom suite setup
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin
@@ -80,52 +82,46 @@ Competition information and search: ReadOnly
     Then the user should see the element  css=#short-description[value="Short public description"]
     And the user clicks the button/link   jQuery=.button:contains("Save and return")
 
-Summary: Contains the correct options
-    [Documentation]    INFUND-6916
-    [Tags]  HappyPath
+Summary: server side validation and autosave
+    [Documentation]    INFUND-6916, INFUND-7486
+    [Tags]
     Given the user clicks the button/link           link=Summary
     And the user should see the text in the page    Text entered into this section will appear in the summary tab
-    Then the user should see the element            css=.editor
-    and the user should see the element             jQuery=label:contains("Grant")
-    And the user should see the element             jQuery=label:contains("Procurement")
-    And the user should see the text in the page    Project size
-    And the user should see the element             id=project-size
+    When the user clicks the button/link            jQuery=.button:contains("Save and return")
+    Then the user should see a summary error        Please enter a funding type.
+    And the user should see a summary error         Please enter a project size.
+    And the user should see a summary error         Please enter a competition description.
+    When the user enters valid data in the summary details
     And the user should see the element             jQuery=.buttonlink:contains("+ add new section")
 
-Summary: server side validation
-    [Documentation]    INFUND-6916
-    When the user clicks the button/link                jQuery=.button:contains("Save and return")
-    Then the user should see a summary error            Please enter a funding type.
-    And the user should see a summary error             Please enter a project size.
-    And the user should see a summary error             Please enter a competition description.
-
 Summary: User enters valid values and saves
-    [Documentation]    INFUND-6916
+    [Documentation]    INFUND-6916, INFUND-7486
     [Tags]  HappyPath
+    Given the internal user navigates to public content  ${public_content_competition_name}
+    And the user clicks the button/link        link=Summary
     When the user enters valid data in the summary details
-    Then the user should be redirected to the correct page    ${public_content_overview}
+    And the user clicks the button/link        jQuery=button:contains("+ add new section")
+    When the user enters text to a text field  css=#heading-0  A nice new Heading
+    Then the user enters text to a text field   jQuery=.editor:eq(1)  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco ullamco
+    And the user uploads the file              css=#file-upload-0  ${valid_pdf}
+    When the user clicks the button/link       jQuery=button:contains("Save and return")
+    Then the user should be redirected to the correct page  ${public_content_overview}
     And the user should see the element      link=Summary
     And the user should see the element      css=img[title='The "Summary" section is marked as done']
 
 Summary: Contains the correct values when viewed
-    [Documentation]    INFUND-6916
+    [Documentation]    INFUND-6916, INFUND-7486
     [Tags]
-    When the user clicks the button/link                link=Summary
-    Then the user should see the text in the page       Text entered into this section will appear in the summary tab
-    And the user should see the text in the page        Grant
-    And the user should see the text in the page        10
-    And the user should see the element                 jQuery=.button:contains("Return to public content")
-    And the user should see the element                 jQuery=.button-secondary:contains("Edit")
-    Then the user clicks the button/link                link=Public content
-
-Summary: Add, remove sections and submit
-    [Documentation]    INFUND-6916
-    [Tags]  HappyPath
-    When the user clicks the button/link                    link=Summary
-    And the user clicks the button/link                 jQuery=.button-secondary:contains("Edit")
-    Then the user can add and remove multiple content groups for summary
-    When the user clicks the button/link                        jQuery=button:contains("Save and return")
-    And the user should see the element  css=img[title='The "Summary" section is marked as done']
+    When the user clicks the button/link      link=Summary
+    Then the user should see the element      jQuery=dt:contains("Funding type") + dd:contains("Grant")
+    And the user should see the element       jQuery=dt:contains("Project size") + dd:contains("10 millions")
+    And the user should see the element       jQuery=h2:contains("A nice new Heading")
+    And the user should see the element       jQuery=a:contains("${valid_pdf}")
+    And the user should see the element       jQuery=.button:contains("Return to public content")
+    When the user clicks the button/link      jQuery=.button-secondary:contains("Edit")
+    And the user enters text to a text field  jQuery=.editor:eq(1)  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+    When the user clicks the button/link      jQuery=button:contains("Save and return")
+    Then the user should see the element      css=img[title='The "Summary" section is marked as done']
 
 Eligibility: Server side validation
     [Documentation]  INFUND-6916
@@ -143,7 +139,7 @@ Eligibility: Add, remove sections and submit
     And the user should see the element  css=img[title='The "Eligibility" section is marked as done']
 
 Scope: Add, remove sections and submit
-    [Documentation]    INFUND-6918 INFUND-7602
+    [Documentation]    INFUND-6918, INFUND-7602
     [Tags]  HappyPath
     When the user clicks the button/link                         link=Scope
     Then the user can add and remove multiple content groups
@@ -217,7 +213,22 @@ Guest user can filter competitions by Keywords
     When the user enters text to a text field  id=keywords  Robot
     And the user clicks the button/link        jQuery=button:contains("Update results")
     Then the user should see the element       jQuery=a:contains("${public_content_competition_name}")
-    [Teardown]  the user closes the browser
+
+Guest user can see the updated Summary information
+    [Documentation]  INFUND-7486
+    [Tags]
+    Given the user clicks the button/link  link=Public content competition
+    And the user clicks the button/link    link=Summary
+    Then the user should see the element   jQuery=.column-third:contains("Description") ~ .column-two-thirds:contains("This is a Summary description")
+    And the user should see the element    jQuery=.column-third:contains("Funding type") ~ .column-two-thirds:contains("Grant")
+    And the user should see the element    jQuery=.column-third:contains("Project size") ~ .column-two-thirds:contains("10 millions")
+    And the user should see the element    jQuery=.column-third:contains("A nice new Heading") ~ .column-two-thirds:contains("Ut enim ad minim veniam,")
+
+The guest user is able to download the file in the Summary
+    [Documentation]  INFUND-7486
+    [Tags]  Pending
+    # TODO Pending due to INFUND-8536
+
 
 *** Keywords ***
 Custom suite setup
@@ -243,10 +254,9 @@ User creates a new competition
     When the user fills in the CS Initial details      ${competition_name}  01  02  ${nextyear}
 
 the user enters valid data in the summary details
-    The user enters text to a text field   css=.editor    Summary Description
+    The user enters text to a text field    css=.editor  This is a Summary description
     the user selects the radio button       fundingType    Grant
-    the user enters text to a text field    id=project-size   10
-    the user clicks the button/link         jQuery=.button:contains("Save and return")
+    the user enters text to a text field    id=project-size   10 millions
 
 the user can add and remove multiple content groups
     When the user enters text to a text field   id=heading-0    Heading 1

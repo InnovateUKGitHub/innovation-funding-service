@@ -62,11 +62,6 @@ processTestResources {
     }
 }
 
-
-task cleanDeploy() {
-    dependsOn build
-}
-
 task cleanDeployServices() {
     dependsOn build
 }

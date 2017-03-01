@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.transactional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.application.domain.ApplicationStatistics;
 import org.innovateuk.ifs.application.mapper.ApplicationCountSummaryMapper;
 import org.innovateuk.ifs.application.mapper.ApplicationCountSummaryPageMapper;
@@ -43,10 +44,20 @@ public class ApplicationCountSummaryServiceImpl extends BaseTransactionalService
     @Override
     public ServiceResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionId(Long competitionId, int pageIndex, int pageSize, Optional<String> filter) {
 
-        String filterStr = filter.map(String::trim).orElse("");
+        String filterStr = filter.map(this::prepareFilterString).orElse("%");
         Pageable pageable = new PageRequest(pageIndex, pageSize);
         Page<ApplicationStatistics> applicationStatistics = applicationStatisticsRepository.findByCompetition(competitionId, filterStr, pageable);
 
         return find(applicationStatistics, notFoundError(Page.class)).andOnSuccessReturn(stats -> applicationCountSummaryPageMapper.mapToResource(stats));
+    }
+
+    private String prepareFilterString(String filter) {
+        String result = filter.trim();
+        if (result.startsWith("0")) {
+            result = StringUtils.stripStart(result,"0") + "%";
+        } else {
+            result = "%" + result + "%";
+        }
+        return result;
     }
 }

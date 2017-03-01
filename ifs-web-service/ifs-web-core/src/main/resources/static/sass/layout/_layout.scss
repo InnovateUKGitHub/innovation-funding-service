@@ -3,6 +3,21 @@
 	margin: 0 15px;
 	a{ color:#fff;}
 }
+
+.related-items {
+
+  border-top:10px solid $link-colour;
+  h2 {
+    margin: 0.3em 0  0.5em;
+  }
+  ul {
+    list-style:none;
+  }
+  li {
+    margin: 0 0 0.75em;
+  }
+}
+
 //no margins for the page headers
 .page-header {
 	margin-left:0;
@@ -19,38 +34,15 @@
   }
 }
 
-//
-// #global-header #logo img{
-// 		width: 35px;
-// 		height: 31px;
-// }
-.innovate-title{
-	font-size: 24px;
-	line-height: 1.25em;
-	margin: 5px 0 0;
-	text-transform: none;
-	font-weight: bold;
-	text-decoration: none;
-	color: white;
-	float: left;
-	@include media-down(mobile){
-		float:none;
-		clear:both;
-		font-size:15px;
-		margin:5px 15px 0;
-	}
-}
 
 .grid-container.phase-banner{
 	border-top: 10px solid $link-colour;
 }
 
 .sub-header {
-    // background: $grey-4;
     clear: both;
     font-size: 16px;
     line-height:40px;
-    // margin: 0 -15px;
     overflow: hidden;
     padding: 5px 0px;
     position: relative;

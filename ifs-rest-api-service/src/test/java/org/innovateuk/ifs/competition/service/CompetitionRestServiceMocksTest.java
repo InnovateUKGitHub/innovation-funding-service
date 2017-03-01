@@ -5,6 +5,7 @@ import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.*;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 
@@ -223,6 +224,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
         assertTrue(result.isSuccess());
     }
 
+    @Ignore
     @Test
     public void releaseFeedback() {
         long competitionId = 1L;

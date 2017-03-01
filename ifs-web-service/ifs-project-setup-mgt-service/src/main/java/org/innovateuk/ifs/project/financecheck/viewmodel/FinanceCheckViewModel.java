@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 public class FinanceCheckViewModel {
 
-    private String formattedCompetitionNumber;
+    private Long competitionId;
     private String competitionName;
     private Long projectId;
     private Long organisationId;
@@ -23,10 +23,10 @@ public class FinanceCheckViewModel {
     private LocalDate approvalDate;
     private FileDetailsViewModel jesFileDetails;
 
-    public FinanceCheckViewModel(String formattedCompetitionNumber, String competitionName, String organisationName, boolean isLeadPartner,
+    public FinanceCheckViewModel(Long competitionId, String competitionName, String organisationName, boolean isLeadPartner,
                                  Long projectId, Long organisationId, String financeContactName, String financeContactEmail, boolean isResearch,
                                  boolean financeChecksApproved, String approverName, LocalDate approvalDate, FileDetailsViewModel jesFileDetails) {
-        this.formattedCompetitionNumber = formattedCompetitionNumber;
+        this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.organisationName = organisationName;
         this.isLeadPartner = isLeadPartner;
@@ -41,10 +41,10 @@ public class FinanceCheckViewModel {
         this.jesFileDetails = jesFileDetails;
     }
 
-    public FinanceCheckViewModel(String formattedCompetitionNumber, String competitionName, String organisationName, boolean isLeadPartner,
+    public FinanceCheckViewModel(Long competitionId, String competitionName, String organisationName, boolean isLeadPartner,
                                  Long projectId, Long organisationId, boolean isResearch,
                                  boolean financeChecksApproved, String approverName, LocalDate approvalDate, FileDetailsViewModel jesFileDetails) {
-        this(formattedCompetitionNumber, competitionName, organisationName, isLeadPartner,
+        this(competitionId, competitionName, organisationName, isLeadPartner,
                 projectId, organisationId, null, null, isResearch,
                 financeChecksApproved, approverName, approvalDate, jesFileDetails);
     }
@@ -89,8 +89,8 @@ public class FinanceCheckViewModel {
         return !financeChecksApproved;
     }
 
-    public String getFormattedCompetitionNumber() {
-        return formattedCompetitionNumber;
+    public Long getCompetitionId() {
+        return competitionId;
     }
 
     public String getCompetitionName() {
@@ -129,7 +129,7 @@ public class FinanceCheckViewModel {
                 .append(isLeadPartner, that.isLeadPartner)
                 .append(isResearch, that.isResearch)
                 .append(financeChecksApproved, that.financeChecksApproved)
-                .append(formattedCompetitionNumber, that.formattedCompetitionNumber)
+                .append(competitionId, that.competitionId)
                 .append(competitionName, that.competitionName)
                 .append(projectId, that.projectId)
                 .append(organisationId, that.organisationId)
@@ -145,7 +145,7 @@ public class FinanceCheckViewModel {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(formattedCompetitionNumber)
+                .append(competitionId)
                 .append(competitionName)
                 .append(projectId)
                 .append(organisationId)
@@ -163,7 +163,7 @@ public class FinanceCheckViewModel {
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("formattedCompetitionNumber", formattedCompetitionNumber)
+                .append("competitionId", competitionId)
                 .append("competitionName", competitionName)
                 .append("projectId", projectId)
                 .append("organisationId", organisationId)
