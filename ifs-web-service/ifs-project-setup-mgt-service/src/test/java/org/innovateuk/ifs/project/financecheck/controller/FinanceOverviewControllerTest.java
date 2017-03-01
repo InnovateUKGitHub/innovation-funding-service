@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.financecheck.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.builder.FileEntryResourceBuilder;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
@@ -26,7 +27,9 @@ import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.math.BigDecimal;
@@ -36,6 +39,7 @@ import java.util.*;
 
 import static junit.framework.TestCase.assertFalse;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder.newPartnerOrganisationResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckOverviewResourceBuilder.newFinanceCheckOverviewResource;
@@ -48,7 +52,10 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.client.ExpectedCount.times;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -59,12 +66,12 @@ public class FinanceOverviewControllerTest extends BaseControllerMockMVCTest<Fin
         Long projectId = 123L;
         Long organisationId = 456L;
 
-        PartnerOrganisationResource partnerOrganisationResource = newPartnerOrganisationResource().withId(organisationId).build();
         List<PartnerOrganisationResource> partnerOrganisationResources = newPartnerOrganisationResource().withProject(projectId).build(3);
         FinanceCheckEligibilityResource financeCheckEligibilityResource = newFinanceCheckEligibilityResource().withTotalCost(BigDecimal.valueOf(280009)).build();
         when(partnerOrganisationServiceMock.getPartnerOrganisations(projectId)).thenReturn(serviceSuccess(partnerOrganisationResources));
         when(financeCheckServiceMock.getFinanceCheckOverview(projectId)).thenReturn(serviceSuccess(mockFinanceOverview()));
         when(financeCheckServiceMock.getFinanceCheckEligibilityDetails(projectId, organisationId)).thenReturn(financeCheckEligibilityResource);
+        when(projectFinanceService.getProjectFinances(projectId)).thenReturn(Collections.emptyList());
 
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check-overview")).
                 andExpect(view().name("project/financecheck/overview")).
@@ -73,6 +80,10 @@ public class FinanceOverviewControllerTest extends BaseControllerMockMVCTest<Fin
         FinanceCheckOverviewViewModel financeCheckOverviewViewModel = (FinanceCheckOverviewViewModel) result.getModelAndView().getModel().get("model");
         assertEquals(LocalDate.of(2016, 01, 01), financeCheckOverviewViewModel.getOverview().getProjectStartDate());
         assertEquals("test-project", financeCheckOverviewViewModel.getOverview().getProjectName());
+
+        verify(financeCheckServiceMock).getFinanceCheckOverview(projectId);
+        verify(financeCheckServiceMock, Mockito.times(3)).getFinanceCheckEligibilityDetails(anyLong(), anyLong());
+        verify(projectFinanceService).getProjectFinances(projectId);
     }
 
     @Override
@@ -98,7 +109,7 @@ public class FinanceOverviewControllerTest extends BaseControllerMockMVCTest<Fin
                 withGrantAppliedFor(totalPercentageGrant).
                 withOtherPublicSectorFunding(otherPublicSectorFunding).
                 withProjectStartDate(startDate).
-                withTotalProjectCost().build();
+                withTotalProjectCost(totalProjectCost).build();
     }
 
 }

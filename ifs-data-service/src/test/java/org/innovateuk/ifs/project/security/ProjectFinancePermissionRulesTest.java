@@ -3,12 +3,18 @@ package org.innovateuk.ifs.project.security;
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 
+import java.util.List;
+
+import static java.util.Collections.emptyList;
 import static junit.framework.TestCase.assertFalse;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertTrue;
 
@@ -170,6 +176,38 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
 
         assertFalse(rules.leadPartnerCanViewAnySpendProfileData(projectOrganisationCompositeId, user));
     }
+
+    @Test
+    public void testInternalUserCanViewFinanceChecks() {
+        Long projectId = 1L;
+        allInternalUsers.forEach(user -> {
+                assertTrue(rules.internalUsersCanSeeTheProjectFinanceOverviewsForAllProjects(projectId, user));
+        });
+    }
+
+
+    @Test
+    public void testProjectFinanceContactCanViewFinanceChecks() throws Exception {
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setupUserAsPartner(project, user);
+        List<RoleResource> financeContact = newRoleResource().withType(UserRoleType.FINANCE_CONTACT).build(1);
+        user.setRoles(financeContact);
+
+        assertTrue(rules.financeContactsCanSeeTheProjectFinanceOverviewsForTheirProject(project.getId(), user));
+    }
+
+    @Test
+    public void testNonProjectFinanceContactCannotViewFinanceChecks() throws Exception {
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setupUserAsPartner(project, user);
+
+        assertFalse(rules.financeContactsCanSeeTheProjectFinanceOverviewsForTheirProject(project.getId(), user));
+    }
+
 
     @Override
     protected ProjectFinancePermissionRules supplyPermissionRulesUnderTest() {
