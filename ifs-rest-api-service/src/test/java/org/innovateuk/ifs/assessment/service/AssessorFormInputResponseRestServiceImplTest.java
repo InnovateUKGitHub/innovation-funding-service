@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.assessment.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
+import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -63,5 +64,16 @@ public class AssessorFormInputResponseRestServiceImplTest extends BaseRestServic
         setupPutWithRestResultExpectations(format("%s", assessorFormInputResponseRestUrl), formInputResponse, OK);
         final RestResult<Void> response = service.updateFormInputResponse(formInputResponse);
         assertTrue(response.isSuccess());
+    }
+
+    @Test
+    public void getApplicationAssessmentAggregate() {
+        long applicationId = 7;
+        ApplicationAssessmentAggregateResource expected = new ApplicationAssessmentAggregateResource(13, 11);
+
+        setupGetWithRestResultExpectations(format("%s/application/%s/scores", assessorFormInputResponseRestUrl, applicationId), ApplicationAssessmentAggregateResource.class, expected, OK);
+        ApplicationAssessmentAggregateResource response = service.getApplicationAssessmentAggregate(applicationId).getSuccessObjectOrThrowException();
+
+        assertSame(expected, response);
     }
 }

@@ -13,6 +13,7 @@ import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.*;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.service.*;
+import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
@@ -226,6 +227,8 @@ public class BaseUnitTest {
     public ApplicationSummaryRestService applicationSummaryRestService;
     @Mock
     public CompetitionKeyStatisticsRestService competitionKeyStatisticsRestServiceMock;
+    @Mock
+    public AssessorFormInputResponseRestService assessorFormInputResponseRestService;
 
     @Spy
     @InjectMocks
