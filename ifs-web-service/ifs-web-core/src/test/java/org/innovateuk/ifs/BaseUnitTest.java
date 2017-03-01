@@ -20,6 +20,7 @@ import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.bankdetails.BankDetailsService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
@@ -479,7 +480,7 @@ public class BaseUnitTest {
         when(sectionService.getSectionsForCompetitionByType(1L,SectionType.FUNDING_FINANCES)).thenReturn(Arrays.asList(sectionResource10));
 
         when(questionService.getQuestionsBySectionIdAndType(7L, QuestionType.COST)).thenReturn(Arrays.asList(q21Resource, q22Resource, q23Resource)) ;
-        when(questionService.getQuestionByCompetitionIdAndFormInputType(1L, FormInputType.APPLICATION_DETAILS)).thenReturn(restSuccess(q01Resource));
+        when(questionService.getQuestionByCompetitionIdAndFormInputType(1L, FormInputType.APPLICATION_DETAILS)).thenReturn(ServiceResult.serviceSuccess(q01Resource));
 
         ArrayList<QuestionResource> questionList = new ArrayList<>();
         for (SectionResource section : sectionResources) {
@@ -646,7 +647,7 @@ public class BaseUnitTest {
         when(sectionService.getCompletedSectionsByOrganisation(applicationResources.get(1).getId())).thenReturn(completedMap);
         when(sectionService.getCompletedSectionsByOrganisation(applicationResources.get(2).getId())).thenReturn(completedMap);
 
-        processRoles.forEach(pr -> when(applicationService.findByProcessRoleId(pr.getId())).thenReturn(restSuccess(idsToApplicationResources.get(pr.getApplicationId()))));
+        processRoles.forEach(pr -> when(applicationService.findByProcessRoleId(pr.getId())).thenReturn(ServiceResult.serviceSuccess(idsToApplicationResources.get(pr.getApplicationId()))));
 
         when(applicationRestService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(restSuccess(applications));
         when(applicationService.getById(applications.get(0).getId())).thenReturn(applications.get(0));

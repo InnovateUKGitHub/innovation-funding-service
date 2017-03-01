@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.controller.FundingDecisionController;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.junit.Before;
@@ -46,6 +47,8 @@ public class FundingDecisionControllerTest extends BaseControllerMockMVCTest<Fun
         ApplicationSummaryResource app10 = app(10L);
         applicationSummaries.setContent(asList(app8, app9, app10));
         when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(123L, null, 0, Integer.MAX_VALUE, null)).thenReturn(applicationSummaries);
+        when(applicationFundingDecisionService.saveApplicationFundingDecisionData(anyLong(), anyMap())).thenReturn(ServiceResult.serviceSuccess());
+        when(applicationFundingDecisionService.makeApplicationFundingDecision(anyLong(), anyMap())).thenReturn(ServiceResult.serviceSuccess());
     }
     
     private ApplicationSummaryResource app(Long id) {
