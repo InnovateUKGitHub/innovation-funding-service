@@ -1,12 +1,9 @@
 package org.innovateuk.ifs.project.bankdetails.resource;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-
-import static org.innovateuk.ifs.application.resource.ApplicationResource.formatter;
+import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 
 /**
  * A resource object for returning bank details status for individual partner organisation.  Usually wrapped within ProjectBankDetailsStatusSummary.
@@ -31,11 +28,6 @@ public class BankDetailsStatusResource {
 
     public void setOrganisationId(Long organisationId) {
         this.organisationId = organisationId;
-    }
-
-    @JsonIgnore
-    public String getFormattedOrganisationId(){
-        return formatter.format(organisationId);
     }
 
     public String getOrganisationName() {

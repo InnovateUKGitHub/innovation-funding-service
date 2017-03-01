@@ -208,4 +208,16 @@ public class CompetitionTest {
         competition.setFundersPanelEndDate(LocalDateTime.now().minusDays(1));
         assertEquals(ASSESSOR_FEEDBACK, competition.getCompetitionStatus());
     }
+
+    @Test
+    public void competitionStatusReleaseFeedback() {
+        competition.setEndDate(LocalDateTime.now().minusDays(7));
+        competition.setAssessorAcceptsDate(LocalDateTime.now().minusDays(6));
+        competition.notifyAssessors(LocalDateTime.now().minusDays(5));
+        competition.closeAssessment(LocalDateTime.now().minusDays(4));
+        competition.setFundersPanelDate(LocalDateTime.now().minusDays(3));
+        competition.setFundersPanelEndDate(LocalDateTime.now().minusDays(2));
+        competition.setReleaseFeedbackDate(LocalDateTime.now().minusDays(1));
+        assertEquals(PROJECT_SETUP, competition.getCompetitionStatus());
+    }
 }

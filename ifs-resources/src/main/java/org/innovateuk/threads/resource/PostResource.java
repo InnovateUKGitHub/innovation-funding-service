@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.threads.attachment.resource.AttachmentResource;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -14,12 +15,12 @@ public class PostResource {
     public final Long id;
     public final UserResource author;
     public final String body;
-    public final List<FileEntryResource> attachments;
+    public final List<AttachmentResource> attachments;
     public final LocalDateTime createdOn;
 
     @JsonCreator
     public PostResource(@JsonProperty("id") Long id, @JsonProperty("author") UserResource author,
-                        @JsonProperty("body") String body, @JsonProperty("attachments") List<FileEntryResource> attachments,
+                        @JsonProperty("body") String body, @JsonProperty("attachments") List<AttachmentResource> attachments,
                         @JsonProperty("createdOn") LocalDateTime createdOn) {
         this.id = id;
         this.author = author;

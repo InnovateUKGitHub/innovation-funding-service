@@ -27,6 +27,8 @@ public abstract class Category {
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<CategoryInnerLink> links = new HashSet<>();
 
+    private Integer priority = 0;
+
     Category() {
         // default constructor
     }
@@ -55,6 +57,14 @@ public abstract class Category {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Integer getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
     }
 
     @Override

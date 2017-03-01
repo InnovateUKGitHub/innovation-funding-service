@@ -1,27 +1,53 @@
 package org.innovateuk.ifs.assessment.viewmodel;
 
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import java.time.LocalDate;
 
 /**
  * Holder of model attributes for the Application Detail view shown as part of the assessment journey.
  */
 public class AssessmentFeedbackApplicationDetailsViewModel {
 
-    private final long daysLeft;
-    private final long daysLeftPercentage;
-    private final CompetitionResource competition;
-    private final ApplicationResource application;
-    private final String questionShortName;
+    private long applicationId;
+    private String applicationName;
+    private LocalDate applicationStartDate;
+    private long applicationDurationInMonths;
+    private long daysLeft;
+    private long daysLeftPercentage;
+    private String questionShortName;
 
-    public AssessmentFeedbackApplicationDetailsViewModel(final long daysLeft, final long daysLeftPercentage, final CompetitionResource competition, final ApplicationResource application, final String questionShortName) {
+    public AssessmentFeedbackApplicationDetailsViewModel(long applicationId,
+                                                         String applicationName,
+                                                         LocalDate applicationStartDate,
+                                                         long applicationDurationInMonths,
+                                                         long daysLeft,
+                                                         long daysLeftPercentage,
+                                                         String questionShortName) {
+        this.applicationId = applicationId;
+        this.applicationName = applicationName;
+        this.applicationStartDate = applicationStartDate;
+        this.applicationDurationInMonths = applicationDurationInMonths;
         this.daysLeft = daysLeft;
         this.daysLeftPercentage = daysLeftPercentage;
-        this.competition = competition;
-        this.application = application;
         this.questionShortName = questionShortName;
+    }
+
+    public long getApplicationId() {
+        return applicationId;
+    }
+
+    public String getApplicationName() {
+        return applicationName;
+    }
+
+    public LocalDate getApplicationStartDate() {
+        return applicationStartDate;
+    }
+
+    public long getApplicationDurationInMonths() {
+        return applicationDurationInMonths;
     }
 
     public long getDaysLeft() {
@@ -30,14 +56,6 @@ public class AssessmentFeedbackApplicationDetailsViewModel {
 
     public long getDaysLeftPercentage() {
         return daysLeftPercentage;
-    }
-
-    public CompetitionResource getCompetition() {
-        return competition;
-    }
-
-    public ApplicationResource getApplication() {
-        return application;
     }
 
     public String getQuestionShortName() {
@@ -57,10 +75,12 @@ public class AssessmentFeedbackApplicationDetailsViewModel {
         AssessmentFeedbackApplicationDetailsViewModel that = (AssessmentFeedbackApplicationDetailsViewModel) o;
 
         return new EqualsBuilder()
+                .append(applicationId, that.applicationId)
+                .append(applicationDurationInMonths, that.applicationDurationInMonths)
                 .append(daysLeft, that.daysLeft)
                 .append(daysLeftPercentage, that.daysLeftPercentage)
-                .append(competition, that.competition)
-                .append(application, that.application)
+                .append(applicationName, that.applicationName)
+                .append(applicationStartDate, that.applicationStartDate)
                 .append(questionShortName, that.questionShortName)
                 .isEquals();
     }
@@ -68,10 +88,12 @@ public class AssessmentFeedbackApplicationDetailsViewModel {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .append(applicationId)
+                .append(applicationName)
+                .append(applicationStartDate)
+                .append(applicationDurationInMonths)
                 .append(daysLeft)
                 .append(daysLeftPercentage)
-                .append(competition)
-                .append(application)
                 .append(questionShortName)
                 .toHashCode();
     }

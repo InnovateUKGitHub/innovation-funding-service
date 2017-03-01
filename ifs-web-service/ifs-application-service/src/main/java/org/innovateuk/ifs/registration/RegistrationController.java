@@ -7,6 +7,7 @@ import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.exception.InviteAlreadyAcceptedException;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
@@ -24,7 +25,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -106,7 +106,7 @@ public class RegistrationController {
     @RequestMapping(value = "/verify-email/{hash}", method = RequestMethod.GET)
     public String verifyEmailAddress(@PathVariable("hash") final String hash,
                                      final HttpServletResponse response){
-        userService.verifyEmail(hash).getSuccessObjectOrThrowException();
+        userService.verifyEmail(hash);
         cookieFlashMessageFilter.setFlashMessage(response, "verificationSuccessful");
         return "redirect:/registration/verified";
     }
@@ -224,7 +224,7 @@ public class RegistrationController {
 
         if(!bindingResult.hasErrors()) {
             //TODO : INFUND-3691
-            RestResult<UserResource> createUserResult = createUser(registrationForm, getOrganisationId(request), getCompetitionId(request));
+            ServiceResult<UserResource> createUserResult = createUser(registrationForm, getOrganisationId(request), getCompetitionId(request));
 
             if (createUserResult.isSuccess()) {
                 removeCompetitionIdCookie(response);
@@ -290,8 +290,8 @@ public class RegistrationController {
 
     private void checkForExistingEmail(String email, BindingResult bindingResult) {
         if(!bindingResult.hasFieldErrors(EMAIL_FIELD_NAME) && StringUtils.hasText(email)) {
-            RestResult<UserResource> existingUserSearch = userService.findUserByEmailForAnonymousUserFlow(email);
-            if (!HttpStatus.NOT_FOUND.equals(existingUserSearch.getStatusCode())) {
+            Optional<UserResource> existingUserSearch = userService.findUserByEmailForAnonymousUserFlow(email);
+            if (existingUserSearch.isPresent()) {
                 ValidationMessages.rejectValue(bindingResult, EMAIL_FIELD_NAME, "validation.standard.email.exists");
             }
         }
@@ -312,7 +312,7 @@ public class RegistrationController {
         }
     }
 
-    private RestResult<UserResource> createUser(RegistrationForm registrationForm, Long organisationId, Long competitionId) {
+    private ServiceResult<UserResource> createUser(RegistrationForm registrationForm, Long organisationId, Long competitionId) {
         return userService.createLeadApplicantForOrganisationWithCompetitionId(
                 registrationForm.getFirstName(),
                 registrationForm.getLastName(),
