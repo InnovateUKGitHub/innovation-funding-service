@@ -279,6 +279,11 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
         }
 
         @Override
+        public ServiceResult<Void> generateSpendProfileForPartnerOrganisation(Long projectId, Long organisationId, Long userId) {
+            return null;
+        }
+
+        @Override
         public ServiceResult<ApprovalType> getSpendProfileStatusByProjectId(Long projectId) {
             return null;
         }
