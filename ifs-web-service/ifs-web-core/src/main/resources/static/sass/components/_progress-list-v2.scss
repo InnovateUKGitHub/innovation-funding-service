@@ -217,10 +217,9 @@
     background-color: $highlight-colour;
     color: $secondary-text-colour;
 
-    .status{
-      .msg-progress{
-        color: $secondary-text-colour;
-      }
+    .msg-progress{
+      color: $secondary-text-colour;
+      font-weight: normal;
     }
 
   }

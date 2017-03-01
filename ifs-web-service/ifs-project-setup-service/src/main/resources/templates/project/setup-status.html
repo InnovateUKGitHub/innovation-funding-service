@@ -13,7 +13,7 @@
 
     <div class="page-title">
         <th:block th:insert="fragments/elements :: project-title (projectId=${model.applicationId}, projectName=${model.projectName})" />
-        <h1 class="heading-xlarge">Project setup status TEST6</h1>
+        <h1 class="heading-xlarge">Project setup status</h1>
     </div>
 
     <th:block th:if="${model.projectComplete}">
@@ -84,15 +84,14 @@
                     </h2>
                     <p th:if="${model.monitoringOfficerAssigned}" class="no-margin">
                         Your Monitoring Officer for this project is
-                        <th:block th:text="${model.monitoringOfficerName}"/>
-                        .
+                        <th:block th:text="${model.monitoringOfficerName}"/>.
+                    </p>
                     </p>
                     <p th:unless="${model.monitoringOfficerAssigned}" class="no-margin">
                         We will assign the project a Monitoring Officer.
                     </p>
                 </div>
-                <th:block th:include="project/fragments :: project-setup-status-indicator(${model.monitoringOfficerStatus.getSectionStatus()})"
-                          th:if="${model.monitoringOfficerAssigned}" />
+                <th:block th:include="project/fragments :: project-setup-status-indicator(${(model.monitoringOfficerAssigned ? model.monitoringOfficerStatus.getSectionStatus() : 'awaiting-assignment')})" />
             </li>
             <!--/* ========================= Bank Details ========================= */-->
             <li class="read-only" th:if="${model.bankDetailsSection.notAccessible}">
