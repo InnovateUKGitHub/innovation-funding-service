@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
@@ -94,13 +95,14 @@ public class ApplicationTeamManagementController {
         Long authenticatedUserOrganisationId = getAuthenticatedUserOrganisationId(user, savedInvites);
         addSavedInvitesToForm(contributorsForm, leadOrganisation, savedInvites, organisationId);
         mergeAndValidateCookieData(request, response, bindingResult, contributorsForm, applicationId, application, leadApplicant);
+        long selectedOrgIndex = getSelectedOrgIndex(contributorsForm, organisationId);
 
-        model.addAttribute("model", applicationTeamManagementModelPopulator.populateModel(applicationId, organisationId, user, authenticatedUserOrganisationId));
+        model.addAttribute("model", applicationTeamManagementModelPopulator.populateModel(applicationId, organisationId, user, authenticatedUserOrganisationId, selectedOrgIndex));
 
         return APPLICATION_CONTRIBUTORS_UPDATE;
     }
 
-    @RequestMapping(value = "team/update/remove/{inviteId}/confirm", method = RequestMethod.GET)
+    @RequestMapping(value = "update/remove/{inviteId}/confirm", method = RequestMethod.GET)
     public String deleteContributorConfirmation(@PathVariable("applicationId") final Long applicationId,
                                                 @PathVariable("inviteId") final Long inviteId,
                                                 Model model) {
@@ -123,7 +125,7 @@ public class ApplicationTeamManagementController {
      * Handle form POST, manage ContributorsForm object, save to cookie, and redirect to the GET handler.
      */
     @RequestMapping(value = "update", method = RequestMethod.POST)
-    public String inviteContributors(@PathVariable("applicationId") Long applicationId,
+    public String updateContributors(@PathVariable("applicationId") Long applicationId,
                                      @RequestParam(name = "organisation", required = false) Long organisationId,
                                      @RequestParam(name = "add_person", required = false) String organisationIndex,
                                      @RequestParam(name = "add_partner", required = false) String addPartner,
@@ -181,6 +183,12 @@ public class ApplicationTeamManagementController {
             return format("redirect:/application/%d/team/update/?newApplication", applicationId);
         }
         return format("redirect:/application/%d/team/update?organisation=%d", applicationId, organisationId);
+    }
+
+    private int getSelectedOrgIndex(ContributorsForm contributorsForm, Long organisationId) {
+        return IntStream.range(0, contributorsForm.getOrganisations().size())
+                .filter(i -> organisationId.equals(contributorsForm.getOrganisations().get(i).getOrganisationId()))
+                .findFirst().getAsInt();
     }
 
     private void saveContributors(@PathVariable("applicationId") Long applicationId, @ModelAttribute ContributorsForm contributorsForm, HttpServletResponse response) {
@@ -299,9 +307,9 @@ public class ApplicationTeamManagementController {
                 });
 
         // Reduce the contributors form org list to selected org
-        List<OrganisationInviteForm> selectedOrganisation = contributorsForm.getOrganisations()
-                .stream().filter(org -> org.getOrganisationId().equals(organisationId)).collect(toList());
-        contributorsForm.setOrganisations(selectedOrganisation);
+//        List<OrganisationInviteForm> selectedOrganisation = contributorsForm.getOrganisations()
+//                .stream().filter(org -> org.getOrganisationId().equals(organisationId)).collect(toList());
+//        contributorsForm.setOrganisations(selectedOrganisation);
     }
 
     private void addPersonRow(ContributorsForm contributorsForm, String organisationIndex) {

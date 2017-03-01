@@ -43,13 +43,12 @@ public class ApplicationTeamManagementModelPopulator {
     @Autowired
     private OrganisationService organisationService;
 
-    public ApplicationTeamManagementViewModel populateModel(Long applicationId, Long organisationId, UserResource user, Long authenticatedUserOrganisationId) {
+    public ApplicationTeamManagementViewModel populateModel(Long applicationId, Long organisationId, UserResource user, Long authenticatedUserOrganisationId, long selectedOrgIndex) {
         ApplicationResource application = applicationService.getById(applicationId);
         ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
         OrganisationResource leadOrganisation = organisationService.getOrganisationById(leadApplicantProcessRole.getOrganisationId());
         UserResource leadApplicant = userService.findById(leadApplicantProcessRole.getUser());
         OrganisationResource selectedOrganisation = organisationId != null ? organisationService.getOrganisationById(organisationId) : null;
-        long selectedOrgIndex = 0;
 
         return new ApplicationTeamManagementViewModel(application.getId(), application.getApplicationDisplayName(), leadApplicant,
                 leadOrganisation, selectedOrganisation, user, authenticatedUserOrganisationId,
