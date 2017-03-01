@@ -215,18 +215,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
                     Pair.of(Eligibility.APPROVED, EligibilityRagStatus.UNSET) :
                     Pair.of(Eligibility.REVIEW, EligibilityRagStatus.UNSET);
 
-            ServiceResult<List<ProjectFinanceResource>> projectFinanceResources = projectFinanceService.getProjectFinances(projectId);
-            boolean anyQueryAwaitingResponse = false;
-
-            if(projectFinanceResources.isSuccess()) {
-                Optional<ProjectFinanceResource> projectFinanceResource = projectFinanceResources.getSuccessObject().stream().filter(pf ->  pf.getOrganisation().longValue() == org.getOrganisation().getId()).findFirst();
-                if(projectFinanceResource.isPresent()) {
-                    ServiceResult<List<QueryResource>> queries = projectFinanceQueriesService.findAll(projectFinanceResource.get().getId());
-                    if (queries.isSuccess()) {
-                        anyQueryAwaitingResponse |= queries.getSuccessObject().stream().anyMatch(f -> f.awaitingResponse);
-                    }
-                }
-            }
+            boolean anyQueryAwaitingResponse = isQueryActionRequired(projectId, org.getOrganisation().getId()).getSuccessObject();
 
             return new FinanceCheckPartnerStatusResource(
                 org.getOrganisation().getId(),
@@ -235,6 +224,21 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
                 eligibility.getLeft(), eligibility.getRight(),
                 anyQueryAwaitingResponse);
         });
+    }
+
+    @Override
+    public ServiceResult<Boolean> isQueryActionRequired(Long projectId, Long organisationId) {
+        boolean actionRequired = false;
+
+        ServiceResult<ProjectFinanceResource> resource = projectFinanceRowService.financeChecksDetails(projectId, organisationId);
+        if(resource.isSuccess()) {
+                ServiceResult<List<QueryResource>> queries = projectFinanceQueriesService.findAll(resource.getSuccessObject().getId());
+                if(queries.isSuccess()) {
+                    actionRequired |= queries.getSuccessObject().stream().anyMatch(q -> q.awaitingResponse);
+                }
+        }
+
+        return serviceSuccess(actionRequired);
     }
 
     private ProjectOrganisationCompositeId getCompositeId(PartnerOrganisation org)  {

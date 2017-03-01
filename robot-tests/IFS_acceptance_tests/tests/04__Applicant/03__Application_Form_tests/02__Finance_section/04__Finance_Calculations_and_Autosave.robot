@@ -38,8 +38,7 @@ Overhead costs
     [Tags]
     When the user clicks the button/link    jQuery=button:contains("Overhead costs")
     And the user clicks the button/link    jQuery=label:contains("20% of labour costs")
-    #Then admin costs total should be correct    id=section-total-10-default    £ 9,600
-    #TODO enable the disabled check as soon as the INFUND-7958
+    Then admin costs total should be correct    id=section-total-10-default    £ 9,600
     [Teardown]    the user clicks the button/link    jQuery=button:contains("Overhead costs")
 
 Materials
@@ -98,7 +97,7 @@ Other costs
     Then Totals should be correct    id=section-total-15    £ 200    css=[data-mirror="#section-total-15"]    £ 200
     Then the user reloads the page
     Then Totals should be correct    id=section-total-15    £ 200    css=[data-mirror="#section-total-15"]    £ 200
-    [Teardown]    the user clicks the button/link    jQuery=button:contains("Other Costs")
+    [Teardown]    the user clicks the button/link    jQuery=button:contains("Other costs")
 
 *** Keywords ***
 the Applicant fills in the Labour costs for two rows
@@ -200,7 +199,7 @@ the Applicant fills the Travel fields
     the user moves focus to the element    jQuery=button:contains("Travel and subsistence")
 
 the applicant adds one row for the other costs
-    the user clicks the button/link    jQuery=button:contains("Other Costs")
+    the user clicks the button/link    jQuery=button:contains("Other costs")
     the user should see the element    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
     the user enters text to a text field    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    100
     the user enters text to a text field    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) textarea    test
@@ -208,7 +207,7 @@ the applicant adds one row for the other costs
     the user should see the element    css=#other-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
     the user enters text to a text field    css=#other-costs-table tbody tr:nth-of-type(2) td:nth-of-type(1) textarea    test
     the user enters text to a text field    css=#other-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    100
-    the user moves focus to the element    jQuery=button:contains("Other Costs")
+    the user moves focus to the element    jQuery=button:contains("Other costs")
 
 the total of the other funding should be correct
     the user should see the element    id=other-funding-total

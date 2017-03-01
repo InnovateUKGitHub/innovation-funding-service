@@ -728,3 +728,8 @@ include::{snippets}/project/get-finance-check-eligibility-details/response-field
 
 ===== Curl Example
 include::{snippets}/project/get-finance-check-eligibility-details/curl-request.adoc[]
+
+=== Get Finance Check Eligibility
+include::{snippets}/project/get-finance-check-eligibility-details/curl-request.adoc[]
+
+

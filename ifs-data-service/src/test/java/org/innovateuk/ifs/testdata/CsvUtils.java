@@ -325,6 +325,10 @@ class CsvUtils {
         List<String> collaborators;
         LocalDateTime submittedDate;
         ApplicationStatusConstants status;
+        boolean markFinancesComplete;
+        String researchCategory;
+        boolean resubmission;
+        boolean markDetailsComplete;
 
         private ApplicationLine(List<String> line) {
             int i = 0;
@@ -337,6 +341,10 @@ class CsvUtils {
             collaborators = collaboratorString != null ? asList(collaboratorString.split(",")) : emptyList();
             submittedDate = nullableDateTime(line.get(i++));
             status = ApplicationStatusConstants.getFromName(line.get(i++));
+            markFinancesComplete = nullableBoolean(line.get(i++));
+            researchCategory = nullable(line.get(i++));
+            resubmission = nullableBoolean(line.get(i++));
+            markDetailsComplete = nullableBoolean(line.get(i++));
         }
     }
 

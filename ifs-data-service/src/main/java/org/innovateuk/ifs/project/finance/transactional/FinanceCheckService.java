@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.finance.transactional;
 
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.finance.domain.FinanceCheck;
@@ -40,6 +41,9 @@ public interface FinanceCheckService {
 
     @PreAuthorize("hasPermission(#projectId, 'READ_OVERVIEW')")
     ServiceResult<FinanceCheckOverviewResource> getFinanceCheckOverview(Long projectId);
+
+    @NotSecured(value = "This Service is to be used within other secured services", mustBeSecuredByOtherServices = true)
+    ServiceResult<Boolean> isQueryActionRequired(Long projectId, Long organisationId);
 
     @PostAuthorize("hasPermission(returnObject, 'READ_ELIGIBILITY')")
     ServiceResult<FinanceCheckEligibilityResource> getFinanceCheckEligibilityDetails(Long projectId, Long organisationId);

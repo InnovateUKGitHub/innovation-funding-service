@@ -7,7 +7,7 @@ Resource          ../../resources/defaultResources.robot
 *** Test Cases ***
 In Panel Dashboard
     Given The user clicks the button/link    link=${FUNDERS_PANEL_COMPETITION_NAME}
-    Then The user should see the text in the page    00000005: Internet of Things
+    Then The user should see the text in the page    5: Internet of Things
     And The user should see the text in the page    Panel
     And The user should see the text in the page    Programme
     And The user should see the text in the page    Materials and manufacturing

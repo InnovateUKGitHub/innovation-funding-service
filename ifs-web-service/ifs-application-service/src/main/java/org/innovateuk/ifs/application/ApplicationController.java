@@ -10,16 +10,16 @@ import org.innovateuk.ifs.application.populator.ApplicationOverviewModelPopulato
 import org.innovateuk.ifs.application.populator.ApplicationPrintPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.service.*;
+import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.controller.viewmodel.OptionalFileDetailsViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
-import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputService;
@@ -39,12 +39,13 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
+import static org.innovateuk.ifs.commons.rest.ValidationMessages.collectValidationMessages;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PROJECT_SETUP;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 /**
@@ -110,6 +111,8 @@ public class ApplicationController {
     @Autowired
     private UserRestService userRestService;
 
+    @Autowired
+    private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
 
     public static String redirectToApplication(ApplicationResource application){
         return "redirect:/application/"+application.getId();
@@ -182,7 +185,13 @@ public class ApplicationController {
             model.addAttribute("assessorFeedback", assessorFeedbackViewModel);
         }
 
-        return "application-summary";
+        if (competition.getCompetitionStatus().isFeedbackReleased()) {
+            model.addAttribute("scores", assessorFormInputResponseRestService.getApplicationAssessmentAggregate(applicationId).getSuccessObjectOrThrowException());
+            return "application-feedback-summary";
+        }
+        else {
+            return "application-summary";
+        }
     }
 
     @ProfileExecution
@@ -203,7 +212,11 @@ public class ApplicationController {
 
             if (markQuestionCompleteId != null && StringUtils.isNotEmpty(questionFormInputValue)) {
                 ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), applicationId);
-                questionService.markAsComplete(markQuestionCompleteId, applicationId, processRole.getId());
+                List<ValidationMessages> markAsCompleteErrors = questionService.markAsComplete(markQuestionCompleteId, applicationId, processRole.getId());
+
+                if (collectValidationMessages(markAsCompleteErrors).hasErrors()) {
+                    questionService.markAsInComplete(markQuestionCompleteId, applicationId, processRole.getId());
+                }
             }
         }
 
@@ -300,62 +313,6 @@ public class ApplicationController {
     public String printApplication(@PathVariable("applicationId") Long applicationId,
                                              Model model, HttpServletRequest request) {
         return applicationPrintPopulator.print(applicationId, model, request);
-    }
-
-    private String doAssignQuestionAndReturnSectionFragment(Model model,
-                                                            Long applicationId,
-                                                            Optional<Long> sectionId,
-                                                            HttpServletRequest request,
-                                                            HttpServletResponse response,
-                                                            ApplicationForm form) {
-        doAssignQuestion(applicationId, request, response);
-
-        ApplicationResource application = applicationService.getById(applicationId);
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-
-        CompetitionResource  competition = competitionService.getById(application.getCompetition());
-
-        Optional<SectionResource> currentSection = applicationSectionAndQuestionModelPopulator.getSectionByIds(competition.getId(), sectionId, false);
-
-        Long questionId = questionService.extractQuestionProcessRoleIdFromAssignSubmit(request);
-        Optional<QuestionResource> question = getQuestion(currentSection, questionId);
-
-        ProcessRoleResource userApplicationRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccessObjectOrThrowException();
-
-        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), currentSection, question.map(QuestionResource::getId), model, form);
-        applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form, userApplicationRole.getOrganisationId());
-
-        model.addAttribute("currentUser", user);
-        model.addAttribute("section", currentSection.orElse(null));
-
-        Map<Long, List<QuestionResource>> sectionQuestions = new HashMap<>();
-        if (currentSection.isPresent()) {
-            if (questionId != null && question.isPresent()) {
-                sectionQuestions.put(currentSection.get().getId(), Arrays.asList(questionService.getById(questionId)));
-            } else {
-                sectionQuestions.put(currentSection.get().getId(), currentSection.get().getQuestions().stream().map(questionService::getById).collect(Collectors.toList()));
-            }
-        }
-
-        Map<Long, List<FormInputResource>> questionFormInputs = sectionQuestions.values().stream().flatMap(a -> a.stream()).collect(Collectors.toMap(q -> q.getId(), k -> formInputService.findApplicationInputsByQuestion(k.getId())));
-
-        model.addAttribute("questionFormInputs", questionFormInputs);
-        model.addAttribute("sectionQuestions", sectionQuestions);
-        List<SectionResource> childSections = simpleMap(currentSection.map(section -> section.getChildSections()).orElse(null), sectionService::getById);
-        model.addAttribute("childSections", childSections);
-        model.addAttribute("childSectionsSize", childSections.size());
-        return "application/single-section-details";
-    }
-
-    private Optional<QuestionResource> getQuestion(Optional<SectionResource> currentSection, Long questionId) {
-        if (currentSection.isPresent()) {
-            return currentSection.get().getQuestions().stream()
-                    .map(questionService::getById)
-                    .filter(q -> q.getId().equals(questionId))
-                    .findAny();
-        } else {
-            return Optional.empty();
-        }
     }
 
     /**

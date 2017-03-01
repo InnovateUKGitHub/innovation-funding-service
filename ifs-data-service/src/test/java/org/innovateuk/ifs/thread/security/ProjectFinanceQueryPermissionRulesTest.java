@@ -1,9 +1,7 @@
 package org.innovateuk.ifs.thread.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
-import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.threads.security.ProjectFinanceQueryPermissionRules;
-import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.threads.resource.FinanceChecksSectionType;
 import org.innovateuk.threads.resource.PostResource;
@@ -14,10 +12,8 @@ import org.junit.Test;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-import static org.innovateuk.ifs.finance.domain.builder.ProjectFinanceBuilder.newProjectFinance;
-import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
+import static org.innovateuk.ifs.thread.security.ProjectFinanceThreadsTestData.projectFinanceWithUserAsFinanceContact;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
-import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.FINANCE_CONTACT;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
@@ -79,14 +75,14 @@ public class ProjectFinanceQueryPermissionRulesTest extends BasePermissionRulesT
         QueryResource queryWithoutPosts = queryWithoutPosts();
         assertTrue(rules.onlyProjectFinanceUsersOrFinanceContactAddPostToTheirQueries(queryWithoutPosts, projectFinanceUser));
         when(projectFinanceRepositoryMock.findOne(queryWithoutPosts.contextClassPk))
-                .thenReturn(mockedProjectFinanceWithUserAsFinanceContact(financeContactUser));
+                .thenReturn(projectFinanceWithUserAsFinanceContact(financeContactUser));
         assertFalse(rules.onlyProjectFinanceUsersOrFinanceContactAddPostToTheirQueries(queryWithoutPosts, financeContactUser));
     }
 
     @Test
     public void testThatOnlyTheProjectFinanceUserOrTheCorrectFinanceContactCanReplyToAQuery() throws Exception {
         when(projectFinanceRepositoryMock.findOne(queryResource.contextClassPk))
-                .thenReturn(mockedProjectFinanceWithUserAsFinanceContact(financeContactUser));
+                .thenReturn(projectFinanceWithUserAsFinanceContact(financeContactUser));
         assertTrue(rules.onlyProjectFinanceUsersOrFinanceContactAddPostToTheirQueries(queryResource, projectFinanceUser));
         assertTrue(rules.onlyProjectFinanceUsersOrFinanceContactAddPostToTheirQueries(queryResource, financeContactUser));
         assertFalse(rules.onlyProjectFinanceUsersOrFinanceContactAddPostToTheirQueries(queryResource, incorrectFinanceContactUser));
@@ -96,16 +92,8 @@ public class ProjectFinanceQueryPermissionRulesTest extends BasePermissionRulesT
     public void testThatOnlyProjectFinanceUsersOrFinanceContactCanViewTheirQueries() {
         assertTrue(rules.onlyProjectFinanceUsersOrFinanceContactCanViewTheirQueries(queryResource, projectFinanceUser));
         when(projectFinanceRepositoryMock.findOne(queryResource.contextClassPk))
-                .thenReturn(mockedProjectFinanceWithUserAsFinanceContact(financeContactUser));
+                .thenReturn(projectFinanceWithUserAsFinanceContact(financeContactUser));
         assertTrue(rules.onlyProjectFinanceUsersOrFinanceContactCanViewTheirQueries(queryResource, financeContactUser));
         assertFalse(rules.onlyProjectFinanceUsersOrFinanceContactCanViewTheirQueries(queryResource, incorrectFinanceContactUser));
     }
-
-
-    private final ProjectFinance mockedProjectFinanceWithUserAsFinanceContact(UserResource user) {
-        Organisation organisation = new Organisation();
-        organisation.addUser(newUser().withRoles(newRole().withType(FINANCE_CONTACT).build(1)).withId(financeContactUser.getId()).build());
-        return newProjectFinance().withOrganisation(organisation).build();
-    }
-
 }

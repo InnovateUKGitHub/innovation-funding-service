@@ -10,7 +10,6 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static java.util.Collections.emptyList;
 import static junit.framework.TestCase.assertFalse;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
@@ -184,7 +183,6 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
                 assertTrue(rules.internalUsersCanSeeTheProjectFinanceOverviewsForAllProjects(projectId, user));
         });
     }
-
 
     @Test
     public void testProjectFinanceContactCanViewFinanceChecks() throws Exception {

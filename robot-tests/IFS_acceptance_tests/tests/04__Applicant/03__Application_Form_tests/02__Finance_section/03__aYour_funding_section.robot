@@ -21,9 +21,8 @@ Applicant has options to enter funding level and details of any other funding
 
 Applicant can see maximum funding size available to them
     [Documentation]    INFUND-6794
-    [Tags]    HappyPath    Pending
-    # TODO Pending due to INFUND-8091
-    When the user should see the text in the page    50% max funding level allowed for an organisation of your size    # note that this text will change
+    [Tags]    HappyPath
+    When the user should see the text in the page    Enter your funding level (maximum 50%)
 
 Funding level validations
     [Documentation]    INFUND-6794

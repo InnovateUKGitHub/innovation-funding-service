@@ -129,6 +129,11 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
         }
 
         @Override
+        public ServiceResult<Boolean> isQueryActionRequired(Long projectId, Long organisationId) {
+            return null;
+        }
+
+        @Override
         public ServiceResult<FinanceCheckEligibilityResource> getFinanceCheckEligibilityDetails(Long projectId, Long organisationId) { return serviceSuccess(newFinanceCheckEligibilityResource().build()); }
 
     }

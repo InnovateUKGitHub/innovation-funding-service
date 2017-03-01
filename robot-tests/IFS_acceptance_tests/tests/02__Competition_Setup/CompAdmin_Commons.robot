@@ -135,12 +135,8 @@ Change the open date of the Competition in the database to one day before
     ${yesterday} =  get yesterday
     execute sql string  UPDATE `${database_name}`.`milestone` INNER JOIN `${database_name}`.`competition` ON `${database_name}`.`milestone`.`competition_id` = `${database_name}`.`competition`.`id` SET `${database_name}`.`milestone`.`DATE`='${yesterday}' WHERE `${database_name}`.`competition`.`name`='${competition}' and `${database_name}`.`milestone`.`type` = 'OPEN_DATE';
 
-get comp id from comp title
-    [Arguments]  ${title}
-    ${result} =  query  SELECT `id` FROM `${database_name}`.`competition` WHERE `name`='${title}';
-    Log  ${result}
-    # the result of this query looks like ((13,),) so you need get the value array[0][0]
-    ${result} =  get from list  ${result}  0
-    ${competitionId} =  get from list  ${result}  0
-    Log  ${competitionId}
-    [Return]  ${competitionId}
+the internal user navigates to public content
+    [Arguments]  ${comp}
+    the user navigates to the page      ${CA_UpcomingComp}
+    the user clicks the button/link    link=${comp}
+    the user clicks the button/link    link=Public content

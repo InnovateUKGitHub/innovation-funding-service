@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionsRestService;
@@ -26,6 +27,7 @@ import static java.math.BigDecimal.ZERO;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.calls;
 import static org.mockito.Mockito.when;
@@ -170,6 +172,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     public void testUpdateStatus() throws Exception {
     	Long applicationId = 2L;
         Long statusId = 1L;
+        when(applicationRestService.updateApplicationStatus(applicationId, statusId)).thenReturn(restSuccess());
         service.updateStatus(applicationId, statusId);
         Mockito.inOrder(applicationRestService).verify(applicationRestService, calls(1)).updateApplicationStatus(applicationId, statusId);
     }
@@ -186,14 +189,19 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     @Test
     public void testSave() throws Exception {
     	ApplicationResource application = new ApplicationResource();
-        service.save(application);
+
+        when(applicationRestService.saveApplication(application)).thenReturn(restSuccess());
+
+        ServiceResult<Void> result = service.save(application);
+    	assertTrue(result.isSuccess());
         Mockito.inOrder(applicationRestService).verify(applicationRestService, calls(1)).saveApplication(application);
     }
 
     @Test
     public void testRemoveCollaborator() throws Exception {
         Long applicationInviteId = 80512L;
-        service.removeCollaborator(applicationInviteId);
+        ServiceResult<Void> result = service.removeCollaborator(applicationInviteId);
+        assertTrue(result.isSuccess());
         Mockito.inOrder(inviteRestService).verify(inviteRestService, calls(1)).removeApplicationInvite(applicationInviteId);
     }
 

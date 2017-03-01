@@ -11,7 +11,8 @@ import org.innovateuk.ifs.project.finance.service.ProjectFinanceNotesRestService
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceQueriesRestService;
 import org.innovateuk.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
-import org.innovateuk.ifs.upload.service.PostAttachmentRestService;
+import org.innovateuk.ifs.upload.service.AttachmentRestService;
+import org.innovateuk.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.threads.resource.NoteResource;
 import org.innovateuk.threads.resource.PostResource;
 import org.innovateuk.threads.resource.QueryResource;
@@ -31,7 +32,7 @@ public class FinanceCheckServiceImpl implements FinanceCheckService {
 
     @Autowired
     @Qualifier("projectFinance")
-    private PostAttachmentRestService attachmentService;
+    private AttachmentRestService attachmentRestService;
 
     @Autowired
     private ProjectFinanceQueriesRestService queryService;
@@ -40,12 +41,12 @@ public class FinanceCheckServiceImpl implements FinanceCheckService {
     private ProjectFinanceNotesRestService noteService;
 
     @Override
-    public FinanceCheckResource getByProjectAndOrganisation(ProjectOrganisationCompositeId key){
+    public FinanceCheckResource getByProjectAndOrganisation(ProjectOrganisationCompositeId key) {
         return financeCheckRestService.getByProjectAndOrganisation(key.getProjectId(), key.getOrganisationId()).getSuccessObjectOrThrowException();
     }
 
     @Override
-    public ServiceResult<Void> update(FinanceCheckResource toUpdate){
+    public ServiceResult<Void> update(FinanceCheckResource toUpdate) {
         return financeCheckRestService.update(toUpdate).toServiceResult();
     }
 
@@ -75,23 +76,29 @@ public class FinanceCheckServiceImpl implements FinanceCheckService {
     }
 
     @Override
-    public ServiceResult<FileEntryResource> uploadFile(String contentType, long contentLength, String originalFilename, byte[] bytes) {
-        return attachmentService.upload(contentType, contentLength, originalFilename, bytes).toServiceResult();
+    public ServiceResult<AttachmentResource> uploadFile(Long projectId, String contentType, long contentLength, String originalFilename, byte[] bytes) {
+        return attachmentRestService.upload(projectId, contentType, contentLength, originalFilename, bytes).toServiceResult();
     }
 
     @Override
     public ServiceResult<Void> deleteFile(Long fileId) {
-        return attachmentService.delete(fileId).toServiceResult();
+        return attachmentRestService.delete(fileId).toServiceResult();
     }
 
     @Override
     public ServiceResult<Optional<ByteArrayResource>> downloadFile(Long fileId) {
-        return attachmentService.download(fileId).toServiceResult();
+        return attachmentRestService.download(fileId).toServiceResult();
     }
 
     @Override
-    public ServiceResult<FileEntryResource> getFileInfo(Long fileId) {
-        return attachmentService.find(fileId).toServiceResult();
+    public ServiceResult<AttachmentResource> getAttachment(Long attachmentId) {
+        return attachmentRestService.find(attachmentId).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<FileEntryResource> getAttachmentInfo(Long attachmentId) {
+        return attachmentRestService.find(attachmentId).toServiceResult()
+                .andOnSuccessReturn(a -> new FileEntryResource(a.name, a.mediaType, a.sizeInBytes));
     }
 
     @Override

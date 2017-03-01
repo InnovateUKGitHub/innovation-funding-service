@@ -57,11 +57,18 @@ public enum CommonFailureKeys implements ErrorTemplate {
     COMPETITION_NO_TEMPLATE(CONFLICT),
 
     /**
+     * Applications
+     */
+    ASSIGNEE_SHOULD_BE_APPLICANT(BAD_REQUEST),
+
+    /**
      * Public content
      */
     PUBLIC_CONTENT_NOT_COMPLETE_TO_PUBLISH(BAD_REQUEST),
     PUBLIC_CONTENT_ALREADY_INITIALISED(BAD_REQUEST),
     PUBLIC_CONTENT_NOT_INITIALISED(BAD_REQUEST),
+    PUBLIC_CONTENT_IDS_INCONSISTENT(BAD_REQUEST),
+    PUBLIC_CONTENT_KEYWORD_TOO_LONG(BAD_REQUEST),
 
     /**
      * Notifications
@@ -136,10 +143,9 @@ public enum CommonFailureKeys implements ErrorTemplate {
     PROJECT_SETUP_ALREADY_COMPLETE(BAD_REQUEST),
 
     /**
-     * Public Content
+     * Non IFS competitions.
      */
-    PUBLIC_CONTENT_IDS_INCONSISTENT(BAD_REQUEST),
-
+    ONLY_NON_IFS_COMPETITION_VALID(BAD_REQUEST),
     /**
      * Project Bank details
      */

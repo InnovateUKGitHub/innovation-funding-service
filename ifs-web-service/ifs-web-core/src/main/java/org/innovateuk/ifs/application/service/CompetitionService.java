@@ -2,7 +2,10 @@ package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
-import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.resource.AssessorCountOptionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
+import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
@@ -31,27 +34,29 @@ public interface CompetitionService {
 
     ServiceResult<Void> setSetupSectionMarkedAsComplete(Long competitionId, CompetitionSetupSection section);
 
-    void setSetupSectionMarkedAsIncomplete(Long competitionId, CompetitionSetupSection section);
+    ServiceResult<Void> setSetupSectionMarkedAsIncomplete(Long competitionId, CompetitionSetupSection section);
 
     ServiceResult<Void> initApplicationFormByCompetitionType(Long competitionId, Long competitionTypeId);
 
     String generateCompetitionCode(Long competitionId, LocalDateTime openingDate);
 
-    void returnToSetup(Long competitionId);
+    ServiceResult<Void> returnToSetup(Long competitionId);
 
-    void markAsSetup(Long competitionId);
+    ServiceResult<Void> markAsSetup(Long competitionId);
 
     List<AssessorCountOptionResource> getAssessorOptionsForCompetitionType(Long competitionTypeId);
 
-    void closeAssessment(Long competitionId);
+    ServiceResult<Void> closeAssessment(Long competitionId);
 
-    void notifyAssessors(Long competitionId);
+    ServiceResult<Void> notifyAssessors(Long competitionId);
+
+    void releaseFeedback(Long competitionId);
 
     PublicContentItemResource getPublicContentOfCompetition(Long competitionId);
 
-    ServiceResult<ByteArrayResource> downloadPublicContentAttachment(Long contentGroupId);
+    ByteArrayResource downloadPublicContentAttachment(Long contentGroupId);
 
-    ServiceResult<FileEntryResource> getPublicContentFileDetails(Long contentGroupId);
+    FileEntryResource getPublicContentFileDetails(Long contentGroupId);
 
     CompetitionResource createNonIfs();
 }
