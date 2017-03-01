@@ -126,6 +126,8 @@ tailorAppInstance
 if [[ ${TARGET} != "production" ]]
 then
     createProject
+else
+    oc project $PROJECT
 fi
 
 if [[ (${TARGET} == "remote") ||  (${TARGET} == "production") ]]
