@@ -616,6 +616,20 @@ include::{snippets}/project/get-finance-check-summary/response-fields.adoc[]
 include::{snippets}/project/get-finance-check-summary/curl-request.adoc[]
 
 
+=== Get Finance Check Overview
+==== Success
+===== Request
+include::{snippets}/project/get-finance-check-overview/http-request.adoc[]
+include::{snippets}/project/get-finance-check-overview/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/get-finance-check-overview/http-response.adoc[]
+include::{snippets}/project/get-finance-check-overview/response-fields.adoc[]
+
+===== Curl Example
+include::{snippets}/project/get-finance-check-overview/curl-request.adoc[]
+
+
 === Get Project Finances
 ==== Success
 ===== Request
