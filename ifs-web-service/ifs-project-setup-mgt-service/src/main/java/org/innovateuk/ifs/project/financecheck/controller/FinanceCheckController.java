@@ -66,6 +66,8 @@ public class FinanceCheckController {
 
     private static final String FORM_ATTR_NAME = "form";
 
+    private static final String UNIVERSITY_HEI = "University (HEI)";
+
     @Autowired
     private ProjectService projectService;
 
@@ -195,7 +197,9 @@ public class FinanceCheckController {
         String formattedCompId = formatter.format(application.getCompetition());
 
         OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
-        boolean isResearch = OrganisationTypeEnum.isResearch(organisationResource.getOrganisationType());
+
+        //TODO - Bronnyl - Change the variable name isResearch as its misleading. Update the view model, template and update the failing test cases.
+        boolean isResearch = isUsingJesFinances(organisationResource.getOrganisationTypeName());
         Optional<ProjectUserResource> financeContact = getFinanceContact(projectId, organisationId);
 
         FinanceCheckProcessResource financeCheckStatus = financeCheckService.getFinanceCheckApprovalStatus(projectId, organisationId);
@@ -221,6 +225,15 @@ public class FinanceCheckController {
         }
 
         model.addAttribute("model", financeCheckViewModel);
+    }
+
+    private boolean isUsingJesFinances(String organisationType) {
+        switch(organisationType) {
+            case UNIVERSITY_HEI:
+                return true;
+            default:
+                return false;
+        }
     }
 
     private Optional<ProjectUserResource> getFinanceContact(Long projectId, Long organisationId){
