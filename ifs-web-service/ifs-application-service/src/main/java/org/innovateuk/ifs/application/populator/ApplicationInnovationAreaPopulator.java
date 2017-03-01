@@ -19,19 +19,22 @@ public class ApplicationInnovationAreaPopulator {
     private ApplicationRestService applicationRestService;
 
     public InnovationAreaViewModel populate(Long applicationId, Long questionId) {
+        ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccessObject();
+
         InnovationAreaViewModel innovationAreaViewModel = new InnovationAreaViewModel();
         innovationAreaViewModel.setAvailableInnovationAreas(innovationAreaRestService.getAvailableInnovationAreasForApplication(applicationId).getSuccessObject());
         innovationAreaViewModel.setQuestionId(applicationId);
         innovationAreaViewModel.setApplicationId(questionId);
+        innovationAreaViewModel.setCurrentCompetitionName(applicationResource.getCompetitionName());
 
-        setInnovationAreaChoice(applicationId, innovationAreaViewModel);
+        setInnovationAreaChoice(applicationResource, innovationAreaViewModel);
 
 
         return innovationAreaViewModel;
     }
 
-    private void setInnovationAreaChoice(Long applicationId, InnovationAreaViewModel innovationAreaViewModel) {
-        ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccessObject();
+    private void setInnovationAreaChoice(ApplicationResource applicationResource, InnovationAreaViewModel innovationAreaViewModel) {
+
         if(applicationResource.getNoInnovationAreaApplicable()) {
             innovationAreaViewModel.setNoInnovationAreaApplicable(true);
         }

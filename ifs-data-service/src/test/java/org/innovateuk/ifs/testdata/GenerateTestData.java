@@ -84,9 +84,9 @@ import static org.mockito.Mockito.when;
 /**
  * Generates web test data based upon csvs in /src/test/resources/testdata using data builders
  */
-@Ignore("Manual web test data generation")
 @ActiveProfiles({"integration-test,seeding-db"})
 @DirtiesContext
+@Ignore
 public class GenerateTestData extends BaseIntegrationTest {
 
     private static final Log LOG = LogFactory.getLog(GenerateTestData.class);
@@ -514,6 +514,7 @@ public class GenerateTestData extends BaseIntegrationTest {
 
         ApplicationDataBuilder baseBuilder = builder.
                 withBasicDetails(leadApplicant, line.title, line.researchCategory, line.resubmission).
+                withInnovationArea(line.innovationArea).
                 withStartDate(line.startDate).
                 withDurationInMonths(line.durationInMonths);
 
