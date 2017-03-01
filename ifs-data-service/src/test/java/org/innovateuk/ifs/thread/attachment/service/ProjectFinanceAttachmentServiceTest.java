@@ -26,6 +26,7 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 public class ProjectFinanceAttachmentServiceTest extends BaseUnitTestMocksTest {
@@ -116,10 +117,13 @@ public class ProjectFinanceAttachmentServiceTest extends BaseUnitTestMocksTest {
         final Long attachmentId = 1L;
         final Long attachmentsFileEntryId = 101L;
         final FileEntry attachmentsFileEntry = new FileEntry(attachmentsFileEntryId, "name", APPLICATION_JSON, 432);
-        when(attachmentMapperMock.mapIdToDomain(attachmentId)).thenReturn(new Attachment(attachmentId, newUser().build(), attachmentsFileEntry));
-        when(fileServiceMock.deleteFile(attachmentsFileEntryId)).thenReturn(ServiceResult.serviceFailure(notFoundError(FileEntry.class, attachmentsFileEntryId)));
+        when(attachmentMapperMock.mapIdToDomain(attachmentId))
+                .thenReturn(new Attachment(attachmentId, newUser().build(), attachmentsFileEntry));
+        when(fileServiceMock.deleteFile(attachmentsFileEntryId))
+                .thenReturn(ServiceResult.serviceFailure(notFoundError(FileEntry.class, attachmentsFileEntryId)));
         ServiceResult<Void> response = service.delete(attachmentId);
-        assertTrue(response.isFailure() && response.getErrors().stream().allMatch(e -> e.getStatusCode().equals(HttpStatus.NOT_FOUND)));
+        assertTrue(response.isFailure()
+                        && response.getErrors().stream().allMatch(e -> e.getStatusCode().equals(NOT_FOUND)));
     }
 
 }
