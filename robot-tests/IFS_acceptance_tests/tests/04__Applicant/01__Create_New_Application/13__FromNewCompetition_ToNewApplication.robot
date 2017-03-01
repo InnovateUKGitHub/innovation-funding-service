@@ -330,8 +330,8 @@ the user selects technical feasibility and no to resubmission
     # Often those labels need double click. Thus i made a separate keyword to looks more tidy
     the user clicks the button/link    jQuery=label[for="financePosition-cat-33"]
     the user clicks the button/link    jQuery=label[for="financePosition-cat-33"]
-    the user clicks the button/link    jQuery=label[for="resubmission-no"]
-    the user clicks the button/link    jQuery=label[for="resubmission-no"]
+    the user clicks the button/link    jQuery=label[for="application.resubmission-no"]
+    the user clicks the button/link    jQuery=label[for="application.resubmission-no"]
 
 the user decides about the growth table
     [Arguments]    ${edit}    ${read}

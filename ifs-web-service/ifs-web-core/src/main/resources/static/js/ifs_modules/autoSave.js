@@ -75,18 +75,18 @@ IFS.core.autoSave = (function () {
               formInputId: fieldInfo.prop('id'),
               fieldName: fieldInfo.prop('name')
             }
-          } else if (IFS.core.autoSave.isIdAutoSaveApplicantField(field)) {
-            jsonObj = {
-              applicationId: applicationId,
-              value: field.val(),
-              formInputId: field.prop('id'),
-              fieldName: field.prop('name')
-            }
-          } else if (digitRegex.test(field.prop('id'))) {
+          } else if (!IFS.core.autoSave.isIdAutoSaveApplicantField(field) && digitRegex.test(field.prop('id'))) {
             jsonObj = {
               applicationId: applicationId,
               value: field.val(),
               formInputId: field.prop('id').match(digitRegex)[0],
+              fieldName: field.prop('name')
+            }
+          } else {
+            jsonObj = {
+              applicationId: applicationId,
+              value: field.val(),
+              formInputId: field.prop('id'),
               fieldName: field.prop('name')
             }
           }
