@@ -150,13 +150,11 @@ public class ApplicationModelPopulatorTest {
         SectionResource financeSection = SectionResourceBuilder.newSectionResource().build();
         List<QuestionResource> costsQuestions = QuestionResourceBuilder.newQuestionResource().build(2);
         String organisationType = "organisationType";
-        String parentOrganisationType = "parentOrganisationType";
         FinanceModelManager financeModelManager = mock(FinanceModelManager.class);
 
         when(sectionService.getFinanceSection(competitionId)).thenReturn(financeSection);
         when(questionService.getQuestionsBySectionIdAndType(financeSection.getId(), QuestionType.COST)).thenReturn(costsQuestions);
         when(organisationService.getOrganisationType(user.getId(), applicationId)).thenReturn(organisationType);
-        when(organisationService.getParentOrganisationType(user.getId(), applicationId)).thenReturn(parentOrganisationType);
 
         when(organisationService.getOrganisationForUser(user.getId())).thenReturn(userOrganisation);
         when(financeHandler.getFinanceModelManager(organisationType)).thenReturn(financeModelManager);

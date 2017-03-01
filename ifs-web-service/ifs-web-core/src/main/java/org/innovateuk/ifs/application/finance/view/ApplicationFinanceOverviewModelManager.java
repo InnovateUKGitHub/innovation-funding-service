@@ -56,8 +56,8 @@ public class ApplicationFinanceOverviewModelManager implements FinanceOverviewMo
     public void addFinanceDetails(Model model, Long competitionId, Long applicationId, Long userId) {
         addFinanceSections(competitionId, model);
         OrganisationApplicationFinanceOverviewImpl organisationFinanceOverview = new OrganisationApplicationFinanceOverviewImpl(financeService, fileEntryRestService, applicationId);
-        String organisationType = organisationService.getParentOrganisationType(userId, applicationId);
-        model.addAttribute("maySeeAcademicBreakdown", "Research".equals(organisationType));
+        String organisationType = organisationService.getOrganisationType(userId, applicationId);
+        model.addAttribute("maySeeAcademicBreakdown", "University (HEI)".equals(organisationType));
         model.addAttribute("financeTotal", organisationFinanceOverview.getTotal());
         model.addAttribute("financeTotalPerType", organisationFinanceOverview.getTotalPerType());
         Map<Long, BaseFinanceResource> organisationFinances = organisationFinanceOverview.getFinancesByOrganisation();
