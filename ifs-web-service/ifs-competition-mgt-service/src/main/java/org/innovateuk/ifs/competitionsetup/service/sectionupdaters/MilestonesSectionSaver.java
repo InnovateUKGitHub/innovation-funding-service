@@ -74,17 +74,19 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
                     .collect(Collectors.toList());
 
             filteredMilestoneEntries = CollectionFunctions.simpleFilter(milestoneEntries, (name, form) -> futureTypes.contains(form.getMilestoneType()));
-
-
         }
 
         List<Error> errors = competitionSetupMilestoneService.validateMilestoneDates(filteredMilestoneEntries);
-
         if(!errors.isEmpty()) {
             return errors;
         }
 
-        return competitionSetupMilestoneService.updateMilestonesForCompetition(milestones, filteredMilestoneEntries, competition.getId());
+        ServiceResult<Void> result = competitionSetupMilestoneService.updateMilestonesForCompetition(milestones, filteredMilestoneEntries, competition.getId());
+        if(result.isFailure()) {
+            return result.getErrors();
+        }
+
+        return Collections.emptyList();
     }
 
     @Override
