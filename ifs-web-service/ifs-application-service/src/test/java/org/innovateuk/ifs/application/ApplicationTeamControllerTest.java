@@ -23,12 +23,14 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.util.List;
 import java.util.Map;
 
+import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.constant.ApplicationStatusConstants.CREATED;
 import static org.innovateuk.ifs.application.constant.ApplicationStatusConstants.OPEN;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
@@ -237,7 +239,7 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
     }
 
     @Test
-    public void getApplicationTeam_leadApplicantCanBeginTheApplication() throws Exception {
+    public void getApplicationTeam_leadApplicantHasOptionToBeginTheApplication() throws Exception {
         Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
         ApplicationResource applicationResource = setupApplicationResource(organisationsMap, CREATED);
         Map<String, UserResource> usersMap = setupUserResources();
@@ -264,7 +266,7 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
     }
 
     @Test
-    public void getApplicationTeam_nonLeadApplicantCannotBeginTheApplication() throws Exception {
+    public void getApplicationTeam_nonLeadApplicantHasNoOptionToBeginTheApplication() throws Exception {
         Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
         ApplicationResource applicationResource = setupApplicationResource(organisationsMap, CREATED);
         Map<String, UserResource> usersMap = setupUserResources();
@@ -287,6 +289,64 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
         inOrder.verify(userService).findById(leadApplicant.getId());
         inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
         inOrder.verify(inviteRestService).getInvitesByApplication(applicationResource.getId());
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void beginApplication_leadApplicantCanBeginACreatedApplication() throws Exception {
+        Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
+        ApplicationResource applicationResource = setupApplicationResource(organisationsMap, CREATED);
+        Map<String, UserResource> usersMap = setupUserResources();
+        UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
+
+        when(applicationService.updateStatus(applicationResource.getId(), OPEN.getId())).thenReturn(serviceSuccess());
+
+        setLoggedInUser(leadApplicant);
+        mockMvc.perform(get("/application/{applicationId}/begin", applicationResource.getId()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(format("/application/%s", applicationResource.getId())));
+
+        InOrder inOrder = inOrder(applicationService, inviteRestService, userService);
+        inOrder.verify(applicationService).getById(applicationResource.getId());
+        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
+        inOrder.verify(applicationService).updateStatus(applicationResource.getId(), OPEN.getId());
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void beginApplication_leadApplicantCannotBeginAnOpenApplication() throws Exception {
+        Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
+        ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
+        Map<String, UserResource> usersMap = setupUserResources();
+        UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
+
+        // Assert the request is redirected to the application page without attempting to change the status
+
+        setLoggedInUser(leadApplicant);
+        mockMvc.perform(get("/application/{applicationId}/begin", applicationResource.getId()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(format("/application/%s", applicationResource.getId())));
+
+        InOrder inOrder = inOrder(applicationService, inviteRestService, userService);
+        inOrder.verify(applicationService).getById(applicationResource.getId());
+        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void beginApplication_nonLeadApplicantCannotBeginTheApplication() throws Exception {
+        Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
+        ApplicationResource applicationResource = setupApplicationResource(organisationsMap, CREATED);
+        Map<String, UserResource> usersMap = setupUserResources();
+        setupLeadApplicant(applicationResource, usersMap);
+
+        setLoggedInUser(usersMap.get("jessica.doe@ludlow.com"));
+        mockMvc.perform(get("/application/{applicationId}/begin", applicationResource.getId()))
+                .andExpect(status().isForbidden());
+
+        InOrder inOrder = inOrder(applicationService, inviteRestService, userService);
+        inOrder.verify(applicationService).getById(applicationResource.getId());
+        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
         inOrder.verifyNoMoreInteractions();
     }
 
