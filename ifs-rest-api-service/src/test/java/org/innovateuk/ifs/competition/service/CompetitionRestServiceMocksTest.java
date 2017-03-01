@@ -228,7 +228,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
         long competitionId = 1L;
         setupPutWithRestResultExpectations(competitionsRestURL + "/" + competitionId + "/release-feedback", HttpStatus.OK);
 
-        RestResult<Void> result = service.notifyAssessors(competitionId);
+        RestResult<Void> result = service.releaseFeedback(competitionId);
         assertTrue(result.isSuccess());
     }
 }

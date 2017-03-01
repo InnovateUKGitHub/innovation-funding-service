@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.competitionsetup.service;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupFinanceResource;
 import org.innovateuk.ifs.competition.service.CompetitionSetupFinanceRestService;
@@ -24,8 +22,8 @@ public class CompetitionSetupFinanceServiceImpl implements CompetitionSetupFinan
     }
 
     @Override
-    public ServiceResult<CompetitionSetupFinanceResource> getByCompetitionId(Long competitionId) {
-        return competitionSetupFinanceRestService.getByCompetitionId(competitionId).toServiceResult();
+    public CompetitionSetupFinanceResource getByCompetitionId(Long competitionId) {
+        return competitionSetupFinanceRestService.getByCompetitionId(competitionId).getSuccessObjectOrThrowException();
     }
 
 

@@ -6,6 +6,7 @@ ${SERVER_BASE}    ifs-local-dev
 ${PROTOCOL}       https://
 ${SERVER}         ${PROTOCOL}${SERVER_BASE}
 ${RUNNING_ON_DEV}    ${EMPTY}
+${SAUCELABS_RUN}    1
 ${LOGIN_URL}      ${SERVER}/
 ${frontDoor}  ${server}/competition/search
 ${LOGGED_OUT_URL_FRAGMENT}    idp/profile/SAML2/Redirect/SSO
@@ -133,3 +134,5 @@ ${database_port}    3306
 ${CLOSED_COMPETITION_NAME}    Machine learning for transport infrastructure
 ${UPCOMING_COMPETITION_TO_ASSESS_NAME}    Home and industrial efficiency programme
 ${UPCOMING_COMPETITION_TO_ASSESS_ID}    11
+${CURRENTLY_WAITING_UNTIL}      false
+

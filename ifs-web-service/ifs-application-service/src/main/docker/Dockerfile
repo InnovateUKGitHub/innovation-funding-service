@@ -4,10 +4,12 @@ RUN apk --update add curl
 EXPOSE 8009
 EXPOSE 8000
 EXPOSE 8080
-ENV JAVA_OPTS -Xmx150m
+ENV JAVA_OPTS -Xmx300m
 VOLUME /tmp
-ADD ifs-application-service-1.0-SNAPSHOT.jar app.jar
+
 RUN sh -c 'touch /app.jar'
+ADD ifs-application-service-1.0-SNAPSHOT.jar app.jar
 ENTRYPOINT exec java $JAVA_OPTS -jar app.jar
-HEALTHCHECK --interval=10s --timeout=5s \
-  CMD curl -f http://localhost:8080/health || exit 1
+HEALTHCHECK --interval=15s --timeout=8s \
+  CMD curl -f --connect-timeout 5 -m 5  http://localhost:8080/health || exit 1
+

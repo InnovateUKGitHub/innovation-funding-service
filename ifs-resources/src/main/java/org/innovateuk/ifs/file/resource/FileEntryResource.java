@@ -30,6 +30,10 @@ public class FileEntryResource {
         this(id, name, mediaType.toString(), filesizeBytes);
     }
 
+    public FileEntryResource(String name, String mediaType, long filesizeBytes) {
+        this(null, name, mediaType, filesizeBytes);
+    }
+
     public Long getId() {
         return id;
     }
