@@ -46,9 +46,6 @@ public class CompetitionManagementManageFundingApplicationsController {
     @Autowired
     private ApplicationFundingDecisionService applicationFundingService;
 
-    @Autowired
-    private CompetitionInFlightModelPopulator competitionInFlightModelPopulator;
-
     @GetMapping(value = "/funding/send")
     public String sendNotifications(Model model,
                                @PathVariable("competitionId") Long competitionId,
