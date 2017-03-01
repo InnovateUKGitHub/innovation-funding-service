@@ -7,7 +7,6 @@ import org.innovateuk.ifs.organisation.service.CompanyHouseRestService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,9 +22,6 @@ import java.util.Optional;
 public class OrganisationServiceImpl implements OrganisationService {
     @Autowired
     private OrganisationRestService organisationRestService;
-
-    @Autowired
-    private OrganisationTypeRestService organisationTypeRestService;
 
     @Autowired
     private CompanyHouseRestService companyHouseRestService;
