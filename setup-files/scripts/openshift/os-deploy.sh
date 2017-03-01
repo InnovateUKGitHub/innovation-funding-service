@@ -36,6 +36,7 @@ function tailorAppInstance() {
 
     sed -i.bak "s/replicas: 1/replicas: 2/g" os-files-tmp/3*.yml
     sed -i.bak "s/replicas: 1/replicas: 2/g" os-files-tmp/4*.yml
+    sed -i.bak "s/replicas: 1/replicas: 2/g" os-files-tmp/shib/*.yml
 }
 
 function useContainerRegistry() {
