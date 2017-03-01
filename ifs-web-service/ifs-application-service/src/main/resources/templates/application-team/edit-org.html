@@ -98,7 +98,7 @@
             </tbody>
         </table>
 
-        <p><button th:if="${model.leadApplicant.id == model.authenticatedUser.id || organisation.id == model.authenticatedUserOrganisation}" class="add-another-row buttonlink" type="submit" name="add_person" th:value="${model.selectedOrgIndex}">Add new applicant</button></p>
+        <p><button th:if="${model.leadApplicant.id == model.authenticatedUser.id || model.organisation.id == model.authenticatedUserOrganisation}" class="add-another-row buttonlink" type="submit" name="add_person" th:value="${model.selectedOrgIndex}">Add new applicant</button></p>
     </form>
 
     <th:block th:if="${model.selectedOrganisation != null and model.authenticatedUser.id == model.leadApplicant.id}">
