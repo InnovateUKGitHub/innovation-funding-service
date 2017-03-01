@@ -34,14 +34,15 @@ public class ProjectFinanceAttachmentRestServiceTest extends BaseRestServiceUnit
         byte[] fileContent = fileContentString.getBytes();
         final String originalFilename = "testFile.pdf";
         final String contentType = "text/pdf";
-        String url = baseURL + "/upload?filename=" + originalFilename;
+        final Long projectId = 77L;
+        String url = baseURL + "/" + projectId + "/upload?filename=" + originalFilename;
 
         AttachmentResource expected = new AttachmentResource(199L, "name", "application/pdf", 1235);
 
         setupFileUploadWithRestResultExpectations(url, AttachmentResource.class,
                 fileContentString, contentType, fileContent.length, expected, CREATED);
 
-        final AttachmentResource response = service.upload(77L, contentType, fileContent.length, originalFilename, fileContent).getSuccessObject();
+        final AttachmentResource response = service.upload(projectId, contentType, fileContent.length, originalFilename, fileContent).getSuccessObject();
         assertSame(expected, response);
     }
 
