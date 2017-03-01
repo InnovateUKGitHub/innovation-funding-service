@@ -11,7 +11,7 @@
         <main id="content">
             <th:block th:insert="fragments/layout :: main-content-start"/>
             <th:block th:insert="fragments/layout :: header-sub"
-                      th:with="linkTitle='Application overview',linkClass='link-back',linkUrl=@{/application/{applicationId}/(applicationId=${model.applicationId})}"/>
+                      th:with="linkTitle='Application overview',linkClass='link-back',linkUrl=@{/application/{applicationId}(applicationId=${model.applicationId})}"/>
 
             <div class="page-title">
                 <th:block
@@ -21,7 +21,16 @@
 
             <p>View and manage your contributors and partners in the application. If an individual is ‘pending’ they have not yet confirmed their role within this project. Click on a name to send this person an email.</p>
 
-            <p>To change the lead applicant for this application please email Innovate UK <a href="mailto:support@innovateuk.gov.uk">support@innovateuk.gov.uk</a>.</p>
+            <p th:unless="${model.applicationCanBegin}">To change the lead applicant for this application please email Innovate UK <a href="mailto:support@innovateuk.gov.uk">support@innovateuk.gov.uk</a>.</p>
+
+            <div th:if="${model.applicationCanBegin}" class="message-alert">
+                <h2 class="heading-medium no-margin-bottom">As the lead applicant you can:</h2>
+                <ul class="list-bullet">
+                    <li>add collaborating and contributing organisations and individuals</li>
+                    <li>manage organisations and individuals</li>
+                    <li>assign questions to individuals</li>
+                </ul>
+            </div>
 
             <th:block th:each="organisation : ${model.organisations}">
                 <h2 class="heading-medium">
@@ -59,7 +68,8 @@
             </th:block>
 
             <p class="extra-margin">
-                <a th:href="@{/application/{applicationId}(applicationId=${model.applicationId})}" class="button-secondary">Return to application overview</a>
+                <a th:if="${model.applicationCanBegin}" th:href="@{/application/{applicationId}/begin(applicationId=${model.applicationId})}" class="button-secondary">Begin application</a>
+                <a th:unless="${model.applicationCanBegin}" th:href="@{/application/{applicationId}(applicationId=${model.applicationId})}" class="button-secondary">Return to application overview</a>
             </p>
 
             <th:block th:insert="fragments/layout :: main-content-end"/>
