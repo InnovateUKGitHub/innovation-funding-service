@@ -187,7 +187,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 	}
 	@Test
 	public void allPublicDatesCompleteFailure() {
-		List<Milestone> milestones = newMilestone().withType(MilestoneType.RELEASE_FEEDBACK, MilestoneType.SUBMISSION_DATE).withDate(null).build(2);
+		List<Milestone> milestones = newMilestone().withType(MilestoneType.RELEASE_FEEDBACK, MilestoneType.SUBMISSION_DATE).build(2);
 		when(milestoneRepository.findByCompetitionIdAndTypeIn(1L, asList(MilestoneType.OPEN_DATE, MilestoneType.RELEASE_FEEDBACK, MilestoneType.SUBMISSION_DATE)))
 				.thenReturn(milestones);
 
