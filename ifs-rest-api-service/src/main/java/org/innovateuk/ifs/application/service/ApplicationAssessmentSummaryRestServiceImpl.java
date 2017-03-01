@@ -26,18 +26,18 @@ public class ApplicationAssessmentSummaryRestServiceImpl extends BaseRestService
     private String applicationAssessmentSummaryRestURL = "/applicationAssessmentSummary";
 
     @Override
-    public RestResult<List<ApplicationAssessorResource>> getAssignedAssessors(Long applicationId) {
+    public RestResult<List<ApplicationAssessorResource>> getAssignedAssessors(long applicationId) {
         return getWithRestResult(format("%s/%s/assignedAssessors", applicationAssessmentSummaryRestURL, applicationId), ParameterizedTypeReferences.applicationAssessorResourceListType());
     }
 
     @Override
-    public RestResult<ApplicationAssessorPageResource> getAvailableAssessors(Long applicationId, Integer pageIndex, Integer pageSize, Long filterInnovationArea) {
+    public RestResult<ApplicationAssessorPageResource> getAvailableAssessors(long applicationId, Integer pageIndex, Integer pageSize, Long filterInnovationArea) {
         String uriWithParams = buildUri(applicationAssessmentSummaryRestURL + "/{applicationId}/availableAssessors",pageIndex, pageSize, filterInnovationArea, applicationId);
         return getWithRestResult(uriWithParams, ApplicationAssessorPageResource.class);
     }
 
     @Override
-    public RestResult<ApplicationAssessmentSummaryResource> getApplicationAssessmentSummary(Long applicationId) {
+    public RestResult<ApplicationAssessmentSummaryResource> getApplicationAssessmentSummary(long applicationId) {
         return getWithRestResult(format("%s/%s", applicationAssessmentSummaryRestURL, applicationId), ApplicationAssessmentSummaryResource.class);
     }
 

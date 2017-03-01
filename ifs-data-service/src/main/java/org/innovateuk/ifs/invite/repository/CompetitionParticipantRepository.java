@@ -47,10 +47,10 @@ public interface CompetitionParticipantRepository extends CrudRepository<Competi
                 "(SELECT 'area' FROM Profile p JOIN p.innovationAreas ia WHERE " +
                 "p.id = cp.user.profileId " +
                 "AND ia.category.id = :innovationAreaId ))")
-    Page<CompetitionParticipant> findParticipantsWithoutAssessments(@Param("compId") Long competitionId,
+    Page<CompetitionParticipant> findParticipantsWithoutAssessments(@Param("compId") long competitionId,
                                                                     @Param("role") CompetitionParticipantRole role,
                                                                     @Param("status") ParticipantStatus status,
-                                                                    @Param("appId") Long applicationId,
+                                                                    @Param("appId") long applicationId,
                                                                     @Param("innovationAreaId") Long filterInnovationArea,
                                                                     Pageable pageable);
 

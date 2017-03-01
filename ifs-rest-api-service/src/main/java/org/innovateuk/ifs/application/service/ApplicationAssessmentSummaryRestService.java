@@ -12,9 +12,9 @@ import java.util.List;
  */
 public interface ApplicationAssessmentSummaryRestService {
 
-    RestResult<ApplicationAssessmentSummaryResource> getApplicationAssessmentSummary(Long applicationId);
+    RestResult<ApplicationAssessmentSummaryResource> getApplicationAssessmentSummary(long applicationId);
 
-    RestResult<List<ApplicationAssessorResource>> getAssignedAssessors(Long applicationId);
+    RestResult<List<ApplicationAssessorResource>> getAssignedAssessors(long applicationId);
 
-    RestResult<ApplicationAssessorPageResource> getAvailableAssessors(Long applicationId, Integer pageIndex, Integer pageSize, Long filterInnovationArea);
+    RestResult<ApplicationAssessorPageResource> getAvailableAssessors(long applicationId, Integer pageIndex, Integer pageSize, Long filterInnovationArea);
 }

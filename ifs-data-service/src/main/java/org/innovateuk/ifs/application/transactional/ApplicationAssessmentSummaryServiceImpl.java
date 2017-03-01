@@ -52,7 +52,7 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
     private ApplicationAssessorPageMapper applicationAssessorPageMapper;
 
     @Override
-    public ServiceResult<ApplicationAssessorPageResource> getAvailableAssessors(Long applicationId, int pageIndex, int pageSize, Long filterInnovationArea) {
+    public ServiceResult<ApplicationAssessorPageResource> getAvailableAssessors(long applicationId, int pageIndex, int pageSize, Long filterInnovationArea) {
 
         return find(applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId)).andOnSuccessReturn(application -> {
                     Pageable pageable = new PageRequest(pageIndex, pageSize, new Sort(ASC, "user.firstName", "user.lastName"));
@@ -69,7 +69,7 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
     }
 
     @Override
-    public ServiceResult<List<ApplicationAssessorResource>> getAssignedAssessors(Long applicationId) {
+    public ServiceResult<List<ApplicationAssessorResource>> getAssignedAssessors(long applicationId) {
         return find(applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId)).andOnSuccessReturn(application ->
                 simpleMap(competitionParticipantRepository.findParticipantsWithAssessments(application.getCompetition().getId(), ASSESSOR, ParticipantStatus.ACCEPTED, applicationId),
                         competitionParticipant -> {

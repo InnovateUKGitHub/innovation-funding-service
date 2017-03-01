@@ -17,7 +17,8 @@ public class ApplicationAssessmentSummaryServiceSecurityTest extends BaseService
 
     @Test
     public void testGetAvailableAssessorsAllowedIfGlobalCompAdminOrProjectFinanceRole() throws Exception {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAvailableAssessors(1L,0,20, 0L), COMP_ADMIN, PROJECT_FINANCE);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() ->
+                classUnderTest.getAvailableAssessors(1L,0,20, 0L), COMP_ADMIN, PROJECT_FINANCE);
     }
     @Test
     public void testGetAssignedAssessorsAllowedIfGlobalCompAdminOrProjectFinanceRole() throws Exception {
@@ -42,12 +43,12 @@ public class ApplicationAssessmentSummaryServiceSecurityTest extends BaseService
         }
 
         @Override
-        public ServiceResult<ApplicationAssessorPageResource> getAvailableAssessors(Long applicationId, int pageIndex, int pageSize, Long filterInnovationArea) {
+        public ServiceResult<ApplicationAssessorPageResource> getAvailableAssessors(long applicationId, int pageIndex, int pageSize, Long filterInnovationArea) {
             return null;
         }
 
         @Override
-        public ServiceResult<List<ApplicationAssessorResource>> getAssignedAssessors(Long applicationId) {
+        public ServiceResult<List<ApplicationAssessorResource>> getAssignedAssessors(long applicationId) {
             return null;
         }
     }

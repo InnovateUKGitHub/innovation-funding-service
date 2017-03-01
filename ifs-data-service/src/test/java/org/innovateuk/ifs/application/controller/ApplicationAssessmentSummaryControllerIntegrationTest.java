@@ -38,20 +38,18 @@ public class ApplicationAssessmentSummaryControllerIntegrationTest extends BaseC
     @Test
     public void getAvailableAssessors() throws Exception {
         loginCompAdmin();
-        RestResult<ApplicationAssessorPageResource> serviceResult = controller.getAvailableAssessors(1L, 0, 20, null);
-        assertTrue(serviceResult.isSuccess());
-
-        ApplicationAssessorPageResource applicationAssessorResources = serviceResult.getSuccessObjectOrThrowException();
+        ApplicationAssessorPageResource applicationAssessorResources = controller
+                .getAvailableAssessors(1L, 0, 20, null)
+                .getSuccessObjectOrThrowException();
 
         assertEquals(Collections.emptyList(), applicationAssessorResources.getContent());
     }
     @Test
     public void getAssignedAssessors() throws Exception {
         loginCompAdmin();
-        RestResult<List<ApplicationAssessorResource>> serviceResult = controller.getAssignedAssessors(1L);
-        assertTrue(serviceResult.isSuccess());
-
-        List<ApplicationAssessorResource> applicationAssessorResources = serviceResult.getSuccessObjectOrThrowException();
+        List<ApplicationAssessorResource> applicationAssessorResources = controller
+                .getAssignedAssessors(1L)
+                .getSuccessObjectOrThrowException();
 
         assertEquals(Collections.emptyList(), applicationAssessorResources);
     }
@@ -74,10 +72,9 @@ public class ApplicationAssessmentSummaryControllerIntegrationTest extends BaseC
 
         loginCompAdmin();
 
-        RestResult<ApplicationAssessmentSummaryResource> serviceResult = controller.getApplicationAssessmentSummary(application.getId());
-        assertTrue(serviceResult.isSuccess());
-
-        ApplicationAssessmentSummaryResource applicationAssessmentSummary = serviceResult.getSuccessObjectOrThrowException();
+        ApplicationAssessmentSummaryResource applicationAssessmentSummary = controller
+                .getApplicationAssessmentSummary(application.getId())
+                .getSuccessObjectOrThrowException();
 
         assertEquals(application.getId().longValue(), applicationAssessmentSummary.getId());
         assertEquals(application.getName(), applicationAssessmentSummary.getName());
