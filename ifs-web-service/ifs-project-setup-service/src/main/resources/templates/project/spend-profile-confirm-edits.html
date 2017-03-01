@@ -13,7 +13,7 @@
 
     <form th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/incomplete(projectId=${projectId},organisationId=${organisationId})}" method="POST" >
         <h2 class="heading-medium no-margin">Allow partner to edit</h2>
-        <p><span th:text="${orgName}"></span> spend profile will be returned to them. They will be informed by email. If you have any specific requirements please contact them directly.</p>
+        <p><span class="heading-small no-margin" th:text="${orgName+'&rsquo;s'}"></span> spend profile will be returned to them. They will be informed by email. If you have any specific requirements please contact them directly.</p>
         <hr />
         <input type="submit" class="button large" value="Allow edits"/>
     </form>
