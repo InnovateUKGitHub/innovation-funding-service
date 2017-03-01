@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.domain;
 
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.category.domain.ApplicationResearchCategoryLink;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -11,7 +10,6 @@ import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.domain.ProcessActivity;
-import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -101,10 +99,6 @@ public class Application implements ProcessActivity {
 
     protected boolean canEqual(Object other) {
         return other instanceof Application;
-    }
-
-    public String getFormattedId() {
-        return ApplicationResource.formatter.format(id);
     }
 
     public void setId(Long id) {

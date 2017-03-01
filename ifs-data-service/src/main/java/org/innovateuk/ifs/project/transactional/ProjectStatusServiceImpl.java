@@ -66,7 +66,7 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
 
         List<ProjectStatusResource> projectStatusResources = simpleMap(projects, project -> getProjectStatusResourceByProject(project));
 
-        CompetitionProjectsStatusResource competitionProjectsStatusResource = new CompetitionProjectsStatusResource(competition.getId(), competition.getFormattedId(), competition.getName(), projectStatusResources);
+        CompetitionProjectsStatusResource competitionProjectsStatusResource = new CompetitionProjectsStatusResource(competition.getId(), competition.getName(), projectStatusResources);
 
         return ServiceResult.serviceSuccess(competitionProjectsStatusResource);
     }
@@ -91,9 +91,9 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
         return new ProjectStatusResource(
                 project.getName(),
                 project.getId(),
-                project.getFormattedId(),
+                project.getId().toString(),
                 project.getApplication().getId(),
-                project.getApplication().getFormattedId(),
+                project.getApplication().getId().toString(),
                 getProjectPartnerCount(project.getId()),
                 null != leadOrganisation ? leadOrganisation.getName() : "",
                 projectDetailsStatus,

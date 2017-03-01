@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.transactional;
 
 import com.google.common.collect.Lists;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
+import org.innovateuk.ifs.PageableMatcher;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.mapper.ApplicationSummaryMapper;
 import org.innovateuk.ifs.application.mapper.ApplicationSummaryPageMapper;
@@ -24,6 +25,7 @@ import java.util.List;
 
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
+import static org.innovateuk.ifs.PageableMatcher.srt;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.argThat;
@@ -448,75 +450,5 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 		ApplicationSummaryResource res = sumPercentage(percentage);
 		res.setId(id);
 		return res;
-	}
-	
-	private Sort srt(String field, Direction dir){
-		Sort sort = new Sort();
-		sort.setField(field);
-		sort.setDirection(dir);
-		return sort;
-	}
-	
-	private static class PageableMatcher extends ArgumentMatcher<Pageable> {
-
-		private int expectedPage;
-		private int expectedPageSize;
-		private Sort[] sortFields;
-		
-		public PageableMatcher(int expectedPage, int expectedPageSize, Sort... sortFields) {
-			this.expectedPage = expectedPage;
-			this.expectedPageSize = expectedPageSize;
-			this.sortFields = sortFields;
-		}
-		
-		@Override
-		public boolean matches(Object argument) {
-			Pageable arg = (Pageable) argument;
-			
-			if(!(expectedPage == arg.getPageNumber())){
-				return false;
-			}
-			
-			if(!(expectedPageSize == arg.getPageSize())){
-				return false;
-			}
-			
-			List<Order> sortList = Lists.newArrayList(arg.getSort().iterator());
-			
-			if(sortList.size() != sortFields.length) {
-				return false;
-			}
-			
-			for(int i = 0; i < sortFields.length; i++) {
-				Sort sortField = sortFields[i];
-				Order order = sortList.get(i);
-				if(!sortField.getDirection().equals(order.getDirection())) {
-					return false;
-				}
-				if(!sortField.getField().equals(order.getProperty())){
-					return false;
-				}
-			}
-			
-			return true;
-		}
-	}
-	
-	private static class Sort {
-		private String field;
-		private Direction direction;
-		
-		public String getField() {
-			return field;
-		}
-		public void setField(String field) {
-			this.field = field;
-		}
-		public Direction getDirection() {
-			return direction;
-		}
-		public void setDirection(Direction direction) {
-			this.direction = direction;
-		}
 	}
 }

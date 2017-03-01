@@ -21,8 +21,8 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
     List<Application> findByName(@Param("name") String name);
 
 	static final String COMP_FILTER = "SELECT a FROM Application a WHERE " +
-			"a.competition.id = :compId" +
-			" AND (str(a.id) LIKE CONCAT('%', :filter, '%'))";
+			"a.competition.id = :compId " +
+			"AND (str(a.id) LIKE CONCAT('%', :filter, '%'))";
 
 	static final String COMP_STATUS_FILTER = "SELECT a FROM Application a WHERE " +
 			"a.competition.id = :compId " +

@@ -187,9 +187,6 @@ public class Competition implements ProcessActivity {
         return id;
     }
 
-    public String getFormattedId() {
-        return ApplicationResource.formatter.format(id);
-    }
 
     public String getName() {
         return name;
