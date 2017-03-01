@@ -118,9 +118,9 @@ function startSeleniumGrid() {
 
     echo "=> Suite count: ${suiteCount}"
 
-    docker-compose -f docker-compose-services.yml up -d --force-recreate --build
+    docker-compose up -d --force-recreate --build
     sleep 2
-    docker-compose -f docker-compose-services.yml scale chrome=${suiteCount}
+    docker-compose scale chrome=${suiteCount}
 
     unset suiteCount
     if [[ ${quickTest} -eq 1 ]]
@@ -134,7 +134,7 @@ function stopSeleniumGrid() {
     section "=> STOPPING SELENIUM GRID"
 
     cd ${scriptDir}
-    docker-compose -f docker-compose-services.yml down -v --remove-orphans
+    docker-compose down -v --remove-orphans
 }
 
 function startPybot() {
@@ -212,7 +212,7 @@ function runTests() {
 
     if [[ $vnc -eq 1 ]]
     then
-      local vncport="$(docker-compose -f docker-compose-services.yml port chrome 5900)"
+      local vncport="$(docker-compose port chrome 5900)"
       vncport=${vncport:8:5}
 
       if [ "$(uname)" == "Darwin" ];

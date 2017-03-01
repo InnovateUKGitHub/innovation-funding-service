@@ -7,6 +7,7 @@ import org.innovateuk.ifs.project.finance.resource.FinanceCheckResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
 import org.innovateuk.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
+import org.innovateuk.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.threads.resource.NoteResource;
 import org.innovateuk.threads.resource.PostResource;
 import org.innovateuk.threads.resource.QueryResource;
@@ -29,13 +30,15 @@ public interface FinanceCheckService {
 
     FinanceCheckEligibilityResource getFinanceCheckEligibilityDetails(Long projectId, Long organisationId);
 
-    ServiceResult<FileEntryResource> uploadFile(String contentType, long contentLength, String originalFilename, byte[] bytes);
+    ServiceResult<AttachmentResource> uploadFile(Long projectId, String contentType, long contentLength, String originalFilename, byte[] bytes);
 
     ServiceResult<Void> deleteFile(Long fileId);
 
     ServiceResult<Optional<ByteArrayResource>> downloadFile(Long fileId);
 
-    ServiceResult<FileEntryResource> getFileInfo(Long fileId);
+    ServiceResult<AttachmentResource> getAttachment(Long attachmentId);
+
+    ServiceResult<FileEntryResource> getAttachmentInfo(Long attachmentId);
 
     ServiceResult<Long> saveQuery(QueryResource query);
 

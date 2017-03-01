@@ -122,7 +122,7 @@ sonarqube {
 }
 
 dockerCompose {
-    useComposeFiles = ['docker-compose-services.yml' ,'docker-compose-services-dev.yml']
+    useComposeFiles = ['docker-compose.yml' ,'docker-compose-dev.yml']
     removeContainers = false
     removeImages = "Local" // Accepted values are: "All", "Local" and "None"
     removeVolumes = false
