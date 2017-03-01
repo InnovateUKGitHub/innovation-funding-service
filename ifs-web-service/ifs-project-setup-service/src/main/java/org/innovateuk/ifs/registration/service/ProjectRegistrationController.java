@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.registration.service;
 
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.registration.form.RegistrationForm;
@@ -24,8 +24,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.registration.service.AcceptProjectInviteController.*;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Controller
 @PreAuthorize("permitAll")
@@ -89,26 +89,27 @@ public class ProjectRegistrationController {
                 ValidationMessages.rejectValue(bindingResult, EMAIL_FIELD_NAME, "validation.standard.email.exists");
                 return restSuccess(REGISTRATION_REGISTER_VIEW);
             }
-            RestResult<String> result = createUser(registrationForm, invite.getOrganisation())
+
+            ServiceResult<String> result = createUser(registrationForm, invite.getOrganisation())
                     .andOnSuccess(newUser -> {
                         projectInviteRestService.acceptInvite(hash, newUser.getId());
-                        return restSuccess(REGISTRATION_SUCCESS_VIEW);
+                        return serviceSuccess(REGISTRATION_SUCCESS_VIEW);
                     });
             if (result.isSuccess()) {
-                return result;
+                return restSuccess(REGISTRATION_SUCCESS_VIEW);
             } else {
                 result.getErrors().forEach(error -> bindingResult.reject("registration." + error.getErrorKey()));
                 return restSuccess(REGISTER_MAPPING);
             }
+
         }).getSuccessObject();
     }
 
     private boolean emailExists(String email) {
-        RestResult<UserResource> existingUserSearch = userService.findUserByEmailForAnonymousUserFlow(email);
-        return !NOT_FOUND.equals(existingUserSearch.getStatusCode());
+        return userService.findUserByEmailForAnonymousUserFlow(email).isPresent();
     }
 
-    private RestResult<UserResource> createUser(RegistrationForm registrationForm, Long organisationId) {
+    private ServiceResult<UserResource> createUser(RegistrationForm registrationForm, Long organisationId) {
         return userService.createOrganisationUser(
                 registrationForm.getFirstName(),
                 registrationForm.getLastName(),

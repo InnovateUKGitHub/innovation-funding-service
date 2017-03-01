@@ -3,6 +3,7 @@ package org.innovateuk.ifs.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.controller.FundingDecisionRestController;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,8 +14,9 @@ import org.springframework.http.MediaType;
 import java.util.Map;
 
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Matchers.argThat;
-import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.*;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.anyMap;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -33,6 +35,8 @@ public class FundingDecisionRestControllerTest extends BaseControllerMockMVCTest
     @Before
     public void setup() {
         when(applicationFundingDecisionService.fundingDecisionForString("Y")).thenReturn(FundingDecision.FUNDED);
+		when(applicationFundingDecisionService.saveApplicationFundingDecisionData(anyLong(), anyMap())).thenReturn(ServiceResult.serviceSuccess());
+		when(applicationFundingDecisionService.makeApplicationFundingDecision(anyLong(), anyMap())).thenReturn(ServiceResult.serviceSuccess());
     }
     
 	@Test

@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    name: ldap
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: ldap
+    strategy:
+      resources: {}
+    template:
+      metadata:
+        labels:
+          deploymentconfig: ldap
+      spec:
+        containers:
+        - env:
+          - name: LDAPPORT
+            value: "8389"
+          - name: LDAPSSLPORT
+            value: "8636"
+          image: innovateuk/ifs-ldap:0.4.0
+          name: ldap
+          imagePullPolicy: IfNotPresent
+          ports:
+          - containerPort: 8389
+          - containerPort: 8636
+          resources:
+            limits:
+              memory: 1G
+    test: false
+    triggers:
+    - type: ConfigChange
+  status: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: ldap
+  spec:
+    ports:
+    - name: 389-tcp
+      port: 389
+      targetPort: 8389
+    selector:
+      deploymentconfig: ldap
+  status:
+    loadBalancer: {}

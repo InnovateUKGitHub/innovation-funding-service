@@ -35,7 +35,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
 
         Pageable pageable = new PageRequest(1, 3);
 
-        Page<ApplicationStatistics> statisticsPage = repository.findByCompetition(competitionId, "%", pageable);
+        Page<ApplicationStatistics> statisticsPage = repository.findByCompetition(competitionId, "", pageable);
         assertEquals(6, statisticsPage.getTotalElements());
         assertEquals(3, statisticsPage.getSize());
         assertEquals(1, statisticsPage.getNumber());

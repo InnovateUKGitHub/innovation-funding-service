@@ -43,8 +43,8 @@ public interface CompetitionSetupService {
 
 	boolean isCompetitionReadyToOpen(CompetitionResource competitionResource);
 
-	void setCompetitionAsReadyToOpen(Long competitionId);
+	ServiceResult<Void> setCompetitionAsReadyToOpen(Long competitionId);
 
-	void setCompetitionAsCompetitionSetup(Long competitionId);
+	ServiceResult<Void> setCompetitionAsCompetitionSetup(Long competitionId);
 
 }

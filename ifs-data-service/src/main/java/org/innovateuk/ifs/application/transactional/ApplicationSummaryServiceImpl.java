@@ -72,7 +72,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 
     @Override
     public ServiceResult<ApplicationSummaryPageResource> getApplicationSummariesByCompetitionId(Long competitionId, String sortBy, int pageIndex, int pageSize, Optional<String> filter) {
-        String filterStr = filter.map(this::prepareFilterString).orElse("%");
+        String filterStr = filter.map(String::trim).orElse("");
         return applicationSummaries(sortBy, pageIndex, pageSize,
                 pageable -> applicationRepository.findByCompetitionIdAndIdLike(competitionId, filterStr,pageable),
                 () -> applicationRepository.findByCompetitionIdAndIdLike(competitionId, filterStr));
@@ -81,7 +81,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
     @Override
     public ServiceResult<ApplicationSummaryPageResource> getSubmittedApplicationSummariesByCompetitionId(
             Long competitionId, String sortBy, int pageIndex, int pageSize, Optional<String> filter) {
-        String filterStr = filter.map(this::prepareFilterString).orElse("%");
+        String filterStr = filter.map(String::trim).orElse("");
         return applicationSummaries(sortBy, pageIndex, pageSize,
                 pageable -> applicationRepository.findByCompetitionIdAndApplicationStatusIdInAndIdLike(competitionId, SUBMITTED_STATUS_IDS, filterStr, pageable),
                 () -> applicationRepository.findByCompetitionIdAndApplicationStatusIdInAndIdLike(competitionId, SUBMITTED_STATUS_IDS, filterStr));
@@ -157,15 +157,4 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
         Sort result = SORT_FIELD_TO_DB_SORT_FIELDS.get(sortBy);
         return result != null ? result : new Sort(ASC, new String[]{"id"});
     }
-
-    private String prepareFilterString(String filter) {
-        String result = filter.trim();
-        if (result.startsWith("0")) {
-            result = StringUtils.stripStart(result,"0") + "%";
-        } else {
-            result = "%" + result + "%";
-        }
-        return result;
-    }
-
 }
