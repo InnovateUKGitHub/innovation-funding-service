@@ -11,6 +11,7 @@ import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.notes.form.FinanceChecksNotesAddNoteForm;
 import org.innovateuk.ifs.project.notes.form.FinanceChecksNotesFormConstraints;
 import org.innovateuk.ifs.project.notes.viewmodel.FinanceChecksNotesAddNoteViewModel;
+import org.innovateuk.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.threads.resource.NoteResource;
 import org.innovateuk.threads.resource.PostResource;
 import org.innovateuk.ifs.project.ProjectService;
@@ -121,10 +122,10 @@ public class FinanceChecksNotesAddNoteController {
 
             ProjectFinanceResource projectFinance = projectFinanceService.getProjectFinance(projectId, organisationId);
 
-            List<FileEntryResource> attachmentResources = new ArrayList<>();
+            List<AttachmentResource> attachmentResources = new ArrayList<>();
             List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
             attachments.forEach(attachment -> {
-                ServiceResult<FileEntryResource> fileEntry = financeCheckService.getFileInfo(attachment);
+                ServiceResult<AttachmentResource> fileEntry = financeCheckService.getAttachment(attachment);
                 if (fileEntry.isSuccess()) {
                     attachmentResources.add(fileEntry.getSuccessObject());
                 }
@@ -167,11 +168,11 @@ public class FinanceChecksNotesAddNoteController {
         return validationHandler.performActionOrBindErrorsToField("attachment", view, view, () -> {
             MultipartFile file = form.getAttachment();
 
-            ServiceResult<FileEntryResource> result = financeCheckService.uploadFile(file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
-            if(result.isSuccess()) {
-                attachments.add(result.getSuccessObject().getId());
+            ServiceResult<AttachmentResource> result = financeCheckService.uploadFile(projectId, file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
+            result.ifSuccessful(uploadedAttachment -> {
+                attachments.add(uploadedAttachment.id);
                 saveAttachmentsToCookie(response, attachments, projectId, organisationId);
-            }
+            });
 
             FinanceChecksNotesAddNoteViewModel viewModel = populateQueriesViewModel(projectId, organisationId, attachments);
             model.addAttribute("model", viewModel);
@@ -197,7 +198,7 @@ public class FinanceChecksNotesAddNoteController {
             if (fileContent.isSuccess()) {
                 content = fileContent.getSuccessObject();
             }
-            ServiceResult<FileEntryResource> fileInfo = financeCheckService.getFileInfo(attachmentId);
+            ServiceResult<FileEntryResource> fileInfo = financeCheckService.getAttachmentInfo(attachmentId);
             if (fileInfo.isSuccess()) {
                 fileDetails = Optional.of(fileInfo.getSuccessObject());
             }
@@ -255,12 +256,8 @@ public class FinanceChecksNotesAddNoteController {
         boolean leadPartnerOrganisation = leadOrganisation.getId().equals(organisation.getId());
 
         Map<Long, String> attachmentLinks = new HashMap<>();
-        attachmentFileIds.forEach(id -> {
-            ServiceResult<FileEntryResource> file = financeCheckService.getFileInfo(id);
-            if(file.isSuccess()) {
-                attachmentLinks.put(id, file.getSuccessObject().getName());
-            }
-        });
+        attachmentFileIds.forEach(id -> financeCheckService.getAttachment(id)
+                .ifSuccessful(foundAttachment -> attachmentLinks.put(id, foundAttachment.name)));
 
         return new FinanceChecksNotesAddNoteViewModel(
                 organisation.getName(),

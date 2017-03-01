@@ -4,7 +4,7 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.application.service.AlertService;
 import org.innovateuk.ifs.application.service.AlertServiceImpl;
-import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -13,13 +13,14 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Arrays.asList;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 import static org.innovateuk.ifs.alert.builder.AlertResourceBuilder.newAlertResource;
 import static org.innovateuk.ifs.alert.resource.AlertType.MAINTENANCE;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static java.util.Arrays.asList;
-import static junit.framework.Assert.assertEquals;
 import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
@@ -115,27 +116,30 @@ public class AlertServiceImplTest extends BaseServiceUnitTest<AlertService> {
                 .build();
 
         when(alertRestService.create(alertResource)).thenReturn(restSuccess(response));
-        final AlertResource created = service.create(alertResource);
+        final AlertResource created = service.create(alertResource).getSuccessObjectOrThrowException();
         verify(alertRestService, only()).create(alertResource);
         assertEquals(response, created);
     }
 
     @Test
     public void test_delete() throws Exception {
-        service.delete(ID_THAT_EXISTS);
+        ServiceResult<Void> result = service.delete(ID_THAT_EXISTS);
+        assertTrue(result.isSuccess());
         verify(alertRestService, only()).delete(ID_THAT_EXISTS);
     }
 
-    @Test(expected = ObjectNotFoundException.class)
+    @Test
     public void test_delete_notExists() throws Exception {
         // try deleting any other id except the one which is known to exist
-        service.delete(1L);
+        ServiceResult<Void> result = service.delete(1L);
+        assertTrue(result.isFailure());
     }
 
     @Test
     public void test_deleteAllByType() throws Exception {
         when(alertRestService.deleteAllByType(MAINTENANCE)).thenReturn(restSuccess());
-        service.deleteAllByType(MAINTENANCE);
+        ServiceResult<Void> result = service.deleteAllByType(MAINTENANCE);
+        assertTrue(result.isSuccess());
         verify(alertRestService, only()).deleteAllByType(MAINTENANCE);
     }
 }

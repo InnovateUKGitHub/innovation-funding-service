@@ -57,9 +57,7 @@ public class AssessmentOverviewController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/finances")
     public String getFinancesSummary(Model model, @PathVariable("assessmentId") Long assessmentId) {
-
-        assessmentFinancesSummaryModelPopulator.populateModel(assessmentId, model);
-
+        model.addAttribute("model", assessmentFinancesSummaryModelPopulator.populateModel(assessmentId, model));
         return "assessment/application-finances-summary";
     }
 
