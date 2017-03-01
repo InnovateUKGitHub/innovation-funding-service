@@ -50,7 +50,7 @@ public class ApplicationCreationAuthenticatedController {
                        HttpServletRequest request) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
 
-        Boolean userHasApplication = userService.userHasApplicationForCompetition(user.getId(), competitionId).getSuccessObjectOrThrowException();
+        Boolean userHasApplication = userService.userHasApplicationForCompetition(user.getId(), competitionId);
         if (Boolean.TRUE.equals(userHasApplication)) {
             model.addAttribute(COMPETITION_ID, competitionId);
             return "create-application/confirm-new-application";

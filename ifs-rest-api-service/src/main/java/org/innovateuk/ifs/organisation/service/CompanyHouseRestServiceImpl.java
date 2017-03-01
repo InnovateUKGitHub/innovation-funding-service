@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.organisation.service;
 
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.apache.commons.logging.Log;
@@ -10,19 +11,19 @@ import org.springframework.web.util.UriUtils;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
-import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.organisationSearchResultListType;
 
 /**
  * Class to expose methods to communicate with the company house api.
  */
 @Service
-public class CompanyHouseRestServiceImpl  extends BaseRestService implements CompanyHouseRestService {
+public class CompanyHouseRestServiceImpl extends BaseRestService implements CompanyHouseRestService {
     private static final Log log = LogFactory.getLog(CompanyHouseRestServiceImpl.class);
 
     private String companyHouseRestUrl = "/companyhouse";
 
     @Override
-    public List<OrganisationSearchResult> searchOrganisations(String searchText){
+    public RestResult<List<OrganisationSearchResult>> searchOrganisations(String searchText){
     	String searchTextEncoded;
         try {
         	searchTextEncoded = UriUtils.encode(searchText, "UTF-8");
@@ -30,11 +31,11 @@ public class CompanyHouseRestServiceImpl  extends BaseRestService implements Com
             log.error(e);
             searchTextEncoded = searchText;
         }
-        return asList(restGetAnonymous(companyHouseRestUrl + "/searchCompanyHouse/"+searchTextEncoded, OrganisationSearchResult[].class));
+
+        return getWithRestResultAnonymous(companyHouseRestUrl + "/searchCompanyHouse/" + searchTextEncoded, organisationSearchResultListType());
     }
     @Override
-    public OrganisationSearchResult getOrganisationById(String id){
-
-        return restGetAnonymous(companyHouseRestUrl + "/getCompanyHouse/"+id, OrganisationSearchResult.class);
+    public RestResult<OrganisationSearchResult> getOrganisationById(String id){
+        return getWithRestResultAnonymous(companyHouseRestUrl + "/getCompanyHouse/" + id, OrganisationSearchResult.class);
     }
 }
