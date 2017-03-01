@@ -27,8 +27,30 @@
         </ul>
     </div>
 
-    <h2 class="heading-medium">Key statistics</h2>
-    <p>None</p>
+    <h2 class="heading-large">Key statistics</h2>
+
+    <ul class="grid-row">
+        <li th:if="${model.keyStatistics.statTwo != null}" class="column-third">
+            <div class="highlight-panel highlight-panel-padded">
+                <span class="heading-large" th:text="${model.keyStatistics.statTwo}">2</span><br/>
+                <small>successful</small>
+            </div>
+        </li>
+
+        <li th:if="${model.keyStatistics.statThree != null}" class="column-third">
+            <div class="highlight-panel highlight-panel-padded">
+                <span class="heading-large" th:text="${model.keyStatistics.statThree}">3</span><br/>
+                <small>unsuccessful</small>
+            </div>
+        </li>
+
+        <li th:if="${model.keyStatistics.statFour != null}" class="column-third">
+            <div class="highlight-panel highlight-panel-padded">
+                <span class="heading-large" th:text="${model.keyStatistics.statFour}">4</span><br/>
+                <small>on hold</small>
+            </div>
+        </li>
+    </ul>
 
     <h2 class="heading-small">Recipients</h2>
     <details>

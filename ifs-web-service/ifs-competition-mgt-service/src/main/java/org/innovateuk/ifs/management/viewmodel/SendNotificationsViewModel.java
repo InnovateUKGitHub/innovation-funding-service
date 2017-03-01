@@ -11,9 +11,11 @@ public class SendNotificationsViewModel {
     private List<ApplicationSummaryResource> applications;
     private long competitionId;
     private String competitionName;
+    private CompetitionInFlightStatsViewModel keyStatistics;
 
 
-    public SendNotificationsViewModel(List<ApplicationSummaryResource> applications, long competitionId, String competitionName) {
+    public SendNotificationsViewModel(List<ApplicationSummaryResource> applications, CompetitionInFlightStatsViewModel keyStatistics, long competitionId, String competitionName) {
+        this.keyStatistics = keyStatistics;
         this.applications = applications;
         this.competitionId = competitionId;
         this.competitionName = competitionName;
@@ -33,5 +35,9 @@ public class SendNotificationsViewModel {
 
     public List<ApplicationSummaryResource> getApplications() {
         return applications != null ? applications : Collections.emptyList();
+    }
+
+    public CompetitionInFlightStatsViewModel getKeyStatistics() {
+        return keyStatistics;
     }
 }
