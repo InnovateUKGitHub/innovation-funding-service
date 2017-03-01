@@ -212,7 +212,7 @@ invite a registered user
     the user reads his email and clicks the link    ${EMAIL_LEAD}    Please verify your email address    If you did not request an account with us
     the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     the user clicks the button/link    jQuery=.button:contains("Sign in")
-    the guest user inserts user email & password    ${EMAIL_LEAD}    Passw0rd123
+    the guest user inserts user email & password    ${EMAIL_LEAD}  ${correct_password}
     the guest user clicks the log-in button
     the user clicks the button/link    link=${OPEN_COMPETITION_LINK}
     the user clicks the button/link    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
