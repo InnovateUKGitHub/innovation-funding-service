@@ -41,6 +41,13 @@ public class ProjectFinanceController {
         return projectFinanceService.generateSpendProfile(projectId).toPostCreateResponse();
     }
 
+    @RequestMapping(value = "/{projectId}/partner-organisation/{organisationId}/user/{userId}/spend-profile/generate", method = POST)
+    public RestResult<Void> generateSpendProfileForPartnerOrganisation(@PathVariable("projectId") final Long projectId,
+                                                                       @PathVariable("organisationId") final Long organisationId,
+                                                                       @PathVariable("userId") final Long userId) {
+        return projectFinanceService.generateSpendProfileForPartnerOrganisation(projectId, organisationId, userId).toPostCreateResponse();
+    }
+
     @RequestMapping(value = "/{projectId}/spend-profile/approval/{approvalType}", method = POST)
     public RestResult<Void> approveOrRejectSpendProfile(@PathVariable("projectId") final Long projectId,
                                                         @PathVariable("approvalType") final ApprovalType approvalType) {

@@ -748,6 +748,16 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         return processAnyFailuresOrSucceed(generationResults);
     }
 
+    @Override
+    public ServiceResult<Void> generateSpendProfileForPartnerOrganisation(Long projectId, Long organisationId, Long userId) {
+
+        User user = userRepository.findOne(userId);
+
+        return spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(projectId, organisationId).
+                andOnSuccess(spendProfileCostCategorySummaries ->
+                        generateSpendProfileForOrganisation(projectId, organisationId, spendProfileCostCategorySummaries, user, Calendar.getInstance()));
+    }
+
     private ServiceResult<Void> generateSpendProfileForOrganisation(
             Long projectId,
             Long organisationId,

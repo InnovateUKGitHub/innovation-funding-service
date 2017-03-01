@@ -47,6 +47,7 @@ public class ProjectSpendProfileController {
     public static final String BASE_DIR = "project";
     public static final String REVIEW_TEMPLATE_NAME = "spend-profile-review";
     private static final String FORM_ATTR_NAME = "form";
+    private static final String UNIVERSITY_HEI = "University (HEI)";
 
     @Autowired
     private ProjectService projectService;
@@ -270,7 +271,7 @@ public class ProjectSpendProfileController {
 
         OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
 
-        boolean isResearch = OrganisationTypeEnum.isResearch(organisationResource.getOrganisationType());
+        boolean isResearch = isUsingJesFinances(organisationResource.getOrganisationTypeName());
         Map<Long, BigDecimal> categoryToActualTotal = spendProfileTableCalculator.calculateRowTotal(spendProfileTableResource.getMonthlyCostsPerCategoryMap());
         List<BigDecimal> totalForEachMonth = spendProfileTableCalculator.calculateMonthlyTotals(spendProfileTableResource.getMonthlyCostsPerCategoryMap(), spendProfileTableResource.getMonths().size());
 
@@ -287,6 +288,15 @@ public class ProjectSpendProfileController {
                 spendProfileTableResource.getCostCategoryResourceMap(), isResearch, isUserPartOfThisOrganisation,
                 projectService.isProjectManager(loggedInUser.getId(), projectResource.getId()),
                 isApproved(projectResource.getId()), leadPartner);
+    }
+
+    private boolean isUsingJesFinances(String organisationType) {
+        switch(organisationType) {
+            case UNIVERSITY_HEI:
+                return true;
+            default:
+                return false;
+        }
     }
 
     private ProjectSpendProfileViewModel buildSpendProfileViewModel(Long projectId, Long organisationId, final UserResource loggedInUser) {
