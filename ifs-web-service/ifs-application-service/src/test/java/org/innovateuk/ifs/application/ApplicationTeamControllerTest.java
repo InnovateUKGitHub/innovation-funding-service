@@ -57,12 +57,7 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
         ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
         Map<String, UserResource> usersMap = setupUserResources();
         setupOrganisationInvitesWithInviteForLeadOrg(applicationResource.getId(), usersMap, organisationsMap);
-        UserResource leadApplicant = usersMap.get("steve.smith@empire.com");
-
-        when(userService.getLeadApplicantProcessRoleOrNull(applicationResource)).thenReturn(newProcessRoleResource()
-                .withUser(leadApplicant)
-                .build());
-        when(userService.findById(leadApplicant.getId())).thenReturn(leadApplicant);
+        UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
 
         List<ApplicationTeamOrganisationRowViewModel> expectedOrganisations = asList(
                 new ApplicationTeamOrganisationRowViewModel(organisationsMap.get("Empire Ltd").getId(), "Empire Ltd", true, asList(
@@ -106,12 +101,7 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
         ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
         Map<String, UserResource> usersMap = setupUserResources();
         setupOrganisationInvitesWithInviteForLeadOrg(applicationResource.getId(), usersMap, organisationsMap);
-        UserResource leadApplicant = usersMap.get("steve.smith@empire.com");
-
-        when(userService.getLeadApplicantProcessRoleOrNull(applicationResource)).thenReturn(newProcessRoleResource()
-                .withUser(leadApplicant)
-                .build());
-        when(userService.findById(leadApplicant.getId())).thenReturn(leadApplicant);
+        UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
 
         List<ApplicationTeamOrganisationRowViewModel> expectedOrganisations = asList(
                 new ApplicationTeamOrganisationRowViewModel(organisationsMap.get("Empire Ltd").getId(), "Empire Ltd", true, asList(
@@ -155,12 +145,7 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
         ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
         Map<String, UserResource> usersMap = setupUserResources();
         setupOrganisationInvitesWithoutInvitesForLeadOrg(applicationResource.getId(), usersMap, organisationsMap);
-        UserResource leadApplicant = usersMap.get("steve.smith@empire.com");
-
-        when(userService.getLeadApplicantProcessRoleOrNull(applicationResource)).thenReturn(newProcessRoleResource()
-                .withUser(leadApplicant)
-                .build());
-        when(userService.findById(leadApplicant.getId())).thenReturn(leadApplicant);
+        UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
 
         List<ApplicationTeamOrganisationRowViewModel> expectedOrganisations = asList(
                 new ApplicationTeamOrganisationRowViewModel(organisationsMap.get("Empire Ltd").getId(), "Empire Ltd", true, singletonList(
@@ -203,12 +188,7 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
         ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
         Map<String, UserResource> usersMap = setupUserResources();
         setupOrganisationInvitesWithAnUnconfirmedOrganisation(applicationResource.getId(), usersMap, organisationsMap);
-        UserResource leadApplicant = usersMap.get("steve.smith@empire.com");
-
-        when(userService.getLeadApplicantProcessRoleOrNull(applicationResource)).thenReturn(newProcessRoleResource()
-                .withUser(leadApplicant)
-                .build());
-        when(userService.findById(leadApplicant.getId())).thenReturn(leadApplicant);
+        UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
 
         List<ApplicationTeamOrganisationRowViewModel> expectedOrganisations = asList(
                 new ApplicationTeamOrganisationRowViewModel(organisationsMap.get("Empire Ltd").getId(), "Empire Ltd", true, asList(
@@ -264,6 +244,15 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
                 .build(4);
 
         return simpleToMap(userResources, UserResource::getEmail);
+    }
+
+    private UserResource setupLeadApplicant(ApplicationResource applicationResource, Map<String, UserResource> usersMap) {
+        UserResource leadApplicant = usersMap.get("steve.smith@empire.com");
+        when(userService.getLeadApplicantProcessRoleOrNull(applicationResource)).thenReturn(newProcessRoleResource()
+                .withUser(leadApplicant)
+                .build());
+        when(userService.findById(leadApplicant.getId())).thenReturn(leadApplicant);
+        return leadApplicant;
     }
 
     private Map<String, OrganisationResource> setupOrganisationResources() {

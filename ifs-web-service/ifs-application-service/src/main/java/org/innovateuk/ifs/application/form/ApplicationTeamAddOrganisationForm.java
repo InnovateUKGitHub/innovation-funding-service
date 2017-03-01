@@ -19,7 +19,7 @@ public class ApplicationTeamAddOrganisationForm implements BindingResultTarget {
     @NotEmpty(message = "{validation.standard.organisationname.required}")
     private String organisationName;
     @Valid
-    @NotEmpty(message="{validation.applicationteamaddorganisationform.applicants.required}")
+    @NotEmpty(message = "{validation.applicationteamaddorganisationform.applicants.required}")
     private List<ApplicantInviteForm> applicants = new ArrayList<>();
     private BindingResult bindingResult;
     private List<ObjectError> objectErrors;
