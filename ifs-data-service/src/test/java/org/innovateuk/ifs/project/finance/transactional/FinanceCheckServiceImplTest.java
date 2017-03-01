@@ -638,6 +638,63 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
     }
 
+    @Test
+    public void getFinanceCheckOverview() {
+        Long projectId = 123L;
+        Long applicationId = 456L;
+
+        Competition competition = newCompetition().build();
+        Application application = newApplication().withId(applicationId).withCompetition(competition).withDurationInMonths(5L).build();
+        Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
+
+        Map<FinanceRowType, FinanceRowCostCategory> projectFinances = createProjectFinance();
+
+        Map<FinanceRowType, FinanceRowCostCategory> applicationFinances = asMap(
+                FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
+                        newLabourCost().
+                                withGrossAnnualSalary(new BigDecimal("1.0"), BigDecimal.ZERO).
+                                withDescription("Developers", WORKING_DAYS_PER_YEAR).
+                                withLabourDays(1, 200).
+                                build(2)).
+                        build(),
+                FinanceRowType.MATERIALS, newDefaultCostCategory().withCosts(
+                        newMaterials().
+                                withCost(new BigDecimal("1.0")).
+                                withQuantity(1).
+                                build(1)).
+                        build(),
+                FinanceRowType.OTHER_FUNDING, newOtherFundingCostCategory().withCosts(
+                        newOtherFunding().
+                                withOtherPublicFunding("Yes", "").
+                                withFundingSource(OTHER_FUNDING, "other funding").
+                                withFundingAmount(null, BigDecimal.valueOf(2)).
+                                build(2)).
+                        build());
+
+        projectFinances.forEach((type, category) -> category.calculateTotal());
+        applicationFinances.forEach((type, category) -> category.calculateTotal());
+
+        List<ProjectFinanceResource> projectFinanceResource = newProjectFinanceResource().
+                withProject(projectId).
+                withFinanceOrganisationDetails(projectFinances).
+                build(2);
+
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(projectFinanceRowServiceMock.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
+
+        ServiceResult<FinanceCheckOverviewResource> result = service.getFinanceCheckOverview(projectId);
+        assertTrue(result.isSuccess());
+
+        FinanceCheckOverviewResource overview = result.getSuccessObject();
+        assertEquals(projectId, overview.getProjectId());
+        assertEquals(6, overview.getDurationInMonths());
+        assertEquals(new BigDecimal("10000067"), overview.getTotalProjectCost());
+        assertEquals(new BigDecimal("2998020"), overview.getGrantAppliedFor());
+        assertEquals(new BigDecimal("2000"), overview.getOtherPublicSectorFunding());
+        assertEquals(new BigDecimal("30"), overview.getTotalPercentageGrant());
+    }
+
     @Override
     protected FinanceCheckServiceImpl supplyServiceUnderTest() {
 

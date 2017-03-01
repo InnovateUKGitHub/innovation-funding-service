@@ -31,18 +31,20 @@ public class FinanceCheckSummaryResource {
     public FinanceCheckSummaryResource() {
     }
 
-    public FinanceCheckSummaryResource(Long projectId, String projectName, Long competitionId, String competitionName, LocalDate projectStartDate, int durationInMonths, BigDecimal totalProjectCost, BigDecimal grantAppliedFor, BigDecimal otherPublicSectorFunding, BigDecimal totalPercentageGrant, boolean spendProfilesGenerated, List<FinanceCheckPartnerStatusResource> partnerStatusResources, boolean financeChecksAllApproved, String spendProfileGeneratedBy, LocalDate spendProfileGeneratedDate) {
-        this.projectId = projectId;
-        this.projectName = projectName;
+    public FinanceCheckSummaryResource(FinanceCheckOverviewResource overviewResource, Long competitionId, String competitionName, boolean spendProfilesGenerated,
+                                       List<FinanceCheckPartnerStatusResource> partnerStatusResources, boolean financeChecksAllApproved, String spendProfileGeneratedBy,
+                                       LocalDate spendProfileGeneratedDate) {
+        this.projectId = overviewResource.getProjectId();
+        this.projectName = overviewResource.getProjectName();
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.partnerStatusResources = partnerStatusResources;
-        this.projectStartDate = projectStartDate;
-        this.durationInMonths = durationInMonths;
-        this.totalProjectCost = totalProjectCost;
-        this.grantAppliedFor = grantAppliedFor;
-        this.otherPublicSectorFunding = otherPublicSectorFunding;
-        this.totalPercentageGrant = totalPercentageGrant;
+        this.projectStartDate = overviewResource.getProjectStartDate();
+        this.durationInMonths = overviewResource.getDurationInMonths();
+        this.totalProjectCost = overviewResource.getTotalProjectCost();
+        this.grantAppliedFor = overviewResource.getGrantAppliedFor();
+        this.otherPublicSectorFunding = overviewResource.getOtherPublicSectorFunding();
+        this.totalPercentageGrant = overviewResource.getTotalPercentageGrant();
         this.spendProfilesGenerated = spendProfilesGenerated;
         this.financeChecksAllApproved = financeChecksAllApproved;
         this.spendProfileGeneratedBy = spendProfileGeneratedBy;

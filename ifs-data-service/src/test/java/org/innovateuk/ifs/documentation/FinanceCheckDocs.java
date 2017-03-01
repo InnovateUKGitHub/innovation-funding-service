@@ -32,6 +32,17 @@ public class FinanceCheckDocs {
             fieldWithPath("partnerStatusResources").description("List of statuses for all partners")
     };
 
+    public static final FieldDescriptor[] financeCheckOverviewResourceFields = {
+            fieldWithPath("projectId").description("Id or project that the status is from"),
+            fieldWithPath("projectName").description("Name of project that the status is from"),
+            fieldWithPath("projectStartDate").description("Expected start date of project"),
+            fieldWithPath("durationInMonths").description("Total expected project duration in months"),
+            fieldWithPath("totalProjectCost").description("Total cost of project (a sum of costs of all partners)"),
+            fieldWithPath("grantAppliedFor").description("Total grant applied for, excluding any other sources of funding"),
+            fieldWithPath("otherPublicSectorFunding").description("Other public sector funding available for the project"),
+            fieldWithPath("totalPercentageGrant").description("Total percentage of grant through IFS"),
+    };
+
     public static final FieldDescriptor[] financeCheckEligibilityResourceFields = {
             fieldWithPath("projectId").description("Id or project that the eligibility is from"),
             fieldWithPath("organisationId").description("Id of organisation that the eligibility is from"),
