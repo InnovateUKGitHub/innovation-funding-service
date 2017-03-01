@@ -11,7 +11,7 @@
 <main id="content" th:object="${form}">
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition dashboard',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" />
     <h1 class="heading-xlarge">
-                <span class="heading-secondary"><th:block th:text="${#numbers.formatInteger(model.competitionId,8)}"/>: <th:block
+                <span class="heading-secondary"><th:block th:text="${model.competitionId}"/>: <th:block
                     th:text="${model.competitionName}"/></span>
         <span>Manage funding applications</span>
     </h1>
@@ -70,7 +70,7 @@
                                 <small class="visibility-hidden">Select application</small>
                             </label>
                         </td>
-                        <td th:text="${#numbers.formatInteger(applicationSummary.id,8)}">194731</td>
+                        <td th:text="${applicationSummary.id}">194731</td>
                         <td th:text="${applicationSummary.name}">Machine learning in robots</td>
                         <td th:text="${applicationSummary.lead}">PWC</td>
                         <th:block th:switch="${applicationSummary.fundingDecision}">

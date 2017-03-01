@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.assessment.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
@@ -123,5 +124,19 @@ public class AssessorFormInputResponseControllerTest extends BaseControllerMockM
                 .andReturn();
 
         verify(assessorFormInputResponseServiceMock).updateFormInputResponse(response);
+    }
+
+    @Test
+    public void getApplicationAggregateScores() throws Exception {
+        long applicationId = 7;
+        ApplicationAssessmentAggregateResource expected = new ApplicationAssessmentAggregateResource(5, 3);
+
+        when(assessorFormInputResponseServiceMock.getApplicationAggregateScores(applicationId)).thenReturn(serviceSuccess(expected));
+
+        mockMvc.perform(get("/assessorFormInputResponse//application/{applicationId}/scores", applicationId))
+                .andExpect(status().isOk())
+                .andExpect(content().string(toJson(expected)));
+
+        verify(assessorFormInputResponseServiceMock, only()).getApplicationAggregateScores(applicationId);
     }
 }

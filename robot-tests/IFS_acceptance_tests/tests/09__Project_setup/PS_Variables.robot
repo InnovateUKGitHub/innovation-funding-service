@@ -11,7 +11,7 @@ ${Cogilith_Id}      55
 ${Cogilith_Name}    Cogilith
 ${PS_GOL_Competition_Id}  10
 ${PS_GOL_APPLICATION_NO}         80
-${PS_GOL_APPLICATION_NUMBER}     00000080
+${PS_GOL_APPLICATION_NUMBER}     80
 ${PS_GOL_APPLICATION_TITLE}      London underground – enhancements to existing stock and logistics
 ${PS_GOL_APPLICATION_HEADER}     ${PS_GOL_APPLICATION_TITLE}
 ${PS_GOL_APPLICATION_PROJECT}    6
@@ -34,7 +34,7 @@ ${Jabbertype_Name}  Jabbertype
 ${PS_MD_Competition_Id}         10
 ${PS_MD_Competition_Name}       Rolling stock future developments
 ${PS_MD_APPLICATION_NO}         79
-${PS_MD_APPLICATION_NUMBER}     00000079
+${PS_MD_APPLICATION_NUMBER}     79
 ${PS_MD_APPLICATION_TITLE}      High-speed rail and its effects on air quality
 ${PS_MD_APPLICATION_HEADER}     ${PS_MD_APPLICATION_TITLE}
 ${PS_MD_APPLICATION_PROJECT}    10
@@ -56,7 +56,7 @@ ${Zooveo_Name}     Zooveo
 ${PS_SP_Competition_Id}         10
 ${PS_SP_Competition_Name}       Rolling stock future developments
 ${PS_SP_APPLICATION_NO}         78
-${PS_SP_APPLICATION_NUMBER}     00000078
+${PS_SP_APPLICATION_NUMBER}     78
 ${PS_SP_APPLICATION_TITLE}      Point control and automated monitoring
 ${PS_SP_APPLICATION_HEADER}     ${PS_SP_APPLICATION_TITLE}
 ${PS_SP_APPLICATION_PROJECT}    9
@@ -78,7 +78,7 @@ ${Npath_Name}     Npath
 ${PS_BD_Competition_Id}         10
 ${PS_BD_Competition_Name}       Rolling stock future developments
 ${PS_BD_APPLICATION_NO}         77
-${PS_BD_APPLICATION_NUMBER}     00000077
+${PS_BD_APPLICATION_NUMBER}     77
 ${PS_BD_APPLICATION_TITLE}      Grade crossing manufacture and supply
 ${PS_BD_APPLICATION_HEADER}     ${PS_BD_APPLICATION_TITLE}
 ${PS_BD_APPLICATION_PROJECT}    8
@@ -106,7 +106,7 @@ ${Wikivu_Name}    Wikivu
 ${PS_EF_Competition_Id}         10
 ${PS_EF_Competition_Name}       Rolling stock future developments
 ${PS_EF_APPLICATION_NO}         76
-${PS_EF_APPLICATION_NUMBER}     00000076
+${PS_EF_APPLICATION_NUMBER}     76
 ${PS_EF_APPLICATION_TITLE}      New materials for lighter stock
 ${PS_EF_APPLICATION_HEADER}     ${PS_EF_APPLICATION_TITLE}
 ${PS_EF_APPLICATION_PROJECT}    7
@@ -121,7 +121,7 @@ ${PS_EF_APPLICATION_ACADEMIC_EMAIL}          bruce.perez@wikivu.example.com
 ${PROJECT_SETUP_COMPETITION}    8
 ${PROJECT_SETUP_COMPETITION_NAME}    New designs for a circular economy
 ${PROJECT_SETUP_APPLICATION_1}    72
-${PROJECT_SETUP_APPLICATION_1_NUMBER}    00000072
+${PROJECT_SETUP_APPLICATION_1_NUMBER}    72
 ${PROJECT_SETUP_APPLICATION_1_TITLE}    Magic material
 ${PROJECT_SETUP_APPLICATION_1_HEADER}    ${PROJECT_SETUP_APPLICATION_1_TITLE}
 ${PROJECT_SETUP_APPLICATION_1_PROJECT}    4
