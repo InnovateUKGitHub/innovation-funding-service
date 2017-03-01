@@ -141,6 +141,64 @@ Non-lead partner cannot remove or submit right
     And the user should not see the element    name=removeExploitationPlanClicked
     And the user should not see the element    jQuery=.button.enabled:contains("Submit partner documents")
 
+PM can view both documents
+    [Documentation]    INFUND-3011, INFUND-2621
+    [Tags]
+    Given log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    Passw0rd
+    And the user navigates to the page    ${project_in_setup_page}
+    And the user clicks the button/link    link=Other documents
+    When the user clicks the button/link    link=${valid_pdf}
+    Then the user should not see an error in the page
+    And the user goes back to the previous page
+    When the user clicks the button/link    link=${valid_pdf}
+    Then the user should not see an error in the page
+    And the user navigates to the page    ${project_in_setup_page}
+    When the user clicks the button/link    link=status of my partners
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
+    And the user goes back to the previous page
+
+PM can remove the second document
+    [Documentation]    INFUND-3011
+    [Tags]
+    Given the user navigates to the page    ${project_in_setup_page}/partner/documents
+    When the user clicks the button/link    name=removeExploitationPlanClicked
+    Then the user should not see an error in the page
+
+Non-lead partner can still view the first document
+    [Documentation]    INFUND-4252
+    [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}    Passw0rd
+    When the user navigates to the page    ${project_in_setup_page}
+    And the user clicks the button/link    link=Other documents
+    Then the user should see the text in the page    ${valid_pdf}
+
+
+PM can remove the first document
+    [Documentation]    INFUND-3011
+    [Tags]
+    [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    Passw0rd
+    Given the user navigates to the page    ${project_in_setup_page}
+    And the user clicks the button/link    link=Other documents
+    When the user clicks the button/link    name=removeCollaborationAgreementClicked
+    Then the user should not see the text in the page    ${valid_pdf}
+
+Non-lead partner cannot view either document once removed
+    [Documentation]    INFUND-4252
+    [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}    Passw0rd
+    When the user navigates to the page    ${project_in_setup_page}
+    And the user clicks the button/link    link=Other documents
+    Then the user should not see the text in the page    ${valid_pdf}
+
+PM can upload both documents after they have been removed
+    [Documentation]    INFUND-3011
+    [Tags]    HappyPath
+    [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    Passw0rd
+    Given the user navigates to the page    ${project_in_setup_page}
+    And the user clicks the button/link    link=Other documents
+    When the user uploads to the collaboration agreement question    ${valid_pdf}
+    Then the user should see the text in the page    ${valid_pdf}
+    When the user uploads to the exploitation plan question    ${valid_pdf}
+    Then the user should not see an error in the page
+
 Status in the dashboard remains action required after uploads
     [Documentation]    INFUND-3011
     [Tags]    HappyPath
