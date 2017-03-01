@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Immutable;
 import org.hibernate.annotations.Where;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
@@ -15,6 +16,7 @@ import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
 /**
  * ApplicationStatistics defines a view on the application table for statistical information
  */
+@Immutable
 @Entity
 @Table(name = "Application")
 public class ApplicationStatistics {
@@ -63,17 +65,14 @@ public class ApplicationStatistics {
         this.competition = competition;
     }
 
-    @JsonIgnore
     private Optional<ProcessRole> getLeadProcessRole() {
         return this.processRoles.stream().filter(p -> UserRoleType.LEADAPPLICANT.getName().equals(p.getRole().getName())).findAny();
     }
 
-    @JsonIgnore
     public Long getLeadOrganisationId() {
         return getLeadProcessRole().map(ProcessRole::getOrganisationId).orElse(null);
     }
 
-    @JsonIgnore
     public List<ProcessRole> getProcessRoles() {
         return processRoles;
     }
@@ -82,7 +81,6 @@ public class ApplicationStatistics {
         this.processRoles = processRoles;
     }
 
-    @JsonIgnore
     public List<Assessment> getAssessments() {
         return assessments;
     }

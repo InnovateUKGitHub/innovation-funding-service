@@ -5,16 +5,32 @@ cd $BASEDIR
 
 cd shibImages
 
-filename=$(ls | grep 'g2g3-ifs-local-dev' | sort | tail -1)
+  spfilename=$(ls -t | grep 'innovateuk-ifs-shib-sp-'    | tail -1)
+ idpfilename=$(ls -t | grep 'innovateuk-ifs-shib-idp-'   | tail -1)
+ldapfilename=$(ls -t | grep 'innovateuk-ifs-ldap-'       | tail -1)
 
 
-if [ -z "$filename" ]; then
+if [ -z "$spfilename" ]; then
 
-  echo "Unable to find Shibboleth Docker image file."
+  echo "Unable to find Shibboleth service provider Docker image file."
   exit 1
 
 fi
 
-docker load < ${filename}
+if [ -z "$idpfilename" ]; then
 
-docker build -t innovateuk/shibboleth:1.0-SNAPSHOT ../shibboleth
+  echo "Unable to find Shibboleth identity provider Docker image file."
+  exit 1
+
+fi
+if [ -z "$ldapfilename" ]; then
+
+  echo "Unable to find Shibboleth ladp provider Docker image file."
+  exit 1
+
+fi
+
+
+docker load < ${spfilename} &
+docker load < ${idpfilename} &
+docker load < ${ldapfilename} &

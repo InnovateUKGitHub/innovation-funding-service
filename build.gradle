@@ -10,6 +10,8 @@ allprojects {
     targetCompatibility = 1.8
 }
 
+ext.openshiftEnv=project.properties['openshiftEnv'] ?:"automated"
+
 build.enabled = false
 jar.enabled=false
 
@@ -129,16 +131,6 @@ dockerCompose {
 
 }
 
-task happyRobotTests(type:Exec) {
-    workingDir 'robot-tests'
-    commandLine './micro_run_tests.sh', '-hnw'
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.9'
-}
-
-import org.apache.tools.ant.filters.*
 
 task robotTestsFilter (type: Copy) {
     from 'robot-tests/IFS_acceptance_tests/resources/variables/'
@@ -146,6 +138,41 @@ task robotTestsFilter (type: Copy) {
     include 'EMAIL_VARIABLES_TEMPLATE.robot'
     rename 'EMAIL_VARIABLES_TEMPLATE.robot', 'EMAIL_VARIABLES_SENSITIVE.robot'
     filter(ReplaceTokens, tokens: [test_mailbox_one_password : project.properties['ifs.robot.mailbox.one.password'], test_mailbox_two_password : project.properties['ifs.robot.mailbox.two.password']])
+}
 
 
+task osDeployRemote(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-deploy.sh'
+    args = [openshiftEnv, "remote"]
+}
+
+task osDeployLocal(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-deploy.sh'
+    args = [openshiftEnv, "local"]
+}
+
+task osTestRemote(type:Exec) {
+    dependsOn robotTestsFilter
+    executable = 'setup-files/scripts/openshift/os-test-remote.sh'
+    args = [openshiftEnv]
+}
+
+import org.apache.tools.ant.filters.*
+task osStopTests(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-stop-tests.sh'
+    args = [openshiftEnv]
+}
+
+task osTestResults(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-test-results.sh'
+    args = [openshiftEnv]
+}
+
+task happyRobotTests(type:Exec) {
+    workingDir 'robot-tests'
+    commandLine './micro_run_tests.sh', '-hnw'
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.9'
 }
