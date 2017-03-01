@@ -38,4 +38,8 @@ public interface ApplicationSummaryService {
 																										 String sortBy,
 																										 int pageIndex,
 																										 int pageSize);
+
+	@PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
+	@SecuredBySpring(value = "READ", description = "Comp Admins can see all Application Summaries with funding decisions across the whole system", securedType = ApplicationSummaryPageResource.class)
+	ServiceResult<ApplicationSummaryPageResource> getWithFundingDecisionApplicationSummariesByCompetitionId(long competitionId, String sortBy, int pageIndex, int pageSize);
 }

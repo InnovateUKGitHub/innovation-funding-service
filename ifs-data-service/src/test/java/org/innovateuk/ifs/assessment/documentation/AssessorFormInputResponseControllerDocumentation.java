@@ -2,6 +2,7 @@ package org.innovateuk.ifs.assessment.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.controller.AssessorFormInputResponseController;
+import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,6 +10,7 @@ import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
 import java.util.List;
 
+import static org.innovateuk.ifs.assessment.documentation.AssessmentAggregateScoreDocs.applicationAssessmentAggregateResourceFields;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.AssessorFormInputResponseDocs.assessorFormInputResponseFields;
 import static org.innovateuk.ifs.documentation.AssessorFormInputResponseDocs.assessorFormInputResponseResourceBuilder;
@@ -88,6 +90,22 @@ public class AssessorFormInputResponseControllerDocumentation extends BaseContro
                 .andExpect(status().is2xxSuccessful())
                 .andDo(this.document.snippets(
                         requestFields(assessorFormInputResponseFields)
+                ));
+    }
+
+    @Test
+    public void getApplicationAggregateScores() throws Exception {
+        long applicationId = 1;
+        ApplicationAssessmentAggregateResource response = new ApplicationAssessmentAggregateResource();
+
+        when(assessorFormInputResponseServiceMock.getApplicationAggregateScores(applicationId)).thenReturn(serviceSuccess(response));
+
+        mockMvc.perform(get("/assessorFormInputResponse/application/{applicationId}/scores", applicationId))
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("applicationId").description("Id of the application associated with the aggregate scores being requested")
+                        ),
+                        responseFields(applicationAssessmentAggregateResourceFields)
                 ));
     }
 }
