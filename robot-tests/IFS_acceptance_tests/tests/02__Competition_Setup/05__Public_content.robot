@@ -6,6 +6,9 @@ Documentation     INFUND-6914 Create 'Public content' menu page for "Front Door"
 ...               INFUND-7602 Add / Remove sections for Competition setup > Public content
 ...
 ...               INFUND-7486 Create Competition > Summary tab for external "Front Door" view of competition summary
+...
+...               INFUND-7487 Create Competition > Eligibility tab for external "Front Door" view of competition eligibility
+
 Suite Setup       Custom suite setup
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin
@@ -13,7 +16,7 @@ Resource          ../../resources/defaultResources.robot
 Resource          CompAdmin_Commons.robot
 
 *** Variables ***
-${public_content_competition_name}    Public content competition
+${public_content_competition_name}    Public content competition - March7
 
 *** Test Cases ***
 User can view the public content
@@ -110,7 +113,7 @@ Summary: User enters valid values and saves
     And the user should see the element      css=img[title='The "Summary" section is marked as done']
 
 Summary: Contains the correct values when viewed
-    [Documentation]    INFUND-6916, INFUND-7486
+    [Documentation]    INFUND-6916, INFUND-7487
     [Tags]
     When the user clicks the button/link      link=Summary
     Then the user should see the element      jQuery=dt:contains("Funding type") + dd:contains("Grant")
@@ -123,28 +126,65 @@ Summary: Contains the correct values when viewed
     When the user clicks the button/link      jQuery=button:contains("Save and return")
     Then the user should see the element      css=img[title='The "Summary" section is marked as done']
 
-Eligibility: Server side validation
-    [Documentation]  INFUND-6916
-    [Tags]  HappyPath
-    When the user clicks the button/link  link=Eligibility
-    And the user clicks the button/link   jQuery=button:contains("Save and return")
-    Then the user should see a summary error  Please enter content.
-    And the user should see a summary error   Please enter a heading.
+Eligibility: server side validation and autosave
+    [Documentation]    INFUND-6916, INFUND-7487
+    [Tags]
+    When the user clicks the button/link            link=Eligibility
+    And the user should see the text in the page    Text entered into this section will appear within the eligibility tab.
+    And the user clicks the button/link             jQuery=button:contains("Save and return")
+    Then the user should see a summary error        Please enter content.
+    And the user should see a summary error         Please enter a heading.
+    When the user enters valid data in the eligibility details
+    And the user should see the element             jQuery=.buttonlink:contains("+ add new section")
 
-Eligibility: Add, remove sections and submit
-    [Documentation]    INFUND-6917 INFUND-7602
+Eligibility: User enters valid values and saves
+    [Documentation]    INFUND-6916, INFUND-7487
     [Tags]  HappyPath
-    Then the user can add and remove multiple content groups
-    When the user clicks the button/link                        jQuery=button:contains("Save and return")
-    And the user should see the element  css=img[title='The "Eligibility" section is marked as done']
+    Given the internal user navigates to public content  ${public_content_competition_name}
+    When the user clicks the button/link                   link=Eligibility
+    And the user enters valid data in the eligibility details
+    Then the user enters text to a text field              css=#heading-0   Nationality Eligibility Heading
+    And the user enters text to a text field               jQuery=.editor:eq(0)   You can give your views on new or changing government policies by responding to consultations. Government departments take these responses into consideration before making decisions
+    And the user uploads the file                          css=#file-upload-0  ${valid_pdf}
+    When the user clicks the button/link                   jQuery=button:contains("Save and return")
+    Then the user should be redirected to the correct page  ${public_content_overview}
+    And the user should see the element                    link=Eligibility
+    And the user should see the element                    css=img[title='The "Eligibility" section is marked as done']
+
+#Eligibility: Add, remove sections and submit
+#    [Documentation]    INFUND-6917 INFUND-7602
+#    [Tags]  HappyPath
+#    Then the user can add and remove multiple content groups
+#    When the user clicks the button/link                        jQuery=button:contains("Save and return")
+#    And the user should see the element  css=img[title='The "Eligibility" section is marked as done']
+
+Eligibility: Contains the correct values when viewed
+            [Documentation]    INFUND-6916, INFUND-7487
+            [Tags]  HappyPath
+            When the user clicks the button/link                        link=Eligibility
+            Then the user should see the element                        jQuery=h2:contains("Nationality Eligibility Heading")
+            And the user should see the element                         jQuery=a:contains("${valid_pdf}")
+            And the user should see the element                         jQuery=.button:contains("Return to public content")
+            When the user clicks the button/link                        jQuery=.button-secondary:contains("Edit")
+            And the user enters text to a text field                    jQuery=.editor:eq(0)   You can give your views on new or changing government policies by responding to consultations. Government departments take these responses into consideration before making decisions
+            When the user clicks the button/link                        jQuery=button:contains("Save and return")
+            And the user should see the element                         css=img[title='The "Eligibility" section is marked as done']
+
+#Eligibility: Server side validation
+#        [Documentation]  INFUND-6916
+#        [Tags]  HappyPath
+#        When the user clicks the button/link  link=Eligibility
+#        And the user clicks the button/link   jQuery=button:contains("Save and return")
+#        Then the user should see a summary error  Please enter content.
+#        And the user should see a summary error   Please enter a heading.
 
 Scope: Add, remove sections and submit
     [Documentation]    INFUND-6918, INFUND-7602
     [Tags]  HappyPath
     When the user clicks the button/link                         link=Scope
     Then the user can add and remove multiple content groups
-    When the user clicks the button/link                        jQuery=button:contains("Save and return")
-    And the user should see the element  css=img[title='The "Scope" section is marked as done']
+    When the user clicks the button/link            jQuery=button:contains("Save and return")
+    And the user should see the element             css=img[title='The "Scope" section is marked as done']
 
 Dates: Add, remove dates and submit
     [Documentation]    INFUND-6919
@@ -217,15 +257,23 @@ Guest user can filter competitions by Keywords
 Guest user can see the updated Summary information
     [Documentation]  INFUND-7486
     [Tags]
-    Given the user clicks the button/link  link=Public content competition
+    Given the user clicks the button/link  link=Public content competition March7
     And the user clicks the button/link    link=Summary
     Then the user should see the element   jQuery=.column-third:contains("Description") ~ .column-two-thirds:contains("This is a Summary description")
     And the user should see the element    jQuery=.column-third:contains("Funding type") ~ .column-two-thirds:contains("Grant")
     And the user should see the element    jQuery=.column-third:contains("Project size") ~ .column-two-thirds:contains("10 millions")
     And the user should see the element    jQuery=.column-third:contains("A nice new Heading") ~ .column-two-thirds:contains("Ut enim ad minim veniam,")
 
+Guest user can see the updated Eligibility information
+    [Documentation]  INFUND-7487
+    [Tags]
+    Given the user clicks the button/link   link=Public content competition - March7
+    When the user clicks the button/link    link=Eligibility
+    Then the user should see the element    jQuery=.column-third:contains("Nationality Eligibility Heading") ~ .column-two-thirds:contains("You can give your views on new or changing government policies by responding to consultations. Government departments take these responses into consideration before making decisions")
+
+
 The guest user is able to download the file in the Summary
-    [Documentation]  INFUND-7486
+    [Documentation]  INFUND-7486, INFUND-7487
     [Tags]  Pending
     # TODO Pending due to INFUND-8536
 
@@ -246,6 +294,8 @@ Custom suite setup
     Set suite variable  ${day}
     ${month} =  get tomorrow month
     set suite variable  ${month}
+    ${time} =  Get Time
+    Set suite variable  ${time}
 
 User creates a new competition
     [Arguments]    ${competition_name}
@@ -257,6 +307,10 @@ the user enters valid data in the summary details
     The user enters text to a text field    css=.editor  This is a Summary description
     the user selects the radio button       fundingType    Grant
     the user enters text to a text field    id=project-size   10 millions
+
+the user enters valid data in the eligibility details
+    The user enters text to a text field    css=#heading-0                Heading1
+    The user enters text to a text field    jQuery=.editor:eq(0)        This is Eligibility Content 1
 
 the user can add and remove multiple content groups
     When the user enters text to a text field   id=heading-0    Heading 1
