@@ -47,7 +47,7 @@ END
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $BASEDIR
 
-docker-compose -f ../../../docker-compose-services.yml exec -T ldap /usr/local/bin/ldap-delete-all-users.sh
+docker-compose -f ../../../docker-compose.yml exec -T ldap /usr/local/bin/ldap-delete-all-users.sh
 
 for user in $(mysql ifs -uroot -ppassword -hifs-database -N -s -e "select email from user;" 2>/dev/null)
 do
