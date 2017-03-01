@@ -27,7 +27,11 @@
                             <span class="error-message" th:each="err : ${#fields.errors('organisationName')}" th:text="${err}" />
                         </th:block>
                     </label>
-                    <input class="form-control width-full" type="text" th:field="*{organisationName}" />
+                    <input type="text"
+                           class="form-control width-full"
+                           th:field="*{organisationName}"
+                           required="required"
+                           th:attr="data-required-errormessage=#{validation.standard.organisationname.required}" />
                 </div>
 
                 <table class="table-overflow">
@@ -40,31 +44,34 @@
                     </thead>
                     <tbody>
                         <tr th:each="applicant, applicantStat : *{applicants}">
-                            <td>
+                            <td class="form-group">
                                 <label th:for="'applicants'+${applicantStat.index}+'.name'">
                                     <span class="visually-hidden">Applicant name</span>
                                     <th:block th:if="${#fields.hasErrors('applicants[__${applicantStat.index}__].name')}">
-                                        <span class="error-message"  th:each="err : ${#fields.errors('applicants[__${applicantStat.index}__].name')}" th:text="${err}">Please enter a name</span>
+                                        <span class="error-message" th:each="err : ${#fields.errors('applicants[__${applicantStat.index}__].name')}" th:text="${err}">Please enter a name.</span>
                                     </th:block>
                                 </label>
                                 <input type="text"
                                        th:field="*{applicants[__${applicantStat.index}__].name}"
-                                       required="required"
                                        class="form-control width-full"
-                                       th:errorclass="field-error" />
+                                       th:errorclass="field-error"
+                                       required="required"
+                                       th:attr="data-required-errormessage=#{validation.standard.name.required}" />
                             </td>
-                            <td>
+                            <td class="form-group">
                                 <label th:for="'applicants'+${applicantStat.index}+'.email'">
                                     <span class="visually-hidden">Applicant email</span>
                                     <th:block th:if="${#fields.hasErrors('applicants[__${applicantStat.index}__].email')}">
-                                        <span class="error-message"  th:each="err : ${#fields.errors('applicants[__${applicantStat.index}__].email')}" th:text="${err}">Please enter a name</span>
+                                        <span class="error-message" th:each="err : ${#fields.errors('applicants[__${applicantStat.index}__].email')}" th:text="${err}"> Please enter an email address.</span>
                                     </th:block>
                                 </label>
-                                <input type="text"
+                                <input type="email"
                                        th:field="*{applicants[__${applicantStat.index}__].email}"
-                                       required="required"
                                        class="form-control width-full"
-                                       th:errorclass="field-error" />
+                                       th:errorclass="field-error"
+                                       required="required"
+                                       th:attr="data-required-errormessage=#{validation.standard.email.required},
+                                                data-email-errormessage=#{validation.standard.email.format}" />
                             </td>
                             <td class="alignright"><button class="add-another-row buttonlink" th:value="${applicantStat.index}" name="removeApplicant" type="submit">Remove</button></td>
                         </tr>
