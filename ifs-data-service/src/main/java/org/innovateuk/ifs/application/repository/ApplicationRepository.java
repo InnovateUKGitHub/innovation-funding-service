@@ -22,12 +22,12 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 
 	static final String COMP_FILTER = "SELECT a FROM Application a WHERE " +
 			"a.competition.id = :compId" +
-			" AND (str(a.id) LIKE CONCAT('%', :filter, '%'))";
+			" AND (str(a.id) LIKE :filter)";
 
 	static final String COMP_STATUS_FILTER = "SELECT a FROM Application a WHERE " +
 			"a.competition.id = :compId " +
 			"AND (a.applicationStatus.id IN :statuses) " +
-			"AND (str(a.id) LIKE CONCAT('%', :filter, '%'))";
+			"AND (str(a.id) LIKE :filter)";
 
     @Override
     List<Application> findAll();
