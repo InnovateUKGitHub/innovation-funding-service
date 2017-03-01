@@ -73,9 +73,10 @@ public class ProjectFinanceAttachmentsServiceImpl implements ProjectFinanceAttac
     @Override
     public ServiceResult<Void> delete(Long attachmentId) {
         return ofNullable(mapper.mapIdToDomain(attachmentId))
-                .map(attachment -> fileService.deleteFile(attachment.fileId()))
-                .map(result -> result.andOnSuccessReturnVoid(deletedFile -> attachmentsRepository.delete(attachmentId)))
-                .orElse(ServiceResult.serviceFailure(notFoundError(AttachmentResource.class, attachmentId)));
+                .map(attachment -> {
+                    attachmentsRepository.delete(attachment.id());
+                    return fileService.deleteFile(attachment.fileId()).andOnSuccessReturnVoid();
+                }).orElse(ServiceResult.serviceFailure(notFoundError(AttachmentResource.class, attachmentId)));
     }
 
     @Override
