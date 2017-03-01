@@ -2,7 +2,7 @@ package org.innovateuk.ifs.upload.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.threads.attachment.resource.AttachmentResource;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
@@ -11,20 +11,20 @@ import java.util.Optional;
 
 @Service
 @Qualifier("projectFinance")
-public class ProjectFinancePostAttachmentRestService extends BaseRestService implements PostAttachmentRestService {
-    private final static String baseURL = "/project/finance/attachment";
+public class ProjectFinancePostAttachmentRestService extends BaseRestService implements AttachmentRestService {
+    private final static String baseURL = "/project/finance/attachments";
 
     @Override
-    public RestResult<FileEntryResource> find(Long fileId) {
-        return getWithRestResult(baseURL+"/" + fileId, FileEntryResource.class);
+    public RestResult<AttachmentResource> find(Long fileId) {
+        return getWithRestResult(baseURL+"/" + fileId, AttachmentResource.class);
     }
 
     @Override
-    public RestResult<FileEntryResource> upload(String contentType, long contentLength,
+    public RestResult<AttachmentResource> upload(Long projectId, String contentType, long contentLength,
                                                     String originalFilename, byte[] bytes)
     {
-        String url =  baseURL + "/upload?filename=" + originalFilename;
-        return postWithRestResult(url, bytes, createFileUploadHeader(contentType, contentLength), FileEntryResource.class);
+        String url =  baseURL + "/" + projectId + "/upload?filename=" + originalFilename;
+        return postWithRestResult(url, bytes, createFileUploadHeader(contentType, contentLength), AttachmentResource.class);
     }
 
     @Override

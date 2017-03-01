@@ -7,7 +7,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 public class BankDetailsReviewViewModel {
     private Long projectId;
     private Long applicationId;
-    private String projectNumber;
     private String projectName;
     private String financeContactName;
     private String financeContactEmail;
@@ -25,10 +24,9 @@ public class BankDetailsReviewViewModel {
     private Boolean approved;
     private Boolean approvedManually;
 
-    public BankDetailsReviewViewModel(Long projectId, Long applicationId, String projectNumber, String projectName, String financeContactName, String financeContactEmail, String financeContactPhoneNumber, Long organisationId, String organisationName, String registrationNumber, String bankAccountNumber, String sortCode, String organisationAddress, Boolean verified, Short companyNameScore, Boolean registrationNumberMatched, Short addressScore, Boolean approved, Boolean approvedManually) {
+    public BankDetailsReviewViewModel(Long projectId, Long applicationId, String projectName, String financeContactName, String financeContactEmail, String financeContactPhoneNumber, Long organisationId, String organisationName, String registrationNumber, String bankAccountNumber, String sortCode, String organisationAddress, Boolean verified, Short companyNameScore, Boolean registrationNumberMatched, Short addressScore, Boolean approved, Boolean approvedManually) {
         this.projectId = projectId;
         this.applicationId = applicationId;
-        this.projectNumber = projectNumber;
         this.projectName = projectName;
         this.financeContactName = financeContactName;
         this.financeContactEmail = financeContactEmail;
@@ -167,14 +165,6 @@ public class BankDetailsReviewViewModel {
         this.approved = approved;
     }
 
-    public String getProjectNumber() {
-        return projectNumber;
-    }
-
-    public void setProjectNumber(String projectNumber) {
-        this.projectNumber = projectNumber;
-    }
-
     public Long getProjectId() {
         return projectId;
     }
@@ -218,7 +208,6 @@ public class BankDetailsReviewViewModel {
         return new EqualsBuilder()
                 .append(projectId, that.projectId)
                 .append(applicationId, that.applicationId)
-                .append(projectNumber, that.projectNumber)
                 .append(projectName, that.projectName)
                 .append(financeContactName, that.financeContactName)
                 .append(financeContactEmail, that.financeContactEmail)
@@ -243,7 +232,6 @@ public class BankDetailsReviewViewModel {
         return new HashCodeBuilder(17, 37)
                 .append(projectId)
                 .append(applicationId)
-                .append(projectNumber)
                 .append(projectName)
                 .append(financeContactName)
                 .append(financeContactEmail)
@@ -268,7 +256,6 @@ public class BankDetailsReviewViewModel {
         return new ToStringBuilder(this)
                 .append("projectId", projectId)
                 .append("applicationId", applicationId)
-                .append("projectNumber", projectNumber)
                 .append("projectName", projectName)
                 .append("financeContactName", financeContactName)
                 .append("financeContactEmail", financeContactEmail)

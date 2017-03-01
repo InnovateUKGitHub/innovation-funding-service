@@ -33,7 +33,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     }
 
     @Test
-    public void test_getAll() {
+    public void getAll() {
 
         List<CompetitionResource> returnedResponse = newCompetitionResource().build(3);
         setupGetWithRestResultExpectations(competitionsRestURL + "/findAll", competitionResourceListType(), returnedResponse);
@@ -43,7 +43,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     }
 
     @Test
-    public void test_getCompetitionById() {
+    public void getCompetitionById() {
 
         CompetitionResource returnedResponse = new CompetitionResource();
 
@@ -55,7 +55,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     }
 
     @Test
-    public void test_getCompetitionTypes() {
+    public void getCompetitionTypes() {
         List<CompetitionTypeResource> returnedResponse = asList(new CompetitionTypeResource(), new CompetitionTypeResource());
 
         setupGetWithRestResultExpectations("/competition-type/findAll", competitionTypeResourceListType(), returnedResponse);
@@ -67,7 +67,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     }
 
     @Test
-    public void test_create() {
+    public void create() {
         CompetitionResource competition = new CompetitionResource();
 
         setupPostWithRestResultExpectations(competitionsRestURL + "", CompetitionResource.class, null, competition, HttpStatus.CREATED);
@@ -78,7 +78,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     }
 
     @Test
-    public void test_createNonIfs() {
+    public void createNonIfs() {
         CompetitionResource competition = new CompetitionResource();
 
         setupPostWithRestResultExpectations(competitionsRestURL + "/non-ifs", CompetitionResource.class, null, competition, HttpStatus.CREATED);
@@ -90,7 +90,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
 
 
     @Test
-    public void test_update() {
+    public void update() {
         CompetitionResource competition = new CompetitionResource();
         competition.setId(1L);
 
@@ -100,7 +100,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     }
 
     @Test
-    public void test_generateCompetitionCode() {
+    public void generateCompetitionCode() {
         LocalDateTime openingDate = LocalDateTime.of(2016, 2, 1, 0, 0);
         Long competitionId = Long.MAX_VALUE;
         String competitionCode = "1602-1";
@@ -112,7 +112,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     }
 
     @Test
-    public void test_findLiveCompetitions() {
+    public void findLiveCompetitions() {
         List<CompetitionSearchResultItem> returnedResponse =
                 singletonList(new CompetitionSearchResultItem(1L, "Name", singleton(""), 0, "", CompetitionStatus.OPEN, "Comp Type", 0, null));
 
@@ -124,7 +124,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     }
 
     @Test
-    public void test_findProjectSetupCompetitions() {
+    public void findProjectSetupCompetitions() {
 
         List<CompetitionSearchResultItem> returnedResponse =
                 singletonList(new CompetitionSearchResultItem(1L, "Name", singleton(""), 0, "", CompetitionStatus.OPEN, "Comp Type", 0, null));
@@ -137,7 +137,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     }
 
     @Test
-    public void test_findUpcomingCompetitions() {
+    public void findUpcomingCompetitions() {
 
         List<CompetitionSearchResultItem> returnedResponse =
                 singletonList(new CompetitionSearchResultItem(1L, "Name", Collections.EMPTY_SET, 0, "", CompetitionStatus.OPEN, "Comp Type", 0, null));
@@ -150,7 +150,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     }
 
     @Test
-    public void test_findNonIfsCompetitions() {
+    public void findNonIfsCompetitions() {
 
         List<CompetitionSearchResultItem> returnedResponse =
                 singletonList(new CompetitionSearchResultItem(1L, "Name", Collections.EMPTY_SET, 0, "", CompetitionStatus.OPEN, "Comp Type", 0, null));
@@ -163,7 +163,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     }
 
     @Test
-    public void test_countCompetitions() {
+    public void countCompetitions() {
         CompetitionCountResource returnedResponse = new CompetitionCountResource();
 
         setupGetWithRestResultExpectations(competitionsRestURL + "/count", CompetitionCountResource.class, returnedResponse);
@@ -174,7 +174,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     }
 
     @Test
-    public void test_searchCompetitions() {
+    public void searchCompetitions() {
         CompetitionSearchResult returnedResponse = new CompetitionSearchResult();
         String searchQuery = "SearchQuery";
         int page = 1;
@@ -188,7 +188,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     }
 
     @Test
-    public void test_markAsSetup() {
+    public void markAsSetup() {
         long competitionId = 1L;
         setupPostWithRestResultExpectations(competitionsRestURL + "/" + competitionId + "/mark-as-setup", HttpStatus.OK);
 
@@ -197,7 +197,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     }
 
     @Test
-    public void test_returnToSetup() {
+    public void returnToSetup() {
         long competitionId = 1L;
         setupPostWithRestResultExpectations(competitionsRestURL + "/" + competitionId + "/return-to-setup", HttpStatus.OK);
 
@@ -206,7 +206,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     }
 
     @Test
-    public void test_closeAssessment() {
+    public void closeAssessment() {
         long competitionId = 1L;
         setupPutWithRestResultExpectations(competitionsRestURL + "/" + competitionId + "/close-assessment",HttpStatus.OK);
 
@@ -215,11 +215,20 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     }
 
     @Test
-    public void test_notifyAssessors() {
+    public void notifyAssessors() {
         long competitionId = 1L;
         setupPutWithRestResultExpectations(competitionsRestURL + "/" + competitionId + "/notify-assessors", HttpStatus.OK);
 
         RestResult<Void> result = service.notifyAssessors(competitionId);
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void releaseFeedback() {
+        long competitionId = 1L;
+        setupPutWithRestResultExpectations(competitionsRestURL + "/" + competitionId + "/release-feedback", HttpStatus.OK);
+
+        RestResult<Void> result = service.releaseFeedback(competitionId);
         assertTrue(result.isSuccess());
     }
 }

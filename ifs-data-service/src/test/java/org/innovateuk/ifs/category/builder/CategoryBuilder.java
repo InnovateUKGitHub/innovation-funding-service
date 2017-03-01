@@ -19,4 +19,6 @@ public abstract class CategoryBuilder<C extends Category, B extends CategoryBuil
     public B withName(String... names) {
         return withArraySetFieldByReflection("name", names);
     }
+
+    public B withPriority(Integer... priorities) { return withArraySetFieldByReflection("priority", priorities); }
 }

@@ -164,21 +164,19 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
         when(projectSetupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
         when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
         when(projectSetupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(true);
-
-        // when(projectSetupProgressCheckerMock.isBankDetailsApproved(organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isBankDetailsApproved(organisation)).thenReturn(true);
 
         assertEquals(ACCESSIBLE, accessor.canAccessFinanceChecksSection(organisation));
 
         verifyInteractions(
                 mock -> mock.isCompaniesHouseSectionRequired(organisation),
                 mock -> mock.isCompaniesHouseDetailsComplete(organisation),
-                mock -> mock.isProjectDetailsSubmitted()
-
-                // TODO DW - INFUND-4428 - reinstate when bank details are approvable or queryable
-                // mock -> mock.isBankDetailsApproved(organisation)
+                mock -> mock.isProjectDetailsSubmitted(),
+                mock -> mock.isBankDetailsApproved(organisation)
         );
     }
 
+    @Ignore //This test is for functionality not currently implemented.
     @Test
     public void testCheckAccessToFinanceChecksSectionHappyPathWhenBankDetailsQueried() {
 
@@ -232,9 +230,7 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
         when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
         when(projectSetupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(true);
 
-
-        // TODO DW - INFUND-4428 - reinstate when bank details are approvable or queryable
-        // when(projectSetupProgressCheckerMock.isBankDetailsApproved(organisation)).thenReturn(true);
+         when(projectSetupProgressCheckerMock.isBankDetailsApproved(organisation)).thenReturn(true);
         when(projectSetupProgressCheckerMock.isSpendProfileGenerated()).thenReturn(true);
 
         assertEquals(ACCESSIBLE, accessor.canAccessSpendProfileSection(organisation));
@@ -243,9 +239,7 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
                 mock -> mock.isCompaniesHouseSectionRequired(organisation),
                 mock -> mock.isCompaniesHouseDetailsComplete(organisation),
                 mock -> mock.isProjectDetailsSubmitted(),
-
-                // TODO DW - INFUND-4428 - reinstate when bank details are approvable or queryable
-                // mock -> mock.isBankDetailsApproved(organisation),
+                mock -> mock.isBankDetailsApproved(organisation),
                 mock -> mock.isSpendProfileGenerated()
         );
     }

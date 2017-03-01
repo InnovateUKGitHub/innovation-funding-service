@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.assessment.viewmodel;
 
-import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 
@@ -16,12 +16,12 @@ import static org.apache.commons.lang3.StringUtils.lowerCase;
  */
 public class AssessmentFeedbackViewModel {
 
-    private Long assessmentId;
+    private long assessmentId;
     private long daysLeft;
     private long daysLeftPercentage;
-    private CompetitionResource competition;
-    private ApplicationResource application;
-    private Long questionId;
+    private long applicationId;
+    private String applicationName;
+    private long questionId;
     private String questionNumber;
     private String questionShortName;
     private String questionName;
@@ -34,16 +34,28 @@ public class AssessmentFeedbackViewModel {
     private FileDetailsViewModel appendixDetails;
     private List<ResearchCategoryResource> researchCategories;
 
-    public AssessmentFeedbackViewModel(Long assessmentId, long daysLeft, long daysLeftPercentage, CompetitionResource competition, ApplicationResource application, Long questionId, String questionNumber, String questionShortName, String questionName, Integer maximumScore, String applicantResponse, List<FormInputResource> assessmentFormInputs, boolean scoreFormInputExists, boolean scopeFormInputExists, List<ResearchCategoryResource> researchCategories) {
-        this(assessmentId, daysLeft, daysLeftPercentage, competition, application, questionId, questionNumber, questionShortName, questionName, maximumScore, applicantResponse, assessmentFormInputs, scoreFormInputExists, scopeFormInputExists, false, null, researchCategories);
-    }
-
-    public AssessmentFeedbackViewModel(Long assessmentId, long daysLeft, long daysLeftPercentage, CompetitionResource competition, ApplicationResource application, Long questionId, String questionNumber, String questionShortName, String questionName, Integer maximumScore, String applicantResponse, List<FormInputResource> assessmentFormInputs, boolean scoreFormInputExists, boolean scopeFormInputExists, boolean appendixExists, FileDetailsViewModel appendixDetails, List<ResearchCategoryResource> researchCategories) {
+    public AssessmentFeedbackViewModel(long assessmentId,
+                                       long daysLeft,
+                                       long daysLeftPercentage,
+                                       long applicationId,
+                                       String applicationName,
+                                       long questionId,
+                                       String questionNumber,
+                                       String questionShortName,
+                                       String questionName,
+                                       Integer maximumScore,
+                                       String applicantResponse,
+                                       List<FormInputResource> assessmentFormInputs,
+                                       boolean scoreFormInputExists,
+                                       boolean scopeFormInputExists,
+                                       boolean appendixExists,
+                                       FileDetailsViewModel appendixDetails,
+                                       List<ResearchCategoryResource> researchCategories) {
         this.assessmentId = assessmentId;
         this.daysLeft = daysLeft;
         this.daysLeftPercentage = daysLeftPercentage;
-        this.competition = competition;
-        this.application = application;
+        this.applicationId = applicationId;
+        this.applicationName = applicationName;
         this.questionId = questionId;
         this.questionNumber = questionNumber;
         this.questionShortName = questionShortName;
@@ -58,7 +70,7 @@ public class AssessmentFeedbackViewModel {
         this.researchCategories = researchCategories;
     }
 
-    public Long getAssessmentId() {
+    public long getAssessmentId() {
         return assessmentId;
     }
 
@@ -70,15 +82,15 @@ public class AssessmentFeedbackViewModel {
         return daysLeftPercentage;
     }
 
-    public CompetitionResource getCompetition() {
-        return competition;
+    public long getApplicationId() {
+        return applicationId;
     }
 
-    public ApplicationResource getApplication() {
-        return application;
+    public String getApplicationName() {
+        return applicationName;
     }
 
-    public Long getQuestionId() {
+    public long getQuestionId() {
         return questionId;
     }
 
@@ -122,11 +134,67 @@ public class AssessmentFeedbackViewModel {
         return appendixDetails;
     }
 
+    public List<ResearchCategoryResource> getResearchCategories() {
+        return researchCategories;
+    }
+
     public String getAppendixFileDescription() {
         return format("View %s appendix", lowerCase(getQuestionShortName()));
     }
 
-    public List<ResearchCategoryResource> getResearchCategories() {
-        return researchCategories;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        AssessmentFeedbackViewModel that = (AssessmentFeedbackViewModel) o;
+
+        return new EqualsBuilder()
+                .append(assessmentId, that.assessmentId)
+                .append(daysLeft, that.daysLeft)
+                .append(daysLeftPercentage, that.daysLeftPercentage)
+                .append(applicationId, that.applicationId)
+                .append(questionId, that.questionId)
+                .append(scoreFormInputExists, that.scoreFormInputExists)
+                .append(scopeFormInputExists, that.scopeFormInputExists)
+                .append(appendixExists, that.appendixExists)
+                .append(applicationName, that.applicationName)
+                .append(questionNumber, that.questionNumber)
+                .append(questionShortName, that.questionShortName)
+                .append(questionName, that.questionName)
+                .append(maximumScore, that.maximumScore)
+                .append(applicantResponse, that.applicantResponse)
+                .append(assessmentFormInputs, that.assessmentFormInputs)
+                .append(appendixDetails, that.appendixDetails)
+                .append(researchCategories, that.researchCategories)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(assessmentId)
+                .append(daysLeft)
+                .append(daysLeftPercentage)
+                .append(applicationId)
+                .append(applicationName)
+                .append(questionId)
+                .append(questionNumber)
+                .append(questionShortName)
+                .append(questionName)
+                .append(maximumScore)
+                .append(applicantResponse)
+                .append(assessmentFormInputs)
+                .append(scoreFormInputExists)
+                .append(scopeFormInputExists)
+                .append(appendixExists)
+                .append(appendixDetails)
+                .append(researchCategories)
+                .toHashCode();
     }
 }
