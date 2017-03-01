@@ -108,7 +108,7 @@ the lead applicant invites a registered user
 
 invite a new academic
     [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
-    guest user log-in    ${EMAIL_LEAD}    Passw0rd123
+    guest user log-in    ${EMAIL_LEAD}    ${correct_password}
     the user clicks the button/link    link=${application_name}
     the user clicks the button/link    link=view and add participants to your application
     the user clicks the button/link    jQuery=.button:contains("Invite new contributors")

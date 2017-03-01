@@ -95,9 +95,10 @@
                     Funding type
                 </label>
 
-                <label class="block-label selection-button-radio" th:each="fundingType:${model.fundingTypes}" >
+                <label th:for="${'fundingType-'+fundingType.displayName}" class="block-label selection-button-radio" th:each="fundingType : ${model.fundingTypes}" >
                     <input type="radio"
                            name="fundingType"
+                           th:id="${'fundingType-'+fundingType.displayName}"
                            th:value="${fundingType.displayName}"
                            required="required"
                            th:checked="${form.fundingType == fundingType.displayName}"

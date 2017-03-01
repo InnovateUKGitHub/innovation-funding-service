@@ -3,7 +3,8 @@ package org.innovateuk.ifs.login.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.error.exception.InvalidURLException;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.exception.ErrorControllerAdvice;
 import org.innovateuk.ifs.login.LoginController;
 import org.innovateuk.ifs.token.resource.TokenResource;
@@ -16,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -53,7 +56,7 @@ public class LoginControllerTest extends BaseControllerMockMVCTest<LoginControll
 
         setLoggedInUser(null);
         String email = "test@test.nl";
-        when(userService.sendPasswordResetNotification(eq(email))).thenReturn(RestResult.restSuccess());
+        when(userRestServiceMock.sendPasswordResetNotification(eq(email))).thenReturn(restSuccess());
 
         mockMvc.perform(
                 post("/" + LoginController.LOGIN_BASE + "/" + LoginController.RESET_PASSWORD)
@@ -69,7 +72,7 @@ public class LoginControllerTest extends BaseControllerMockMVCTest<LoginControll
 
         setLoggedInUser(null);
         String email = "testtest.nl";
-        when(userService.sendPasswordResetNotification(eq(email))).thenReturn(RestResult.restSuccess());
+        when(userRestServiceMock.sendPasswordResetNotification(eq(email))).thenReturn(restSuccess());
 
         mockMvc.perform(
                 post("/" + LoginController.LOGIN_BASE + "/" + LoginController.RESET_PASSWORD)
@@ -82,10 +85,7 @@ public class LoginControllerTest extends BaseControllerMockMVCTest<LoginControll
 
     @Test
     public void testResetPassword() throws Exception {
-
         String hash = UUID.randomUUID().toString();
-        when(userService.checkPasswordResetHash(eq(hash))).thenReturn(RestResult.restSuccess());
-
         mockMvc.perform(get("/" + LoginController.LOGIN_BASE + "/" + LoginController.RESET_PASSWORD + "/hash/" + hash))
                 .andExpect(status().isOk())
                 .andExpect(view().name(LoginController.LOGIN_BASE + "/" + LoginController.RESET_PASSWORD_FORM));
@@ -93,22 +93,22 @@ public class LoginControllerTest extends BaseControllerMockMVCTest<LoginControll
 
     @Test
     public void testResetPasswordInvalidHash() throws Exception {
-
         String hash = UUID.randomUUID().toString();
-        when(userService.checkPasswordResetHash(eq(hash))).thenReturn(RestResult.restFailure(CommonErrors.notFoundError(TokenResource.class, hash)));
+        Error error = CommonErrors.notFoundError(TokenResource.class, hash);
+        when(userService.checkPasswordResetHash(hash)).thenThrow(new InvalidURLException(error.getErrorKey(), error.getArguments()));
 
         mockMvc.perform(get("/" + LoginController.LOGIN_BASE + "/" + LoginController.RESET_PASSWORD + "/hash/" + hash))
                 .andExpect(status().isAlreadyReported())
                 .andExpect(view().name(ErrorControllerAdvice.URL_HASH_INVALID_TEMPLATE));
     }
 
+
+
     @Test
     public void testResetPasswordPost() throws Exception {
-
         String hash = UUID.randomUUID().toString();
         String password = "Passw0rd12";
-        when(userService.checkPasswordResetHash(eq(hash))).thenReturn(RestResult.restSuccess());
-        when(userService.resetPassword(eq(hash), eq(password))).thenReturn(RestResult.restSuccess());
+        when(userService.resetPassword(eq(hash), eq(password))).thenReturn(serviceSuccess());
 
         mockMvc.perform(
                 post("/" + LoginController.LOGIN_BASE + "/" + LoginController.RESET_PASSWORD + "/hash/" + hash)
@@ -125,8 +125,7 @@ public class LoginControllerTest extends BaseControllerMockMVCTest<LoginControll
 
         String hash = UUID.randomUUID().toString();
         String password = "Passw0rd";
-        when(userService.checkPasswordResetHash(eq(hash))).thenReturn(RestResult.restSuccess());
-        when(userService.resetPassword(eq(hash), eq(password))).thenReturn(RestResult.restSuccess());
+        when(userService.resetPassword(eq(hash), eq(password))).thenReturn(serviceSuccess());
 
         mockMvc.perform(
                 post("/" + LoginController.LOGIN_BASE + "/" + LoginController.RESET_PASSWORD + "/hash/" + hash)
@@ -144,10 +143,10 @@ public class LoginControllerTest extends BaseControllerMockMVCTest<LoginControll
 
         String hash = UUID.randomUUID().toString();
         String password = "Passw0rd123";
-        when(userService.checkPasswordResetHash(eq(hash))).thenReturn(RestResult.restSuccess());
+        when(userRestServiceMock.checkPasswordResetHash(eq(hash))).thenReturn(restSuccess());
         List<Error> errors = new ArrayList<>();
         errors.add(new Error("INVALID_PASSWORD", HttpStatus.CONFLICT));
-        when(userService.resetPassword(eq(hash), eq(password))).thenReturn(RestResult.restFailure(errors));
+        when(userService.resetPassword(eq(hash), eq(password))).thenReturn(ServiceResult.serviceFailure(errors));
 
         mockMvc.perform(
                 post("/" + LoginController.LOGIN_BASE + "/" + LoginController.RESET_PASSWORD + "/hash/" + hash)
@@ -162,10 +161,10 @@ public class LoginControllerTest extends BaseControllerMockMVCTest<LoginControll
 
     @Test
     public void testResetPasswordPostInvalidHash() throws Exception {
-
         String hash = UUID.randomUUID().toString();
         String password = "Passw0rd";
-        when(userService.checkPasswordResetHash(eq(hash))).thenReturn(RestResult.restFailure(CommonErrors.notFoundError(TokenResource.class, hash)));
+        Error error = CommonErrors.notFoundError(TokenResource.class, hash);
+        when(userService.checkPasswordResetHash(eq(hash))).thenThrow(new InvalidURLException(error.getErrorKey(), error.getArguments()));
 
         mockMvc.perform(
                 post("/" + LoginController.LOGIN_BASE + "/" + LoginController.RESET_PASSWORD + "/hash/" + hash)
