@@ -3,6 +3,9 @@ package org.innovateuk.ifs.application.viewmodel;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+/**
+ * Holder of model attributes for the Add Organisation view.
+ */
 public class ApplicationTeamAddOrganisationViewModel {
 
     private long applicationId;

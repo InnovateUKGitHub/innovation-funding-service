@@ -33,7 +33,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 
 /**
- * TODO
+ * This controller will handle all requests that are related to adding a new partner organisation to the application team.
  */
 @Controller
 @RequestMapping("/application/{applicationId}/team")

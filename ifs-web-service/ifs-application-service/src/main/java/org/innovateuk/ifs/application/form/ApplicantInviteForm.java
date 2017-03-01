@@ -9,7 +9,7 @@ import org.innovateuk.ifs.commons.validation.ValidationConstants;
 import javax.validation.constraints.Size;
 
 /**
- * TODO
+ * Form field model for the Applicant fields within the Add Organisation view.
  */
 public class ApplicantInviteForm {
 

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * Form field model for the Add Organisation view.
  */
 public class ApplicationTeamAddOrganisationForm implements BindingResultTarget {
 
