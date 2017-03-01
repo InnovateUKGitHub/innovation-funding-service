@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.category.domain.ApplicationInnovationAreaLink;
 import org.innovateuk.ifs.category.domain.ApplicationResearchCategoryLink;
@@ -200,8 +199,7 @@ public class Application implements ProcessActivity {
     public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
-
-    @JsonIgnore
+    
     public List<ApplicationFinance> getApplicationFinances() {
         return applicationFinances;
     }
@@ -218,32 +216,26 @@ public class Application implements ProcessActivity {
         this.applicationFinances = applicationFinances;
     }
 
-    @JsonIgnore
     public ProcessRole getLeadApplicantProcessRole() {
         return getLeadProcessRole().orElse(null);
     }
 
-    @JsonIgnore
     private Optional<ProcessRole> getLeadProcessRole() {
         return this.processRoles.stream().filter(p -> UserRoleType.LEADAPPLICANT.getName().equals(p.getRole().getName())).findAny();
     }
 
-    @JsonIgnore
     public User getLeadApplicant() {
         return getLeadProcessRole().map(role -> role.getUser()).orElse(null);
     }
 
-    @JsonIgnore
     public Long getLeadOrganisationId() {
         return getLeadProcessRole().map(role -> role.getOrganisationId()).orElse(null);
     }
 
-    @JsonIgnore
     public List<ApplicationInvite> getInvites() {
         return this.invites;
     }
 
-    @JsonIgnore
     public boolean isOpen() {
         return Objects.equals(applicationStatus.getId(), ApplicationStatusConstants.OPEN.getId());
     }

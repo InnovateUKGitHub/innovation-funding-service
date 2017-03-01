@@ -235,4 +235,47 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
         assertEquals(saved.get(2), foundForAssessment2FormInput1);
         assertEquals(saved.get(3), foundForAssessment2FormInput2);
     }
+
+    @Test
+    public void findByAssessmentTargetId() {
+
+        ProcessRole processRole = processRoleRepository.findOne(1L);
+        Application application = applicationRepository.findOne(1L);
+        ActivityState openState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, AssessmentStates.OPEN.getBackingState());
+
+        List<Assessment> assessments =
+                newAssessment().
+                        withParticipant(processRole).
+                        withApplication(application).
+                        withActivityState(openState).
+                        build(2);
+
+        List<Assessment> savedAssessments = simpleMap(assessments, assessmentRepository::save);
+
+        // Save a question
+        Question question = questionRepository.save(new Question());
+
+        // Save two form inputs for the question
+        List<FormInput> formInputs = newFormInput()
+                .withId(null, null)
+                .withQuestion(question, question)
+                .withPriority(0, 1)
+                .withType(TEXTAREA, TEXTAREA)
+                .withScope(ASSESSMENT, ASSESSMENT)
+                .build(2).stream().map(formInput -> formInputRepository.save(formInput)).collect(toList());
+
+        // For each of the assessments, save one response for each of the two form inputs
+        List<AssessorFormInputResponse> saved = newAssessorFormInputResponse()
+                .withId(null, null, null, null)
+                .withAssessment(savedAssessments.get(0), savedAssessments.get(0), savedAssessments.get(1), savedAssessments.get(1))
+                .withFormInput(formInputs.get(0), formInputs.get(1), formInputs.get(0), formInputs.get(1))
+                .withValue("Sample response 1", "Sample response 2", "Sample response 3", "Sample response 4")
+                .withUpdatedDate(LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now())
+                .build(4).stream().map(assessorFormInputResponse -> repository.save(assessorFormInputResponse)).collect(toList());
+
+        // There should be a response found for each of the form inputs, for each assessment
+        List<AssessorFormInputResponse> responses = repository.findByAssessmentTargetId(application.getId());
+
+        assertEquals(saved, responses);
+    }
 }
