@@ -52,7 +52,7 @@ public class CompetitionBankDetailsController {
             Address address = bankDetail.getOrganisationAddress().getAddress();
             List<String> row = new ArrayList<>();
             row.add(bankDetail.getOrganisation().getName());
-            row.add(bankDetail.getProject().getApplication().getFormattedId());
+            row.add(bankDetail.getProject().getApplication().getId().toString());
             row.add(address.getAddressLine1());
             row.add(address.getAddressLine2());
             row.add(address.getAddressLine3());

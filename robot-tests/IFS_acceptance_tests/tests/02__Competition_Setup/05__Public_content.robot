@@ -7,6 +7,8 @@ Documentation     INFUND-6914 Create 'Public content' menu page for "Front Door"
 ...
 ...               INFUND-7486 Create Competition > Summary tab for external "Front Door" view of competition summary
 ...
+...               INFUND-7489 Create 'Competition' > 'Dates' tab for external "Front Door" view of competition dates
+...
 ...               INFUND-7487 Create Competition > Eligibility tab for external "Front Door" view of competition eligibility
 
 Suite Setup       Custom suite setup
@@ -16,7 +18,7 @@ Resource          ../../resources/defaultResources.robot
 Resource          CompAdmin_Commons.robot
 
 *** Variables ***
-${public_content_competition_name}    Public content competition - March7
+${public_content_competition_name}    Public content competition
 
 *** Test Cases ***
 User can view the public content
@@ -113,7 +115,7 @@ Summary: User enters valid values and saves
     And the user should see the element      css=img[title='The "Summary" section is marked as done']
 
 Summary: Contains the correct values when viewed
-    [Documentation]    INFUND-6916, INFUND-7487
+    [Documentation]    INFUND-6916, INFUND-7486
     [Tags]
     When the user clicks the button/link      link=Summary
     Then the user should see the element      jQuery=dt:contains("Funding type") + dd:contains("Grant")
@@ -257,7 +259,7 @@ Guest user can filter competitions by Keywords
 Guest user can see the updated Summary information
     [Documentation]  INFUND-7486
     [Tags]
-    Given the user clicks the button/link  link=Public content competition March7
+    Given the user clicks the button/link  link=Public content competition
     And the user clicks the button/link    link=Summary
     Then the user should see the element   jQuery=.column-third:contains("Description") ~ .column-two-thirds:contains("This is a Summary description")
     And the user should see the element    jQuery=.column-third:contains("Funding type") ~ .column-two-thirds:contains("Grant")
@@ -277,6 +279,16 @@ The guest user is able to download the file in the Summary
     [Tags]  Pending
     # TODO Pending due to INFUND-8536
 
+The guest user can see updated date information
+   [Documentation]    INFUND-7489
+   [Tags]
+   [Setup]    the month is converted to text
+   Given the user clicks the button/link    link=Dates
+   And the user should see the element    jQuery=dt:contains("1 February ${nextyear}") + dd:contains("Competition opens")
+   And the user should see the element    jQuery=dt:contains(${newdate}) + dd:contains("Competition closes")
+   And the user should see the element    jQuery=dt:contains(${newdate}) + dd:contains("Applicants notified")
+   And the user should see the element    jQuery=dt:contains("12 December ${nextyear}") + dd:contains("Content 1")
+   And the user should see the element    jQuery=dt:contains("20 December ${nextyear}") + dd:contains("Content 2")
 
 *** Keywords ***
 Custom suite setup
@@ -358,6 +370,11 @@ the user can add and remove multiple event groups
     And the user clicks the button/link         jQuery=button:contains("Save and return")
     Then the user should see a summary error    Please enter a valid date.
     And the user should see a summary error     Please enter valid content.
+    And the user enters text to a text field    id=dates-0-day      60
+    And the user enters text to a text field    id=dates-0-month    -6
+    And the user clicks the button/link         jQuery=button:contains("Save and return")
+    Then the user should see a summary error    must be between 1 and 31
+    And the user should see a summary error     must be between 1 and 12
     When the user enters text to a text field   id=dates-0-day      12
     And the user enters text to a text field    id=dates-0-month    12
     And the user enters text to a text field    id=dates-0-year     ${nextyear}
@@ -398,3 +415,8 @@ the user visits
 the user should see all sections completed
     :FOR  ${i}  IN RANGE  1  8
     \    the user should see the element  jQuery=li:nth-child(${i}) img.complete
+
+the month is converted to text
+    ${fulldate} =  Catenate    ${nextyear}  ${month}   ${day}
+    ${newdate} =    Convert Date     ${fulldate}    result_format=%-d %B %Y    exclude_millis=true
+    set suite variable    ${newdate}

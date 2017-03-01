@@ -16,11 +16,11 @@
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Allocate applications',linkClass='link-back',linkUrl=@{/assessment/competition/{competitionId}(competitionId=${model.competitionId})}" />
 
             <h1 class="heading-xlarge">
-                <span class="heading-secondary" th:text="|${#numbers.formatInteger(model.competitionId,8)}: ${model.competitionName}|">0102468: Technology inspired, in assessment</span>
+                <span class="heading-secondary" th:text="|${model.competitionId}: ${model.competitionName}|">0102468: Technology inspired, in assessment</span>
                 <span th:text="${model.inAssessment ? 'Application progress' : 'Assign to application'}" th:remove="tag">Application progress</span>
             </h1>
 
-            <h2 class="heading-medium" th:text="|${#numbers.formatInteger(model.applicationId,8)}: ${model.applicationName}|">
+            <h2 class="heading-medium" th:text="|${model.applicationId}: ${model.applicationName}|">
                 94565678: The potential for glucose based contact lens monitoring in the managment of type two diabetetes
             </h2>
 
