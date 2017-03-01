@@ -13,9 +13,9 @@ public class AssessmentFeedbackViewModelTest {
         AssessmentFeedbackViewModel assessmentFeedbackViewModel = new AssessmentFeedbackViewModel(0L,
                 0L,
                 0L,
+                0L,
                 null,
-                null,
-                null,
+                0L,
                 null,
                 questionShortName,
                 null,
@@ -24,6 +24,8 @@ public class AssessmentFeedbackViewModelTest {
                 null,
                 false,
                 false,
+                false,
+                null,
                 null
         );
 

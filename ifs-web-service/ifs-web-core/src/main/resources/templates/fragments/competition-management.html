@@ -8,11 +8,11 @@
 
 <!--/* TODO: Following on from previous to do, we can do it like this: */-->
 <th:block th:fragment="competition-id-simple(competitionId)">
-    <p class="subtitle"><th:block th:text="${#numbers.formatInteger(competitionId,8)}" /> : Innovate UK</p>
+    <p class="subtitle"><th:block th:text="${competitionId}" /> : Innovate UK</p>
 </th:block>
 
 <th:block th:fragment="competition-id-and-name(competitionId, competitionName)">
-    <p class="subtitle"><th:block th:text="${#numbers.formatInteger(competitionId,8)}"/> : <th:block th:text="${competitionName}"/></p>
+    <p class="subtitle"><th:block th:text="${competitionId}"/> : <th:block th:text="${competitionName}"/></p>
 </th:block>
 
 <!--/* competition status with blue block */-->
@@ -168,7 +168,7 @@
      </thead>
      <tbody>
        <tr th:each="result : ${results.content}">
-         <td><a th:href="${'/management/competition/' + competition.competitionId + '/application/' + result.id}" th:text="${result.getFormattedId()}" /></td>
+         <td><a th:href="${'/management/competition/' + competition.competitionId + '/application/' + result.id}" th:text="${result.id}" /></td>
          <td th:text="${result.name}"></td>
          <td th:text="${result.leadApplicant}"></td>
          <td th:text="${result.lead}"></td>
@@ -202,7 +202,7 @@
                        <span class="invisible">Select application</span>
                    </label>
                </td>
-               <td><a th:href="${'/management/competition/' + competition.competitionId + '/application/' + result.id} + ${originQuery}"  th:text="${#numbers.formatInteger(result.id,8)}"/></td>
+               <td><a th:href="${'/management/competition/' + competition.competitionId + '/application/' + result.id} + ${originQuery}"  th:text="${result.id}"/></td>
                <td th:text="${result.name}"></td>
                <td th:text="${result.lead}"></td>
                <td th:text="${result.numberOfPartners}"></td>
@@ -229,7 +229,8 @@
            </thead>
            <tbody>
              <tr th:each="result : ${results.content}">
-               <td><a th:href="${'/management/competition/' + competition.competitionId + '/application/' + result.id}"  th:text="${#numbers.formatInteger(result.id,8)}"/></td>
+
+                 <td><a th:href="${'/management/competition/' + competition.competitionId + '/application/' + result.id}"  th:text="${result.id}"/></td>
                <td th:text="${result.name}"></td>
                <td th:text="${result.lead}"></td>
                <td th:text="${result.completedPercentage}"></td>

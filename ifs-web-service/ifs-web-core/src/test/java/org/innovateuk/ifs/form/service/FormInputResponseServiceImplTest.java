@@ -14,6 +14,8 @@ import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.only;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 
@@ -29,7 +31,7 @@ public class FormInputResponseServiceImplTest extends BaseUnitTestMocksTest {
     private FormInputResponseRestService restServiceMock;
 
     @Test
-    public void test_getByApplication() {
+    public void getByApplication() {
 
         List<FormInputResponseResource> formInputResponses = newFormInputResponseResource().build(3);
         when(restServiceMock.getResponsesByApplicationId(123L)).thenReturn(restSuccess(formInputResponses));
@@ -39,7 +41,7 @@ public class FormInputResponseServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void test_mapResponsesToFormInputs() {
+    public void mapResponsesToFormInputs() {
 
         List<FormInputResponseResource> formInputResponses = newFormInputResponseResource().
                 withFormInputs(3L, 2L, 1L).
@@ -52,7 +54,7 @@ public class FormInputResponseServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void test_save() {
+    public void save() {
 
         ValidationMessages validation = new ValidationMessages(
                 fieldError("value", "", "an error", NOT_ACCEPTABLE),
@@ -63,5 +65,21 @@ public class FormInputResponseServiceImplTest extends BaseUnitTestMocksTest {
 
         ValidationMessages responses = service.save(123L, 456L, 789L, "A new value", false);
         assertEquals(validation, responses);
+    }
+
+    @Test
+    public void getByApplicationIdAndQuestionName() throws Exception {
+        long applicationId = 1L;
+        String questionName = "name";
+
+        FormInputResponseResource expected = newFormInputResponseResource().build();
+
+        when(restServiceMock.getByApplicationIdAndQuestionName(applicationId, questionName)).thenReturn(
+                restSuccess(expected));
+
+        FormInputResponseResource actual = service.getByApplicationIdAndQuestionName(applicationId, questionName);
+        assertEquals(expected, actual);
+
+        verify(restServiceMock, only()).getByApplicationIdAndQuestionName(applicationId, questionName);
     }
 }

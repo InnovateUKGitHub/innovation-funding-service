@@ -68,7 +68,7 @@ public class NonIfsDetailsFormSaverTest {
         when(competitionSetupMilestoneService.validateMilestoneDates(any())).thenReturn(emptyList());
         when(competitionService.update(competition)).thenReturn(serviceSuccess());
         when(milestoneService.getAllMilestonesByCompetitionId(competition.getId())).thenReturn(allMilestones);
-        when(competitionSetupMilestoneService.updateMilestonesForCompetition(eq(allMilestones), any(), eq(competition.getId()))).thenReturn(emptyList());
+        when(competitionSetupMilestoneService.updateMilestonesForCompetition(eq(allMilestones), any(), eq(competition.getId()))).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = target.save(form, competition);
 

@@ -72,17 +72,17 @@
 
 <!-- =========================== Element: Application Title =========================== -->
 <th:block th:fragment="application-title (applicationId, applicationName) ">
-    <p class="subtitle" th:text="${#numbers.formatInteger(applicationId,8)} + ': ' + ${applicationName} "/>
+    <p class="subtitle" th:text="${applicationId} + ': ' + ${applicationName} "/>
 </th:block>
 
 <!-- =========================== Element: Competition Title =========================== -->
 <th:block th:fragment="competition-title (competition) ">
-    <p class="subtitle" th:text="${#numbers.formatInteger(competition.id,8)} + ': ' + ${competition.name == null ? 'No competition title defined' : competition.name} "/>
+    <p class="subtitle" th:text="${competition.id} + ': ' + ${competition.name == null ? 'No competition title defined' : competition.name} "/>
 </th:block>
 
 <!-- =========================== Element: Project Title =========================== -->
 <th:block th:fragment="project-title (projectId, projectName) ">
-    <p class="subtitle" th:text="${#numbers.formatInteger(projectId,8)} + ': ' + ${projectName} "/>
+    <p class="subtitle" th:text="${projectId} + ': ' + ${projectName} "/>
 </th:block>
 
 <!-- =========================== Element: Competition Closing soon? =========================== -->
@@ -210,19 +210,21 @@
 		<div class="success-alert" th:if="${(app.applicationStatusName == 'approved')}">
 	        <h2 class="heading-small no-margin">Congratulations, your application has been successful</h2>
 	        <p>
-            You have been successful in this round of funding.
-            <th:block th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}" th:text="${'Assessor feedback on your application will be available here on '+ #temporals.format(competition.assessorFeedbackDate, 'd MMMM yyyy')+'.'}" />
-          </p>
-          <p th:if="${currentProject}">
-            <a th:href="@{/project-setup/project/{projectId}(projectId=${currentProject.id})}">Start to plan your project</a>
-          </p>
-    </div>
-	  <div class="warning-alert" th:if="${(app.applicationStatusName == 'rejected')}">
-        <h2 class="heading-small no-margin">Your application has not been successful in this competition.</h2>
-        <p th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}">
-          <th:block th:text="${'Assessor feedback on your application will be available here on '+ #temporals.format(competition.assessorFeedbackDate, 'dd/MM/yyyy')}" />.
-        </p>
-    </div>
+                <th:block th:unless="${competition.competitionStatus.isFeedbackReleased()}">You have been successful in this round of funding.</th:block>
+                <th:block th:if="${competition.competitionStatus.isFeedbackReleased()}">Scores and written feedback from each assessor can be found below.</th:block>
+                <th:block th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}" th:text="${'Assessor feedback on your application will be available here on '+ #temporals.format(competition.assessorFeedbackDate, 'd MMMM yyyy')+'.'}" />
+            </p>
+            <p th:if="${currentProject}">
+                <a th:href="@{/project-setup/project/{projectId}(projectId=${currentProject.id})}">Start to plan your project</a>
+            </p>
+        </div>
+        <div class="warning-alert" th:if="${(app.applicationStatusName == 'rejected')}">
+            <h2 class="heading-small no-margin">Your application has not been successful in this competition.</h2>
+            <p>
+                <th:block th:if="${competition.competitionStatus.isFeedbackReleased()}">Scores and written feedback from each assessor can be found below.</th:block>
+                <th:block th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}" th:text="${'Assessor feedback on your application will be available here on '+ #temporals.format(competition.assessorFeedbackDate, 'dd/MM/yyyy')+'.'}" />
+            </p>
+        </div>
 </th:block>
 
 </html>

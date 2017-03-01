@@ -14,7 +14,7 @@
     <div class="grid-row">
       <div class="column-two-thirds">
         <div class="page-title">
-          <p class="subtitle no-margin" th:text="${model.competitionProjectsStatusResource.formattedCompetitionNumber+': Innovate UK'}" />
+          <p class="subtitle no-margin" th:text="${model.competitionProjectsStatusResource.competitionNumber+': Innovate UK'}" />
           <h1 class="heading-xlarge" th:text="${model.competitionProjectsStatusResource.competitionName}" />
         </div>
       </div>
@@ -46,7 +46,7 @@
           <tr th:each="project : ${model.competitionProjectsStatusResource.projectStatusResources}">
               <th scope="row">
                 <div class="heading-small no-margin" th:text="${project.projectTitle}" />
-                <a th:text="${project.formattedApplicationNumber}" th:href="${'/management/competition/'+model.competitionProjectsStatusResource.competitionNumber+'/application/'+project.applicationNumber}" />
+                <a th:text="${project.applicationNumber}" th:href="${'/management/competition/'+model.competitionProjectsStatusResource.competitionNumber+'/application/'+project.applicationNumber}" />
                 <small>
                   <th:block th:text="${project.numberOfPartners > 1 ? project.numberOfPartners+' partners' : project.numberOfPartners+' partner'}" /><br/>
                   <th:block th:text="${'Lead: '+project.projectLeadOrganisationName}" />
