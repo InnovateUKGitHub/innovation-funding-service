@@ -151,7 +151,7 @@ Non-lead partner can see the application overview
     And the user should see the text in the page    Other documents
     When the user clicks the button/link    link=View application and feedback
     Then the user should see the text in the page    Congratulations, your application has been successful
-    And the user should see the text in the page    Application questions
+    And the user should see the text in the page    Application details
     And the user should not see an error in the page
 
 Lead partner can see the project setup page
@@ -192,7 +192,7 @@ Lead partner can see the application overview
     Given the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=View application and feedback
     Then the user should see the element    jQuery=.success-alert h2:contains("Congratulations, your application has been successful")
-    And the user should see the element     jQuery=h2:contains("Application questions")
+    And the user should see the element     jQuery=h2:contains("Application details")
     And the user should not see an error in the page
 
 Lead partner is able to see finances without an error
