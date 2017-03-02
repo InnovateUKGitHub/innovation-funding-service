@@ -408,12 +408,16 @@ After rejection, lead partner cannot upload either document
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
 
-After rejection, lead partner cannot view either document
+After rejection, lead partner can view both documents
     [Documentation]    INFUND-3011, INFUND-2621, INFUND-7342
     [Tags]
     Given the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
-    Then the user should not see the element  link=${valid_pdf}
+    When the user clicks the button/link    link=${valid_pdf}
+    Then the user should not see an error in the page
+    And the user goes back to the previous page
+    When the user clicks the button/link    link=${valid_pdf}
+    Then the user should not see an error in the page
     And the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    link=status of my partners
     When the user clicks the button/link    link=status of my partners
