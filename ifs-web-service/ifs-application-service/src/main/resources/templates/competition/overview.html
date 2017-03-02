@@ -24,13 +24,13 @@
                          time=${#strings.toLowerCase(#temporals.format(model.competitionCloseDate, ' h:mma'))}">
                 <strong>Competition closes:</strong> <th:block th:text="${date + ' ' + time}"/></li>
         </ul>
-        <p th:unless="${model.nonIfsUrl}" class="extra-margin">
+        <p th:unless="${model.nonIfs}" class="extra-margin">
             <a
                th:href="@{/application/create/check-eligibility/{competitionId}(competitionId=${model.competitionId})}" class="button">
                 Start or continue your application
             </a>
         </p>
-        <div th:if="${model.nonIfsUrl}" class="extra-margin">
+        <div th:if="${model.nonIfs}" class="extra-margin">
             <p>This is a non-IFS competition, applications will not be managed by this service</p>
             <p>
                 <a

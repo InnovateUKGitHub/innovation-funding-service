@@ -26,6 +26,7 @@ public class CompetitionOverviewPopulator {
         viewModel.setCompetitionCloseDate(publicContentItemResource.getCompetitionCloseDate());
         viewModel.setCompetitionTitle(publicContentItemResource.getCompetitionTitle());
         viewModel.setNonIfsUrl(publicContentItemResource.getNonIfsUrl());
+        viewModel.setNonIfs(publicContentItemResource.getNonIfs());
 
         if(null != publicContentItemResource.getPublicContentResource()) {
             viewModel.setShortDescription(publicContentItemResource.getPublicContentResource().getShortDescription());
