@@ -76,8 +76,7 @@ Working days per year should be 232
 User pressing back button should get the correct version of the page
     [Documentation]    INFUND-2695
     [Tags]
-    [Setup]
-    When  Applicant navigates to the finances of the Robot application
+    [Setup]  Applicant navigates to the finances of the Robot application
     And the user clicks the button/link  link=Your project costs
     Given The user adds three material rows
     When the user navigates to another page
@@ -143,12 +142,12 @@ Overheads section read only view should contain calculate overheads sheet
     [Documentation]     INFUND-6788   INFUND-8191
     [Tags]
     [Setup]  log in as a different user    &{lead_applicant_credentials}
-    #This test applies if user has chosen the calcualte overheads option in Project costs after section is marked as complete
+    #This test applies if user has chosen the calcualte overheads option in Project costs
     When the user navigates to Your-finances page     ${Competition_E2E}
     then the user fills in the project costs        ${Competition_E2E}
     and the user clicks the button/link     link=Your project costs
     When the user clicks the button/link     jQuery=button:contains("Overhead costs")
-    #Need to click twice to expand the dropdwon
+    #Need to click twice to expand the dropdown
     and the user clicks the button/link     jQuery=button:contains("Overhead costs")
     then the user should see the element      jQuery=a:contains(${excel_file})
 
