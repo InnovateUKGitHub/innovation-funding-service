@@ -19,17 +19,11 @@
                 <h1 class="heading-xlarge"  th:text="${model.selectedOrganisation != null ? 'Update ' + model.selectedOrganisation.name : 'Add organisation'}">Update Empire Ltd</h1>
             </div>
 
-            <!--/* TODO INFUND-7974
             <p th:if="${model.authenticatedUser.id == model.leadApplicant.id and model.selectedOrganisation.id == model.leadOrganisation.id}">You can invite and remove members of the lead organisation. The lead organisation itself and the lead applicant cannot be removed.</p>
-             */-->
 
-            <!--/* TODO INFUND-7975
             <p th:if="${model.authenticatedUser.id == model.leadApplicant.id and model.selectedOrganisation.id != model.leadOrganisation.id}">From this page you are able to invite and remove applicants from a partner organisation.</p>
-            */-->
 
-            <!--/* TODO INFUND-7977
-            <p th:if="${model.authenticatedUser.id != model.leadApplicant.id}">From this page you are able to invite and remove applicants from your organisation. Only the lead applicant can remove partners</p>
-            */-->
+            <p th:if="${model.authenticatedUser.id != model.leadApplicant.id}">From this page you are able to invite and remove applicants from your organisation. Only the lead applicant can remove partners.</p>
 
             <h2 class="heading-medium">
                 <th:block th:text="${model.organisation.lead} ? ${model.organisation.name} + ', Lead organisation' : ${model.organisation.name}"></th:block>
