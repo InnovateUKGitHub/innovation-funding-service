@@ -253,14 +253,15 @@
                 </div>
             </div>*/-->
 
-            <!--/* TODO INFUND-8172
-            <h2 class="heading-medium">Assessor feedback</h2>
-            <ul class="boxed-list">
-                <li>
-                    <h3 class="heading-small">Assessor 1</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
-                </li>
-            </ul>*/-->
+            <div th:if="!${#lists.isEmpty(feedback)}">
+                <h2 class="heading-medium">Assessor feedback</h2>
+                <ul class="boxed-list">
+                    <li th:each="item, iterStat : ${feedback}">
+                        <h3 class="heading-small" th:text="|Assessor ${iterStat.count}|">Assessor 1</h3>
+                        <p th:text="${item}">Feedback text</p>
+                    </li>
+                </ul>
+            </div>
 
             <th:block th:insert="fragments/layout :: main-content-end" />
         </main>

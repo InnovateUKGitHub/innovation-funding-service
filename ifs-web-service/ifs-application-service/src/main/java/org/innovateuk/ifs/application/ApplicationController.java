@@ -12,6 +12,8 @@ import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionMod
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.service.*;
+import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentFeedbackResource;
+import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
@@ -117,6 +119,9 @@ public class ApplicationController {
     @Autowired
     private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
 
+    @Autowired
+    private AssessmentRestService assessmentRestService;
+
     public static String redirectToApplication(ApplicationResource application){
         return "redirect:/application/"+application.getId();
     }
@@ -190,6 +195,10 @@ public class ApplicationController {
 
         if (APPLICATION_FEEDBACK_SUMMARY_FEATURE_ENABLED && competition.getCompetitionStatus().isFeedbackReleased()) {
             model.addAttribute("scores", assessorFormInputResponseRestService.getApplicationAssessmentAggregate(applicationId).getSuccessObjectOrThrowException());
+            model.addAttribute("feedback", assessmentRestService.getApplicationFeedback(applicationId)
+                    .getSuccessObjectOrThrowException()
+                    .getFeedback()
+            );
 
             return "application-feedback-summary";
         }
