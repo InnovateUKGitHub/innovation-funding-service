@@ -60,7 +60,8 @@ public class ApplicationTeamManagementModelPopulator {
         }
 
         return new ApplicationTeamManagementViewModel(applicationResource.getId(), applicationResource.getApplicationDisplayName(),
-                getOrganisationName(inviteOrganisationResource), leadOrganisation, userIsLeadApplicant, applicantRowViewModelsForInvites);
+                inviteOrganisationResource.getOrganisation(), getOrganisationName(inviteOrganisationResource),
+                leadOrganisation, userIsLeadApplicant, applicantRowViewModelsForInvites);
     }
 
     private List<ApplicationTeamManagementApplicantRowViewModel> appendLeadApplicant(

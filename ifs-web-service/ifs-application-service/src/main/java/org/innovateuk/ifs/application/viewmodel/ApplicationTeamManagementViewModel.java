@@ -12,6 +12,7 @@ public class ApplicationTeamManagementViewModel {
 
     private long applicationId;
     private String applicationName;
+    private Long organisationId;
     private String organisationName;
     private boolean leadOrganisation;
     private boolean userLeadApplicant;
@@ -19,12 +20,14 @@ public class ApplicationTeamManagementViewModel {
 
     public ApplicationTeamManagementViewModel(long applicationId,
                                               String applicationName,
+                                              Long organisationId,
                                               String organisationName,
                                               boolean leadOrganisation,
                                               boolean userLeadApplicant,
                                               List<ApplicationTeamManagementApplicantRowViewModel> applicants) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
+        this.organisationId = organisationId;
         this.organisationName = organisationName;
         this.leadOrganisation = leadOrganisation;
         this.userLeadApplicant = userLeadApplicant;
@@ -37,6 +40,10 @@ public class ApplicationTeamManagementViewModel {
 
     public String getApplicationName() {
         return applicationName;
+    }
+
+    public Long getOrganisationId() {
+        return organisationId;
     }
 
     public String getOrganisationName() {
@@ -72,6 +79,7 @@ public class ApplicationTeamManagementViewModel {
                 .append(leadOrganisation, that.leadOrganisation)
                 .append(userLeadApplicant, that.userLeadApplicant)
                 .append(applicationName, that.applicationName)
+                .append(organisationId, that.organisationId)
                 .append(organisationName, that.organisationName)
                 .append(applicants, that.applicants)
                 .isEquals();
@@ -82,6 +90,7 @@ public class ApplicationTeamManagementViewModel {
         return new HashCodeBuilder(17, 37)
                 .append(applicationId)
                 .append(applicationName)
+                .append(organisationId)
                 .append(organisationName)
                 .append(leadOrganisation)
                 .append(userLeadApplicant)

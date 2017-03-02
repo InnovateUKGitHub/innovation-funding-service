@@ -52,7 +52,7 @@ public class ApplicationTeamManagementController {
     @Autowired
     private ApplicationTeamManagementModelPopulator applicationTeamManagementModelPopulator;
 
-    @GetMapping
+    @GetMapping(params = {"organisation"})
     public String getUpdateOrganisation(Model model,
                                         @PathVariable("applicationId") long applicationId,
                                         @RequestParam(name = "organisation") long organisationId,
@@ -66,7 +66,7 @@ public class ApplicationTeamManagementController {
         return "application-team/edit-org";
     }
 
-    @GetMapping
+    @GetMapping(params = {"organisationName"})
     public String getUpdateOrganisation(Model model,
                                         @PathVariable("applicationId") long applicationId,
                                         @RequestParam(name = "organisationName") String organisationName,
@@ -80,7 +80,7 @@ public class ApplicationTeamManagementController {
         return "application-team/edit-org";
     }
 
-    @PostMapping
+    @PostMapping(params = {"organisation"})
     public String submitUpdateOrganisation(Model model,
                                            @PathVariable("applicationId") Long applicationId,
                                            @RequestParam(name = "organisation") long organisationId,
@@ -101,7 +101,7 @@ public class ApplicationTeamManagementController {
         });
     }
 
-    @PostMapping
+    @PostMapping(params = {"organisationName"})
     public String submitUpdateOrganisation(Model model,
                                            @PathVariable("applicationId") Long applicationId,
                                            @RequestParam(name = "organisationName") String organisationName,
