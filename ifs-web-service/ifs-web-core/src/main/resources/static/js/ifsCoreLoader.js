@@ -40,6 +40,20 @@ IFS.core.loadOrder = {
       IFS.core.debug.init()
     }
   },
+  commonStateManaged: {
+    mobile: function () {
+      IFS.core.collapsible.init('tabs')
+    },
+    desktop: function () {
+      IFS.core.tabs.init()
+    },
+    mobileLeave: function () {
+      IFS.core.collapsible.destroy('tabs')
+    },
+    desktopLeave: function () {
+      IFS.core.tabs.destroy()
+    }
+  },
   'finance': {
     init: function () {
       IFS.core.repeatableFinanceRows.init()
