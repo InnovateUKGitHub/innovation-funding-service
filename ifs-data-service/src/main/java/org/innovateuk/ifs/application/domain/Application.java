@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.application.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.category.domain.ApplicationResearchCategoryLink;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -12,7 +10,6 @@ import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.domain.ProcessActivity;
-import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -42,6 +39,8 @@ public class Application implements ProcessActivity {
     private Boolean resubmission;
     private String previousApplicationNumber;
     private String previousApplicationTitle;
+    private LocalDateTime manageFundingEmailDate;
+
     @Min(0)
     private Long durationInMonths; // in months
     @Min(0)
@@ -100,10 +99,6 @@ public class Application implements ProcessActivity {
 
     protected boolean canEqual(Object other) {
         return other instanceof Application;
-    }
-
-    public String getFormattedId() {
-        return ApplicationResource.formatter.format(id);
     }
 
     public void setId(Long id) {
@@ -182,6 +177,14 @@ public class Application implements ProcessActivity {
         }
     }
 
+    public LocalDateTime getManageFundingEmailDate() {
+        return manageFundingEmailDate;
+    }
+
+    public void setManageFundingEmailDate(LocalDateTime manageFundingEmailDate) {
+        this.manageFundingEmailDate = manageFundingEmailDate;
+    }
+
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -189,8 +192,7 @@ public class Application implements ProcessActivity {
     public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
-
-    @JsonIgnore
+    
     public List<ApplicationFinance> getApplicationFinances() {
         return applicationFinances;
     }
@@ -207,32 +209,26 @@ public class Application implements ProcessActivity {
         this.applicationFinances = applicationFinances;
     }
 
-    @JsonIgnore
     public ProcessRole getLeadApplicantProcessRole() {
         return getLeadProcessRole().orElse(null);
     }
 
-    @JsonIgnore
     private Optional<ProcessRole> getLeadProcessRole() {
         return this.processRoles.stream().filter(p -> UserRoleType.LEADAPPLICANT.getName().equals(p.getRole().getName())).findAny();
     }
 
-    @JsonIgnore
     public User getLeadApplicant() {
         return getLeadProcessRole().map(role -> role.getUser()).orElse(null);
     }
 
-    @JsonIgnore
     public Long getLeadOrganisationId() {
         return getLeadProcessRole().map(role -> role.getOrganisationId()).orElse(null);
     }
 
-    @JsonIgnore
     public List<ApplicationInvite> getInvites() {
         return this.invites;
     }
 
-    @JsonIgnore
     public boolean isOpen() {
         return Objects.equals(applicationStatus.getId(), ApplicationStatusConstants.OPEN.getId());
     }

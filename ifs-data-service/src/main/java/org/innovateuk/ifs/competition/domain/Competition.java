@@ -187,9 +187,6 @@ public class Competition implements ProcessActivity {
         return id;
     }
 
-    public String getFormattedId() {
-        return ApplicationResource.formatter.format(id);
-    }
 
     public String getName() {
         return name;
@@ -632,6 +629,10 @@ public class Competition implements ProcessActivity {
                     CompetitionStatus.CLOSED);
         }
         setMilestoneDate(MilestoneType.ASSESSORS_NOTIFIED, date);
+    }
+
+    public void releaseFeedback(LocalDateTime date) {
+        setMilestoneDate(MilestoneType.RELEASE_FEEDBACK, date);
     }
 
     public void closeAssessment(LocalDateTime date) {

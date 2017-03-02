@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.threads.domain;
 
 import org.innovateuk.ifs.file.domain.FileEntry;
+import org.innovateuk.ifs.threads.attachments.domain.Attachment;
 import org.innovateuk.ifs.user.domain.User;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -29,14 +30,14 @@ public class Post {
     @OneToMany
     @JoinTable(name = "post_attachment",
             joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "file_entry_id", referencedColumnName = "id"))
-    private List<FileEntry> attachments;
+            inverseJoinColumns = @JoinColumn(name = "attachment_id", referencedColumnName = "id"))
+    private List<Attachment> attachments;
 
     @CreatedDate
     private LocalDateTime createdOn;
 
     public Post(){}
-    public Post(Long id, User author, String body, List<FileEntry> attachments, LocalDateTime createdOn) {
+    public Post(Long id, User author, String body, List<Attachment> attachments, LocalDateTime createdOn) {
         this.id = id;
         this.author = author;
         this.body = body;
@@ -52,8 +53,8 @@ public class Post {
         return author;
     }
 
-    public List<FileEntry> attachments() {
-        return attachments;
+    public List<Attachment> attachments() {
+        return new ArrayList<>(attachments);
     }
 
     public final String body() {

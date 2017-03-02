@@ -2,6 +2,7 @@ package org.innovateuk.ifs.thread.viewmodel;
 
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.threads.resource.PostResource;
 
 import java.time.LocalDateTime;
@@ -10,7 +11,7 @@ import java.util.List;
 public class ThreadPostViewModel extends PostResource {
     private String username;
 
-    public ThreadPostViewModel(Long id, UserResource author, String body, List<FileEntryResource> attachments, LocalDateTime createdOn) {
+    public ThreadPostViewModel(Long id, UserResource author, String body, List<AttachmentResource> attachments, LocalDateTime createdOn) {
         super(id, author, body, attachments, createdOn);
     }
 
