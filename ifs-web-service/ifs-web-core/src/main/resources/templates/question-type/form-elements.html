@@ -303,14 +303,6 @@
 </th:block>
 <!-- ========================= Assigned to =========================== -->
 <th:block th:fragment="assigned-to">
-        <!--<th:block th:if="${questionAssignee?.assignee != null} ">-->
-            <!--<span th:if="${questionAssignee?.assignedByUserId == leadApplicant?.getId()}">Assigned to </span>-->
-            <!--<span th:unless="${questionAssignee?.assignedByUserId == leadApplicant?.getId()}">Reassigned to </span>-->
-             <!--<strong th:text="${name}" th:with="name=${(questionAssignee?.assigneeUserId == currentUser.getId()) ? 'You' : questionAssignee?.getAssigneeName()}" />-->
-        <!--</th:block>-->
-        <!--<th:block th:if="${questionAssignee?.assignee == null} ">-->
-            <!--Assigned to <strong th:text="${name}" th:with="name=${(leadApplicant?.getId() == currentUser.getId()) ? 'You' : leadApplicant?.getName()}" />-->
-        <!--</th:block>-->
   <th:block th:if="${questionAssignee?.assignee != null} ">
     <span class="action-required" th:if="${questionAssignee?.assigneeUserId == currentUser.getId()}">
       <strong th:if="${questionAssignee?.assignedByUserId == leadApplicant?.getId()}">Assigned to you</strong>
