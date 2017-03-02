@@ -28,7 +28,6 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
  */
 @Component
 public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHandler {
-
     private static final Log LOG = LogFactory.getLog(OrganisationFinanceDefaultHandler.class);
 
     @Autowired
@@ -377,7 +376,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
             } else{
                 applicationFinanceRow = Optional.empty();
             }
-            return ImmutablePair.of(buildApplicationFinanceRow(applicationFinanceRow, applicationFinance), buildProjectFinanceRow(Optional.of(cost), applicationFinance));
+            return ImmutablePair.of(toFinanceRow(applicationFinanceRow, applicationFinance), toFinanceRow(Optional.of(cost), applicationFinance));
         });
     }
 
@@ -389,40 +388,26 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
             Optional<ApplicationFinanceRow> applicationFinanceRow = Optional.ofNullable(applicationFinanceRowRepository.findOne(cost.getId()));
             Optional<ProjectFinanceRow> projectFinanceRow = projectFinanceRowRepository.findOneByApplicationRowId(cost.getId());
             if(!projectFinanceRow.isPresent()) {
-                removals.add(ImmutablePair.of(buildApplicationFinanceRow(applicationFinanceRow, applicationFinance), Optional.empty()) );
+                removals.add(ImmutablePair.of(toFinanceRow(applicationFinanceRow, applicationFinance), Optional.empty()) );
             }
         }
 
         return removals;
     }
+    
 
-    private Optional<ApplicationFinanceRow> buildApplicationFinanceRow(Optional<ApplicationFinanceRow> optionalCost, ApplicationFinance applicationFinance){
-        if(!optionalCost.isPresent()) {
-            return Optional.empty();
-        }
-
-        ApplicationFinanceRow cost = optionalCost.get();
-        ApplicationFinanceRow applicationFinanceRow = new ApplicationFinanceRow(cost.getId(), cost.getName(), cost.getItem(), cost.getDescription(),
-                cost.getQuantity(), cost.getCost(), applicationFinance, cost.getQuestion());
-
-        applicationFinanceRow.setFinanceRowMetadata(cost.getFinanceRowMetadata());
-        return Optional.of(applicationFinanceRow);
-    }
-
-    private Optional<ApplicationFinanceRow> buildProjectFinanceRow(Optional<ProjectFinanceRow> optionalCost, ApplicationFinance applicationFinance){
-        if(!optionalCost.isPresent()) {
-            return Optional.empty();
-        }
-        ProjectFinanceRow cost = optionalCost.get();
-        ApplicationFinanceRow applicationFinanceRow = new ApplicationFinanceRow(cost.getId(), cost.getName(), cost.getItem(), cost.getDescription(),
-                cost.getQuantity(), cost.getCost(), applicationFinance, cost.getQuestion());
-        applicationFinanceRow.setFinanceRowMetadata(cost.getFinanceRowMetadata());
-        return Optional.of(applicationFinanceRow);
+    private Optional<ApplicationFinanceRow> toFinanceRow(Optional<? extends FinanceRow> optionalCost,
+                                                                  ApplicationFinance applicationFinance) {
+        return optionalCost.map(cost -> {
+            ApplicationFinanceRow applicationFinanceRow = new ApplicationFinanceRow(cost.getId(), cost.getName(),
+                    cost.getItem(), cost.getDescription(), cost.getQuantity(), cost.getCost(), applicationFinance, cost.getQuestion());
+            applicationFinanceRow.setFinanceRowMetadata(cost.getFinanceRowMetadata());
+            return applicationFinanceRow;
+        });
     }
 
     private FinanceRowItem getApplicationCostItem(FinanceRowType financeRowType, ApplicationFinanceRow applicationCost){
-        FinanceRowHandler financeRowHandler = getCostHandler(financeRowType);
-        return financeRowHandler.toCostItem(applicationCost);
+        return getCostHandler(financeRowType).toCostItem(applicationCost);
     }
 
     private List<ProjectFinanceRow> getProjectCosts(Long projectFinanceId){
