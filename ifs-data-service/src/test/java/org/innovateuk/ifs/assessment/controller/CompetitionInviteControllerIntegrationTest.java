@@ -802,7 +802,15 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         assertEquals(0, availableAssessorPageResource.getNumber());
         assertEquals(1, availableAssessorPageResource.getTotalPages());
         assertEquals(6, availableAssessorPageResource.getTotalElements());
-        assertEquals(6, availableAssessorPageResource.getContent().size());
+
+        List<AvailableAssessorResource> content = availableAssessorPageResource.getContent();
+        assertEquals(6, content.size());
+        assertEquals("Andrew Marr", content.get(0).getName());
+        assertEquals("Felix Wilson", content.get(1).getName());
+        assertEquals("James Blake", content.get(2).getName());
+        assertEquals("Jessica Alba", content.get(3).getName());
+        assertEquals("Professor Plum", content.get(4).getName());
+        assertEquals("Victoria Beckham", content.get(5).getName());
     }
 
     @Test
