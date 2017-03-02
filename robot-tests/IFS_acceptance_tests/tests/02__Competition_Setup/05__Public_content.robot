@@ -260,11 +260,10 @@ The guest user is able to download the file in the Summary
 The guest user can see updated date information
    [Documentation]    INFUND-7489
    [Tags]
-   [Setup]    the month is converted to text
    Given the user clicks the button/link    link=Dates
    And the user should see the element    jQuery=dt:contains("1 February ${nextyear}") + dd:contains("Competition opens")
-   And the user should see the element    jQuery=dt:contains(${newdate}) + dd:contains("Competition closes")
-   And the user should see the element    jQuery=dt:contains(${newdate}) + dd:contains("Applicants notified")
+   And the user should see the element    jQuery=dt:contains("1 February ${nextyear}") + dd:contains("Competition closes")
+   And the user should see the element    jQuery=dt:contains("1 February ${nextyear}") + dd:contains("Applicants notified")
    And the user should see the element    jQuery=dt:contains("12 December ${nextyear}") + dd:contains("Content 1")
    And the user should see the element    jQuery=dt:contains("20 December ${nextyear}") + dd:contains("Content 2")
 
@@ -394,8 +393,3 @@ the user visits
 the user should see all sections completed
     :FOR  ${i}  IN RANGE  1  8
     \    the user should see the element  jQuery=li:nth-child(${i}) img.complete
-
-the month is converted to text
-    ${fulldate} =  Catenate    ${nextyear}  ${month}   ${day}
-    ${newdate} =    Convert Date     ${fulldate}    result_format=%-d %B %Y    exclude_millis=true
-    set suite variable    ${newdate}
