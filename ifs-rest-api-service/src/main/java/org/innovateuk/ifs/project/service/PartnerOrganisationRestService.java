@@ -6,5 +6,5 @@ import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import java.util.List;
 
 public interface PartnerOrganisationRestService {
-    public RestResult<List<PartnerOrganisationResource>> getProjectPartnerOrganisations(Long projectId);
+    RestResult<List<PartnerOrganisationResource>> getProjectPartnerOrganisations(Long projectId);
 }

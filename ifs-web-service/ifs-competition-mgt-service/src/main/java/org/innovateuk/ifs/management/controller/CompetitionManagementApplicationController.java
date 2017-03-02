@@ -296,7 +296,7 @@ public class CompetitionManagementApplicationController extends BaseController {
             LOG.error("Found no user to impersonate.");
             return null;
         }
-        user = userService.retrieveUserById(userId.get()).getSuccessObject();
+        user = userService.retrieveUserById(userId.get());
         return user;
     }
 

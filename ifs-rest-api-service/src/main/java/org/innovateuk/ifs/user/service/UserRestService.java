@@ -48,5 +48,4 @@ public interface UserRestService {
     RestResult<UserProfileResource> getUserProfile(Long userId);
     RestResult<Void> updateUserProfile(Long userId, UserProfileResource userProfile);
     RestResult<UserProfileStatusResource> getUserProfileStatus(Long userId);
-
 }
