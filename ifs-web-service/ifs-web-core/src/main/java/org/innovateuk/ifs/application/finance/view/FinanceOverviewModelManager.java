@@ -5,6 +5,6 @@ import org.springframework.ui.Model;
 
 public interface FinanceOverviewModelManager {
     //TODO: INFUND-7849 - make sure this function is not going to be used anymore
-    void addFinanceDetails(Model model, Long competitionId, Long applicationId);
+    void addFinanceDetails(Model model, Long competitionId, Long applicationId, Long userId);
     BaseFinanceOverviewViewModel getFinanceDetailsViewModel(Long competitionId, Long applicationId);
 }
