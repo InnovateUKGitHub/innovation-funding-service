@@ -16,7 +16,7 @@ Suite Setup       Custom Suite Setup
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
-Resource          ../../FinanceSection_Commons.robot
+Resource          /FinanceSection_Commons.robot
 
 *** Test Cases ***
 Finance sub-sections
@@ -147,6 +147,8 @@ Overheads section read only view should contain calculate overheads sheet
     then the user fills in the project costs         ${New_innovation_solution}
     and the user clicks the button/link     link=Your project costs
     When the user clicks the button/link     jQuery=button:contains("Overhead costs")
+    #Need to click twice to expand the dropdwon
+    and the user clicks the button/link     jQuery=button:contains("Overhead costs")
     then the user should see the element      jQuery=a:contains(${excel_file})
 
 *** Keywords ***
