@@ -190,6 +190,7 @@ public class ApplicationController {
 
         if (APPLICATION_FEEDBACK_SUMMARY_FEATURE_ENABLED && competition.getCompetitionStatus().isFeedbackReleased()) {
             model.addAttribute("scores", assessorFormInputResponseRestService.getApplicationAssessmentAggregate(applicationId).getSuccessObjectOrThrowException());
+
             return "application-feedback-summary";
         }
         else {
