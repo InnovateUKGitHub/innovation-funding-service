@@ -353,12 +353,6 @@
                 </div>
                 <div th:unless="${overheadCosts?.getUseTotalOption()}" id="overhead-custom-percentage">
                     <h3 class="heading-medium">Custom overhead costs</h3>
-                    <p>
-                        If you feel your overhead costs are higher than 20% you may calculate a value using an Innovate UK model.
-                        The model shows you which types of indirect costs associated with your project you may claim. For support with this option,
-                        please contact our Customer Support Service on 01793 44 2700. They will be happy to provide you with the calculation model sheet (together with guidance documentation).
-                        Any value claimed under this model will be subject to a review. This will assess the appropriateness of your claim if your grant application is successful.
-                    </p>
                     <div class="form-group alignright inline" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ overheadCosts?.id +'-rate]}')} ? 'error' : ''">
                         <label th:for="${'cost-'+ type + '-'+overheadCosts?.id+'-customRate'}">
                             <span>Rate calculated (%)</span>
@@ -391,32 +385,16 @@
                     </div>
                 </div>
                 <div th:if="${overheadCosts?.getUseTotalOption()}" id="overhead-total">
-                    <h3 class="heading-medium">Calculate overheads</h3>
-                    <p>
-                        If you feel your overheads are higher than 20% you may calculate a value using the Innovate UK model in the spreadsheet available below.
-                        The model shows you which types of indirect costs associated with your project you may claim.
-                        For support with this option, please contact our Customer Support Service on 01793 44 2700. Any value claimed under this model will be subject to a review.
-                        This will assess the appropriateness of your claim if your grant application is successful.
-                    </p>
-                    <div class="form-group download">
-                        <h3 class="heading-small no-margin">Download the overhead calculation spreadsheet</h3>
-                        <a href="/files/overheads.xlsx">Overhead calculation spreadsheet.xlsx (16kb)</a>
-                    </div>
+                    <h3 class="heading-medium">Calculated overheads</h3>
                     <div class="upload-section extra-margin">
-                        <h3 class="heading-small no-margin">Upload your completed spreadsheet</h3>
+                        <h3 class="heading-small no-margin">Uploaded spreadsheet</h3>
                         <div class="form-group">
                             <input type="hidden" name="fileoverheadid" th:value="${overheadCosts?.id}"/>
                             <th:block th:if="${#strings.isEmpty(overheadCosts?.getCalculationFile())}">
                                 <p class="uploaded-file">No file currently uploaded</p>
-                                <input name="overheadfile" type="file" id="overheadfile" class="inputfile"/>
-                                <label for="overheadfile" class="button-secondary extra-margin">+ Upload</label>
-                                <button name="overheadfilesubmit" class="button-secondary" type="submit" data-for-file-upload="overheadfile">Save</button>
                             </th:block>
                             <th:block th:unless="${#strings.isEmpty(overheadCosts?.calculationFile)}">
-                                <a th:href="@{${'/application/download/overheadfile/'+overheadCosts?.id}}" class="uploaded-file" th:text="${overheadCosts?.calculationFile?.get()?.name}">The-uploaded-file-example.pdf</a>
-                                <div th:unless="${viewmode=='readonly'}" class="alignright">
-                                    <button class="button-secondary no-margin-right" type="submit" th:name="overheadfiledelete">Remove</button>
-                                </div>
+                                <a th:href="@{${'/download/overheadfile/'+overheadCosts?.id}}" class="uploaded-file" th:text="${overheadCosts?.calculationFile?.get()?.name}">The-uploaded-file-example.pdf</a>
                             </th:block>
                         </div>
                     </div>
