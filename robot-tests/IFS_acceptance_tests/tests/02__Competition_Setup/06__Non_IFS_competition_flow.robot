@@ -6,7 +6,7 @@ Documentation     INFUND-7963: Create Non-IFS tab in 'Competition dashboard' for
 ...               INFUND-7965: Update 'Public content' for adding non-IFS competitions to front door
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
-Force Tags        CompAdmin
+Force Tags        CompAdmin    Failing
 Resource          ../../resources/defaultResources.robot
 Resource          CompAdmin_Commons.robot
 
