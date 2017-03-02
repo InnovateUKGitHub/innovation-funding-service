@@ -12,7 +12,7 @@
 
         <main id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
-            <!-- <th:block th:insert="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication},linkTitle='Application team',linkClass='link-back',linkUrl=@{'/#'}" /> -->
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Application team',linkClass='link-back',linkUrl=@{/application/{applicationId}/team(applicationId=${model.applicationId})}" />
 
             <div class="page-title">
                 <th:block th:insert="fragments/elements :: application-title (applicationId=${model.applicationId},applicationName=${model.applicationName})" />
