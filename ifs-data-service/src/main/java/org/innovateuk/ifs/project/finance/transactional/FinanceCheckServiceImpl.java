@@ -159,7 +159,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
         ServiceResult<Double> researchParticipationPercentage = financeRowService.getResearchParticipationPercentage(application.getId());
         BigDecimal researchParticipationPercentageValue = BigDecimal.ZERO;
-        if (researchParticipationPercentage.isSuccess()) {
+        if (researchParticipationPercentage.isSuccess() && researchParticipationPercentage.getSuccessObject() != null) {
             researchParticipationPercentageValue = BigDecimal.valueOf(researchParticipationPercentage.getSuccessObject());
         }
         BigDecimal competitionMaximumResearchPercentage = BigDecimal.valueOf(competition.getMaxResearchRatio());

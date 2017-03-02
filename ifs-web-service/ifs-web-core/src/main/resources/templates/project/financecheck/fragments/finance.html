@@ -1148,8 +1148,7 @@
     <!-- ===========================Research Participation alert messages =========================== -->
     <th:block th:fragment="research_participation_alert">
         <div th:unless="${researchParticipationPercentage &gt; maxResearchPercentage}" class="success-alert">
-            <h2 class="heading-small no-margin">The participation levels of this project are within the required range.</h2>
-            <p>This application can be submitted with these project costs.</p>
+            <h2 class="heading-small no-margin">The research participation levels of this project are within the required range.</h2>
         </div>
         <div th:if="${researchParticipationPercentage &gt; maxResearchPercentage}" class="warning-alert">
             <h2 class="heading-small no-margin">Maximum research participation exceeded</h2>
