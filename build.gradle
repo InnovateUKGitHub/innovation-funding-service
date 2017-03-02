@@ -10,6 +10,11 @@ allprojects {
     targetCompatibility = 1.8
 }
 
+
+if(project.hasProperty('profile') && profile == 'automated') {
+    ext.openshiftEnv = project.properties['openshiftEnv'] ?: "automated"
+}
+
 build.enabled = false
 jar.enabled=false
 
