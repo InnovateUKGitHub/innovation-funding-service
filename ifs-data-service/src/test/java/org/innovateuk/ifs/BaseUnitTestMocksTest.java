@@ -613,6 +613,11 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     @Mock
     protected PostMapper postMapper;
 
+    @Mock
+    protected ApplicationAssessorMapper applicationAssessorMapperMock;
+
+    @Mock
+    protected ApplicationAssessorPageMapper applicationAssessorPageMapperMock;
 
 
     @Before

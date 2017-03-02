@@ -28,6 +28,10 @@ public class AssessmentBuilder extends BaseBuilder<Assessment, AssessmentBuilder
         return new AssessmentBuilder(emptyList()).with(uniqueIds());
     }
 
+    public static AssessmentBuilder newAssessmentWithoutIds() {
+        return new AssessmentBuilder(emptyList());
+    }
+
     @Override
     protected AssessmentBuilder createNewBuilderWithActions(List<BiConsumer<Integer, Assessment>> actions) {
         return new AssessmentBuilder(actions);
