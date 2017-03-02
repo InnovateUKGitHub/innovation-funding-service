@@ -195,14 +195,12 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
 
     @Test
     public void testNotifyLeadApplicantsOfFundingDecisions() {
-
-        // Arrange: the applications to use as input params...
+        
         Application application1 = newApplication().build();
         Application application2 = newApplication().build();
         Application application3 = newApplication().build();
         List<Long> applicationIds = Arrays.asList(application1.getId(), application2.getId(), application3.getId());
 
-        // Arrange: the applicants to notify...
         User application1LeadApplicant = newUser().build();
         User application2LeadApplicant = newUser().build();
         User application3LeadApplicant = newUser().build();
@@ -220,7 +218,6 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
         UserNotificationTarget application3LeadApplicantTarget = new UserNotificationTarget(application3LeadApplicant);
         List<NotificationTarget> expectedLeadApplicants = asList(application1LeadApplicantTarget, application2LeadApplicantTarget, application3LeadApplicantTarget);
 
-        // Arrange: the subject and body of notification to send...
         NotificationResource notificationResource = new NotificationResource("Subject", "The message body.", applicationIds);
         Map<String, Object> expectedGlobalNotificationArguments = asMap(
                 "subject", notificationResource.getSubject(),
@@ -228,20 +225,25 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
 
         Notification expectedFundingNotification = new Notification(systemNotificationSourceMock, expectedLeadApplicants, APPLICATION_FUNDING, expectedGlobalNotificationArguments);
 
-        // Arrange: the expected mock calls...
         when(roleRepositoryMock.findOneByName(LEADAPPLICANT.getName())).thenReturn(leadApplicantRole);
         leadApplicantProcessRoles.forEach(processRole ->
                 when(processRoleRepositoryMock.findByApplicationIdAndRoleId(processRole.getApplicationId(), processRole.getRole().getId())).thenReturn(singletonList(processRole))
         );
         when(notificationServiceMock.sendNotification(createFullNotificationExpectationsNew(expectedFundingNotification), eq(EMAIL))).thenReturn(serviceSuccess());
 
-        // Act
+
         ServiceResult<Void> result = service.notifyLeadApplicantsOfFundingDecisions(notificationResource);
         assertTrue(result.isSuccess());
 
-        // Assert
+
         verify(notificationServiceMock).sendNotification(createFullNotificationExpectationsNew(expectedFundingNotification), eq(EMAIL));
         verifyNoMoreInteractions(notificationServiceMock);
+
+        verify(applicationServiceMock).setApplicationFundingEmailDateTime(eq(application1.getId()), any(LocalDateTime.class));
+        verify(applicationServiceMock).setApplicationFundingEmailDateTime(eq(application2.getId()), any(LocalDateTime.class));
+        verify(applicationServiceMock).setApplicationFundingEmailDateTime(eq(application3.getId()), any(LocalDateTime.class));
+        verifyNoMoreInteractions(applicationServiceMock);
+
     }
 
 	@Test

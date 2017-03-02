@@ -12,7 +12,6 @@ import org.innovateuk.ifs.management.model.CompetitionInFlightModelPopulator;
 import org.innovateuk.ifs.management.model.CompetitionInFlightStatsModelPopulator;
 import org.innovateuk.ifs.management.model.ManageFundingApplicationsModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.CompetitionInFlightStatsViewModel;
-import org.innovateuk.ifs.management.viewmodel.CompetitionInFlightViewModel;
 import org.innovateuk.ifs.management.viewmodel.ManageFundingApplicationViewModel;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.junit.Test;
@@ -22,10 +21,8 @@ import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 
-import java.util.Collections;
 import java.util.List;
 
-import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.application.builder.ApplicationSummaryResourceBuilder.newApplicationSummaryResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -39,7 +36,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CompetitionManagementManageFundingApplicationsControllerTest extends BaseControllerMockMVCTest<CompetitionManagementManageFundingApplicationsController> {
+public class CompetitionManagementManageFundingApplicationsControllerTest extends BaseControllerMockMVCTest<CompetitionManagementFundingNotificationsController> {
 
 
     @InjectMocks
@@ -122,7 +119,7 @@ public class CompetitionManagementManageFundingApplicationsControllerTest extend
     }
 
     @Override
-    protected CompetitionManagementManageFundingApplicationsController supplyControllerUnderTest() {
-        return new CompetitionManagementManageFundingApplicationsController();
+    protected CompetitionManagementFundingNotificationsController supplyControllerUnderTest() {
+        return new CompetitionManagementFundingNotificationsController();
     }
 }

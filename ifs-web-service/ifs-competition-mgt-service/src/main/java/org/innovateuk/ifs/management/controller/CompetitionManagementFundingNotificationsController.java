@@ -6,7 +6,6 @@ import org.innovateuk.ifs.competition.form.ManageFundingApplicationsQueryForm;
 import org.innovateuk.ifs.competition.form.NotificationEmailsForm;
 import org.innovateuk.ifs.competition.form.SelectApplicationsForEmailForm;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.management.model.CompetitionInFlightModelPopulator;
 import org.innovateuk.ifs.management.model.ManageFundingApplicationsModelPopulator;
 import org.innovateuk.ifs.management.model.SendNotificationsModelPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +29,7 @@ import static java.util.stream.Collectors.toList;
 @Controller
 @RequestMapping("/competition/{competitionId}")
 @PreAuthorize("hasAuthority('comp_admin')")
-public class CompetitionManagementManageFundingApplicationsController {
+public class CompetitionManagementFundingNotificationsController {
 
 
     private static final String MANAGE_FUNDING_APPLICATIONS_VIEW = "comp-mgt-manage-funding-applications";

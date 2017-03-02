@@ -401,7 +401,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
             return null;
         }
 
-        @Override public ServiceResult<ApplicationResource> addApplicationFundingEmailDateTime(@P("applicationId") final Long id) {
+        @Override public ServiceResult<ApplicationResource> setApplicationFundingEmailDateTime(@P("applicationId") final Long applicationId, final LocalDateTime fundingEmailDate) {
             return null;
         }
 

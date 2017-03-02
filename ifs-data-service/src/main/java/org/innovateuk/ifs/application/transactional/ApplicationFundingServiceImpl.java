@@ -133,8 +133,8 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
             ServiceResult<Void> fundedEmailSendResult = notificationService.sendNotification(fundingNotification, EMAIL);
             if (fundedEmailSendResult.isSuccess()) {
                 notificationResource.getApplicationIds()
-                        .forEach(id ->
-                                applicationService.addApplicationFundingEmailDateTime(id));
+                        .forEach(applicationId ->
+                                applicationService.setApplicationFundingEmailDateTime(applicationId, LocalDateTime.now()));
             }
 
             return processAnyFailuresOrSucceed(fundedEmailSendResult);

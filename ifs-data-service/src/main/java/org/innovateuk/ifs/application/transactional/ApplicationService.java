@@ -27,7 +27,6 @@ import java.util.function.Supplier;
  */
 public interface ApplicationService {
 
-
     @PreAuthorize("hasAuthority('applicant') || hasAnyAuthority('applicant', 'system_registrar')")
     @SecuredBySpring(value = "CREATE",
             description = "Any logged in user with Global roles or user with system registrar role can create and application",
@@ -67,7 +66,7 @@ public interface ApplicationService {
 
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
     @SecuredBySpring(value = "SET_FUNDING_DECISION_EMAIL_DATE", securedType = ApplicationResource.class, description = "Comp Admins should be able to set the funding decision email date")
-    ServiceResult<ApplicationResource> addApplicationFundingEmailDateTime(@P("applicationId") final Long id);
+    ServiceResult<ApplicationResource> setApplicationFundingEmailDateTime(@P("applicationId") final Long applicationId, LocalDateTime fundingEmailDate);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<CompletedPercentageResource> getProgressPercentageByApplicationId(@P("applicationId") final Long applicationId);
