@@ -31,7 +31,7 @@ Review and submit button
     [Tags]
     When the user clicks the button/link    link=Review and submit
     Then the user should see the text in the page  You will not be able to make changes to your application or resubmit after this point.
-    And the user should see the element            jQuery=h1:contains("Application Summary")
+    And the user should see the element            jQuery=h1:contains("Application summary")
 
 List with the sections
     [Tags]    HappyPath
