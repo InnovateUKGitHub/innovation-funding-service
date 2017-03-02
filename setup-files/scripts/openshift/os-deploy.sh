@@ -6,7 +6,7 @@ TARGET=$2
 
 if [[ ${TARGET} == "production" ]]
 then
-    PROJECT="production"
+    PROJECT="production1"
 fi
 
 if [[ (${TARGET} == "remote") ||  (${TARGET} == "production") ]]
@@ -37,6 +37,11 @@ function tailorAppInstance() {
     sed -i.bak "s/replicas: 1/replicas: 2/g" os-files-tmp/3*.yml
     sed -i.bak "s/replicas: 1/replicas: 2/g" os-files-tmp/4*.yml
     sed -i.bak "s/replicas: 1/replicas: 2/g" os-files-tmp/shib/*.yml
+
+    if [[ ${TARGET} == "production" ]]
+    then
+        sed -i.bak "s/claimName: file-upload-claim/claimName: production-file-upload-claim/g" os-files-tmp/*.yml
+    fi
 }
 
 function useContainerRegistry() {
@@ -79,6 +84,10 @@ function deploy() {
 
     if [[ ${TARGET} == "production" ]]
     then
+        oc create -f os-files-tmp/gluster/10-gluster-svc.yml
+        oc create -f os-files-tmp/gluster/11-gluster-endpoints.yml
+        oc create -f os-files-tmp/gluster/production/12-production-file-upload-claim.yml
+
         oc create -f os-files-tmp/
         oc create -f os-files-tmp/shib/5-shib.yml
         oc create -f os-files-tmp/shib/prod/56-idp.yml
@@ -86,6 +95,7 @@ function deploy() {
         oc create -f os-files-tmp/imap/
         oc create -f os-files-tmp/mysql/
         oc create -f os-files-tmp/shib/
+        oc create -f os-files-tmp/gluster/
         oc create -f os-files-tmp/
     fi
 }
