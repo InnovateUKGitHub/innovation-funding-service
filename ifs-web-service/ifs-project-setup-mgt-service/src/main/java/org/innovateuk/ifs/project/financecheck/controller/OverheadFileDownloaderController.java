@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.grantofferletter.send.controller;
+package org.innovateuk.ifs.project.financecheck.controller;
 
 
 import org.innovateuk.ifs.file.resource.FileEntryResource;
