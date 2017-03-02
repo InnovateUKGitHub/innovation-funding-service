@@ -2,6 +2,7 @@ package org.innovateuk.ifs.nonifs.form;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
 
 import javax.validation.Valid;
@@ -12,22 +13,22 @@ import javax.validation.constraints.NotNull;
  */
 public class NonIfsDetailsForm {
 
-    @NotNull
+    @NotEmpty(message = "{validation.standard.title.required}")
     private String title;
     @NotNull
     private Long innovationSectorCategoryId;
     @NotNull
     private Long innovationAreaCategoryId;
     @Valid
-    @NotNull
+    @NotNull(message = "{validation.nonifs.detailsform.opendate.required}")
     private MilestoneRowForm openDate;
     @Valid
-    @NotNull
+    @NotNull(message = "{validation.nonifs.detailsform.closedate.required}")
     private MilestoneRowForm closeDate;
     @Valid
-    @NotNull
+    @NotNull(message = "{validation.nonifs.detailsform.notified.required}")
     private MilestoneRowForm applicantNotifiedDate;
-    @NotNull
+    @NotEmpty(message= "{validation.nonifs.detailsform.url.required}")
     private String url;
 
     public String getTitle() {
