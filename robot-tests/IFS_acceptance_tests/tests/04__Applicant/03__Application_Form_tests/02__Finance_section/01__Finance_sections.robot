@@ -143,8 +143,8 @@ Overheads section read only view should contain calculate overheads sheet
     [Tags]
     [Setup]  log in as a different user    &{lead_applicant_credentials}
     #This test applies if user has chosen the calcualte overheads option in Project costs after section is marked as complete
-    When the user navigates to Your-finances page     ${New_innovation_solution}
-    then the user fills in the project costs         ${New_innovation_solution}
+    When the user navigates to Your-finances page     ${Competition_E2E}
+    then the user fills in the project costs        ${Competition_E2E}
     and the user clicks the button/link     link=Your project costs
     When the user clicks the button/link     jQuery=button:contains("Overhead costs")
     #Need to click twice to expand the dropdwon
