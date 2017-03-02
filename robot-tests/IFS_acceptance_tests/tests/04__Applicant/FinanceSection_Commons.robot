@@ -107,18 +107,24 @@ the user has read only view once section is marked complete
 
 the user fills in Labour
     the user clicks the button/link            jQuery=#form-input-20 button:contains("Labour")
-    the user should see the element            css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input
-    the user clears the text from the element  css=[name^="labour-labourDaysYearly"]
-    the user enters text to a text field       css=[name^="labour-labourDaysYearly"]    230
-    the user enters text to a text field       css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input    test
-    the user enters text to a text field       css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    120000
-    the user enters text to a text field       css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    100
+    the user should see the element            css=.labour-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input
+    the user enters text to a text field       jQuery=input[name^="labour-labourDaysYearly"][id$="labourDaysYearly"]    230
+    wait For autosave
+    the user enters text to a text field       css=.labour-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    test
+    wait For autosave
+    the user enters text to a text field       css=.labour-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    120000
+    wait For autosave
+    the user enters text to a text field       css=.labour-costs-table tbody tr:nth-of-type(1) td:nth-of-type(4) input    100
+    wait For autosave
     the user moves focus to the element        jQuery=button:contains('Add another role')
     the user clicks the button/link            jQuery=button:contains('Add another role')
-    the user should see the element            css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input
-    the user enters text to a text field       css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(2) input    120000
-    the user enters text to a text field       css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input    100
-    the user enters text to a text field       css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(1) input    test
+    the user should see the element            css=.labour-costs-table tbody tr:nth-of-type(3) td:nth-of-type(4) input
+    the user enters text to a text field       css=.labour-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input    120000
+    wait For autosave
+    the user enters text to a text field       css=.labour-costs-table tbody tr:nth-of-type(3) td:nth-of-type(4) input    100
+    wait For autosave
+    the user enters text to a text field       css=.labour-costs-table tbody tr:nth-of-type(3) td:nth-of-type(1) input    test
+    wait For autosave
     the user clicks the button/link            jQuery=#form-input-20 button:contains("Labour")
 
 the user fills in Overhead costs

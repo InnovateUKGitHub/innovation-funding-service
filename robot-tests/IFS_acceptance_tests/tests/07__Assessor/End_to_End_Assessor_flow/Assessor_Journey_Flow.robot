@@ -68,6 +68,8 @@ CompAdmin Invites assessor to assess an application
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And The user clicks the button/link    jQuery=a:contains("Assessor management - assignment to applications")
     And the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
+    And the user clicks the button/link    jQuery=.pagination-label:contains(Next)
+    And the user clicks the button/link    jQuery=.pagination-label:contains(Next)
     When the user clicks the button/link    jQuery=tr:contains(Tom Fister) button:contains("Assign")
     And the user clicks the button/link    jQuery=a:contains("Allocate applications")
     And the user clicks the button/link    jQuery=a:contains("Competition")
