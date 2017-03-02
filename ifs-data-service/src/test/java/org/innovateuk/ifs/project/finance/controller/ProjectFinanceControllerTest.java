@@ -56,6 +56,17 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
     }
 
     @Test
+    public void testGenerateSpendProfileForPartnerOrganisation() throws Exception {
+
+        when(projectFinanceServiceMock.generateSpendProfileForPartnerOrganisation(1L, 2L, 7L)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/1/partner-organisation/2/user/7/spend-profile/generate")).
+                andExpect(status().isCreated());
+
+        verify(projectFinanceServiceMock).generateSpendProfileForPartnerOrganisation(1L, 2L, 7L);
+    }
+
+    @Test
     public void getSpendProfileTable() throws Exception {
 
         Long projectId = 1L;
