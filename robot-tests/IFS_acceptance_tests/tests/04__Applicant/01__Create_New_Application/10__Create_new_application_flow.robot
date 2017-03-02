@@ -87,7 +87,7 @@ Non registered users non CH route
     And the user clicks the button/link    jQuery=.button:contains("Create account")
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And the user clicks the Not on company house link
-    And the user clicks the button/link    jQuery=.button:contains("Save")
+    And the user clicks the button/link    jQuery=.button:contains("Confirm and continue")
     And the user enters the details and clicks the create account    ${test_mailbox_one}+2@gmail.com
     And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
 
