@@ -230,6 +230,8 @@ public class BaseUnitTest {
     public CompetitionKeyStatisticsRestService competitionKeyStatisticsRestServiceMock;
     @Mock
     public AssessorFormInputResponseRestService assessorFormInputResponseRestService;
+    @Mock
+    public ApplicationInnovationAreaRestService applicationInnovationAreaRestService;
 
     @Spy
     @InjectMocks

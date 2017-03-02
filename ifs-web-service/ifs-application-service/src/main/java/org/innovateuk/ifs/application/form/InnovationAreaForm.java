@@ -1,13 +1,13 @@
 package org.innovateuk.ifs.application.form;
 
-import org.hibernate.validator.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 /**
  * Beam serves as a container for form parameters.
  */
 
 public class InnovationAreaForm {
-    @NotEmpty
+    @NotNull(message = "{validation.application.innovationarea.category.required}")
     String innovationAreaChoice;
 
     public String getInnovationAreaChoice() {

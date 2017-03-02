@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationInnovationAreaRestService;
 import org.innovateuk.ifs.application.viewmodel.InnovationAreaViewModel;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.function.Supplier;
 
 /**
  * This controller handles requests by Applicants to change the Innovation Area choice for an Application.
@@ -46,20 +48,19 @@ public class InnovationAreaController {
 
     @PostMapping
     public String submitInnovationAreaChoice(@ModelAttribute("form") @Valid InnovationAreaForm innovationAreaForm, HttpServletResponse response,
-                                             BindingResult bindingResult, Model model, @PathVariable Long applicationId, @PathVariable Long questionId) {
-
-        saveInnovationAreaChoice(applicationId, innovationAreaForm);
-
+                                             BindingResult bindingResult, ValidationHandler validationHandler, Model model, @PathVariable Long applicationId, @PathVariable Long questionId) {
         InnovationAreaViewModel innovationAreaViewModel = innovationAreaPopulator.populate(applicationId, questionId);
 
         model.addAttribute("model", innovationAreaViewModel);
-        if(bindingResult.hasErrors()) {
-            return "application/innovation-areas";
-        }
-        else {
-            cookieFlashMessageFilter.setFlashMessage(response, APPLICATION_SAVED_MESSAGE);
-            return "redirect:/application/"+applicationId+"/form/question/"+questionId;
-        }
+
+        Supplier<String> failureView = () -> "application/innovation-areas";
+
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+            return validationHandler.addAnyErrors(saveInnovationAreaChoice(applicationId, innovationAreaForm)).failNowOrSucceedWith(failureView,
+                    () -> {cookieFlashMessageFilter.setFlashMessage(response, APPLICATION_SAVED_MESSAGE);
+                    return "redirect:/application/"+applicationId+"/form/question/"+questionId;
+            });
+        });
     }
 
     private RestResult<ApplicationResource> saveInnovationAreaChoice(Long applicationId, InnovationAreaForm innovationAreaForm) {

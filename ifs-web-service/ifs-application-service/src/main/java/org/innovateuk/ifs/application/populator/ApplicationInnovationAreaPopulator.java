@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ApplicationInnovationAreaPopulator {
     @Autowired
-    private ApplicationInnovationAreaRestService innovationAreaRestService;
+    private ApplicationInnovationAreaRestService applicationInnovationAreaRestService;
 
     @Autowired
     private ApplicationRestService applicationRestService;
@@ -22,9 +22,9 @@ public class ApplicationInnovationAreaPopulator {
         ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccessObject();
 
         InnovationAreaViewModel innovationAreaViewModel = new InnovationAreaViewModel();
-        innovationAreaViewModel.setAvailableInnovationAreas(innovationAreaRestService.getAvailableInnovationAreasForApplication(applicationId).getSuccessObject());
-        innovationAreaViewModel.setQuestionId(applicationId);
-        innovationAreaViewModel.setApplicationId(questionId);
+        innovationAreaViewModel.setAvailableInnovationAreas(applicationInnovationAreaRestService.getAvailableInnovationAreasForApplication(applicationId).getSuccessObject());
+        innovationAreaViewModel.setQuestionId(questionId);
+        innovationAreaViewModel.setApplicationId(applicationId);
         innovationAreaViewModel.setCurrentCompetitionName(applicationResource.getCompetitionName());
 
         setInnovationAreaChoice(applicationResource, innovationAreaViewModel);
@@ -41,9 +41,5 @@ public class ApplicationInnovationAreaPopulator {
         else if (applicationResource.getInnovationArea() != null && applicationResource.getInnovationArea().getId() != null) {
             innovationAreaViewModel.setSelectedInnovationAreaId(applicationResource.getInnovationArea().getId());
         }
-    }
-
-    private void addBackURLToModel(Long application, Long questionId, InnovationAreaViewModel model){
-        String backURL;
     }
 }
