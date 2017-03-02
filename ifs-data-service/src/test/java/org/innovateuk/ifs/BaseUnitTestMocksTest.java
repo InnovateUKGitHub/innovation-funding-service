@@ -618,7 +618,11 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     @Mock
     protected ApplicationInnovationAreaService applicationInnovationAreaService;
 
+    @Mock
+    protected ApplicationAssessorMapper applicationAssessorMapperMock;
 
+    @Mock
+    protected ApplicationAssessorPageMapper applicationAssessorPageMapperMock;
 
     @Before
     public void setupMockInjection() {
