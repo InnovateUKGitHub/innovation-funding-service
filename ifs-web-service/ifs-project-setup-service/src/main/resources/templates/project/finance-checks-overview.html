@@ -10,25 +10,20 @@
 
 <main id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.overview.projectId})}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/partner-organisation/{organisationId}/finance-checks(projectId=${model.overview.projectId},organisationId=${model.organisation)}" />
 
-    <div class="grid-row">
-        <div class="column-two-thirds">
-            <div class="page-title">
-                <th:block th:insert="fragments/competition-management :: competition-id-and-name(${#numbers.formatInteger(model.overview.projectId,8)}, ${model.overview.projectName})" />
-                <h1 class="heading-xlarge">Finance overview</h1>
-            </div>
-        </div>
-        <div class="column-third alignright extra-margin">
-            <h2 class="bold-small blue-block">Finance checks</h2>
-        </div>
+    <div class="page-title">
+        <p class="subtitle"><th:block th:text="${model.overview.projectName}" /></p>
+        <h1 class="heading-xlarge">Finance overview</h1>
     </div>
+    <p>This is the financial overview of all partners in this collaboration, each partner will be going through finance checks. The overview provides the progress of all partners through this section, as well as a view of their finances during review.</p>
 
     <hr />
 
     <th:block th:insert="project/financecheck/fragments/finance :: project-finance-overview(overview=${model.overview})" />
 
     <h3 class="heading-medium">Finance summaries</h3>
+    <p>This is the level of cost detail that the assessors will see during the assessment process.</p>
 
     <th:block th:insert="project/financecheck/fragments/finance :: project-finance-summaries(summaries=${model.summaries})" />
 
