@@ -394,7 +394,7 @@
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 class="heading-medium no-margin">Reject spend profile</h2>
         <p>Rejecting will return access to this section to all project partners.</p>
-        <p>Before taking this action please contact the project manager to explain why the the Spend Profile is being returned to them.</p>
+        <p>Before taking this action please contact the project manager to explain why the spend profile is being returned to them.</p>
         <form th:action="@{'/project/' + ${projectId} + '/spend-profile/approval/REJECTED'}" method="post">
           <hr />
           <div class="column-half">
