@@ -34,29 +34,29 @@ public interface CompetitionService {
 
     ServiceResult<Void> setSetupSectionMarkedAsComplete(Long competitionId, CompetitionSetupSection section);
 
-    void setSetupSectionMarkedAsIncomplete(Long competitionId, CompetitionSetupSection section);
+    ServiceResult<Void> setSetupSectionMarkedAsIncomplete(Long competitionId, CompetitionSetupSection section);
 
     ServiceResult<Void> initApplicationFormByCompetitionType(Long competitionId, Long competitionTypeId);
 
     String generateCompetitionCode(Long competitionId, LocalDateTime openingDate);
 
-    void returnToSetup(Long competitionId);
+    ServiceResult<Void> returnToSetup(Long competitionId);
 
-    void markAsSetup(Long competitionId);
+    ServiceResult<Void> markAsSetup(Long competitionId);
 
     List<AssessorCountOptionResource> getAssessorOptionsForCompetitionType(Long competitionTypeId);
 
-    void closeAssessment(Long competitionId);
+    ServiceResult<Void> closeAssessment(Long competitionId);
 
-    void notifyAssessors(Long competitionId);
+    ServiceResult<Void> notifyAssessors(Long competitionId);
 
     void releaseFeedback(Long competitionId);
 
     PublicContentItemResource getPublicContentOfCompetition(Long competitionId);
 
-    ServiceResult<ByteArrayResource> downloadPublicContentAttachment(Long contentGroupId);
+    ByteArrayResource downloadPublicContentAttachment(Long contentGroupId);
 
-    ServiceResult<FileEntryResource> getPublicContentFileDetails(Long contentGroupId);
+    FileEntryResource getPublicContentFileDetails(Long contentGroupId);
 
     CompetitionResource createNonIfs();
 }

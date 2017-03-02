@@ -1,7 +1,8 @@
 package org.innovateuk.ifs.application.service;
 
-import org.innovateuk.ifs.alert.resource.AlertType;
 import org.innovateuk.ifs.alert.resource.AlertResource;
+import org.innovateuk.ifs.alert.resource.AlertType;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 
 import java.util.List;
 
@@ -16,10 +17,10 @@ public interface AlertService {
 
     AlertResource getById(final Long id);
 
-    AlertResource create(final AlertResource alertResource);
+    ServiceResult<AlertResource> create(final AlertResource alertResource);
 
-    void delete(final Long id);
+    ServiceResult<Void> delete(final Long id);
 
-    void deleteAllByType(final AlertType type);
+    ServiceResult<Void> deleteAllByType(final AlertType type);
 
 }

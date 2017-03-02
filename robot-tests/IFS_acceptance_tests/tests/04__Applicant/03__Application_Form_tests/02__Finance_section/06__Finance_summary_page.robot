@@ -182,15 +182,18 @@ the red warning should be visible
     Page Should Contain Image    css=.finance-summary tr:nth-of-type(1) img[src*="/images/warning-icon"]
 
 Lead enters a valid research participation value
-    When The user navigates to the academic application finances
+    When the user navigates to the academic application finances
     the user clicks the button/link       link=Your project costs
     the user clicks the button/link    jQuery=button:contains("Labour")
     the user should see the element    name=add_cost
     the user clicks the button/link    jQuery=button:contains('Add another role')
     the user should see the element    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input
-    the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    1200000000
-    the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    1000
     the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input    Test
+    wait for autosave
+    the user enters large text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    1200000000
+    wait for autosave
+    the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    1000
+    wait for autosave
     then the user selects the checkbox      id=agree-state-aid-page
     the user clicks the button/link        jQuery= button:contains('Mark as complete')
     wait for autosave
