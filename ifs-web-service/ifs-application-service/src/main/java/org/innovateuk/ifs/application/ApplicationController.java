@@ -61,7 +61,7 @@ public class ApplicationController {
     private static final Log LOG = LogFactory.getLog(ApplicationController.class);
 
     // TODO implement feature toggle https://devops.innovateuk.org/issue-tracking/browse/INFUND-8579
-    static final boolean APPLICATION_FEEDBACK_SUMMARY_FEATURE_ENABLED = false;
+    static final boolean APPLICATION_FEEDBACK_SUMMARY_FEATURE_ENABLED = true;
 
     public static final String ASSIGN_QUESTION_PARAM = "assign_question";
     public static final String MARK_AS_COMPLETE = "mark_as_complete";

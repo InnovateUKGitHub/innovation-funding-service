@@ -9,26 +9,26 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 
-public class BigDecimalAverageCollector implements Collector<String, BigDecimalAverageCollector.BigDecimalAccumulator, BigDecimal> {
+public class AssessorScoreAverageCollector implements Collector<String, AssessorScoreAverageCollector.ScoreAccumulator, BigDecimal> {
 
     @Override
-    public Supplier<BigDecimalAccumulator> supplier() {
-        return BigDecimalAccumulator::new;
+    public Supplier<ScoreAccumulator> supplier() {
+        return ScoreAccumulator::new;
     }
 
     @Override
-    public BiConsumer<BigDecimalAccumulator, String> accumulator() {
-        return BigDecimalAccumulator::add;
+    public BiConsumer<ScoreAccumulator, String> accumulator() {
+        return ScoreAccumulator::add;
     }
 
     @Override
-    public BinaryOperator<BigDecimalAccumulator> combiner() {
-        return BigDecimalAccumulator::combine;
+    public BinaryOperator<ScoreAccumulator> combiner() {
+        return ScoreAccumulator::combine;
     }
 
     @Override
-    public Function<BigDecimalAccumulator, BigDecimal> finisher() {
-        return BigDecimalAccumulator::getAverage;
+    public Function<ScoreAccumulator, BigDecimal> finisher() {
+        return ScoreAccumulator::getAverage;
     }
 
     @Override
@@ -36,7 +36,7 @@ public class BigDecimalAverageCollector implements Collector<String, BigDecimalA
         return Collections.emptySet();
     }
 
-    static class BigDecimalAccumulator {
+    static class ScoreAccumulator {
         private BigDecimal sum = BigDecimal.ZERO;
         private BigDecimal count = BigDecimal.ZERO;
 
@@ -48,10 +48,10 @@ public class BigDecimalAverageCollector implements Collector<String, BigDecimalA
             return count;
         }
 
-        public BigDecimalAccumulator() {
+        public ScoreAccumulator() {
         }
 
-        public BigDecimalAccumulator(BigDecimal sum, BigDecimal count) {
+        public ScoreAccumulator(BigDecimal sum, BigDecimal count) {
             this.sum = sum;
             this.count = count;
         }
@@ -59,11 +59,11 @@ public class BigDecimalAverageCollector implements Collector<String, BigDecimalA
         BigDecimal getAverage() {
             return BigDecimal.ZERO.compareTo(count) == 0 ?
                     BigDecimal.ZERO :
-                    sum.divide(count, 2, BigDecimal.ROUND_HALF_UP);
+                    sum.divide(count, 0, BigDecimal.ROUND_HALF_UP);
         }
 
-        BigDecimalAccumulator combine(BigDecimalAccumulator another) {
-            return new BigDecimalAccumulator(
+        ScoreAccumulator combine(ScoreAccumulator another) {
+            return new ScoreAccumulator(
                     sum.add(another.getSum()),
                     count.add(another.getCount())
             );

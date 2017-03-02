@@ -14,14 +14,16 @@ public class ApplicationAssessmentAggregateResource {
     private int totalScope;
     private int inScope;
     private Map<Long, BigDecimal> scores;
+    private long averagePercentage;
 
     public ApplicationAssessmentAggregateResource() {
     }
 
-    public ApplicationAssessmentAggregateResource(int totalScope, int inScope, Map<Long, BigDecimal> scores) {
+    public ApplicationAssessmentAggregateResource(int totalScope, int inScope, Map<Long, BigDecimal> scores, long averagePercentage) {
         this.totalScope = totalScope;
         this.inScope = inScope;
         this.scores = scores;
+        this.averagePercentage = averagePercentage;
     }
 
     public int getTotalScope() {
@@ -36,6 +38,10 @@ public class ApplicationAssessmentAggregateResource {
         return scores;
     }
 
+    public long getAveragePercentage() {
+        return averagePercentage;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -47,6 +53,7 @@ public class ApplicationAssessmentAggregateResource {
         return new EqualsBuilder()
                 .append(totalScope, that.totalScope)
                 .append(inScope, that.inScope)
+                .append(averagePercentage, that.averagePercentage)
                 .append(scores, that.scores)
                 .isEquals();
     }
@@ -57,6 +64,7 @@ public class ApplicationAssessmentAggregateResource {
                 .append(totalScope)
                 .append(inScope)
                 .append(scores)
+                .append(averagePercentage)
                 .toHashCode();
     }
 }

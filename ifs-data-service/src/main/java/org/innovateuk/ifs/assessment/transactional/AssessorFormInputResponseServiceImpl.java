@@ -14,7 +14,7 @@ import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.transactional.FormInputService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.innovateuk.ifs.util.BigDecimalAverageCollector;
+import org.innovateuk.ifs.util.AssessorScoreAverageCollector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -71,7 +71,6 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
 
     @Override
     public ServiceResult<ApplicationAssessmentAggregateResource> getApplicationAggregateScores(long applicationId) {
-        // TODO to be improved upon as part of INFUND-8169 Assessors scores viewed on Feedback Overview by applicant
         List<AssessorFormInputResponse> responses = assessorFormInputResponseRepository.findByAssessmentTargetId(applicationId);
         int totalScope = 0;
         int totalInScope = 0;
@@ -82,7 +81,13 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
                                 x -> x.getFormInput().getQuestion().getId(),
                                 Collectors.mapping(
                                         AssessorFormInputResponse::getValue,
-                                        new BigDecimalAverageCollector())));
+                                        new AssessorScoreAverageCollector())));
+
+        long averagePercentage = Math.round(responses.stream()
+                .filter(input -> input.getFormInput().getType() == FormInputType.ASSESSOR_SCORE)
+                .mapToDouble(value -> (Double.parseDouble(value.getValue()) / value.getFormInput().getQuestion().getAssessorMaximumScore()) * 100.0)
+                .average()
+                .orElse(0.0));
 
 
         for (AssessorFormInputResponse response : responses) {
@@ -93,7 +98,7 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
                 }
             }
         }
-        return serviceSuccess(new ApplicationAssessmentAggregateResource(totalScope, totalInScope,avgScores));
+        return serviceSuccess(new ApplicationAssessmentAggregateResource(totalScope, totalInScope,avgScores,averagePercentage));
     }
 
     private ServiceResult<Void> performUpdateFormInputResponse(AssessorFormInputResponseResource response) {
