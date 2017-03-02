@@ -148,7 +148,7 @@ public class ApplicationModelPopulator {
         boolean hasFinanceSection = financeSection != null;
 
         if(hasFinanceSection) {
-            Optional<Long> optionalOrganisationId = organisationId != null ? Optional.of(organisationId) : Optional.empty();
+            Optional<Long> optionalOrganisationId = Optional.ofNullable(organisationId);
             applicationFinanceOverviewModelManager.addFinanceDetails(model, competitionId, applicationId, optionalOrganisationId);
 
             List<QuestionResource> costsQuestions = questionService.getQuestionsBySectionIdAndType(financeSection.getId(), QuestionType.COST);
