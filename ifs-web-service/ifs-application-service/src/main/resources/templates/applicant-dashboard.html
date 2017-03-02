@@ -33,7 +33,7 @@
                                     </a>
                                 </h3>
                                 <ul class="application-details">
-                                    <li>Application number: <span th:text="${#numbers.formatInteger(project.application,8)}">APPLICATION NUMBER</span></li>
+                                    <li>Application number: <span th:text="${project.application}">APPLICATION NUMBER</span></li>
                                     <li th:if="${competition}">Competition: <span th:text="${competitions.get(project.application).name}">COMPETITION NAME</span></li>
                                 </ul>
                             </div>
@@ -64,7 +64,7 @@
                                             th:text="((${app.name} == '') ? ${competitions.get(app.getId()).getName()}: ${app.name})"/>
                                     </h3>
                                     <ul class="application-details">
-                                        <li>Application number: <span th:text="${#numbers.formatInteger(app.id,8)}"></span></li>
+                                        <li>Application number: <span th:text="${app.id}"></span></li>
                                         <li>Competition: <span th:text="${competitions.get(app.getId()).getName()}">COMPETITION NAME</span></li>
                                     </ul>
                                     <th:block th:if="${applicationsAssigned?.contains(app.id)}">
@@ -90,7 +90,7 @@
                                         <a th:href="@{/application/{id}/track(id=${app.getId()})}" th:text="${app.name}">placeholder</a>
                                     </h3>
                                     <ul class="application-details">
-                                        <li>Application number: <span th:text="${#numbers.formatInteger(app.id,8)}"></span></li>
+                                        <li>Application number: <span th:text="${app.id}"></span></li>
                                         <li>Competition: <span th:text="${competitions.get(app.getId()).getName()}">COMPETITION NAME</span></li>
                                     </ul>
                                 </div>
@@ -116,7 +116,7 @@
                                     <a th:href="@{/application/{id}/summary(id=${app.getId()})}" th:text="${app.getApplicationDisplayName()}">placeholder</a>
                                 </h3>
                                 <ul class="application-details">
-                                    <li>Application number: <span th:text="${#numbers.formatInteger(app.id,8)}"></span></li>
+                                    <li>Application number: <span th:text="${app.id}"></span></li>
                                     <li>Competition: <span th:text="${competitions.get(app.getId()).getName()}">COMPETITION NAME</span></li>
                                 </ul>
                             </div>

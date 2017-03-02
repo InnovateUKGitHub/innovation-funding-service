@@ -296,11 +296,11 @@ public class AssessorFeedbackServiceImplTest extends BaseServiceUnitTest<Assesso
         Map<NotificationTarget, Map<String, Object>> expectedFundedNotificationTargetSpecificArguments = asMap(
                 fundedApplication1LeadApplicantTarget, asMap(
                         "applicationName", fundedApplication1.getName(),
-                        "applicationNumber", fundedApplication1.getFormattedId()
+                        "applicationNumber", fundedApplication1.getId()
                 ),
                 fundedApplication3LeadApplicantTarget, asMap(
                         "applicationName", fundedApplication3.getName(),
-                        "applicationNumber", fundedApplication3.getFormattedId())
+                        "applicationNumber", fundedApplication3.getId())
         );
 
         Notification expectedFundedNotification = new Notification(systemNotificationSourceMock, expectedFundedLeadApplicants, APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
@@ -312,7 +312,7 @@ public class AssessorFeedbackServiceImplTest extends BaseServiceUnitTest<Assesso
         Map<NotificationTarget, Map<String, Object>> expectedUnfundedNotificationTargetSpecificArguments = asMap(
                 unfundedApplication2LeadApplicantTarget, asMap(
                         "applicationName", unfundedApplication2.getName(),
-                        "applicationNumber", unfundedApplication2.getFormattedId())
+                        "applicationNumber", unfundedApplication2.getId())
         );
 
         Notification expectedUnfundedNotification = new Notification(systemNotificationSourceMock, expectedUnfundedLeadApplicants, APPLICATION_NOT_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
