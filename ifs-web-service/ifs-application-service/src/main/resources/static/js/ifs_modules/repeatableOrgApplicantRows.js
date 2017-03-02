@@ -19,27 +19,51 @@ IFS.application.repeatableOrgApplicantRows = (function () {
       })
     },
     addRow: function (el) {
+      var newRow
       var target = jQuery(el).attr('data-repeatable-rowcontainer')
       var uniqueRowId = jQuery(target).children().length || 0
-      var newRow = jQuery('<tr>' +
-        '<td class="form-group">' +
-        '<label for="applicants' + uniqueRowId + '.name"><span class="visually-hidden">Applicant name</span></label>' +
-        '<input class="form-control width-full" type="text" ' +
-        'id="applicants' + uniqueRowId + '.name" ' +
-        'name="applicants[' + uniqueRowId + '].name" value="" ' +
-        'data-required-errormessage="Please enter a name." required="required" />' +
-        '</td>' +
-        '<td class="form-group">' +
-        '<label for="applicants' + uniqueRowId + '.email"><span class="visually-hidden">Applicant email</span></label>' +
-        '<input class="form-control width-full" type="email" ' +
-        'id="applicants' + uniqueRowId + '.email" ' +
-        'name="applicants[' + uniqueRowId + '].email" value="" ' +
-        'data-required-errormessage="Please enter an email address." required="required" />' +
-        '</td>' +
-        '<td class="alignright">' +
-        '<button class="remove-another-row buttonlink" name="removeApplicant" type="button" value="0">Remove</button>' +
-        '</td>' +
-        '</tr>')
+      if (jQuery(el).attr('name') === 'add_person') {
+        newRow = jQuery('<tr>' +
+          '<td class="form-group">' +
+          '<label for="applicants' + uniqueRowId + '.name"><span class="visually-hidden">Applicant name</span></label>' +
+          '<input class="form-control width-full" type="text" ' +
+          'id="applicants' + uniqueRowId + '.name" ' +
+          'name="applicants[' + uniqueRowId + '].name" value="" ' +
+          'data-required-errormessage="Please enter a name." required="required" />' +
+          '</td>' +
+          '<td class="form-group">' +
+          '<label for="applicants' + uniqueRowId + '.email"><span class="visually-hidden">Applicant email</span></label>' +
+          '<input class="form-control width-full" type="email" ' +
+          'id="applicants' + uniqueRowId + '.email" ' +
+          'name="applicants[' + uniqueRowId + '].email" value="" ' +
+          'data-required-errormessage="Please enter an email address." required="required" />' +
+          '</td>' +
+          '<td></td>' +
+          '<td class="alignright">' +
+          '<button class="remove-another-row buttonlink" name="removeApplicant" type="button" value="0">Remove</button>' +
+          '</td>' +
+          '</tr>')
+      } else {
+        newRow = jQuery('<tr>' +
+          '<td class="form-group">' +
+          '<label for="applicants' + uniqueRowId + '.name"><span class="visually-hidden">Applicant name</span></label>' +
+          '<input class="form-control width-full" type="text" ' +
+          'id="applicants' + uniqueRowId + '.name" ' +
+          'name="applicants[' + uniqueRowId + '].name" value="" ' +
+          'data-required-errormessage="Please enter a name." required="required" />' +
+          '</td>' +
+          '<td class="form-group">' +
+          '<label for="applicants' + uniqueRowId + '.email"><span class="visually-hidden">Applicant email</span></label>' +
+          '<input class="form-control width-full" type="email" ' +
+          'id="applicants' + uniqueRowId + '.email" ' +
+          'name="applicants[' + uniqueRowId + '].email" value="" ' +
+          'data-required-errormessage="Please enter an email address." required="required" />' +
+          '</td>' +
+          '<td class="alignright">' +
+          '<button class="remove-another-row buttonlink" name="removeApplicant" type="button" value="0">Remove</button>' +
+          '</td>' +
+          '</tr>')
+      }
 
       // insert the new row with the correct values and move focus to the first field to aid keyboard users
       jQuery(target).append(newRow)
