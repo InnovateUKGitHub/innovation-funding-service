@@ -19,14 +19,17 @@
                 <h1 class="heading-xlarge"  th:text="${model.selectedOrganisation != null ? 'Update ' + model.selectedOrganisation.name : 'Add organisation'}">Update Empire Ltd</h1>
             </div>
 
-            <!-- INFUND-7974 -->
+            <!--/* TODO INFUND-7974
             <p th:if="${model.authenticatedUser.id == model.leadApplicant.id and model.selectedOrganisation.id == model.leadOrganisation.id}">You can invite and remove members of the lead organisation. The lead organisation itself and the lead applicant cannot be removed.</p>
+             */-->
 
-            <!-- INFUND-7975 -->
+            <!--/* TODO INFUND-7975
             <p th:if="${model.authenticatedUser.id == model.leadApplicant.id and model.selectedOrganisation.id != model.leadOrganisation.id}">From this page you are able to invite and remove applicants from a partner organisation.</p>
+            */-->
 
-            <!-- INFUND-7977 -->
+            <!--/* TODO INFUND-7977
             <p th:if="${model.authenticatedUser.id != model.leadApplicant.id}">From this page you are able to invite and remove applicants from your organisation. Only the lead applicant can remove partners</p>
+            */-->
 
             <h2 class="heading-medium">
                 <th:block th:text="${model.organisation.lead} ? ${model.organisation.name} + ', Lead organisation' : ${model.organisation.name}"></th:block>
@@ -99,26 +102,28 @@
                 </table>
 
                 <p><button th:if="${model.leadApplicant.id == model.authenticatedUser.id || model.organisation.id == model.authenticatedUserOrganisation}" class="add-another-row buttonlink" type="submit" name="add_person" th:value="${model.selectedOrgIndex}">Add new applicant</button></p>
+
+                <!--/* TODO INFUND-7975 (lead applicant edits partner org)
+                <th:block th:if="${model.selectedOrganisation != null and model.authenticatedUser.id == model.leadApplicant.id}">
+                    <div class="alignright extra-margin-top" th:unless="${model.selectedOrganisation == null or model.selectedOrganisation.id == model.leadOrganisation.id}">
+                        <a th:href="'/application/' + ${model.applicationId} + '/update'" th:attr="name='save_contributors'" data-js-modal="modal-delete-organisation" class="button-secondary">Delete organisation</a>
+                        <hr />
+                    </div>
+
+                    <p class="extra-margin-top" th:unless="${model.selectedOrganisation == null}">Updating the organisation will notify applicants of changes to their position on the project.</p>
+
+                    <th:block th:insert="fragments/modals :: modal-delete-organisation" />
+                </th:block>
+                */-->
+
+                <p class="extra-margin">
+                    <a th:href="'/application/' + ${model.applicationId} + '/team/update'" th:attr="name='save_contributors'" data-js-modal="modal-update-organisation" class="button">Update organisation</a>
+                    <a th:href="'/application/' + ${model.applicationId} + '/team'" href="#" class="button button-clear">Cancel</a>
+                </p>
+
+                <th:block th:insert="fragments/modals :: modal-update-organisation" />
             </form>
 
-            <th:block th:if="${model.selectedOrganisation != null and model.authenticatedUser.id == model.leadApplicant.id}">
-                <!-- INFUND-7975 (lead applicant edits partner org) -->
-                <div class="alignright extra-margin-top" th:unless="${model.selectedOrganisation == null or model.selectedOrganisation.id == model.leadOrganisation.id}">
-                    <a th:href="'/application/' + ${model.applicationId} + '/update'" th:attr="name='save_contributors'" data-js-modal="modal-delete-organisation" class="button-secondary">Delete organisation</a>
-                    <hr />
-                </div>
-
-                <p class="extra-margin-top" th:unless="${model.selectedOrganisation == null}">Updating the organisation will notify applicants of changes to their position on the project.</p>
-
-                <th:block th:insert="fragments/modals :: modal-delete-organisation" />
-            </th:block>
-
-            <p class="extra-margin">
-                <a th:href="'/application/' + ${model.applicationId} + '/team/update'" th:attr="name='save_contributors'" data-js-modal="modal-update-organisation" class="button">Update organisation</a>
-                <a th:href="'/application/' + ${model.applicationId} + '/team'" href="#" class="button button-clear">Cancel</a>
-            </p>
-
-            <th:block th:insert="fragments/modals :: modal-update-organisation" />
             <th:block th:insert="fragments/layout :: main-content-end" />
         </main>
 
