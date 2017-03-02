@@ -748,6 +748,20 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         return processAnyFailuresOrSucceed(generationResults);
     }
 
+    @Override
+    /**
+     * This method was written to recreate Spend Profile for one of the partner organisations on Production.
+     * This method assumes that all the necessary stuff is in the database before the Spend Profile can be generated.
+     */
+    public ServiceResult<Void> generateSpendProfileForPartnerOrganisation(Long projectId, Long organisationId, Long userId) {
+
+        User user = userRepository.findOne(userId);
+
+        return spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(projectId, organisationId).
+                andOnSuccess(spendProfileCostCategorySummaries ->
+                        generateSpendProfileForOrganisation(projectId, organisationId, spendProfileCostCategorySummaries, user, Calendar.getInstance()));
+    }
+
     private ServiceResult<Void> generateSpendProfileForOrganisation(
             Long projectId,
             Long organisationId,
