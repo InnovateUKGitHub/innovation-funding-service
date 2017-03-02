@@ -19,6 +19,7 @@ public class PublicContentItemResourceDocs {
             fieldWithPath("competitionOpenDate").description("Opening date of the competition linked to the public content resource"),
             fieldWithPath("competitionCloseDate").description("Closing date of the competition linked to the public content resource"),
             fieldWithPath("nonIfsUrl").description("The URL to apply to a competition if it is not managed via IFS"),
-            fieldWithPath("nonIfs").description("Boolean the indicates if this is a non IFS competition")
+            fieldWithPath("nonIfs").description("Boolean that indicates if this is a non IFS competition"),
+            fieldWithPath("competitionIsOpen").description("Boolean that indicates if this competition is currently open")
     };
 }

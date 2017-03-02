@@ -29,16 +29,32 @@
                 <strong>Registration closes:</strong> <th:block th:text="${date + ' ' + time}"/></li>
 
         </ul>
-        <p th:unless="${model.nonIfs}" class="extra-margin">
-            <a th:href="@{/application/create/check-eligibility/{competitionId}(competitionId=${model.competitionId})}" class="button">
-                Start or continue your application
-            </a>
-        </p>
-        <p th:if="${model.nonIfs}" class="extra-margin">
-            <a th:href="${model.nonIfsUrl}" class="button">
-                Register and apply online
-            </a>
-        </p>
+        <th:block th:unless="${model.nonIfs}">
+            <div th:unless="${model.showApplyButton}">
+                <div class="warning-alert">
+                    This competition is now closed.
+                </div>
+                <p class="extra-margin">
+                    <a class="button disabled" disabled="disabled">
+                        Start or continue your application
+                    </a>
+                </p>
+            </div>
+            <div th:if="${model.showApplyButton}" th:remove="tag">
+                <p class="extra-margin">
+                    <a th:href="@{/application/create/check-eligibility/{competitionId}(competitionId=${model.competitionId})}" class="button">
+                        Start or continue your application
+                    </a>
+                </p>
+            </div>
+        </th:block>
+        <th:block th:if="${model.nonIfs}">
+            <p class="extra-margin">
+                <a th:href="${model.nonIfsUrl}" class="button">
+                    Register and apply online
+                </a>
+            </p>
+        </th:block>
         <ul class="inline-nav hide-mobile">
             <th:block th:each="sectionType : ${model.allContentSections}">
                 <li th:class="${(sectionType.active ? 'selected' : 'not-selected' )}">

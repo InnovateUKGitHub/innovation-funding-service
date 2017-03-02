@@ -18,6 +18,7 @@ public class CompetitionOverviewViewModel {
     private String shortDescription;
     private String nonIfsUrl;
     private Boolean nonIfs;
+    private Boolean showApplyButton;
     private List<SectionViewModel> allContentSections;
     private AbstractPublicSectionContentViewModel currentSection;
 
@@ -99,5 +100,13 @@ public class CompetitionOverviewViewModel {
 
     public void setNonIfs(Boolean nonIfs) {
         this.nonIfs = nonIfs;
+    }
+
+    public Boolean getShowApplyButton() {
+        return showApplyButton;
+    }
+
+    public void setShowApplyButton(Boolean showApplyButton) {
+        this.showApplyButton = showApplyButton;
     }
 }
