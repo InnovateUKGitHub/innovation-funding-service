@@ -153,12 +153,6 @@ Eligibility: User enters valid values and saves
     And the user should see the element                    link=Eligibility
     And the user should see the element                    css=img[title='The "Eligibility" section is marked as done']
 
-#Eligibility: Add, remove sections and submit
-#    [Documentation]    INFUND-6917 INFUND-7602
-#    [Tags]  HappyPath
-#    Then the user can add and remove multiple content groups
-#    When the user clicks the button/link                        jQuery=button:contains("Save and return")
-#    And the user should see the element  css=img[title='The "Eligibility" section is marked as done']
 
 Eligibility: Contains the correct values when viewed
             [Documentation]    INFUND-6916, INFUND-7487
@@ -172,13 +166,6 @@ Eligibility: Contains the correct values when viewed
             When the user clicks the button/link                        jQuery=button:contains("Save and return")
             And the user should see the element                         css=img[title='The "Eligibility" section is marked as done']
 
-#Eligibility: Server side validation
-#        [Documentation]  INFUND-6916
-#        [Tags]  HappyPath
-#        When the user clicks the button/link  link=Eligibility
-#        And the user clicks the button/link   jQuery=button:contains("Save and return")
-#        Then the user should see a summary error  Please enter content.
-#        And the user should see a summary error   Please enter a heading.
 
 Scope: Add, remove sections and submit
     [Documentation]    INFUND-6918, INFUND-7602
@@ -219,8 +206,8 @@ Publish public content: Publish once all sections are complete
     [Documentation]    INFUND-6914
     [Tags]  HappyPath
     Given the user should not see the text in the page  Last published
-    When the user clicks the button/link                jQuery=button:contains("Publish public content")
-    Then the user should see the element                jQuery=small:contains("Last published")
+    When the user clicks the button/link    jQuery=button:contains("Publish public content")
+    Then the user should see the element    jQuery=small:contains("Last published")
     And the user should not see the element             jQuery=button:contains("Publish public content")
     When the user clicks the button/link                link=Competition information and search
     And the user clicks the button/link                 link=Edit
@@ -269,7 +256,7 @@ Guest user can see the updated Summary information
 Guest user can see the updated Eligibility information
     [Documentation]  INFUND-7487
     [Tags]
-    Given the user clicks the button/link   link=Public content competition - March7
+    Given the user clicks the button/link   link=Public content competition
     When the user clicks the button/link    link=Eligibility
     Then the user should see the element    jQuery=.column-third:contains("Nationality Eligibility Heading") ~ .column-two-thirds:contains("You can give your views on new or changing government policies by responding to consultations. Government departments take these responses into consideration before making decisions")
 
