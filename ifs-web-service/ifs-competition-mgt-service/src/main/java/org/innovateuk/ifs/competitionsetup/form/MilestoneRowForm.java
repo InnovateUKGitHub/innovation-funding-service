@@ -18,7 +18,7 @@ public class MilestoneRowForm {
     private Integer month;
     @Range(min = 2016, max = 9000)
     private Integer year;
-    private MilestoneTime time;
+    private MilestoneTime time = MilestoneTime.TWELVE_PM;
 
     private MilestoneType milestoneType;
     private String dayOfWeek;
