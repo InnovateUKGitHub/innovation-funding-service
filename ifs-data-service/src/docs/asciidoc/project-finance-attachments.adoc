@@ -1,22 +1,31 @@
 
 === Upload Attachment
 ==== Request
+include::{snippets}/project/finance/attachments/upload/http-request.adoc[]
 include::{snippets}/project/finance/attachments/upload/request-parameters.adoc[]
+include::{snippets}/project/finance/attachments/upload/path-parameters.adoc[]
 include::{snippets}/project/finance/attachments/upload/request-headers.adoc[]
 
 ==== Response
+include::{snippets}/project/finance/attachments/upload/http-response.adoc[]
 include::{snippets}/project/finance/attachments/upload/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/project/finance/attachments/upload/curl-request.adoc[]
+
 
 
 === Find Attachment by Id
 ==== Request
+include::{snippets}/project/finance/attachments/find-one/http-request.adoc[]
 include::{snippets}/project/finance/attachments/find-one/path-parameters.adoc[]
 
 ==== Response
+include::{snippets}/project/finance/attachments/find-one/http-response.adoc[]
 include::{snippets}/project/finance/attachments/find-one/response-fields.adoc[]
 
-//==== Curl Example
-//include::{snippets}/project/finance/attachments/find-all/curl-request.adoc[]
+==== Curl Example
+include::{snippets}/project/finance/attachments/find-one/curl-request.adoc[]
 
 
 === Download Attachment
@@ -34,11 +43,11 @@ include::{snippets}/project/finance/attachments/download/curl-request.adoc[]
 
 === Delete Attachment
 ==== Request
-//include::{snippets}/project/finance/attachments/add-post/http-request.adoc[]
-include::{snippets}/project/finance/attachments/find-one/path-parameters.adoc[]
+include::{snippets}/project/finance/attachments/delete/http-request.adoc[]
+include::{snippets}/project/finance/attachments/delete/path-parameters.adoc[]
 
-//===== Response
-//include::{snippets}/project/finance/attachments/add-post/http-response.adoc[]
-//
-//===== Curl Example
-//include::{snippets}/project/finance/attachments/add-post/curl-request.adoc[]
+==== Response
+include::{snippets}/project/finance/attachments/delete/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project/finance/attachments/delete/curl-request.adoc[]

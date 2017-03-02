@@ -123,7 +123,7 @@ public class ApplicationContributorController{
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
     public String deleteContributor(@PathVariable("applicationId") final Long applicationId,
                                     @Valid @ModelAttribute RemoveContributorsForm removeContributorsForm) {
-        applicationService.removeCollaborator(removeContributorsForm.getApplicationInviteId());
+        applicationService.removeCollaborator(removeContributorsForm.getApplicationInviteId()).getSuccessObjectOrThrowException();
 
         return "redirect:/application/" + applicationId + "/contributors";
     }
