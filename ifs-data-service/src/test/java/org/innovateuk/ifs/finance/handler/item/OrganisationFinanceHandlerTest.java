@@ -30,8 +30,8 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.when;
@@ -68,7 +68,7 @@ public class OrganisationFinanceHandlerTest {
         competition = newCompetition().build();
         application = newApplication().withCompetition(competition).build();
         applicationFinance = newApplicationFinance().withApplication(application).build();
-        costTypeQuestion = new HashMap<FinanceRowType, Question>();
+        costTypeQuestion = new HashMap<>();
 
         for (FinanceRowType costType : FinanceRowType.values()) {
             if (FinanceRowType.ACADEMIC != costType) {
@@ -176,7 +176,14 @@ public class OrganisationFinanceHandlerTest {
 
     @Test
     public void testGetOrganisationFinanceTotals() throws Exception {
+        Map<FinanceRowType, FinanceRowCostCategory> expected = handler.getOrganisationFinances(applicationFinance.getId());
+        expected.values().forEach(costCategory -> costCategory.setCosts(new ArrayList<>()));
+        Map<FinanceRowType, FinanceRowCostCategory> obtained = handler.getOrganisationFinanceTotals(applicationFinance.getId(), competition);
 
+        assertEquals(obtained.size(), expected.size());
+        assertTrue(obtained.keySet().stream().allMatch(key -> expected.containsKey(key)));
+        assertTrue(obtained.keySet().stream().allMatch(key -> obtained.get(key).getCosts().isEmpty()
+                            && expected.get(key).getCosts().equals(obtained.get(key).getCosts())));
     }
 
     @Test
