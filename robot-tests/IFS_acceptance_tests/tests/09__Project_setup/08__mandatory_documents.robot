@@ -202,7 +202,8 @@ PM can upload both documents after they have been removed
 Status in the dashboard remains action required after uploads
     [Documentation]    INFUND-3011
     [Tags]    HappyPath
-    When the user should not see the element    jQuery=ul li.complete:nth-child(7)
+    Given the user navigates to the page    ${project_in_setup_page}
+    Then the user should not see the element    jQuery=ul li.complete:nth-child(7)
     When the user clicks the button/link    link=status of my partners
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
 
