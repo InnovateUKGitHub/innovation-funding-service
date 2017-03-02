@@ -34,6 +34,7 @@ import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormIn
 import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_RESEARCH_CATEGORY;
 import static java.time.LocalDateTime.now;
 import static java.util.Collections.nCopies;
+import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_SCORE;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.*;
@@ -418,6 +419,8 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
                 .withFormInput(scopeFormInput, otherFormInput, scopeFormInput)
                 .withValue("true", "true", "false")
                 .build(3);
+
+
 
         when(assessorFormInputResponseRepositoryMock.findByAssessmentTargetId(applicationId)).thenReturn(assessorFormInputResponses);
 

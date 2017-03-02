@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.assessment.transactional;
 
-import org.innovateuk.ifs.application.domain.Question;
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.assessment.domain.AssessorFormInputResponse;
 import org.innovateuk.ifs.assessment.mapper.AssessorFormInputResponseMapper;
 import org.innovateuk.ifs.assessment.repository.AssessorFormInputResponseRepository;
@@ -14,12 +14,16 @@ import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.transactional.FormInputService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.apache.commons.lang3.StringUtils;
+import org.innovateuk.ifs.util.BigDecimalAverageCollector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+import static java.time.LocalDateTime.now;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -27,7 +31,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.StringFunctions.countWords;
-import static java.time.LocalDateTime.now;
 
 /**
  * Transactional and secured service providing operations around {@link org.innovateuk.ifs.assessment.domain.AssessorFormInputResponse} data.
@@ -65,12 +68,23 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
         return validate(response).andOnSuccessReturnVoid(() -> performUpdateFormInputResponse(response));
     }
 
+
     @Override
     public ServiceResult<ApplicationAssessmentAggregateResource> getApplicationAggregateScores(long applicationId) {
         // TODO to be improved upon as part of INFUND-8169 Assessors scores viewed on Feedback Overview by applicant
         List<AssessorFormInputResponse> responses = assessorFormInputResponseRepository.findByAssessmentTargetId(applicationId);
         int totalScope = 0;
         int totalInScope = 0;
+        Map<Long, BigDecimal> avgScores = responses.stream()
+                .filter(input -> input.getFormInput().getType() == FormInputType.ASSESSOR_SCORE)
+                .collect(
+                        Collectors.groupingBy(
+                                x -> x.getFormInput().getQuestion().getId(),
+                                Collectors.mapping(
+                                        AssessorFormInputResponse::getValue,
+                                        new BigDecimalAverageCollector())));
+
+
         for (AssessorFormInputResponse response : responses) {
             if (response.getFormInput().getType() == FormInputType.ASSESSOR_APPLICATION_IN_SCOPE) {
                 totalScope++;
@@ -79,7 +93,7 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
                 }
             }
         }
-        return serviceSuccess(new ApplicationAssessmentAggregateResource(totalScope, totalInScope));
+        return serviceSuccess(new ApplicationAssessmentAggregateResource(totalScope, totalInScope,avgScores));
     }
 
     private ServiceResult<Void> performUpdateFormInputResponse(AssessorFormInputResponseResource response) {
