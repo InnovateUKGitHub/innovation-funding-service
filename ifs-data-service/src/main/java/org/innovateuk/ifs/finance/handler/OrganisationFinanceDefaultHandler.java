@@ -53,7 +53,6 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
 
     @Override
     public Iterable<ApplicationFinanceRow> initialiseCostType(ApplicationFinance applicationFinance, FinanceRowType costType){
-
         if(costTypeSupportedByHandler(costType)) {
             Long competitionId = applicationFinance.getApplication().getCompetition().getId();
             Question question = getQuestionByCostType(competitionId, costType);
@@ -63,13 +62,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
                     c.setQuestion(question);
                     c.setTarget(applicationFinance);
                 });
-                if(!cost.isEmpty()){
-                    applicationFinanceRowRepository.save(cost);
-                    return cost;
-                }else{
-                    return new ArrayList<>();
-                }
-
+                return cost.isEmpty() ? new ArrayList<>() : applicationFinanceRowRepository.save(cost);
             }catch (IllegalArgumentException e){
                 LOG.error(String.format("No FinanceRowHandler for type: %s", costType.getType()), e);
             }
