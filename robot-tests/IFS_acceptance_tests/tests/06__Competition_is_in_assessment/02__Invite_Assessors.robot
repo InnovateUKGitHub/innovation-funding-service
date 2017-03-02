@@ -73,7 +73,7 @@ Innovation sector and area are correct
     And the user should see the element    jQuery=.standard-definition-list dt:contains("Innovation sector")
     And the user should see the element    jQuery=.standard-definition-list dt:contains("Innovation area")
     And the user should see the element    jQuery=.standard-definition-list dd:contains("Materials and manufacturing")
-    And the user should see the element    jQuery=.standard-definition-list dd:contains("Earth Observation")
+    And the user should see the element    jQuery=.standard-definition-list dd:contains("Digital Industries")
 
 Remove users from the list
     [Documentation]    INFUND-7354
