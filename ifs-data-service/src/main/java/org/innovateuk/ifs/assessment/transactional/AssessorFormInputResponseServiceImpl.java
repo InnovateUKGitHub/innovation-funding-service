@@ -1,8 +1,10 @@
 package org.innovateuk.ifs.assessment.transactional;
 
+import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.assessment.domain.AssessorFormInputResponse;
 import org.innovateuk.ifs.assessment.mapper.AssessorFormInputResponseMapper;
 import org.innovateuk.ifs.assessment.repository.AssessorFormInputResponseRepository;
+import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
@@ -61,6 +63,23 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
     @Override
     public ServiceResult<Void> updateFormInputResponse(AssessorFormInputResponseResource response) {
         return validate(response).andOnSuccessReturnVoid(() -> performUpdateFormInputResponse(response));
+    }
+
+    @Override
+    public ServiceResult<ApplicationAssessmentAggregateResource> getApplicationAggregateScores(long applicationId) {
+        // TODO to be improved upon as part of INFUND-8169 Assessors scores viewed on Feedback Overview by applicant
+        List<AssessorFormInputResponse> responses = assessorFormInputResponseRepository.findByAssessmentTargetId(applicationId);
+        int totalScope = 0;
+        int totalInScope = 0;
+        for (AssessorFormInputResponse response : responses) {
+            if (response.getFormInput().getType() == FormInputType.ASSESSOR_APPLICATION_IN_SCOPE) {
+                totalScope++;
+                if (response.getValue().equals("true")) {
+                    totalInScope++;
+                }
+            }
+        }
+        return serviceSuccess(new ApplicationAssessmentAggregateResource(totalScope, totalInScope));
     }
 
     private ServiceResult<Void> performUpdateFormInputResponse(AssessorFormInputResponseResource response) {

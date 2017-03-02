@@ -3,8 +3,8 @@ package org.innovateuk.ifs.application.service;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.resource.QuestionType;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 
@@ -16,7 +16,7 @@ import java.util.concurrent.Future;
  * Interface for CRUD operations on {@link QuestionResource} related data.
  */
 public interface QuestionService {
-    void assign(Long questionId, Long applicationId, Long assigneeId, Long assignedById);
+    ServiceResult<Void> assign(Long questionId, Long applicationId, Long assigneeId, Long assignedById);
     List<ValidationMessages> markAsComplete(Long questionId, Long applicationId, Long markedAsCompleteById);
     void markAsInComplete(Long questionId, Long applicationId, Long markedAsInCompleteById);
     List<QuestionResource> findByCompetition(Long competitionId);
@@ -29,7 +29,7 @@ public interface QuestionService {
     Optional<QuestionResource> getPreviousQuestion(Long questionId);
     Optional<QuestionResource> getPreviousQuestionBySection(Long sectionId);
     Optional<QuestionResource> getNextQuestionBySection(Long sectionId);
-    RestResult<QuestionResource> getQuestionByCompetitionIdAndFormInputType(Long competitionId, FormInputType formInputType);
+    ServiceResult<QuestionResource> getQuestionByCompetitionIdAndFormInputType(Long competitionId, FormInputType formInputType);
     Map<Long, QuestionStatusResource> getQuestionStatusesForApplicationAndOrganisation(Long applicationId, Long userOrganisationId);
     QuestionStatusResource getByQuestionIdAndApplicationIdAndOrganisationId(Long questionId, Long applicationId, Long organisationId);
     Map<Long, QuestionStatusResource> getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(List<Long> questionIds, Long applicationId, Long organisationId);

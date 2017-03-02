@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.transactional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.mapper.ApplicationSummaryMapper;
@@ -104,6 +105,14 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 
     }
 
+    @Override
+    public ServiceResult<ApplicationSummaryPageResource> getWithFundingDecisionApplicationSummariesByCompetitionId(long competitionId, String sortBy, int pageIndex, int pageSize) {
+        return applicationSummaries(sortBy, pageIndex, pageSize,
+                pageable -> applicationRepository.findByCompetitionIdAndFundingDecisionIsNotNull(competitionId, pageable),
+                () -> applicationRepository.findByCompetitionIdAndFundingDecisionIsNotNull(competitionId));
+    }
+
+
     private ServiceResult<ApplicationSummaryPageResource> applicationSummaries(String sortBy, int pageIndex, int pageSize, Function<Pageable, Page<Application>> paginatedApplicationsSupplier, Supplier<List<Application>> nonPaginatedApplicationsSupplier) {
         Sort sortField = getApplicationSummarySortField(sortBy);
         Pageable pageable = new PageRequest(pageIndex, pageSize, sortField);
@@ -148,5 +157,4 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
         Sort result = SORT_FIELD_TO_DB_SORT_FIELDS.get(sortBy);
         return result != null ? result : new Sort(ASC, new String[]{"id"});
     }
-
 }

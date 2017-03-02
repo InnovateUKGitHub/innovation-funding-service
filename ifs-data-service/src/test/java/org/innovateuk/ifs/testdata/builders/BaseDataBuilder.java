@@ -230,15 +230,17 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected ProcessRoleResource retrieveApplicantByEmail(String emailAddress, Long applicationId) {
         return doAs(systemRegistrar(), () -> {
             UserResource user = retrieveUserByEmail(emailAddress);
-            return usersRolesService.getProcessRoleByUserIdAndApplicationId(user.getId(), applicationId).
-                    getSuccessObjectOrThrowException();
+            return doAs(user, () -> {
+                return usersRolesService.getProcessRoleByUserIdAndApplicationId(user.getId(), applicationId).
+                        getSuccessObjectOrThrowException();
+            });
         });
     }
 
     protected ProcessRoleResource retrieveLeadApplicant(Long applicationId) {
-        return doAs(systemRegistrar(), () ->
+        return doAs(compAdmin(), () ->
                 simpleFindFirst(usersRolesService.getProcessRolesByApplicationId(applicationId).
-                    getSuccessObjectOrThrowException(), pr -> pr.getRoleName().equals(LEADAPPLICANT.getName())).get());
+                        getSuccessObjectOrThrowException(), pr -> pr.getRoleName().equals(LEADAPPLICANT.getName())).get());
     }
 
     protected Organisation retrieveOrganisationByName(String organisationName) {

@@ -46,6 +46,7 @@ public class InnovationAreaRepositoryIntegrationTest extends BaseRepositoryInteg
         List<InnovationArea> innovationAreas = newInnovationArea()
                 .with(id(null))
                 .withName("bbb", "aaa", "ccc")
+                .withPriority(2, 1, 3)
                 .build(3);
 
         repository.save(innovationAreas);
@@ -56,7 +57,7 @@ public class InnovationAreaRepositoryIntegrationTest extends BaseRepositoryInteg
                 .withName("aaa", "bbb", "ccc")
                 .build(3);
 
-        List<InnovationArea> actual = repository.findAllByOrderByNameAsc();
+        List<InnovationArea> actual = repository.findAllByOrderByPriorityAsc();
 
         assertEquals(expectedInnovationAreas, actual);
     }

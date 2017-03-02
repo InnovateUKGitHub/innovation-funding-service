@@ -38,45 +38,13 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
     @Autowired
     private ApplicationService applicationService;
 
-    @Autowired
-    private ApplicationRepository applicationRepository;
-
     public static final long APPLICATION_ID = 1L;
     public static final long COMPETITION_ID = 1L;
 
-    private Long leadApplicantProcessRole;
-    private Long leadApplicantId;
-
-    private Long compAdminUserId;
-    private Long compAdminRoleId;
-
     @Before
     public void setUp() throws Exception {
-        leadApplicantId = 1L;
-        leadApplicantProcessRole = 1L;
-        List<ProcessRole> leadApplicantProccessRoles = new ArrayList<>();
-        Application application = new Application(
-                APPLICATION_ID,
-                "",
-                new ApplicationStatus(
-                        ApplicationStatusConstants.CREATED.getId(),
-                        ApplicationStatusConstants.CREATED.getName()
-                )
-        );
-        leadApplicantProccessRoles.add(
-                new ProcessRole(
-                        leadApplicantProcessRole,
-                        null,
-                        application.getId(),
-                        null,
-                        null
-                )
-        );
-        User user = new User(leadApplicantId, "steve", "smith", "steve.smith@empire.com", "", "123abc");
-        leadApplicantProccessRoles.get(0).setUser(user);
-
-        compAdminUserId = 2L;
-        compAdminRoleId = 2L;
+        Long compAdminUserId = 2L;
+        Long compAdminRoleId = 2L;
         UserResource compAdminUser = newUserResource().withId(compAdminUserId).withFirstName("jim").withLastName("kirk").withEmail("j.kirk@starfleet.org").build();
         RoleResource compAdminRole = new RoleResource(compAdminRoleId, UserRoleType.COMP_ADMIN.getName());
         compAdminUser.getRoles().add(compAdminRole);

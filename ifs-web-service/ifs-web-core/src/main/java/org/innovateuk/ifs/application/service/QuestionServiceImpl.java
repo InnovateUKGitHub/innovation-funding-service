@@ -1,10 +1,11 @@
+
 package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.resource.QuestionType;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.apache.commons.logging.Log;
@@ -34,8 +35,8 @@ public class QuestionServiceImpl implements QuestionService {
     private QuestionStatusRestService questionStatusRestService;
 
     @Override
-    public void assign(Long questionId, Long applicationId, Long assigneeId, Long assignedById) {
-        questionRestService.assign(questionId, applicationId, assigneeId, assignedById);
+    public ServiceResult<Void> assign(Long questionId, Long applicationId, Long assigneeId, Long assignedById) {
+        return questionRestService.assign(questionId, applicationId, assigneeId, assignedById).toServiceResult();
     }
 
     @Override
@@ -120,8 +121,8 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public RestResult<QuestionResource> getQuestionByCompetitionIdAndFormInputType(Long competitionId, FormInputType formInputType) {
-        return questionRestService.getQuestionByCompetitionIdAndFormInputType(competitionId, formInputType);
+    public ServiceResult<QuestionResource> getQuestionByCompetitionIdAndFormInputType(Long competitionId, FormInputType formInputType) {
+        return questionRestService.getQuestionByCompetitionIdAndFormInputType(competitionId, formInputType).toServiceResult();
     }
 
     @Override
@@ -165,7 +166,7 @@ public class QuestionServiceImpl implements QuestionService {
             Long questionId = extractQuestionProcessRoleIdFromAssignSubmit(request);
             Long assigneeId = extractAssigneeProcessRoleIdFromAssignSubmit(request);
 
-            assign(questionId, applicationId, assigneeId, assignedBy.getId());
+            assign(questionId, applicationId, assigneeId, assignedBy.getId()).getSuccessObjectOrThrowException();
         }
     }
 
