@@ -1,1 +1,0 @@
-./gradlew cleanDeploy -x test

@@ -54,7 +54,7 @@ Submitted applications Key Statistics
 Submitted applications View completed applications
     [Documentation]    INFUND-7351
     [Tags]    HappyPath
-    Given the user clicks the button/link    link=00000019
+    Given the user clicks the button/link    link=19
     And the user should see the text in the page    Application overview
     When the user clicks the button/link    link=Back
     Then the user should see the text in the page    Submitted applications

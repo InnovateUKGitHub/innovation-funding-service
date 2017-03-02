@@ -35,6 +35,7 @@ import org.innovateuk.ifs.email.service.EmailService;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.file.service.FileTemplateRenderer;
+import org.innovateuk.ifs.file.transactional.FileEntryService;
 import org.innovateuk.ifs.file.transactional.FileHttpHeadersValidator;
 import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
@@ -44,6 +45,7 @@ import org.innovateuk.ifs.finance.mapper.ProjectFinanceRowMapper;
 import org.innovateuk.ifs.finance.repository.*;
 import org.innovateuk.ifs.finance.transactional.FinanceRowService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
+import org.innovateuk.ifs.form.mapper.FormInputResponseMapper;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.form.transactional.FormInputService;
@@ -86,6 +88,10 @@ import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.sil.experian.service.SilExperianEndpoint;
+import org.innovateuk.ifs.threads.attachments.mapper.AttachmentMapper;
+import org.innovateuk.ifs.threads.attachments.repository.AttachmentRepository;
+import org.innovateuk.ifs.threads.attachments.service.AttachmentsService;
+import org.innovateuk.ifs.threads.attachments.service.ProjectFinanceAttachmentService;
 import org.innovateuk.ifs.threads.mapper.NoteMapper;
 import org.innovateuk.ifs.threads.mapper.PostMapper;
 import org.innovateuk.ifs.threads.mapper.QueryMapper;
@@ -162,6 +168,15 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected AssessorFormInputResponseService assessorFormInputResponseServiceMock;
+
+    @Mock
+    protected AttachmentMapper attachmentMapperMock;
+
+    @Mock
+    protected AttachmentRepository attachmentRepositoryMock;
+
+    @Mock
+    protected FormInputResponseMapper formInputResponseMapperMock;
 
     @Mock
     protected FormInputResponseRepository formInputResponseRepositoryMock;
@@ -365,6 +380,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected FileEntryRepository fileEntryRepositoryMock;
 
     @Mock
+    protected FileEntryService fileEntryServiceMock;
+
+    @Mock
     protected FileEntryMapper fileEntryMapperMock;
 
     @Mock
@@ -384,6 +402,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ProjectFinanceNotesService projectFinanceNotesService;
+
+    @Mock
+    protected ProjectFinanceAttachmentService projectFinanceAttachmentServiceMock;
 
     @Mock
     protected ProjectService projectServiceMock;
@@ -592,6 +613,11 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     @Mock
     protected PostMapper postMapper;
 
+    @Mock
+    protected ApplicationAssessorMapper applicationAssessorMapperMock;
+
+    @Mock
+    protected ApplicationAssessorPageMapper applicationAssessorPageMapperMock;
 
 
     @Before

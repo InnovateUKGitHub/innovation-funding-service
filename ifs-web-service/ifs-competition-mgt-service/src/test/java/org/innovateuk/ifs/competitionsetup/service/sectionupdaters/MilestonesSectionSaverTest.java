@@ -25,6 +25,7 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.MilestoneResourceBuilder.newMilestoneResource;
 import static org.junit.Assert.*;
@@ -67,6 +68,7 @@ public class MilestonesSectionSaverTest {
 
         competitionSetupForm.setMilestoneEntries(populateMilestoneFormEntry(resourceList));
 
+        when(competitionSetupMilestoneService.updateMilestonesForCompetition(anyList(), anyMap(), anyLong())).thenReturn(serviceSuccess());
         when(milestoneService.getAllMilestonesByCompetitionId(anyLong())).thenReturn(resourceList);
         service.saveSection(competition, competitionSetupForm);
         List<Long> milestones = competition.getMilestones();
@@ -106,6 +108,7 @@ public class MilestonesSectionSaverTest {
         List<MilestoneResource> resourceList = asList(milestonePast, milestoneFuture);
 
         competitionSetupForm.setMilestoneEntries(populateMilestoneFormEntry(resourceList));
+        when(competitionSetupMilestoneService.updateMilestonesForCompetition(anyList(), anyMap(), anyLong())).thenReturn(serviceSuccess());
         when(milestoneService.getAllMilestonesByCompetitionId(anyLong())).thenReturn(resourceList);
 
         service.saveSection(competition, competitionSetupForm);

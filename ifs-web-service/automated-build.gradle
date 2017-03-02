@@ -1,5 +1,3 @@
-ext.tomcatWebAppsDir=""
-
 ext.ifsDataServiceRestBaseURL="http://localhost:8090"
 
 ext.ifsIdpLogoutUrl="https://ifs-local-dev/Logout/"

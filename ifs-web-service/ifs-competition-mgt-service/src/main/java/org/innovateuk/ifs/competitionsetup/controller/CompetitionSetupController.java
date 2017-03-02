@@ -117,7 +117,7 @@ public class CompetitionSetupController {
         }
 
 
-        competitionService.setSetupSectionMarkedAsIncomplete(competitionId, section);
+        competitionService.setSetupSectionMarkedAsIncomplete(competitionId, section).getSuccessObjectOrThrowException();
         if(!competition.isSetupAndLive()) {
             competitionSetupService.setCompetitionAsCompetitionSetup(competitionId);
         }
