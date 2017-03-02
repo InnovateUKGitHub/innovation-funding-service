@@ -30,6 +30,9 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.AdditionalAnswers.returnsFirstArg;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyList;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.when;
 
@@ -60,6 +63,7 @@ public class OrganisationFinanceHandlerTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
+        when(financeRowRepositoryMock.save(anyList())).then(returnsFirstArg());
 
         competition = newCompetition().build();
         application = newApplication().withCompetition(competition).build();
@@ -122,7 +126,7 @@ public class OrganisationFinanceHandlerTest {
         costs.add((ApplicationFinanceRow)materialCost);
 
         when(financeRowRepositoryMock.findByTargetId(applicationFinance.getId())).thenReturn(costs);
-        when(financeRowMetaFieldRepository.findAll()).thenReturn(new ArrayList<FinanceRowMetaField>());
+        when(financeRowMetaFieldRepository.findAll()).thenReturn(new ArrayList<>());
     }
 
     private void setUpCostTypeQuestions(Competition competition, FinanceRowType costType) {
@@ -166,7 +170,8 @@ public class OrganisationFinanceHandlerTest {
         labourCategory.getWorkingDaysPerYearCostItem().setLabourDays(25);
         labourCategory.calculateTotal();
         assertEquals(0, new BigDecimal(600000).compareTo(labourCategory.getTotal()));
-        assertEquals("Testing equality for; "+ FinanceRowType.LABOUR.getType(), new BigDecimal(600000).setScale(5), organisationFinances.get(FinanceRowType.LABOUR).getTotal().setScale(5));
+        assertEquals("Testing equality for; "+ FinanceRowType.LABOUR.getType(), new BigDecimal(600000).setScale(5),
+                organisationFinances.get(FinanceRowType.LABOUR).getTotal().setScale(5));
     }
 
     @Test
