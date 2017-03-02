@@ -34,13 +34,13 @@ function tailorAppInstance() {
     sed -i.bak "s/<<IMAP-ADDRESS>>/imap-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/imap/*.yml
     sed -i.bak "s/<<ADMIN-ADDRESS>>/admin-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/*.yml
 
-    sed -i.bak "s/replicas: 1/replicas: 2/g" os-files-tmp/3*.yml
-    sed -i.bak "s/replicas: 1/replicas: 2/g" os-files-tmp/4*.yml
-    sed -i.bak "s/replicas: 1/replicas: 2/g" os-files-tmp/shib/*.yml
-
     if [[ ${TARGET} == "production" ]]
     then
         sed -i.bak "s/claimName: file-upload-claim/claimName: production-file-upload-claim/g" os-files-tmp/*.yml
+        sed -i.bak "s/replicas: 1/replicas: 2/g" os-files-tmp/3*.yml
+        sed -i.bak "s/replicas: 1/replicas: 2/g" os-files-tmp/4*.yml
+        sed -i.bak "s/replicas: 1/replicas: 2/g" os-files-tmp/shib/*.yml
+        sed -i.bak "s/replicas: 1/replicas: 2/g" os-files-tmp/shib/prod/*.yml
     fi
 }
 
