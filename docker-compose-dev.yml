@@ -1,7 +1,8 @@
 version: '2'
 services:
-  application-service:
-    hostname: application-service
+
+  application-svc:
+    hostname: application-svc
     links:
       - admin
     ports:
@@ -10,8 +11,8 @@ services:
     environment:
       - JAVA_OPTS=-Xmx150m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
 
-  assessment-service:
-    hostname: assessment-service
+  assessment-svc:
+    hostname: assessment-svc
     links:
       - admin
     ports:
@@ -19,18 +20,20 @@ services:
       - "9002:8000"
     environment:
       - JAVA_OPTS=-Xmx150m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
-  competition-mgt-service:
-    hostname: competition-mgt-service
+
+
+  competition-mgt-svc:
+    hostname: competition-mgt-svc
+    environment:
+      - JAVA_OPTS=-Xmx150m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
     links:
       - admin
     ports:
       - "8083:8080"
       - "9003:8000"
-    environment:
-      - JAVA_OPTS=-Xmx150m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
 
-  project-setup-mgt-service:
-    hostname: project-setup-mgt-service
+  project-setup-mgt-svc:
+    hostname: project-setup-mgt-svc
     links:
       - admin
     ports:
@@ -39,8 +42,8 @@ services:
     environment:
       - JAVA_OPTS=-Xmx150m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
 
-  project-setup-service:
-    hostname: project-setup-service
+  project-setup-svc:
+    hostname: project-setup-svc
     links:
       - admin
     ports:
@@ -104,6 +107,7 @@ services:
     image: mysql:5.5.49
     ports:
       - "3306:3306"
+    command: [--character-set-server=utf8, --collation-server=utf8_bin]
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: ifs

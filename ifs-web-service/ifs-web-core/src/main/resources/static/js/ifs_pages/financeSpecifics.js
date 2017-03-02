@@ -50,16 +50,24 @@ IFS.core.financeSpecifics = (function () {
         }
       }
     },
+    // addPercentageOfLabourCosts: function () {
+    //   var header = jQuery(s.adminSupportCostsSelect).closest('section.collapsible').find('button')
+    //   var html = '<span></span>')
+    //   <span data-calculation-format="percentage" data-mirror="#section-percentage-115" data-calculation-fields="100, #total-cost, [data-current-overhead-total]" data-calculation-binded="" data-calculation-rawvalue="6.465493257743544">6%</span>
+    // },
     setOverheadSectionElementValue: function () {
-      var totalEl = jQuery(s.adminSupportCostsSelect).closest('section.collapsible').find('[data-mirror]')
-      if (totalEl.is('[data-calculation-format="percentage"]')) {
-        // percentage total in section header update the calculation
-        totalEl.attr('data-calculation-fields', '100, #total-cost, [data-current-overhead-total]')
-      } else {
-        // total in section header we mirror the total directly
-        IFS.core.mirrorElements.updateElement(totalEl, '[data-current-overhead-total]')
-        IFS.core.mirrorElements.bindMirrorElement(totalEl, '[data-current-overhead-total]')
-      }
+      var totalElements = jQuery(s.adminSupportCostsSelect).closest('section.collapsible').find('[data-mirror]')
+      totalElements.each(function () {
+        var totalEl = jQuery(this)
+        if (totalEl.is('[data-calculation-format="percentage"]')) {
+          // percentage total in section header update the calculation
+          totalEl.attr('data-calculation-fields', '100, #total-cost, [data-current-overhead-total]')
+        } else {
+          // total in section header we mirror the total directly
+          IFS.core.mirrorElements.updateElement(totalEl, '[data-current-overhead-total]')
+          IFS.core.mirrorElements.bindMirrorElement(totalEl, '[data-current-overhead-total]')
+        }
+      })
     },
     initOtherFunding: function () {
       // make sure that the total gets updated on pressing yes, for more info INFUND-3196

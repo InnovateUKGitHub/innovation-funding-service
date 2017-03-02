@@ -6,12 +6,10 @@ import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.threads.attachments.controller.ProjectFinanceAttachmentsController;
 import org.innovateuk.ifs.threads.attachments.service.ProjectFinanceAttachmentService;
 import org.innovateuk.threads.attachment.resource.AttachmentResource;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.function.Function;
@@ -39,13 +37,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class ProjectFinanceAttachmentsControllerDocumentation extends BaseControllerMockMVCTest<ProjectFinanceAttachmentsController> {
 
-    private RestDocumentationResultHandler document;
+    private static final String identifier = "project/finance/attachments/{method-name}";
 
-    @Before
-    public void setup() {
-        this.document = document("project/finance/attachments/{method-name}",
-                preprocessResponse(prettyPrint()));
-    }
 
     @Test
     public void findOne() throws Exception {
@@ -56,7 +49,7 @@ public class ProjectFinanceAttachmentsControllerDocumentation extends BaseContro
         mockMvc.perform(get("/project/finance/attachments/{attachmentId}", id))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(attachmentResource)))
-                .andDo(this.document.document(
+                .andDo(document(identifier,
                         pathParameters(parameterWithName("attachmentId").description("Id of the Attachment to be fetched")),
                         responseFields(attachmentFields())));
 
@@ -72,7 +65,7 @@ public class ProjectFinanceAttachmentsControllerDocumentation extends BaseContro
 
         assertGetFileContents("/project/finance/attachments/download/{attachmentId}", new Object[]{id},
                 emptyMap(), projectFinanceAttachmentServiceMock, serviceCallToDownload)
-                .andDo(documentFileGetContentsMethod(document));
+                .andDo(documentFileGetContentsMethod(document(identifier, preprocessResponse(prettyPrint()))));
     }
 
     @Test
@@ -83,7 +76,7 @@ public class ProjectFinanceAttachmentsControllerDocumentation extends BaseContro
 
         mockMvc.perform(RestDocumentationRequestBuilders.delete("/project/finance/attachments/{attachmentId}", id))
                 .andExpect(status().isNoContent())
-                .andDo(this.document.document(
+                .andDo(document(identifier,
                         pathParameters(parameterWithName("attachmentId").description("Id of the Attachment to be deleted")))
                 );
 
@@ -103,7 +96,7 @@ public class ProjectFinanceAttachmentsControllerDocumentation extends BaseContro
                 .headers(createFileUploadHeader("application/pdf", 1234)))
                 .andExpect(content().json(toJson(attachmentResource)))
                 .andExpect(status().isCreated())
-                .andDo(document.document(
+                .andDo(document(identifier,
                         pathParameters(parameterWithName("projectId").description("The Id of the Project under which this Attachment is being uploaded.")),
                         requestParameters(parameterWithName("filename").description("The filename of the file being uploaded")),
                         requestHeaders(
