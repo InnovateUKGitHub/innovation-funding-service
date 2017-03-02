@@ -18,7 +18,7 @@ public class MilestoneRowForm {
     private Integer month;
     @Range(min = 2016, max = 9000)
     private Integer year;
-    private MilestoneTime time = MilestoneTime.TWELVE_PM;
+    private MilestoneTime time;
 
     private MilestoneType milestoneType;
     private String dayOfWeek;
@@ -42,6 +42,7 @@ public class MilestoneRowForm {
             this.editable = LocalDateTime.now().isBefore(dateTime);
         } else {
             this.editable = true;
+            this.setTime(MilestoneTime.TWELVE_PM);
         }
     }
 
