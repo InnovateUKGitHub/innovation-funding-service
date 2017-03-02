@@ -55,7 +55,10 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
         Long financeFileEntry = 1L;
 
         ProjectOrganisationCompositeId key = new ProjectOrganisationCompositeId(projectId, organisationId);
-        OrganisationResource organisationResource = newOrganisationResource().withId(organisationId).withOrganisationType(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId()).build();
+        OrganisationResource organisationResource = newOrganisationResource().withId(organisationId)
+                .withOrganisationType(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId())
+                .withOrganisationTypeName("BUSINESS")
+                .build();
         ApplicationResource applicationResource = newApplicationResource().withId(applicationId).build();
         ProjectResource projectResource = newProjectResource().withId(projectId).withApplication(applicationResource).build();
         List<PartnerOrganisationResource> partnerOrganisationResources = newPartnerOrganisationResource().withProject(projectId).build(3);

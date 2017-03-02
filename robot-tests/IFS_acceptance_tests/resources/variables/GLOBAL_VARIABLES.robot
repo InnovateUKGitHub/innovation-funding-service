@@ -69,6 +69,7 @@ ${IN_ASSESSMENT_APPLICATION_5_LEAD_PARTNER_EMAIL}    paula.fuller@example.com
 ${IN_ASSESSMENT_APPLICATION_5_TITLE}    Products and Services Personalised
 ${INFORM_COMPETITION_NAME}    Integrated delivery programme - low carbon vehicles
 ${INFORM_APPLICATION_1_PROJECT}    4
+${NON_IFS_COMPETITION_NAME}     Transforming big data
 ${STEVE_SMITH_ID}    55
 ${DASHBOARD_URL}    ${SERVER}/applicant/dashboard
 ${SUMMARY_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1}/summary
