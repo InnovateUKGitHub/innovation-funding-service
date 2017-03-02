@@ -96,6 +96,7 @@ public class CompetitionOverviewPopulatorTest {
                 .withCompetitionTitle(competitionTitle)
                 .withContentSection(publicContentResource)
                 .withNonIfsUrl(nonIfsUrl)
+                .withNonIfs(Boolean.FALSE)
                 .build();
 
         return publicContentItem;
