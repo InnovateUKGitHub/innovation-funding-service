@@ -39,11 +39,11 @@ public class CompetitionManagementApplicationAssessmentProgressController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String applicationProgress(Model model,
-                                      @Valid @ModelAttribute(FORM_ATTR_NAME) AvailableAssessorsForm form,
-                                      @SuppressWarnings("unused") BindingResult bindingResult,
                                       @PathVariable("applicationId") Long applicationId,
-                                      @RequestParam MultiValueMap<String, String> queryParams) {
-        return doProgressView(model, applicationId, form.getSortField(), queryParams);
+                                      @RequestParam MultiValueMap<String, String> queryParams,
+                                      @RequestParam(value = "page", defaultValue = "0") int page,
+                                      @RequestParam(value = "filterInnovationArea", required = false) Long filterInnovationArea) {
+        return doProgressView(model, applicationId, filterInnovationArea, queryParams, page);
     }
 
     @RequestMapping(path = "/assign/{assessorId}", method = RequestMethod.POST)
@@ -80,12 +80,13 @@ public class CompetitionManagementApplicationAssessmentProgressController {
         return "competition/application-progress-remove-confirm";
     }
 
-    private String doProgressView(Model model, Long applicationId, AvailableAssessorsSortFieldType sort, MultiValueMap<String, String> queryParams) {
+    private String doProgressView(Model model, Long applicationId, Long filterInnovationArea, MultiValueMap<String, String> queryParams, int page) {
         queryParams.add("applicationId", applicationId.toString());
 
-        model.addAttribute("model", applicationAssessmentProgressModelPopulator.populateModel(applicationId, sort));
+        String assessorProfileOrigin = buildOriginQueryString(AssessorProfileOrigin.APPLICATION_PROGRESS, queryParams);
+        model.addAttribute("model", applicationAssessmentProgressModelPopulator.populateModel(applicationId, filterInnovationArea, page, assessorProfileOrigin));
         model.addAttribute("applicationOriginQuery", buildOriginQueryString(ApplicationOverviewOrigin.APPLICATION_PROGRESS, queryParams));
-        model.addAttribute("assessorProfileOriginQuery", buildOriginQueryString(AssessorProfileOrigin.APPLICATION_PROGRESS, queryParams));
+        model.addAttribute("assessorProfileOriginQuery", assessorProfileOrigin);
 
         return "competition/application-progress";
     }
