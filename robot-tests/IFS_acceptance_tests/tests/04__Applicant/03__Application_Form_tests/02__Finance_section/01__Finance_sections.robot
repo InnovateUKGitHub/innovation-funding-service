@@ -137,7 +137,6 @@ File upload mandatory for Academic partner to mark section as complete
     and the user clicks the button/link     jQuery=button:contains("Mark as complete")
     then the user should see a field error     css=a.uploaded-file
 
-
 *** Keywords ***
 Custom Suite Setup
     log in and create new application if there is not one already
