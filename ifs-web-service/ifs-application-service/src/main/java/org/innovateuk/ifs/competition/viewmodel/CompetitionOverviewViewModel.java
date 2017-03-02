@@ -12,6 +12,7 @@ import java.util.List;
 public class CompetitionOverviewViewModel {
     private String competitionTitle;
     private LocalDateTime competitionOpenDate;
+    private LocalDateTime registrationCloseDate;
     private LocalDateTime competitionCloseDate;
     private Long competitionId;
     private String shortDescription;
@@ -34,6 +35,14 @@ public class CompetitionOverviewViewModel {
 
     public void setCompetitionOpenDate(LocalDateTime competitionOpenDate) {
         this.competitionOpenDate = competitionOpenDate;
+    }
+
+    public LocalDateTime getRegistrationCloseDate() {
+        return registrationCloseDate;
+    }
+
+    public void setRegistrationCloseDate(LocalDateTime registrationCloseDate) {
+        this.registrationCloseDate = registrationCloseDate;
     }
 
     public LocalDateTime getCompetitionCloseDate() {

@@ -20,25 +20,25 @@
         <ul class="list">
             <li><strong>Competition opens:</strong> <span th:text="${#temporals.format(model.competitionOpenDate, 'EEEE d MMM yyyy')}"></span></li>
 
-            <li th:with="date=${#temporals.format(model.competitionCloseDate, 'EEEE d MMMM yyyy')},
+            <li th:unless="${model.nonIfs}" th:with="date=${#temporals.format(model.competitionCloseDate, 'EEEE d MMMM yyyy')},
                          time=${#strings.toLowerCase(#temporals.format(model.competitionCloseDate, ' h:mma'))}">
                 <strong>Competition closes:</strong> <th:block th:text="${date + ' ' + time}"/></li>
+
+            <li th:if="${model.nonIfs}" th:with="date=${#temporals.format(model.registrationCloseDate, 'EEEE d MMMM yyyy')},
+            time=${#strings.toLowerCase(#temporals.format(model.competitionCloseDate, ' h:mma'))}">
+                <strong>Registration closes:</strong> <th:block th:text="${date + ' ' + time}"/></li>
+
         </ul>
         <p th:unless="${model.nonIfs}" class="extra-margin">
-            <a
-               th:href="@{/application/create/check-eligibility/{competitionId}(competitionId=${model.competitionId})}" class="button">
+            <a th:href="@{/application/create/check-eligibility/{competitionId}(competitionId=${model.competitionId})}" class="button">
                 Start or continue your application
             </a>
         </p>
-        <div th:if="${model.nonIfs}" class="extra-margin">
-            <p>This is a non-IFS competition, applications will not be managed by this service</p>
-            <p>
-                <a
-                   th:href="${model.nonIfsUrl}" class="button">
-                    Apply to non-IFS competition
-                </a>
-            </p>
-        </div>
+        <p th:if="${model.nonIfs}" class="extra-margin">
+            <a th:href="${model.nonIfsUrl}" class="button">
+                Register and apply online
+            </a>
+        </p>
         <ul class="inline-nav hide-mobile">
             <th:block th:each="sectionType : ${model.allContentSections}">
                 <li th:class="${(sectionType.active ? 'selected' : 'not-selected' )}">

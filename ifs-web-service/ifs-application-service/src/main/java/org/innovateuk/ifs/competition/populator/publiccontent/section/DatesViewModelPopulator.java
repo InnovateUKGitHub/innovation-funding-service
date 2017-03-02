@@ -13,7 +13,6 @@ import org.innovateuk.ifs.competition.viewmodel.publiccontent.section.submodel.D
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -46,7 +45,7 @@ public class DatesViewModelPopulator extends AbstractPublicContentSectionViewMod
     private List<DateViewModel> getMilestonesAsDatesViewModel(Boolean nonIFS, Long competitionId) {
         List<MilestoneResource> milestones = milestoneService.getAllPublicMilestonesByCompetitionId(competitionId);
 
-        List<DateViewModel> mileStonesMapped = mapMilestoneToDateViewModel(milestones);
+        List<DateViewModel> mileStonesMapped = mapMilestoneToDateViewModel(milestones, nonIFS);
         if(nonIFS) {
             mileStonesMapped.add(addRegistrationCloseDateForNonIFSComp(
                     milestones.stream().filter(resource -> SUBMISSION_DATE.equals(resource.getType())).findFirst()));
@@ -60,18 +59,13 @@ public class DatesViewModelPopulator extends AbstractPublicContentSectionViewMod
         if(competitionCloseDateMilestone.isPresent()) {
             registrationClosesDate.setMustBeStrong(false);
             registrationClosesDate.setContent("Registration closes");
-            registrationClosesDate.setDateTime(getDateTimeWeekBefore(competitionCloseDateMilestone.get().getDate()));
+            registrationClosesDate.setDateTime(competitionCloseDateMilestone.get().getDate().minusDays(7));
         }
 
         return registrationClosesDate;
     }
 
-    private LocalDateTime getDateTimeWeekBefore(LocalDateTime competitionCloseDate) {
-        LocalDateTime registrationCloseDate = competitionCloseDate.minusDays(7);
-        return LocalDateTime.of(registrationCloseDate.getYear(), registrationCloseDate.getMonth(), registrationCloseDate.getDayOfMonth(), 0, 0);
-    }
-
-    private List<DateViewModel> mapMilestoneToDateViewModel(List<MilestoneResource> milestonesNeeded) {
+    private List<DateViewModel> mapMilestoneToDateViewModel(List<MilestoneResource> milestonesNeeded, Boolean nonIfs) {
         List<DateViewModel> publicContentDates = new ArrayList<>();
 
         milestonesNeeded.forEach(milestoneResource -> {
@@ -92,7 +86,9 @@ public class DatesViewModelPopulator extends AbstractPublicContentSectionViewMod
                     break;
             }
 
-            publicContentDates.add(publicContentDate);
+            if(!(nonIfs && SUBMISSION_DATE.equals(milestoneResource.getType()))) {
+                publicContentDates.add(publicContentDate);
+            }
         });
 
         return publicContentDates;
