@@ -47,7 +47,9 @@ public class ChangedFinanceRowPair<L extends FinanceRowItem, R extends FinanceRo
         this.changed = changed;
     }
 
-    public static ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem> of(TypeOfChange typeOfChange, FinanceRowItem applicationFinanceRowItem, FinanceRowItem projectFinanceRowItem){
+    public static ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem> of(TypeOfChange typeOfChange,
+                                                                           FinanceRowItem applicationFinanceRowItem,
+                                                                           FinanceRowItem projectFinanceRowItem) {
         return new ChangedFinanceRowPair<>(typeOfChange, applicationFinanceRowItem, projectFinanceRowItem);
     }
 }

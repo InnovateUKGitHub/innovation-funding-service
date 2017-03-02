@@ -226,7 +226,7 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
 
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
 
-        MvcResult result = mockMvc.perform(get("/project/" + project.getId() +" /partner-organisation/" + industrialOrganisation.getId() + "/finance-checks/eligibility")).
+        MvcResult result = mockMvc.perform(get("/project/" + project.getId() + " /partner-organisation/" + industrialOrganisation.getId() + "/finance-checks/eligibility")).
                 andExpect(status().isOk()).
                 andExpect(view().name("project/financecheck/eligibility")).
                 andReturn();
@@ -253,12 +253,12 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
     }
 
     @Test
-    public void testEligibiltiyChanges() throws Exception {
+    public void testEligibilityChanges() throws Exception {
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
-        MvcResult result = mockMvc.perform(get("/project/" + project.getId() +" /partner-organisation/" + industrialOrganisation.getId() + "/finance-checks/eligibility/changes")).
-                andExpect(status().isOk()).
-                andExpect(view().name("project/financecheck/eligibility-changes")).
-                andReturn();
+        mockMvc.perform(get("/project/" + project.getId() + " /partner-organisation/" + industrialOrganisation.getId() + "/finance-checks/eligibility/changes"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("project/financecheck/eligibility-changes"))
+                .andReturn();
     }
 
     @Override
