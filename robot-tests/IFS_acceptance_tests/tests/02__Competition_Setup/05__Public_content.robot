@@ -225,15 +225,6 @@ The user is able to edit and publish again
     When the user clicks the button/link        link=Return to setup overview
     Then the user should see the element        JQuery=p:contains("${today}")
 
-Make Competition searchable in front door page
-    [Documentation]  INFUND-6923
-    [Tags]  HappyPath
-    # Is added in HP cause is required for the next step
-    Given the user navigates to the page  ${ca_upcomingcomp}
-    And the user clicks the button/link   link=${public_content_competition_name}
-    Then the user fills in the CS Milestones  ${day}  ${month}  ${nextyear}
-    [Teardown]  the user closes the browser
-
 Guest user can filter competitions by Keywords
     [Documentation]  INFUND-6923
     [Tags]  HappyPath
@@ -301,6 +292,7 @@ User creates a new competition
     Given the user navigates to the page    ${CA_UpcomingComp}
     When the user clicks the button/link    jQuery=.button:contains("Create competition")
     When the user fills in the CS Initial details      ${competition_name}  01  02  ${nextyear}
+    And the user fills in the CS Milestones     01  02  ${nextyear}
 
 the user enters valid data in the summary details
     The user enters text to a text field    css=.editor  This is a Summary description
