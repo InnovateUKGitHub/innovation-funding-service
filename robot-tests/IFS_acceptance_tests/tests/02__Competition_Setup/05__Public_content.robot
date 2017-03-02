@@ -247,9 +247,8 @@ Guest user can see the updated Summary information
 Guest user can see the updated Eligibility information
     [Documentation]  INFUND-7487
     [Tags]
-    Given the user clicks the button/link   link=Public content competition
-    When the user clicks the button/link    link=Eligibility
-    Then the user should see the element    jQuery=.column-third:contains("Nationality Eligibility Heading") ~ .column-two-thirds:contains("You can give your views on new or changing government policies by responding to consultations. Government departments take these responses into consideration before making decisions")
+    Given the user clicks the button/link    link=Eligibility
+    Then the user should see the element    jQuery=.column-third:contains("Nationality Eligibility Heading") ~ .column-two-thirds:contains("changing government policies")
 
 
 The guest user is able to download the file in the Summary
