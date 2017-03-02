@@ -169,7 +169,7 @@ public class ApplicationModelPopulatorTest {
         verifyNoMoreInteractions(model);
 
         //Verify model calls
-        verify(applicationFinanceOverviewModelManager).addFinanceDetails(model, competitionId, applicationId, user.getId());
+        verify(applicationFinanceOverviewModelManager).addFinanceDetails(model, competitionId, applicationId, Optional.of(organisationId));
         verify(financeModelManager).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form, organisationId);
     }
 }
