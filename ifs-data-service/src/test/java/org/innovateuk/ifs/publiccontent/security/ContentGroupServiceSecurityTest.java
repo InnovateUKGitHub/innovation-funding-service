@@ -64,21 +64,12 @@ public class ContentGroupServiceSecurityTest extends BaseServiceSecurityTest<Con
 
     @Test
     public void testGetFileDetails() {
-        setupMockFilePermissionRules();
-        classUnderTest.getFileDetails(1L);
-        verifyPermissionRules();
+        assertAccessDenied(() -> classUnderTest.getFileDetails(1L), this::verifyPermissionRules);
     }
 
     @Test
     public void testGetFileContents() {
-        setupMockFilePermissionRules();
-        classUnderTest.getFileContents(1L);
-        verifyPermissionRules();
-    }
-
-    private void setupMockFilePermissionRules() {
-        when(rules.externalUsersCanViewPublishedContentGroupFiles(any(), any())).thenReturn(true);
-        when(rules.internalUsersCanViewAllContentGroupFiles(any(), any())).thenReturn(true);
+        assertAccessDenied(() -> classUnderTest.getFileContents(1L), this::verifyPermissionRules);
     }
 
     private void verifyPermissionRules() {
