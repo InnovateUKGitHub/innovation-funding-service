@@ -76,7 +76,8 @@ Working days per year should be 232
 User pressing back button should get the correct version of the page
     [Documentation]    INFUND-2695
     [Tags]
-    [Setup]  Applicant navigates to the finances of the Robot application
+    [Setup]
+    When  Applicant navigates to the finances of the Robot application
     And the user clicks the button/link  link=Your project costs
     Given The user adds three material rows
     When the user navigates to another page
