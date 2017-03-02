@@ -29,7 +29,7 @@
                 <th:block th:text="${model.organisation.lead} ? ${model.organisation.name} + ', Lead organisation' : ${model.organisation.name}"></th:block>
             </h2>
 
-            <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${contributorsForm}" method="POST" class="contributorsForm">
+            <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${contributorsForm}" method="POST" class="contributorsForm" novalidate="novalidate">
                 <button class="hidden-save" type="submit" aria-hidden="true" tabindex="-1">save form</button>
                 <input type="hidden" th:field="${contributorsForm.organisations[__${model.selectedOrgIndex}__].organisationId}" />
                 <input type="hidden" th:field="${contributorsForm.organisations[__${model.selectedOrgIndex}__].organisationInviteId}" />
