@@ -48,7 +48,7 @@ IFS.application.progressiveSelect = (function () {
       })
       html += '</ul>'
       el.after(html).remove()
-
+      jQuery('body').trigger('updateSerializedFormState')
     },
     initDropDownHTML: function (el) {
       var inst = jQuery(el)
