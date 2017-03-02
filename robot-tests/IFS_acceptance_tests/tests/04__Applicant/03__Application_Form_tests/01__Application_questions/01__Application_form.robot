@@ -126,7 +126,7 @@ Review and submit button
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Robot test application
     When the user clicks the button/link    jQuery=.button:contains("Review and submit")
-    Then the user should see the text in the page    Application Summary
+    Then the user should see the text in the page    Application summary
     And the user should see the text in the page    Please review your application before final submission
 
 *** Keywords ***
