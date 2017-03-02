@@ -30,6 +30,10 @@ public class ProfileBuilder extends BaseBuilder<Profile, ProfileBuilder> {
         return new ProfileBuilder(emptyList()).with(uniqueIds());
     }
 
+    public static ProfileBuilder newProfileWithoutId() {
+        return new ProfileBuilder(emptyList());
+    }
+
     @Override
     protected ProfileBuilder createNewBuilderWithActions(List<BiConsumer<Integer, Profile>> actions) {
         return new ProfileBuilder(actions);
