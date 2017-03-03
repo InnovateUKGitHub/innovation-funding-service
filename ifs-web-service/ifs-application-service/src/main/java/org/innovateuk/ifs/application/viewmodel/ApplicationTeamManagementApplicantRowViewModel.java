@@ -8,13 +8,13 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 public class ApplicationTeamManagementApplicantRowViewModel {
 
-    private long id;
+    private Long id;
     private String name;
     private String email;
     private boolean lead;
     private boolean pending;
 
-    public ApplicationTeamManagementApplicantRowViewModel(long id, String name, String email, boolean lead, boolean pending) {
+    public ApplicationTeamManagementApplicantRowViewModel(Long id, String name, String email, boolean lead, boolean pending) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -22,7 +22,7 @@ public class ApplicationTeamManagementApplicantRowViewModel {
         this.pending = pending;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

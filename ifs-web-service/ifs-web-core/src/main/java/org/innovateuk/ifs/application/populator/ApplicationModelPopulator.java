@@ -148,7 +148,7 @@ public class ApplicationModelPopulator {
         boolean hasFinanceSection = financeSection != null;
 
         if(hasFinanceSection) {
-            applicationFinanceOverviewModelManager.addFinanceDetails(model, competitionId, applicationId);
+            applicationFinanceOverviewModelManager.addFinanceDetails(model, competitionId, applicationId, user.getId());
 
             List<QuestionResource> costsQuestions = questionService.getQuestionsBySectionIdAndType(financeSection.getId(), QuestionType.COST);
             // NOTE: This code is terrible.  It does nothing if none of below two conditions don't match.  This is not my code RB.

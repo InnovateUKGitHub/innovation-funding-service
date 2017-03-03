@@ -357,7 +357,7 @@
     <div class="modal-confirm-allow-spend-profile-edits" role="dialog" aria-hidden="true">
         <div th:include="fragments/modals :: close-button" th:remove="tag"/>
         <h2 class="heading-medium no-margin">Allow partner to edit</h2>
-        <p><span th:text="${orgName}"></span> spend profile will be returned to them. They will be informed by email. If you have any specific requirements please contact them directly.</p>
+        <p><span class="heading-small no-margin"><th:block th:text="${orgName}" />'s</span> spend profile will be returned to them. They will be informed by email. If you have any specific requirements please contact them directly.</p>
         <hr />
         <form th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/incomplete(projectId=${model.projectId},organisationId=${model.organisationId})}" method="POST" >
             <div class="alignright-button">
@@ -489,16 +489,12 @@
         <hr/>
 
         <div class="grid-row extra-margin">
-            <form method="post" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${contributorsForm}" id="submit-add-collaborator-form">
-                <input type="hidden" class="form-control width-full" th:field="${contributorsForm.organisations[__${model.selectedOrgIndex}__].organisationId}" />
-                <input type="hidden" class="form-control width-full" th:field="${contributorsForm.organisations[__${model.selectedOrgIndex}__].organisationInviteId}" />
-                <div class="column-half">
-                    <button type="button" class="js-close buttonlink large">Cancel</button>
-                </div>
-                <div class="column-half alignright-button">
-                    <button class="button large" name="save_contributors" value="save_contributors" type="submit">Update organisation</button>
-                </div>
-            </form>
+            <div class="column-half">
+                <button type="button" class="js-close buttonlink large">Cancel</button>
+            </div>
+            <div class="column-half alignright-button">
+                <button class="button large" name="save_contributors" value="save_contributors" type="submit">Update organisation</button>
+            </div>
         </div>
     </div>
 </th:block>
@@ -512,17 +508,12 @@
         <p>This will remove all collaborators, and they will no longer be able to access this application. It will also delete the organisations financial details, and any assigned questions will be returned to you as the lead applicant.</p>
         <hr />
 
-        <form method="post" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${contributorsForm}" id="submit-delete-organisation-form">
-            <input type="hidden" class="form-control width-full" th:field="${contributorsForm.organisations[__${model.selectedOrgIndex}__].organisationId}" />
-            <input type="hidden" class="form-control width-full" th:field="${contributorsForm.organisations[__${model.selectedOrgIndex}__].organisationInviteId}" />
-
-            <div class="column-half">
-                <button type="button" class="js-close buttonlink large">Cancel</button>
-            </div>
-            <div class="column-half alignright-button">
-                <button class="button large" name="remove_person" value="remove_person" type="submit">Delete organisation</button>
-            </div>
-        </form>
+        <div class="column-half">
+            <button type="button" class="js-close buttonlink large">Cancel</button>
+        </div>
+        <div class="column-half alignright-button">
+            <button class="button large" name="remove_person" value="remove_person" type="submit">Delete organisation</button>
+        </div>
     </div>
 </th:block>
 
