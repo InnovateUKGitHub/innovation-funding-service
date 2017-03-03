@@ -2,7 +2,6 @@ package org.innovateuk.ifs.application;
 
 import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.junit.Before;
@@ -67,7 +66,7 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseUnitTest
 
     @Test
     public void testGetRequestWithExistingApplication() throws Exception {
-        when(userService.userHasApplicationForCompetition(loggedInUser.getId(), 1L)).thenReturn(ServiceResult.serviceSuccess(true));
+        when(userService.userHasApplicationForCompetition(loggedInUser.getId(), 1L)).thenReturn(true);
         mockMvc.perform(get("/application/create-authenticated/1"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("create-application/confirm-new-application"));
@@ -80,7 +79,7 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseUnitTest
         application.setId(99L);
 
         when(applicationService.createApplication(anyLong(), anyLong(), eq(""))).thenReturn(application);
-        when(userService.userHasApplicationForCompetition(loggedInUser.getId(), 1L)).thenReturn(ServiceResult.serviceSuccess(false));
+        when(userService.userHasApplicationForCompetition(loggedInUser.getId(), 1L)).thenReturn(false);
 
         mockMvc.perform(get("/application/create-authenticated/1"))
                 .andExpect(status().is3xxRedirection())

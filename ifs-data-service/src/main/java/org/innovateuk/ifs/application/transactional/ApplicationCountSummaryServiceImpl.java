@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.transactional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.application.domain.ApplicationStatistics;
 import org.innovateuk.ifs.application.mapper.ApplicationCountSummaryMapper;
 import org.innovateuk.ifs.application.mapper.ApplicationCountSummaryPageMapper;

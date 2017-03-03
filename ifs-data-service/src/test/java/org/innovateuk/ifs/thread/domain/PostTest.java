@@ -1,17 +1,24 @@
 package org.innovateuk.ifs.thread.domain;
 
 import org.innovateuk.ifs.file.domain.FileEntry;
+import org.innovateuk.ifs.threads.attachments.domain.Attachment;
 import org.innovateuk.ifs.threads.domain.Post;
 import org.innovateuk.ifs.user.domain.User;
 
+import static java.util.stream.IntStream.range;
 import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
+import static org.innovateuk.ifs.util.CollectionFunctions.nOf;
 import static org.junit.Assert.*;
+
+import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 
@@ -21,7 +28,7 @@ public class PostTest {
     private Long id;
     private User author;
     private String body;
-    private List<FileEntry> attachments;
+    private List<Attachment> attachments;
     private LocalDateTime createdOn;
 
     @Before
@@ -45,7 +52,7 @@ public class PostTest {
 
     @Test
     public void testItReturnsAttachmentInSameOrderAsDefined() {
-        attachments = newFileEntry().withMediaType("pdf").build(3);
+        attachments = nOf(3, new Attachment());
         Post currentPost = new Post(id, author, body, attachments, createdOn);
         assertEquals(currentPost.attachments(), attachments);
     }

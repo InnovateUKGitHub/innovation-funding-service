@@ -122,3 +122,6 @@ ifs-web-service.iws
 ifs-libs/*
 .gradletasknamecache
 EMAIL_VARIABLES_SENSITIVE.robot
+
+os-files-tmp/
+shib-init

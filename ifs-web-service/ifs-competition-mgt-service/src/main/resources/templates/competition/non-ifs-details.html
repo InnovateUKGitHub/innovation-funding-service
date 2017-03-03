@@ -17,7 +17,7 @@
         <h1 class="heading-xlarge">Non-IFS competition details</h1>
     </div>
 
-    <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="POST" th:object="${form}" >
+    <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="POST" th:object="${form}" novalidate="novalidate">
         <div class="error-summary" th:attr="aria-hidden=${!#fields.hasAnyErrors()}">
             <h2 class="heading-medium error-summary-heading">There was a problem submitting the Non-IFS competition.</h2>
 
@@ -274,7 +274,7 @@
                        type="text"
                        th:field="${form.url}"
                        required="required"
-                       th:attr="data-required-errormessage=#{validation.standard.title.required}" />
+                       th:attr="data-required-errormessage=#{validation.nonifs.detailsform.url.required}" />
             </div>
         </fieldset>
         <div class="extra-margin">

@@ -35,7 +35,7 @@ the user fills in the CS Initial details
     the user enters text to a text field                 css=#title  ${compTitle}
     the user selects the option from the drop-down menu  Programme  id=competitionTypeId
     the user selects the option from the drop-down menu  Emerging and enabling technologies  id=innovationSectorCategoryId
-    the user selects the option from the drop-down menu  Robotics and AS  css=select[id^=innovationAreaCategory]
+    the user selects the option from the drop-down menu  Robotics and Autonomous Systems  css=select[id^=innovationAreaCategory]
     the user enters text to a text field                 css=#openingDateDay  ${day}
     the user enters text to a text field                 css=#openingDateMonth  ${month}
     the user enters text to a text field                 css=#openingDateYear  ${year}
@@ -134,16 +134,6 @@ Change the open date of the Competition in the database to one day before
     [Arguments]  ${competition}
     ${yesterday} =  get yesterday
     execute sql string  UPDATE `${database_name}`.`milestone` INNER JOIN `${database_name}`.`competition` ON `${database_name}`.`milestone`.`competition_id` = `${database_name}`.`competition`.`id` SET `${database_name}`.`milestone`.`DATE`='${yesterday}' WHERE `${database_name}`.`competition`.`name`='${competition}' and `${database_name}`.`milestone`.`type` = 'OPEN_DATE';
-
-get comp id from comp title
-    [Arguments]  ${title}
-    ${result} =  query  SELECT `id` FROM `${database_name}`.`competition` WHERE `name`='${title}';
-    Log  ${result}
-    # the result of this query looks like ((13,),) so you need get the value array[0][0]
-    ${result} =  get from list  ${result}  0
-    ${competitionId} =  get from list  ${result}  0
-    Log  ${competitionId}
-    [Return]  ${competitionId}
 
 the internal user navigates to public content
     [Arguments]  ${comp}

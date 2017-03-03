@@ -9,8 +9,8 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupFinanceResource;
  */
 public interface CompetitionSetupFinanceService {
 
-	ServiceResult<Void> updateFinance(CompetitionSetupFinanceResource question);
+    ServiceResult<Void> updateFinance(CompetitionSetupFinanceResource question);
 
-	ServiceResult<CompetitionSetupFinanceResource> getByCompetitionId(Long competitionId);
+	CompetitionSetupFinanceResource getByCompetitionId(Long competitionId);
 
 }
