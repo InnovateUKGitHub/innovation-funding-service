@@ -108,17 +108,15 @@ the user has read only view once section is marked complete
 the user fills in Labour
     the user clicks the button/link            jQuery=#form-input-20 button:contains("Labour")
     the user should see the element            css=.labour-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input
-    run keyword and ignore error without screenshots  the user clicks the button/link  jQuery=.labour-costs-table:contains("Remove")
     the user enters text to a text field       jQuery=input[name^="labour-labourDaysYearly"][id$="labourDaysYearly"]    230
-    the user enters text to a text field       css=.labour-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    test
-    the user enters text to a text field       css=.labour-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    120000
-    the user enters text to a text field       css=.labour-costs-table tbody tr:nth-of-type(1) td:nth-of-type(4) input    100
+    the user enters text to a text field       jQuery=.labour-costs-table input[id$="role"]  test
+    the user enters text to a text field       jQuery=.labour-costs-table input[id$="labourGrossSalary"]  120000
+    the user enters text to a text field       jQuery=.labour-costs-table input[id$="labourDays"]  100
     the user moves focus to the element        jQuery=button:contains('Add another role')
     the user clicks the button/link            jQuery=button:contains('Add another role')
-    the user should see the element            css=.labour-costs-table tbody tr:nth-of-type(3) td:nth-of-type(4) input
-    the user enters text to a text field       css=.labour-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input    120000
-    the user enters text to a text field       css=.labour-costs-table tbody tr:nth-of-type(3) td:nth-of-type(4) input    100
-    the user enters text to a text field       css=.labour-costs-table tbody tr:nth-of-type(3) td:nth-of-type(1) input    test
+    the user enters text to a text field       jQuery=.labour-costs-table input[id$="role"]:last-of-type  anotherrole
+    the user enters text to a text field       jQuery=.labour-costs-table input[id$="labourGrossSalary"]:last-of-type  120000
+    the user enters text to a text field       jQuery=.labour-costs-table input[id$="labourDays"]:last-of-type  100
     wait For autosave
     the user clicks the button/link            jQuery=#form-input-20 button:contains("Labour")
 
@@ -222,3 +220,10 @@ the user should see all finance subsections incomplete
     the user should see the element  jQuery=li.grid-row.section:nth-of-type(1) img.section-status.assigned
     the user should see the element  jQuery=li.grid-row.section:nth-of-type(2) img.section-status.assigned
     the user should see the element  jQuery=h3:contains("Your funding")
+
+Remove previous rows
+    [Arguments]  ${element}
+    :FOR    ${i}    IN RANGE  10
+    \  Exit For Loop If  the user should not see the element  ${element}
+    \  the user clicks the button/link  ${element}
+    \  ${i} =  Set Variable  ${i + 1}
