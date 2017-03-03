@@ -46,7 +46,7 @@ Contribution to project and funding sought should not be negative number
     [Documentation]    INFUND-524
     ...
     ...    This test case still use the old application after the refactoring
-    [Tags]    Failing
+    [Tags]
     [Setup]  log in as a different user    &{lead_applicant_credentials}
     #TODO investigate intermittent failure
     When the user navigates to Your-finances page       Providing sustainable childcare
@@ -86,7 +86,7 @@ Red warning should show when the finances are incomplete
 
 Green check should show when the finances are complete
     [Documentation]    INFUND-927, INFUND-894, INFUND-446
-    [Tags]    Failing
+    [Tags]
     [Setup]
     #TODO   investigate intermmitent failure
     When the user navigates to Your-finances page    Robot test application
