@@ -7,10 +7,7 @@ import org.innovateuk.ifs.application.repository.QuestionRepository;
 import org.innovateuk.ifs.application.repository.SectionRepository;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
-import org.innovateuk.ifs.application.transactional.ApplicationFundingService;
-import org.innovateuk.ifs.application.transactional.ApplicationService;
-import org.innovateuk.ifs.application.transactional.QuestionService;
-import org.innovateuk.ifs.application.transactional.SectionService;
+import org.innovateuk.ifs.application.transactional.*;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.transactional.AssessmentService;
 import org.innovateuk.ifs.assessment.transactional.AssessorFormInputResponseService;
@@ -144,6 +141,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected FinanceCheckService financeCheckService;
     protected RejectionReasonService rejectionReasonService;
     protected UserProfileService userProfileService;
+    protected ApplicationInnovationAreaService applicationInnovationAreaService;
     protected AssessorFormInputResponseService assessorFormInputResponseService;
 
     public BaseDataBuilder(List<BiConsumer<Integer, T>> newActions, ServiceLocator serviceLocator) {
@@ -211,6 +209,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         this.contentEventRepository = serviceLocator.getBean(ContentEventRepository.class);
         this.contentGroupRepository = serviceLocator.getBean(ContentGroupRepository.class);
         this.assessorFormInputResponseService = serviceLocator.getBean(AssessorFormInputResponseService.class);
+        this.applicationInnovationAreaService = serviceLocator.getBean(ApplicationInnovationAreaService.class);
     }
 
     @Override

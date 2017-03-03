@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
 import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.category.mapper.ResearchCategoryMapper;
 import org.innovateuk.ifs.category.mapper.ResearchCategoryMapperImpl;
@@ -60,6 +61,17 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                 data.setApplication(created);
             });
         });
+    }
+
+    public ApplicationDataBuilder withInnovationArea(String innovationAreaName) {
+        return asLeadApplicant(data -> {
+                if (innovationAreaName.equals("NOT_APPLICABLE")) {
+                    applicationInnovationAreaService.setNoInnovationAreaApplies(data.getApplication().getId());
+                } else if (!innovationAreaName.isEmpty()) {
+                    InnovationArea innovationArea = innovationAreaRepository.findByName(innovationAreaName);
+                    applicationInnovationAreaService.setInnovationArea(data.getApplication().getId(), innovationArea.getId());
+                }
+            });
     }
 
     public ApplicationDataBuilder markApplicationDetailsComplete(boolean markAsComplete) {
