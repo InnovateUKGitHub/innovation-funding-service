@@ -269,7 +269,7 @@
 
 <!-- ========UPDATED TASK LIST - ======= -->
 
-<div th:fragment="prototype-task-question-labels">
+<th:block th:fragment="prototype-task-question-labels">
 	<div class="assign-container" th:classappend="${(status == 'assignedToYou' or status == 'reassignedToYou' ? 'action-required' : 'secondary-notification')}" th:unless="${status == 'complete'}">
 
     <th:block th:if="${status == 'assigned'}">
@@ -312,7 +312,7 @@
       <span>Completed</span>
     </div>
   </th:block>
-</div>
+</th:block>
 
 
 <!-- ================== Application progress snippet  =========================== -->

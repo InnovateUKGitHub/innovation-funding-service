@@ -34,7 +34,11 @@
   </div>
 
     <th:block th:insert="project/financecheck/fragments/finance :: project-finance-overview(overview=${model.financeCheckSummaryResource})" />
-  <h3 class="heading-medium">Progress</h3>
+    <th:block th:with="showResearchParticipation=${true},
+                maxResearchPercentage=${model.financeCheckSummaryResource.competitionMaximumResearchPercentage},
+                researchParticipationPercentage=${model.financeCheckSummaryResource.researchParticipationPercentage}"
+              th:insert="project/financecheck/fragments/finance :: research_participation" />
+    <h3 class="heading-medium">Progress</h3>
   <table class="table-progress extra-margin-bottom">
       <thead>
         <tr>

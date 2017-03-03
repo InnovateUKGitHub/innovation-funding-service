@@ -152,8 +152,13 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         String spendProfileGeneratedBy = spendProfile.map(p -> p.getGeneratedBy().getName()).orElse(null);
         LocalDate spendProfileGeneratedDate = spendProfile.map(p -> LocalDate.from(p.getGeneratedDate().toInstant().atOffset(ZoneOffset.UTC))).orElse(null);
 
+        ServiceResult<Double> researchParticipationPercentage = financeRowService.getResearchParticipationPercentage(application.getId());
+        BigDecimal researchParticipationPercentageValue = getResearchParticipationPercentage(researchParticipationPercentage);
+
+        BigDecimal competitionMaximumResearchPercentage = BigDecimal.valueOf(competition.getMaxResearchRatio());
+
         return serviceSuccess(new FinanceCheckSummaryResource(overviewResource, competition.getId(), competition.getName(), spendProfile.isPresent(), getPartnerStatuses(partnerOrganisations,
-                projectId), financeChecksAllApproved, spendProfileGeneratedBy, spendProfileGeneratedDate));
+                projectId), financeChecksAllApproved, spendProfileGeneratedBy, spendProfileGeneratedDate, researchParticipationPercentageValue, competitionMaximumResearchPercentage));
     }
 
     @Override
@@ -372,5 +377,13 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
             }
         }
         return serviceSuccess();
+    }
+
+    private BigDecimal getResearchParticipationPercentage(ServiceResult<Double> researchParticipationPercentage) {
+        BigDecimal researchParticipationPercentageValue = BigDecimal.ZERO;
+        if (researchParticipationPercentage.isSuccess() && researchParticipationPercentage.getSuccessObject() != null) {
+            researchParticipationPercentageValue = BigDecimal.valueOf(researchParticipationPercentage.getSuccessObject());
+        }
+        return researchParticipationPercentageValue;
     }
 }

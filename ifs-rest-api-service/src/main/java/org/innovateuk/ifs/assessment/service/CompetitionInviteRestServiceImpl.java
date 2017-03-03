@@ -5,8 +5,10 @@ import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.resource.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
@@ -50,8 +52,20 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
     }
 
     @Override
-    public RestResult<List<AvailableAssessorResource>> getAvailableAssessors(long competitionId) {
-        return getWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "getAvailableAssessors", competitionId), availableAssessorResourceListType());
+    public RestResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, int page, Optional<Long> innovationArea) {
+        String url = format("%s/%s/%s", competitionInviteRestUrl, "getAvailableAssessors", competitionId);
+        String filteredUrl = addAvailableAssessorsQueryParams(url, page, innovationArea);
+
+        return getWithRestResult(filteredUrl, AvailableAssessorPageResource.class);
+    }
+
+    private String addAvailableAssessorsQueryParams(String url, int page, Optional<Long> innovationArea) {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromPath(url);
+
+        builder.queryParam("page", page);
+        innovationArea.ifPresent(innovationAreaId -> builder.queryParam("innovationArea", innovationAreaId));
+
+        return builder.toUriString();
     }
 
     @Override
