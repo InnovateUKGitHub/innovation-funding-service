@@ -272,7 +272,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                 .getAssessorsByCompetitionAndInnovationAreaAndStatusAndContract(
                         competitionId,
                         innovationArea.orElse(null),
-                        status.map(ParticipantStatus::getId).orElse(null),
+                        status.orElse(null),
                         contract.orElse(null),
                         pageable
                 );

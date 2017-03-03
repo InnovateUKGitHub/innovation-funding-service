@@ -33,7 +33,7 @@ public interface CompetitionParticipantRepository extends PagingAndSortingReposi
             "JOIN profile.innovationAreas innovationAreas " +
             "WHERE competitionParticipant.competition.id = :competitionId " +
             "AND competitionParticipant.role = 'ASSESSOR' " +
-            "AND (:statusId IS NULL OR competitionParticipant.status.id = :statusId) " +
+            "AND (:status IS NULL OR competitionParticipant.status = :status) " +
             "AND (:innovationAreaId IS NULL OR innovationAreas.category.id = :innovationAreaId) " +
             "AND (:isCompliant IS NULL OR (:isCompliant = true AND (" +
             "   EXISTS(" +
@@ -46,7 +46,7 @@ public interface CompetitionParticipantRepository extends PagingAndSortingReposi
             ")))")
     Page<CompetitionParticipant> getAssessorsByCompetitionAndInnovationAreaAndStatusAndContract(@Param("competitionId") long competitionId,
                                                                                                 @Param("innovationAreaId") Long innovationAreaId,
-                                                                                                @Param("statusId") Long statusId,
+                                                                                                @Param("status") ParticipantStatus status,
                                                                                                 @Param("isCompliant") Boolean isCompliant,
                                                                                                 Pageable pageable);
 
