@@ -152,7 +152,7 @@ Invite and accept the invitation
     And the user enters text to a text field    id=addressForm.selectedPostcode.county    Poppleshire
     And the user enters text to a text field    id=addressForm.selectedPostcode.postcode    POPPS123
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
-    And the user clicks the button/link    jQuery=.button:contains("Save")
+    And the user clicks the button/link    jQuery=.button:contains("Confirm and continue")
     And the user fills the create account form    Arsene    Wenger
     And the user reads his email and clicks the link    ${test_mailbox_one}+academictest@gmail.com    Please verify your email address    Verify account
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
@@ -206,7 +206,7 @@ invite a registered user
     the user clicks the button/link    LINK=INNOVATE LTD
     the user selects the checkbox    address-same
     the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
-    the user clicks the button/link    jQuery=.button:contains("Save")
+    the user clicks the button/link    jQuery=.button:contains("Confirm and continue")
     the user enters the details and clicks the create account    ${EMAIL_LEAD}
     the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
     the user reads his email and clicks the link    ${EMAIL_LEAD}    Please verify your email address    If you did not request an account with us
