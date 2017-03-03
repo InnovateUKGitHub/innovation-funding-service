@@ -33,9 +33,7 @@
             </div>
 
             <th:block th:each="organisation : ${model.organisations}">
-                <h2 class="heading-medium">
-                    <th:block th:text="${organisation.lead} ? ${organisation.name} + ', Lead organisation' : ${organisation.name}"></th:block>
-                </h2>
+                <h2 class="heading-medium" th:text="${organisation.lead} ? ${organisation.name} + ', Lead organisation' : ${organisation.name}">Empire Ltd, Lead organisation</h2>
 
                 <table class="table-overflow">
                     <thead>

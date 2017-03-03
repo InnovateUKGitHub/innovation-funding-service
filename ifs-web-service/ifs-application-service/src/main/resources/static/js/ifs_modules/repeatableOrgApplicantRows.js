@@ -21,9 +21,9 @@ IFS.application.repeatableOrgApplicantRows = (function () {
     addRow: function (el) {
       var newRow
       var target = jQuery(el).attr('data-repeatable-rowcontainer')
-      var uniqueRowId = jQuery(target).children().length || 0
-      if (jQuery(el).attr('name') === 'add_person') {
-        newRow = jQuery('<tr>' +
+      var uniqueRowId = jQuery(target).children('.repeatable-row').length || 0
+      if (jQuery(el).attr('name') === 'addApplicant') {
+        newRow = jQuery('<tr class="repeatable-row">' +
           '<td class="form-group">' +
           '<label for="applicants' + uniqueRowId + '.name"><span class="visually-hidden">Applicant name</span></label>' +
           '<input class="form-control width-full" type="text" ' +
@@ -44,7 +44,7 @@ IFS.application.repeatableOrgApplicantRows = (function () {
           '</td>' +
           '</tr>')
       } else {
-        newRow = jQuery('<tr>' +
+        newRow = jQuery('<tr class="repeatable-row">' +
           '<td class="form-group">' +
           '<label for="applicants' + uniqueRowId + '.name"><span class="visually-hidden">Applicant name</span></label>' +
           '<input class="form-control width-full" type="text" ' +
@@ -77,7 +77,7 @@ IFS.application.repeatableOrgApplicantRows = (function () {
       // must remove row before getting row information to correctly count remaining rows
       $element.closest('tr').remove()
 
-      rows = jQuery(rowParent).children()
+      rows = jQuery(rowParent).children('.repeatable-row')
 
       // re-number rows to ensure no empty/missing data is created server-side
       jQuery(rows).each(function (rowIndex) {

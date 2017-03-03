@@ -54,7 +54,7 @@ public class ApplicationTeamAddOrganisationController {
     @Autowired
     private ApplicationTeamAddOrganisationModelPopulator applicationTeamAddOrganisationModelPopulator;
 
-    @RequestMapping(value = "/addOrganisation", method = RequestMethod.GET)
+    @GetMapping(value = "/addOrganisation")
     public String getAddOrganisation(Model model,
                                      @PathVariable("applicationId") long applicationId,
                                      @ModelAttribute("loggedInUser") UserResource loggedInUser,
@@ -69,7 +69,7 @@ public class ApplicationTeamAddOrganisationController {
         return doViewAddOrganisation(model, applicationResource);
     }
 
-    @RequestMapping(value = "/addOrganisation", method = RequestMethod.POST)
+    @PostMapping(value = "/addOrganisation")
     public String submitAddOrganisation(Model model,
                                         @PathVariable("applicationId") long applicationId,
                                         @ModelAttribute("loggedInUser") UserResource loggedInUser,
@@ -91,7 +91,7 @@ public class ApplicationTeamAddOrganisationController {
         });
     }
 
-    @RequestMapping(path = "/addOrganisation", params = {"addApplicant"}, method = RequestMethod.POST)
+    @PostMapping(value = "/addOrganisation", params = {"addApplicant"})
     public String addApplicant(Model model,
                                @PathVariable("applicationId") long applicationId,
                                @ModelAttribute("loggedInUser") UserResource loggedInUser,
@@ -102,7 +102,7 @@ public class ApplicationTeamAddOrganisationController {
         return doViewAddOrganisation(model, applicationResource);
     }
 
-    @RequestMapping(path = "/addOrganisation", params = {"removeApplicant"}, method = RequestMethod.POST)
+    @PostMapping(value = "/addOrganisation", params = {"removeApplicant"})
     public String removeApplicant(Model model,
                                   @PathVariable("applicationId") long applicationId,
                                   @ModelAttribute("loggedInUser") UserResource loggedInUser,
@@ -116,7 +116,7 @@ public class ApplicationTeamAddOrganisationController {
 
     private void checkUserIsLeadApplicant(ApplicationResource applicationResource, long loggedInUserId) {
         if (loggedInUserId != getLeadApplicantId(applicationResource)) {
-            throw new ForbiddenActionException("Unable to assign Monitoring Officers until the Project Details have been submitted");
+            throw new ForbiddenActionException("User must be Lead Applicant");
         }
     }
 
