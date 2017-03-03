@@ -158,7 +158,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         OrganisationResource expectedOrganisation = organisationsMap.get("Ludlow");
         List<ApplicationTeamManagementApplicantRowViewModel> expectedApplicants = asList(
                 new ApplicationTeamManagementApplicantRowViewModel(applicationInviteId1,"Jessica Doe", "jessica.doe@ludlow.com", false, false, false),
-                new ApplicationTeamManagementApplicantRowViewModel(applicationInviteId2,"Ryan Dell", "ryan.dell@ludlow.com", false, true, true));
+                new ApplicationTeamManagementApplicantRowViewModel(applicationInviteId2,"Ryan Dell", "ryan.dell@ludlow.com", false, true, false));
 
         ApplicationTeamManagementViewModel expectedViewModel = new ApplicationTeamManagementViewModel(
                 applicationResource.getId(),
