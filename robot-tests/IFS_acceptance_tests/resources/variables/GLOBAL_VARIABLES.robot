@@ -6,6 +6,7 @@ ${SERVER_BASE}    ifs-local-dev
 ${PROTOCOL}       https://
 ${SERVER}         ${PROTOCOL}${SERVER_BASE}
 ${RUNNING_ON_DEV}    ${EMPTY}
+${SAUCELABS_RUN}    1
 ${LOGIN_URL}      ${SERVER}/
 ${frontDoor}  ${server}/competition/search
 ${LOGGED_OUT_URL_FRAGMENT}    idp/profile/SAML2/Redirect/SSO
@@ -68,6 +69,7 @@ ${IN_ASSESSMENT_APPLICATION_5_LEAD_PARTNER_EMAIL}    paula.fuller@example.com
 ${IN_ASSESSMENT_APPLICATION_5_TITLE}    Products and Services Personalised
 ${INFORM_COMPETITION_NAME}    Integrated delivery programme - low carbon vehicles
 ${INFORM_APPLICATION_1_PROJECT}    4
+${NON_IFS_COMPETITION_NAME}     Transforming big data
 ${STEVE_SMITH_ID}    55
 ${DASHBOARD_URL}    ${SERVER}/applicant/dashboard
 ${SUMMARY_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1}/summary
@@ -133,3 +135,5 @@ ${database_port}    3306
 ${CLOSED_COMPETITION_NAME}    Machine learning for transport infrastructure
 ${UPCOMING_COMPETITION_TO_ASSESS_NAME}    Home and industrial efficiency programme
 ${UPCOMING_COMPETITION_TO_ASSESS_ID}    11
+${CURRENTLY_WAITING_UNTIL}      false
+

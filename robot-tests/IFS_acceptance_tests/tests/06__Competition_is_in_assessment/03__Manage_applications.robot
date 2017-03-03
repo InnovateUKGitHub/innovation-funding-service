@@ -55,6 +55,7 @@ View the available assessors
     [Documentation]    INFUND-7233\\
     [Tags]
     Then the user should see the element    jQuery=.column-two-thirds:contains("Assessors")
+    And the user clicks the button/link    jQuery=.pagination-label:contains(Next)
     And the available assessors information is correct
 
 View the assigned list
@@ -73,6 +74,7 @@ Remove an assigned user (Not notified)
     Given the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
     And the user clicks the button/link    jQuery=tr:nth-child(1) a:contains("Remove")
     And the user clicks the button/link    jQuery=button:contains("Remove assessor")
+    And the user clicks the button/link    jQuery=.pagination-label:contains(Next)
     And the available assessors information is correct
 
 Notify an assigned user
