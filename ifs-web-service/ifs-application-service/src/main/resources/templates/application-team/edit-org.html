@@ -6,7 +6,6 @@
 
     <body class="app-org-invite" th:with="context='applicant'">
         <th:block th:insert="fragments/modals :: modal-overlay" />
-        <th:block th:insert="fragments/modals :: modal-submit-remove-collaborator" />
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
@@ -50,12 +49,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="applicant, applicantStat : ${model.applicants}">
+                        <tr th:each="applicant, applicantStat : ${model.applicants}" th:unless="${#sets.contains(form.markedForRemoval, applicant.applicationInviteId)}">
                             <td th:text="${applicant.name}">Steve Smith</td>
                             <td th:text="${applicant.email}">steve.smith@empire.com</td>
                             <td th:text="${applicant.lead} ? 'Lead' : (${applicant.pending} ? 'Pending' : '')">Lead</td>
                             <td class="alignright">
-                                <button th:if="${applicant.removable}" class="buttonlink" type="submit" name="removeApplicant">Remove</button>
+                                <button th:if="${applicant.removable}" class="buttonlink" th:value="${applicant.applicationInviteId}" name="markForRemoval" type="submit">Remove</button>
                             </td>
                         </tr>
 
@@ -119,11 +118,13 @@
                 <p class="extra-margin">Updating the organisation will notify applicants of changes to their position on the project.</p>
 
                 <p class="extra-margin">
-                    <a th:href="@{/application/{applicationId}/team/update(applicationId=${model.applicationId})}" data-js-modal="modal-update-organisation" class="button">Update organisation</a>
+                    <a href="#" data-js-modal="modal-update-organisation" class="button">Update organisation</a>
                     <a th:href="@{/application/{applicationId}/team(applicationId=${model.applicationId})}" class="button button-clear">Cancel</a>
                 </p>
 
                 <th:block th:insert="fragments/modals :: modal-update-organisation" />
+
+                <input type="hidden" th:field="*{markedForRemoval}" />
             </form>
 
             <th:block th:insert="fragments/layout :: main-content-end" />
