@@ -28,14 +28,9 @@ public class SendNotificationsModelPopulator {
 
     public SendNotificationsViewModel populate(long competitionId, List<Long> applicationIds){
 
-        // TODO: Replace these lines with a new call to 'getApplicationsByIds' the ApplicationService or ApplicationSummaryService
-        // List<ApplicationSummaryResource> filteredApplications = applicationSummaryService.findByIds(application_ids);
+        ApplicationSummaryPageResource pagedApplications = applicationSummaryService.findByCompetitionId(competitionId, null, null, null, null);
 
-        ApplicationSummaryPageResource results = applicationSummaryService.findByCompetitionId(competitionId, null, null, null, null);
-
-        List<ApplicationSummaryResource> applications = results.getContent();
-        //Temporary: filter results down to only selected applications, listed in applicationIds
-        List<ApplicationSummaryResource> filteredApplications  = applications.stream()
+        List<ApplicationSummaryResource> filteredApplications = pagedApplications.getContent().stream()
                 .filter(application -> applicationIds.contains(application.getId()) )
                 .collect(Collectors.toList());
 
