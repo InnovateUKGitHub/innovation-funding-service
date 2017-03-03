@@ -108,6 +108,7 @@ the user has read only view once section is marked complete
 the user fills in Labour
     the user clicks the button/link            jQuery=#form-input-20 button:contains("Labour")
     the user should see the element            css=.labour-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input
+    remove previous rows                       jQuery=.labour-costs-table button:contains("Remove")
     the user enters text to a text field       jQuery=input[name^="labour-labourDaysYearly"][id$="labourDaysYearly"]    230
     the user enters large text to a text field     jQuery=.labour-costs-table input[id$="labourGrossSalary"]  120000
     the user enters text to a text field       jQuery=.labour-costs-table input[id$="role"]  test
