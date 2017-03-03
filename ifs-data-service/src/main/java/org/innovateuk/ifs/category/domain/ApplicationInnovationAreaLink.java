@@ -18,9 +18,7 @@ public class ApplicationInnovationAreaLink extends CategoryLink<Application, Inn
     @JoinColumn(name = "class_pk", referencedColumnName = "id")
     private Application application;
 
-    ApplicationInnovationAreaLink() {
-        // default constructor
-    }
+    ApplicationInnovationAreaLink() { }
 
     public ApplicationInnovationAreaLink(Application application, InnovationArea category) {
         super(category);

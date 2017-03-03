@@ -322,9 +322,8 @@ public class Application implements ProcessActivity {
         if(innovationArea!=null) {
             return innovationArea.getCategory();
         }
-        else {
-            return null;
-        }
+
+        return null;
     }
 
     public void setInnovationArea(InnovationArea newInnovationArea) {

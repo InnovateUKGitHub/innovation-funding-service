@@ -33,7 +33,7 @@ Guest user can filter competitions by Innovation area
     [Documentation]  INFUND-6923
     [Tags]  HappyPath
     [Setup]  the user navigates to the page  ${frontDoor}
-    When the user selects the option from the drop-down menu  Cyber Security  id=innovation-area
+    When the user selects the option from the drop-down menu  Space technology  id=innovation-area
     And the user clicks the button/link                       jQuery=button:contains("Update results")
     Then the user should see the element                      jQuery=a:contains("Transforming big data")
     And the user should not see the element                   jQuery=a:contains("Home and industrial efficiency programme")

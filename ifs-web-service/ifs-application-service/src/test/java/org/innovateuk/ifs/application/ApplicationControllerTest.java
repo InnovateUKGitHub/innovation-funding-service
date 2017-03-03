@@ -42,6 +42,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.google.common.collect.Sets.newHashSet;
+import static org.innovateuk.ifs.application.ApplicationController.APPLICATION_FEEDBACK_SUMMARY_FEATURE_ENABLED;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -299,20 +300,37 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(assessorFormInputResponseRestService.getApplicationAssessmentAggregate(app.getId()))
                 .thenReturn(restSuccess(new ApplicationAssessmentAggregateResource(5,4)));
 
-        mockMvc.perform(get("/application/" + app.getId()+"/summary"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("application-feedback-summary"))
-                .andExpect(model().attribute("currentApplication", app))
-                .andExpect(model().attribute("currentCompetition",  competitionService.getById(app.getCompetition())))
-                .andExpect(model().attribute("leadOrganisation", organisations.get(0)))
-                .andExpect(model().attribute("applicationOrganisations", Matchers.hasSize(application1Organisations.size())))
-                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(application1Organisations.get(0))))
-                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(application1Organisations.get(1))))
-                .andExpect(model().attribute("responses", formInputsToFormInputResponses))
-                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(0)))
-                .andExpect(model().attribute("pendingOrganisationNames", Matchers.hasSize(0)))
-                .andExpect(model().attribute("scores", new ApplicationAssessmentAggregateResource(5,4)))
-                .andExpect(model().attribute("rsCategoryId", app.getResearchCategories().stream().findFirst().get().getId()));
+        if (APPLICATION_FEEDBACK_SUMMARY_FEATURE_ENABLED) {
+            mockMvc.perform(get("/application/" + app.getId() + "/summary"))
+                    .andExpect(status().isOk())
+                    .andExpect(view().name("application-feedback-summary"))
+                    .andExpect(model().attribute("currentApplication", app))
+                    .andExpect(model().attribute("currentCompetition", competitionService.getById(app.getCompetition())))
+                    .andExpect(model().attribute("leadOrganisation", organisations.get(0)))
+                    .andExpect(model().attribute("applicationOrganisations", Matchers.hasSize(application1Organisations.size())))
+                    .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(application1Organisations.get(0))))
+                    .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(application1Organisations.get(1))))
+                    .andExpect(model().attribute("responses", formInputsToFormInputResponses))
+                    .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(0)))
+                    .andExpect(model().attribute("pendingOrganisationNames", Matchers.hasSize(0)))
+                    .andExpect(model().attribute("scores", new ApplicationAssessmentAggregateResource(5, 4)))
+                    .andExpect(model().attribute("rsCategoryId", app.getResearchCategories().stream().findFirst().get().getId()));
+        }
+        else {
+            mockMvc.perform(get("/application/" + app.getId()+"/summary"))
+                    .andExpect(status().isOk())
+                    .andExpect(view().name("application-summary"))
+                    .andExpect(model().attribute("currentApplication", app))
+                    .andExpect(model().attribute("currentCompetition",  competitionService.getById(app.getCompetition())))
+                    .andExpect(model().attribute("leadOrganisation", organisations.get(0)))
+                    .andExpect(model().attribute("applicationOrganisations", Matchers.hasSize(application1Organisations.size())))
+                    .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(application1Organisations.get(0))))
+                    .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(application1Organisations.get(1))))
+                    .andExpect(model().attribute("responses", formInputsToFormInputResponses))
+                    .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(0)))
+                    .andExpect(model().attribute("pendingOrganisationNames", Matchers.hasSize(0)))
+                    .andExpect(model().attribute("rsCategoryId", app.getResearchCategories().stream().findFirst().get().getId()));
+        }
     }
 
     @Test

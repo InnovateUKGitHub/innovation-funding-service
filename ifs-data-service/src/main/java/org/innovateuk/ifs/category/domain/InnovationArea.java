@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.category.domain;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -38,18 +41,22 @@ public class InnovationArea extends Category {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+
         if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
 
         InnovationArea that = (InnovationArea) o;
 
-        return sector != null ? sector.equals(that.sector) : that.sector == null;
+        return new EqualsBuilder()
+                .appendSuper(super.equals(o))
+                .append(sector, that.sector)
+                .isEquals();
     }
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (sector != null ? sector.hashCode() : 0);
-        return result;
+        return new HashCodeBuilder(17, 37)
+                .appendSuper(super.hashCode())
+                .append(sector)
+                .toHashCode();
     }
 }
