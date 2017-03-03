@@ -287,7 +287,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Long projectId = 123L;
         Long applicationId = 456L;
 
-        Competition competition = newCompetition().build();
+        Competition competition = newCompetition().withMaxResearchRatio(2).build();
         Application application = newApplication().withId(applicationId).withCompetition(competition).build();
         Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).build();
 
@@ -345,6 +345,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(projectFinanceQueriesService.findAll(234L)).thenReturn(serviceSuccess(Arrays.asList(queryResource1)));
         when(projectFinanceQueriesService.findAll(345L)).thenReturn(serviceSuccess(new ArrayList<>()));
         when(projectFinanceQueriesService.findAll(456L)).thenReturn(serviceSuccess(Arrays.asList(queryResource2)));
+        when(financeRowServiceMock.getResearchParticipationPercentage(applicationId)).thenReturn(serviceSuccess(Double.valueOf(3.0)));
         ServiceResult<FinanceCheckSummaryResource> result = service.getFinanceCheckSummary(projectId);
         assertTrue(result.isSuccess());
 
@@ -366,9 +367,192 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         assertEquals(Viability.REVIEW, organisation3Results.getViability());
         assertEquals(viability3.getViabilityRagStatus(), organisation3Results.getViabilityRagStatus());
         assertFalse(organisation3Results.isAwaitingResponse());
+
+        assertEquals(BigDecimal.valueOf(2), summary.getCompetitionMaximumResearchPercentage());
+        assertEquals(BigDecimal.valueOf(3.0), summary.getResearchParticipationPercentage());
     }
 
+    @Test
+    public void testGetFinanceCheckSummaryNoResearch(){
 
+        Long projectId = 123L;
+        Long applicationId = 456L;
+
+        Competition competition = newCompetition().withMaxResearchRatio(2).build();
+        Application application = newApplication().withId(applicationId).withCompetition(competition).build();
+        Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).build();
+
+        Organisation[] organisations = newOrganisation().
+                withOrganisationType(OrganisationTypeEnum.BUSINESS, OrganisationTypeEnum.ACADEMIC, OrganisationTypeEnum.BUSINESS).
+                buildArray(3, Organisation.class);
+
+        List<PartnerOrganisation> partnerOrganisations = newPartnerOrganisation().
+                withProject(project).
+                withOrganisation(organisations).
+                build(3);
+
+        User projectFinanceUser = newUser().withFirstName("Project").withLastName("Finance").build();
+        Optional<SpendProfile> spendProfile = Optional.of(newSpendProfile().withGeneratedBy(projectFinanceUser).withGeneratedDate(new GregorianCalendar()).build());
+        List<ProjectFinanceResource> projectFinanceResourceList = newProjectFinanceResource().build(3);
+        ProjectTeamStatusResource projectTeamStatus = newProjectTeamStatusResource().build();
+
+        FinanceCheckProcess process = newFinanceCheckProcess().withModifiedDate(new GregorianCalendar()).build();
+        ActivityState pendingState = new ActivityState(PROJECT_SETUP_FINANCE_CHECKS, State.PENDING);
+        process.setActivityState(pendingState);
+        ProjectUserResource projectUser = newProjectUserResource().build();
+        UserResource user = newUserResource().build();
+        ViabilityResource viability1 = new ViabilityResource(Viability.APPROVED, ViabilityRagStatus.AMBER);
+        ViabilityResource viability2 = new ViabilityResource(Viability.NOT_APPLICABLE, ViabilityRagStatus.UNSET);
+        ViabilityResource viability3 = new ViabilityResource(Viability.REVIEW, ViabilityRagStatus.UNSET);
+        EligibilityResource eligibility1 = new EligibilityResource(Eligibility.APPROVED, EligibilityRagStatus.AMBER);
+        EligibilityResource eligibility2 = new EligibilityResource(Eligibility.REVIEW, EligibilityRagStatus.UNSET);
+        EligibilityResource eligibility3 = new EligibilityResource(Eligibility.REVIEW, EligibilityRagStatus.UNSET);
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(partnerOrganisationRepositoryMock.findByProjectId(projectId)).thenReturn(partnerOrganisations);
+        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, partnerOrganisations.get(0).getOrganisation().getId())).thenReturn(spendProfile);
+        when(projectFinanceRowServiceMock.financeChecksTotals(project.getId())).thenReturn(serviceSuccess(projectFinanceResourceList));
+        when(projectServiceMock.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(serviceSuccess(projectTeamStatus));
+        when(financeCheckProcessRepository.findOneByTargetId(partnerOrganisations.get(0).getId())).thenReturn(process);
+        when(financeCheckProcessRepository.findOneByTargetId(partnerOrganisations.get(1).getId())).thenReturn(process);
+        when(financeCheckProcessRepository.findOneByTargetId(partnerOrganisations.get(2).getId())).thenReturn(process);
+        when(projectUserMapperMock.mapToResource(process.getParticipant())).thenReturn(projectUser);
+        when(userMapperMock.mapToResource(process.getInternalParticipant())).thenReturn(user);
+
+        when(projectFinanceServiceMock.getViability(new ProjectOrganisationCompositeId(projectId, organisations[0].getId()))).thenReturn(serviceSuccess(viability1));
+        when(projectFinanceServiceMock.getViability(new ProjectOrganisationCompositeId(projectId, organisations[1].getId()))).thenReturn(serviceSuccess(viability2));
+        when(projectFinanceServiceMock.getViability(new ProjectOrganisationCompositeId(projectId, organisations[2].getId()))).thenReturn(serviceSuccess(viability3));
+        when(projectFinanceServiceMock.getEligibility(new ProjectOrganisationCompositeId(projectId, organisations[0].getId()))).thenReturn(serviceSuccess(eligibility1));
+        when(projectFinanceServiceMock.getEligibility(new ProjectOrganisationCompositeId(projectId, organisations[1].getId()))).thenReturn(serviceSuccess(eligibility2));
+        when(projectFinanceServiceMock.getEligibility(new ProjectOrganisationCompositeId(projectId, organisations[2].getId()))).thenReturn(serviceSuccess(eligibility3));
+
+        ProjectFinanceResource[] projectFinanceResources = newProjectFinanceResource().withId(234L, 345L, 456L).withOrganisation(organisations[0].getId(), organisations[1].getId(), organisations[2].getId()).buildArray(3, ProjectFinanceResource.class);
+        when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisations[0].getId())).thenReturn(ServiceResult.serviceSuccess(projectFinanceResources[0]));
+        when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisations[1].getId())).thenReturn(ServiceResult.serviceSuccess(projectFinanceResources[1]));
+        when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisations[2].getId())).thenReturn(ServiceResult.serviceSuccess(projectFinanceResources[2]));
+
+        QueryResource queryResource1 = new QueryResource(12L, 23L, new ArrayList<>(), FinanceChecksSectionType.ELIGIBILITY, "Title" , true, LocalDateTime.now());
+        QueryResource queryResource2 = new QueryResource(12L, 23L, new ArrayList<>(), FinanceChecksSectionType.ELIGIBILITY, "Title" , false, LocalDateTime.now());
+        when(projectFinanceQueriesService.findAll(234L)).thenReturn(serviceSuccess(Arrays.asList(queryResource1)));
+        when(projectFinanceQueriesService.findAll(345L)).thenReturn(serviceSuccess(new ArrayList<>()));
+        when(projectFinanceQueriesService.findAll(456L)).thenReturn(serviceSuccess(Arrays.asList(queryResource2)));
+        when(financeRowServiceMock.getResearchParticipationPercentage(applicationId)).thenReturn(serviceFailure(GENERAL_FORBIDDEN));
+        ServiceResult<FinanceCheckSummaryResource> result = service.getFinanceCheckSummary(projectId);
+        assertTrue(result.isSuccess());
+
+        FinanceCheckSummaryResource summary = result.getSuccessObject();
+        List<FinanceCheckPartnerStatusResource> partnerStatuses = summary.getPartnerStatusResources();
+        assertEquals(3, partnerStatuses.size());
+
+        FinanceCheckPartnerStatusResource organisation1Results = partnerStatuses.get(0);
+        assertEquals(Viability.APPROVED, organisation1Results.getViability());
+        assertEquals(viability1.getViabilityRagStatus(), organisation1Results.getViabilityRagStatus());
+        assertTrue(organisation1Results.isAwaitingResponse());
+
+        FinanceCheckPartnerStatusResource organisation2Results = partnerStatuses.get(1);
+        assertEquals(Viability.NOT_APPLICABLE, organisation2Results.getViability());
+        assertEquals(ViabilityRagStatus.UNSET, organisation2Results.getViabilityRagStatus());
+        assertFalse(organisation2Results.isAwaitingResponse());
+
+        FinanceCheckPartnerStatusResource organisation3Results = partnerStatuses.get(2);
+        assertEquals(Viability.REVIEW, organisation3Results.getViability());
+        assertEquals(viability3.getViabilityRagStatus(), organisation3Results.getViabilityRagStatus());
+        assertFalse(organisation3Results.isAwaitingResponse());
+
+        assertEquals(BigDecimal.valueOf(2), summary.getCompetitionMaximumResearchPercentage());
+        assertEquals(BigDecimal.valueOf(0), summary.getResearchParticipationPercentage());
+    }
+
+    @Test
+    public void testGetFinanceCheckSummaryResearchNull(){
+
+        Long projectId = 123L;
+        Long applicationId = 456L;
+
+        Competition competition = newCompetition().withMaxResearchRatio(2).build();
+        Application application = newApplication().withId(applicationId).withCompetition(competition).build();
+        Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).build();
+
+        Organisation[] organisations = newOrganisation().
+                withOrganisationType(OrganisationTypeEnum.BUSINESS, OrganisationTypeEnum.ACADEMIC, OrganisationTypeEnum.BUSINESS).
+                buildArray(3, Organisation.class);
+
+        List<PartnerOrganisation> partnerOrganisations = newPartnerOrganisation().
+                withProject(project).
+                withOrganisation(organisations).
+                build(3);
+
+        User projectFinanceUser = newUser().withFirstName("Project").withLastName("Finance").build();
+        Optional<SpendProfile> spendProfile = Optional.of(newSpendProfile().withGeneratedBy(projectFinanceUser).withGeneratedDate(new GregorianCalendar()).build());
+        List<ProjectFinanceResource> projectFinanceResourceList = newProjectFinanceResource().build(3);
+        ProjectTeamStatusResource projectTeamStatus = newProjectTeamStatusResource().build();
+
+        FinanceCheckProcess process = newFinanceCheckProcess().withModifiedDate(new GregorianCalendar()).build();
+        ActivityState pendingState = new ActivityState(PROJECT_SETUP_FINANCE_CHECKS, State.PENDING);
+        process.setActivityState(pendingState);
+        ProjectUserResource projectUser = newProjectUserResource().build();
+        UserResource user = newUserResource().build();
+        ViabilityResource viability1 = new ViabilityResource(Viability.APPROVED, ViabilityRagStatus.AMBER);
+        ViabilityResource viability2 = new ViabilityResource(Viability.NOT_APPLICABLE, ViabilityRagStatus.UNSET);
+        ViabilityResource viability3 = new ViabilityResource(Viability.REVIEW, ViabilityRagStatus.UNSET);
+        EligibilityResource eligibility1 = new EligibilityResource(Eligibility.APPROVED, EligibilityRagStatus.AMBER);
+        EligibilityResource eligibility2 = new EligibilityResource(Eligibility.REVIEW, EligibilityRagStatus.UNSET);
+        EligibilityResource eligibility3 = new EligibilityResource(Eligibility.REVIEW, EligibilityRagStatus.UNSET);
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(partnerOrganisationRepositoryMock.findByProjectId(projectId)).thenReturn(partnerOrganisations);
+        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, partnerOrganisations.get(0).getOrganisation().getId())).thenReturn(spendProfile);
+        when(projectFinanceRowServiceMock.financeChecksTotals(project.getId())).thenReturn(serviceSuccess(projectFinanceResourceList));
+        when(projectServiceMock.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(serviceSuccess(projectTeamStatus));
+        when(financeCheckProcessRepository.findOneByTargetId(partnerOrganisations.get(0).getId())).thenReturn(process);
+        when(financeCheckProcessRepository.findOneByTargetId(partnerOrganisations.get(1).getId())).thenReturn(process);
+        when(financeCheckProcessRepository.findOneByTargetId(partnerOrganisations.get(2).getId())).thenReturn(process);
+        when(projectUserMapperMock.mapToResource(process.getParticipant())).thenReturn(projectUser);
+        when(userMapperMock.mapToResource(process.getInternalParticipant())).thenReturn(user);
+
+        when(projectFinanceServiceMock.getViability(new ProjectOrganisationCompositeId(projectId, organisations[0].getId()))).thenReturn(serviceSuccess(viability1));
+        when(projectFinanceServiceMock.getViability(new ProjectOrganisationCompositeId(projectId, organisations[1].getId()))).thenReturn(serviceSuccess(viability2));
+        when(projectFinanceServiceMock.getViability(new ProjectOrganisationCompositeId(projectId, organisations[2].getId()))).thenReturn(serviceSuccess(viability3));
+        when(projectFinanceServiceMock.getEligibility(new ProjectOrganisationCompositeId(projectId, organisations[0].getId()))).thenReturn(serviceSuccess(eligibility1));
+        when(projectFinanceServiceMock.getEligibility(new ProjectOrganisationCompositeId(projectId, organisations[1].getId()))).thenReturn(serviceSuccess(eligibility2));
+        when(projectFinanceServiceMock.getEligibility(new ProjectOrganisationCompositeId(projectId, organisations[2].getId()))).thenReturn(serviceSuccess(eligibility3));
+
+        ProjectFinanceResource[] projectFinanceResources = newProjectFinanceResource().withId(234L, 345L, 456L).withOrganisation(organisations[0].getId(), organisations[1].getId(), organisations[2].getId()).buildArray(3, ProjectFinanceResource.class);
+        when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisations[0].getId())).thenReturn(ServiceResult.serviceSuccess(projectFinanceResources[0]));
+        when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisations[1].getId())).thenReturn(ServiceResult.serviceSuccess(projectFinanceResources[1]));
+        when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisations[2].getId())).thenReturn(ServiceResult.serviceSuccess(projectFinanceResources[2]));
+
+        QueryResource queryResource1 = new QueryResource(12L, 23L, new ArrayList<>(), FinanceChecksSectionType.ELIGIBILITY, "Title" , true, LocalDateTime.now());
+        QueryResource queryResource2 = new QueryResource(12L, 23L, new ArrayList<>(), FinanceChecksSectionType.ELIGIBILITY, "Title" , false, LocalDateTime.now());
+        when(projectFinanceQueriesService.findAll(234L)).thenReturn(serviceSuccess(Arrays.asList(queryResource1)));
+        when(projectFinanceQueriesService.findAll(345L)).thenReturn(serviceSuccess(new ArrayList<>()));
+        when(projectFinanceQueriesService.findAll(456L)).thenReturn(serviceSuccess(Arrays.asList(queryResource2)));
+        when(financeRowServiceMock.getResearchParticipationPercentage(applicationId)).thenReturn(serviceSuccess(null));
+        ServiceResult<FinanceCheckSummaryResource> result = service.getFinanceCheckSummary(projectId);
+        assertTrue(result.isSuccess());
+
+        FinanceCheckSummaryResource summary = result.getSuccessObject();
+        List<FinanceCheckPartnerStatusResource> partnerStatuses = summary.getPartnerStatusResources();
+        assertEquals(3, partnerStatuses.size());
+
+        FinanceCheckPartnerStatusResource organisation1Results = partnerStatuses.get(0);
+        assertEquals(Viability.APPROVED, organisation1Results.getViability());
+        assertEquals(viability1.getViabilityRagStatus(), organisation1Results.getViabilityRagStatus());
+        assertTrue(organisation1Results.isAwaitingResponse());
+
+        FinanceCheckPartnerStatusResource organisation2Results = partnerStatuses.get(1);
+        assertEquals(Viability.NOT_APPLICABLE, organisation2Results.getViability());
+        assertEquals(ViabilityRagStatus.UNSET, organisation2Results.getViabilityRagStatus());
+        assertFalse(organisation2Results.isAwaitingResponse());
+
+        FinanceCheckPartnerStatusResource organisation3Results = partnerStatuses.get(2);
+        assertEquals(Viability.REVIEW, organisation3Results.getViability());
+        assertEquals(viability3.getViabilityRagStatus(), organisation3Results.getViabilityRagStatus());
+        assertFalse(organisation3Results.isAwaitingResponse());
+
+        assertEquals(BigDecimal.valueOf(2), summary.getCompetitionMaximumResearchPercentage());
+        assertEquals(BigDecimal.valueOf(0), summary.getResearchParticipationPercentage());
+    }
 
     @Test
     public void testGetFinanceCheckEligibility(){

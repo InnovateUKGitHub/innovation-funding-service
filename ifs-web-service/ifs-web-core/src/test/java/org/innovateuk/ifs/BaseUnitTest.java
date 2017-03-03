@@ -18,6 +18,7 @@ import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.bankdetails.BankDetailsService;
+import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -230,6 +231,10 @@ public class BaseUnitTest {
     public CompetitionKeyStatisticsRestService competitionKeyStatisticsRestServiceMock;
     @Mock
     public AssessorFormInputResponseRestService assessorFormInputResponseRestService;
+    @Mock
+    public ApplicationInnovationAreaRestService applicationInnovationAreaRestService;
+    @Mock
+    public CategoryRestService categoryRestServiceMock;
 
     @Spy
     @InjectMocks
