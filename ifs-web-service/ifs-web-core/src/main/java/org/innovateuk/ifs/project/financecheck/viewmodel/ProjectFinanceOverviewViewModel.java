@@ -17,6 +17,8 @@ public class ProjectFinanceOverviewViewModel {
     private BigDecimal grantAppliedFor;
     private BigDecimal otherPublicSectorFunding;
     private BigDecimal totalPercentageGrant;
+    private BigDecimal researchParticipationPercentage;
+    private BigDecimal competitionMaximumResearchPercentage;
 
     private ProjectFinanceOverviewViewModel() {}
 
@@ -29,6 +31,8 @@ public class ProjectFinanceOverviewViewModel {
         this.grantAppliedFor = overviewResource.getGrantAppliedFor();
         this.otherPublicSectorFunding = overviewResource.getOtherPublicSectorFunding();
         this.totalPercentageGrant = overviewResource.getTotalPercentageGrant();
+        this.researchParticipationPercentage = overviewResource.getResearchParticipationPercentage();
+        this.competitionMaximumResearchPercentage = overviewResource.getCompetitionMaximumResearchPercentage();
     }
 
     public Long getProjectId() {
@@ -93,5 +97,21 @@ public class ProjectFinanceOverviewViewModel {
 
     public void setTotalPercentageGrant(BigDecimal totalPercentageGrant) {
         this.totalPercentageGrant = totalPercentageGrant;
+    }
+
+    public BigDecimal getResearchParticipationPercentage() {
+        return researchParticipationPercentage;
+    }
+
+    public void setResearchParticipationPercentage(BigDecimal researchParticipationPercentage) {
+        this.researchParticipationPercentage = researchParticipationPercentage;
+    }
+
+    public BigDecimal getCompetitionMaximumResearchPercentage() {
+        return competitionMaximumResearchPercentage;
+    }
+
+    public void setCompetitionMaximumResearchPercentage(BigDecimal competitionMaximumResearchPercentage) {
+        this.competitionMaximumResearchPercentage = competitionMaximumResearchPercentage;
     }
 }

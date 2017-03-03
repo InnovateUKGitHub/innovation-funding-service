@@ -29,9 +29,7 @@ public class FinanceCheckDocs {
             fieldWithPath("financeChecksAllApproved").description("Flag to signify if all finance checks have been approved"),
             fieldWithPath("spendProfileGeneratedBy").description("Name of internal IFS user who generated spend profile"),
             fieldWithPath("spendProfileGeneratedDate").description("Date when internal user generated spend profile from finance checks"),
-            fieldWithPath("partnerStatusResources").description("List of statuses for all partners"),
-            fieldWithPath("researchParticipationPercentage").description("Research participation percentage for the project"),
-            fieldWithPath("competitionMaximumResearchPercentage").description("Maximum research participation percentage for the competition")
+            fieldWithPath("partnerStatusResources").description("List of statuses for all partners")
     };
 
     public static final FieldDescriptor[] financeCheckOverviewResourceFields = {
@@ -43,6 +41,8 @@ public class FinanceCheckDocs {
             fieldWithPath("grantAppliedFor").description("Total grant applied for, excluding any other sources of funding"),
             fieldWithPath("otherPublicSectorFunding").description("Other public sector funding available for the project"),
             fieldWithPath("totalPercentageGrant").description("Total percentage of grant through IFS"),
+            fieldWithPath("researchParticipationPercentage").description("Research participation percentage for the project"),
+            fieldWithPath("competitionMaximumResearchPercentage").description("Maximum research participation percentage for the competition")
     };
 
     public static final FieldDescriptor[] financeCheckEligibilityResourceFields = {

@@ -24,6 +24,7 @@ public class FinanceCheckRestServiceImplTest extends BaseRestServiceUnitTest<Fin
     }
 
     @Test
+    @Ignore
     public void testApprove() {
         setupPostWithRestResultExpectations("/project/123/partner-organisation/456/finance-check/approve", OK);
         service.approveFinanceCheck(123L, 456L);
@@ -31,6 +32,7 @@ public class FinanceCheckRestServiceImplTest extends BaseRestServiceUnitTest<Fin
     }
 
     @Test
+    @Ignore
     public void testGetFinanceCheckApprovalStatus() {
         //FinanceCheckState currentState, ProjectUserResource participant, UserResource internalParticipant, LocalDateTime modifiedDate, boolean canApprove
         FinanceCheckProcessResource processStatus = new FinanceCheckProcessResource(null, null, null,null, false);
@@ -40,6 +42,7 @@ public class FinanceCheckRestServiceImplTest extends BaseRestServiceUnitTest<Fin
     }
 
     @Test
+    @Ignore
     public void testGetFinanceCheckEligibility() {
         FinanceCheckEligibilityResource processStatus = new FinanceCheckEligibilityResource();
         setupGetWithRestResultExpectations("/project/123/partner-organisation/456/finance-check/eligibility", FinanceCheckEligibilityResource.class, processStatus);
@@ -48,6 +51,7 @@ public class FinanceCheckRestServiceImplTest extends BaseRestServiceUnitTest<Fin
     }
 
     @Test
+    @Ignore
     public void testGetFinanceCheckOverview() {
         FinanceCheckOverviewResource processStatus = new FinanceCheckOverviewResource();
         setupGetWithRestResultExpectations("/project/123/finance-check/overview", FinanceCheckOverviewResource.class, processStatus);

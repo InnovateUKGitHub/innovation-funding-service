@@ -12,12 +12,17 @@ public class FinanceCheckOverviewResource {
     private BigDecimal grantAppliedFor;
     private BigDecimal otherPublicSectorFunding;
     private BigDecimal totalPercentageGrant;
+    private BigDecimal researchParticipationPercentage;
+    private BigDecimal competitionMaximumResearchPercentage;
 
 
     public FinanceCheckOverviewResource() {
     }
 
-    public FinanceCheckOverviewResource(Long projectId, String projectName,LocalDate projectStartDate, int durationInMonths, BigDecimal totalProjectCost, BigDecimal grantAppliedFor, BigDecimal otherPublicSectorFunding, BigDecimal totalPercentageGrant) {
+    public FinanceCheckOverviewResource(Long projectId, String projectName,LocalDate projectStartDate,
+                                        int durationInMonths, BigDecimal totalProjectCost, BigDecimal grantAppliedFor,
+                                        BigDecimal otherPublicSectorFunding, BigDecimal totalPercentageGrant,
+                                        BigDecimal researchParticipationPercentage, BigDecimal competitionMaximumResearchPercentage) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.projectStartDate = projectStartDate;
@@ -26,6 +31,8 @@ public class FinanceCheckOverviewResource {
         this.grantAppliedFor = grantAppliedFor;
         this.otherPublicSectorFunding = otherPublicSectorFunding;
         this.totalPercentageGrant = totalPercentageGrant;
+        this.researchParticipationPercentage = researchParticipationPercentage;
+        this.competitionMaximumResearchPercentage = competitionMaximumResearchPercentage;
     }
 
     public Long getProjectId() {
@@ -90,5 +97,21 @@ public class FinanceCheckOverviewResource {
 
     public void setTotalPercentageGrant(BigDecimal totalPercentageGrant) {
         this.totalPercentageGrant = totalPercentageGrant;
+    }
+
+    public BigDecimal getResearchParticipationPercentage() {
+        return researchParticipationPercentage;
+    }
+
+    public void setResearchParticipationPercentage(BigDecimal researchParticipationPercentage) {
+        this.researchParticipationPercentage = researchParticipationPercentage;
+    }
+
+    public BigDecimal getCompetitionMaximumResearchPercentage() {
+        return competitionMaximumResearchPercentage;
+    }
+
+    public void setCompetitionMaximumResearchPercentage(BigDecimal competitionMaximumResearchPercentage) {
+        this.competitionMaximumResearchPercentage = competitionMaximumResearchPercentage;
     }
 }
