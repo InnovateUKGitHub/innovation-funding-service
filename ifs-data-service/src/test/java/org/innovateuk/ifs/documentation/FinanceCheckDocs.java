@@ -29,7 +29,9 @@ public class FinanceCheckDocs {
             fieldWithPath("financeChecksAllApproved").description("Flag to signify if all finance checks have been approved"),
             fieldWithPath("spendProfileGeneratedBy").description("Name of internal IFS user who generated spend profile"),
             fieldWithPath("spendProfileGeneratedDate").description("Date when internal user generated spend profile from finance checks"),
-            fieldWithPath("partnerStatusResources").description("List of statuses for all partners")
+            fieldWithPath("partnerStatusResources").description("List of statuses for all partners"),
+            fieldWithPath("researchParticipationPercentage").description("Research participation percentage for the project"),
+            fieldWithPath("competitionMaximumResearchPercentage").description("Maximum research participation percentage for the competition")
     };
 
     public static final FieldDescriptor[] financeCheckEligibilityResourceFields = {

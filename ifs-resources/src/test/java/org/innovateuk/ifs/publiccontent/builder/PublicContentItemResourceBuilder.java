@@ -41,6 +41,10 @@ public class PublicContentItemResourceBuilder extends BaseBuilder<PublicContentI
         return with(publicContentItem -> setField("nonIfsUrl", nonIfsUrl, publicContentItem));
     }
 
+    public PublicContentItemResourceBuilder withNonIfs(Boolean nonIfs) {
+        return with(publicContentItem -> setField("nonIfs", nonIfs, publicContentItem));
+    }
+
     @Override
     protected PublicContentItemResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, PublicContentItemResource>> actions) {
         return new PublicContentItemResourceBuilder(actions);
