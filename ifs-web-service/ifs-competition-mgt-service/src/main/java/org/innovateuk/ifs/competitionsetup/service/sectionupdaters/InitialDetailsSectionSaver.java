@@ -25,8 +25,9 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static java.util.Collections.singletonList;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -71,20 +72,13 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
                 competition.setName(initialDetailsForm.getTitle());
 
                 if (shouldTryToSaveStartDate(initialDetailsForm)) {
-                    try {
-                        LocalDateTime startDate = LocalDateTime.of(initialDetailsForm.getOpeningDateYear(),
-                                initialDetailsForm.getOpeningDateMonth(), initialDetailsForm.getOpeningDateDay(), 0, 0);
-                        competition.setStartDate(startDate);
+                    LocalDateTime startDate = LocalDateTime.of(initialDetailsForm.getOpeningDateYear(),
+                            initialDetailsForm.getOpeningDateMonth(), initialDetailsForm.getOpeningDateDay(), 0, 0);
+                    competition.setStartDate(startDate);
 
-                        List<Error> errors = saveOpeningDateAsMilestone(startDate, competition.getId(), initialDetailsForm.isMarkAsCompleteAction());
-                        if (!errors.isEmpty()) {
-                            return serviceFailure(errors);
-                        }
-
-                    } catch (Exception e) {
-                        LOG.error(e.getMessage());
-
-                        return serviceFailure(asList(fieldError(OPENINGDATE_FIELDNAME, null, "competition.setup.opening.date.not.able.to.save")));
+                    List<Error> errors = saveOpeningDateAsMilestone(startDate, competition.getId(), initialDetailsForm.isMarkAsCompleteAction());
+                    if (!errors.isEmpty()) {
+                        return serviceFailure(errors);
                     }
                 }
 
@@ -153,14 +147,18 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
 
         List<MilestoneResource> milestones = milestoneService.getAllMilestonesByCompetitionId(competitionId);
         if(milestones.isEmpty()) {
-            milestones = competitionSetupMilestoneService.createMilestonesForCompetition(competitionId);
+            milestones = competitionSetupMilestoneService.createMilestonesForCompetition(competitionId).getSuccessObjectOrThrowException();
         }
-        milestones.sort((c1, c2) -> c1.getType().compareTo(c2.getType()));
+        milestones.sort(Comparator.comparing(MilestoneResource::getType));
 
 		LinkedMap<String, MilestoneRowForm> milestoneEntryMap = new LinkedMap<>();
 		milestoneEntryMap.put(MilestoneType.OPEN_DATE.name(), milestoneEntry);
 
-		return competitionSetupMilestoneService.updateMilestonesForCompetition(milestones, milestoneEntryMap, competitionId);
+        ServiceResult<Void> result = competitionSetupMilestoneService.updateMilestonesForCompetition(milestones, milestoneEntryMap, competitionId);
+        if(result.isFailure()) {
+            return result.getErrors();
+        }
+		return emptyList();
 	}
 
     @Override

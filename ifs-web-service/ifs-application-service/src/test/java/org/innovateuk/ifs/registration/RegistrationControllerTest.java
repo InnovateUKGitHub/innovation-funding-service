@@ -3,15 +3,17 @@ package org.innovateuk.ifs.registration;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.exception.GeneralUnexpectedErrorException;
+import org.innovateuk.ifs.commons.error.exception.InvalidURLException;
+import org.innovateuk.ifs.commons.error.exception.RegistrationTokenExpiredException;
 import org.innovateuk.ifs.exception.ErrorControllerAdvice;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.invite.service.EthnicityRestService;
+import org.innovateuk.ifs.invite.service.InviteServiceImpl;
 import org.innovateuk.ifs.user.builder.EthnicityResourceBuilder;
 import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.Gender;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.invite.service.InviteServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,18 +29,19 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Optional;
 import java.util.UUID;
 
-import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VERIFICATION_TOKEN_NOT_FOUND;
-import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.user.resource.Title.Mr;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
@@ -87,9 +90,9 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
         registrationController.setValidator(new LocalValidatorFactoryBean());
 
-        when(userService.findUserByEmail(anyString())).thenReturn(restSuccess(new UserResource()));
-        when(userService.findUserByEmailForAnonymousUserFlow(anyString())).thenReturn(restSuccess(new UserResource()));
-        when(userService.createLeadApplicantForOrganisation(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong())).thenReturn(restSuccess(new UserResource()));
+        when(userService.findUserByEmail(anyString())).thenReturn(Optional.of(new UserResource()));
+        when(userService.findUserByEmailForAnonymousUserFlow(anyString())).thenReturn(Optional.of(new UserResource()));
+        when(userService.createUserForOrganisation(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong())).thenReturn(serviceSuccess(new UserResource()));
         when(ethnicityRestService.findAllActive()).thenReturn(restSuccess(asList(EthnicityResourceBuilder.newEthnicityResource().withId(1L).withDescription("Nerdy People").withName("IFS programmer").withPriority(1).build())));
 
         inviteHashCookie = new Cookie(InviteServiceImpl.INVITE_HASH, encryptor.encrypt(INVITE_HASH));
@@ -163,7 +166,6 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     @Test
     public void testVerifyEmail() throws Exception {
         final String hash = UUID.randomUUID().toString();
-        when(userService.verifyEmail(eq(hash))).thenReturn(restSuccess());
 
         mockMvc.perform(get("/registration/verify-email/" + hash))
                 .andExpect(status().is3xxRedirection())
@@ -173,7 +175,8 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     @Test
     public void testVerifyEmailInvalid() throws Exception {
         final String hash = UUID.randomUUID().toString();
-        when(userService.verifyEmail(eq(hash))).thenReturn(restFailure(new Error(USERS_EMAIL_VERIFICATION_TOKEN_NOT_FOUND)));
+
+        when(userService.verifyEmail(eq(hash))).thenThrow(new InvalidURLException(USERS_EMAIL_VERIFICATION_TOKEN_NOT_FOUND.getErrorKey(), null));
 
         mockMvc.perform(get("/registration/verify-email/" + hash))
                 .andExpect(status().isAlreadyReported())
@@ -183,7 +186,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
     @Test
     public void testVerifyEmailExpired() throws Exception {
         final String hash = UUID.randomUUID().toString();
-        when(userService.verifyEmail(eq(hash))).thenReturn(restFailure(new Error(USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED)));
+        when(userService.verifyEmail(eq(hash))).thenThrow(new RegistrationTokenExpiredException(USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED.getErrorKey(), null));
 
         mockMvc.perform(get("/registration/verify-email/" + hash))
                 .andExpect(status().isForbidden())
@@ -227,7 +230,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
         String email = "alreadyexistingemail@test.test";
 
         when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
-        when(userService.findUserByEmailForAnonymousUserFlow(email)).thenReturn(restSuccess(new UserResource()));
+        when(userService.findUserByEmailForAnonymousUserFlow(email)).thenReturn(Optional.of(new UserResource()));
 
         mockMvc.perform(post("/registration/register")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -324,10 +327,10 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
         when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
 
         String testEmailAddress = "tester@tester.com";
-        when(userService.findUserByEmailForAnonymousUserFlow(anyString())).thenReturn(restFailure(notFoundError(UserResource.class, testEmailAddress)));
+        when(userService.findUserByEmailForAnonymousUserFlow(anyString())).thenReturn(Optional.empty());
 
         Error error = Error.fieldError("password", "INVALID_PASSWORD", BAD_REQUEST.getReasonPhrase());
-        when(userService.createLeadApplicantForOrganisationWithCompetitionId(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyString(), anyLong(), anyLong())).thenReturn(restFailure(error));
+        when(userService.createLeadApplicantForOrganisationWithCompetitionId(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyString(), anyLong(), anyLong())).thenReturn(serviceFailure(error));
 
         mockMvc.perform(post("/registration/register")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -408,8 +411,8 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 userResource.getEthnicity(),
                 userResource.getDisability() != null ? userResource.getDisability().toString() : null,
                 1L,
-                null)).thenReturn(restSuccess(userResource));
-        when(userService.findUserByEmailForAnonymousUserFlow("test@test.test")).thenReturn(restFailure(notFoundError(UserResource.class, "test@test.test")));
+                null)).thenReturn(serviceSuccess(userResource));
+        when(userService.findUserByEmailForAnonymousUserFlow("test@test.test")).thenReturn(Optional.empty());
 
         mockMvc.perform(post("/registration/register")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -459,8 +462,8 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 userResource.getEthnicity(),
                 userResource.getDisability() != null ? userResource.getDisability().toString() : null,
                 1L,
-                null)).thenReturn(restSuccess(userResource));
-        when(userService.findUserByEmailForAnonymousUserFlow(eq("invited@email.com"))).thenReturn(restFailure(notFoundError(UserResource.class, "invited@email.com")));
+                null)).thenReturn(serviceSuccess(userResource));
+        when(userService.findUserByEmailForAnonymousUserFlow(eq("invited@email.com"))).thenReturn(Optional.empty());
         when(inviteRestService.acceptInvite(eq(INVITE_HASH), anyLong())).thenReturn(restSuccess());
 
         mockMvc.perform(post("/registration/register")
@@ -550,7 +553,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 userResource.getGender() != null ? userResource.getGender().toString() : null,
                 userResource.getEthnicity(),
                 userResource.getDisability() != null ? userResource.getDisability().toString() : null,
-                1L, null)).thenReturn(restFailure(error));
+                1L, null)).thenReturn(serviceFailure(error));
 
         mockMvc.perform(post("/registration/register")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
