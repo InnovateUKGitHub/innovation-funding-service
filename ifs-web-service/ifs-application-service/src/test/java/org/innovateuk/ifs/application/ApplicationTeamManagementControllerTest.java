@@ -5,9 +5,9 @@ import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.form.ApplicantInviteForm;
 import org.innovateuk.ifs.application.form.ApplicationTeamUpdateForm;
 import org.innovateuk.ifs.application.populator.ApplicationTeamManagementModelPopulator;
-import org.innovateuk.ifs.application.populator.ApplicationTeamModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.viewmodel.*;
+import org.innovateuk.ifs.application.viewmodel.ApplicationTeamManagementApplicantRowViewModel;
+import org.innovateuk.ifs.application.viewmodel.ApplicationTeamManagementViewModel;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.resource.InviteResultsResource;
@@ -29,12 +29,9 @@ import java.util.Map;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.application.constant.ApplicationStatusConstants.CREATED;
 import static org.innovateuk.ifs.application.constant.ApplicationStatusConstants.OPEN;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
@@ -44,11 +41,8 @@ import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProc
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -164,7 +158,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         OrganisationResource expectedOrganisation = organisationsMap.get("Ludlow");
         List<ApplicationTeamManagementApplicantRowViewModel> expectedApplicants = asList(
                 new ApplicationTeamManagementApplicantRowViewModel(applicationInviteId1,"Jessica Doe", "jessica.doe@ludlow.com", false, false, false),
-                new ApplicationTeamManagementApplicantRowViewModel(applicationInviteId2,"Ryan Dell", "ryan.dell@ludlow.com", false, true, false));
+                new ApplicationTeamManagementApplicantRowViewModel(applicationInviteId2,"Ryan Dell", "ryan.dell@ludlow.com", false, true, true));
 
         ApplicationTeamManagementViewModel expectedViewModel = new ApplicationTeamManagementViewModel(
                 applicationResource.getId(),
@@ -189,7 +183,6 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
         inOrder.verify(inviteRestService).getInvitesByApplication(applicationResource.getId());
         inOrder.verify(applicationService).getById(applicationResource.getId());
-        inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
         inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
         inOrder.verify(userService).findById(leadApplicant.getId());
         inOrder.verifyNoMoreInteractions();
@@ -207,8 +200,8 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
 
         OrganisationResource expectedOrganisation = organisationsMap.get("Ludlow");
         List<ApplicationTeamManagementApplicantRowViewModel> expectedApplicants = asList(
-                new ApplicationTeamManagementApplicantRowViewModel(applicationInviteId1, "Jessica Doe", "jessica.doe@ludlow.com", false, false, false),
-                new ApplicationTeamManagementApplicantRowViewModel(applicationInviteId2,"Ryan Dell", "ryan.dell@ludlow.com", false, true, false));
+                new ApplicationTeamManagementApplicantRowViewModel(applicationInviteId1, "Jessica Doe", "jessica.doe@ludlow.com", false, false, true),
+                new ApplicationTeamManagementApplicantRowViewModel(applicationInviteId2,"Ryan Dell", "ryan.dell@ludlow.com", false, true, true));
 
         ApplicationTeamManagementViewModel expectedViewModel = new ApplicationTeamManagementViewModel(
                 applicationResource.getId(),
@@ -216,7 +209,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
                 expectedOrganisation.getId(),
                 expectedOrganisation.getName(),
                 false,
-                false,
+                true,
                 expectedApplicants);
 
         setLoggedInUser(leadApplicant);
@@ -264,7 +257,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("applicants[0].name", applicants.get(0).getName())
                 .param("applicants[0].email", applicants.get(0).getEmail()))
-                .andExpect(model().attribute("applicationTeamUpdateForm", expectedForm))
+                .andExpect(model().attribute("form", expectedForm))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/application/%s/team", applicationResource.getId())))
                 .andReturn();
@@ -301,7 +294,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("applicants[0].name", applicants.get(0).getName())
                 .param("applicants[0].email", applicants.get(0).getEmail()))
-                .andExpect(model().attribute("applicationTeamUpdateForm", expectedForm))
+                .andExpect(model().attribute("form", expectedForm))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/application/%s/team", applicationResource.getId())))
                 .andReturn();
@@ -318,7 +311,6 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
         Map<String, UserResource> usersMap = setupUserResources();
         setupOrganisationInvitesWithInviteForLeadOrg(applicationResource.getId(), usersMap, organisationsMap);
-        UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
 
         OrganisationResource organisation = organisationsMap.get("Ludlow");
 
@@ -338,7 +330,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("applicants[0].name", applicants.get(0).getName())
                 .param("applicants[0].email", applicants.get(0).getEmail()))
-                .andExpect(model().attribute("applicationTeamUpdateForm", expectedForm))
+                .andExpect(model().attribute("form", expectedForm))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/application/%s/team", applicationResource.getId())))
                 .andReturn();
@@ -368,11 +360,11 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
                 .param("applicants[0].name", applicants.get(0).getName()))
                 .andExpect(status().isOk())
                 .andExpect(model().hasErrors())
-                .andExpect(model().attributeHasFieldErrors("applicationTeamUpdateForm", "applicants[0].email"))
+                .andExpect(model().attributeHasFieldErrors("form", "applicants[0].email"))
                 .andExpect(view().name("application-team/edit-org"))
                 .andReturn();
 
-        ApplicationTeamUpdateForm form = (ApplicationTeamUpdateForm) result.getModelAndView().getModel().get("applicationTeamUpdateForm");
+        ApplicationTeamUpdateForm form = (ApplicationTeamUpdateForm) result.getModelAndView().getModel().get("form");
 
         BindingResult bindingResult = form.getBindingResult();
         assertEquals(0, bindingResult.getGlobalErrorCount());
@@ -382,7 +374,6 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
 
         InOrder inOrder = inOrder(applicationService, userService);
         inOrder.verify(applicationService, times(3)).getById(applicationResource.getId());
-        inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
         inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
         inOrder.verify(userService).findById(leadApplicant.getId());
         inOrder.verifyNoMoreInteractions();
