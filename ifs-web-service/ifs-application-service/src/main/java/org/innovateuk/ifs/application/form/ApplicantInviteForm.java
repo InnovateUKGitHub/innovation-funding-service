@@ -10,7 +10,7 @@ import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 import javax.validation.constraints.Size;
 
 /**
- * Form field model for the Applicant fields within the Add Organisation view.
+ * Form field model for the Applicant fields within the Add/Update Organisation views.
  */
 public class ApplicantInviteForm extends BaseBindingResultTarget {
 
