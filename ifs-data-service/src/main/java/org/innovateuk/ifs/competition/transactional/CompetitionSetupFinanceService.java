@@ -3,7 +3,6 @@ package org.innovateuk.ifs.competition.transactional;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupFinanceResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 
