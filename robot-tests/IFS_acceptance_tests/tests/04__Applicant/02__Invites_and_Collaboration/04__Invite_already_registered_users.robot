@@ -19,7 +19,7 @@ The invited user should not follow the registration flow again
     Given we create a new user    ${test_mailbox_one}+invitedregistered@gmail.com
     Given the lead applicant invites a registered user    ${test_mailbox_one}+invite2@gmail.com    ${test_mailbox_one}+invitedregistered@gmail.com
     When the user reads his email and clicks the link    ${test_mailbox_one}+invitedregistered@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    participate in their application
-    Then the user should see the text in the page    We've found an existing user account with the invited email address
+    Then the user should see the text in the page    You already have an account with us.
 
 The user clicks the login link
     [Documentation]    INFUND-1458

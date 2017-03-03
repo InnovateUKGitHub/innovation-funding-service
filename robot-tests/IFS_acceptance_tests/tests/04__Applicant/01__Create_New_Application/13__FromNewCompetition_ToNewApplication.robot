@@ -274,7 +274,7 @@ Invite Collaborator in Application with Growth table
     [Setup]  the user navigates to the page             ${dashboard_url}
     Given the lead applicant invites an existing user   ${compWITHGrowth}  ${collaborator1_credentials["email"]}
     When the user reads his email and clicks the link   ${collaborator1_credentials["email"]}  Invitation to collaborate in ${compWITHGrowth}  participate in their application
-    Then the user should see the element                jQuery=h1:contains("We've found an existing user")
+    Then the user should see the element                jQuery=h1:contains("You already have an account with us.")
     And the user clicks the button/link                 link=Click here to sign in
     When guest user log-in                              &{collaborator1_credentials}
     Then the user clicks the button/link                link=Continue to application
