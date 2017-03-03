@@ -34,7 +34,7 @@ Labour
     [Teardown]    the user clicks the button/link    jQuery=button:contains("Labour")
 
 Overhead costs
-    [Documentation]    INFUND-192, INFUND-736, INFUND-6390 , INFUND-6788
+    [Documentation]    INFUND-192, INFUND-736, INFUND -6390 , INFUND-6788
     [Tags]
     # Check for No overheads costs option
     When the user clicks the button/link    jQuery=button:contains("Overhead costs")
