@@ -105,13 +105,16 @@
 
                 <p><button class="buttonlink" data-repeatable-rowcontainer="#applicant-table tbody" type="submit" name="addApplicant">Add new applicant</button></p>
 
+                <!--
+                TODO INFUND-8590
                 <th:block th:if="${model.userLeadApplicant and !model.leadOrganisation}">
                     <div class="alignright">
-                        <a th:href="@{/application/{applicationId}/update(applicationId=${model.applicationId})}" th:attr="name='save_contributors'" data-js-modal="modal-delete-organisation" class="button-secondary">Delete organisation</a>
+                        <a href="#" data-js-modal="modal-delete-organisation" class="button-secondary">Delete organisation</a>
                     </div>
 
                     <th:block th:insert="fragments/modals :: modal-delete-organisation" />
                 </th:block>
+                -->
 
                 <p class="extra-margin">Updating the organisation will notify applicants of changes to their position on the project.</p>
 
