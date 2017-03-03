@@ -508,21 +508,28 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
                 .withId()
                 .withContract(contract)
                 .withInnovationAreas(singletonList(innovationArea))
-                .withSkillsAreas("Skill area 1", "Skill Area 2")
-                .build(2);
+                .withSkillsAreas("Skill area 1", "Skill area 2", "Skill area 3", "Skill area 4")
+                .build(4);
 
         profileRepository.save(profiles);
 
         List<User> users = newUser()
                 .withId()
-                .withUid("uid-1", "uid-2")
-                .withFirstName("Jane", "Anthony")
-                .withLastName("Horowitz", "Hopkins")
-                .withProfileId(profiles.get(0).getId(), profiles.get(1).getId())
-                .build(2);
+                .withUid("uid-1", "uid-2", "uid-3", "uid-4")
+                .withFirstName("Jane", "Charles", "Claire", "Anthony")
+                .withLastName("Pritchard", "Dance", "Jenkins", "Hale")
+                .withProfileId(
+                        profiles.get(0).getId(),
+                        profiles.get(1).getId(),
+                        profiles.get(2).getId(),
+                        profiles.get(3).getId()
+                )
+                .build(4);
 
         userRepository.save(users);
 
+        // Only add affiliations for three of the assessors
+        // to demonstrate filtering of non-compliant assessors
         users.get(0).setAffiliations(
                 newAffiliation()
                         .withId()
@@ -541,38 +548,91 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
                         .withUser(users.get(1))
                         .build(1)
         );
+        users.get(3).setAffiliations(
+                newAffiliation()
+                        .withId()
+                        .withAffiliationType(AffiliationType.PROFESSIONAL)
+                        .withDescription("Affiliation Description 3")
+                        .withExists(TRUE)
+                        .withUser(users.get(3))
+                        .build(1)
+        );
 
         userRepository.save(users);
 
         List<CompetitionInvite> newAssessorInvites = newCompetitionInviteWithoutId()
-                .withName("Jane Horowitz", "Anthony Hopkins")
-                .withEmail("jh@test.com", "ah@test.com")
+                .withName("Jane Pritchard", "Charles Dance", "Claire Jenkins", "Anthony Hale")
+                .withEmail("jp@test.com", "cd@test.com", "cj@test.com", "ah@test2.com")
                 .withCompetition(competition)
                 .withInnovationArea(innovationArea)
-                .withUser(users.get(0), users.get(1))
+                .withUser(users.get(0), users.get(1), users.get(2), users.get(3))
                 .withStatus(SENT)
-                .build(2);
+                .build(4);
 
         saveNewCompetitionParticipants(newAssessorInvites);
         flushAndClearSession();
 
-        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "user.firstName", "user.lastName"));
+        assertEquals(4, repository.count());
+
+        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 
         Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndContract(
                 competition.getId(),
                 innovationArea.getId(),
-                PENDING,
+                PENDING.getId(),
                 TRUE,
                 pageable
         );
 
         assertEquals(1, pagedResult.getTotalPages());
-        assertEquals(2, pagedResult.getTotalElements());
+        assertEquals(3, pagedResult.getTotalElements());
+        assertEquals(20, pagedResult.getSize());
+        assertEquals(0, pagedResult.getNumber());
 
         List<CompetitionParticipant> content = pagedResult.getContent();
 
-        assertEquals(2, content.size());
-        assertEquals("Anthony Hopkins", content.get(0).getUser().getName());
-        assertEquals("Jane Horowitz", content.get(1).getUser().getName());
+        assertEquals(3, content.size());
+        assertEquals("Anthony Hale", content.get(0).getInvite().getName());
+        assertEquals("Charles Dance", content.get(1).getInvite().getName());
+        assertEquals("Jane Pritchard", content.get(2).getInvite().getName());
+    }
+
+    @Test
+    public void getAssessorsByCompetitionAndInnovationAreaAndStatusAndContract_noConditions() throws Exception {
+        List<CompetitionInvite> newAssessorInvites = newCompetitionInviteWithoutId()
+                .withName("Jane Pritchard", "Charles Dance", "Claire Jenkins", "Anthony Hale")
+                .withEmail("jp@test.com", "cd@test.com", "cj@test.com", "ah@test2.com")
+                .withCompetition(competition)
+                .withInnovationArea(innovationArea)
+                .withStatus(SENT)
+                .build(4);
+
+        saveNewCompetitionParticipants(newAssessorInvites);
+        flushAndClearSession();
+
+        assertEquals(4, repository.count());
+
+        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
+
+        Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndContract(
+                competition.getId(),
+                null,
+                null,
+                null,
+                pageable
+        );
+
+        assertEquals(1, pagedResult.getTotalPages());
+        assertEquals(4, pagedResult.getTotalElements());
+        assertEquals(20, pagedResult.getSize());
+        assertEquals(0, pagedResult.getNumber());
+
+        List<CompetitionParticipant> content = pagedResult.getContent();
+
+        assertEquals(4, content.size());
+        assertEquals("Anthony Hale", content.get(0).getInvite().getName());
+        assertEquals("Charles Dance", content.get(1).getInvite().getName());
+        assertEquals("Claire Jenkins", content.get(2).getInvite().getName());
+        assertEquals("Jane Pritchard", content.get(3).getInvite().getName());
     }
 }
