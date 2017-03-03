@@ -101,7 +101,7 @@ public class ApplicationTeamManagementModelPopulator {
 
     private ApplicationTeamManagementApplicantRowViewModel getApplicantViewModel(ApplicationInviteResource applicationInviteResource, long loggedInUserId) {
         boolean pending = applicationInviteResource.getStatus() != InviteStatus.OPENED;
-        boolean removable = applicationInviteResource.getUser() != loggedInUserId;
+        boolean removable = applicationInviteResource.getUser() == null || applicationInviteResource.getUser() != loggedInUserId;
         return new ApplicationTeamManagementApplicantRowViewModel(applicationInviteResource.getId(), getApplicantName(applicationInviteResource),
                 applicationInviteResource.getEmail(), false, pending, removable);
     }

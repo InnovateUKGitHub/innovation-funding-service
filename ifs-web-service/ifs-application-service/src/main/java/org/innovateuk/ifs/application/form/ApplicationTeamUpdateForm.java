@@ -3,14 +3,15 @@ package org.innovateuk.ifs.application.form;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.innovateuk.ifs.controller.BindingResultTarget;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Form field model for the Update Organisation view.
@@ -18,8 +19,8 @@ import java.util.List;
 public class ApplicationTeamUpdateForm implements BindingResultTarget {
 
     @Valid
-    @NotEmpty(message = "{validation.applicationteamupdateform.applicants.required}")
     private List<ApplicantInviteForm> applicants = new ArrayList<>();
+    private Set<Long> markedForRemoval = new HashSet<>();
     private BindingResult bindingResult;
     private List<ObjectError> objectErrors;
 
@@ -29,6 +30,14 @@ public class ApplicationTeamUpdateForm implements BindingResultTarget {
 
     public void setApplicants(List<ApplicantInviteForm> applicants) {
         this.applicants = applicants;
+    }
+
+    public Set<Long> getMarkedForRemoval() {
+        return markedForRemoval;
+    }
+
+    public void setMarkedForRemoval(Set<Long> markedForRemoval) {
+        this.markedForRemoval = markedForRemoval;
     }
 
     @Override
@@ -65,6 +74,7 @@ public class ApplicationTeamUpdateForm implements BindingResultTarget {
 
         return new EqualsBuilder()
                 .append(applicants, that.applicants)
+                .append(markedForRemoval, that.markedForRemoval)
                 .append(bindingResult, that.bindingResult)
                 .append(objectErrors, that.objectErrors)
                 .isEquals();
@@ -74,6 +84,7 @@ public class ApplicationTeamUpdateForm implements BindingResultTarget {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(applicants)
+                .append(markedForRemoval)
                 .append(bindingResult)
                 .append(objectErrors)
                 .toHashCode();
