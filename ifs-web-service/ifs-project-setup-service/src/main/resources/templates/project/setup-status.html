@@ -13,7 +13,7 @@
 
     <div class="page-title">
         <th:block th:insert="fragments/elements :: project-title (projectId=${model.applicationId}, projectName=${model.projectName})" />
-        <h1 class="heading-xlarge">Project setup status</h1>
+        <h1 class="heading-xlarge">Project setup status TEST2</h1>
     </div>
 
     <th:block th:if="${model.projectComplete}">
@@ -86,7 +86,6 @@
                         Your Monitoring Officer for this project is
                         <th:block th:text="${model.monitoringOfficerName}"/>.
                     </p>
-                    </p>
                     <p th:unless="${model.monitoringOfficerAssigned}" class="no-margin">
                         We will assign the project a Monitoring Officer.
                     </p>
@@ -116,7 +115,7 @@
                 <th:block th:include="project/fragments :: project-setup-status-indicator(${model.bankDetailsStatus.getSectionStatus()})"/>
             </li>
             <!--/* ========================= Finance Check ========================= */-->
-            <li th:class="${(model.financeChecksSection.notAccessible ? 'read-only' : '')}" th:classappend="${model.financeChecksStatus.getSectionStatus()}">
+            <li th:class="${model.financeChecksSection.notAccessible} ? 'read-only'" th:classappend="${model.financeChecksStatus.getSectionStatus()}">
                 <div class="task">
                     <h2 class="heading-small">
                         <a th:if="${model.financeChecksSection.accessible}"
@@ -128,8 +127,7 @@
                     </h2>
                     <p class="no-margin">We will review all project costs.</p>
                 </div>
-                <th:block th:include="project/fragments :: project-setup-status-indicator(${model.financeChecksStatus.getSectionStatus()})"
-                          th:if="${model.financeChecksSection.accessible}" />
+                <th:block th:include="project/fragments :: project-setup-status-indicator(${model.financeChecksStatus.getSectionStatus()})"/>
             </li>
             <!--/* ========================= Spend Profile ========================= */-->
             <li th:class="${(model.spendProfileSection.notAccessible ? 'read-only' : '')}" th:classappend="${model.spendProfileStatus.getSectionStatus()}">

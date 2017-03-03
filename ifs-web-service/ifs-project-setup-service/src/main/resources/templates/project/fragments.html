@@ -101,7 +101,7 @@
             <th:block th:switch="${status}">
                 <span th:case="complete" class="status-complete">Completed</span>
                 <span th:case="require-action" class="status-action-required">To be completed</span>
-                <span th:case="waiting" class="status-action-required">To be completed</span>
+                <span th:case="waiting" class="status-waiting">Awaiting review</span>
                 <span th:case="rejected" class="status-reject">Unsuccessful</span>
                 <span th:case="awaiting-assignment">Awaiting assignment</span>
             </th:block>
