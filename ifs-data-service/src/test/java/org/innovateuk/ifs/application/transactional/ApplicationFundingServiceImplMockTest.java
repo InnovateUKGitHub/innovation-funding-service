@@ -310,7 +310,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
 		when(notificationServiceMock.sendNotification(createFullNotificationExpectations(expectedFundedNotification), eq(EMAIL))).thenReturn(serviceSuccess());
 		when(notificationServiceMock.sendNotification(createFullNotificationExpectations(expectedUnfundedNotification), eq(EMAIL))).thenReturn(serviceSuccess());
 
-		ServiceResult<Void> result = service.notifyLeadApplicantsOfFundingDecisionsOld(competition.getId(), decision);
+		ServiceResult<Void> result = service.notifyLeadApplicantsOfFundingDecisions(competition.getId(), decision);
 		assertTrue(result.isSuccess());
 
 		verify(notificationServiceMock).sendNotification(createFullNotificationExpectations(expectedFundedNotification), eq(EMAIL));
@@ -365,7 +365,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
         when(notificationServiceMock.sendNotification(createSimpleNotificationExpectations(expectedFundedNotification), eq(EMAIL))).thenReturn(serviceSuccess());
         when(notificationServiceMock.sendNotification(createSimpleNotificationExpectations(expectedUnfundedNotification), eq(EMAIL))).thenReturn(serviceSuccess());
 
-        ServiceResult<Void> result = service.notifyLeadApplicantsOfFundingDecisionsOld(competition.getId(), decision);
+        ServiceResult<Void> result = service.notifyLeadApplicantsOfFundingDecisions(competition.getId(), decision);
         assertTrue(result.isSuccess());
 
         verify(notificationServiceMock).sendNotification(createSimpleNotificationExpectations(expectedFundedNotification), eq(EMAIL));

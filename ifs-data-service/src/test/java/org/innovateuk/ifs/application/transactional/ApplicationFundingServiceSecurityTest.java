@@ -142,7 +142,8 @@ public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTe
 		}
 
 		@Override
-		public ServiceResult<Void> notifyLeadApplicantsOfFundingDecisionsOld(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
+		@Deprecated
+		public ServiceResult<Void> notifyLeadApplicantsOfFundingDecisions(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
 			return null;
 		}
 

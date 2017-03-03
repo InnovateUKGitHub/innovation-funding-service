@@ -21,9 +21,10 @@ public interface ApplicationFundingService {
 	@SecuredBySpring(value = "SEND_FUNDING_DECISION_EMAILS_DEPRECATED", securedType = FundingDecision.class, description = "Comp Admins should be able to send emails to Lead Applicants confirming the Funding Panel's decisions on their Applications")
 	ServiceResult<Void> notifyLeadApplicantsOfFundingDecisions(NotificationResource notificationResource);
 
+	@Deprecated
 	@PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
 	@SecuredBySpring(value = "SEND_FUNDING_DECISION_EMAILS", securedType = FundingDecision.class, description = "Comp Admins should be able to send emails to Lead Applicants confirming the Funding Panel's decisions on their Applications")
-	ServiceResult<Void> notifyLeadApplicantsOfFundingDecisionsOld(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions);
+	ServiceResult<Void> notifyLeadApplicantsOfFundingDecisions(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions);
 
 	@PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
 	@SecuredBySpring(value = "SAVE_FUNDING_DECISION_DATA", securedType = FundingDecision.class, description = "Comp Admins should be able to save the decision of what applications to fund for a given competition")

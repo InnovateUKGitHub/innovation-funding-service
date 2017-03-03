@@ -28,6 +28,7 @@ import static org.mockito.Mockito.when;
 public class SendNotificationsModelPopulatorTest {
 
     public static final Long COMPETITION_ID = 7L;
+    public static final String COMPETITION_NAME = "name";
 
     @InjectMocks
     private SendNotificationsModelPopulator sendNotificationsModelPopulator;
@@ -48,8 +49,7 @@ public class SendNotificationsModelPopulatorTest {
     @Test
     public void populateModel() throws Exception {
 
-        String competitionName = "name";
-        CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource().withName(competitionName).build();
+        CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource().withName(COMPETITION_NAME).build();
 
         CompetitionInFlightStatsViewModel keyStatistics = new CompetitionInFlightStatsViewModel();
 
@@ -73,7 +73,7 @@ public class SendNotificationsModelPopulatorTest {
         SendNotificationsViewModel viewModel = sendNotificationsModelPopulator.populate(COMPETITION_ID, requestedIds);
 
         assertThat(viewModel.getCompetitionId(), is(equalTo(COMPETITION_ID)));
-        assertThat(viewModel.getCompetitionName(), is(equalTo(competitionName)));
+        assertThat(viewModel.getCompetitionName(), is(equalTo(COMPETITION_NAME)));
         assertThat(viewModel.getApplications(), is(equalTo(expectedApplications)));
         assertThat(viewModel.getKeyStatistics(), is(equalTo(keyStatistics)));
     }
