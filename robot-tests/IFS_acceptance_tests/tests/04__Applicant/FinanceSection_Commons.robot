@@ -110,15 +110,21 @@ the user fills in Labour
     the user clicks the button/link            jQuery=#form-input-20 button:contains("Labour")
     the user should see the element            css=.labour-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input
     the user enters text to a text field       jQuery=input[name^="labour-labourDaysYearly"][id$="labourDaysYearly"]    230
+    wait for autosave
     the user enters text to a text field       jQuery=.labour-costs-table input[id$="role"]  test
+    wait for autosave
     the user enters text to a text field       jQuery=.labour-costs-table input[id$="labourGrossSalary"]  120000
+    wait for autosave
     the user enters text to a text field       jQuery=.labour-costs-table input[id$="labourDays"]  100
+    wait for autosave
     the user moves focus to the element        jQuery=button:contains('Add another role')
     the user clicks the button/link            jQuery=button:contains('Add another role')
     the user enters text to a text field       jQuery=.labour-costs-table input[id$="role"]:last-of-type  anotherrole
+    wait for autosave
     the user enters text to a text field       jQuery=.labour-costs-table input[id$="labourGrossSalary"]:last-of-type  120000
+    wait for autosave
     the user enters text to a text field       jQuery=.labour-costs-table input[id$="labourDays"]:last-of-type  100
-    wait For autosave
+    wait for autosave
     the user clicks the button/link            jQuery=#form-input-20 button:contains("Labour")
 
 the user fills in Overhead costs
@@ -132,6 +138,7 @@ the user chooses Calculate overheads option
     then the user should see the element     jQuery=h3:contains("Calculate overheads")
     and the user should see the element     css=.button-secondary
     and the user uploads the file       id=overheadfile   ${excel_file}
+    wait for autosave
     and the user enters text to a text field    jQuery=input[id^="cost-overheads"][value="0"]   4000
 
 the user chooses 20% overheads option
