@@ -148,11 +148,12 @@ public class ApplicationModelPopulator {
         boolean hasFinanceSection = financeSection != null;
 
         if(hasFinanceSection) {
-            applicationFinanceOverviewModelManager.addFinanceDetails(model, competitionId, applicationId, user.getId());
+            Optional<Long> optionalOrganisationId = Optional.ofNullable(organisationId);
+            applicationFinanceOverviewModelManager.addFinanceDetails(model, competitionId, applicationId, optionalOrganisationId);
 
             List<QuestionResource> costsQuestions = questionService.getQuestionsBySectionIdAndType(financeSection.getId(), QuestionType.COST);
             // NOTE: This code is terrible.  It does nothing if none of below two conditions don't match.  This is not my code RB.
-            if(!form.isAdminMode() || organisationId != null) {
+            if(!form.isAdminMode() || optionalOrganisationId.isPresent()) {
                 String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
                 financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form, organisationId);
             }
