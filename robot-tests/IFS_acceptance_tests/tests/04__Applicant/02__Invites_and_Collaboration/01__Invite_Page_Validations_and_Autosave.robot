@@ -122,7 +122,7 @@ the applicant fills the lead organisation fields
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');
     Focus    jQuery=.button:contains("Save changes")
     browser validations have been disabled
-    The user clicks the button/link    jQuery=.button:contains("Save changes")
+    run keyword and ignore error without screenshots  The user clicks the button/link  jQuery=.button:contains("Save changes")
 
 the applicant can enter Organisation name, Name and E-mail
     The user enters text to a text field    name=organisations[1].organisationName    Fannie May
