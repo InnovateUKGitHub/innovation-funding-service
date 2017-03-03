@@ -62,9 +62,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 public class ApplicationController {
     private static final Log LOG = LogFactory.getLog(ApplicationController.class);
 
-    // TODO implement feature toggle https://devops.innovateuk.org/issue-tracking/browse/INFUND-8579
-    static final boolean APPLICATION_FEEDBACK_SUMMARY_FEATURE_ENABLED = false;
-
     public static final String ASSIGN_QUESTION_PARAM = "assign_question";
     public static final String MARK_AS_COMPLETE = "mark_as_complete";
 
@@ -193,7 +190,7 @@ public class ApplicationController {
             model.addAttribute("assessorFeedback", assessorFeedbackViewModel);
         }
 
-        if (APPLICATION_FEEDBACK_SUMMARY_FEATURE_ENABLED && competition.getCompetitionStatus().isFeedbackReleased()) {
+        if (competition.getCompetitionStatus().isFeedbackReleased()) {
             model.addAttribute("scores", assessorFormInputResponseRestService.getApplicationAssessmentAggregate(applicationId).getSuccessObjectOrThrowException());
             model.addAttribute("feedback", assessmentRestService.getApplicationFeedback(applicationId)
                     .getSuccessObjectOrThrowException()
