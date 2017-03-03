@@ -30,6 +30,7 @@ import static org.innovateuk.ifs.application.builder.QuestionBuilder.newQuestion
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -73,7 +74,7 @@ public class OrganisationFinanceHandlerTest {
         costTypeQuestion = new HashMap<>();
 
         for (FinanceRowType costType : FinanceRowType.values()) {
-            if (FinanceRowType.ACADEMIC != costType) {
+            if (ACADEMIC != costType) {
                 setUpCostTypeQuestions(competition, costType);
             }
         }
@@ -209,15 +210,18 @@ public class OrganisationFinanceHandlerTest {
 
     @Test
     public void testGetHandlerMatches() throws Exception {
-        asList(Pair.of(materialCost, MaterialsHandler.class),
-                Pair.of(labourCost, LabourCostHandler.class),
-                Pair.of(capitalUsageCost, CapitalUsageHandler.class),
-                Pair.of(subContractingCost, SubContractingCostHandler.class)
+        asList( Pair.of(MATERIALS, MaterialsHandler.class),
+                Pair.of(LABOUR, LabourCostHandler.class),
+                Pair.of(TRAVEL, TravelCostHandler.class),
+                Pair.of(CAPITAL_USAGE, CapitalUsageHandler.class),
+                Pair.of(SUBCONTRACTING_COSTS, SubContractingCostHandler.class),
+                Pair.of(OVERHEADS, OverheadsHandler.class),
+                Pair.of(OTHER_COSTS, OtherCostHandler.class),
+                Pair.of(OTHER_FUNDING, OtherFundingHandler.class)
         ).forEach(pair -> {
-            final FinanceRow row = pair.getKey();
+            final FinanceRowType costType = pair.getKey();
             final Class<?> clazz = pair.getValue();
-            FinanceRowType costType = FinanceRowType.fromType(row.getQuestion().getFormInputs().get(0).getType());
-            assertEquals("Correct handler for " + costType, clazz.getName(), handler.getCostHandler(costType).getClass().getName());
+            assertEquals("Correct handler for " + costType, clazz, handler.getCostHandler(costType).getClass());
         });
     }
 
