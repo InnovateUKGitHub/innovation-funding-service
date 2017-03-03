@@ -4,6 +4,7 @@ import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfWriter;
 import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -252,10 +253,11 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     }
 
     private final List<String> organisationsListWithLeadOnTopAndPartnersAlphabeticallyOrdered(List<String> organisationNames, Organisation leadOrganisation) {
+        final String leadOrganisationName = StringEscapeUtils.escapeXml10(leadOrganisation.getName());
         final List<String> organisations = organisationNames.stream()
-                .filter(po -> !po.equals(leadOrganisation.getName()))
+                .filter(po -> !po.equals(leadOrganisationName))
                 .sorted().collect(toList());
-        organisations.add(0, leadOrganisation.getName());
+        organisations.add(0, leadOrganisationName);
         return organisations;
     }
 
@@ -493,7 +495,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
                 !organisationsExcludedFromGrantOfferLetter.contains(organisation))
                 .collect(toList());
 
-        includedOrganisations.forEach(includedOrg -> includedOrganisationNames.add(includedOrg.getName()));
+        includedOrganisations.forEach(includedOrg -> includedOrganisationNames.add(StringEscapeUtils.escapeXml10(includedOrg.getName())));
 
         return new YearlyGOLProfileTable(organisationAndGrantPercentageMap, organisationYearsMap,
                 organisationEligibleCostTotal, organisationGrantAllocationTotal,

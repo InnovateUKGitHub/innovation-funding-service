@@ -567,11 +567,11 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
                 .append("</html>\n").toString();
 
         Competition comp = newCompetition()
-                .withName("Test Comp")
+                .withName("Test Comp<")
                 .build();
-        Organisation o1 = organisation(BUSINESS, "OrgLeader");
-        Organisation o2 = organisation(BUSINESS, "Org2");
-        Organisation o3 = organisation(BUSINESS, "Org3");
+        Organisation o1 = organisation(BUSINESS, "OrgLeader&");
+        Organisation o2 = organisation(BUSINESS, "Org2<");
+        Organisation o3 = organisation(BUSINESS, "Org3>");
 
         Role leadAppRole = newRole(UserRoleType.LEADAPPLICANT)
                 .build();
@@ -611,10 +611,10 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
 
 
         Address address = newAddress()
-                .withAddressLine1("InnovateUK")
-                .withAddressLine2("Northstar House")
-                .withTown("Swindon")
-                .withPostcode("SN1 1AA")
+                .withAddressLine1("InnovateUK>")
+                .withAddressLine2("Northstar House\"")
+                .withTown("Swindon&")
+                .withPostcode("SN1 1AA'")
                 .build();
         Project project = newProject()
                 .withOtherDocumentsApproved(ApprovalType.APPROVED)
@@ -637,18 +637,18 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
                 .build();
 
         Map<String, Object> templateArgs = new HashMap<String, Object>();
-        templateArgs.put("SortedOrganisations", asList(o1.getName(), o2.getName(), o3.getName()));
+        templateArgs.put("SortedOrganisations", asList("OrgLeader&amp;", "Org2&lt;", "Org3&gt;"));
         templateArgs.put("ProjectLength", 10L);
         templateArgs.put("ProjectTitle", "project 1");
         templateArgs.put("LeadContact", "ab cd");
         templateArgs.put("ApplicationNumber", 3L);
-        templateArgs.put("LeadOrgName", "OrgLeader");
-        templateArgs.put("CompetitionName", "Test Comp");
-        templateArgs.put("Address1", "InnovateUK");
-        templateArgs.put("Address2", "Northstar House");
+        templateArgs.put("LeadOrgName", "OrgLeader&");
+        templateArgs.put("CompetitionName", "Test Comp<");
+        templateArgs.put("Address1", "InnovateUK>");
+        templateArgs.put("Address2", "Northstar House\"");
         templateArgs.put("Address3", "");
-        templateArgs.put("TownCity", "Swindon");
-        templateArgs.put("PostCode", "SN1 1AA");
+        templateArgs.put("TownCity", "Swindon&");
+        templateArgs.put("PostCode", "SN1 1AA'");
         templateArgs.put("ProjectStartDate",project.getTargetStartDate().format(DateTimeFormatter.ofPattern(GRANT_OFFER_LETTER_DATE_FORMAT)));
         templateArgs.put("Date", LocalDateTime.now().toString());
 
