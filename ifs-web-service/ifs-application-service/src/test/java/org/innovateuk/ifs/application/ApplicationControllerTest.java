@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application;
 
+import com.google.common.collect.ImmutableMap;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
@@ -37,6 +38,7 @@ import org.springframework.ui.Model;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -284,6 +286,8 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         CompetitionResource competition = competitionResources.get(0);
         competition.setCompetitionStatus(PROJECT_SETUP);
 
+        ApplicationAssessmentAggregateResource aggregateResource = new ApplicationAssessmentAggregateResource(5,4, ImmutableMap.of(1L,new BigDecimal("2")),3L);
+
         ApplicationResource app = applications.get(0);
         app.setCompetition(competition.getId());
         app.setAssessorFeedbackFileEntry(123L);
@@ -298,7 +302,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(userRestServiceMock.findProcessRole(loggedInUser.getId(), app.getId())).thenReturn(restSuccess(userApplicationRole));
 
         when(assessorFormInputResponseRestService.getApplicationAssessmentAggregate(app.getId()))
-                .thenReturn(restSuccess(new ApplicationAssessmentAggregateResource(5,4)));
+                .thenReturn(restSuccess(aggregateResource));
 
         if (APPLICATION_FEEDBACK_SUMMARY_FEATURE_ENABLED) {
             mockMvc.perform(get("/application/" + app.getId() + "/summary"))
@@ -313,7 +317,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                     .andExpect(model().attribute("responses", formInputsToFormInputResponses))
                     .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(0)))
                     .andExpect(model().attribute("pendingOrganisationNames", Matchers.hasSize(0)))
-                    .andExpect(model().attribute("scores", new ApplicationAssessmentAggregateResource(5, 4)))
+                    .andExpect(model().attribute("scores", aggregateResource))
                     .andExpect(model().attribute("rsCategoryId", app.getResearchCategories().stream().findFirst().get().getId()));
         }
         else {
