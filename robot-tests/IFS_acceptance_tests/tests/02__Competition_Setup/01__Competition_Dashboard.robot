@@ -116,6 +116,18 @@ Clearing filters should show all the competitions
     When The user clicks the button/link    link=Clear filters
     Then The user should see the element    jQuery=a:contains(Live)
 
+Non IFS competitions
+    [Documentation]    INFUND-7963
+    When the user clicks the button/link    jQuery=a:contains(Non-IFS)    # We have used the JQuery selector for the link because the title will change according to the competitions number
+    Then the user should see the text in the page    Non-IFS competitions
+    And the user should see the text in the page    ${NON_IFS_COMPETITION_NAME}
+
+Non IFS competitions do not appear in search results
+    [Documentation]    INFUND-7963
+    When The user enters text to a text field    id=searchQuery    ${NON_IFS_COMPETITION_NAME}
+    And The user clicks the button/link    css=#searchsubmit
+    Then the result should be correct    0 competitions with the term ${NON_IFS_COMPETITION_NAME}
+
 *** Keywords ***
 the total calculation should be correct
     [Documentation]    This keyword is for the total of the search results with or without second page

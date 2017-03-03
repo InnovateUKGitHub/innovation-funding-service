@@ -18,12 +18,8 @@ public class FinanceChecksViabilityViewModel {
     private Integer otherPublicSectorFunding;
     private Integer contributionToProject;
     private String companyRegistrationNumber;
-
-    // currently always null
-    private Integer turnover;
-
-    // currently always null
-    private Integer headCount;
+    private Long turnover;
+    private Long headCount;
 
     private OrganisationSize organisationSize;
 
@@ -37,7 +33,7 @@ public class FinanceChecksViabilityViewModel {
     public FinanceChecksViabilityViewModel(String organisationName, boolean leadPartnerOrganisation, Integer totalCosts,
                                            Integer percentageGrant, Integer fundingSought, Integer otherPublicSectorFunding,
                                            Integer contributionToProject, String companyRegistrationNumber,
-                                           Integer turnover, Integer headCount, OrganisationSize organisationSize,
+                                           Long turnover, Long headCount, OrganisationSize organisationSize,
                                            Long projectId, boolean viabilityConfirmed,
                                            boolean approved, String approverName, LocalDate approvalDate, Long organisationId) {
 
@@ -72,11 +68,11 @@ public class FinanceChecksViabilityViewModel {
         return companyRegistrationNumber;
     }
 
-    public Integer getTurnover() {
+    public Long getTurnover() {
         return turnover;
     }
 
-    public Integer getHeadCount() {
+    public Long getHeadCount() {
         return headCount;
     }
 
