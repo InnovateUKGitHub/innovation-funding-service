@@ -1,40 +1,53 @@
 package org.innovateuk.ifs.application;
 
-import org.apache.commons.lang3.CharEncoding;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.form.ContributorsForm;
+import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
+import org.innovateuk.ifs.application.form.ApplicantInviteForm;
+import org.innovateuk.ifs.application.form.ApplicationTeamUpdateForm;
 import org.innovateuk.ifs.application.populator.ApplicationTeamManagementModelPopulator;
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
+import org.innovateuk.ifs.application.populator.ApplicationTeamModelPopulator;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.viewmodel.*;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
+import org.innovateuk.ifs.invite.resource.InviteResultsResource;
+import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InOrder;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.validation.Validator;
+import org.springframework.validation.BindingResult;
 
-import javax.servlet.http.Cookie;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
-import static org.innovateuk.ifs.application.ApplicationTeamManagementController.APPLICATION_CONTRIBUTORS_UPDATE;
-import static org.innovateuk.ifs.application.ApplicationTeamManagementController.APPLICATION_CONTRIBUTORS_UPDATE_REMOVE_CONFIRM;
+import static java.lang.String.format;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.application.constant.ApplicationStatusConstants.CREATED;
+import static org.innovateuk.ifs.application.constant.ApplicationStatusConstants.OPEN;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
+import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
+import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.isA;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -48,429 +61,500 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
     @InjectMocks
     private ApplicationTeamManagementModelPopulator applicationTeamManagementModelPopulator;
 
-    @Mock
-    private Validator validator;
-
-    @Mock
-    private CookieFlashMessageFilter cookieFlashMessageFilter;
-
-    private Long applicationId;
-    private Long alternativeApplicationId;
-    private Long organisationId;
-    private String redirectUrl;
-    private String viewName;
-    private String applicationRedirectUrl;
-    private String inviteOverviewRedirectUrl;
-    private String removeUrl;
-    private String updateUrl;
-
     @Override
     protected ApplicationTeamManagementController supplyControllerUnderTest() {
         return new ApplicationTeamManagementController();
     }
 
-    @Before
-    public void setUp() {
-        super.setUp();
-
-        this.setupCompetition();
-        this.setupApplicationWithRoles();
-        this.setupApplicationResponses();
-        this.loginDefaultUser();
-        this.setupFinances();
-        this.setupInvites();
-        setupCookieUtil();
-
-        applicationId = applications.get(0).getId();
-        alternativeApplicationId = applicationId + 1;
-        organisationId = organisations.get(0).getId();
-        removeUrl = String.format("/application/%d/team/update/remove", applicationId);
-        redirectUrl = String.format("redirect:/application/%d/team/update?organisation=%d", applicationId, organisationId);
-        applicationRedirectUrl = String.format("redirect:/application/%d", applicationId);
-        inviteOverviewRedirectUrl = String.format("redirect:/application/%d/team", applicationId);
-        updateUrl = String.format("/application/%d/team/update?organisation=%d", applicationId, organisationId);
-        viewName = APPLICATION_CONTRIBUTORS_UPDATE;
-    }
-
     @Test
-    public void testUpdateContributors() throws Exception {
-        mockMvc.perform(get(updateUrl))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name(viewName));
-    }
+    public void getUpdateLeadTeam_loggedInUserIsLead() throws Exception {
+        Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
+        ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
+        Map<String, UserResource> usersMap = setupUserResources();
+        setupOrganisationInvitesWithInviteForLeadOrg(applicationResource.getId(), usersMap, organisationsMap);
+        UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
 
-    @Test
-    public void testUpdateContributorsCookie() throws Exception {
-        Cookie cookie = new Cookie("contributor_invite_state", encryptor.encrypt(URLEncoder.encode("{\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationId\":3,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\",\"inviteStatus\":null}]}]}}", CharEncoding.UTF_8)));
+        OrganisationResource expectedOrganisation = organisationsMap.get("Empire Ltd");
+        List<ApplicationTeamManagementApplicantRowViewModel> expectedApplicants = asList(
+                new ApplicationTeamManagementApplicantRowViewModel(usersMap.get("steve.smith@empire.com").getId(), "Steve Smith", "steve.smith@empire.com", true, false),
+                new ApplicationTeamManagementApplicantRowViewModel(usersMap.get("paul.davidson@empire.com").getId(), "Paul Davidson", "paul.davidson@empire.com", false, false));
 
-        MvcResult mockResult = mockMvc.perform(get(updateUrl).cookie(cookie))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name(viewName))
-             //   .andExpect(model().attributeExists("leadOrganisation", "leadApplicant", "contributorsForm"))
+        ApplicationTeamManagementViewModel expectedViewModel = new ApplicationTeamManagementViewModel(
+                applicationResource.getId(),
+                "Application name",
+                expectedOrganisation.getName(),
+                true,
+                true,
+                expectedApplicants);
+
+        setLoggedInUser(leadApplicant);
+        MvcResult mockResult = mockMvc.perform(get("/application/{applicationId}/team/update?organisation={organisationId}", applicationResource.getId(), expectedOrganisation.getId()))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("model", expectedViewModel))
+                .andExpect(view().name("application-team/edit-org"))
                 .andReturn();
 
-        ContributorsForm contributorsFormResult = (ContributorsForm) mockResult.getModelAndView().getModelMap().get("contributorsForm");
-        assertNotNull(contributorsFormResult.getOrganisations().get(0));
-        assertEquals(1, contributorsFormResult.getOrganisations().get(0).getInvites().size());
-        assertEquals("Nico Bijl", contributorsFormResult.getOrganisations().get(0).getInvites().get(0).getPersonName());
-        assertEquals("nico@worth.systems", contributorsFormResult.getOrganisations().get(0).getInvites().get(0).getEmail());
+        ApplicationTeamManagementViewModel viewModelResult = (ApplicationTeamManagementViewModel) mockResult.getModelAndView().getModel().get("model");
+
+        InOrder inOrder = inOrder(applicationService, inviteRestService, userService);
+        inOrder.verify(applicationService).getById(applicationResource.getId());
+        inOrder.verify(inviteRestService).getInvitesByApplication(applicationResource.getId());
+        inOrder.verify(applicationService).getById(applicationResource.getId());
+        inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
+        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
+        inOrder.verify(userService).findById(leadApplicant.getId());
+        inOrder.verifyNoMoreInteractions();
     }
 
     @Test
-    public void testUpdateContributorsPostAddPerson() throws Exception {
-        MvcResult result = mockMvc.perform(post(updateUrl)
-                .param("organisations[0].organisationName", "Empire Ltd")
-                .param("organisations[0].organisationId", "1")
-                .param("add_person", "0"))
+    public void getUpdateNonLeadTeam_loggedInUserIsLead() throws Exception {
+        Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
+        ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
+        Map<String, UserResource> usersMap = setupUserResources();
+        setupOrganisationInvitesWithInviteForLeadOrg(applicationResource.getId(), usersMap, organisationsMap);
+        UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
+
+        OrganisationResource expectedOrganisation = organisationsMap.get("Ludlow");
+        List<ApplicationTeamManagementApplicantRowViewModel> expectedApplicants = asList(
+                new ApplicationTeamManagementApplicantRowViewModel(usersMap.get("jessica.doe@ludlow.com").getId(), "Jessica Doe", "jessica.doe@ludlow.com", false, false),
+                new ApplicationTeamManagementApplicantRowViewModel(null, "Ryan Dell", "ryan.dell@ludlow.com", false, true));
+
+        ApplicationTeamManagementViewModel expectedViewModel = new ApplicationTeamManagementViewModel(
+                applicationResource.getId(),
+                "Application name",
+                expectedOrganisation.getName(),
+                false,
+                true,
+                expectedApplicants);
+
+        setLoggedInUser(leadApplicant);
+        MvcResult mockResult = mockMvc.perform(get("/application/{applicationId}/team/update?organisation={organisationId}", applicationResource.getId(), expectedOrganisation.getId()))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("model", expectedViewModel))
+                .andExpect(view().name("application-team/edit-org"))
+                .andReturn();
+
+        ApplicationTeamManagementViewModel viewModelResult = (ApplicationTeamManagementViewModel) mockResult.getModelAndView().getModel().get("model");
+
+        InOrder inOrder = inOrder(applicationService, inviteRestService, userService);
+        inOrder.verify(applicationService).getById(applicationResource.getId());
+        inOrder.verify(inviteRestService).getInvitesByApplication(applicationResource.getId());
+        inOrder.verify(applicationService).getById(applicationResource.getId());
+        inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
+        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
+        inOrder.verify(userService).findById(leadApplicant.getId());
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void getUpdateNonLeadTeam_loggedInUserIsNonLead() throws Exception {
+        Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
+        ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
+        Map<String, UserResource> usersMap = setupUserResources();
+        setupOrganisationInvitesWithInviteForLeadOrg(applicationResource.getId(), usersMap, organisationsMap);
+        UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
+
+        OrganisationResource expectedOrganisation = organisationsMap.get("Ludlow");
+        List<ApplicationTeamManagementApplicantRowViewModel> expectedApplicants = asList(
+                new ApplicationTeamManagementApplicantRowViewModel(usersMap.get("jessica.doe@ludlow.com").getId(), "Jessica Doe", "jessica.doe@ludlow.com", false, false),
+                new ApplicationTeamManagementApplicantRowViewModel(null, "Ryan Dell", "ryan.dell@ludlow.com", false, true));
+
+        ApplicationTeamManagementViewModel expectedViewModel = new ApplicationTeamManagementViewModel(
+                applicationResource.getId(),
+                "Application name",
+                expectedOrganisation.getName(),
+                false,
+                false,
+                expectedApplicants);
+
+        setLoggedInUser(usersMap.get("jessica.doe@ludlow.com"));
+        MvcResult mockResult = mockMvc.perform(get("/application/{applicationId}/team/update?organisation={organisationId}", applicationResource.getId(), expectedOrganisation.getId()))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("model", expectedViewModel))
+                .andExpect(view().name("application-team/edit-org"))
+                .andReturn();
+
+        ApplicationTeamManagementViewModel viewModelResult = (ApplicationTeamManagementViewModel) mockResult.getModelAndView().getModel().get("model");
+
+        InOrder inOrder = inOrder(applicationService, inviteRestService, userService);
+        inOrder.verify(applicationService).getById(applicationResource.getId());
+        inOrder.verify(inviteRestService).getInvitesByApplication(applicationResource.getId());
+        inOrder.verify(applicationService).getById(applicationResource.getId());
+        inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
+        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
+        inOrder.verify(userService).findById(leadApplicant.getId());
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void getUpdateNewTeam_loggedInUserIsLead() throws Exception {
+        Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
+        ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
+        Map<String, UserResource> usersMap = setupUserResources();
+        setupOrganisationInvitesWithInviteForLeadOrg(applicationResource.getId(), usersMap, organisationsMap);
+        UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
+
+        OrganisationResource expectedOrganisation = organisationsMap.get("Ludlow");
+        List<ApplicationTeamManagementApplicantRowViewModel> expectedApplicants = asList(
+                new ApplicationTeamManagementApplicantRowViewModel(usersMap.get("jessica.doe@ludlow.com").getId(), "Jessica Doe", "jessica.doe@ludlow.com", false, false),
+                new ApplicationTeamManagementApplicantRowViewModel(null, "Ryan Dell", "ryan.dell@ludlow.com", false, true));
+
+        ApplicationTeamManagementViewModel expectedViewModel = new ApplicationTeamManagementViewModel(
+                applicationResource.getId(),
+                "Application name",
+                expectedOrganisation.getName(),
+                false,
+                true,
+                expectedApplicants);
+
+        setLoggedInUser(leadApplicant);
+        MvcResult mockResult = mockMvc.perform(get("/application/{applicationId}/team/update?organisationName={organisationName}", applicationResource.getId(), expectedOrganisation.getName()))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("model", expectedViewModel))
+                .andExpect(view().name("application-team/edit-org"))
+                .andReturn();
+
+        ApplicationTeamManagementViewModel viewModelResult = (ApplicationTeamManagementViewModel) mockResult.getModelAndView().getModel().get("model");
+
+        InOrder inOrder = inOrder(applicationService, inviteRestService, userService);
+        inOrder.verify(applicationService).getById(applicationResource.getId());
+        inOrder.verify(inviteRestService).getInvitesByApplication(applicationResource.getId());
+        inOrder.verify(applicationService).getById(applicationResource.getId());
+        inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
+        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
+        inOrder.verify(userService).findById(leadApplicant.getId());
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void submitUpdateLeadOrganisation_loggedInUserIsLead() throws Exception {
+        Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
+        ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
+        Map<String, UserResource> usersMap = setupUserResources();
+        setupOrganisationInvitesWithInviteForLeadOrg(applicationResource.getId(), usersMap, organisationsMap);
+        UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
+
+        OrganisationResource organisation = organisationsMap.get("Empire Ltd");
+        List<ApplicationTeamManagementApplicantRowViewModel> currentApplicants = asList(
+                new ApplicationTeamManagementApplicantRowViewModel(usersMap.get("steve.smith@empire.com").getId(), "Steve Smith", "steve.smith@empire.com", true, false),
+                new ApplicationTeamManagementApplicantRowViewModel(usersMap.get("paul.davidson@empire.com").getId(), "Paul Davidson", "paul.davidson@empire.com", false, false));
+
+        ApplicationTeamUpdateForm expectedForm = new ApplicationTeamUpdateForm();
+        List<ApplicantInviteForm> applicants = asList(
+                new ApplicantInviteForm("Fred Brown", "fred.brown@empire.com")
+        );
+        expectedForm.setApplicants(applicants);
+
+        ApplicationInviteResource applicationInvite = new ApplicationInviteResource(applicants.get(0).getName(), applicants.get(0).getEmail(), applicationResource.getId());
+        InviteResultsResource inviteResultsResource = new InviteResultsResource();
+        inviteResultsResource.setInvitesSendSuccess(1);
+        when(inviteRestService.createInvitesByOrganisation(organisation.getId(), asList(applicationInvite))).thenReturn(restSuccess(inviteResultsResource));
+
+        setLoggedInUser(leadApplicant);
+        MvcResult mockResult = mockMvc.perform(post("/application/{applicationId}/team/update?organisation={organisationId}", applicationResource.getId(), organisation.getId())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("applicants[0].name", applicants.get(0).getName())
+                .param("applicants[0].email", applicants.get(0).getEmail()))
+                .andExpect(model().attribute("applicationTeamUpdateForm", expectedForm))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(cookie().exists("contributor_invite_state"))
-                .andExpect(view().name(redirectUrl))
+                .andExpect(redirectedUrl(format("/application/%s/team", applicationResource.getId())))
                 .andReturn();
 
-        assertEquals(URLEncoder.encode("{\"triedToSave\":false,\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationNameConfirmed\":null,\"organisationId\":1,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"\",\"email\":\"\",\"inviteStatus\":null}]}]}", CharEncoding.UTF_8),
-                getDecryptedCookieValue(result.getResponse().getCookies(), "contributor_invite_state"));
+        InOrder inOrder = inOrder(applicationService, inviteRestService);
+        inOrder.verify(applicationService).getById(applicationResource.getId());
+        inOrder.verify(inviteRestService).createInvitesByOrganisation(organisation.getId(), asList(applicationInvite));
+        inOrder.verifyNoMoreInteractions();
     }
 
     @Test
-    public void testUpdateContributorsPostPerson() throws Exception {
-        MvcResult result = mockMvc.perform(
-                post(updateUrl)
-                        .param("organisations[0].organisationName", "Empire Ltd")
-                        .param("organisations[0].organisationId", "1")
-                        .param("organisations[0].invites[0].personName", "Nico Bijl")
-                        .param("organisations[0].invites[0].email", "nico@worth.systems")
-        )
+    public void submitUpdateNonLeadOrganisation_loggedInUserIsLead() throws Exception {
+        Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
+        ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
+        Map<String, UserResource> usersMap = setupUserResources();
+        setupOrganisationInvitesWithInviteForLeadOrg(applicationResource.getId(), usersMap, organisationsMap);
+        UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
+
+        OrganisationResource organisation = organisationsMap.get("Ludlow");
+        List<ApplicationTeamManagementApplicantRowViewModel> expectedApplicants = asList(
+                new ApplicationTeamManagementApplicantRowViewModel(usersMap.get("jessica.doe@ludlow.com").getId(), "Jessica Doe", "jessica.doe@ludlow.com", false, false),
+                new ApplicationTeamManagementApplicantRowViewModel(null, "Ryan Dell", "ryan.dell@ludlow.com", false, true));
+
+        ApplicationTeamUpdateForm expectedForm = new ApplicationTeamUpdateForm();
+        List<ApplicantInviteForm> applicants = asList(
+                new ApplicantInviteForm("Joe Smith", "joe.smith@empire.com")
+        );
+        expectedForm.setApplicants(applicants);
+
+        ApplicationInviteResource applicationInvite = new ApplicationInviteResource(applicants.get(0).getName(), applicants.get(0).getEmail(), applicationResource.getId());
+        InviteResultsResource inviteResultsResource = new InviteResultsResource();
+        inviteResultsResource.setInvitesSendSuccess(1);
+        when(inviteRestService.createInvitesByOrganisation(organisation.getId(), asList(applicationInvite))).thenReturn(restSuccess(inviteResultsResource));
+
+        setLoggedInUser(leadApplicant);
+        MvcResult mockResult = mockMvc.perform(post("/application/{applicationId}/team/update?organisation={organisationId}", applicationResource.getId(), organisation.getId())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("applicants[0].name", applicants.get(0).getName())
+                .param("applicants[0].email", applicants.get(0).getEmail()))
+                .andExpect(model().attribute("applicationTeamUpdateForm", expectedForm))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(cookie().exists("contributor_invite_state"))
-                .andExpect(view().name(redirectUrl))
+                .andExpect(redirectedUrl(format("/application/%s/team", applicationResource.getId())))
                 .andReturn();
 
-        assertEquals(URLEncoder.encode("{\"triedToSave\":false,\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationNameConfirmed\":null,\"organisationId\":1,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\",\"inviteStatus\":null}]}]}", CharEncoding.UTF_8),
-                getDecryptedCookieValue(result.getResponse().getCookies(), "contributor_invite_state"));
+        InOrder inOrder = inOrder(applicationService, inviteRestService);
+        inOrder.verify(applicationService).getById(applicationResource.getId());
+        inOrder.verify(inviteRestService).createInvitesByOrganisation(organisation.getId(), asList(applicationInvite));
+        inOrder.verifyNoMoreInteractions();
     }
 
     @Test
-    public void testUpdateContributorsPostDuplicatePerson() throws Exception {
-        MvcResult result = mockMvc.perform(
-                post(updateUrl)
-                        .param("organisations[0].organisationName", "Empire Ltd")
-                        .param("organisations[0].organisationId", "1")
-                        .param("organisations[0].invites[0].personName", "Nico Bijl")
-                        .param("organisations[0].invites[0].email", "nico@worth.systems")
-                        .param("organisations[0].invites[1].personName", "Nico Bijl")
-                        .param("organisations[0].invites[1].email", "nico@worth.systems")
-        )
+    public void submitUpdateNonLeadOrganisation_loggedInUserIsNonLead() throws Exception {
+        Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
+        ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
+        Map<String, UserResource> usersMap = setupUserResources();
+        setupOrganisationInvitesWithInviteForLeadOrg(applicationResource.getId(), usersMap, organisationsMap);
+        UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
+
+        OrganisationResource organisation = organisationsMap.get("Ludlow");
+        List<ApplicationTeamManagementApplicantRowViewModel> expectedApplicants = asList(
+                new ApplicationTeamManagementApplicantRowViewModel(usersMap.get("jessica.doe@ludlow.com").getId(), "Jessica Doe", "jessica.doe@ludlow.com", false, false),
+                new ApplicationTeamManagementApplicantRowViewModel(null, "Ryan Dell", "ryan.dell@ludlow.com", false, true));
+
+        ApplicationTeamUpdateForm expectedForm = new ApplicationTeamUpdateForm();
+        List<ApplicantInviteForm> applicants = asList(
+                new ApplicantInviteForm("Joe Smith", "joe.smith@empire.com")
+        );
+        expectedForm.setApplicants(applicants);
+
+        ApplicationInviteResource applicationInvite = new ApplicationInviteResource(applicants.get(0).getName(), applicants.get(0).getEmail(), applicationResource.getId());
+        InviteResultsResource inviteResultsResource = new InviteResultsResource();
+        inviteResultsResource.setInvitesSendSuccess(1);
+        when(inviteRestService.createInvitesByOrganisation(organisation.getId(), asList(applicationInvite))).thenReturn(restSuccess(inviteResultsResource));
+
+        setLoggedInUser(usersMap.get("jessica.doe@ludlow.com"));
+        MvcResult mockResult = mockMvc.perform(post("/application/{applicationId}/team/update?organisation={organisationId}", applicationResource.getId(), organisation.getId())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("applicants[0].name", applicants.get(0).getName())
+                .param("applicants[0].email", applicants.get(0).getEmail()))
+                .andExpect(model().attribute("applicationTeamUpdateForm", expectedForm))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(cookie().exists("contributor_invite_state"))
-                .andExpect(view().name(redirectUrl))
+                .andExpect(redirectedUrl(format("/application/%s/team", applicationResource.getId())))
                 .andReturn();
 
-        assertEquals(URLEncoder.encode("{\"triedToSave\":false,\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationNameConfirmed\":null,\"organisationId\":1,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\",\"inviteStatus\":null},{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\",\"inviteStatus\":null}]}]}", CharEncoding.UTF_8),
-                getDecryptedCookieValue(result.getResponse().getCookies(), "contributor_invite_state"));
+        InOrder inOrder = inOrder(applicationService, inviteRestService);
+        inOrder.verify(applicationService).getById(applicationResource.getId());
+        inOrder.verify(inviteRestService).createInvitesByOrganisation(organisation.getId(), asList(applicationInvite));
+        inOrder.verifyNoMoreInteractions();
     }
 
     @Test
-    public void testUpdateContributorsPostInvalidPerson() throws Exception {
+    public void submitUpdateLeadOrganisation_loggedInUserIsLead_invalid() throws Exception {
+        Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
+        ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
+        Map<String, UserResource> usersMap = setupUserResources();
+        setupOrganisationInvitesWithInviteForLeadOrg(applicationResource.getId(), usersMap, organisationsMap);
+        UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
 
-        String expectedCookieVal = URLEncoder.encode("{\"triedToSave\":false,\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationNameConfirmed\":null,\"organisationId\":1,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"\",\"inviteStatus\":null}]}]}", CharEncoding.UTF_8);
-        String cookieName = "contributor_invite_state";
+        OrganisationResource organisation = organisationsMap.get("Empire Ltd");
+        List<ApplicationTeamManagementApplicantRowViewModel> currentApplicants = asList(
+                new ApplicationTeamManagementApplicantRowViewModel(usersMap.get("steve.smith@empire.com").getId(), "Steve Smith", "steve.smith@empire.com", true, false),
+                new ApplicationTeamManagementApplicantRowViewModel(usersMap.get("paul.davidson@empire.com").getId(), "Paul Davidson", "paul.davidson@empire.com", false, false));
+        List<ApplicantInviteForm> applicants = asList(
+                new ApplicantInviteForm("Joe Smith", "joe.smith@empire.com")
+        );
 
-        MvcResult result = mockMvc.perform(
-                post(updateUrl)
-                        .param("organisations[0].organisationName", "Empire Ltd")
-                        .param("organisations[0].organisationId", "1")
-                        .param("organisations[0].organisationInviteId", "")
-                        .param("organisations[0].invites[0].personName", "Nico Bijl")
-                        .param("organisations[0].invites[0].email", "")
-        )
-                .andExpect(status().is3xxRedirection())
-                .andExpect(cookie().exists(cookieName))
-                .andExpect(view().name(redirectUrl))
+        setLoggedInUser(leadApplicant);
+        MvcResult result = mockMvc.perform(post("/application/{applicationId}/team/update?organisation={organisationId}", applicationResource.getId(), organisation.getId())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("applicants[0].name", applicants.get(0).getName()))
+                .andExpect(status().isOk())
+                .andExpect(model().hasErrors())
+                .andExpect(model().attributeHasFieldErrors("applicationTeamUpdateForm", "applicants[0].email"))
+                .andExpect(view().name("application-team/edit-org"))
                 .andReturn();
 
-        assertEquals(expectedCookieVal, getDecryptedCookieValue(result.getResponse().getCookies(), cookieName));
-    }
+        ApplicationTeamUpdateForm form = (ApplicationTeamUpdateForm) result.getModelAndView().getModel().get("applicationTeamUpdateForm");
 
-    @Test
-    public void testUpdateContributorsBeginApplication() throws Exception {
-        MvcResult resultOne = mockMvc.perform(
-                post(updateUrl)
-                        .param("organisations[0].organisationName", "Empire Ltd")
-                        .param("organisations[0].organisationId", "1")
-                        .param("organisations[0].invites[0].personName", "Nico Bijl")
-                        .param("organisations[0].invites[0].email", "nico@gmail.com")
-                        .param("save_contributors", "")
-        )
-                .andExpect(status().is3xxRedirection())
-                .andExpect(cookie().exists("contributor_invite_state"))
-                .andExpect(view().name(inviteOverviewRedirectUrl))
-                .andReturn();
+        BindingResult bindingResult = form.getBindingResult();
+        assertEquals(0, bindingResult.getGlobalErrorCount());
+        assertEquals(1, bindingResult.getFieldErrorCount());
+        assertTrue(bindingResult.hasFieldErrors("applicants[0].email"));
+        assertEquals("Please enter an email address.", bindingResult.getFieldError("applicants[0].email").getDefaultMessage());
 
-        assertEquals("", getDecryptedCookieValue(resultOne.getResponse().getCookies(), "contributor_invite_state"));
-
-
-        MvcResult resultTwo = mockMvc.perform(
-                post(updateUrl + "")
-                        .param("newApplication", "Empire Ltd")
-                        .param("organisations[0].organisationName", "Empire Ltd")
-                        .param("organisations[0].organisationId", "1")
-                        .param("organisations[0].invites[0].personName", "Nico Bijl")
-                        .param("organisations[0].invites[0].email", "nico@gmail.com")
-                        .param("save_contributors", "")
-        )
-                .andExpect(status().is3xxRedirection())
-                .andExpect(cookie().exists("contributor_invite_state"))
-                .andExpect(view().name(applicationRedirectUrl))
-                .andReturn();
-
-        assertEquals("", getDecryptedCookieValue(resultTwo.getResponse().getCookies(), "contributor_invite_state"));
-    }
-
-    @Test
-    public void testLeadCanInviteToOtherOrganisation() throws Exception {
-        MvcResult result = mockMvc.perform(
-                post(updateUrl)
-                        .param("organisations[0].organisationName", "Empire Ltd")
-                        .param("organisations[0].organisationId", "1")
-                        .param("organisations[1].organisationName", "Some Other Org Ltd")
-                        .param("organisations[1].organisationId", "2")
-                        .param("organisations[1].invites[0].personName", "Jim Kirk")
-                        .param("organisations[1].invites[0].email", "j.kirk@starfleet.org")
-                        .param("save_contributors", "")
-        )
-                .andExpect(status().is3xxRedirection())
-                .andExpect(cookie().exists("contributor_invite_state"))
-                .andExpect(view().name(inviteOverviewRedirectUrl))
-                .andReturn();
-
-        assertEquals("", getDecryptedCookieValue(result.getResponse().getCookies(), "contributor_invite_state"));
-    }
-
-    @Test
-    public void testNonLeadCannotInviteToOtherOrganisation() throws Exception {
-
-        this.setupUserInvite("name", "user@email.com", 3L);
-        this.loginNonLeadUser("user@email.com");
-
-        MvcResult result = mockMvc.perform(
-                post(updateUrl)
-                        .param("organisations[0].organisationName", "Empire Ltd")
-                        .param("organisations[0].organisationId", "1")
-                        .param("organisations[1].organisationName", "Some Other Org Ltd")
-                        .param("organisations[1].organisationId", "2")
-                        .param("organisations[1].invites[0].personName", "Jim Kirk")
-                        .param("organisations[1].invites[0].email", "j.kirk@starfleet.org")
-                        .param("save_contributors", "")
-        )
-                .andExpect(status().is3xxRedirection())
-                .andExpect(cookie().exists("contributor_invite_state"))
-                .andExpect(view().name(redirectUrl))
-                .andReturn();
-
-        assertEquals(URLEncoder.encode("{\"triedToSave\":true,\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationNameConfirmed\":null,\"organisationId\":1,\"organisationInviteId\":null,\"invites\":[]},{\"organisationName\":\"Some Other Org Ltd\",\"organisationNameConfirmed\":null,\"organisationId\":2,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Jim Kirk\",\"email\":\"j.kirk@starfleet.org\",\"inviteStatus\":null}]}]}", CharEncoding.UTF_8),
-                getDecryptedCookieValue(result.getResponse().getCookies(), "contributor_invite_state"));
+        InOrder inOrder = inOrder(applicationService, userService);
+        inOrder.verify(applicationService, times(3)).getById(applicationResource.getId());
+        inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
+        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
+        inOrder.verify(userService).findById(leadApplicant.getId());
+        inOrder.verifyNoMoreInteractions();
     }
 
 
-
-    @Test
-    public void testNonLeadCanInviteToTheirOwnOrganisation() throws Exception {
-
-        this.setupUserInvite("name", "user@email.com", 2L);
-        this.loginNonLeadUser("user@email.com");
-
-        MvcResult result = mockMvc.perform(
-                post(updateUrl)
-                        .param("organisations[0].organisationName", "Empire Ltd")
-                        .param("organisations[0].organisationId", "1")
-                        .param("organisations[1].organisationName", "Some Other Org Ltd")
-                        .param("organisations[1].organisationId", "2")
-                        .param("organisations[1].invites[0].personName", "Jim Kirk")
-                        .param("organisations[1].invites[0].email", "j.kirk@starfleet.org")
-                        .param("save_contributors", "")
-        )
-                .andExpect(status().is3xxRedirection())
-                .andExpect(cookie().exists("contributor_invite_state"))
-                .andExpect(view().name(inviteOverviewRedirectUrl))
-                .andReturn();
-
-        assertEquals("", getDecryptedCookieValue(result.getResponse().getCookies(), "contributor_invite_state"));
+    private ApplicationResource setupApplicationResource(Map<String, OrganisationResource> organisationsMap) {
+        return setupApplicationResource(organisationsMap, OPEN);
     }
 
+    private ApplicationResource setupApplicationResource(Map<String, OrganisationResource> organisationsMap, ApplicationStatusConstants applicationStatus) {
+        ApplicationResource applicationResource = newApplicationResource()
+                .withName("Application name")
+                .withApplicationStatus(applicationStatus)
+                .build();
 
-
-    @Test
-    public void testUpdateContributorsRemovePerson() throws Exception {
-        MvcResult result = mockMvc.perform(
-                post(updateUrl)
-                        .param("organisations[0].organisationName", "Empire Ltd")
-                        .param("organisations[0].organisationId", "1")
-                        .param("organisations[0].invites[0].personName", "Nico Bijl")
-                        .param("organisations[0].invites[0].email", "nico@worth.systems")
-                        .param("organisations[0].invites[1].personName", "Brent de Kok")
-                        .param("organisations[0].invites[1].email", "brent@worth.systems")
-                        .param("remove_person", "0_1")
-        )
-                .andExpect(status().is3xxRedirection())
-                .andExpect(cookie().exists("contributor_invite_state"))
-                .andExpect(view().name(redirectUrl))
-                .andReturn();
-
-        assertEquals(URLEncoder.encode("{\"triedToSave\":false,\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationNameConfirmed\":null,\"organisationId\":1,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\",\"inviteStatus\":null}]}]}", CharEncoding.UTF_8),
-                getDecryptedCookieValue(result.getResponse().getCookies(), "contributor_invite_state"));
+        when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);
+        when(applicationService.getLeadOrganisation(applicationResource.getId())).thenReturn(organisationsMap.get("Empire Ltd"));
+        return applicationResource;
     }
 
-    @Test
-    public void testUpdateContributorsRemovePerson2() throws Exception {
-        MvcResult result = mockMvc.perform(
-                post(updateUrl)
-                        .param("organisations[0].organisationName", "Empire Ltd")
-                        .param("organisations[0].organisationId", "1")
-                        .param("organisations[0].invites[0].personName", "Nico Bijl")
-                        .param("organisations[0].invites[0].email", "nico@worth.systems")
-                        .param("organisations[0].invites[1].personName", "Brent de Kok")
-                        .param("organisations[0].invites[1].email", "brent@worth.systems")
-                        .param("remove_person", "0_0")
-        )
-                .andExpect(status().is3xxRedirection())
-                .andExpect(cookie().exists("contributor_invite_state"))
-                .andExpect(view().name(redirectUrl))
-                .andReturn();
+    private Map<String, UserResource> setupUserResources() {
+        List<UserResource> userResources = newUserResource()
+                .withFirstName("Jessica", "Paul", "Steve", "Paul")
+                .withLastName("Doe", "Tom", "Smith", "Davidson")
+                .withEmail("jessica.doe@ludlow.com", "paul.tom@egg.com", "steve.smith@empire.com", "paul.davidson@empire.com")
+                .build(4);
 
-        assertEquals(URLEncoder.encode("{\"triedToSave\":false,\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationNameConfirmed\":null,\"organisationId\":1,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Brent de Kok\",\"email\":\"brent@worth.systems\",\"inviteStatus\":null}]}]}", CharEncoding.UTF_8),
-                getDecryptedCookieValue(result.getResponse().getCookies(), "contributor_invite_state"));
-
+        return simpleToMap(userResources, UserResource::getEmail);
     }
 
-    /**
-     * When user adds a partner organisation, it should just add a empty person row, so the user can fill in directly.
-     */
-    @Test
-    public void testUpdateContributorsPostAddPartner() throws Exception {
-        MvcResult result = mockMvc.perform(post(updateUrl)
-                .param("organisations[0].organisationName", "Empire Ltd")
-                .param("organisations[0].organisationId", "1")
-                .param("organisations[0].invites[0].personName", "Nico Bijl")
-                .param("organisations[0].invites[0].email", "nico@worth.systems")
-                .param("organisations[0].invites[1].personName", "Brent de Kok")
-                .param("organisations[0].invites[1].email", "brent@worth.systems")
-                .param("add_partner", ""))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(cookie().exists("contributor_invite_state"))
-                .andExpect(view().name(redirectUrl))
-                .andReturn();
-
-        assertEquals(URLEncoder.encode("{\"triedToSave\":false,\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationNameConfirmed\":null,\"organisationId\":1,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\",\"inviteStatus\":null},{\"userId\":null,\"personName\":\"Brent de Kok\",\"email\":\"brent@worth.systems\",\"inviteStatus\":null}]},{\"organisationName\":\"\",\"organisationNameConfirmed\":null,\"organisationId\":null,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"\",\"email\":\"\",\"inviteStatus\":null}]}]}", CharEncoding.UTF_8),
-                getDecryptedCookieValue(result.getResponse().getCookies(), "contributor_invite_state"));
+    private UserResource setupLeadApplicant(ApplicationResource applicationResource, Map<String, UserResource> usersMap) {
+        UserResource leadApplicant = usersMap.get("steve.smith@empire.com");
+        when(userService.getLeadApplicantProcessRoleOrNull(applicationResource)).thenReturn(newProcessRoleResource()
+                .withUser(leadApplicant)
+                .build());
+        when(userService.findById(leadApplicant.getId())).thenReturn(leadApplicant);
+        return leadApplicant;
     }
 
+    private Map<String, OrganisationResource> setupOrganisationResources() {
+        List<OrganisationResource> organisationResources = newOrganisationResource()
+                .withName("Ludlow", "EGGS", "Empire Ltd")
+                .build(3);
 
-    /**
-     * When the last person is removed from a partner organisation, also remove the organisation.
-     * @throws Exception
-     */
-    @Test
-    public void testInviteContributorsPostRemovePersonAndPartner() throws Exception {
-        MvcResult result = mockMvc.perform(post(updateUrl)
-                .param("organisations[0].organisationName", "Empire Ltd")
-                .param("organisations[0].organisationId", "1")
-                .param("organisations[0].invites[0].personName", "Nico Bijl")
-                .param("organisations[0].invites[0].email", "nico@worth.systems")
-                .param("organisations[0].invites[1].personName", "Brent de Kok")
-                .param("organisations[0].invites[1].email", "brent@worth.systems")
-                .param("organisations[1].organisationName", "SomePartner")
-                .param("organisations[1].invites[0].personName", "Nico Bijl")
-                .param("organisations[1].invites[0].email", "nico@worth.systems")
-                .param("remove_person", "1_0"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(cookie().exists("contributor_invite_state"))
-                .andExpect(view().name(redirectUrl))
-                .andReturn();
-
-        assertEquals(
-                URLEncoder.encode("{\"triedToSave\":false,\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationNameConfirmed\":null,\"organisationId\":1,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\",\"inviteStatus\":null},{\"userId\":null,\"personName\":\"Brent de Kok\",\"email\":\"brent@worth.systems\",\"inviteStatus\":null}]}]}", CharEncoding.UTF_8),
-                getDecryptedCookieValue(result.getResponse().getCookies(), "contributor_invite_state"));
+        return simpleToMap(organisationResources, OrganisationResource::getName);
     }
 
-    @Test
-    public void testInviteContributorsPostRemovePersonFromPartner() throws Exception {
-        MvcResult result = mockMvc.perform(post(updateUrl)
-                .param("organisations[0].organisationName", "Empire Ltd")
-                .param("organisations[0].organisationId", "1")
-                .param("organisations[0].invites[0].personName", "Nico Bijl")
-                .param("organisations[0].invites[0].email", "nico@worth.systems")
-                .param("organisations[0].invites[1].personName", "Brent de Kok")
-                .param("organisations[0].invites[1].email", "brent@worth.systems")
-                .param("organisations[1].organisationName", "SomePartner")
-                .param("organisations[1].invites[0].personName", "Nico Bijl")
-                .param("organisations[1].invites[0].email", "nico@worth.systems")
-                .param("organisations[1].invites[1].personName", "Brent de Kok")
-                .param("organisations[1].invites[1].email", "brent@worth.systems")
-                .param("applicationId", applicationId.toString())
-                .param("remove_person", "1_0"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(cookie().exists("contributor_invite_state"))
-                .andExpect(view().name(redirectUrl))
-                .andReturn();
+    private List<InviteOrganisationResource> setupOrganisationInvitesWithInviteForLeadOrg(long applicationId,
+                                                                                          Map<String, UserResource> usersMap,
+                                                                                          Map<String, OrganisationResource> organisationsMap) {
+        UserResource user1 = usersMap.get("jessica.doe@ludlow.com");
+        UserResource user2 = usersMap.get("paul.tom@egg.com");
+        UserResource user3 = usersMap.get("paul.davidson@empire.com");
 
-        assertEquals(
-                URLEncoder.encode("{\"triedToSave\":false,\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationNameConfirmed\":null,\"organisationId\":1,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\",\"inviteStatus\":null},{\"userId\":null,\"personName\":\"Brent de Kok\",\"email\":\"brent@worth.systems\",\"inviteStatus\":null}]},{\"organisationName\":\"SomePartner\",\"organisationNameConfirmed\":null,\"organisationId\":null,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Brent de Kok\",\"email\":\"brent@worth.systems\",\"inviteStatus\":null}]}]}", CharEncoding.UTF_8),
-                getDecryptedCookieValue(result.getResponse().getCookies(), "contributor_invite_state"));
+        List<ApplicationInviteResource> invitesOrg1 = newApplicationInviteResource()
+                .withUsers(user1.getId(), null)
+                .withNameConfirmed(user1.getName(), null)
+                .withName("Jess Doe", "Ryan Dell")
+                .withEmail(user1.getEmail(), "ryan.dell@ludlow.com")
+                .withStatus(OPENED, SENT)
+                .build(2);
+
+        List<ApplicationInviteResource> invitesOrg2 = newApplicationInviteResource()
+                .withUsers(user2.getId())
+                .withNameConfirmed(user2.getName())
+                .withName(user2.getName())
+                .withEmail(user2.getEmail())
+                .withStatus(OPENED)
+                .build(1);
+
+        List<ApplicationInviteResource> invitesOrg3 = newApplicationInviteResource()
+                .withUsers(user3.getId())
+                .withNameConfirmed(user3.getName())
+                .withName(user3.getName())
+                .withEmail(user3.getEmail())
+                .withStatus(OPENED)
+                .build(1);
+
+        OrganisationResource org1 = organisationsMap.get("Ludlow");
+        OrganisationResource org2 = organisationsMap.get("EGGS");
+        OrganisationResource org3 = organisationsMap.get("Empire Ltd");
+
+        List<InviteOrganisationResource> inviteOrganisationResources = newInviteOrganisationResource()
+                .withOrganisation(org1.getId(), org2.getId(), org3.getId())
+                .withOrganisationName(org1.getName(), org2.getName(), org3.getName())
+                .withOrganisationNameConfirmed(org1.getName(), org2.getName(), org3.getName())
+                .withInviteResources(invitesOrg1, invitesOrg2, invitesOrg3)
+                .build(3);
+
+        when(inviteRestService.getInvitesByApplication(applicationId)).thenReturn(restSuccess(inviteOrganisationResources));
+        return inviteOrganisationResources;
     }
 
-    @Test
-    public void whenCookieHasDifferingApplicationIdFromGetParameterItShouldBeIgnored() throws Exception {
-        Cookie cookie = new Cookie("contributor_invite_state", encryptor.encrypt(URLEncoder.encode("{\"applicationId\":"+alternativeApplicationId+",\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationNameConfirmed\":null,\"organisationId\":3,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\",\"inviteStatus\":null}]}]}}", CharEncoding.UTF_8)));
+    private List<InviteOrganisationResource> setupOrganisationInvitesWithoutInvitesForLeadOrg(long applicationId,
+                                                                                              Map<String, UserResource> usersMap,
+                                                                                              Map<String, OrganisationResource> organisationsMap) {
+        UserResource user1 = usersMap.get("jessica.doe@ludlow.com");
+        UserResource user2 = usersMap.get("paul.tom@egg.com");
 
-        MvcResult mockResult = mockMvc.perform(get(updateUrl).cookie(cookie))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name(viewName))
-             //   .andExpect(model().attributeExists("leadOrganisation", "leadApplicant", "contributorsForm"))
-                .andReturn();
+        List<ApplicationInviteResource> invitesOrg1 = newApplicationInviteResource()
+                .withUsers(user1.getId(), null)
+                .withNameConfirmed(user1.getName(), null)
+                .withName("Jess Doe", "Ryan Dell")
+                .withEmail(user1.getEmail(), "ryan.dell@ludlow.com")
+                .withStatus(OPENED, SENT)
+                .build(2);
 
-        ContributorsForm contributorsFormResult = (ContributorsForm) mockResult.getModelAndView().getModelMap().get("contributorsForm");
-        assertNotNull(contributorsFormResult.getOrganisations().get(0));
-        assertEquals(0, contributorsFormResult.getOrganisations().get(0).getInvites().size());
+        List<ApplicationInviteResource> invitesOrg2 = newApplicationInviteResource()
+                .withUsers(user2.getId())
+                .withNameConfirmed(user2.getName())
+                .withName(user2.getName())
+                .withEmail(user2.getEmail())
+                .withStatus(OPENED)
+                .build(1);
+
+        OrganisationResource org1 = organisationsMap.get("Ludlow");
+        OrganisationResource org2 = organisationsMap.get("EGGS");
+
+        List<InviteOrganisationResource> inviteOrganisationResources = newInviteOrganisationResource()
+                .withOrganisation(org1.getId(), org2.getId())
+                .withOrganisationName(org1.getName(), org2.getName())
+                .withOrganisationNameConfirmed(org1.getName(), org2.getName())
+                .withInviteResources(invitesOrg1, invitesOrg2)
+                .build(2);
+
+        when(inviteRestService.getInvitesByApplication(applicationId)).thenReturn(restSuccess(inviteOrganisationResources));
+        return inviteOrganisationResources;
     }
 
-    @Test
-    public void whenUserIsRemovedRedirectToOverview() throws Exception {
-        when(applicationService.removeCollaborator(anyLong())).thenReturn(ServiceResult.serviceSuccess());
+    private List<InviteOrganisationResource> setupOrganisationInvitesWithAnUnconfirmedOrganisation(long applicationId,
+                                                                                                   Map<String, UserResource> usersMap,
+                                                                                                   Map<String, OrganisationResource> organisationsMap) {
+        UserResource user1 = usersMap.get("jessica.doe@ludlow.com");
+        UserResource user2 = usersMap.get("paul.tom@egg.com");
+        UserResource user3 = usersMap.get("paul.davidson@empire.com");
 
-        mockMvc.perform(
-                post(removeUrl)
-                        .param("applicationInviteId", "2")
-        )
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name(inviteOverviewRedirectUrl));
-    }
+        List<ApplicationInviteResource> invitesOrg1 = newApplicationInviteResource()
+                .withUsers(user1.getId(), null)
+                .withNameConfirmed(user1.getName(), null)
+                .withName("Jess Doe", "Ryan Dell")
+                .withEmail(user1.getEmail(), "ryan.dell@ludlow.com")
+                .withStatus(SENT, SENT)
+                .build(2);
 
-    @Test
-    @Ignore("INFUND-7974")
-    public void whenUserHasNoJSUserMustConfirm() throws Exception {
-        Long inviteId = 2314L;
+        List<ApplicationInviteResource> invitesOrg2 = newApplicationInviteResource()
+                .withUsers(user2.getId())
+                .withNameConfirmed(user2.getName())
+                .withName(user2.getName())
+                .withEmail(user2.getEmail())
+                .withStatus(OPENED)
+                .build(1);
 
-        mockMvc.perform(
-                get(removeUrl + String.format("/%d/confirm", inviteId))
-        )
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name(APPLICATION_CONTRIBUTORS_UPDATE_REMOVE_CONFIRM))
-                .andExpect(model().attribute("inviteId", inviteId))
-                .andExpect(model().attributeExists("removeContributorForm"));
-    }
+        List<ApplicationInviteResource> invitesOrg3 = newApplicationInviteResource()
+                .withUsers(user3.getId())
+                .withNameConfirmed(user3.getName())
+                .withName(user3.getName())
+                .withEmail(user3.getEmail())
+                .withStatus(OPENED)
+                .build(1);
 
-    private void loginNonLeadUser(String email) {
-        UserResource user = newUserResource().withId(2L).withFirstName("test").withLastName("name").withEmail(email).build();
-        loginUser(user);
-    }
+        OrganisationResource org2 = organisationsMap.get("EGGS");
+        OrganisationResource org3 = organisationsMap.get("Empire Ltd");
 
-    private void setupUserInvite(String name, String email, Long organisationId) {
-        InviteOrganisationResource inviteOrgResource = new InviteOrganisationResource();
-        inviteOrgResource.setOrganisation(organisationId);
-        inviteOrgResource.setId(1L);
-        inviteOrgResource.setInviteResources(Arrays.asList(new ApplicationInviteResource(null, name, email, null, null, null, null)));
-        List l = new ArrayList();
-        l.add(inviteOrgResource);
-        when(inviteRestService.getInvitesByApplication(isA(Long.class))).thenReturn(restSuccess(l));
+        List<InviteOrganisationResource> inviteOrganisationResources = newInviteOrganisationResource()
+                .withOrganisation(null, org2.getId(), org3.getId())
+                .withOrganisationName("Ludlow", org2.getName(), org3.getName())
+                .withOrganisationNameConfirmed(null, org2.getName(), org3.getName())
+                .withInviteResources(invitesOrg1, invitesOrg2, invitesOrg3)
+                .build(3);
+
+        when(inviteRestService.getInvitesByApplication(applicationId)).thenReturn(restSuccess(inviteOrganisationResources));
+        return inviteOrganisationResources;
     }
 }

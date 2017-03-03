@@ -3,14 +3,16 @@ package org.innovateuk.ifs.application.form;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
  * Form field model for the Update Organisation view.
  */
-public class ApplicationTeamUpdateForm {
+public class ApplicationTeamUpdateForm  extends BaseBindingResultTarget {
 
     @Valid
     private List<ApplicantInviteForm> applicants;

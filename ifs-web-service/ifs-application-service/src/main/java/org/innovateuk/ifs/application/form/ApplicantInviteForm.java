@@ -5,13 +5,14 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.innovateuk.ifs.commons.validation.ValidationConstants;
+import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 
 import javax.validation.constraints.Size;
 
 /**
  * Form field model for the Applicant fields within the Add Organisation view.
  */
-public class ApplicantInviteForm {
+public class ApplicantInviteForm extends BaseBindingResultTarget {
 
     @NotEmpty(message = "{validation.standard.name.required}")
     private String name;
