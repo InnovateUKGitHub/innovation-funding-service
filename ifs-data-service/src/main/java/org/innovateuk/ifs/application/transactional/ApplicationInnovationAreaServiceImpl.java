@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_FORBIDDEN;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -43,21 +42,21 @@ public class ApplicationInnovationAreaServiceImpl extends BaseTransactionalServi
 
     @Override
     public ServiceResult<ApplicationResource> setInnovationArea(Long applicationId, Long innovationAreaId) {
-        return findApplication(applicationId).andOnSuccess(application ->
+        return find(application(applicationId)).andOnSuccess(application ->
                 findInnovationAreaInAllowedList(application, innovationAreaId).andOnSuccess(innovationArea ->
-                        saveApplicationWithInnovationArea(application, innovationArea))).andOnSuccess(applicationResource -> serviceSuccess(applicationMapper.mapToResource(applicationResource)));
+                        saveApplicationWithInnovationArea(application, innovationArea))).andOnSuccess(application -> serviceSuccess(applicationMapper.mapToResource(application)));
     }
 
     @Override
     public ServiceResult<ApplicationResource> setNoInnovationAreaApplies(Long applicationId) {
-        return findApplication(applicationId).andOnSuccess(application ->
-                saveWithNoInnovationAreaApplies(application)).andOnSuccess(applicationResource -> serviceSuccess(applicationMapper.mapToResource(applicationResource)));
+        return find(application(applicationId)).andOnSuccess(this::saveWithNoInnovationAreaApplies)
+                .andOnSuccess(application -> serviceSuccess(applicationMapper.mapToResource(application)));
     }
 
     @Override
-    public ServiceResult<List<InnovationAreaResource>> getAvailableInnovationAreas(Long applicationdId) {
-        return findApplication(applicationdId).andOnSuccess(application ->
-                getAllowedInnovationAreas(application)).andOnSuccess(areas -> serviceSuccess(innovationAreaMapper.mapToResource(areas)));
+    public ServiceResult<List<InnovationAreaResource>> getAvailableInnovationAreas(Long applicationId) {
+        return find(application(applicationId)).andOnSuccess(this::getAllowedInnovationAreas)
+                .andOnSuccess(areas -> serviceSuccess(innovationAreaMapper.mapToResource(areas)));
     }
 
     private ServiceResult<InnovationArea> findInnovationAreaInAllowedList(Application application, Long innovationAreaId) {
@@ -100,9 +99,5 @@ public class ApplicationInnovationAreaServiceImpl extends BaseTransactionalServi
         application.setNoInnovationAreaApplicable(false);
         application.setInnovationArea(innovationArea);
         return serviceSuccess(applicationRepository.save(application));
-    }
-
-    private ServiceResult<Application> findApplication(Long applicationId) {
-        return find(applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId));
     }
 }
