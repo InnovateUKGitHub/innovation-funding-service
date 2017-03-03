@@ -150,7 +150,7 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
                 .withContent(newAssessorCreatedInviteResource().build(2))
                 .build();
 
-        setupGetWithRestResultExpectations(format("%s/%s/%s", restUrl, "getCreatedInvites", competitionId), AssessorCreatedInvitePageResource.class, expected);
+        setupGetWithRestResultExpectations(format("%s/%s/%s?page=1", restUrl, "getCreatedInvites", competitionId), AssessorCreatedInvitePageResource.class, expected);
 
         AssessorCreatedInvitePageResource actual = service.getCreatedInvites(competitionId, page).getSuccessObject();
         assertEquals(expected, actual);
