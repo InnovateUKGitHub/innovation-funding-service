@@ -1,20 +1,19 @@
 package org.innovateuk.ifs.thread.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.upload.service.ProjectFinancePostAttachmentRestService;
+import org.innovateuk.threads.attachment.resource.AttachmentResource;
 import org.junit.Test;
 import org.springframework.core.io.ByteArrayResource;
 
 import java.util.Optional;
 
-import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.junit.Assert.assertSame;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
-public class ProjectFinancePostAttachmentRestServiceTest extends BaseRestServiceUnitTest<ProjectFinancePostAttachmentRestService> {
-    private final static String baseURL = "/project/finance/attachment";
+public class ProjectFinanceAttachmentRestServiceTest extends BaseRestServiceUnitTest<ProjectFinancePostAttachmentRestService> {
+    private final static String baseURL = "/project/finance/attachments";
 
     @Override
     protected ProjectFinancePostAttachmentRestService registerRestServiceUnderTest() {
@@ -23,9 +22,9 @@ public class ProjectFinancePostAttachmentRestServiceTest extends BaseRestService
 
     @Test
     public void test_find() throws Exception {
-        FileEntryResource expected = newFileEntryResource().withId(199L).build();
-        setupGetWithRestResultExpectations(baseURL + "/199", FileEntryResource.class, expected, OK);
-        final FileEntryResource response = service.find(199L).getSuccessObject();
+        AttachmentResource expected = new AttachmentResource(199L, "name", "application/pdf", 1235);
+        setupGetWithRestResultExpectations(baseURL + "/199", AttachmentResource.class, expected, OK);
+        final AttachmentResource response = service.find(199L).getSuccessObject();
         assertSame(expected, response);
     }
 
@@ -35,15 +34,15 @@ public class ProjectFinancePostAttachmentRestServiceTest extends BaseRestService
         byte[] fileContent = fileContentString.getBytes();
         final String originalFilename = "testFile.pdf";
         final String contentType = "text/pdf";
-        String url = baseURL + "/upload?filename=" + originalFilename;
+        final Long projectId = 77L;
+        String url = baseURL + "/" + projectId + "/upload?filename=" + originalFilename;
 
-        FileEntryResource expected = newFileEntryResource().withId(199L).withFilesizeBytes(fileContent.length)
-                .withMediaType(contentType).build();
+        AttachmentResource expected = new AttachmentResource(199L, "name", "application/pdf", 1235);
 
-        setupFileUploadWithRestResultExpectations(url, FileEntryResource.class,
+        setupFileUploadWithRestResultExpectations(url, AttachmentResource.class,
                 fileContentString, contentType, fileContent.length, expected, CREATED);
 
-        final FileEntryResource response = service.upload(contentType, fileContent.length, originalFilename, fileContent).getSuccessObject();
+        final AttachmentResource response = service.upload(projectId, contentType, fileContent.length, originalFilename, fileContent).getSuccessObject();
         assertSame(expected, response);
     }
 

@@ -3,10 +3,13 @@ package org.innovateuk.ifs.assessment.transactional;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessorFormInputResponse;
+import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.resource.FormInputResource;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -17,6 +20,8 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
+import static org.innovateuk.ifs.application.builder.QuestionBuilder.newQuestion;
+import static org.innovateuk.ifs.application.builder.SectionBuilder.newSection;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseBuilder.newAssessorFormInputResponse;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
@@ -397,4 +402,28 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
         assertTrue(result.getFailure().is(fieldError("value", value, "org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException", "CategoryResource", value)));
     }
 
+
+    @Test
+    public void getApplicationAggregateScores() {
+        long applicationId = 7;
+
+        FormInput scopeFormInput = newFormInput()
+                .withType(FormInputType.ASSESSOR_APPLICATION_IN_SCOPE)
+                .build();
+        FormInput otherFormInput = newFormInput()
+                .withType(FormInputType.ASSESSOR_RESEARCH_CATEGORY)
+                .build();
+
+        List<AssessorFormInputResponse> assessorFormInputResponses = newAssessorFormInputResponse()
+                .withFormInput(scopeFormInput, otherFormInput, scopeFormInput)
+                .withValue("true", "true", "false")
+                .build(3);
+
+        when(assessorFormInputResponseRepositoryMock.findByAssessmentTargetId(applicationId)).thenReturn(assessorFormInputResponses);
+
+        ApplicationAssessmentAggregateResource scores = assessorFormInputResponseService.getApplicationAggregateScores(applicationId).getSuccessObjectOrThrowException();
+
+        assertEquals(2, scores.getTotalScope());
+        assertEquals(1, scores.getInScope());
+    }
 }

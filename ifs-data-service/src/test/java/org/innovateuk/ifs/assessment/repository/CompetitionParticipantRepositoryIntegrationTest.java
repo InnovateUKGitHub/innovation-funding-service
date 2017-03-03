@@ -1,6 +1,9 @@
 package org.innovateuk.ifs.assessment.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
+import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -8,8 +11,18 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.domain.*;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
+import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.repository.ProfileRepository;
+import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.workflow.domain.ActivityState;
+import org.innovateuk.ifs.workflow.domain.ActivityType;
+import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
+import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +31,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,6 +71,24 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
     @Autowired
     private RejectionReasonRepository rejectionReasonRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private AssessmentRepository assessmentRepository;
+
+    @Autowired
+    private ApplicationRepository applicationRepository;
+
+    @Autowired
+    private ProcessRoleRepository processRoleRepository;
+
+    @Autowired
+    private ActivityStateRepository activityStateRepository;
+
+    @Autowired
+    private ProfileRepository profileRepository;
 
     @Autowired
     @Override
@@ -244,6 +276,111 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         assertNotNull(retrievedParticipants);
         assertEqualParticipants(singletonList(competitionParticipantToAccept), retrievedParticipants);
+    }
+
+    @Test
+    public void findParticipantsWithAssessments() {
+        List<Competition> competitions = newCompetition().withId(1L, 7L).build(2);
+
+        Application application = applicationRepository.findByCompetitionId(competitions.get(0).getId()).get(0);
+
+        Role role = roleRepository.findOneByName(UserRoleType.ASSESSOR.getName());
+
+        ActivityState activityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION_ASSESSMENT, State.ACCEPTED);
+        List<User> users = findUsersByEmail("paul.plum@gmail.com", "felix.wilson@gmail.com", "steve.smith@empire.com");
+        List<CompetitionParticipant> savedParticipants = saveNewCompetitionParticipants(
+                newCompetitionInviteWithoutId()
+                        .withName("name1", "name2", "name3")
+                        .withEmail("test1@test.com", "test2@test.com", "test3@test.com")
+                        .withUser(users.toArray(new User[users.size()]))
+                        .withHash(generateInviteHash(), generateInviteHash(), generateInviteHash())
+                        .withCompetition(competitions.get(0), competitions.get(0), competitions.get(1))
+                        .withInnovationArea(innovationArea)
+                        .withStatus(SENT)
+                        .build(3));
+
+        // Now accept all of the invites
+        savedParticipants.stream().forEach(
+                participant -> {
+                    participant.getInvite().open();
+                    participant.acceptAndAssignUser(participant.getInvite().getUser());
+                }
+        );
+
+        // Now assign two of the participants
+        for (int i = 0; i < 2; i++) {
+
+            ProcessRole processRole = new ProcessRole();
+            processRole.setUser(users.get(i));
+            processRole.setApplicationId(application.getId());
+            processRole.setRole(role);
+            processRoleRepository.save(processRole);
+
+            Assessment assessment = new Assessment(application, processRole);
+            assessment.setActivityState(activityState);
+            assessmentRepository.save(assessment);
+        }
+
+        flushAndClearSession();
+
+        List<CompetitionParticipant> retrievedParticipants = repository.findParticipantsWithAssessments(1L, ASSESSOR, ParticipantStatus.ACCEPTED, 1L);
+
+        assertNotNull(retrievedParticipants);
+        assertEquals(2, retrievedParticipants.size());
+    }
+
+    @Test
+    public void findParticipantsWithoutAssessments() {
+        List<Competition> competitions = newCompetition().withId(1L, 7L).build(2);
+
+        Application application = applicationRepository.findByCompetitionId(competitions.get(0).getId()).get(0);
+
+        Role role = roleRepository.findOneByName(UserRoleType.ASSESSOR.getName());
+
+        ActivityState activityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION_ASSESSMENT, State.ACCEPTED);
+        List<User> users = findUsersByEmail("paul.plum@gmail.com", "felix.wilson@gmail.com", "steve.smith@empire.com");
+        List<CompetitionParticipant> savedParticipants = saveNewCompetitionParticipants(
+                newCompetitionInviteWithoutId()
+                        .withName("name1", "name2", "name3")
+                        .withEmail("test1@test.com", "test2@test.com", "test3@test.com")
+                        .withUser(users.toArray(new User[users.size()]))
+                        .withHash(generateInviteHash(), generateInviteHash(), generateInviteHash())
+                        .withCompetition(competitions.get(0), competitions.get(0), competitions.get(0))
+                        .withInnovationArea(innovationArea)
+                        .withStatus(SENT)
+                        .build(3));
+
+        // Now accept all of the invites
+        savedParticipants.stream().forEach(
+                participant -> {
+                    participant.getInvite().open();
+                    participant.acceptAndAssignUser(participant.getInvite().getUser());
+                }
+        );
+
+        // Now assign one of the participants
+        ProcessRole processRole = new ProcessRole();
+        processRole.setUser(users.get(0));
+        processRole.setApplicationId(application.getId());
+        processRole.setRole(role);
+        processRoleRepository.save(processRole);
+
+        Assessment assessment = new Assessment(application, processRole);
+        assessment.setActivityState(activityState);
+        assessmentRepository.save(assessment);
+
+        flushAndClearSession();
+
+        Pageable pagination = new PageRequest(0, 1);
+
+        Page<CompetitionParticipant> retrievedParticipants = repository.findParticipantsWithoutAssessments(1L, ASSESSOR, ParticipantStatus.ACCEPTED, 1L, null, pagination);
+
+        assertNotNull(retrievedParticipants);
+        assertEquals(2, retrievedParticipants.getTotalElements());
+    }
+
+    private List<User> findUsersByEmail(String... emails) {
+        return Arrays.stream(emails).map(email -> userRepository.findByEmail(email).get()).collect(toList());
     }
 
     @Test

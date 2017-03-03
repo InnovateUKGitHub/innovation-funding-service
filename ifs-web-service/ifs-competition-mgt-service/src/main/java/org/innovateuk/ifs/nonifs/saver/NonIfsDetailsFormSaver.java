@@ -20,14 +20,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 /**
  * Service to save {@link org.innovateuk.ifs.nonifs.form.NonIfsDetailsForm}
  */
 @Service
 public class NonIfsDetailsFormSaver {
+
+    private static List<MilestoneType> PUBLIC_MILESTONE_TYPES = asList(MilestoneType.OPEN_DATE, MilestoneType.SUBMISSION_DATE, MilestoneType.RELEASE_FEEDBACK);
 
     @Autowired
     private CompetitionService competitionService;
@@ -50,15 +52,23 @@ public class NonIfsDetailsFormSaver {
             return serviceFailure(errors);
         } else {
             return competitionService.update(competitionResource).andOnSuccess(() -> {
-                List<MilestoneResource> milestones = milestoneService.getAllMilestonesByCompetitionId(competitionResource.getId());
-                List<Error> updateErrors = competitionSetupMilestoneService.updateMilestonesForCompetition(milestones, mappedMilestones, competitionResource.getId());
-                if (updateErrors.isEmpty()) {
-                    return serviceSuccess();
-                } else {
-                    return serviceFailure(updateErrors);
-                }
+                List<MilestoneResource> milestones = getPublicMilestones(competitionResource);
+                return competitionSetupMilestoneService.updateMilestonesForCompetition(milestones, mappedMilestones, competitionResource.getId());
             });
         }
+    }
+
+    private List<MilestoneResource> getPublicMilestones(CompetitionResource competitionResource) {
+        List<MilestoneResource> milestones = milestoneService.getAllMilestonesByCompetitionId(competitionResource.getId());
+        if (milestones.isEmpty()) {
+            createPublicMilestones(competitionResource.getId());
+            milestones = milestoneService.getAllMilestonesByCompetitionId(competitionResource.getId());
+        }
+        return milestones;
+    }
+
+    private void createPublicMilestones(Long competitionId) {
+        PUBLIC_MILESTONE_TYPES.forEach(type -> milestoneService.create(type, competitionId));
     }
 
     private void mapFormFields(NonIfsDetailsForm form, CompetitionResource competitionResource) {
@@ -77,8 +87,12 @@ public class NonIfsDetailsFormSaver {
     }
 
     private void putDateIfFuture(Map<String, MilestoneRowForm> milestones, MilestoneType type, MilestoneRowForm row) {
-        if(row.getMilestoneAsDateTime().isAfter(LocalDateTime.now())) {
+        if(!dateIsInPast(row)) {
             milestones.put(type.name(), row);
         }
+    }
+
+    private boolean dateIsInPast(MilestoneRowForm row) {
+        return row.getMilestoneAsDateTime() != null && row.getMilestoneAsDateTime().isBefore(LocalDateTime.now());
     }
 }

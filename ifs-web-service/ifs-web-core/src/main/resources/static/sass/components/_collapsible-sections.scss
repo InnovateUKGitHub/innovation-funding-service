@@ -29,11 +29,11 @@ The collapsible element will show a normal header when there is no javascript, w
 		position: relative;
 		border-top: 1px solid $border-colour;
 		clear:both;
-  }
-  > h2:last-child,
-  > h3:last-child {
+	}
+	> h2:last-child,
+	> h3:last-child {
 		border-top: 1px solid $border-colour;
-  }
+	}
 
 	> h2 button,
 	> h3 button {
@@ -79,7 +79,7 @@ The collapsible element will show a normal header when there is no javascript, w
 	> h3 + [aria-hidden="false"] {
 		display: block;
 		@extend %contain-floats;
- 		padding:0 0 15px;
+		padding:0 0 15px;
 	}
 	.status {
 		float:right;
@@ -101,7 +101,7 @@ The collapsible element will show a normal header when there is no javascript, w
 		float:right;
 	}
 	.collapsible-content {
-    @extend %contain-floats;
+		@extend %contain-floats;
 		padding-bottom: 3em;
 	}
 

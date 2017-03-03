@@ -113,7 +113,7 @@ Summary:Questions should show the scores
 Summary:Overall scores section
     [Documentation]    INFUND-4648
     Then each question will contain links to respective questions
-    And the scores under each question should be correct
+    And the table should show the correct scores
     And the total scores should be correct
 
 Summary:Feedback should show in each section
@@ -344,16 +344,16 @@ the user adds score and feedback for every question
     The user clicks the button/link    jquery=button:contains("Save and return to assessment overview")
 
 the table should show the correct scores
-    Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(1)    10
-    Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(2)    10
-    Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(3)    10
-    Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(4)    10
-    Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(5)    10
-    Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(6)    10
-    Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(7)    10
-    Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(8)    10
-    Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(9)    10
-    Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(10)    10
+    Element should contain    css=.table-overflow tr:nth-of-type(1) td:nth-of-type(1)    10
+    Element should contain    css=.table-overflow tr:nth-of-type(1) td:nth-of-type(2)    10
+    Element should contain    css=.table-overflow tr:nth-of-type(1) td:nth-of-type(3)    10
+    Element should contain    css=.table-overflow tr:nth-of-type(1) td:nth-of-type(4)    10
+    Element should contain    css=.table-overflow tr:nth-of-type(1) td:nth-of-type(5)    10
+    Element should contain    css=.table-overflow tr:nth-of-type(1) td:nth-of-type(6)    10
+    Element should contain    css=.table-overflow tr:nth-of-type(1) td:nth-of-type(7)    10
+    Element should contain    css=.table-overflow tr:nth-of-type(1) td:nth-of-type(8)    10
+    Element should contain    css=.table-overflow tr:nth-of-type(1) td:nth-of-type(9)    10
+    Element should contain    css=.table-overflow tr:nth-of-type(1) td:nth-of-type(10)    10
 
 each question will contain links to respective questions
     The user should see the element    link=Q1
@@ -410,6 +410,5 @@ the application should have the correct status
 
 the progress of the applications should be correct
     [Arguments]    ${EXPECTED_TOTAL_ACCEPTED}
-    element should contain    css=.action-required .accepted-applications    3
     ${TOTAL_ACCEPTED}=    Get text    css=.action-required .accepted-applications    #gets the total number
     Should Be Equal As Integers    ${TOTAL_ACCEPTED}    ${EXPECTED_TOTAL_ACCEPTED}
