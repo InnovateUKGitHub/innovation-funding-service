@@ -56,7 +56,7 @@ Mark application details as incomplete
     the user clicks the button/link       link=Application details
     the user clicks the button/link       jQuery=button:contains("Edit")
     the user clicks the button/link       jQuery=button:contains("Save and return to application overview")
-    the user should see the element       jQuery=img.assigned[alt*="Application details"]
+    the user should see the element       jQuery=li:contains("Application details") > .action-required
 
 
 the Application details are completed
@@ -66,6 +66,10 @@ the Application details are completed
 the applicant completes the application details
     [Arguments]   ${Application_details}
     the user clicks the button/link       link=${Application_details}
+    the user clicks the button/link       jQuery=button:contains(Change your innovation area)
+    the user clicks the button/link       jQuery=label[for="innovationAreaChoice-26"]
+    the user clicks the button/link       jQuery=label[for="innovationAreaChoice-26"]
+    the user clicks the button/link       jQuery=button:contains(Save)
     the user clicks the button/link       jQuery=label[for^="financePosition"]:contains("Experimental development")
     the user clicks the button/link       jQuery=label[for^="financePosition"]:contains("Experimental development")
     the user clicks the button/link       jQuery=label[for="resubmission-no"]
@@ -85,7 +89,7 @@ the user marks the finances as complete
     the user checks Your Funding section     ${Application}
     the user should see all finance subsections complete
     the user clicks the button/link  link=Application Overview
-    the user should see the element  jQuery=img.complete[alt*="finances"]
+    the user should see the element  jQuery=li:contains("Your finances") > .task-status-complete
 
 the user fills in the project costs
     the user clicks the button/link  link=Your project costs
@@ -108,22 +112,17 @@ the user has read only view once section is marked complete
 the user fills in Labour
     the user clicks the button/link            jQuery=#form-input-20 button:contains("Labour")
     the user should see the element            css=.labour-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input
+    remove previous rows                       jQuery=.labour-costs-table button:contains("Remove")
     the user enters text to a text field       jQuery=input[name^="labour-labourDaysYearly"][id$="labourDaysYearly"]    230
-    wait For autosave
-    the user enters text to a text field       css=.labour-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    test
-    wait For autosave
-    the user enters text to a text field       css=.labour-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    120000
-    wait For autosave
-    the user enters text to a text field       css=.labour-costs-table tbody tr:nth-of-type(1) td:nth-of-type(4) input    100
-    wait For autosave
+    the user enters large text to a text field     jQuery=.labour-costs-table input[id$="labourGrossSalary"]  120000
+    the user enters text to a text field       jQuery=.labour-costs-table input[id$="role"]  test
+    the user enters text to a text field       jQuery=.labour-costs-table input[id$="labourDays"]  100
+    wait for autosave
     the user moves focus to the element        jQuery=button:contains('Add another role')
     the user clicks the button/link            jQuery=button:contains('Add another role')
-    the user should see the element            css=.labour-costs-table tbody tr:nth-of-type(3) td:nth-of-type(4) input
-    the user enters text to a text field       css=.labour-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input    120000
-    wait For autosave
-    the user enters text to a text field       css=.labour-costs-table tbody tr:nth-of-type(3) td:nth-of-type(4) input    100
-    wait For autosave
-    the user enters text to a text field       css=.labour-costs-table tbody tr:nth-of-type(3) td:nth-of-type(1) input    test
+    the user enters large text to a text field     jQuery=.labour-costs-table input[id$="role"]:last-of-type  anotherrole
+    the user enters large text to a text field     jQuery=.labour-costs-table input[id$="labourGrossSalary"]:last-of-type  120000
+    the user enters text to a text field       jQuery=.labour-costs-table input[id$="labourDays"]:last-of-type  100
     wait For autosave
     the user clicks the button/link            jQuery=#form-input-20 button:contains("Labour")
 
@@ -227,3 +226,11 @@ the user should see all finance subsections incomplete
     the user should see the element  jQuery=li.grid-row.section:nth-of-type(1) img.section-status.assigned
     the user should see the element  jQuery=li.grid-row.section:nth-of-type(2) img.section-status.assigned
     the user should see the element  jQuery=h3:contains("Your funding")
+
+Remove previous rows
+    [Arguments]  ${element}
+    :FOR    ${i}    IN RANGE  10
+    \  ${status}  run keyword and return status without screenshots  the user should not see the element  ${element}
+    \  Exit For Loop If  ${status}=='PASS'
+    \  run keyword if  ${status}=='FAIL'  the user clicks the button/link  ${element}
+    \  ${i} =  Set Variable  ${i + 1}

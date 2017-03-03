@@ -43,14 +43,14 @@ public class CompetitionInviteRepositoryIntegrationTest extends BaseRepositoryIn
 
     @Before
     public void setup() {
-        competition = competitionRepository.save( newCompetition().withName("competition").build() );
-        innovationArea = innovationAreaRepository.save(newInnovationArea().withName("innovation area").build() );
+        competition = competitionRepository.save(newCompetition().withName("competition").build());
+        innovationArea = innovationAreaRepository.save(newInnovationArea().withName("innovation area").build());
     }
 
     @Test
     public void findAll() {
-        repository.save( new CompetitionInvite("name1", "tom@poly.io", "hash", competition, innovationArea)  );
-        repository.save( new CompetitionInvite("name2", "tom@2poly.io", "hash2", competition, innovationArea)  );
+        repository.save(new CompetitionInvite("name1", "tom@poly.io", "hash", competition, innovationArea));
+        repository.save(new CompetitionInvite("name2", "tom@2poly.io", "hash2", competition, innovationArea));
 
         Iterable<CompetitionInvite> invites = repository.findAll();
 
@@ -122,7 +122,7 @@ public class CompetitionInviteRepositoryIntegrationTest extends BaseRepositoryIn
                 .withStatus(CREATED, CREATED, OPENED, OPENED, SENT, SENT)
                 .build(6));
 
-        long count = repository.countByCompetitionIdAndStatusIn(competition.getId(), of(CREATED,OPENED));
+        long count = repository.countByCompetitionIdAndStatusIn(competition.getId(), of(CREATED, OPENED));
         assertEquals(2, count);
     }
 
@@ -145,7 +145,7 @@ public class CompetitionInviteRepositoryIntegrationTest extends BaseRepositoryIn
 
     @Test(expected = DataIntegrityViolationException.class)
     public void save_duplicateHash() {
-        repository.save( new CompetitionInvite("name1", "tom@poly.io", "sameHash", competition, innovationArea)  );
-        repository.save( new CompetitionInvite("name2", "tom@2poly.io", "sameHash", competition, innovationArea)  );
+        repository.save(new CompetitionInvite("name1", "tom@poly.io", "sameHash", competition, innovationArea));
+        repository.save(new CompetitionInvite("name2", "tom@2poly.io", "sameHash", competition, innovationArea));
     }
 }
