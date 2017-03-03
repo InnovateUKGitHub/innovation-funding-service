@@ -84,9 +84,9 @@ import static org.mockito.Mockito.when;
 /**
  * Generates web test data based upon csvs in /src/test/resources/testdata using data builders
  */
-@Ignore("Manual web test data generation")
 @ActiveProfiles({"integration-test,seeding-db"})
 @DirtiesContext
+@Ignore
 public class GenerateTestData extends BaseIntegrationTest {
 
     private static final Log LOG = LogFactory.getLog(GenerateTestData.class);
@@ -514,6 +514,7 @@ public class GenerateTestData extends BaseIntegrationTest {
 
         ApplicationDataBuilder baseBuilder = builder.
                 withBasicDetails(leadApplicant, line.title, line.researchCategory, line.resubmission).
+                withInnovationArea(line.innovationArea).
                 withStartDate(line.startDate).
                 withDurationInMonths(line.durationInMonths);
 
@@ -711,11 +712,11 @@ public class GenerateTestData extends BaseIntegrationTest {
                         line.innovationSector, null, null, null,
                         null, null, null, null, null, null, null,
                         null, null, null, null, line.nonIfsUrl)
-                .withPublicContent(line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
-                        line.competitionDescription, line.fundingType, line.projectSize, line.keywords)
                 .withOpenDate(line.openDate)
                 .withSubmissionDate(line.submissionDate)
-                .withReleaseFeedbackDate(line.releaseFeedback);
+                .withReleaseFeedbackDate(line.releaseFeedback)
+                .withPublicContent(line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
+                        line.competitionDescription, line.fundingType, line.projectSize, line.keywords);
     }
 
     private CompetitionDataBuilder ifsCompetitionDataBuilder(CsvUtils.CompetitionLine line, Optional<Long> existingCompetitionId) {
@@ -725,9 +726,10 @@ public class GenerateTestData extends BaseIntegrationTest {
                         line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive,
                         line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay,
                         line.multiStream, line.collaborationLevel, line.leadApplicantType, line.researchRatio, line.resubmission, null).
+                withNewMilestones().
+                withReleaseFeedbackDate(line.releaseFeedback).
                 withPublicContent(line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
                         line.competitionDescription, line.fundingType, line.projectSize, line.keywords)
-                .withNewMilestones()
 
         ).orElse(competitionDataBuilder.
                 createCompetition().
@@ -735,8 +737,6 @@ public class GenerateTestData extends BaseIntegrationTest {
                         line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive,
                         line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay,
                         line.multiStream, line.collaborationLevel, line.leadApplicantType, line.researchRatio, line.resubmission, null).
-                withPublicContent(line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
-                        line.competitionDescription, line.fundingType, line.projectSize, line.keywords).
                 withApplicationFormFromTemplate().
                 withNewMilestones()).
                 withOpenDate(line.openDate).
@@ -753,7 +753,9 @@ public class GenerateTestData extends BaseIntegrationTest {
                 withPanelDate(line.panelDate).
                 withFundersPanelDate(line.fundersPanelDate).
                 withFundersPanelEndDate(line.fundersPanelEndDate).
-                withReleaseFeedbackDate(line.releaseFeedback);
+                withReleaseFeedbackDate(line.releaseFeedback).
+                withPublicContent(line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
+                line.competitionDescription, line.fundingType, line.projectSize, line.keywords);
     }
 
     private void freshDb() throws Exception {

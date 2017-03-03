@@ -232,6 +232,8 @@ public class BaseUnitTest {
     @Mock
     public AssessorFormInputResponseRestService assessorFormInputResponseRestService;
     @Mock
+    public ApplicationInnovationAreaRestService applicationInnovationAreaRestService;
+    @Mock
     public CategoryRestService categoryRestServiceMock;
 
     @Spy
