@@ -148,23 +148,33 @@ Eligibility: User enters valid values and saves
     Then the user enters text to a text field              css=#heading-0   Nationality Eligibility Heading
     And the user enters text to a text field               jQuery=.editor:eq(0)   You can give your views on new or changing government policies by responding to consultations. Government departments take these responses into consideration before making decisions
     And the user uploads the file                          css=#file-upload-0  ${valid_pdf}
+    Then the user clicks the button/link                   jQuery=button:contains("+ add new section")
+    And The user enters text to a text field                css=#heading-1   Minimum Eligibility Threshold
+    And The user enters text to a text field                jQuery=.editor:eq(1)    One of the important new changes we are introducing through these reforms is establishing the national eligibility criteria for adult care and support
+    And the user uploads the file                          css=#file-upload-1  ${valid_pdf}
     When the user clicks the button/link                   jQuery=button:contains("Save and return")
     Then the user should be redirected to the correct page  ${public_content_overview}
     And the user should see the element                    link=Eligibility
     And the user should see the element                    css=img[title='The "Eligibility" section is marked as done']
 
 
-Eligibility: Contains the correct values when viewed
+Eligibility: Contains the correct values when viewed, Edit sections
             [Documentation]    INFUND-6916, INFUND-7487
             [Tags]  HappyPath
-            When the user clicks the button/link                        link=Eligibility
-            Then the user should see the element                        jQuery=h2:contains("Nationality Eligibility Heading")
-            And the user should see the element                         jQuery=a:contains("${valid_pdf}")
-            And the user should see the element                         jQuery=.button:contains("Return to public content")
-            When the user clicks the button/link                        jQuery=.button-secondary:contains("Edit")
-            And the user enters text to a text field                    jQuery=.editor:eq(0)   You can give your views on new or changing government policies by responding to consultations. Government departments take these responses into consideration before making decisions
-            When the user clicks the button/link                        jQuery=button:contains("Save and return")
-            And the user should see the element                         css=img[title='The "Eligibility" section is marked as done']
+    When the user clicks the button/link                        link=Eligibility
+    Then the user should see the element                        jQuery=h2:contains("Nationality Eligibility Heading")
+    And the user should see the element                         jQuery=a:contains("${valid_pdf}")
+    And the user should see the element                         jQuery=.button:contains("Return to public content")
+    When the user clicks the button/link                        jQuery=.button-secondary:contains("Edit")
+    And the user enters text to a text field                    jQuery=.editor:eq(0)   You can give your views on new or changing government policies by responding to consultations. Government departments rule of 267567£$*90 take these responses into consideration before making decisions, Local authorities can decide to meet needs that do not meet the eligibility criteria, Where they decide to do this, the same steps must be taken as would be if the person did have eligible needs (for example, the preparation of a care and support plan).
+    And The user enters text to a text field                    jQuery=.editor:eq(1)   One of the important new changes we are introducing through these reforms is establishing the national eligibility criteria for adult care and support This is to be achieved through regulations to be made under a power in clause 13 of the Care Bill. These will set a minimum threshold.
+    Then the user clicks the button/link                        jQuery=button:contains("+ add new section")
+    And The user enters text to a text field                    css=#heading-2    Draft Care and Support - Eligibility Criteria
+    And the user enters text to a text field                    jQuery=.editor:eq(2)   In these Regulations— Citation, commencement “basic personal care activities” means essential personal care tasks that a person carries out as part of normal daily, An adult’s needs meet the eligibility criteria if those needs are due to a physical or mental impairment or illness and the effect of such needs is that the adult.
+    And the user clicks the button/link                         css=#contentGroup-row-0 > div.form-group.upload-section>div > button[type=submit]
+    And the user uploads the file                               css=#file-upload-2  ${valid_pdf}
+    When the user clicks the button/link                        jQuery=button:contains("Save and return")
+    And the user should see the element                         css=img[title='The "Eligibility" section is marked as done']
 
 
 Scope: Add, remove sections and submit
@@ -249,7 +259,8 @@ Guest user can see the updated Eligibility information
     [Tags]
     Given the user clicks the button/link    link=Eligibility
     Then the user should see the element    jQuery=.column-third:contains("Nationality Eligibility Heading") ~ .column-two-thirds:contains("changing government policies")
-
+    Then the user should see the element    jQuery=.column-third:contains("Minimum Eligibility Threshold") ~ .column-two-thirds:contains("new changes we are introducing")
+    Then the user should see the element    jQuery=.column-third:contains("Draft Care and Support - Eligibility Criteria") ~ .column-two-thirds:contains("basic personal care activities")
 
 The guest user is able to download the file in the Summary
     [Documentation]  INFUND-7486, INFUND-7487
@@ -298,8 +309,8 @@ the user enters valid data in the summary details
     the user enters text to a text field    id=project-size   10 millions
 
 the user enters valid data in the eligibility details
-    The user enters text to a text field    css=#heading-0                Heading1
-    The user enters text to a text field    jQuery=.editor:eq(0)        This is Eligibility Content 1
+    The user enters text to a text field    css=#heading-0              Minimum Eligibility Threshold
+    The user enters text to a text field    jQuery=.editor:eq(0)        We are establishing a system that will place a greater focus on prevention, which will mean that the care and support needs of people will be considered earlier than is currently the case. This will build on the strengths of the person and look to prevent, reduce or delay their need for care and support. The Bill will introduce a new system that will support people to live independently and put personalisation at the heart of the process
 
 the user can add and remove multiple content groups
     When the user enters text to a text field   id=heading-0    Heading 1
