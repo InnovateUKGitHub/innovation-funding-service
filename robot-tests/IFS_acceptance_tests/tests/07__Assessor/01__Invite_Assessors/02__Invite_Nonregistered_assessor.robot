@@ -119,9 +119,10 @@ Innovation area on assessor profile for invited user
     [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
     Given the user clicks the button/link    link=${OPEN_COMPETITION_NAME}
     And the user clicks the button/link    jQuery=a:contains("Invite assessors to assess the competition")
+    And the user clicks the button/link    jQuery=a:contains(81 to)
     When the user clicks the button/link    link=Thomas Fister
     Then the user should see the text in the page    Emerging and enabling technologies
-    And the user should see the text in the page    Earth Observation
+    And the user should see the text in the page    Satellite Applications
     [Teardown]    Logout as user
 
 Non-registered assessor: Reject invitation

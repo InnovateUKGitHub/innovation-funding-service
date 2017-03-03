@@ -1,39 +1,22 @@
 package org.innovateuk.ifs.competition.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.application.domain.GuidanceRow;
-import org.innovateuk.ifs.application.domain.Question;
-import org.innovateuk.ifs.application.repository.GuidanceRowRepository;
-import org.innovateuk.ifs.application.repository.QuestionRepository;
-import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupFinanceResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
-import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
 import org.innovateuk.ifs.form.domain.FormInput;
-import org.innovateuk.ifs.form.mapper.GuidanceRowMapper;
-import org.innovateuk.ifs.form.repository.FormInputRepository;
-import org.innovateuk.ifs.form.resource.FormInputScope;
+import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;
-import org.mockito.Mock;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.application.builder.GuidanceRowBuilder.newFormInputGuidanceRow;
-import static org.innovateuk.ifs.application.builder.GuidanceRowResourceBuilder.newFormInputGuidanceRowResourceBuilder;
-import static org.innovateuk.ifs.application.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionSetupFinanceResourceBuilder.newCompetitionSetupFinanceResource;
-import static org.innovateuk.ifs.competition.builder.CompetitionSetupQuestionResourceBuilder.newCompetitionSetupQuestionResource;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
+import static org.innovateuk.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
 import static org.innovateuk.ifs.form.resource.FormInputType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.*;
@@ -103,6 +86,8 @@ public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<
         Competition c = newCompetition().with(id(competitionId)).withFullFinance(isFullFinance).build();
         when(competitionRepositoryMock.findOne(competitionId)).thenReturn(c);
 
+        FormInputResponse headcount = newFormInputResponse().withValue("1").build();
+        FormInputResponse turnover = newFormInputResponse().withValue("2").build();
         // Turnover and count - these should be active in sync with each other.
         FormInput staffCountFormInput = newFormInput().withType(STAFF_COUNT).withActive(!isIncludeGrowthTable).build();
         FormInput staffTurnoverFormInput = newFormInput().withType(STAFF_TURNOVER).withActive(!isIncludeGrowthTable).build();
@@ -110,9 +95,9 @@ public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_COUNT))).thenReturn(asList(staffCountFormInput));
 
         // Financial inputs - these should be active in sync with each other and opposite to turnover and count.
-        FormInput financialYearEnd = newFormInput().withType(FINANCIAL_YEAR_END).withActive(isIncludeGrowthTable).build();
+        FormInput financialYearEnd = newFormInput().withType(FINANCIAL_YEAR_END).withActive(isIncludeGrowthTable).withResponses(asList(turnover)).build();
         List<FormInput> financialOverviewRows = newFormInput().withType(FINANCIAL_OVERVIEW_ROW).withActive(isIncludeGrowthTable).build(4);
-        FormInput financialCount = newFormInput().withType(FormInputType.FINANCIAL_STAFF_COUNT).withActive(isIncludeGrowthTable).build();
+        FormInput financialCount = newFormInput().withType(FormInputType.FINANCIAL_STAFF_COUNT).withActive(isIncludeGrowthTable).withResponses(asList(headcount)).build();
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_YEAR_END))).thenReturn(asList(financialYearEnd));
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_OVERVIEW_ROW))).thenReturn(financialOverviewRows);
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_STAFF_COUNT))).thenReturn(asList(financialCount));
@@ -126,59 +111,4 @@ public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<
         assertEquals(isIncludeGrowthTable, compSetupFinanceRes.getSuccessObject().isIncludeGrowthTable());
     }
 
-
-    @Test
-    public void test_GetForCompetitionErrorCountTurnover() {
-        // Should never happen but check that reasonable error codes get returned in the event that the database
-        // becomes inconsistent
-
-        // Turnover and count - these should always be in sync - but here we test when they are not.
-        FormInput staffCountFormInput = newFormInput().withType(STAFF_COUNT).withActive(true).build();
-        FormInput staffTurnoverFormInput = newFormInput().withType(STAFF_TURNOVER).withActive(false).build();
-
-        // Method under test
-        ServiceResult<Boolean> shouldBeFailure = service.isIncludeGrowthTableByCountAndTurnover(staffCountFormInput, staffTurnoverFormInput);
-
-        // Assertions
-        assertTrue(shouldBeFailure.isFailure());
-        assertEquals(1, shouldBeFailure.getErrors().size());
-        assertEquals("include.growth.table.count.turnover.input.active.not.consistent", shouldBeFailure.getErrors().get(0).getErrorKey());
-    }
-
-
-    @Test
-    public void test_GetForCompetitionErrorFinance() {
-        // Should never happen but check that reasonable error codes get returned in the event that the database
-        // becomes inconsistent
-
-        // Financial inputs - these should always be in sync - but here we test when they are not.
-        FormInput yearEnd = newFormInput().withType(FINANCIAL_YEAR_END).withActive(true).build();
-        List<FormInput> overviewRows = newFormInput().withType(FINANCIAL_OVERVIEW_ROW).withActive(true, true, true, false /*Inconsistent*/).build(4);
-        FormInput count = newFormInput().withType(FormInputType.FINANCIAL_STAFF_COUNT).withActive(true).build();
-
-        // Method under test
-        ServiceResult<Boolean> shouldBeFailure = service.isIncludeGrowthTableByFinance(yearEnd, overviewRows, count);
-
-        // Assertions
-        assertTrue(shouldBeFailure.isFailure());
-        assertEquals(1, shouldBeFailure.getErrors().size());
-        assertEquals("include.growth.table.finance.input.active.not.consistent", shouldBeFailure.getErrors().get(0).getErrorKey());
-    }
-
-    @Test
-    public void test_GetForCompetitionErrorCountTurnoverFinance() {
-        // Should never happen but check that reasonable error codes get returned in the event that the database
-        // becomes inconsistent
-
-        // Not consistent
-        boolean byFinance = false;
-        boolean byCountAndTurnover = true;
-        // Method under test
-        ServiceResult<Boolean> shouldBeFailure = service.isIncludeGrowthTableByCountTurnoverAndFinance(byFinance, byCountAndTurnover);
-
-        // Assertions
-        assertTrue(shouldBeFailure.isFailure());
-        assertEquals(1, shouldBeFailure.getErrors().size());
-        assertEquals("include.growth.table.count.turnover.finance.input.active.not.consistent", shouldBeFailure.getErrors().get(0).getErrorKey());
-    }
 }
