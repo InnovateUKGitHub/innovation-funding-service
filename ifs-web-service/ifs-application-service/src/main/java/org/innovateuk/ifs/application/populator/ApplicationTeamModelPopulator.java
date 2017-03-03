@@ -111,8 +111,8 @@ public class ApplicationTeamModelPopulator {
                 applicationInviteResource.getEmail(), false, pending);
     }
 
-    private ApplicationTeamApplicantRowViewModel getLeadApplicantViewModel(UserResource userResource) {
-        return new ApplicationTeamApplicantRowViewModel(userResource.getName(), userResource.getEmail(), true, false);
+    private ApplicationTeamApplicantRowViewModel getLeadApplicantViewModel(UserResource leadApplicant) {
+        return new ApplicationTeamApplicantRowViewModel(leadApplicant.getName(), leadApplicant.getEmail(), true, false);
     }
 
     private UserResource getLeadApplicant(ApplicationResource applicationResource) {

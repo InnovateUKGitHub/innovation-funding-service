@@ -85,7 +85,7 @@ public class ApplicationTeamManagementController {
                                            @PathVariable("applicationId") Long applicationId,
                                            @RequestParam(name = "organisation") long organisationId,
                                            @ModelAttribute("loggedInUser") UserResource loggedInUser,
-                                           @Valid @ModelAttribute ApplicationTeamUpdateForm form,
+                                           @Valid @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form,
                                            @SuppressWarnings("unused") BindingResult bindingResult,
                                            ValidationHandler validationHandler) {
 

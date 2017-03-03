@@ -8,22 +8,26 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 public class ApplicationTeamManagementApplicantRowViewModel {
 
-    private long id;
+    private Long applicationInviteId;
     private String name;
     private String email;
     private boolean lead;
     private boolean pending;
 
-    public ApplicationTeamManagementApplicantRowViewModel(long id, String name, String email, boolean lead, boolean pending) {
-        this.id = id;
+    public ApplicationTeamManagementApplicantRowViewModel(String name, String email, boolean lead, boolean pending) {
+        this(null, name, email, lead, pending);
+    }
+
+    public ApplicationTeamManagementApplicantRowViewModel(Long applicationInviteId, String name, String email, boolean lead, boolean pending) {
+        this.applicationInviteId = applicationInviteId;
         this.name = name;
         this.email = email;
         this.lead = lead;
         this.pending = pending;
     }
 
-    public long getId() {
-        return id;
+    public Long getApplicationInviteId() {
+        return applicationInviteId;
     }
 
     public String getName() {
@@ -44,14 +48,18 @@ public class ApplicationTeamManagementApplicantRowViewModel {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
+        if (this == o) {
+            return true;
+        }
 
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         ApplicationTeamManagementApplicantRowViewModel that = (ApplicationTeamManagementApplicantRowViewModel) o;
 
         return new EqualsBuilder()
-                .append(id, that.id)
+                .append(applicationInviteId, that.applicationInviteId)
                 .append(lead, that.lead)
                 .append(pending, that.pending)
                 .append(name, that.name)
@@ -62,7 +70,7 @@ public class ApplicationTeamManagementApplicantRowViewModel {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(id)
+                .append(applicationInviteId)
                 .append(name)
                 .append(email)
                 .append(lead)
