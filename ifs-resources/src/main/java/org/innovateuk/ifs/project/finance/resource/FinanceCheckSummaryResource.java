@@ -33,7 +33,23 @@ public class FinanceCheckSummaryResource {
     public FinanceCheckSummaryResource() {
     }
 
-    public FinanceCheckSummaryResource(Long projectId, String projectName, Long competitionId, String competitionName, LocalDate projectStartDate, int durationInMonths, BigDecimal totalProjectCost, BigDecimal grantAppliedFor, BigDecimal otherPublicSectorFunding, BigDecimal totalPercentageGrant, boolean spendProfilesGenerated, List<FinanceCheckPartnerStatusResource> partnerStatusResources, boolean financeChecksAllApproved, String spendProfileGeneratedBy, LocalDate spendProfileGeneratedDate, BigDecimal researchParticipationPercentage, BigDecimal competitionMaximumResearchPercentage) {
+    public FinanceCheckSummaryResource(Long projectId,
+                                       String projectName,
+                                       Long competitionId,
+                                       String competitionName,
+                                       LocalDate projectStartDate,
+                                       int durationInMonths,
+                                       BigDecimal totalProjectCost,
+                                       BigDecimal grantAppliedFor,
+                                       BigDecimal otherPublicSectorFunding,
+                                       BigDecimal totalPercentageGrant,
+                                       boolean spendProfilesGenerated,
+                                       List<FinanceCheckPartnerStatusResource> partnerStatusResources,
+                                       boolean financeChecksAllApproved,
+                                       String spendProfileGeneratedBy,
+                                       LocalDate spendProfileGeneratedDate,
+                                       BigDecimal researchParticipationPercentage,
+                                       BigDecimal competitionMaximumResearchPercentage) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.competitionId = competitionId;
