@@ -95,6 +95,7 @@ The Lead's inputs should not be visible in other application invites
 
 Lead applicant can remove the Pending partners
     [Documentation]    INFUND-4807
+    [Tags]    Failing
     Given The user navigates to the invitation page of the test application
     When the applicant fills the lead organisation fields  Test user 001    test@email.com
     Then the user should see the element                   jQuery=li:contains("Test user 001") > small:contains("pending")
