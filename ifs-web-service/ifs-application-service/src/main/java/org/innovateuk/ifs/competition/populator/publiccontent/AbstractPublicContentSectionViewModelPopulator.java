@@ -12,7 +12,7 @@ import org.innovateuk.ifs.competition.viewmodel.publiccontent.AbstractPublicSect
  */
 public abstract class AbstractPublicContentSectionViewModelPopulator<M extends AbstractPublicSectionContentViewModel>{
 
-    public M populate(PublicContentResource publicContentResource) {
+    public M populate(PublicContentResource publicContentResource, Boolean nonIFS) {
         M model = createInitial();
         model.setSectionType(getType());
         model.setPublished(publicContentResource.getPublishDate() != null);
@@ -21,7 +21,7 @@ public abstract class AbstractPublicContentSectionViewModelPopulator<M extends A
                 .filter(section -> getType().equals(section.getType()))
                 .findAny()
                 .ifPresent(publicContentSectionResource -> {
-                    populateSection(model, publicContentResource, publicContentSectionResource);
+                    populateSection(model, publicContentResource, publicContentSectionResource, nonIFS);
                 });
 
 
@@ -29,6 +29,6 @@ public abstract class AbstractPublicContentSectionViewModelPopulator<M extends A
     }
 
     protected abstract M createInitial();
-    protected abstract void populateSection(M model, PublicContentResource publicContentResource, PublicContentSectionResource section);
+    protected abstract void populateSection(M model, PublicContentResource publicContentResource, PublicContentSectionResource section, Boolean nonIFS);
     public abstract PublicContentSectionType getType();
 }
