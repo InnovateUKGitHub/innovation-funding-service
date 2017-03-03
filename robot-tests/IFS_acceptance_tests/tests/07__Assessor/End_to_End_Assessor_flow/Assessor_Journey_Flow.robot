@@ -16,7 +16,7 @@ Invite a new Assessor to assess a competition
     And The user enters text to a text field    css=#invite-table tr:nth-of-type(1) td:nth-of-type(1) input    E2E
     And The user enters text to a text field    css=#invite-table tr:nth-of-type(1) td:nth-of-type(2) input    ${test_mailbox_one}+AJE2E@gmail.com
     And the user selects the option from the drop-down menu    Emerging and enabling technologies    css=.js-progressive-group-select
-    And the user selects the option from the drop-down menu    Data    id=grouped-innovation-area
+    And the user selects the option from the drop-down menu    Emerging Technology    id=grouped-innovation-area
     And the user clicks the button/link    jQuery=.button:contains("Add assessors to list")
     When the user clicks the button/link    jQuery=tr:nth-child(1) .button:contains(Invite individual)
     And the user clicks the button/link    jQuery=.button:contains(Send invite)
@@ -51,7 +51,7 @@ New assessor should have the correct innovation area
     [Documentation]    INFUND-8092
     When The user clicks the button/link    link=your skills
     Then The user should see the text in the page    Emerging and enabling technologies
-    And The user should see the text in the page    Data
+    And The user should see the text in the page    Emerging Technology
 
 CompAdmin should see Assessor's profile and Innovation Area
     [Documentation]    INFUND-8092
@@ -61,7 +61,7 @@ CompAdmin should see Assessor's profile and Innovation Area
     And the user clicks the button/link    link=Overview
     When the user clicks the button/link    link=E2E
     Then the user should see the text in the page    Emerging and enabling technologies
-    And the user should see the text in the page    Data
+    And the user should see the text in the page    Emerging Technology
 
 CompAdmin Invites assessor to assess an application
     [Setup]    The user clicks the button/link    link=My dashboard

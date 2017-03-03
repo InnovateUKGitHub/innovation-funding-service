@@ -1,18 +1,18 @@
 package org.innovateuk.ifs.application.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
 import static org.junit.Assert.assertEquals;
@@ -92,5 +92,17 @@ public class ApplicationTest {
     	assertEquals("2", application.getFormInputResponses().get(0).getValue());
     }
 
+    @Test(expected=IllegalStateException.class)
+    public void addingInnovationAreaAndThenNotApplicableShouldResultInIllegalStateException() {
+        Application application = new Application();
+        application.setInnovationArea(newInnovationArea().build());
+        application.setNoInnovationAreaApplicable(true);
+    }
 
+    @Test(expected=IllegalStateException.class)
+    public void addingNotApplicableAndThenInnovationAreaShouldResultInIllegalStateException() {
+        Application application = new Application();
+        application.setNoInnovationAreaApplicable(true);
+        application.setInnovationArea(newInnovationArea().build());
+    }
 }
