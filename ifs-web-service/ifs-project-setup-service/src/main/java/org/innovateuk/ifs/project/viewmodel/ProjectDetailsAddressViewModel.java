@@ -6,7 +6,6 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 public class ProjectDetailsAddressViewModel implements BasicProjectDetailsViewModel {
     private Long applicationId;
     private Long projectId;
-    private String projectNumber;
     private String projectName;
     private AddressResource registeredAddress;
     private AddressResource operatingAddress;
@@ -14,17 +13,8 @@ public class ProjectDetailsAddressViewModel implements BasicProjectDetailsViewMo
 
     public ProjectDetailsAddressViewModel(ProjectResource projectResource) {
         this.projectId = projectResource.getId();
-        this.projectNumber = projectResource.getFormattedId();
         this.projectName = projectResource.getName();
         this.applicationId = projectResource.getApplication();
-    }
-
-    public String getProjectNumber() {
-        return projectNumber;
-    }
-
-    public void setProjectNumber(String projectNumber) {
-        this.projectNumber = projectNumber;
     }
 
     public String getProjectName() {

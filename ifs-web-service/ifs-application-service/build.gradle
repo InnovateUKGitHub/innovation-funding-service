@@ -1,6 +1,3 @@
-if(!project.hasProperty('cloud')) {
-    apply from: "war-build.gradle";
-}
 
 bootRun {
     addResources = false
@@ -68,11 +65,5 @@ task buildDocker( type:Docker, dependsOn: build) {
             into stageDir
         }
     }
-}
-
-task cleanDeployServices() {
-    build.mustRunAfter clean
-    dependsOn clean
-    dependsOn buildDocker
 }
 

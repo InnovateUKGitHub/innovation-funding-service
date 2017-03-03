@@ -20,6 +20,7 @@ Invite a new Assessor to assess a competition
     And the user clicks the button/link    jQuery=.button:contains("Add assessors to list")
     When the user clicks the button/link    jQuery=tr:nth-child(1) .button:contains(Invite individual)
     And the user clicks the button/link    jQuery=.button:contains(Send invite)
+    And The user should see the element    jQuery=span:contains("Add a non-registered assessor to your list")
     [Teardown]    The user closes the browser
 
 Invited User gets an email to assess the competition
@@ -67,10 +68,13 @@ CompAdmin Invites assessor to assess an application
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And The user clicks the button/link    jQuery=a:contains("Assessor management - assignment to applications")
     And the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
+    And the user clicks the button/link    jQuery=.pagination-label:contains(Next)
+    And the user clicks the button/link    jQuery=.pagination-label:contains(Next)
     When the user clicks the button/link    jQuery=tr:contains(Tom Fister) button:contains("Assign")
     And the user clicks the button/link    jQuery=a:contains("Allocate applications")
     And the user clicks the button/link    jQuery=a:contains("Competition")
     And the user clicks the button/link    jQuery=button:contains("Notify assessors")
+    And the element should be disabled    jQuery=button:contains("Notify assessors")
     [Teardown]    The user closes the browser
 
 Assessor is notified by Email
@@ -94,7 +98,7 @@ User reads the email and clicks the link to accept the assessment
 
 open email locally assessor
     [Arguments]    ${recipient}    ${subject}    ${pattern}
-    Open Mailbox    server=ifs-local-dev    port=9876    user=smtp    password=smtp    is_secure=False
+    Open Mailbox    server=${local_imap}    port=${local_imap_port}   user=smtp    password=smtp     is_secure=False
     ${email_to_test}=    wait for email    sender=${sender}    recipient=${recipient}    subject=${subject}    timeout=90
     log    ${subject}
     click the link assessor    ${email_to_test}    ${pattern}

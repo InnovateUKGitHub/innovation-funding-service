@@ -179,7 +179,10 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
                 .withRoleName(PARTNER)
                 .build(1);
 
-        OrganisationResource organisation = newOrganisationResource().withId(organisationId).withOrganisationType(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId()).build();
+        OrganisationResource organisation = newOrganisationResource().withId(organisationId)
+                .withOrganisationType(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId())
+                .withOrganisationTypeName("BUSINESS")
+                .build();
 
         SpendProfileTableResource table = buildSpendProfileTableResource(projectResource);
 
@@ -452,7 +455,10 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
                 .withRoleName(PARTNER)
                 .build(1);
 
-        OrganisationResource organisation = newOrganisationResource().withId(organisationId).withOrganisationType(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId()).build();
+        OrganisationResource organisation = newOrganisationResource().withId(organisationId)
+                .withOrganisationType(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId())
+                .withOrganisationTypeName("BUSINESS")
+                .build();
 
         SpendProfileTableResource table = buildSpendProfileTableResource(projectResource);
 
@@ -648,6 +654,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         OrganisationResource organisationResource = OrganisationResourceBuilder.newOrganisationResource()
                 .withId(organisationId)
                 .withName("Org1")
+                .withOrganisationTypeName("BUSINESS")
                 .build();
 
         List<ProjectUserResource> projectUsers = newProjectUserResource()

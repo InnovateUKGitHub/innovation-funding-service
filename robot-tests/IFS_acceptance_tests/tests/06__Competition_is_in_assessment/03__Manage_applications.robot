@@ -28,8 +28,8 @@ View the list of the applications
 Application number navigates to Overview
     [Documentation]    INFUND-7042
     [Tags]
-    When the user clicks the button/link    link=00000022
-    Then The user should see the text in the page    00000022: Intelligent water system
+    When the user clicks the button/link    link=22
+    Then The user should see the text in the page    22: Intelligent water system
     And the user should see the text in the page    University of Bath
     And the user should see the text in the page    Cardiff University
     [Teardown]    the user clicks the button/link    link=Back
@@ -38,7 +38,7 @@ View application progress page
     [Documentation]    INFUND-7042, INFUND-7046
     [Tags]
     Given the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
-    Then The user should see the text in the page    00000016: Rainfall
+    Then The user should see the text in the page    16: Rainfall
     And the user should see the text in the page    Everyday Im Juggling Ltd (Lead)
     And the user should see the text in the page    No assessors have been assigned to this application.
     And the user should see the text in the page    No assessors have rejected this application.
@@ -55,6 +55,7 @@ View the available assessors
     [Documentation]    INFUND-7233\\
     [Tags]
     Then the user should see the element    jQuery=.column-two-thirds:contains("Assessors")
+    And the user clicks the button/link    jQuery=.pagination-label:contains(Next)
     And the available assessors information is correct
 
 View the assigned list
@@ -73,6 +74,7 @@ Remove an assigned user (Not notified)
     Given the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
     And the user clicks the button/link    jQuery=tr:nth-child(1) a:contains("Remove")
     And the user clicks the button/link    jQuery=button:contains("Remove assessor")
+    And the user clicks the button/link    jQuery=.pagination-label:contains(Next)
     And the available assessors information is correct
 
 Notify an assigned user
@@ -117,7 +119,7 @@ Assessor should not see the removed application
 the application list is correct before changes
     the user should see the element    jQuery=tr:nth-child(1) td:contains(Everyday Im Juggling Ltd)
     the user should see the element    jQuery=tr:nth-child(1) td:contains(Rainfall)
-    the user should see the element    jQuery=tr:nth-child(1) td:nth-child(1):contains("00000016")
+    the user should see the element    jQuery=tr:nth-child(1) td:nth-child(1):contains("16")
     the user should see the element    jQuery=tr:nth-child(1) td:nth-child(2):contains("Rainfall")
     the user should see the element    jQuery=tr:nth-child(1) td:nth-child(3):contains("Everyday Im Juggling Ltd")
     #the user should see the element    jQuery=tr:nth-child(1) td:nth-child(4):contains(${initial_application_assesors})

@@ -3,8 +3,6 @@ package org.innovateuk.ifs.application.resource;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 /**
  * Represents a high-level overview of an application.
  */
@@ -37,11 +35,6 @@ public class ApplicationSummaryResource {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    @JsonIgnore
-    public String getFormattedId() {
-        return ApplicationResource.formatter.format(id);
     }
 
     public String getName() {

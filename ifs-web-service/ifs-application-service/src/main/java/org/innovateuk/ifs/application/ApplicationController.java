@@ -12,6 +12,7 @@ import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionMod
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.service.*;
+import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
@@ -58,6 +59,9 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @PreAuthorize("hasAuthority('applicant')")
 public class ApplicationController {
     private static final Log LOG = LogFactory.getLog(ApplicationController.class);
+
+    // TODO implement feature toggle https://devops.innovateuk.org/issue-tracking/browse/INFUND-8579
+    static final boolean APPLICATION_FEEDBACK_SUMMARY_FEATURE_ENABLED = false;
 
     public static final String ASSIGN_QUESTION_PARAM = "assign_question";
     public static final String MARK_AS_COMPLETE = "mark_as_complete";
@@ -110,6 +114,8 @@ public class ApplicationController {
     @Autowired
     private UserRestService userRestService;
 
+    @Autowired
+    private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
 
     public static String redirectToApplication(ApplicationResource application){
         return "redirect:/application/"+application.getId();
@@ -182,7 +188,13 @@ public class ApplicationController {
             model.addAttribute("assessorFeedback", assessorFeedbackViewModel);
         }
 
-        return "application-summary";
+        if (APPLICATION_FEEDBACK_SUMMARY_FEATURE_ENABLED && competition.getCompetitionStatus().isFeedbackReleased()) {
+            model.addAttribute("scores", assessorFormInputResponseRestService.getApplicationAssessmentAggregate(applicationId).getSuccessObjectOrThrowException());
+            return "application-feedback-summary";
+        }
+        else {
+            return "application-summary";
+        }
     }
 
     @ProfileExecution

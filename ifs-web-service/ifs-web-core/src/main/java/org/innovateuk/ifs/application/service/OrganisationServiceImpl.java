@@ -21,17 +21,17 @@ import java.util.Optional;
 @Service
 public class OrganisationServiceImpl implements OrganisationService {
     @Autowired
-    OrganisationRestService organisationRestService;
+    private OrganisationRestService organisationRestService;
 
     @Autowired
-    CompanyHouseRestService companyHouseRestService;
+    private CompanyHouseRestService companyHouseRestService;
 
     @Autowired
     private ProcessRoleService processRoleService;
 
     @Override
     public OrganisationSearchResult getCompanyHouseOrganisation(String organisationId) {
-        return companyHouseRestService.getOrganisationById(organisationId);
+        return companyHouseRestService.getOrganisationById(organisationId).getSuccessObjectOrThrowException();
     }
 
     @Override

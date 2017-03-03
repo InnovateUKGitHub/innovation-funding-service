@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.service;
 import org.innovateuk.ifs.alert.resource.AlertType;
 import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.alert.service.AlertRestService;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,17 +35,17 @@ public class AlertServiceImpl implements AlertService {
     }
 
     @Override
-    public AlertResource create(final AlertResource alertResource) {
-        return alertRestService.create(alertResource).getSuccessObjectOrThrowException();
+    public ServiceResult<AlertResource> create(final AlertResource alertResource) {
+        return alertRestService.create(alertResource).toServiceResult();
     }
 
     @Override
-    public void delete(final Long id) {
-        alertRestService.delete(id).getSuccessObjectOrThrowException();
+    public ServiceResult<Void> delete(final Long id) {
+        return alertRestService.delete(id).toServiceResult();
     }
 
     @Override
-    public void deleteAllByType(final AlertType type) {
-        alertRestService.deleteAllByType(type).getSuccessObjectOrThrowException();
+    public ServiceResult<Void> deleteAllByType(final AlertType type) {
+        return alertRestService.deleteAllByType(type).toServiceResult();
     }
 }
