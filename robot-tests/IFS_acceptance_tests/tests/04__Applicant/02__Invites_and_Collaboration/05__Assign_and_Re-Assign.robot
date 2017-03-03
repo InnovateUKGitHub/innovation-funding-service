@@ -197,7 +197,7 @@ Lead selects Research Area
     # The following line has been commented  as 'alert message' is commented in application details section html due to upcoming functionality
     #Then the user should see the element      jQuery=h2:contains("Research category determines funding")
     Then the user should see the element       jQuery=legend:contains("Research category")
-    And the user selects the radio button     application.researchCategoryId   financePosition-cat-35
+    And the user fills out innovation area and research category
 
 Lead marks finances as complete
     [Documentation]    INFUND-3016
@@ -289,3 +289,12 @@ the applicant changes the name of the application
 Steve smith assigns a question to the collaborator
     the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
     When the applicant assigns the question to the collaborator  css=#form-input-12 .editor  test1233  Jessica Doe
+
+the user fills out innovation area and research category
+    # Often those labels need double click. Thus i made a separate keyword to looks more tidy
+    the user clicks the button/link    jQuery=button:contains(Change your innovation area)
+    the user clicks the button/link    jQuery=label[for="innovationAreaChoice-26"]
+    the user clicks the button/link    jQuery=label[for="innovationAreaChoice-26"]
+    the user clicks the button/link    jQuery=button:contains(Save)
+    the user clicks the button/link    jQuery=label[for="financePosition-cat-33"]
+    the user clicks the button/link    jQuery=label[for="financePosition-cat-33"]

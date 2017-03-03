@@ -121,7 +121,7 @@ Innovation area on assessor profile for invited user
     And the user clicks the button/link    jQuery=a:contains("Invite assessors to assess the competition")
     When the user clicks the button/link    link=Thomas Fister
     Then the user should see the text in the page    Emerging and enabling technologies
-    And the user should see the text in the page    Digital Industries
+    And the user should see the text in the page    Satellite Applications
     [Teardown]    Logout as user
 
 Non-registered assessor: Reject invitation

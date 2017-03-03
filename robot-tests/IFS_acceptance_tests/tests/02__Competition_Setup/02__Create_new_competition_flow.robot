@@ -116,7 +116,7 @@ Initial Details - User can remove an innovation area
     Given the user clicks the button/link  jQuery=.button:contains("Edit")
     And the user clicks the button/link    jQuery=#innovation-row-2 button:contains('Remove')
     When the user clicks the button/link   jQuery=.button:contains("Done")
-    Then the user should not see the text in the page  Creative Industries
+    Then the user should not see the text in the page  Space technology
 
 Initial Details - drop down menu is populated with comp admin users
     [Documentation]    INFUND-6905
@@ -136,8 +136,8 @@ Initial details - Comp Type and Date should not be editable
     And the user should see the text in the page    Ian Cooper
     And the user should see the text in the page    Test competition
     And the user should see the text in the page    Emerging and enabling technologies
-    And the user should see the text in the page    Digital Technology
-    And the user should see the text in the page    Sector
+    And the user should see the text in the page    Creative Industries
+    And the user should see the text in the page    Satellite Applications
     And the user should see the text in the page    Yes
 
 
