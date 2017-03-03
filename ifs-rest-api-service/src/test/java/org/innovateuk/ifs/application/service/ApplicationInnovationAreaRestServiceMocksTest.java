@@ -30,7 +30,7 @@ public class ApplicationInnovationAreaRestServiceMocksTest extends BaseRestServi
     public void testSaveApplicationInnovationAreaChoice() {
         Long innovationAreaId = 123L;
         Long applicationId = 321L;
-        String expectedUrl = applicationInnovationAreaRestUrl + "/setInnovationArea/" + 321;
+        String expectedUrl = applicationInnovationAreaRestUrl + "/innovationArea/" + 321;
 
         ApplicationResource applicationResource = newApplicationResource().build();
 
@@ -43,7 +43,7 @@ public class ApplicationInnovationAreaRestServiceMocksTest extends BaseRestServi
     @Test
     public void setSetApplicationInnovationAreaNotApplicable() {
         Long applicationId = 321L;
-        String expectedUrl = applicationInnovationAreaRestUrl + "/setNoInnovationAreaApplicable/" + 321;
+        String expectedUrl = applicationInnovationAreaRestUrl + "/noInnovationAreaApplicable/" + 321;
 
         ApplicationResource applicationResource = newApplicationResource().build();
 
@@ -55,7 +55,7 @@ public class ApplicationInnovationAreaRestServiceMocksTest extends BaseRestServi
     @Test
     public void testGetAvailableInnovationAreas() {
         Long applicationId = 321L;
-        String expectedUrl = applicationInnovationAreaRestUrl + "/getAvailableInnovationAreas/" + 321;
+        String expectedUrl = applicationInnovationAreaRestUrl + "/availableInnovationAreas/" + 321;
 
         List<InnovationAreaResource> innovationAreaResourceList = newInnovationAreaResource().build(5);
 

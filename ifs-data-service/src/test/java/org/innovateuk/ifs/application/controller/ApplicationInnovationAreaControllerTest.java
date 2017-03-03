@@ -25,7 +25,7 @@ public class ApplicationInnovationAreaControllerTest extends BaseControllerMockM
 
         when(applicationInnovationAreaService.setInnovationArea(applicationId, innovationAreaId)).thenReturn(serviceSuccess(newApplicationResource().build()));
 
-        mockMvc.perform(post("/applicationInnovationArea/setInnovationArea/"+applicationId)
+        mockMvc.perform(post("/applicationInnovationArea/innovationArea/"+applicationId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(innovationAreaId)))
                 .andExpect(status().isOk());
@@ -37,7 +37,7 @@ public class ApplicationInnovationAreaControllerTest extends BaseControllerMockM
 
         when(applicationInnovationAreaService.setNoInnovationAreaApplies(applicationId)).thenReturn(serviceSuccess(newApplicationResource().build()));
 
-        mockMvc.perform(post("/applicationInnovationArea/setNoInnovationAreaApplicable/"+applicationId)
+        mockMvc.perform(post("/applicationInnovationArea/noInnovationAreaApplicable/"+applicationId)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
@@ -48,7 +48,7 @@ public class ApplicationInnovationAreaControllerTest extends BaseControllerMockM
 
         when(applicationInnovationAreaService.getAvailableInnovationAreas(applicationId)).thenReturn(serviceSuccess(newInnovationAreaResource().build(5)));
 
-        mockMvc.perform(get("/applicationInnovationArea/getAvailableInnovationAreas/"+applicationId)
+        mockMvc.perform(get("/applicationInnovationArea/availableInnovationAreas/"+applicationId)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }

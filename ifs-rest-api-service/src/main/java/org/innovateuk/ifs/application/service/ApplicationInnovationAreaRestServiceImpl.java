@@ -18,16 +18,16 @@ public class ApplicationInnovationAreaRestServiceImpl extends BaseRestService im
 
     @Override
     public RestResult<ApplicationResource> saveApplicationInnovationAreaChoice(Long applicationId, Long innovationAreaId) {
-        return postWithRestResult(applicationFundingDecisionRestURL + "setInnovationArea/" + applicationId, innovationAreaId, ApplicationResource.class);
+        return postWithRestResult(applicationFundingDecisionRestURL + "innovationArea/" + applicationId, innovationAreaId, ApplicationResource.class);
     }
 
     @Override
     public RestResult<ApplicationResource> setApplicationInnovationAreaToNotApplicable(Long applicationId) {
-        return postWithRestResult(applicationFundingDecisionRestURL + "setNoInnovationAreaApplicable/" + applicationId, ApplicationResource.class);
+        return postWithRestResult(applicationFundingDecisionRestURL + "noInnovationAreaApplicable/" + applicationId, ApplicationResource.class);
     }
 
     @Override
     public RestResult<List<InnovationAreaResource>> getAvailableInnovationAreasForApplication(Long applicationId) {
-        return getWithRestResult(applicationFundingDecisionRestURL + "getAvailableInnovationAreas/" + applicationId, ParameterizedTypeReferences.innovationAreaResourceListType());
+        return getWithRestResult(applicationFundingDecisionRestURL + "availableInnovationAreas/" + applicationId, ParameterizedTypeReferences.innovationAreaResourceListType());
     }
 }

@@ -66,7 +66,7 @@ public class ApplicationInnovationAreaServiceImpl extends BaseTransactionalServi
 
     private ServiceResult<List<InnovationArea>> getAllowedInnovationAreas(Application application) {
 
-        if(application.getCompetition() !=null
+        if (application.getCompetition() !=null
                 && application.getCompetition().getInnovationSector() !=null
                 && application.getCompetition().getInnovationSector().getChildren() !=null) {
             List<InnovationArea> innovationAreas = application.getCompetition().getInnovationSector().getChildren();
@@ -81,7 +81,7 @@ public class ApplicationInnovationAreaServiceImpl extends BaseTransactionalServi
         Optional<InnovationArea> allowedInnovationArea = innovationAreasList.stream().filter(area ->
                 area.getId().equals(innovationAreaId)).findAny();
 
-        if(allowedInnovationArea.isPresent()) {
+        if (allowedInnovationArea.isPresent()) {
             return serviceSuccess(allowedInnovationArea.get());
         }
         else {

@@ -48,7 +48,9 @@ The User can Add and Remove Assessors
     Then The user should see the text in the page    will.smith@gmail.com
     And The user should see the text in the page    Will Smith
     And The user should see the element    jQuery=td:contains("Will Smith") ~ td .yes
-    And the user should see the element    jQuery=td:contains("Will Smith") ~ td:nth-child(3):contains("Precision Medicine, Advanced Materials, Energy Systems")
+    And the user should see the element    jQuery=td:contains("Will Smith") ~ td:nth-child(3):contains("Precision Medicine")
+    And the user should see the element    jQuery=td:contains("Will Smith") ~ td:nth-child(3):contains("Advanced Materials")
+    And the user should see the element    jQuery=td:contains("Will Smith") ~ td:nth-child(3):contains("Energy Systems")
     And the calculations of the Assessors on invite list should be correct
     When The user clicks the button/link    link=Invite
     And The user clicks the button/link    jQuery=td:contains("Will Smith") ~ td .button:contains("Remove")
@@ -113,17 +115,10 @@ Invite non-registered users
     And The user should not see the text in the page    Please select an innovation area.    #check for the client side validation
     And the user clicks the button/link    jQuery=.button:contains("Add assessors to list")
     Then the user should see the element    css=.no
-<<<<<<< HEAD
-    And The user should see the element    jQuery=tr:nth-child(1) td:contains(Olivier Giroud)
-    And The user should see the element    jQuery=tr:nth-child(1) td:contains(${test_mailbox_one}+OlivierGiroud@gmail.com)
-    And The user should see the element    jQuery=tr:nth-child(1) td:contains(Emerging Technology)
-    And The user should see the element    jQuery=tr:nth-child(1) button:contains(Remove from list)
-=======
     And The user should see the element    jQuery=td:contains("Olivier Giroud")
     And The user should see the element    jQuery=td:contains("Olivier Giroud") ~ td:contains(${test_mailbox_one}+OlivierGiroud@gmail.com)
-    And The user should see the element    jQuery=td:contains("Olivier Giroud") ~ td:contains("Data")
+    And The user should see the element    jQuery=td:contains("Olivier Giroud") ~ td:contains("Emerging Technology")
     And The user should see the element    jQuery=td:contains("Olivier Giroud") ~ td .button:contains("Remove")
->>>>>>> da036ad0b26977279cca4627ad0fc33d72c41ed2
 
 Assessor overview information
     [Documentation]    INFUND-6450

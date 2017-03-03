@@ -327,11 +327,11 @@ public class Application implements ProcessActivity {
     }
 
     public void setInnovationArea(InnovationArea newInnovationArea) {
-        if(newInnovationArea == null) {
+        if (newInnovationArea == null) {
             innovationArea = null;
         }
         else {
-            if(this.noInnovationAreaApplicable) {
+            if (this.noInnovationAreaApplicable) {
                 throw new IllegalStateException("InnovationArea not reconcilable with current value of noInnovationAreaApplies.");
             }
             innovationArea = new ApplicationInnovationAreaLink(this, newInnovationArea);
@@ -344,8 +344,8 @@ public class Application implements ProcessActivity {
     }
 
     public void setNoInnovationAreaApplicable(boolean noInnovationAreaApplicable) {
-        if(noInnovationAreaApplicable && innovationArea != null) {
-            throw new IllegalStateException("noInnovationAreaApplicable not reconcilable with current value of InnovationArea.");
+        if (noInnovationAreaApplicable && innovationArea != null) {
+            throw new IllegalStateException("noInnovationAreaApplicable cannot be set while an innovationArea is not null.");
         }
 
         this.noInnovationAreaApplicable = noInnovationAreaApplicable;

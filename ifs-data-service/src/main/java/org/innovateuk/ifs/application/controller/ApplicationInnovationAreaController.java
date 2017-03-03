@@ -25,17 +25,17 @@ public class ApplicationInnovationAreaController {
     @Autowired
     private ApplicationMapper applicationMapper;
 
-    @PostMapping("/setInnovationArea/{applicationId}")
+    @PostMapping("/innovationArea/{applicationId}")
     public RestResult<ApplicationResource> setInnovationArea(@PathVariable("applicationId") final Long applicationId, @RequestBody Long innovationAreaId) {
         return applicationInnovationAreaService.setInnovationArea(applicationId, innovationAreaId).toGetResponse();
     }
 
-    @PostMapping("/setNoInnovationAreaApplicable/{applicationId}")
+    @PostMapping("/noInnovationAreaApplicable/{applicationId}")
     public RestResult<ApplicationResource> setNoInnovationAreaApplies(@PathVariable("applicationId") final Long applicationId) {
         return applicationInnovationAreaService.setNoInnovationAreaApplies(applicationId).toGetResponse();
     }
 
-    @GetMapping("/getAvailableInnovationAreas/{applicationId}")
+    @GetMapping("/availableInnovationAreas/{applicationId}")
     public RestResult<List<InnovationAreaResource>> getAvailableInnovationAreas(@PathVariable("applicationId") final Long applicationId) {
         return applicationInnovationAreaService.getAvailableInnovationAreas(applicationId).toGetResponse();
     }
