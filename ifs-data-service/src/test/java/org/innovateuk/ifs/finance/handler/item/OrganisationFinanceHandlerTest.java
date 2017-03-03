@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.finance.handler.item;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.transactional.QuestionService;
@@ -23,6 +24,7 @@ import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import java.math.BigDecimal;
 import java.util.*;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -121,7 +123,7 @@ public class OrganisationFinanceHandlerTest {
         material.setCost(BigDecimal.valueOf(100));
         material.setItem("Screws");
         material.setQuantity(5);
-        materialCost = handler.costItemToCost(material);
+        materialCost =  handler.costItemToCost(material);
         materialCost.setQuestion(costTypeQuestion.get(FinanceRowType.MATERIALS));
         costs.add((ApplicationFinanceRow)materialCost);
 
@@ -133,7 +135,7 @@ public class OrganisationFinanceHandlerTest {
         FormInput formInput = newFormInput()
                 .withType(costType.getFormInputType())
                 .build();
-        Question question = newQuestion().withFormInputs(Arrays.asList(formInput)).build();
+        Question question = newQuestion().withFormInputs(asList(formInput)).build();
 
         costTypeQuestion.put(costType, question);
         when(questionService.getQuestionByCompetitionIdAndFormInputType(eq(competition.getId()), eq(costType.getFormInputType()))).thenReturn(serviceSuccess(question));
@@ -206,16 +208,26 @@ public class OrganisationFinanceHandlerTest {
     }
 
     @Test
+    public void testGetHandlerMatches() throws Exception {
+        asList(Pair.of(materialCost, MaterialsHandler.class),
+                Pair.of(labourCost, LabourCostHandler.class),
+                Pair.of(capitalUsageCost, CapitalUsageHandler.class),
+                Pair.of(subContractingCost, SubContractingCostHandler.class)
+        ).forEach(pair -> {
+            final FinanceRow row = pair.getKey();
+            final Class<?> clazz = pair.getValue();
+            FinanceRowType costType = FinanceRowType.fromType(row.getQuestion().getFormInputs().get(0).getType());
+            assertEquals("Correct handler for " + costType, clazz.getName(), handler.getCostHandler(costType).getClass().getName());
+        });
+    }
+
+    @Test
     public void testCostToCostItem() throws Exception {
-        Materials costItem = (Materials) handler.costToCostItem((ApplicationFinanceRow) materialCost);
+        FinanceRowItem costItem = handler.costToCostItem((ApplicationFinanceRow) materialCost);
         assertEquals(costItem.getTotal(), materialCost.getCost().multiply(new BigDecimal(materialCost.getQuantity())));
-        assertEquals(costItem.getItem(), materialCost.getItem());
         assertEquals(costItem.getName(), materialCost.getName());
         assertEquals(costItem.getId(), materialCost.getId());
     }
 
-    @Test
-    public void testCostItemsToCost() throws Exception {
 
-    }
 }
