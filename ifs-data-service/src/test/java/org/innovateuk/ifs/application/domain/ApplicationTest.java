@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.innovateuk.ifs.application.builder.QuestionBuilder.newQuestion;
+import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -113,5 +114,17 @@ public class ApplicationTest {
         assertEquals(formInputResponse2, application.getFormInputResponses().get(1));
     }
 
+    @Test(expected=IllegalStateException.class)
+    public void addingInnovationAreaAndThenNotApplicableShouldResultInIllegalStateException() {
+        Application application = new Application();
+        application.setInnovationArea(newInnovationArea().build());
+        application.setNoInnovationAreaApplicable(true);
+    }
 
+    @Test(expected=IllegalStateException.class)
+    public void addingNotApplicableAndThenInnovationAreaShouldResultInIllegalStateException() {
+        Application application = new Application();
+        application.setNoInnovationAreaApplicable(true);
+        application.setInnovationArea(newInnovationArea().build());
+    }
 }

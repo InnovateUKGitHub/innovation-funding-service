@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.project.viability.controller;
 
+import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
@@ -49,6 +51,9 @@ public class FinanceChecksViabilityController {
 
     @Autowired
     private ProjectFinanceService financeService;
+
+    @Autowired
+    private ApplicationService applicationService;
 
     @RequestMapping(method = GET)
     public String viewViability(@PathVariable("projectId") Long projectId,
@@ -143,8 +148,18 @@ public class FinanceChecksViabilityController {
         Integer contributionToProject = toZeroScaleInt(financesForOrganisation.getTotalContribution());
 
         String companyRegistrationNumber = organisation.getCompanyHouseNumber();
-        Integer turnover = null; // for this release, these will always be null
-        Integer headCount = null; // for this release, these will always be null
+
+        Long headCount = null;
+        RestResult<Long> headCountResult = applicationService.getHeadCount(projectService.getById(projectId).getApplication());
+        if (headCountResult.isSuccess()) {
+            headCount = headCountResult.getSuccessObject();
+        }
+        Long turnover = null;
+        RestResult<Long> turnOverResult = applicationService.getTurnover(projectService.getById(projectId).getApplication());
+        if (turnOverResult.isSuccess()) {
+            turnover = turnOverResult.getSuccessObject();
+        }
+
         OrganisationSize organisationSize = organisation.getOrganisationSize();
 
         String approver = viability.getViabilityApprovalUserFirstName() + " " + viability.getViabilityApprovalUserLastName();

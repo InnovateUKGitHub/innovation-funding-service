@@ -46,7 +46,8 @@ Contribution to project and funding sought should not be negative number
     [Documentation]    INFUND-524
     ...
     ...    This test case still use the old application after the refactoring
-    [Tags]
+    [Tags]  Pending
+    #TODO when INFUND-8449 is merged
     [Setup]  log in as a different user    &{lead_applicant_credentials}
     When the user navigates to Your-finances page       Providing sustainable childcare
     and the user fills in the project costs
@@ -98,7 +99,7 @@ Alert shows If the academic research participation is too high
     [Documentation]    INFUND-1436
     [Tags]    Email
     [Setup]    Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    participate in their application
-    Given guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
+    Given guest user log-in    ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
     And The user navigates to the academic application finances
     And The user clicks the button/link       link=Your project costs
     When the user enters text to a text field      id=incurred-staff    1000
@@ -182,15 +183,18 @@ the red warning should be visible
     Page Should Contain Image    css=.finance-summary tr:nth-of-type(1) img[src*="/images/warning-icon"]
 
 Lead enters a valid research participation value
-    When The user navigates to the academic application finances
+    When the user navigates to the academic application finances
     the user clicks the button/link       link=Your project costs
     the user clicks the button/link    jQuery=button:contains("Labour")
     the user should see the element    name=add_cost
     the user clicks the button/link    jQuery=button:contains('Add another role')
     the user should see the element    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input
-    The user enters large text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    1200000000
-    the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    1000
     the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input    Test
+    wait for autosave
+    the user enters large text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    1200000000
+    wait for autosave
+    the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    1000
+    wait for autosave
     then the user selects the checkbox      id=agree-state-aid-page
     the user clicks the button/link        jQuery= button:contains('Mark as complete')
     wait for autosave
