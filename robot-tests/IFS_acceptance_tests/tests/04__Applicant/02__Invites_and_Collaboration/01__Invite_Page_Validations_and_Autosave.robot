@@ -125,12 +125,22 @@ the applicant fills the lead organisation fields
 
 the applicant can enter Organisation name, Name and E-mail
     The user enters text to a text field    name=organisations[1].organisationName    Fannie May
+    Focus    jquery=button:contains("Save changes")
+    wait for autosave
     The user enters text to a text field    css=li:nth-child(2) tr:nth-of-type(1) td:nth-of-type(1) input    Collaborator 2
+    Focus    jquery=button:contains("Save changes")
+    wait for autosave
     The user enters text to a text field    css=li:nth-child(2) tr:nth-of-type(1) td:nth-of-type(2) input    ewan+10@hiveit.co.uk
+    Focus    jquery=button:contains("Save changes")
+    wait for autosave
     Focus    jquery=li:nth-child(2) button:contains('Add another person')
     The user clicks the button/link    jquery=li:nth-child(2) button:contains('Add another person')
     The user enters text to a text field    css=li:nth-child(2) tr:nth-of-type(2) td:nth-of-type(1) input    Collaborator 3
+    Focus    jquery=button:contains("Save changes")
+    wait for autosave
     The user enters text to a text field    css=li:nth-child(2) tr:nth-of-type(2) td:nth-of-type(2) input    ewan+11@hiveit.co.uk
+    Focus    jquery=button:contains("Save changes")
+    wait for autosave
     Focus    jquery=button:contains("Save changes")
     wait for autosave
     the user reloads the page
