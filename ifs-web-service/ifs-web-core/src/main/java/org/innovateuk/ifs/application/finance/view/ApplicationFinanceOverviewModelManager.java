@@ -18,10 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toMap;
@@ -53,11 +50,16 @@ public class ApplicationFinanceOverviewModelManager implements FinanceOverviewMo
         this.formInputService = formInputService;
     }
 
-    public void addFinanceDetails(Model model, Long competitionId, Long applicationId, Long userId) {
+    public void addFinanceDetails(Model model, Long competitionId, Long applicationId, Optional<Long> organisationId) {
         addFinanceSections(competitionId, model);
         OrganisationApplicationFinanceOverviewImpl organisationFinanceOverview = new OrganisationApplicationFinanceOverviewImpl(financeService, fileEntryRestService, applicationId);
-        String organisationType = organisationService.getOrganisationType(userId, applicationId);
-        model.addAttribute("maySeeAcademicBreakdown", "University (HEI)".equals(organisationType));
+        if (organisationId.isPresent()) {
+            String organisationType = organisationService.getOrganisationById(organisationId.get()).getOrganisationTypeName();
+            model.addAttribute("maySeeAcademicBreakdown", "University (HEI)".equals(organisationType));
+        } else {
+            //If no organisation id is present then this is an internal user and they can view the breakdown.
+            model.addAttribute("maySeeAcademicBreakdown", true);
+        }
         model.addAttribute("financeTotal", organisationFinanceOverview.getTotal());
         model.addAttribute("financeTotalPerType", organisationFinanceOverview.getTotalPerType());
         Map<Long, BaseFinanceResource> organisationFinances = organisationFinanceOverview.getFinancesByOrganisation();
