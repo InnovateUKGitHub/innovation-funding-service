@@ -143,7 +143,8 @@ public class OrganisationFinanceHandlerTest {
     public void testGetOrganisationFinancesMaterials() throws Exception {
         Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = handler.getOrganisationFinances(applicationFinance.getId());
 
-        assertEquals("Testing equality for; " + FinanceRowType.MATERIALS.getType(), new BigDecimal(500), organisationFinances.get(FinanceRowType.MATERIALS).getTotal());
+        assertEquals("Testing equality for: " + FinanceRowType.MATERIALS.getType(),
+                new BigDecimal(500), organisationFinances.get(FinanceRowType.MATERIALS).getTotal());
     }
 
     @Test
@@ -206,7 +207,11 @@ public class OrganisationFinanceHandlerTest {
 
     @Test
     public void testCostToCostItem() throws Exception {
-
+        Materials costItem = (Materials) handler.costToCostItem((ApplicationFinanceRow) materialCost);
+        assertEquals(costItem.getTotal(), materialCost.getCost().multiply(new BigDecimal(materialCost.getQuantity())));
+        assertEquals(costItem.getItem(), materialCost.getItem());
+        assertEquals(costItem.getName(), materialCost.getName());
+        assertEquals(costItem.getId(), materialCost.getId());
     }
 
     @Test
