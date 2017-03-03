@@ -13,17 +13,19 @@ public class ApplicationTeamManagementApplicantRowViewModel {
     private String email;
     private boolean lead;
     private boolean pending;
+    private boolean removable;
 
-    public ApplicationTeamManagementApplicantRowViewModel(String name, String email, boolean lead, boolean pending) {
-        this(null, name, email, lead, pending);
+    public ApplicationTeamManagementApplicantRowViewModel(String name, String email, boolean lead, boolean pending, boolean removable) {
+        this(null, name, email, lead, pending, removable);
     }
 
-    public ApplicationTeamManagementApplicantRowViewModel(Long applicationInviteId, String name, String email, boolean lead, boolean pending) {
+    public ApplicationTeamManagementApplicantRowViewModel(Long applicationInviteId, String name, String email, boolean lead, boolean pending, boolean removable) {
         this.applicationInviteId = applicationInviteId;
         this.name = name;
         this.email = email;
         this.lead = lead;
         this.pending = pending;
+        this.removable = removable;
     }
 
     public Long getApplicationInviteId() {
@@ -46,6 +48,10 @@ public class ApplicationTeamManagementApplicantRowViewModel {
         return pending;
     }
 
+    public boolean isRemovable() {
+        return removable;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -59,9 +65,10 @@ public class ApplicationTeamManagementApplicantRowViewModel {
         ApplicationTeamManagementApplicantRowViewModel that = (ApplicationTeamManagementApplicantRowViewModel) o;
 
         return new EqualsBuilder()
-                .append(applicationInviteId, that.applicationInviteId)
                 .append(lead, that.lead)
                 .append(pending, that.pending)
+                .append(removable, that.removable)
+                .append(applicationInviteId, that.applicationInviteId)
                 .append(name, that.name)
                 .append(email, that.email)
                 .isEquals();
@@ -75,6 +82,7 @@ public class ApplicationTeamManagementApplicantRowViewModel {
                 .append(email)
                 .append(lead)
                 .append(pending)
+                .append(removable)
                 .toHashCode();
     }
 }

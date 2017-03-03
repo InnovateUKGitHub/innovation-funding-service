@@ -80,7 +80,8 @@ public class ApplicationTeamManagementModelPopulator {
                 organisationName,
                 true,
                 isUserLeadApplicant(loggedInUserId, leadApplicant),
-                combineLists(getLeadApplicantViewModel(leadApplicant), simpleMap(applicationInviteResources, this::getApplicantViewModel))
+                combineLists(getLeadApplicantViewModel(leadApplicant), simpleMap(applicationInviteResources,
+                        applicationInviteResource -> getApplicantViewModel(applicationInviteResource, loggedInUserId)))
         );
     }
 
@@ -90,21 +91,23 @@ public class ApplicationTeamManagementModelPopulator {
         UserResource leadApplicant = getLeadApplicant(applicationResource);
         return new ApplicationTeamManagementViewModel(applicationResource.getId(),
                 applicationResource.getApplicationDisplayName(),
-                inviteOrganisationResource.getId(),
+                inviteOrganisationResource.getOrganisation(),
                 getOrganisationName(inviteOrganisationResource),
                 false,
                 isUserLeadApplicant(loggedInUserId, leadApplicant),
-                simpleMap(inviteOrganisationResource.getInviteResources(), this::getApplicantViewModel));
+                simpleMap(inviteOrganisationResource.getInviteResources(), applicationInviteResource ->
+                        getApplicantViewModel(applicationInviteResource, loggedInUserId)));
     }
 
-    private ApplicationTeamManagementApplicantRowViewModel getApplicantViewModel(ApplicationInviteResource applicationInviteResource) {
+    private ApplicationTeamManagementApplicantRowViewModel getApplicantViewModel(ApplicationInviteResource applicationInviteResource, long loggedInUserId) {
         boolean pending = applicationInviteResource.getStatus() != InviteStatus.OPENED;
+        boolean removable = applicationInviteResource.getUser() != loggedInUserId;
         return new ApplicationTeamManagementApplicantRowViewModel(applicationInviteResource.getId(), getApplicantName(applicationInviteResource),
-                applicationInviteResource.getEmail(), false, pending);
+                applicationInviteResource.getEmail(), false, pending, removable);
     }
 
     private ApplicationTeamManagementApplicantRowViewModel getLeadApplicantViewModel(UserResource leadApplicant) {
-        return new ApplicationTeamManagementApplicantRowViewModel(leadApplicant.getName(), leadApplicant.getEmail(), true, false);
+        return new ApplicationTeamManagementApplicantRowViewModel(leadApplicant.getName(), leadApplicant.getEmail(), true, false, false);
     }
 
     private UserResource getLeadApplicant(ApplicationResource applicationResource) {

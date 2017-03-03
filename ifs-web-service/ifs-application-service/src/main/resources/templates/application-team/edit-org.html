@@ -55,7 +55,7 @@
                             <td th:text="${applicant.email}">steve.smith@empire.com</td>
                             <td th:text="${applicant.lead} ? 'Lead' : (${applicant.pending} ? 'Pending' : '')">Lead</td>
                             <td class="alignright">
-                                <button th:unless="${applicant.lead}" class="buttonlink" type="submit" name="removeApplicant">Remove</button>
+                                <button th:if="${applicant.removable}" class="buttonlink" type="submit" name="removeApplicant">Remove</button>
                             </td>
                         </tr>
 
@@ -97,7 +97,7 @@
                             </td>
                             <td></td>
                             <td class="alignright">
-                                <button class="remove-another-row buttonlink" name="remove_person" type="submit">Remove</button>
+                                <button class="remove-another-row buttonlink" th:value="${applicantStat.index}" name="removeApplicant" type="submit">Remove</button>
                             </td>
                         </tr>
                     </tbody>

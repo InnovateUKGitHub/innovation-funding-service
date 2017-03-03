@@ -9,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,7 +19,7 @@ public class ApplicationTeamUpdateForm implements BindingResultTarget {
 
     @Valid
     @NotEmpty(message = "{validation.applicationteamupdateform.applicants.required}")
-    private List<ApplicantInviteForm> applicants;
+    private List<ApplicantInviteForm> applicants = new ArrayList<>();
     private BindingResult bindingResult;
     private List<ObjectError> objectErrors;
 

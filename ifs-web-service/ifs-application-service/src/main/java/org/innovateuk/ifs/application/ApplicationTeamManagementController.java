@@ -73,7 +73,7 @@ public class ApplicationTeamManagementController {
                                         @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                         @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
-        checkUserIsLeadApplicant(applicationResource, loggedInUser.getId());
+        checkUserHasAuthority(applicationResource, organisationName, loggedInUser.getId());
 
         model.addAttribute("model", applicationTeamManagementModelPopulator.populateModel(applicationId, organisationName,
                 loggedInUser.getId()));
@@ -111,7 +111,7 @@ public class ApplicationTeamManagementController {
                                            ValidationHandler validationHandler) {
 
         ApplicationResource applicationResource = applicationService.getById(applicationId);
-        checkUserIsLeadApplicant(applicationResource, loggedInUser.getId());
+        checkUserHasAuthority(applicationResource, organisationName, loggedInUser.getId());
 
         Supplier<String> failureView = () -> getUpdateOrganisation(model, applicationId, organisationName, loggedInUser, form);
 
@@ -148,7 +148,7 @@ public class ApplicationTeamManagementController {
         return inviteRestService.createInvitesByInviteOrganisation(organisationName, createInvites(form, applicationId)).toServiceResult();
     }
 
-    @PostMapping(params = {"addApplicant"})
+    @PostMapping(params = {"addApplicant", "organisation"})
     public String addApplicant(Model model,
                                @PathVariable("applicationId") long applicationId,
                                @RequestParam(name = "organisation", required = false) long organisationId,
@@ -161,7 +161,20 @@ public class ApplicationTeamManagementController {
         return getUpdateOrganisation(model, applicationId, organisationId, loggedInUser, form);
     }
 
-    @PostMapping(params = {"removeApplicant"})
+    @PostMapping(params = {"addApplicant", "organisationName"})
+    public String addApplicant(Model model,
+                               @PathVariable("applicationId") long applicationId,
+                               @RequestParam(name = "organisationName") String organisationName,
+                               @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                               @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form) {
+        ApplicationResource applicationResource = applicationService.getById(applicationId);
+        checkUserHasAuthority(applicationResource, organisationName, loggedInUser.getId());
+
+        form.getApplicants().add(new ApplicantInviteForm());
+        return getUpdateOrganisation(model, applicationId, organisationName, loggedInUser, form);
+    }
+
+    @PostMapping(params = {"removeApplicant", "organisation"})
     public String removeApplicant(Model model,
                                   @PathVariable("applicationId") long applicationId,
                                   @RequestParam(name = "organisation", required = false) long organisationId,
@@ -175,11 +188,26 @@ public class ApplicationTeamManagementController {
         return getUpdateOrganisation(model, applicationId, organisationId, loggedInUser, form);
     }
 
+    @PostMapping(params = {"removeApplicant", "organisationName"})
+    public String removeApplicant(Model model,
+                                  @PathVariable("applicationId") long applicationId,
+                                  @RequestParam(name = "organisationName") String organisationName,
+                                  @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                  @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form,
+                                  @RequestParam(name = "removeApplicant") Integer position) {
+        ApplicationResource applicationResource = applicationService.getById(applicationId);
+        checkUserHasAuthority(applicationResource, organisationName, loggedInUser.getId());
+
+        form.getApplicants().remove(position.intValue());
+        return getUpdateOrganisation(model, applicationId, organisationName, loggedInUser, form);
+    }
+
     private void checkUserHasAuthority(ApplicationResource applicationResource, long organisationId, long loggedInUserId) {
         // TODO throw exception if user doesn't have authority
     }
 
-    private void checkUserIsLeadApplicant(ApplicationResource applicationResource, long loggedInUserId) {
+    private void checkUserHasAuthority(ApplicationResource applicationResource, String organisationName, long loggedInUserId) {
+        // TODO throw exception if user doesn't have authority
         if (loggedInUserId != getLeadApplicantId(applicationResource)) {
             throw new ForbiddenActionException("User must be Lead Applicant");
         }
