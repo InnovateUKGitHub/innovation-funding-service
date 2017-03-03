@@ -5,7 +5,6 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 
 public class BankDetailsViewModel {
     private Long projectId;
-    private String projectNumber;
     private String projectName;
     private String companyNumber;
     private String organisationId;
@@ -16,16 +15,7 @@ public class BankDetailsViewModel {
 
     public BankDetailsViewModel(ProjectResource projectResource) {
         this.projectId = projectResource.getId();
-        this.projectNumber = projectResource.getFormattedId();
         this.projectName = projectResource.getName();
-    }
-
-    public String getProjectNumber() {
-        return projectNumber;
-    }
-
-    public void setProjectNumber(String projectNumber) {
-        this.projectNumber = projectNumber;
     }
 
     public String getProjectName() {

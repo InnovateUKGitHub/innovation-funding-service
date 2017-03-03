@@ -124,5 +124,4 @@ ifs-libs/*
 EMAIL_VARIABLES_SENSITIVE.robot
 
 os-files-tmp/
-shib-init/
-/setup-files/scripts/openshift/ifs
+shib-init

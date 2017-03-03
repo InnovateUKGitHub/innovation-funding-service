@@ -189,4 +189,6 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return withArray((id, object) -> setField("id", id, object), ids);
     }
 
+    public CompetitionBuilder withMaxResearchRatio(Integer... ratios) { return withArray((ratio, competition) -> competition.setMaxResearchRatio(ratio), ratios); }
+
 }

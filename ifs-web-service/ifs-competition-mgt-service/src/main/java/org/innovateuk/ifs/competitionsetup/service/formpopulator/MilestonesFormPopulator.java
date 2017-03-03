@@ -12,6 +12,7 @@ import org.apache.commons.collections4.map.LinkedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -37,9 +38,9 @@ public class MilestonesFormPopulator implements CompetitionSetupFormPopulator {
 
         List<MilestoneResource> milestonesByCompetition = milestoneService.getAllMilestonesByCompetitionId(competitionResource.getId());
         if (milestonesByCompetition.isEmpty()) {
-            milestonesByCompetition.addAll(competitionSetupMilestoneService.createMilestonesForCompetition(competitionResource.getId()));
+            milestonesByCompetition.addAll(competitionSetupMilestoneService.createMilestonesForCompetition(competitionResource.getId()).getSuccessObjectOrThrowException());
         } else {
-            milestonesByCompetition.sort((c1, c2) -> c1.getType().compareTo(c2.getType()));
+            milestonesByCompetition.sort(Comparator.comparing(MilestoneResource::getType));
         }
 
         LinkedMap<String, MilestoneRowForm> milestoneFormEntries = new LinkedMap<>();

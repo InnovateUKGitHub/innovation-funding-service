@@ -29,7 +29,7 @@ public class ApplicationFinanceFormPopulator implements CompetitionSetupSubsecti
 	@Override
 	public CompetitionSetupForm populateForm(CompetitionResource competitionResource, Optional<Long> objectId) {
 
-		CompetitionSetupFinanceResource csfr = competitionSetupFinanceService.getByCompetitionId(competitionResource.getId()).getSuccessObjectOrThrowException();
+		CompetitionSetupFinanceResource csfr = competitionSetupFinanceService.getByCompetitionId(competitionResource.getId());
 		ApplicationFinanceForm competitionSetupForm = new ApplicationFinanceForm();
 
 		competitionSetupForm.setFullApplicationFinance(csfr.isFullApplicationFinance());

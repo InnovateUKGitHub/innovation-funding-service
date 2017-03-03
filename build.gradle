@@ -10,6 +10,11 @@ allprojects {
     targetCompatibility = 1.8
 }
 
+
+if(project.hasProperty('profile') && profile == 'automated') {
+    ext.openshiftEnv = project.properties['openshiftEnv'] ?: "automated"
+}
+
 build.enabled = false
 jar.enabled=false
 
@@ -122,7 +127,7 @@ sonarqube {
 }
 
 dockerCompose {
-    useComposeFiles = ['docker-compose-services.yml' ,'docker-compose-services-dev.yml']
+    useComposeFiles = ['docker-compose.yml' ,'docker-compose-dev.yml']
     removeContainers = false
     removeImages = "Local" // Accepted values are: "All", "Local" and "None"
     removeVolumes = false
