@@ -69,7 +69,7 @@ public class CompetitionController {
 
         model.addAttribute("model", overviewPopulator.populateViewModel(
                 publicContentItem,
-                getPopulator(selectedSection.orElse(PublicContentSectionType.SUMMARY)).populate(publicContentItem.getPublicContentResource())));
+                getPopulator(selectedSection.orElse(PublicContentSectionType.SUMMARY)).populate(publicContentItem.getPublicContentResource(), publicContentItem.getNonIfs())));
         return TEMPLATE_PATH + "overview";
     }
 

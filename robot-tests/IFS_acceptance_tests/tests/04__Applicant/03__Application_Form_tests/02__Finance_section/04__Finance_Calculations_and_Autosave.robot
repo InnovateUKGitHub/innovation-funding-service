@@ -74,10 +74,7 @@ Subcontracting costs
     [Documentation]    INFUND-192, INFUND-736, INFUND-2303, INFUND-6390
     [Tags]
     When the applicant edits the Subcontracting costs section
-    Then Totals should be correct    css=#section-total-13    £ 200    css=[aria-controls="collapsible-4"] [data-mirror]    £ 200
-    And the user clicks the button/link    css=#subcontracting [data-repeatable-row]:nth-child(1) button
-    And the user reloads the page
-    Then Totals should be correct    css=#section-total-13    £ 100    css=[aria-controls="collapsible-4"] [data-mirror]    £ 100
+    Then the user should see the element  jQuery=button:contains("Subcontracting") > *:contains("£ 200")
     [Teardown]    the user clicks the button/link    jQuery=button:contains("Subcontracting costs")
 
 Travel and subsistence
