@@ -21,14 +21,19 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.test.annotation.Repeat;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.time.LocalDateTime.now;
+import static java.time.ZoneId.systemDefault;
+import static java.time.temporal.ChronoUnit.DAYS;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -116,21 +121,24 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         assertEquals(expectedAssessorProfileStatusViewModel, model.getProfileStatus());
         assertTrue(model.getUpcomingCompetitions().isEmpty());
     }
-
+    
     @Test
     public void dashboard_activeStartsToday() throws Exception {
+        LocalDateTime now = now();
+        Clock clock = Clock.fixed(now.atZone(systemDefault()).toInstant(), systemDefault());
         CompetitionParticipantResource participant = newCompetitionParticipantResource()
                 .withCompetitionParticipantRole(ASSESSOR)
                 .withStatus(ACCEPTED)
                 .withUser(3L)
                 .withCompetition(2L)
                 .withCompetitionName("Juggling Craziness")
-                .withAssessorAcceptsDate(now().minusDays(0))
-                .withAssessorDeadlineDate(now().plusDays(6))
+                .withAssessorAcceptsDate(now.minusDays(1))
+                .withAssessorDeadlineDate(now.plusDays(5))
                 .withSubmittedAssessments(1L)
                 .withTotalAssessments(3L)
                 .withCompetitionStatus(IN_ASSESSMENT)
                 .build();
+        ReflectionTestUtils.setField(participant, "clock", clock, Clock.class);
         UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
                 .withSkillsComplete(false)
                 .withAffliliationsComplete(true)
@@ -150,7 +158,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
 
         List<AssessorDashboardActiveCompetitionViewModel> expectedActiveCompetitions = singletonList(
                 new AssessorDashboardActiveCompetitionViewModel(2L, "Juggling Craziness", 1, 3,
-                        LocalDateTime.now().plusDays(6).toLocalDate(),
+                        now.plusDays(5).toLocalDate(),
                         5,
                         16
                 )
