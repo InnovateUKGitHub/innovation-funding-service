@@ -19,7 +19,8 @@ lead applicant can add/remove partners
     [Documentation]    INFUND-901
     [Tags]    HappyPath
     Given The user navigates to the invitation page of the test application
-    When The user clicks the button/link    jquery=li:nth-child(1) button:contains('Add another person')
+    When The user clicks the button/link    jquery=a:contains("Update Empire Ltd")
+    And the user clicks the button/link    jQuery=button:contains("Add new applicant")
     Then The user should see the element    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1)
     And The user clicks the button/link    jquery=li:nth-child(1) button:contains('Remove')
     Then The user should not see the element    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1)
@@ -174,7 +175,7 @@ Login and create a new application
     And the user clicks the button/link    jQuery=.button:contains("Apply now")
     And the user selects the radio button    create-application    true
     And the user clicks the button/link    jQuery=.button:contains("Continue")
-    And the user clicks the button/link    jquery=button:contains("Begin application")
+    And the user clicks the button/link    jquery=a:contains("Begin application")
     And the user clicks the button/link    link=Application details
     And the user enters text to a text field    id=application_details-title    Invitation page test
     And the user clicks the button/link    jQuery=button:contains("Save and return")
@@ -184,4 +185,3 @@ The user navigates to the invitation page of the test application
     And the user clicks the button/link    link=Invitation page test
     And the user should see the text in the page    view and add participants to your application
     And the user clicks the button/link    link=view and add participants to your application
-    And The user clicks the button/link    jQuery=.button:contains("Invite new contributors")

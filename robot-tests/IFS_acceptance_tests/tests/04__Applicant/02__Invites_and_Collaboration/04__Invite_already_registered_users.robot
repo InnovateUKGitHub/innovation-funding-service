@@ -81,7 +81,7 @@ Existing user creates a new application and invites a user from the same organis
     And The user clicks the button/link    jquery=li:nth-child(1) button:contains('Add another person')
     And The user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    Olivier Giroud
     And The user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input    ${test_mailbox_one}+invite2@gmail.com
-    And the user clicks the button/link    jQuery=.button:contains("Begin application")
+    And the user clicks the button/link    jQuery=a:contains("Begin application")
     And the user clicks the button/link    link=Application details
     And the user enters text to a text field    id=application_details-title    Invite a user with the same org@
     And the user clicks the button/link    jQuery=button:contains("Save and return")
