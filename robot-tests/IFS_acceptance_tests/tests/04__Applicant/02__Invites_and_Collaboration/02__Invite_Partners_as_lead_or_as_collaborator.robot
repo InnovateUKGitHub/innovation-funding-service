@@ -34,7 +34,7 @@ Valid invitation submit
     [Documentation]    INFUND-901
     [Tags]    HappyPath    SmokeTest
     [Setup]    Delete the emails from both test mailboxes
-    Given the user is on the invites and collaborators page
+    Given log into smoke test application
     When the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
     When the applicant enters valid inputs
     Then the user should see the text in the page    Application team
@@ -188,12 +188,10 @@ the applicant enters valid inputs
     The user clicks the button/link    jquery=button:contains("Save changes")
 
 The lead applicant should have the correct status
-    the user should see the element    css=#content h2.heading-medium
-    ${input_value} =    get text    css=#content h2.heading-medium
-    Should Be Equal As Strings    ${input_value}    Empire Ltd (Lead organisation)
-    the user should see the element    link=Steve Smith
-    ${input_value} =    get text    css=.list-bullet li small
-    Should Be Equal As Strings    ${input_value}    (Lead Applicant)
+    the user should see the element    jQuery=h2:contains("Empire Ltd, Lead organisation")
+    the user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(1):contains("Steve Smith")
+    the user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(2):contains("steve.smith@empire.com")
+    the user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(3):contains("Lead")
 
 the user adds new collaborator
     the user should see the element    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input
