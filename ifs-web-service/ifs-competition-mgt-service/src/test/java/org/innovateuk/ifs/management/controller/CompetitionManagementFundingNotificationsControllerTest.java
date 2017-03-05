@@ -5,6 +5,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.LambdaMatcher;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
+import org.innovateuk.ifs.application.resource.NotificationResource;
 import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyStatisticsResource;
@@ -31,11 +32,13 @@ import java.util.List;
 import static org.innovateuk.ifs.application.builder.ApplicationSummaryResourceBuilder.newApplicationSummaryResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionFundedKeyStatisticsResourceBuilder.newCompetitionFundedKeyStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.ASSESSOR_FEEDBACK;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -62,7 +65,9 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
     @Mock
     private ApplicationFundingDecisionService applicationFundingServiceMock;
 
-    public static final Long COMPETITION_ID = 1L;
+    public static final Long COMPETITION_ID = 22L;
+    public static final Long APPLICATION_ID_ONE = 1L;
+    public static final Long APPLICATION_ID_TWO = 2L;
 
     @Test
     public void testApplications() throws Exception {
@@ -134,16 +139,93 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
     @Test
     public void getSendNotificationsPageTest() throws Exception {
 
-        List<Long> applicationsIds = Arrays.asList(22L);
+        List<Long> applicationsIds = Arrays.asList(APPLICATION_ID_ONE);
         List<ApplicationSummaryResource> resourceList = Arrays.asList(new ApplicationSummaryResource());
 
         SendNotificationsViewModel viewModel = new SendNotificationsViewModel(resourceList, null, COMPETITION_ID, "compName");
         when(sendNotificationsModelPopulator.populate(COMPETITION_ID, applicationsIds)).thenReturn(viewModel);
-
-        // Method under test
-        mockMvc.perform(get("/competition/{competitionId}/funding/send?application_ids=1", COMPETITION_ID))
+        mockMvc.perform(get("/competition/{competitionId}/funding/send?application_ids={applicationId}", COMPETITION_ID, APPLICATION_ID_ONE))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt-send-notifications"));
+    }
+
+    @Test
+    public void sendNotificationsTest() throws Exception {
+
+        when(applicationFundingServiceMock.sendFundingNotifications(any(NotificationResource.class))).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/competition/{competitionId}/funding/send", COMPETITION_ID)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("subject", "a subject")
+                .param("message", "a message")
+                .param("applicationIds", String.valueOf(APPLICATION_ID_ONE)))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/competition/" + COMPETITION_ID + "/manage-funding-applications"));
+
+        verify(applicationFundingServiceMock).sendFundingNotifications(any(NotificationResource.class));
+    }
+
+    @Test
+    public void sendNotificationsTestMultipleApplications() throws Exception {
+
+        when(applicationFundingServiceMock.sendFundingNotifications(any(NotificationResource.class))).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/competition/{competitionId}/funding/send", COMPETITION_ID)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("subject", "a subject")
+                .param("message", "a message")
+                .param("applicationIds", String.valueOf(APPLICATION_ID_ONE))
+                .param("applicationIds", String.valueOf(APPLICATION_ID_TWO)))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/competition/" + COMPETITION_ID + "/manage-funding-applications"));
+
+        verify(applicationFundingServiceMock).sendFundingNotifications(any(NotificationResource.class));
+    }
+
+    @Test
+    public void sendNotificationsWithInvalidSubject() throws Exception {
+        when(applicationFundingServiceMock.sendFundingNotifications(any(NotificationResource.class))).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/competition/{competitionId}/funding/send", COMPETITION_ID)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("message", "a message")
+                .param("applicationIds", String.valueOf(APPLICATION_ID_ONE)))
+                .andExpect(view().name("comp-mgt-send-notifications"))
+                .andExpect(model().attributeHasFieldErrors("form", "subject"))
+                .andReturn();
+
+        verify(applicationFundingServiceMock, never()).sendFundingNotifications(any(NotificationResource.class));
+    }
+
+    @Test
+    public void sendNotificationsTestWithInvalidMessage() throws Exception {
+        when(applicationFundingServiceMock.sendFundingNotifications(any(NotificationResource.class))).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/competition/{competitionId}/funding/send", COMPETITION_ID)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("subject", "a subject")
+                .param("applicationIds", String.valueOf(APPLICATION_ID_ONE)))
+                .andExpect(view().name("comp-mgt-send-notifications"))
+                .andExpect(model().attributeHasFieldErrors("form", "message"))
+                .andReturn();
+
+        verify(applicationFundingServiceMock, never()).sendFundingNotifications(any(NotificationResource.class));
+    }
+
+    @Test
+    public void sendNotificationsWithInvalidApplicationIds() throws Exception {
+
+        when(applicationFundingServiceMock.sendFundingNotifications(any(NotificationResource.class))).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/competition/{competitionId}/funding/send", COMPETITION_ID)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("subject", "a subject")
+                .param("message", "a message"))
+                .andExpect(view().name("comp-mgt-send-notifications"))
+                .andExpect(model().attributeHasFieldErrors("form", "applicationIds"))
+                .andReturn();
+
+        verify(applicationFundingServiceMock, never()).sendFundingNotifications(any(NotificationResource.class));
     }
 
     @Override
