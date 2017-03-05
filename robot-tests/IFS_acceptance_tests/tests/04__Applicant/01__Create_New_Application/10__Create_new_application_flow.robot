@@ -55,7 +55,7 @@ Non registered users CH route (email step)
     And the guest user clicks the log-in button
     Then the user should see the text in the page    Your dashboard
     And the user clicks the button/link    link=${OPEN_COMPETITION_LINK}
-    And the user clicks the button/link    jQuery=.button:contains("Begin application")
+    And the user clicks the button/link    jQuery=a:contains("Begin application")
     And the user should see the text in the page    Application overview
 
 The email address does not stay in the cookie
@@ -105,7 +105,7 @@ Non registered users non CH route (email step)
     And the guest user clicks the log-in button
     Then the user should see the text in the page    Your dashboard
     And the user clicks the button/link    link=${OPEN_COMPETITION_LINK}
-    And the user clicks the button/link    jQuery=.button:contains("Begin application")
+    And the user clicks the button/link    jQuery=a:contains("Begin application")
     And the user should see the text in the page    Application overview
 
 Verify the name of the new application

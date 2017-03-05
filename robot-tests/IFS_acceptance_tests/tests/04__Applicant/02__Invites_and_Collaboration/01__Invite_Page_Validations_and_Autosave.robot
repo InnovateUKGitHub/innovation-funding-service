@@ -19,10 +19,11 @@ lead applicant can add/remove partners
     [Documentation]    INFUND-901
     [Tags]    HappyPath
     Given The user navigates to the invitation page of the test application
-    When The user clicks the button/link    jquery=li:nth-child(1) button:contains('Add another person')
-    Then The user should see the element    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1)
-    And The user clicks the button/link    jquery=li:nth-child(1) button:contains('Remove')
-    Then The user should not see the element    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1)
+    When The user clicks the button/link    jquery=a:contains("Update Empire Ltd")
+    And the user clicks the button/link    jQuery=button:contains("Add new applicant")
+    Then The user should see the element    jQuery=.table-overflow tr:nth-of-type(2) td:nth-of-type(1)
+    And The user clicks the button/link    jQuery=button:contains('Remove')
+    Then The user should not see the element    jQuery=.table-overflow tr:nth-of-type(2) td:nth-of-type(1)
 
 lead applicant cannot remove himself
     [Documentation]    INFUND-901
@@ -32,7 +33,7 @@ lead applicant cannot remove himself
 Validations for the Email field
     [Documentation]    INFUND-901
     [Tags]    HappyPath
-    When The user clicks the button/link    jquery=li:nth-child(1) button:contains('Add another person')
+    When The user clicks the button/link    jQuery=button:contains("Add new applicant")
     And the applicant fills the lead organisation fields    Collaborator01    @hiveit.co.uk
     Then the user should see an error    Please enter a valid email address.
 
@@ -40,7 +41,8 @@ Validations for the name field
     [Documentation]    INFUND-901
     [Tags]
     When the applicant fills the lead organisation fields    ${EMPTY}    ewan+5@hiveit.co.uk
-    Then the user should see an error    ${empty_field_warning_message}
+    Then the user should see an error    PLease enter a name.
+    [Teardown]    the user clicks the button/link    link=Application team
 
 Link to remove partner organisation
     [Documentation]    INFUND-1039
@@ -48,7 +50,6 @@ Link to remove partner organisation
     # on the user interface.    All we can test is that the state is saved in cookie, so not lost on page reload.
     When The user clicks the button/link    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
     And the applicant inputs details    1
-    Then The user should see the element    jquery=li:nth-child(2) button:contains('Remove')
     When The user clicks the button/link    jquery=li:nth-child(2) button:contains('Remove')
     Then The user should not see the text in the page    Organisation name
 
@@ -111,17 +112,19 @@ the user fills the name and email field and reloads the page
     the user reloads the page
 
 the lead applicant cannot be removed
-    Element Should Contain    css=li:nth-child(1) tr:nth-of-type(1) td:nth-of-type(3)    Lead applicant
+    the user should see the text in the element    jQuery=tr:nth-of-type(1) td:nth-of-type(3)    Lead
+    the user should not see the element    jQuery=button:contains('Remove')
 
 the applicant fills the lead organisation fields
     [Arguments]    ${LEAD_NAME}    ${LEAD_EMAIL}
-    The user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    ${LEAD_NAME}
-    The user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input    ${LEAD_EMAIL}
+    The user enters text to a text field    jQuery=tr:nth-of-type(2) td:nth-of-type(1) input    ${LEAD_NAME}
+    The user enters text to a text field    jQuery=tr:nth-of-type(2) td:nth-of-type(2) input    ${LEAD_EMAIL}
     # the following keyword disables the browser's validation
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');
-    Focus    jQuery=.button:contains("Save changes")
+    Focus    jQuery=.button:contains("Update organisation")
     browser validations have been disabled
-    The user clicks the button/link    jQuery=.button:contains("Save changes")
+    The user clicks the button/link    jQuery=.button:contains("Update organisation")
+    The user clicks the button/link    jQuery=button:contains("Update organisation")
 
 the applicant can enter Organisation name, Name and E-mail
     The user enters text to a text field    name=organisations[1].organisationName    Fannie May
@@ -174,7 +177,7 @@ Login and create a new application
     And the user clicks the button/link    jQuery=.button:contains("Apply now")
     And the user selects the radio button    create-application    true
     And the user clicks the button/link    jQuery=.button:contains("Continue")
-    And the user clicks the button/link    jquery=button:contains("Begin application")
+    And the user clicks the button/link    jquery=a:contains("Begin application")
     And the user clicks the button/link    link=Application details
     And the user enters text to a text field    id=application_details-title    Invitation page test
     And the user clicks the button/link    jQuery=button:contains("Save and return")
@@ -184,4 +187,3 @@ The user navigates to the invitation page of the test application
     And the user clicks the button/link    link=Invitation page test
     And the user should see the text in the page    view and add participants to your application
     And the user clicks the button/link    link=view and add participants to your application
-    And The user clicks the button/link    jQuery=.button:contains("Invite new contributors")

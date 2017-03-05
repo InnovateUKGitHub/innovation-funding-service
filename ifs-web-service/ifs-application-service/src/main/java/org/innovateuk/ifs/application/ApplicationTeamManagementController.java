@@ -166,7 +166,7 @@ public class ApplicationTeamManagementController {
                                   @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form,
                                   @RequestParam(name = "removeApplicant") Integer position) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
-        checkUserHasAuthority(applicationResource, organisationId, loggedInUser.getId());
+        checkUserIsLeadApplicant(applicationResource, loggedInUser.getId());
 
         form.getApplicants().remove(position.intValue());
         return getUpdateOrganisation(model, applicationId, organisationId, loggedInUser, form);
@@ -180,7 +180,7 @@ public class ApplicationTeamManagementController {
                                   @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form,
                                   @RequestParam(name = "removeApplicant") Integer position) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
-        checkUserHasAuthority(applicationResource, organisationName, loggedInUser.getId());
+        checkUserIsLeadApplicant(applicationResource, loggedInUser.getId());
 
         form.getApplicants().remove(position.intValue());
         return getUpdateOrganisation(model, applicationId, organisationName, loggedInUser, form);
@@ -194,7 +194,7 @@ public class ApplicationTeamManagementController {
                                  @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form,
                                  @RequestParam(name = "markForRemoval") long applicationInviteId) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
-        checkUserHasAuthority(applicationResource, organisationId, loggedInUser.getId());
+        checkUserIsLeadApplicant(applicationResource, loggedInUser.getId());
 
         form.getMarkedForRemoval().add(applicationInviteId);
         return getUpdateOrganisation(model, applicationId, organisationId, loggedInUser, form);
@@ -208,7 +208,7 @@ public class ApplicationTeamManagementController {
                                  @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form,
                                  @RequestParam(name = "markForRemoval") long applicationInviteId) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
-        checkUserHasAuthority(applicationResource, organisationName, loggedInUser.getId());
+        checkUserIsLeadApplicant(applicationResource, loggedInUser.getId());
 
         form.getMarkedForRemoval().add(applicationInviteId);
         return getUpdateOrganisation(model, applicationId, organisationName, loggedInUser, form);
@@ -220,6 +220,12 @@ public class ApplicationTeamManagementController {
 
     private void checkUserHasAuthority(ApplicationResource applicationResource, String organisationName, long loggedInUserId) {
         // TODO throw exception if user doesn't have authority
+        if (loggedInUserId != getLeadApplicantId(applicationResource)) {
+            throw new ForbiddenActionException("User must be Lead Applicant");
+        }
+    }
+
+    private void checkUserIsLeadApplicant(ApplicationResource applicationResource, long loggedInUserId) {
         if (loggedInUserId != getLeadApplicantId(applicationResource)) {
             throw new ForbiddenActionException("User must be Lead Applicant");
         }

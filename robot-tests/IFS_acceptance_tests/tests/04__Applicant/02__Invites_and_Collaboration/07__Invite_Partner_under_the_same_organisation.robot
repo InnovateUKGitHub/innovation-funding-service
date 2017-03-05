@@ -24,7 +24,7 @@ Create a new application
     And The user should see the element    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1)
     The user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    ${NAME}
     The user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input    ${EMAIL}
-    And the user clicks the button/link    jQuery=.button:contains("Begin application")
+    And the user clicks the button/link    jQuery=a:contains("Begin application")
     And the user clicks the button/link    link=Application details
     And the user enters text to a text field    id=application_details-title    ${APPLICATION NAME}
     And the user clicks the button/link    jQuery=button:contains("Save and return")
