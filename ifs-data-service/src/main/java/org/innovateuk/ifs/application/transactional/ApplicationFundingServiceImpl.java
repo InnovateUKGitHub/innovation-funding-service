@@ -126,21 +126,19 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
         List<ServiceResult<Pair<Long, NotificationTarget>>> fundingNotificationTargets = getLeadApplicantNotificationTargets(notificationResource.getApplicationIds());
         ServiceResult<List<Pair<Long, NotificationTarget>>> aggregatedFundingTargets = aggregate(fundingNotificationTargets);
 
-        if (aggregatedFundingTargets.isSuccess()) {
+        return aggregatedFundingTargets.handleSuccessOrFailure(
+                failure -> serviceFailure(NOTIFICATIONS_UNABLE_TO_DETERMINE_NOTIFICATION_TARGETS),
+                success -> {
 
-            Notification fundingNotification = createFundingDecisionNotification(notificationResource, aggregatedFundingTargets.getSuccessObject(), APPLICATION_FUNDING);
+                    Notification fundingNotification = createFundingDecisionNotification(notificationResource, aggregatedFundingTargets.getSuccessObject(), APPLICATION_FUNDING);
+                    ServiceResult<Void> fundedEmailSendResult = notificationService.sendNotification(fundingNotification, EMAIL);
 
-            ServiceResult<Void> fundedEmailSendResult = notificationService.sendNotification(fundingNotification, EMAIL);
-            if (fundedEmailSendResult.isSuccess()) {
-                notificationResource.getApplicationIds()
-                        .forEach(applicationId ->
-                                applicationService.setApplicationFundingEmailDateTime(applicationId, LocalDateTime.now()));
-            }
-
-            return processAnyFailuresOrSucceed(fundedEmailSendResult);
-        } else {
-            return serviceFailure(NOTIFICATIONS_UNABLE_TO_DETERMINE_NOTIFICATION_TARGETS);
-        }
+                    return fundedEmailSendResult.andOnSuccess(() ->
+                            aggregate(simpleMap(
+                                    notificationResource.getApplicationIds(), applicationId ->
+                                            applicationService.setApplicationFundingEmailDateTime(applicationId, LocalDateTime.now()))))
+                            .andOnSuccessReturnVoid();
+                });
     }
 
     @Override

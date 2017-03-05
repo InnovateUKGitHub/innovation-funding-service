@@ -5,22 +5,27 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.LambdaMatcher;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
+import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.management.model.CompetitionInFlightModelPopulator;
 import org.innovateuk.ifs.management.model.CompetitionInFlightStatsModelPopulator;
 import org.innovateuk.ifs.management.model.ManageFundingApplicationsModelPopulator;
+import org.innovateuk.ifs.management.model.SendNotificationsModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.CompetitionInFlightStatsViewModel;
 import org.innovateuk.ifs.management.viewmodel.ManageFundingApplicationViewModel;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.viewmodel.SendNotificationsViewModel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.innovateuk.ifs.application.builder.ApplicationSummaryResourceBuilder.newApplicationSummaryResource;
@@ -36,7 +41,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class CompetitionManagementManageFundingApplicationsControllerTest extends BaseControllerMockMVCTest<CompetitionManagementFundingNotificationsController> {
+public class CompetitionManagementFundingNotificationsControllerTest extends BaseControllerMockMVCTest<CompetitionManagementFundingNotificationsController> {
 
 
     @InjectMocks
@@ -51,9 +56,16 @@ public class CompetitionManagementManageFundingApplicationsControllerTest extend
     @Spy
     private CompetitionInFlightModelPopulator competitionInFlightModelPopulator;
 
+    @Mock
+    private SendNotificationsModelPopulator sendNotificationsModelPopulator;
+
+    @Mock
+    private ApplicationFundingDecisionService applicationFundingServiceMock;
+
+    public static final Long COMPETITION_ID = 1L;
+
     @Test
     public void testApplications() throws Exception {
-        long competitionId = 1l;
         int pageNumber = 0;
         int pageSize = 20;
         String sortField = "id";
@@ -63,24 +75,24 @@ public class CompetitionManagementManageFundingApplicationsControllerTest extend
         long changesSinceLastNotify = 10;
         String queryParams = "";
         // Mock setup
-        CompetitionResource competitionResource = newCompetitionResource().withId(competitionId).withCompetitionStatus(ASSESSOR_FEEDBACK).withName("A competition").build();
-        when(competitionService.getById(competitionId)).thenReturn(competitionResource);
+        CompetitionResource competitionResource = newCompetitionResource().withId(COMPETITION_ID).withCompetitionStatus(ASSESSOR_FEEDBACK).withName("A competition").build();
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
 
         List<ApplicationSummaryResource> applications = newApplicationSummaryResource().with(uniqueIds()).build(pageSize);
         ApplicationSummaryPageResource applicationSummaryPageResource = new ApplicationSummaryPageResource(totalElements, totalPages, applications, pageNumber, pageSize);
-        when(applicationSummaryService.getWithFundingDecisionApplications(competitionId, sortField, pageNumber, pageSize, filter)).thenReturn(applicationSummaryPageResource);
+        when(applicationSummaryService.getWithFundingDecisionApplications(COMPETITION_ID, sortField, pageNumber, pageSize, filter)).thenReturn(applicationSummaryPageResource);
 
         CompetitionFundedKeyStatisticsResource keyStatistics = newCompetitionFundedKeyStatisticsResource().build();
-        when(competitionKeyStatisticsRestServiceMock.getFundedKeyStatisticsByCompetition(competitionId)).thenReturn(restSuccess(keyStatistics));
-        when(assessmentRestService.countByStateAndCompetition(AssessmentStates.CREATED, competitionId)).thenReturn(restSuccess(changesSinceLastNotify));
+        when(competitionKeyStatisticsRestServiceMock.getFundedKeyStatisticsByCompetition(COMPETITION_ID)).thenReturn(restSuccess(keyStatistics));
+        when(assessmentRestService.countByStateAndCompetition(AssessmentStates.CREATED, COMPETITION_ID)).thenReturn(restSuccess(changesSinceLastNotify));
 
         // Expected values to match against
         CompetitionInFlightStatsViewModel keyStatisticsModel = competitionInFlightStatsModelPopulator.populateStatsViewModel(competitionResource);
-        ManageFundingApplicationViewModel model = new ManageFundingApplicationViewModel(applicationSummaryPageResource, keyStatisticsModel, new PaginationViewModel(applicationSummaryPageResource, queryParams), sortField, filter, competitionId, competitionResource.getName());
+        ManageFundingApplicationViewModel model = new ManageFundingApplicationViewModel(applicationSummaryPageResource, keyStatisticsModel, new PaginationViewModel(applicationSummaryPageResource, queryParams), sortField, filter, COMPETITION_ID, competitionResource.getName());
 
 
         // Method under test
-        mockMvc.perform(get("/competition/{competitionId}/manage-funding-applications", competitionId))
+        mockMvc.perform(get("/competition/{competitionId}/manage-funding-applications", COMPETITION_ID))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt-manage-funding-applications"))
                 .andExpect(model().attribute("model", manageFundingApplicationViewModelMatcher(model)));
@@ -91,9 +103,10 @@ public class CompetitionManagementManageFundingApplicationsControllerTest extend
     public void testSelectApplications() throws Exception {
         long competitionId = 1l;
         mockMvc.perform(post("/competition/{competitionId}/manage-funding-applications", competitionId).
-                contentType(MediaType.APPLICATION_FORM_URLENCODED).
-                param("ids[0]", "18").
-        param("ids[3]", "21"))
+                contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("ids[0]", "18")
+                .param("ids[3]", "21"))
+                .andExpect(status().is3xxRedirection())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/competition/1/funding/send?application_ids=18,21"));
     }
@@ -116,6 +129,21 @@ public class CompetitionManagementManageFundingApplicationsControllerTest extend
             assertEquals(toMatchCompetitionInFlightViewModel.getCanManageFundingNotifications(), matchCompetitionInFlightViewModel.getCanManageFundingNotifications());
             return true;
         });
+    }
+
+    @Test
+    public void getSendNotificationsPageTest() throws Exception {
+
+        List<Long> applicationsIds = Arrays.asList(22L);
+        List<ApplicationSummaryResource> resourceList = Arrays.asList(new ApplicationSummaryResource());
+
+        SendNotificationsViewModel viewModel = new SendNotificationsViewModel(resourceList, null, COMPETITION_ID, "compName");
+        when(sendNotificationsModelPopulator.populate(COMPETITION_ID, applicationsIds)).thenReturn(viewModel);
+
+        // Method under test
+        mockMvc.perform(get("/competition/{competitionId}/funding/send?application_ids=1", COMPETITION_ID))
+                .andExpect(status().isOk())
+                .andExpect(view().name("comp-mgt-send-notifications"));
     }
 
     @Override

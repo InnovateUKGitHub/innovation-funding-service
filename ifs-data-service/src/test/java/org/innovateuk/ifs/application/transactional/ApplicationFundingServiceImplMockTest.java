@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationStatus;
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.mapper.FundingDecisionMapper;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.NotificationResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -32,13 +33,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import static org.innovateuk.ifs.application.transactional.ApplicationFundingServiceImpl.Notifications.APPLICATION_FUNDING;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyMap;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.resource.FundingDecision.*;
-import static org.innovateuk.ifs.application.transactional.ApplicationFundingServiceImpl.Notifications.APPLICATION_FUNDED;
-import static org.innovateuk.ifs.application.transactional.ApplicationFundingServiceImpl.Notifications.APPLICATION_NOT_FUNDED;
+import static org.innovateuk.ifs.application.transactional.ApplicationFundingServiceImpl.Notifications.*;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -50,9 +52,6 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyMap;
-import static java.util.Collections.singletonList;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -230,11 +229,10 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
                 when(processRoleRepositoryMock.findByApplicationIdAndRoleId(processRole.getApplicationId(), processRole.getRole().getId())).thenReturn(singletonList(processRole))
         );
         when(notificationServiceMock.sendNotification(createFullNotificationExpectationsNew(expectedFundingNotification), eq(EMAIL))).thenReturn(serviceSuccess());
-
+        when(applicationServiceMock.setApplicationFundingEmailDateTime(any(Long.class), any(LocalDateTime.class))).thenReturn(serviceSuccess(new ApplicationResource()));
 
         ServiceResult<Void> result = service.notifyLeadApplicantsOfFundingDecisions(notificationResource);
         assertTrue(result.isSuccess());
-
 
         verify(notificationServiceMock).sendNotification(createFullNotificationExpectationsNew(expectedFundingNotification), eq(EMAIL));
         verifyNoMoreInteractions(notificationServiceMock);
@@ -247,7 +245,8 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     }
 
 	@Test
-	public void testNotifyLeadApplicantsOfFundingDecisionsOld() {
+    @Deprecated
+	public void testDeprecatedNotifyLeadApplicantsOfFundingDecisions() {
 
         Competition competition = newCompetition().withId(111L).withAssessorFeedbackDate(LocalDateTime.of(2017, 5, 3, 0, 0)).build();
 
