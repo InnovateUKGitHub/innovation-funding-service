@@ -64,19 +64,27 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
         Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
         ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
         Map<String, UserResource> usersMap = setupUserResources();
-        setupOrganisationInvitesWithInviteForLeadOrg(applicationResource.getId(), usersMap, organisationsMap);
+        Map<String, InviteOrganisationResource> inviteOrganisationsMap = setupOrganisationInvitesWithInviteForLeadOrg(
+                applicationResource.getId(), usersMap, organisationsMap);
         UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
 
+        Long orgIdEmpire = organisationsMap.get("Empire Ltd").getId();
+        Long orgIdLudlow = organisationsMap.get("Ludlow").getId();
+        Long orgIdEggs = organisationsMap.get("EGGS").getId();
+        Long inviteOrgIdEmpire = inviteOrganisationsMap.get("Empire Ltd").getId();
+        Long inviteOrgIdLudlow = inviteOrganisationsMap.get("Ludlow").getId();
+        Long inviteOrgIdEggs = inviteOrganisationsMap.get("EGGS").getId();
+
         List<ApplicationTeamOrganisationRowViewModel> expectedOrganisations = asList(
-                new ApplicationTeamOrganisationRowViewModel(organisationsMap.get("Empire Ltd").getId(), "Empire Ltd", true, asList(
+                new ApplicationTeamOrganisationRowViewModel(orgIdEmpire, inviteOrgIdEmpire, "Empire Ltd", true, asList(
                         new ApplicationTeamApplicantRowViewModel("Steve Smith", "steve.smith@empire.com", true, false),
                         new ApplicationTeamApplicantRowViewModel("Paul Davidson", "paul.davidson@empire.com", false, false)
                 ), true),
-                new ApplicationTeamOrganisationRowViewModel(organisationsMap.get("Ludlow").getId(), "Ludlow", false, asList(
+                new ApplicationTeamOrganisationRowViewModel(orgIdLudlow, inviteOrgIdLudlow, "Ludlow", false, asList(
                         new ApplicationTeamApplicantRowViewModel("Jessica Doe", "jessica.doe@ludlow.com", false, false),
                         new ApplicationTeamApplicantRowViewModel("Ryan Dell", "ryan.dell@ludlow.com", false, true)
                 ), true),
-                new ApplicationTeamOrganisationRowViewModel(organisationsMap.get("EGGS").getId(), "EGGS", false, singletonList(
+                new ApplicationTeamOrganisationRowViewModel(orgIdEggs, inviteOrgIdEggs, "EGGS", false, singletonList(
                         new ApplicationTeamApplicantRowViewModel("Paul Tom", "paul.tom@egg.com", false, false)
                 ), true)
         );
@@ -109,19 +117,27 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
         Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
         ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
         Map<String, UserResource> usersMap = setupUserResources();
-        setupOrganisationInvitesWithInviteForLeadOrg(applicationResource.getId(), usersMap, organisationsMap);
+        Map<String, InviteOrganisationResource> inviteOrganisationsMap = setupOrganisationInvitesWithInviteForLeadOrg(
+                applicationResource.getId(), usersMap, organisationsMap);
         UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
 
+        Long orgIdEmpire = organisationsMap.get("Empire Ltd").getId();
+        Long orgIdLudlow = organisationsMap.get("Ludlow").getId();
+        Long orgIdEggs = organisationsMap.get("EGGS").getId();
+        Long inviteOrgIdEmpire = inviteOrganisationsMap.get("Empire Ltd").getId();
+        Long inviteOrgIdLudlow = inviteOrganisationsMap.get("Ludlow").getId();
+        Long inviteOrgIdEggs = inviteOrganisationsMap.get("EGGS").getId();
+
         List<ApplicationTeamOrganisationRowViewModel> expectedOrganisations = asList(
-                new ApplicationTeamOrganisationRowViewModel(organisationsMap.get("Empire Ltd").getId(), "Empire Ltd", true, asList(
+                new ApplicationTeamOrganisationRowViewModel(orgIdEmpire, inviteOrgIdEmpire, "Empire Ltd", true, asList(
                         new ApplicationTeamApplicantRowViewModel("Steve Smith", "steve.smith@empire.com", true, false),
                         new ApplicationTeamApplicantRowViewModel("Paul Davidson", "paul.davidson@empire.com", false, false)
                 ), false),
-                new ApplicationTeamOrganisationRowViewModel(organisationsMap.get("Ludlow").getId(), "Ludlow", false, asList(
+                new ApplicationTeamOrganisationRowViewModel(orgIdLudlow, inviteOrgIdLudlow, "Ludlow", false, asList(
                         new ApplicationTeamApplicantRowViewModel("Jessica Doe", "jessica.doe@ludlow.com", false, false),
                         new ApplicationTeamApplicantRowViewModel("Ryan Dell", "ryan.dell@ludlow.com", false, true)
                 ), true),
-                new ApplicationTeamOrganisationRowViewModel(organisationsMap.get("EGGS").getId(), "EGGS", false, singletonList(
+                new ApplicationTeamOrganisationRowViewModel(orgIdEggs, inviteOrgIdEggs, "EGGS", false, singletonList(
                         new ApplicationTeamApplicantRowViewModel("Paul Tom", "paul.tom@egg.com", false, false)
                 ), false)
         );
@@ -154,18 +170,27 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
         Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
         ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
         Map<String, UserResource> usersMap = setupUserResources();
-        setupOrganisationInvitesWithoutInvitesForLeadOrg(applicationResource.getId(), usersMap, organisationsMap);
+        Map<String, InviteOrganisationResource> inviteOrganisationsMap = setupOrganisationInvitesWithoutInvitesForLeadOrg(
+                applicationResource.getId(), usersMap, organisationsMap);
         UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
 
+        Long orgIdEmpire = organisationsMap.get("Empire Ltd").getId();
+        Long orgIdLudlow = organisationsMap.get("Ludlow").getId();
+        Long orgIdEggs = organisationsMap.get("EGGS").getId();
+        // No InviteOrganisation exists for Empire Ltd
+        Long inviteOrgIdEmpire = null;
+        Long inviteOrgIdLudlow = inviteOrganisationsMap.get("Ludlow").getId();
+        Long inviteOrgIdEggs = inviteOrganisationsMap.get("EGGS").getId();
+
         List<ApplicationTeamOrganisationRowViewModel> expectedOrganisations = asList(
-                new ApplicationTeamOrganisationRowViewModel(organisationsMap.get("Empire Ltd").getId(), "Empire Ltd", true, singletonList(
+                new ApplicationTeamOrganisationRowViewModel(orgIdEmpire, inviteOrgIdEmpire, "Empire Ltd", true, singletonList(
                         new ApplicationTeamApplicantRowViewModel("Steve Smith", "steve.smith@empire.com", true, false)
                 ), false),
-                new ApplicationTeamOrganisationRowViewModel(organisationsMap.get("Ludlow").getId(), "Ludlow", false, asList(
+                new ApplicationTeamOrganisationRowViewModel(orgIdLudlow, inviteOrgIdLudlow, "Ludlow", false, asList(
                         new ApplicationTeamApplicantRowViewModel("Jessica Doe", "jessica.doe@ludlow.com", false, false),
                         new ApplicationTeamApplicantRowViewModel("Ryan Dell", "ryan.dell@ludlow.com", false, true)
                 ), true),
-                new ApplicationTeamOrganisationRowViewModel(organisationsMap.get("EGGS").getId(), "EGGS", false, singletonList(
+                new ApplicationTeamOrganisationRowViewModel(orgIdEggs, inviteOrgIdEggs, "EGGS", false, singletonList(
                         new ApplicationTeamApplicantRowViewModel("Paul Tom", "paul.tom@egg.com", false, false)
                 ), false)
         );
@@ -198,19 +223,28 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
         Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
         ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
         Map<String, UserResource> usersMap = setupUserResources();
-        setupOrganisationInvitesWithAnUnconfirmedOrganisation(applicationResource.getId(), usersMap, organisationsMap);
+        Map<String, InviteOrganisationResource> inviteOrganisationsMap = setupOrganisationInvitesWithAnUnconfirmedOrganisation(
+                applicationResource.getId(), usersMap, organisationsMap);
         UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
 
+        Long orgIdEmpire = organisationsMap.get("Empire Ltd").getId();
+        // No Organisation exists for Ludlow
+        Long orgIdLudlow = null;
+        Long orgIdEggs = organisationsMap.get("EGGS").getId();
+        Long inviteOrgIdEmpire = inviteOrganisationsMap.get("Empire Ltd").getId();
+        Long inviteOrgIdLudlow = inviteOrganisationsMap.get("Ludlow").getId();
+        Long inviteOrgIdEggs = inviteOrganisationsMap.get("EGGS").getId();
+
         List<ApplicationTeamOrganisationRowViewModel> expectedOrganisations = asList(
-                new ApplicationTeamOrganisationRowViewModel(organisationsMap.get("Empire Ltd").getId(), "Empire Ltd", true, asList(
+                new ApplicationTeamOrganisationRowViewModel(orgIdEmpire, inviteOrgIdEmpire, "Empire Ltd", true, asList(
                         new ApplicationTeamApplicantRowViewModel("Steve Smith", "steve.smith@empire.com", true, false),
                         new ApplicationTeamApplicantRowViewModel("Paul Davidson", "paul.davidson@empire.com", false, false)
                 ), true),
-                new ApplicationTeamOrganisationRowViewModel(null, "Ludlow", false, asList(
+                new ApplicationTeamOrganisationRowViewModel(orgIdLudlow, inviteOrgIdLudlow, "Ludlow", false, asList(
                         new ApplicationTeamApplicantRowViewModel("Jessica Doe", "jessica.doe@ludlow.com", false, true),
                         new ApplicationTeamApplicantRowViewModel("Ryan Dell", "ryan.dell@ludlow.com", false, true)
                 ), true),
-                new ApplicationTeamOrganisationRowViewModel(organisationsMap.get("EGGS").getId(), "EGGS", false, singletonList(
+                new ApplicationTeamOrganisationRowViewModel(orgIdEggs, inviteOrgIdEggs, "EGGS", false, singletonList(
                         new ApplicationTeamApplicantRowViewModel("Paul Tom", "paul.tom@egg.com", false, false)
                 ), true)
         );
@@ -392,9 +426,9 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
         return simpleToMap(organisationResources, OrganisationResource::getName);
     }
 
-    private List<InviteOrganisationResource> setupOrganisationInvitesWithInviteForLeadOrg(long applicationId,
-                                                                                          Map<String, UserResource> usersMap,
-                                                                                          Map<String, OrganisationResource> organisationsMap) {
+    private Map<String, InviteOrganisationResource> setupOrganisationInvitesWithInviteForLeadOrg(long applicationId,
+                                                                                                 Map<String, UserResource> usersMap,
+                                                                                                 Map<String, OrganisationResource> organisationsMap) {
         UserResource user1 = usersMap.get("jessica.doe@ludlow.com");
         UserResource user2 = usersMap.get("paul.tom@egg.com");
         UserResource user3 = usersMap.get("paul.davidson@empire.com");
@@ -435,12 +469,12 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
                 .build(3);
 
         when(inviteRestService.getInvitesByApplication(applicationId)).thenReturn(restSuccess(inviteOrganisationResources));
-        return inviteOrganisationResources;
+        return simpleToMap(inviteOrganisationResources, InviteOrganisationResource::getOrganisationName);
     }
 
-    private List<InviteOrganisationResource> setupOrganisationInvitesWithoutInvitesForLeadOrg(long applicationId,
-                                                                                              Map<String, UserResource> usersMap,
-                                                                                              Map<String, OrganisationResource> organisationsMap) {
+    private Map<String, InviteOrganisationResource> setupOrganisationInvitesWithoutInvitesForLeadOrg(long applicationId,
+                                                                                                     Map<String, UserResource> usersMap,
+                                                                                                     Map<String, OrganisationResource> organisationsMap) {
         UserResource user1 = usersMap.get("jessica.doe@ludlow.com");
         UserResource user2 = usersMap.get("paul.tom@egg.com");
 
@@ -471,12 +505,12 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
                 .build(2);
 
         when(inviteRestService.getInvitesByApplication(applicationId)).thenReturn(restSuccess(inviteOrganisationResources));
-        return inviteOrganisationResources;
+        return simpleToMap(inviteOrganisationResources, InviteOrganisationResource::getOrganisationName);
     }
 
-    private List<InviteOrganisationResource> setupOrganisationInvitesWithAnUnconfirmedOrganisation(long applicationId,
-                                                                                                   Map<String, UserResource> usersMap,
-                                                                                                   Map<String, OrganisationResource> organisationsMap) {
+    private Map<String, InviteOrganisationResource> setupOrganisationInvitesWithAnUnconfirmedOrganisation(long applicationId,
+                                                                                                          Map<String, UserResource> usersMap,
+                                                                                                          Map<String, OrganisationResource> organisationsMap) {
         UserResource user1 = usersMap.get("jessica.doe@ludlow.com");
         UserResource user2 = usersMap.get("paul.tom@egg.com");
         UserResource user3 = usersMap.get("paul.davidson@empire.com");
@@ -516,6 +550,6 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
                 .build(3);
 
         when(inviteRestService.getInvitesByApplication(applicationId)).thenReturn(restSuccess(inviteOrganisationResources));
-        return inviteOrganisationResources;
+        return simpleToMap(inviteOrganisationResources, InviteOrganisationResource::getOrganisationName);
     }
 }

@@ -82,7 +82,9 @@ public class ApplicationTeamModelPopulator {
     private List<ApplicationTeamOrganisationRowViewModel> appendLeadOrganisation(
             List<ApplicationTeamOrganisationRowViewModel> organisationRowViewModels, OrganisationResource leadOrganisation,
             boolean editable) {
-        organisationRowViewModels.add(0, new ApplicationTeamOrganisationRowViewModel(leadOrganisation.getId(),
+        // The InviteOrganisation id is null since there are no invites
+        Long inviteOrganisationId = null;
+        organisationRowViewModels.add(0, new ApplicationTeamOrganisationRowViewModel(leadOrganisation.getId(), inviteOrganisationId,
                 leadOrganisation.getName(), true, new ArrayList<>(), editable));
         return organisationRowViewModels;
     }
@@ -101,8 +103,8 @@ public class ApplicationTeamModelPopulator {
         boolean leadOrganisation = isInviteForLeadOrganisation(inviteOrganisationResource, leadOrganisationId);
         boolean editable = userLeadApplicant || isUserMemberOfOrganisation(loggedInUserId, inviteOrganisationResource);
         return new ApplicationTeamOrganisationRowViewModel(inviteOrganisationResource.getOrganisation(),
-                getOrganisationName(inviteOrganisationResource), leadOrganisation, inviteOrganisationResource.getInviteResources()
-                .stream().map(this::getApplicantViewModel).collect(toList()), editable);
+                inviteOrganisationResource.getId(), getOrganisationName(inviteOrganisationResource), leadOrganisation,
+                inviteOrganisationResource.getInviteResources().stream().map(this::getApplicantViewModel).collect(toList()), editable);
     }
 
     private ApplicationTeamApplicantRowViewModel getApplicantViewModel(ApplicationInviteResource applicationInviteResource) {

@@ -41,21 +41,26 @@ Validations for the name field
     [Documentation]    INFUND-901
     [Tags]
     When the applicant fills the lead organisation fields    ${EMPTY}    ewan+5@hiveit.co.uk
-    Then the user should see an error    PLease enter a name.
+    Then the user should see an error    Please enter a name.
     [Teardown]    the user clicks the button/link    link=Application team
 
 Link to remove partner organisation
     [Documentation]    INFUND-1039
     [Tags]    HappyPath
     # on the user interface.    All we can test is that the state is saved in cookie, so not lost on page reload.
-    When The user clicks the button/link    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
+    When The user clicks the button/link    jQuery=a:contains('Add partner organisation')
     And the applicant inputs details    1
-    When The user clicks the button/link    jquery=li:nth-child(2) button:contains('Remove')
-    Then The user should not see the text in the page    Organisation name
+    And the user clicks the button/link    jQuery=a:contains("Update Fannie May")
+    When The user clicks the button/link    jQuery=button:contains('Remove')
+    And the user clicks the button/link    jQuery=a:contains("Update organisation")
+    And the user clicks the button/link    jQuery=button:contains("Update organisation")
+    Then The user should not see the text in the page    Fannie May
+    And the user should see the text in the page    Application team
 
 Autosaved works (in cookie)
     [Documentation]    INFUND-1039
-    [Tags]    HappyPath
+    [Tags]    HappyPath    Pending
+    #TODO work out if autosave s still valid with new screen INFUND-7974
     When The user clicks the button/link    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
     And the applicant can enter Organisation name, Name and E-mail
     Then the applicant's inputs should be visible
@@ -63,7 +68,7 @@ Autosaved works (in cookie)
 Blank Partner organisation fields are not allowed
     [Documentation]    INFUND-896
     [Tags]
-    Given the user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    MR Tester
+    Given the user clicks the button/link    jQuery=a:contains('Add partner organisation')
     When the applicant fills the Partner organisation fields    1    ${EMPTY}    ${EMPTY}    ${EMPTY}
     Then the user should see an error    An organisation name is required.
     And the user should see an error    This field cannot be left blank.
@@ -78,7 +83,7 @@ Invalid email address is not allowed
 Already invite email should is not allowed
     [Tags]
     When the applicant fills the Partner organisation fields    1    Fannie May    Collaborator 10    ewan+5@hiveit.co.uk
-    Then the user should see an error    You have already added this email address.
+    Then the user should see an error    You have used this email address for another applicant.
 
 Link to add multiple partner organisation
     [Tags]    HappyPath
@@ -127,43 +132,44 @@ the applicant fills the lead organisation fields
     The user clicks the button/link    jQuery=button:contains("Update organisation")
 
 the applicant can enter Organisation name, Name and E-mail
-    The user enters text to a text field    name=organisations[1].organisationName    Fannie May
-    The user enters text to a text field    css=li:nth-child(2) tr:nth-of-type(1) td:nth-of-type(1) input    Collaborator 2
-    The user enters text to a text field    css=li:nth-child(2) tr:nth-of-type(1) td:nth-of-type(2) input    ewan+10@hiveit.co.uk
-    Focus    jquery=li:nth-child(2) button:contains('Add another person')
-    The user clicks the button/link    jquery=li:nth-child(2) button:contains('Add another person')
-    The user enters text to a text field    css=li:nth-child(2) tr:nth-of-type(2) td:nth-of-type(1) input    Collaborator 3
-    The user enters text to a text field    css=li:nth-child(2) tr:nth-of-type(2) td:nth-of-type(2) input    ewan+11@hiveit.co.uk
+    The user enters text to a text field    name=organisationName    Fannie May
+    The user enters text to a text field    name=applicants[0].name   Collaborator 2
+    The user enters text to a text field    name=applicants[0].email    ewan+10@hiveit.co.uk
+    Focus    jQuery=button:contains('Add new applicant')
+    The user clicks the button/link    jQuery=button:contains('Add new applicant')
+    The user enters text to a text field    name=applicants[1].name    Collaborator 3
+    The user enters text to a text field    name=applicants[1].email    ewan+11@hiveit.co.uk
     Focus    jquery=button:contains("Save changes")
     wait for autosave
     the user reloads the page
 
 the applicant's inputs should be visible
     Textfield Value Should Be    name=organisations[1].organisationName    Fannie May
-    ${input_value} =    Get Value    name=organisations[1].organisationName
+    ${input_value} =    Get Value    name=organisationName
     Should Be Equal As Strings    ${input_value}    Fannie May
-    Textfield Value Should Be    css=li:nth-child(2) tr:nth-of-type(1) td:nth-of-type(1) input    Collaborator 2
-    ${input_value} =    Get Value    css=li:nth-child(2) tr:nth-of-type(1) td:nth-of-type(1) input
+    Textfield Value Should Be    name=applicants[0].name    Collaborator 2
+    ${input_value} =    Get Value    name=applicants[0].name
     Should Be Equal As Strings    ${input_value}    Collaborator 2
-    Textfield Value Should Be    css=li:nth-child(2) tr:nth-of-type(2) td:nth-of-type(1) input    Collaborator 3
-    ${input_value} =    Get Value    css=li:nth-child(2) tr:nth-of-type(2) td:nth-of-type(1) input
+    Textfield Value Should Be    name=applicants[1].name    Collaborator 3
+    ${input_value} =    Get Value    name=applicants[1].name
     Should Be Equal As Strings    ${input_value}    Collaborator 3
 
 the applicant inputs details
     [Arguments]    ${group_number}
-    The user enters text to a text field    name=organisations[${group_number}].organisationName    Fannie May
-    The user enters text to a text field    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(1) input    Collaborator 2
-    The user enters text to a text field    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input    ewan+10@hiveit.co.uk
+    The user enters text to a text field    name=organisationName    Fannie May
+    The user enters text to a text field    name=applicants[0].name    Collaborator 2
+    The user enters text to a text field    name=applicants[0].email    ewan+10@hiveit.co.uk
+    The user clicks the button/link    jQuery=button:contains("Add organisation and invite applicants")
 
 the applicant fills the Partner organisation fields
     [Arguments]    ${group_number}    ${PARTNER_ORG_NAME}    ${ORG_NAME}    ${EMAIL_NAME}
     browser validations have been disabled
-    The user enters text to a text field    name=organisations[${group_number}].organisationName    ${PARTNER_ORG_NAME}
-    The user enters text to a text field    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(1) input    ${ORG_NAME}
-    The user enters text to a text field    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input    ${EMAIL_NAME}
+    The user enters text to a text field    name=organisationName    ${PARTNER_ORG_NAME}
+    The user enters text to a text field    name=applicants[0].name     ${ORG_NAME}
+    The user enters text to a text field    name=applicants[0].email    ${EMAIL_NAME}
     # the following keyword disables the browser's validation
-    Focus    jquery=button:contains("Save changes")
-    The user clicks the button/link    jquery=button:contains("Save changes")
+    Focus    jQuery=button:contains("Add organisation and invite applicants")
+    The user clicks the button/link    jQuery=button:contains("Add organisation and invite applicants")
 
 
 a validation error is shown on organisation name
