@@ -51,7 +51,14 @@ function copyNecessaryFiles() {
     cp -r ifs-data-service/docker-build.gradle robot-tests-tmp/docker-build.gradle
 }
 
+function navigateToRoot(){
+    scriptDir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+    cd ${scriptDir}
+    cd ../../..
+}
+
+navigateToRoot
 cleanUp
 rm -rf robot-tests/target && mkdir robot-tests/target
 fileFixtures
