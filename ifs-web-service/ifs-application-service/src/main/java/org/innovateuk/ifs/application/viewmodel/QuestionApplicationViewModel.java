@@ -22,6 +22,7 @@ public class QuestionApplicationViewModel {
     private List<ResearchCategoryResource> researchCategories;
     private Long researchCategoryId;
     private boolean hasApplicationFinances;
+    private String selectedInnovationAreaName;
 
     public QuestionApplicationViewModel(Set<Long> markedAsComplete, Boolean allReadOnly, ApplicationResource currentApplication,
                                         CompetitionResource competitionResource, OrganisationResource userOrganisation) {
@@ -90,5 +91,13 @@ public class QuestionApplicationViewModel {
 
     public void setHasApplicationFinances(boolean hasApplicationFinances) {
         this.hasApplicationFinances = hasApplicationFinances;
+    }
+
+    public String getSelectedInnovationAreaName() {
+        return selectedInnovationAreaName;
+    }
+
+    public void setSelectedInnovationAreaName(String selectedInnovationAreaName) {
+        this.selectedInnovationAreaName = selectedInnovationAreaName;
     }
 }

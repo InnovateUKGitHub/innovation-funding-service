@@ -12,6 +12,8 @@ Documentation     INFUND-7042 As a member of the competitions team I can see lis
 ...               INFUND-7237 Implement Assessor Total Applications and Assigned Counts for Application Progress within Assessor Management
 ...
 ...               INFUND-7232 As a member of the competitions team I can view previously assigned assessors so I can see who has previously been removed from assessing the application
+...
+...               INFUND-8061 Filter and pagination on Allocate Applications (Closed competition) and Manage applications (In assessment) dashboards
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin    Assessor
@@ -24,6 +26,14 @@ View the list of the applications
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     When The user clicks the button/link    jQuery=a:contains("Assessor management - assignment to applications")
     Then the application list is correct before changes
+
+Filtering of the applications
+    [Documentation]    INFUND-8061
+    When The user enters text to a text field    css=#filterSearch    22
+    and The user clicks the button/link    jQuery=button:contains(Filter)
+    Then the user should see the element    jQuery=tr:nth-child(1) td:nth-child(1):contains("22")
+    And The user clicks the button/link    link=Clear all filters
+    then the user should not see the element    jQuery=tr:nth-child(1) td:nth-child(1):contains("22")
 
 Application number navigates to Overview
     [Documentation]    INFUND-7042
@@ -55,6 +65,7 @@ View the available assessors
     [Documentation]    INFUND-7233\\
     [Tags]
     Then the user should see the element    jQuery=.column-two-thirds:contains("Assessors")
+    And the user clicks the button/link    jQuery=.pagination-label:contains(Next)
     And the available assessors information is correct
 
 View the assigned list
@@ -73,6 +84,7 @@ Remove an assigned user (Not notified)
     Given the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
     And the user clicks the button/link    jQuery=tr:nth-child(1) a:contains("Remove")
     And the user clicks the button/link    jQuery=button:contains("Remove assessor")
+    And the user clicks the button/link    jQuery=.pagination-label:contains(Next)
     And the available assessors information is correct
 
 Notify an assigned user

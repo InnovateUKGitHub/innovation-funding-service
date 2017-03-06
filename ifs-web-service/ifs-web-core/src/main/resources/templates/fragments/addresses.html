@@ -1,6 +1,6 @@
 
 <div th:fragment="company-address-details">
-    <div id="manual-company-input" class="extra-margin">
+    <div id="manual-company-input">
         <fieldset>
             <legend th:if="${legend}" class="visuallyhidden" th:text="${legend}" />
             <legend th:unless="${legend}" class="visuallyhidden">Organisation details</legend>
@@ -33,7 +33,8 @@
         </fieldset>
         <fieldset id="address-details" class="extra-margin" th:if="${form.addressForm.selectedPostcodeIndex != null or form.addressForm.manualAddress}">
             <input type="hidden" th:field="*{addressForm.manualAddress}" />
-            <legend class="visuallyhidden">Address details</legend>
+            <legend class="heading-medium" th:if="${addressType}" th:text="|Your ${addressType}|">ADDRESS TYPE</legend>
+            <legend class="visuallyhidden" th:unless="${addressType}">Address details</legend>
             <div th:class="${#fields.hasErrors('*{addressForm.selectedPostcode.addressLine1}') and form.addressForm.triedToSave} ? 'form-group error' : 'form-group'">
                 <label class="form-label" for="addressForm.selectedPostcode.addressLine1">
                     <span class="form-label-bold">Street</span>
