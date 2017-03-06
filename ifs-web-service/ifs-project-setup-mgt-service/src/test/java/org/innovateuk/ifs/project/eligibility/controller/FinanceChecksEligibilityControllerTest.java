@@ -199,7 +199,6 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
         FinanceChecksEligibilityViewModel viewModel = (FinanceChecksEligibilityViewModel) model.get("summaryModel");
 
         assertEquals(expectedIsLeadPartnerOrganisation, viewModel.isLeadPartnerOrganisation());
-        assertTrue(viewModel.getApplicationId().equals(application.getFormattedId()));
         assertTrue(viewModel.getOrganisationName().equals(industrialOrganisation.getName()));
         assertTrue(viewModel.getProjectName().equals(project.getName()));
 

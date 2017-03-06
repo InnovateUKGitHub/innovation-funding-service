@@ -1,166 +1,143 @@
 package org.innovateuk.ifs.application.service;
 
-import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
-import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static java.util.Arrays.asList;
-
-
-import java.util.List;
-import java.util.Map;
-
+import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
+import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
+import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import org.innovateuk.ifs.application.resource.FundingDecision;
-import org.innovateuk.ifs.commons.error.CommonErrors;
-import org.innovateuk.ifs.commons.error.exception.GeneralUnexpectedErrorException;
+import java.util.*;
+
+import static org.innovateuk.ifs.application.builder.ApplicationSummaryResourceBuilder.newApplicationSummaryResource;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ApplicationFundingDecisionServiceImplTest {
-	@InjectMocks
-	private ApplicationFundingDecisionServiceImpl service;
-	
+public class ApplicationFundingDecisionServiceImplTest extends BaseServiceUnitTest<ApplicationFundingDecisionServiceImpl> {
 	@Mock
 	private ApplicationFundingDecisionRestService applicationFundingDecisionRestService;
-	
-	@SuppressWarnings("unchecked")
-	@Test
-	public void testMakeFundingDecision() {
-		Long competitionId = 123L;
-		Map<Long, FundingDecision> applicationIdToFundingDecision = mock(Map.class);
-		
-		when(applicationFundingDecisionRestService.makeApplicationFundingDecision(competitionId, applicationIdToFundingDecision)).thenReturn(restSuccess());
 
-		service.makeApplicationFundingDecision(competitionId, applicationIdToFundingDecision);
-		
-		verify(applicationFundingDecisionRestService).makeApplicationFundingDecision(competitionId,  applicationIdToFundingDecision);
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Test(expected = GeneralUnexpectedErrorException.class)
-	public void testErrorMakingFundingDecision() {
-		Long competitionId = 123L;
-		Map<Long, FundingDecision> applicationIdToFundingDecision = mock(Map.class);
-		
-		when(applicationFundingDecisionRestService.makeApplicationFundingDecision(competitionId, applicationIdToFundingDecision)).thenReturn(restFailure(CommonErrors.internalServerErrorError()));
-		service.makeApplicationFundingDecision(competitionId, applicationIdToFundingDecision);
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Test
-	public void testSaveFundingDecisionData() {
-		Long competitionId = 123L;
-		Map<Long, FundingDecision> applicationIdToFundingDecision = mock(Map.class);
-		
-		when(applicationFundingDecisionRestService.saveApplicationFundingDecisionData(competitionId, applicationIdToFundingDecision)).thenReturn(restSuccess());
+	@Mock
+	private ApplicationSummaryService applicationSummaryService;
 
-		service.saveApplicationFundingDecisionData(competitionId, applicationIdToFundingDecision);
-		
-		verify(applicationFundingDecisionRestService).saveApplicationFundingDecisionData(competitionId,  applicationIdToFundingDecision);
+	@Override
+	@Before
+	public void setUp() {
+		super.setUp();
 	}
-	
-	@SuppressWarnings("unchecked")
-	@Test(expected = GeneralUnexpectedErrorException.class)
-	public void testErrorSavingFundingDecisionData() {
-		Long competitionId = 123L;
-		Map<Long, FundingDecision> applicationIdToFundingDecision = mock(Map.class);
-		
-		when(applicationFundingDecisionRestService.saveApplicationFundingDecisionData(competitionId, applicationIdToFundingDecision)).thenReturn(restFailure(CommonErrors.internalServerErrorError()));
-		service.saveApplicationFundingDecisionData(competitionId, applicationIdToFundingDecision);
-	}
-	
-	@Test
-	public void testVerifyAllApplicationsRepresented() {
-		Map<String, String[]> parameterMap = asMap("1", val("Y"), "2", val("N"));
-		List<Long> applicationIds = asList(1L, 2L);
-		
-		boolean result = service.verifyAllApplicationsRepresented(parameterMap, applicationIds);
 
-		assertTrue(result);
+	protected ApplicationFundingDecisionServiceImpl supplyServiceUnderTest() {
+		return new ApplicationFundingDecisionServiceImpl();
 	}
-	
-	@Test
-	public void testVerifyNotAllApplicationsRepresented() {
-		Map<String, String[]> parameterMap = asMap("1", val("Y"));
-		List<Long> applicationIds = asList(1L, 2L);
-		
-		boolean result = service.verifyAllApplicationsRepresented(parameterMap, applicationIds);
 
-		assertFalse(result);
-	}
-	
 	@Test
-	public void testVerifyAllApplicationsDecided() {
-		Map<String, String[]> parameterMap = asMap("1", val("Y"), "2", val("-"));
-		List<Long> applicationIds = asList(1L, 2L);
-		
-		boolean result = service.verifyAllApplicationsRepresented(parameterMap, applicationIds);
+	public void saveFundingDecision() throws Exception {
+		List<Long> applicationIds = new ArrayList<>();
+		applicationIds.add(8L);
+		applicationIds.add(9L);
 
-		assertFalse(result);
-	}
-	
-	@Test
-	public void testIgnoreNonNumericParamNamesForVerifyNotAllApplicationsRepresented() {
-		Map<String, String[]> parameterMap = asMap("1", val("Y"), "somethingelse", val("Y"));
-		List<Long> applicationIds = asList(1L, 2L);
-		
-		boolean result = service.verifyAllApplicationsRepresented(parameterMap, applicationIds);
+		ApplicationSummaryPageResource applicationSummaryPageResource = new ApplicationSummaryPageResource();
+		List<ApplicationSummaryResource> applicationSummaryResources = newApplicationSummaryResource().withId(8L,9L).build(4);
+		applicationSummaryPageResource.setContent(applicationSummaryResources);
 
-		assertFalse(result);
-	}
-	
-	@Test
-	public void testIgnoreIrrelevantParamValuesForVerifyNotAllApplicationsRepresented() {
-		Map<String, String[]> parameterMap = asMap("1", val("Y"), "2", val("Q"));
-		List<Long> applicationIds = asList(1L, 2L);
-		
-		boolean result = service.verifyAllApplicationsRepresented(parameterMap, applicationIds);
+		when(applicationFundingDecisionRestService.saveApplicationFundingDecisionData(any(), any())).thenReturn(restSuccess());
+		when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(any(), any(), any(), any(),any())).thenReturn(applicationSummaryPageResource);
 
-		assertFalse(result);
-	}
-	
-	@Test
-	public void testApplicationIdToFundingDecisionFromRequestParams() {
-		Map<String, String[]> parameterMap = asMap("1", val("Y"), "2", val("N"), "3", val("-"), "4", val("Y"));
-		List<Long> applicationIds = asList(1L, 2L, 3L);
-		
-		Map<Long, FundingDecision> result = service.applicationIdToFundingDecisionFromRequestParams(parameterMap, applicationIds);
+		service.saveApplicationFundingDecisionData(1L, FundingDecision.ON_HOLD, applicationIds);
 
-		assertEquals(3, result.size());
-		assertEquals(FundingDecision.FUNDED, result.get(1L));
-		assertEquals(FundingDecision.UNFUNDED, result.get(2L));
-		assertEquals(FundingDecision.UNDECIDED, result.get(3L));
+		Map<Long, FundingDecision> expectedDecisionMap = new HashMap<>();
+		expectedDecisionMap.put(8L, FundingDecision.ON_HOLD);
+		expectedDecisionMap.put(9L, FundingDecision.ON_HOLD);
+
+		verify(applicationFundingDecisionRestService).saveApplicationFundingDecisionData(1L, expectedDecisionMap);
+		verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(any(),any(),any(),any(),any());
 	}
-	
+
 	@Test
-	public void testFundingDecisionForStringFunded() {
-		FundingDecision result = service.fundingDecisionForString("Y");
-		assertEquals(FundingDecision.FUNDED, result);
+	public void saveFundingDecision_undecidedFundingDecisionChoice() throws Exception {
+		List<Long> applicationIds = new ArrayList<>();
+		applicationIds.add(8L);
+		applicationIds.add(9L);
+
+		ApplicationSummaryPageResource applicationSummaryPageResource = new ApplicationSummaryPageResource();
+		List<ApplicationSummaryResource> applicationSummaryResources = newApplicationSummaryResource().withId(8L,9L).build(2);
+		applicationSummaryPageResource.setContent(applicationSummaryResources);
+
+		ServiceResult<Void> result = service.saveApplicationFundingDecisionData(1L, FundingDecision.UNDECIDED, applicationIds);
+
+		assertTrue(result.isFailure());
+
+		verifyZeroInteractions(applicationFundingDecisionRestService);
+		verifyZeroInteractions(applicationSummaryService);
 	}
-	
+
 	@Test
-	public void testFundingDecisionForStringUnfunded() {
-		FundingDecision result = service.fundingDecisionForString("N");
-		assertEquals(FundingDecision.UNFUNDED, result);
+	public void saveFundingDecision_unsubmittedApplicationsShouldNotReceiveFundingDecision() throws Exception {
+		List<Long> applicationIds = new ArrayList<>();
+		applicationIds.add(8L);
+		applicationIds.add(9L);
+
+		ApplicationSummaryPageResource applicationSummaryPageResource = new ApplicationSummaryPageResource();
+		List<ApplicationSummaryResource> applicationSummaryResources = newApplicationSummaryResource().withId(10L,11L).build(2);
+		applicationSummaryPageResource.setContent(applicationSummaryResources);
+
+		when(applicationFundingDecisionRestService.saveApplicationFundingDecisionData(any(), any())).thenReturn(restSuccess());
+		when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(any(), any(), any(), any(),any())).thenReturn(applicationSummaryPageResource);
+
+		service.saveApplicationFundingDecisionData(1L, FundingDecision.ON_HOLD, applicationIds);
+
+		Map<Long, FundingDecision> expectedDecisionMap = new HashMap<>();
+
+		verify(applicationFundingDecisionRestService).saveApplicationFundingDecisionData(1L, expectedDecisionMap);
+		verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(any(),any(),any(),any(),any());
 	}
-	
+
 	@Test
-	public void testFundingDecisionForStringUndecided() {
-		FundingDecision result = service.fundingDecisionForString("-");
-		assertEquals(FundingDecision.UNDECIDED, result);
+	public void saveFundingDecision_onlySubmittedApplicationsShouldNotReceiveFundingDecision() throws Exception {
+		List<Long> applicationIds = new ArrayList<>();
+		applicationIds.add(8L);
+		applicationIds.add(9L);
+
+		ApplicationSummaryPageResource applicationSummaryPageResource = new ApplicationSummaryPageResource();
+		List<ApplicationSummaryResource> applicationSummaryResources = newApplicationSummaryResource().withId(1L, 2L, 7L, 8L, 9L).build(5);
+		applicationSummaryPageResource.setContent(applicationSummaryResources);
+
+		when(applicationFundingDecisionRestService.saveApplicationFundingDecisionData(any(), any())).thenReturn(restSuccess());
+		when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(any(), any(), any(), any(),any())).thenReturn(applicationSummaryPageResource);
+
+		service.saveApplicationFundingDecisionData(1L, FundingDecision.ON_HOLD, applicationIds);
+
+		Map<Long, FundingDecision> expectedDecisionMap = new HashMap<>();
+		expectedDecisionMap.put(8L, FundingDecision.ON_HOLD);
+		expectedDecisionMap.put(9L, FundingDecision.ON_HOLD);
+
+		verify(applicationFundingDecisionRestService).saveApplicationFundingDecisionData(1L, expectedDecisionMap);
+		verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(any(),any(),any(),any(),any());
 	}
-	
-	private String[] val(String val) {
-		return new String[]{val};
+
+	@Test
+	public void saveFundingDecision_getFundingDecisionForStringShouldReturnAppropriateFundingDecision() throws Exception {
+		String fundingDecisionString = "ON_HOLD";
+
+		Optional<FundingDecision> fundingDecision = service.getFundingDecisionForString(fundingDecisionString);
+
+		assertTrue(fundingDecision.isPresent());
+		assertEquals(fundingDecision.get(), FundingDecision.ON_HOLD);
+	}
+
+	@Test
+	public void saveFundingDecision_getFundingDecisionForStringShouldReturnEmptyOptionalIfFundingDecisionisUnrecognized() throws Exception {
+		String fundingDecisionString = "NOT_A_FUNDING_DECISION_AT_ALL";
+
+		Optional<FundingDecision> fundingDecision = service.getFundingDecisionForString(fundingDecisionString);
+
+		assertTrue(!fundingDecision.isPresent());
 	}
 }

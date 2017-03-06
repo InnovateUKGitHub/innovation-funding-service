@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 /**
  * Service to save {@link org.innovateuk.ifs.nonifs.form.NonIfsDetailsForm}
@@ -51,12 +50,7 @@ public class NonIfsDetailsFormSaver {
         } else {
             return competitionService.update(competitionResource).andOnSuccess(() -> {
                 List<MilestoneResource> milestones = milestoneService.getAllMilestonesByCompetitionId(competitionResource.getId());
-                List<Error> updateErrors = competitionSetupMilestoneService.updateMilestonesForCompetition(milestones, mappedMilestones, competitionResource.getId());
-                if (updateErrors.isEmpty()) {
-                    return serviceSuccess();
-                } else {
-                    return serviceFailure(updateErrors);
-                }
+                return competitionSetupMilestoneService.updateMilestonesForCompetition(milestones, mappedMilestones, competitionResource.getId());
             });
         }
     }

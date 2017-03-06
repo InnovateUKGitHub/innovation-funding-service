@@ -47,7 +47,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static org.innovateuk.ifs.application.resource.ApplicationResource.formatter;
 import static org.innovateuk.ifs.project.finance.resource.FinanceCheckState.APPROVED;
 import static org.innovateuk.ifs.project.util.ControllersUtil.isLeadPartner;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
@@ -192,7 +191,6 @@ public class FinanceCheckController {
         ProjectResource project = projectService.getById(projectId);
         ApplicationResource application = applicationService.getById(project.getApplication());
         String competitionName = application.getCompetitionName();
-        String formattedCompId = formatter.format(application.getCompetition());
 
         OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
         boolean isResearch = OrganisationTypeEnum.isResearch(organisationResource.getOrganisationType());
@@ -212,7 +210,7 @@ public class FinanceCheckController {
             jesFileDetailsViewModel = new FileDetailsViewModel(jesFileEntryResource);
         }
 
-        FinanceCheckViewModel financeCheckViewModel = new FinanceCheckViewModel(formattedCompId, competitionName, organisationResource.getName(),
+        FinanceCheckViewModel financeCheckViewModel = new FinanceCheckViewModel(application.getCompetition(), competitionName, organisationResource.getName(),
                 isLeadPartner, projectId, organisationId, isResearch, financeChecksApproved, approverName, approvalDate, jesFileDetailsViewModel);
 
         if (financeContact.isPresent()) { // Internal users may still view finance contact page without finance contact being set.  They will see a message warning about this on template.

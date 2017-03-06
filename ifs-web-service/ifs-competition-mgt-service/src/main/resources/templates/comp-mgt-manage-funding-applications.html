@@ -11,7 +11,7 @@
 <main id="content" th:object="${form}">
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition dashboard',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" />
     <h1 class="heading-xlarge">
-                <span class="heading-secondary"><th:block th:text="${#numbers.formatInteger(model.competitionId,8)}"/>: <th:block
+                <span class="heading-secondary"><th:block th:text="${model.competitionId}"/>: <th:block
                     th:text="${model.competitionName}"/></span>
         <span>Manage funding applications</span>
     </h1>
@@ -28,15 +28,23 @@
     <div th:replace="competition/key-statistics :: key-statistics(keyStatistics=${model.keyStatistics})" />
 
     <form method="post" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}">
-        <div class="grid-row sorting sorting-controls">
+        <div class="grid-row sorting">
             <div class="column-half">
-                <div class="form-group">
-                    <span class="form-hint alignleft"><span class="applications-selected">0</span> applications selected</span>
+                <div class="select-all">
+                    <fieldset>
+                        <legend class="visuallyhidden">Select applications</legend>
+                        <label class="block-label selection-button-checkbox" for="select-all-1">
+                            <input data-select-all="[id^=app-row-]" class="select-all" id="select-all-1" value="select-all" type="checkbox">
+                            Select all applications
+                        </label>
+                        <span class="form-hint"><span data-count-selected="[id^=app-row-]">3</span> applications selected</span>
+                    </fieldset>
                 </div>
             </div>
-
-            <div class="column-half alignright">
-                <button class="button button-notification extra-margin-top" type="submit">Write and send email</button>
+            <div class="column-half">
+                <fieldset class="mark-applications">
+                    <button class="button button-notification extra-margin-top" data-enable-button-when="one-checked" type="submit" name="write-an-send-email">Write and send email</button>
+                </fieldset>
             </div>
         </div>
 
@@ -57,12 +65,12 @@
                     <tbody>
                     <tr th:each="applicationSummary, stat : ${model.content}">
                         <td class="form-group-cell">
-                            <label class="block-label selection-button-checkbox" th:for="'application-id' + ${applicationSummary.id}">
-                                <input type="checkbox" class="app-row-select row-successful" th:field="*{ids[__${stat.index}__]}" th:value="${applicationSummary.id}" aria-labelledby="select-applications-label" th:id="'application-id' + ${applicationSummary.id}"/>
+                            <label class="block-label selection-button-checkbox" th:for="'app-row-' + ${applicationSummary.id}">
+                                <input data-switches-button-status="[name=write-an-send-email]" type="checkbox" class="app-row-select row-successful" th:field="*{ids[__${stat.index}__]}" th:value="${applicationSummary.id}" aria-labelledby="select-applications-label" th:id="'app-row-' + ${applicationSummary.id}"/>
                                 <small class="visibility-hidden">Select application</small>
                             </label>
                         </td>
-                        <td th:text="${#numbers.formatInteger(applicationSummary.id,8)}">194731</td>
+                        <td th:text="${applicationSummary.id}">194731</td>
                         <td th:text="${applicationSummary.name}">Machine learning in robots</td>
                         <td th:text="${applicationSummary.lead}">PWC</td>
                         <th:block th:switch="${applicationSummary.fundingDecision}">
@@ -79,20 +87,25 @@
             </div>
         </div>
 
-        <div class="grid-row sorting sorting-controls no-border">
+        <div class="grid-row sorting">
             <div class="column-half">
-                <div class="form-group">
-                    <span class="form-hint alignleft"><span class="applications-selected">0</span> applications selected</span>
+                <div class="select-all">
+                    <fieldset>
+                        <legend class="visuallyhidden">Select applications</legend>
+                        <label class="block-label selection-button-checkbox" for="select-all-2">
+                            <input data-select-all="[id^=app-row-]" class="select-all" id="select-all-2" value="select-all" type="checkbox">
+                            Select all applications
+                        </label>
+                        <span class="form-hint"><span data-count-selected="[id^=app-row-]">3</span> applications selected</span>
+                    </fieldset>
                 </div>
             </div>
-
-            <div class="column-half alignright">
-                <input type="hidden" name="comp" value="panel" />
-                <button class="button button-notification extra-margin-top" type="submit">Write and send email</button>
+            <div class="column-half">
+                <fieldset class="mark-applications">
+                    <button class="button button-notification extra-margin-top" data-enable-button-when="one-checked" type="submit" name="write-an-send-email">Write and send email</button>
+                </fieldset>
             </div>
         </div>
-        <div th:include="fragments/elements :: general-pagination(pagination=${model.pagination})" th:remove="tag"/>
-
     </form>
 
 

@@ -11,6 +11,7 @@ import java.util.Map;
  */
 public interface ApplicationFundingDecisionRestService {
 
+	//TODO: reuse or remove this and subsequent methods after implementation of INFUND-7378
 	RestResult<Void> makeApplicationFundingDecision(Long competitionId, Map<Long, FundingDecision> applicationIdToFundingDecision);
 
 	RestResult<Void> saveApplicationFundingDecisionData(Long competitionId, Map<Long, FundingDecision> applicationIdToFundingDecision);

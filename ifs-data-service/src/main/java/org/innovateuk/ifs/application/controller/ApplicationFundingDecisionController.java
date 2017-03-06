@@ -23,6 +23,7 @@ public class ApplicationFundingDecisionController {
     @Autowired
     private ProjectService projectService;
 
+    //TODO: reuse or remove this and subsequent methods after implementation of INFUND-7378
     @RequestMapping(value="/{competitionId}/submit", method=RequestMethod.POST)
     public RestResult<Void> makeFundingDecision(@PathVariable("competitionId") final Long competitionId, @RequestBody Map<Long, FundingDecision> applicationFundingDecisions) {
         return applicationFundingService.makeFundingDecision(competitionId, applicationFundingDecisions).

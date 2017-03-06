@@ -16,6 +16,7 @@ public class ApplicationFundingDecisionRestServiceImpl extends BaseRestService i
 
     private String applicationFundingDecisionRestURL = "/applicationfunding";
 
+	//TODO: reuse or remove this and subsequent methods after implementation of INFUND-7378
 	@Override
 	public RestResult<Void> makeApplicationFundingDecision(Long competitionId, Map<Long, FundingDecision> applicationIdToFundingDecision) {
 		 return postWithRestResult(applicationFundingDecisionRestURL + "/" + competitionId + "/submit", applicationIdToFundingDecision, Void.class);
