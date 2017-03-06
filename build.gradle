@@ -15,6 +15,10 @@ if(project.hasProperty('profile') && profile == 'automated') {
     ext.openshiftEnv = project.properties['openshiftEnv'] ?: "automated"
 }
 
+if(!project.hasProperty('osTestArgs')) {
+    ext.osTestArgs = ""
+}
+
 build.enabled = false
 jar.enabled=false
 
@@ -157,7 +161,7 @@ task osDeployLocal(type:Exec) {
 task osTestRemote(type:Exec) {
     dependsOn robotTestsFilter
     executable = 'setup-files/scripts/openshift/os-test-remote.sh'
-    args = [openshiftEnv]
+    args = [openshiftEnv, osTestArgs]
 }
 
 import org.apache.tools.ant.filters.*
