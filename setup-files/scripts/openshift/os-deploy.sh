@@ -106,6 +106,7 @@ function deploy() {
         oc create -f os-files-tmp/mysql/
         oc create -f os-files-tmp/shib/
         oc create -f os-files-tmp/gluster/
+        oc create -f os-files-tmp/spring-admin/
         oc create -f os-files-tmp/
     fi
 }
