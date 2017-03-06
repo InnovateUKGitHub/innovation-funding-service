@@ -12,13 +12,16 @@ public class AvailableAssessorRowViewModel extends InviteAssessorsRowViewModel {
 
     private String email;
     private BusinessType businessType;
-    private boolean added;
 
-    public AvailableAssessorRowViewModel(Long id, String name, List<InnovationAreaResource> innovationAreas, boolean compliant, String email, BusinessType businessType, boolean added) {
+    public AvailableAssessorRowViewModel(Long id,
+                                         String name,
+                                         List<InnovationAreaResource> innovationAreas,
+                                         boolean compliant,
+                                         String email,
+                                         BusinessType businessType) {
         super(id, name, innovationAreas, compliant);
         this.email = email;
         this.businessType = businessType;
-        this.added = added;
     }
 
     public String getEmail() {
@@ -27,9 +30,5 @@ public class AvailableAssessorRowViewModel extends InviteAssessorsRowViewModel {
 
     public BusinessType getBusinessType() {
         return businessType;
-    }
-
-    public boolean isAdded() {
-        return added;
     }
 }

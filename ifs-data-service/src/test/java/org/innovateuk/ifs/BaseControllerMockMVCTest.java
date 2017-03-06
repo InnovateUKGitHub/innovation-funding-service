@@ -18,6 +18,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Rule;
 import org.mockito.InjectMocks;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.restdocs.JUnitRestDocumentation;
@@ -118,6 +119,7 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
 
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .setMessageConverters(newListOfConvertersArray)
+                .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
                 .setControllerAdvice(new ErrorControllerAdvice())
                 .apply(documentationConfiguration(this.restDocumentation)
                         .uris()
