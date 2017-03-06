@@ -21,7 +21,6 @@ import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.service.FileTemplateRenderer;
 import org.innovateuk.ifs.file.transactional.FileService;
-import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.transactional.FinanceRowService;
 import org.innovateuk.ifs.project.domain.Project;
@@ -43,7 +42,6 @@ import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
@@ -116,9 +114,6 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
 
     @Autowired
     private SpendProfileTableCalculator spendProfileTableCalculator;
-
-/*    @Autowired
-    private OrganisationFinanceDelegate organisationFinanceDelegate;*/
 
     @Autowired
     private FinanceUtil financeUtil;

@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.project.finance.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
@@ -46,9 +45,6 @@ public class ByProjectFinanceCostCategorySummaryStrategy implements SpendProfile
     @Autowired
     private CostCategoryTypeStrategy costCategoryTypeStrategy;
 
-/*    @Autowired
-    private OrganisationFinanceDelegate organisationFinanceDelegate;*/
-
     @Autowired
     private FinanceUtil financeUtil;
 
@@ -67,7 +63,6 @@ public class ByProjectFinanceCostCategorySummaryStrategy implements SpendProfile
     private ServiceResult<SpendProfileCostCategorySummaries> createCostCategorySummariesWithCostCategoryType(
             Long projectId, Long organisationId, ProjectResource project, OrganisationResource organisation, ProjectFinanceResource finances) {
 
-        //boolean useAcademicFinances = organisationFinanceDelegate.isUsingJesFinances(organisation.getOrganisationTypeName());
         boolean useAcademicFinances = financeUtil.isUsingJesFinances(organisation.getOrganisationTypeName());
 
         return costCategoryTypeStrategy.getOrCreateCostCategoryTypeForSpendProfile(projectId, organisationId).andOnSuccessReturn(

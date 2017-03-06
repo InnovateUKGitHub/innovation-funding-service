@@ -3,7 +3,6 @@ package org.innovateuk.ifs.project.transactional;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.*;
-import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.repository.*;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
@@ -51,9 +50,6 @@ public class FinanceChecksGenerator {
 
     @Autowired
     private ApplicationFinanceRowRepository financeRowRepository;
-
-/*    @Autowired
-    private OrganisationFinanceDelegate organisationFinanceDelegate;*/
 
     @Autowired
     private FinanceUtil financeUtil;

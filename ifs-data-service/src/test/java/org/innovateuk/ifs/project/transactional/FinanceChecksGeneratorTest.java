@@ -12,7 +12,6 @@ import org.innovateuk.ifs.project.finance.domain.CostCategoryType;
 import org.innovateuk.ifs.project.finance.domain.CostGroup;
 import org.innovateuk.ifs.project.finance.domain.FinanceCheck;
 import org.innovateuk.ifs.project.finance.transactional.CostCategoryTypeStrategy;
-import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.resource.OrganisationSize;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
