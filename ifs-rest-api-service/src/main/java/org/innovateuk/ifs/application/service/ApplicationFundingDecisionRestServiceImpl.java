@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.NotificationResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,10 @@ public class ApplicationFundingDecisionRestServiceImpl extends BaseRestService i
 
 	protected void setApplicationFundingDecisionRestURL(String applicationFundingDecisionRestURL) {
 		this.applicationFundingDecisionRestURL = applicationFundingDecisionRestURL;
+	}
+
+	public RestResult<Void> sendApplicationFundingDecisions(NotificationResource notificationResource) {
+		return postWithRestResult(applicationFundingDecisionRestURL + "/sendNotifications", notificationResource, Void.class);
 	}
 
 }

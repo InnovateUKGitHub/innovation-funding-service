@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.NotificationResource;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
 import org.innovateuk.ifs.util.MapFunctions;
 import org.junit.Test;
@@ -9,6 +10,7 @@ import org.springframework.http.MediaType;
 
 import java.util.Map;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -70,5 +72,18 @@ public class ApplicationFundingDecisionControllerTest extends BaseControllerMock
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
     }
-    
+
+    @Test
+    public void testSendNotifications() throws Exception {
+        NotificationResource notification = new NotificationResource("Subject of notification", "Body of notification message.", asList(1L, 2L, 3L));
+
+        when(applicationFundingServiceMock.notifyLeadApplicantsOfFundingDecisions(notification)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/applicationfunding/sendNotifications")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(notification)))
+                .andExpect(status().isOk())
+                .andExpect(content().string(""));
+    }
+
 }

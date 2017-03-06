@@ -4,6 +4,7 @@ import org.apache.catalina.util.ParameterMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.NotificationResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,10 @@ public class ApplicationFundingDecisionServiceImpl implements ApplicationFunding
 	@Autowired
 	private ApplicationFundingDecisionRestService applicationFundingDecisionRestService;
 
+	@Override
+	public ServiceResult<Void> sendFundingNotifications(NotificationResource notificationResource) {
+		return applicationFundingDecisionRestService.sendApplicationFundingDecisions(notificationResource).toServiceResult();
+	}
 
 	//TODO: remove this and subsequent methods after implementation of INFUND-7378
 	/*
@@ -60,7 +65,7 @@ public class ApplicationFundingDecisionServiceImpl implements ApplicationFunding
 			return true;
 		}
 	}
-	
+
 	public Optional<FundingDecision> getFundingDecisionForString(String val) {
 		Optional<FundingDecision> fundingDecision = Optional.empty();
 

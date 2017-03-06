@@ -367,6 +367,15 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
+    public ServiceResult<ApplicationResource> setApplicationFundingEmailDateTime(final Long applicationId, final LocalDateTime fundingEmailDateTime) {
+        return getApplication(applicationId).andOnSuccessReturn(application -> {
+            application.setManageFundingEmailDate(fundingEmailDateTime);
+            Application savedApplication = applicationRepository.save(application);
+            return applicationMapper.mapToResource(savedApplication);
+        });
+    }
+
+    @Override
     public ServiceResult<CompletedPercentageResource> getProgressPercentageByApplicationId(final Long applicationId) {
         return getApplicationById(applicationId).andOnSuccessReturn(applicationResource -> {
             CompletedPercentageResource resource = new CompletedPercentageResource();
