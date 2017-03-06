@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.application.viewmodel;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.util.List;
 
 /**
@@ -59,5 +62,37 @@ public class ApplicationTeamManagementViewModel {
         return applicants;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
 
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ApplicationTeamManagementViewModel that = (ApplicationTeamManagementViewModel) o;
+
+        return new EqualsBuilder()
+                .append(applicationId, that.applicationId)
+                .append(leadOrganisation, that.leadOrganisation)
+                .append(userLeadApplicant, that.userLeadApplicant)
+                .append(applicationName, that.applicationName)
+                .append(organisationId, that.organisationId)
+                .append(inviteOrganisationId, that.inviteOrganisationId)
+                .append(organisationName, that.organisationName)
+                .append(applicants, that.applicants)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(applicationId)
+                .append(applicationName)
+                .append(organisationId)
+                .append(inviteOrganisationId)
+                .append(organisationName)
+                .append(leadOrganisation)
+                .append(userLeadApplicant)
+                .append(applicants)
+                .toHashCode();
+    }
 }
