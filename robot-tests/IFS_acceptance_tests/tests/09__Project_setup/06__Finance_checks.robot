@@ -206,8 +206,8 @@ Post new query server side validations
     [Documentation]    INFUND-4840
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Post Query")
-    Then the user should see the text in the page    jQuery=label[for="queryTitle"] span:nth-child(2):contains(This field cannot be left blank.)
-    And the user should see the text in the page    jQuery=label[for="query"] span:nth-child(2):contains(This field cannot be left blank.)
+    Then the user should see the text in the page    jQuery=label[for="queryTitle"] span:nth-child(2) span:contains(This field cannot be left blank.)
+    And the user should see the text in the page    jQuery=label[for="query"] span:nth-child(2) span:contains(This field cannot be left blank.)
 
 Post new query client side validations
     [Documentation]    INFUND-4840
