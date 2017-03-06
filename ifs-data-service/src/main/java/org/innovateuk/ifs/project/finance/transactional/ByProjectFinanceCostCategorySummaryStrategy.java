@@ -13,6 +13,7 @@ import org.innovateuk.ifs.project.finance.domain.CostCategory;
 import org.innovateuk.ifs.project.finance.domain.CostCategoryType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.transactional.ProjectService;
+import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -45,8 +46,11 @@ public class ByProjectFinanceCostCategorySummaryStrategy implements SpendProfile
     @Autowired
     private CostCategoryTypeStrategy costCategoryTypeStrategy;
 
+/*    @Autowired
+    private OrganisationFinanceDelegate organisationFinanceDelegate;*/
+
     @Autowired
-    private OrganisationFinanceDelegate organisationFinanceDelegate;
+    private FinanceUtil financeUtil;
 
     @Autowired
     private OrganisationService organisationService;
@@ -63,7 +67,8 @@ public class ByProjectFinanceCostCategorySummaryStrategy implements SpendProfile
     private ServiceResult<SpendProfileCostCategorySummaries> createCostCategorySummariesWithCostCategoryType(
             Long projectId, Long organisationId, ProjectResource project, OrganisationResource organisation, ProjectFinanceResource finances) {
 
-        boolean useAcademicFinances = organisationFinanceDelegate.isUsingJesFinances(organisation.getOrganisationTypeName());
+        //boolean useAcademicFinances = organisationFinanceDelegate.isUsingJesFinances(organisation.getOrganisationTypeName());
+        boolean useAcademicFinances = financeUtil.isUsingJesFinances(organisation.getOrganisationTypeName());
 
         return costCategoryTypeStrategy.getOrCreateCostCategoryTypeForSpendProfile(projectId, organisationId).andOnSuccessReturn(
                 costCategoryType ->

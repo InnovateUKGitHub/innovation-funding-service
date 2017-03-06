@@ -12,6 +12,7 @@ import org.innovateuk.ifs.project.finance.domain.*;
 import org.innovateuk.ifs.project.finance.repository.FinanceCheckRepository;
 import org.innovateuk.ifs.project.finance.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
+import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,8 +52,11 @@ public class FinanceChecksGenerator {
     @Autowired
     private ApplicationFinanceRowRepository financeRowRepository;
 
+/*    @Autowired
+    private OrganisationFinanceDelegate organisationFinanceDelegate;*/
+
     @Autowired
-    private OrganisationFinanceDelegate organisationFinanceDelegate;
+    private FinanceUtil financeUtil;
 
     @Autowired
     private ViabilityWorkflowHandler viabilityWorkflowHandler;
@@ -78,7 +82,7 @@ public class FinanceChecksGenerator {
 
         ProjectFinance projectFinance = new ProjectFinance(organisation, applicationFinanceForOrganisation.getOrganisationSize(), newProject);
 
-        if (organisationFinanceDelegate.isUsingJesFinances(organisation.getOrganisationType().getName())) {
+        if (financeUtil.isUsingJesFinances(organisation.getOrganisationType().getName())) {
 
             PartnerOrganisation partnerOrganisation = partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(newProject.getId(), organisation.getId());
             viabilityWorkflowHandler.organisationIsAcademic(partnerOrganisation, null);

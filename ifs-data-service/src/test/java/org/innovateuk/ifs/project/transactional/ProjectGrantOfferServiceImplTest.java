@@ -4,7 +4,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -263,7 +262,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         when(organisationMapperMock.mapToResource(organisations.get(0))).thenReturn(organisationResources.get(0));
         when(organisationMapperMock.mapToResource(organisations.get(1))).thenReturn(organisationResources.get(1));
         when(organisationMapperMock.mapToResource(organisations.get(2))).thenReturn(organisationResources.get(2));
-        when(organisationFinanceDelegateMock.isUsingJesFinances(ACADEMIC.name())).thenReturn(true);
+        when(financeUtilMock.isUsingJesFinances(ACADEMIC.name())).thenReturn(true);
         when(financeRowServiceMock.financeDetails(project.getApplication().getId(), organisations.get(0).getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
         when(financeRowServiceMock.financeDetails(project.getApplication().getId(), organisations.get(1).getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
         when(financeRowServiceMock.financeDetails(project.getApplication().getId(), organisations.get(2).getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
@@ -691,7 +690,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         when(fileEntryMapperMock.mapToResource(createdFile)).thenReturn(fileEntryResource);
         when(financeCheckServiceMock.getFinanceCheckSummary(project.getId())).thenReturn(ServiceResult.serviceSuccess(financeCheckSummaryResource));
 
-        when(organisationFinanceDelegateMock.isUsingJesFinances(BUSINESS.name())).thenReturn(false);
+        when(financeUtilMock.isUsingJesFinances(BUSINESS.name())).thenReturn(false);
         when(financeRowServiceMock.financeDetails(project.getApplication().getId(), o1.getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
         when(financeRowServiceMock.financeDetails(project.getApplication().getId(), o2.getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
         when(financeRowServiceMock.financeDetails(project.getApplication().getId(), o3.getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
@@ -802,7 +801,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
                 build();
 
         when(projectRepositoryMock.findOne(123L)).thenReturn(project);
-        when(organisationFinanceDelegateMock.isUsingJesFinances(BUSINESS.name())).thenReturn(false);
+        when(financeUtilMock.isUsingJesFinances(BUSINESS.name())).thenReturn(false);
         when(financeRowServiceMock.financeDetails(project.getApplication().getId(), nonAcademicUnfunded.getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResourceZero));
         when(projectFinanceServiceMock.getSpendProfileTable(new ProjectOrganisationCompositeId(projectId, nonAcademicUnfunded.getId())))
                 .thenReturn(ServiceResult.serviceSuccess(tableZero));
@@ -1036,7 +1035,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         when(fileEntryMapperMock.mapToResource(createdFile)).thenReturn(fileEntryResource);
         when(financeCheckServiceMock.getFinanceCheckSummary(project.getId())).thenReturn(ServiceResult.serviceSuccess(financeCheckSummaryResource));
 
-        when(organisationFinanceDelegateMock.isUsingJesFinances(BUSINESS.name())).thenReturn(false);
+        when(financeUtilMock.isUsingJesFinances(BUSINESS.name())).thenReturn(false);
         when(financeRowServiceMock.financeDetails(project.getApplication().getId(), o1.getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResourceZeroGrantClaim));
         when(financeRowServiceMock.financeDetails(project.getApplication().getId(), o2.getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
         when(financeRowServiceMock.financeDetails(project.getApplication().getId(), o3.getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));

@@ -36,6 +36,7 @@ import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.resource.SpendProfileTableResource;
+import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
 import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
@@ -116,8 +117,11 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     @Autowired
     private SpendProfileTableCalculator spendProfileTableCalculator;
 
+/*    @Autowired
+    private OrganisationFinanceDelegate organisationFinanceDelegate;*/
+
     @Autowired
-    private OrganisationFinanceDelegate organisationFinanceDelegate;
+    private FinanceUtil financeUtil;
 
     @Autowired
     private GOLWorkflowHandler golWorkflowHandler;
@@ -474,7 +478,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
                 monthlyCostsPerOrganisationMap, months, financeCheckSummary.getTotalPercentageGrant());
 
         Set<Organisation> organisationsExcludedFromGrantOfferLetter = project.getOrganisations().stream().filter(organisation ->
-                !organisationFinanceDelegate.isUsingJesFinances(organisation.getOrganisationType().getName())
+                !financeUtil.isUsingJesFinances(organisation.getOrganisationType().getName())
                         && !organisation.getName().equals(leadOrganisation.getName())
                         && organisationAndGrantPercentageMap.get(organisation.getName()).equals(0)
                         && organisationGrantAllocationTotal.get(organisation.getName()).stream().reduce(BigDecimal.ZERO, BigDecimal::add).compareTo(BigDecimal.ZERO) == 0)
@@ -553,7 +557,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
 
     private ServiceResult<Void> grantPercentagePerOrganisation(ApplicationFinanceResource applicationFinanceResource, Organisation organisation, Map<String, Integer> organisationAndGrantPercentageMap) {
         organisationAndGrantPercentageMap.put(organisation.getName(),
-                organisationFinanceDelegate.isUsingJesFinances(organisation.getOrganisationType().getName())
+                financeUtil.isUsingJesFinances(organisation.getOrganisationType().getName())
                         ? 100 : applicationFinanceResource.getGrantClaimPercentage());
         return serviceSuccess();
     }
