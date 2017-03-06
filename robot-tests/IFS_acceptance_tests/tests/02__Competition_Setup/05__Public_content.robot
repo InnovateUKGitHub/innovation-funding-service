@@ -298,8 +298,6 @@ Custom suite setup
     Set suite variable  ${day}
     ${month} =  get tomorrow month
     set suite variable  ${month}
-    ${time} =  Get Time
-    Set suite variable  ${time}
 
 User creates a new competition
     [Arguments]    ${competition_name}
