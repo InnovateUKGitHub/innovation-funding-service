@@ -252,12 +252,11 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     }
 
     private final List<String> organisationsListWithLeadOnTopAndPartnersAlphabeticallyOrdered(List<String> organisationNames, Organisation leadOrganisation) {
-        final String leadOrganisationName = leadOrganisation.getName();
         final List<String> organisations = organisationNames.stream()
-                .filter(po -> !po.equals(leadOrganisationName))
+                .filter(po -> !po.equals(leadOrganisation.getName()))
                 .map(po -> StringEscapeUtils.escapeXml10(po))
                 .sorted().collect(toList());
-        organisations.add(0, StringEscapeUtils.escapeXml10(leadOrganisationName));
+        organisations.add(0, StringEscapeUtils.escapeXml10(leadOrganisation.getName()));
         return organisations;
     }
 
@@ -497,23 +496,18 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
 
         includedOrganisations.forEach(includedOrg -> includedOrganisationNames.add(includedOrg.getName()));
 
-        Map<String, Integer> escapedOrganisationAndGrantPercentageMap = new HashMap<>();
-        Map<String, List<String>> escapedOrganisationYearsMap = new LinkedHashMap<>();
-        Map<String, List<BigDecimal>> escapedOrganisationEligibleCostTotal = new HashMap<>();
-        Map<String, List<BigDecimal>> escapedOrganisationGrantAllocationTotal = new HashMap<>();
-        Map<String, BigDecimal> escapedYearEligibleCostTotal = new HashMap<>();
-        Map<String, BigDecimal> escapedYearlyGrantAllocationTotal = new HashMap<>();
+        return new YearlyGOLProfileTable(escapeXml10(organisationAndGrantPercentageMap),
+                                         escapeXml10(organisationYearsMap),
+                                         escapeXml10(organisationEligibleCostTotal),
+                                         escapeXml10(organisationGrantAllocationTotal),
+                                         escapeXml10(yearEligibleCostTotal),
+                                         escapeXml10(yearlyGrantAllocationTotal));
+    }
 
-        organisationAndGrantPercentageMap.forEach((org, value) -> escapedOrganisationAndGrantPercentageMap.put(StringEscapeUtils.escapeXml10(org), value));
-        organisationYearsMap.forEach((org, value) -> escapedOrganisationYearsMap.put(StringEscapeUtils.escapeXml10(org), value));
-        organisationEligibleCostTotal.forEach((org, value) -> escapedOrganisationEligibleCostTotal.put(StringEscapeUtils.escapeXml10(org), value));
-        organisationGrantAllocationTotal.forEach((org, value) -> escapedOrganisationGrantAllocationTotal.put(StringEscapeUtils.escapeXml10(org), value));
-        yearEligibleCostTotal.forEach((org, value) -> escapedYearEligibleCostTotal.put(StringEscapeUtils.escapeXml10(org), value));
-        yearlyGrantAllocationTotal.forEach((org, value) -> escapedYearlyGrantAllocationTotal.put(StringEscapeUtils.escapeXml10(org), value));
-
-        return new YearlyGOLProfileTable(escapedOrganisationAndGrantPercentageMap, escapedOrganisationYearsMap,
-                escapedOrganisationEligibleCostTotal, escapedOrganisationGrantAllocationTotal,
-                escapedYearEligibleCostTotal, escapedYearlyGrantAllocationTotal);
+    private <T> Map<String, T>escapeXml10(Map<String, T> unescapedMap) {
+        Map<String, T> escapedMap = new HashMap<>();
+        unescapedMap.forEach((organisation, value) -> escapedMap.put(StringEscapeUtils.escapeXml10(organisation), value));
+        return escapedMap;
     }
 
     private Map<String, List<BigDecimal>> getMonthlyEligibleCostPerOrganisation(Map<String,
