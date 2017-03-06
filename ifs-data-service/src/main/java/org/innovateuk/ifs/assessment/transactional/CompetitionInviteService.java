@@ -62,7 +62,7 @@ public interface CompetitionInviteService {
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ_INVITES_BY_COMPETITION",
             description = "Competition Administrators and Executives can retrieve created invites by competition")
-    ServiceResult<List<AssessorCreatedInviteResource>> getCreatedInvites(long competitionId);
+    ServiceResult<AssessorCreatedInvitePageResource> getCreatedInvites(long competitionId, Pageable pageable);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ_INVITE_OVERVIEW_BY_COMPETITION",
