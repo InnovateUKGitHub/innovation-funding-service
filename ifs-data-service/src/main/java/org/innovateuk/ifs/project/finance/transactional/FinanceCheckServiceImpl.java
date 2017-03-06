@@ -157,9 +157,14 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         String spendProfileGeneratedBy = spendProfile.map(p -> p.getGeneratedBy().getName()).orElse(null);
         LocalDate spendProfileGeneratedDate = spendProfile.map(p -> LocalDate.from(p.getGeneratedDate().toInstant().atOffset(ZoneOffset.UTC))).orElse(null);
 
+        ServiceResult<Double> researchParticipationPercentage = financeRowService.getResearchParticipationPercentage(application.getId());
+        BigDecimal researchParticipationPercentageValue = getResearchParticipationPercentage(researchParticipationPercentage);
+
+        BigDecimal competitionMaximumResearchPercentage = BigDecimal.valueOf(competition.getMaxResearchRatio());
+
         return serviceSuccess(new FinanceCheckSummaryResource(project.getId(), project.getName(), competition.getId(), competition.getName(), project.getTargetStartDate(),
                 project.getDurationInMonths().intValue(), totalProjectCost, totalFundingSought, totalOtherFunding, totalPercentageGrant, spendProfile.isPresent(),
-                getPartnerStatuses(partnerOrganisations, projectId), financeChecksAllApproved, spendProfileGeneratedBy, spendProfileGeneratedDate));
+                getPartnerStatuses(partnerOrganisations, projectId), financeChecksAllApproved, spendProfileGeneratedBy, spendProfileGeneratedDate, researchParticipationPercentageValue, competitionMaximumResearchPercentage));
     }
 
     public ServiceResult<FinanceCheckEligibilityResource> getFinanceCheckEligibilityDetails(Long projectId, Long organisationId) {
@@ -364,5 +369,13 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
             }
         }
         return serviceSuccess();
+    }
+
+    private BigDecimal getResearchParticipationPercentage(ServiceResult<Double> researchParticipationPercentage) {
+        BigDecimal researchParticipationPercentageValue = BigDecimal.ZERO;
+        if (researchParticipationPercentage.isSuccess() && researchParticipationPercentage.getSuccessObject() != null) {
+            researchParticipationPercentageValue = BigDecimal.valueOf(researchParticipationPercentage.getSuccessObject());
+        }
+        return researchParticipationPercentageValue;
     }
 }

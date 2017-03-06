@@ -16,4 +16,8 @@ public interface ContentGroupRestService {
     RestResult<ByteArrayResource> getFile(Long groupId);
 
     RestResult<FileEntryResource> getFileDetails(Long contentGroupId);
+
+    RestResult<ByteArrayResource> getFileAnonymous(Long groupId);
+
+    RestResult<FileEntryResource> getFileDetailsAnonymous(Long contentGroupId);
 }
