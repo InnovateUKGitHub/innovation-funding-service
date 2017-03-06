@@ -6,7 +6,7 @@ TARGET=$2
 
 if [[ ${TARGET} == "production" ]]
 then
-    PROJECT="production"
+    PROJECT="production-new"
 fi
 
 if [[ (${TARGET} == "remote") ||  (${TARGET} == "production") ]]
@@ -20,6 +20,16 @@ ROUTE_DOMAIN=apps.$HOST
 REGISTRY=docker-registry-default.apps.prod.ifs-test-clusters.com
 #REGISTRY=docker-registry-default.apps.dev.ifs-test-clusters.com
 INTERNAL_REGISTRY=172.30.80.28:5000
+
+SVC_ACCOUNT_TOKEN="kuTo-yMsDdidRJkmWEllai4ywNG9q1QS7W1EXFhBzNk"
+
+if [[ ${TARGET} == "production" ]]
+then
+    SVC_ACCOUNT_CLAUSE="--namespace=${PROJECT} --token=${SVC_ACCOUNT_TOKEN} --server=https://console.prod.ifs-test-clusters.com:443 --insecure-skip-tls-verify=true"
+    REGISTRY_TOKEN=${SVC_ACCOUNT_TOKEN}
+else
+    REGISTRY_TOKEN=$(oc whoami -t)
+fi
 
 
 echo "Deploying the $PROJECT Openshift project"
@@ -66,7 +76,7 @@ function useContainerRegistry() {
     docker tag innovateuk/application-service:1.0-SNAPSHOT \
         ${REGISTRY}/${PROJECT}/application-service:1.0-SNAPSHOT
 
-    docker login -p $(oc whoami -t) -e unused -u unused ${REGISTRY}
+    docker login -p ${REGISTRY_TOKEN} -e unused -u unused ${REGISTRY}
 
     docker push ${REGISTRY}/${PROJECT}/data-service:1.0-SNAPSHOT
     docker push ${REGISTRY}/${PROJECT}/project-setup-service:1.0-SNAPSHOT
@@ -84,13 +94,13 @@ function deploy() {
 
     if [[ ${TARGET} == "production" ]]
     then
-        oc create -f os-files-tmp/gluster/10-gluster-svc.yml
-        oc create -f os-files-tmp/gluster/11-gluster-endpoints.yml
-        oc create -f os-files-tmp/gluster/production/12-production-file-upload-claim.yml
+        oc create -f os-files-tmp/gluster/10-gluster-svc.yml ${SVC_ACCOUNT_CLAUSE}
+        oc create -f os-files-tmp/gluster/11-gluster-endpoints.yml ${SVC_ACCOUNT_CLAUSE}
+        oc create -f os-files-tmp/gluster/production/12-production-file-upload-claim.yml ${SVC_ACCOUNT_CLAUSE}
 
-        oc create -f os-files-tmp/
-        oc create -f os-files-tmp/shib/5-shib.yml
-        oc create -f os-files-tmp/shib/prod/56-idp.yml
+        oc create -f os-files-tmp/ ${SVC_ACCOUNT_CLAUSE}
+        oc create -f os-files-tmp/shib/5-shib.yml ${SVC_ACCOUNT_CLAUSE}
+        oc create -f os-files-tmp/shib/prod/56-idp.yml ${SVC_ACCOUNT_CLAUSE}
     else
         oc create -f os-files-tmp/imap/
         oc create -f os-files-tmp/mysql/
@@ -104,12 +114,12 @@ function blockUntilServiceIsUp() {
     UNREADY_PODS=1
     while [ ${UNREADY_PODS} -ne "0" ]
     do
-        UNREADY_PODS=$(oc get pods -o custom-columns='NAME:{.metadata.name},READY:{.status.conditions[?(@.type=="Ready")].status}' | grep -v True | sed 1d | wc -l)
-        oc get pods
+        UNREADY_PODS=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} -o custom-columns='NAME:{.metadata.name},READY:{.status.conditions[?(@.type=="Ready")].status}' | grep -v True | sed 1d | wc -l)
+        oc get pods ${SVC_ACCOUNT_CLAUSE}
         echo "$UNREADY_PODS pods still not ready"
         sleep 5s
     done
-    oc get routes
+    oc get routes ${SVC_ACCOUNT_CLAUSE}
 }
 
 function shibInit() {
@@ -140,8 +150,6 @@ tailorAppInstance
 if [[ ${TARGET} != "production" ]]
 then
     createProject
-else
-    oc project $PROJECT
 fi
 
 if [[ (${TARGET} == "remote") ||  (${TARGET} == "production") ]]
