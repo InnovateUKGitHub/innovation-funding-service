@@ -73,22 +73,22 @@ the user should see the change in the view team members page
     The user should see the element    jQuery=.table-overflow:eq(1) td:nth-child(1):contains("Dennis Bergkamp")
 
 Existing user creates a new application and invites a user from the same organisation
-    When the user navigates to the page    ${COMPETITION_DETAILS_URL}
-    And the user clicks the button/link    jQuery=.button:contains("Apply now")
-    And the user clicks the button/link    jQuery=.button:contains("Apply now")
-    And the user clicks the button/link    jQuery=Label:contains("Yes I want to create a new application")
-    And the user clicks the button/link    jQuery=.button:contains("Continue")
-    And the user clicks the button/link    jQuery=a:contains("Update INNOVATE LTD")
-    And The user clicks the button/link    jQuery=button:contains("Add new applicant")
-    And The user enters text to a text field    name=applicants[0].name    Olivier Giroud
-    And The user enters text to a text field    name=applicants[0].email    ${test_mailbox_one}+invite2@gmail.com
-    And the user clicks the button/link    jQuery=a:contains("Update organisation")
-    And the user clicks the button/link    jQuery=button:contains("Update organisation")
-    And the user clicks the button/link    jQuery=a:contains("Begin application")
-    And the user clicks the button/link    link=Application details
-    And the user enters text to a text field    id=application_details-title    Invite a user with the same org@
-    And the user clicks the button/link    jQuery=button:contains("Save and return")
-    And the user closes the browser
+    the user navigates to the page    ${COMPETITION_DETAILS_URL}
+    the user clicks the button/link    jQuery=.button:contains("Apply now")
+    the user clicks the button/link    jQuery=.button:contains("Apply now")
+    the user clicks the button/link    jQuery=Label:contains("Yes I want to create a new application")
+    the user clicks the button/link    jQuery=.button:contains("Continue")
+    the user clicks the button/link    jQuery=a:contains("Update INNOVATE LTD")
+    The user clicks the button/link    jQuery=button:contains("Add new applicant")
+    The user enters text to a text field    name=applicants[0].name    Olivier Giroud
+    The user enters text to a text field    name=applicants[0].email    ${test_mailbox_one}+invite2@gmail.com
+    the user clicks the button/link    jQuery=a:contains("Update organisation")
+    the user clicks the button/link    jQuery=button:contains("Update organisation")
+    the user clicks the button/link    jQuery=a:contains("Begin application")
+    the user clicks the button/link    link=Application details
+    the user enters text to a text field    id=application_details-title    Invite a user with the same org@
+    the user clicks the button/link    jQuery=button:contains("Save and return")
+    the user closes the browser
 
 The invited user should get a message to contact the helpdesk
     [Arguments]    ${recipient}    ${subject}    ${pattern}
