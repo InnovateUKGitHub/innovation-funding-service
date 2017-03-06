@@ -172,6 +172,11 @@ Eligibility: Contains the correct values when viewed, Edit sections
     And The user enters text to a text field                    css=#heading-2    Draft Care and Support - Eligibility Criteria
     And the user enters text to a text field                    jQuery=.editor:eq(2)   In these Regulations— Citation, commencement “basic personal care activities” means essential personal care tasks that a person carries out as part of normal daily, An adult’s needs meet the eligibility criteria if those needs are due to a physical or mental impairment or illness and the effect of such needs is that the adult.
     And the user clicks the button/link                         css=#contentGroup-row-0 > div.form-group.upload-section>div > button[type=submit]
+    And the user clicks the button/link                         css=#contentGroup-row-1 > div.form-group.upload-section>div > button[type=submit]
+    Then the user uploads the file                              css=#file-upload-2  ${valid_pdf}
+    And the user uploads the file                               css=#file-upload-0  ${valid_pdf}
+    And the user uploads the file                               css=#file-upload-1  ${valid_pdf}
+    Then the user clicks the button/link                        css=#contentGroup-row-2 > div.form-group.upload-section>div > button[type=submit]
     And the user uploads the file                               css=#file-upload-2  ${valid_pdf}
     When the user clicks the button/link                        jQuery=button:contains("Save and return")
     And the user should see the element                         css=img[title='The "Eligibility" section is marked as done']
