@@ -109,6 +109,13 @@ Lead partner can view both documents
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
     [Teardown]    the user navigates to the page    ${project_in_setup_page}
 
+Lead partner does not have the option to submit the mandatory documents
+    [Documentation]    INFUND-3011
+    [Tags]
+    [Setup]    the user navigates to the page    ${project_in_setup_page}/partner/documents
+    When the user should not see an error in the page
+    And the user should not see the element    jQuery=.button.enabled:contains("Submit partner documents")
+
 Lead partner cannot remove either document
     [Documentation]    INFUND-3011
     When the user should not see the text in the page    Remove
