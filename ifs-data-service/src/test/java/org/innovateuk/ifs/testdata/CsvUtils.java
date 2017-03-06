@@ -327,6 +327,7 @@ class CsvUtils {
         ApplicationStatusConstants status;
         boolean markFinancesComplete;
         String researchCategory;
+        String innovationArea;
         boolean resubmission;
         boolean markDetailsComplete;
 
@@ -343,6 +344,7 @@ class CsvUtils {
             status = ApplicationStatusConstants.getFromName(line.get(i++));
             markFinancesComplete = nullableBoolean(line.get(i++));
             researchCategory = nullable(line.get(i++));
+            innovationArea = nullable(line.get(i++));
             resubmission = nullableBoolean(line.get(i++));
             markDetailsComplete = nullableBoolean(line.get(i++));
         }

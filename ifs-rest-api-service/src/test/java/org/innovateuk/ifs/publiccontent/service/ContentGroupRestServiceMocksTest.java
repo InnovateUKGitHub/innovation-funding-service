@@ -76,4 +76,31 @@ public class ContentGroupRestServiceMocksTest extends BaseRestServiceUnitTest<Co
         assertThat(actual, equalTo(returnedFileEntry));
     }
 
+    @Test
+    public void test_getFileAnonymous() {
+        Long groupId = 1L;
+        String expectedUrl = CONTENT_GROUP_REST_URL + "get-file-contents/" + groupId;
+
+        ByteArrayResource returnedFileContents = new ByteArrayResource("Retrieved content".getBytes());
+        setupGetWithRestResultAnonymousExpectations(expectedUrl, ByteArrayResource.class, returnedFileContents, OK);
+
+        ByteArrayResource actual = service.getFileAnonymous(groupId).getSuccessObjectOrThrowException();
+
+        assertThat(actual, equalTo(returnedFileContents));
+
+    }
+
+    @Test
+    public void test_getFileDetailsAnonymous() {
+        Long groupId = 1L;
+        String expectedUrl = CONTENT_GROUP_REST_URL + "get-file-details/" + groupId;
+
+        FileEntryResource returnedFileEntry = new FileEntryResource();
+        setupGetWithRestResultAnonymousExpectations(expectedUrl, FileEntryResource.class, returnedFileEntry, OK);
+
+        FileEntryResource actual =  service.getFileDetailsAnonymous(groupId).getSuccessObjectOrThrowException();
+
+        assertThat(actual, equalTo(returnedFileEntry));
+    }
+
 }
