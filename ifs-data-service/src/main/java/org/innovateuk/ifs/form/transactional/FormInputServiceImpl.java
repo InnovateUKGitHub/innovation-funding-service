@@ -99,7 +99,7 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
                         response.setUpdatedBy(userAppRole);
                     }
                     response.setValue(htmlUnescapedValue);
-                    application.addFormInputResponse(response);
+                    application.addFormInputResponse(response, userAppRole);
                     applicationRepository.save(application);
                     return response;
                 })
@@ -119,7 +119,7 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
 
     private ServiceResult<FormInputResponse> getOrCreateResponse(Application application, FormInput formInput, ProcessRole userAppRole) {
 
-    	Optional<FormInputResponse> existingResponse = application.getFormInputResponseByFormInput(formInput);
+    	Optional<FormInputResponse> existingResponse = application.getFormInputResponseByFormInputAndProcessRole(formInput, userAppRole);
 
         return existingResponse != null && existingResponse.isPresent() ?
                 serviceSuccess(existingResponse.get()) :
@@ -137,4 +137,5 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
     private List<FormInputResponseResource> formInputResponsesToResources(List<FormInputResponse> filtered) {
         return simpleMap(filtered, formInputResponse -> formInputResponseMapper.mapToResource(formInputResponse));
     }
+
 }
