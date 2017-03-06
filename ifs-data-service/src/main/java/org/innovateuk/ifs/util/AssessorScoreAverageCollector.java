@@ -40,15 +40,15 @@ public class AssessorScoreAverageCollector implements Collector<String, Assessor
         private BigDecimal sum = BigDecimal.ZERO;
         private BigDecimal count = BigDecimal.ZERO;
 
+        public ScoreAccumulator() {
+        }
+
         public BigDecimal getSum() {
             return sum;
         }
 
         public BigDecimal getCount() {
             return count;
-        }
-
-        public ScoreAccumulator() {
         }
 
         public ScoreAccumulator(BigDecimal sum, BigDecimal count) {
