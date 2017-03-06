@@ -50,7 +50,7 @@ public class ProjectFinanceChecksOverviewController {
         model.addAttribute("model", financeCheckOverviewViewModel);
         model.addAttribute("organisation", organisationId);
 
-        return "project/finance-checks/overview";
+        return "project/finance-checks-overview";
     }
 
     private FinanceCheckOverviewViewModel buildFinanceCheckOverviewViewModel(final Long projectId) {
