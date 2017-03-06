@@ -27,6 +27,7 @@ import java.util.function.Supplier;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.processAnyFailuresOrSucceed;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 
@@ -123,8 +124,10 @@ public class ApplicationTeamManagementController {
     }
 
     private ServiceResult<InviteResultsResource> updateInvitesByOrganisation(long organisationId, ApplicationTeamUpdateForm form, long applicationId) {
+        List<ApplicationInviteResource> invites = createInvites(form, applicationId);
         return processAnyFailuresOrSucceed(form.getMarkedForRemoval().stream().map(applicationService::removeCollaborator).collect(toList()))
-                .andOnSuccess(() -> inviteRestService.createInvitesByOrganisation(organisationId, createInvites(form, applicationId)).toServiceResult());
+                .andOnSuccess(() -> invites.isEmpty() ? serviceSuccess(new InviteResultsResource()) :
+                        inviteRestService.createInvitesByOrganisation(organisationId, invites).toServiceResult());
     }
 
     private ServiceResult<InviteResultsResource> updateInvitesByInviteOrganisation(long inviteOrganisationId, ApplicationTeamUpdateForm form, long applicationId) {
