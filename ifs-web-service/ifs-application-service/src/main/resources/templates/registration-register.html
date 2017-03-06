@@ -11,7 +11,11 @@
 <main id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='javascript:history.back()',currentApplication=${currentApplication}" />
-        <h1 class="heading-large">Create your account</h1>
+
+        <h1 class="heading-xlarge">
+            <span class="heading-secondary">Create your account</span>
+            Your details
+        </h1>
 
         <form th:action="@{/registration/register}" method="post" th:object="${registrationForm}">
             <div class="error-summary" th:if="${#fields.hasErrors('*')}">
@@ -29,8 +33,6 @@
             </div>
 
             <h2 class="heading-medium">Your details</h2>
-
-
 
                 <div th:class="${#fields.hasErrors('title')}? 'form-group error':'form-group'">
                     <label class="form-label" for="title">
