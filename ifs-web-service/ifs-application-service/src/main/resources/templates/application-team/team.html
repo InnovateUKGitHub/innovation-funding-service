@@ -53,9 +53,10 @@
                 </table>
 
                 <p th:if="${organisation.editable}">
-                    <a th:if="${organisation.id}" th:href="@{/application/{applicationId}/team/update(applicationId=${model.applicationId},organisation=${organisation.id})}"
-                        th:text="|Update ${organisation.name}|">Update Empire Ltd</a>
-                    <a th:unless="${organisation.id}" th:href="@{/application/{applicationId}/team/update(applicationId=${model.applicationId},organisationName=${organisation.name})}"
+                    <!--/* Prefer linking by the InviteOrganisation id over the Organisation id except where there is no InviteOrganisation. */-->
+                    <a th:if="${organisation.inviteOrganisationId}" th:href="@{/application/{applicationId}/team/update(applicationId=${model.applicationId},inviteOrganisation=${organisation.inviteOrganisationId})}"
+                       th:text="|Update ${organisation.name}|">Update Empire Ltd</a>
+                    <a th:unless="${organisation.inviteOrganisationId}" th:href="@{/application/{applicationId}/team/update(applicationId=${model.applicationId},organisation=${organisation.organisationId})}"
                        th:text="|Update ${organisation.name}|">Update Empire Ltd</a>
                 </p>
             </th:block>

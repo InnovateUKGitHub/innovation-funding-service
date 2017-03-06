@@ -61,21 +61,21 @@ public class ApplicationTeamManagementController {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
         checkUserHasAuthority(applicationResource, organisationId, loggedInUser.getId());
 
-        model.addAttribute("model", applicationTeamManagementModelPopulator.populateModel(applicationId, organisationId,
+        model.addAttribute("model", applicationTeamManagementModelPopulator.populateModelByOrganisationId(applicationId, organisationId,
                 loggedInUser.getId()));
         return "application-team/edit-org";
     }
 
-    @GetMapping(params = {"organisationName"})
-    public String getUpdateOrganisation(Model model,
-                                        @PathVariable("applicationId") long applicationId,
-                                        @RequestParam(name = "organisationName") String organisationName,
-                                        @ModelAttribute("loggedInUser") UserResource loggedInUser,
-                                        @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form) {
+    @GetMapping(params = {"inviteOrganisation"})
+    public String getUpdateOrganisationByInviteOrganisation(Model model,
+                                                            @PathVariable("applicationId") long applicationId,
+                                                            @RequestParam(name = "inviteOrganisation") long inviteOrganisationId,
+                                                            @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                                            @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
-        checkUserHasAuthority(applicationResource, organisationName, loggedInUser.getId());
+        checkUserHasAuthority(applicationResource, inviteOrganisationId, "", loggedInUser.getId());
 
-        model.addAttribute("model", applicationTeamManagementModelPopulator.populateModel(applicationId, organisationName,
+        model.addAttribute("model", applicationTeamManagementModelPopulator.populateModelByInviteOrganisationId(applicationId, inviteOrganisationId,
                 loggedInUser.getId()));
         return "application-team/edit-org";
     }
@@ -101,22 +101,22 @@ public class ApplicationTeamManagementController {
         });
     }
 
-    @PostMapping(params = {"organisationName"})
-    public String submitUpdateOrganisation(Model model,
-                                           @PathVariable("applicationId") Long applicationId,
-                                           @RequestParam(name = "organisationName") String organisationName,
-                                           @ModelAttribute("loggedInUser") UserResource loggedInUser,
-                                           @Valid @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form,
-                                           @SuppressWarnings("unused") BindingResult bindingResult,
-                                           ValidationHandler validationHandler) {
+    @PostMapping(params = {"inviteOrganisation"})
+    public String submitUpdateOrganisationByInviteOrganisation(Model model,
+                                                               @PathVariable("applicationId") Long applicationId,
+                                                               @RequestParam(name = "inviteOrganisation") long inviteOrganisationId,
+                                                               @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                                               @Valid @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form,
+                                                               @SuppressWarnings("unused") BindingResult bindingResult,
+                                                               ValidationHandler validationHandler) {
 
         ApplicationResource applicationResource = applicationService.getById(applicationId);
-        checkUserHasAuthority(applicationResource, organisationName, loggedInUser.getId());
+        checkUserHasAuthority(applicationResource, inviteOrganisationId, "", loggedInUser.getId());
 
-        Supplier<String> failureView = () -> getUpdateOrganisation(model, applicationId, organisationName, loggedInUser, form);
+        Supplier<String> failureView = () -> getUpdateOrganisationByInviteOrganisation(model, applicationId, inviteOrganisationId, loggedInUser, form);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            ServiceResult<InviteResultsResource> updateResult = updateInvitesByInviteOrganisation(organisationName, form, applicationId);
+            ServiceResult<InviteResultsResource> updateResult = updateInvitesByInviteOrganisation(inviteOrganisationId, form, applicationId);
             return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors())
                     .failNowOrSucceedWith(failureView, () -> format("redirect:/application/%s/team", applicationId));
         });
@@ -127,9 +127,9 @@ public class ApplicationTeamManagementController {
                 .andOnSuccess(() -> inviteRestService.createInvitesByOrganisation(organisationId, createInvites(form, applicationId)).toServiceResult());
     }
 
-    private ServiceResult<InviteResultsResource> updateInvitesByInviteOrganisation(String organisationName, ApplicationTeamUpdateForm form, long applicationId) {
+    private ServiceResult<InviteResultsResource> updateInvitesByInviteOrganisation(long inviteOrganisationId, ApplicationTeamUpdateForm form, long applicationId) {
         return processAnyFailuresOrSucceed(form.getMarkedForRemoval().stream().map(applicationService::removeCollaborator).collect(toList()))
-                .andOnSuccess(() -> inviteRestService.createInvitesByInviteOrganisation(organisationName, createInvites(form, applicationId)).toServiceResult());
+                .andOnSuccess(() -> inviteRestService.saveInvites(createInvites(form, applicationId, inviteOrganisationId)).toServiceResult());
     }
 
     @PostMapping(params = {"addApplicant", "organisation"})
@@ -145,17 +145,17 @@ public class ApplicationTeamManagementController {
         return getUpdateOrganisation(model, applicationId, organisationId, loggedInUser, form);
     }
 
-    @PostMapping(params = {"addApplicant", "organisationName"})
-    public String addApplicant(Model model,
-                               @PathVariable("applicationId") long applicationId,
-                               @RequestParam(name = "organisationName") String organisationName,
-                               @ModelAttribute("loggedInUser") UserResource loggedInUser,
-                               @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form) {
+    @PostMapping(params = {"addApplicant", "inviteOrganisation"})
+    public String addApplicantByInviteOrganisation(Model model,
+                                                   @PathVariable("applicationId") long applicationId,
+                                                   @RequestParam(name = "inviteOrganisation") long inviteOrganisationId,
+                                                   @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                                   @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
-        checkUserHasAuthority(applicationResource, organisationName, loggedInUser.getId());
+        checkUserHasAuthority(applicationResource, inviteOrganisationId, "", loggedInUser.getId());
 
         form.getApplicants().add(new ApplicantInviteForm());
-        return getUpdateOrganisation(model, applicationId, organisationName, loggedInUser, form);
+        return getUpdateOrganisationByInviteOrganisation(model, applicationId, inviteOrganisationId, loggedInUser, form);
     }
 
     @PostMapping(params = {"removeApplicant", "organisation"})
@@ -172,18 +172,18 @@ public class ApplicationTeamManagementController {
         return getUpdateOrganisation(model, applicationId, organisationId, loggedInUser, form);
     }
 
-    @PostMapping(params = {"removeApplicant", "organisationName"})
-    public String removeApplicant(Model model,
-                                  @PathVariable("applicationId") long applicationId,
-                                  @RequestParam(name = "organisationName") String organisationName,
-                                  @ModelAttribute("loggedInUser") UserResource loggedInUser,
-                                  @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form,
-                                  @RequestParam(name = "removeApplicant") Integer position) {
+    @PostMapping(params = {"removeApplicant", "inviteOrganisation"})
+    public String removeApplicantByInviteOrganisation(Model model,
+                                                      @PathVariable("applicationId") long applicationId,
+                                                      @RequestParam(name = "inviteOrganisation") long inviteOrganisationId,
+                                                      @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                                      @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form,
+                                                      @RequestParam(name = "removeApplicant") Integer position) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
         checkUserIsLeadApplicant(applicationResource, loggedInUser.getId());
 
         form.getApplicants().remove(position.intValue());
-        return getUpdateOrganisation(model, applicationId, organisationName, loggedInUser, form);
+        return getUpdateOrganisationByInviteOrganisation(model, applicationId, inviteOrganisationId, loggedInUser, form);
     }
 
     @PostMapping(params = {"markForRemoval", "organisation"})
@@ -200,25 +200,25 @@ public class ApplicationTeamManagementController {
         return getUpdateOrganisation(model, applicationId, organisationId, loggedInUser, form);
     }
 
-    @PostMapping(params = {"markForRemoval", "organisationName"})
-    public String markForRemoval(Model model,
-                                 @PathVariable("applicationId") long applicationId,
-                                 @RequestParam(name = "organisationName") String organisationName,
-                                 @ModelAttribute("loggedInUser") UserResource loggedInUser,
-                                 @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form,
-                                 @RequestParam(name = "markForRemoval") long applicationInviteId) {
+    @PostMapping(params = {"markForRemoval", "inviteOrganisation"})
+    public String markForRemovalByInviteOrganisation(Model model,
+                                                     @PathVariable("applicationId") long applicationId,
+                                                     @RequestParam(name = "inviteOrganisation") long inviteOrganisationId,
+                                                     @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                                     @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form,
+                                                     @RequestParam(name = "markForRemoval") long applicationInviteId) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
         checkUserIsLeadApplicant(applicationResource, loggedInUser.getId());
 
         form.getMarkedForRemoval().add(applicationInviteId);
-        return getUpdateOrganisation(model, applicationId, organisationName, loggedInUser, form);
+        return getUpdateOrganisationByInviteOrganisation(model, applicationId, inviteOrganisationId, loggedInUser, form);
     }
 
     private void checkUserHasAuthority(ApplicationResource applicationResource, long organisationId, long loggedInUserId) {
         // TODO throw exception if user doesn't have authority
     }
 
-    private void checkUserHasAuthority(ApplicationResource applicationResource, String organisationName, long loggedInUserId) {
+    private void checkUserHasAuthority(ApplicationResource applicationResource, long inviteOrganisationId, String organisationName, long loggedInUserId) {
         // TODO throw exception if user doesn't have authority
         if (loggedInUserId != getLeadApplicantId(applicationResource)) {
             throw new ForbiddenActionException("User must be Lead Applicant");
@@ -237,11 +237,19 @@ public class ApplicationTeamManagementController {
 
     private List<ApplicationInviteResource> createInvites(ApplicationTeamUpdateForm applicationTeamUpdateForm,
                                                           long applicationId) {
-        return applicationTeamUpdateForm.getApplicants().stream()
-                .map(applicantInviteForm -> createInvite(applicantInviteForm, applicationId)).collect(toList());
+        return createInvites(applicationTeamUpdateForm, applicationId, null);
     }
 
-    private ApplicationInviteResource createInvite(ApplicantInviteForm applicantInviteForm, long applicationId) {
-        return new ApplicationInviteResource(applicantInviteForm.getName(), applicantInviteForm.getEmail(), applicationId);
+    private List<ApplicationInviteResource> createInvites(ApplicationTeamUpdateForm applicationTeamUpdateForm,
+                                                          long applicationId, Long inviteOrganisationId) {
+        return applicationTeamUpdateForm.getApplicants().stream()
+                .map(applicantInviteForm -> createInvite(applicantInviteForm, applicationId, inviteOrganisationId)).collect(toList());
+    }
+
+    private ApplicationInviteResource createInvite(ApplicantInviteForm applicantInviteForm, long applicationId, Long inviteOrganisationId) {
+        ApplicationInviteResource applicationInviteResource = new ApplicationInviteResource(applicantInviteForm.getName(),
+                applicantInviteForm.getEmail(), applicationId);
+        applicationInviteResource.setInviteOrganisation(inviteOrganisationId);
+        return applicationInviteResource;
     }
 }

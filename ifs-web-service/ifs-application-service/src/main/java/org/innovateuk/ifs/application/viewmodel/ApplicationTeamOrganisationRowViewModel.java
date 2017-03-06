@@ -10,26 +10,28 @@ import java.util.List;
  */
 public class ApplicationTeamOrganisationRowViewModel {
 
-    private Long id;
+    private Long organisationId;
+    private Long inviteOrganisationId;
     private String name;
     private boolean lead;
     private List<ApplicationTeamApplicantRowViewModel> applicants;
     private boolean editable;
 
-    public ApplicationTeamOrganisationRowViewModel(Long id,
-                                                   String name,
-                                                   boolean lead,
-                                                   List<ApplicationTeamApplicantRowViewModel> applicants,
-                                                   boolean editable) {
-        this.id = id;
+    public ApplicationTeamOrganisationRowViewModel(Long organisationId, Long inviteOrganisationId, String name, boolean lead, List<ApplicationTeamApplicantRowViewModel> applicants, boolean editable) {
+        this.organisationId = organisationId;
+        this.inviteOrganisationId = inviteOrganisationId;
         this.name = name;
         this.lead = lead;
         this.applicants = applicants;
         this.editable = editable;
     }
 
-    public Long getId() {
-        return id;
+    public Long getOrganisationId() {
+        return organisationId;
+    }
+
+    public Long getInviteOrganisationId() {
+        return inviteOrganisationId;
     }
 
     public String getName() {
@@ -61,9 +63,10 @@ public class ApplicationTeamOrganisationRowViewModel {
         ApplicationTeamOrganisationRowViewModel that = (ApplicationTeamOrganisationRowViewModel) o;
 
         return new EqualsBuilder()
-                .append(id, that.id)
                 .append(lead, that.lead)
                 .append(editable, that.editable)
+                .append(organisationId, that.organisationId)
+                .append(inviteOrganisationId, that.inviteOrganisationId)
                 .append(name, that.name)
                 .append(applicants, that.applicants)
                 .isEquals();
@@ -72,7 +75,8 @@ public class ApplicationTeamOrganisationRowViewModel {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(id)
+                .append(organisationId)
+                .append(inviteOrganisationId)
                 .append(name)
                 .append(lead)
                 .append(applicants)

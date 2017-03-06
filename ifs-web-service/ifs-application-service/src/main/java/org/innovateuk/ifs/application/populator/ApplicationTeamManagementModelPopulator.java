@@ -20,9 +20,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Supplier;
 
 import static java.util.Collections.emptyList;
+import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
@@ -41,59 +41,65 @@ public class ApplicationTeamManagementModelPopulator {
     @Autowired
     private UserService userService;
 
-    public ApplicationTeamManagementViewModel populateModel(long applicationId, long organisationId, long loggedInUserId) {
+    public ApplicationTeamManagementViewModel populateModelByOrganisationId(long applicationId, long organisationId, long loggedInUserId) {
         OrganisationResource leadOrganisationResource = getLeadOrganisation(applicationId);
         boolean requestForLeadOrganisation = isRequestForLeadOrganisation(organisationId, leadOrganisationResource);
         return populateModel(applicationId, loggedInUserId, leadOrganisationResource, requestForLeadOrganisation,
-                organisationInviteSupplier(applicationId, organisationId));
+                getInviteOrganisationByOrganisationId(applicationId, organisationId).orElse(null));
     }
 
-    public ApplicationTeamManagementViewModel populateModel(long applicationId, String organisationName, long loggedInUserId) {
+    public ApplicationTeamManagementViewModel populateModelByInviteOrganisationId(long applicationId, long inviteOrganisationId, long loggedInUserId) {
         OrganisationResource leadOrganisationResource = getLeadOrganisation(applicationId);
-        boolean requestForLeadOrganisation = isRequestForLeadOrganisation(organisationName, leadOrganisationResource);
+        Optional<InviteOrganisationResource> inviteOrganisationResource = getInviteOrganisationByInviteOrganisationId(applicationId, inviteOrganisationId);
+        boolean requestForLeadOrganisation = inviteOrganisationResource.map(inviteOrganisationResourceValue ->
+                isRequestForLeadOrganisation(inviteOrganisationResourceValue, leadOrganisationResource)).orElse(false);
         return populateModel(applicationId, loggedInUserId, leadOrganisationResource, requestForLeadOrganisation,
-                organisationInviteSupplier(applicationId, organisationName));
+                inviteOrganisationResource.orElse(null));
     }
 
     private ApplicationTeamManagementViewModel populateModel(long applicationId, long loggedInUserId,
                                                              OrganisationResource leadOrganisationResource,
                                                              boolean requestForLeadOrganisation,
-                                                             Supplier<Optional<InviteOrganisationResource>> inviteOrganisationSupplier) {
-        Optional<InviteOrganisationResource> inviteOrganisationResourceOptional = inviteOrganisationSupplier.get();
-        List<ApplicationInviteResource> invites = inviteOrganisationResourceOptional.map(InviteOrganisationResource::getInviteResources).orElse(emptyList());
+                                                             InviteOrganisationResource inviteOrganisationResource) {
         if (requestForLeadOrganisation) {
-            return populateModelForLeadOrganisation(applicationId, loggedInUserId, leadOrganisationResource.getId(), leadOrganisationResource.getName(), invites);
+            return populateModelForLeadOrganisation(applicationId, loggedInUserId, leadOrganisationResource.getId(), leadOrganisationResource.getName(), inviteOrganisationResource);
         }
-        return inviteOrganisationResourceOptional.map(inviteOrganisationResource ->
-                populateModelForNonLeadOrganisation(applicationId, loggedInUserId, inviteOrganisationResource))
-                .orElseThrow(() -> new ObjectNotFoundException("Organisation invite not found", null));
+        return populateModelForNonLeadOrganisation(applicationId, loggedInUserId, inviteOrganisationResource);
     }
 
     private ApplicationTeamManagementViewModel populateModelForLeadOrganisation(long applicationId, long loggedInUserId,
                                                                                 long organisationId, String organisationName,
-                                                                                List<ApplicationInviteResource> applicationInviteResources) {
+                                                                                InviteOrganisationResource inviteOrganisationResource) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
+        // The InviteOrganisation id is null since there are no invites
         UserResource leadApplicant = getLeadApplicant(applicationResource);
         boolean userLeadApplicant = isUserLeadApplicant(loggedInUserId, leadApplicant);
+        List<ApplicationInviteResource> invites = ofNullable(inviteOrganisationResource)
+                .map(InviteOrganisationResource::getInviteResources).orElse(emptyList());
         return new ApplicationTeamManagementViewModel(applicationResource.getId(),
                 applicationResource.getApplicationDisplayName(),
                 organisationId,
+                ofNullable(inviteOrganisationResource).map(InviteOrganisationResource::getId).orElse(null),
                 organisationName,
                 true,
                 userLeadApplicant,
-                combineLists(getLeadApplicantViewModel(leadApplicant), simpleMap(applicationInviteResources,
-                        applicationInviteResource -> getApplicantViewModel(applicationInviteResource, userLeadApplicant)))
+                combineLists(getLeadApplicantViewModel(leadApplicant), simpleMap(invites, applicationInviteResource ->
+                        getApplicantViewModel(applicationInviteResource, userLeadApplicant)))
         );
     }
 
     private ApplicationTeamManagementViewModel populateModelForNonLeadOrganisation(long applicationId, long loggedInUserId,
                                                                                    InviteOrganisationResource inviteOrganisationResource) {
+        if (inviteOrganisationResource == null) {
+            throw new ObjectNotFoundException("Organisation invite not found", null);
+        }
         ApplicationResource applicationResource = applicationService.getById(applicationId);
         UserResource leadApplicant = getLeadApplicant(applicationResource);
         boolean userLeadApplicant = isUserLeadApplicant(loggedInUserId, leadApplicant);
         return new ApplicationTeamManagementViewModel(applicationResource.getId(),
                 applicationResource.getApplicationDisplayName(),
                 inviteOrganisationResource.getOrganisation(),
+                inviteOrganisationResource.getId(),
                 getOrganisationName(inviteOrganisationResource),
                 false,
                 userLeadApplicant,
@@ -120,17 +126,17 @@ public class ApplicationTeamManagementModelPopulator {
         return applicationService.getLeadOrganisation(applicationId);
     }
 
-    private Supplier<Optional<InviteOrganisationResource>> organisationInviteSupplier(long applicationId, long organisationId) {
-        return () -> getOrganisationInvites(applicationId).andOnSuccessReturn(inviteOrganisationResources ->
+    private Optional<InviteOrganisationResource> getInviteOrganisationByOrganisationId(long applicationId, long organisationId) {
+        return getOrganisationInvites(applicationId).andOnSuccessReturn(inviteOrganisationResources ->
                 inviteOrganisationResources.stream().filter(inviteOrganisationResource ->
                         inviteOrganisationResource.getOrganisation() != null && inviteOrganisationResource.getOrganisation() == organisationId).findFirst())
                 .getSuccessObjectOrThrowException();
     }
 
-    private Supplier<Optional<InviteOrganisationResource>> organisationInviteSupplier(long applicationId, String organisationName) {
-        return () -> getOrganisationInvites(applicationId).andOnSuccessReturn(inviteOrganisationResources ->
+    private Optional<InviteOrganisationResource> getInviteOrganisationByInviteOrganisationId(long applicationId, long inviteOrganisationId) {
+        return getOrganisationInvites(applicationId).andOnSuccessReturn(inviteOrganisationResources ->
                 inviteOrganisationResources.stream().filter(inviteOrganisationResource ->
-                        inviteOrganisationResource.getOrganisationName().equals(organisationName)).findFirst())
+                        inviteOrganisationResource.getId().equals(inviteOrganisationId)).findFirst())
                 .getSuccessObjectOrThrowException();
     }
 
@@ -156,7 +162,8 @@ public class ApplicationTeamManagementModelPopulator {
         return requestedOrganisationId == leadOrganisationResource.getId();
     }
 
-    private boolean isRequestForLeadOrganisation(String requestedOrganisationName, OrganisationResource leadOrganisationResource) {
-        return requestedOrganisationName.equals(leadOrganisationResource.getName());
+    private boolean isRequestForLeadOrganisation(InviteOrganisationResource inviteOrganisationResource, OrganisationResource leadOrganisationResource) {
+        return inviteOrganisationResource.getOrganisation() != null
+                && inviteOrganisationResource.getOrganisation().equals(leadOrganisationResource.getId());
     }
 }
