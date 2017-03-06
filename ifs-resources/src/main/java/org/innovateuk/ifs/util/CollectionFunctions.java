@@ -774,7 +774,7 @@ public final class CollectionFunctions {
         return sorted;
     }
 
-    public static final <R, S, T> SortedMap<T, List<R>> toSortedMap(List<S> orderedList, Function<S, T> keyTransform, Function<S, R> valueTransform) {
+    public static final <R, S, T> SortedMap<T, List<R>> toSortedMapWithList(List<S> orderedList, Function<S, T> keyTransform, Function<S, R> valueTransform) {
         SortedMap<T, List<R>> orderedMap = new TreeMap<>();
         if (orderedList != null) {
             orderedList.stream().forEachOrdered(s -> {
@@ -791,6 +791,13 @@ public final class CollectionFunctions {
         }
         return orderedMap;
     }
+
+    public static final <R, S, T> SortedMap<T, R> toSortedMap(List<S> orderedList, Function<S, T> keyTransform, Function<S, R> valueTransform) {
+        return orderedList.stream().collect(Collectors.toMap(keyTransform, valueTransform,
+                (v1,v2) ->{ throw new RuntimeException(String.format("Duplicate key for values %s and %s", v1, v2));},
+                TreeMap::new));
+    }
+
 
     public static <S, T> T unique(Collection<S> collectionToSearch, Function<S, T> property) {
         List<T> distinct = collectionToSearch.stream().map(property).distinct().collect(toList());
