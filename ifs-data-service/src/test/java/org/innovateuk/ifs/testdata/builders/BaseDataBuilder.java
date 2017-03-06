@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.testdata.builders;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.repository.QuestionRepository;
 import org.innovateuk.ifs.application.repository.SectionRepository;
@@ -9,6 +10,7 @@ import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.transactional.*;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.transactional.AssessmentService;
+import org.innovateuk.ifs.assessment.transactional.AssessorFormInputResponseService;
 import org.innovateuk.ifs.assessment.transactional.AssessorService;
 import org.innovateuk.ifs.assessment.transactional.CompetitionInviteService;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
@@ -48,6 +50,7 @@ import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.*;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -64,8 +67,7 @@ import java.util.function.Supplier;
 import static org.innovateuk.ifs.commons.BaseIntegrationTest.setLoggedInUser;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
-import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
+import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
@@ -140,6 +142,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected RejectionReasonService rejectionReasonService;
     protected UserProfileService userProfileService;
     protected ApplicationInnovationAreaService applicationInnovationAreaService;
+    protected AssessorFormInputResponseService assessorFormInputResponseService;
 
     public BaseDataBuilder(List<BiConsumer<Integer, T>> newActions, ServiceLocator serviceLocator) {
         super(newActions);
@@ -205,6 +208,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         this.publicContentRepository = serviceLocator.getBean(PublicContentRepository.class);
         this.contentEventRepository = serviceLocator.getBean(ContentEventRepository.class);
         this.contentGroupRepository = serviceLocator.getBean(ContentGroupRepository.class);
+        this.assessorFormInputResponseService = serviceLocator.getBean(AssessorFormInputResponseService.class);
         this.applicationInnovationAreaService = serviceLocator.getBean(ApplicationInnovationAreaService.class);
     }
 
@@ -275,6 +279,17 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
             Organisation organisation = retrieveOrganisationByName(organisationName);
             return organisationService.findById(organisation.getId()).getSuccessObjectOrThrowException();
         });
+    }
+
+    protected ProcessRole retrieveAssessorByApplicationNameAndUser(String applicationName, UserResource user) {
+        Application application = applicationRepository.findByName(applicationName).get(0);
+
+        return processRoleRepository.findByUserAndApplicationId(userRepository.findOne(user.getId()),
+                application.getId())
+                .stream()
+                .filter(x -> x.getRole().getName().equals(ASSESSOR.getName()))
+                .findFirst()
+                .get();
     }
 
     protected UserResource systemRegistrar() {

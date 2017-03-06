@@ -5,7 +5,9 @@ import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 
 public interface InviteOrganisationRestService {
 
-    RestResult<InviteOrganisationResource> findOne(Long id);
+    RestResult<InviteOrganisationResource> getById(Long id);
+
+    RestResult<InviteOrganisationResource> getByIdForAnonymousUserFlow(Long id);
 
     RestResult<Void> put(InviteOrganisationResource inviteOrganisation);
 }
