@@ -223,9 +223,6 @@ public class ApplicationTeamManagementController {
 
     private void checkUserHasAuthority(ApplicationResource applicationResource, long inviteOrganisationId, String organisationName, long loggedInUserId) {
         // TODO throw exception if user doesn't have authority
-        if (loggedInUserId != getLeadApplicantId(applicationResource)) {
-            throw new ForbiddenActionException("User must be Lead Applicant");
-        }
     }
 
     private void checkUserIsLeadApplicant(ApplicationResource applicationResource, long loggedInUserId) {
