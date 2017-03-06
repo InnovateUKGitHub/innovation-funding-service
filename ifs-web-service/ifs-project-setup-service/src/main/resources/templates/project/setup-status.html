@@ -13,7 +13,7 @@
 
     <div class="page-title">
         <th:block th:insert="fragments/elements :: project-title (projectId=${model.applicationId}, projectName=${model.projectName})" />
-        <h1 class="heading-xlarge">Project setup status</h1>
+        <h1 class="heading-xlarge">Project setup status TEST2</h1>
     </div>
 
     <th:block th:if="${model.projectComplete}">
@@ -70,7 +70,7 @@
                 <th:block th:include="project/fragments :: project-setup-status-indicator(${model.projectDetailsStatus.getSectionStatus()})"/>
             </li>
             <!--/* ========================= Monitoring Officer ========================= */-->
-            <li th:classappend="${model.monitoringOfficerAssigned ? 'complete' : 'read-only'}">
+            <li th:classappend="${model.monitoringOfficerAssigned ? 'complete' : 'waiting'}">
                 <div class="task">
                     <h2 class="heading-small">
                         <a th:if="${model.monitoringOfficerSection.accessible and not model.projectComplete}"

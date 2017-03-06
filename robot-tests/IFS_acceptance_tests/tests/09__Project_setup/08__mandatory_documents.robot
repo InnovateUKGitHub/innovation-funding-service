@@ -32,7 +32,7 @@ Non-lead partner cannot upload either document
     [Documentation]    INFUND-3011, INFUND-2621, INFUND-5258, INFUND-5806
     [Tags]
     Given the user navigates to the page    ${project_in_setup_page}
-    Then the user should see the element    jQuery=.ifs-progress-list > li.waiting:nth-of-type(7)
+    Then the user should see the element    jQuery=.progress-list > li.waiting:nth-of-type(7)
     And The user should see the text in the page    The lead partner of the consortium will need to upload the following
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
@@ -115,7 +115,7 @@ Non-lead partner can view both documents
     Given log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}    Passw0rd
     When the user navigates to the page    ${project_in_setup_page}
     Then the user moves focus to the element  jQuery=ul li:nth-child(7)
-    And the user should see the element   jQuery=#content > ul > li:nth-child(7) > div.progress-status
+    And the user should see the element   jQuery=#content > ul > li:nth-child(7) > .msg-progress
     And the user clicks the button/link    link=Other documents
     And the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
@@ -343,7 +343,7 @@ After rejection, non-lead partner cannot upload either document
     [Tags]
     [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}    Passw0rd
     Given the user navigates to the page    ${project_in_setup_page}
-    Then the user should see the element    jQuery=.ifs-progress-list > li.waiting:nth-of-type(7)
+    Then the user should see the element    jQuery=.progress-list > li.waiting:nth-of-type(7)
     And The user should see the text in the page    The lead partner of the consortium will need to upload the following
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
@@ -428,7 +428,7 @@ After rejection, non-lead partner can view both documents
     Given log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}    Passw0rd
     When the user navigates to the page    ${project_in_setup_page}
     Then the user moves focus to the element  jQuery=ul li:nth-child(7)
-    And the user should see the element   jQuery=#content > ul > li:nth-child(7) > div.progress-status
+    And the user should see the element   jQuery=#content > ul > li:nth-child(7) > div.msg-progress
     And the user clicks the button/link    link=Other documents
     And the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
