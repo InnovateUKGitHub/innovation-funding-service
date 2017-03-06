@@ -131,7 +131,8 @@ public class DefaultProjectFinanceModelManager implements FinanceModelManager {
         model.addAttribute("cost", costItem);
     }
 
-    public ProjectFinanceChangesViewModel getProjectFinanceChangesViewModel(boolean isInternal, ProjectResource project, OrganisationResource organisation, Long userId){
+    public ProjectFinanceChangesViewModel getProjectFinanceChangesViewModel(boolean isInternal, ProjectResource project,
+                                                                            OrganisationResource organisation, Long userId) {
         FinanceCheckEligibilityResource eligibilityOverview = financeCheckService.getFinanceCheckEligibilityDetails(project.getId(), organisation.getId());
         ProjectFinanceResource projectFinanceResource = projectFinanceService.getProjectFinance(project.getId(), organisation.getId());
         ApplicationFinanceResource appFinanceResource = applicationFinanceService.getApplicationFinanceDetails(userId, project.getApplication(), organisation.getId());

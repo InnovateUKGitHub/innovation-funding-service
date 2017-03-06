@@ -124,7 +124,7 @@ public class OrganisationFinanceHandlerTest {
         material.setCost(BigDecimal.valueOf(100));
         material.setItem("Screws");
         material.setQuantity(5);
-        materialCost =  handler.costItemToCost(material);
+        materialCost = handler.costItemToCost(material);
         materialCost.setQuestion(costTypeQuestion.get(FinanceRowType.MATERIALS));
         costs.add((ApplicationFinanceRow)materialCost);
 
@@ -139,7 +139,8 @@ public class OrganisationFinanceHandlerTest {
         Question question = newQuestion().withFormInputs(asList(formInput)).build();
 
         costTypeQuestion.put(costType, question);
-        when(questionService.getQuestionByCompetitionIdAndFormInputType(eq(competition.getId()), eq(costType.getFormInputType()))).thenReturn(serviceSuccess(question));
+        when(questionService.getQuestionByCompetitionIdAndFormInputType(eq(competition.getId()), eq(costType.getFormInputType())))
+                .thenReturn(serviceSuccess(question));
     }
 
     @Test
@@ -227,10 +228,15 @@ public class OrganisationFinanceHandlerTest {
 
     @Test
     public void testCostToCostItem() throws Exception {
-        FinanceRowItem costItem = handler.costToCostItem((ApplicationFinanceRow) materialCost);
+        final FinanceRowItem costItem = handler.costToCostItem((ApplicationFinanceRow) materialCost);
         assertEquals(costItem.getTotal(), materialCost.getCost().multiply(new BigDecimal(materialCost.getQuantity())));
         assertEquals(costItem.getName(), materialCost.getName());
         assertEquals(costItem.getId(), materialCost.getId());
+    }
+
+    @Test
+    public void testGetProjectOrganisationFinanceChanges() throws Exception {
+    //TODO
     }
 
 
