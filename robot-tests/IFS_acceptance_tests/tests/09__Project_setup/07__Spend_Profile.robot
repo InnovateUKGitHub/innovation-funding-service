@@ -52,6 +52,8 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               INFUND-7409 PM is redirected to the wrong screen when saving their spend profile
 ...
 ...               INFUND-5899 As an internal user I want to be able to use the breadcrumb navigation consistently throughout Project Setup so I can return to the previous page as appropriate
+...
+...               INFUND-5549 As a Competitions team member I want to see the Innovation Lead  listed in the Spend profile approval page so that I can confirm who is required to approve the Spend Profiles
 Suite Setup       all previous sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -541,6 +543,7 @@ Project Finance is able to see Spend Profile approval page
     And the user should see the element    jQuery=#content div.grid-row div.column-third.alignright.extra-margin h2:contains("Spend profile")
     And the user should not see the element    jQuery=h2:contains("The spend profile has been approved")
     And the user should not see the element    jQuery=h2:contains("The spend profile has been rejected")
+    And the user should see the text in the page  Innovation Lead
     And the user should see the text in the page    Peter Freeman
     When the user should see the text in the page    Project spend profile
     Then the user clicks the button/link             link=${Katz_Name}-spend-profile.csv
@@ -553,13 +556,15 @@ Project Finance is able to see Spend Profile approval page
     And the user should see the element    jQuery=#content .button.button.button-warning.large:contains("Reject")
 
 Comp Admin is able to see Spend Profile approval page
-    [Documentation]    INFUND-2638, INFUND-5617, INFUND-6226
+    [Documentation]    INFUND-2638, INFUND-5617, INFUND-6226, INFUND-5549
     [Tags]
     [Setup]    Log in as a different user    &{Comp_admin1_credentials}
     Given the user navigates to the page    ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/spend-profile/approval
     Then the user should see the element    jQuery=#content div.grid-row div.column-third.alignright.extra-margin h2:contains("Spend profile")
     And the element should be disabled    jQuery=#accept-profile
     And the user should see the element    jQuery=#content .button.button.button-warning.large:contains("Reject")
+    And the user should see the text in the page  Innovation Lead
+    And the user should see the text in the page  Peter Freeman
     When the user clicks the button/link    jQuery=#content .button.button.button-warning.large:contains("Reject")
     Then the user should see the text in the page    Before taking this action please contact the project manager
     When the user clicks the button/link    jQuery=.modal-reject-profile button:contains("Cancel")
@@ -697,12 +702,14 @@ Lead partner can send the combined spend profile
 
 
 Project Finance is able to Approve Spend Profile
-    [Documentation]    INFUND-2638, INFUND-5617, INFUND-5507
+    [Documentation]    INFUND-2638, INFUND-5617, INFUND-5507, INFUND-5549
     [Tags]    HappyPath
     [Setup]    log in as a different user    &{internal_finance_credentials}
     Given the user navigates to the page    ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/spend-profile/approval
     When the user selects the checkbox      approvedByLeadTechnologist
     Then the user should see the element    jQuery=button:contains("Approved")
+    And the user should see the text in the page  Innovation Lead
+    And the user should see the text in the page  Peter Freeman
     When the user clicks the button/link    jQuery=button:contains("Approved")
     Then the user should see the text in the page  Approved by Innovate UK
     When the user clicks the button/link    jQuery=.modal-accept-profile button:contains("Cancel")

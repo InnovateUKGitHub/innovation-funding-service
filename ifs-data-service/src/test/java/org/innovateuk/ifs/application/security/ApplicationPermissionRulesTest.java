@@ -117,6 +117,14 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
+    public void testUsersConnectedToTheApplicationCanViewInnovationAreas() {
+        assertTrue(rules.usersConnectedToTheApplicationCanViewInnovationAreas(applicationResource1, leadOnApplication1));
+        assertTrue(rules.usersConnectedToTheApplicationCanViewInnovationAreas(applicationResource2, user2));
+        assertFalse(rules.usersConnectedToTheApplicationCanViewInnovationAreas(applicationResource1, user2));
+        assertFalse(rules.usersConnectedToTheApplicationCanViewInnovationAreas(applicationResource2, leadOnApplication1));
+    }
+
+    @Test
     public void testInternalUsersCanViewApplications() {
         assertTrue(rules.internalUsersCanViewApplications(applicationResource1, compAdmin));
         assertTrue(rules.internalUsersCanViewApplications(applicationResource1, projectFinanceUser()));
@@ -167,6 +175,12 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     public void consortiumCanSeeTheResearchParticipantPercentageTest() {
         assertTrue(rules.consortiumCanSeeTheResearchParticipantPercentage(applicationResource1, leadOnApplication1));
         assertFalse(rules.consortiumCanSeeTheResearchParticipantPercentage(applicationResource1, compAdmin));
+    }
+
+    @Test
+    public void leadApplicantCanUpdateTheInnovationArea() {
+        assertTrue(rules.leadApplicantCanUpdateApplicationResource(applicationResource1, leadOnApplication1));
+        assertFalse(rules.leadApplicantCanUpdateApplicationResource(applicationResource1, user2));
     }
 
     @Test
