@@ -17,9 +17,13 @@ function coloredEcho() {
         white|*) color=7 ;; # white or invalid color
        esac
     fi
-    tput setaf ${color};
-    echo ${exp};
-    tput sgr0;
+    if [[ $- == *i* ]]; then
+        tput setaf ${color};
+        echo ${exp};
+        tput sgr0;
+    else
+        echo ${exp}
+    fi
 }
 
 function section() {
@@ -193,8 +197,8 @@ while getopts ":p :q :h :t :r :c :n :w :d: :I: :E:" opt ; do
         ;;
         r)
 		    rerunFailed=1
-	;;
-	d)
+	    ;;
+	    d)
             testDirectory="$OPTARG"
             parallel=0
         ;;
@@ -221,7 +225,7 @@ while getopts ":p :q :h :t :r :c :n :w :d: :I: :E:" opt ; do
         ;;
         :)
             case $OPTARG in
-		    d)
+		        d)
                  coloredEcho "=> Option -$OPTARG requires the location of the robottest files relative to ${scriptDir}." red >&2
                 ;;
                 *)

@@ -62,6 +62,7 @@ import static org.innovateuk.ifs.testdata.CsvUtils.*;
 import static org.innovateuk.ifs.testdata.builders.AssessmentDataBuilder.newAssessmentData;
 import static org.innovateuk.ifs.testdata.builders.AssessorDataBuilder.newAssessorData;
 import static org.innovateuk.ifs.testdata.builders.AssessorInviteDataBuilder.newAssessorInviteData;
+import static org.innovateuk.ifs.testdata.builders.AssessorResponseDataBuilder.newAssessorResponseData;
 import static org.innovateuk.ifs.testdata.builders.BaseDataBuilder.COMP_ADMIN_EMAIL;
 import static org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder.newCompetitionData;
 import static org.innovateuk.ifs.testdata.builders.CompetitionFunderDataBuilder.newCompetitionFunderData;
@@ -137,6 +138,7 @@ public class GenerateTestData extends BaseIntegrationTest {
     private AssessorDataBuilder assessorUserBuilder;
     private AssessorInviteDataBuilder assessorInviteUserBuilder;
     private AssessmentDataBuilder assessmentDataBuilder;
+    private AssessorResponseDataBuilder assessorResponseDataBuilder;
     private ProjectDataBuilder projectDataBuilder;
 
     private static List<OrganisationLine> organisationLines;
@@ -200,6 +202,8 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     private static List<AssessmentLine> assessmentLines;
 
+    private static List<AssessorResponseLine> assessorResponseLines;
+
     private static List<ProjectLine> projectLines;
 
     @Before
@@ -222,6 +226,7 @@ public class GenerateTestData extends BaseIntegrationTest {
         questionResponseLines = readApplicationQuestionResponses();
         applicationFinanceLines = readApplicationFinances();
         assessmentLines = readAssessments();
+        assessorResponseLines = readAssessorResponses();
         projectLines = readProjects();
     }
 
@@ -264,6 +269,7 @@ public class GenerateTestData extends BaseIntegrationTest {
         assessorUserBuilder = newAssessorData(serviceLocator);
         assessorInviteUserBuilder = newAssessorInviteData(serviceLocator);
         assessmentDataBuilder = newAssessmentData(serviceLocator);
+        assessorResponseDataBuilder = newAssessorResponseData(serviceLocator);
         projectDataBuilder = newProjectData(serviceLocator);
         publicContentGroupDataBuilder = newPublicContentGroupDataBuilder(serviceLocator);
         publicContentDateDataBuilder = newPublicContentDateDataBuilder(serviceLocator);
@@ -283,6 +289,7 @@ public class GenerateTestData extends BaseIntegrationTest {
         createAssessors();
         createNonRegisteredAssessorInvites();
         createAssessments();
+        createAssessorResponses();
         createProjects();
 
 //        CSVWriter writer = new CSVWriter(new FileWriter(new File("/tmp/applications.csv")));
@@ -378,6 +385,21 @@ public class GenerateTestData extends BaseIntegrationTest {
     private void createAssessment(AssessmentLine line) {
         assessmentDataBuilder.withAssessmentData(line.assessorEmail, line.applicationName, line.rejectReason, line
                 .rejectComment, line.state).build();
+    }
+
+    private void createAssessorResponses() {
+        assessorResponseLines.forEach(this::createAssessorResponse);
+    }
+
+    private void createAssessorResponse(AssessorResponseLine line) {
+        assessorResponseDataBuilder.withAssessorResponseData(line.competitionName,
+                line.applicationName,
+                line.assessorEmail,
+                line.shortName,
+                line.description,
+                line.isResearchCategory,
+                line.value)
+            .build();
     }
 
     private void createCompetitionFunders() {

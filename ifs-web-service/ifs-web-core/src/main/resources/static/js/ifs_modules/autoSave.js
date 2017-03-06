@@ -58,25 +58,35 @@ IFS.core.autoSave = (function () {
       // traversing from field as we might get the situation in the future where we have 2 different type autosaves on 1 page within two seperate <form>'s
       var applicationId = jQuery('#application_id').val()
       var saveType = form.attr('data-autosave')
+      var digitRegex = /\d+/
       var jsonObj
       var fieldInfo
       var dateField
+      var dateValue
       switch (saveType) {
         case 'application':
           dateField = field.is('[data-date]')
           if (dateField) {
             fieldInfo = field.closest('.date-group').find('input[type="hidden"]')
+            dateValue = fieldInfo.hasClass('day') ? field.attr('data-date').substring(2) : field.attr('data-date')
             jsonObj = {
               applicationId: applicationId,
-              value: field.attr('data-date'),
+              value: dateValue,
               formInputId: fieldInfo.prop('id'),
               fieldName: fieldInfo.prop('name')
+            }
+          } else if (!IFS.core.autoSave.isIdAutoSaveApplicantField(field) && digitRegex.test(field.prop('id'))) {
+            jsonObj = {
+              applicationId: applicationId,
+              value: field.val(),
+              formInputId: field.prop('id').match(digitRegex)[0],
+              fieldName: field.prop('name')
             }
           } else {
             jsonObj = {
               applicationId: applicationId,
               value: field.val(),
-              formInputId: field.prop('id').replace('form-textarea-', ''),
+              formInputId: field.prop('id'),
               fieldName: field.prop('name')
             }
           }
@@ -228,6 +238,12 @@ IFS.core.autoSave = (function () {
         errorMessage = 'Something went wrong when saving your data'
       }
       return errorMessage
+    },
+    isIdAutoSaveApplicantField: function (field) {
+      var id = field.prop('id')
+      return id.indexOf('application') !== -1 ||
+       id.indexOf('financePosition') !== -1 ||
+       id.indexOf('cost') !== -1
     }
   }
 })()
