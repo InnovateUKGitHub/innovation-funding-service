@@ -16,18 +16,15 @@ else
     HOST=ifs-local
 fi
 
+SVC_ACCOUNT_TOKEN="kuTo-yMsDdidRJkmWEllai4ywNG9q1QS7W1EXFhBzNk"
+SVC_ACCOUNT_CLAUSE="--namespace=${PROJECT} --token=${SVC_ACCOUNT_TOKEN} --server=https://console.prod.ifs-test-clusters.com:443 --insecure-skip-tls-verify=true"
+
 ROUTE_DOMAIN=apps.$HOST
 REGISTRY=docker-registry-default.apps.prod.ifs-test-clusters.com
 #REGISTRY=docker-registry-default.apps.dev.ifs-test-clusters.com
 INTERNAL_REGISTRY=172.30.80.28:5000
 
-SVC_ACCOUNT_TOKEN="kuTo-yMsDdidRJkmWEllai4ywNG9q1QS7W1EXFhBzNk"
 REGISTRY_TOKEN=${SVC_ACCOUNT_TOKEN}
-
-if [[ ${TARGET} == "production" ]]
-then
-    SVC_ACCOUNT_CLAUSE="--namespace=${PROJECT} --token=${SVC_ACCOUNT_TOKEN} --server=https://console.prod.ifs-test-clusters.com:443 --insecure-skip-tls-verify=true"
-fi
 
 
 echo "Deploying the $PROJECT Openshift project"
@@ -135,9 +132,9 @@ function cloneConfig() {
 }
 
 function createProject() {
-    until oc new-project $PROJECT  ${SVC_ACCOUNT_CLAUSE}
+    until oc new-project $PROJECT ${SVC_ACCOUNT_CLAUSE}
     do
-      oc delete project $PROJECT  ${SVC_ACCOUNT_CLAUSE} || true
+      oc delete project $PROJECT ${SVC_ACCOUNT_CLAUSE} || true
       sleep 10
     done
 }
