@@ -20,10 +20,12 @@ Create a new application
     the user clicks the button/link    jQuery=.button:contains("Apply now")
     the user clicks the button/link    jQuery=Label:contains("Yes I want to create a new application")
     the user clicks the button/link    jQuery=.button:contains("Continue")
-    the user clicks the button/link    jquery=li:nth-child(1) button:contains('Add another person')
-    The user should see the element    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1)
-    The user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    ${NAME}
-    The user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input    ${EMAIL}
+    the user clicks the button/link    jQuery=a:contains("Update Empire Ltd")
+    the user clicks the button/link    jQuery=button:contains("Add new applicant")
+    The user enters text to a text field    name=applicants[0].name    ${NAME}
+    The user enters text to a text field    name=applicants[0].email   ${EMAIL}
+    the user clicks the button/link    jQuery=a:contains("Update organisation")
+    the user clicks the button/link    jQuery=button:contains("Update organisation")
     the user clicks the button/link    jQuery=a:contains("Begin application")
     the user clicks the button/link    link=Application details
     the user enters text to a text field    id=application_details-title    ${APPLICATION NAME}
