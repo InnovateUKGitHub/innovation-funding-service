@@ -15,7 +15,7 @@ public class FinanceChecksNotesAddNoteForm extends BaseBindingResultTarget {
     private String note;
 
     @NotBlank(message = "{validation.field.must.not.be.blank}")
-    @Size(max = FinanceChecksNotesFormConstraints.MAX_TITLE_CHARACTERS, message = "{validation.field.max.word.count}")
+    @Size(max = FinanceChecksNotesFormConstraints.MAX_TITLE_CHARACTERS, message = "{validation.field.too.many.characters}")
     private String noteTitle;
 
     private MultipartFile attachment;
