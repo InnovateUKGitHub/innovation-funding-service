@@ -19,7 +19,7 @@
 
             <p>Add organisations to your application team. If you wish to remove a sole member of an organisation, you must add a replacement member first.</p>
 
-            <form th:action="@{/application/{applicationId}/team/addOrganisation(applicationId=${model.applicationId})}" th:object="${form}" method="post" novalidate="novalidate">
+            <form th:action="@{/application/{applicationId}/team/addOrganisation(applicationId=${model.applicationId})}" th:object="${form}" method="post">
                 <button class="hidden-save" type="submit" aria-hidden="true" tabindex="-1">save form</button>
 
                 <div class="error-summary" th:if="${#fields.hasErrors('*')}">
