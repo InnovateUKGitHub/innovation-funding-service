@@ -22,13 +22,11 @@ REGISTRY=docker-registry-default.apps.prod.ifs-test-clusters.com
 INTERNAL_REGISTRY=172.30.80.28:5000
 
 SVC_ACCOUNT_TOKEN="kuTo-yMsDdidRJkmWEllai4ywNG9q1QS7W1EXFhBzNk"
+REGISTRY_TOKEN=${SVC_ACCOUNT_TOKEN}
 
 if [[ ${TARGET} == "production" ]]
 then
     SVC_ACCOUNT_CLAUSE="--namespace=${PROJECT} --token=${SVC_ACCOUNT_TOKEN} --server=https://console.prod.ifs-test-clusters.com:443 --insecure-skip-tls-verify=true"
-    REGISTRY_TOKEN=${SVC_ACCOUNT_TOKEN}
-else
-    REGISTRY_TOKEN=$(oc whoami -t)
 fi
 
 
@@ -102,12 +100,12 @@ function deploy() {
         oc create -f os-files-tmp/shib/5-shib.yml ${SVC_ACCOUNT_CLAUSE}
         oc create -f os-files-tmp/shib/prod/56-idp.yml ${SVC_ACCOUNT_CLAUSE}
     else
-        oc create -f os-files-tmp/imap/
-        oc create -f os-files-tmp/mysql/
-        oc create -f os-files-tmp/shib/
-        oc create -f os-files-tmp/gluster/
-        oc create -f os-files-tmp/spring-admin/
-        oc create -f os-files-tmp/
+        oc create -f os-files-tmp/imap/ ${SVC_ACCOUNT_CLAUSE}
+        oc create -f os-files-tmp/mysql/ ${SVC_ACCOUNT_CLAUSE}
+        oc create -f os-files-tmp/shib/ ${SVC_ACCOUNT_CLAUSE}
+        oc create -f os-files-tmp/gluster/ ${SVC_ACCOUNT_CLAUSE}
+        oc create -f os-files-tmp/spring-admin/ ${SVC_ACCOUNT_CLAUSE}
+        oc create -f os-files-tmp/ ${SVC_ACCOUNT_CLAUSE}
     fi
 }
 
@@ -124,7 +122,7 @@ function blockUntilServiceIsUp() {
 }
 
 function shibInit() {
-     oc rsh $(oc get pods | awk '/ldap/ { print $1 }') /usr/local/bin/ldap-sync-from-ifs-db.sh ifs-database
+     oc rsh ${SVC_ACCOUNT_CLAUSE} $(oc get pods  ${SVC_ACCOUNT_CLAUSE} | awk '/ldap/ { print $1 }') /usr/local/bin/ldap-sync-from-ifs-db.sh ifs-database
 }
 
 function cleanUp() {
@@ -137,9 +135,9 @@ function cloneConfig() {
 }
 
 function createProject() {
-    until oc new-project $PROJECT
+    until oc new-project $PROJECT  ${SVC_ACCOUNT_CLAUSE}
     do
-      oc delete project $PROJECT || true
+      oc delete project $PROJECT  ${SVC_ACCOUNT_CLAUSE} || true
       sleep 10
     done
 }
