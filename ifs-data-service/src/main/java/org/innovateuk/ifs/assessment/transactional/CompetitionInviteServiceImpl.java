@@ -46,7 +46,6 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 
-import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
@@ -226,21 +225,34 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
 
     @Override
-    public ServiceResult<List<AssessorCreatedInviteResource>> getCreatedInvites(long competitionId) {
-        return serviceSuccess(simpleMap(competitionInviteRepository.getByCompetitionIdAndStatus(competitionId, CREATED), competitionInvite -> {
-            AssessorCreatedInviteResource assessorCreatedInvite = new AssessorCreatedInviteResource();
-            assessorCreatedInvite.setName(competitionInvite.getName());
-            assessorCreatedInvite.setInnovationAreas(getInnovationAreasForInvite(competitionInvite));
-            assessorCreatedInvite.setCompliant(isUserCompliant(competitionInvite));
-            assessorCreatedInvite.setEmail(competitionInvite.getEmail());
-            assessorCreatedInvite.setInviteId(competitionInvite.getId());
+    public ServiceResult<AssessorCreatedInvitePageResource> getCreatedInvites(long competitionId, Pageable pageable) {
+        Page<CompetitionInvite> pagedResult = competitionInviteRepository.getByCompetitionIdAndStatus(competitionId, CREATED, pageable);
 
-            if (competitionInvite.getUser() != null) {
-                assessorCreatedInvite.setId(competitionInvite.getUser().getId());
-            }
+        List<AssessorCreatedInviteResource> createdInvites = simpleMap(
+                pagedResult.getContent(),
+                competitionInvite -> {
+                    AssessorCreatedInviteResource assessorCreatedInvite = new AssessorCreatedInviteResource();
+                    assessorCreatedInvite.setName(competitionInvite.getName());
+                    assessorCreatedInvite.setInnovationAreas(getInnovationAreasForInvite(competitionInvite));
+                    assessorCreatedInvite.setCompliant(isUserCompliant(competitionInvite));
+                    assessorCreatedInvite.setEmail(competitionInvite.getEmail());
+                    assessorCreatedInvite.setInviteId(competitionInvite.getId());
 
-            return assessorCreatedInvite;
-        }));
+                    if (competitionInvite.getUser() != null) {
+                        assessorCreatedInvite.setId(competitionInvite.getUser().getId());
+                    }
+
+                    return assessorCreatedInvite;
+                }
+        );
+
+        return serviceSuccess(new AssessorCreatedInvitePageResource(
+                pagedResult.getTotalElements(),
+                pagedResult.getTotalPages(),
+                createdInvites,
+                pagedResult.getNumber(),
+                pagedResult.getSize()
+        ));
     }
 
     @Override
@@ -330,7 +342,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
         if (participant.getStatus() == REJECTED) {
             details = format("Invite declined as %s", lowerCase(participant.getRejectionReason().getReason()));
-        } else if ( participant.getStatus() == PENDING) {
+        } else if (participant.getStatus() == PENDING) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
             if (participant.getInvite().getSentOn() != null) {
                 details = format("Invite sent: %s", participant.getInvite().getSentOn().format(formatter));
@@ -341,7 +353,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     private ServiceResult<InnovationArea> getInnovationArea(long innovationCategoryId) {
-        return find( innovationAreaRepository.findOne(innovationCategoryId), notFoundError(Category.class, innovationCategoryId, INNOVATION_AREA));
+        return find(innovationAreaRepository.findOne(innovationCategoryId), notFoundError(Category.class, innovationCategoryId, INNOVATION_AREA));
     }
 
     private ServiceResult<CompetitionInvite> inviteUserToCompetition(String name, String email, Competition competition, InnovationArea innovationArea) {
@@ -467,8 +479,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                         return participant;
                     }
             );
-        }
-        else {
+        } else {
             return serviceSuccess(participant);
         }
     }

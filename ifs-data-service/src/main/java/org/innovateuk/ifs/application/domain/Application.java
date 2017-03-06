@@ -277,8 +277,8 @@ public class Application implements ProcessActivity {
         this.formInputResponses = formInputResponses;
     }
 
-    public void addFormInputResponse(FormInputResponse formInputResponse) {
-        Optional<FormInputResponse> existing = getFormInputResponseByFormInput(formInputResponse.getFormInput());
+    public void addFormInputResponse(FormInputResponse formInputResponse, ProcessRole processRole) {
+        Optional<FormInputResponse> existing = getFormInputResponseByFormInputAndProcessRole(formInputResponse.getFormInput(), processRole);
         if (existing.isPresent()) {
             existing.get().setFileEntry(formInputResponse.getFileEntry());
             existing.get().setUpdateDate(formInputResponse.getUpdateDate());
@@ -289,9 +289,17 @@ public class Application implements ProcessActivity {
         }
     }
 
-    public Optional<FormInputResponse> getFormInputResponseByFormInput(FormInput formInput) {
-        return formInputResponses.stream().filter(fir -> formInput.equals(fir.getFormInput())).findFirst();
+    public Optional<FormInputResponse> getFormInputResponseByFormInputAndProcessRole(FormInput formInput, ProcessRole processRole) {
+        if (formInput.getQuestion().getMultipleStatuses()) {
+            return formInputResponses.stream().filter(fir -> formInput.equals(fir.getFormInput())
+                    && fir.getUpdatedBy().getOrganisationId().equals(processRole.getOrganisationId())).findFirst();
+        } else {
+            return formInputResponses.stream().filter(fir -> formInput.equals(fir.getFormInput())).findFirst();
+        }
     }
+
+
+
 
     public BigDecimal getCompletion() {
         return completion;
