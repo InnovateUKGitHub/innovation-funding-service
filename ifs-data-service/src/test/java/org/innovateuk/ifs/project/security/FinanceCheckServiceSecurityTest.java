@@ -24,6 +24,7 @@ import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStat
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.UserRoleType.FINANCE_CONTACT;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.verify;
@@ -62,6 +63,17 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
     @Test
     public void testGetFinanceCheckSummary(){
         assertRolesCanPerform(() -> classUnderTest.getFinanceCheckSummary(1L), PROJECT_FINANCE);
+    }
+
+    @Test
+    public void testGetFinanceCheckOverview() {
+        assertAccessDenied(
+                () -> classUnderTest.getFinanceCheckOverview(1L),
+                () -> {
+                    verify(projectFinancePermissionRules).financeContactsCanSeeTheProjectFinanceOverviewsForTheirProject(isA(Long.class), isA(UserResource.class));
+                    verify(projectFinancePermissionRules).internalUsersCanSeeTheProjectFinanceOverviewsForAllProjects(isA(Long.class), isA(UserResource.class));
+                }
+        );
     }
 
     @Test
