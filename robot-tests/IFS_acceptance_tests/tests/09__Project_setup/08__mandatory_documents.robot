@@ -32,7 +32,7 @@ Non-lead partner cannot upload either document
     [Documentation]    INFUND-3011, INFUND-2621, INFUND-5258, INFUND-5806
     [Tags]
     Given the user navigates to the page    ${project_in_setup_page}
-    Then the user should see the element    jQuery=.progress-list > li.waiting:nth-of-type(7)
+    Then the user should see the element    jQuery=.progress-list ul > li.waiting:nth-of-type(7)
     And The user should see the text in the page    The lead partner of the consortium will need to upload the following
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
@@ -343,7 +343,7 @@ After rejection, non-lead partner cannot upload either document
     [Tags]
     [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}    Passw0rd
     Given the user navigates to the page    ${project_in_setup_page}
-    Then the user should see the element    jQuery=.progress-list > li.waiting:nth-of-type(7)
+    Then the user should see the element    jQuery=.progress-list ul > li.waiting:nth-of-type(7)
     And The user should see the text in the page    The lead partner of the consortium will need to upload the following
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
