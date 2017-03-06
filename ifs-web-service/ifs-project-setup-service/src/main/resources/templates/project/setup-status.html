@@ -128,7 +128,7 @@
                 <th:block th:include="project/fragments :: project-setup-status-indicator(${model.financeChecksStatus.getSectionStatus()})"/>
             </li>
             <!--/* ========================= Spend Profile ========================= */-->
-            <li th:class="${(model.spendProfileSection.notAccessible ? 'read-only' : '')}" th:classappend="${model.spendProfileStatus.getSectionStatus()}">
+            <li th:class="${model.spendProfileSection.notAccessible} ? 'read-only'" th:classappend="${model.spendProfileStatus.getSectionStatus()}">
                 <div class="task">
                     <h2 class="heading-small">
                         <a th:if="${model.spendProfileSection.accessible}"
@@ -142,7 +142,7 @@
                           th:if="${model.spendProfileSection.accessible}"/>
             </li>
             <!--/* ========================= Other documents ========================= */-->
-            <li th:class="${(model.otherDocumentsSection.notAccessible ? 'read-only' : '')}" th:classappend="${model.otherDocumentsStatus.getSectionStatus()}">
+            <li th:class="${model.otherDocumentsSection.notAccessible} ? 'read-only'" th:classappend="${model.otherDocumentsStatus.getSectionStatus()}">
                 <div class="task">
                     <h2 class="heading-small">
                         <a th:if="${model.otherDocumentsSection.accessible and not model.projectComplete}"
@@ -169,7 +169,7 @@
             </li>
             <!--/* ========================= GOL ========================= */-->
             <!--/* TODO extra case to be outlined before GOL has been sent by internal user  */-->
-            <li th:class="${(model.grantOfferLetterSection.notAccessible ? 'read-only' : '')}" th:classappend="${model.grantOfferLetterStatus.getSectionStatus()}">
+            <li th:class="${model.grantOfferLetterSection.notAccessible} ? 'read-only'" th:classappend="${model.grantOfferLetterStatus.getSectionStatus()}">
                 <div class="task">
                     <h2 class="heading-small">
                         <a th:if="${model.grantOfferLetterSection.accessible}"
