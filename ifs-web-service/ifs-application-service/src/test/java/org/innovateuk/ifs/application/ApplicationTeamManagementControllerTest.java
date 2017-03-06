@@ -29,6 +29,7 @@ import java.util.Map;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.constant.ApplicationStatusConstants.OPEN;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -250,7 +251,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         ApplicationInviteResource applicationInvite = new ApplicationInviteResource(applicants.get(0).getName(), applicants.get(0).getEmail(), applicationResource.getId());
         InviteResultsResource inviteResultsResource = new InviteResultsResource();
         inviteResultsResource.setInvitesSendSuccess(1);
-        when(inviteRestService.createInvitesByOrganisation(organisation.getId(), asList(applicationInvite))).thenReturn(restSuccess(inviteResultsResource));
+        when(inviteRestService.createInvitesByOrganisation(organisation.getId(), singletonList(applicationInvite))).thenReturn(restSuccess(inviteResultsResource));
 
         setLoggedInUser(leadApplicant);
         MvcResult mockResult = mockMvc.perform(post("/application/{applicationId}/team/update?organisation={organisationId}", applicationResource.getId(), organisation.getId())
@@ -264,7 +265,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
 
         InOrder inOrder = inOrder(applicationService, inviteRestService);
         inOrder.verify(applicationService).getById(applicationResource.getId());
-        inOrder.verify(inviteRestService).createInvitesByOrganisation(organisation.getId(), asList(applicationInvite));
+        inOrder.verify(inviteRestService).createInvitesByOrganisation(organisation.getId(), singletonList(applicationInvite));
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -287,7 +288,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         ApplicationInviteResource applicationInvite = new ApplicationInviteResource(applicants.get(0).getName(), applicants.get(0).getEmail(), applicationResource.getId());
         InviteResultsResource inviteResultsResource = new InviteResultsResource();
         inviteResultsResource.setInvitesSendSuccess(1);
-        when(inviteRestService.createInvitesByInviteOrganisation(organisation.getName(), asList(applicationInvite))).thenReturn(restSuccess(inviteResultsResource));
+        when(inviteRestService.createInvitesByInviteOrganisation(organisation.getName(), singletonList(applicationInvite))).thenReturn(restSuccess(inviteResultsResource));
 
         setLoggedInUser(leadApplicant);
         MvcResult mockResult = mockMvc.perform(post("/application/{applicationId}/team/update?organisationName={organisationName}", applicationResource.getId(), organisation.getName())
@@ -301,7 +302,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
 
         InOrder inOrder = inOrder(applicationService, inviteRestService);
         inOrder.verify(applicationService).getById(applicationResource.getId());
-        inOrder.verify(inviteRestService).createInvitesByInviteOrganisation(organisation.getName(), asList(applicationInvite));
+        inOrder.verify(inviteRestService).createInvitesByInviteOrganisation(organisation.getName(), singletonList(applicationInvite));
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -435,7 +436,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         ApplicationInviteResource applicationInvite = new ApplicationInviteResource(applicants.get(0).getName(), applicants.get(0).getEmail(), applicationResource.getId());
         InviteResultsResource inviteResultsResource = new InviteResultsResource();
         inviteResultsResource.setInvitesSendSuccess(1);
-        when(inviteRestService.createInvitesByOrganisation(organisation.getId(), asList(applicationInvite))).thenReturn(restSuccess(inviteResultsResource));
+        when(inviteRestService.createInvitesByOrganisation(organisation.getId(), singletonList(applicationInvite))).thenReturn(restSuccess(inviteResultsResource));
 
         setLoggedInUser(leadApplicant);
         MvcResult mockResult = mockMvc.perform(post("/application/{applicationId}/team/update/?organisation={organisationId}&addApplicant=true", applicationResource.getId(), organisation.getId())
@@ -470,7 +471,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         ApplicationInviteResource applicationInvite = new ApplicationInviteResource(applicants.get(0).getName(), applicants.get(0).getEmail(), applicationResource.getId());
         InviteResultsResource inviteResultsResource = new InviteResultsResource();
         inviteResultsResource.setInvitesSendSuccess(1);
-        when(inviteRestService.createInvitesByOrganisation(organisation.getId(), asList(applicationInvite))).thenReturn(restSuccess(inviteResultsResource));
+        when(inviteRestService.createInvitesByOrganisation(organisation.getId(), singletonList(applicationInvite))).thenReturn(restSuccess(inviteResultsResource));
 
         setLoggedInUser(leadApplicant);
         MvcResult mockResult = mockMvc.perform(post("/application/{applicationId}/team/update/?organisationName={organisationName}&addApplicant=true", applicationResource.getId(), organisation.getName())
@@ -505,7 +506,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         ApplicationInviteResource applicationInvite = new ApplicationInviteResource(applicants.get(0).getName(), applicants.get(0).getEmail(), applicationResource.getId());
         InviteResultsResource inviteResultsResource = new InviteResultsResource();
         inviteResultsResource.setInvitesSendSuccess(1);
-        when(inviteRestService.createInvitesByOrganisation(organisation.getId(), asList(applicationInvite))).thenReturn(restSuccess(inviteResultsResource));
+        when(inviteRestService.createInvitesByOrganisation(organisation.getId(), singletonList(applicationInvite))).thenReturn(restSuccess(inviteResultsResource));
 
         setLoggedInUser(leadApplicant);
         MvcResult mockResult = mockMvc.perform(post("/application/{applicationId}/team/update/?organisation={organisationId}&removeApplicant=0", applicationResource.getId(), organisation.getId())
@@ -540,7 +541,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         ApplicationInviteResource applicationInvite = new ApplicationInviteResource(applicants.get(0).getName(), applicants.get(0).getEmail(), applicationResource.getId());
         InviteResultsResource inviteResultsResource = new InviteResultsResource();
         inviteResultsResource.setInvitesSendSuccess(1);
-        when(inviteRestService.createInvitesByOrganisation(organisation.getId(), asList(applicationInvite))).thenReturn(restSuccess(inviteResultsResource));
+        when(inviteRestService.createInvitesByOrganisation(organisation.getId(), singletonList(applicationInvite))).thenReturn(restSuccess(inviteResultsResource));
 
         setLoggedInUser(leadApplicant);
         MvcResult mockResult = mockMvc.perform(post("/application/{applicationId}/team/update/?organisationName={organisationName}&removeApplicant=0", applicationResource.getId(), organisation.getName())
