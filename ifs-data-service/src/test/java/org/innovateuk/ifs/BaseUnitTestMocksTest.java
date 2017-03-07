@@ -86,6 +86,7 @@ import org.innovateuk.ifs.project.transactional.ProjectGrantOfferService;
 import org.innovateuk.ifs.project.transactional.ProjectService;
 import org.innovateuk.ifs.project.transactional.ProjectStatusService;
 import org.innovateuk.ifs.project.users.ProjectUsersHelper;
+import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
 import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
@@ -93,7 +94,6 @@ import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.sil.experian.service.SilExperianEndpoint;
 import org.innovateuk.ifs.threads.attachments.mapper.AttachmentMapper;
 import org.innovateuk.ifs.threads.attachments.repository.AttachmentRepository;
-import org.innovateuk.ifs.threads.attachments.service.AttachmentsService;
 import org.innovateuk.ifs.threads.attachments.service.ProjectFinanceAttachmentService;
 import org.innovateuk.ifs.threads.mapper.NoteMapper;
 import org.innovateuk.ifs.threads.mapper.PostMapper;
@@ -578,6 +578,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected OrganisationFinanceDelegate organisationFinanceDelegateMock;
+
+    @Mock
+    protected FinanceUtil financeUtilMock;
 
     @Mock
     protected OrganisationMapper organisationMapperMock;
