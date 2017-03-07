@@ -150,9 +150,9 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(2, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("noteTitle"));
-        assertEquals("The title cannot be empty.", bindingResult.getFieldError("noteTitle").getDefaultMessage());
+        assertEquals("This field cannot be left blank.", bindingResult.getFieldError("noteTitle").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("note"));
-        assertEquals("The note cannot be empty.", bindingResult.getFieldError("note").getDefaultMessage());
+        assertEquals("This field cannot be left blank.", bindingResult.getFieldError("note").getDefaultMessage());
     }
 
     @Test
@@ -179,9 +179,9 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(2, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("noteTitle"));
-        assertEquals("The title is too long, please reduce it to {1} characters.", bindingResult.getFieldError("noteTitle").getDefaultMessage());
+        assertEquals("This field cannot contain more than {1} characters.", bindingResult.getFieldError("noteTitle").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("note"));
-        assertEquals("The note is too long, please reduce it to {1} characters.", bindingResult.getFieldError("note").getDefaultMessage());
+        assertEquals("This field cannot contain more than {1} characters.", bindingResult.getFieldError("note").getDefaultMessage());
     }
 
     @Test
@@ -208,7 +208,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("note"));
-        assertEquals("The note is too long, please reduce it to {0} words.", bindingResult.getFieldError("note").getDefaultMessage());
+        assertEquals("Maximum word count exceeded. Please reduce your word count to {1}.", bindingResult.getFieldError("note").getDefaultMessage());
     }
 
     @Test
