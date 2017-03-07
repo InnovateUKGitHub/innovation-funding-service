@@ -42,6 +42,7 @@ public class MilestoneRowForm {
             this.editable = LocalDateTime.now().isBefore(dateTime);
         } else {
             this.editable = true;
+            this.setTime(MilestoneTime.TWELVE_PM);
         }
     }
 

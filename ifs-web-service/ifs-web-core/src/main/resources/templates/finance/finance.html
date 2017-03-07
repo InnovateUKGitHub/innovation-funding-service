@@ -150,7 +150,7 @@
             <div class="date-group" data-past-date="">
                 <!--/* this is added for javascript date validation, if we have more mm yyyy fields we might want to do this in a cleaner way */-->
                 <div class="day">
-                    <input type="hidden" value="1" class="js-visited" disabled="disabled" />
+                    <input th:id="'year-end-day-'+${formInput.id}" type="hidden" value="1" class="js-visited day" disabled="disabled" />
                 </div>
                 <div class="month" th:with="month=${#strings.substringBefore(value, '-')}">
                     <label class="form-label" th:for="${formInput.id}+'.MMYYYY.month'">

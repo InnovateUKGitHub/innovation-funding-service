@@ -11,32 +11,23 @@
 <main id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='javascript:history.back()',currentApplication=${currentApplication}" />
+
+    <h1 class="heading-xlarge">Please sign in or create an account</h1>
+
     <div class="grid-row">
 
         <section class="column-half" th:with="redirectAfterLogin= '/application/create-authenticated/'+${competitionId}">
-
-            <h1 class="heading-large">Sign in</h1>
-            <p>If you have used this service before you must <a th:href="${redirectAfterLogin}">sign in</a></p>
+            <h2 class="heading-large no-margin">Used this service before?</h2>
+            <p>Please sign into your Innovation Funding Service account.</p>
 
             <a th:href="${redirectAfterLogin}" class="button" value="create-account" type="submit">Sign in</a>
-
         </section>
 
         <section class="column-half" th:with="createUrl= '/organisation/create/find-business'">
-            <h1 class="heading-large">Create Account</h1>
+            <h2 class="heading-large no-margin">New to this service?</h2>
+            <p>If you haven't used the new Innovation Funding Service before you will need to create an account.</p>
 
-            <p>If you haven’t used this service before you must <a th:href="${createUrl}">create an account</a>,
-                even if you already have an existing account with Innovate UK.</p>
-
-            <p>When you create an account you can:</p>
-            <ul class="list list-bullet">
-                <li>apply for a competition</li>
-                <li>track your competition applications</li>
-                <li>view application feedback</li>
-                <li>set up successful projects</li>
-            </ul>
-
-            <a th:href="${createUrl}" class="button" value="create-account" type="submit">Create</a>
+            <a th:href="${createUrl}" class="button" value="create-account" type="submit">Create account</a>
         </section>
     </div>
 

@@ -15,7 +15,7 @@ In Assessment dashboard page
     And The user should see the text in the page    In assessment
     And The user should see the text in the page    Programme
     And The user should see the text in the page    Materials and manufacturing
-    And The user should see the text in the page    Earth Observation
+    And The user should see the text in the page    Satellite Applications
     And the user should not see the element    link=View and update competition setup
     #The following checks test if the correct buttons are disabled
     And the user should see the element    jQuery=.disabled[aria-disabled="true"]:contains("Input and review funding decision")
@@ -33,7 +33,7 @@ Key statistics of the In Assessment competitions
 *** Keywords ***
 The key statistics counts should be correct
     ${TOTAL_ASSIGNMENT}=    Get text    css=ul:nth-child(4) > li:nth-child(1) > div > span
-    Should Be Equal As Integers    ${TOTAL_ASSIGNMENT}    13
+    Should Be Equal As Integers    ${TOTAL_ASSIGNMENT}    14
     ${AWAITING}=    Get text    css=ul:nth-child(4) > li:nth-child(2) > div > span
     Should Be Equal As Integers    ${AWAITING}    7
     ${ACCEPTED}=    Get text    css=ul:nth-child(4) > li:nth-child(3) > div > span
@@ -41,4 +41,4 @@ The key statistics counts should be correct
     ${STARTED}=    Get text    css=.extra-margin > li:nth-child(1) > div > span
     Should Be Equal As Integers    ${STARTED}    0
     ${SUBMITTED}=    Get text    css=.extra-margin > li:nth-child(2) > div > span
-    Should Be Equal As Integers    ${SUBMITTED}    0
+    Should Be Equal As Integers    ${SUBMITTED}    1

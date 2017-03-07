@@ -36,11 +36,11 @@ public class FreemarkerGOLTemplateRendererTest extends BaseServiceUnitTest<FileT
 
         when(freemarkerConfigurationMock.getTemplate("/path/to/template")).thenReturn(freemarkerTemplateMock);
 
-        ServiceResult<String> renderResult = service.renderTemplate("/path/to/template", asMap("arg1", "1", "arg2", 2L));
+        ServiceResult<String> renderResult = service.renderTemplate("/path/to/template", asMap("arg1", "1&", "arg2", 2L, "arg3", "3\"", "arg4", "4<", "arg5", "5>", "arg6", "6'"));
         assertTrue(renderResult.isSuccess());
         assertEquals("", renderResult.getSuccessObject());
 
-        Map<String, Object> expectedTemplateArguments = asMap("arg1", "1", "arg2", 2L);
+        Map<String, Object> expectedTemplateArguments = asMap("arg1", "1&amp;", "arg2", 2L, "arg3", "3&quot;", "arg4", "4&lt;", "arg5", "5&gt;", "arg6", "6&apos;");
         verify(freemarkerTemplateMock).process(eq(expectedTemplateArguments), isA(Writer.class));
     }
 

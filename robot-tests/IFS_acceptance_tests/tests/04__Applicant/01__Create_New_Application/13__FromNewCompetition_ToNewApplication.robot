@@ -82,14 +82,14 @@ Applicant fills in the Application Details
     Given the user should see the element    jQuery=h1:contains("Application overview")
     When the user clicks the button/link    link=Application details
     Then the user enters text to a text field    css=#application_details-title    ${applicationTitle}
-    And the user selects technical feasibility and no to resubmission
+    And the user selects technical feasibility and no to resubmission and an innovation area
     And the user enters text to a text field    css=#application_details-startdate_day    ${day}
     And the user enters text to a text field    css=#application_details-startdate_month    ${month}
     And the user enters text to a text field    css=#application_details-startdate_year    ${nextyear}
     And the user enters text to a text field    css=#application_details-duration    24
     When The user clicks the button/link    jQuery=button[name="mark_as_complete"]
     Then the user clicks the button/link    link=Application Overview
-    And the user should see the element    jQuery=img.complete[alt*="Application details"]
+    And the user should see the element     jQuery=li:contains("Application details") > .task-status-complete
 
 Turnover and Staff count fields
     [Documentation]    INFUND-6393
@@ -166,7 +166,7 @@ Mark Organisation as complete when no
     And the user enters text to a text field    jQuery=label:contains("Turnover") + input    17506
     And the user selects medium organisation size
     When the user clicks the button/link    jQuery=button:contains("Mark as complete")
-    Then the user should see the element    jQuery=img.complete[alt*="Your organisation"]
+    Then the user should see the element    jQuery=li:contains("Your organisation") > .complete
     When the user clicks the button/link    link=Your organisation
     # Then the user should see the fields in readonly mode, but currently they are missing this attribute
     # TODO INFUND-8071
@@ -183,7 +183,7 @@ Funding subsection opens when Appl details and organisation info are provided
     [Tags]    HappyPath
     [Setup]    the user navigates to the page    ${dashboard_url}
     And the user clicks the button/link    link=${applicationTitle}
-    When the user should see the element    jQuery=img.complete[alt*="Application details"]
+    When the user should see the element   jQuery=li:contains("Application details") > .task-status-complete
     And the user clicks the button/link    link=Your finances
     And the user should see the element    jQuery=img.complete[alt*="Your organisation"]
     Then the user should see the element    jQuery=img.assigned[alt*="Your funding"]
@@ -326,12 +326,16 @@ the the user should see that the funding depends on the research area
 the user should see his finances empty
     the user should see the element    jQuery=thead:contains("Total project costs") ~ *:contains("£0")
 
-the user selects technical feasibility and no to resubmission
+the user selects technical feasibility and no to resubmission and an innovation area
     # Often those labels need double click. Thus i made a separate keyword to looks more tidy
+    the user clicks the button/link    jQuery=button:contains(Change your innovation area)
+    the user clicks the button/link    jQuery=label[for="innovationAreaChoice-5"]
+    the user clicks the button/link    jQuery=label[for="innovationAreaChoice-5"]
+    the user clicks the button/link    jQuery=button:contains(Save)
     the user clicks the button/link    jQuery=label[for="financePosition-cat-33"]
     the user clicks the button/link    jQuery=label[for="financePosition-cat-33"]
-    the user clicks the button/link    jQuery=label[for="resubmission-no"]
-    the user clicks the button/link    jQuery=label[for="resubmission-no"]
+    the user clicks the button/link    jQuery=label[for="application.resubmission-no"]
+    the user clicks the button/link    jQuery=label[for="application.resubmission-no"]
 
 the user decides about the growth table
     [Arguments]    ${edit}    ${read}

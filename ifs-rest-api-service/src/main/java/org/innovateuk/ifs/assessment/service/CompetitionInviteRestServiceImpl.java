@@ -5,8 +5,10 @@ import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.resource.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
@@ -50,13 +52,24 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
     }
 
     @Override
-    public RestResult<List<AvailableAssessorResource>> getAvailableAssessors(long competitionId) {
-        return getWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "getAvailableAssessors", competitionId), availableAssessorResourceListType());
+    public RestResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, int page, Optional<Long> innovationArea) {
+        String baseUrl = format("%s/%s/%s", competitionInviteRestUrl, "getAvailableAssessors", competitionId);
+        UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl);
+
+        builder.queryParam("page", page);
+        innovationArea.ifPresent(innovationAreaId -> builder.queryParam("innovationArea", innovationAreaId));
+
+        return getWithRestResult(builder.toUriString(), AvailableAssessorPageResource.class);
     }
 
     @Override
-    public RestResult<List<AssessorCreatedInviteResource>> getCreatedInvites(long competitionId) {
-        return getWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "getCreatedInvites", competitionId), assessorCreatedInviteResourceListType());
+    public RestResult<AssessorCreatedInvitePageResource> getCreatedInvites(long competitionId, int page) {
+        String baseUrl = format("%s/%s/%s", competitionInviteRestUrl, "getCreatedInvites", competitionId);
+        UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl);
+
+        builder.queryParam("page", page);
+
+        return getWithRestResult(builder.toUriString(), AssessorCreatedInvitePageResource.class);
     }
 
     public RestResult<List<AssessorInviteOverviewResource>> getInvitationOverview(long competitionId) {
@@ -74,7 +87,7 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
     }
 
     @Override
-    public RestResult<Void> inviteNewUsers(NewUserStagedInviteListResource newUserStagedInvites,  long competitionId) {
+    public RestResult<Void> inviteNewUsers(NewUserStagedInviteListResource newUserStagedInvites, long competitionId) {
         return postWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "inviteNewUsers", competitionId), newUserStagedInvites, Void.class);
     }
 
@@ -87,6 +100,4 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
     public RestResult<AssessorInviteToSendResource> sendInvite(long inviteId, EmailContent content) {
         return postWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "sendInvite", inviteId), content, AssessorInviteToSendResource.class);
     }
-
-
 }
