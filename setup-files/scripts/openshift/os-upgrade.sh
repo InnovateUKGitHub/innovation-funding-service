@@ -15,7 +15,7 @@ REGISTRY=docker-registry-default.apps.prod.ifs-test-clusters.com
 INTERNAL_REGISTRY=172.30.80.28:5000
 
 SVC_ACCOUNT_TOKEN="L2uE9Zka9JJnzBzcM0ItQQ3is26bO45EVzRh9SQJ9rA"
-SVC_ACCOUNT_CLAUSE="--namespace=${PROJECT} --token=${SVC_ACCOUNT_TOKEN} --server=https://console.prod.ifs-test-clusters.com:443 --insecure-skip-tls-verify=true"
+SVC_ACCOUNT_CLAUSE="--namespace=${PROJECT} --token=${SVC_ACCOUNT_TOKEN} --server=https://console.prod.ifs-test-clusters.com:443 --insecure-skip-tls-verify=true --request-timeout='10m'"
 
 REGISTRY_TOKEN=${SVC_ACCOUNT_TOKEN}
 
