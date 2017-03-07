@@ -17,6 +17,8 @@ import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.documentation.AssessorCreatedInvitePageResourceDocs.assessorCreatedInvitePageResourceBuilder;
+import static org.innovateuk.ifs.documentation.AssessorCreatedInvitePageResourceDocs.assessorCreatedInvitePageResourceFields;
 import static org.innovateuk.ifs.documentation.AssessorCreatedInviteResourceDocs.assessorCreatedInviteResourceFields;
 import static org.innovateuk.ifs.documentation.AssessorInviteOverviewResourceDocs.assessorInviteOverviewResourceFields;
 import static org.innovateuk.ifs.documentation.AvailableAssessorPageResourceDocs.availableAssessorPageResourceBuilder;
@@ -26,7 +28,6 @@ import static org.innovateuk.ifs.documentation.CompetitionInviteDocs.*;
 import static org.innovateuk.ifs.documentation.CompetitionInviteStatisticsResourceDocs.competitionInviteStatisticsResourceBuilder;
 import static org.innovateuk.ifs.documentation.CompetitionInviteStatisticsResourceDocs.competitionInviteStatisticsResourceFields;
 import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
-import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
@@ -195,22 +196,33 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
     @Test
     public void getCreatedInvites() throws Exception {
         long competitionId = 1L;
-        List<AssessorCreatedInviteResource> expectedAssessorCreatedInviteResources = newAssessorCreatedInviteResource().build(2);
 
-        when(competitionInviteServiceMock.getCreatedInvites(competitionId)).thenReturn(serviceSuccess(expectedAssessorCreatedInviteResources));
+        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "name"));
 
-        mockMvc.perform(get("/competitioninvite/getCreatedInvites/{competitionId}", 1L))
+        when(competitionInviteServiceMock.getCreatedInvites(competitionId, pageable)).thenReturn(serviceSuccess(assessorCreatedInvitePageResourceBuilder.build()));
+
+        mockMvc.perform(get("/competitioninvite/getCreatedInvites/{competitionId}", 1L)
+                .param("size", "20")
+                .param("page", "0")
+                .param("sort", "name,asc"))
                 .andExpect(status().isOk())
                 .andDo(document("competitioninvite/{method-name}",
                         pathParameters(
                                 parameterWithName("competitionId").description("Id of the competition")
                         ),
-                        responseFields(
-                                fieldWithPath("[]").description("List of the created assessor invites for the competition")
-                        ).andWithPrefix("[].", assessorCreatedInviteResourceFields)
+                        requestParameters(
+                                parameterWithName("size").optional()
+                                        .description("Maximum number of elements in a single page. Defaults to 20."),
+                                parameterWithName("page").optional()
+                                        .description("Page number of the paginated data. Starts at 0. Defaults to 0."),
+                                parameterWithName("sort").optional()
+                                        .description("The property to sort the elements on. For example `sort=name,asc`. Defaults to `name,asc`")
+                        ),
+                        responseFields(assessorCreatedInvitePageResourceFields)
+                                .andWithPrefix("content[]", assessorCreatedInviteResourceFields)
                 ));
 
-        verify(competitionInviteServiceMock, only()).getCreatedInvites(competitionId);
+        verify(competitionInviteServiceMock, only()).getCreatedInvites(competitionId, pageable);
     }
 
     @Test
