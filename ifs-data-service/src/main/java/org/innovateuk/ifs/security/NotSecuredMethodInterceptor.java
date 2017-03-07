@@ -19,7 +19,6 @@ public class NotSecuredMethodInterceptor implements MethodInterceptor {
     private SecuredMethodsInStackCountInterceptor methodSecuredInStackCountInterceptor;
 
     private static final Logger LOG = LoggerFactory.getLogger(NotSecuredMethodInterceptor.class);
-    private ThreadLocal<Boolean> isSecured = new ThreadLocal<>();
 
     @Override
     public Object invoke(final MethodInvocation invocation) throws Throwable {

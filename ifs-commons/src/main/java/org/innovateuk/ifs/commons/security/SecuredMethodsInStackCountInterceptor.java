@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.security;
+package org.innovateuk.ifs.commons.security;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;

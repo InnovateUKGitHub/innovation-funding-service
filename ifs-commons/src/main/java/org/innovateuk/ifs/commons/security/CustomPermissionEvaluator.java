@@ -38,6 +38,9 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
     @Autowired
     private ApplicationContext applicationContext;
 
+    @Autowired
+    private SecuredMethodsInStackCountInterceptor methodSecuredInStackCountInterceptor;
+
     private PermissionedObjectClassToPermissionsToPermissionsMethods rulesMap;
 
     private PermissionedObjectClassesToListOfLookup lookupStrategyMap;
@@ -223,6 +226,11 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
 
     @Override
     public boolean hasPermission(final Authentication authentication, final Object targetObject, final Object permission) {
+
+        if (methodSecuredInStackCountInterceptor.isStackSecured()) {
+            return true;
+        }
+
         if (targetObject == null) {
             return true;
         }
@@ -239,12 +247,22 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         final ListOfOwnerAndMethod permissionMethodsForPermissionAggregate
                 = permissionMethodsForPermissionList.stream().
                 reduce(new ListOfOwnerAndMethod(), (f1, f2) -> ListOfOwnerAndMethod.from(combineLists(f1, f2)));
-        return permissionMethodsForPermissionAggregate.stream().
-                map(methodAndBean -> callHasPermissionMethod(methodAndBean, targetObject, authentication)).
-                reduce(false, (a, b) -> a || b);
+
+        for (Pair<Object, Method> methodAndBean : permissionMethodsForPermissionAggregate) {
+            if (callHasPermissionMethod(methodAndBean, targetObject, authentication)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public boolean hasPermission(Authentication authentication, Serializable targetId, Class<?> targetType, Object permission) {
+
+        if (methodSecuredInStackCountInterceptor.isStackSecured()) {
+            return true;
+        }
+
         final Pair<Object, Method> lookup = lookup(targetId, targetType);
         final Object permissionEntity;
         try {
@@ -287,6 +305,11 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
 
     @Override
     public boolean hasPermission(Authentication authentication, Serializable targetId, String targetType, Object permission) {
+
+        if (methodSecuredInStackCountInterceptor.isStackSecured()) {
+            return true;
+        }
+
         final Class<?> clazz;
         try {
             clazz = Class.forName(targetType);
