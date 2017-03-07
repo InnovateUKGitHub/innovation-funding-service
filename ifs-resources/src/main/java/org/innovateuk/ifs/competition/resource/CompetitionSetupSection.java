@@ -20,7 +20,7 @@ public enum CompetitionSetupSection {
 	MILESTONES("milestones", "Milestones", emptyList(), true),
 	APPLICATION_FORM("application", "Application", asList(PROJECT_DETAILS, QUESTIONS, FINANCES, APPLICATION_DETAILS), false),
 	ASSESSORS("assessors", "Assessors", emptyList(), true),
-	CONTENT("content", "Public Content", emptyList(), true);
+	CONTENT("content", "Public content", emptyList(), true);
 	
 	private String path;
 	private String name;
