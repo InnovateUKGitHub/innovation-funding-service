@@ -13,7 +13,7 @@ import javax.persistence.ManyToOne;
  * Links a {@link Application} to an {@link ResearchCategory}.
  */
 @Entity
-@DiscriminatorValue("org.innovateuk.ifs.application.domain.Application")
+@DiscriminatorValue("org.innovateuk.ifs.application.domain.Application#researchCategory")
 public class ApplicationResearchCategoryLink extends CategoryLink<Application, ResearchCategory> {
 
     @ManyToOne(optional = false)

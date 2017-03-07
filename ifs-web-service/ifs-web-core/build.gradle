@@ -61,12 +61,3 @@ processTestResources {
         expand project.properties
     }
 }
-
-
-task cleanDeploy() {
-    dependsOn build
-}
-
-task cleanDeployServices() {
-    dependsOn build
-}

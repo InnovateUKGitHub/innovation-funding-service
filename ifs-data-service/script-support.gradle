@@ -3,7 +3,7 @@
 
 task createTestSchema(type:Exec) {
     workingDir '../'
-    commandLine 'docker-compose', '-f', 'docker-compose-services.yml', '-f', 'docker-compose-services-dev.yml', 'exec', '-T', 'mysql' ,'mysql' ,'-uroot' ,'-ppassword' ,'-e', 'create database if not exists ifs_test'
+    commandLine 'docker-compose', '-f', 'docker-compose.yml', '-f', 'docker-compose-dev.yml', 'exec', '-T', 'mysql' ,'mysql' ,'-uroot' ,'-ppassword' ,'-e', 'create database if not exists ifs_test'
     doLast {
         exec {
             //wait for sql container to start.
@@ -16,7 +16,7 @@ task createTestSchema(type:Exec) {
 
 task createSchema(type:Exec) {
     workingDir '../'
-    commandLine 'docker-compose', '-f', 'docker-compose-services.yml', '-f', 'docker-compose-services-dev.yml', 'exec', '-T', 'mysql' ,'mysql' ,'-uroot' ,'-ppassword' ,'-e', 'create database if not exists ifs'
+    commandLine 'docker-compose', '-f', 'docker-compose.yml', '-f', 'docker-compose-dev.yml', 'exec', '-T', 'mysql' ,'mysql' ,'-uroot' ,'-ppassword' ,'-e', 'create database if not exists ifs'
     doLast {
         exec {
             //wait for sql container to start.
@@ -29,7 +29,7 @@ task createSchema(type:Exec) {
 
 task startMySql(type:Exec) {
     workingDir '../'
-    commandLine 'docker-compose', '-f', 'docker-compose-services.yml', '-f', 'docker-compose-services-dev.yml', 'up', '-d', 'mysql'
+    commandLine 'docker-compose', '-f', 'docker-compose.yml', '-f', 'docker-compose-dev.yml', 'up', '-d', 'mysql'
     doLast {
         exec {
             //wait for sql container to start.
@@ -41,8 +41,8 @@ task startMySql(type:Exec) {
 }
 
 task syncShib(type:Exec) {
-    workingDir '../setup-files/scripts/docker'
-    commandLine './syncShibServices.sh'
+    workingDir '../'
+    commandLine 'docker-compose', 'exec', '-T', 'ldap', '/usr/local/bin/ldap-sync-from-ifs-db.sh', 'mysql'
 }
 
 task loadShib(type:Exec) {

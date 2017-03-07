@@ -23,10 +23,10 @@ import static org.mockito.Mockito.when;
 public class OrganisationServiceImplTest extends BaseServiceUnitTest<OrganisationService> {
 
     @Mock
-    OrganisationRestService organisationRestService;
+    private OrganisationRestService organisationRestService;
 
     @Mock
-    CompanyHouseRestService companyHouseRestService;
+    private CompanyHouseRestService companyHouseRestService;
 
     @Mock
     private ProcessRoleService processRoleService;
@@ -60,7 +60,7 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
     public void testGetCompanyHouseOrganisation() throws Exception {
         String organisationSearch = "Empire";
         OrganisationSearchResult organisation = new OrganisationSearchResult();
-        when(companyHouseRestService.getOrganisationById(organisationSearch)).thenReturn(organisation);
+        when(companyHouseRestService.getOrganisationById(organisationSearch)).thenReturn(restSuccess(organisation));
 
         OrganisationSearchResult returnedOrganisation = service.getCompanyHouseOrganisation(organisationSearch);
 

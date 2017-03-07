@@ -6,9 +6,9 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryId;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
-import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -91,4 +91,16 @@ public interface ApplicationService {
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<BigDecimal> getProgressPercentageBigDecimalByApplicationId(Long applicationId);
+
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
+    ServiceResult<Long> getTurnoverByApplicationId(Long applicationId);
+
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
+    ServiceResult<Long> getHeadCountByApplicationId(Long applicationId);
+
+    @SecuredBySpring(value = "NOTIFY_APPLICANTS_OF_FEEDBACK",
+            description = "Comp admins and project finance users can notify applicants that their feedback is released")
+    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
+    ServiceResult<Void> notifyApplicantsByCompetition(Long competitionId);
+
 }

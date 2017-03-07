@@ -1,12 +1,9 @@
 package org.innovateuk.ifs.competition.controller;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
+import org.innovateuk.ifs.application.service.ApplicationSummaryService;
+import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -16,10 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import org.innovateuk.ifs.application.resource.FundingDecision;
-import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
-import org.innovateuk.ifs.application.service.ApplicationSummaryService;
-import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * This controller gets the decision to fund or not fund the applications for a given competition.
@@ -44,7 +42,7 @@ public class FundingDecisionController {
 
 		Map<Long, FundingDecision> applicationIdToFundingDecision = applicationFundingDecisionService.applicationIdToFundingDecisionFromRequestParams(request.getParameterMap(), applicationIds);
 
-		applicationFundingDecisionService.saveApplicationFundingDecisionData(competitionId, applicationIdToFundingDecision);
+		applicationFundingDecisionService.saveApplicationFundingDecisionData(competitionId, applicationIdToFundingDecision).getSuccessObjectOrThrowException();
 		
 		if(!"notify".equals(action)) {
 			return "redirect:/competition/" + competitionId + "/applications";
@@ -68,14 +66,14 @@ public class FundingDecisionController {
 
 		Map<Long, FundingDecision> applicationIdToFundingDecision = applicationFundingDecisionService.applicationIdToFundingDecisionFromRequestParams(request.getParameterMap(), applicationIds);
 
-		applicationFundingDecisionService.saveApplicationFundingDecisionData(competitionId, applicationIdToFundingDecision);
+		applicationFundingDecisionService.saveApplicationFundingDecisionData(competitionId, applicationIdToFundingDecision).getSuccessObjectOrThrowException();
 		
 		if(!applicationFundingDecisionService.verifyAllApplicationsRepresented(request.getParameterMap(), applicationIds)) {
 			cookieFlashMessageFilter.setFlashMessage(response, "fundingNotDecidedForAllApplications");
 			return "redirect:/competition/" + competitionId + "/applications";
 		}
 		
-		applicationFundingDecisionService.makeApplicationFundingDecision(competitionId, applicationIdToFundingDecision);
+		applicationFundingDecisionService.makeApplicationFundingDecision(competitionId, applicationIdToFundingDecision).getSuccessObjectOrThrowException();
 
 		return "redirect:/competition/" + competitionId + "/applications";
     }

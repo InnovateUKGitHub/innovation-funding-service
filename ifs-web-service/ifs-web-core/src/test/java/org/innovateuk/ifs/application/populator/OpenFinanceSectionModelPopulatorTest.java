@@ -16,6 +16,7 @@ import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.BaseSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.OpenFinanceSectionViewModel;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -234,7 +235,7 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest 
         when(financeHandler.getFinanceModelManager(OrganisationTypeEnum.BUSINESS.name())).thenReturn(financeManager);
 
         QuestionResource question = newQuestionResource().build();
-        when(questionService.getQuestionByCompetitionIdAndFormInputType(anyLong(), eq(FormInputType.APPLICATION_DETAILS))).thenReturn(restSuccess(question));
+        when(questionService.getQuestionByCompetitionIdAndFormInputType(anyLong(), eq(FormInputType.APPLICATION_DETAILS))).thenReturn(ServiceResult.serviceSuccess(question));
         Map<Long, QuestionStatusResource> statuses = new HashMap<>();
         statuses.put(question.getId(), newQuestionStatusResource().withMarkedAsComplete(true).build());
         when(questionService.getQuestionStatusesForApplicationAndOrganisation(eq(applicationResource.getId()), anyLong())).thenReturn(statuses);

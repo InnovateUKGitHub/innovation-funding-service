@@ -17,11 +17,11 @@ Competition dashboard Open competition
     [Documentation]    INFUND-7562
     [Tags]
     When The user clicks the button/link    link=${OPEN_COMPETITION_NAME}
-    Then the user should see the element    jQuery=span:contains("00000001: Connected digital additive manufacturing")
+    Then the user should see the element    jQuery=span:contains("1: Connected digital additive manufacturing")
     And the user should see the element    jQuery=h1:contains("Open")
     And the user should see the element    jQuery=dt:contains("Competition type") ~ dd:contains("Programme")
     And the user should see the element    jQuery=dt:contains("Innovation sector") ~ dd:contains("Materials and manufacturing")
-    And the user should see the element    jQuery=dt:contains("Innovation area") ~ dd:contains("Earth Observation")
+    And the user should see the element    jQuery=dt:contains("Innovation area") ~ dd:contains("Satellite Applications")
     And the user should see the element    link=View and update competition setup
     And the user should see the element    jQuery=a:contains("Invite assessors to assess the competition")
     And the user should see the element    jQuery=a:contains("Applications - All, submitted")
@@ -44,12 +44,12 @@ Competition dashboard ready to Open competition
     [Tags]
     Given the user navigates to the page    ${CA_UpcomingComp}
     When The user clicks the button/link    link=${READY_TO_OPEN_COMPETITION_NAME}
-    Then the user should see the element    jQuery=span:contains("00000006: Photonics for health")
+    Then the user should see the element    jQuery=span:contains("6: Photonics for health")
     And the user should see the element    jQuery=h1:contains("Ready to open")
     And the user should see the element    jQuery=h1:contains("Ready to open")
     And the user should see the element    jQuery=dt:contains("Competition type") ~ dd:contains("Programme")
     And the user should see the element    jQuery=dt:contains("Innovation sector") ~ dd:contains("Materials and manufacturing")
-    And the user should see the element    jQuery=dt:contains("Innovation area") ~ dd:contains("Earth Observation")
+    And the user should see the element    jQuery=dt:contains("Innovation area") ~ dd:contains("Satellite Applications")
     And the user should see the element    link=View and update competition setup
     And the user should see the element    jQuery=a:contains("Invite assessors to assess the competition")
     #The following checks test if the correct buttons are disabled

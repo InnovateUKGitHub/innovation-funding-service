@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Feedback overview'" />
+    </head>
+
+    <body th:with="context='applicant'" class="app-summary" th:classappend="${currentApplication.isOpen() ? 'is-open' : 'is-closed' }">
+        <th:block th:insert="fragments/layout :: body-start" />
+        <th:block th:insert="fragments/layout :: global-header" />
+
+        <main id="content">
+            <th:block th:insert="fragments/layout :: main-content-start" />
+
+            <th:block th:if="${currentApplication.isOpen() and currentCompetition.isOpen()}" th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication},linkTitle='Application Overview',linkClass='link-back',linkUrl=@{/application/{id}(id=${currentApplication.id})}"/>
+
+            <th:block th:insert="fragments/elements :: competition-closing-warning (competition=${currentCompetition})" />
+
+            <div class="page-title">
+                <th:block th:insert="fragments/elements :: application-title (applicationId=${currentApplication.id},applicationName=${currentApplication.applicationDisplayName})" />
+                <h1 class="heading-xlarge no-margin">Feedback overview</h1>
+            </div>
+
+            <th:block th:insert="fragments/elements :: competition-status-message (app=${currentApplication}, competition=${currentCompetition})" />
+
+            <h2 class="heading-medium">Overall scores</h2>
+            <div class="table-overflow">
+                <table th:each="section : ${sections.values()}" th:if="${!section.name.equals('Project details') && !section.name.equals('Finances')}">
+                    <thead>
+                        <tr>
+                            <th class="width-150" scope="row">Question</th>
+                            <th th:each="question : ${sectionQuestions.get(section.id)}" scope="col">
+                                <a th:text="|Q${question.questionNumber}|">Q1</a>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th class="width-150" scope="row">Score</th>
+                            <td th:each="question : ${sectionQuestions.get(section.id)}">
+                                <span th:text="${scores.scores.get(question.id)}" th:remove="tag" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h2 class="heading-medium no-margin-bottom">Application details</h2>
+            <p class="form-hint">Assessors do not provide scores on these sections of the application.</p>
+
+            <div class="boxed">
+                <div class="grid-row">
+                    <div class="column-half">
+                        <h3 class="heading-small">Project title</h3>
+                        <p th:text="${currentApplication.name}">Machine learning in robots</p>
+
+                        <h3 class="heading-small">Lead organisation</h3>
+                        <p th:text="${leadOrganisation.name}">Aptrans Ltd</p>
+
+                        <h3 class="heading-small">Partners</h3>
+                        <ul class="list list-bullet">
+                            <li th:each="organisation : ${applicationOrganisations}" th:unless="${organisation.equals(leadOrganisation)}" th:text="${organisation.name}">Biotech Corp</li>
+                        </ul>
+                    </div>
+
+                    <div class="column-half">
+                        <h3 class="heading-small">Project timescales</h3>
+                        <p>Project start date: <br /><span th:text="${#temporals.format(currentApplication.startDate, 'd MMMM yyyy')}" th:remove="tag">4 November 2016</span></p>
+                        <p>Duration: <br /><span th:text="${currentApplication.durationInMonths}" th:remove="tag">51</span> months</p>
+
+                        <h3 class="heading-small extra-margin">Total project cost</h3>
+                        <p th:text="'£'+${#numbers.formatDecimal(totalFundingSought, 0, 'COMMA', 0, 'POINT')}">£203,567</p>
+                    </div>
+                </div>
+            </div>
+
+            <section th:each="section : ${sections.values()}" th:unless="${section.name.equals('Finances')}">
+                <th:block th:if="${section.name.equals('Project details')}">
+                    <ul class="list-overview extra-margin">
+                        <th:block th:each="question : ${sectionQuestions.get(section.id)}" th:unless="${question.shortName.equals('Application details')}">
+                            <li class="section-status">
+                                <div class="grid-row">
+                                    <div class="column-two-thirds">
+                                        <h3 th:text="${question.shortName}" class="heading-small">Project summary</h3>
+                                    </div>
+                                    <div class="column-third">
+                                        <p th:unless=${question.shortName.equals('Scope')} class="form-hint no-margin">No feedback provided</p>
+                                        <p th:if=${question.shortName.equals('Scope')}>
+                                            In scope? <span th:text="${scores.inScope}">4</span>/<span th:text="${scores.totalScope}">5</span> Yes
+                                        </p>
+                                    </div>
+                                </div>
+                            </li>
+                        </th:block>
+                    </ul>
+                </th:block>
+                <th:block th:if="${!section.name.equals('Project details')}">
+                    <h2 class="heading-medium no-margin-bottom">Application questions</h2>
+                    <p class="form-hint">Each question has been assessed by several independent assessors. They have given a score and feedback for each.</p>
+
+                    <ul class="list-overview">
+                        <li class="section-status" th:each="question : ${sectionQuestions.get(section.id)}">
+                        <div class="grid-row">
+                            <div class="column-two-thirds">
+                                <h3 class="heading-small">
+                                    <a th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.shortName}">1. Business opportunity</a>
+                                </h3>
+                            </div>
+                            <div>
+                                <div class="column-third" th:text="|Average score ${scores.scores.get(question.id)} / ${question.assessorMaximumScore}|">Average score 7 / 10</div>
+                            </div>
+                        </div>
+                        </li>
+                    </ul>
+                    <div class="grid-row extra-margin">
+                        <div class="column-two-thirds">
+                            &nbsp;
+                        </div>
+                        <div class="column-third">
+                            <p>Average overall: <strong class="heading-" th:text="|${scores.averagePercentage}%|">70%</strong></p>
+                        </div>
+                    </div>
+                </th:block>
+            </section>
+
+            <section th:if="${hasFinanceSection}">
+                <h2 class="heading-medium">Finance</h2>
+                <div class="collapsible">
+                    <h3>Finances summaries</h3>
+                    <div class="question">
+                        <div th:replace="finance/finance-summary :: application_finances_summary"></div>
+
+                        <h2 class="heading-medium">Funding breakdown</h2>
+                        <th:block th:insert="finance/finance-summary :: financial_summary_table" />
+
+                        <div th:if="${academicOrganisations != null and academicOrganisations.size() > 0}">
+                            <h2 class="heading-medium">Academic partner breakdown</h2>
+                            <p>Academic partners submit their project costs through the Je-S system. For a full breakdown of their project costs, please see the
+                                below documents.</p>
+                            <th:block th:insert="finance/finance-summary :: academic_partner_breakdown" />
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!--/*
+            <h2 class="heading-medium">Finances</h2>
+            <p class="form-hint">These finances were submitted at the application stage.</p>
+
+            <div class="collapsible section-overview">
+                <h3 class="heading-small no-margin">Finance summaries</h3>
+                <div class="table-overflow">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th scope="col">Partner</th>
+                                <th scope="col" class="numeric width-small">Total costs</th>
+                                <th scope="col" class="numeric width-small">% Grant</th>
+                                <th scope="col" class="numeric width-small-medium">Funding sought</th>
+                                <th scope="col" class="numeric width-medium">Other public sector funding</th>
+                                <th scope="col" class="numeric width-small-medium">Contribution to project</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>Total</th>
+                                <td class="numeric">
+                                    <strong>&pound;280,000</strong>
+                                </td>
+                                <td class="numeric">
+                                    <strong>&pound;280,000</strong>
+                                </td>
+                                <td class="numeric">
+                                    <strong>&pound;280,000</strong>
+                                </td>
+                                <td class="numeric">
+                                    <strong>&pound;280,000</strong>
+                                </td>
+                                <td class="numeric">
+                                    <strong>&pound;280,000</strong>
+                                </td>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            <tr>
+                                <th scope="row">
+                                    Aptrans Ltd<br />
+                                    <small>Lead partner</small>
+                                </th>
+                                <td class="numeric">
+                                    <strong>&pound;100,000</strong>
+                                </td>
+                                <td class="numeric">70%</td>
+                                <td class="numeric">&pound;60,000</td>
+                                <td class="numeric">&pound;10,000</td>
+                                <td class="numeric">&pound;30,000</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="collapsible section-overview">
+                <h3 class="heading-small no-margin">Project cost breakdown</h3>
+                <div class="table-overflow">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th scope="col" class="width-large">Partner</th>
+                                <th scope="col" class="numeric width-small">Total</th>
+                                <th scope="col" class="numeric width-small">Labour</th>
+                                <th scope="col" class="numeric width-small">Overheads</th>
+                                <th scope="col" class="numeric width-small">Materials</th>
+                                <th scope="col" class="numeric width-small">Capital usage</th>
+                                <th scope="col" class="numeric width-small">Subcontracting cost</th>
+                                <th scope="col" class="numeric width-small">Travel and subsistence</th>
+                                <th scope="col" class="numeric width-small">Other Costs</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>Total</th>
+                                <td class="numeric"><strong>£450,983</strong></td>
+                                <td class="numeric">&nbsp;</td>
+                                <td class="numeric">&nbsp;</td>
+                                <td class="numeric">&nbsp;</td>
+                                <td class="numeric">&nbsp;</td>
+                                <td class="numeric">&nbsp;</td>
+                                <td class="numeric">&nbsp;</td>
+                                <td class="numeric">&nbsp;</td>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            <tr>
+                                <th scope="row">
+                                    Aptrans Ltd<br />
+                                    <small class="width-large">
+                                        Lead partner<br />
+                                        <a>Detailed finances</a>
+                                    </small>
+                                </th>
+                                <td class="numeric"><strong>£257,033</strong></td>
+                                <td class="numeric">£126,207</td>
+                                <td class="numeric">£86,167</td>
+                                <td class="numeric">£44,659</td>
+                                <td class="numeric">£257,033</td>
+                                <td class="numeric">£126,207</td>
+                                <td class="numeric">£86,167</td>
+                                <td class="numeric">£44,659</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>*/-->
+
+            <!--/* TODO INFUND-8172
+            <h2 class="heading-medium">Assessor feedback</h2>
+            <ul class="boxed-list">
+                <li>
+                    <h3 class="heading-small">Assessor 1</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
+                </li>
+            </ul>*/-->
+
+            <th:block th:insert="fragments/layout :: main-content-end" />
+        </main>
+
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
+    </body>
+</html>

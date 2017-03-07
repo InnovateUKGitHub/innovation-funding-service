@@ -41,6 +41,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
+import org.innovateuk.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.threads.resource.PostResource;
 import org.innovateuk.threads.resource.QueryResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,13 +52,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -65,13 +60,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -83,8 +72,6 @@ import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipa
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * This controller will handle requests related to finance checks
@@ -206,10 +193,10 @@ public class ProjectFinanceChecksController {
             return validationHandler.addAnyErrors(validationMessages, fieldErrorsToFieldErrors(), asGlobalErrors()).
                     failNowOrSucceedWith(failureView, () -> {
 
-                        List<FileEntryResource> attachmentResources = new ArrayList<>();
+                        List<AttachmentResource> attachmentResources = new ArrayList<>();
                         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
                         attachments.forEach(attachment -> {
-                            ServiceResult<FileEntryResource> fileEntry = financeCheckService.getFileInfo(attachment);
+                            ServiceResult<AttachmentResource> fileEntry = financeCheckService.getAttachment(attachment);
                             if (fileEntry.isSuccess()) {
                                 attachmentResources.add(fileEntry.getSuccessObject());
                             }
@@ -255,9 +242,10 @@ public class ProjectFinanceChecksController {
 
         return validationHandler.performActionOrBindErrorsToField("attachment", view, view, () -> {
             MultipartFile file = form.getAttachment();
-            ServiceResult<FileEntryResource> result = financeCheckService.uploadFile(file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
+            ServiceResult<AttachmentResource> result = financeCheckService.uploadFile(projectId, file.getContentType(),
+                    file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
             if(result.isSuccess()) {
-                attachments.add(result.getSuccessObject().getId());
+                attachments.add(result.getSuccessObject().id);
                 saveAttachmentsToCookie(response, attachments, projectId, organisationId, queryId);
             }
             ProjectFinanceChecksViewModel viewModel = buildFinanceChecksLandingPage(projectComposite, attachments, queryId);
@@ -285,7 +273,7 @@ public class ProjectFinanceChecksController {
             if (fileContent.isSuccess()) {
                 content = fileContent.getSuccessObject();
             }
-            ServiceResult<FileEntryResource> fileInfo = financeCheckService.getFileInfo(attachmentId);
+            ServiceResult<FileEntryResource> fileInfo = financeCheckService.getAttachmentInfo(attachmentId);
             if (fileInfo.isSuccess()) {
                 fileDetails = Optional.of(fileInfo.getSuccessObject());
             }
@@ -307,7 +295,7 @@ public class ProjectFinanceChecksController {
         if (fileContent.isSuccess()) {
             content = fileContent.getSuccessObject();
         }
-        ServiceResult<FileEntryResource> fileInfo = financeCheckService.getFileInfo(attachmentId);
+        ServiceResult<FileEntryResource> fileInfo = financeCheckService.getAttachmentInfo(attachmentId);
         if (fileInfo.isSuccess()) {
             fileDetails = Optional.of(fileInfo.getSuccessObject());
         }
@@ -380,7 +368,7 @@ public class ProjectFinanceChecksController {
         Map<Long, String> attachmentLinks = new HashMap<>();
         if(attachments != null) {
             attachments.forEach(id -> {
-                ServiceResult<FileEntryResource> file = financeCheckService.getFileInfo(id);
+                ServiceResult<FileEntryResource> file = financeCheckService.getAttachmentInfo(id);
                 if (file.isSuccess()) {
                     attachmentLinks.put(id, file.getSuccessObject().getName());
                 }
@@ -492,7 +480,7 @@ public class ProjectFinanceChecksController {
 
     private String doViewEligibility(CompetitionResource competition, ApplicationResource application, ProjectResource project, List<SectionResource> allSections, UserResource user, boolean isLeadPartnerOrganisation, OrganisationResource organisation, Model model, FinanceChecksEligibilityForm eligibilityForm, ApplicationForm form, BindingResult bindingResult) {
 
-        poulateProjectFinanceDetails(competition, application, project, organisation.getId(), allSections, user, form, bindingResult, model);
+        populateProjectFinanceDetails(competition, application, project, organisation.getId(), allSections, user, form, bindingResult, model);
 
         EligibilityResource eligibility = projectFinanceService.getEligibility(project.getId(), organisation.getId());
 
@@ -505,7 +493,7 @@ public class ProjectFinanceChecksController {
         boolean eligibilityApproved = eligibility.getEligibility() == Eligibility.APPROVED;
 
         model.addAttribute("summaryModel", new FinanceChecksEligibilityViewModel(eligibilityOverview, organisation.getName(), project.getName(),
-                application.getFormattedId(), isLeadPartnerOrganisation, project.getId(), organisation.getId(),
+                application.getId(), isLeadPartnerOrganisation, project.getId(), organisation.getId(),
                 eligibilityApproved, eligibility.getEligibilityRagStatus(), eligibility.getEligibilityApprovalUserFirstName(),
                 eligibility.getEligibilityApprovalUserLastName(), eligibility.getEligibilityApprovalDate(), true));
 
@@ -515,7 +503,7 @@ public class ProjectFinanceChecksController {
         return "project/financecheck/eligibility";
     }
 
-    private void poulateProjectFinanceDetails(CompetitionResource competition, ApplicationResource application, ProjectResource project, Long organisationId, List<SectionResource> allSections, UserResource user, ApplicationForm form, BindingResult bindingResult, Model model){
+    private void populateProjectFinanceDetails(CompetitionResource competition, ApplicationResource application, ProjectResource project, Long organisationId, List<SectionResource> allSections, UserResource user, ApplicationForm form, BindingResult bindingResult, Model model){
 
         SectionResource section = simpleFilter(allSections, s -> s.getType().equals(PROJECT_COST_FINANCES)).get(0);
 
