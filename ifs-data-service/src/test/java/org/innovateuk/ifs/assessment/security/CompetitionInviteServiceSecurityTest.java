@@ -25,6 +25,7 @@ import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newE
 import static org.innovateuk.ifs.invite.builder.CompetitionParticipantResourceBuilder.newCompetitionParticipantResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
@@ -152,7 +153,7 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
     public void getInvitationOverview() {
         Pageable pageable = new PageRequest(0, 20);
         Optional<Long> innovationArea = Optional.of(1L);
-        Optional<ParticipantStatus> status = Optional.of(ParticipantStatus.ACCEPTED);
+        Optional<ParticipantStatus> status = Optional.of(ACCEPTED);
         Optional<Boolean> contract = Optional.of(TRUE);
 
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getInvitationOverview(1L, pageable, innovationArea, status, contract), COMP_ADMIN,PROJECT_FINANCE);

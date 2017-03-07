@@ -26,7 +26,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.test.annotation.Rollback;
 
 import java.util.Arrays;
 import java.util.List;
@@ -46,7 +45,6 @@ import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESS
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
-import static org.innovateuk.ifs.user.builder.ContractBuilder.newContract;
 import static org.innovateuk.ifs.user.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElement;
@@ -579,7 +577,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndContract(
                 competition.getId(),
                 innovationArea.getId(),
-                PENDING.getId(),
+                PENDING,
                 TRUE,
                 pageable
         );

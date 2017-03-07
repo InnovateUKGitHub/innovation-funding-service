@@ -39,11 +39,18 @@ public interface CompetitionParticipantRepository extends PagingAndSortingReposi
     @Query("SELECT competitionParticipant " +
             "FROM CompetitionParticipant competitionParticipant " +
             "LEFT JOIN Profile profile ON profile.id = competitionParticipant.user.profileId " +
-            "LEFT JOIN profile.innovationAreas innovationAreas " +
             "WHERE competitionParticipant.competition.id = :competitionId " +
             "AND competitionParticipant.role = 'ASSESSOR' " +
-            "AND (:statusId IS NULL OR competitionParticipant.status.id = :statusId) " +
-            "AND (:innovationAreaId IS NULL OR innovationAreas.category.id = :innovationAreaId) " +
+            "AND (:status IS NULL OR competitionParticipant.status = :status) " +
+            "AND (:innovationAreaId IS NULL " +
+            "   OR competitionParticipant.invite.innovationArea.id = :innovationAreaId " +
+            "   OR EXISTS(" +
+            "       SELECT profile.id " +
+            "       FROM Profile profile " +
+            "       JOIN profile.innovationAreas innovationAreas " +
+            "       WHERE profile.id = competitionParticipant.user.profileId " +
+            "       AND innovationAreas.category.id = :innovationAreaId " +
+            ")) " +
             "AND (:isCompliant IS NULL OR (:isCompliant = true AND (" +
             "   EXISTS(" +
             "       SELECT affiliation.id " +
@@ -55,7 +62,7 @@ public interface CompetitionParticipantRepository extends PagingAndSortingReposi
             ")))")
     Page<CompetitionParticipant> getAssessorsByCompetitionAndInnovationAreaAndStatusAndContract(@Param("competitionId") long competitionId,
                                                                                                 @Param("innovationAreaId") Long innovationAreaId,
-                                                                                                @Param("statusId") Long statusId,
+                                                                                                @Param("status") ParticipantStatus status,
                                                                                                 @Param("isCompliant") Boolean isCompliant,
                                                                                                 Pageable pageable);
 
