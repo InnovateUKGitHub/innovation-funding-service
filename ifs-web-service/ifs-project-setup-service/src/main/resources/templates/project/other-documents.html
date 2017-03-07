@@ -175,7 +175,7 @@
             <p th:unless="${model.exploitationPlanFileDetails}" class="uploaded-file">Awaiting upload by the Project Manager</p>
         </th:block>
     </div>
-    <p>Once the documents are uploaded they must be sent to Innovate UK.</p>
+    <p>The Project Manager needs to upload the documents and submit them to us.</p>
 
     <th:block th:if="${model.isShowSubmitDocumentsButton()}">
         <a th:href="@{/project/{id}/partner/documents/confirm(id=${model.getProjectId()})}" class="button extra-margin"
