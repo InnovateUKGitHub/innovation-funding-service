@@ -39,8 +39,4 @@ public class AvailableAssessorResourceBuilder extends AssessorInviteResourceBuil
     public AvailableAssessorResourceBuilder withBusinessType(BusinessType... value) {
         return withArraySetFieldByReflection("businessType", value);
     }
-
-    public AvailableAssessorResourceBuilder withAdded(Boolean... value) {
-        return withArraySetFieldByReflection("added", value);
-    }
 }

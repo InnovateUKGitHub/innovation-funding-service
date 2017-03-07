@@ -382,7 +382,11 @@ public class ApplicationFormController {
             // user did a action, just display the same page.
             LOG.debug("redirect: " + request.getRequestURI());
             return "redirect:" + request.getRequestURI();
-        } else {
+        }
+        else if(request.getParameter("submit-section-redirect") != null) {
+            return "redirect:" + APPLICATION_BASE_URL + applicationId + request.getParameter("submit-section-redirect");
+        }
+        else {
             if (sectionType.isPresent() && sectionType.get().getParent().isPresent()) {
                 return redirectToSection(sectionType.get().getParent().get(), applicationId);
             }

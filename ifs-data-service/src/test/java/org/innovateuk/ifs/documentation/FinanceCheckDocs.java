@@ -41,6 +41,8 @@ public class FinanceCheckDocs {
             fieldWithPath("grantAppliedFor").description("Total grant applied for, excluding any other sources of funding"),
             fieldWithPath("otherPublicSectorFunding").description("Other public sector funding available for the project"),
             fieldWithPath("totalPercentageGrant").description("Total percentage of grant through IFS"),
+            fieldWithPath("researchParticipationPercentage").description("Research participation percentage for the project"),
+            fieldWithPath("competitionMaximumResearchPercentage").description("Maximum research participation percentage for the competition")
     };
 
     public static final FieldDescriptor[] financeCheckEligibilityResourceFields = {

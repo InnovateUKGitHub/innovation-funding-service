@@ -16,6 +16,7 @@ public abstract class InviteAssessorsViewModel<ViewModelRowType extends InviteAs
     private String innovationSector;
     private String innovationArea;
     private List<ViewModelRowType> assessors;
+    private PaginationViewModel pagination;
 
     protected InviteAssessorsViewModel() {
     }
@@ -90,5 +91,13 @@ public abstract class InviteAssessorsViewModel<ViewModelRowType extends InviteAs
 
     public void setAssessors(List<ViewModelRowType> assessors) {
         this.assessors = assessors;
+    }
+
+    public PaginationViewModel getPagination() {
+        return pagination;
+    }
+
+    public void setPagination(PaginationViewModel pagination) {
+        this.pagination = pagination;
     }
 }

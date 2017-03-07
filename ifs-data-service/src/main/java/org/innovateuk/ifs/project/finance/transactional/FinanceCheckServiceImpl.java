@@ -159,6 +159,9 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     @Override
     public ServiceResult<FinanceCheckOverviewResource> getFinanceCheckOverview(Long projectId) {
         Project project = projectRepository.findOne(projectId);
+        Application application = project.getApplication();
+        Competition competition = application.getCompetition();
+
         List<ProjectFinanceResource> projectFinanceResourceList = projectFinanceRowService.financeChecksTotals(projectId).getSuccessObject();
 
         BigDecimal totalProjectCost = calculateTotalForAllOrganisations(projectFinanceResourceList, ProjectFinanceResource::getTotal);
@@ -166,8 +169,13 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         BigDecimal totalOtherFunding = calculateTotalForAllOrganisations(projectFinanceResourceList, ProjectFinanceResource::getTotalOtherFunding);
         BigDecimal totalPercentageGrant = calculateGrantPercentage(totalProjectCost, totalFundingSought);
 
+        ServiceResult<Double> researchParticipationPercentage = financeRowService.getResearchParticipationPercentage(application.getId());
+        BigDecimal researchParticipationPercentageValue = getResearchParticipationPercentage(researchParticipationPercentage);
+
+        BigDecimal competitionMaximumResearchPercentage = BigDecimal.valueOf(competition.getMaxResearchRatio());
+
         return serviceSuccess(new FinanceCheckOverviewResource(projectId, project.getName(), project.getTargetStartDate(), project.getDurationInMonths().intValue(),
-                totalProjectCost, totalFundingSought, totalOtherFunding, totalPercentageGrant));
+                totalProjectCost, totalFundingSought, totalOtherFunding, totalPercentageGrant, researchParticipationPercentageValue, competitionMaximumResearchPercentage));
     }
 
     public ServiceResult<FinanceCheckEligibilityResource> getFinanceCheckEligibilityDetails(Long projectId, Long organisationId) {
@@ -372,5 +380,13 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
             }
         }
         return serviceSuccess();
+    }
+
+    private BigDecimal getResearchParticipationPercentage(ServiceResult<Double> researchParticipationPercentage) {
+        BigDecimal researchParticipationPercentageValue = BigDecimal.ZERO;
+        if (researchParticipationPercentage.isSuccess() && researchParticipationPercentage.getSuccessObject() != null) {
+            researchParticipationPercentageValue = BigDecimal.valueOf(researchParticipationPercentage.getSuccessObject());
+        }
+        return researchParticipationPercentageValue;
     }
 }
