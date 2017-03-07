@@ -91,7 +91,7 @@
   <section th:if="${hasFinanceSection}">
       <h2 class="heading-medium">Finance</h2>
       <div class="collapsible">
-          <h3>Finances Summary
+          <h3>Finances summary
               <th:block th:if="${currentApplication.isOpen()}">
                   <div class="section-status section-complete" th:if="${sectionsMarkedAsComplete.contains(financeSectionId)}">Complete</div>
                   <div class="section-status section-incomplete" th:unless="${sectionsMarkedAsComplete.contains(financeSectionId)}">Incomplete</div>
