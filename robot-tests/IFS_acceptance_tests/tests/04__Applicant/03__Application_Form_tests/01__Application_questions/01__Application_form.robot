@@ -126,7 +126,7 @@ Review and submit button
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Robot test application
     When the user clicks the button/link    jQuery=.button:contains("Review and submit")
-    Then the user should see the text in the page    Application Summary
+    Then the user should see the text in the page    Application summary
     And the user should see the text in the page    Please review your application before final submission
 
 *** Keywords ***
@@ -179,7 +179,7 @@ the Applicant edits Project summary and marks it as complete
 
 the question should be marked as complete on the application overview page
     The user clicks the button/link    link=Application Overview
-    The user should see the element    jQuery=#section-1 .section:nth-child(2) img[src*="/images/field/field-done-right"]
+    The user should see the element    jQuery=#section-1 li:nth-child(2) span:contains("Completed")
 
 the text box should be editable
     Wait Until Element Is Enabled Without Screenshots    css=#form-input-11 textarea
@@ -190,8 +190,8 @@ the button state should change to 'Mark as complete'
 the question should not be marked as complete on the application overview page
     The user clicks the button/link    link=Application Overview
     Run Keyword And Ignore Error Without Screenshots    confirm action
-    the user should see the element    jQuery=#section-1 .section:nth-child(2)
-    the user should not see the element    jQuery=#section-1 .section:nth-child(2) img[src*="/images/field/field-done-right"]
+    the user should see the element    jQuery=#section-1 li:nth-child(2)
+    the user should not see the element    jQuery=#section-1 li:nth-child(2) span:contains("Completed")
 
 The applicant navigates to the next section
     The user clicks the button/link    css=.next .pagination-label

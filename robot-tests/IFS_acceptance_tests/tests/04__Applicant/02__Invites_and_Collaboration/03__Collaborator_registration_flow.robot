@@ -44,7 +44,7 @@ The type of organisation navigates to the correct page
     [Tags]
     When the user selects the radio button    organisationType    1
     And the user clicks the button/link    jQuery=.button:contains("Continue")
-    Then the user should see the text in the page    Find your business on Companies House
+    Then the user should see the text in the page    Find your organisation on Companies House
     When the user goes back to the previous page
     Given the user selects the radio button    organisationType    2
     And the user clicks the button/link    jQuery=.button:contains("Continue")
@@ -117,7 +117,7 @@ Catapult search (accept invitation flow)
     When the user clicks the button/link    jQuery=.button:contains("Continue")
     Then the user should see the text in the page    Digital Catapult
     And the user should see the text in the page    Operating Address
-    And the user clicks the button/link    jQuery=.button:contains("Save")
+    And the user clicks the button/link    jQuery=.button:contains("Confirm and continue")
     When the user navigates to the page  ${server}/registration/register
     Then the user fills the create account form    Thierry    Henry
 

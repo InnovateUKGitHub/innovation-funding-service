@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.assessment.controller;
 
 
+import com.google.common.collect.Lists;
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
@@ -16,15 +17,26 @@ import org.innovateuk.ifs.invite.repository.CompetitionInviteRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.user.domain.Profile;
+import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProfileRepository;
+import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+import static java.util.Optional.empty;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
 import static org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
@@ -41,9 +53,13 @@ import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESS
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
 import static org.innovateuk.ifs.user.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.*;
+import static org.springframework.data.domain.Sort.Direction.ASC;
 
 public class CompetitionInviteControllerIntegrationTest extends BaseControllerIntegrationTest<CompetitionInviteController> {
+
+    private static final long INNOVATION_AREA_ID = 5L;
 
     @Autowired
     @Override
@@ -69,17 +85,30 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
     @Autowired
     private ProfileRepository profileRepository;
 
+    @Autowired
+    private RoleRepository roleRepository;
+
     private Competition competition;
-    private Profile profile;
 
     @Before
     public void setup() {
         loginSystemRegistrationUser();
 
         competition = competitionRepository.findOne(1L);
-        profile = profileRepository.save(newProfile().with(id(null)).build());
-        User user = userRepository.findByEmail("paul.plum@gmail.com").get();
-        user.setProfileId(profile.getId());
+
+        List<Profile> profiles = newProfile()
+                .withId()
+                .build(2);
+
+        List<Profile> savedProfiles = Lists.newArrayList(profileRepository.save(profiles));
+
+        User paulPlum = userRepository.findOne(getPaulPlum().getId());
+        User felixWilson = userRepository.findOne(getFelixWilson().getId());
+
+        paulPlum.setProfileId(savedProfiles.get(0).getId());
+        felixWilson.setProfileId(savedProfiles.get(1).getId());
+
+        userRepository.save(asList(paulPlum, felixWilson));
     }
 
     @Test
@@ -361,6 +390,8 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
         RestResult<Void> serviceResult = controller.acceptInvite("hash");
         assertTrue(serviceResult.isSuccess());
+
+        Profile profile = profileRepository.findOne(getPaulPlum().getProfileId());
 
         assertEquals(Collections.singleton(innovationArea), profile.getInnovationAreas());
     }
@@ -704,5 +735,238 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
         CompetitionInviteStatisticsResource statisticsResource = controller.getInviteStatistics(1L).getSuccessObject();
         assertEquals(expected, statisticsResource);
+    }
+
+    @Test
+    public void getAvailableAssessors() throws Exception {
+        loginCompAdmin();
+
+        addTestAssessors();
+
+        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "firstName"));
+        Optional<Long> innovationArea = Optional.of(5L);
+
+        AvailableAssessorPageResource availableAssessorPageResource = controller.getAvailableAssessors(competition.getId(), pageable, innovationArea)
+                .getSuccessObjectOrThrowException();
+
+        assertEquals(20, availableAssessorPageResource.getSize());
+        assertEquals(0, availableAssessorPageResource.getNumber());
+        assertEquals(1, availableAssessorPageResource.getTotalPages());
+        assertEquals(4, availableAssessorPageResource.getTotalElements());
+
+        List<AvailableAssessorResource> availableAssessorResources = availableAssessorPageResource.getContent();
+
+        assertEquals(4, availableAssessorResources.size());
+        assertEquals("Andrew Marr", availableAssessorResources.get(0).getName());
+        assertEquals("James Blake", availableAssessorResources.get(1).getName());
+        assertEquals("Jessica Alba", availableAssessorResources.get(2).getName());
+        assertEquals("Victoria Beckham", availableAssessorResources.get(3).getName());
+    }
+
+    @Test
+    public void getAvailableAssessors_nextPage() throws Exception {
+        loginCompAdmin();
+
+        addTestAssessors();
+
+        Pageable pageable = new PageRequest(1, 2, new Sort(ASC, "firstName"));
+        Optional<Long> innovationArea = Optional.of(5L);
+
+        AvailableAssessorPageResource availableAssessorPageResource = controller.getAvailableAssessors(competition.getId(), pageable, innovationArea)
+                .getSuccessObjectOrThrowException();
+
+        assertEquals(2, availableAssessorPageResource.getSize());
+        assertEquals(1, availableAssessorPageResource.getNumber());
+        assertEquals(2, availableAssessorPageResource.getTotalPages());
+        assertEquals(4, availableAssessorPageResource.getTotalElements());
+
+        List<AvailableAssessorResource> availableAssessorResources = availableAssessorPageResource.getContent();
+
+        assertEquals(2, availableAssessorResources.size());
+        assertEquals("Jessica Alba", availableAssessorResources.get(0).getName());
+        assertEquals("Victoria Beckham", availableAssessorResources.get(1).getName());
+    }
+
+    @Test
+    public void getAvailableAssessors_noInnovationArea() throws Exception {
+        loginCompAdmin();
+
+        addTestAssessors();
+
+        Pageable pageable = new PageRequest(0, 6, new Sort(ASC, "firstName"));
+
+        AvailableAssessorPageResource availableAssessorPageResource = controller.getAvailableAssessors(competition.getId(), pageable, empty())
+                .getSuccessObjectOrThrowException();
+
+        assertEquals(6, availableAssessorPageResource.getSize());
+        assertEquals(0, availableAssessorPageResource.getNumber());
+        assertEquals(1, availableAssessorPageResource.getTotalPages());
+        assertEquals(6, availableAssessorPageResource.getTotalElements());
+
+        List<AvailableAssessorResource> content = availableAssessorPageResource.getContent();
+        assertEquals(6, content.size());
+        assertEquals("Andrew Marr", content.get(0).getName());
+        assertEquals("Felix Wilson", content.get(1).getName());
+        assertEquals("James Blake", content.get(2).getName());
+        assertEquals("Jessica Alba", content.get(3).getName());
+        assertEquals("Professor Plum", content.get(4).getName());
+        assertEquals("Victoria Beckham", content.get(5).getName());
+    }
+
+    @Test
+    public void getAvailableAssessors_sortsFirstAndLastName() throws Exception {
+        loginCompAdmin();
+
+        Role assessorRole = roleRepository.findOneByName(UserRoleType.ASSESSOR.getName());
+        InnovationArea innovationArea = innovationAreaRepository.findOne(INNOVATION_AREA_ID);
+
+        List<Profile> profiles = newProfile()
+                .withId()
+                .withInnovationArea(innovationArea)
+                .build(4);
+
+        List<Profile> savedProfiles = Lists.newArrayList(profileRepository.save(profiles));
+
+        Long[] profileIds = simpleMap(savedProfiles, Profile::getId).toArray(new Long[savedProfiles.size()]);
+
+        List<User> users = newUser()
+                .withId()
+                .withUid("uid1", "uid2", "uid3", "uid4")
+                .withFirstName("Robert", "Robert", "Alexis", "Alexis")
+                .withLastName("Stark", "Salt", "Kinney", "Colon")
+                .withRoles(singletonList(assessorRole))
+                .withProfileId(profileIds)
+                .build(4);
+
+        userRepository.save(users);
+        flushAndClearSession();
+
+        Pageable pageable = new PageRequest(0, 10, new Sort(ASC, "firstName", "lastName"));
+
+        AvailableAssessorPageResource availableAssessorPageResource = controller.getAvailableAssessors(competition.getId(), pageable, empty())
+                .getSuccessObjectOrThrowException();
+
+        assertEquals(10, availableAssessorPageResource.getSize());
+        assertEquals(0, availableAssessorPageResource.getNumber());
+        assertEquals(1, availableAssessorPageResource.getTotalPages());
+        assertEquals(6, availableAssessorPageResource.getTotalElements());
+
+        List<AvailableAssessorResource> items = availableAssessorPageResource.getContent();
+
+        assertEquals(6, items.size());
+        assertEquals("Alexis Colon", items.get(0).getName());
+        assertEquals("Alexis Kinney", items.get(1).getName());
+        assertEquals("Felix Wilson", items.get(2).getName());
+        assertEquals("Professor Plum", items.get(3).getName());
+        assertEquals("Robert Salt", items.get(4).getName());
+        assertEquals("Robert Stark", items.get(5).getName());
+    }
+
+    private void addTestAssessors() {
+        InnovationArea innovationArea = innovationAreaRepository.findOne(INNOVATION_AREA_ID);
+
+        List<Profile> profiles = newProfile()
+                .withId()
+                .withInnovationArea(innovationArea)
+                .build(4);
+
+        List<Profile> savedProfiles = Lists.newArrayList(profileRepository.save(profiles));
+
+        Long[] profileIds = simpleMap(savedProfiles, Profile::getId).toArray(new Long[savedProfiles.size()]);
+
+        Role assessorRole = roleRepository.findOneByName(UserRoleType.ASSESSOR.getName());
+
+        List<User> users = newUser()
+                .withId()
+                .withUid("uid1", "uid2", "uid3", "uid4")
+                .withFirstName("Victoria", "James", "Jessica", "Andrew")
+                .withLastName("Beckham", "Blake", "Alba", "Marr")
+                .withRoles(singletonList(assessorRole))
+                .withProfileId(profileIds[0], profileIds[1], profileIds[2], profileIds[3])
+                .build(4);
+
+        userRepository.save(users);
+        flushAndClearSession();
+    }
+
+    @Test
+    public void getCreatedInvites() throws Exception {
+        loginCompAdmin();
+
+        addTestCreatedInvites();
+
+        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "name"));
+
+        AssessorCreatedInvitePageResource createdInvitesPageResource = controller.getCreatedInvites(competition.getId(), pageable)
+                .getSuccessObjectOrThrowException();
+
+        assertEquals(20, createdInvitesPageResource.getSize());
+        assertEquals(6, createdInvitesPageResource.getTotalElements());
+        assertEquals(1, createdInvitesPageResource.getTotalPages());
+        assertEquals(0, createdInvitesPageResource.getNumber());
+
+        List<AssessorCreatedInviteResource> pageItems = createdInvitesPageResource.getContent();
+
+        assertEquals(6, pageItems.size());
+        assertEquals("Angela Merkel", pageItems.get(0).getName());
+        assertEquals("Bill Gates", pageItems.get(1).getName());
+        assertEquals("Felix Wilson", pageItems.get(2).getName());
+        assertEquals("Paul Plum", pageItems.get(3).getName());
+        assertEquals("Serena Williams", pageItems.get(4).getName());
+        assertEquals("Will Smith", pageItems.get(5).getName());
+    }
+
+    @Test
+    public void getCreatedInvites_nextPage() throws Exception {
+        loginCompAdmin();
+
+        addTestCreatedInvites();
+
+        Pageable pageable = new PageRequest(1, 2, new Sort(ASC, "name"));
+
+        AssessorCreatedInvitePageResource createdInvitesPageResource = controller.getCreatedInvites(competition.getId(), pageable)
+                .getSuccessObjectOrThrowException();
+
+        assertEquals(2, createdInvitesPageResource.getSize());
+        assertEquals(6, createdInvitesPageResource.getTotalElements());
+        assertEquals(3, createdInvitesPageResource.getTotalPages());
+        assertEquals(1, createdInvitesPageResource.getNumber());
+
+        List<AssessorCreatedInviteResource> pageItems = createdInvitesPageResource.getContent();
+
+        assertEquals(2, pageItems.size());
+        assertEquals("Felix Wilson", pageItems.get(0).getName());
+        assertEquals("Paul Plum", pageItems.get(1).getName());
+    }
+
+    private void addTestCreatedInvites() {
+        InnovationArea innovationArea = innovationAreaRepository.findOne(5L);
+
+        List<CompetitionInvite> createdInvites = newCompetitionInvite()
+                .withId()
+                .withName("Will Smith", "Bill Gates", "Serena Williams", "Angela Merkel")
+                .withEmail("ws@test.com", "bg@test.com", "sw@test.com", "am@test.com")
+                .withStatus(CREATED)
+                .withCompetition(competition)
+                .withInnovationArea(innovationArea)
+                .build(4);
+
+        User paulPlum = userRepository.findByEmail("paul.plum@gmail.com").orElse(null);
+        User felixWilson = userRepository.findByEmail("felix.wilson@gmail.com").orElse(null);
+
+        List<CompetitionInvite> existingUserInvites = newCompetitionInvite()
+                .withId()
+                .withName("Paul Plum", "Felix Wilson")
+                .withEmail("paul.plum@gmail.com", "felix.wilson@gmail.com")
+                .withUser(paulPlum, felixWilson)
+                .withCompetition(competition)
+                .withStatus(CREATED)
+                .withInnovationArea()
+                .build(2);
+
+        createdInvites.addAll(existingUserInvites);
+
+        competitionInviteRepository.save(createdInvites);
+        flushAndClearSession();
     }
 }

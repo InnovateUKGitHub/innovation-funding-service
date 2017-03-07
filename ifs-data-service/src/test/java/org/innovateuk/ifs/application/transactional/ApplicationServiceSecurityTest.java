@@ -396,6 +396,10 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
             return null;
         }
 
+        @Override public ServiceResult<Long> getTurnoverByApplicationId(final Long applicationId) { return null; }
+
+        @Override public ServiceResult<Long> getHeadCountByApplicationId(final Long applicationId) { return null; }
+
         @Override
         public ServiceResult<Void> notifyApplicantsByCompetition(Long competitionId) {
             return null;
@@ -404,6 +408,5 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         @Override public ServiceResult<ApplicationResource> setApplicationFundingEmailDateTime(@P("applicationId") final Long applicationId, final LocalDateTime fundingEmailDate) {
             return null;
         }
-
     }
 }

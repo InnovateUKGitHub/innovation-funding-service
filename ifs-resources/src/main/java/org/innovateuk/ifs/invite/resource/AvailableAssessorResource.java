@@ -14,16 +14,19 @@ public class AvailableAssessorResource extends AssessorInviteResource {
 
     private String email;
     private BusinessType businessType;
-    private boolean added;
 
     public AvailableAssessorResource() {
     }
 
-    public AvailableAssessorResource(Long id, String name, List<InnovationAreaResource> innovationAreas, boolean compliant, String email, BusinessType businessType, boolean added) {
+    public AvailableAssessorResource(Long id,
+                                     String name,
+                                     List<InnovationAreaResource> innovationAreas,
+                                     boolean compliant,
+                                     String email,
+                                     BusinessType businessType) {
         super(id, name, innovationAreas, compliant);
         this.email = email;
         this.businessType = businessType;
-        this.added = added;
     }
 
     public String getEmail() {
@@ -42,14 +45,6 @@ public class AvailableAssessorResource extends AssessorInviteResource {
         this.businessType = businessType;
     }
 
-    public boolean isAdded() {
-        return added;
-    }
-
-    public void setAdded(boolean added) {
-        this.added = added;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -64,7 +59,6 @@ public class AvailableAssessorResource extends AssessorInviteResource {
 
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
-                .append(added, that.added)
                 .append(email, that.email)
                 .append(businessType, that.businessType)
                 .isEquals();
@@ -76,7 +70,6 @@ public class AvailableAssessorResource extends AssessorInviteResource {
                 .appendSuper(super.hashCode())
                 .append(email)
                 .append(businessType)
-                .append(added)
                 .toHashCode();
     }
 }

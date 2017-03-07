@@ -18,6 +18,7 @@ import org.springframework.ui.Model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
@@ -45,7 +46,7 @@ public class ProjectFinanceOverviewModelManager implements FinanceOverviewModelM
     }
 
     // TODO DW - INFUND-1555 - handle rest results
-    public void addFinanceDetails(Model model, Long competitionId, Long projectId) {
+    public void addFinanceDetails(Model model, Long competitionId, Long projectId, Optional<Long> organisationId) {
         addFinanceSections(competitionId, model);
         OrganisationFinanceOverview organisationFinanceOverview = new OrganisationProjectFinanceOverviewImpl(financeService, projectId);
         model.addAttribute("financeTotal", organisationFinanceOverview.getTotal());
