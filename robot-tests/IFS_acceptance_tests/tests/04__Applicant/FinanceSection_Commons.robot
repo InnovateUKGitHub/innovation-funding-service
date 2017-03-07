@@ -112,7 +112,7 @@ the user has read only view once section is marked complete
 the user fills in Labour
     the user clicks the button/link            jQuery=#form-input-20 button:contains("Labour")
     the user should see the element            css=.labour-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input
-    #remove previous rows                       jQuery=.labour-costs-table button:contains("Remove")
+    remove previous rows
     the user enters text to a text field       jQuery=input[name^="labour-labourDaysYearly"][id$="labourDaysYearly"]    230
     the user enters large text to a text field     jQuery=.labour-costs-table input[id$="labourGrossSalary"]  120000
     the user enters text to a text field       jQuery=.labour-costs-table input[id$="role"]  test
@@ -225,9 +225,11 @@ the user should see all finance subsections incomplete
     the user should see the element  jQuery=h3:contains("Your funding")
 
 Remove previous rows
-    [Arguments]  ${element}
+    #[Arguments]  ${element}
     :FOR    ${i}    IN RANGE  10
-    \  ${status}  run keyword and return status without screenshots  the user should not see the element  ${element}
-    \  Exit For Loop If  ${status}=='PASS'
-    \  run keyword if  ${status}=='FAIL'  the user clicks the button/link  ${element}
+    \    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible    jQuery=.labour-costs-table tr:first-of-type button:contains("Remove")
+    \
+    \  Exit For Loop If  '${status}'=='FAIL'
+    \  the user clicks the button/link  jQuery=.labour-costs-table tr:first-of-type button:contains("Remove")
     \  ${i} =  Set Variable  ${i + 1}
+
