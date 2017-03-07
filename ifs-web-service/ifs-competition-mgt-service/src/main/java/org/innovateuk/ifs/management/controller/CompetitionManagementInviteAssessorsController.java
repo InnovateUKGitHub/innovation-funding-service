@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.management.controller;
 
-import com.google.common.net.InetAddresses;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -113,34 +112,35 @@ public class CompetitionManagementInviteAssessorsController {
     public String invite(Model model,
                          @PathVariable("competitionId") long competitionId,
                          @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form,
-                         @RequestParam MultiValueMap<String, String> queryParams
-    ) {
+                         @RequestParam(defaultValue = "0") int page,
+                         @RequestParam MultiValueMap<String, String> queryParams) {
         if (form.getInvites().isEmpty()) {
             form.getInvites().add(new InviteNewAssessorsRowForm());
         }
 
-        return doViewInvite(model, competitionId, queryParams);
+        return doViewInvite(model, competitionId, page, queryParams);
     }
 
     @RequestMapping(value = "/invite", params = {"remove"}, method = RequestMethod.POST)
     public String removeInviteFromInviteView(Model model,
                                              @PathVariable("competitionId") long competitionId,
                                              @RequestParam(name = "remove") String email,
-                                             @RequestParam MultiValueMap<String, String> queryParams,
+                                             @RequestParam(defaultValue = "0") int page,
                                              @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form) {
         deleteInvite(email, competitionId);
-        return invite(model, competitionId, form, queryParams);
+        return redirectToInvite(competitionId, page);
     }
 
     @RequestMapping(value = "/invite", params = {"addNewUser"}, method = RequestMethod.POST)
     public String addNewUserToInviteView(Model model,
                                          @PathVariable("competitionId") long competitionId,
-                                         @RequestParam MultiValueMap<String, String> queryParams,
-                                         @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form) {
+                                         @RequestParam(defaultValue = "0") int page,
+                                         @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form,
+                                         @RequestParam MultiValueMap<String, String> queryParams) {
         form.getInvites().add(new InviteNewAssessorsRowForm());
         form.setVisible(true);
 
-        return invite(model, competitionId, form, queryParams);
+        return invite(model, competitionId, form, page, queryParams);
     }
 
     @RequestMapping(value = "/invite", params = {"removeNewUser"}, method = RequestMethod.POST)
@@ -148,16 +148,18 @@ public class CompetitionManagementInviteAssessorsController {
                                               @PathVariable("competitionId") long competitionId,
                                               @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form,
                                               @RequestParam(name = "removeNewUser") int position,
+                                              @RequestParam(defaultValue = "0") int page,
                                               @RequestParam MultiValueMap<String, String> queryParams) {
         form.getInvites().remove(position);
         form.setVisible(true);
 
-        return invite(model, competitionId, form, queryParams);
+        return invite(model, competitionId, form, page, queryParams);
     }
 
     @RequestMapping(value = "/invite", params = {"inviteNewUsers"}, method = RequestMethod.POST)
     public String inviteNewsUsersFromInviteView(Model model,
                                                 @PathVariable("competitionId") long competitionId,
+                                                @RequestParam(defaultValue = "0") int page,
                                                 @RequestParam MultiValueMap<String, String> queryParams,
                                                 @Valid @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form,
                                                 @SuppressWarnings("unused") BindingResult bindingResult,
@@ -165,7 +167,7 @@ public class CompetitionManagementInviteAssessorsController {
         form.setVisible(true);
 
         return validationHandler.failNowOrSucceedWith(
-                () -> invite(model, competitionId, form, queryParams),
+                () -> invite(model, competitionId, form, page, queryParams),
                 () -> {
                     RestResult<Void> restResult = competitionInviteRestService.inviteNewUsers(
                             newInviteFormToResource(form, competitionId), competitionId
@@ -173,11 +175,18 @@ public class CompetitionManagementInviteAssessorsController {
 
                     return validationHandler.addAnyErrors(restResult)
                             .failNowOrSucceedWith(
-                                    () -> invite(model, competitionId, form, queryParams),
-                                    () -> format("redirect:/competition/%s/assessors/invite", competitionId)
+                                    () -> invite(model, competitionId, form, page, queryParams),
+                                    () -> redirectToInvite(competitionId, page)
                             );
                 }
         );
+    }
+
+    private String redirectToInvite(long competitionId, int page) {
+        return "redirect:" + UriComponentsBuilder.fromPath("/competition/{competitionId}/assessors/invite")
+                .queryParam("page", page)
+                .buildAndExpand(asMap("competitionId", competitionId))
+                .toUriString();
     }
 
     @RequestMapping(value = "/overview", method = RequestMethod.GET)
@@ -214,10 +223,13 @@ public class CompetitionManagementInviteAssessorsController {
         return "assessors/find";
     }
 
-    private String doViewInvite(Model model, long competitionId, MultiValueMap<String, String> queryParams) {
+    private String doViewInvite(Model model, long competitionId, int page, MultiValueMap<String, String> queryParams) {
         CompetitionResource competition = competitionService.getById(competitionId);
-        model.addAttribute("model", inviteAssessorsInviteModelPopulator.populateModel(competition));
-        model.addAttribute("originQuery", buildOriginQueryString(AssessorProfileOrigin.ASSESSOR_INVITE, queryParams));
+
+        String originQuery = buildOriginQueryString(AssessorProfileOrigin.ASSESSOR_INVITE, queryParams);
+
+        model.addAttribute("model", inviteAssessorsInviteModelPopulator.populateModel(competition, page, originQuery));
+        model.addAttribute("originQuery", originQuery);
 
         return "assessors/invite";
     }
