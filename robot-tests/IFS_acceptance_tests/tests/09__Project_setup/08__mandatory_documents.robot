@@ -291,7 +291,7 @@ CompAdmin can see uploaded files
     Then the user should see the element    jQuery=h2:contains("Projects in setup")
     # Comp Admin should see the element as action needed instead of done TODO-INFUND-5601
     When the user clicks the button/link    jQuery=#table-project-status tr:nth-child(2) td:nth-child(7) a
-    Then the user should see the text in the page    Collaboration Agreement
+    Then the user should see the text in the page    Collaboration agreement
     When the user clicks the button/link    jQuery=.uploaded-file:nth-of-type(1)
     Then the user should see the file without error
     When the user clicks the button/link    jQuery=.uploaded-file:nth-of-type(2)
