@@ -454,26 +454,6 @@
     </div>
 </th:block>
 
-<!-- confirmation update organisation -->
-<th:block th:fragment="modal-update-organisation">
-    <div class="modal-update-organisation" role="dialog" aria-hidden="true">
-        <th:block th:insert="fragments/modals :: close-button" />
-        <h2 class="heading-medium no-margin">Update organisation</h2>
-        <p>Invites will be sent to all new applicants.</p>
-        <p>You should not remove members of your team without discussing this action with them first. Members who are removed may not receive a notification from Innovate UK.</p>
-        <hr/>
-
-        <div class="grid-row extra-margin">
-            <div class="column-half">
-                <button class="button large" name="save_contributors" value="save_contributors" type="submit">Update organisation</button>
-            </div>
-            <div class="column-half alignright-button">
-                <button type="button" class="js-close buttonlink large">Cancel</button>
-            </div>
-        </div>
-    </div>
-</th:block>
-
 <!-- confirmation new organisation -->
 <th:block th:fragment="modal-delete-organisation">
     <div class="modal-delete-organisation" role="dialog" aria-hidden="true">

@@ -5,7 +5,6 @@
     </head>
 
     <body class="app-org-invite" th:with="context='applicant'">
-        <th:block th:insert="fragments/modals :: modal-overlay" />
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
@@ -114,14 +113,13 @@
                 </th:block>
                 -->
 
-                <p class="extra-margin">Once you update the organisation, your changes will take effect.</p>
+                <p class="extra-margin">Once you update the organisation, your changes will take effect. Invites will be sent to all new applicants.</p>
+                <p th:if="${model.userLeadApplicant}">You should not remove members of your team without discussing this action with them first. Members who are removed may not receive a notification from Innovate UK.</p>
 
                 <p class="extra-margin">
-                    <a href="#" data-js-modal="modal-update-organisation" class="button">Update organisation</a>
+                    <button class="button" name="save_contributors" type="submit">Update organisation</button>
                     <a th:href="@{/application/{applicationId}/team(applicationId=${model.applicationId})}" class="button button-clear">Cancel</a>
                 </p>
-
-                <th:block th:insert="fragments/modals :: modal-update-organisation" />
 
                 <input type="hidden" th:field="*{markedForRemoval}" />
             </form>
