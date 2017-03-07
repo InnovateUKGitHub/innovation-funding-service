@@ -116,7 +116,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
 
         OrganisationResource expectedOrganisation = organisationsMap.get("Ludlow");
-        Long inviteOrgIdLudlow = expectedOrganisation.getId();
+        Long inviteOrgIdLudlow = inviteOrganisationsMap.get("Ludlow").getId();
         Long applicationInviteId1 = inviteOrganisationsMap.get("Ludlow").getInviteResources().get(0).getId();
         Long applicationInviteId2 = inviteOrganisationsMap.get("Ludlow").getInviteResources().get(1).getId();
 
@@ -135,6 +135,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
                 expectedApplicants);
 
         setLoggedInUser(leadApplicant);
+
         mockMvc.perform(get("/application/{applicationId}/team/update?organisation={organisationId}", applicationResource.getId(), expectedOrganisation.getId()))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedViewModel))
@@ -159,7 +160,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
 
         OrganisationResource expectedOrganisation = organisationsMap.get("Ludlow");
-        Long inviteOrgIdLudlow = expectedOrganisation.getId();
+        Long inviteOrgIdLudlow = inviteOrganisationsMap.get("Ludlow").getId();
         Long applicationInviteId1 = inviteOrganisationsMap.get("Ludlow").getInviteResources().get(0).getId();
         Long applicationInviteId2 = inviteOrganisationsMap.get("Ludlow").getInviteResources().get(1).getId();
 
@@ -294,7 +295,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         expectedForm.setApplicants(applicants);
 
         ApplicationInviteResource applicationInvite = newApplicationInviteResource()
-                .withId(null)
+                .withId((Long) null)
                 .withName(applicants.get(0).getName())
                 .withEmail(applicants.get(0).getEmail())
                 .withApplication(applicationResource.getId())
@@ -337,7 +338,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         expectedForm.setApplicants(applicants);
 
         ApplicationInviteResource applicationInvite = newApplicationInviteResource()
-                .withId(null)
+                .withId((Long) null)
                 .withName(applicants.get(0).getName())
                 .withEmail(applicants.get(0).getEmail())
                 .withApplication(applicationResource.getId())
@@ -377,7 +378,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         expectedForm.setApplicants(applicants);
 
         ApplicationInviteResource applicationInvite = newApplicationInviteResource()
-                .withId(null)
+                .withId((Long) null)
                 .withName(applicants.get(0).getName())
                 .withEmail(applicants.get(0).getEmail())
                 .withApplication(applicationResource.getId())
@@ -453,7 +454,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         );
 
         ApplicationInviteResource applicationInvite = newApplicationInviteResource()
-                .withId(null)
+                .withId((Long) null)
                 .withName(applicants.get(0).getName())
                 .withEmail(applicants.get(0).getEmail())
                 .withApplication(applicationResource.getId())
@@ -520,7 +521,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         );
 
         ApplicationInviteResource applicationInvite = newApplicationInviteResource()
-                .withId(null)
+                .withId((Long) null)
                 .withName(applicants.get(0).getName())
                 .withEmail(applicants.get(0).getEmail())
                 .withApplication(applicationResource.getId())
@@ -556,7 +557,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         );
 
         ApplicationInviteResource applicationInvite = newApplicationInviteResource()
-                .withId(null)
+                .withId((Long) null)
                 .withName(applicants.get(0).getName())
                 .withEmail(applicants.get(0).getEmail())
                 .withApplication(applicationResource.getId())
