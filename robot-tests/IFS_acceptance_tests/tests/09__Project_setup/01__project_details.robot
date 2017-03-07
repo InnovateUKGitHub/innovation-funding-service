@@ -106,7 +106,7 @@ Non-lead partner can see the project setup page
     And the user should see the text in the page    The application ${PROJECT_SETUP_APPLICATION_1_TITLE} has been successful within the ${PROJECT_SETUP_COMPETITION_NAME} competition
     And the user should see the element    link=View application and feedback
     And the user clicks the button/link    link=View terms and conditions of grant offer
-    And the user should see the text in the page     Terms and Conditions of an Innovate UK Grant Award
+    And the user should see the text in the page     Terms and conditions of an Innovate UK grant award
     And the user goes back to the previous page
     And the user should see the text in the page    Project details
     And the user should see the text in the page    Monitoring Officer
