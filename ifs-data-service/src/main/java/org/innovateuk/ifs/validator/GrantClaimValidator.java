@@ -45,15 +45,15 @@ public class GrantClaimValidator implements Validator {
         OrganisationType organisationType = ((ApplicationFinanceRow)cost).getTarget().getOrganisation().getOrganisationType();
         int max;
 
-        if(isAcademicOrBusiness(organisationType)) {
+        if(canRequest100PercentFunding(organisationType)) {
+            max = 100;
+        } else {
             OrganisationSize size = ((ApplicationFinanceRow)cost).getTarget().getOrganisationSize();
             if (size == null) {
                 rejectValue(errors, "grantClaimPercentage", "validation.finance.select.organisation.size");
                 return;
             }
             max = size.getMaxGrantClaimPercentage();
-        } else {
-            max = 100;
         }
 
         if(response.getGrantClaimPercentage() > max){
@@ -63,7 +63,7 @@ public class GrantClaimValidator implements Validator {
         }
     }
     
-    private boolean isAcademicOrBusiness(OrganisationType type) {
-    	return OrganisationTypeEnum.ACADEMIC.getOrganisationTypeId().equals(type.getId()) || OrganisationTypeEnum.BUSINESS.getOrganisationTypeId().equals(type.getId());
+    private boolean canRequest100PercentFunding(OrganisationType type) {
+    	return !OrganisationTypeEnum.BUSINESS.getOrganisationTypeId().equals(type.getId());
     }
 }
