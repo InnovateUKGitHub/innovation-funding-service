@@ -116,7 +116,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
 
         OrganisationResource expectedOrganisation = organisationsMap.get("Ludlow");
-        Long inviteOrgIdLudlow = inviteOrganisationsMap.get("Ludlow").getId();
+        Long inviteOrgIdLudlow = expectedOrganisation.getId();
         Long applicationInviteId1 = inviteOrganisationsMap.get("Ludlow").getInviteResources().get(0).getId();
         Long applicationInviteId2 = inviteOrganisationsMap.get("Ludlow").getInviteResources().get(1).getId();
 
@@ -159,7 +159,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
 
         OrganisationResource expectedOrganisation = organisationsMap.get("Ludlow");
-        Long inviteOrgIdLudlow = inviteOrganisationsMap.get("Ludlow").getId();
+        Long inviteOrgIdLudlow = expectedOrganisation.getId();
         Long applicationInviteId1 = inviteOrganisationsMap.get("Ludlow").getInviteResources().get(0).getId();
         Long applicationInviteId2 = inviteOrganisationsMap.get("Ludlow").getInviteResources().get(1).getId();
 
@@ -293,8 +293,13 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         );
         expectedForm.setApplicants(applicants);
 
-        ApplicationInviteResource applicationInvite = new ApplicationInviteResource(applicants.get(0).getName(), applicants.get(0).getEmail(), applicationResource.getId());
-        applicationInvite.setInviteOrganisation(inviteOrganisation.getId());
+        ApplicationInviteResource applicationInvite = newApplicationInviteResource()
+                .withId(null)
+                .withName(applicants.get(0).getName())
+                .withEmail(applicants.get(0).getEmail())
+                .withApplication(applicationResource.getId())
+                .withInviteOrganisation(inviteOrganisation.getId())
+                .build();
 
         InviteResultsResource inviteResultsResource = new InviteResultsResource();
         inviteResultsResource.setInvitesSendSuccess(1);
@@ -331,7 +336,12 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         );
         expectedForm.setApplicants(applicants);
 
-        ApplicationInviteResource applicationInvite = new ApplicationInviteResource(applicants.get(0).getName(), applicants.get(0).getEmail(), applicationResource.getId());
+        ApplicationInviteResource applicationInvite = newApplicationInviteResource()
+                .withId(null)
+                .withName(applicants.get(0).getName())
+                .withEmail(applicants.get(0).getEmail())
+                .withApplication(applicationResource.getId())
+                .build();
         InviteResultsResource inviteResultsResource = new InviteResultsResource();
         inviteResultsResource.setInvitesSendSuccess(1);
         when(inviteRestService.createInvitesByOrganisation(organisation.getId(), singletonList(applicationInvite))).thenReturn(restSuccess(inviteResultsResource));
@@ -366,7 +376,12 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         );
         expectedForm.setApplicants(applicants);
 
-        ApplicationInviteResource applicationInvite = new ApplicationInviteResource(applicants.get(0).getName(), applicants.get(0).getEmail(), applicationResource.getId());
+        ApplicationInviteResource applicationInvite = newApplicationInviteResource()
+                .withId(null)
+                .withName(applicants.get(0).getName())
+                .withEmail(applicants.get(0).getEmail())
+                .withApplication(applicationResource.getId())
+                .build();
         InviteResultsResource inviteResultsResource = new InviteResultsResource();
         inviteResultsResource.setInvitesSendSuccess(1);
         when(inviteRestService.createInvitesByOrganisation(organisation.getId(), singletonList(applicationInvite))).thenReturn(restSuccess(inviteResultsResource));
@@ -437,7 +452,12 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
                 new ApplicantInviteForm("Fred Brown", "fred.brown@empire.com")
         );
 
-        ApplicationInviteResource applicationInvite = new ApplicationInviteResource(applicants.get(0).getName(), applicants.get(0).getEmail(), applicationResource.getId());
+        ApplicationInviteResource applicationInvite = newApplicationInviteResource()
+                .withId(null)
+                .withName(applicants.get(0).getName())
+                .withEmail(applicants.get(0).getEmail())
+                .withApplication(applicationResource.getId())
+                .build();
         InviteResultsResource inviteResultsResource = new InviteResultsResource();
         inviteResultsResource.setInvitesSendSuccess(1);
         when(inviteRestService.createInvitesByOrganisation(organisation.getId(), singletonList(applicationInvite))).thenReturn(restSuccess(inviteResultsResource));
@@ -464,11 +484,9 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
         InviteOrganisationResource inviteOrganisation = inviteOrganisationsMap.get("Ludlow");
 
-        ApplicationTeamUpdateForm expectedForm = new ApplicationTeamUpdateForm();
         List<ApplicantInviteForm> applicants = singletonList(
                 new ApplicantInviteForm("Fred Brown", "fred.brown@ludlow.com")
         );
-        expectedForm.setApplicants(applicants);
 
         ApplicationInviteResource applicationInvite = new ApplicationInviteResource(applicants.get(0).getName(), applicants.get(0).getEmail(), applicationResource.getId());
         InviteResultsResource inviteResultsResource = new InviteResultsResource();
@@ -501,7 +519,12 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
                 new ApplicantInviteForm("Fred Brown", "fred.brown@empire.com")
         );
 
-        ApplicationInviteResource applicationInvite = new ApplicationInviteResource(applicants.get(0).getName(), applicants.get(0).getEmail(), applicationResource.getId());
+        ApplicationInviteResource applicationInvite = newApplicationInviteResource()
+                .withId(null)
+                .withName(applicants.get(0).getName())
+                .withEmail(applicants.get(0).getEmail())
+                .withApplication(applicationResource.getId())
+                .build();
         InviteResultsResource inviteResultsResource = new InviteResultsResource();
         inviteResultsResource.setInvitesSendSuccess(1);
         when(inviteRestService.createInvitesByOrganisation(organisation.getId(), singletonList(applicationInvite))).thenReturn(restSuccess(inviteResultsResource));
@@ -532,7 +555,12 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
                 new ApplicantInviteForm("Fred Brown", "fred.brown@ludlow.com")
         );
 
-        ApplicationInviteResource applicationInvite = new ApplicationInviteResource(applicants.get(0).getName(), applicants.get(0).getEmail(), applicationResource.getId());
+        ApplicationInviteResource applicationInvite = newApplicationInviteResource()
+                .withId(null)
+                .withName(applicants.get(0).getName())
+                .withEmail(applicants.get(0).getEmail())
+                .withApplication(applicationResource.getId())
+                .build();
         InviteResultsResource inviteResultsResource = new InviteResultsResource();
         inviteResultsResource.setInvitesSendSuccess(1);
         when(inviteRestService.createInvitesByOrganisation(inviteOrganisation.getOrganisation(), singletonList(applicationInvite))).thenReturn(restSuccess(inviteResultsResource));
