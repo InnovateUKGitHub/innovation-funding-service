@@ -24,7 +24,6 @@ import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -308,7 +307,6 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
     }
 
     @Test
-    @Ignore // TODO - Bronnyl to fix later.
     public void testGenerateSpendProfileForPartnerOrganisation() {
 
         Project project = newProject().
@@ -349,12 +347,12 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
                 new Cost("200").withCategory(costCategoryMaterials));
 
         List<Cost> expectedOrganisation1SpendProfileFigures = asList(
-                new Cost("34").withCategory(costCategoryLabour).withTimePeriod(0, MONTH, 1, MONTH),
+                new Cost("34.00").withCategory(costCategoryLabour).withTimePeriod(0, MONTH, 1, MONTH),
                 new Cost("33").withCategory(costCategoryLabour).withTimePeriod(1, MONTH, 1, MONTH),
                 new Cost("33").withCategory(costCategoryLabour).withTimePeriod(2, MONTH, 1, MONTH),
-                new Cost("66").withCategory(costCategoryMaterials).withTimePeriod(0, MONTH, 1, MONTH),
-                new Cost("67").withCategory(costCategoryMaterials).withTimePeriod(1, MONTH, 1, MONTH),
-                new Cost("67").withCategory(costCategoryMaterials).withTimePeriod(2, MONTH, 1, MONTH));
+                new Cost("68.00").withCategory(costCategoryMaterials).withTimePeriod(0, MONTH, 1, MONTH),
+                new Cost("66").withCategory(costCategoryMaterials).withTimePeriod(1, MONTH, 1, MONTH),
+                new Cost("66").withCategory(costCategoryMaterials).withTimePeriod(2, MONTH, 1, MONTH));
 
         Long userId = 7L;
         User generatedBy = newUser().build();
