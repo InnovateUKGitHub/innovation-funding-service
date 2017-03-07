@@ -2,6 +2,7 @@ package org.innovateuk.ifs.security;
 
 import org.innovateuk.ifs.commons.interceptor.AbstractIfsMethodsAdvice;
 import org.innovateuk.ifs.commons.security.NotSecured;
+import org.innovateuk.ifs.commons.security.SecuredMethodsInStackCountInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
@@ -25,7 +26,7 @@ public class SecuredMethodsAdvice extends AbstractIfsMethodsAdvice {
     public static final int SECURED_METHODS_ORDER  = NotSecuredMethodThatMustBeSecuredByOtherMethodsAdvice.NOT_SECURED_METHOD_THAT_MUST_BE_SECURED_BY_OTHER_METHODS_ORDER - 1;
     private static final long serialVersionUID = 1L;
     private static final BiFunction<Method, Class, Boolean> FILTER =
-            (m, c) -> !simpleFilter(asList(PostFilter.class, PreFilter.class, PreAuthorize.class, PostAuthorize.class), a -> m.isAnnotationPresent(a)).isEmpty();
+            (m, c) -> !simpleFilter(asList(PostFilter.class, PreFilter.class, PreAuthorize.class, PostAuthorize.class), m::isAnnotationPresent).isEmpty();
 
     @Autowired
     public SecuredMethodsAdvice(final SecuredMethodsInStackCountInterceptor interceptor) {

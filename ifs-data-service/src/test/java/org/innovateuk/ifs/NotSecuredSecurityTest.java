@@ -2,8 +2,8 @@ package org.innovateuk.ifs;
 
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.commons.security.NotSecured;
+import org.innovateuk.ifs.commons.security.SecuredMethodsInStackCountInterceptor;
 import org.innovateuk.ifs.security.NotSecuredMethodException;
-import org.innovateuk.ifs.security.SecuredMethodsInStackCountInterceptor;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,6 +25,7 @@ public class NotSecuredSecurityTest extends BaseIntegrationTest {
 
     @Autowired
     private SecuredMethodsInStackCountInterceptor securedMethodsInStackCountInterceptor;
+
     @Autowired
     private GenericApplicationContext applicationContext;
     private TestServiceLevel1 springWrappedTestServiceLevel1;

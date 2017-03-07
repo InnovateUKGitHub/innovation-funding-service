@@ -17,8 +17,7 @@ public class SecuredMethodsInStackCountInterceptor implements MethodInterceptor 
         final Integer numberSecuredMethodsInStackBeforeCalling = securedMethodsInStackCount.get() != null ? securedMethodsInStackCount.get() : 0;
         try {
             securedMethodsInStackCount.set(numberSecuredMethodsInStackBeforeCalling + 1);
-            final Object proceed = invocation.proceed();
-            return proceed;
+            return invocation.proceed();
         } finally {
             securedMethodsInStackCount.set(numberSecuredMethodsInStackBeforeCalling);
         }

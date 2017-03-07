@@ -3,6 +3,7 @@ package org.innovateuk.ifs.security;
 import org.innovateuk.ifs.commons.security.NotSecured;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
+import org.innovateuk.ifs.commons.security.SecuredMethodsInStackCountInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +24,8 @@ public class NotSecuredMethodInterceptor implements MethodInterceptor {
     @Override
     public Object invoke(final MethodInvocation invocation) throws Throwable {
         if (methodSecuredInStackCountInterceptor.isStackSecured()) {
-            final Object proceed = invocation.proceed();
-            return proceed;
-        }
-        else {
+            return invocation.proceed();
+        } else {
             throw new NotSecuredMethodException("This method expects to be secured further up the method chain");
         }
     }
