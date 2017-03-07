@@ -6,7 +6,7 @@ TARGET=$2
 
 if [[ ${TARGET} == "production" ]]
 then
-    PROJECT="production-new"
+    PROJECT="production"
 fi
 
 if [[ (${TARGET} == "remote") ||  (${TARGET} == "production") ]]
