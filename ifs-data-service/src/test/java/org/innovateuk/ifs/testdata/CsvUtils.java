@@ -85,6 +85,10 @@ class CsvUtils {
         return simpleMap(readCsvLines("assessments"), AssessmentLine::new);
     }
 
+    static List<AssessorResponseLine> readAssessorResponses() {
+        return simpleMap(readCsvLines("assessor-responses"), AssessorResponseLine::new);
+    }
+
     static List<InviteLine> readInvites() {
         return simpleMap(readCsvLines("invites"), InviteLine::new);
     }
@@ -327,6 +331,7 @@ class CsvUtils {
         ApplicationStatusConstants status;
         boolean markFinancesComplete;
         String researchCategory;
+        String innovationArea;
         boolean resubmission;
         boolean markDetailsComplete;
 
@@ -343,6 +348,7 @@ class CsvUtils {
             status = ApplicationStatusConstants.getFromName(line.get(i++));
             markFinancesComplete = nullableBoolean(line.get(i++));
             researchCategory = nullable(line.get(i++));
+            innovationArea = nullable(line.get(i++));
             resubmission = nullableBoolean(line.get(i++));
             markDetailsComplete = nullableBoolean(line.get(i++));
         }
@@ -355,6 +361,8 @@ class CsvUtils {
         AssessmentRejectOutcomeValue rejectReason;
         String rejectComment;
         AssessmentStates state;
+        String feedback;
+        String recommendComment;
 
         private AssessmentLine(List<String> line) {
 
@@ -365,6 +373,29 @@ class CsvUtils {
             rejectReason = rejectReasonString != null ? AssessmentRejectOutcomeValue.valueOf(rejectReasonString) : null;
             rejectComment = nullable(line.get(i++));
             state = AssessmentStates.valueOf(line.get(i++));
+            feedback = line.get(i++);
+            recommendComment = line.get(i++);
+        }
+    }
+
+    static class AssessorResponseLine {
+        String competitionName;
+        String applicationName;
+        String assessorEmail;
+        String shortName;
+        String description;
+        boolean isResearchCategory;
+        String value;
+
+        private AssessorResponseLine(List<String> line) {
+            int i = 0;
+            competitionName = line.get(i++);
+            applicationName = line.get(i++);
+            assessorEmail = line.get(i++);
+            shortName = line.get(i++);
+            description = line.get(i++);
+            isResearchCategory = nullableBoolean(line.get(i++));
+            value = line.get(i++);
         }
     }
 

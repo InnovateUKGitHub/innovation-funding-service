@@ -7,14 +7,19 @@ import org.innovateuk.ifs.invite.resource.*;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.lang.String.format;
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
 import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
+import static org.innovateuk.ifs.invite.builder.AssessorCreatedInvitePageResourceBuilder.newAssessorCreatedInvitePageResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteToSendResourceBuilder.newAssessorInviteToSendResource;
+import static org.innovateuk.ifs.invite.builder.AvailableAssessorPageResourceBuilder.newAvailableAssessorPageResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
 import static org.innovateuk.ifs.invite.builder.CompetitionInviteStatisticsResourceBuilder.newCompetitionInviteStatisticsResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteListResourceBuilder.newNewUserStagedInviteListResource;
@@ -96,22 +101,58 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
     @Test
     public void getAvailableAssessors() throws Exception {
         long competitionId = 1L;
-        List<AvailableAssessorResource> expected = newAvailableAssessorResource().build(2);
+        int page = 1;
+        Optional<Long> innovationArea = of(2L);
 
-        setupGetWithRestResultExpectations(format("%s/%s/%s", restUrl, "getAvailableAssessors", competitionId), availableAssessorResourceListType(), expected);
+        List<AvailableAssessorResource> assessorItems = newAvailableAssessorResource().build(2);
 
-        List<AvailableAssessorResource> actual = service.getAvailableAssessors(competitionId).getSuccessObject();
+        AvailableAssessorPageResource expected = newAvailableAssessorPageResource()
+                .withContent(assessorItems)
+                .build();
+
+        setupGetWithRestResultExpectations(
+                format("%s/%s/%s?page=1&innovationArea=2", restUrl, "getAvailableAssessors", competitionId),
+                AvailableAssessorPageResource.class,
+                expected
+        );
+
+        AvailableAssessorPageResource actual = service.getAvailableAssessors(competitionId, page, innovationArea).getSuccessObject();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getAvailableAssessors_noInnovationArea() throws Exception {
+        long competitionId = 1L;
+        int page = 1;
+        Optional<Long> innovationArea = empty();
+
+        List<AvailableAssessorResource> assessorItems = newAvailableAssessorResource().build(2);
+
+        AvailableAssessorPageResource expected = newAvailableAssessorPageResource()
+                .withContent(assessorItems)
+                .build();
+
+        setupGetWithRestResultExpectations(
+                format("%s/%s/%s?page=1", restUrl, "getAvailableAssessors", competitionId),
+                AvailableAssessorPageResource.class,
+                expected
+        );
+
+        AvailableAssessorPageResource actual = service.getAvailableAssessors(competitionId, page, innovationArea).getSuccessObject();
         assertEquals(expected, actual);
     }
 
     @Test
     public void getCreatedInvites() throws Exception {
         long competitionId = 1L;
-        List<AssessorCreatedInviteResource> expected = newAssessorCreatedInviteResource().build(2);
+        int page = 1;
+        AssessorCreatedInvitePageResource expected = newAssessorCreatedInvitePageResource()
+                .withContent(newAssessorCreatedInviteResource().build(2))
+                .build();
 
-        setupGetWithRestResultExpectations(format("%s/%s/%s", restUrl, "getCreatedInvites", competitionId), assessorCreatedInviteResourceListType(), expected);
+        setupGetWithRestResultExpectations(format("%s/%s/%s?page=1", restUrl, "getCreatedInvites", competitionId), AssessorCreatedInvitePageResource.class, expected);
 
-        List<AssessorCreatedInviteResource> actual = service.getCreatedInvites(competitionId).getSuccessObject();
+        AssessorCreatedInvitePageResource actual = service.getCreatedInvites(competitionId, page).getSuccessObject();
         assertEquals(expected, actual);
     }
 

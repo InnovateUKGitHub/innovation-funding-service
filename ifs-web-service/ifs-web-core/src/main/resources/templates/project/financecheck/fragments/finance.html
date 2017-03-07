@@ -1341,4 +1341,31 @@
             </tr>
         </th:block>
     </th:block>
+    <!-- ===========================Research Participation =========================== -->
+    <th:block th:fragment="research_participation" th:if="${showResearchParticipation}">
+        <div th:class="${researchParticipationPercentage &gt; maxResearchPercentage} ? 'eligibility warning' : 'eligibility'" >
+            <dl class="list-eligibility">
+                <dt>Maximum research participation</dt>
+                <dd th:text="${maxResearchPercentage}+' %'"></dd>
+                <dt>Current research participation</dt>
+                <dd th:class="${researchParticipationPercentage &gt; maxResearchPercentage} ? 'warning'" 
+                    th:text="(${researchParticipationPercentage} % 1 == 0 ?
+                                ${#numbers.formatDecimal(researchParticipationPercentage,0,0)} :
+                                ${researchParticipationPercentage}) +' %'"></dd>
+            </dl>
+
+            <div th:replace="project/financecheck/fragments/finance :: research_participation_alert"></div>
+        </div>
+    </th:block>
+
+    <!-- ===========================Research Participation alert messages =========================== -->
+    <th:block th:fragment="research_participation_alert">
+        <div th:unless="${researchParticipationPercentage &gt; maxResearchPercentage}" class="success-alert">
+            <h2 class="heading-small no-margin">The research participation levels of this project are within the required range.</h2>
+        </div>
+        <div th:if="${researchParticipationPercentage &gt; maxResearchPercentage}" class="warning-alert">
+            <h2 class="heading-small no-margin">Maximum research participation exceeded</h2>
+            <p>Please seek confirmation that the project is still eligible for funding.</p>
+        </div>
+    </th:block>
 </html>

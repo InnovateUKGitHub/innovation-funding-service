@@ -400,9 +400,14 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
             return null;
         }
 
+        @Override public ServiceResult<Long> getTurnoverByApplicationId(final Long applicationId) { return null; }
+
+        @Override public ServiceResult<Long> getHeadCountByApplicationId(final Long applicationId) { return null; }
+
         @Override
         public ServiceResult<Void> notifyApplicantsByCompetition(Long competitionId) {
             return null;
         }
+
     }
 }

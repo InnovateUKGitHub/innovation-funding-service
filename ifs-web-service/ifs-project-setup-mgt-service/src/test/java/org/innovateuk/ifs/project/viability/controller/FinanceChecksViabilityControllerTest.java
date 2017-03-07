@@ -1,6 +1,9 @@
 package org.innovateuk.ifs.project.viability.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -21,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
 import static org.innovateuk.ifs.finance.builder.GrantClaimCostBuilder.newGrantClaim;
 import static org.innovateuk.ifs.finance.builder.GrantClaimCostCategoryBuilder.newGrantClaimCostCategory;
@@ -57,7 +61,8 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
             withCompanyHouseNumber("987654321").
             build();
 
-    private ProjectResource project = newProjectResource().build();
+    private ApplicationResource app = newApplicationResource().withId(456L).withCompetition(123L).build();
+    private ProjectResource project = newProjectResource().withApplication(app).build();
 
     private Map<FinanceRowType, FinanceRowCostCategory> industrialOrganisationFinances = asMap(
             FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
@@ -137,6 +142,12 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         when(projectFinanceService.getViability(project.getId(), industrialOrganisation.getId())).thenReturn(viability);
         when(projectFinanceService.isCreditReportConfirmed(project.getId(), industrialOrganisation.getId())).thenReturn(false);
 
+        when(projectService.getById(project.getId())).thenReturn(project);
+        when(applicationService.getById(456L)).thenReturn(app);
+
+        when(applicationService.getHeadCount(456L)).thenReturn(RestResult.restSuccess(1L));
+        when(applicationService.getTurnover(456L)).thenReturn(RestResult.restSuccess(2L));
+
         MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/viability",
                 project.getId(), industrialOrganisation.getId())).
                 andExpect(status().isOk()).
@@ -166,6 +177,9 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         assertEquals(viability.getViabilityRagStatus(), form.getRagStatus());
         assertEquals(false, form.isCreditReportConfirmed());
         assertEquals(true, form.isConfirmViabilityChecked());
+
+        assertEquals(2L, viewModel.getTurnover().longValue());
+        assertEquals(1L, viewModel.getHeadCount().longValue());
     }
 
     @Test
@@ -178,6 +192,10 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         when(projectFinanceService.getProjectFinances(project.getId())).thenReturn(projectFinances);
         when(projectFinanceService.getViability(project.getId(), academicOrganisation.getId())).thenReturn(viability);
         when(projectFinanceService.isCreditReportConfirmed(project.getId(), academicOrganisation.getId())).thenReturn(true);
+
+        when(projectService.getById(project.getId())).thenReturn(project);
+        when(applicationService.getHeadCount(456L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_SINGLE_ENTRY_EXPECTED));
+        when(applicationService.getTurnover(456L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_SINGLE_ENTRY_EXPECTED));
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/viability",
                 project.getId(), academicOrganisation.getId())).
@@ -208,6 +226,9 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         assertEquals(viability.getViabilityRagStatus(), form.getRagStatus());
         assertEquals(true, form.isCreditReportConfirmed());
         assertEquals(false, form.isConfirmViabilityChecked());
+
+        assertEquals(null, viewModel.getTurnover());
+        assertEquals(null, viewModel.getHeadCount());
     }
 
     @Test
@@ -289,8 +310,6 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         assertEquals(organisation.getOrganisationSize(), viewModel.getOrganisationSize());
         assertEquals(organisation.getCompanyHouseNumber(), viewModel.getCompanyRegistrationNumber());
         assertEquals(organisation.getId(), viewModel.getOrganisationId());
-        assertNull(viewModel.getHeadCount());
-        assertNull(viewModel.getTurnover());
         assertEquals(organisation.getCompanyHouseNumber(), viewModel.getCompanyRegistrationNumber());
     }
 

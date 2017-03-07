@@ -108,9 +108,6 @@ Funding information server-side validations
     When the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see an error    Please enter a funder name.
     And the user should see an error    Please enter a budget.
-    And the user should see an error    Please enter a PAF number.
-    And the user should see an error    Please enter a budget code.
-    And the user should see an error    Please enter an activity code.
     And the user should see an error    Please generate a competition code.
 
 Funding information client-side validations
@@ -121,13 +118,10 @@ Funding information client-side validations
     When the user enters text to a text field    id=funders0.funder    FunderName
     Then the user should not see the error any more    Please enter a funder name.
     And the user enters text to a text field    id=0-funderBudget    20000
-    Then the user should not see the error any more    Please enter a budget.
-    When the user enters text to a text field    id=pafNumber    2016
-    Then the user should not see the error any more    Please enter a PAF number.
+    And the user enters text to a text field    id=pafNumber    2016
     And the user enters text to a text field    id=budgetCode    2004
-    Then the user should not see the error any more    Please enter a budget code.
     And the user enters text to a text field    id=activityCode    4242
-    Then The user should not see the error text in the page    Please enter an activity code.
+    Then The user should not see the error text in the page   Please enter a budget.
 
 Funding information Autosave
     [Documentation]    INFUND-4581
