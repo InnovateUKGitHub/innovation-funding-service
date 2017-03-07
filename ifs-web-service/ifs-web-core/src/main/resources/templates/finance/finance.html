@@ -649,7 +649,7 @@
                             <th:block th:unless="${#strings.isEmpty(overheadCosts?.calculationFile)}">
                                 <a th:href="@{${'/application/download/overheadfile/'+overheadCosts?.id}}" class="uploaded-file" th:text="${overheadCosts?.calculationFile?.get()?.name}">The-uploaded-file-example.pdf</a>
                                 <div th:unless="${viewmode=='readonly'}" class="alignright">
-                                    <button class="button-secondary no-margin-right" type="submit" th:name="overheadfiledelete">Remove</button>
+                                    <button class="buttonlink no-margin-right" type="submit" th:name="overheadfiledelete">Remove</button>
                                 </div>
                             </th:block>
                         </div>

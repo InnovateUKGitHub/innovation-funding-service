@@ -46,7 +46,7 @@
 
     <h2 class="heading-medium">Grant offer letter</h2>
 
-    <div class="upload-section unstyled-view">
+    <div class="upload-section">
     <form th:action="@{/project/{id}/grant-offer-letter/grant-offer-letter(id=${model.projectId})}"
           th:object="${form}" method="post" enctype="multipart/form-data">
 
@@ -80,9 +80,11 @@
         <th:block th:if="${model.grantOfferLetterFile}">
             <a th:href="@{/project/{id}/grant-offer-letter/grant-offer-letter(id=${model.projectId})}"
                class="uploaded-file" th:text="${model.grantOfferLetterFile.filename}">The-uploaded-file-example.pdf</a>
-            <button th:if="${model.showRemoveOfferLetterButton}" name="removeGrantOfferLetterClicked" class="button-secondary no-margin-right"
-                    type="submit">Remove
-            </button>
+            <div class="alignright">
+                <button th:if="${model.showRemoveOfferLetterButton}" name="removeGrantOfferLetterClicked" class="buttonlink no-margin-right"
+                        type="submit">Remove
+                </button>
+            </div>
         </th:block>
 
     </form>
@@ -105,7 +107,7 @@
                 None specified.
             </th:block>
             <th:block th:unless="${model.isSentToProjectTeam()}">
-                <div class="upload-section unstyled-view">
+                <div class="upload-section">
                     <th:block th:if="${model.isSentToProjectTeam()}">
                         <p>None specified.</p>
                     </th:block>

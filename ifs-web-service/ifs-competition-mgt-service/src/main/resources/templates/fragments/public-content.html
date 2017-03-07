@@ -304,7 +304,9 @@
                         <a th:href="@{/competition/setup/public-content/{sectionPath}/{compId}/edit/{groupId}(sectionPath=${model.section.type.path},compId=${model.competition.id},groupId=${contentGroup.id})}"
                            th:text="${model.fileName(contentGroup.id)}">Filename.pdf</a>
                     </p>
-                    <button class="button-secondary" type="submit" name="removeFile" th:value="${contentGroup.id}">remove</button>
+                    <div class="alignright">
+                        <button class="buttonlink no-margin-right" type="submit" name="removeFile" th:value="${contentGroup.id}">remove</button>
+                    </div>
                 </th:block>
                 </div>
             </div>

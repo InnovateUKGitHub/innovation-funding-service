@@ -35,15 +35,12 @@
     </p>
 
     <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl},query_section=${model.querySection})}" th:object="${form}" method="post" enctype="multipart/form-data" novalidate="novalidate">
-        <fieldset>
-            <legend class="heading-medium">Post new query</legend>
-            <div th:class="${#fields.hasErrors('queryTitle')}? 'form-group error':'form-group'">
+            <h3 class="heading-medium">Post new query</h3>
+            <div class="form-group" th:classappend="${#fields.hasErrors('queryTitle')}? 'error'">
                 <label for="queryTitle" class="form-label-bold">
                     <span class="heading-small no-margin">Title</span>
                     <th:block th:if="${#fields.hasErrors('queryTitle')}">
-                        <span>
-                            <span class="error-message" th:each="err : ${#fields.errors('queryTitle')}" th:text="${err}" />
-                        </span>
+                        <span class="error-message" th:each="err : ${#fields.errors('queryTitle')}" th:text="${err}" />
                     </th:block>
                 </label>
                 <input name="queryTitle"
@@ -56,13 +53,11 @@
                                 data-required-errormessage=#{validation.notesandqueries.query.title.required},
                                 data-maxlength-errormessage=#{validation.notesandqueries.query.title.length.max(null,${model.maxTitleCharacters})}" />
             </div>
-            <div th:class="${#fields.hasErrors('section')}? 'form-group error':'form-group'">
+            <div class="form-group" th:classappend="${#fields.hasErrors('section')}? 'error'">
                 <label for="section" class="form-label-bold">
                     <span class="heading-small no-margin">Section</span>
                     <th:block th:if="${#fields.hasErrors('section')}">
-                        <span>
-                            <span class="error-message" th:each="err : ${#fields.errors('section')}" th:text="${err}" />
-                        </span>
+                        <span class="error-message" th:each="err : ${#fields.errors('section')}" th:text="${err}" />
                     </th:block>
                 </label>
                 <select name="section" id="section" class="form-control">
@@ -86,13 +81,11 @@
                     </th:block>
                 </select>
             </div>
-            <div th:class="${#fields.hasErrors('query')}? 'form-group error':'form-group'">
+            <div class="form-group" th:classappend="${#fields.hasErrors('query')}? 'error'">
                 <label for="query" class="form-label-bold">
                     <span class="heading-small no-margin">Query</span>
                     <th:block th:if="${#fields.hasErrors('query')}">
-                        <span>
-                            <span class="error-message" th:each="err : ${#fields.errors('query')}" th:text="${err}" />
-                        </span>
+                        <span class="error-message" th:each="err : ${#fields.errors('query')}" th:text="${err}" />
                     </th:block>
                 </label>
                 <div class="textarea-wrapped word-count">
@@ -101,41 +94,40 @@
                               th:field="*{query}"
                               id="query"
                               name="query"
+                              class="form-control"
                               th:attr="maxlength=${model.maxQueryCharacters},
-                      data-max_words=${model.maxQueryWords},
-                      data-maxwordslength=${model.maxQueryWords},
-                      data-maxwordslength-errormessage=#{validation.notesandqueries.query.word.length.max(${model.maxQueryWords})},
-                      data-maxlength-errormessage=#{validation.notesandqueries.query.character.length.max(null,${model.maxQueryCharacters})},
-                      data-required-errormessage=#{validation.notesandqueries.query.required}"
-                              th:classappend="${#fields.hasErrors('query') ? 'form-control field-error' : 'form-control'}"></textarea>
+                                      data-max_words=${model.maxQueryWords},
+                                      data-maxwordslength=${model.maxQueryWords},
+                                      data-maxwordslength-errormessage=#{validation.notesandqueries.query.word.length.max(${model.maxQueryWords})},
+                                      data-maxlength-errormessage=#{validation.notesandqueries.query.character.length.max(null,${model.maxQueryCharacters})},
+                                      data-required-errormessage=#{validation.notesandqueries.query.required}"
+                              th:classappend="${#fields.hasErrors('query')} ? 'field-error'"></textarea>
                     <div class="textarea-footer" th:with="query=*{query}">
                         <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=${model.maxQueryWords}, currentWordsLeft=${#ifsUtil.wordsRemaining(model.maxQueryWords, content)})" />
                     </div>
                 </div>
             </div>
-        </fieldset>
-        <th:block th:if="${model.newAttachmentLinks.size() > 0}">
-            <fieldset>
-                <legend class="heading-small">Supporting documentation</legend>
+
+        <div class="upload-section">
+            <th:block th:if="${model.newAttachmentLinks.size() > 0}">
+                <h3 class="heading-small">Supporting documentation</h3>
                 <th:block th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
-                    <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},query_section=${model.querySection},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId)}">filename</a>
-                    <button name="removeAttachment" class="buttonlink" th:value="${attachmentId}">Remove</button><br />
+                    <a class="uploaded-file" th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},query_section=${model.querySection},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId)}">filename</a>
+                    <div class="alignright">
+                        <button name="removeAttachment" class="buttonlink" th:value="${attachmentId}">Remove</button>
+                    </div>
                 </th:block>
-            </fieldset>
-        </th:block>
-        <fieldset>
-            <div class="upload-section unstyled-view">
-                <legend class="heading-small no-margin">Upload supporting documentation</legend>
-                <th:block th:if="${#fields.hasErrors('attachment')}">
-                    <span>
-                        <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
-                    </span>
-                </th:block>
-                <input type="file" id="attachment" class="inputfile" name="attachment">
-                <label for="attachment" class="button-secondary extra-margin">+ Upload</label>
-                <button name="uploadAttachment" class="button-secondary" type="submit" data-for-file-upload="attachment">Save</button>
-            </div>
-        </fieldset>
+            </th:block>
+            <h3 class="heading-small no-margin">Upload supporting documentation</h3>
+            <th:block th:if="${#fields.hasErrors('attachment')}">
+                <span>
+                    <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
+                </span>
+            </th:block>
+            <input type="file" id="attachment" class="inputfile" name="attachment">
+            <label for="attachment" class="button-secondary extra-margin">+ Upload</label>
+            <button name="uploadAttachment" class="button-secondary" type="submit" data-for-file-upload="attachment">Save</button>
+        </div>
         <hr />
         <input type="hidden" id="action" value="postQuery">
         <div class="grid-row">
