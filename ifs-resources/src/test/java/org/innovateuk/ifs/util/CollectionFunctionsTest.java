@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.util;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.*;
@@ -691,7 +690,7 @@ public class CollectionFunctionsTest {
         String fourthEntry = "4th entry";
 
         List<Pair<String, String>> sortedList = asList(of(firstLabel, firstEntry), of(firstLabel, secondEntry), of(secondLabel, thirdEntry), of(firstLabel, fourthEntry));
-        SortedMap<String, List<String>> sortedMap = toSortedMap(sortedList, Pair::getLeft, Pair::getRight);
+        SortedMap<String, List<String>> sortedMap = toSortedMapWithList(sortedList, Pair::getLeft, Pair::getRight);
         assertEquals(2, sortedMap.size());
         assertEquals(firstLabel, sortedMap.firstKey());
         assertEquals(sortedMap.get(firstLabel), asList(firstEntry, secondEntry, fourthEntry));
@@ -704,7 +703,7 @@ public class CollectionFunctionsTest {
     @Test
     public void testToSortedNull(){
         List<String> nullList = null;
-        SortedMap<String, List<String>> sortedMap = toSortedMap(nullList, identity(), identity());
+        SortedMap<String, List<String>> sortedMap = toSortedMapWithList(nullList, identity(), identity());
         assertEquals(new TreeMap<String,List<String>>(), sortedMap);
     }
 
