@@ -45,13 +45,13 @@ function uploadToRegistry() {
 
 function upgradeServices {
     oc export dc data-service ${SVC_ACCOUNT_CLAUSE} | sed "s#image:.*#image: ${INTERNAL_REGISTRY}/${PROJECT}/data-service:${VERSION}#g" | oc apply ${SVC_ACCOUNT_CLAUSE} -f -
-    oc rollout status dc/data-service
+    oc rollout status dc/data-service ${SVC_ACCOUNT_CLAUSE}
 
     oc export dc application-svc ${SVC_ACCOUNT_CLAUSE} | sed "s#image:.*#image: ${INTERNAL_REGISTRY}/${PROJECT}/application-service:${VERSION}#g" | oc apply ${SVC_ACCOUNT_CLAUSE} -f -
     oc export dc assessment-svc ${SVC_ACCOUNT_CLAUSE} | sed "s#image:.*#image: ${INTERNAL_REGISTRY}/${PROJECT}/assessment-service:${VERSION}#g" | oc apply ${SVC_ACCOUNT_CLAUSE} -f -
     oc export dc competition-mgt-svc ${SVC_ACCOUNT_CLAUSE} | sed "s#image:.*#image: ${INTERNAL_REGISTRY}/${PROJECT}/competition-management-service:${VERSION}#g" | oc apply ${SVC_ACCOUNT_CLAUSE} -f -
     oc export dc project-setup-mgt-svc ${SVC_ACCOUNT_CLAUSE} | sed "s#image:.*#image: ${INTERNAL_REGISTRY}/${PROJECT}/project-setup-management-service:${VERSION}#g" | oc apply ${SVC_ACCOUNT_CLAUSE} -f -
-    oc export dc project-setup-svc ${SVC_ACCOUNT_CLAUSE} | sed "s#image:.*#image: ${INTERNAL_REGISTRY}/${PROJECT}/project-setup-service:${VERSION}#g" | oc apply -f ${SVC_ACCOUNT_CLAUSE} -
+    oc export dc project-setup-svc ${SVC_ACCOUNT_CLAUSE} | sed "s#image:.*#image: ${INTERNAL_REGISTRY}/${PROJECT}/project-setup-service:${VERSION}#g" | oc apply ${SVC_ACCOUNT_CLAUSE} -f -
 
     oc rollout status dc/application-svc ${SVC_ACCOUNT_CLAUSE}
     oc rollout status dc/assessment-svc ${SVC_ACCOUNT_CLAUSE}
