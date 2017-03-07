@@ -23,8 +23,8 @@ public class ApplicationFundingDecisionController {
     @Autowired
     private ProjectService projectService;
 
-    //TODO: reuse or remove this and subsequent methods after implementation of INFUND-7378
-    @RequestMapping(value="/{competitionId}/submit", method=RequestMethod.POST)
+    //TODO: reuse or remove this and subsequent methods after implementation of INFUND-8624
+    @PostMapping(value="/{competitionId}/submit")
     public RestResult<Void> makeFundingDecision(@PathVariable("competitionId") final Long competitionId, @RequestBody Map<Long, FundingDecision> applicationFundingDecisions) {
         return applicationFundingService.makeFundingDecision(competitionId, applicationFundingDecisions).
                 andOnSuccess(() -> projectService.createProjectsFromFundingDecisions(applicationFundingDecisions)
@@ -32,13 +32,13 @@ public class ApplicationFundingDecisionController {
                 ).toPostResponse();
     }
 
-    @RequestMapping(value="/sendNotifications", method=RequestMethod.POST)
+    @PostMapping(value="/sendNotifications")
     public RestResult<Void> sendFundingDecisions(@RequestBody NotificationResource notificationResource) {
         return applicationFundingService.notifyLeadApplicantsOfFundingDecisions(notificationResource)
             .toPostResponse();
     }
     
-    @RequestMapping(value="/{competitionId}", method=RequestMethod.POST)
+    @PostMapping(value="/{competitionId}")
     public RestResult<Void> saveFundingDecisionData(@PathVariable("competitionId") final Long competitionId, @RequestBody Map<Long, FundingDecision> applicationFundingDecisions) {
         return applicationFundingService.saveFundingDecisionData(competitionId, applicationFundingDecisions).
                 toPutResponse();

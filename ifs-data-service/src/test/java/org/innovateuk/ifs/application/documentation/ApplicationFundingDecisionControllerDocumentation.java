@@ -66,7 +66,6 @@ public class ApplicationFundingDecisionControllerDocumentation extends BaseContr
         		.andDo( this.document.snippets());
     }
 
-
     @Test
     public void sendNotifications() throws Exception {
         NotificationResource notification = new NotificationResource("Subject of notification", "Body of notification message.", asList(1L, 2L, 3L));

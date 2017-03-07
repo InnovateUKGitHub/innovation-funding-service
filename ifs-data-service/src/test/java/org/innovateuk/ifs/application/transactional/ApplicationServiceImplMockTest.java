@@ -1103,7 +1103,6 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         assertTrue(result.isSuccess());
     }
 
-
     @Test
     public void setApplicationFundingEmailDateTime_Failure() throws Exception {
 
