@@ -297,17 +297,29 @@
               <button type="submit">Reassign</button>
         </div>
     </div>
+    <th:block th:unless="${question.isAssignEnabled()}">
+      <th:block th:insert="question-type/form-elements :: assigned-to" />
+    </th:block>
 </th:block>
 <!-- ========================= Assigned to =========================== -->
 <th:block th:fragment="assigned-to">
-        <th:block th:if="${questionAssignee?.assignee != null} ">
-            <span th:if="${questionAssignee?.assignedByUserId == leadApplicant?.getId()}">Assigned to:</span>
-            <span th:unless="${questionAssignee?.assignedByUserId == leadApplicant?.getId()}">Reassigned to:</span>
-             <strong th:text="${name}" th:with="name=${(questionAssignee?.assigneeUserId == currentUser.getId()) ? 'You' : questionAssignee?.getAssigneeName()}" />
-        </th:block>
-        <th:block th:if="${questionAssignee?.assignee == null} ">
-            Assigned to: <strong th:text="${name}" th:with="name=${(leadApplicant?.getId() == currentUser.getId()) ? 'You' : leadApplicant?.getName()}" />
-        </th:block>
+  <th:block th:if="${questionAssignee?.assignee != null} ">
+    <span class="action-required" th:if="${questionAssignee?.assigneeUserId == currentUser.getId()}">
+      <strong th:if="${questionAssignee?.assignedByUserId == leadApplicant?.getId()}">Assigned to you</strong>
+      <strong th:unless="${questionAssignee?.assignedByUserId == leadApplicant?.getId()}">Reassigned to you</strong>
+    </span>
+    <span class="secondary-notification" th:unless="${questionAssignee?.assigneeUserId == currentUser.getId()}">
+      Assigned to <span th:text="${name}" th:with="name=${questionAssignee?.getAssigneeName()}"></span>
+    </span>
+  </th:block>
+  <th:block th:if="${questionAssignee?.assignee == null} ">
+    <span class="action-required" th:if="${(leadApplicant?.getId() == currentUser.getId())}">
+      <strong>Assigned to you</strong>
+    </span>
+    <span class="secondary-notification" th:unless="${(leadApplicant?.getId() == currentUser.getId())}">
+      Assigned to <span th:text="${name}" th:with="name=${leadApplicant?.getName()}"></span>
+    </span>
+  </th:block>
 </th:block>
 
 <!-- ========================= Last update info =========================== -->

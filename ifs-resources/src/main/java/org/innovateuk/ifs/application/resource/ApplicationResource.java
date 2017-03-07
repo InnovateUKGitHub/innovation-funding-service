@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
 import org.innovateuk.ifs.commons.validation.constraints.FutureLocalDate;
@@ -68,6 +69,9 @@ public class ApplicationResource {
 
     @NotNull(message="{validation.application.research.category.required}")
     private Long researchCategoryId;
+
+    private InnovationAreaResource innovationArea;
+    private boolean noInnovationAreaApplicable;
 
     public Long getId() {
         return id;
@@ -291,4 +295,21 @@ public class ApplicationResource {
     public void setResearchCategoryId(Long researchCategoryId) {
         this.researchCategoryId = researchCategoryId;
     }
+
+    public InnovationAreaResource getInnovationArea() {
+        return innovationArea;
+    }
+
+    public void setInnovationArea(InnovationAreaResource innovationArea) {
+        this.innovationArea = innovationArea;
+    }
+
+    public boolean getNoInnovationAreaApplicable() {
+        return noInnovationAreaApplicable;
+    }
+
+    public void setNoInnovationAreaApplicable(boolean noInnovationAreaApplicable) {
+        this.noInnovationAreaApplicable = noInnovationAreaApplicable;
+    }
+
 }

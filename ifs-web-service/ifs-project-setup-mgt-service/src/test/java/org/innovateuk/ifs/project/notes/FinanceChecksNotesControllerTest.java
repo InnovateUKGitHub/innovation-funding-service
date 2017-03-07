@@ -306,7 +306,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("comment"));
-        assertEquals("The comment cannot be empty.", bindingResult.getFieldError("comment").getDefaultMessage());
+        assertEquals("This field cannot be left blank.", bindingResult.getFieldError("comment").getDefaultMessage());
     }
 
     @Test
@@ -335,7 +335,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("comment"));
-        assertEquals("The comment is too long, please reduce it to {1} characters.", bindingResult.getFieldError("comment").getDefaultMessage());
+        assertEquals("This field cannot contain more than {1} characters.", bindingResult.getFieldError("comment").getDefaultMessage());
     }
 
     @Test
@@ -363,7 +363,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("comment"));
-        assertEquals("The comment is too long, please reduce it to {0} words.", bindingResult.getFieldError("comment").getDefaultMessage());
+        assertEquals("Maximum word count exceeded. Please reduce your word count to {1}.", bindingResult.getFieldError("comment").getDefaultMessage());
     }
 
     @Test

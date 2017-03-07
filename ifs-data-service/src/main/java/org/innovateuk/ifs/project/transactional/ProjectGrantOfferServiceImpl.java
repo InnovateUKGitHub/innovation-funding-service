@@ -4,6 +4,7 @@ import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfWriter;
 import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -42,7 +43,6 @@ import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
@@ -254,8 +254,9 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     private final List<String> organisationsListWithLeadOnTopAndPartnersAlphabeticallyOrdered(List<String> organisationNames, Organisation leadOrganisation) {
         final List<String> organisations = organisationNames.stream()
                 .filter(po -> !po.equals(leadOrganisation.getName()))
+                .map(po -> StringEscapeUtils.escapeXml10(po))
                 .sorted().collect(toList());
-        organisations.add(0, leadOrganisation.getName());
+        organisations.add(0, StringEscapeUtils.escapeXml10(leadOrganisation.getName()));
         return organisations;
     }
 
@@ -495,9 +496,18 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
 
         includedOrganisations.forEach(includedOrg -> includedOrganisationNames.add(includedOrg.getName()));
 
-        return new YearlyGOLProfileTable(organisationAndGrantPercentageMap, organisationYearsMap,
-                organisationEligibleCostTotal, organisationGrantAllocationTotal,
-                yearEligibleCostTotal, yearlyGrantAllocationTotal);
+        return new YearlyGOLProfileTable(escapeXml10(organisationAndGrantPercentageMap),
+                                         escapeXml10(organisationYearsMap),
+                                         escapeXml10(organisationEligibleCostTotal),
+                                         escapeXml10(organisationGrantAllocationTotal),
+                                         escapeXml10(yearEligibleCostTotal),
+                                         escapeXml10(yearlyGrantAllocationTotal));
+    }
+
+    private <T> Map<String, T>escapeXml10(Map<String, T> unescapedMap) {
+        Map<String, T> escapedMap = new HashMap<>();
+        unescapedMap.forEach((organisation, value) -> escapedMap.put(StringEscapeUtils.escapeXml10(organisation), value));
+        return escapedMap;
     }
 
     private Map<String, List<BigDecimal>> getMonthlyEligibleCostPerOrganisation(Map<String,
