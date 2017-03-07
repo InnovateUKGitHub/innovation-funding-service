@@ -15,6 +15,8 @@ REGISTRY=docker-registry-default.apps.prod.ifs-test-clusters.com
 INTERNAL_REGISTRY=172.30.80.28:5000
 
 SVC_ACCOUNT_TOKEN="L2uE9Zka9JJnzBzcM0ItQQ3is26bO45EVzRh9SQJ9rA"
+SVC_ACCOUNT_CLAUSE="--namespace=${PROJECT} --token=${SVC_ACCOUNT_TOKEN} --server=https://console.prod.ifs-test-clusters.com:443 --insecure-skip-tls-verify=true"
+
 REGISTRY_TOKEN=${SVC_ACCOUNT_TOKEN}
 
 function uploadToRegistry() {
@@ -42,20 +44,20 @@ function uploadToRegistry() {
 }
 
 function upgradeServices {
-    oc export dc data-service | sed "s#image:.*#image: ${INTERNAL_REGISTRY}/${PROJECT}/data-service:${VERSION}#g" | oc apply -f -
+    oc export dc data-service ${SVC_ACCOUNT_CLAUSE} | sed "s#image:.*#image: ${INTERNAL_REGISTRY}/${PROJECT}/data-service:${VERSION}#g" | oc apply ${SVC_ACCOUNT_CLAUSE} -f -
     oc rollout status dc/data-service
 
-    oc export dc application-svc | sed "s#image:.*#image: ${INTERNAL_REGISTRY}/${PROJECT}/application-service:${VERSION}#g" | oc apply -f -
-    oc export dc assessment-svc | sed "s#image:.*#image: ${INTERNAL_REGISTRY}/${PROJECT}/assessment-service:${VERSION}#g" | oc apply -f -
-    oc export dc competition-mgt-svc | sed "s#image:.*#image: ${INTERNAL_REGISTRY}/${PROJECT}/competition-management-service:${VERSION}#g" | oc apply -f -
-    oc export dc project-setup-mgt-svc | sed "s#image:.*#image: ${INTERNAL_REGISTRY}/${PROJECT}/project-setup-management-service:${VERSION}#g" | oc apply -f -
-    oc export dc project-setup-svc | sed "s#image:.*#image: ${INTERNAL_REGISTRY}/${PROJECT}/project-setup-service:${VERSION}#g" | oc apply -f -
+    oc export dc application-svc ${SVC_ACCOUNT_CLAUSE} | sed "s#image:.*#image: ${INTERNAL_REGISTRY}/${PROJECT}/application-service:${VERSION}#g" | oc apply ${SVC_ACCOUNT_CLAUSE} -f -
+    oc export dc assessment-svc ${SVC_ACCOUNT_CLAUSE} | sed "s#image:.*#image: ${INTERNAL_REGISTRY}/${PROJECT}/assessment-service:${VERSION}#g" | oc apply ${SVC_ACCOUNT_CLAUSE} -f -
+    oc export dc competition-mgt-svc ${SVC_ACCOUNT_CLAUSE} | sed "s#image:.*#image: ${INTERNAL_REGISTRY}/${PROJECT}/competition-management-service:${VERSION}#g" | oc apply ${SVC_ACCOUNT_CLAUSE} -f -
+    oc export dc project-setup-mgt-svc ${SVC_ACCOUNT_CLAUSE} | sed "s#image:.*#image: ${INTERNAL_REGISTRY}/${PROJECT}/project-setup-management-service:${VERSION}#g" | oc apply ${SVC_ACCOUNT_CLAUSE} -f -
+    oc export dc project-setup-svc ${SVC_ACCOUNT_CLAUSE} | sed "s#image:.*#image: ${INTERNAL_REGISTRY}/${PROJECT}/project-setup-service:${VERSION}#g" | oc apply -f ${SVC_ACCOUNT_CLAUSE} -
 
-    oc rollout status dc/application-svc
-    oc rollout status dc/assessment-svc
-    oc rollout status dc/competition-mgt-svc
-    oc rollout status dc/project-setup-mgt-svc
-    oc rollout status dc/project-setup-svc
+    oc rollout status dc/application-svc ${SVC_ACCOUNT_CLAUSE}
+    oc rollout status dc/assessment-svc ${SVC_ACCOUNT_CLAUSE}
+    oc rollout status dc/competition-mgt-svc ${SVC_ACCOUNT_CLAUSE}
+    oc rollout status dc/project-setup-mgt-svc ${SVC_ACCOUNT_CLAUSE}
+    oc rollout status dc/project-setup-svc ${SVC_ACCOUNT_CLAUSE}
 }
 
 
