@@ -83,7 +83,7 @@ Invalid email address is not allowed
     Then the user should see an error    Please enter a valid email address.
 
 Already invite email should is not allowed
-    [Tags]
+    [Tags]    Pending
     When the applicant fills the Partner organisation fields    1    Fannie May    Collaborator 10    ewan+5@hiveit.co.uk
     Then the user should see an error    You have used this email address for another applicant.
 

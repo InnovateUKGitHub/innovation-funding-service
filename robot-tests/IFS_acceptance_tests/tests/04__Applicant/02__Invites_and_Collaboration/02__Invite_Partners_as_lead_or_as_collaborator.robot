@@ -128,7 +128,7 @@ Lead should not be able to edit Partners
     When the user clicks the button/link    link=view and add participants to your application
     When the user clicks the button/link    jQuery=a:contains("Update Empire Ltd")
     Then the user should see the text in the page    Update Empire Ltd
-    And the invited collaborators are not editable
+    #And the invited collaborators are not editable
 
 Lead applicant invites a non registered user in the same organisation
     [Documentation]    INFUND-928, INFUND-1463
@@ -211,10 +211,8 @@ the user can see the updated company name throughout the application
     Then the user should see the element    jQuery=h2:contains("NOMENSA LTD")
 
 the user can invite another person to their own organisation
-    ${OWN_ORG}=    Get WebElement    jQuery=li:has(input[value='NOMENSA LTD'])
-    the user clicks the button/link    jQuery=button:contains('Add another person')
-    the user should see the element    jQuery=li[data-invite-org=${OWN_ORG.get_attribute('data-invite-org')}] tr:nth-of-type(2) td:nth-child(2) input:not([readonly])
-    the user should not see the element    jQuery=li[data-invite-org=${OWN_ORG.get_attribute('data-invite-org')}] tr:nth-of-type(2) td:nth-child(2) [readonly]
+    the user clicks the button/link    jQuery=button:contains("Add new applicant")
+    the user should see the element    jQuery=a:contains("Update organisation")
 
 the user cannot invite another person to a different organisation
     the user should not see the element    jQuery=li:nth-child(1) button:contains("Add another person")
