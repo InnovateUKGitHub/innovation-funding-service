@@ -69,9 +69,6 @@ public class AssessorFormInputResponseRestServiceImplTest extends BaseRestServic
         assertTrue(response.isSuccess());
     }
 
-    //     public ApplicationAssessmentAggregateResource(int totalScope, int inScope, Map<Long, BigDecimal> scores, long averagePercentage) {
-
-
     @Test
     public void getApplicationAssessmentAggregate() {
         long applicationId = 7;
