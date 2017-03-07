@@ -16,7 +16,7 @@ The collapsible element will show a normal header when there is no javascript, w
 	font-size: 19px;
 	font-weight: 700;
 	text-align:left;
-	padding: 10px 40px 10px 0px; //padding right for the icons
+	padding: 10px 40px 10px 10px; //padding right for the icons
 	background:#fff;
 	@include media-down(mobile){
 		font-size:15px;
