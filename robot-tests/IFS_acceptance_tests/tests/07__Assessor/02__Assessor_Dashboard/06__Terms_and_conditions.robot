@@ -2,7 +2,7 @@
 Documentation     INFUND-7058 As an assessor I can read the terms and conditions so that I know what I have agreed to
 Suite Setup       guest user log-in    ${test_mailbox_one}+jeremy.alufson@gmail.com    Passw0rd
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Assessor
+Force Tags        Assessor    Pending
 Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***

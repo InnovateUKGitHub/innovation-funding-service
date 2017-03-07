@@ -12,6 +12,5 @@ public class AvailableAssessorResourceDocs {
             fieldWithPath("compliant").description("Flag to signify if the assessor is compliant. An assessor is compliant if, and only if they’ve completed their Skills and Business Type, and they’ve completed their DoI, and they’ve signed a Contract."),
             fieldWithPath("email").description("E-mail address of the assessor"),
             fieldWithPath("businessType").description("Assessor type (business or academic)"),
-            fieldWithPath("added").description("Flag to signify if the assessor has been added to the assessor invite list for the competition requested")
     };
 }

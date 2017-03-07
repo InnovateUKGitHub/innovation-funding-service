@@ -83,6 +83,7 @@ dependencies {
     compile project(":ifs-data-service:data-service-commons")
 
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
+    compile "org.hibernate:hibernate-core:5.2.7.Final"
     compile "org.hibernate:hibernate-validator:5.2.4.Final"
     compile "org.springframework.security:spring-security-crypto"
     compile "org.springframework.boot:spring-boot-starter-security"
@@ -147,10 +148,11 @@ task buildDocker(type: Docker, dependsOn: build) {
 }
 
 asciidoctor {
+    onlyIf { file(snippetsDir).exists() }
+    dependsOn test
     attributes 'snippets': snippetsDir
     backends  'html5'
     inputs.dir snippetsDir
-    dependsOn test
 }
 
 task generateMainMapperClasses(type: JavaCompile) {
@@ -202,26 +204,18 @@ flywayMigrate.dependsOn processResources
 flywayClean.dependsOn processResources
 
 
-task cleanDeployServices() {
+task initDB() {
 
-    buildDocker.mustRunAfter clean
-    // ensures test schema is created for unit tests
-    buildDocker.mustRunAfter createTestSchema
-    flywayClean.mustRunAfter buildDocker
     flywayClean.mustRunAfter startMySql
     createTestSchema.mustRunAfter startMySql
     createSchema.mustRunAfter startMySql
     flywayMigrate.mustRunAfter flywayClean
 
-    dependsOn clean
-    dependsOn buildDocker
     dependsOn startMySql
     dependsOn createTestSchema
     dependsOn createSchema
     dependsOn flywayClean
     dependsOn flywayMigrate
-
-
 
 }
 
