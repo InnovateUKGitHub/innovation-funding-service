@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.finance.domain.OrganisationSize;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDefaultHandler;
@@ -84,7 +85,7 @@ public class ProjectFinanceRowServiceImplTest extends BaseServiceUnitTest<Projec
 
         project = newProject().withId(projectId).withApplication(application).build();
 
-        newFinance = new ProjectFinance(organisation, organisation.getOrganisationSize(), project);
+        newFinance = new ProjectFinance(organisation, new OrganisationSize(), project);
         newFinance.setId(projectFinanceId);
 
         question = newQuestion().withId(questionId).build();

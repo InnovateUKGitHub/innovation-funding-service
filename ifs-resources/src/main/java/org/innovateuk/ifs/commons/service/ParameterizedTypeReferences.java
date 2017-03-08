@@ -10,10 +10,7 @@ import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.resource.FinanceRowMetaFieldResource;
-import org.innovateuk.ifs.finance.resource.FinanceRowResource;
-import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.finance.resource.*;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
@@ -163,6 +160,9 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<FinanceRowItem>> costItemListType() {
         return new ParameterizedTypeReference<List<FinanceRowItem>>() {};
+    }
+    public static ParameterizedTypeReference<List<OrganisationSizeResource>> organisationSizeListType() {
+        return new ParameterizedTypeReference<List<OrganisationSizeResource>>() {};
     }
 
     public static ParameterizedTypeReference<List<ApplicationFinanceResource>> applicationFinanceResourceListType() {

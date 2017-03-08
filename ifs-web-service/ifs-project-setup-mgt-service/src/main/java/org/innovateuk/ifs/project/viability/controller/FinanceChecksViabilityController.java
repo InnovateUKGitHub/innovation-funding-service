@@ -14,7 +14,6 @@ import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
 import org.innovateuk.ifs.project.viability.form.FinanceChecksViabilityForm;
 import org.innovateuk.ifs.project.viability.viewmodel.FinanceChecksViabilityViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.OrganisationSize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -160,14 +159,12 @@ public class FinanceChecksViabilityController {
             turnover = turnOverResult.getSuccessObject();
         }
 
-        OrganisationSize organisationSize = organisation.getOrganisationSize();
-
         String approver = viability.getViabilityApprovalUserFirstName() + " " + viability.getViabilityApprovalUserLastName();
         LocalDate approvalDate = viability.getViabilityApprovalDate();
 
         return new FinanceChecksViabilityViewModel(organisationName, leadPartnerOrganisation,
                 totalCosts, percentageGrant, fundingSought, otherPublicSectorFunding, contributionToProject,
-                companyRegistrationNumber, turnover, headCount, organisationSize, projectId, viabilityConfirmed,
+                companyRegistrationNumber, turnover, headCount, projectId, viabilityConfirmed,
                 viabilityConfirmed, approver, approvalDate, organisationId);
     }
 

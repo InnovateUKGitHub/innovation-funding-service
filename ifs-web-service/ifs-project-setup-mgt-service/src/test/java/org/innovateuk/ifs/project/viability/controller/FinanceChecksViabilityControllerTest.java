@@ -14,7 +14,6 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.viability.form.FinanceChecksViabilityForm;
 import org.innovateuk.ifs.project.viability.viewmodel.FinanceChecksViabilityViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.OrganisationSize;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.web.servlet.MvcResult;
@@ -51,13 +50,11 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
 
     private OrganisationResource industrialOrganisation = newOrganisationResource().
             withName("Industrial Org").
-            withOrganisationSize(OrganisationSize.MEDIUM).
             withCompanyHouseNumber("123456789").
             build();
 
     private OrganisationResource academicOrganisation = newOrganisationResource().
             withName("Academic Org").
-            withOrganisationSize(OrganisationSize.LARGE).
             withCompanyHouseNumber("987654321").
             build();
 
@@ -307,7 +304,6 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
 
     private void assertOrganisationDetails(OrganisationResource organisation, FinanceChecksViabilityViewModel viewModel) {
         assertEquals(organisation.getName(), viewModel.getOrganisationName());
-        assertEquals(organisation.getOrganisationSize(), viewModel.getOrganisationSize());
         assertEquals(organisation.getCompanyHouseNumber(), viewModel.getCompanyRegistrationNumber());
         assertEquals(organisation.getId(), viewModel.getOrganisationId());
         assertEquals(organisation.getCompanyHouseNumber(), viewModel.getCompanyRegistrationNumber());
