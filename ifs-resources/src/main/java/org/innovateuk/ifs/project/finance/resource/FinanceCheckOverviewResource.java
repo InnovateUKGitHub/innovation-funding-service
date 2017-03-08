@@ -3,7 +3,8 @@ package org.innovateuk.ifs.project.finance.resource;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class FinanceCheckOverviewResource {
+public class
+FinanceCheckOverviewResource {
     private Long projectId;
     private String projectName;
     private LocalDate projectStartDate;
