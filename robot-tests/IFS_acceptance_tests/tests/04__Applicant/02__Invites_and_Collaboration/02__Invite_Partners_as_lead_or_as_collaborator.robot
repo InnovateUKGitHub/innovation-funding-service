@@ -142,7 +142,7 @@ Lead applicant invites a non registered user in the same organisation
     Then the user should see the text in the page    Update Empire Ltd
     And the user clicks the button/link    jQuery=button:contains("Add new applicant")
     When the user adds new collaborator
-    And the user clicks the button/link    jQuery=a:contains("Update organisation")
+    #And the user clicks the button/link    jQuery=a:contains("Update organisation")
     And the user clicks the button/link    jQuery=button:contains("Update organisation")
     Then the user should see the text in the page    Application team
     And the user should see the text in the page    View and manage your contributors and partners in the application
@@ -212,7 +212,7 @@ the user can see the updated company name throughout the application
 
 the user can invite another person to their own organisation
     the user clicks the button/link    jQuery=button:contains("Add new applicant")
-    the user should see the element    jQuery=a:contains("Update organisation")
+    the user should see the element    jQuery=button:contains("Update organisation")
 
 the user cannot invite another person to a different organisation
     the user should not see the element    jQuery=li:nth-child(1) button:contains("Add another person")

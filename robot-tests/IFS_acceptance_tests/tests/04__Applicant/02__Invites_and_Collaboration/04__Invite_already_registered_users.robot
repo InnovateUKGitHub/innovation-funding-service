@@ -82,7 +82,7 @@ Existing user creates a new application and invites a user from the same organis
     The user clicks the button/link    jQuery=button:contains("Add new applicant")
     The user enters text to a text field    name=applicants[0].name    Olivier Giroud
     The user enters text to a text field    name=applicants[0].email    ${test_mailbox_one}+invite2@gmail.com
-    the user clicks the button/link    jQuery=a:contains("Update organisation")
+    #the user clicks the button/link    jQuery=a:contains("Update organisation")
     the user clicks the button/link    jQuery=button:contains("Update organisation")
     the user clicks the button/link    jQuery=a:contains("Begin application")
     the user clicks the button/link    link=Application details

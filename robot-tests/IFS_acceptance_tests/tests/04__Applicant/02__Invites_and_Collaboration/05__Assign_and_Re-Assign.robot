@@ -257,7 +257,7 @@ Lead applicant should be able to remove the registered partner
     And the user clicks the button/link    jQuery=.table-overflow:contains("Dennis") ~ p a
     When the user clicks the button/link    jQuery=button:contains("Remove")
     Then the user should not see the element    link=Dennis Bergkamp
-    And the user clicks the button/link    jQuery=a:contains("Update organisation")
+    #And the user clicks the button/link    jQuery=a:contains("Update organisation")
     And the user clicks the button/link    jQuery=button:contains("Update organisation")
     #The following steps check if the collaborator should not see the application in the dashboard page
     And log in as a different user  ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
