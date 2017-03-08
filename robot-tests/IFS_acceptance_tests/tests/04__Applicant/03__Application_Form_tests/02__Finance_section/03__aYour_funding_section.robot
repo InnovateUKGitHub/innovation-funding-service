@@ -67,7 +67,7 @@ Changing application details sets funding level to incomplete
     When the user selects the radio button    application.researchCategoryId    34
     And the user clicks the button/link    name=mark_as_complete
     And applicant navigates to the finances of the robot application
-    Then the user should see the element    css=.list-overview .section:nth-of-type(3) .assigned
+    Then the user should see the element    css=.task-list li:nth-of-type(3) .action-required
 
 Funding level has been reset
     [Documentation]    INFUND-6895
@@ -88,4 +88,4 @@ Funding level can be re-entered, and this saves correctly
     And the user selects the checkbox    termsAgreed
     And the user clicks the button/link    jQuery=.button:contains("Mark as complete")
     Then the user should not see an error in the page
-    And the user should see the element    css=.list-overview .section:nth-of-type(3) .complete
+    And the user should see the element    css=.task-list li:nth-of-type(3) .task-status-complete
