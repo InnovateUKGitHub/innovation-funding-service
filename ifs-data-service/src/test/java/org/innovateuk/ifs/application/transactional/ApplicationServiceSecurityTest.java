@@ -85,13 +85,13 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
 
 
     @Test
-    public void test_createApplicationByAppNameForUserIdAndCompetitionId_allowedIfGlobalApplicationRole() {
+    public void testCreateApplicationByAppNameForUserIdAndCompetitionId_allowedIfGlobalApplicationRole() {
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(APPLICANT).build())).build());
         classUnderTest.createApplicationByApplicationNameForUserIdAndCompetitionId("An application", 123L, 456L);
     }
 
     @Test
-    public void test_createApplicationByAppNameForUserIdAndCompetitionId_deniedIfNotLoggedIn() {
+    public void testCreateApplicationByAppNameForUserIdAndCompetitionId_deniedIfNotLoggedIn() {
 
         setLoggedInUser(null);
         try {
@@ -103,7 +103,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
     }
 
     @Test
-    public void test_createApplicationByAppNameForUserIdAndCompetitionId_deniedIfNoGlobalRolesAtAll() {
+    public void testCreateApplicationByAppNameForUserIdAndCompetitionId_deniedIfNoGlobalRolesAtAll() {
 
         try {
             classUnderTest.createApplicationByApplicationNameForUserIdAndCompetitionId("An application", 123L, 456L);
@@ -114,7 +114,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
     }
 
    @Test
-    public void test_createApplicationByAppNameForUserIdAndCompetitionId_deniedIfNotCorrectGlobalRolesOrASystemRegistrar() {
+    public void testCreateApplicationByAppNameForUserIdAndCompetitionId_deniedIfNotCorrectGlobalRolesOrASystemRegistrar() {
         EnumSet<UserRoleType> nonApplicantRoles = complementOf(of(APPLICANT, SYSTEM_REGISTRATION_USER));
 
         nonApplicantRoles.forEach(role -> {
