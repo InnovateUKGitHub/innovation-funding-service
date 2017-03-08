@@ -111,6 +111,7 @@ buildscript {
         classpath 'org.owasp:dependency-check-gradle:1.4.0'
         classpath "com.avast.gradle:docker-compose-gradle-plugin:0.3.13"
         classpath "se.transmode.gradle:gradle-docker:1.2"
+        classpath "gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.13.1"
     }
 
 }
@@ -118,6 +119,7 @@ buildscript {
 
 apply plugin: "org.sonarqube"
 apply plugin: 'docker-compose'
+apply plugin: "com.github.hierynomus.license"
 
 sonarqube {
     properties {
