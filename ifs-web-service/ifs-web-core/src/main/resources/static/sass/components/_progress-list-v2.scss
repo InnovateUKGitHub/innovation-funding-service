@@ -7,6 +7,12 @@
   margin: 20px 0 50px;
   padding: 15px;
 
+  &--individual-blocks{
+    background-color: $white;
+    margin: 30px 0 50px;
+    padding: 0;
+  }
+
   > .heading-medium {
     margin-top: 0;
   }
@@ -262,15 +268,5 @@
         border-right: 1px dashed $border-colour;
       }
     }
-
   }
-
-    /*-------- Progress list modifier - boxed style - used in project setup -------*/
-
-    &--individual-blocks{
-      background-color: $white;
-      margin: 30px 0 50px;
-      padding: 0;
-    }
-
 }
