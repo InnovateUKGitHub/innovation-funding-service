@@ -148,17 +148,27 @@ public class FinanceCheckSummaryResource {
     }
 
     public boolean isFinanceChecksAllApproved() {
-        return financeChecksAllApproved;
+        return financeChecksAllApproved && isViabilityAllApprovedOrNotRequired() && isEligibilityAllApprovedOrNotRequired();
     }
 
     @JsonIgnore
-    public boolean isViabilityAllApprovedOrNotRequired() {
+    private boolean isViabilityAllApprovedOrNotRequired() {
 
         List<Viability> relevantStatuses = asList(
                 Viability.APPROVED,
                 Viability.NOT_APPLICABLE);
 
         return partnerStatusResources.stream().allMatch(org -> relevantStatuses.contains(org.getViability()));
+    }
+
+    @JsonIgnore
+    private boolean isEligibilityAllApprovedOrNotRequired() {
+
+        List<Eligibility> relevantStatuses = asList(
+                Eligibility.APPROVED,
+                Eligibility.NOT_APPLICABLE);
+
+        return partnerStatusResources.stream().allMatch(org -> relevantStatuses.contains(org.getEligibility()));
     }
 
     public void setFinanceChecksAllApproved(boolean financeChecksAllApproved) {

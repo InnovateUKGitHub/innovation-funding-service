@@ -110,15 +110,6 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     }
 
     @Override
-    public ServiceResult<Void> approve(Long projectId, Long organisationId) {
-
-        return getCurrentlyLoggedInUser().andOnSuccess(currentUser ->
-                getPartnerOrganisation(projectId, organisationId).andOnSuccessReturn(partnerOrg ->
-                        financeCheckWorkflowHandler.approveFinanceCheckFigures(partnerOrg, currentUser)).
-                        andOnSuccess(workflowResult -> workflowResult ? serviceSuccess() : serviceFailure(FINANCE_CHECKS_CANNOT_PROGRESS_WORKFLOW)));
-    }
-
-    @Override
     public ServiceResult<FinanceCheckProcessResource> getFinanceCheckApprovalStatus(Long projectId, Long organisationId) {
         return getPartnerOrganisation(projectId, organisationId).andOnSuccess(this::getFinanceCheckApprovalStatus);
     }
@@ -211,17 +202,9 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
         return mapWithIndex(partnerOrganisations, (i, org) -> {
 
-            FinanceCheckProcessResource financeCheckStatus = getFinanceCheckApprovalStatus(org).getSuccessObjectOrThrowException();
-            boolean financeChecksApproved = APPROVED.equals(financeCheckStatus.getCurrentState());
-
             ProjectOrganisationCompositeId compositeId = getCompositeId(org);
             Pair<Viability, ViabilityRagStatus> viability = getViability(compositeId);
-//            Pair<Eligibility, EligibilityRagStatus> eligibility = getEligibility(compositeId);
-
-            //TODO INFUND-6716 remove and use above.
-            Pair<Eligibility, EligibilityRagStatus> eligibility = financeChecksApproved ?
-                    Pair.of(Eligibility.APPROVED, EligibilityRagStatus.UNSET) :
-                    Pair.of(Eligibility.REVIEW, EligibilityRagStatus.UNSET);
+            Pair<Eligibility, EligibilityRagStatus> eligibility = getEligibility(compositeId);
 
             boolean anyQueryAwaitingResponse = isQueryActionRequired(projectId, org.getOrganisation().getId()).getSuccessObject();
 
