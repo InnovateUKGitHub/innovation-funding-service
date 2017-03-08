@@ -20,13 +20,9 @@
                     Short description
                     <span class="form-hint">Appears at the top of the competition page.</span>
                 </label>
-                <textarea data-editor="html"
-                          class="form-control width-full"
-                          id="short-description"
-                          th:field="${form.shortDescription}"
-                          ifs:utext="${form.shortDescription}"
-                          required="required"
-                          th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.shortDescription.required}"></textarea>
+                <input class="form-control width-full" id="short-description" type="text" th:field="${form.shortDescription}"
+                       required="required"
+                       th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.shortDescription.required}" />
             </div>
             <div class="form-group">
                 <label class="form-label-bold" for="funding-range">
