@@ -81,18 +81,19 @@
             </th:block>
         </th:block>
         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" />
-        <div th:if="${!#strings.isEmpty(filename)}">
-            <div>
-                <a th:if="${isCompManagementDownload}" th:href="@{${compManagementDownloadURL}}" class="uploaded-file" th:text="${filename}">The-uploaded-file-example.pdf</a>
-                <a th:unless="${isCompManagementDownload}" th:href="@{${downloadURL}}" class="uploaded-file" th:text="${filename}">The-uploaded-file-example.pdf</a>
-            </div>
+
+        <th:block th:unless="${!#strings.isEmpty(filename)}">
+            <p class="uploaded-file">No file currently uploaded</p>
+        </th:block>
+        <th:block th:if="${!#strings.isEmpty(filename)}">
+            <a th:if="${isCompManagementDownload}" th:href="@{${compManagementDownloadURL}}" class="uploaded-file" th:text="${filename}">The-uploaded-file-example.pdf</a>
+            <a th:unless="${isCompManagementDownload}" th:href="@{${downloadURL}}" class="uploaded-file" th:text="${filename}">The-uploaded-file-example.pdf</a>
+
             <div th:unless="${readonly}" class="alignright" th:if="${(not question.isMarkAsCompletedEnabled() or (question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id) and (questionAssignee?.assigneeUserId == currentUser?.getId() or (questionAssignee?.getAssignee() == null))))}">
                 <button class="no-margin-right buttonlink" type="submit" th:name="${removeName}">Remove</button>
             </div>
-        </div>
-        <div th:unless="${!#strings.isEmpty(filename)}">
-            <p class="uploaded-file">No file currently uploaded</p>
-        </div>
+        </th:block>
+
     </div>
 
     <!-- ===========================Form: Percentage =========================== -->

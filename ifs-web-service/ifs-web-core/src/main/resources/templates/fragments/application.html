@@ -59,9 +59,7 @@
                      </div>
 
                      <div th:if="${assessorFeedback.fileUploaded}">
-                         <div>
-                             <a th:href="${assessorFeedbackDownloadLink}" class="uploaded-file" th:text="${assessorFeedback.filename}">The-uploaded-file-example.pdf</a>
-                         </div>
+                         <a th:href="${assessorFeedbackDownloadLink}" class="uploaded-file" th:text="${assessorFeedback.filename}">The-uploaded-file-example.pdf</a>
                          <div class="alignright">
                              <button class="buttonlink no-margin-right" type="submit" name="removeAssessorFeedback">Remove</button>
                          </div>

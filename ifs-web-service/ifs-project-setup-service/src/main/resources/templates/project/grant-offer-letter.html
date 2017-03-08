@@ -97,6 +97,7 @@
                     <input th:field="*{signedGrantOfferLetter}" type="file" class="inputfile"/>
                     <label for="signedGrantOfferLetter" class="button-secondary extra-margin">+ Upload</label>
                     <button name="uploadSignedGrantOfferLetterClicked" class="button-secondary" type="submit" data-for-file-upload="signedGrantOfferLetter">Save</button>
+                    <p class="uploaded-file">No file currently uploaded</p>
                 </div>
                 <!--/* file is uploaded */-->
                 <th:block th:if="${model.signedGrantOfferLetterFile}">
