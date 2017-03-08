@@ -32,8 +32,9 @@ import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.Advised;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,10 +88,10 @@ import static org.mockito.Mockito.when;
  */
 @ActiveProfiles({"integration-test,seeding-db"})
 @DirtiesContext
-@Ignore
+//@Ignore
 public class GenerateTestData extends BaseIntegrationTest {
 
-    private static final Log LOG = LogFactory.getLog(GenerateTestData.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GenerateTestData.class);
 
     @Value("${flyway.url}")
     private String databaseUrl;
@@ -289,7 +290,6 @@ public class GenerateTestData extends BaseIntegrationTest {
         createAssessors();
         createNonRegisteredAssessorInvites();
         createAssessments();
-        createAssessorResponses();
         createProjects();
 
 //        CSVWriter writer = new CSVWriter(new FileWriter(new File("/tmp/applications.csv")));
@@ -379,16 +379,22 @@ public class GenerateTestData extends BaseIntegrationTest {
     }
 
     private void createAssessments() {
+        LOG.info("Creating assessments...");
+
         assessmentLines.forEach(this::createAssessment);
+        assessorResponseLines.forEach(this::createAssessorResponse);
+        assessmentLines.forEach(this::submitAssessment);
     }
 
     private void createAssessment(AssessmentLine line) {
-        assessmentDataBuilder.withAssessmentData(line.assessorEmail, line.applicationName, line.rejectReason, line
-                .rejectComment, line.state).build();
-    }
-
-    private void createAssessorResponses() {
-        assessorResponseLines.forEach(this::createAssessorResponse);
+        assessmentDataBuilder.withAssessmentData(
+                line.assessorEmail,
+                line.applicationName,
+                line.rejectReason,
+                line.rejectComment,
+                line.state
+        )
+                .build();
     }
 
     private void createAssessorResponse(AssessorResponseLine line) {
@@ -402,6 +408,17 @@ public class GenerateTestData extends BaseIntegrationTest {
             .build();
     }
 
+    private void submitAssessment(AssessmentLine line) {
+        assessmentDataBuilder.withSubmission(
+                line.applicationName,
+                line.assessorEmail,
+                line.state,
+                line.feedback,
+                line.recommendComment
+        )
+                .build();
+    }
+
     private void createCompetitionFunders() {
         competitionFunderLines.forEach(this::createCompetitionFunder);
     }
@@ -413,7 +430,6 @@ public class GenerateTestData extends BaseIntegrationTest {
     private void createPublicContentDates() {
         publicContentDateLines.forEach(this::createPublicContentDate);
     }
-
 
     private void createCompetitionFunder(CompetitionFunderLine line) {
         competitionFunderDataBuilder.withCompetitionFunderData(line.competitionName, line.funder, line.funder_budget, line.co_funder)
@@ -447,8 +463,9 @@ public class GenerateTestData extends BaseIntegrationTest {
     }
 
     private void createCompetitions() {
-
         competitionLines.forEach(line -> {
+            LOG.info("Creating competition '{}'", line.name);
+
             if ("Connected digital additive manufacturing".equals(line.name)) {
                 createCompetitionWithApplications(line, Optional.of(1L));
             } else {
