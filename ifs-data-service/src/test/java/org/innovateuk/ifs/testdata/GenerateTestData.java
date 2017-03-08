@@ -643,7 +643,7 @@ public class GenerateTestData extends BaseIntegrationTest {
             case "Organisation size":
                 return builder.withOrganisationSize(Long.valueOf(financeRow.metadata.get(0)));
             case "Labour":
-                return builder.withLabourEntry(financeRow.metadata.get(0), Integer.valueOf(financeRow.metadata.get(2)), Integer.valueOf(financeRow.metadata.get(2)));
+                return builder.withLabourEntry(financeRow.metadata.get(0), Integer.valueOf(financeRow.metadata.get(1)), Integer.valueOf(financeRow.metadata.get(2)));
             case "Overheads":
                 switch (financeRow.metadata.get(0).toLowerCase()) {
                     case "custom":
