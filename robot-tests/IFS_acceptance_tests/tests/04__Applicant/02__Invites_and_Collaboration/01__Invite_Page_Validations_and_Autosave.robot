@@ -54,7 +54,7 @@ Link to remove partner organisation
     And the applicant inputs details    1
     And the user clicks the button/link    jQuery=a:contains("Update Fannie May")
     When The user clicks the button/link    jQuery=button:contains('Remove')
-    And the user clicks the button/link    jQuery=a:contains("Update organisation")
+    #And the user clicks the button/link    jQuery=a:contains("Update organisation")
     And the user clicks the button/link    jQuery=button:contains("Update organisation")
     Then The user should not see the text in the page    Fannie May
     And the user should see the text in the page    Application team
@@ -132,7 +132,7 @@ the applicant fills the lead organisation fields
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');
     Focus    jQuery=.button:contains("Update organisation")
     browser validations have been disabled
-    The user clicks the button/link    jQuery=.button:contains("Update organisation")
+    #The user clicks the button/link    jQuery=.button:contains("Update organisation")
     The user clicks the button/link    jQuery=button:contains("Update organisation")
 
 the applicant can enter Organisation name, Name and E-mail
