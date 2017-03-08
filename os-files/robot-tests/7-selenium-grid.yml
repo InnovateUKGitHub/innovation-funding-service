@@ -43,6 +43,10 @@ items:
         labels:
           deploymentconfig: chrome
       spec:
+        volumes:
+        - name: dshm
+          emptyDir:
+            medium: Memory
         containers:
         - image: selenium/node-chrome-debug:3.0.1-dysprosium
           name: chrome
@@ -58,6 +62,9 @@ items:
                     echo "$IDP_PORT_443_TCP_ADDR auth-<<SHIB-ADDRESS>>" >> /etc/hosts
           ports:
           - containerPort: 5900
+          volumeMounts:
+          - mountPath: /dev/shm
+            name: dshm
           env:
           - name: NODE_MAX_SESSION
             value: "20"
