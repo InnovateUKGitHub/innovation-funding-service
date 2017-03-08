@@ -150,13 +150,13 @@ the user fills in the Public content and publishes
     # Fill in the Eligibility
     the user clicks the button/link         link=Eligibility
     the user enters text to a text field    id=heading-0    Heading 1
-    the user enters text to a text field    jQuery=.editor:eq(0)     Content 1
+    the user enters text to a text field    jQuery=div.editor:first-of-type     Content 1
     the user clicks the button/link         jQuery=button:contains("Save and return")
     the user should see the element         css=img[title='The "Eligibility" section is marked as done']
     # Fill in the Scope
     the user clicks the button/link         link=Scope
     the user enters text to a text field    id=heading-0    Heading 1
-    the user enters text to a text field    jQuery=.editor:eq(0)     Content 1
+    the user enters text to a text field    jQuery=div.editor:first-of-type     Content 1
     the user clicks the button/link         jQuery=button:contains("Save and return")
     the user should see the element         css=img[title='The "Scope" section is marked as done']
     # Save the dates
@@ -166,13 +166,13 @@ the user fills in the Public content and publishes
     # Fill in the How to apply
     the user clicks the button/link         link=How to apply
     the user enters text to a text field    id=heading-0    Heading 1
-    the user enters text to a text field    jQuery=.editor:eq(0)     Content 1
+    the user enters text to a text field    jQuery=div.editor:first-of-type     Content 1
     the user clicks the button/link         jQuery=button:contains("Save and return")
     the user should see the element         css=img[title='The "How to apply" section is marked as done']
     # Fill in the Supporting information
     the user clicks the button/link         link=Supporting information
     the user enters text to a text field    id=heading-0    Heading 1
-    the user enters text to a text field    jQuery=.editor:eq(0)     Content 1
+    the user enters text to a text field    jQuery=div.editor:first-of-type     Content 1
     the user clicks the button/link         jQuery=button:contains("Save and return")
     the user should see the element         css=img[title='The "Supporting information" section is marked as done']
     # Publish and return
