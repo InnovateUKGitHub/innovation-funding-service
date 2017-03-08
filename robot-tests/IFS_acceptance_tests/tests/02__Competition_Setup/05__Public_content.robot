@@ -142,20 +142,20 @@ Eligibility: server side validation and autosave
 Eligibility: User enters valid values and saves
     [Documentation]    INFUND-6916, INFUND-7487
     [Tags]  HappyPath
-    Given the internal user navigates to public content  ${public_content_competition_name}
-    When the user clicks the button/link                   link=Eligibility
+    Given the internal user navigates to public content     ${public_content_competition_name}
+    When the user clicks the button/link                    link=Eligibility
     And the user enters valid data in the eligibility details
-    Then the user enters text to a text field              css=#heading-0   Nationality Eligibility Heading
-    And the user enters text to a text field               jQuery=.editor:eq(0)   You can give your views on new or changing government policies by responding to consultations. Government departments take these responses into consideration before making decisions
-    And the user uploads the file                          css=#file-upload-0  ${valid_pdf}
-    Then the user clicks the button/link                   jQuery=button:contains("+ add new section")
-    And The user enters text to a text field                css=#heading-1   Minimum Eligibility Threshold
+    Then the user enters text to a text field               jQuery=input[id^="heading-0"]:first-of-type   Nationality Eligibility Heading
+    And the user enters text to a text field                jQuery=.editor:eq(0)   You can give your views on new or changing government policies by responding to consultations. Government departments take these responses into consideration before making decisions
+     And the user uploads the file                          jQuery=input[id^="file-upload-0"]:first-of-type     ${valid_pdf}
+    Then the user clicks the button/link                    jQuery=button:contains("+ add new section")
+    And The user enters text to a text field                jQuery=input[id^="heading-1"]:nth-of-type(1)   Minimum Eligibility Threshold
     And The user enters text to a text field                jQuery=.editor:eq(1)    One of the important new changes we are introducing through these reforms is establishing the national eligibility criteria for adult care and support
-    And the user uploads the file                          css=#file-upload-1  ${valid_pdf}
-    When the user clicks the button/link                   jQuery=button:contains("Save and return")
+    And the user uploads the file                           jQuery=input[id^="file-upload-1"]:nth-of-type(1)    ${valid_pdf}
+    When the user clicks the button/link                    jQuery=button:contains("Save and return")
     Then the user should be redirected to the correct page  ${public_content_overview}
-    And the user should see the element                    link=Eligibility
-    And the user should see the element                    css=img[title='The "Eligibility" section is marked as done']
+    And the user should see the element                     link=Eligibility
+    And the user should see the element                     css=img[title='The "Eligibility" section is marked as done']
 
 
 Eligibility: Contains the correct values when viewed, Edit sections
@@ -169,15 +169,15 @@ Eligibility: Contains the correct values when viewed, Edit sections
     And the user enters text to a text field                    jQuery=.editor:eq(0)   You can give your views on new or changing government policies by responding to consultations. Government departments rule of 267567£$*90 take these responses into consideration before making decisions, Local authorities can decide to meet needs that do not meet the eligibility criteria, Where they decide to do this, the same steps must be taken as would be if the person did have eligible needs (for example, the preparation of a care and support plan).
     And The user enters text to a text field                    jQuery=.editor:eq(1)   One of the important new changes we are introducing through these reforms is establishing the national eligibility criteria for adult care and support This is to be achieved through regulations to be made under a power in clause 13 of the Care Bill. These will set a minimum threshold.
     Then the user clicks the button/link                        jQuery=button:contains("+ add new section")
-    And The user enters text to a text field                    css=#heading-2    Draft Care and Support - Eligibility Criteria
+    And The user enters text to a text field                    jQuery=input[id^="heading-2"]:last-of-type    Draft Care and Support - Eligibility Criteria
     And the user enters text to a text field                    jQuery=.editor:eq(2)   In these Regulations— Citation, commencement “basic personal care activities” means essential personal care tasks that a person carries out as part of normal daily, An adult’s needs meet the eligibility criteria if those needs are due to a physical or mental impairment or illness and the effect of such needs is that the adult.
     And the user clicks the button/link                         css=#contentGroup-row-0 > div.form-group.upload-section>div > button[type=submit]
     And the user clicks the button/link                         css=#contentGroup-row-1 > div.form-group.upload-section>div > button[type=submit]
-    Then the user uploads the file                              css=#file-upload-2  ${valid_pdf}
-    And the user uploads the file                               css=#file-upload-0  ${valid_pdf}
-    And the user uploads the file                               css=#file-upload-1  ${valid_pdf}
+    Then the user uploads the file                              jQuery=input[id^="file-upload-2"]:last-of-type      ${valid_pdf}
+    And the user uploads the file                               jQuery=input[id^="file-upload-0"]:first-of-type     ${valid_pdf}
+    And the user uploads the file                               jQuery=input[id^="file-upload-1"]:nth-of-type(1)    ${valid_pdf}
     Then the user clicks the button/link                        css=#contentGroup-row-2 > div.form-group.upload-section>div > button[type=submit]
-    And the user uploads the file                               css=#file-upload-2  ${valid_pdf}
+    And the user uploads the file                               jQuery=input[id^="file-upload-2"]:last-of-type      ${valid_pdf}
     When the user clicks the button/link                        jQuery=button:contains("Save and return")
     And the user should see the element                         css=img[title='The "Eligibility" section is marked as done']
 
