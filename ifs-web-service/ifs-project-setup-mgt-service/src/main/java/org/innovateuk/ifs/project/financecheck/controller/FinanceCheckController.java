@@ -13,6 +13,7 @@ import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.project.PartnerOrganisationService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
+import org.innovateuk.ifs.project.finance.resource.FinanceCheckOverviewResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
 import org.innovateuk.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
@@ -25,8 +26,8 @@ import org.innovateuk.ifs.project.financecheck.viewmodel.ProjectFinanceCheckSumm
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -65,8 +66,6 @@ public class FinanceCheckController {
 
     private static final String FORM_ATTR_NAME = "form";
 
-    private static final String UNIVERSITY_HEI = "University (HEI)";
-
     @Autowired
     private ProjectService projectService;
 
@@ -87,6 +86,9 @@ public class FinanceCheckController {
 
     @Autowired
     private PartnerOrganisationService partnerOrganisationService;
+
+    @Autowired
+    private FinanceUtil financeUtil;
 
     @RequestMapping(value = "/organisation/{organisationId}", method = GET)
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
@@ -196,8 +198,7 @@ public class FinanceCheckController {
 
         OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
 
-        //TODO - Bronnyl - Change the variable name isResearch as its misleading. Update the view model, template and update the failing test cases.
-        boolean isResearch = isUsingJesFinances(organisationResource.getOrganisationTypeName());
+        boolean isUsingJesFinances = financeUtil.isUsingJesFinances(organisationResource.getOrganisationTypeName());
         Optional<ProjectUserResource> financeContact = getFinanceContact(projectId, organisationId);
 
         FinanceCheckProcessResource financeCheckStatus = financeCheckService.getFinanceCheckApprovalStatus(projectId, organisationId);
@@ -215,7 +216,7 @@ public class FinanceCheckController {
         }
 
         FinanceCheckViewModel financeCheckViewModel = new FinanceCheckViewModel(application.getCompetition(), competitionName, organisationResource.getName(),
-                isLeadPartner, projectId, organisationId, isResearch, financeChecksApproved, approverName, approvalDate, jesFileDetailsViewModel);
+                isLeadPartner, projectId, organisationId, isUsingJesFinances, financeChecksApproved, approverName, approvalDate, jesFileDetailsViewModel);
 
         if (financeContact.isPresent()) { // Internal users may still view finance contact page without finance contact being set.  They will see a message warning about this on template.
             financeCheckViewModel.setFinanceContactName(financeContact.get().getUserName());
@@ -223,15 +224,6 @@ public class FinanceCheckController {
         }
 
         model.addAttribute("model", financeCheckViewModel);
-    }
-
-    private boolean isUsingJesFinances(String organisationType) {
-        switch(organisationType) {
-            case UNIVERSITY_HEI:
-                return true;
-            default:
-                return false;
-        }
     }
 
     private Optional<ProjectUserResource> getFinanceContact(Long projectId, Long organisationId){
@@ -262,6 +254,8 @@ public class FinanceCheckController {
     }
 
     private String doViewFinanceCheckSummary(Long projectId, Model model) {
+        FinanceCheckOverviewResource financeCheckOverviewResource = financeCheckService.getFinanceCheckOverview(projectId).getSuccessObjectOrThrowException();
+
         FinanceCheckSummaryResource financeCheckSummaryResource = financeCheckService.getFinanceCheckSummary(projectId).getSuccessObjectOrThrowException();
         ProjectFinanceCheckSummaryViewModel projectFinanceCheckSummaryViewModel = new ProjectFinanceCheckSummaryViewModel(financeCheckSummaryResource);
         model.addAttribute("model", projectFinanceCheckSummaryViewModel);
