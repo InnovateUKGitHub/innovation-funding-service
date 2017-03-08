@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.finance.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
+import org.innovateuk.ifs.project.finance.resource.FinanceCheckOverviewResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
 import org.innovateuk.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
@@ -16,6 +17,8 @@ public interface FinanceCheckRestService {
     RestResult<Void> update(FinanceCheckResource financeCheckResource);
 
     RestResult<FinanceCheckSummaryResource> getFinanceCheckSummary(Long projectId);
+
+    RestResult<FinanceCheckOverviewResource> getFinanceCheckOverview(Long projectId);
 
     RestResult<Void> approveFinanceCheck(Long projectId, Long organisationId);
 
