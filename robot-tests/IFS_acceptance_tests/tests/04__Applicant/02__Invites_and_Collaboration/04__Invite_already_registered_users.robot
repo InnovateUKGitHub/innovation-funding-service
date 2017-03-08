@@ -24,7 +24,7 @@ The invited user should not follow the registration flow again
 The user clicks the login link
     [Documentation]    INFUND-1458
     [Tags]    HappyPath
-    When the user clicks the button/link    link=Click here to sign in
+    When the user clicks the button/link    link=Sign into the Innovation Funding Service.
     And the guest user inserts user email & password    ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     And the guest user clicks the log-in button
     Then the user should see the text in the page    Confirm your organisation
@@ -91,7 +91,7 @@ The invited user should get a message to contact the helpdesk
     [Arguments]    ${recipient}    ${subject}    ${pattern}
     And the guest user opens the browser
     When the user reads his email and clicks the link    ${recipient}    ${subject}    ${pattern}
-    When the user clicks the button/link    link=Click here to sign in
+    When the user clicks the button/link    link=Sign into the Innovation Funding Service.
     And the guest user inserts user email & password    ${recipient}  ${correct_password}
     And the guest user clicks the log-in button
     Then the user should see the text in the page    Sorry, you are unable to accept this invitation
