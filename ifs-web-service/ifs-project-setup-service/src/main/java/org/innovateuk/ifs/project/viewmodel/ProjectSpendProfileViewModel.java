@@ -30,7 +30,7 @@ public class ProjectSpendProfileViewModel {
     private SpendProfileSummaryModel summary;
     private SpendProfileTableResource table;
     private Boolean markedAsComplete;
-    private Boolean research;
+    private Boolean usingJesFinances;
     private Map<Long, BigDecimal> categoryToActualTotal;
     private List<BigDecimal> totalForEachMonth;
     private BigDecimal totalOfAllActualTotals;
@@ -48,7 +48,7 @@ public class ProjectSpendProfileViewModel {
                                         Map<Long, BigDecimal> categoryToActualTotal, List<BigDecimal> totalForEachMonth,
                                         BigDecimal totalOfAllActualTotals, BigDecimal totalOfAllEligibleTotals, boolean submitted,
                                         Map<String, List<Map<Long, List<BigDecimal>>>> costCategoryGroupMap,
-                                        Map<Long, CostCategoryResource> costCategoryResourceMap, Boolean research, boolean userPartOfThisOrganisation,
+                                        Map<Long, CostCategoryResource> costCategoryResourceMap, Boolean usingJesFinances, boolean userPartOfThisOrganisation,
                                         boolean isProjectManager, boolean approved, boolean leadPartner) {
         this.projectId = project.getId();
         this.organisationId = organisationResource.getId();
@@ -66,7 +66,7 @@ public class ProjectSpendProfileViewModel {
         this.totalOfAllEligibleTotals = totalOfAllEligibleTotals;
         this.costCategoryGroupMap = costCategoryGroupMap;
         this.costCategoryResourceMap = costCategoryResourceMap;
-        this.research = research;
+        this.usingJesFinances = usingJesFinances;
         this.submitted = submitted;
         this.userPartOfThisOrganisation = userPartOfThisOrganisation;
         this.projectManager = isProjectManager;
@@ -188,12 +188,12 @@ public class ProjectSpendProfileViewModel {
         this.totalOfAllEligibleTotals = totalOfAllEligibleTotals;
     }
 
-    public Boolean getResearch() {
-        return research;
+    public Boolean getUsingJesFinances() {
+        return usingJesFinances;
     }
 
-    public void setResearch(Boolean research) {
-        this.research = research;
+    public void setUsingJesFinances(Boolean usingJesFinances) {
+        this.usingJesFinances = usingJesFinances;
     }
 
     public Map<Long, CostCategoryResource> getCostCategoryResourceMap() {
@@ -248,7 +248,7 @@ public class ProjectSpendProfileViewModel {
                 .append(summary, that.summary)
                 .append(table, that.table)
                 .append(markedAsComplete, that.markedAsComplete)
-                .append(research, that.research)
+                .append(usingJesFinances, that.usingJesFinances)
                 .append(categoryToActualTotal, that.categoryToActualTotal)
                 .append(totalForEachMonth, that.totalForEachMonth)
                 .append(totalOfAllActualTotals, that.totalOfAllActualTotals)
@@ -275,7 +275,7 @@ public class ProjectSpendProfileViewModel {
                 .append(summary)
                 .append(table)
                 .append(markedAsComplete)
-                .append(research)
+                .append(usingJesFinances)
                 .append(categoryToActualTotal)
                 .append(totalForEachMonth)
                 .append(totalOfAllActualTotals)
@@ -304,7 +304,7 @@ public class ProjectSpendProfileViewModel {
                 .append("summary", summary)
                 .append("table", table)
                 .append("markedAsComplete", markedAsComplete)
-                .append("research", research)
+                .append("usingJesFinances", usingJesFinances)
                 .append("categoryToActualTotal", categoryToActualTotal)
                 .append("totalForEachMonth", totalForEachMonth)
                 .append("totalOfAllActualTotals", totalOfAllActualTotals)
