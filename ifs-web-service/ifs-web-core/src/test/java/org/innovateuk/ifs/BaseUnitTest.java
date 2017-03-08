@@ -54,6 +54,7 @@ import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.status.ProjectStatusService;
+import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.service.*;
 import org.innovateuk.ifs.util.CookieUtil;
@@ -209,6 +210,8 @@ public class BaseUnitTest {
     public RejectionReasonRestService rejectionReasonRestService;
     @Mock
     public FinanceCheckService financeCheckServiceMock;
+    @Mock
+    public FinanceUtil financeUtilMock;
     @Mock
     public ProjectStatusService projectStatusServiceMock;
     @Mock

@@ -943,6 +943,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         InnovationArea innovationArea = innovationAreaRepository.findOne(5L);
 
         List<CompetitionInvite> createdInvites = newCompetitionInvite()
+                .withId()
                 .withName("Will Smith", "Bill Gates", "Serena Williams", "Angela Merkel")
                 .withEmail("ws@test.com", "bg@test.com", "sw@test.com", "am@test.com")
                 .withStatus(CREATED)
@@ -954,6 +955,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         User felixWilson = userRepository.findByEmail("felix.wilson@gmail.com").orElse(null);
 
         List<CompetitionInvite> existingUserInvites = newCompetitionInvite()
+                .withId()
                 .withName("Paul Plum", "Felix Wilson")
                 .withEmail("paul.plum@gmail.com", "felix.wilson@gmail.com")
                 .withUser(paulPlum, felixWilson)

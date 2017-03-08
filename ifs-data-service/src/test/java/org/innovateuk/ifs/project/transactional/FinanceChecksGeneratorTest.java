@@ -128,7 +128,7 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
     @Test
     public void testCreateFinanceChecksFiguresWhenOrganisationIsUsingJesFinances() {
 
-        when(organisationFinanceDelegateMock.isUsingJesFinances(organisation.getOrganisationType().getName())).thenReturn(true);
+        when(financeUtilMock.isUsingJesFinances(organisation.getOrganisationType().getName())).thenReturn(true);
         PartnerOrganisation partnerOrganisation = PartnerOrganisationBuilder.newPartnerOrganisation().build();
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(newProject.getId(), organisation.getId())).thenReturn(partnerOrganisation);
         when(viabilityWorkflowHandlerMock.organisationIsAcademic(partnerOrganisation, null)).thenReturn(true);
