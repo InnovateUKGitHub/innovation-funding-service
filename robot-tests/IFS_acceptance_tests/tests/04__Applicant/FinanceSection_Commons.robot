@@ -112,15 +112,16 @@ the user has read only view once section is marked complete
 the user fills in Labour
     the user clicks the button/link            jQuery=#form-input-20 button:contains("Labour")
     the user should see the element            css=.labour-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input
-    remove previous rows
     the user enters text to a text field       jQuery=input[id$="labourDaysYearly"]    230
-    the user enters text to a text field     jQuery=.labour-costs-table tr:nth-child(1) td:nth-child(2) input    120000
-    the user enters text to a text field       jQuery=.labour-costs-table tr:nth-child(1) td:nth-child(1) input    test
-    the user enters text to a text field       jQuery=.labour-costs-table tr:nth-child(1) td:nth-child(4) input    100
+    the user should see the element            jQuery=input.form-control[name^=labour-role]:text[value=""]:first
+    the user enters text to a text field       jQuery=input.form-control[name^=labour-role]:text[value=""]:first    anotherrole
+    the user enters text to a text field       jQuery=input.form-control[name^=labour-gross][value=""]:first    120000
+    the user enters text to a text field       jQuery=input.form-control[name^=labour-labour][value=""]:first    100
     the user clicks the button/link            jQuery=button:contains('Add another role')
-    the user enters text to a text field     jQuery=.labour-costs-table tr:nth-child(3) td:nth-child(1) input    anotherrole
-    the user enters text to a text field     jQuery=.labour-costs-table tr:nth-child(3) td:nth-child(2) input    120000
-    the user enters text to a text field       jQuery=.labour-costs-table tr:nth-child(3) td:nth-child(4) input    100
+    the user should see the element            jQuery=input.form-control[name^=labour-role]:text[value=""]:first
+    the user enters text to a text field       jQuery=input.form-control[name^=labour-role]:text[value=""]:first   test
+    the user enters text to a text field       jQuery=input.form-control[name^=labour-gross][value=""]:first    120000
+    the user enters text to a text field       jQuery=input.form-control[name^=labour-labour][value=""]:first    100
     the user clicks the button/link            jQuery=#form-input-20 button:contains("Labour")
 
 the user fills in Overhead costs
