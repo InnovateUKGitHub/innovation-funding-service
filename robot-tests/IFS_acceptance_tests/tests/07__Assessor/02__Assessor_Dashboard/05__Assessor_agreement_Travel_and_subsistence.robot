@@ -1,9 +1,9 @@
 *** Settings ***
-Documentation     INFUND-1481 As an assessor I need to review and accept the Innovate UK Assessor contract so that I am able to assess a competition
+Documentation     INFUND-1481 As an assessor I need to review and accept the Innovate UK Assessor agreement so that I am able to assess a competition
 ...
-...               INFUND-5628 As an assessor I want to be able to monitor my contract expiry so that I can be sure that I am eligible to assess competitions
+...               INFUND-5628 As an assessor I want to be able to monitor my agreement expiry so that I can be sure that I am eligible to assess competitions
 ...
-...               INFUND-5645 As an assessor I want to be able to review annexes to the contract from the same screen so that I have all the information I need about assessing competitions
+...               INFUND-5645 As an assessor I want to be able to review annexes to the agreement from the same screen so that I have all the information I need about assessing competitions
 ...
 ...               INFUND-5432 As an assessor I want to receive an alert to complete my profile when I log into my dashboard so that I can ensure that it is complete.
 ...
@@ -31,8 +31,8 @@ Server-side validations
     ...
     ...    INFUND-5432
     [Tags]    HappyPath
-    Given The user should see the element    link=your contract    #his checks the alert message on the top of the page
-    And the user clicks the button/link    jQuery=a:contains("your contract")
+    Given The user should see the element    link=your assessor agreement    #his checks the alert message on the top of the page
+    And the user clicks the button/link    jQuery=a:contains("your assessor agreement")
     When the user clicks the button/link    jQuery=button:contains("Save and return to assessor dashboard")
     Then the user should see an error    Please agree to the terms and conditions.
 
@@ -41,34 +41,34 @@ Cancel returns you back to the dashboard
     [Tags]
     Given the user clicks the button/link    jQuery=a:contains(Cancel)
     Then the user should be redirected to the correct page    ${assessor_dashboard_url}
-    [Teardown]    the user clicks the button/link    jQuery=a:contains("your contract")
+    [Teardown]    the user clicks the button/link    jQuery=a:contains("your assessor agreement")
 
 Back button takes you to the previous page
     [Documentation]    INFUND-8009
     [Tags]
     Given the user clicks the button/link    link=Assessor dashboard
     Then the user should be redirected to the correct page    ${assessor_dashboard_url}
-    [Teardown]    the user clicks the button/link    jQuery=a:contains("your contract")
+    [Teardown]    the user clicks the button/link    jQuery=a:contains("your assessor agreement")
 
 Terms and Conditions
     [Documentation]    INFUND-1481
     [Tags]
-    When the user clicks the button/link    link=Download terms of contract
+    When the user clicks the button/link    link=Download assessor agreement
     Then the user should be redirected to the correct page without the usual headers    ${Server}/assessment/documents/AssessorServicesAgreementContractIFSAug2016.pdf
     And The user goes back to the previous page
-    [Teardown]    The user navigates to the page    ${Server}/assessment/profile/contract
+    [Teardown]    The user navigates to the page    ${Server}/assessment/profile/agreement
 
 Review Annexes
     [Documentation]    INFUND-5645
     When the user clicks the button/link    link=Annex A
     Then the user should see the text in the page    Technology programme: Assessor services
-    And the user clicks the button/link    link=Back to your terms of contract
+    And the user clicks the button/link    link=Back to your assessor agreement
     And the user clicks the button/link    link=Annex B
     And the user should see the text in the page    Travel and subsistence rates for non-civil service contracted personnel
-    And the user clicks the button/link    link=Back to your terms of contract
+    And the user clicks the button/link    link=Back to your assessor agreement
     And the user clicks the button/link    link=Annex C
     And the user should see the text in the page    Information management
-    And the user clicks the button/link    link=Back to your terms of contract
+    And the user clicks the button/link    link=Back to your assessor agreement
 
 Client-side validations and Submit
     [Documentation]    INFUND-1481
@@ -80,9 +80,9 @@ Client-side validations and Submit
     And the user should not see an error in the page
     And the user clicks the button/link    jQuery=button:contains("Save and return to assessor dashboard")
     Then the user should be redirected to the correct page    ${assessor_dashboard_url}
-    And The user should not see the element    jQuery=.message-alert a:contains('your contract')    #his checks the alert message on the top od the page
+    And The user should not see the element    jQuery=.message-alert a:contains('your assessor agreement')    #his checks the alert message on the top od the page
 
 Agreement Confirmation
     [Documentation]    INFUND-5628
-    Then the user clicks the button/link    jQuery=a:contains("your contract")
-    And the user should see the text in the page    You signed the contract on
+    Then the user clicks the button/link    jQuery=a:contains("your assessor agreement")
+    And the user should see the text in the page    You signed the assessor agreement on

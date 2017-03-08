@@ -28,7 +28,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
  * Controller to manage the Assessor Profile Contract page
  */
 @Controller
-@RequestMapping("/profile/contract")
+@RequestMapping("/profile/agreement")
 @PreAuthorize("hasAuthority('assessor')")
 public class AssessorProfileContractController {
 
@@ -85,7 +85,7 @@ public class AssessorProfileContractController {
 
     private String doViewContract(Model model, ProfileContractResource profileContract) {
         model.addAttribute("model", assessorProfileContractModelPopulator.populateModel(profileContract));
-        return "profile/contract";
+        return "profile/agreement";
     }
 
     private void populateFormWithExistingValues(AssessorProfileContractForm form, ProfileContractResource profileContract) {

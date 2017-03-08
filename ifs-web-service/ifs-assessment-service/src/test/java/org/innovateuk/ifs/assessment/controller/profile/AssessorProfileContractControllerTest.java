@@ -77,12 +77,12 @@ public class AssessorProfileContractControllerTest extends BaseControllerMockMVC
         AssessorProfileContractForm expectedForm = new AssessorProfileContractForm();
         expectedForm.setAgreesToTerms(TRUE);
 
-        mockMvc.perform(get("/profile/contract"))
+        mockMvc.perform(get("/profile/agreement"))
                 .andExpect(status().isOk())
                 .andExpect(model().hasNoErrors())
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(model().attribute("form", expectedForm))
-                .andExpect(view().name("profile/contract"));
+                .andExpect(view().name("profile/agreement"));
 
         verify(userService, only()).getProfileContract(user.getId());
     }
@@ -124,7 +124,7 @@ public class AssessorProfileContractControllerTest extends BaseControllerMockMVC
 
         when(userService.updateProfileContract(user.getId())).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/profile/contract")
+        mockMvc.perform(post("/profile/agreement")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("agreesToTerms", "true"))
                 .andExpect(status().is3xxRedirection())
@@ -156,7 +156,7 @@ public class AssessorProfileContractControllerTest extends BaseControllerMockMVC
         expectedViewModel.setContractSignedDate(expectedContractSignedDate);
         expectedViewModel.setText(expectedText);
 
-        MvcResult result = mockMvc.perform(post("/profile/contract")
+        MvcResult result = mockMvc.perform(post("/profile/agreement")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("agreesToTerms", "false"))
                 .andExpect(status().isOk())
@@ -165,7 +165,7 @@ public class AssessorProfileContractControllerTest extends BaseControllerMockMVC
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(model().attributeExists("form"))
                 .andExpect(model().attributeHasFieldErrors("form", "agreesToTerms"))
-                .andExpect(view().name("profile/contract"))
+                .andExpect(view().name("profile/agreement"))
                 .andReturn();
 
         AssessorProfileContractForm form = (AssessorProfileContractForm) result.getModelAndView().getModel().get("form");
@@ -185,7 +185,7 @@ public class AssessorProfileContractControllerTest extends BaseControllerMockMVC
 
     private void assertProfileContractAnnexView(ContractAnnexParameter annexParameter, String expectedText) throws Exception {
         AssessorProfileContractAnnexViewModel expectedViewModel = new AssessorProfileContractAnnexViewModel(annexParameter, expectedText);
-        mockMvc.perform(get("/profile/contract/annex/{annex}", annexParameter))
+        mockMvc.perform(get("/profile/agreement/annex/{annex}", annexParameter))
                 .andExpect(status().isOk())
                 .andExpect(model().hasNoErrors())
                 .andExpect(model().attribute("model", expectedViewModel))
