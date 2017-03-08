@@ -55,14 +55,14 @@ public class ProjectFinanceChecksOverviewController {
 
     private FinanceCheckOverviewViewModel buildFinanceCheckOverviewViewModel(final Long projectId) {
         List<PartnerOrganisationResource> partnerOrgs = partnerOrganisationService.getPartnerOrganisations(projectId).getSuccessObject();
-        return new FinanceCheckOverviewViewModel(getProjectFinanceOverviewViewModel(projectId), getProjectFinanceSummaries(projectId, partnerOrgs),
+        return new FinanceCheckOverviewViewModel(null, getProjectFinanceSummaries(projectId, partnerOrgs),
                 getProjectFinanceCostBreakdown(projectId, partnerOrgs));
     }
-
-    private ProjectFinanceOverviewViewModel getProjectFinanceOverviewViewModel(Long projectId) {
-        FinanceCheckOverviewResource financeCheckOverviewResource = financeCheckService.getFinanceCheckOverview(projectId).getSuccessObjectOrThrowException();
-        return new ProjectFinanceOverviewViewModel(financeCheckOverviewResource);
-    }
+//
+//    private ProjectFinanceOverviewViewModel getProjectFinanceOverviewViewModel(Long projectId) {
+//        FinanceCheckOverviewResource financeCheckOverviewResource = financeCheckService.getFinanceCheckOverview(projectId).getSuccessObjectOrThrowException();
+//        return new ProjectFinanceOverviewViewModel(financeCheckOverviewResource);
+//    }
 
     private FinanceCheckSummariesViewModel getProjectFinanceSummaries(Long projectId, List<PartnerOrganisationResource> partnerOrgs) {
         List<FinanceCheckEligibilityResource> summaries = mapWithIndex(partnerOrgs, (i, org) -> {

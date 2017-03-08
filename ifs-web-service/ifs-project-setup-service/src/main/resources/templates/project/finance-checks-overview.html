@@ -10,7 +10,7 @@
 
 <main id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/partner-organisation/{organisationId}/finance-checks(projectId=${model.overview.projectId},organisationId=${organisation.value})}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/partner-organisation/{organisationId}/finance-checks(projectId=${model.overview.projectId},organisationId=${organisation})}" />
 
     <div class="page-title">
         <p class="subtitle"><th:block th:text="${model.overview.projectName}" /></p>
@@ -18,9 +18,7 @@
     </div>
     <p>This is the financial overview of all partners in this collaboration, each partner will be going through finance checks. The overview provides the progress of all partners through this section, as well as a view of their finances during review.</p>
 
-    <th:block th:insert="project/financecheck/fragments/finance :: research_participation(researchParticipationPercentage=${model.overview.researchParticipationPercentage},maxResearchPercentage=${model.overview.competitionMaximumResearchPercentage})"/>
-
-    <th:block th:insert="project/financecheck/fragments/finance :: project-finance-overview(overview=${model.overview})" />
+    <!--<th:block th:insert="project/financecheck/fragments/finance :: research_participation(researchParticipationPercentage=${model.overview.researchParticipationPercentage},maxResearchPercentage=${model.overview.competitionMaximumResearchPercentage})"/>-->
 
     <h3 class="heading-medium">Finance summaries</h3>
     <p>This is the level of cost detail that the assessors will see during the assessment process.</p>
