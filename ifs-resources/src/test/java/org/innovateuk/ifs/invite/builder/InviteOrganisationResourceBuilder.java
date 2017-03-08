@@ -27,23 +27,23 @@ public class InviteOrganisationResourceBuilder extends BaseBuilder<InviteOrganis
     }
 
     public InviteOrganisationResourceBuilder withId(Long... ids) {
-        return withArray((id, inviteResource) -> setField("id", id, inviteResource), ids);
+        return withArraySetFieldByReflection("id", ids);
     }
 
     public InviteOrganisationResourceBuilder withOrganisationName(String... organisationNames) {
-        return withArray((organisationName, inviteResource) -> setField("organisationName", organisationName, inviteResource), organisationNames);
+        return withArraySetFieldByReflection("organisationName", organisationNames);
     }
 
     public InviteOrganisationResourceBuilder withOrganisationNameConfirmed(String... organisationNameConfirmeds) {
-        return withArray((organisationNameConfirmed, inviteResource) -> setField("organisationNameConfirmed", organisationNameConfirmed, inviteResource), organisationNameConfirmeds);
+        return withArraySetFieldByReflection("organisationNameConfirmed", organisationNameConfirmeds);
     }
 
     public InviteOrganisationResourceBuilder withInviteResources(List<ApplicationInviteResource>... inviteResourceLists) {
-        return withArray((inviteResources, inviteResource) -> setField("inviteResources", inviteResources, inviteResource), inviteResourceLists);
+        return withArraySetFieldByReflection("inviteResources", inviteResourceLists);
     }
 
     public InviteOrganisationResourceBuilder withOrganisation(Long... organisationIds) {
-        return withArray((organisationId, inviteResource) -> setField("organisation", organisationId, inviteResource), organisationIds);
+        return withArraySetFieldByReflection("organisation", organisationIds);
     }
 
     @Override
