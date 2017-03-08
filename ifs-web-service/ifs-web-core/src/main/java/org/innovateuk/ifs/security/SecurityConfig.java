@@ -41,6 +41,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .anonymous().and()
                 .exceptionHandling().and()
-            .headers().addHeaderWriter(new StaticHeadersWriter("server","server")).cacheControl().disable();
+            .headers()
+                .addHeaderWriter(new StaticHeadersWriter("server","server"))
+                .cacheControl().disable();
     }
 }

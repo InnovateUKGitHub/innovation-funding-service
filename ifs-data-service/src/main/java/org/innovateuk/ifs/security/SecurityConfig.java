@@ -40,6 +40,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
             .exceptionHandling().and()
             .addFilterBefore(statelessAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .headers().addHeaderWriter(new StaticHeadersWriter("server","server")).cacheControl();
+                .headers()
+                    .addHeaderWriter(new StaticHeadersWriter("server","server"))
+                    .cacheControl();
     }
 }
