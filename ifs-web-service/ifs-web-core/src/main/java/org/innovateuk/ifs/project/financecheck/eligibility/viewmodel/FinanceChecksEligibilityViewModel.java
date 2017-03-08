@@ -28,7 +28,7 @@ public class FinanceChecksEligibilityViewModel {
 
     private boolean readOnly;
     private boolean isUsingJesFinances;
-    private FileDetailsViewModel jesFileDetailsViewModel;
+    private FileDetailsViewModel jesFileDetails;
 
     public FinanceChecksEligibilityViewModel(FinanceCheckEligibilityResource eligibilityOverview, String organisationName, String projectName,
                                              Long applicationId, boolean leadPartnerOrganisation, Long projectId, Long organisationId,
@@ -50,7 +50,7 @@ public class FinanceChecksEligibilityViewModel {
 
         this.readOnly = readOnly;
         this.isUsingJesFinances = isUsingJesFinances;
-        this.jesFileDetailsViewModel = jesFileDetailsViewModel;
+        this.jesFileDetails = jesFileDetailsViewModel;
     }
 
     public boolean isApproved() {
@@ -186,12 +186,12 @@ public class FinanceChecksEligibilityViewModel {
         isUsingJesFinances = usingJesFinances;
     }
 
-    public FileDetailsViewModel getJesFileDetailsViewModel() {
-        return jesFileDetailsViewModel;
+    public FileDetailsViewModel getJesFileDetails() {
+        return jesFileDetails;
     }
 
-    public void setJesFileDetailsViewModel(FileDetailsViewModel jesFileDetailsViewModel) {
-        this.jesFileDetailsViewModel = jesFileDetailsViewModel;
+    public void setJesFileDetails(FileDetailsViewModel jesFileDetails) {
+        this.jesFileDetails = jesFileDetails;
     }
 
 }

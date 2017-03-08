@@ -122,8 +122,8 @@
         <p>If you need to make corrections, discuss this with the applicant. You can do this by raising queries through IFS. Saved changes will be visible to the applicant.</p>
         <div class="upload-section">
             <h3 class="heading-small no-margin">Download Je-S form:</h3>
-            <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/jes-file(projectId=${model.projectId}, organisationId=${model.organisationId})}"
-               class="uploaded-file" th:text="${model.jesFileDetails?.filename}">The-uploaded-file-example.pdf</a>
+            <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/jes-file(projectId=${summaryModel.projectId}, organisationId=${summaryModel.organisationId})}"
+               class="uploaded-file" th:text="${summaryModel.jesFileDetails?.filename}">The-uploaded-file-example.pdf</a>
         </div>
     </th:block>
 

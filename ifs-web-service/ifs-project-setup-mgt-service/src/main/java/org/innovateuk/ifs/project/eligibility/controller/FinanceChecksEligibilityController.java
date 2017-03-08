@@ -134,8 +134,6 @@ public class FinanceChecksEligibilityController {
 
     private String doViewEligibility(CompetitionResource competition, ApplicationResource application, ProjectResource project, List<SectionResource> allSections, UserResource user, boolean isLeadPartnerOrganisation, OrganisationResource organisation, Model model, FinanceChecksEligibilityForm eligibilityForm, ApplicationForm form, BindingResult bindingResult) {
 
-        populateProjectFinanceDetails(competition, application, project, organisation.getId(), allSections, user, form, bindingResult, model);
-
         EligibilityResource eligibility = projectFinanceService.getEligibility(project.getId(), organisation.getId());
 
         if (eligibilityForm == null) {
@@ -148,12 +146,16 @@ public class FinanceChecksEligibilityController {
 
         OrganisationResource organisationResource = organisationService.getOrganisationById(organisation.getId());
 
-        boolean isUsingJesFinances = financeUtil.isUsingJesFinances(organisationResource.getOrganisationTypeName());
         FileDetailsViewModel jesFileDetailsViewModel = null;
-        ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceByApplicationIdAndOrganisationId(application.getId(), organisation.getId());
-        if (applicationFinanceResource.getFinanceFileEntry() != null) {
-            FileEntryResource jesFileEntryResource = financeService.getFinanceEntry(applicationFinanceResource.getFinanceFileEntry()).getSuccessObject();
-            jesFileDetailsViewModel = new FileDetailsViewModel(jesFileEntryResource);
+        boolean isUsingJesFinances = financeUtil.isUsingJesFinances(organisationResource.getOrganisationTypeName());
+        if (!isUsingJesFinances) {
+            populateProjectFinanceDetails(competition, application, project, organisation.getId(), allSections, user, form, bindingResult, model);
+        } else {
+            ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceByApplicationIdAndOrganisationId(application.getId(), organisation.getId());
+            if (applicationFinanceResource.getFinanceFileEntry() != null) {
+                FileEntryResource jesFileEntryResource = financeService.getFinanceEntry(applicationFinanceResource.getFinanceFileEntry()).getSuccessObject();
+                jesFileDetailsViewModel = new FileDetailsViewModel(jesFileEntryResource);
+            }
         }
         model.addAttribute("summaryModel", new FinanceChecksEligibilityViewModel(eligibilityOverview, organisation.getName(), project.getName(),
                 application.getId(), isLeadPartnerOrganisation, project.getId(), organisation.getId(),

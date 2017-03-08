@@ -212,7 +212,7 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
         MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility",
                 project.getId(), academicOrganisation.getId())).
                 andExpect(status().isOk()).
-                andExpect(model().attributeExists("model")).
+                andExpect(model().attributeExists("summaryModel")).
                 andExpect(view().name("project/financecheck/eligibility")).
                 andReturn();
 
@@ -236,7 +236,7 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
         MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility",
                 project.getId(), academicOrganisation.getId())).
                 andExpect(status().isOk()).
-                andExpect(model().attributeExists("model")).
+                andExpect(model().attributeExists("summaryModel")).
                 andExpect(view().name("project/financecheck/eligibility")).
                 andReturn();
 
@@ -276,8 +276,8 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
 
         assertFalse(viewModel.isReadOnly());
         assertEquals(expectedIsUsingJesFinances, viewModel.isUsingJesFinances());
-        if (null != viewModel.getJesFileDetailsViewModel()) {
-            assertEquals(expectedJesFilename, viewModel.getJesFileDetailsViewModel().getFilename());
+        if (null != viewModel.getJesFileDetails()) {
+            assertEquals(expectedJesFilename, viewModel.getJesFileDetails().getFilename());
         }
     }
 
