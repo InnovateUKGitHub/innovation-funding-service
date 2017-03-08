@@ -42,21 +42,21 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td class="numeric">&pound;
-                        <th:block th:text="${#numbers.formatInteger(summaryModel.totalCost,1,'COMMA')}"/>
-                    </td>
-                    <td class="numeric" th:text="${#numbers.formatInteger(summaryModel.percentageGrant,1,'NONE')+'%'}"/>
-                    <td class="numeric">&pound;
-                        <th:block th:text="${#numbers.formatInteger(summaryModel.fundingSought,1,'COMMA')}"/>
-                    </td>
-                    <td class="numeric">&pound;
-                        <th:block th:text="${#numbers.formatInteger(summaryModel.otherPublicSectorFunding,1,'COMMA')}"/>
-                    </td>
-                    <td class="numeric">&pound;
-                        <th:block th:text="${#numbers.formatInteger(summaryModel.contributionToProject,1,'COMMA')}"/>
-                    </td>
-                </tr>
+                    <tr>
+                        <td class="numeric">&pound;
+                            <th:block th:text="${#numbers.formatInteger(summaryModel.totalCost,1,'COMMA')}"/>
+                        </td>
+                        <td class="numeric" th:text="${#numbers.formatInteger(summaryModel.percentageGrant,1,'NONE')+'%'}"/>
+                        <td class="numeric">&pound;
+                            <th:block th:text="${#numbers.formatInteger(summaryModel.fundingSought,1,'COMMA')}"/>
+                        </td>
+                        <td class="numeric">&pound;
+                            <th:block th:text="${#numbers.formatInteger(summaryModel.otherPublicSectorFunding,1,'COMMA')}"/>
+                        </td>
+                        <td class="numeric">&pound;
+                            <th:block th:text="${#numbers.formatInteger(summaryModel.contributionToProject,1,'COMMA')}"/>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
