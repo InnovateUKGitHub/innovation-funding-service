@@ -157,7 +157,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
      */
     private Map<FinanceRowType, FinanceRowCostCategory> addCostToCategory(Map<FinanceRowType, FinanceRowCostCategory> costCategories,
                                                                           ApplicationFinanceRow cost) {
-        cost.getQuestion().getFormInputs().size();
+        //cost.getQuestion().getFormInputs().size();
         FinanceRowType costType = FinanceRowType.fromType(cost.getQuestion().getFormInputs().get(0).getType());
         FinanceRowHandler financeRowHandler = getCostHandler(costType);
         FinanceRowItem costItem = financeRowHandler.toCostItem(cost);
