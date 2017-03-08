@@ -150,10 +150,7 @@ public class QuestionModelPopulator extends BaseModelPopulator {
 
         addApplicationFormDetailInputs(application, form);
         addSelectedInnovationAreaName(application, questionApplicationViewModel);
-
-        questionApplicationViewModel.setResearchCategories(categoryService.getResearchCategories());
-        questionApplicationViewModel.setResearchCategoryId(application.getResearchCategories().stream().findFirst().map(cat -> cat.getId()).orElse(null));
-
+        addSelectedResearchCategoryName(application, questionApplicationViewModel);
 
         return questionApplicationViewModel;
     }
@@ -167,6 +164,15 @@ public class QuestionModelPopulator extends BaseModelPopulator {
         }
         else {
             questionApplicationViewModel.setSelectedInnovationAreaName("None selected.");
+        }
+    }
+
+    private void addSelectedResearchCategoryName(ApplicationResource applicationResource, QuestionApplicationViewModel questionApplicationViewModel) {
+        if(applicationResource.getResearchCategory() != null && applicationResource.getResearchCategory().getName() != null) {
+            questionApplicationViewModel.setSelectedResearchCategoryName(applicationResource.getResearchCategory().getName());
+        }
+        else {
+            questionApplicationViewModel.setSelectedResearchCategoryName("None selected.");
         }
     }
 

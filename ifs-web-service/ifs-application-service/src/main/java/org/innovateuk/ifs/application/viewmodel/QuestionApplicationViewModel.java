@@ -19,10 +19,9 @@ public class QuestionApplicationViewModel {
     private ApplicationResource currentApplication;
     private CompetitionResource currentCompetition;
     private OrganisationResource userOrganisation;
-    private List<ResearchCategoryResource> researchCategories;
-    private Long researchCategoryId;
     private boolean hasApplicationFinances;
     private String selectedInnovationAreaName;
+    private String selectedResearchCategoryName;
 
     public QuestionApplicationViewModel(Set<Long> markedAsComplete, Boolean allReadOnly, ApplicationResource currentApplication,
                                         CompetitionResource competitionResource, OrganisationResource userOrganisation) {
@@ -69,22 +68,6 @@ public class QuestionApplicationViewModel {
         return !currentCompetition.isOpen() || !currentApplication.isOpen();
     }
 
-    public List<ResearchCategoryResource> getResearchCategories() {
-        return researchCategories;
-    }
-
-    public void setResearchCategories(List<ResearchCategoryResource> researchCategories) {
-        this.researchCategories = researchCategories;
-    }
-
-    public Long getResearchCategoryId() {
-        return researchCategoryId;
-    }
-
-    public void setResearchCategoryId(Long researchCategoryId) {
-        this.researchCategoryId = researchCategoryId;
-    }
-
     public boolean getHasApplicationFinances() {
         return hasApplicationFinances;
     }
@@ -99,5 +82,13 @@ public class QuestionApplicationViewModel {
 
     public void setSelectedInnovationAreaName(String selectedInnovationAreaName) {
         this.selectedInnovationAreaName = selectedInnovationAreaName;
+    }
+
+    public String getSelectedResearchCategoryName() {
+        return selectedResearchCategoryName;
+    }
+
+    public void setSelectedResearchCategoryName(String selectedResearchCategoryName) {
+        this.selectedResearchCategoryName = selectedResearchCategoryName;
     }
 }

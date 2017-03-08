@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Research category'" />
+    </head>
+    <body th:with="context='applicant'" class="application details innovation-areas">
+        <th:block th:insert="fragments/layout :: body-start" />
+        <th:block th:insert="fragments/layout :: global-header" />
+
+        <main id="content">
+            <th:block th:insert="fragments/layout :: main-content-start" />
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/application/{applicationId}/form/question/{questionId}(applicationId=${model.applicationId},questionId=${model.questionId})}" />
+
+            <div class="page-title">
+                <p class="subtitle" th:text="${model.currentCompetitionName}">Competition title</p>
+                <h1 class="heading-xlarge">Research category</h1>
+                <p>
+                    xxxxxxxx
+                </p>
+            </div>
+
+            <form method="post" th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}">
+                <div class="form-group">
+                    <fieldset>
+                        <legend class="visuallyhidden">
+                            What type of research is your project undertaking? Further guidance is available from <a href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#funding-rules">Innovate UK funding rules.</a>.
+                        </legend>
+                        <th:block th:each="researchCategory : ${model.availableResearchCategories}">
+                            <label class="block-label selection-button-radio" th:for="${'researchCategoryChoice-'+researchCategory.id}">
+                                <input type="radio" name="researchCategoryChoice" th:id="${'researchCategoryChoice-'+researchCategory.id}" th:value="${researchCategory.id}" th:checked="${model.selectedResearchCategoryId} == ${researchCategory.id}" required="required">
+                                <th:block th:text="${researchCategory.name}" />
+                                <span class="form-hint" th:text="${researchCategory.description}">description</span>
+                            </label>
+                        </th:block>
+                    </fieldset>
+                </div>
+                <button class="button" name="save-research-category">Save</button>
+                <a th:href="@{/application/__${model.applicationId}__/form/question/__${model.questionId}__}">Cancel</a>
+            </form>
+
+            <th:block th:insert="fragments/layout :: main-content-end" />
+        </main>
+
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
+    </body>
+</html>
