@@ -118,10 +118,13 @@ the user fills in Labour
     the user enters text to a text field       jQuery=input.form-control[name^=labour-gross][value=""]:first    120000
     the user enters text to a text field       jQuery=input.form-control[name^=labour-labour][value=""]:first    100
     the user clicks the button/link            jQuery=button:contains('Add another role')
+    the user clicks the button/link            jQuery=button:contains('Add another role')
     the user should see the element            jQuery=input.form-control[name^=labour-role]:text[value=""]:first
-    the user enters text to a text field       jQuery=input.form-control[name^=labour-role]:text[value=""]:first   test
-    the user enters text to a text field       jQuery=input.form-control[name^=labour-gross][value=""]:first    120000
-    the user enters text to a text field       jQuery=input.form-control[name^=labour-labour][value=""]:first    100
+    the user should see the element            jQuery=input.form-control[name^=labour-labour][value=""]:first
+    the user should see the element            jQuery=input.form-control[name^=labour-gross][value=""]:first
+    the user enters text to a text field       jQuery=input.form-control[name^=labour-gross][value=""]:last    120000
+    the user enters text to a text field       jQuery=input.form-control[name^=labour-labour][value=""]:last    100
+    the user enters text to a text field       jQuery=input.form-control[name^=labour-role]:text[value=""]:last   test
     the user clicks the button/link            jQuery=#form-input-20 button:contains("Labour")
 
 the user fills in Overhead costs
