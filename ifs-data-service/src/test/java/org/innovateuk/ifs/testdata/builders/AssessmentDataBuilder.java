@@ -4,11 +4,8 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
-import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.domain.ActivityType;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -16,11 +13,7 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.ASSESSOR_FEEDBACK;
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.FUNDERS_PANEL;
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PROJECT_SETUP;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 
 /**
@@ -32,7 +25,9 @@ public class AssessmentDataBuilder extends BaseDataBuilder<Void, AssessmentDataB
                                                     String applicationName,
                                                     AssessmentRejectOutcomeValue rejectReason,
                                                     String rejectComment,
-                                                    AssessmentStates state) {
+                                                    AssessmentStates state,
+                                                    String feedback,
+                                                    String recommendComment) {
         return with(data -> {
 
             Application application = applicationRepository.findByName(applicationName).get(0);
@@ -70,16 +65,28 @@ public class AssessmentDataBuilder extends BaseDataBuilder<Void, AssessmentDataB
                 );
                 assessment.setActivityState(activityState);
             }
+
+            doAs(assessor, () -> {
+                if (feedback == null && recommendComment == null) {
+                    return;
+                }
+
+                AssessmentFundingDecisionOutcomeResource fundingDecision = new AssessmentFundingDecisionOutcomeResource(
+                        true,
+                        feedback,
+                        recommendComment
+                );
+
+                assessmentService.recommend(assessment.getId(), fundingDecision).getSuccessObjectOrThrowException();
+            });
         });
     }
 
     public AssessmentDataBuilder withSubmission(String applicationName,
                                                 String assessorEmail,
-                                                AssessmentStates state,
-                                                String feedback,
-                                                String recommendComment) {
+                                                AssessmentStates state) {
         return with(data -> {
-            if (!EnumSet.of(READY_TO_SUBMIT, SUBMITTED).contains(state)) {
+            if (state != SUBMITTED) {
                 return;
             }
 
@@ -91,28 +98,16 @@ public class AssessmentDataBuilder extends BaseDataBuilder<Void, AssessmentDataB
                 return;
             }
 
-            doAs(assessor, () -> {
-                AssessmentFundingDecisionOutcomeResource fundingDecision = new AssessmentFundingDecisionOutcomeResource(
-                        true,
-                        feedback,
-                        recommendComment
-                );
+            // We have to forcefully set the SUBMITTED state for the assessment, as the
+            // relevant competition is not necessarily IN_ASSESSMENT.
+            // This means that the state transition to SUBMITTED through the workflow
+            // handler will fail due to the `CompetitionInAssessmentGuard`.
+            ActivityState activityState = activityStateRepository.findOneByActivityTypeAndState(
+                    APPLICATION_ASSESSMENT,
+                    SUBMITTED.getBackingState()
+            );
 
-                assessmentService.recommend(assessment.get().getId(), fundingDecision).getSuccessObjectOrThrowException();
-
-                if (state == SUBMITTED) {
-                    // We have to forcefully set the SUBMITTED state for the assessment, as the
-                    // relevant competition is not necessarily IN_ASSESSMENT.
-                    // This means that the state transition to SUBMITTED through the workflow
-                    // handler will fail due to the `CompetitionInAssessmentGuard`.
-                    ActivityState activityState = activityStateRepository.findOneByActivityTypeAndState(
-                            APPLICATION_ASSESSMENT,
-                            state.getBackingState()
-                    );
-
-                    assessment.ifPresent(a -> a.setActivityState(activityState));
-                }
-            });
+            assessment.ifPresent(a -> a.setActivityState(activityState));
         });
     }
 
