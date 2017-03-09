@@ -71,7 +71,7 @@
       <dd th:text="${model.headCount != null ? model.headCount : '-'}">0</dd>
 
       <dt>Organisation size</dt>
-      <dd th:text="${model.organisationSize != null ? #messages.msg('ifs.organisation.size.' + model.organisationSize) : '-'}">Medium</dd>
+      <dd th:text="${model.organisationSizeDescription != null ? model.organisationSizeDescription : '-'}">Medium</dd>
     </dl>
 
     <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}">
