@@ -10,7 +10,6 @@ Documentation     INFUND-6914 Create 'Public content' menu page for "Front Door"
 ...               INFUND-7489 Create 'Competition' > 'Dates' tab for external "Front Door" view of competition dates
 ...
 ...               INFUND-7487 Create Competition > Eligibility tab for external "Front Door" view of competition eligibility
-
 ...
 ...               INFUND-7488 Create 'Competition' > 'Scope' tab for external "Front Door" view of competition scope
 Suite Setup       Custom suite setup
