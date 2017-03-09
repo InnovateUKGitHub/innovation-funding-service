@@ -19,6 +19,7 @@ import static org.innovateuk.ifs.project.builder.CostCategoryResourceBuilder.new
 import static org.innovateuk.ifs.project.builder.CostGroupResourceBuilder.newCostGroupResource;
 import static org.innovateuk.ifs.project.builder.CostResourceBuilder.newCostResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
+import static org.innovateuk.ifs.project.finance.builder.FinanceCheckOverviewResourceBuilder.newFinanceCheckOverviewResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStatusResourceBuilder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStatusResourceBuilder.newFinanceCheckPartnerStatusResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckProcessResourceBuilder.newFinanceCheckProcessResource;
@@ -182,6 +183,37 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
                 ));
 
         verify(financeCheckServiceMock).getFinanceCheckSummary(123L);
+    }
+
+    @Test
+    public void getFinanceCheckOverview() throws Exception {
+        Long projectId = 123L;
+
+        FinanceCheckOverviewResource expected = newFinanceCheckOverviewResource().
+                withProjectId(projectId).
+                withProjectStartDate(LocalDate.now()).
+                withDurationInMonths(6).
+                withTotalProjectCost(new BigDecimal(10000.00)).
+                withGrantAppliedFor(new BigDecimal(5000.00)).
+                withOtherPublicSectorFunding(new BigDecimal(0.00)).
+                withTotalPercentageGrants(new BigDecimal(30.00)).
+                build();
+
+        when(financeCheckServiceMock.getFinanceCheckOverview(123L)).thenReturn(serviceSuccess(expected));
+
+        String url = FinanceCheckURIs.BASE_URL + "/{projectId}" + FinanceCheckURIs.PATH + "/overview";
+
+        mockMvc.perform(get(url, 123L)).
+                andExpect(status().isOk()).
+                andExpect(content().json(toJson(expected))).
+                andDo(document("project/{method-name}",
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project to which the Finance Check is linked")
+                        ),
+                        responseFields(financeCheckOverviewResourceFields)
+                ));
+
+        verify(financeCheckServiceMock).getFinanceCheckOverview(123L);
     }
 
     @Test
