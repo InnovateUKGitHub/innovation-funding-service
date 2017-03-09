@@ -220,12 +220,3 @@ the user should see all finance subsections incomplete
     the user should see the element  jQuery=li.grid-row.section:nth-of-type(2) img.section-status.assigned
     the user should see the element  jQuery=h3:contains("Your funding")
 
-Remove previous rows
-    #[Arguments]  ${element}
-    :FOR    ${i}    IN RANGE  10
-    \    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible    jQuery=.labour-costs-table tr:first-of-type button:contains("Remove")
-    \
-    \  Exit For Loop If  '${status}'=='FAIL'
-    \  the user clicks the button/link  jQuery=.labour-costs-table tr:first-of-type button:contains("Remove")
-    \  ${i} =  Set Variable  ${i + 1}
-

@@ -169,14 +169,15 @@ The user enters text to a text field
     Clear Element Text    ${TEXT_FIELD}
     Wait Until Keyword Succeeds Without Screenshots    10    200ms    input text    ${TEXT_FIELD}    ${TEXT_INPUT}
     Mouse Out    ${TEXT_FIELD}
-    Wait for autosave
     Run Keyword And Ignore Error Without Screenshots    focus    link=Sign out
+    Wait for autosave
+
 
 The user enters large text to a text field
     [Arguments]    ${TEXT_FIELD}    ${TEXT_INPUT}
     Wait Until Element Is Visible Without Screenshots    ${TEXT_FIELD}
     Clear Element Text    ${TEXT_FIELD}
-    Wait Until Keyword Succeeds Without Screenshots    10    200ms    input text    ${TEXT_FIELD}    ${TEXT_INPUT}
+    Wait Until Keyword Succeeds Without Screenshots    10    1500ms    input text    ${TEXT_FIELD}    ${TEXT_INPUT}
     Mouse Out    ${TEXT_FIELD}
     Run Keyword And Ignore Error Without Screenshots    focus    link=Sign out
     Wait for autosave
