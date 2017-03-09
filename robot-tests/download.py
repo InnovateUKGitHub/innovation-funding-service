@@ -65,23 +65,19 @@ def downloadPublicFile(downloadUrl, downloadFileLocation):
 
 def main():
     if len(sys.argv) == 3:
-      downloadUrl = sys.argv[1]
-      downloadFileLocation = sys.argv[2]
-      downloadPublicFile(downloadUrl, downloadFileLocation)
-    elif len(sys.argv) == 5:
-      user = sys.argv[1] # e.g. john.doe@innovateuk.test
-      password = sys.argv[2] # e.g. Passw0rd
-      downloadUrl = sys.argv[3] # e.g. https://ifs-local-dev/management/competition/1/download
-      downloadFileLocation = sys.argv[4] # e.g. /tmp/file.xlsx
-      baseUrl = getBaseUrl(downloadUrl)
-      loginPostUrl, baseAuthUrl = getBaseAuthUrlAndPortUrl(baseUrl)
-      sAMLResponse, relayState = postCredentialsAndGetShibbolethParameters(user, password, baseAuthUrl, loginPostUrl)
-      shibCookieName, shibCookieValue = postShibbolethParametersForSession(sAMLResponse, relayState, baseUrl)
-      downloadFile(shibCookieName, shibCookieValue, downloadUrl, downloadFileLocation)
-    else
-      print "[*] Usage: ./download.py [test_user] [password] [download_url] [filename]"
-      print "[*] eg ./download.py john.doe@innovateuk.test Passw0rd https://ifs-local-dev/management/competition/10/applications/download downloaded_files/submitted_applications.xlsx"
-      sys.exit()
+       downloadUrl = sys.argv[1]
+       downloadFileLocation = sys.argv[2]
+       downloadPublicFile(downloadUrl, downloadFileLocation)
+    else:
+       user = sys.argv[1] # e.g. john.doe@innovateuk.test
+       password = sys.argv[2] # e.g. Passw0rd
+       downloadUrl = sys.argv[3] # e.g. https://ifs-local-dev/management/competition/1/download
+       downloadFileLocation = sys.argv[4] # e.g. /tmp/file.xlsx
+       baseUrl = getBaseUrl(downloadUrl)
+       loginPostUrl, baseAuthUrl = getBaseAuthUrlAndPortUrl(baseUrl)
+       sAMLResponse, relayState = postCredentialsAndGetShibbolethParameters(user, password, baseAuthUrl, loginPostUrl)
+       shibCookieName, shibCookieValue = postShibbolethParametersForSession(sAMLResponse, relayState, baseUrl)
+       downloadFile(shibCookieName, shibCookieValue, downloadUrl, downloadFileLocation)
 
 if __name__ == '__main__':
   main()

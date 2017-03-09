@@ -153,8 +153,7 @@ Scope: Server side validation
 Scope: Add, remove sections and submit
     [Documentation]    INFUND-6918, INFUND-7602
     [Tags]  HappyPath
-    When the user clicks the button/link                         link=Scope
-    Then the user can add and remove multiple content groups
+    Given the user can add and remove multiple content groups
     When the user clicks the button/link                        jQuery=button:contains("Save and return")
     And the user should see the element  css=img[title='The "Scope" section is marked as done']
 
