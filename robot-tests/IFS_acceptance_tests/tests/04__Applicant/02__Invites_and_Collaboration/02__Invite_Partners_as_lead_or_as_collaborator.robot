@@ -45,7 +45,9 @@ Pending users visible in the assign list but not clickable
     ...
     ...    INFUND-1962
     [Tags]    HappyPath
-    When the user navigates to the next question
+    Given the user navigates to the page    ${DASHBOARD_URL}
+    And the user clicks the button/link    link=Invite robot test application
+    And the user clicks the button/link    link=Project summary
     Then the applicant cannot assign to pending invitees
     And the user should see the text in the page    Adrian Booth (pending)
 
