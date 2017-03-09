@@ -11,7 +11,7 @@ The user downloads the file
 
 Guest user downloads the file
     [Arguments]    ${url}    ${filename}
-    Run and Return RC    ./downloadpublic.py ${url} ${filename}
+    Run and Return RC    ./download.py ${url} ${filename}
     Wait Until Keyword Succeeds Without Screenshots    30s    200ms    Download should be done
 
 the user uploads the file
