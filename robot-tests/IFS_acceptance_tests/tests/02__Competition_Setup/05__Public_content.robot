@@ -8,6 +8,8 @@ Documentation     INFUND-6914 Create 'Public content' menu page for "Front Door"
 ...               INFUND-7486 Create Competition > Summary tab for external "Front Door" view of competition summary
 ...
 ...               INFUND-7489 Create 'Competition' > 'Dates' tab for external "Front Door" view of competition dates
+...
+...               INFUND-7488 Create 'Competition' > 'Scope' tab for external "Front Door" view of competition scope
 Suite Setup       Custom suite setup
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin
@@ -140,6 +142,14 @@ Eligibility: Add, remove sections and submit
     When the user clicks the button/link                        jQuery=button:contains("Save and return")
     And the user should see the element  css=img[title='The "Eligibility" section is marked as done']
 
+Scope: Server side validation
+    [Documentation]  INFUND-7488
+    [Tags]  HappyPath
+    When the user clicks the button/link  link=Scope
+    And the user clicks the button/link   jQuery=button:contains("Save and return")
+    Then the user should see a summary error  Please enter content.
+    And the user should see a summary error   Please enter a heading.
+
 Scope: Add, remove sections and submit
     [Documentation]    INFUND-6918, INFUND-7602
     [Tags]  HappyPath
@@ -223,16 +233,12 @@ The guest user is able to download the file in the Summary
     # TODO Pending due to INFUND-8536
 
 The guest user can see updated scope information
-    [Documentation]
+    [Documentation]    INFUND-7488
     [Tags]
     Given the user clicks the button/link    link=Scope
     Then the user should see the element      jQuery=.column-third:contains("Heading 1") ~ .column-two-thirds:contains("Content 1")
     And the user should see the element      jQuery=.column-third:contains("Heading 2") ~ .column-two-thirds:contains("Content 2")
-
-The guest user is able to download the file in the Scope
-    [Documentation]
-    [Tags]
-    Given Guest user downloads the file    ${server}/competition/15/download/48    ${DOWNLOAD_FOLDER}/scope.pdf
+    And guest user downloads the file    ${server}/competition/15/download/48    ${DOWNLOAD_FOLDER}/scope.pdf
 
 The guest user can see updated date information
    [Documentation]    INFUND-7489
