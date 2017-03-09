@@ -77,17 +77,17 @@ public class ProjectSetupSectionStatus {
     }
 
     public SectionStatus otherDocumentsSectionStatus(final ProjectResource project,
-                                                     final boolean leadPartner) {
+                                                     final boolean projectManager) {
         if (project.isPartnerDocumentsSubmitted()) {
             if (ApprovalType.APPROVED.equals(project.getOtherDocumentsApproved())) {
                 return TICK;
             }
 
-            if (ApprovalType.REJECTED.equals(project.getOtherDocumentsApproved()) && leadPartner) {
+            if (ApprovalType.REJECTED.equals(project.getOtherDocumentsApproved()) && projectManager) {
                 return FLAG;
             }
             return HOURGLASS;
-        } else if (leadPartner) {
+        } else if (projectManager) {
             return FLAG;
         }
         return HOURGLASS;

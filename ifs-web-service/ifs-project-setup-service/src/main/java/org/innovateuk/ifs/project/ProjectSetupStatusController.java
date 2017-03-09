@@ -3,11 +3,7 @@ package org.innovateuk.ifs.project;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.project.constant.ProjectActivityStates;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckPartnerStatusResource;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
 import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.sections.ProjectSetupSectionPartnerAccessor;
@@ -17,7 +13,6 @@ import org.innovateuk.ifs.project.sections.SectionStatus;
 import org.innovateuk.ifs.project.viewmodel.ProjectSetupStatusViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -33,6 +28,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
+import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
@@ -75,6 +71,10 @@ public class ProjectSetupStatusController {
         return PROJECT_SETUP_PAGE;
     }
 
+    private Optional<ProjectUserResource> getProjectManager(Long projectId) {
+        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
+        return simpleFindFirst(projectUsers, pu -> PROJECT_MANAGER.getName().equals(pu.getRoleName()));
+    }
     private ProjectSetupStatusViewModel getProjectSetupStatusViewModel(Long projectId, UserResource loggedInUser) {
 
         ProjectResource project = projectService.getById(projectId);
@@ -90,6 +90,8 @@ public class ProjectSetupStatusController {
         ProjectSetupSectionStatus sectionStatus = new ProjectSetupSectionStatus();
 
         boolean leadPartner = teamStatus.getLeadPartnerStatus().getOrganisationId().equals(organisation.getId());
+        Optional<ProjectUserResource> projectManager = getProjectManager(projectId);
+        boolean isProjectManager = projectManager.isPresent() ? projectManager.get().getUser() == loggedInUser.getId() : false;
         boolean isFinanceContact = projectUsers.stream().anyMatch(pu -> pu.isUser(loggedInUser.getId()) && pu.isFinanceContact());
         boolean projectDetailsSubmitted = COMPLETE.equals(teamStatus.getLeadPartnerStatus().getProjectDetailsStatus());
         boolean projectDetailsProcessCompleted = leadPartner ? checkLeadPartnerProjectDetailsProcessCompleted(teamStatus) : statusAccessor.isFinanceContactSubmitted(organisation);
@@ -109,7 +111,7 @@ public class ProjectSetupStatusController {
         SectionStatus bankDetailsStatus = sectionStatus.bankDetailsSectionStatus(ownOrganisation.getBankDetailsStatus());
         SectionStatus financeChecksStatus = sectionStatus.financeChecksSectionStatus(ownOrganisation.getFinanceChecksStatus(), checkAllFinanceChecksApproved(teamStatus), financeChecksAccess);
         SectionStatus spendProfileStatus= sectionStatus.spendProfileSectionStatus(ownOrganisation.getSpendProfileStatus());
-        SectionStatus otherDocumentsStatus = sectionStatus.otherDocumentsSectionStatus(project, leadPartner);
+        SectionStatus otherDocumentsStatus = sectionStatus.otherDocumentsSectionStatus(project, isProjectManager);
         SectionStatus grantOfferStatus = sectionStatus.grantOfferLetterSectionStatus(ownOrganisation.getGrantOfferLetterStatus(), leadPartner);
 
         return new ProjectSetupStatusViewModel(project, competition, monitoringOfficer, organisation, leadPartner,
