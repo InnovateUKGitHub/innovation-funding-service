@@ -307,7 +307,7 @@ Invited project manager registration flow
     And the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+invitedprojectmanager@gmail.com    Please verify your email address    Dear Bob Jones
     Then the user should see the text in the page    Account verified
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
-    And the guest user inserts user email & password    ${test_mailbox_one}+invitedprojectmanager@gmail.com    Passw0rd123
+    And the guest user inserts user email & password    ${test_mailbox_one}+invitedprojectmanager@gmail.com  ${correct_password}
     And the guest user clicks the log-in button
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_TITLE}
 
@@ -357,11 +357,11 @@ Lead partner can change the project address
     Then the user should see the element    css=#select-address-block
     And the user clicks the button/link    css=#select-address-block > button
     And the address fields should be filled
-    And the user clicks the button/link    jQuery=.button:contains("Save")
+    And the user clicks the button/link    jQuery=.button:contains("Save project address")
     And the user should see the address data
     When the user clicks the button/link    link=Project address
     And the user selects the radio button    addressType    REGISTERED
-    And the user clicks the button/link    jQuery=.button:contains("Save")
+    And the user clicks the button/link    jQuery=.button:contains("Save project address")
     Then the user should see the text in the page    1, Sheffield, S1 2ED
 
 Project details can be submitted with PM, project address and start date
