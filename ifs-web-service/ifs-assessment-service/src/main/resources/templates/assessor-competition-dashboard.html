@@ -29,6 +29,11 @@
             </div>
 
             <div class="my-applications">
+
+                <div th:if="${ #lists.isEmpty(model.outstanding) && #lists.isEmpty(model.submitted) }">
+                    There are currently no assessments for your review
+                </div>
+
                 <div class="in-progress" th:unless="${#lists.isEmpty(model.outstanding)}">
 
                     <form method="post" th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}">
