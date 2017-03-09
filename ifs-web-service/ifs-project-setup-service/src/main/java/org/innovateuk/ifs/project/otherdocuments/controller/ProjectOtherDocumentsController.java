@@ -208,8 +208,6 @@ public class ProjectOtherDocumentsController {
 
         List<String> partnerOrganisationNames = simpleMap(partnerOrganisations, OrganisationResource::getName);
 
-        boolean leadPartner = projectService.isUserLeadPartner(projectId, loggedInUser.getId());
-
         boolean isProjectManager = projectService.isProjectManager(loggedInUser.getId(), projectId);
 
         boolean isSubmitAllowed = projectService.isOtherDocumentSubmitAllowed(projectId);
@@ -224,7 +222,7 @@ public class ProjectOtherDocumentsController {
                 collaborationAgreement.map(FileDetailsViewModel::new).orElse(null),
                 exploitationPlan.map(FileDetailsViewModel::new).orElse(null),
                 partnerOrganisationNames, rejectionReasons,
-                leadPartner, isProjectManager, otherDocumentsSubmitted, otherDocumentsApproved,
+                isProjectManager, otherDocumentsSubmitted, otherDocumentsApproved,
                 isSubmitAllowed, project.getDocumentsSubmittedDate());
     }
 
