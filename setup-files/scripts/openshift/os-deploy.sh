@@ -16,7 +16,7 @@ else
     HOST=ifs-local
 fi
 
-SVC_ACCOUNT_TOKEN="kuTo-yMsDdidRJkmWEllai4ywNG9q1QS7W1EXFhBzNk"
+SVC_ACCOUNT_TOKEN="gDrv6i22oi9uqIUjq8wqHULadJleza36ehvpqAijej8"
 SVC_ACCOUNT_CLAUSE="--namespace=${PROJECT} --token=${SVC_ACCOUNT_TOKEN} --server=https://console.prod.ifs-test-clusters.com:443 --insecure-skip-tls-verify=true"
 
 ROUTE_DOMAIN=apps.$HOST
