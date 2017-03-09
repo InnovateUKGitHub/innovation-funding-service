@@ -627,6 +627,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     @Mock
     protected ApplicationAssessorPageMapper applicationAssessorPageMapperMock;
 
+    @Mock
+    protected ApplicationResearchCategoryService applicationResearchCategoryService;
+
     @Before
     public void setupMockInjection() {
         // Process mock annotations
