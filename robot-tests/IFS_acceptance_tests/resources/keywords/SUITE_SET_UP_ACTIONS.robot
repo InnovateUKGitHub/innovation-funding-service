@@ -62,7 +62,7 @@ the user marks every section but one as complete
     the user marks the section as complete    8
     the user marks the section as complete    15
     the user marks the section as complete    16
-    the user marks finances as complete
+    #the user marks finances as complete
 
 the user marks the section as complete
     [Arguments]    ${form-id}

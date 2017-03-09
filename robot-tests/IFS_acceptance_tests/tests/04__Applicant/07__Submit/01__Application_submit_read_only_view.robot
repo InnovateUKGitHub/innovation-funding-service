@@ -14,7 +14,7 @@ Applicant submits the application
     [Documentation]
     [Tags]
     When the user navigates to the page    ${DASHBOARD_URL}
-    and the user clicks the button/link      link=${Competition_E2E}
+    and the user clicks the button/link      link=create new submit application
     then the applicant completes the application details    Application details
     and the user clicks the button/link     link=Return to application overview
     and the user clicks the button/link     link=Your finances
