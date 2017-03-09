@@ -18,12 +18,15 @@ public class GrantClaimMaximum {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="competitionTypeId", referencedColumnName="id")
     private CompetitionType competitionType;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="categoryId", referencedColumnName="id")
     private ResearchCategory researchCategory;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="organisationTypeId", referencedColumnName="id")
     private OrganisationType organisationType;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="organisationSizeId", referencedColumnName="id")
     private OrganisationSize organisationSize;

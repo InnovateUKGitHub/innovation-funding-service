@@ -31,6 +31,7 @@ import static org.innovateuk.ifs.finance.builder.ApplicationFinanceRowBuilder.ne
 import static org.innovateuk.ifs.finance.builder.FinanceRowMetaFieldBuilder.newFinanceRowMetaField;
 import static org.innovateuk.ifs.finance.builder.FinanceRowMetaValueBuilder.newFinanceRowMetaValue;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceRowBuilder.newProjectFinanceRow;
+import static org.innovateuk.ifs.finance.domain.builder.OrganisationSizeBuilder.newOrganisationSize;
 import static org.innovateuk.ifs.project.builder.CostBuilder.newCost;
 import static org.innovateuk.ifs.project.builder.CostCategoryBuilder.newCostCategory;
 import static org.innovateuk.ifs.project.builder.CostCategoryGroupBuilder.newCostCategoryGroup;
@@ -149,7 +150,7 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
     }
 
     private List<ProjectFinanceRow> setUpCreateFinanceChecksFiguresMocking() {
-        OrganisationSize organisationSize = new OrganisationSize();
+        OrganisationSize organisationSize = newOrganisationSize().build();
         ApplicationFinance applicationFinance = newApplicationFinance().withOrganisationSize(organisationSize).build();
         ProjectFinance newProjectFinance = new ProjectFinance(organisation, organisationSize, newProject);
         newProjectFinance.setId(999L);

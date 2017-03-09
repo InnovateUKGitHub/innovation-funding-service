@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import java.util.Collections;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.finance.builder.OrganisationSizeResourceBuilder.newOrganisationSizeResource;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -27,7 +28,7 @@ public class OrganisationSizeControllerDocumentation extends BaseControllerMockM
 
     @Test
     public void getOrganisationSizes() throws Exception {
-        OrganisationSizeResource size = new OrganisationSizeResource();
+        OrganisationSizeResource size = newOrganisationSizeResource().build();
         size.setId(1L);
         size.setDescription("Desc");
 

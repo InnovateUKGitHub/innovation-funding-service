@@ -15,7 +15,9 @@ import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.innovateuk.ifs.finance.builder.OrganisationSizeResourceBuilder.newOrganisationSizeResource;
+import static org.innovateuk.ifs.finance.domain.builder.OrganisationSizeBuilder.newOrganisationSize;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 public class OrganisationSizeServiceImplTest extends BaseServiceUnitTest<OrganisationSizeServiceImpl> {
@@ -37,8 +39,8 @@ public class OrganisationSizeServiceImplTest extends BaseServiceUnitTest<Organis
 
     @Test
     public void testGetOrganisationSizes() {
-        List<OrganisationSize> organisationSizes = newArrayList(new OrganisationSize());
-        List<OrganisationSizeResource> organisationSizeResources = newArrayList(new OrganisationSizeResource());
+        List<OrganisationSize> organisationSizes = newOrganisationSize().build(1);
+        List<OrganisationSizeResource> organisationSizeResources = newArrayList(newOrganisationSizeResource().build());
         when(organisationSizeRepository.findAll()).thenReturn(organisationSizes);
         when(organisationSizeMapper.mapToResource(organisationSizes)).thenReturn(organisationSizeResources);
 

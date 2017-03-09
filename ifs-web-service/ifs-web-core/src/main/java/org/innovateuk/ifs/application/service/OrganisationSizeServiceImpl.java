@@ -13,8 +13,10 @@ import java.util.List;
  */
 @Service
 public class OrganisationSizeServiceImpl implements OrganisationSizeService {
+
     @Autowired
     private OrganisationSizeRestService organisationSizeRestService;
+    
     @Override
     public List<OrganisationSizeResource> getOrganisationSizes() {
         return organisationSizeRestService.getOrganisationSizes().getSuccessObjectOrThrowException();
