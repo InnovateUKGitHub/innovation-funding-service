@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.finance.handler;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.*;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
@@ -54,6 +55,11 @@ public class OrganisationJESFinance implements OrganisationFinanceHandler {
 
     @Override
     public Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> getProjectOrganisationFinanceChanges(Long projectFinanceId) {
+//        throw new NotImplementedException("Academic finances are not edited, so not required");
+        return noChangesAsAcademicFinancesAreNotEditable();
+    }
+
+    private Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> noChangesAsAcademicFinancesAreNotEditable() {
         return emptyMap();
     }
 
