@@ -82,7 +82,7 @@ public class QuestionModelPopulator extends BaseModelPopulator {
     private FinanceService financeService;
 
     public QuestionViewModel populateModel(final Long questionId, final Long applicationId, final UserResource user, final Model model,
-                                           final ApplicationForm form, final QuestionOrganisationDetailsViewModel organisationDetailsViewModel) {
+                                           final ApplicationForm form) {
         QuestionResource question = questionService.getById(questionId);
         List<FormInputResource> formInputs = formInputService.findApplicationInputsByQuestion(questionId);
         ApplicationResource application = applicationService.getById(applicationId);
@@ -91,7 +91,6 @@ public class QuestionModelPopulator extends BaseModelPopulator {
 
         QuestionViewModel viewModel = addFormAttributes(application, competition, user, model, form,
                 question, formInputs, userApplicationRoles);
-        addOrganisationDetailsViewModel(viewModel, organisationDetailsViewModel);
 
         return viewModel;
     }
@@ -287,12 +286,5 @@ public class QuestionModelPopulator extends BaseModelPopulator {
                 .filter(uar -> uar.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()))
                 .map(uar -> organisationService.getOrganisationById(uar.getOrganisationId()))
                 .findFirst();
-    }
-
-    private void addOrganisationDetailsViewModel(QuestionViewModel viewModel, QuestionOrganisationDetailsViewModel organisationDetailsViewModel) {
-        viewModel.setAcademicOrganisations(organisationDetailsViewModel.getAcademicOrganisations());
-        viewModel.setApplicationOrganisations(organisationDetailsViewModel.getApplicationOrganisations());
-        viewModel.setLeadOrganisation(organisationDetailsViewModel.getLeadOrganisation());
-        viewModel.setPendingOrganisationNames(organisationDetailsViewModel.getPendingOrganisationNames());
     }
 }

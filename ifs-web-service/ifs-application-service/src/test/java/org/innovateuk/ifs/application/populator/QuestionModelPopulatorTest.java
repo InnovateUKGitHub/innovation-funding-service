@@ -31,7 +31,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.ui.Model;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -150,7 +149,7 @@ public class QuestionModelPopulatorTest extends BaseUnitTestMocksTest {
     public void testPopulateModelWithValidObjects() throws Exception {
         setupSuccess();
 
-        QuestionViewModel viewModel = populator.populateModel(questionId, applicationId, user, model, form, organisationDetailsViewModel);
+        QuestionViewModel viewModel = populator.populateModel(questionId, applicationId, user, model, form);
         assertNotEquals(null, viewModel);
 
         assertEquals(user, viewModel.getCurrentUser());

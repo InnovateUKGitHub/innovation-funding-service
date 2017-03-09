@@ -212,8 +212,7 @@ public class ApplicationFormController {
                                HttpServletRequest request) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
 
-        QuestionOrganisationDetailsViewModel organisationDetailsViewModel = organisationDetailsViewModelPopulator.populateModel(applicationId);
-        QuestionViewModel questionViewModel = questionModelPopulator.populateModel(questionId, applicationId, user, model, form, organisationDetailsViewModel);
+        QuestionViewModel questionViewModel = questionModelPopulator.populateModel(questionId, applicationId, user, model, form);
 
         model.addAttribute(MODEL_ATTRIBUTE_MODEL, questionViewModel);
         applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null);
@@ -341,7 +340,7 @@ public class ApplicationFormController {
 
                 // Add any validated fields back in invalid entries are displayed on re-render
                 QuestionOrganisationDetailsViewModel organisationDetailsViewModel = organisationDetailsViewModelPopulator.populateModel(applicationId);
-                QuestionViewModel questionViewModel = questionModelPopulator.populateModel(questionId, applicationId, user, model, form, organisationDetailsViewModel);
+                QuestionViewModel questionViewModel = questionModelPopulator.populateModel(questionId, applicationId, user, model, form);
 
                 model.addAttribute(MODEL_ATTRIBUTE_MODEL, questionViewModel);
                 applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null);
