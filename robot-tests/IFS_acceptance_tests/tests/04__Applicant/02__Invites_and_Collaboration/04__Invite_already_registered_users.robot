@@ -19,12 +19,12 @@ The invited user should not follow the registration flow again
     Given we create a new user    ${test_mailbox_one}+invitedregistered@gmail.com
     Given the lead applicant invites a registered user    ${test_mailbox_one}+invite2@gmail.com    ${test_mailbox_one}+invitedregistered@gmail.com
     When the user reads his email and clicks the link    ${test_mailbox_one}+invitedregistered@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    participate in their application
-    Then the user should see the text in the page    We've found an existing user account with the invited email address
+    Then the user should see the text in the page    You already have an account with us.
 
 The user clicks the login link
     [Documentation]    INFUND-1458
     [Tags]    HappyPath
-    When the user clicks the button/link    link=Click here to sign in
+    When the user clicks the button/link    link=Sign into the Innovation Funding Service.
     And the guest user inserts user email & password    ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     And the guest user clicks the log-in button
     Then the user should see the text in the page    Confirm your organisation
@@ -70,28 +70,31 @@ the user should see the change in the view team members page
     The user clicks the button/link    link=My dashboard
     The user clicks the button/link    css=#content section:nth-of-type(1) li:nth-child(2) h3 a
     The user clicks the button/link    link=view and add participants to your application
-    The user should see the element    link= Dennis Bergkamp
+    The user should see the element    jQuery=.table-overflow:eq(1) td:nth-child(1):contains("Dennis Bergkamp")
 
 Existing user creates a new application and invites a user from the same organisation
-    When the user navigates to the page    ${COMPETITION_DETAILS_URL}
-    And the user clicks the button/link    jQuery=.button:contains("Apply now")
-    And the user clicks the button/link    jQuery=.button:contains("Apply now")
-    And the user clicks the button/link    jQuery=Label:contains("Yes I want to create a new application")
-    And the user clicks the button/link    jQuery=.button:contains("Continue")
-    And The user clicks the button/link    jquery=li:nth-child(1) button:contains('Add another person')
-    And The user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    Olivier Giroud
-    And The user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input    ${test_mailbox_one}+invite2@gmail.com
-    And the user clicks the button/link    jQuery=.button:contains("Begin application")
-    And the user clicks the button/link    link=Application details
-    And the user enters text to a text field    id=application_details-title    Invite a user with the same org@
-    And the user clicks the button/link    jQuery=button:contains("Save and return")
-    And the user closes the browser
+    the user navigates to the page    ${COMPETITION_DETAILS_URL}
+    the user clicks the button/link    jQuery=.button:contains("Apply now")
+    the user clicks the button/link    jQuery=.button:contains("Apply now")
+    the user clicks the button/link    jQuery=Label:contains("Yes I want to create a new application")
+    the user clicks the button/link    jQuery=.button:contains("Continue")
+    the user clicks the button/link    jQuery=a:contains("Update INNOVATE LTD")
+    The user clicks the button/link    jQuery=button:contains("Add new applicant")
+    The user enters text to a text field    name=applicants[0].name    Olivier Giroud
+    The user enters text to a text field    name=applicants[0].email    ${test_mailbox_one}+invite2@gmail.com
+    #the user clicks the button/link    jQuery=a:contains("Update organisation")
+    the user clicks the button/link    jQuery=button:contains("Update organisation")
+    the user clicks the button/link    jQuery=a:contains("Begin application")
+    the user clicks the button/link    link=Application details
+    the user enters text to a text field    id=application_details-title    Invite a user with the same org@
+    the user clicks the button/link    jQuery=button:contains("Save and return")
+    the user closes the browser
 
 The invited user should get a message to contact the helpdesk
     [Arguments]    ${recipient}    ${subject}    ${pattern}
     And the guest user opens the browser
     When the user reads his email and clicks the link    ${recipient}    ${subject}    ${pattern}
-    When the user clicks the button/link    link=Click here to sign in
+    When the user clicks the button/link    link=Sign into the Innovation Funding Service.
     And the guest user inserts user email & password    ${recipient}  ${correct_password}
     And the guest user clicks the log-in button
     Then the user should see the text in the page    Sorry, you are unable to accept this invitation
