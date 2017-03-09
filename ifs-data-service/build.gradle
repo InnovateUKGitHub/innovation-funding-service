@@ -93,9 +93,9 @@ dependencies {
     compile "com.jayway.jsonpath:json-path"
     compile "org.springframework.statemachine:spring-statemachine-core:1.1.0.RELEASE"
     compile "org.springframework.statemachine:spring-statemachine-recipes-common:1.1.0.RELEASE"
-    compile 'org.apache.commons:commons-lang3:3.4'
+    compile 'org.apache.commons:commons-lang3:3.5'
     compile 'commons-codec:commons-codec:1.10'
-    compile "commons-beanutils:commons-beanutils:1.8.3"
+    compile "commons-beanutils:commons-beanutils:1.9.3"
     compile "org.flywaydb:flyway-core:4.0"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
     compile "org.mapstruct:mapstruct:1.0.0.Final"
@@ -110,8 +110,8 @@ dependencies {
     compile "commons-io:commons-io:2.4"
     compile 'org.jsoup:jsoup:1.10.2'
     compile "net.sf.opencsv:opencsv:2.3"
-    compile "org.xhtmlrenderer:flying-saucer-core:9.1.0"
-    compile "org.xhtmlrenderer:flying-saucer-pdf:9.1.0"
+    compile "org.xhtmlrenderer:flying-saucer-core:9.1.1"
+    compile "org.xhtmlrenderer:flying-saucer-pdf:9.1.1"
 
 
     testCompile project(':ifs-resources').sourceSets.test.output
@@ -220,5 +220,5 @@ task initDB() {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.9'
+    gradleVersion = '3.4'
 }
