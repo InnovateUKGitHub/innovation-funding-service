@@ -24,9 +24,10 @@ import java.util.List;
 
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
- * Build the model for the Application Team view.
+ * Builds the model for the Application Team view.
  */
 @Component
 public class ApplicationTeamModelPopulator {
@@ -76,7 +77,7 @@ public class ApplicationTeamModelPopulator {
     private boolean isNoInvitesForLeadOrganisation(List<InviteOrganisationResource> inviteOrganisationResources,
                                                    long leadOrganisationId) {
         return inviteOrganisationResources.stream().noneMatch(inviteOrganisationResource ->
-                isInviteForLeadOrganisation(inviteOrganisationResource, leadOrganisationId));
+                isInviteForOrganisation(inviteOrganisationResource, leadOrganisationId));
     }
 
     private List<ApplicationTeamOrganisationRowViewModel> appendLeadOrganisation(
@@ -100,7 +101,7 @@ public class ApplicationTeamModelPopulator {
     private ApplicationTeamOrganisationRowViewModel getOrganisationViewModel(InviteOrganisationResource inviteOrganisationResource,
                                                                              long leadOrganisationId, long loggedInUserId,
                                                                              boolean userLeadApplicant) {
-        boolean leadOrganisation = isInviteForLeadOrganisation(inviteOrganisationResource, leadOrganisationId);
+        boolean leadOrganisation = isInviteForOrganisation(inviteOrganisationResource, leadOrganisationId);
         boolean editable = userLeadApplicant || isUserMemberOfOrganisation(loggedInUserId, inviteOrganisationResource);
         return new ApplicationTeamOrganisationRowViewModel(inviteOrganisationResource.getOrganisation(),
                 inviteOrganisationResource.getId(), getOrganisationName(inviteOrganisationResource), leadOrganisation,
@@ -134,12 +135,12 @@ public class ApplicationTeamModelPopulator {
     }
 
     private String getOrganisationName(InviteOrganisationResource inviteOrganisationResource) {
-        return StringUtils.isNotBlank(inviteOrganisationResource.getOrganisationNameConfirmed()) ?
+        return isNotBlank(inviteOrganisationResource.getOrganisationNameConfirmed()) ?
                 inviteOrganisationResource.getOrganisationNameConfirmed() : inviteOrganisationResource.getOrganisationName();
     }
 
     private String getApplicantName(ApplicationInviteResource applicationInviteResource) {
-        return StringUtils.isNotBlank(applicationInviteResource.getNameConfirmed()) ?
+        return isNotBlank(applicationInviteResource.getNameConfirmed()) ?
                 applicationInviteResource.getNameConfirmed() : applicationInviteResource.getName();
     }
 
@@ -147,8 +148,8 @@ public class ApplicationTeamModelPopulator {
         return userId == leadApplicant.getId();
     }
 
-    private boolean isInviteForLeadOrganisation(InviteOrganisationResource inviteOrganisationResource, long leadOrganisationId) {
-        return inviteOrganisationResource.getOrganisation() != null && inviteOrganisationResource.getOrganisation() == leadOrganisationId;
+    private boolean isInviteForOrganisation(InviteOrganisationResource inviteOrganisationResource, long organisationId) {
+        return inviteOrganisationResource.getOrganisation() != null && inviteOrganisationResource.getOrganisation() == organisationId;
     }
 
     private boolean isUserMemberOfOrganisation(long userId, InviteOrganisationResource inviteOrganisationResource) {
@@ -157,8 +158,8 @@ public class ApplicationTeamModelPopulator {
     }
 
     private Comparator<? super InviteOrganisationResource> compareByLeadOrganisationThenById(long leadOrganisationId) {
-        return (organisation1, organisation2) -> isInviteForLeadOrganisation(organisation1, leadOrganisationId) ? -1 :
-                isInviteForLeadOrganisation(organisation2, leadOrganisationId) ? 1 :
+        return (organisation1, organisation2) -> isInviteForOrganisation(organisation1, leadOrganisationId) ? -1 :
+                isInviteForOrganisation(organisation2, leadOrganisationId) ? 1 :
                         organisation1.getId().compareTo(organisation2.getId());
     }
 }

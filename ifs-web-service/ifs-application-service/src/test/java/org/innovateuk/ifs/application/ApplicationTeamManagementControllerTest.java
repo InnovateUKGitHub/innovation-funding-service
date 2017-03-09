@@ -23,7 +23,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 import java.util.Map;
@@ -44,7 +43,8 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -67,12 +67,11 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
         ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
         Map<String, UserResource> usersMap = setupUserResources();
-        Map<String, InviteOrganisationResource> inviteOrganisationsMap = setupOrganisationInvitesWithInviteForLeadOrg(applicationResource.getId(), usersMap, organisationsMap);
+        InviteOrganisationResource inviteOrganisationsResource = setupOrganisationInviteWithInviteForLeadOrg(applicationResource.getId(), usersMap, organisationsMap);
         UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
 
         OrganisationResource expectedOrganisation = organisationsMap.get("Empire Ltd");
-        Long inviteOrgIdEmpire = inviteOrganisationsMap.get("Empire Ltd").getId();
-        Long applicationInviteId = inviteOrganisationsMap.get("Empire Ltd").getInviteResources().get(0).getId();
+        Long applicationInviteId = inviteOrganisationsResource.getInviteResources().get(0).getId();
 
         List<ApplicationTeamManagementApplicantRowViewModel> expectedApplicants = asList(
                 new ApplicationTeamManagementApplicantRowViewModel("Steve Smith", "steve.smith@empire.com", true, false, false),
@@ -82,25 +81,21 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
                 applicationResource.getId(),
                 "Application name",
                 expectedOrganisation.getId(),
-                inviteOrgIdEmpire,
+                inviteOrganisationsResource.getId(),
                 expectedOrganisation.getName(),
                 true,
                 true,
                 expectedApplicants);
 
         setLoggedInUser(leadApplicant);
-        MvcResult mockResult = mockMvc.perform(get("/application/{applicationId}/team/update?organisation={organisationId}", applicationResource.getId(), expectedOrganisation.getId()))
+        mockMvc.perform(get("/application/{applicationId}/team/update?organisation={organisationId}", applicationResource.getId(), expectedOrganisation.getId()))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedViewModel))
-                .andExpect(view().name("application-team/edit-org"))
-                .andReturn();
+                .andExpect(view().name("application-team/edit-org"));
 
-        ApplicationTeamManagementViewModel viewModelResult = (ApplicationTeamManagementViewModel) mockResult.getModelAndView().getModel().get("model");
-
-        InOrder inOrder = inOrder(applicationService, inviteRestService, userService);
-        inOrder.verify(applicationService).getById(applicationResource.getId());
+        InOrder inOrder = inOrder(applicationService, inviteOrganisationRestService, userService, inviteRestService);
         inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
-        inOrder.verify(inviteRestService).getInvitesByApplication(applicationResource.getId());
+        inOrder.verify(inviteOrganisationRestService).getByOrganisationIdWithInvitesForApplication(expectedOrganisation.getId(), applicationResource.getId());
         inOrder.verify(applicationService).getById(applicationResource.getId());
         inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
         inOrder.verify(userService).findById(leadApplicant.getId());
@@ -112,13 +107,12 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
         ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
         Map<String, UserResource> usersMap = setupUserResources();
-        Map<String, InviteOrganisationResource> inviteOrganisationsMap = setupOrganisationInvitesWithInviteForLeadOrg(applicationResource.getId(), usersMap, organisationsMap);
+        InviteOrganisationResource inviteOrganisationResource = setupOrganisationInviteForNonLeadOrg(applicationResource.getId(), usersMap, organisationsMap);
         UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
 
         OrganisationResource expectedOrganisation = organisationsMap.get("Ludlow");
-        Long inviteOrgIdLudlow = inviteOrganisationsMap.get("Ludlow").getId();
-        Long applicationInviteId1 = inviteOrganisationsMap.get("Ludlow").getInviteResources().get(0).getId();
-        Long applicationInviteId2 = inviteOrganisationsMap.get("Ludlow").getInviteResources().get(1).getId();
+        Long applicationInviteId1 = inviteOrganisationResource.getInviteResources().get(0).getId();
+        Long applicationInviteId2 = inviteOrganisationResource.getInviteResources().get(1).getId();
 
         List<ApplicationTeamManagementApplicantRowViewModel> expectedApplicants = asList(
                 new ApplicationTeamManagementApplicantRowViewModel(applicationInviteId1, "Jessica Doe", "jessica.doe@ludlow.com", false, false, true),
@@ -128,23 +122,21 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
                 applicationResource.getId(),
                 "Application name",
                 expectedOrganisation.getId(),
-                inviteOrgIdLudlow,
+                inviteOrganisationResource.getId(),
                 expectedOrganisation.getName(),
                 false,
                 true,
                 expectedApplicants);
 
         setLoggedInUser(leadApplicant);
-
         mockMvc.perform(get("/application/{applicationId}/team/update?organisation={organisationId}", applicationResource.getId(), expectedOrganisation.getId()))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(view().name("application-team/edit-org"));
 
-        InOrder inOrder = inOrder(applicationService, inviteRestService, userService);
-        inOrder.verify(applicationService).getById(applicationResource.getId());
+        InOrder inOrder = inOrder(applicationService, inviteOrganisationRestService, userService, inviteRestService);
         inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
-        inOrder.verify(inviteRestService).getInvitesByApplication(applicationResource.getId());
+        inOrder.verify(inviteOrganisationRestService).getByOrganisationIdWithInvitesForApplication(expectedOrganisation.getId(), applicationResource.getId());
         inOrder.verify(applicationService).getById(applicationResource.getId());
         inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
         inOrder.verify(userService).findById(leadApplicant.getId());
@@ -156,13 +148,12 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
         ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
         Map<String, UserResource> usersMap = setupUserResources();
-        Map<String, InviteOrganisationResource> inviteOrganisationsMap = setupOrganisationInvitesWithInviteForLeadOrg(applicationResource.getId(), usersMap, organisationsMap);
+        InviteOrganisationResource inviteOrganisationResource = setupOrganisationInviteForNonLeadOrg(applicationResource.getId(), usersMap, organisationsMap);
         UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
 
         OrganisationResource expectedOrganisation = organisationsMap.get("Ludlow");
-        Long inviteOrgIdLudlow = inviteOrganisationsMap.get("Ludlow").getId();
-        Long applicationInviteId1 = inviteOrganisationsMap.get("Ludlow").getInviteResources().get(0).getId();
-        Long applicationInviteId2 = inviteOrganisationsMap.get("Ludlow").getInviteResources().get(1).getId();
+        Long applicationInviteId1 = inviteOrganisationResource.getInviteResources().get(0).getId();
+        Long applicationInviteId2 = inviteOrganisationResource.getInviteResources().get(1).getId();
 
         List<ApplicationTeamManagementApplicantRowViewModel> expectedApplicants = asList(
                 new ApplicationTeamManagementApplicantRowViewModel(applicationInviteId1, "Jessica Doe", "jessica.doe@ludlow.com", false, false, false),
@@ -172,23 +163,21 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
                 applicationResource.getId(),
                 "Application name",
                 expectedOrganisation.getId(),
-                inviteOrgIdLudlow,
+                inviteOrganisationResource.getId(),
                 expectedOrganisation.getName(),
                 false,
                 false,
                 expectedApplicants);
 
         setLoggedInUser(usersMap.get("jessica.doe@ludlow.com"));
-        MvcResult mockResult = mockMvc.perform(get("/application/{applicationId}/team/update?organisation={organisationId}", applicationResource.getId(), expectedOrganisation.getId()))
+        mockMvc.perform(get("/application/{applicationId}/team/update?organisation={organisationId}", applicationResource.getId(), expectedOrganisation.getId()))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedViewModel))
-                .andExpect(view().name("application-team/edit-org"))
-                .andReturn();
+                .andExpect(view().name("application-team/edit-org"));
 
-        InOrder inOrder = inOrder(applicationService, inviteRestService, userService);
-        inOrder.verify(applicationService).getById(applicationResource.getId());
+        InOrder inOrder = inOrder(applicationService, inviteOrganisationRestService, userService, inviteRestService);
         inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
-        inOrder.verify(inviteRestService).getInvitesByApplication(applicationResource.getId());
+        inOrder.verify(inviteOrganisationRestService).getByOrganisationIdWithInvitesForApplication(expectedOrganisation.getId(), applicationResource.getId());
         inOrder.verify(applicationService).getById(applicationResource.getId());
         inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
         inOrder.verify(userService).findById(leadApplicant.getId());
@@ -200,12 +189,11 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
         ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
         Map<String, UserResource> usersMap = setupUserResources();
-        Map<String, InviteOrganisationResource> inviteOrganisationsMap = setupOrganisationInvitesWithAnUnconfirmedOrganisation(applicationResource.getId(), usersMap, organisationsMap);
+        InviteOrganisationResource inviteOrganisationResource = setupOrganisationInviteWithAnUnconfirmedOrganisation(applicationResource.getId(), usersMap);
         UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
 
-        InviteOrganisationResource inviteOrganisation = inviteOrganisationsMap.get("Ludlow");
-        Long applicationInviteId1 = inviteOrganisation.getInviteResources().get(0).getId();
-        Long applicationInviteId2 = inviteOrganisation.getInviteResources().get(1).getId();
+        Long applicationInviteId1 = inviteOrganisationResource.getInviteResources().get(0).getId();
+        Long applicationInviteId2 = inviteOrganisationResource.getInviteResources().get(1).getId();
 
         List<ApplicationTeamManagementApplicantRowViewModel> expectedApplicants = asList(
                 new ApplicationTeamManagementApplicantRowViewModel(applicationInviteId1, "Jessica Doe", "jessica.doe@ludlow.com", false, true, true),
@@ -215,23 +203,21 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
                 applicationResource.getId(),
                 "Application name",
                 null,
-                inviteOrganisation.getId(),
-                inviteOrganisation.getOrganisationName(),
+                inviteOrganisationResource.getId(),
+                inviteOrganisationResource.getOrganisationName(),
                 false,
                 true,
                 expectedApplicants);
 
         setLoggedInUser(leadApplicant);
-        MvcResult mockResult = mockMvc.perform(get("/application/{applicationId}/team/update?inviteOrganisation={inviteOrganisationId}", applicationResource.getId(), inviteOrganisation.getId()))
+        mockMvc.perform(get("/application/{applicationId}/team/update?inviteOrganisation={inviteOrganisationId}", applicationResource.getId(), inviteOrganisationResource.getId()))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedViewModel))
-                .andExpect(view().name("application-team/edit-org"))
-                .andReturn();
+                .andExpect(view().name("application-team/edit-org"));
 
-        InOrder inOrder = inOrder(applicationService, inviteRestService, userService);
-        inOrder.verify(applicationService).getById(applicationResource.getId());
+        InOrder inOrder = inOrder(applicationService, inviteOrganisationRestService, userService, inviteRestService);
         inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
-        inOrder.verify(inviteRestService).getInvitesByApplication(applicationResource.getId());
+        inOrder.verify(inviteOrganisationRestService).getByIdWithInvitesForApplication(inviteOrganisationResource.getId(), applicationResource.getId());
         inOrder.verify(applicationService).getById(applicationResource.getId());
         inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
         inOrder.verify(userService).findById(leadApplicant.getId());
@@ -243,7 +229,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
         ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
         Map<String, UserResource> usersMap = setupUserResources();
-        setupOrganisationInvitesWithInviteForLeadOrg(applicationResource.getId(), usersMap, organisationsMap);
+        setupOrganisationInviteWithInviteForLeadOrg(applicationResource.getId(), usersMap, organisationsMap);
         UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
 
         OrganisationResource organisation = organisationsMap.get("Empire Ltd");
@@ -259,7 +245,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
                 new ApplicationInviteResource(applicants.get(0).getName(), applicants.get(0).getEmail(), applicationResource.getId()),
                 new ApplicationInviteResource(applicants.get(1).getName(), applicants.get(1).getEmail(), applicationResource.getId())
         );
-                InviteResultsResource inviteResultsResource = new InviteResultsResource();
+        InviteResultsResource inviteResultsResource = new InviteResultsResource();
         inviteResultsResource.setInvitesSendSuccess(1);
         when(inviteRestService.createInvitesByOrganisation(organisation.getId(), applicationInvites)).thenReturn(restSuccess(inviteResultsResource));
 
@@ -273,8 +259,8 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/application/%s/team", applicationResource.getId())));
-        InOrder inOrder = inOrder(applicationService, inviteRestService);
-        inOrder.verify(applicationService).getById(applicationResource.getId());
+
+        InOrder inOrder = inOrder(applicationService, inviteOrganisationRestService, userService, inviteRestService);
         inOrder.verify(inviteRestService).createInvitesByOrganisation(organisation.getId(), applicationInvites);
         inOrder.verifyNoMoreInteractions();
     }
@@ -284,9 +270,8 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
         ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
         Map<String, UserResource> usersMap = setupUserResources();
-        Map<String, InviteOrganisationResource> inviteOrganisationsMap = setupOrganisationInvitesWithAnUnconfirmedOrganisation(applicationResource.getId(), usersMap, organisationsMap);
+        InviteOrganisationResource inviteOrganisationResource = setupOrganisationInviteWithAnUnconfirmedOrganisation(applicationResource.getId(), usersMap);
         UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
-        InviteOrganisationResource inviteOrganisation = inviteOrganisationsMap.get("Ludlow");
 
         ApplicationTeamUpdateForm expectedForm = new ApplicationTeamUpdateForm();
         List<ApplicantInviteForm> applicants = singletonList(
@@ -299,7 +284,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
                 .withName(applicants.get(0).getName())
                 .withEmail(applicants.get(0).getEmail())
                 .withApplication(applicationResource.getId())
-                .withInviteOrganisation(inviteOrganisation.getId())
+                .withInviteOrganisation(inviteOrganisationResource.getId())
                 .build();
 
         InviteResultsResource inviteResultsResource = new InviteResultsResource();
@@ -307,7 +292,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         when(inviteRestService.saveInvites(singletonList(applicationInvite))).thenReturn(restSuccess(inviteResultsResource));
 
         setLoggedInUser(leadApplicant);
-        mockMvc.perform(post("/application/{applicationId}/team/update?inviteOrganisation={inviteOrganisationId}", applicationResource.getId(), inviteOrganisation.getId())
+        mockMvc.perform(post("/application/{applicationId}/team/update?inviteOrganisation={inviteOrganisationId}", applicationResource.getId(), inviteOrganisationResource.getId())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("applicants[0].name", applicants.get(0).getName())
                 .param("applicants[0].email", applicants.get(0).getEmail()))
@@ -315,8 +300,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/application/%s/team", applicationResource.getId())));
 
-        InOrder inOrder = inOrder(applicationService, inviteRestService);
-        inOrder.verify(applicationService).getById(applicationResource.getId());
+        InOrder inOrder = inOrder(applicationService, inviteOrganisationRestService, userService, inviteRestService);
         inOrder.verify(inviteRestService).saveInvites(singletonList(applicationInvite));
         inOrder.verifyNoMoreInteractions();
     }
@@ -326,7 +310,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
         ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
         Map<String, UserResource> usersMap = setupUserResources();
-        setupOrganisationInvitesWithInviteForLeadOrg(applicationResource.getId(), usersMap, organisationsMap);
+        setupOrganisationInviteWithInviteForLeadOrg(applicationResource.getId(), usersMap, organisationsMap);
         UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
 
         OrganisationResource organisation = organisationsMap.get("Ludlow");
@@ -356,8 +340,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/application/%s/team", applicationResource.getId())));
 
-        InOrder inOrder = inOrder(applicationService, inviteRestService);
-        inOrder.verify(applicationService).getById(applicationResource.getId());
+        InOrder inOrder = inOrder(applicationService, inviteOrganisationRestService, userService, inviteRestService);
         inOrder.verify(inviteRestService).createInvitesByOrganisation(organisation.getId(), singletonList(applicationInvite));
         inOrder.verifyNoMoreInteractions();
     }
@@ -367,7 +350,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
         ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
         Map<String, UserResource> usersMap = setupUserResources();
-        setupOrganisationInvitesWithInviteForLeadOrg(applicationResource.getId(), usersMap, organisationsMap);
+        setupOrganisationInviteWithInviteForLeadOrg(applicationResource.getId(), usersMap, organisationsMap);
 
         OrganisationResource organisation = organisationsMap.get("Ludlow");
 
@@ -396,8 +379,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/application/%s/team", applicationResource.getId())));
 
-        InOrder inOrder = inOrder(applicationService, inviteRestService);
-        inOrder.verify(applicationService).getById(applicationResource.getId());
+        InOrder inOrder = inOrder(applicationService, inviteOrganisationRestService, userService, inviteRestService);
         inOrder.verify(inviteRestService).createInvitesByOrganisation(organisation.getId(), singletonList(applicationInvite));
         inOrder.verifyNoMoreInteractions();
     }
@@ -407,7 +389,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
         ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
         Map<String, UserResource> usersMap = setupUserResources();
-        setupOrganisationInvitesWithInviteForLeadOrg(applicationResource.getId(), usersMap, organisationsMap);
+        setupOrganisationInviteWithInviteForLeadOrg(applicationResource.getId(), usersMap, organisationsMap);
         UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
 
         OrganisationResource organisation = organisationsMap.get("Empire Ltd");
@@ -433,8 +415,8 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         assertTrue(bindingResult.hasFieldErrors("applicants[0].email"));
         assertEquals("Please enter an email address.", bindingResult.getFieldError("applicants[0].email").getDefaultMessage());
 
-        InOrder inOrder = inOrder(applicationService, userService);
-        inOrder.verify(applicationService, times(3)).getById(applicationResource.getId());
+        InOrder inOrder = inOrder(applicationService, inviteOrganisationRestService, userService, inviteRestService);
+        inOrder.verify(applicationService).getById(applicationResource.getId());
         inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
         inOrder.verify(userService).findById(leadApplicant.getId());
         inOrder.verifyNoMoreInteractions();
@@ -445,7 +427,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
         ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
         Map<String, UserResource> usersMap = setupUserResources();
-        setupOrganisationInvitesWithInviteForLeadOrg(applicationResource.getId(), usersMap, organisationsMap);
+        setupOrganisationInviteWithInviteForLeadOrg(applicationResource.getId(), usersMap, organisationsMap);
         UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
         OrganisationResource organisation = organisationsMap.get("Empire Ltd");
 
@@ -453,15 +435,8 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
                 new ApplicantInviteForm("Fred Brown", "fred.brown@empire.com")
         );
 
-        ApplicationInviteResource applicationInvite = newApplicationInviteResource()
-                .withId((Long) null)
-                .withName(applicants.get(0).getName())
-                .withEmail(applicants.get(0).getEmail())
-                .withApplication(applicationResource.getId())
-                .build();
         InviteResultsResource inviteResultsResource = new InviteResultsResource();
         inviteResultsResource.setInvitesSendSuccess(1);
-        when(inviteRestService.createInvitesByOrganisation(organisation.getId(), singletonList(applicationInvite))).thenReturn(restSuccess(inviteResultsResource));
 
         setLoggedInUser(leadApplicant);
         mockMvc.perform(post("/application/{applicationId}/team/update/?organisation={organisationId}&addApplicant=true", applicationResource.getId(), organisation.getId())
@@ -471,8 +446,12 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
                 .andExpect(status().isOk())
                 .andExpect(view().name("application-team/edit-org"));
 
-        InOrder inOrder = inOrder(applicationService);
-        inOrder.verify(applicationService, times(3)).getById(applicationResource.getId());
+        InOrder inOrder = inOrder(applicationService, inviteOrganisationRestService, userService, inviteRestService);
+        inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
+        inOrder.verify(inviteOrganisationRestService).getByOrganisationIdWithInvitesForApplication(organisation.getId(), applicationResource.getId());
+        inOrder.verify(applicationService).getById(applicationResource.getId());
+        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
+        inOrder.verify(userService).findById(leadApplicant.getId());
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -481,29 +460,27 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
         ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
         Map<String, UserResource> usersMap = setupUserResources();
-        Map<String, InviteOrganisationResource> inviteOrganisationsMap = setupOrganisationInvitesWithAnUnconfirmedOrganisation(applicationResource.getId(), usersMap, organisationsMap);
+        InviteOrganisationResource inviteOrganisationResource = setupOrganisationInviteWithAnUnconfirmedOrganisation(applicationResource.getId(), usersMap);
         UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
-        InviteOrganisationResource inviteOrganisation = inviteOrganisationsMap.get("Ludlow");
 
         List<ApplicantInviteForm> applicants = singletonList(
                 new ApplicantInviteForm("Fred Brown", "fred.brown@ludlow.com")
         );
 
-        ApplicationInviteResource applicationInvite = new ApplicationInviteResource(applicants.get(0).getName(), applicants.get(0).getEmail(), applicationResource.getId());
-        InviteResultsResource inviteResultsResource = new InviteResultsResource();
-        inviteResultsResource.setInvitesSendSuccess(1);
-        when(inviteRestService.createInvitesByOrganisation(inviteOrganisation.getOrganisation(), singletonList(applicationInvite))).thenReturn(restSuccess(inviteResultsResource));
-
         setLoggedInUser(leadApplicant);
-        mockMvc.perform(post("/application/{applicationId}/team/update/?inviteOrganisation={inviteOrganisationId}&addApplicant=true", applicationResource.getId(), inviteOrganisation.getId())
+        mockMvc.perform(post("/application/{applicationId}/team/update/?inviteOrganisation={inviteOrganisationId}&addApplicant=true", applicationResource.getId(), inviteOrganisationResource.getId())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("applicants[0].name", applicants.get(0).getName())
                 .param("applicants[0].email", applicants.get(0).getEmail()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("application-team/edit-org"));
 
-        InOrder inOrder = inOrder(applicationService);
-        inOrder.verify(applicationService, times(3)).getById(applicationResource.getId());
+        InOrder inOrder = inOrder(applicationService, inviteOrganisationRestService, userService, inviteRestService);
+        inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
+        inOrder.verify(inviteOrganisationRestService).getByIdWithInvitesForApplication(inviteOrganisationResource.getId(), applicationResource.getId());
+        inOrder.verify(applicationService).getById(applicationResource.getId());
+        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
+        inOrder.verify(userService).findById(leadApplicant.getId());
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -512,7 +489,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
         ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
         Map<String, UserResource> usersMap = setupUserResources();
-        setupOrganisationInvitesWithInviteForLeadOrg(applicationResource.getId(), usersMap, organisationsMap);
+        setupOrganisationInviteWithInviteForLeadOrg(applicationResource.getId(), usersMap, organisationsMap);
         UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
         OrganisationResource organisation = organisationsMap.get("Empire Ltd");
 
@@ -520,15 +497,8 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
                 new ApplicantInviteForm("Fred Brown", "fred.brown@empire.com")
         );
 
-        ApplicationInviteResource applicationInvite = newApplicationInviteResource()
-                .withId((Long) null)
-                .withName(applicants.get(0).getName())
-                .withEmail(applicants.get(0).getEmail())
-                .withApplication(applicationResource.getId())
-                .build();
         InviteResultsResource inviteResultsResource = new InviteResultsResource();
         inviteResultsResource.setInvitesSendSuccess(1);
-        when(inviteRestService.createInvitesByOrganisation(organisation.getId(), singletonList(applicationInvite))).thenReturn(restSuccess(inviteResultsResource));
 
         setLoggedInUser(leadApplicant);
         mockMvc.perform(post("/application/{applicationId}/team/update/?organisation={organisationId}&removeApplicant=0", applicationResource.getId(), organisation.getId())
@@ -538,8 +508,12 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
                 .andExpect(status().isOk())
                 .andExpect(view().name("application-team/edit-org"));
 
-        InOrder inOrder = inOrder(applicationService);
-        inOrder.verify(applicationService, times(3)).getById(applicationResource.getId());
+        InOrder inOrder = inOrder(applicationService, inviteOrganisationRestService, userService, inviteRestService);
+        inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
+        inOrder.verify(inviteOrganisationRestService).getByOrganisationIdWithInvitesForApplication(organisation.getId(), applicationResource.getId());
+        inOrder.verify(applicationService).getById(applicationResource.getId());
+        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
+        inOrder.verify(userService).findById(leadApplicant.getId());
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -548,34 +522,27 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
         ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
         Map<String, UserResource> usersMap = setupUserResources();
-        Map<String, InviteOrganisationResource> inviteOrganisationsMap = setupOrganisationInvitesWithAnUnconfirmedOrganisation(applicationResource.getId(), usersMap, organisationsMap);
+        InviteOrganisationResource inviteOrganisationResource = setupOrganisationInviteWithAnUnconfirmedOrganisation(applicationResource.getId(), usersMap);
         UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
-        InviteOrganisationResource inviteOrganisation = inviteOrganisationsMap.get("Ludlow");
 
         List<ApplicantInviteForm> applicants = singletonList(
                 new ApplicantInviteForm("Fred Brown", "fred.brown@ludlow.com")
         );
 
-        ApplicationInviteResource applicationInvite = newApplicationInviteResource()
-                .withId((Long) null)
-                .withName(applicants.get(0).getName())
-                .withEmail(applicants.get(0).getEmail())
-                .withApplication(applicationResource.getId())
-                .build();
-        InviteResultsResource inviteResultsResource = new InviteResultsResource();
-        inviteResultsResource.setInvitesSendSuccess(1);
-        when(inviteRestService.createInvitesByOrganisation(inviteOrganisation.getOrganisation(), singletonList(applicationInvite))).thenReturn(restSuccess(inviteResultsResource));
-
         setLoggedInUser(leadApplicant);
-        mockMvc.perform(post("/application/{applicationId}/team/update/?inviteOrganisation={inviteOrganisationId}&removeApplicant=0", applicationResource.getId(), inviteOrganisation.getId())
+        mockMvc.perform(post("/application/{applicationId}/team/update/?inviteOrganisation={inviteOrganisationId}&removeApplicant=0", applicationResource.getId(), inviteOrganisationResource.getId())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("applicants[0].name", applicants.get(0).getName())
                 .param("applicants[0].email", applicants.get(0).getEmail()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("application-team/edit-org"));
 
-        InOrder inOrder = inOrder(applicationService);
-        inOrder.verify(applicationService, times(3)).getById(applicationResource.getId());
+        InOrder inOrder = inOrder(applicationService, inviteOrganisationRestService, userService, inviteRestService);
+        inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
+        inOrder.verify(inviteOrganisationRestService).getByIdWithInvitesForApplication(inviteOrganisationResource.getId(), applicationResource.getId());
+        inOrder.verify(applicationService).getById(applicationResource.getId());
+        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
+        inOrder.verify(userService).findById(leadApplicant.getId());
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -584,10 +551,10 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
         ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
         Map<String, UserResource> usersMap = setupUserResources();
-        Map<String, InviteOrganisationResource> inviteOrganisationsMap = setupOrganisationInvitesWithInviteForLeadOrg(applicationResource.getId(), usersMap, organisationsMap);
+        InviteOrganisationResource inviteOrganisationResource = setupOrganisationInviteWithInviteForLeadOrg(applicationResource.getId(), usersMap, organisationsMap);
         UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
         OrganisationResource organisation = organisationsMap.get("Empire Ltd");
-        Long applicationInviteId = inviteOrganisationsMap.get("Empire Ltd").getInviteResources().get(0).getId();
+        Long applicationInviteId = inviteOrganisationResource.getInviteResources().get(0).getId();
 
         List<ApplicantInviteForm> applicants = singletonList(
                 new ApplicantInviteForm("Fred Brown", "fred.brown@empire.com")
@@ -601,8 +568,12 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
                 .andExpect(status().isOk())
                 .andExpect(view().name("application-team/edit-org"));
 
-        InOrder inOrder = inOrder(applicationService);
-        inOrder.verify(applicationService, times(3)).getById(applicationResource.getId());
+        InOrder inOrder = inOrder(applicationService, inviteOrganisationRestService, userService, inviteRestService);
+        inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
+        inOrder.verify(inviteOrganisationRestService).getByOrganisationIdWithInvitesForApplication(organisation.getId(), applicationResource.getId());
+        inOrder.verify(applicationService).getById(applicationResource.getId());
+        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
+        inOrder.verify(userService).findById(leadApplicant.getId());
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -611,25 +582,28 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
         ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
         Map<String, UserResource> usersMap = setupUserResources();
-        Map<String, InviteOrganisationResource> inviteOrganisationsMap = setupOrganisationInvitesWithAnUnconfirmedOrganisation(applicationResource.getId(), usersMap, organisationsMap);
+        InviteOrganisationResource inviteOrganisationResource = setupOrganisationInviteWithInviteForLeadOrg(applicationResource.getId(), usersMap, organisationsMap);
         UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
-        InviteOrganisationResource inviteOrganisation = inviteOrganisationsMap.get("Ludlow");
-        Long applicationInviteId = inviteOrganisation.getInviteResources().get(0).getId();
+        Long applicationInviteId = inviteOrganisationResource.getInviteResources().get(0).getId();
 
         List<ApplicantInviteForm> applicants = singletonList(
                 new ApplicantInviteForm("Fred Brown", "fred.brown@ludlow.com")
         );
 
         setLoggedInUser(leadApplicant);
-        mockMvc.perform(post("/application/{applicationId}/team/update/?inviteOrganisation={inviteOrganisationId}&markForRemoval={applicationInviteId}", applicationResource.getId(), inviteOrganisation.getId(), applicationInviteId)
+        mockMvc.perform(post("/application/{applicationId}/team/update/?inviteOrganisation={inviteOrganisationId}&markForRemoval={applicationInviteId}", applicationResource.getId(), inviteOrganisationResource.getId(), applicationInviteId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("applicants[0].name", applicants.get(0).getName())
                 .param("applicants[0].email", applicants.get(0).getEmail()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("application-team/edit-org"));
 
-        InOrder inOrder = inOrder(applicationService);
-        inOrder.verify(applicationService, times(3)).getById(applicationResource.getId());
+        InOrder inOrder = inOrder(applicationService, inviteOrganisationRestService, userService, inviteRestService);
+        inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
+        inOrder.verify(inviteOrganisationRestService).getByIdWithInvitesForApplication(inviteOrganisationResource.getId(), applicationResource.getId());
+        inOrder.verify(applicationService).getById(applicationResource.getId());
+        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
+        inOrder.verify(userService).findById(leadApplicant.getId());
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -650,10 +624,10 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
 
     private Map<String, UserResource> setupUserResources() {
         List<UserResource> userResources = newUserResource()
-                .withFirstName("Jessica", "Paul", "Steve", "Paul")
-                .withLastName("Doe", "Tom", "Smith", "Davidson")
-                .withEmail("jessica.doe@ludlow.com", "paul.tom@egg.com", "steve.smith@empire.com", "paul.davidson@empire.com")
-                .build(4);
+                .withFirstName("Jessica", "Steve", "Paul")
+                .withLastName("Doe", "Smith", "Davidson")
+                .withEmail("jessica.doe@ludlow.com", "steve.smith@empire.com", "paul.davidson@empire.com")
+                .build(3);
 
         return simpleToMap(userResources, UserResource::getEmail);
     }
@@ -669,100 +643,81 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
 
     private Map<String, OrganisationResource> setupOrganisationResources() {
         List<OrganisationResource> organisationResources = newOrganisationResource()
-                .withName("Ludlow", "EGGS", "Empire Ltd")
-                .build(3);
+                .withName("Ludlow", "Empire Ltd")
+                .build(2);
 
         return simpleToMap(organisationResources, OrganisationResource::getName);
     }
 
-    private Map<String, InviteOrganisationResource> setupOrganisationInvitesWithInviteForLeadOrg(long applicationId,
-                                                                                                 Map<String, UserResource> usersMap,
-                                                                                                 Map<String, OrganisationResource> organisationsMap) {
-        UserResource user1 = usersMap.get("jessica.doe@ludlow.com");
-        UserResource user2 = usersMap.get("paul.tom@egg.com");
-        UserResource user3 = usersMap.get("paul.davidson@empire.com");
+    private InviteOrganisationResource setupOrganisationInviteWithInviteForLeadOrg(long applicationId,
+                                                                                   Map<String, UserResource> usersMap,
+                                                                                   Map<String, OrganisationResource> organisationsMap) {
+        UserResource user = usersMap.get("paul.davidson@empire.com");
+        OrganisationResource organisation = organisationsMap.get("Empire Ltd");
 
-        List<ApplicationInviteResource> invitesOrg1 = newApplicationInviteResource()
-                .withUsers(user1.getId(), null)
-                .withNameConfirmed(user1.getName(), null)
-                .withName("Jess Doe", "Ryan Dell")
-                .withEmail(user1.getEmail(), "ryan.dell@ludlow.com")
-                .withStatus(OPENED, SENT)
-                .build(2);
+        InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource()
+                .withOrganisation(organisation.getId())
+                .withOrganisationName(organisation.getName())
+                .withOrganisationNameConfirmed(organisation.getName())
+                .withInviteResources(newApplicationInviteResource()
+                        .withUsers(user.getId())
+                        .withNameConfirmed(user.getName())
+                        .withName(user.getName())
+                        .withEmail(user.getEmail())
+                        .withStatus(OPENED)
+                        .build(1))
+                .build();
 
-        List<ApplicationInviteResource> invitesOrg2 = newApplicationInviteResource()
-                .withUsers(user2.getId())
-                .withNameConfirmed(user2.getName())
-                .withName(user2.getName())
-                .withEmail(user2.getEmail())
-                .withStatus(OPENED)
-                .build(1);
-
-        List<ApplicationInviteResource> invitesOrg3 = newApplicationInviteResource()
-                .withUsers(user3.getId())
-                .withNameConfirmed(user3.getName())
-                .withName(user3.getName())
-                .withEmail(user3.getEmail())
-                .withStatus(OPENED)
-                .build(1);
-
-        OrganisationResource org1 = organisationsMap.get("Ludlow");
-        OrganisationResource org2 = organisationsMap.get("EGGS");
-        OrganisationResource org3 = organisationsMap.get("Empire Ltd");
-
-        List<InviteOrganisationResource> inviteOrganisationResources = newInviteOrganisationResource()
-                .withOrganisation(org1.getId(), org2.getId(), org3.getId())
-                .withOrganisationName(org1.getName(), org2.getName(), org3.getName())
-                .withOrganisationNameConfirmed(org1.getName(), org2.getName(), org3.getName())
-                .withInviteResources(invitesOrg1, invitesOrg2, invitesOrg3)
-                .build(3);
-
-        when(inviteRestService.getInvitesByApplication(applicationId)).thenReturn(restSuccess(inviteOrganisationResources));
-        return simpleToMap(inviteOrganisationResources, InviteOrganisationResource::getOrganisationName);
+        when(inviteOrganisationRestService.getByIdWithInvitesForApplication(inviteOrganisationResource.getId(), applicationId))
+                .thenReturn(restSuccess(inviteOrganisationResource));
+        when(inviteOrganisationRestService.getByOrganisationIdWithInvitesForApplication(organisation.getId(), applicationId))
+                .thenReturn(restSuccess(inviteOrganisationResource));
+        return inviteOrganisationResource;
     }
 
-    private Map<String, InviteOrganisationResource> setupOrganisationInvitesWithAnUnconfirmedOrganisation(long applicationId,
-                                                                                                          Map<String, UserResource> usersMap,
-                                                                                                          Map<String, OrganisationResource> organisationsMap) {
-        UserResource user1 = usersMap.get("jessica.doe@ludlow.com");
-        UserResource user2 = usersMap.get("paul.tom@egg.com");
-        UserResource user3 = usersMap.get("paul.davidson@empire.com");
+    private InviteOrganisationResource setupOrganisationInviteForNonLeadOrg(long applicationId,
+                                                                            Map<String, UserResource> usersMap,
+                                                                            Map<String, OrganisationResource> organisationsMap) {
+        UserResource user = usersMap.get("jessica.doe@ludlow.com");
+        OrganisationResource organisation = organisationsMap.get("Ludlow");
 
-        List<ApplicationInviteResource> invitesOrg1 = newApplicationInviteResource()
-                .withUsers(user1.getId(), null)
-                .withNameConfirmed(user1.getName(), null)
-                .withName("Jess Doe", "Ryan Dell")
-                .withEmail(user1.getEmail(), "ryan.dell@ludlow.com")
-                .withStatus(SENT, SENT)
-                .build(2);
+        InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource()
+                .withOrganisation(organisation.getId())
+                .withOrganisationName(organisation.getName())
+                .withOrganisationNameConfirmed(organisation.getName())
+                .withInviteResources(newApplicationInviteResource()
+                        .withUsers(user.getId(), null)
+                        .withNameConfirmed(user.getName(), null)
+                        .withName("Jess Doe", "Ryan Dell")
+                        .withEmail(user.getEmail(), "ryan.dell@ludlow.com")
+                        .withStatus(OPENED, SENT)
+                        .build(2))
+                .build();
 
-        List<ApplicationInviteResource> invitesOrg2 = newApplicationInviteResource()
-                .withUsers(user2.getId())
-                .withNameConfirmed(user2.getName())
-                .withName(user2.getName())
-                .withEmail(user2.getEmail())
-                .withStatus(OPENED)
-                .build(1);
+        when(inviteOrganisationRestService.getByIdWithInvitesForApplication(inviteOrganisationResource.getId(), applicationId))
+                .thenReturn(restSuccess(inviteOrganisationResource));
+        when(inviteOrganisationRestService.getByOrganisationIdWithInvitesForApplication(organisation.getId(), applicationId))
+                .thenReturn(restSuccess(inviteOrganisationResource));
+        return inviteOrganisationResource;
+    }
 
-        List<ApplicationInviteResource> invitesOrg3 = newApplicationInviteResource()
-                .withUsers(user3.getId())
-                .withNameConfirmed(user3.getName())
-                .withName(user3.getName())
-                .withEmail(user3.getEmail())
-                .withStatus(OPENED)
-                .build(1);
+    private InviteOrganisationResource setupOrganisationInviteWithAnUnconfirmedOrganisation(long applicationId,
+                                                                                            Map<String, UserResource> usersMap) {
+        UserResource user = usersMap.get("jessica.doe@ludlow.com");
 
-        OrganisationResource org2 = organisationsMap.get("EGGS");
-        OrganisationResource org3 = organisationsMap.get("Empire Ltd");
+        InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource()
+                .withOrganisationName("Ludlow")
+                .withInviteResources(newApplicationInviteResource()
+                        .withUsers(user.getId(), null)
+                        .withNameConfirmed(user.getName(), null)
+                        .withName("Jess Doe", "Ryan Dell")
+                        .withEmail(user.getEmail(), "ryan.dell@ludlow.com")
+                        .withStatus(SENT, SENT)
+                        .build(2))
+                .build();
 
-        List<InviteOrganisationResource> inviteOrganisationResources = newInviteOrganisationResource()
-                .withOrganisation(null, org2.getId(), org3.getId())
-                .withOrganisationName("Ludlow", org2.getName(), org3.getName())
-                .withOrganisationNameConfirmed(null, org2.getName(), org3.getName())
-                .withInviteResources(invitesOrg1, invitesOrg2, invitesOrg3)
-                .build(3);
-
-        when(inviteRestService.getInvitesByApplication(applicationId)).thenReturn(restSuccess(inviteOrganisationResources));
-        return simpleToMap(inviteOrganisationResources, InviteOrganisationResource::getOrganisationName);
+        when(inviteOrganisationRestService.getByIdWithInvitesForApplication(inviteOrganisationResource.getId(), applicationId))
+                .thenReturn(restSuccess(inviteOrganisationResource));
+        return inviteOrganisationResource;
     }
 }

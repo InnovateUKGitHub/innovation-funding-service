@@ -22,7 +22,7 @@ public class InviteOrganisationRestServiceImplTest extends BaseRestServiceUnitTe
 
     @Test
     public void getById() throws Exception {
-        Long inviteOrganisationId = 1L;
+        long inviteOrganisationId = 1L;
 
         InviteOrganisationResource expected = newInviteOrganisationResource().build();
 
@@ -33,12 +33,41 @@ public class InviteOrganisationRestServiceImplTest extends BaseRestServiceUnitTe
 
     @Test
     public void getByIdForAnonymousUserFlow() throws Exception {
-        Long inviteOrganisationId = 1L;
+        long inviteOrganisationId = 1L;
 
         InviteOrganisationResource expected = newInviteOrganisationResource().build();
 
         setupGetWithRestResultAnonymousExpectations(format("%s/%s", restUrl, inviteOrganisationId), InviteOrganisationResource.class, expected);
         InviteOrganisationResource actual = service.getByIdForAnonymousUserFlow(inviteOrganisationId).getSuccessObjectOrThrowException();
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getByIdWithInvitesForApplication() throws Exception {
+        long inviteOrganisationId = 1L;
+        long applicationId = 2L;
+
+        InviteOrganisationResource expected = newInviteOrganisationResource().build();
+
+        setupGetWithRestResultExpectations(format("%s/%s/application/%s", restUrl, inviteOrganisationId, applicationId),
+                InviteOrganisationResource.class, expected);
+        InviteOrganisationResource actual = service.getByIdWithInvitesForApplication(inviteOrganisationId, applicationId)
+                .getSuccessObjectOrThrowException();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getByOrganisationIdWithInvitesForApplication() throws Exception {
+        long organisationId = 1L;
+        long applicationId = 2L;
+
+        InviteOrganisationResource expected = newInviteOrganisationResource().build();
+
+        setupGetWithRestResultExpectations(format("%s/organisation/%s/application/%s", restUrl, organisationId, applicationId),
+                InviteOrganisationResource.class, expected);
+        InviteOrganisationResource actual = service.getByOrganisationIdWithInvitesForApplication(organisationId, applicationId)
+                .getSuccessObjectOrThrowException();
         assertEquals(expected, actual);
     }
 

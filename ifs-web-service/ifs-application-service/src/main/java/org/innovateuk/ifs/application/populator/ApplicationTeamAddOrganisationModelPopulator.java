@@ -5,7 +5,7 @@ import org.innovateuk.ifs.application.viewmodel.ApplicationTeamAddOrganisationVi
 import org.springframework.stereotype.Component;
 
 /**
- * Build the model for the Add Organisation view.
+ * Builds the model for the Add Organisation view.
  */
 @Component
 public class ApplicationTeamAddOrganisationModelPopulator {

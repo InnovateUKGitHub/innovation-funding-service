@@ -13,13 +13,23 @@ public class InviteOrganisationRestServiceImpl extends BaseRestService implement
     private String restUrl = "/inviteorganisation";
 
     @Override
-    public RestResult<InviteOrganisationResource> getById(Long id) {
+    public RestResult<InviteOrganisationResource> getById(long id) {
         return getWithRestResult(format("%s/%s", restUrl, id), InviteOrganisationResource.class);
     }
 
     @Override
-    public RestResult<InviteOrganisationResource> getByIdForAnonymousUserFlow(Long id) {
+    public RestResult<InviteOrganisationResource> getByIdForAnonymousUserFlow(long id) {
         return getWithRestResultAnonymous(format("%s/%s", restUrl, id), InviteOrganisationResource.class);
+    }
+
+    @Override
+    public RestResult<InviteOrganisationResource> getByIdWithInvitesForApplication(long id, long applicationId) {
+        return getWithRestResult(format("%s/%s/application/%s", restUrl, id, applicationId), InviteOrganisationResource.class);
+    }
+
+    @Override
+    public RestResult<InviteOrganisationResource> getByOrganisationIdWithInvitesForApplication(long organisationId, long applicationId) {
+        return getWithRestResult(format("%s/organisation/%s/application/%s", restUrl, organisationId, applicationId), InviteOrganisationResource.class);
     }
 
     @Override
