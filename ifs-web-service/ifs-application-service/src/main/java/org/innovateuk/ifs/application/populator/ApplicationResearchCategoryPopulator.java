@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationResearchCategoryRestService;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.viewmodel.ResearchCategoryViewModel;
+import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,11 +19,14 @@ public class ApplicationResearchCategoryPopulator {
     @Autowired
     private ApplicationRestService applicationRestService;
 
+    @Autowired
+    private CategoryRestService categoryRestService;
+
     public ResearchCategoryViewModel populate(Long applicationId, Long questionId) {
         ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccessObject();
 
         ResearchCategoryViewModel researchCategoryViewModel = new ResearchCategoryViewModel();
-        researchCategoryViewModel.setAvailableResearchCategories(applicationResearchCategoryRestService.getAvailableResearchCategoriesForApplication(applicationId).getSuccessObject());
+        researchCategoryViewModel.setAvailableResearchCategories(categoryRestService.getResearchCategories().getSuccessObject());
         researchCategoryViewModel.setQuestionId(questionId);
         researchCategoryViewModel.setApplicationId(applicationId);
         researchCategoryViewModel.setCurrentCompetitionName(applicationResource.getCompetitionName());

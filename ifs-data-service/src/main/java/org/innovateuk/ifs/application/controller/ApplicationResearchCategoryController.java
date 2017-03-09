@@ -29,9 +29,4 @@ public class ApplicationResearchCategoryController {
     public RestResult<ApplicationResource> setResearchCategory(@PathVariable("applicationId") final Long applicationId, @RequestBody Long researchCategoryId) {
         return applicationResearchCategoryService.setResearchCategory(applicationId, researchCategoryId).toGetResponse();
     }
-
-    @GetMapping("/availableResearchCategories/{applicationId}")
-    public RestResult<List<ResearchCategoryResource>> getAvailableResearchCategories(@PathVariable("applicationId") final Long applicationId) {
-        return applicationResearchCategoryService.getAvailableResearchCategories(applicationId).toGetResponse();
-    }
 }

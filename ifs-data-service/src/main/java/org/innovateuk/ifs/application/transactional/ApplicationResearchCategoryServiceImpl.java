@@ -8,13 +8,10 @@ import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.category.mapper.ResearchCategoryMapper;
 import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
-import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -43,12 +40,6 @@ public class ApplicationResearchCategoryServiceImpl extends BaseTransactionalSer
         return find(application(applicationId)).andOnSuccess(application ->
                 findResearchCategory(researchCategoryId).andOnSuccess(researchCategory ->
                         saveApplicationWithResearchCategory(application, researchCategory))).andOnSuccess(application -> serviceSuccess(applicationMapper.mapToResource(application)));
-    }
-
-    @Override
-    public ServiceResult<List<ResearchCategoryResource>> getAvailableResearchCategories(Long applicationId) {
-        return find(researchCategoryRepository.findAllByOrderByPriorityAsc(), notFoundError(ResearchCategory.class))
-                .andOnSuccessReturn(researchCategoryMapper::mapToResource);
     }
 
     private ServiceResult<ResearchCategory> findResearchCategory(Long researchCategoryId) {
