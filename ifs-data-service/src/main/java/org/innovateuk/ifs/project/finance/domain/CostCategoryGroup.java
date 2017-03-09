@@ -1,12 +1,10 @@
 package org.innovateuk.ifs.project.finance.domain;
 
-import org.innovateuk.ifs.util.CollectionFunctions;
-
 import javax.persistence.*;
 import java.util.*;
 import java.util.function.Function;
 
-import static org.innovateuk.ifs.util.CollectionFunctions.toSortedMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.toSortedMapWithList;
 import static javax.persistence.CascadeType.ALL;
 
 /**
@@ -31,7 +29,7 @@ public class CostCategoryGroup {
     }
 
     public SortedMap<String, List<CostCategory>> orderedLabelledCostCategories(){
-        return toSortedMap(getCostCategories(), cc -> cc.getLabel() != null ? cc.getLabel() : "", Function.identity());
+        return toSortedMapWithList(getCostCategories(), cc -> cc.getLabel() != null ? cc.getLabel() : "", Function.identity());
     }
 
     public CostCategoryGroup(String description, Collection<CostCategory> costCategories) {

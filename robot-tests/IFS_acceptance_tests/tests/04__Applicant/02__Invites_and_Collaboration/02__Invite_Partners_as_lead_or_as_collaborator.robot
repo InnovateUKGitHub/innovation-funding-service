@@ -34,11 +34,9 @@ Valid invitation submit
     [Documentation]    INFUND-901
     [Tags]    HappyPath    SmokeTest
     [Setup]    Delete the emails from both test mailboxes
-    Given the user is on the invites and collaborators page
-    When the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
-    When the applicant enters valid inputs
+    Given the applicant enters valid inputs
     Then the user should see the text in the page    Application team
-    And the user should see the text in the page    Invites sent
+    And the user should see the element    jQuery=.table-overflow:eq(1) td:nth-child(3):contains("Pending")
 
 Pending partners visible in the Application details
     [Documentation]    INFUND-2966, INFUND-2738
@@ -57,25 +55,12 @@ Pending users visible in the assign list but not clickable
     Then the applicant cannot assign to pending invitees
     And the user should see the text in the page    Adrian Booth (pending)
 
-Pending partners visible in Application team page
-    [Documentation]    INFUND-929
-    ...
-    ...    INFUND-3742
-    [Tags]    HappyPath
-    Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=Invite robot test application
-    When the user clicks the button/link    link=view and add participants to your application
-    Then the status of the invited people should be correct in the application team page
-    And The Lead organisation should be shown only one time
-
 Pending partners visible in the Manage contributors page
     [Documentation]    INFUND-928
     [Tags]    HappyPath
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
     When the user clicks the button/link    link=view and add participants to your application
-    When the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
-    Then the user should see the text in the page    Manage contributors
     And the status of the people should be correct in the Manage contributors page
     [Teardown]    Logout as user
 
@@ -95,7 +80,7 @@ Business organisation (partner accepts invitation)
     And the user clicks the button/link    link=NOMENSA LTD
     And the user selects the checkbox    address-same
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
-    And the user clicks the button/link    jQuery=.button:contains("Save")
+    And the user clicks the button/link    jQuery=.button:contains("Confirm and continue")
     And the user fills the create account form    Adrian    Booth
     And the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com    Please verify your email address    If you did not request an account with us
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
@@ -114,7 +99,7 @@ Partner can invite others to his own organisation
     When the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
     And the user clicks the button/link    link=view and add participants to your application
-    And the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
+    And the user clicks the button/link    jQuery=a:contains("Update NOMENSA LTD")
     Then the user can invite another person to their own organisation
 
 Partner cannot invite others to other organisations
@@ -141,9 +126,9 @@ Lead should not be able to edit Partners
     And the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
     When the user clicks the button/link    link=view and add participants to your application
-    When the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
-    Then the user should see the text in the page    Manage contributors
-    And the invited collaborators are not editable
+    When the user clicks the button/link    jQuery=a:contains("Update Empire Ltd")
+    Then the user should see the text in the page    Update Empire Ltd
+    #And the invited collaborators are not editable
 
 Lead applicant invites a non registered user in the same organisation
     [Documentation]    INFUND-928, INFUND-1463
@@ -153,11 +138,12 @@ Lead applicant invites a non registered user in the same organisation
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
     When the user clicks the button/link    link=view and add participants to your application
-    When the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
-    Then the user should see the text in the page    Manage contributors
-    And the user clicks the button/link    jQuery=li:nth-child(1) button:contains("Add another person")
+    When the user clicks the button/link    jQuery=a:contains("Update Empire Ltd")
+    Then the user should see the text in the page    Update Empire Ltd
+    And the user clicks the button/link    jQuery=button:contains("Add new applicant")
     When the user adds new collaborator
-    And the user clicks the button/link    jquery=button:contains("Save changes")
+    #And the user clicks the button/link    jQuery=a:contains("Update organisation")
+    And the user clicks the button/link    jQuery=button:contains("Update organisation")
     Then the user should see the text in the page    Application team
     And the user should see the text in the page    View and manage your contributors and partners in the application
     [Teardown]    the user closes the browser
@@ -180,31 +166,23 @@ Registered partner should not create new org but should follow the create accoun
 
 *** Keywords ***
 the applicant enters valid inputs
-    The user clicks the button/link    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
-    The user enters text to a text field    name=organisations[1].organisationName    Fannie May
-    The user enters text to a text field    name=organisations[1].invites[0].personName    Adrian Booth
-    The user enters text to a text field    name=organisations[1].invites[0].email    ${test_mailbox_one}+inviteorg${unique_email_number}@gmail.com
-    focus    jquery=button:contains("Save changes")
-    The user clicks the button/link    jquery=button:contains("Save changes")
+    The user clicks the button/link    jQuery=a:contains('Add partner organisation')
+    The user enters text to a text field    name=organisationName    Fannie May
+    The user enters text to a text field    name=applicants[0].name    Adrian Booth
+    The user enters text to a text field    name=applicants[0].email    ${test_mailbox_one}+inviteorg${unique_email_number}@gmail.com
+    The user clicks the button/link    jQuery=button:contains("Add organisation and invite applicants")
 
 The lead applicant should have the correct status
-    the user should see the element    css=#content h2.heading-medium
-    ${input_value} =    get text    css=#content h2.heading-medium
-    Should Be Equal As Strings    ${input_value}    Empire Ltd (Lead organisation)
-    the user should see the element    link=Steve Smith
-    ${input_value} =    get text    css=.list-bullet li small
-    Should Be Equal As Strings    ${input_value}    (Lead Applicant)
+    the user should see the element    jQuery=h2:contains("Empire Ltd, Lead organisation")
+    the user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(1):contains("Steve Smith")
+    the user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(2):contains("steve.smith@empire.com")
+    the user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(3):contains("Lead")
 
 the user adds new collaborator
-    the user should see the element    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input
-    The user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    Roger Axe
-    The user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input    ${test_mailbox_one}+inviteorg2@gmail.com
-    focus    jquery=li:nth-child(1) button:contains('Add another person')
+    The user enters text to a text field    name= applicants[0].name   Roger Axe
+    The user enters text to a text field    name=applicants[0].email    ${test_mailbox_one}+inviteorg2@gmail.com
+    focus    jQuery=button:contains('Add new applicant')
     wait for autosave
-
-The status of the invited people should be correct in the application team page
-    the user should see the text in the page    Adrian Booth
-    Element Should Contain    xpath=//a[contains(text(),"Adrian Booth")]//following::small    (pending)
 
 the invited collaborators are not editable
     the user should see the element    jQuery=li:nth-child(1) tr:nth-of-type(1) td:nth-child(1) [readonly]
@@ -217,8 +195,8 @@ the applicant cannot assign to pending invitees
     the user should not see the element    jQuery=button:contains("Adrian Booth")
 
 the status of the people should be correct in the Manage contributors page
-    Element Should Contain    css=li:nth-child(1) tr:nth-of-type(1) td:nth-child(3)    Lead applicant
-    Element Should Contain    css=li:nth-child(2) tr:nth-of-type(1) td:nth-child(3)    (pending)
+    the user should see the element    jQuery=.table-overflow tr:contains("Steve Smith") td:nth-child(3):contains("Lead")
+    the user should see the element    jQuery=.table-overflow tr:contains("Adrian Booth") td:nth-child(3):contains("Pending")
 
 the user can see the updated company name throughout the application
     Given the user navigates to the page    ${DASHBOARD_URL}
@@ -233,10 +211,8 @@ the user can see the updated company name throughout the application
     Then the user should see the element    jQuery=h2:contains("NOMENSA LTD")
 
 the user can invite another person to their own organisation
-    ${OWN_ORG}=    Get WebElement    jQuery=li:has(input[value='NOMENSA LTD'])
-    the user clicks the button/link    jQuery=button:contains('Add another person')
-    the user should see the element    jQuery=li[data-invite-org=${OWN_ORG.get_attribute('data-invite-org')}] tr:nth-of-type(2) td:nth-child(2) input:not([readonly])
-    the user should not see the element    jQuery=li[data-invite-org=${OWN_ORG.get_attribute('data-invite-org')}] tr:nth-of-type(2) td:nth-child(2) [readonly]
+    the user clicks the button/link    jQuery=button:contains("Add new applicant")
+    the user should see the element    jQuery=button:contains("Update organisation")
 
 the user cannot invite another person to a different organisation
     the user should not see the element    jQuery=li:nth-child(1) button:contains("Add another person")
@@ -244,16 +220,3 @@ the user cannot invite another person to a different organisation
 the user navigates to the next question
     The user clicks the button/link    css=.next .pagination-label
     Run Keyword And Ignore Error Without Screenshots    confirm action
-
-the user is on the invites and collaborators page
-    ${status}=    Run Keyword And Ignore Error Without Screenshots    the user should see the element    jQuery=.button:contains("Invite new contributors")
-    run keyword if    ${status}!=('PASS', None)    log into smoke test application
-
-log into smoke test application
-    logout as user
-    guest user log-in    ${test_mailbox_one}+${unique_email_number}@gmail.com    Passw0rd123
-    the user clicks the button/link    link=IFS smoke test
-    the user clicks the button/link    link=view and add participants to your application
-
-The Lead organisation should be shown only one time
-    Element Should not Contain    css=div:nth-child(7)    Steve Smith

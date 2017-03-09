@@ -174,25 +174,27 @@
                         </legend>
                         <label class="block-label selection-button-radio "
                                th:classappend="${currentApplication.resubmission != null and currentApplication.resubmission} ? 'selected'"
-                               for="resubmission-yes"
+                               for="application.resubmission-yes"
                                data-target="resubmission-details">
                             <input type="radio"
-                                   id="resubmission-yes"
+                                   id="application.resubmission-yes"
                                    th:field="*{__application.resubmission__}"
                                    value="true"
                                    required="required"
-                                   th:checked="${currentApplication.resubmission != null and currentApplication.resubmission}" />
-                            Yes
+                                   th:checked="${currentApplication.resubmission != null and currentApplication.resubmission}"
+                                   th:attr="data-required-errormessage=#{validation.application.must.indicate.resubmission.or.not}"/>
+                                    Yes
                         </label>
                         <label class="block-label selection-button-radio"
                                th:classappend="${currentApplication.resubmission != null and !currentApplication.resubmission} ? 'selected'"
-                               for="resubmission-no">
+                               for="application.resubmission-no">
                                 <input type="radio"
-                                       id="resubmission-no"
+                                       id="application.resubmission-no"
                                        th:field="*{__application.resubmission__}"
                                        value="false"
                                        required="required"
-                                       th:checked="${currentApplication.resubmission != null and !currentApplication.resubmission}" />
+                                       th:checked="${currentApplication.resubmission != null and !currentApplication.resubmission}"
+                                       th:attr="data-required-errormessage=#{validation.application.must.indicate.resubmission.or.not}"/>
                                     No
                         </label>
                     </fieldset>

@@ -148,10 +148,11 @@ task buildDocker(type: Docker, dependsOn: build) {
 }
 
 asciidoctor {
+    onlyIf { file(snippetsDir).exists() }
+    dependsOn test
     attributes 'snippets': snippetsDir
     backends  'html5'
     inputs.dir snippetsDir
-    dependsOn test
 }
 
 task generateMainMapperClasses(type: JavaCompile) {
