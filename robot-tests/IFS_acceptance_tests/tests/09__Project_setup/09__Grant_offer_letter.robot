@@ -483,7 +483,7 @@ other documents have been uploaded and approved
     choose file    name=collaborationAgreement    ${upload_folder}/testing.pdf
     choose file    name=exploitationPlan    ${upload_folder}/testing.pdf
     the user reloads the page
-    the user clicks the button/link    jQuery=.button:contains("Submit partner documents")
+    the user clicks the button/link    jQuery=.button:contains("Submit documents")
     the user clicks the button/link    jQuery=.button:contains("Submit")
     log in as a different user         &{internal_finance_credentials}
     the user navigates to the page     ${SERVER}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/partner/documents
