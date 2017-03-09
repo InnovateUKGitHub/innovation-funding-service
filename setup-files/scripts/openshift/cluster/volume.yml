@@ -3,6 +3,9 @@ kind: PersistentVolume
 metadata:
   name: fileupload-vol
 spec:
+  metadata:
+    labels:
+      dev: dev
   accessModes:
   - ReadWriteMany
   capacity:
