@@ -30,9 +30,9 @@
 
             <div class="my-applications">
 
-                <div th:if="${ #lists.isEmpty(model.outstanding) && #lists.isEmpty(model.submitted) }">
-                    There are currently no assessments for your review
-                </div>
+                <p th:if="${ #lists.isEmpty(model.outstanding) && #lists.isEmpty(model.submitted) }" class="extra-margin">
+                    There are currently no assessments for your review.
+                </p>
 
                 <div class="in-progress" th:unless="${#lists.isEmpty(model.outstanding)}">
 
