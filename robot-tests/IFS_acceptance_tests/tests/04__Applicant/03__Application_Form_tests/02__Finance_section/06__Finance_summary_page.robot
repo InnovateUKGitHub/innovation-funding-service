@@ -104,13 +104,13 @@ Alert shows If the academic research participation is too high
     And The user navigates to the academic application finances
     And The user clicks the button/link       link=Your project costs
     When the user enters text to a text field      id=incurred-staff    1000
-    And Guest user log-in    &{lead_applicant_credentials}
+    And log in as a different user  &{lead_applicant_credentials}
     And the user navigates to the finance overview of the academic
     Then the user should see the text in the page    The participation levels of this project are not within the required range
     And the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=Review and submit
-    And the user clicks the button/link    jquery=button:contains("Finances Summary")
+    And the user clicks the button/link    jQuery=button:contains("Finances summary")
     Then the user should see the text in the page    The participation levels of this project are not within the required range
     [Teardown]
 
@@ -124,9 +124,9 @@ Alert should not show If research participation is below the maximum level
     And the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=Review and submit
-    And the user clicks the button/link    jquery=button:contains("Finances Summary")
+    And the user clicks the button/link    jquery=button:contains("Finances summary")
     Then the user should see the text in the page    The participation levels of this project are within the required range
-    [Teardown]
+
 
 *** Keywords ***
 
