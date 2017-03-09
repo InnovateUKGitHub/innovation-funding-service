@@ -57,7 +57,7 @@ public class FormInputResponseFileUploadRules {
     }
 
     @PermissionRule(value = "READ", description = "An Assessor can download a file for an answer to an Application they are Assessing")
-    public boolean assessorCanDowloadFileForApplicationTheyAreAssessing(FormInputResponseFileEntryResource fileEntry, UserResource user) {
+    public boolean assessorCanDownloadFileForApplicationTheyAreAssessing(FormInputResponseFileEntryResource fileEntry, UserResource user) {
         return userIsAssessorOnThisApplication(fileEntry, user);
     }
 

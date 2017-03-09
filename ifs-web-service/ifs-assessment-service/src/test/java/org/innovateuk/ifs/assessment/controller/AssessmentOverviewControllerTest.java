@@ -25,6 +25,7 @@ import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationSize;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -70,8 +71,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -619,8 +619,9 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, assessorRole.getId());
 
         loginDefaultUser();
+        UserResource assessor = getLoggedInUser();
 
-        when(processRoleService.findProcessRole(getLoggedInUser().getId(), applicationId)).thenReturn(assessorRole);
+        when(processRoleService.findProcessRole(assessor.getId(), applicationId)).thenReturn(assessorRole);
         when(formInputResponseService.getFile(formInputId,
                 applicationId,
                 assessorRole.getId()))
@@ -636,6 +637,10 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(content().string("The returned file data"))
                 .andExpect(header().string("Content-Type", "text/hello"))
                 .andExpect(header().longValue("Content-Length", "The returned file data".length()));
+
+        verify(processRoleService).findProcessRole(assessor.getId(), applicationId);
+        verify(formInputResponseService).getFile(formInputId, applicationId, assessorRole.getId());
+        verify(formInputResponseService).getFileDetails(formInputId, applicationId, assessorRole.getId());
     }
 
     private List<ApplicationFinanceResource> setupFinances(ApplicationResource app, SortedSet<OrganisationResource> orgSet) {

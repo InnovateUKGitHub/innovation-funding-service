@@ -130,7 +130,10 @@ public class FormInputResponseFileUploadRulesTest extends BaseUnitTestMocksTest 
         when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationId(assessor.getId(), assessorRole, applicationId))
                 .thenReturn(assessorProcessRole);
 
-        assertTrue(fileUploadRules.assessorCanDowloadFileForApplicationTheyAreAssessing(file, assessor));
+        assertTrue(fileUploadRules.assessorCanDownloadFileForApplicationTheyAreAssessing(file, assessor));
+
+        verify(roleRepositoryMock).findOneByName(ASSESSOR.getName());
+        verify(processRoleRepositoryMock).findByUserIdAndRoleAndApplicationId(assessor.getId(), assessorRole, applicationId);
     }
 
     @Test
@@ -146,6 +149,9 @@ public class FormInputResponseFileUploadRulesTest extends BaseUnitTestMocksTest 
         when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationId(assessor.getId(), assessorRole, applicationId))
                 .thenReturn(null);
 
-        assertFalse(fileUploadRules.assessorCanDowloadFileForApplicationTheyAreAssessing(file, assessor));
+        assertFalse(fileUploadRules.assessorCanDownloadFileForApplicationTheyAreAssessing(file, assessor));
+
+        verify(roleRepositoryMock).findOneByName(ASSESSOR.getName());
+        verify(processRoleRepositoryMock).findByUserIdAndRoleAndApplicationId(assessor.getId(), assessorRole, applicationId);
     }
 }
