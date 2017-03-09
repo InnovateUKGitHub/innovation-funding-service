@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import static java.lang.String.format;
 import static org.innovateuk.ifs.invite.service.InviteServiceImpl.INVITE_HASH;
 
 /**
@@ -84,7 +85,7 @@ public class ApplicationCreationController {
                 return "redirect:/";
             }
             // TODO INFUND-936 temporary measure to redirect to login screen until email verification is in place above
-            return String.format("redirect:/application/%s/contributors/invite?newApplication", String.valueOf(application.getId()));
+            return format("redirect:/application/%s/team", application.getId());
 
         }
         return null;
