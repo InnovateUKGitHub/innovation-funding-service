@@ -15,6 +15,7 @@ import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.application.viewmodel.OpenFinanceSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.OpenSectionViewModel;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
@@ -184,7 +185,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         assertEquals(users.get(0), viewModel.getLeadApplicant());
         assertEquals(currentSectionId, viewModel.getCurrentSectionId());
 
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(HttpServletRequest.class), any(Model.class), any(SectionResource.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class));
     }
 
     @Test
@@ -209,7 +210,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         assertEquals(users.get(0), viewModel.getLeadApplicant());
         assertEquals(currentSectionId, viewModel.getCurrentSectionId());
 
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(HttpServletRequest.class), any(Model.class), any(SectionResource.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class));
     }
 
     @Test
@@ -236,7 +237,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         assertEquals(currentSectionId, viewModel.getFinanceSectionId());
         assertEquals(Boolean.TRUE, viewModel.getApplication().getAllReadOnly());
 
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(HttpServletRequest.class), any(Model.class), any(SectionResource.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class));
     }
 
     @Test
@@ -280,7 +281,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                         .param(ApplicationFormController.EDIT_QUESTION, "1_2")
         )
                 .andExpect(view().name("application-form"));
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(HttpServletRequest.class), any(Model.class), any(SectionResource.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class));
     }
 
     @Test
@@ -369,7 +370,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         SectionResourceBuilder sectionResourceBuilder = SectionResourceBuilder.newSectionResource();
         when(sectionService.getById(1L)).thenReturn(sectionResourceBuilder.with(id(1L)).with(name("Your funding")).withType(SectionType.FUNDING_FINANCES).build());
         QuestionResource financeQuestion = newQuestionResource().build();
-        when(questionService.getQuestionByCompetitionIdAndFormInputType(application.getCompetition(), FormInputType.FINANCE)).thenReturn(restSuccess(financeQuestion));
+        when(questionService.getQuestionByCompetitionIdAndFormInputType(application.getCompetition(), FormInputType.FINANCE)).thenReturn(ServiceResult.serviceSuccess(financeQuestion));
         when(financeRowService.add(anyLong(), eq(financeQuestion.getId()), any(GrantClaim.class))).thenReturn(ValidationMessages.noErrors());
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
@@ -389,7 +390,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         SectionResourceBuilder sectionResourceBuilder = SectionResourceBuilder.newSectionResource();
         when(sectionService.getById(1L)).thenReturn(sectionResourceBuilder.with(id(1L)).with(name("Your funding")).withType(SectionType.FUNDING_FINANCES).build());
         QuestionResource financeQuestion = newQuestionResource().build();
-        when(questionService.getQuestionByCompetitionIdAndFormInputType(application.getCompetition(), FormInputType.FINANCE)).thenReturn(restSuccess(financeQuestion));
+        when(questionService.getQuestionByCompetitionIdAndFormInputType(application.getCompetition(), FormInputType.FINANCE)).thenReturn(ServiceResult.serviceSuccess(financeQuestion));
         when(financeRowService.add(anyLong(), eq(financeQuestion.getId()), any(GrantClaim.class))).thenReturn(ValidationMessages.noErrors());
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
@@ -433,7 +434,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attributeErrorCount("form", 1))
                 .andExpect(model().attributeHasFieldErrors("form", ApplicationFormController.TERMS_AGREED_KEY));
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(HttpServletRequest.class), any(Model.class), any(SectionResource.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class));
     }
 
     @Test
@@ -451,7 +452,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attributeErrorCount("form", 1))
                 .andExpect(model().attributeHasFieldErrors("form", ApplicationFormController.STATE_AID_AGREED_KEY));
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(HttpServletRequest.class), any(Model.class), any(SectionResource.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class));
     }
 
     @Test
@@ -464,7 +465,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         ).andExpect(status().isOk())
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attributeErrorCount("form", 1));
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(HttpServletRequest.class), any(Model.class), any(SectionResource.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class));
     }
 
     @Test
@@ -563,7 +564,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         assertEquals("FutureLocalDate", bindingResult.getFieldError("application.startDate").getCode());
         assertEquals("NotNull", bindingResult.getFieldError("application.resubmission").getCode());
 
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(HttpServletRequest.class), any(Model.class), any(SectionResource.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class));
     }
 
     @Test
@@ -584,7 +585,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         assertEquals("FieldRequiredIf", bindingResult.getFieldError("application.previousApplicationNumber").getCode());
         assertEquals("FieldRequiredIf", bindingResult.getFieldError("application.previousApplicationTitle").getCode());
 
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(HttpServletRequest.class), any(Model.class), any(SectionResource.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class));
     }
 
     @Test
@@ -603,7 +604,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
 
         BindingResult bindingResult = (BindingResult)result.getModelAndView().getModel().get("org.springframework.validation.BindingResult.form");
         assertEquals("FutureLocalDate", bindingResult.getFieldError("application.startDate").getCode());
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(HttpServletRequest.class), any(Model.class), any(SectionResource.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class));
     }
 
     @Test
@@ -616,7 +617,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
 
         BindingResult bindingResult = (BindingResult)result.getModelAndView().getModel().get("org.springframework.validation.BindingResult.form");
         assertEquals("Min", bindingResult.getFieldError("application.durationInMonths").getCode());
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(HttpServletRequest.class), any(Model.class), any(SectionResource.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class));
     }
 
     @Test
@@ -629,7 +630,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
 
         BindingResult bindingResult = (BindingResult)result.getModelAndView().getModel().get("org.springframework.validation.BindingResult.form");
         assertEquals("Max", bindingResult.getFieldError("application.durationInMonths").getCode());
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(HttpServletRequest.class), any(Model.class), any(SectionResource.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class));
     }
 
     @Test
@@ -649,7 +650,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
 
         assertNull(bindingResult.getFieldError("application.previousApplicationNumber"));
         assertNull(bindingResult.getFieldError("application.previousApplicationTitle"));
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(HttpServletRequest.class), any(Model.class), any(SectionResource.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class));
     }
 
     @Test
@@ -696,7 +697,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                 .andExpect(view().name("application-form"))
                 .andExpect(model().attributeErrorCount("form", 1))
                 .andExpect(model().hasErrors());
-        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(HttpServletRequest.class), any(Model.class), any(SectionResource.class));
+        verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(Model.class), any(SectionResource.class));
     }
 
     @Test

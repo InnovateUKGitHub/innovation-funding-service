@@ -36,6 +36,7 @@ import java.util.*;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -286,7 +287,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Long projectId = 123L;
         Long applicationId = 456L;
 
-        Competition competition = newCompetition().build();
+        Competition competition = newCompetition().withMaxResearchRatio(2).build();
         Application application = newApplication().withId(applicationId).withCompetition(competition).build();
         Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).build();
 
@@ -335,12 +336,16 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(projectFinanceServiceMock.getEligibility(new ProjectOrganisationCompositeId(projectId, organisations[2].getId()))).thenReturn(serviceSuccess(eligibility3));
 
         ProjectFinanceResource[] projectFinanceResources = newProjectFinanceResource().withId(234L, 345L, 456L).withOrganisation(organisations[0].getId(), organisations[1].getId(), organisations[2].getId()).buildArray(3, ProjectFinanceResource.class);
-        when(projectFinanceServiceMock.getProjectFinances(projectId)).thenReturn(ServiceResult.serviceSuccess(Arrays.asList(projectFinanceResources)));
+        when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisations[0].getId())).thenReturn(ServiceResult.serviceSuccess(projectFinanceResources[0]));
+        when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisations[1].getId())).thenReturn(ServiceResult.serviceSuccess(projectFinanceResources[1]));
+        when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisations[2].getId())).thenReturn(ServiceResult.serviceSuccess(projectFinanceResources[2]));
+
         QueryResource queryResource1 = new QueryResource(12L, 23L, new ArrayList<>(), FinanceChecksSectionType.ELIGIBILITY, "Title" , true, LocalDateTime.now());
         QueryResource queryResource2 = new QueryResource(12L, 23L, new ArrayList<>(), FinanceChecksSectionType.ELIGIBILITY, "Title" , false, LocalDateTime.now());
         when(projectFinanceQueriesService.findAll(234L)).thenReturn(serviceSuccess(Arrays.asList(queryResource1)));
         when(projectFinanceQueriesService.findAll(345L)).thenReturn(serviceSuccess(new ArrayList<>()));
         when(projectFinanceQueriesService.findAll(456L)).thenReturn(serviceSuccess(Arrays.asList(queryResource2)));
+        when(financeRowServiceMock.getResearchParticipationPercentage(applicationId)).thenReturn(serviceSuccess(Double.valueOf(3.0)));
         ServiceResult<FinanceCheckSummaryResource> result = service.getFinanceCheckSummary(projectId);
         assertTrue(result.isSuccess());
 
@@ -457,6 +462,151 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     }
 
     @Test
+    public void testQueryActionRequired() {
+
+        Long projectId = 123L;
+        Long applicationId = 456L;
+        Long organisationId = 789L;
+
+        Competition competition = newCompetition().build();
+        Application application = newApplication().withId(applicationId).withCompetition(competition).withDurationInMonths(5L).build();
+        Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
+
+        Organisation organisation = newOrganisation().
+                withOrganisationType(OrganisationTypeEnum.BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
+        ProjectFinanceResource resource = newProjectFinanceResource().build();
+        QueryResource fakeQuery = new QueryResource(1L, 1L, Collections.emptyList(), FinanceChecksSectionType.ELIGIBILITY, "", true, LocalDateTime.now());
+        List<QueryResource> queries = Collections.singletonList(fakeQuery);
+
+        when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisationId)).thenReturn(serviceSuccess(resource));
+        when(projectFinanceQueriesService.findAll(resource.getId())).thenReturn(serviceSuccess(queries));
+
+        ServiceResult<Boolean> result = service.isQueryActionRequired(project.getId(), organisation.getId());
+        assertTrue(result.isSuccess());
+        assertTrue(result.getSuccessObject());
+    }
+
+    @Test
+    public void testQueryNoActionRequired() {
+
+        Long projectId = 123L;
+        Long applicationId = 456L;
+        Long organisationId = 789L;
+
+        Competition competition = newCompetition().build();
+        Application application = newApplication().withId(applicationId).withCompetition(competition).withDurationInMonths(5L).build();
+        Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
+
+        Organisation organisation = newOrganisation().
+                withOrganisationType(OrganisationTypeEnum.BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
+        ProjectFinanceResource resource = newProjectFinanceResource().build();
+        QueryResource fakeQuery = new QueryResource(1L, 1L, Collections.emptyList(), FinanceChecksSectionType.ELIGIBILITY, "", false, LocalDateTime.now());
+        List<QueryResource> queries = Collections.singletonList(fakeQuery);
+
+        when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisationId)).thenReturn(serviceSuccess(resource));
+        when(projectFinanceQueriesService.findAll(resource.getId())).thenReturn(serviceSuccess(queries));
+
+        ServiceResult<Boolean> result = service.isQueryActionRequired(project.getId(), organisation.getId());
+        assertTrue(result.isSuccess());
+        assertFalse(result.getSuccessObject());
+    }
+
+    @Test
+    public void testQueryWithNoProjectFinance() {
+
+        Long projectId = 123L;
+        Long applicationId = 456L;
+        Long organisationId = 789L;
+
+        Competition competition = newCompetition().build();
+        Application application = newApplication().withId(applicationId).withCompetition(competition).withDurationInMonths(5L).build();
+        Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
+
+        Organisation organisation = newOrganisation().
+                withOrganisationType(OrganisationTypeEnum.BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
+        ProjectFinanceResource resource = newProjectFinanceResource().build();
+        QueryResource fakeQuery = new QueryResource(1L, 1L, Collections.emptyList(), FinanceChecksSectionType.ELIGIBILITY, "", false, LocalDateTime.now());
+        List<QueryResource> queries = Collections.singletonList(fakeQuery);
+
+        when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisationId)).thenReturn(serviceFailure(internalServerErrorError()));
+        when(projectFinanceQueriesService.findAll(resource.getId())).thenReturn(serviceSuccess(queries));
+
+        ServiceResult<Boolean> result = service.isQueryActionRequired(project.getId(), organisation.getId());
+        assertTrue(result.isSuccess());
+        assertFalse(result.getSuccessObject());
+    }
+
+    @Test
+    public void testQueryWithNoQueries() {
+
+        Long projectId = 123L;
+        Long applicationId = 456L;
+        Long organisationId = 789L;
+
+        Competition competition = newCompetition().build();
+        Application application = newApplication().withId(applicationId).withCompetition(competition).withDurationInMonths(5L).build();
+        Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
+
+        Organisation organisation = newOrganisation().
+                withOrganisationType(OrganisationTypeEnum.BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
+        ProjectFinanceResource resource = newProjectFinanceResource().build();
+        List<QueryResource> queries = Collections.emptyList();
+
+        when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisationId)).thenReturn(serviceFailure(internalServerErrorError()));
+        when(projectFinanceQueriesService.findAll(resource.getId())).thenReturn(serviceSuccess(queries));
+
+        ServiceResult<Boolean> result = service.isQueryActionRequired(project.getId(), organisation.getId());
+        assertTrue(result.isSuccess());
+        assertFalse(result.getSuccessObject());
+    }
+
+    @Test
+    public void testQueryWithQueriesFailure() {
+
+        Long projectId = 123L;
+        Long applicationId = 456L;
+        Long organisationId = 789L;
+
+        Competition competition = newCompetition().build();
+        Application application = newApplication().withId(applicationId).withCompetition(competition).withDurationInMonths(5L).build();
+        Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
+
+        Organisation organisation = newOrganisation().
+                withOrganisationType(OrganisationTypeEnum.BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
+        ProjectFinanceResource resource = newProjectFinanceResource().build();
+
+        when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisationId)).thenReturn(serviceFailure(internalServerErrorError()));
+        when(projectFinanceQueriesService.findAll(resource.getId())).thenReturn(serviceFailure(internalServerErrorError()));
+
+        ServiceResult<Boolean> result = service.isQueryActionRequired(project.getId(), organisation.getId());
+        assertTrue(result.isSuccess());
+        assertFalse(result.getSuccessObject());
+    }
+
+    @Test
+    public void testQueryWithNullQueries() {
+
+        Long projectId = 123L;
+        Long applicationId = 456L;
+        Long organisationId = 789L;
+
+        Competition competition = newCompetition().build();
+        Application application = newApplication().withId(applicationId).withCompetition(competition).withDurationInMonths(5L).build();
+        Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
+
+        Organisation organisation = newOrganisation().
+                withOrganisationType(OrganisationTypeEnum.BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
+        ProjectFinanceResource resource = newProjectFinanceResource().build();
+
+        when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisationId)).thenReturn(serviceFailure(internalServerErrorError()));
+        when(projectFinanceQueriesService.findAll(resource.getId())).thenReturn(serviceSuccess(null));
+
+        ServiceResult<Boolean> result = service.isQueryActionRequired(project.getId(), organisation.getId());
+        assertTrue(result.isSuccess());
+        assertFalse(result.getSuccessObject());
+    }
+
+    @Test
     public void testGetFinanceCheckEligibilityNoApplicationFinances(){
 
         Long projectId = 123L;
@@ -485,6 +635,213 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         ServiceResult<FinanceCheckEligibilityResource> result = service.getFinanceCheckEligibilityDetails(projectId, organisationId);
         assertTrue(result.isFailure());
 
+    }
+
+    @Test
+    public void getFinanceCheckOverview() {
+        Long projectId = 123L;
+        Long applicationId = 456L;
+
+        Competition competition = newCompetition().withMaxResearchRatio(2).build();
+        Application application = newApplication().withId(applicationId).withCompetition(competition).withDurationInMonths(5L).build();
+        Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
+
+        Organisation[] organisations = newOrganisation().
+                withOrganisationType(OrganisationTypeEnum.BUSINESS, OrganisationTypeEnum.ACADEMIC, OrganisationTypeEnum.BUSINESS).
+                buildArray(3, Organisation.class);
+
+        List<PartnerOrganisation> partnerOrganisations = newPartnerOrganisation().
+                withProject(project).
+                withOrganisation(organisations).
+                build(3);
+
+        Map<FinanceRowType, FinanceRowCostCategory> projectFinances = createProjectFinance();
+
+        Map<FinanceRowType, FinanceRowCostCategory> applicationFinances = asMap(
+                FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
+                        newLabourCost().
+                                withGrossAnnualSalary(new BigDecimal("1.0"), BigDecimal.ZERO).
+                                withDescription("Developers", WORKING_DAYS_PER_YEAR).
+                                withLabourDays(1, 200).
+                                build(2)).
+                        build(),
+                FinanceRowType.MATERIALS, newDefaultCostCategory().withCosts(
+                        newMaterials().
+                                withCost(new BigDecimal("1.0")).
+                                withQuantity(1).
+                                build(1)).
+                        build(),
+                FinanceRowType.OTHER_FUNDING, newOtherFundingCostCategory().withCosts(
+                        newOtherFunding().
+                                withOtherPublicFunding("Yes", "").
+                                withFundingSource(OTHER_FUNDING, "other funding").
+                                withFundingAmount(null, BigDecimal.valueOf(2)).
+                                build(2)).
+                        build());
+
+        projectFinances.forEach((type, category) -> category.calculateTotal());
+        applicationFinances.forEach((type, category) -> category.calculateTotal());
+
+        List<ProjectFinanceResource> projectFinanceResource = newProjectFinanceResource().
+                withProject(projectId).
+                withFinanceOrganisationDetails(projectFinances).
+                build(2);
+
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(projectFinanceRowServiceMock.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
+        when(financeRowServiceMock.getResearchParticipationPercentage(applicationId)).thenReturn(serviceSuccess(Double.valueOf(3.0)));
+
+        ServiceResult<FinanceCheckOverviewResource> result = service.getFinanceCheckOverview(projectId);
+        assertTrue(result.isSuccess());
+
+        FinanceCheckOverviewResource overview = result.getSuccessObject();
+        assertEquals(projectId, overview.getProjectId());
+        assertEquals(6, overview.getDurationInMonths());
+        assertEquals(new BigDecimal("10000067"), overview.getTotalProjectCost());
+        assertEquals(new BigDecimal("2998020"), overview.getGrantAppliedFor());
+        assertEquals(new BigDecimal("2000"), overview.getOtherPublicSectorFunding());
+        assertEquals(new BigDecimal("30"), overview.getTotalPercentageGrant());
+        assertEquals(BigDecimal.valueOf(2), overview.getCompetitionMaximumResearchPercentage());
+        assertEquals(BigDecimal.valueOf(3.0), overview.getResearchParticipationPercentage());
+    }
+
+    @Test
+    public void getFinanceCheckOverviewNoResearch() {
+        Long projectId = 123L;
+        Long applicationId = 456L;
+
+        Competition competition = newCompetition().withMaxResearchRatio(2).build();
+        Application application = newApplication().withId(applicationId).withCompetition(competition).withDurationInMonths(5L).build();
+        Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
+
+        Organisation[] organisations = newOrganisation().
+                withOrganisationType(OrganisationTypeEnum.BUSINESS, OrganisationTypeEnum.ACADEMIC, OrganisationTypeEnum.BUSINESS).
+                buildArray(3, Organisation.class);
+
+        List<PartnerOrganisation> partnerOrganisations = newPartnerOrganisation().
+                withProject(project).
+                withOrganisation(organisations).
+                build(3);
+
+        Map<FinanceRowType, FinanceRowCostCategory> projectFinances = createProjectFinance();
+
+        Map<FinanceRowType, FinanceRowCostCategory> applicationFinances = asMap(
+                FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
+                        newLabourCost().
+                                withGrossAnnualSalary(new BigDecimal("1.0"), BigDecimal.ZERO).
+                                withDescription("Developers", WORKING_DAYS_PER_YEAR).
+                                withLabourDays(1, 200).
+                                build(2)).
+                        build(),
+                FinanceRowType.MATERIALS, newDefaultCostCategory().withCosts(
+                        newMaterials().
+                                withCost(new BigDecimal("1.0")).
+                                withQuantity(1).
+                                build(1)).
+                        build(),
+                FinanceRowType.OTHER_FUNDING, newOtherFundingCostCategory().withCosts(
+                        newOtherFunding().
+                                withOtherPublicFunding("Yes", "").
+                                withFundingSource(OTHER_FUNDING, "other funding").
+                                withFundingAmount(null, BigDecimal.valueOf(2)).
+                                build(2)).
+                        build());
+
+        projectFinances.forEach((type, category) -> category.calculateTotal());
+        applicationFinances.forEach((type, category) -> category.calculateTotal());
+
+        List<ProjectFinanceResource> projectFinanceResource = newProjectFinanceResource().
+                withProject(projectId).
+                withFinanceOrganisationDetails(projectFinances).
+                build(2);
+
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(projectFinanceRowServiceMock.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
+        when(financeRowServiceMock.getResearchParticipationPercentage(applicationId)).thenReturn(serviceFailure(GENERAL_FORBIDDEN));
+
+        ServiceResult<FinanceCheckOverviewResource> result = service.getFinanceCheckOverview(projectId);
+        assertTrue(result.isSuccess());
+
+        FinanceCheckOverviewResource overview = result.getSuccessObject();
+        assertEquals(projectId, overview.getProjectId());
+        assertEquals(6, overview.getDurationInMonths());
+        assertEquals(new BigDecimal("10000067"), overview.getTotalProjectCost());
+        assertEquals(new BigDecimal("2998020"), overview.getGrantAppliedFor());
+        assertEquals(new BigDecimal("2000"), overview.getOtherPublicSectorFunding());
+        assertEquals(new BigDecimal("30"), overview.getTotalPercentageGrant());
+        assertEquals(BigDecimal.valueOf(2), overview.getCompetitionMaximumResearchPercentage());
+        assertEquals(BigDecimal.valueOf(0), overview.getResearchParticipationPercentage());
+    }
+
+    @Test
+    public void getFinanceCheckOverviewResearchNull() {
+        Long projectId = 123L;
+        Long applicationId = 456L;
+
+        Competition competition = newCompetition().withMaxResearchRatio(2).build();
+        Application application = newApplication().withId(applicationId).withCompetition(competition).withDurationInMonths(5L).build();
+        Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
+
+        Organisation[] organisations = newOrganisation().
+                withOrganisationType(OrganisationTypeEnum.BUSINESS, OrganisationTypeEnum.ACADEMIC, OrganisationTypeEnum.BUSINESS).
+                buildArray(3, Organisation.class);
+
+        List<PartnerOrganisation> partnerOrganisations = newPartnerOrganisation().
+                withProject(project).
+                withOrganisation(organisations).
+                build(3);
+
+        Map<FinanceRowType, FinanceRowCostCategory> projectFinances = createProjectFinance();
+
+        Map<FinanceRowType, FinanceRowCostCategory> applicationFinances = asMap(
+                FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
+                        newLabourCost().
+                                withGrossAnnualSalary(new BigDecimal("1.0"), BigDecimal.ZERO).
+                                withDescription("Developers", WORKING_DAYS_PER_YEAR).
+                                withLabourDays(1, 200).
+                                build(2)).
+                        build(),
+                FinanceRowType.MATERIALS, newDefaultCostCategory().withCosts(
+                        newMaterials().
+                                withCost(new BigDecimal("1.0")).
+                                withQuantity(1).
+                                build(1)).
+                        build(),
+                FinanceRowType.OTHER_FUNDING, newOtherFundingCostCategory().withCosts(
+                        newOtherFunding().
+                                withOtherPublicFunding("Yes", "").
+                                withFundingSource(OTHER_FUNDING, "other funding").
+                                withFundingAmount(null, BigDecimal.valueOf(2)).
+                                build(2)).
+                        build());
+
+        projectFinances.forEach((type, category) -> category.calculateTotal());
+        applicationFinances.forEach((type, category) -> category.calculateTotal());
+
+        List<ProjectFinanceResource> projectFinanceResource = newProjectFinanceResource().
+                withProject(projectId).
+                withFinanceOrganisationDetails(projectFinances).
+                build(2);
+
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(projectFinanceRowServiceMock.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
+        when(financeRowServiceMock.getResearchParticipationPercentage(applicationId)).thenReturn(serviceSuccess(null));
+
+        ServiceResult<FinanceCheckOverviewResource> result = service.getFinanceCheckOverview(projectId);
+        assertTrue(result.isSuccess());
+
+        FinanceCheckOverviewResource overview = result.getSuccessObject();
+        assertEquals(projectId, overview.getProjectId());
+        assertEquals(6, overview.getDurationInMonths());
+        assertEquals(new BigDecimal("10000067"), overview.getTotalProjectCost());
+        assertEquals(new BigDecimal("2998020"), overview.getGrantAppliedFor());
+        assertEquals(new BigDecimal("2000"), overview.getOtherPublicSectorFunding());
+        assertEquals(new BigDecimal("30"), overview.getTotalPercentageGrant());
+        assertEquals(BigDecimal.valueOf(2), overview.getCompetitionMaximumResearchPercentage());
+        assertEquals(BigDecimal.valueOf(0), overview.getResearchParticipationPercentage());
     }
 
     @Override

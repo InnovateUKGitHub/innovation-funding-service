@@ -15,6 +15,7 @@ import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.util.JsonUtil;
+import org.innovateuk.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.threads.resource.NoteResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -84,7 +85,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
                 .andReturn();
 
         FinanceChecksNotesAddNoteViewModel noteViewModel = (FinanceChecksNotesAddNoteViewModel) result.getModelAndView().getModel().get("model");
-        
+
         assertEquals("Org1", noteViewModel.getOrganisationName());
         assertEquals("Project1", noteViewModel.getProjectName());
         assertEquals(applicantOrganisationId, noteViewModel.getOrganisationId());
@@ -149,9 +150,9 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(2, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("noteTitle"));
-        assertEquals("The title cannot be empty.", bindingResult.getFieldError("noteTitle").getDefaultMessage());
+        assertEquals("This field cannot be left blank.", bindingResult.getFieldError("noteTitle").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("note"));
-        assertEquals("The note cannot be empty.", bindingResult.getFieldError("note").getDefaultMessage());
+        assertEquals("This field cannot be left blank.", bindingResult.getFieldError("note").getDefaultMessage());
     }
 
     @Test
@@ -178,9 +179,9 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(2, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("noteTitle"));
-        assertEquals("The title is too long, please reduce it to {1} characters.", bindingResult.getFieldError("noteTitle").getDefaultMessage());
+        assertEquals("This field cannot contain more than {1} characters.", bindingResult.getFieldError("noteTitle").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("note"));
-        assertEquals("The note is too long, please reduce it to {1} characters.", bindingResult.getFieldError("note").getDefaultMessage());
+        assertEquals("This field cannot contain more than {1} characters.", bindingResult.getFieldError("note").getDefaultMessage());
     }
 
     @Test
@@ -207,17 +208,17 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("note"));
-        assertEquals("The note is too long, please reduce it {0} words.", bindingResult.getFieldError("note").getDefaultMessage());
+        assertEquals("Maximum word count exceeded. Please reduce your word count to {1}.", bindingResult.getFieldError("note").getDefaultMessage());
     }
 
     @Test
     public void testSaveNewQueryAttachment() throws Exception {
 
         MockMultipartFile uploadedFile = new MockMultipartFile("attachment", "testFile.pdf", "application/pdf", "My content!".getBytes());
-        FileEntryResource fileEntry = new FileEntryResource(1L, "name", "mediaType", 2L);
+        AttachmentResource attachment = new AttachmentResource(1L, "name", "mediaType", 2L);
 
-        when(financeCheckServiceMock.uploadFile("application/pdf", 11, "testFile.pdf", "My content!".getBytes())).thenReturn(ServiceResult.serviceSuccess(fileEntry));
-        when(financeCheckServiceMock.getFileInfo(1L)).thenReturn(ServiceResult.serviceSuccess(fileEntry));
+        when(financeCheckServiceMock.uploadFile(projectId, "application/pdf", 11, "testFile.pdf", "My content!".getBytes())).thenReturn(ServiceResult.serviceSuccess(attachment));
+        when(financeCheckServiceMock.getAttachment(1L)).thenReturn(ServiceResult.serviceSuccess(attachment));
 
         MvcResult result = mockMvc.perform(
                 fileUpload("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/new-note").
@@ -231,7 +232,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
         assertEquals(URLEncoder.encode(JsonUtil.getSerializedObject(expectedAttachmentIds), CharEncoding.UTF_8),
                 getDecryptedCookieValue(result.getResponse().getCookies(), "finance_checks_notes_new_note_attachments_"+projectId+"_"+applicantOrganisationId));
 
-        verify(financeCheckServiceMock).uploadFile("application/pdf", 11, "testFile.pdf", "My content!".getBytes());
+        verify(financeCheckServiceMock).uploadFile(projectId, "application/pdf", 11, "testFile.pdf", "My content!".getBytes());
 
     }
 
@@ -274,8 +275,8 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
     @Test
     public void testViewNewQueryWithAttachments() throws Exception {
 
-        FileEntryResource fileEntry = new FileEntryResource(1L, "name", "mediaType", 2L);
-        when(financeCheckServiceMock.getFileInfo(1L)).thenReturn(ServiceResult.serviceSuccess(fileEntry));
+        AttachmentResource attachment = new AttachmentResource(1L, "name", "mediaType", 2L);
+        when(financeCheckServiceMock.getAttachment(1L)).thenReturn(ServiceResult.serviceSuccess(attachment));
 
         List<Long> attachmentIds = new ArrayList<>();
         attachmentIds.add(1L);
@@ -289,7 +290,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
                 .andReturn();
 
         FinanceChecksNotesAddNoteViewModel noteViewModel = (FinanceChecksNotesAddNoteViewModel) result.getModelAndView().getModel().get("model");
-        
+
         assertEquals("Org1", noteViewModel.getOrganisationName());
         assertEquals("Project1", noteViewModel.getProjectName());
         assertEquals(applicantOrganisationId, noteViewModel.getOrganisationId());
@@ -343,9 +344,9 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
         attachmentIds.add(1L);
         Cookie ck = createAttachmentsCookie(attachmentIds);
 
-        FileEntryResource fileEntry = new FileEntryResource(1L, "name", "mediaType", 2L);
+        AttachmentResource attachment = new AttachmentResource(1L, "name", "mediaType", 2L);
 
-        when(financeCheckServiceMock.getFileInfo(1L)).thenReturn(ServiceResult.serviceSuccess(fileEntry));
+        when(financeCheckServiceMock.getAttachment(1L)).thenReturn(ServiceResult.serviceSuccess(attachment));
 
         MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/new-note")
                 .param("removeAttachment", "2")

@@ -149,11 +149,25 @@ public class QuestionModelPopulator extends BaseModelPopulator {
                 financeService.getApplicationFinanceDetails(userId, application.getId(), org.getId()) != null));
 
         addApplicationFormDetailInputs(application, form);
+        addSelectedInnovationAreaName(application, questionApplicationViewModel);
 
         questionApplicationViewModel.setResearchCategories(categoryService.getResearchCategories());
         questionApplicationViewModel.setResearchCategoryId(application.getResearchCategories().stream().findFirst().map(cat -> cat.getId()).orElse(null));
 
+
         return questionApplicationViewModel;
+    }
+
+    private void addSelectedInnovationAreaName(ApplicationResource applicationResource, QuestionApplicationViewModel questionApplicationViewModel) {
+        if(applicationResource.getNoInnovationAreaApplicable()) {
+            questionApplicationViewModel.setSelectedInnovationAreaName("No Innovation Area applicable.");
+        }
+        else if(applicationResource.getInnovationArea() != null && applicationResource.getInnovationArea().getName() != null) {
+            questionApplicationViewModel.setSelectedInnovationAreaName(applicationResource.getInnovationArea().getName());
+        }
+        else {
+            questionApplicationViewModel.setSelectedInnovationAreaName("None selected.");
+        }
     }
 
     private Boolean calculateAllReadOnly(CompetitionResource competition, QuestionResource questionResource, List<QuestionStatusResource> questionStatuses, Long userId, Set<Long> completedDetails) {

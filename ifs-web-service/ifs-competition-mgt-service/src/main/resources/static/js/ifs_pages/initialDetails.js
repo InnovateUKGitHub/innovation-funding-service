@@ -1,11 +1,8 @@
 IFS.competitionManagement.initialDetails = (function () {
   'use strict'
-  var s
   return {
     init: function () {
-      s = this.settings
-
-      jQuery('body.competition-management.competition-setup').on('change', '#competitionTypeId', function() {
+      jQuery('body.competition-management.competition-setup').on('change', '#competitionTypeId', function () {
         IFS.competitionManagement.initialDetails.handleStateAid()
       })
       IFS.competitionManagement.initialDetails.handleInnovationSector(true)
@@ -26,7 +23,7 @@ IFS.competitionManagement.initialDetails = (function () {
     handleInnovationSector: function (pageLoad) {
       var sector = jQuery('[name="innovationSectorCategoryId"]').val()
       if (typeof (sector) === 'undefined' || sector === null) {
-        var innovationCategory = jQuery('[name^="innovationAreaCategoryIds"]')
+        var innovationCategory = jQuery('[name*="innovationAreaCategoryId"]')
         innovationCategory.html('<option value="innovation sector" disabled="disabled" selected="selected">Please select an innovation sector first &hellip;</option>')
       } else {
         var url = window.location.protocol + '//' + window.location.host + '/management/competition/setup/getInnovationArea/' + sector
@@ -46,7 +43,7 @@ IFS.competitionManagement.initialDetails = (function () {
     },
     disableAlreadySelectedOptions: function () {
       var disabledSections = {}
-      jQuery('[name^="innovationAreaCategoryIds"]').each(function () {
+      jQuery('[name*="innovationAreaCategoryId"]').each(function () {
         var inst = jQuery(this)
         var value = inst.val()
         var name = inst.prop('name')
@@ -54,13 +51,13 @@ IFS.competitionManagement.initialDetails = (function () {
           disabledSections[name] = value
         }
       })
-      jQuery('[name^="innovationAreaCategoryIds"]').find('[disabled]:not([value=""])').removeAttr('disabled').removeAttr('aria-hidden')
+      jQuery('[name*="innovationAreaCategoryId"]').find('[disabled]:not([value=""])').removeAttr('disabled').removeAttr('aria-hidden')
       for (var section in disabledSections) {
-        jQuery('[name^="innovationAreaCategoryIds"]:not([name="' + section + '"]) option[value="' + disabledSections[section] + '"]').attr({'disabled':'disabled', 'aria-hidden':'true'});
+        jQuery('[name*="innovationAreaCategoryId"]:not([name="' + section + '"]) option[value="' + disabledSections[section] + '"]').attr({'disabled': 'disabled', 'aria-hidden': 'true'})
       }
     },
     enableDisableMultipleInnovationAreas: function (el) {
-      var isSectorCompetition = (jQuery(el).val() == 5)
+      var isSectorCompetition = (jQuery(el).val() === '5')
       if (isSectorCompetition) {
         jQuery('[data-add-row="innovationArea"]').attr('aria-hidden', 'false')
       } else {
@@ -72,7 +69,7 @@ IFS.competitionManagement.initialDetails = (function () {
       }
     },
     fillInnovationAreas: function (currentAreas) {
-      var innovationAreasFields = jQuery('[name^="innovationAreaCategoryIds"]')
+      var innovationAreasFields = jQuery('[name*="innovationAreaCategoryId"]')
       jQuery.each(innovationAreasFields, function () {
         var innovationAreasField = jQuery(this)
         innovationAreasField.children().remove()
@@ -85,18 +82,18 @@ IFS.competitionManagement.initialDetails = (function () {
     },
     autosaveInnovationAreaIds: function () {
       // gets called whenever something changed in the list
-      var saveField =  jQuery('[name="autosaveInnovationAreaIds"]')
-      var innovationAreas = jQuery.unique(jQuery.map(jQuery('[name*="innovationAreaCategoryIds"]'), function (el) { return jQuery(el).val() }))
+      var saveField = jQuery('[name="autosaveInnovationAreaIds"]')
+      var innovationAreas = jQuery.unique(jQuery.map(jQuery('[name*="innovationAreaCategoryId"]'), function (el) { return jQuery(el).val() }))
       saveField.val(innovationAreas.join())
       IFS.core.autoSave.fieldChanged(saveField)
     },
-    filterInnovationAreasPageLoad : function (currentAreas) {
+    filterInnovationAreasPageLoad: function (currentAreas) {
       currentAreas = jQuery.map(currentAreas, function (area) {
         return '[value="' + area.id + '"]'
       })
       currentAreas.push('[value=""]')
       currentAreas = currentAreas.join(',')
-      var innovationAreas = jQuery('[name^="innovationAreaCategoryIds"] option')
+      var innovationAreas = jQuery('[name*="innovationAreaCategoryId"] option')
       innovationAreas.not(currentAreas).remove()
     },
     handleStateAid: function () {

@@ -7,11 +7,11 @@ Resource          ../../resources/defaultResources.robot
 *** Test Cases ***
 In Panel Dashboard
     Given The user clicks the button/link    link=${FUNDERS_PANEL_COMPETITION_NAME}
-    Then The user should see the text in the page    00000005: Internet of Things
+    Then The user should see the text in the page    5: Internet of Things
     And The user should see the text in the page    Panel
     And The user should see the text in the page    Programme
     And The user should see the text in the page    Materials and manufacturing
-    And The user should see the text in the page    Earth Observation
+    And The user should see the text in the page    Satellite Applications
     And the user should not see the element    link=View and update competition setup
     And the user should see the element    jQuery=a:contains("Input and review funding decision")
     And the user should see the element    jQuery=a:contains("Invite assessors to assess the competition")

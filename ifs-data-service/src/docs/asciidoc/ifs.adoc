@@ -162,6 +162,10 @@ include::competitionSetupQuestion.adoc[]
 == Competition Setup Finance
 include::competitionSetupFinance.adoc[]
 
+[[inviteorganisation]]
+== Invite Organisation
+include::invite-organisation.adoc[]
+
 [[Milestone]]
 == Milestone
 include::milestone.adoc[]
@@ -200,6 +204,7 @@ include::project.adoc[]
 include::project-grant-offer.adoc[]
 include::bank-details.adoc[]
 include::project-finance-queries.adoc[]
+include::project-finance-attachments.adoc[]
 
 [[applicationCountSummary]]
 == ApplicationCountSummary
@@ -208,3 +213,7 @@ include::applicationCountSummary.adoc[]
 [[competitionKeyStatistics]]
 == CompetitionKeyStatistics
 include::competitionKeyStatistics.adoc[]
+
+[[applicationSummary]]
+== ApplicationSummary
+include::application-summary.adoc[]

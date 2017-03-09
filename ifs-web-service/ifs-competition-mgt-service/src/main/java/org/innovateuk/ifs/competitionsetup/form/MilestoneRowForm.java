@@ -1,9 +1,10 @@
 package org.innovateuk.ifs.competitionsetup.form;
 
-import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.validator.constraints.Range;
+import org.innovateuk.ifs.commons.validation.constraints.ValidAggregatedDate;
+import org.innovateuk.ifs.competition.resource.MilestoneType;
 
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
@@ -11,13 +12,15 @@ import java.time.LocalDateTime;
 /**
  * Milestone Form Entry for the Milestones form.
  */
+@ValidAggregatedDate(yearField="year", monthField="month", dayField="day", message="{validation.standard.date.format}")
 public class MilestoneRowForm {
-    @Range(min = 1, max = 31)
-    private Integer day;
-    @Range(min = 1, max = 12)
-    private Integer month;
-    @Range(min = 2016, max = 9000)
+    @Range(min=2000, max = 9999, message="{validation.nonifs.detailsform.yyyy.range.format}")
     private Integer year;
+    private Integer month;
+    private Integer day;
+
+    private MilestoneTime time;
+
     private MilestoneType milestoneType;
     private String dayOfWeek;
     private boolean editable;
@@ -35,10 +38,12 @@ public class MilestoneRowForm {
             this.setDay(dateTime.getDayOfMonth());
             this.setMonth(dateTime.getMonth().getValue());
             this.setYear(dateTime.getYear());
+            this.setTime(MilestoneTime.fromLocalDateTime(dateTime));
             this.setDate(dateTime);
             this.editable = LocalDateTime.now().isBefore(dateTime);
         } else {
             this.editable = true;
+            this.setTime(MilestoneTime.TWELVE_PM);
         }
     }
 
@@ -102,6 +107,14 @@ public class MilestoneRowForm {
         this.date = date;
     }
 
+    public MilestoneTime getTime() {
+        return time;
+    }
+
+    public void setTime(MilestoneTime time) {
+        this.time = time;
+    }
+
     private String getNameOfDay() {
         String dayName =  getMilestoneDate(day, month, year);
         if(dayName == null) {
@@ -130,9 +143,13 @@ public class MilestoneRowForm {
         return null;
     }
 
-    public LocalDateTime getMilestoneAsDateTime(){
+    public LocalDateTime getMilestoneAsDateTime() {
         if (day != null && month != null && year != null){
-            return LocalDateTime.of(year, month, day, 0, 0);
+            if ( time != null) {
+                return LocalDateTime.of(year, month, day, time.getHour(), 0);
+            } else {
+                return LocalDateTime.of(year, month, day, 0, 0);
+            }
         } else {
             return null;
         }

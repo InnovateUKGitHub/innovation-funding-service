@@ -1,9 +1,5 @@
 package org.innovateuk.ifs.category.domain;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.category.resource.CategoryType;
-
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,11 +14,8 @@ public abstract class Category {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
-
-    // the type attribute is used by a spring data query
-    @Column(name = "type", insertable = false, updatable = false)
-    @Enumerated(value = EnumType.STRING)
-    private CategoryType type;
+    private String description;
+    private Integer priority = 0;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<CategoryInnerLink> links = new HashSet<>();
@@ -57,24 +50,37 @@ public abstract class Category {
         this.name = name;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Integer getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-
         if (o == null || getClass() != o.getClass()) return false;
 
         Category category = (Category) o;
 
-        return new EqualsBuilder()
-                .append(name, category.name)
-                .isEquals();
+        if (name != null ? !name.equals(category.name) : category.name != null) return false;
+        return description != null ? description.equals(category.description) : category.description == null;
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(name)
-                .toHashCode();
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        return result;
     }
-
 }

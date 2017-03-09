@@ -59,6 +59,7 @@ public class CompetitionSetupController {
     private static final String SECTION_PATH_KEY = "sectionPath";
     private static final String SUBSECTION_PATH_KEY = "subsectionPath";
     public static final String COMPETITION_NAME_KEY = "competitionName";
+    public static final String PUBLIC_CONTENT_LANDING_REDIRECT = "redirect:/competition/setup/public-content/";
 
     @Autowired
     private UserAuthenticationService userAuthenticationService;
@@ -93,6 +94,9 @@ public class CompetitionSetupController {
     public String initCompetitionSetupSection(Model model, @PathVariable(COMPETITION_ID_KEY) Long competitionId) {
 
         CompetitionResource competition = competitionService.getById(competitionId);
+        if(competition.isNonIfs()) {
+            return "redirect:/non-ifs-competition/setup/" + competitionId;
+        }
         CompetitionSetupSection section = CompetitionSetupSection.fromPath("home");
         competitionSetupService.populateCompetitionSectionModelAttributes(model, competition, section);
         model.addAttribute(READY_TO_OPEN_KEY, competitionSetupService.isCompetitionReadyToOpen(competition));
@@ -113,7 +117,8 @@ public class CompetitionSetupController {
             return "redirect:/dashboard";
         }
 
-        competitionService.setSetupSectionMarkedAsIncomplete(competitionId, section);
+
+        competitionService.setSetupSectionMarkedAsIncomplete(competitionId, section).getSuccessObjectOrThrowException();
         if(!competition.isSetupAndLive()) {
             competitionSetupService.setCompetitionAsCompetitionSetup(competitionId);
         }
@@ -132,10 +137,16 @@ public class CompetitionSetupController {
             return "redirect:/dashboard";
         } else if (section == CompetitionSetupSection.APPLICATION_FORM) {
             return String.format(APPLICATION_LANDING_REDIRECT, competitionId);
+        } else if (section == CompetitionSetupSection.CONTENT){
+            return PUBLIC_CONTENT_LANDING_REDIRECT + competitionId;
         }
 
-
         CompetitionResource competition = competitionService.getById(competitionId);
+
+        if(competition.isNonIfs()) {
+            return "redirect:/non-ifs-competition/setup/" + competitionId;
+        }
+
         competitionSetupService.populateCompetitionSectionModelAttributes(model, competition, section);
         model.addAttribute("competitionSetupForm", competitionSetupService.getSectionFormData(competition, section));
 
@@ -345,6 +356,9 @@ public class CompetitionSetupController {
 
     private String genericCompetitionSetupSection(CompetitionSetupForm competitionSetupForm, ValidationHandler validationHandler, Long competitionId, CompetitionSetupSection section, Model model) {
         CompetitionResource competition = competitionService.getById(competitionId);
+        if(competition.isNonIfs()) {
+            return "redirect:/non-ifs-competition/setup/" + competitionId;
+        }
         Supplier<String> successView = () -> "redirect:/competition/setup/" + competitionId + "/section/" + section.getPath();
         Supplier<String> failureView = () -> {
             competitionSetupService.populateCompetitionSectionModelAttributes(model, competition, section);

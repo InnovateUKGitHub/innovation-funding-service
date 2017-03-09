@@ -8,10 +8,7 @@ import org.innovateuk.ifs.address.transactional.AddressService;
 import org.innovateuk.ifs.alert.mapper.AlertMapper;
 import org.innovateuk.ifs.alert.repository.AlertRepository;
 import org.innovateuk.ifs.alert.transactional.AlertService;
-import org.innovateuk.ifs.application.mapper.ApplicationCountSummaryMapper;
-import org.innovateuk.ifs.application.mapper.ApplicationMapper;
-import org.innovateuk.ifs.application.mapper.QuestionMapper;
-import org.innovateuk.ifs.application.mapper.SectionMapper;
+import org.innovateuk.ifs.application.mapper.*;
 import org.innovateuk.ifs.application.repository.*;
 import org.innovateuk.ifs.application.transactional.*;
 import org.innovateuk.ifs.assessment.mapper.*;
@@ -23,7 +20,10 @@ import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.category.mapper.InnovationSectorMapper;
 import org.innovateuk.ifs.category.mapper.ResearchCategoryMapper;
-import org.innovateuk.ifs.category.repository.*;
+import org.innovateuk.ifs.category.repository.CategoryRepository;
+import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
+import org.innovateuk.ifs.category.repository.InnovationSectorRepository;
+import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
 import org.innovateuk.ifs.category.transactional.CategoryService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.test.BaseTest;
@@ -38,6 +38,7 @@ import org.innovateuk.ifs.email.service.EmailService;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.file.service.FileTemplateRenderer;
+import org.innovateuk.ifs.file.transactional.FileEntryService;
 import org.innovateuk.ifs.file.transactional.FileHttpHeadersValidator;
 import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
@@ -47,12 +48,14 @@ import org.innovateuk.ifs.finance.mapper.ProjectFinanceRowMapper;
 import org.innovateuk.ifs.finance.repository.*;
 import org.innovateuk.ifs.finance.transactional.FinanceRowService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
+import org.innovateuk.ifs.form.mapper.FormInputResponseMapper;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.form.transactional.FormInputService;
 import org.innovateuk.ifs.invite.mapper.*;
 import org.innovateuk.ifs.invite.repository.*;
 import org.innovateuk.ifs.invite.transactional.EthnicityService;
+import org.innovateuk.ifs.invite.transactional.InviteOrganisationService;
 import org.innovateuk.ifs.invite.transactional.InviteProjectService;
 import org.innovateuk.ifs.invite.transactional.RejectionReasonService;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
@@ -84,11 +87,15 @@ import org.innovateuk.ifs.project.transactional.ProjectGrantOfferService;
 import org.innovateuk.ifs.project.transactional.ProjectService;
 import org.innovateuk.ifs.project.transactional.ProjectStatusService;
 import org.innovateuk.ifs.project.users.ProjectUsersHelper;
+import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
 import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.sil.experian.service.SilExperianEndpoint;
+import org.innovateuk.ifs.threads.attachments.mapper.AttachmentMapper;
+import org.innovateuk.ifs.threads.attachments.repository.AttachmentRepository;
+import org.innovateuk.ifs.threads.attachments.service.ProjectFinanceAttachmentService;
 import org.innovateuk.ifs.threads.mapper.NoteMapper;
 import org.innovateuk.ifs.threads.mapper.PostMapper;
 import org.innovateuk.ifs.threads.mapper.QueryMapper;
@@ -100,7 +107,6 @@ import org.innovateuk.ifs.user.mapper.*;
 import org.innovateuk.ifs.user.repository.*;
 import org.innovateuk.ifs.user.transactional.*;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
-import org.innovateuk.threads.resource.NoteResource;
 import org.junit.Before;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -167,6 +173,15 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected AssessorFormInputResponseService assessorFormInputResponseServiceMock;
 
     @Mock
+    protected AttachmentMapper attachmentMapperMock;
+
+    @Mock
+    protected AttachmentRepository attachmentRepositoryMock;
+
+    @Mock
+    protected FormInputResponseMapper formInputResponseMapperMock;
+
+    @Mock
     protected FormInputResponseRepository formInputResponseRepositoryMock;
 
     @Mock
@@ -210,6 +225,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ApplicationCountSummaryMapper applicationCountSummaryMapperMock;
+
+    @Mock
+    protected ApplicationCountSummaryPageMapper applicationCountSummaryPageMapperMock;
 
     @Mock
     protected FormInputRepository formInputRepositoryMock;
@@ -258,6 +276,12 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected InviteOrganisationRepository inviteOrganisationRepositoryMock;
+
+    @Mock
+    protected InviteOrganisationMapper inviteOrganisationMapperMock;
+
+    @Mock
+    protected InviteOrganisationService inviteOrganisationServiceMock;
 
     @Mock
     protected ApplicationInviteRepository applicationInviteRepositoryMock;
@@ -365,6 +389,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected FileEntryRepository fileEntryRepositoryMock;
 
     @Mock
+    protected FileEntryService fileEntryServiceMock;
+
+    @Mock
     protected FileEntryMapper fileEntryMapperMock;
 
     @Mock
@@ -384,6 +411,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ProjectFinanceNotesService projectFinanceNotesService;
+
+    @Mock
+    protected ProjectFinanceAttachmentService projectFinanceAttachmentServiceMock;
 
     @Mock
     protected ProjectService projectServiceMock;
@@ -557,6 +587,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected OrganisationFinanceDelegate organisationFinanceDelegateMock;
 
     @Mock
+    protected FinanceUtil financeUtilMock;
+
+    @Mock
     protected OrganisationMapper organisationMapperMock;
 
     @Mock
@@ -592,7 +625,14 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     @Mock
     protected PostMapper postMapper;
 
+    @Mock
+    protected ApplicationInnovationAreaService applicationInnovationAreaService;
 
+    @Mock
+    protected ApplicationAssessorMapper applicationAssessorMapperMock;
+
+    @Mock
+    protected ApplicationAssessorPageMapper applicationAssessorPageMapperMock;
 
     @Before
     public void setupMockInjection() {

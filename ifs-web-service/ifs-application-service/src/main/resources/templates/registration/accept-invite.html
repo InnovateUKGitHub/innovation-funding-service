@@ -35,9 +35,8 @@
                 <a th:href="@{${createAccountLink}}" class="button" value="create-account" type="submit">Create</a>
             </div>
             <div th:if="${emailAddressRegistered}">
-                <h1 class="heading-large">We've found an existing user account with the invited email address</h1>
-                <p>Please sign in with your existing account.</p>
-                <p><a href="/accept-invite-authenticated/confirm-invited-organisation">Click here to sign in</a></p>
+                <p>You already have an account with us. Please sign in with your existing account.</p>
+                <p><a href="/accept-invite-authenticated/confirm-invited-organisation">Sign into the Innovation Funding Service.</a></p>
             </div>
         </section>
         <section class="column-half">

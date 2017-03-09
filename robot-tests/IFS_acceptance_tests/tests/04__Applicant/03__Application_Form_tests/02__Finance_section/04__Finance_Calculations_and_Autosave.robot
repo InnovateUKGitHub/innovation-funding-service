@@ -38,8 +38,7 @@ Overhead costs
     [Tags]
     When the user clicks the button/link    jQuery=button:contains("Overhead costs")
     And the user clicks the button/link    jQuery=label:contains("20% of labour costs")
-    #Then admin costs total should be correct    id=section-total-10-default    £ 9,600
-    #TODO enable the disabled check as soon as the INFUND-7958
+    Then admin costs total should be correct    id=section-total-10-default    £ 9,600
     [Teardown]    the user clicks the button/link    jQuery=button:contains("Overhead costs")
 
 Materials
@@ -75,10 +74,7 @@ Subcontracting costs
     [Documentation]    INFUND-192, INFUND-736, INFUND-2303, INFUND-6390
     [Tags]
     When the applicant edits the Subcontracting costs section
-    Then Totals should be correct    css=#section-total-13    £ 200    css=[aria-controls="collapsible-4"] [data-mirror]    £ 200
-    And the user clicks the button/link    css=#subcontracting [data-repeatable-row]:nth-child(1) button
-    And the user reloads the page
-    Then Totals should be correct    css=#section-total-13    £ 100    css=[aria-controls="collapsible-4"] [data-mirror]    £ 100
+    Then the user should see the element  jQuery=button:contains("Subcontracting") > *:contains("£ 200")
     [Teardown]    the user clicks the button/link    jQuery=button:contains("Subcontracting costs")
 
 Travel and subsistence

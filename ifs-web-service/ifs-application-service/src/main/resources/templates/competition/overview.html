@@ -20,15 +20,42 @@
         <ul class="list">
             <li><strong>Competition opens:</strong> <span th:text="${#temporals.format(model.competitionOpenDate, 'EEEE d MMM yyyy')}"></span></li>
 
-            <li th:with="date=${#temporals.format(model.competitionCloseDate, 'EEEE d MMMM yyyy')},
+            <li th:unless="${model.nonIfs}" th:with="date=${#temporals.format(model.competitionCloseDate, 'EEEE d MMMM yyyy')},
                          time=${#strings.toLowerCase(#temporals.format(model.competitionCloseDate, ' h:mma'))}">
                 <strong>Competition closes:</strong> <th:block th:text="${date + ' ' + time}"/></li>
+
+            <li th:if="${model.nonIfs}" th:with="date=${#temporals.format(model.registrationCloseDate, 'EEEE d MMMM yyyy')},
+            time=${#strings.toLowerCase(#temporals.format(model.competitionCloseDate, ' h:mma'))}">
+                <strong>Registration closes:</strong> <th:block th:text="${date + ' ' + time}"/></li>
+
         </ul>
-        <p>
-            <a th:href="@{/application/create/check-eligibility/{competitionId}(competitionId=${model.competitionId})}" class="button extra-margin">
-                Start or continue your application
-            </a>
-        </p>
+        <div>
+            <div th:unless="${model.showApplyButton}" class="warning-alert">
+                This competition is now closed.
+            </div>
+            <th:block th:unless="${model.nonIfs}">
+                <p class="extra-margin">
+                    <a class="button"
+                       th:if="${model.showApplyButton}"
+                       th:href="@{/application/create/check-eligibility/{competitionId}(competitionId=${model.competitionId})}">
+                        Start or continue your application
+                    </a>
+                    <button th:unless="${model.showApplyButton}" class="button" disabled="disabled">
+                        Start or continue your application
+                    </button>
+                </p>
+            </th:block>
+            <th:block th:if="${model.nonIfs}">
+                <p class="extra-margin">
+                    <a th:href="${model.nonIfsUrl}" th:if="${model.showApplyButton}" class="button">
+                        Register and apply online
+                    </a>
+                    <button th:unless="${model.showApplyButton}" class="button" disabled="disabled">
+                        Register and apply online
+                    </button>
+                </p>
+            </th:block>
+        </div>
 
         <ul class="inline-nav hide-mobile">
             <th:block th:each="sectionType : ${model.allContentSections}">

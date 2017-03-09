@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.finance.model.FinanceFormField;
 import org.innovateuk.ifs.application.finance.view.item.*;
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
@@ -11,13 +12,12 @@ import org.innovateuk.ifs.exception.BigDecimalNumberFormatException;
 import org.innovateuk.ifs.exception.IntegerNumberFormatException;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.project.finance.service.ProjectFinanceRowService;
 import org.innovateuk.ifs.util.Either;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
@@ -35,9 +35,6 @@ public abstract class BaseFinanceFormHandler {
 
     private static final Log LOG = LogFactory.getLog(BaseFinanceFormHandler.class);
 
-    @Autowired
-    private ProjectFinanceRowService financeRowService;
-
     protected ValidationMessages getValidationMessageFromException(Map.Entry<Long, List<FinanceFormField>> entry, NumberFormatException e) {
         ValidationMessages validationMessages = new ValidationMessages();
         validationMessages.setObjectId(entry.getKey());
@@ -45,13 +42,13 @@ public abstract class BaseFinanceFormHandler {
         List<Object> args = singletonList(e.getMessage());
         if(IntegerNumberFormatException.class.equals(e.getClass()) || BigDecimalNumberFormatException.class.equals(e.getClass())){
             validationMessages.addError(globalError(e.getMessage(), args));
-        }else{
-            validationMessages.addError(globalError("field.value.not.valid", args));
+        } else{
+            validationMessages.addError(new Error(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR));
         }
         return validationMessages;
     }
 
-    protected ValidationMessages getAndStoreCostitems(HttpServletRequest request, Long financeId) {
+    protected ValidationMessages getAndStoreCostitems(HttpServletRequest request, Long financeId, Function<FinanceRowItem, RestResult<ValidationMessages>> updatingFunction) {
 
         ValidationMessages errors = new ValidationMessages();
 
@@ -70,7 +67,7 @@ public abstract class BaseFinanceFormHandler {
         errors.addErrors(getFinanceRowItemErrors);
 
         List<FinanceRowItem> validItems = costItems.stream().filter(e -> e.isLeft()).map(e -> e.getLeft()).collect(Collectors.toList());
-        Map<Long, ValidationMessages> storedItemErrors = storeFinanceRowItems(validItems);
+        Map<Long, ValidationMessages> storedItemErrors = storeFinanceRowItems(validItems, updatingFunction);
         storedItemErrors.forEach((costId, validationMessages) ->
                 validationMessages.getErrors().stream().forEach(e -> {
                     if(StringUtils.hasText(e.getErrorKey())){
@@ -147,10 +144,10 @@ public abstract class BaseFinanceFormHandler {
         return null;
     }
 
-    Map<Long, ValidationMessages> storeFinanceRowItems(List<FinanceRowItem> costItems) {
+    Map<Long, ValidationMessages> storeFinanceRowItems(List<FinanceRowItem> costItems, Function<FinanceRowItem, RestResult<ValidationMessages>> updatingFunction) {
         Map<Long, ValidationMessages> validationMessagesMap = new HashMap<>();
         costItems.stream().forEach(c -> {
-            RestResult<ValidationMessages> messages = financeRowService.update(c);
+            RestResult<ValidationMessages> messages = updatingFunction.apply(c);
             Optional<ValidationMessages> successObject = messages.getOptionalSuccessObject();
             if (successObject.isPresent() && successObject.get() != null &&
                     messages.getSuccessObject().getErrors() != null &&

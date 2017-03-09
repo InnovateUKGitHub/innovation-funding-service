@@ -1,8 +1,7 @@
 package org.innovateuk.ifs.application.resource;
 
 import java.math.BigDecimal;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.time.LocalDateTime;
 
 /**
  * Represents a high-level overview of an application.
@@ -20,6 +19,15 @@ public class ApplicationSummaryResource {
     private long duration;
     private FundingDecision fundingDecision;
     private String innovationArea;
+    private LocalDateTime manageFundingEmailDate;
+
+    public LocalDateTime getManageFundingEmailDate() {
+        return manageFundingEmailDate;
+    }
+
+    public void setManageFundingEmailDate(LocalDateTime manageFundingEmailDate) {
+        this.manageFundingEmailDate = manageFundingEmailDate;
+    }
 
     public long getId() {
         return id;
@@ -27,11 +35,6 @@ public class ApplicationSummaryResource {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    @JsonIgnore
-    public String getFormattedId() {
-        return ApplicationResource.formatter.format(id);
     }
 
     public String getName() {

@@ -28,7 +28,6 @@ import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 @PermissionRules
 @Component
 public class FormInputResponsePermissionRules {
-    private static final Log LOG = LogFactory.getLog(ApplicationPermissionRules.class);
 
     @Autowired
     private ProcessRoleRepository processRoleRepository;
@@ -85,14 +84,14 @@ public class FormInputResponsePermissionRules {
 
         return (isLead || isCollaborator)
                 && checkIfAssignedToQuestion(questionStatuses, user)
-                && checkQuestionStatuses(questionStatuses);
+                && checkQuestionStatuses(questionStatuses, user);
 
     }
 
-    private boolean checkQuestionStatuses(List<QuestionStatus> questionStatuses) {
+    private boolean checkQuestionStatuses(List<QuestionStatus> questionStatuses, UserResource user) {
         Question question = questionStatuses.get(0).getQuestion();
         if (question.getMultipleStatuses()) {
-            return checkIfAnyIncompleteQuestionStatus(questionStatuses);
+            return !checkIfAnyMarkedQuestionByUser(questionStatuses, user);
         } else {
             return !checkIfQuestionIsMarked(questionStatuses);
         }
@@ -117,14 +116,18 @@ public class FormInputResponsePermissionRules {
 
     private boolean checkIfQuestionIsMarked(List<QuestionStatus> questionStatuses) {
         boolean isMarked = questionStatuses.stream()
-                .anyMatch(questionStatus -> questionStatus.getMarkedAsComplete() != null && questionStatus.getMarkedAsComplete().equals(true));
+                .anyMatch(this::isMarkedAsComplete);
 
         return isMarked;
     }
 
-    private boolean checkIfAnyIncompleteQuestionStatus(List<QuestionStatus> questionStatuses) {
+    private boolean checkIfAnyMarkedQuestionByUser(List<QuestionStatus> questionStatuses, UserResource user) {
         return questionStatuses.stream()
-            .anyMatch(questionStatus -> questionStatus.getMarkedAsComplete() == null || !questionStatus.getMarkedAsComplete());
+                .anyMatch(questionStatus -> isMarkedAsComplete(questionStatus) && questionStatus.getMarkedAsCompleteBy().getUser().getId().equals(user.getId()));
+    }
+
+    private boolean isMarkedAsComplete(QuestionStatus questionStatus) {
+        return questionStatus.getMarkedAsComplete() != null && questionStatus.getMarkedAsComplete().equals(true);
     }
 
     private boolean checkRoleForApplicationAndOrganisation(UserResource user, FormInputResponseResource response, UserRoleType userRoleType) {

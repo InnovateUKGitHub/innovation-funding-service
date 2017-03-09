@@ -202,9 +202,8 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
         when(userRestService.userHasApplicationForCompetition(userId, competitionId)).thenReturn(restSuccess(expected));
 
-        ServiceResult<Boolean> response = service.userHasApplicationForCompetition(userId, competitionId);
-        assertTrue(response.isSuccess());
-        assertEquals(expected, response.getSuccessObjectOrThrowException());
+        Boolean response = service.userHasApplicationForCompetition(userId, competitionId);
+        assertEquals(expected, response);
 
         verify(userRestService, only()).userHasApplicationForCompetition(userId, competitionId);
     }

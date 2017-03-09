@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.category.repository;
 
-import org.innovateuk.ifs.category.domain.*;
+import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
@@ -14,7 +14,9 @@ public interface ResearchCategoryRepository extends CrudRepository<ResearchCateg
 
     ResearchCategory findById(long id);
 
+    ResearchCategory findByName(String name);
+
     List<ResearchCategory> findAll();
 
-    List<ResearchCategory> findAllByOrderByNameAsc();
+    List<ResearchCategory> findAllByOrderByPriorityAsc();
 }

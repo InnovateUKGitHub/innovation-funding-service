@@ -99,6 +99,8 @@ Create assessor account: Postcode lookup and save
     And The user enters text to a text field    id=password    Passw0rd123
     And The user enters text to a text field    id=retypedPassword    Passw0rd123
     And the user clicks the button/link    jQuery=button:contains("Continue")
+    Then the user should see the text in the page    Your account has been created
+    And the user clicks the button/link    jQuery=a:contains("Sign into your account")
     Then the user should be redirected to the correct page    ${LOGGED_OUT_URL_FRAGMENT}
 
 Create assessor account: Accepted competitions should be displayed in dashboard
@@ -117,9 +119,10 @@ Innovation area on assessor profile for invited user
     [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
     Given the user clicks the button/link    link=${OPEN_COMPETITION_NAME}
     And the user clicks the button/link    jQuery=a:contains("Invite assessors to assess the competition")
+    And the user clicks the button/link    jQuery=a:contains(81 to)
     When the user clicks the button/link    link=Thomas Fister
     Then the user should see the text in the page    Emerging and enabling technologies
-    And the user should see the text in the page    Earth Observation
+    And the user should see the text in the page    Satellite Applications
     [Teardown]    Logout as user
 
 Non-registered assessor: Reject invitation

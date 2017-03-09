@@ -1,13 +1,12 @@
 package org.innovateuk.ifs.competition.transactional;
 
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationStatistics;
+import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.repository.ApplicationStatisticsRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.CompetitionClosedKeyStatisticsResource;
-import org.innovateuk.ifs.competition.resource.CompetitionInAssessmentKeyStatisticsResource;
-import org.innovateuk.ifs.competition.resource.CompetitionOpenKeyStatisticsResource;
-import org.innovateuk.ifs.competition.resource.CompetitionReadyToOpenKeyStatisticsResource;
+import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.repository.CompetitionInviteRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
@@ -17,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.EnumSet;
+import java.util.List;
 
 import static java.util.EnumSet.of;
 import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.CREATED_AND_OPEN_STATUS_IDS;
@@ -94,5 +94,27 @@ public class CompetitionKeyStatisticsServiceImpl extends BaseTransactionalServic
         competitionKeyStatisticsResource.setAssessmentsStarted(assessmentRepository.countByActivityStateStateInAndTargetCompetitionId(of(OPEN, DECIDE_IF_READY_TO_SUBMIT, READY_TO_SUBMIT), competitionId));
         competitionKeyStatisticsResource.setAssessmentsSubmitted(assessmentRepository.countByActivityStateStateAndTargetCompetitionId(SUBMITTED, competitionId));
         return serviceSuccess(competitionKeyStatisticsResource);
+    }
+
+    @Override
+    public ServiceResult<CompetitionFundedKeyStatisticsResource> getFundedKeyStatisticsByCompetition(long competitionId) {
+        CompetitionFundedKeyStatisticsResource competitionFundedKeyStatisticsResource = new CompetitionFundedKeyStatisticsResource();
+        List<Application> applications = applicationRepository.findByCompetitionIdAndApplicationStatusIdIn(competitionId, SUBMITTED_STATUS_IDS);
+        competitionFundedKeyStatisticsResource.setApplicationsSubmitted(applications.size());
+        competitionFundedKeyStatisticsResource.setApplicationsFunded(getFundingDecisionCount(applications, FundingDecisionStatus.FUNDED));
+        competitionFundedKeyStatisticsResource.setApplicationsNotFunded(getFundingDecisionCount(applications, FundingDecisionStatus.UNFUNDED));
+        competitionFundedKeyStatisticsResource.setApplicationsOnHold(0); // TODO - awaiting Wouter's change - will be - getFundingDecisionCount(applications, FundingDecisionStatus.ON_HOLD)competition
+        competitionFundedKeyStatisticsResource.setApplicationsNotifiedOfDecision(applicationRepository.countByCompetitionIdAndFundingDecisionIsNotNullAndManageFundingEmailDateIsNotNull(competitionId));
+        competitionFundedKeyStatisticsResource.setApplicationsAwaitingDecision(applicationRepository.countByCompetitionIdAndFundingDecisionIsNotNullAndManageFundingEmailDateIsNull(competitionId));
+        return serviceSuccess(competitionFundedKeyStatisticsResource);
+    }
+
+    private int getFundingDecisionCount(List<Application> applications, FundingDecisionStatus fundingDecisionStatus) {
+        return (int) applications.stream().filter(application -> {
+            if (application.getFundingDecision() != null) {
+                return application.getFundingDecision().equals(fundingDecisionStatus);
+            }
+            return false;
+        }).count();
     }
 }

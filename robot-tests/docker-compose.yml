@@ -31,14 +31,14 @@ services:
     links:
       - "hub:hub"
     external_links:
-      - ifs-local-dev
+      - innovationfundingservice_shib_1:ifs-local-dev
     depends_on:
       - hub
     networks:
       - selenium-network
-      - ifs_front-tier
+      - innovationfundingservice_ifs
 networks:
   selenium-network:
     driver: bridge
-  ifs_front-tier:
+  innovationfundingservice_ifs:
     external: true
