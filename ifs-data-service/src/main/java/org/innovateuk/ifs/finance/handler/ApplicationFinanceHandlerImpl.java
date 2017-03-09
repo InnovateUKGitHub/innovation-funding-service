@@ -158,8 +158,9 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
         Organisation organisation = organisationRepository.findOne(projectFinanceResource.getOrganisation());
         OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(organisation.getOrganisationType().getName());
         Map<FinanceRowType, FinanceRowCostCategory> costs = organisationFinanceHandler.getProjectOrganisationFinances(projectFinanceResource.getId());
-        Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> costChanges = organisationFinanceHandler.getProjectOrganisationFinanceChanges(projectFinanceResource.getId());
         projectFinanceResource.setFinanceOrganisationDetails(costs);
+
+        Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> costChanges = organisationFinanceHandler.getProjectOrganisationFinanceChanges(projectFinanceResource.getId());
         projectFinanceResource.setCostChanges(costChanges);
     }
 }
