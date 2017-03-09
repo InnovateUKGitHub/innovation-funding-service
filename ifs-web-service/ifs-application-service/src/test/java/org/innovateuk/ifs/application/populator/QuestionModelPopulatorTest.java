@@ -149,7 +149,7 @@ public class QuestionModelPopulatorTest extends BaseUnitTestMocksTest {
     public void testPopulateModelWithValidObjects() throws Exception {
         setupSuccess();
 
-        QuestionViewModel viewModel = populator.populateModel(questionId, applicationId, user, model, form);
+        QuestionViewModel viewModel = populator.populateModel(questionId, applicationId, user, model, form, organisationDetailsViewModel);
         assertNotEquals(null, viewModel);
 
         assertEquals(user, viewModel.getCurrentUser());
