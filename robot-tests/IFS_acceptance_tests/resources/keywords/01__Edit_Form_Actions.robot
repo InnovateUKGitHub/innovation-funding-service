@@ -172,7 +172,6 @@ The user enters text to a text field
     Run Keyword And Ignore Error Without Screenshots    focus    link=Sign out
     Wait for autosave
 
-
 The user enters large text to a text field
     [Arguments]    ${TEXT_FIELD}    ${TEXT_INPUT}
     Wait Until Element Is Visible Without Screenshots    ${TEXT_FIELD}
