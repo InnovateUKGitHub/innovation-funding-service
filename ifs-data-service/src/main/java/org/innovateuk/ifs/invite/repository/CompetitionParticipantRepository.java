@@ -31,9 +31,9 @@ public interface CompetitionParticipantRepository extends PagingAndSortingReposi
             "FROM CompetitionParticipant competitionParticipant " +
             "WHERE competitionParticipant.competition.id = :competitionId " +
             "AND competitionParticipant.role = 'ASSESSOR' " +
-            "AND (:statusId IS NULL OR competitionParticipant.status.id = :statusId)")
+            "AND (:status IS NULL OR competitionParticipant.status = :status)")
     Page<CompetitionParticipant> getAssessorsByCompetitionAndStatus(@Param("competitionId") long competitionId,
-                                                                    @Param("statusId") Long statusId,
+                                                                    @Param("status") ParticipantStatus status,
                                                                     Pageable pageable);
 
     @Query("SELECT competitionParticipant " +
@@ -60,11 +60,11 @@ public interface CompetitionParticipantRepository extends PagingAndSortingReposi
             "   AND profile.skillsAreas IS NOT NULL " +
             "   AND profile.contract IS NOT NULL " +
             ")))")
-    Page<CompetitionParticipant> getAssessorsByCompetitionAndInnovationAreaAndStatusAndContract(@Param("competitionId") long competitionId,
-                                                                                                @Param("innovationAreaId") Long innovationAreaId,
-                                                                                                @Param("status") ParticipantStatus status,
-                                                                                                @Param("isCompliant") Boolean isCompliant,
-                                                                                                Pageable pageable);
+    Page<CompetitionParticipant> getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(@Param("competitionId") long competitionId,
+                                                                                                 @Param("innovationAreaId") Long innovationAreaId,
+                                                                                                 @Param("status") ParticipantStatus status,
+                                                                                                 @Param("isCompliant") Boolean isCompliant,
+                                                                                                 Pageable pageable);
 
     List<CompetitionParticipant> getByCompetitionIdAndRoleAndStatus(Long competitionId, CompetitionParticipantRole role, ParticipantStatus status);
 

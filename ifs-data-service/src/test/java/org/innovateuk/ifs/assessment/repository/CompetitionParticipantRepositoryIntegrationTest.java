@@ -14,7 +14,6 @@ import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
 import org.innovateuk.ifs.user.domain.*;
 import org.innovateuk.ifs.user.repository.*;
 import org.innovateuk.ifs.user.resource.AffiliationType;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
@@ -45,7 +44,6 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
-import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
 import static org.innovateuk.ifs.user.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -499,7 +497,56 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     }
 
     @Test
-    public void getAssessorsByCompetitionAndInnovationAreaAndStatusAndContract_allFilters() throws Exception {
+    public void getAssessorsByCompetitionAndStatus() throws Exception {
+        List<CompetitionInvite> newAssessorInvites = newCompetitionInviteWithoutId()
+                .withName("Jane Pritchard", "Charles Dance", "Claire Jenkins", "Anthony Hale")
+                .withEmail("jp@test.com", "cd@test.com", "cj@test.com", "ah@test2.com")
+                .withCompetition(competition)
+                .withInnovationArea(innovationArea)
+                .withStatus(SENT)
+                .build(4);
+
+        List<CompetitionParticipant> competitionParticipants = saveNewCompetitionParticipants(newAssessorInvites);
+
+        User user = newUser()
+                .withId()
+                .withUid("uid-1")
+                .withFirstName("Anthony")
+                .withLastName("Hale")
+                .withProfileId()
+                .build();
+
+        userRepository.save(user);
+
+        competitionParticipants.get(3).getInvite().open();
+        competitionParticipants.get(3).acceptAndAssignUser(user);
+
+        repository.save(competitionParticipants);
+        flushAndClearSession();
+
+        assertEquals(4, repository.count());
+
+        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
+
+        Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndStatus(
+                competition.getId(),
+                ACCEPTED,
+                pageable
+        );
+
+        assertEquals(1, pagedResult.getTotalPages());
+        assertEquals(1, pagedResult.getTotalElements());
+        assertEquals(20, pagedResult.getSize());
+        assertEquals(0, pagedResult.getNumber());
+
+        List<CompetitionParticipant> content = pagedResult.getContent();
+
+        assertEquals(1, content.size());
+        assertEquals("Anthony Hale", content.get(0).getInvite().getName());
+    }
+
+    @Test
+    public void getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant_allFilters() throws Exception {
         loginCompAdmin();
 
         Contract contract = contractRepository.findOne(1L);
@@ -580,7 +627,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 
-        Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndContract(
+        Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
                 competition.getId(),
                 innovationArea.getId(),
                 ACCEPTED,
@@ -600,7 +647,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     }
 
     @Test
-    public void getAssessorsByCompetitionAndInnovationAreaAndStatusAndContract_innovationArea() throws Exception {
+    public void getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant_innovationArea() throws Exception {
         InnovationArea otherInnovationArea = innovationAreaRepository.findOne(5L);
 
         List<CompetitionInvite> newAssessorInvites = newCompetitionInviteWithoutId()
@@ -618,7 +665,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 
-        Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndContract(
+        Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
                 competition.getId(),
                 innovationArea.getId(),
                 null,
@@ -638,14 +685,12 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     }
 
     @Test
-    public void getAssessorsByCompetitionAndInnovationAreaAndStatusAndContract_participantStatus() throws Exception {
-        InnovationArea otherInnovationArea = innovationAreaRepository.findOne(5L);
-
+    public void getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant_participantStatus() throws Exception {
         List<CompetitionInvite> newAssessorInvites = newCompetitionInviteWithoutId()
                 .withName("Jane Pritchard", "Charles Dance", "Claire Jenkins", "Anthony Hale")
                 .withEmail("jp@test.com", "cd@test.com", "cj@test.com", "ah@test2.com")
                 .withCompetition(competition)
-                .withInnovationArea(otherInnovationArea, otherInnovationArea, innovationArea, otherInnovationArea)
+                .withInnovationArea(innovationArea)
                 .withStatus(SENT)
                 .build(4);
 
@@ -671,7 +716,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 
-        Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndContract(
+        Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
                 competition.getId(),
                 null,
                 ACCEPTED,
@@ -691,7 +736,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     }
 
     @Test
-    public void getAssessorsByCompetitionAndInnovationAreaAndStatusAndContract_isCompliant() throws Exception {
+    public void getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant_isCompliant() throws Exception {
         loginCompAdmin();
 
         Contract contract = contractRepository.findOne(1L);
@@ -748,7 +793,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 
-        Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndContract(
+        Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
                 competition.getId(),
                 null,
                 null,
@@ -768,7 +813,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     }
 
     @Test
-    public void getAssessorsByCompetitionAndInnovationAreaAndStatusAndContract_noFilters() throws Exception {
+    public void getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant_noFilters() throws Exception {
         List<CompetitionInvite> newAssessorInvites = newCompetitionInviteWithoutId()
                 .withName("Jane Pritchard", "Charles Dance", "Claire Jenkins", "Anthony Hale")
                 .withEmail("jp@test.com", "cd@test.com", "cj@test.com", "ah@test2.com")
@@ -784,7 +829,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 
-        Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndContract(
+        Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
                 competition.getId(),
                 null,
                 null,
