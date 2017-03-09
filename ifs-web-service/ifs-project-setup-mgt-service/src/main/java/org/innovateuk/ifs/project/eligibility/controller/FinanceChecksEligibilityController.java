@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.eligibility.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.application.finance.view.DefaultProjectFinanceModelManager;
+import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
 import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceChangesViewModel;
 import org.innovateuk.ifs.application.form.ApplicationForm;
@@ -21,6 +22,9 @@ import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.project.ProjectService;
@@ -34,6 +38,7 @@ import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.financecheck.eligibility.form.FinanceChecksEligibilityForm;
 import org.innovateuk.ifs.project.financecheck.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.AjaxResult;
@@ -103,6 +108,12 @@ public class FinanceChecksEligibilityController {
     @Autowired
     private ProjectFinanceRowService financeRowService;
 
+    @Autowired
+    private FinanceUtil financeUtil;
+
+    @Autowired
+    private FinanceService financeService;
+
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
     @GetMapping
     public String viewEligibility(@PathVariable("projectId") Long projectId,
@@ -137,10 +148,23 @@ public class FinanceChecksEligibilityController {
 
         boolean eligibilityApproved = eligibility.getEligibility() == Eligibility.APPROVED;
 
+        OrganisationResource organisationResource = organisationService.getOrganisationById(organisation.getId());
+
+        FileDetailsViewModel jesFileDetailsViewModel = null;
+        boolean isUsingJesFinances = financeUtil.isUsingJesFinances(organisationResource.getOrganisationTypeName());
+        if (!isUsingJesFinances) {
+            populateProjectFinanceDetails(competition, application, project, organisation.getId(), allSections, user, form, bindingResult, model);
+        } else {
+            ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceByApplicationIdAndOrganisationId(application.getId(), organisation.getId());
+            if (applicationFinanceResource.getFinanceFileEntry() != null) {
+                FileEntryResource jesFileEntryResource = financeService.getFinanceEntry(applicationFinanceResource.getFinanceFileEntry()).getSuccessObject();
+                jesFileDetailsViewModel = new FileDetailsViewModel(jesFileEntryResource);
+            }
+        }
         model.addAttribute("summaryModel", new FinanceChecksEligibilityViewModel(eligibilityOverview, organisation.getName(), project.getName(),
                 application.getId(), isLeadPartnerOrganisation, project.getId(), organisation.getId(),
                 eligibilityApproved, eligibility.getEligibilityRagStatus(), eligibility.getEligibilityApprovalUserFirstName(),
-                eligibility.getEligibilityApprovalUserLastName(), eligibility.getEligibilityApprovalDate(), false));
+                eligibility.getEligibilityApprovalUserLastName(), eligibility.getEligibilityApprovalDate(), false, isUsingJesFinances, jesFileDetailsViewModel));
 
         model.addAttribute("eligibilityForm", eligibilityForm);
         model.addAttribute("form", form);
