@@ -373,8 +373,8 @@ class CsvUtils {
             rejectReason = rejectReasonString != null ? AssessmentRejectOutcomeValue.valueOf(rejectReasonString) : null;
             rejectComment = nullable(line.get(i++));
             state = AssessmentStates.valueOf(line.get(i++));
-            feedback = line.get(i++);
-            recommendComment = line.get(i++);
+            feedback = nullable(line.get(i++));
+            recommendComment = nullable(line.get(i++));
         }
     }
 
