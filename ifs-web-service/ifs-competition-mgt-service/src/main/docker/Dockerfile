@@ -11,5 +11,5 @@ RUN sh -c 'touch /app.jar'
 
 ADD *.jar app.jar
 ENTRYPOINT exec java $JAVA_OPTS -jar app.jar
-#HEALTHCHECK --interval=15s --timeout=8s \
-#  CMD curl -f --connect-timeout 5 -m 5  http://localhost:8080/management/health || exit 1
+HEALTHCHECK --interval=15s --timeout=8s \
+  CMD curl -f --connect-timeout 5 -m 5  http://localhost:8080/management/health || exit 1
