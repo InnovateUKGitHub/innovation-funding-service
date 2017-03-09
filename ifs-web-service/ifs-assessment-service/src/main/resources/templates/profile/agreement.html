@@ -32,7 +32,7 @@
                 <div ifs:utext="${model.text}" />
 
                 <ul class="list list-bullet extra-margin">
-                    <li th:each="annex : ${T(org.innovateuk.ifs.assessment.controller.profile.AssessorProfileContractController.ContractAnnexParameter).values()}">
+                    <li th:each="annex : ${T(org.innovateuk.ifs.assessment.controller.profile.AssessorProfileAgreementController.AgreementAnnexParameter).values()}">
                         <a th:href="@{/profile/agreement/annex/{annex}(annex=${annex})}" th:text="|Annex ${annex}|">Annex A</a>
                     </li>
                 </ul>
@@ -49,7 +49,7 @@
                                 </span>
                             </legend>
                             <label class="block-label selection-button-checkbox">
-                                <input th:attr="data-required-errormessage=#{validation.assessorprofilecontractform.terms.required}" required="required" type="checkbox" th:field="*{agreesToTerms}" />
+                                <input th:attr="data-required-errormessage=#{validation.assessorprofileagreementform.terms.required}" required="required" type="checkbox" th:field="*{agreesToTerms}" />
                                 I agree to and sign the agreement for becoming an assessor
                             </label>
                         </fieldset>
@@ -61,7 +61,7 @@
 
             </div>
 
-            <p class="extra-margin" th:text="|You signed the assessor agreement on ${#temporals.format(model.contractSignedDate, 'd MMMM yyyy')}.|" th:if="${model.currentAgreement}">
+            <p class="extra-margin" th:text="|You signed the assessor agreement on ${#temporals.format(model.agreementSignedDate, 'd MMMM yyyy')}.|" th:if="${model.currentAgreement}">
                 <span class="icon icon-important"></span>
                 You signed the assessor agreement on 1 January 1970.
             </p>

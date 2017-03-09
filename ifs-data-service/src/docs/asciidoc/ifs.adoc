@@ -138,9 +138,9 @@ include::question.adoc[]
 == Section
 include::section.adoc[]
 
-[[contract]]
-== Contract
-include::contract.adoc[]
+[[agreement]]
+== Agreement
+include::agreement.adoc[]
 
 [[competition]]
 == Competition

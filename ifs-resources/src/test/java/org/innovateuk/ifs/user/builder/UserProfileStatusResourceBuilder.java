@@ -44,7 +44,7 @@ public class UserProfileStatusResourceBuilder extends BaseBuilder<UserProfileSta
         return withArray((affiliationsComplete, userProfileStatusResource) -> setField("affiliationsComplete", affiliationsComplete, userProfileStatusResource), affiliationsCompleteList);
     }
 
-    public UserProfileStatusResourceBuilder withContractComplete(Boolean... contractCompleteList) {
-        return withArray((contractComplete, userProfileStatusResource) -> setField("contractComplete", contractComplete, userProfileStatusResource), contractCompleteList);
+    public UserProfileStatusResourceBuilder withAgreementComplete(Boolean... agereementCompleteList) {
+        return withArray((agreementComplete, userProfileStatusResource) -> setField("agreementComplete", agreementComplete, userProfileStatusResource), agereementCompleteList);
     }
 }
