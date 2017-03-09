@@ -113,12 +113,10 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
         ValidationMessages vm = new ValidationMessages();
         Competition competition = competitionRepository.findById(milestones.get(0).getCompetitionId());
 
-        if(competition.isNonIfs()) {
-            vm.addAll(validateDateNotNull(milestones));
-        }
-        else {
+        vm.addAll(validateDateNotNull(milestones));
+
+        if(!competition.isNonIfs()) {
             vm.addAll(validateDateInFuture(milestones));
-            vm.addAll(validateDateNotNull(milestones));
         }
 
         return vm;
@@ -128,7 +126,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
         ValidationMessages vm = new ValidationMessages();
 
         milestones.forEach(m -> {
-            if(m.getDate().isBefore(LocalDateTime.now())) {
+            if(m.getDate() != null && m.getDate().isBefore(LocalDateTime.now())) {
                 Error error = new Error("error.milestone.pastdate", HttpStatus.BAD_REQUEST);
                 vm.addError(error);
             }
