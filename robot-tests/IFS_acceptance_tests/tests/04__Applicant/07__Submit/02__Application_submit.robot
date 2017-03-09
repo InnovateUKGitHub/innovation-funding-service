@@ -21,24 +21,15 @@ Resource          ../FinanceSection_Commons.robot
 *** Variables ***
 
 *** Test Cases ***
-Submit button disabled when the application is incomplete
-    [Documentation]    INFUND-195
-    [Tags]    Email    HappyPath   Pending
-    When the user clicks the button/link    jQuery=.button:contains("Review and submit")
-    Then the submit button should be disabled
-    [Teardown]    the applicant marks the first section as complete
-
-Submit button disabled when finance section is incomplete
+Submit button disabled when application is incomplete
     [Documentation]    INFUND-927
     [Tags]    Email    HappyPath
     Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=${application_name}
-    Given the user clicks the button/link    link=Your finances
-    #When the user clicks the button/link    jQuery=button:contains("Edit")
+    When the user clicks the button/link    link=${application_name}
+    And the user clicks the button/link    link=Your finances
     And the user clicks the button/link    link= Application Overview
     And the user clicks the button/link    jQuery=.button:contains("Review and submit")
     Then the submit button should be disabled
-   # [Teardown]    The user marks the finances as complete
 
 Applicant submits the application
     [Documentation]
@@ -51,25 +42,6 @@ Applicant submits the application
     and the user marks the finances as complete    ${application_name}
     when the user clicks the button/link     link=Review and submit
     then the user should not see the element     css=input
-
-Submit button disabled when the application is incomplete
-    [Documentation]    INFUND-195
-    [Tags]    Email    HappyPath   Pending
-    When the user clicks the button/link    jQuery=.button:contains("Review and submit")
-    Then the submit button should be disabled
-    [Teardown]    the applicant marks the first section as complete
-
-Submit button disabled when finance section is incomplete
-    [Documentation]    INFUND-927
-    [Tags]    Email    HappyPath    Pending
-    Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=${application_name}
-    Given the user clicks the button/link    link=Your finances
-    When the user clicks the button/link    jQuery=button:contains("Edit")
-    And the user clicks the button/link    link= Application Overview
-    And the user clicks the button/link    jQuery=.button:contains("Review and submit")
-    Then the submit button should be disabled
-    [Teardown]    The user marks the finances as complete
 
 Submit flow (complete application)
     [Documentation]    INFUND-205
@@ -149,15 +121,6 @@ the submit button should be disabled
 the applicant accepts the terms and conditions
     the user selects the checkbox    agree-terms-page
     the user selects the checkbox    agree-state-aid-page
-
-The user marks the finances as complete in same file
-    the user navigates to the page    ${DASHBOARD_URL}
-    the user clicks the button/link    link=${application_name}
-    the user clicks the button/link    link=Your finances
-    the user selects the checkbox    agree-terms-page
-    the user selects the checkbox    agree-state-aid-page
-    the user moves focus to the element    jQuery=button:contains("Mark all as complete")
-    the user clicks the button/link    jQuery=button:contains("Mark all as complete")
 
 the applicant marks the first section as complete
     Given the user navigates to the page  ${DASHBOARD_URL}
