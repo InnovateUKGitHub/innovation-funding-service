@@ -54,6 +54,7 @@ import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.status.ProjectStatusService;
+import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.service.*;
 import org.innovateuk.ifs.util.CookieUtil;
@@ -209,6 +210,8 @@ public class BaseUnitTest {
     public RejectionReasonRestService rejectionReasonRestService;
     @Mock
     public FinanceCheckService financeCheckServiceMock;
+    @Mock
+    public FinanceUtil financeUtilMock;
     @Mock
     public ProjectStatusService projectStatusServiceMock;
     @Mock
@@ -731,7 +734,7 @@ public class BaseUnitTest {
         inviteOrganisation.setInviteResources(Arrays.asList(invite));
 
         when(inviteRestService.getInviteByHash(eq(INVITE_HASH))).thenReturn(restSuccess(invite));
-        when(inviteOrganisationRestService.findOne(eq(invite.getInviteOrganisation()))).thenReturn(restSuccess(inviteOrganisation));
+        when(inviteOrganisationRestService.getByIdForAnonymousUserFlow(eq(invite.getInviteOrganisation()))).thenReturn(restSuccess(inviteOrganisation));
         when(inviteOrganisationRestService.put(any())).thenReturn(restSuccess());
         when(inviteRestService.checkExistingUser(eq(INVITE_HASH))).thenReturn(restSuccess(false));
         when(inviteRestService.checkExistingUser(eq(INVALID_INVITE_HASH))).thenReturn(restFailure(notFoundError(UserResource.class, email)));
