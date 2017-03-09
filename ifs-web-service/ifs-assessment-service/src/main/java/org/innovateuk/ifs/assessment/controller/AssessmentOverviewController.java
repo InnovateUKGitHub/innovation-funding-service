@@ -79,14 +79,17 @@ public class AssessmentOverviewController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/application/{applicationId}/formInput/{formInputId}/download")
     public @ResponseBody ResponseEntity<ByteArrayResource> downloadAppendix (
-            @PathVariable("applicationId") final Long applicationId,
-            @PathVariable("formInputId") final Long formInputId,
+            @PathVariable("applicationId") Long applicationId,
+            @PathVariable("formInputId") Long formInputId,
             HttpServletRequest request) {
         final UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), applicationId);
 
-        final ByteArrayResource resource = formInputResponseService.getFile(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
-        final FormInputResponseFileEntryResource fileDetails = formInputResponseService.getFileDetails(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
+        final ByteArrayResource resource = formInputResponseService
+                .getFile(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
+
+        final FormInputResponseFileEntryResource fileDetails = formInputResponseService
+                .getFileDetails(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
 
         return getFileResponseEntity(resource, fileDetails.getFileEntryResource());
     }
