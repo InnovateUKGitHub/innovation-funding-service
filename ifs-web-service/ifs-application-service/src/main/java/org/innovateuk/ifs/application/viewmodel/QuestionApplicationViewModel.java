@@ -19,7 +19,6 @@ public class QuestionApplicationViewModel {
     private ApplicationResource currentApplication;
     private CompetitionResource currentCompetition;
     private OrganisationResource userOrganisation;
-    private boolean hasApplicationFinances;
     private String selectedInnovationAreaName;
     private String selectedResearchCategoryName;
 
@@ -66,14 +65,6 @@ public class QuestionApplicationViewModel {
 
     public Boolean getApplicationIsReadOnly() {
         return !currentCompetition.isOpen() || !currentApplication.isOpen();
-    }
-
-    public boolean getHasApplicationFinances() {
-        return hasApplicationFinances;
-    }
-
-    public void setHasApplicationFinances(boolean hasApplicationFinances) {
-        this.hasApplicationFinances = hasApplicationFinances;
     }
 
     public String getSelectedInnovationAreaName() {

@@ -8,13 +8,13 @@ import java.util.List;
  * View Model for an Research category selection overview.
  */
 public class ResearchCategoryViewModel {
-    Long selectedResearchCategoryId;
-    String currentCompetitionName;
 
-    Long applicationId;
-    Long questionId;
-
-    List<ResearchCategoryResource> availableResearchCategories;
+    private Long selectedResearchCategoryId;
+    private String currentCompetitionName;
+    private Long applicationId;
+    private Long questionId;
+    private List<ResearchCategoryResource> availableResearchCategories;
+    private boolean hasApplicationFinances;
 
     public List<ResearchCategoryResource> getAvailableResearchCategories() {
         return availableResearchCategories;
@@ -53,5 +53,13 @@ public class ResearchCategoryViewModel {
 
     public void setCurrentCompetitionName(String currentCompetitionName) {
         this.currentCompetitionName = currentCompetitionName;
+    }
+
+    public boolean getHasApplicationFinances() {
+        return hasApplicationFinances;
+    }
+
+    public void setHasApplicationFinances(boolean hasApplicationFinances) {
+        this.hasApplicationFinances = hasApplicationFinances;
     }
 }

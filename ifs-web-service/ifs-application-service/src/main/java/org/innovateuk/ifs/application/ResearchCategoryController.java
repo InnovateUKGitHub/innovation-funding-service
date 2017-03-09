@@ -6,8 +6,10 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationResearchCategoryRestService;
 import org.innovateuk.ifs.application.viewmodel.ResearchCategoryViewModel;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -15,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.function.Supplier;
@@ -26,6 +29,7 @@ import java.util.function.Supplier;
 @RequestMapping(ApplicationFormController.APPLICATION_BASE_URL+"{applicationId}/form/question/{questionId}/research-category")
 @PreAuthorize("hasAuthority('applicant')")
 public class ResearchCategoryController {
+
     private static String APPLICATION_SAVED_MESSAGE = "applicationSaved";
 
     @Autowired
@@ -37,9 +41,16 @@ public class ResearchCategoryController {
     @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
+    @Autowired
+    private UserAuthenticationService userAuthenticationService;
+
     @GetMapping
-    public String getResearchCategories(Model model, @PathVariable Long applicationId, @PathVariable Long questionId) {
-        ResearchCategoryViewModel researchCategoryViewModel = researchCategoryPopulator.populate(applicationId, questionId);
+    public String getResearchCategories(Model model, @PathVariable Long applicationId, @PathVariable Long questionId,
+                                        HttpServletRequest request) {
+
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+
+        ResearchCategoryViewModel researchCategoryViewModel = researchCategoryPopulator.populate(applicationId, questionId, user.getId());
 
         model.addAttribute("model", researchCategoryViewModel);
 
@@ -47,10 +58,14 @@ public class ResearchCategoryController {
     }
 
     @PostMapping
-    public String submitResearchCategoryChoice(@ModelAttribute("form") @Valid ResearchCategoryForm researchCategoryForm, HttpServletResponse response,
-                                             BindingResult bindingResult, ValidationHandler validationHandler, Model model, @PathVariable Long applicationId, @PathVariable Long questionId) {
+    public String submitResearchCategoryChoice(@ModelAttribute("form") @Valid ResearchCategoryForm researchCategoryForm,
+                                               HttpServletRequest request, HttpServletResponse response,
+                                               BindingResult bindingResult, ValidationHandler validationHandler,
+                                               Model model, @PathVariable Long applicationId, @PathVariable Long questionId) {
 
-        ResearchCategoryViewModel researchCategoryViewModel = researchCategoryPopulator.populate(applicationId, questionId);
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+
+        ResearchCategoryViewModel researchCategoryViewModel = researchCategoryPopulator.populate(applicationId, questionId, user.getId());
 
         model.addAttribute("model", researchCategoryViewModel);
 

@@ -2,7 +2,6 @@ package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.application.UserApplicationRole;
-import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
@@ -11,7 +10,6 @@ import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
 import org.innovateuk.ifs.application.viewmodel.QuestionOrganisationDetailsViewModel;
 import org.innovateuk.ifs.application.viewmodel.QuestionViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputService;
@@ -91,9 +89,6 @@ public class QuestionModelPopulatorTest extends BaseUnitTestMocksTest {
     @Mock
     private CategoryService categoryService;
 
-    @Mock
-    private FinanceService financeService;
-
     private Long questionId;
     private Long applicationId;
     private Long competitionId;
@@ -108,7 +103,6 @@ public class QuestionModelPopulatorTest extends BaseUnitTestMocksTest {
     private QuestionResource question;
     private List<FormInputResource> formInputs;
     private List<ProcessRoleResource> userApplicationRoles;
-    private ApplicationFinanceResource applicationFinanceResource;
 
     @Before
     public void setUp() {
@@ -167,6 +161,5 @@ public class QuestionModelPopulatorTest extends BaseUnitTestMocksTest {
         when(userService.isLeadApplicant(user.getId(), application)).thenReturn(Boolean.TRUE);
         when(userService.getLeadApplicantProcessRoleOrNull(application)).thenReturn(newProcessRoleResource().withUser(user).build());
         when(userService.findById(user.getId())).thenReturn(user);
-        when(financeService.getApplicationFinanceDetails(user.getId(), applicationId, organisationId)).thenReturn(applicationFinanceResource);
     }
 }
