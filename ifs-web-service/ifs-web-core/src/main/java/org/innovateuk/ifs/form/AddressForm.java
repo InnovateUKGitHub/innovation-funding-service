@@ -1,17 +1,20 @@
 package org.innovateuk.ifs.form;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.innovateuk.ifs.address.resource.AddressResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.address.resource.AddressResource;
 
 import javax.validation.Valid;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonFormat(shape=JsonFormat.Shape.ARRAY)
 public class AddressForm  implements Serializable {
     private static final long serialVersionUID = -3584886875510525322L;
+
     private boolean triedToSave = false;
     private boolean triedToSearch = false;
 
