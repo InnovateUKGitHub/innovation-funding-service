@@ -59,6 +59,7 @@ public class CompetitionSetupController {
     private static final String SECTION_PATH_KEY = "sectionPath";
     private static final String SUBSECTION_PATH_KEY = "subsectionPath";
     public static final String COMPETITION_NAME_KEY = "competitionName";
+    public static final String PUBLIC_CONTENT_LANDING_REDIRECT = "redirect:/competition/setup/public-content/";
 
     @Autowired
     private UserAuthenticationService userAuthenticationService;
@@ -136,8 +137,9 @@ public class CompetitionSetupController {
             return "redirect:/dashboard";
         } else if (section == CompetitionSetupSection.APPLICATION_FORM) {
             return String.format(APPLICATION_LANDING_REDIRECT, competitionId);
+        } else if (section == CompetitionSetupSection.CONTENT){
+            return PUBLIC_CONTENT_LANDING_REDIRECT + competitionId;
         }
-
 
         CompetitionResource competition = competitionService.getById(competitionId);
 
