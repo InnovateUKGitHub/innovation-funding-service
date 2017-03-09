@@ -102,31 +102,47 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     private ValidationMessages validate(List<MilestoneResource> milestones) {
         ValidationMessages vm = new ValidationMessages();
 
-        Competition competition = competitionRepository.findById(milestones.get(0).getCompetitionId());
         vm.addAll(validateCompetitionIdConsistency(milestones));
-
-        if(competition.isNonIfs()) {
-            vm.addAll(validateDates(milestones, false));
-        }
-        else {
-            vm.addAll(validateDates(milestones, true));
-        }
-
+        vm.addAll(validateDates(milestones));
         vm.addAll(validateDateOrder(milestones));
-        vm.addAll(validateCompetitionIdConsistency(milestones));
 
         return vm;
     }
 
-    private ValidationMessages validateDates(List<MilestoneResource> milestones, boolean mustBeInFuture) {
+    private ValidationMessages validateDates(List<MilestoneResource> milestones) {
+        ValidationMessages vm = new ValidationMessages();
+        Competition competition = competitionRepository.findById(milestones.get(0).getCompetitionId());
+
+        if(competition.isNonIfs()) {
+            vm.addAll(validateDateNotNull(milestones));
+        }
+        else {
+            vm.addAll(validateDateInFuture(milestones));
+            vm.addAll(validateDateNotNull(milestones));
+        }
+
+        return vm;
+    }
+
+    private ValidationMessages validateDateInFuture(List<MilestoneResource> milestones) {
+        ValidationMessages vm = new ValidationMessages();
+
+        milestones.forEach(m -> {
+            if(m.getDate().isBefore(LocalDateTime.now())) {
+                Error error = new Error("error.milestone.pastdate", HttpStatus.BAD_REQUEST);
+                vm.addError(error);
+            }
+        });
+
+        return vm;
+    }
+
+    private ValidationMessages validateDateNotNull(List<MilestoneResource> milestones) {
         ValidationMessages vm = new ValidationMessages();
 
         milestones.forEach(m -> {
             if(m.getDate() == null) {
                 Error error = new Error("error.milestone.nulldate", HttpStatus.BAD_REQUEST);
-                vm.addError(error);
-            } else if(mustBeInFuture && m.getDate().isBefore(LocalDateTime.now())) {
-                Error error = new Error("error.milestone.pastdate", HttpStatus.BAD_REQUEST);
                 vm.addError(error);
             }
         });
