@@ -13,6 +13,9 @@ import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
+/**
+ * Implementation of {@link OrganisationSizeService} for retrieving {@link OrganisationSizeResource} records.
+ */
 @Service
 public class OrganisationSizeServiceImpl extends BaseTransactionalService implements OrganisationSizeService {
 

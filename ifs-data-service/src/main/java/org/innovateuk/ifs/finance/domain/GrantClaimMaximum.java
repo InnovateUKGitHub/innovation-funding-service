@@ -7,6 +7,9 @@ import org.innovateuk.ifs.user.domain.OrganisationType;
 
 import javax.persistence.*;
 
+/**
+ * Reference data that describes the maximum funding level that can be applied for.
+ */
 @Entity
 @Immutable
 public class GrantClaimMaximum {

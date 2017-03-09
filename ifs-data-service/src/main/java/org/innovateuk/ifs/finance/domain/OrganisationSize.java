@@ -6,6 +6,9 @@ import org.hibernate.annotations.Immutable;
 
 import javax.persistence.*;
 
+/**
+ * Reference data that describes the different organisation sizes businesses can apply as.
+ */
 @Entity
 @Immutable
 public class OrganisationSize  {

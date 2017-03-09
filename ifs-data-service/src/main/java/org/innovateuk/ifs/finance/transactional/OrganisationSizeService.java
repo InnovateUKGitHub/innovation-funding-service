@@ -7,6 +7,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
+/**
+ * Interface for retrieving {@link OrganisationSizeResource}s.
+ */
 public interface OrganisationSizeService {
 
     @PreAuthorize("hasAnyAuthority('applicant', 'comp_admin', 'project_finance')")
