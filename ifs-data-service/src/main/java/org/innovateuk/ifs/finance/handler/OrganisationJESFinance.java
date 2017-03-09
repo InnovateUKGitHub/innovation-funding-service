@@ -55,7 +55,6 @@ public class OrganisationJESFinance implements OrganisationFinanceHandler {
 
     @Override
     public Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> getProjectOrganisationFinanceChanges(Long projectFinanceId) {
-//        throw new NotImplementedException("Academic finances are not edited, so not required");
         return noChangesAsAcademicFinancesAreNotEditable();
     }
 
