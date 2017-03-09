@@ -5,10 +5,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.form.ApplicationForm;
-import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
-import org.innovateuk.ifs.application.populator.ApplicationOverviewModelPopulator;
-import org.innovateuk.ifs.application.populator.ApplicationPrintPopulator;
-import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
+import org.innovateuk.ifs.application.populator.*;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.service.*;
@@ -106,6 +103,9 @@ public class ApplicationController {
     private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
 
     @Autowired
+    private AssessorQuestionFeedbackPopulator assessorQuestionFeedbackPopulator;
+
+    @Autowired
     private FormInputService formInputService;
 
     @Autowired
@@ -194,6 +194,13 @@ public class ApplicationController {
         }
     }
 
+    @RequestMapping(value = "/{applicationId}/question/{questionId}/feedback")
+    public String applicationAssessorQuestionFeedback(Model model, @PathVariable("applicationId") final Long applicationId,
+                                              @PathVariable("questionId") final Long questionId) {
+        model.addAttribute("model", assessorQuestionFeedbackPopulator.populate(applicationId, questionId));
+        return "application-assessor-feedback";
+    }
+
     @ProfileExecution
     @RequestMapping(value = "/{applicationId}/summary", method = RequestMethod.POST)
     public String applicationSummarySubmit(@PathVariable("applicationId") final Long applicationId,
@@ -222,6 +229,7 @@ public class ApplicationController {
 
         return "redirect:/application/" + applicationId + "/summary";
     }
+
     @ProfileExecution
     @RequestMapping("/{applicationId}/confirm-submit")
     public String applicationConfirmSubmit(ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
