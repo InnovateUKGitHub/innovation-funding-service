@@ -16,6 +16,7 @@ import org.junit.Before;
 import org.mockito.InjectMocks;
 import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
+import org.springframework.format.support.DefaultFormattingConversionService;
 import org.springframework.format.support.FormattingConversionService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -61,7 +62,7 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
         CookieLocaleResolver localeResolver = new CookieLocaleResolver();
         localeResolver.setCookieDomain("domain");
 
-        FormattingConversionService formattingConversionService = new FormattingConversionService();
+        FormattingConversionService formattingConversionService = new DefaultFormattingConversionService();
         formattingConversionService.addFormatter(new RejectionReasonFormatter());
         formattingConversionService.addFormatter(new EthnicityFormatter());
 

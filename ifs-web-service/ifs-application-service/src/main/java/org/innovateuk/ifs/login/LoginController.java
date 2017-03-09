@@ -1,13 +1,12 @@
 package org.innovateuk.ifs.login;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.login.form.ResetPasswordForm;
 import org.innovateuk.ifs.login.form.ResetPasswordRequestForm;
 import org.innovateuk.ifs.user.service.UserService;
-import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.commons.error.exception.InvalidURLException;
-import org.innovateuk.ifs.commons.rest.RestResult;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -64,22 +63,19 @@ public class LoginController {
 
     @RequestMapping(value = "/" + LOGIN_BASE + "/" + RESET_PASSWORD + "/hash/{hash}", method = RequestMethod.GET)
     public String resetPassword(@PathVariable("hash") String hash, @ModelAttribute ResetPasswordForm resetPasswordForm, Model model, HttpServletRequest request) {
-        if (userService.checkPasswordResetHash(hash).isFailure()) {
-            throw new InvalidURLException();
-        }
+        userService.checkPasswordResetHash(hash);
+
         return LOGIN_BASE + "/" + RESET_PASSWORD_FORM;
     }
 
     @RequestMapping(value = "/" + LOGIN_BASE + "/" + RESET_PASSWORD + "/hash/{hash}", method = RequestMethod.POST)
     public String resetPasswordPost(@PathVariable("hash") String hash, @Valid @ModelAttribute ResetPasswordForm resetPasswordForm, BindingResult bindingResult) {
-        if (userService.checkPasswordResetHash(hash).isFailure()) {
-            throw new InvalidURLException();
-        }
+        userService.checkPasswordResetHash(hash);
 
         if (bindingResult.hasErrors()) {
             return LOGIN_BASE + "/" + RESET_PASSWORD + "-form";
         } else {
-            RestResult<Void> result = userService.resetPassword(hash, resetPasswordForm.getPassword());
+            ServiceResult<Void> result = userService.resetPassword(hash, resetPasswordForm.getPassword());
             if(result.isFailure()){
                 List<Error> errors = result.getFailure().getErrors();
                 for (Error error : errors) {

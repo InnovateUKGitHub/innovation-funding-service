@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    name: robot-framework
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: robot-framework
+    strategy:
+      resources: {}
+    template:
+      metadata:
+        labels:
+          deploymentconfig: robot-framework
+      spec:
+        containers:
+        - image: innovateuk/robot-framework:1.0-SNAPSHOT
+          name: robot-framework
+          imagePullPolicy: Always
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - "sh"
+                  - "-c"
+                  - >
+                    echo "$SHIB_PORT_443_TCP_ADDR <<SHIB-ADDRESS>>" >> /etc/hosts &&
+                    echo "$IDP_PORT_443_TCP_ADDR auth-<<SHIB-ADDRESS>>" >> /etc/hosts
+          ports: {}
+          resources: {}
+          restartPolicy:
+            never: {}
+    test: false
+    triggers:
+    - type: ConfigChange
+  status: {}
+
+
+

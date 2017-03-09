@@ -52,6 +52,7 @@ Comp admin completes ths competition setup
     Given the user should see the element    jQuery=h1:contains("Competition setup")
     Then the user marks the Application as done
     And the user fills in the CS Assessors
+    And the user fills in the Public content and publishes
     When the user clicks the button/link    jQuery=a:contains("Save")
     And the user navigates to the page    ${CA_UpcomingComp}
     Then the user should see the element    jQuery=h2:contains("Ready to open") ~ ul a:contains("${compWithoutGrowth}")
@@ -82,14 +83,14 @@ Applicant fills in the Application Details
     Given the user should see the element    jQuery=h1:contains("Application overview")
     When the user clicks the button/link    link=Application details
     Then the user enters text to a text field    css=#application_details-title    ${applicationTitle}
-    And the user selects technical feasibility and no to resubmission
+    And the user selects technical feasibility and no to resubmission and an innovation area
     And the user enters text to a text field    css=#application_details-startdate_day    ${day}
     And the user enters text to a text field    css=#application_details-startdate_month    ${month}
     And the user enters text to a text field    css=#application_details-startdate_year    ${nextyear}
     And the user enters text to a text field    css=#application_details-duration    24
     When The user clicks the button/link    jQuery=button[name="mark_as_complete"]
     Then the user clicks the button/link    link=Application Overview
-    And the user should see the element    jQuery=img.complete[alt*="Application details"]
+    And the user should see the element     jQuery=li:contains("Application details") > .task-status-complete
 
 Turnover and Staff count fields
     [Documentation]    INFUND-6393
@@ -113,6 +114,7 @@ Once the project growth table is selected
     When the user decides about the growth table    yes    Yes
     Then the user marks the Application as done
     And the user fills in the CS Assessors
+    And the user fills in the Public content and publishes
     When the user clicks the button/link    jQuery=a:contains("Save")
     And the user navigates to the page    ${CA_UpcomingComp}
     Then the user should see the element    jQuery=h2:contains("Ready to open") ~ ul a:contains("${compWITHGrowth}")
@@ -166,19 +168,24 @@ Mark Organisation as complete when no
     And the user enters text to a text field    jQuery=label:contains("Turnover") + input    17506
     And the user selects medium organisation size
     When the user clicks the button/link    jQuery=button:contains("Mark as complete")
-    Then the user should see the element    jQuery=img.complete[alt*="Your organisation"]
+    Then the user should see the element    jQuery=li:contains("Your organisation") > .complete
     When the user clicks the button/link    link=Your organisation
     # Then the user should see the fields in readonly mode, but currently they are missing this attribute
     # TODO INFUND-8071
     Then the user should see the element    jQuery=button:contains("Edit your organisation")
     And the user clicks the button/link    jQuery=a:contains("Return to finances")
 
+The Lead applicant is able to edit and re-submit when no
+    [Documentation]  INFUND-8518
+    [Tags]
+    Given the user can edit resubmit and read only of the organisation
+
 Funding subsection opens when Appl details and organisation info are provided
     [Documentation]    INFUND-6895
     [Tags]    HappyPath
     [Setup]    the user navigates to the page    ${dashboard_url}
     And the user clicks the button/link    link=${applicationTitle}
-    When the user should see the element    jQuery=img.complete[alt*="Application details"]
+    When the user should see the element   jQuery=li:contains("Application details") > .task-status-complete
     And the user clicks the button/link    link=Your finances
     And the user should see the element    jQuery=img.complete[alt*="Your organisation"]
     Then the user should see the element    jQuery=img.assigned[alt*="Your funding"]
@@ -248,62 +255,53 @@ Mark Organisation as complete when yes
     When the user clicks the button/link    jQuery=button:contains("Mark as complete")
     Then the user should see the element    jQuery=img.complete[alt*="Your organisation"]
 
+The Lead Applicant is able to edit and re-submit when yes
+    [Documentation]  INFUND-8518
+    [Tags]
+    Given the user can edit resubmit and read only of the organisation
+
 Applicant can view and edit project growth table
     [Documentation]    INFUND-6395
     [Tags]
     Given the user navigates to Your-finances page    ${compWITHGrowth}
     When the user clicks the button/link    link=Your organisation
     Then the user should view the project growth table
-    and the user can edit the project growth table
-
-Lead applicant invites a collaborator
-    [Tags]    Email
-    Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link= ${compWITHGrowth}
-    And the user should see the text in the page    view and add participants to your application
-    When the user clicks the button/link    link=view and add participants to your application
-    Then the user should see the text in the page    Application team
-    And the user should see the text in the page    View and manage your contributors and partners in the application.
-    When the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
-    When the applicant enters valid inputs
-    Then the user should see the text in the page    Application team
-    And the user should see the text in the page    Invites sent
-
-Collaborator can accept the invitation
-    [Tags]    Email
-    [Setup]    The guest user opens the browser
-    When the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+invitepartner@gmail.com    Invitation to collaborate in ${compWITHGrowth}    participate in their application
-    And the user clicks the button/link    jQuery=.button:contains("Create")
-    And the user selects the radio button    organisationType    1
-    And the user clicks the button/link    jQuery=.button:contains("Continue")
-    And the user enters text to a text field    id=organisationSearchName    Nomensa
-    And the user clicks the button/link    id=org-search
-    And the user clicks the button/link    link=NOMENSA LTD
-    And the user selects the checkbox    address-same
-    And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
-    And the user clicks the button/link    jQuery=.button:contains("Save")
-    And the user fills the create account form    Adrian   Smith
-    And the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+invitepartner@gmail.com    Please verify your email address    If you did not request an account with us
-    And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
-
-Non-lead applicant can view and edit project growth table
-    [Documentation]    INFUND-6395
-    [Tags]   Pending
-    # TODO Pending due to INFUND-8426
-    Given the user clicks the button/link    jQuery=.button:contains("Sign in")
-    When guest user log-in    ${TEST_MAILBOX_ONE}+invitepartner@gmail.com    ${correct_password}
-    And the user navigates to Your-finances page    ${compWITHGrowth}
-    And the user clicks the button/link    link=Your organisation
-    And the user selects medium organisation size
-    Then the user enters text to a text field    css=input[name$="month"]    12./
-    And the user enters text to a text field    css=input[name$="year"]    2016
-    And the user populates the project growth table
-    And the user enters text to a text field    jQuery=label:contains("employees") + input    4
-    When the user clicks the button/link    jQuery=button:contains("Mark as complete")
-    Then the user should see the element    jQuery=img.complete[alt*="Your organisation"]
-    When the user clicks the button/link    link=Your organisation
-    Then the user should view the project growth table
     And the user can edit the project growth table
+    And the user populates the project growth table
+
+Invite Collaborator in Application with Growth table
+    [Documentation]  INFUND-8518
+    [Tags]  Email  Failing
+    # TODO INFUND-8561
+    [Setup]  the user navigates to the page             ${dashboard_url}
+    Given the lead applicant invites an existing user   ${compWITHGrowth}  ${collaborator1_credentials["email"]}
+    When the user reads his email and clicks the link   ${collaborator1_credentials["email"]}  Invitation to collaborate in ${compWITHGrowth}  participate in their application
+    Then the user should see the element                jQuery=h1:contains("You already have an account with us.")
+    And the user clicks the button/link                 link=Sign into the Innovation Funding Service.
+    When guest user log-in                              &{collaborator1_credentials}
+    Then the user clicks the button/link                link=Continue to application
+
+Non-lead can mark Organisation as complete
+    [Documentation]  INFUND-8518
+    [Tags]  Failing
+    # TODO INFUND-8561
+    Given the user navigates to the page            ${DASHBOARD_URL}
+    And the user clicks the button/link             link=${compWITHGrowth}
+    When the user clicks the button/link            link=Your finances
+    And the user clicks the button/link             link=Your organisation
+    Then the user selects medium organisation size
+    And the user enters text to a text field        css=input[name$="month"]  12
+    And the user enters text to a text field        css=input[name$="year"]  2016
+    Then the user populates the project growth table
+    And the user enters text to a text field        jQuery=label:contains("employees") + input  42
+    When the user clicks the button/link            jQuery=button:contains("Mark as complete")
+    Then the user should see the element            jQuery=img.complete[alt*="Your organisation"]
+
+Non-lead can can edit and remark Organisation as Complete
+    [Documentation]  INFUND-8518
+    [Tags]  Failing
+    # TODO INFUND-8561
+    Given the user can edit resubmit and read only of the organisation
 
 *** Keywords ***
 Custom Suite Setup
@@ -319,6 +317,7 @@ Custom Suite Setup
     Set suite variable    ${tomorrowfull}
     ${tomorrow_nextyear} =    get tomorrow full next year
     Set suite variable    ${tomorrow_nextyear}
+    Delete the emails from both test mailboxes
 
 the user should see the dates in full format
     the user should see the element    jQuery=td:contains("Briefing event") ~ td:contains("${tomorrow_nextyear}")
@@ -329,12 +328,16 @@ the the user should see that the funding depends on the research area
 the user should see his finances empty
     the user should see the element    jQuery=thead:contains("Total project costs") ~ *:contains("£0")
 
-the user selects technical feasibility and no to resubmission
+the user selects technical feasibility and no to resubmission and an innovation area
     # Often those labels need double click. Thus i made a separate keyword to looks more tidy
+    the user clicks the button/link    jQuery=button:contains(Change your innovation area)
+    the user clicks the button/link    jQuery=label[for="innovationAreaChoice-5"]
+    the user clicks the button/link    jQuery=label[for="innovationAreaChoice-5"]
+    the user clicks the button/link    jQuery=button:contains(Save)
     the user clicks the button/link    jQuery=label[for="financePosition-cat-33"]
     the user clicks the button/link    jQuery=label[for="financePosition-cat-33"]
-    the user clicks the button/link    jQuery=label[for="resubmission-no"]
-    the user clicks the button/link    jQuery=label[for="resubmission-no"]
+    the user clicks the button/link    jQuery=label[for="application.resubmission-no"]
+    the user clicks the button/link    jQuery=label[for="application.resubmission-no"]
 
 the user decides about the growth table
     [Arguments]    ${edit}    ${read}
@@ -404,9 +407,32 @@ the user can edit the project growth table
     the user enters text to a text field    jQuery=td input[value="65000"]    5000
 
 the applicant enters valid inputs
-    The user clicks the button/link    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
-    The user enters text to a text field    name=organisations[1].organisationName    Fannie May
-    The user enters text to a text field    name=organisations[1].invites[0].personName    Adrian Booth
-    The user enters text to a text field    name=organisations[1].invites[0].email    ${test_mailbox_one}+invitepartner@gmail.com
+    The user clicks the button/link         jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
+    The user enters text to a text field    name=organisations[1].organisationName  Ludlow
+    The user enters text to a text field    name=organisations[1].invites[0].personName    Jessica Doe
+    The user enters text to a text field    name=organisations[1].invites[0].email  ${collaborator1_credentials["email"]}
     focus    jquery=button:contains("Save changes")
     The user clicks the button/link    jquery=button:contains("Save changes")
+
+the user can edit resubmit and read only of the organisation
+    the user should see the element             jQuery=img.complete[alt*="Your organisation"]
+    the user clicks the button/link             link=Your organisation
+    the user clicks the button/link             jQuery=button:contains("Edit your organisation")
+    the user enters text to a text field        jQuery=label:contains("employees") + input  2
+    the user clicks the button/link             jQuery=button:contains("Mark as complete")
+    the user should not see an error in the page
+    the user should see the element             jQuery=img.complete[alt*="Your organisation"]
+    the user clicks the button/link             link=Your organisation
+    the user should see the element             jQuery=dt:contains("employees") + dd:contains("2")
+
+the lead applicant invites an existing user
+    [Arguments]  ${comp_title}  ${EMAIL_INVITED}
+    the user clicks the button/link    link=${comp_title}
+    the user clicks the button/link    link=view and add participants to your application
+    the user clicks the button/link    link=Invite new contributors
+    the user clicks the button/link    jQuery=button:contains('Add additional partner organisation')
+    Input Text                         name=organisations[1].organisationName    innovate
+    Input Text                         name=organisations[1].invites[0].personName    Partner name
+    Input Text                         css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input  ${EMAIL_INVITED}
+    the user clicks the button/link    jQuery=.button:contains("Save changes")
+    the user logs out if they are logged in

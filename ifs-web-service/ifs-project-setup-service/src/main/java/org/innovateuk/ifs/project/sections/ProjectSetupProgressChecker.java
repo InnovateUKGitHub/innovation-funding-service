@@ -32,7 +32,7 @@ class ProjectSetupProgressChecker {
     }
 
     public boolean isBankDetailsApproved(OrganisationResource organisation) {
-        return COMPLETE.equals(getMatchingPartnerStatus(organisation).getBankDetailsStatus());
+        return asList(COMPLETE, NOT_REQUIRED).contains(getMatchingPartnerStatus(organisation).getBankDetailsStatus());
     }
 
     public boolean isBankDetailsQueried(OrganisationResource organisation) {

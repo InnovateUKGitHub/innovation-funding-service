@@ -103,10 +103,7 @@ public class ApplicationPrintPopulatorTest {
         verify(applicationModelPopulator).addUserDetails(model, application, user.getId());
         verify(applicationModelPopulator).addApplicationInputs(application, model);
         verify(applicationSectionAndQuestionModelPopulator).addMappedSectionsDetails(model, application, competition, Optional.empty(), userOrganisation);
-        verify(applicationFinanceOverviewModelManager).addFinanceDetails(model, competition.getId(), applicationId);
-
-
-
+        verify(applicationFinanceOverviewModelManager).addFinanceDetails(model, competition.getId(), applicationId, userOrganisation.map(OrganisationResource::getId));
 
     }
 

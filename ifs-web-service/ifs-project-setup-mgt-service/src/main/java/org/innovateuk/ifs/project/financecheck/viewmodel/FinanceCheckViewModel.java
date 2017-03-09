@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 public class FinanceCheckViewModel {
 
-    private String formattedCompetitionNumber;
+    private Long competitionId;
     private String competitionName;
     private Long projectId;
     private Long organisationId;
@@ -17,16 +17,16 @@ public class FinanceCheckViewModel {
     private boolean isLeadPartner;
     private String financeContactName;
     private String financeContactEmail;
-    private boolean isResearch;
+    private boolean isUsingJesFinances;
     private boolean financeChecksApproved;
     private String approverName;
     private LocalDate approvalDate;
     private FileDetailsViewModel jesFileDetails;
 
-    public FinanceCheckViewModel(String formattedCompetitionNumber, String competitionName, String organisationName, boolean isLeadPartner,
-                                 Long projectId, Long organisationId, String financeContactName, String financeContactEmail, boolean isResearch,
+    public FinanceCheckViewModel(Long competitionId, String competitionName, String organisationName, boolean isLeadPartner,
+                                 Long projectId, Long organisationId, String financeContactName, String financeContactEmail, boolean isUsingJesFinances,
                                  boolean financeChecksApproved, String approverName, LocalDate approvalDate, FileDetailsViewModel jesFileDetails) {
-        this.formattedCompetitionNumber = formattedCompetitionNumber;
+        this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.organisationName = organisationName;
         this.isLeadPartner = isLeadPartner;
@@ -34,18 +34,18 @@ public class FinanceCheckViewModel {
         this.organisationId = organisationId;
         this.financeContactName = financeContactName;
         this.financeContactEmail = financeContactEmail;
-        this.isResearch = isResearch;
+        this.isUsingJesFinances = isUsingJesFinances;
         this.financeChecksApproved = financeChecksApproved;
         this.approverName = approverName;
         this.approvalDate = approvalDate;
         this.jesFileDetails = jesFileDetails;
     }
 
-    public FinanceCheckViewModel(String formattedCompetitionNumber, String competitionName, String organisationName, boolean isLeadPartner,
-                                 Long projectId, Long organisationId, boolean isResearch,
+    public FinanceCheckViewModel(Long competitionId, String competitionName, String organisationName, boolean isLeadPartner,
+                                 Long projectId, Long organisationId, boolean isUsingJesFinances,
                                  boolean financeChecksApproved, String approverName, LocalDate approvalDate, FileDetailsViewModel jesFileDetails) {
-        this(formattedCompetitionNumber, competitionName, organisationName, isLeadPartner,
-                projectId, organisationId, null, null, isResearch,
+        this(competitionId, competitionName, organisationName, isLeadPartner,
+                projectId, organisationId, null, null, isUsingJesFinances,
                 financeChecksApproved, approverName, approvalDate, jesFileDetails);
     }
 
@@ -57,8 +57,8 @@ public class FinanceCheckViewModel {
         return financeContactEmail;
     }
 
-    public boolean isResearch() {
-        return isResearch;
+    public boolean isUsingJesFinances() {
+        return isUsingJesFinances;
     }
 
     public boolean isFinanceChecksApproved() {
@@ -89,8 +89,8 @@ public class FinanceCheckViewModel {
         return !financeChecksApproved;
     }
 
-    public String getFormattedCompetitionNumber() {
-        return formattedCompetitionNumber;
+    public Long getCompetitionId() {
+        return competitionId;
     }
 
     public String getCompetitionName() {
@@ -127,9 +127,9 @@ public class FinanceCheckViewModel {
 
         return new EqualsBuilder()
                 .append(isLeadPartner, that.isLeadPartner)
-                .append(isResearch, that.isResearch)
+                .append(isUsingJesFinances, that.isUsingJesFinances)
                 .append(financeChecksApproved, that.financeChecksApproved)
-                .append(formattedCompetitionNumber, that.formattedCompetitionNumber)
+                .append(competitionId, that.competitionId)
                 .append(competitionName, that.competitionName)
                 .append(projectId, that.projectId)
                 .append(organisationId, that.organisationId)
@@ -145,7 +145,7 @@ public class FinanceCheckViewModel {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(formattedCompetitionNumber)
+                .append(competitionId)
                 .append(competitionName)
                 .append(projectId)
                 .append(organisationId)
@@ -153,7 +153,7 @@ public class FinanceCheckViewModel {
                 .append(isLeadPartner)
                 .append(financeContactName)
                 .append(financeContactEmail)
-                .append(isResearch)
+                .append(isUsingJesFinances)
                 .append(financeChecksApproved)
                 .append(approverName)
                 .append(approvalDate)
@@ -163,7 +163,7 @@ public class FinanceCheckViewModel {
     @Override
     public String toString() {
         return new ToStringBuilder(this)
-                .append("formattedCompetitionNumber", formattedCompetitionNumber)
+                .append("competitionId", competitionId)
                 .append("competitionName", competitionName)
                 .append("projectId", projectId)
                 .append("organisationId", organisationId)
@@ -171,7 +171,7 @@ public class FinanceCheckViewModel {
                 .append("isLeadPartner", isLeadPartner)
                 .append("financeContactName", financeContactName)
                 .append("financeContactEmail", financeContactEmail)
-                .append("isResearch", isResearch)
+                .append("isUsingJesFinances", isUsingJesFinances)
                 .append("financeChecksApproved", financeChecksApproved)
                 .append("approverName", approverName)
                 .append("approvalDate", approvalDate)

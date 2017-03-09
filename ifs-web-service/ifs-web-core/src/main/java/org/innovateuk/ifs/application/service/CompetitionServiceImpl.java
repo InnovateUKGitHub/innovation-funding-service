@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
  * This class contains methods to retrieve and store {@link CompetitionResource} related data,
  * through the RestService {@link CompetitionsRestService}.
  */
-// TODO DW - INFUND-1555 - get this service to return RestResults
 @Service
 public class CompetitionServiceImpl implements CompetitionService {
 
@@ -85,8 +84,8 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     @Override
-    public void setSetupSectionMarkedAsIncomplete(Long competitionId, CompetitionSetupSection section) {
-        competitionsRestService.markSectionInComplete(competitionId, section).getSuccessObjectOrThrowException();
+    public ServiceResult<Void> setSetupSectionMarkedAsIncomplete(Long competitionId, CompetitionSetupSection section) {
+        return competitionsRestService.markSectionInComplete(competitionId, section).toServiceResult();
     }
 
     @Override
@@ -100,13 +99,13 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     @Override
-    public void returnToSetup(Long competitionId) {
-        competitionsRestService.returnToSetup(competitionId);
+    public ServiceResult<Void> returnToSetup(Long competitionId) {
+        return competitionsRestService.returnToSetup(competitionId).toServiceResult();
     }
 
     @Override
-    public void markAsSetup(Long competitionId) {
-        competitionsRestService.markAsSetup(competitionId);
+    public ServiceResult<Void> markAsSetup(Long competitionId) {
+        return competitionsRestService.markAsSetup(competitionId).toServiceResult();
     }
 
     @Override
@@ -115,13 +114,13 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     @Override
-    public void closeAssessment(Long competitionId) {
-        competitionsRestService.closeAssessment(competitionId).getSuccessObjectOrThrowException();
+    public ServiceResult<Void> closeAssessment(Long competitionId) {
+        return competitionsRestService.closeAssessment(competitionId).toServiceResult();
     }
 
     @Override
-    public void notifyAssessors(Long competitionId) {
-        competitionsRestService.notifyAssessors(competitionId).getSuccessObjectOrThrowException();
+    public ServiceResult<Void> notifyAssessors(Long competitionId) {
+        return competitionsRestService.notifyAssessors(competitionId).toServiceResult();
     }
 
     @Override
@@ -135,13 +134,13 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     @Override
-    public ServiceResult<ByteArrayResource> downloadPublicContentAttachment(Long contentGroupId) {
-        return contentGroupRestService.getFile(contentGroupId).toServiceResult();
+    public ByteArrayResource downloadPublicContentAttachment(Long contentGroupId) {
+        return contentGroupRestService.getFileAnonymous(contentGroupId).getSuccessObjectOrThrowException();
     }
 
     @Override
-    public ServiceResult<FileEntryResource> getPublicContentFileDetails(Long contentGroupId) {
-        return contentGroupRestService.getFileDetails(contentGroupId).toServiceResult();
+    public FileEntryResource getPublicContentFileDetails(Long contentGroupId) {
+        return contentGroupRestService.getFileDetailsAnonymous(contentGroupId).getSuccessObjectOrThrowException();
     }
 
     @Override

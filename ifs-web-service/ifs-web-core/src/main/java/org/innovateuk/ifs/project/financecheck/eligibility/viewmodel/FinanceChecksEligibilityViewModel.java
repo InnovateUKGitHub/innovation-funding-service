@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.financecheck.eligibility.viewmodel;
 
 
 import org.apache.commons.lang3.StringUtils;
+import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 
@@ -15,7 +16,7 @@ public class FinanceChecksEligibilityViewModel {
     private String organisationName;
     private boolean leadPartnerOrganisation;
     private String projectName;
-    private String applicationId;
+    private Long applicationId;
     private Long projectId;
     private Long organisationId;
 
@@ -26,11 +27,13 @@ public class FinanceChecksEligibilityViewModel {
     private LocalDate approvalDate;
 
     private boolean readOnly;
+    private boolean isUsingJesFinances;
+    private FileDetailsViewModel jesFileDetails;
 
     public FinanceChecksEligibilityViewModel(FinanceCheckEligibilityResource eligibilityOverview, String organisationName, String projectName,
-                                             String applicationId, boolean leadPartnerOrganisation, Long projectId, Long organisationId,
+                                             Long applicationId, boolean leadPartnerOrganisation, Long projectId, Long organisationId,
                                              boolean eligibilityApproved, EligibilityRagStatus eligibilityRagStatus, String approverFirstName,
-                                             String approverLastName, LocalDate approvalDate, boolean readOnly) {
+                                             String approverLastName, LocalDate approvalDate, boolean readOnly, boolean isUsingJesFinances, FileDetailsViewModel jesFileDetailsViewModel) {
         this.eligibilityOverview = eligibilityOverview;
         this.organisationName = organisationName;
         this.projectName = projectName;
@@ -46,6 +49,8 @@ public class FinanceChecksEligibilityViewModel {
         this.approvalDate = approvalDate;
 
         this.readOnly = readOnly;
+        this.isUsingJesFinances = isUsingJesFinances;
+        this.jesFileDetails = jesFileDetailsViewModel;
     }
 
     public boolean isApproved() {
@@ -101,11 +106,11 @@ public class FinanceChecksEligibilityViewModel {
         this.projectName = projectName;
     }
 
-    public String getApplicationId() {
+    public Long getApplicationId() {
         return applicationId;
     }
 
-    public void setApplicationId(String applicationId) {
+    public void setApplicationId(Long applicationId) {
         this.applicationId = applicationId;
     }
 
@@ -172,4 +177,21 @@ public class FinanceChecksEligibilityViewModel {
     public void setReadOnly(boolean readOnly) {
         this.readOnly = readOnly;
     }
+
+    public boolean isUsingJesFinances() {
+        return isUsingJesFinances;
+    }
+
+    public void setUsingJesFinances(boolean usingJesFinances) {
+        isUsingJesFinances = usingJesFinances;
+    }
+
+    public FileDetailsViewModel getJesFileDetails() {
+        return jesFileDetails;
+    }
+
+    public void setJesFileDetails(FileDetailsViewModel jesFileDetails) {
+        this.jesFileDetails = jesFileDetails;
+    }
+
 }

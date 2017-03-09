@@ -29,8 +29,8 @@ the user reads his email from the second default mailbox
 
 the user reads his email locally
     [Arguments]    ${recipient}    ${subject}    ${pattern}
-    Open Mailbox    server=ifs-local-dev    port=9876    user=smtp    password=smtp    is_secure=False
-    ${email_to_test}=    wait for email    sender=${sender}    recipient=${recipient}    subject=${subject}    timeout=90
+    Open Mailbox    server=${local_imap}    port=${local_imap_port}    user=smtp    password=smtp    is_secure=False
+    ${email_to_test}=  wait for email    sender=${sender}    recipient=${recipient}    subject=${subject}    timeout=90
     log    ${subject}
     check pattern in email    ${email_to_test}    ${pattern}
     Set Test Variable    ${email_to_test}
@@ -87,8 +87,8 @@ the user reads his email from the second default mailbox and clicks the link
 
 the user reads his email and clicks the link locally
     [Arguments]    ${recipient}    ${subject}    ${pattern}
-    Open Mailbox    server=ifs-local-dev    port=9876    user=smtp    password=smtp    is_secure=False
-    ${email_to_test}=    wait for email    sender=${sender}    recipient=${recipient}    subject=${subject}    timeout=90
+    Open Mailbox    server=${local_imap}    port=${local_imap_port}   user=smtp    password=smtp     is_secure=False
+    ${email_to_test}=  wait for email    sender=${sender}    recipient=${recipient}    subject=${subject}    timeout=90
     log    ${subject}
     the user reads the email and clicks the link    ${email_to_test}    ${pattern}
 
@@ -138,8 +138,7 @@ delete the emails from the default remote test mailbox
     Run Keyword and Ignore Error Without Screenshots    Remove All Emails    server=imap.googlemail.com    user=${test_mailbox_one}@gmail.com    password=${test_mailbox_one_password}    timeout=1
 
 delete the emails from the local test mailbox
-    Run Keyword and Ignore Error Without Screenshots    Remove All Emails    server=ifs-local-dev    port=9876    user=smtp    password=smtp    is_secure=False
-    ...    timeout=1
+    Run Keyword and Ignore Error Without Screenshots   Remove All Emails    server=${local_imap}   port=${local_imap_port}   user=smtp    password=smtp   is_secure=False   timeout=1
 
 Delete the emails from both default test mailboxes
     run keyword if    ${docker}==1    delete the emails from the local test mailbox    # Note that all emails come through to the same local mailbox, so we only need to delete from one mailbox here

@@ -84,7 +84,7 @@ function buildAndDeploy() {
     if [[ ${noDeploy} -eq 0 ]]
     then
         echo "=> Starting build and deploy script..."
-        ./gradlew -Pcloud=development cleanDeployServices -x test
+        ./gradlew -Pcloud=development buildDocker -x test
     else
         coloredEcho "=> No Deploy flag used. Skipping build and deploy..." yellow
     fi
@@ -118,9 +118,9 @@ function startSeleniumGrid() {
 
     echo "=> Suite count: ${suiteCount}"
 
-    docker-compose -f docker-compose-services.yml up -d --force-recreate --build
+    docker-compose up -d --force-recreate --build
     sleep 2
-    docker-compose -f docker-compose-services.yml scale chrome=${suiteCount}
+    docker-compose scale chrome=${suiteCount}
 
     unset suiteCount
     if [[ ${quickTest} -eq 1 ]]
@@ -134,7 +134,7 @@ function stopSeleniumGrid() {
     section "=> STOPPING SELENIUM GRID"
 
     cd ${scriptDir}
-    docker-compose -f docker-compose-services.yml down -v --remove-orphans
+    docker-compose down -v --remove-orphans
 }
 
 function startPybot() {
@@ -185,7 +185,10 @@ function startPybot() {
     -v UPLOAD_FOLDER:${uploadFileDir} \
     -v DOWNLOAD_FOLDER:download_files \
     -v BROWSER=chrome \
-    -v REMOTE_URL:'http://ifs-local-dev:4444/wd/hub' \
+    -v REMOTE_URL:'http://ifs.local-dev:4444/wd/hub' \
+    -v SAUCELABS_RUN:0 \
+    -v local_imap:'ifs.local-dev' \
+    -v local_imap_port:9876 \
     $includeHappyPath \
     $includeBespokeTags \
     $excludeBespokeTags \
@@ -209,15 +212,15 @@ function runTests() {
 
     if [[ $vnc -eq 1 ]]
     then
-      local vncport="$(docker-compose -f docker-compose-services.yml port chrome 5900)"
+      local vncport="$(docker-compose port chrome 5900)"
       vncport=${vncport:8:5}
 
       if [ "$(uname)" == "Darwin" ];
       then
-        open "vnc://root:secret@ifs-local-dev:"${vncport}
+        open "vnc://root:secret@ifs.local-dev:"${vncport}
       fi
       echo "**********For remote desktop please use this url in your vnc client**********"
-        echo  "vnc://root:secret@ifs-local-dev:"${vncport}
+        echo  "vnc://root:secret@ifs.local-dev:"${vncport}
     fi
 
     for job in `jobs -p`
@@ -254,7 +257,7 @@ rootDir=`pwd`
 
 dataServiceCodeDir="${rootDir}/ifs-data-service"
 webServiceCodeDir="${rootDir}/ifs-web-service"
-webBase="ifs-local-dev"
+webBase="ifs.local-dev"
 
 uploadFileDir="${scriptDir}/upload_files"
 baseFileStorage="/tmp/uploads"

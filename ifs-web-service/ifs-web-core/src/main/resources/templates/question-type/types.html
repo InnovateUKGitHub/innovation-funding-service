@@ -155,7 +155,17 @@
                         </label>
                     </fieldset>
                 </div>
-                <div class="form-group"  th:classappend="${#fields.hasErrors('*{__application.resubmission__}')} ? 'error'">
+                <div class="form-group">
+                    <fieldset>
+                        <legend>
+                            <span class="heading-medium">Innovation area</span>
+                            <th:block th:insert="question-type/form-elements :: form-hint (hint='This is the primary innovation area for your project. This will help Innovate UK select suitable assessors for your application.')" />
+                        </legend>
+                        Chosen innovation area: <th:block th:text="${model.questionApplicationViewModel.selectedInnovationAreaName}" /><br/>
+                        <button class="buttonlink" name="submit-section-redirect" th:value="${'/form/question/' + question.id + '/innovation-area'}" type="submit">Change your innovation area</button>
+                    </fieldset>
+                </div>
+                <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.resubmission__}')} ? 'error'">
                     <fieldset>
                         <legend>
                             <span class="form-label form-label-bold">Is this application a resubmission of a previous application?</span>
@@ -164,25 +174,27 @@
                         </legend>
                         <label class="block-label selection-button-radio "
                                th:classappend="${currentApplication.resubmission != null and currentApplication.resubmission} ? 'selected'"
-                               for="resubmission-yes"
+                               for="application.resubmission-yes"
                                data-target="resubmission-details">
                             <input type="radio"
-                                   id="resubmission-yes"
+                                   id="application.resubmission-yes"
                                    th:field="*{__application.resubmission__}"
                                    value="true"
                                    required="required"
-                                   th:checked="${currentApplication.resubmission != null and currentApplication.resubmission}" />
-                            Yes
+                                   th:checked="${currentApplication.resubmission != null and currentApplication.resubmission}"
+                                   th:attr="data-required-errormessage=#{validation.application.must.indicate.resubmission.or.not}"/>
+                                    Yes
                         </label>
                         <label class="block-label selection-button-radio"
                                th:classappend="${currentApplication.resubmission != null and !currentApplication.resubmission} ? 'selected'"
-                               for="resubmission-no">
+                               for="application.resubmission-no">
                                 <input type="radio"
-                                       id="resubmission-no"
+                                       id="application.resubmission-no"
                                        th:field="*{__application.resubmission__}"
                                        value="false"
                                        required="required"
-                                       th:checked="${currentApplication.resubmission != null and !currentApplication.resubmission}" />
+                                       th:checked="${currentApplication.resubmission != null and !currentApplication.resubmission}"
+                                       th:attr="data-required-errormessage=#{validation.application.must.indicate.resubmission.or.not}"/>
                                     No
                         </label>
                     </fieldset>

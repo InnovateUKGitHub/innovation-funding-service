@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application;
 import org.apache.commons.lang3.CharEncoding;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.form.ContributorsForm;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
@@ -27,6 +28,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -424,6 +426,8 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
 
     @Test
     public void whenUserIsRemovedRedirectToOverview() throws Exception {
+        when(applicationService.removeCollaborator(anyLong())).thenReturn(ServiceResult.serviceSuccess());
+
         mockMvc.perform(
                 post(removeUrl)
                         .param("applicationInviteId", "2")

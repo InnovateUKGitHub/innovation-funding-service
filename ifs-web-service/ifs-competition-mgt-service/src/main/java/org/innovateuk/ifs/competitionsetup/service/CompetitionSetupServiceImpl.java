@@ -3,6 +3,7 @@ package org.innovateuk.ifs.competitionsetup.service;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
@@ -16,6 +17,7 @@ import org.innovateuk.ifs.competitionsetup.service.modelpopulator.CompetitionSet
 import org.innovateuk.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSectionSaver;
 import org.innovateuk.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSubsectionSaver;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -23,6 +25,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 @Service
@@ -206,14 +209,14 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 	}
 
 	@Override
-	public void setCompetitionAsReadyToOpen(Long competitionId) {
+	public ServiceResult<Void> setCompetitionAsReadyToOpen(Long competitionId) {
 		CompetitionResource competitionResource = competitionService.getById(competitionId);
 		if (competitionResource.getCompetitionStatus() == CompetitionStatus.READY_TO_OPEN) {
-			return;
+            return serviceFailure(new Error("competition.setup.is.already.ready.to.open", HttpStatus.BAD_REQUEST));
 		}
 
 		if (isCompetitionReadyToOpen(competitionResource)) {
-			competitionService.markAsSetup(competitionId);
+			return competitionService.markAsSetup(competitionId);
 		} else {
 			LOG.error("Requesting to set a competition (id:" + competitionId + ") as Read to Open, But the competition is not ready to open yet. " +
 					"Please check all the madatory sections are done");
@@ -222,8 +225,8 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 	}
 
 	@Override
-	public void setCompetitionAsCompetitionSetup(Long competitionId) {
-		competitionService.returnToSetup(competitionId);
+	public ServiceResult<Void> setCompetitionAsCompetitionSetup(Long competitionId) {
+		return competitionService.returnToSetup(competitionId);
 	}
 
 	private List<CompetitionSetupSection> getRequiredSectionsForReadyToOpen() {
@@ -233,6 +236,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 		requiredSections.add(CompetitionSetupSection.ELIGIBILITY);
 		requiredSections.add(CompetitionSetupSection.MILESTONES);
 		requiredSections.add(CompetitionSetupSection.APPLICATION_FORM);
+		requiredSections.add(CompetitionSetupSection.CONTENT);
 		return requiredSections;
 	}
 

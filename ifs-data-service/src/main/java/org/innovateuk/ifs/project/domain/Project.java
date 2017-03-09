@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.domain;
 
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.invite.domain.ProcessActivity;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
@@ -128,10 +127,6 @@ public class Project implements ProcessActivity {
 
     public Long getId() {
         return id;
-    }
-
-    public String getFormattedId() {
-        return ApplicationResource.formatter.format(id);
     }
 
     public void setId(Long id) {

@@ -14,7 +14,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Optional;
 
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionSetupFinanceResourceBuilder.newCompetitionSetupFinanceResource;
 import static org.junit.Assert.assertEquals;
@@ -48,7 +47,7 @@ public class ApplicationFinanceFormPopulatorTest {
 				.withFullApplicationFinance(isFullApplication)
 				.build();
 
-		when(competitionSetupFinanceService.getByCompetitionId(compId)).thenReturn(serviceSuccess(csfr));
+		when(competitionSetupFinanceService.getByCompetitionId(compId)).thenReturn(csfr);
 
 		CompetitionResource competition = newCompetitionResource()
 				.withId(compId)
