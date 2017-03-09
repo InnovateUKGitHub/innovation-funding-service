@@ -90,8 +90,22 @@
         <td th:case="'ACTION_REQUIRED'" class="status action"><span class="visuallyhidden">Requires action</span></td>
         <td th:case="'NOT_STARTED'" class="status">- <span class="visuallyhidden">Stage is not yet available</span></td>
         <td th:case="'NOT_REQUIRED'" class="status na"><span class="visuallyhidden">Not required for this partner</span></td>
-        <td th:case="'PENDING'" class="status waiting"><span class="visuallyhidden">Awaiting review from Innovate UK</span></td>
+        <td th:case="'PENDING'" class="status waiting"><span class="visuallyhidden">Awaiting review</span></td>
         <td th:case="*"></td><!--/* just in case there is a different status we put out an empty td to not break the table */-->
     </th:block>
+</div>
+
+<div th:fragment="project-setup-status-indicator(status)">
+    <div class="status">
+        <div class="status-msg msg-progress">
+            <th:block th:switch="${status}">
+                <span th:case="complete" class="status-complete">Completed</span>
+                <span th:case="require-action" class="status-action-required">To be completed</span>
+                <span th:case="waiting" class="status-waiting">Awaiting review</span>
+                <span th:case="rejected" class="status-reject">Unsuccessful</span>
+                <span th:case="awaiting-assignment">Awaiting assignment</span>
+            </th:block>
+        </div>
+    </div>
 </div>
 </html>
