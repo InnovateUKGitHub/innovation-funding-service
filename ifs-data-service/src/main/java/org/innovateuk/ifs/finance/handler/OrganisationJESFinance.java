@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.finance.handler;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.*;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
@@ -19,11 +18,10 @@ import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.util.Collections.emptyMap;
 
 @Component
 public class OrganisationJESFinance implements OrganisationFinanceHandler {
@@ -56,7 +54,7 @@ public class OrganisationJESFinance implements OrganisationFinanceHandler {
 
     @Override
     public Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> getProjectOrganisationFinanceChanges(Long projectFinanceId) {
-        throw new NotImplementedException("Academic finances are not edited, so not required");
+        return emptyMap();
     }
 
     @Override
