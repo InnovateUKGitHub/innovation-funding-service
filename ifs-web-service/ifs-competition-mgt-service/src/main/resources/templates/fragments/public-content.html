@@ -8,7 +8,7 @@
             <dt>Project funding range</dt>
             <dd th:text="${form.projectFundingRange}"></dd>
             <dt>Eligibility summary</dt>
-            <dd ifs:utext="${form.eligibilitySummary}"></dd>
+            <dd><div class="wysiwyg-styles" ifs:utext="${form.eligibilitySummary}"></div></dd>
             <dt>Keywords</dt>
             <dd th:text="${form.keywords}"></dd>
         </dl>
@@ -70,7 +70,7 @@
     <th:block th:if="${model.readOnly}">
         <dl class="readonly-data">
             <dt>Competition description</dt>
-            <dd ifs:utext="${form.description}"></dd>
+            <dd><div class="wysiwyg-styles" ifs:utext="${form.description}"></div></dd>
             <dt>Funding type</dt>
             <dd th:text="${form.fundingType}"></dd>
             <dt>Project size</dt>
