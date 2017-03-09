@@ -602,15 +602,13 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         Long projectId = projectOrganisationCompositeId.getProjectId();
         Long organisationId = projectOrganisationCompositeId.getOrganisationId();
 
-        return getCurrentlyLoggedInUser().andOnSuccess(currentUser ->
-                        approveFinanceCheckFigures(currentUser, projectId, organisationId)
-                .andOnSuccess(() -> getPartnerOrganisation(projectId, organisationId)
+        return getCurrentlyLoggedInUser().andOnSuccess(currentUser -> getPartnerOrganisation(projectId, organisationId)
                 .andOnSuccess(partnerOrganisation -> getEligibilityProcess(partnerOrganisation)
                         .andOnSuccess(eligibilityProcess -> validateEligibility(eligibilityProcess.getActivityState(), eligibility, eligibilityRagStatus))
                         .andOnSuccess(() -> getProjectFinance(projectId, organisationId))
                         .andOnSuccess(projectFinance -> triggerEligibilityWorkflowEvent(currentUser, partnerOrganisation, eligibility)
                                 .andOnSuccess(() -> saveEligibility(projectFinance, eligibilityRagStatus))
-                ))));
+                )));
     }
 
 //    .andOnSuccess(() -> approveFinanceCheckFigures(currentUser, projectId, organisationId))
