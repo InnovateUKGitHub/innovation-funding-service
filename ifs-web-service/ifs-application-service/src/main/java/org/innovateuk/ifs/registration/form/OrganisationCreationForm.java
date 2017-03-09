@@ -24,6 +24,7 @@ public class OrganisationCreationForm implements Serializable {
     private boolean triedToSave = false;
 
     @NotNull(message = "{validation.standard.organisationtyperesource.required}")
+    @JsonFormat(shape=JsonFormat.Shape.ARRAY)
     private OrganisationTypeResource organisationType;
     private OrganisationTypeEnum organisationTypeEnum;
     @NotEmpty(message = "{validation.standard.organisationsearchname.required}")
