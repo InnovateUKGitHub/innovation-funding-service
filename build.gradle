@@ -5,6 +5,8 @@ allprojects {
     apply plugin: 'idea'
     apply plugin: 'java'
     apply plugin: 'docker'
+    apply plugin: 'com.github.ben-manes.versions'
+
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
@@ -27,6 +29,7 @@ subprojects {
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'jacoco'
     apply plugin: 'org.owasp.dependencycheck'
+
     findMainClass.enabled = false
 
     jacocoTestReport {
@@ -102,6 +105,7 @@ buildscript {
     }
 
     dependencies {
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.14.0'
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
         classpath "io.spring.gradle:dependency-management-plugin:0.6.1.RELEASE"
         classpath 'com.bluepapa32:gradle-watch-plugin:0.1.5'
@@ -114,6 +118,19 @@ buildscript {
         classpath "se.transmode.gradle:gradle-docker:1.2"
     }
 
+}
+
+dependencyUpdates.resolutionStrategy = {
+    componentSelection { rules ->
+        rules.all { ComponentSelection selection ->
+            boolean rejected = ['alpha', 'beta', 'rc', 'cr', 'm', 'pr1', 'Beta'].any { qualifier ->
+                selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*/
+            }
+            if (rejected) {
+                selection.reject('Release candidate')
+            }
+        }
+    }
 }
 
 

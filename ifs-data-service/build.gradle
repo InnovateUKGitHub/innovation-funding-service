@@ -96,7 +96,7 @@ dependencies {
     compile 'org.apache.commons:commons-lang3:3.5'
     compile 'commons-codec:commons-codec:1.10'
     compile "commons-beanutils:commons-beanutils:1.9.3"
-    compile "org.flywaydb:flyway-core:4.0"
+    compile "org.flywaydb:flyway-core:4.1.2"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
     compile "org.mapstruct:mapstruct:1.0.0.Final"
     mapstruct 'org.mapstruct:mapstruct-processor:1.0.0.Final'
@@ -106,7 +106,7 @@ dependencies {
 
     compile 'javax.mail:mail:1.4.7'
     compile "org.apache.httpcomponents:httpasyncclient"
-    compile "com.google.guava:guava:19.0"
+    compile "com.google.guava:guava:21.0"
     compile "commons-io:commons-io:2.5"
     compile 'org.jsoup:jsoup:1.10.2'
     compile "net.sf.opencsv:opencsv:2.3"
