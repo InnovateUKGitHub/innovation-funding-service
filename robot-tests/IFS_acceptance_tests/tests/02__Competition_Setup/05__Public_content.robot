@@ -222,6 +222,18 @@ The guest user is able to download the file in the Summary
     [Tags]  Pending
     # TODO Pending due to INFUND-8536
 
+The guest user can see updated scope information
+    [Documentation]
+    [Tags]
+    Given the user clicks the button/link    link=Scope
+    Then the user should see the element      jQuery=.column-third:contains("Heading 1") ~ .column-two-thirds:contains("Content 1")
+    And the user should see the element      jQuery=.column-third:contains("Heading 2") ~ .column-two-thirds:contains("Content 2")
+
+The guest user is able to download the file in the Scope
+    [Documentation]
+    [Tags]
+    Given Guest user downloads the file    ${server}/competition/15/download/48    ${DOWNLOAD_FOLDER}/scope.pdf
+
 The guest user can see updated date information
    [Documentation]    INFUND-7489
    [Tags]
