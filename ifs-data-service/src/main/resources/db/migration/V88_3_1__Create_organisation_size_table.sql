@@ -3,7 +3,8 @@ CREATE TABLE `organisation_size` (
     `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(255) NOT NULL,
     `description` VARCHAR(255) NOT NULL,
-    PRIMARY KEY (`id`));
+    PRIMARY KEY (`id`)
+    )ENGINE=InnoDB DEFAULT CHARSET=utf8;;
 
 -- Insert values from the ENUM.
 INSERT INTO `organisation_size` (name, description)
