@@ -24,7 +24,6 @@ Application team page
     [Tags]    HappyPath
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
-    And the user should see the text in the page    view and add participants to your application
     When the user clicks the button/link    link=view and add participants to your application
     Then the user should see the text in the page    Application team
     And the user should see the text in the page    View and manage your contributors and partners in the application.
@@ -82,8 +81,8 @@ Business organisation (partner accepts invitation)
 Partner should be able to log-in and see the new company name
     [Documentation]    INFUND-2083
     [Tags]    Email    HappyPath    SmokeTest
-    Given the user clicks the button/link  jQuery=.button:contains("Sign in")
-    When guest user log-in    ${test_mailbox_one}+inviteorg${unique_email_number}@gmail.com  ${correct_password}
+    Given the user clicks the button/link    jQuery=.button:contains("Sign in")
+    When guest user log-in    ${test_mailbox_one}+inviteorg${unique_email_number}@gmail.com    ${correct_password}
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
     And the user can see the updated company name throughout the application
 
@@ -173,7 +172,7 @@ The lead applicant should have the correct status
     the user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(3):contains("Lead")
 
 the user adds new collaborator
-    The user enters text to a text field    name= applicants[0].name   Roger Axe
+    The user enters text to a text field    name= applicants[0].name    Roger Axe
     The user enters text to a text field    name=applicants[0].email    ${test_mailbox_one}+inviteorg2@gmail.com
     focus    jQuery=button:contains('Add new applicant')
     wait for autosave
