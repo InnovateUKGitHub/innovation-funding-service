@@ -82,10 +82,12 @@ public class CookieUtil {
         Optional<Cookie> cookie = getCookie(request, fieldName);
         if (cookie.isPresent()) {
             try {
-                return decodeCookieValue(cookie.get().getValue());
-            } catch (UnsupportedEncodingException ignore) {
-                LOG.error(ignore);
-                //Do nothing
+                String value = cookie.get().getValue();
+                if(value.trim().length() > 0) {
+                    return decodeCookieValue(value);
+                }
+            } catch (UnsupportedEncodingException | ArrayIndexOutOfBoundsException ignore) {
+                LOG.error("Failing cookie (" + fieldName + "):" + ignore.getMessage());
             }
         }
         return "";
