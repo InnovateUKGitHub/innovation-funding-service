@@ -4,6 +4,14 @@ Documentation     INFUND-7365 Inflight competition dashboards: Inform dashboard
 ...               INFUND-7561 Inflight competition dashboards- View milestones
 ...
 ...               INFUND-8050 Release feedback and send notification email
+...
+...               INFUND-7861 Feedback overview dashboard of application after feedback is released
+...
+...               INFUND-8168 Question list and finance summary on Feedback overview dashboard
+...
+...               INFUND-8169 Assessors scores viewed on Feedback Overview by applicant
+...
+...               INFUND-8172 Assessor's Overall feedback displayed on Feedback Overview
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
@@ -35,6 +43,8 @@ Release feedback
     Then The user should not see the text in the page    Inform
     When The user clicks the button/link    jQuery=a:contains(Live)
     Then The user should not see the text in the page    ${INFORM_COMPETITION_NAME}
+    And the user reads his email    ${test_mailbox_two}+releasefeedback@gmail.com   Feedback for your application    The feedback provided by the independent assessors has been reviewed by Innovate UK
+
 
 Unsuccessful applicant sees unsuccessful alert
     [Documentation]    INFUND-7861
@@ -65,12 +75,11 @@ Overall scores and application details are correct
     And the application details are correct
 
 The finance details are shown
-    [Documentation]
+    [Documentation]    INFUND-8168
     [Tags]
     When the user clicks the button/link     jQuery=.collapsible button
     Then the user should see the element     jQuery=.collapsible div[aria-hidden="false"]
     And the user should not see the element    jQuery=.collapsible div[aria-hidden="true"]
-
 
 *** Keywords ***
 the overall scores are correct
