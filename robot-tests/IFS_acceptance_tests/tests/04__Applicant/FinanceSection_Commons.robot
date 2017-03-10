@@ -72,8 +72,8 @@ the applicant completes the application details
     the user clicks the button/link       jQuery=button:contains(Save)
     the user clicks the button/link       jQuery=label[for^="financePosition"]:contains("Experimental development")
     the user clicks the button/link       jQuery=label[for^="financePosition"]:contains("Experimental development")
-    the user clicks the button/link       jQuery=label[for="resubmission-no"]
-    the user clicks the button/link       jQuery=label[for="resubmission-no"]
+    the user clicks the button/link       jQuery=label[for="application.resubmission-no"]
+    the user clicks the button/link       jQuery=label[for="application.resubmission-no"]
     # those Radio buttons need to be clicked twice.
     The user enters text to a text field  id=application_details-startdate_day  18
     The user enters text to a text field  id=application_details-startdate_year  2018
@@ -113,20 +113,11 @@ the user has read only view once section is marked complete
 the user fills in Labour
     the user clicks the button/link            jQuery=#form-input-20 button:contains("Labour")
     the user should see the element            css=.labour-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input
-    remove previous rows                       jQuery=.labour-costs-table button:contains("Remove")
-    the user enters text to a text field       jQuery=input[name^="labour-labourDaysYearly"][id$="labourDaysYearly"]    230
-    wait for autosave
-    the user enters large text to a text field     jQuery=.labour-costs-table input[id$="labourGrossSalary"]  1200
-    wait for autosave
-    the user enters text to a text field       jQuery=.labour-costs-table input[id$="role"]  test
-    wait for autosave
-    the user enters text to a text field       jQuery=.labour-costs-table input[id$="labourDays"]  100
-    wait for autosave
-    #the user moves focus to the element        jQuery=button:contains('Add another role')
-    #the user clicks the button/link            jQuery=button:contains('Add another role')
-    #the user enters large text to a text field     jQuery=.labour-costs-table input[id$="role"]:last-of-type  anotherrole
-    #the user enters large text to a text field     jQuery=.labour-costs-table input[id$="labourGrossSalary"]:last-of-type  120000
-    #the user enters text to a text field       jQuery=.labour-costs-table input[id$="labourDays"]:last-of-type  100
+    the user enters text to a text field       jQuery=input[id$="labourDaysYearly"]    230
+    the user should see the element            jQuery=input.form-control[name^=labour-role]:text[value=""]:first
+    the user enters text to a text field       jQuery=input.form-control[name^=labour-role]:text[value=""]:first    anotherrole
+    the user enters text to a text field       jQuery=input.form-control[name^=labour-gross][value=""]:first    120000
+    the user enters text to a text field       jQuery=input.form-control[name^=labour-labour][value=""]:first    100
     the user clicks the button/link            jQuery=#form-input-20 button:contains("Labour")
 
 the user fills in Overhead costs

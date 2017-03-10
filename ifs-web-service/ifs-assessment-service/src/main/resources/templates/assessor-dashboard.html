@@ -18,7 +18,10 @@
             <div class="message-alert extra-margin-bottom" th:unless="${model.profileStatus.complete}">
                 <h2 class="heading-small no-margin">Complete your assessor account</h2>
 
-                <p>You must complete your profile before we can assign you applications.</p>
+                <p>
+                    Please complete the following sections of your account. We cannot assign applications to you for
+                    assessment until these sections are complete.
+                </p>
                 <ul class="list list-bullet extra-margin-top">
                     <li th:unless="${model.profileStatus.skillsComplete}">
                         <a th:href="@{/profile/skills}">your skills</a>
@@ -151,9 +154,6 @@
                     <a th:href="">change your password</a>
                 </li>
                 */-->
-                <li>
-                    <a th:href="@{/assessor/terms-and-conditions}">read terms and conditions</a>
-                </li>
             </ul>
 
             <th:block th:insert="fragments/layout :: main-content-end" />

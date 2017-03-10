@@ -11,6 +11,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
@@ -22,6 +26,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.springframework.data.domain.Sort.Direction.*;
 
 public class CompetitionInviteRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<CompetitionInviteRepository> {
 
@@ -98,7 +103,12 @@ public class CompetitionInviteRepositoryIntegrationTest extends BaseRepositoryIn
                 .withStatus(CREATED, CREATED, OPENED, OPENED, SENT, SENT)
                 .build(6));
 
-        List<CompetitionInvite> retrievedInvites = repository.getByCompetitionIdAndStatus(competition.getId(), CREATED);
+        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "name"));
+
+        Page<CompetitionInvite> pageResult = repository.getByCompetitionIdAndStatus(competition.getId(), CREATED, pageable);
+
+        List<CompetitionInvite> retrievedInvites = pageResult.getContent();
+
         assertEquals(1, retrievedInvites.size());
 
         assertEquals(competition, retrievedInvites.get(0).getTarget());

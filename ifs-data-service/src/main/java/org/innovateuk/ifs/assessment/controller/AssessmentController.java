@@ -65,6 +65,11 @@ public class AssessmentController {
         return assessmentService.recommend(id, assessmentFundingDecision).toPutResponse();
     }
 
+    @RequestMapping(value = "/application/{applicationId}/feedback", method = GET)
+    public RestResult<ApplicationAssessmentFeedbackResource> getApplicationFeedback(@PathVariable("applicationId") long applicationId) {
+        return assessmentService.getApplicationFeedback(applicationId).toGetResponse();
+    }
+
     @RequestMapping(value = "/{id}/rejectInvitation", method = PUT)
     public RestResult<Void> rejectInvitation(@PathVariable("id") long id, @RequestBody @Valid AssessmentRejectOutcomeResource assessmentRejectOutcomeResource) {
         return assessmentService.rejectInvitation(id, assessmentRejectOutcomeResource).toPutResponse();

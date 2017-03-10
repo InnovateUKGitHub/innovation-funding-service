@@ -28,7 +28,6 @@ import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 @PermissionRules
 @Component
 public class FormInputResponsePermissionRules {
-    private static final Log LOG = LogFactory.getLog(ApplicationPermissionRules.class);
 
     @Autowired
     private ProcessRoleRepository processRoleRepository;

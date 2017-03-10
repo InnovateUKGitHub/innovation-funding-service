@@ -72,7 +72,7 @@ Collaborator should see the terms and conditions from the overview page
     [Tags]    Email
     Given the user clicks the button/link    link=Application Overview
     When The user clicks the button/link    link= view conditions of grant offer
-    Then the user should see the text in the page    Terms and Conditions of an Innovate UK Grant Award
+    Then the user should see the text in the page    Terms and conditions of an Innovate UK grant award
     And the user should see the text in the page    Entire Agreement
 
 Collaborator should see the review button instead of the review and submit
@@ -203,7 +203,7 @@ Lead marks finances as complete
     [Documentation]    INFUND-3016
     ...
     ...    This test depends on the previous test suite to run first
-    [Tags]    Failing
+    [Tags]
     Given the user navigates to the page  ${DASHBOARD_URL}
     And the user clicks the button/link  link=Assign test
     And the applicant completes the application details      Application details
@@ -221,7 +221,7 @@ Lead marks finances as complete
 Collaborator from another organisation should be able to mark Finances as complete
     [Documentation]  INFUND-3016
     ...              This test depends on the previous test suite to run first
-    [Tags]    Failing
+    [Tags]
     [Setup]  log in as a different user     ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     Given the user navigates to Your-finances page   Assign test
     Then the user should see all finance subsections incomplete
@@ -254,9 +254,11 @@ Lead applicant should be able to remove the registered partner
     [Setup]    log in as a different user    ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
     Given the user clicks the button/link    link= Assign test
     And the user clicks the button/link    link=view and add participants to your application
-    When the user clicks the button/link    jQuery=div:nth-child(6) a:contains("Remove")
-    And the user clicks the button/link    jQuery=button:contains("Remove")
+    And the user clicks the button/link    jQuery=.table-overflow:contains("Dennis") ~ p a
+    When the user clicks the button/link    jQuery=button:contains("Remove")
     Then the user should not see the element    link=Dennis Bergkamp
+    #And the user clicks the button/link    jQuery=a:contains("Update organisation")
+    And the user clicks the button/link    jQuery=button:contains("Update organisation")
     #The following steps check if the collaborator should not see the application in the dashboard page
     And log in as a different user  ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     And the user should not see the element    link= Assign test

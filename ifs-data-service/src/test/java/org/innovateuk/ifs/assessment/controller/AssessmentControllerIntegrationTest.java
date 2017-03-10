@@ -2,6 +2,7 @@ package org.innovateuk.ifs.assessment.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.assessment.domain.AssessmentFundingDecisionOutcome;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
@@ -19,7 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
+import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeResourceBuilder.newAssessmentRejectOutcomeResource;
@@ -248,6 +251,39 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         AssessmentResource assessmentResult = controller.findById(assessmentId).getSuccessObject();
         assertEquals(OPEN, assessmentResult.getAssessmentState());
         assertEquals(assessmentFundingDecisionOutcomeResource, assessmentResult.getFundingDecision());
+    }
+
+    @Test
+    public void getApplicationFeedback() throws Exception {
+        long applicationId = 4L;
+
+        AssessmentFundingDecisionOutcome outcome1 = new AssessmentFundingDecisionOutcome();
+        outcome1.setComment("Test Comment 1");
+        outcome1.setFeedback("Feedback 1");
+        outcome1.setFundingConfirmation(FALSE);
+
+        Assessment assessment1 = assessmentRepository.findOne(2L);
+        assessment1.setFundingDecision(outcome1);
+
+        AssessmentFundingDecisionOutcome outcome2 = new AssessmentFundingDecisionOutcome();
+        outcome2.setComment("Test Comment 2");
+        outcome2.setFeedback("Feedback 2");
+        outcome2.setFundingConfirmation(FALSE);
+
+        Assessment assessment2 = assessmentRepository.findOne(6L);
+        assessment2.setFundingDecision(outcome2);
+
+        assessmentRepository.save(asList(assessment1, assessment2));
+        flushAndClearSession();
+
+        loginSteveSmith();
+
+        RestResult<ApplicationAssessmentFeedbackResource> result = controller.getApplicationFeedback(applicationId);
+
+        assertTrue(result.isSuccess());
+
+        ApplicationAssessmentFeedbackResource feedbackResource = result.getSuccessObjectOrThrowException();
+        assertEquals(asList("Feedback 1", "Feedback 2"), feedbackResource.getFeedback());
     }
 
     @Test

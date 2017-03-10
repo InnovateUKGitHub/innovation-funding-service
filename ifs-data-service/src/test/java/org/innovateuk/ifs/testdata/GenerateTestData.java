@@ -2,8 +2,6 @@ package org.innovateuk.ifs.testdata;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.flywaydb.core.Flyway;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
@@ -34,6 +32,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.Advised;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,11 +57,12 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate.UNIVERSITY_HEI;
+import static org.innovateuk.ifs.project.util.FinanceUtil.UNIVERSITY_HEI;
 import static org.innovateuk.ifs.testdata.CsvUtils.*;
 import static org.innovateuk.ifs.testdata.builders.AssessmentDataBuilder.newAssessmentData;
 import static org.innovateuk.ifs.testdata.builders.AssessorDataBuilder.newAssessorData;
 import static org.innovateuk.ifs.testdata.builders.AssessorInviteDataBuilder.newAssessorInviteData;
+import static org.innovateuk.ifs.testdata.builders.AssessorResponseDataBuilder.newAssessorResponseData;
 import static org.innovateuk.ifs.testdata.builders.BaseDataBuilder.COMP_ADMIN_EMAIL;
 import static org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder.newCompetitionData;
 import static org.innovateuk.ifs.testdata.builders.CompetitionFunderDataBuilder.newCompetitionFunderData;
@@ -89,7 +90,7 @@ import static org.mockito.Mockito.when;
 @Ignore
 public class GenerateTestData extends BaseIntegrationTest {
 
-    private static final Log LOG = LogFactory.getLog(GenerateTestData.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GenerateTestData.class);
 
     @Value("${flyway.url}")
     private String databaseUrl;
@@ -137,6 +138,7 @@ public class GenerateTestData extends BaseIntegrationTest {
     private AssessorDataBuilder assessorUserBuilder;
     private AssessorInviteDataBuilder assessorInviteUserBuilder;
     private AssessmentDataBuilder assessmentDataBuilder;
+    private AssessorResponseDataBuilder assessorResponseDataBuilder;
     private ProjectDataBuilder projectDataBuilder;
 
     private static List<OrganisationLine> organisationLines;
@@ -200,6 +202,8 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     private static List<AssessmentLine> assessmentLines;
 
+    private static List<AssessorResponseLine> assessorResponseLines;
+
     private static List<ProjectLine> projectLines;
 
     @Before
@@ -222,6 +226,7 @@ public class GenerateTestData extends BaseIntegrationTest {
         questionResponseLines = readApplicationQuestionResponses();
         applicationFinanceLines = readApplicationFinances();
         assessmentLines = readAssessments();
+        assessorResponseLines = readAssessorResponses();
         projectLines = readProjects();
     }
 
@@ -264,6 +269,7 @@ public class GenerateTestData extends BaseIntegrationTest {
         assessorUserBuilder = newAssessorData(serviceLocator);
         assessorInviteUserBuilder = newAssessorInviteData(serviceLocator);
         assessmentDataBuilder = newAssessmentData(serviceLocator);
+        assessorResponseDataBuilder = newAssessorResponseData(serviceLocator);
         projectDataBuilder = newProjectData(serviceLocator);
         publicContentGroupDataBuilder = newPublicContentGroupDataBuilder(serviceLocator);
         publicContentDateDataBuilder = newPublicContentDateDataBuilder(serviceLocator);
@@ -372,12 +378,44 @@ public class GenerateTestData extends BaseIntegrationTest {
     }
 
     private void createAssessments() {
+        LOG.info("Creating assessments...");
+
         assessmentLines.forEach(this::createAssessment);
+        assessorResponseLines.forEach(this::createAssessorResponse);
+        assessmentLines.forEach(this::submitAssessment);
     }
 
     private void createAssessment(AssessmentLine line) {
-        assessmentDataBuilder.withAssessmentData(line.assessorEmail, line.applicationName, line.rejectReason, line
-                .rejectComment, line.state).build();
+        assessmentDataBuilder.withAssessmentData(
+                line.assessorEmail,
+                line.applicationName,
+                line.rejectReason,
+                line.rejectComment,
+                line.state,
+                line.feedback,
+                line.recommendComment
+        )
+                .build();
+    }
+
+    private void createAssessorResponse(AssessorResponseLine line) {
+        assessorResponseDataBuilder.withAssessorResponseData(line.competitionName,
+                line.applicationName,
+                line.assessorEmail,
+                line.shortName,
+                line.description,
+                line.isResearchCategory,
+                line.value)
+            .build();
+    }
+
+    private void submitAssessment(AssessmentLine line) {
+        assessmentDataBuilder.withSubmission(
+                line.applicationName,
+                line.assessorEmail,
+                line.state
+        )
+                .build();
     }
 
     private void createCompetitionFunders() {
@@ -391,7 +429,6 @@ public class GenerateTestData extends BaseIntegrationTest {
     private void createPublicContentDates() {
         publicContentDateLines.forEach(this::createPublicContentDate);
     }
-
 
     private void createCompetitionFunder(CompetitionFunderLine line) {
         competitionFunderDataBuilder.withCompetitionFunderData(line.competitionName, line.funder, line.funder_budget, line.co_funder)
@@ -425,8 +462,9 @@ public class GenerateTestData extends BaseIntegrationTest {
     }
 
     private void createCompetitions() {
-
         competitionLines.forEach(line -> {
+            LOG.info("Creating competition '{}'", line.name);
+
             if ("Connected digital additive manufacturing".equals(line.name)) {
                 createCompetitionWithApplications(line, Optional.of(1L));
             } else {

@@ -2,8 +2,10 @@
 set -e
 
 PROJECT=$1
+shift 1
+ROBOT_COMMAND=$@
 HOST=prod.ifs-test-clusters.com
-ROUTE_DOMAIN=apps.$HOST
+ROUTE_DOMAIN=apps.${HOST}
 REGISTRY=docker-registry-default.apps.prod.ifs-test-clusters.com
 INTERNAL_REGISTRY=172.30.80.28:5000
 
@@ -18,6 +20,8 @@ function tailorToAppInstance() {
     cp -r robot-tests robot-tests-tmp
     sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" robot-tests-tmp/openshift/*.sh
     sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" robot-tests-tmp/os_run_tests.sh
+    sed -i.bak "s#\[\"./os_run_tests.sh\", \"-q\"\]#[\"./os_run_tests.sh\", \"-q\", \"$ROBOT_COMMAND\"]#g" robot-tests-tmp/Dockerfile
+
 }
 
 function cleanUp() {
@@ -47,7 +51,14 @@ function copyNecessaryFiles() {
     cp -r ifs-data-service/docker-build.gradle robot-tests-tmp/docker-build.gradle
 }
 
+function navigateToRoot(){
+    scriptDir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+    cd ${scriptDir}
+    cd ../../..
+}
+
+navigateToRoot
 cleanUp
 rm -rf robot-tests/target && mkdir robot-tests/target
 fileFixtures

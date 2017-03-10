@@ -393,7 +393,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("response"));
-        assertEquals("The response cannot be empty.", bindingResult.getFieldError("response").getDefaultMessage());
+        assertEquals("This field cannot be left blank.", bindingResult.getFieldError("response").getDefaultMessage());
     }
 
     @Test
@@ -424,7 +424,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("response"));
-        assertEquals("The response is too long, please reduce it to {1} characters.", bindingResult.getFieldError("response").getDefaultMessage());
+        assertEquals("This field cannot contain more than {1} characters.", bindingResult.getFieldError("response").getDefaultMessage());
     }
 
     @Test
@@ -454,7 +454,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("response"));
-        assertEquals("The response is too long, please reduce it {0} words.", bindingResult.getFieldError("response").getDefaultMessage());
+        assertEquals("Maximum word count exceeded. Please reduce your word count to {1}.", bindingResult.getFieldError("response").getDefaultMessage());
     }
 
     @Test

@@ -61,7 +61,7 @@ public class InviteOrganisation {
     }
 
     public List<ApplicationInvite> getInvites() {
-        return (invites == null)? new ArrayList<>() : invites;
+        return (invites == null) ? new ArrayList<>() : invites;
     }
 
     public void setInvites(List<ApplicationInvite> invites) {
