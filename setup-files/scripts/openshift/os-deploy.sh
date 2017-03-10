@@ -5,13 +5,6 @@ set -e
 PROJECT=$1
 TARGET=$2
 
-echo $bamboo_OPENSHIFT_SVC_ACCOUNT_TOKEN
-
-if [[ ${TARGET} == "production" ]]
-then
-    PROJECT="production"
-fi
-
 if [[ (${TARGET} == "remote") ||  (${TARGET} == "production") ]]
 then
     HOST=prod.ifs-test-clusters.com

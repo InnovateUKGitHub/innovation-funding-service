@@ -6,6 +6,8 @@ PROJECT=$1
 TARGET=$2
 VERSION=$3
 
+echo $bamboo_OPENSHIFT_SVC_ACCOUNT_TOKEN
+
 if [[ ${TARGET} == "production" ]]
 then
     PROJECT="production"
