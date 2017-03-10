@@ -1160,7 +1160,7 @@ Project finance user can see updated finance overview after partner changes to e
     And the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(4)    £ 87,847
     And the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(6)    28%
 
-#TODO Jay This one is failing needs to use the new page or be removed
+#TODO Jay this is failing, needs to use the new page or be removed
 Approve Eligibility: Collaborator partner organisation
     [Documentation]    INFUND-5193
     [Tags]    HappyPath
@@ -1174,7 +1174,7 @@ Approve Eligibility: Collaborator partner organisation
     And The user clicks the button/link    link=Finance checks
     Then the user sees the text in the element    css=a.eligibility-1    Approved
 
-#TODO Jay needs to check approval of both and SP button available via new page
+#TODO Jay this is failing, needs to check approval of both and SP button available via new page
 Approve Eligibility and verify Viability and RAG: Academic partner organisation
     [Documentation]    INFUND-5193, INFUND-7026, INFUND-7095
     [Tags]    HappyPath
