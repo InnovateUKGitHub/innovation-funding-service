@@ -124,9 +124,9 @@ public class UserPermissionRules {
         return user.getId().equals(profileSkills.getUser());
     }
 
-    @PermissionRule(value = "READ", description = "A user can read their own profile contract")
-    public boolean usersCanViewTheirOwnProfileContract(ProfileContractResource profileContract, UserResource user) {
-        return user.getId().equals(profileContract.getUser());
+    @PermissionRule(value = "READ", description = "A user can read their own profile agreement")
+    public boolean usersCanViewTheirOwnProfileAgreement(ProfileAgreementResource profileAgreementResource, UserResource user) {
+        return user.getId().equals(profileAgreementResource.getUser());
     }
 
     @PermissionRule(value = "READ", description = "A user can read their own affiliations")
