@@ -6,8 +6,6 @@
 <body th:with="context='applicant'" class="competition-overview">
 
     <th:block th:insert="fragments/layout :: body-start" />
-    <th:block th:insert="fragments/layout :: global-header" />
-
     <main id="content">
         <th:block th:insert="fragments/layout :: main-content-start" />
         <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to all competitions',linkClass='link-back',linkUrl='/competition/search'" />
@@ -57,23 +55,38 @@
             </th:block>
         </div>
 
-        <ul class="inline-nav hide-mobile">
-            <th:block th:each="sectionType : ${model.allContentSections}">
-                <li th:class="${(sectionType.active ? 'selected' : 'not-selected' )}">
-                    <h2>
-                        <a th:href="@{/competition/{competitionId}/overview/{type}(competitionId=${model.competitionId}, type=${sectionType.path})}">
-                            <strong th:text="${sectionType.text}"></strong>
-                        </a>
-                    </h2>
-                </li>
+        <div id="competition-overview-tabs" class="tabs">
+            <ul>
+                <th:block th:each="sectionType : ${model.allContentSections}">
+                    <li>
+                        <a th:href="${'#' + sectionType.path}" th:text="${sectionType.text}"></a>
+                    </li>
+                </th:block>
+            </ul>
+            <th:block th:each="section : ${model.allContentSections}">
+                <!-- Need work done on the view model to out put all the sections here not just the current section -->
+                <th:block th:insert="competition/section/fragments :: ${model.currentSection.sectionPath} (section=${model.currentSection}, competitionId=${model.competitionId})"/>
             </th:block>
-        </ul>
-        <div>
-            <th:block th:insert="competition/section/fragments :: ${model.currentSection.sectionPath} (section=${model.currentSection}, competitionId=${model.competitionId})"/>
         </div>
+        <!--<ul class="inline-nav hide-mobile">-->
+            <!--<th:block th:each="sectionType : ${model.allContentSections}">-->
+                <!--<li th:class="${(sectionType.active ? 'selected' : 'not-selected' )}">-->
+                    <!--<h2>-->
+                        <!--<a th:href="@{/competition/{competitionId}/overview/{type}(competitionId=${model.competitionId}, type=${sectionType.path})}">-->
+                            <!--<strong th:text="${sectionType.text}"></strong>-->
+                        <!--</a>-->
+                    <!--</h2>-->
+                <!--</li>-->
+            <!--</th:block>-->
+        <!--</ul>-->
+        <!--<div>-->
+            <!--<th:block th:insert="competition/section/fragments :: ${model.currentSection.sectionPath} (section=${model.currentSection}, competitionId=${model.competitionId})"/>-->
+        <!--</div>-->
 
         <div th:insert="fragments/layout :: main-content-end" th:remove="tag" />
     </main>
+
+    <th:block th:insert="fragments/layout :: global-header" />
 
     <th:block th:insert="fragments/layout :: footer" />
     <th:block th:insert="fragments/layout :: body-end" />
