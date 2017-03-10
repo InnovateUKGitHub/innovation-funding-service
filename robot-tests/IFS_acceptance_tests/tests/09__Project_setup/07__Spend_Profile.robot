@@ -56,6 +56,9 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               INFUND-5549 As a Competitions team member I want to see the Innovation Lead  listed in the Spend profile approval page so that I can confirm who is required to approve the Spend Profiles
 ...
 ...               INFUND-6148 Negative numbers on spend profile table generation not disallowed by rounding logic
+...
+...               INFUND-7422 On rejection non-lead partners should still see a tick instead of an hourglass, until edit rights have been returned to them
+
 Suite Setup       all previous sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -637,6 +640,16 @@ Lead partner can see that the spend profile has been rejected
     When the user clicks the button/link    link=status of my partners
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
     [Teardown]    the user goes back to the previous page
+
+Non Lead partners should still see a tick instead of an hourglass when spend profile has been rejected
+    [Documentation]    INFUND-7422
+    [Tags]
+    Given log in as a different user        ${PS_SP_APPLICATION_PARTNER_EMAIL}    ${short_password}
+    When the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
+    Then the user should see the element    jQuery=li.complete:nth-of-type(6)
+    Given log in as a different user        ${PS_SP_APPLICATION_ACADEMIC_EMAIL}   ${short_password}
+    When the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
+    Then the user should see the element    jQuery=li.complete:nth-of-type(6)
 
 Lead partner no longer has the 'submitted' view of the spend profiles
     [Documentation]    INFUND-6977
