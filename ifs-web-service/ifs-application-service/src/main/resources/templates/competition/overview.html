@@ -15,7 +15,7 @@
         <p class="subtitle">Funding competition</p>
         <h1 class="heading-large no-margin" th:text="${model.competitionTitle}"></h1>
 
-        <p ifs:utext="${model.shortDescription}"></p>
+        <p class="wysiwyg-styles" ifs:utext="${model.shortDescription}"></p>
 
         <ul class="list">
             <li><strong>Competition opens:</strong> <span th:text="${#temporals.format(model.competitionOpenDate, 'EEEE d MMM yyyy')}"></span></li>
