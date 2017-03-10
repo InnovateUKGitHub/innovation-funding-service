@@ -26,7 +26,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
 import org.innovateuk.ifs.competition.service.CompetitionsRestService;
-import org.innovateuk.ifs.contract.service.ContractService;
+import org.innovateuk.ifs.agreement.service.AgreementService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.category.GrantClaimCategory;
@@ -145,7 +145,7 @@ public class BaseUnitTest {
     @Mock
     public CompetitionsRestService competitionRestService;
     @Mock
-    public ContractService contractService;
+    public AgreementService agreementService;
     @Mock
     public ProcessRoleService processRoleService;
     @Mock
