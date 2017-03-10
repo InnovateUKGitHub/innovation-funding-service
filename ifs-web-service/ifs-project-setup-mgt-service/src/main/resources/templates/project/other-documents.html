@@ -53,7 +53,7 @@
 
         <th:block th:if="${(model.collaborationAgreementFileDetails != null) and (model.exploitationPlanFileDetails != null)}">
 
-            <h2 class="heading-medium">Collaboration Agreement</h2>
+            <h2 class="heading-medium">Collaboration agreement</h2>
             <a th:href="@{/project/{id}/partner/documents/collaboration-agreement(id=${model.projectId})}"
              class="uploaded-file" th:text="${model.collaborationAgreementFileDetails.filename}">The-uploaded-file-example.pdf</a>
 

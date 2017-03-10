@@ -32,7 +32,7 @@ Non-lead partner cannot upload either document
     [Documentation]    INFUND-3011, INFUND-2621, INFUND-5258, INFUND-5806
     [Tags]
     Given the user navigates to the page    ${project_in_setup_page}
-    Then the user should see the element    jQuery=.ifs-progress-list > li.waiting:nth-of-type(7)
+    Then the user should see the element    jQuery=.progress-list ul > li.waiting:nth-of-type(7)
     And The user should see the text in the page    The Project Manager will need to upload the following
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
@@ -42,7 +42,7 @@ Lead partner cannot upload either document
     [Tags]
     [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}    Passw0rd
     Given the user navigates to the page    ${project_in_setup_page}
-    Then the user should see the element    jQuery=.ifs-progress-list > li.require-action:nth-of-type(7)
+    Then the user should see the element    jQuery=.progress-list ul > li.waiting:nth-of-type(7)
     And The user should see the text in the page    The Project Manager will need to upload the following
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
@@ -128,7 +128,7 @@ Non-lead partner can view both documents
     Given log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}    Passw0rd
     When the user navigates to the page    ${project_in_setup_page}
     Then the user moves focus to the element  jQuery=ul li:nth-child(7)
-    And the user should see the element   jQuery=#content > ul > li:nth-child(7) > div.progress-status
+    And the user should see the element   jQuery=#content ul > li:nth-child(7) .msg-progress
     And the user clicks the button/link    link=Other documents
     And the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
@@ -166,7 +166,7 @@ PM can view both documents
 
 PM can remove the second document
     [Documentation]    INFUND-3011
-    [Tags]
+    [Tags]    HappyPath
     Given the user navigates to the page    ${project_in_setup_page}/partner/documents
     When the user clicks the button/link    name=removeExploitationPlanClicked
     Then the user should not see an error in the page
@@ -181,7 +181,7 @@ Non-lead partner can still view the first document
 
 PM can remove the first document
     [Documentation]    INFUND-3011
-    [Tags]
+    [Tags]    HappyPath
     [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    Passw0rd
     Given the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
@@ -303,7 +303,7 @@ CompAdmin can see uploaded files
     Then the user should see the element    jQuery=h2:contains("Projects in setup")
     # Comp Admin should see the element as action needed instead of done TODO-INFUND-5601
     When the user clicks the button/link    jQuery=#table-project-status tr:nth-child(2) td:nth-child(7) a
-    Then the user should see the text in the page    Collaboration Agreement
+    Then the user should see the text in the page    Collaboration agreement
     When the user clicks the button/link    jQuery=.uploaded-file:nth-of-type(1)
     Then the user should see the file without error
     When the user clicks the button/link    jQuery=.uploaded-file:nth-of-type(2)
@@ -354,7 +354,7 @@ After rejection, lead partner cannot upload either document
     [Tags]    HappyPath
     [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}    Passw0rd
     Given the user navigates to the page    ${project_in_setup_page}
-    Then the user should see the element    jQuery=.ifs-progress-list > li.require-action:nth-of-type(7)
+    Then the user should see the element    jQuery=.progress-list ul > li.waiting:nth-of-type(7)
     And The user should see the text in the page    The Project Manager will need to upload the following
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
@@ -387,6 +387,8 @@ After rejection, non-lead partner cannot view both documents
     [Tags]    HappyPath
     Given log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}    Passw0rd
     When the user navigates to the page    ${project_in_setup_page}
+    Then the user moves focus to the element  jQuery=ul li:nth-child(7)
+    And the user should see the element   jQuery=#content ul > li:nth-child(7) .msg-progress
     And the user clicks the button/link    link=Other documents
     And the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
@@ -421,7 +423,7 @@ After rejection, non-lead partner cannot upload either document
     [Tags]
     [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}    Passw0rd
     Given the user navigates to the page    ${project_in_setup_page}
-    Then the user should see the element    jQuery=.ifs-progress-list > li.waiting:nth-of-type(7)
+    Then the user should see the element    jQuery=.progress-list ul > li.waiting:nth-of-type(7)
     And The user should see the text in the page    The Project Manager will need to upload the following
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload

@@ -1341,14 +1341,15 @@
             </tr>
         </th:block>
     </th:block>
+
     <!-- ===========================Research Participation =========================== -->
-    <th:block th:fragment="research_participation" th:if="${showResearchParticipation}">
+    <th:block th:fragment="research_participation(researchParticipationPercentage,maxResearchPercentage)">
         <div th:class="${researchParticipationPercentage &gt; maxResearchPercentage} ? 'eligibility warning' : 'eligibility'" >
             <dl class="list-eligibility">
                 <dt>Maximum research participation</dt>
                 <dd th:text="${maxResearchPercentage}+' %'"></dd>
                 <dt>Current research participation</dt>
-                <dd th:class="${researchParticipationPercentage &gt; maxResearchPercentage} ? 'warning'" 
+                <dd th:class="${researchParticipationPercentage &gt; maxResearchPercentage} ? 'warning'"
                     th:text="(${researchParticipationPercentage} % 1 == 0 ?
                                 ${#numbers.formatDecimal(researchParticipationPercentage,0,0)} :
                                 ${researchParticipationPercentage}) +' %'"></dd>
@@ -1366,6 +1367,142 @@
         <div th:if="${researchParticipationPercentage &gt; maxResearchPercentage}" class="warning-alert">
             <h2 class="heading-small no-margin">Maximum research participation exceeded</h2>
             <p>Please seek confirmation that the project is still eligible for funding.</p>
+        </div>
+    </th:block>
+
+    <!-- ===========================Finances Overview =========================== -->
+    <th:block th:fragment="project-finance-overview(overview)">
+        <h3 class="heading-medium">Overview</h3>
+        <table class="table-overview extra-margin-bottom">
+            <thead>
+            <tr>
+                <th scope="col">Start date</th>
+                <th scope="col">Duration</th>
+                <th scope="col" class="numeric">Total project cost</th>
+                <th scope="col" class="numeric">Grant applied for</th>
+                <th scope="col" class="numeric">Other public sector funding</th>
+                <th scope="col" class="numeric">Total % grant</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td th:text="${#temporals.format(overview.projectStartDate, 'd MMM yyyy')}" />
+                <td th:text="${overview.durationInMonths+' months'}" />
+                <td class="numeric">&pound; <th:block th:text="${#numbers.formatInteger(overview.totalProjectCost,1,'COMMA')}" /></td>
+                <td class="numeric">&pound; <th:block th:text="${#numbers.formatInteger(overview.grantAppliedFor,1,'COMMA')}" /></td>
+                <td class="numeric">&pound; <th:block th:text="${#numbers.formatInteger(overview.otherPublicSectorFunding,1,'COMMA')}" /></td>
+                <td th:text="${#numbers.formatInteger(overview.totalPercentageGrant,1,'NONE')+'%'}" class="numeric" />
+            </tr>
+            </tbody>
+        </table>
+    </th:block>
+
+    <!-- ===========================Project Finance Summaries =========================== -->
+    <th:block th:fragment="project-finance-summaries(summaries)">
+        <div class="extra-margin-bottom">
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">Partner</th>
+                        <th scope="col" class="numeric width-small">Total costs</th>
+                        <th scope="col" class="numeric width-small">
+                            % Grant
+                        </th>
+                        <th scope="col" class="numeric width-small-medium">
+                            Funding sought
+                        </th>
+                        <th scope="col" class="numeric width-medium">
+                            Other public sector funding
+                        </th>
+                        <th scope="col" class="numeric width-small-medium">
+                            Contribution to project
+                        </th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Total</th>
+                        <td class="numeric"><strong>&pound; <th:block th:text="${#numbers.formatInteger(summaries.getTotalCost(),1,'COMMA')}" /></strong></td>
+                        <td class="numeric"><strong>&nbsp;</strong></td>
+                        <td class="numeric"><strong>&pound; <th:block th:text="${#numbers.formatInteger(summaries.getTotalFundingSought(),1,'COMMA')}" /></strong></td>
+                        <td class="numeric"><strong>&pound; <th:block th:text="${#numbers.formatInteger(summaries.getTotalOtherPublicSectorFunding(),1,'COMMA')}" /></strong></td>
+                        <td class="numeric"><strong>&pound; <th:block th:text="${#numbers.formatInteger(summaries.getTotalContributionToProject(),1,'COMMA')}" /></strong></td>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    <th:block th:each="summary : ${summaries.financeCheckSummariesResources}" th:with="partner=${summaries.getPartnerFromSummary(summary.organisationId)}">
+                        <tr >
+                            <th scope="col">
+                                <strong th:text="${partner.organisationName}">Organisation Name<br /></strong>
+                                <small th:text="${partner.isLeadOrganisation()} ? 'Lead Partner' : 'Partner'" ></small>
+                            </th>
+                            <td class="numeric"><strong>&pound; <th:block th:text="${#numbers.formatInteger(summary.totalCost,1,'COMMA')}" /></strong></td>
+                            <td th:text="${#numbers.formatInteger(summary.percentageGrant,1,'NONE')+'%'}" class="numeric" />
+                            <td class="numeric">&pound; <th:block th:text="${#numbers.formatInteger(summary.fundingSought,1,'COMMA')}" /></td>
+                            <td class="numeric">&pound; <th:block th:text="${#numbers.formatInteger(summary.otherPublicSectorFunding,1,'COMMA')}" /></td>
+                            <td class="numeric">&pound; <th:block th:text="${#numbers.formatInteger(summary.contributionToProject,1,'COMMA')}" /></td>
+                        </tr>
+                    </th:block>
+                </tbody>
+            </table>
+        </div>
+    </th:block>
+
+    <!-- ===========================Project Finance Cost Breakdown =========================== -->
+    <th:block th:fragment="project-finance-cost-breakdown(breakdowns)">
+        <div class="form-group">
+            <div style="overflow: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="col">Partner</th>
+                            <th scope="col" class="numeric width-small">Total</th>
+                            <th scope="col" class="numeric width-small">
+                                Labour
+                            </th>
+                            <th scope="col" class="numeric width-small">
+                                Overheads
+                            </th>
+                            <th scope="col" class="numeric width-small">
+                                Materials
+                            </th>
+                            <th scope="col" class="numeric width-small">Capital usage</th>
+                            <th scope="col" class="numeric width-small">Subcontracting cost</th>
+                            <th scope="col" class="numeric width-small">Travel and subsistence</th>
+                            <th scope="col" class="numeric width-small">Other Costs</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>Total</th>
+                            <td class="numeric"><strong>&pound; <th:block th:text="${#numbers.formatInteger(breakdowns.total,1,'COMMA')}" /></strong></td>
+                            <td class="numeric">&nbsp;</td>
+                            <td class="numeric">&nbsp;</td>
+                            <td class="numeric">&nbsp;</td>
+                            <td class="numeric">&nbsp;</td>
+                            <td class="numeric">&nbsp;</td>
+                            <td class="numeric">&nbsp;</td>
+                            <td class="numeric">&nbsp;</td>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                    <th:block th:each="finance : ${breakdowns.finances}" th:with="partner=${breakdowns.getPartnerFromBreakdown(finance.organisation)}">
+                        <tr>
+                            <th scope="col">
+                                <strong th:text="${partner.getOrganisationName()}">Organisation Name<br /></strong>
+                                <small th:text="${partner.isLeadOrganisation()} ? 'Lead Partner' : 'Partner'" ></small>
+                            </th>
+                            <td class="numeric"><strong>&pound; <th:block th:text="${#numbers.formatInteger(finance.getTotal(),1,'COMMA')}" /></strong></td>
+                            <th:block th:each="rowType : ${finance.financeOrganisationDetails.keySet()}" th:with="row=${finance.financeOrganisationDetails.get(rowType)}">
+                            <td th:if="${rowType.isSpendCostCategory()}" class="numeric">
+                                &pound; <th:block th:text="${#numbers.formatInteger(row.total,1,'COMMA')}" />
+                            </td>
+                            </th:block>
+                        </tr>
+                    </th:block>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </th:block>
 </html>
