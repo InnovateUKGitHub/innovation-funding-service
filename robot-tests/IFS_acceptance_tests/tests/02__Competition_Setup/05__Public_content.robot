@@ -10,7 +10,8 @@ Documentation     INFUND-6914 Create 'Public content' menu page for "Front Door"
 ...               INFUND-7489 Create 'Competition' > 'Dates' tab for external "Front Door" view of competition dates
 ...
 ...               INFUND-7487 Create Competition > Eligibility tab for external "Front Door" view of competition eligibility
-
+...
+...               INFUND-7488 Create 'Competition' > 'Scope' tab for external "Front Door" view of competition scope
 Suite Setup       Custom suite setup
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin
@@ -67,7 +68,7 @@ Competition information and search: Valid values
     [Tags]  HappyPath
     When the user enters text to a text field       id=short-description        Short public description
     And the user enters text to a text field        id=funding-range            Up to £1million
-    And the user enters text to a text field        id=eligibility-summary      Summary of eligiblity
+    And the user enters text to a text field        css=[labelledby="eligibility-summary"]      Summary of eligiblity
     When the user enters text to a text field       id=keywords  hellohellohellohellohellohellohellohellohellohellou
     And the user clicks the button/link             jQuery=button:contains("Save and return")
     Then the user should see the element            jQuery=.error-summary-list:contains("Each keyword must be less than 50 characters long.")
@@ -181,14 +182,20 @@ Eligibility: Contains the correct values when viewed, Edit sections
     When the user clicks the button/link                        jQuery=button:contains("Save and return")
     And the user should see the element                         css=img[title='The "Eligibility" section is marked as done']
 
+Scope: Server side validation
+    [Documentation]  INFUND-7488
+    [Tags]  HappyPath
+    When the user clicks the button/link  link=Scope
+    And the user clicks the button/link   jQuery=button:contains("Save and return")
+    Then the user should see a summary error  Please enter content.
+    And the user should see a summary error   Please enter a heading.
 
 Scope: Add, remove sections and submit
     [Documentation]    INFUND-6918, INFUND-7602
     [Tags]  HappyPath
-    When the user clicks the button/link                         link=Scope
-    Then the user can add and remove multiple content groups
-    When the user clicks the button/link            jQuery=button:contains("Save and return")
-    And the user should see the element             css=img[title='The "Scope" section is marked as done']
+    Given the user can add and remove multiple content groups
+    When the user clicks the button/link                        jQuery=button:contains("Save and return")
+    And the user should see the element  css=img[title='The "Scope" section is marked as done']
 
 Dates: Add, remove dates and submit
     [Documentation]    INFUND-6919
@@ -232,7 +239,7 @@ Publish public content: Publish once all sections are complete
 The user is able to edit and publish again
     [Documentation]  INFUND-6914
     [Tags]
-    Given the user enters text to a text field  id=eligibility-summary  Some other summary
+    Given the user enters text to a text field  css=[labelledby="eligibility-summary"]  Some other summary
     And the user clicks the button/link         jQuery=button:contains("Publish and return")
     When the user should see all sections completed
     Then the user should see the element        jQuery=small:contains("${today}")
@@ -271,6 +278,15 @@ The guest user is able to download the file in the Summary
     [Documentation]  INFUND-7486, INFUND-7487
     [Tags]  Pending
     # TODO Pending due to INFUND-8536
+
+The guest user can see updated scope information
+    [Documentation]    INFUND-7488
+    [Tags]
+    Given the user clicks the button/link    link=Scope
+    Then the user should see the element      jQuery=.column-third:contains("Heading 1") ~ .column-two-thirds:contains("Content 1")
+    And the user should see the element      jQuery=.column-third:contains("Heading 2") ~ .column-two-thirds:contains("Content 2")
+    And guest user downloads the file    ${server}/competition/15/download/48    ${DOWNLOAD_FOLDER}/scope.pdf
+    [Teardown]    remove the file from the operating system    scope.pdf
 
 The guest user can see updated date information
    [Documentation]    INFUND-7489
