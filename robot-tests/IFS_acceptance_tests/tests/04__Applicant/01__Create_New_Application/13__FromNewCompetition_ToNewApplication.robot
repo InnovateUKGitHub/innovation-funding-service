@@ -52,6 +52,7 @@ Comp admin completes ths competition setup
     Given the user should see the element    jQuery=h1:contains("Competition setup")
     Then the user marks the Application as done
     And the user fills in the CS Assessors
+    And the user fills in the Public content and publishes
     When the user clicks the button/link    jQuery=a:contains("Save")
     And the user navigates to the page    ${CA_UpcomingComp}
     Then the user should see the element    jQuery=h2:contains("Ready to open") ~ ul a:contains("${compWithoutGrowth}")
@@ -82,7 +83,7 @@ Applicant fills in the Application Details
     Given the user should see the element    jQuery=h1:contains("Application overview")
     When the user clicks the button/link    link=Application details
     Then the user enters text to a text field    css=#application_details-title    ${applicationTitle}
-    And the user selects technical feasibility and no to resubmission
+    And the user selects technical feasibility and no to resubmission and an innovation area
     And the user enters text to a text field    css=#application_details-startdate_day    ${day}
     And the user enters text to a text field    css=#application_details-startdate_month    ${month}
     And the user enters text to a text field    css=#application_details-startdate_year    ${nextyear}
@@ -113,6 +114,7 @@ Once the project growth table is selected
     When the user decides about the growth table    yes    Yes
     Then the user marks the Application as done
     And the user fills in the CS Assessors
+    And the user fills in the Public content and publishes
     When the user clicks the button/link    jQuery=a:contains("Save")
     And the user navigates to the page    ${CA_UpcomingComp}
     Then the user should see the element    jQuery=h2:contains("Ready to open") ~ ul a:contains("${compWITHGrowth}")
@@ -274,8 +276,8 @@ Invite Collaborator in Application with Growth table
     [Setup]  the user navigates to the page             ${dashboard_url}
     Given the lead applicant invites an existing user   ${compWITHGrowth}  ${collaborator1_credentials["email"]}
     When the user reads his email and clicks the link   ${collaborator1_credentials["email"]}  Invitation to collaborate in ${compWITHGrowth}  participate in their application
-    Then the user should see the element                jQuery=h1:contains("We've found an existing user")
-    And the user clicks the button/link                 link=Click here to sign in
+    Then the user should see the element                jQuery=h1:contains("You already have an account with us.")
+    And the user clicks the button/link                 link=Sign into the Innovation Funding Service.
     When guest user log-in                              &{collaborator1_credentials}
     Then the user clicks the button/link                link=Continue to application
 
@@ -326,12 +328,16 @@ the the user should see that the funding depends on the research area
 the user should see his finances empty
     the user should see the element    jQuery=thead:contains("Total project costs") ~ *:contains("£0")
 
-the user selects technical feasibility and no to resubmission
+the user selects technical feasibility and no to resubmission and an innovation area
     # Often those labels need double click. Thus i made a separate keyword to looks more tidy
+    the user clicks the button/link    jQuery=button:contains(Change your innovation area)
+    the user clicks the button/link    jQuery=label[for="innovationAreaChoice-5"]
+    the user clicks the button/link    jQuery=label[for="innovationAreaChoice-5"]
+    the user clicks the button/link    jQuery=button:contains(Save)
     the user clicks the button/link    jQuery=label[for="financePosition-cat-33"]
     the user clicks the button/link    jQuery=label[for="financePosition-cat-33"]
-    the user clicks the button/link    jQuery=label[for="resubmission-no"]
-    the user clicks the button/link    jQuery=label[for="resubmission-no"]
+    the user clicks the button/link    jQuery=label[for="application.resubmission-no"]
+    the user clicks the button/link    jQuery=label[for="application.resubmission-no"]
 
 the user decides about the growth table
     [Arguments]    ${edit}    ${read}
@@ -362,7 +368,7 @@ Lead Applicant applies to the new created competition
     ${competitionId} =    get comp id from comp title    ${competition}
     the user navigates to the page    ${server}/competition/${competitionId}/info/eligibility
     the user clicks the button/link    jQuery=a:contains("Apply now")
-    the user clicks the button/link    jQuery=button:contains("Begin application")
+    the user clicks the button/link    jQuery=a:contains("Begin application")
 
 the user enters value to field
     [Arguments]    ${field}    ${value}

@@ -2,10 +2,7 @@ package org.innovateuk.ifs.project.finance.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.project.controller.FinanceCheckController;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckResource;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckURIs;
+import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.junit.Test;
@@ -98,6 +95,16 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
                 contentType(APPLICATION_JSON).
                 content(toJson(financeCheckResource))).
                 andExpect(status().isOk());
+    }
+
+    @Test
+    public void testGetFinanceCheckOverview() throws Exception {
+        Long projectId = 123L;
+        when(financeCheckServiceMock.getFinanceCheckOverview(projectId)).thenReturn(serviceSuccess(new FinanceCheckOverviewResource()));
+
+        mockMvc.perform(get(FinanceCheckURIs.BASE_URL + "/{projectId}" + FinanceCheckURIs.PATH + "/overview", projectId)).andExpect(status().isOk());
+
+        verify(financeCheckServiceMock).getFinanceCheckOverview(projectId);
     }
 
     @Override

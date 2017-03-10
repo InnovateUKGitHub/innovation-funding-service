@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Add organisation'" />
+    </head>
+
+    <body class="app-org-invite" th:with="context='applicant'">
+        <th:block th:insert="fragments/layout :: body-start" />
+        <th:block th:insert="fragments/layout :: global-header" />
+
+        <main id="content">
+            <th:block th:insert="fragments/layout :: main-content-start" />
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Application team',linkClass='link-back',linkUrl=@{/application/{applicationId}/team(applicationId=${model.applicationId})}" />
+
+            <div class="page-title">
+                <th:block th:insert="fragments/elements :: application-title (applicationId=${model.applicationId},applicationName=${model.applicationName})" />
+                <h1 class="heading-xlarge">Add organisation</h1>
+            </div>
+
+            <p>Add organisations to your application team. If you wish to remove a sole member of an organisation, you must add a replacement member first.</p>
+
+            <form th:action="@{/application/{applicationId}/team/addOrganisation(applicationId=${model.applicationId})}" th:object="${form}" method="post">
+                <button class="hidden-save" type="submit" aria-hidden="true" tabindex="-1">save form</button>
+
+                <div class="error-summary" th:if="${#fields.hasErrors('*')}">
+                    <h2 class="heading-medium error-summary-heading">We were unable to save your changes</h2>
+                    <ul class="error-summary-list">
+                        <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+                    </ul>
+                </div>
+
+                <div th:class="${#fields.hasErrors('organisationName')}? 'form-group error':'form-group'">
+                    <label class="form-label-bold" for="organisationName">
+                        Organisation name
+                        <th:block th:if="${#fields.hasErrors('organisationName')}">
+                            <span class="error-message" th:each="err : ${#fields.errors('organisationName')}" th:text="${err}" />
+                        </th:block>
+                    </label>
+                    <input type="text"
+                           class="form-control width-full"
+                           th:field="*{organisationName}"
+                           required="required"
+                           th:attr="data-required-errormessage=#{validation.standard.organisationname.required}" />
+                </div>
+
+                <table id="applicant-table" class="table-overflow">
+                    <thead>
+                        <tr>
+                            <th class="width-30-percent" scope="col">Applicant name</th>
+                            <th class="width-55-percent" scope="col">Email</th>
+                            <th class="width-15-percent alignright" scope="col"><span class="visually-hidden">Actions</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="applicant, applicantStat : *{applicants}" class="repeatable-row">
+                            <td th:class="${#fields.hasErrors('applicants[__${applicantStat.index}__].name')}? 'form-group error':'form-group'">
+                                <label th:for="'applicants'+${applicantStat.index}+'.name'">
+                                    <span class="visually-hidden">Applicant name</span>
+                                    <th:block th:if="${#fields.hasErrors('applicants[__${applicantStat.index}__].name')}">
+                                        <span th:each="err : ${#fields.errors('applicants[__${applicantStat.index}__].name')}"
+                                              th:text="${err}"
+                                              class="error-message"
+                                              th:data-errorfield="'applicants['+${applicantStat.index}+'].name'">Please enter a name.</span>
+                                    </th:block>
+                                </label>
+                                <input type="text"
+                                       th:field="*{applicants[__${applicantStat.index}__].name}"
+                                       class="form-control width-full"
+                                       th:errorclass="field-error"
+                                       required="required"
+                                       th:attr="data-required-errormessage=#{validation.standard.name.required}" />
+                            </td>
+                            <td th:class="${#fields.hasErrors('applicants[__${applicantStat.index}__].email')}? 'form-group error':'form-group'">
+                                <label th:for="'applicants'+${applicantStat.index}+'.email'">
+                                    <span class="visually-hidden">Applicant email</span>
+                                    <th:block th:if="${#fields.hasErrors('applicants[__${applicantStat.index}__].email')}">
+                                        <span th:each="err : ${#fields.errors('applicants[__${applicantStat.index}__].email')}"
+                                              th:text="${err}"
+                                              class="error-message"
+                                              th:data-errorfield="'applicants['+${applicantStat.index}+'].email'"> Please enter an email address.</span>
+                                    </th:block>
+                                </label>
+                                <input type="email"
+                                       th:field="*{applicants[__${applicantStat.index}__].email}"
+                                       class="form-control width-full"
+                                       th:errorclass="field-error"
+                                       required="required"
+                                       th:attr="data-required-errormessage=#{validation.invite.email.required},
+                                                data-email-errormessage=#{validation.standard.email.format}" />
+                            </td>
+                            <td class="alignright"><button class="remove-another-row buttonlink" th:value="${applicantStat.index}" name="removeApplicant" type="submit">Remove</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p><button class="buttonlink" data-repeatable-rowcontainer="#applicant-table tbody" name="addApplicant" type="submit">Add new applicant</button></p>
+
+                <p class="extra-margin">
+                    <button class="button" name="add_partner" value="add_partner" type="submit">Add organisation and invite applicants</button>
+                    <a th:href="@{/application/{applicationId}/team(applicationId=${model.applicationId})}" class="button button-clear">Cancel</a>
+                </p>
+            </form>
+
+            <th:block th:insert="fragments/layout :: main-content-end" />
+        </main>
+
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
+    </body>
+</html>

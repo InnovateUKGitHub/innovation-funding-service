@@ -216,7 +216,7 @@ public class ApplicationFormController {
         QuestionViewModel questionViewModel = questionModelPopulator.populateModel(questionId, applicationId, user, model, form, organisationDetailsViewModel);
 
         model.addAttribute(MODEL_ATTRIBUTE_MODEL, questionViewModel);
-        applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model, null);
+        applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null);
 
         return APPLICATION_FORM;
     }
@@ -256,7 +256,7 @@ public class ApplicationFormController {
 
         Long organisationId = userService.getUserOrganisationId(user.getId(), applicationId);
 
-        populateSection(model, form, bindingResult, request, application, user, organisationId, section, allSections);
+        populateSection(model, form, bindingResult, application, user, organisationId, section, allSections);
 
         return APPLICATION_FORM;
     }
@@ -264,7 +264,6 @@ public class ApplicationFormController {
     private void populateSection(Model model,
                                  ApplicationForm form,
                                  BindingResult bindingResult,
-                                 HttpServletRequest request,
                                  ApplicationResource application,
                                  UserResource user,
                                  Long organisationId,
@@ -286,7 +285,7 @@ public class ApplicationFormController {
 
             model.addAttribute(MODEL_ATTRIBUTE_MODEL, viewModel);
         }
-        applicationNavigationPopulator.addAppropriateBackURLToModel(application.getId(), request, model, section);
+        applicationNavigationPopulator.addAppropriateBackURLToModel(application.getId(), model, section);
     }
 
     @ProfileExecution
@@ -345,7 +344,7 @@ public class ApplicationFormController {
                 QuestionViewModel questionViewModel = questionModelPopulator.populateModel(questionId, applicationId, user, model, form, organisationDetailsViewModel);
 
                 model.addAttribute(MODEL_ATTRIBUTE_MODEL, questionViewModel);
-                applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model, null);
+                applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, model, null);
                 return APPLICATION_FORM;
             } else {
                 return getRedirectUrl(request, applicationId, Optional.empty());
@@ -382,7 +381,11 @@ public class ApplicationFormController {
             // user did a action, just display the same page.
             LOG.debug("redirect: " + request.getRequestURI());
             return "redirect:" + request.getRequestURI();
-        } else {
+        }
+        else if(request.getParameter("submit-section-redirect") != null) {
+            return "redirect:" + APPLICATION_BASE_URL + applicationId + request.getParameter("submit-section-redirect");
+        }
+        else {
             if (sectionType.isPresent() && sectionType.get().getParent().isPresent()) {
                 return redirectToSection(sectionType.get().getParent().get(), applicationId);
             }
@@ -751,7 +754,7 @@ public class ApplicationFormController {
 
         if(saveApplicationErrors.hasErrors() || !validFinanceTerms || overheadFileSaver.isOverheadFileRequest(request)){
             validationHandler.addAnyErrors(saveApplicationErrors);
-            populateSection(model, form, bindingResult, request, application, user, organisationId, section, allSections);
+            populateSection(model, form, bindingResult, application, user, organisationId, section, allSections);
             return APPLICATION_FORM;
         } else {
             return getRedirectUrl(request, applicationId, Optional.of(section.getType()));
