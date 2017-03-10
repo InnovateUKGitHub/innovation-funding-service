@@ -166,7 +166,7 @@ PM can view both documents
 
 PM can remove the second document
     [Documentation]    INFUND-3011
-    [Tags]
+    [Tags]    HappyPath
     Given the user navigates to the page    ${project_in_setup_page}/partner/documents
     When the user clicks the button/link    name=removeExploitationPlanClicked
     Then the user should not see an error in the page
@@ -181,7 +181,7 @@ Non-lead partner can still view the first document
 
 PM can remove the first document
     [Documentation]    INFUND-3011
-    [Tags]
+    [Tags]    HappyPath
     [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    Passw0rd
     Given the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
