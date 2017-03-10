@@ -105,7 +105,7 @@
             </select>
           </div>
           <button type="button" data-js-modal="modal-confirm-viability" class="button" id="confirm-button">Confirm viability</button>
-          <th:block  th:include="fragments/modals :: modal-confirm-viability" />
+          <th:block th:insert="fragments/modals :: modal-confirm-viability" />
       </th:block>
       <hr/>
       <button th:if="${model.showSaveAndContinueButton}" class="button-secondary" name="save-and-continue">Save and return to finance checks</button>
