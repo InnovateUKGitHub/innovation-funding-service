@@ -64,7 +64,7 @@ Competition information and search: Valid values
     [Tags]  HappyPath
     When the user enters text to a text field       id=short-description        Short public description
     And the user enters text to a text field        id=funding-range            Up to £1million
-    And the user enters text to a text field        id=eligibility-summary      Summary of eligiblity
+    And the user enters text to a text field        css=[labelledby="eligibility-summary"]      Summary of eligiblity
     When the user enters text to a text field       id=keywords  hellohellohellohellohellohellohellohellohellohellou
     And the user clicks the button/link             jQuery=button:contains("Save and return")
     Then the user should see the element            jQuery=.error-summary-list:contains("Each keyword must be less than 50 characters long.")
@@ -190,7 +190,7 @@ Publish public content: Publish once all sections are complete
 The user is able to edit and publish again
     [Documentation]  INFUND-6914
     [Tags]
-    Given the user enters text to a text field  id=eligibility-summary  Some other summary
+    Given the user enters text to a text field  css=[labelledby="eligibility-summary"]  Some other summary
     And the user clicks the button/link         jQuery=button:contains("Publish and return")
     When the user should see all sections completed
     Then the user should see the element        jQuery=small:contains("${today}")
