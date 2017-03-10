@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.application.form;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import javax.validation.constraints.NotNull;
 
 /**
@@ -18,18 +21,24 @@ public class ResearchCategoryForm {
         this.researchCategoryChoice = researchCategoryChoice;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+
         if (o == null || getClass() != o.getClass()) return false;
 
         ResearchCategoryForm that = (ResearchCategoryForm) o;
 
-        return researchCategoryChoice != null ? researchCategoryChoice.equals(that.researchCategoryChoice) : that.researchCategoryChoice == null;
+        return new EqualsBuilder()
+                .append(researchCategoryChoice, that.researchCategoryChoice)
+                .isEquals();
     }
 
     @Override
     public int hashCode() {
-        return researchCategoryChoice != null ? researchCategoryChoice.hashCode() : 0;
+        return new HashCodeBuilder(17, 37)
+                .append(researchCategoryChoice)
+                .toHashCode();
     }
 }
