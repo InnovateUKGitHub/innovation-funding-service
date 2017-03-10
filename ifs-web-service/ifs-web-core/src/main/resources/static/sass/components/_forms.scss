@@ -317,8 +317,8 @@ td.autosave-info {
 		background: url(../images/icons/icon-download.png) no-repeat;
 }
 
-
 // ------- progressive group select -------- //
+
 .js-progressive-group-select {
   display: block;
   margin: 0 0 1em 0;
@@ -334,4 +334,51 @@ td.autosave-info {
   @include media (tablet) {
     max-width: 40%;
   }
+}
+
+// ------- form footer - edit / mark as complete -------- //
+/*
+
+```
+<div>
+  <div class="grid-row form-footer">
+    <div class="column-half">
+      <a href="#">Mark as complete</a>
+    </div>
+    <div class="column-half alignright">
+      Last saved 15 January 03:34 by you
+    </div>
+</div>
+```
+
+*/
+
+.form-footer{
+  @include core-16;
+  color: $secondary-text-colour;
+  background: $panel-colour;
+  padding: 0.5em 0;
+  margin: 0;
+
+  .column-quarter{
+    min-height: 1em;
+  }
+
+  @include media-down(mobile) {
+    .alignright{
+      text-align: left;
+      margin-top: 0.5em;
+    }
+  }
+
+  .buttonlink{
+    margin: 0;
+  }
+
+  .autosave-info{
+    padding: 0;
+    float: none;
+    font-weight: bold;
+  }
+
 }

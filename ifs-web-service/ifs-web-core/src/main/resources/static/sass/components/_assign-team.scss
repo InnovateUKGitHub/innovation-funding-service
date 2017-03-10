@@ -28,6 +28,16 @@ The assign container is normally a `<select>`, which gets progressivly transform
     position:relative;
     @include inline-block;
 
+    &--block{
+      display: block;
+      margin-bottom: 30px;
+      background: $panel-colour;
+      border-left: 5px solid $text-colour;
+      padding: 0.5em;
+      @include core-16;
+
+    }
+
     .assign-team {
         @include border-radius(2px);
         border: 1px solid $grey-3;

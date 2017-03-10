@@ -180,6 +180,21 @@
 <!-- ========================= textarea wrapped within all extra's =========================== -->
 
 <th:block th:fragment="form-textarea-wrapped">
+
+    <th:block th:unless="${hideAlerts}">
+        <th:block th:insert="question-type/form-elements :: ready-for-review" th:if="${!userIsLeadApplicant}"/>
+        <th:block th:insert="question-type/form-elements :: assign-buttons"
+                  th:unless="${readonly} or ${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} or ${!userIsLeadApplicant}"/>
+    </th:block>
+
+    <div th:unless="${readonly} or ${hideAlerts}" class="textarea-header">
+
+        <th:block th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}">
+            <div class="success-alert assignee">This question is <strong>marked as complete</strong></div>
+        </th:block>
+
+    </div>
+
     <div th:class="'textarea-wrapped ' +
                    (${readonly} ? '' : (
                             (${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} ? 'marked-as-complete' :
@@ -193,27 +208,6 @@
 
          th:with="currentUser=${#authentication.getDetails()},validationId='formInput['+${question.getId()}+']'">
 
-         <div th:unless="${readonly}" class="textarea-header">
-           <img th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
-                 src="/images/field/field-done.png"
-                th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done.png')}"
-                alt=""
-                 class="marked-as-complete" />
-
-            <th:block th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}">
-                  <div class="assignee">This question is <strong>marked as complete</strong></div>
-            </th:block>
-
-            <img th:if="${!(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) and ((currentUser.getId() == questionAssignee?.assigneeUserId) or ((questionAssignee?.assignee == null) and (leadApplicant?.getId() == currentUser.getId())))}"
-                 src="/images/field/field-assigned.png"
-                 th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-assigned.png')}"
-                 alt=""
-                 class="assigned-to-me" />
-
-            <th:block th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
-                 th:include="question-type/form-elements :: current-assignee" />
-        </div>
-
         <textarea th:id="'form-textarea-'+${formInput.id}"
                   th:name="'formInput['+${formInput.id}+']'"
                   th:field="*{formInput[__${formInput.id}__]}"
@@ -226,22 +220,39 @@
                   th:attr="data-required-errormessage=#{validation.field.please.enter.some.text}"
                   required="required"></textarea>
 
-        <div class="textarea-footer">
-          <p>
-            <th:block th:insert="question-type/form-elements :: last-update-info" />
-            <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=${formInput.getWordCount()}, currentWordsLeft=${response?.getWordCountLeft()})" />
-          </p>
+        <div class="grid-row form-footer">
 
-            <th:block th:insert="question-type/form-elements :: ready-for-review" th:if="${!userIsLeadApplicant}" />
-            <th:block th:insert="question-type/form-elements :: assign-buttons" th:unless="${readonly} or ${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} or ${!userIsLeadApplicant}" />
+            <div class="column-quarter">
+                <th:block th:if="${competitionIsOpen} == null or ${competitionIsOpen}">
+                    <!--/* if  readonly we show the edit form button */-->
+                    <th:block th:if="${readonly and userIsLeadApplicant}" th:include="question-type/form-elements :: form-edit-question-button" />
+                    <!--/*  we show mark as complete buttons and the question should be assigned to you or */-->
+                    <th:block th:if="${userIsLeadApplicant}" th:include="question-type/form-elements :: form-mark-as-complete-buttons" />
+                </th:block>
+            </div>
 
-            <th:block th:if="${competitionIsOpen} == null or ${competitionIsOpen}">
-                <!--/* if  readonly we show the edit form button */-->
-                <th:block th:if="${readonly and userIsLeadApplicant}" th:include="question-type/form-elements :: form-edit-question-button" />
-                <!--/*  we show mark as complete buttons and the question should be assigned to you or */-->
-                <th:block th:if="${userIsLeadApplicant}" th:include="question-type/form-elements :: form-mark-as-complete-buttons" />
-            </th:block>
+            <div class="column-three-quarters alignright">
+
+                <span class="textarea-footer"></span>
+
+                <th:block th:if="${response?.getUpdateDate()}">
+                    <span class="update-details">
+                        <th:block th:include="fragments/elements :: pretty-date (date=${response?.getUpdateDate()})"/> by
+                        <th:block th:if="${response?.getUpdatedByUser() == currentUser.getId()}">you</th:block>
+                        <th:block th:unless="${response?.getUpdatedByUser() == currentUser.getId()}"
+                                  th:text="${response?.getUpdatedByUserName()}"/>
+                    </span>
+                </th:block>
+
+                <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=${formInput.getWordCount()}, currentWordsLeft=${response?.getWordCountLeft()})" />
+
+            </div>
+
         </div>
+
+        <th:block th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
+                  th:include="question-type/form-elements :: current-assignee" />
+
     </div>
 </th:block>
 <!-- ========================= Current Assignee =========================== -->
@@ -273,7 +284,7 @@
   </div>
 </th:block>
 <th:block th:fragment="assign-buttons">
-    <div class="assign-container" th:if="${question.isAssignEnabled()}">
+    <div class="assign-container" th:classappend="${displayBlock} ? 'assign-container--block'" th:if="${question.isAssignEnabled()}">
         <div class="assign-button">
               <th:block th:insert="question-type/form-elements :: assigned-to" />
         </div>
