@@ -570,7 +570,7 @@ Lead partner can see the status update when all Project details are submitted
     When the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element   jQuery=ul li.complete:nth-child(2)
     And the user should see the element    jQuery=ul li.require-action:nth-child(4)
-    And the user should see the element    jQuery=ul li.require-action:nth-child(7)
+    And the user should see the element    jQuery=ul li.waiting:nth-child(7)
     When the user clicks the button/link   link=status of my partners
     Then the user should see the element   id=table-project-status
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)
