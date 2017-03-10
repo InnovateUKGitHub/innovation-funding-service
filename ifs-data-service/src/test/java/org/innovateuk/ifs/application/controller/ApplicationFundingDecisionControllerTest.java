@@ -10,7 +10,6 @@ import org.springframework.http.MediaType;
 
 import java.util.Map;
 
-import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -75,8 +74,11 @@ public class ApplicationFundingDecisionControllerTest extends BaseControllerMock
 
     @Test
     public void testSendNotifications() throws Exception {
-        NotificationResource notification = new NotificationResource("Subject of notification", "Body of notification message.", asList(1L, 2L, 3L));
 
+        Map<Long, FundingDecision> decisions = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED, 3L, FundingDecision.ON_HOLD);
+        NotificationResource notification = new NotificationResource("Subject of notification", "Body of notification message.", decisions);
+
+        when(projectServiceMock.createProjectsFromFundingDecisions(decisions)).thenReturn(serviceSuccess());
         when(applicationFundingServiceMock.notifyLeadApplicantsOfFundingDecisions(notification)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/applicationfunding/sendNotifications")

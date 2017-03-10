@@ -30,6 +30,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.innovateuk.ifs.application.builder.ApplicationSummaryResourceBuilder.newApplicationSummaryResource;
+import static org.innovateuk.ifs.application.resource.FundingDecision.FUNDED;
+import static org.innovateuk.ifs.application.resource.FundingDecision.UNFUNDED;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -158,7 +160,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("subject", "a subject")
                 .param("message", "a message")
-                .param("applicationIds", String.valueOf(APPLICATION_ID_ONE)))
+                .param("fundingDecisions[" + APPLICATION_ID_ONE + "]", String.valueOf(FUNDED)))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/competition/" + COMPETITION_ID + "/manage-funding-applications"));
 
@@ -174,8 +176,8 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("subject", "a subject")
                 .param("message", "a message")
-                .param("applicationIds", String.valueOf(APPLICATION_ID_ONE))
-                .param("applicationIds", String.valueOf(APPLICATION_ID_TWO)))
+                .param("fundingDecisions[" + APPLICATION_ID_ONE + "]", String.valueOf(FUNDED))
+                .param("fundingDecisions[" + APPLICATION_ID_TWO + "]", String.valueOf(UNFUNDED)))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/competition/" + COMPETITION_ID + "/manage-funding-applications"));
 
@@ -189,7 +191,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
         mockMvc.perform(post("/competition/{competitionId}/funding/send", COMPETITION_ID)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("message", "a message")
-                .param("applicationIds", String.valueOf(APPLICATION_ID_ONE)))
+                .param("fundingDecisions[" + APPLICATION_ID_ONE + "]", String.valueOf(FUNDED)))
                 .andExpect(view().name("comp-mgt-send-notifications"))
                 .andExpect(model().attributeHasFieldErrors("form", "subject"))
                 .andReturn();
@@ -204,7 +206,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
         mockMvc.perform(post("/competition/{competitionId}/funding/send", COMPETITION_ID)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("subject", "a subject")
-                .param("applicationIds", String.valueOf(APPLICATION_ID_ONE)))
+                .param("fundingDecisions[" + APPLICATION_ID_ONE + "]", String.valueOf(FUNDED)))
                 .andExpect(view().name("comp-mgt-send-notifications"))
                 .andExpect(model().attributeHasFieldErrors("form", "message"))
                 .andReturn();
@@ -212,8 +214,9 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
         verify(applicationFundingServiceMock, never()).sendFundingNotifications(any(NotificationResource.class));
     }
 
+
     @Test
-    public void sendNotificationsWithInvalidApplicationIds() throws Exception {
+    public void sendNotificationsWithInvalidFundingDecisions() throws Exception {
 
         when(applicationFundingServiceMock.sendFundingNotifications(any(NotificationResource.class))).thenReturn(serviceSuccess());
 
@@ -222,7 +225,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
                 .param("subject", "a subject")
                 .param("message", "a message"))
                 .andExpect(view().name("comp-mgt-send-notifications"))
-                .andExpect(model().attributeHasFieldErrors("form", "applicationIds"))
+                .andExpect(model().attributeHasFieldErrors("form", "fundingDecisions"))
                 .andReturn();
 
         verify(applicationFundingServiceMock, never()).sendFundingNotifications(any(NotificationResource.class));

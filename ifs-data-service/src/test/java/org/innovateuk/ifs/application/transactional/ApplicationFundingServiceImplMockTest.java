@@ -198,7 +198,6 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
         Application application1 = newApplication().build();
         Application application2 = newApplication().build();
         Application application3 = newApplication().build();
-        List<Long> applicationIds = Arrays.asList(application1.getId(), application2.getId(), application3.getId());
 
         User application1LeadApplicant = newUser().build();
         User application2LeadApplicant = newUser().build();
@@ -217,7 +216,12 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
         UserNotificationTarget application3LeadApplicantTarget = new UserNotificationTarget(application3LeadApplicant);
         List<NotificationTarget> expectedLeadApplicants = asList(application1LeadApplicantTarget, application2LeadApplicantTarget, application3LeadApplicantTarget);
 
-        NotificationResource notificationResource = new NotificationResource("Subject", "The message body.", applicationIds);
+        Map<Long, FundingDecision> decisions = MapFunctions.asMap(
+                application1.getId(), FundingDecision.FUNDED,
+                application2.getId(), FundingDecision.UNFUNDED,
+                application3.getId(), FundingDecision.ON_HOLD);
+
+        NotificationResource notificationResource = new NotificationResource("Subject", "The message body.", decisions);
         Map<String, Object> expectedGlobalNotificationArguments = asMap(
                 "subject", notificationResource.getSubject(),
                 "message", notificationResource.getMessageBody());

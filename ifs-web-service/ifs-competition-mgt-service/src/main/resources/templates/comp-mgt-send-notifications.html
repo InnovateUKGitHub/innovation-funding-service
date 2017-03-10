@@ -74,6 +74,7 @@
                     <td th:case="${T(org.innovateuk.ifs.application.resource.FundingDecision).FUNDED}">Successful</td>
                     <td th:case="${T(org.innovateuk.ifs.application.resource.FundingDecision).UNFUNDED}">Unsuccessful</td>
                     <td th:case="${T(org.innovateuk.ifs.application.resource.FundingDecision).UNDECIDED}">Undecided</td>
+                    <td th:case="${T(org.innovateuk.ifs.application.resource.FundingDecision).ON_HOLD}">On hold</td>
                     <td th:case="*">-</td>
                 </th:block>
             </tr>
@@ -117,7 +118,9 @@
             </div>
         </div>
 
-        <input type="hidden" th:field="${form.applicationIds}" />
+        <th:block th:each="entry : ${model.fundingDecisions}" >
+            <input type="hidden"  th:name="'fundingDecisions[' + ${entry.key} + ']'" th:value="${entry.value}"/>
+        </th:block>
         <button name="send-emails" class="button">Send email to all applicants</button>
 
         <a th:href="@{/competition/{competitionId}/manage-funding-applications(competitionId=${model.competitionId})}">

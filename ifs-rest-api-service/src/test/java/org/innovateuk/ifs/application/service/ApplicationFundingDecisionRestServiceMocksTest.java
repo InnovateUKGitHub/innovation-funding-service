@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 
 import java.util.Map;
 
-import static java.util.Arrays.asList;
 import static org.junit.Assert.assertNotNull;
 
 public class ApplicationFundingDecisionRestServiceMocksTest extends BaseRestServiceUnitTest<ApplicationFundingDecisionRestServiceImpl> {
@@ -55,8 +54,9 @@ public class ApplicationFundingDecisionRestServiceMocksTest extends BaseRestServ
 
     @Test
     public void testSendFundingDecision() {
+        Map<Long, FundingDecision> decisions = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED, 3L, FundingDecision.ON_HOLD);
 
-        NotificationResource notification = new NotificationResource("Subject", "Body.", asList(1L, 2L, 3L));
+        NotificationResource notification = new NotificationResource("Subject", "Body.", decisions);
 
         String expectedUrl = applicationFundingDecisionRestURL + "/sendNotifications";
         setupPostWithRestResultExpectations(expectedUrl, notification, HttpStatus.OK);

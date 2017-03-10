@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -85,10 +84,8 @@ public class ApplicationFundingDecisionServiceImpl implements ApplicationFunding
 	}
 
 	private Map<Long, FundingDecision> createSubmittedApplicationFundingDecisionMap(List<Long> applicationIds, Long competitionId, FundingDecision fundingDecision) {
-		Map<Long, FundingDecision> applicationIdToFundingDecision = new HashMap<>();
-		applicationIdToFundingDecision = filteredListOfFundingDecisions(applicationIds, competitionId, fundingDecision);
 
-		return applicationIdToFundingDecision;
+		return filteredListOfFundingDecisions(applicationIds, competitionId, fundingDecision);
 	}
 
 	private Map<Long, FundingDecision> filteredListOfFundingDecisions(List<Long> applicationIds, Long competitionId, FundingDecision fundingDecision) {

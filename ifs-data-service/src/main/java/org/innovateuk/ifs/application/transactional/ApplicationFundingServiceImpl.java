@@ -123,7 +123,7 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<Void> notifyLeadApplicantsOfFundingDecisions(NotificationResource notificationResource) {
 
-        List<ServiceResult<Pair<Long, NotificationTarget>>> fundingNotificationTargets = getLeadApplicantNotificationTargets(notificationResource.getApplicationIds());
+        List<ServiceResult<Pair<Long, NotificationTarget>>> fundingNotificationTargets = getLeadApplicantNotificationTargets(notificationResource.calculateApplicationIds());
         ServiceResult<List<Pair<Long, NotificationTarget>>> aggregatedFundingTargets = aggregate(fundingNotificationTargets);
 
         return aggregatedFundingTargets.handleSuccessOrFailure(
@@ -135,7 +135,7 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
 
                     return fundedEmailSendResult.andOnSuccess(() ->
                             aggregate(simpleMap(
-                                    notificationResource.getApplicationIds(), applicationId ->
+                                    notificationResource.calculateApplicationIds(), applicationId ->
                                             applicationService.setApplicationFundingEmailDateTime(applicationId, LocalDateTime.now()))))
                             .andOnSuccessReturnVoid();
                 });

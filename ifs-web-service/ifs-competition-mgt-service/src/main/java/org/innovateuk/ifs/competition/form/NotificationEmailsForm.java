@@ -1,8 +1,12 @@
 package org.innovateuk.ifs.competition.form;
 
 import org.hibernate.validator.constraints.NotEmpty;
+import org.innovateuk.ifs.application.resource.FundingDecision;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class NotificationEmailsForm {
 
@@ -13,7 +17,7 @@ public class NotificationEmailsForm {
     private String message;
 
     @NotEmpty(message="{validation.manage.funding.applications.no.application.selected}")
-    private List<Long> applicationIds;
+    private Map<Long, FundingDecision> fundingDecisions;
 
     public String getSubject() {
         return subject;
@@ -32,10 +36,14 @@ public class NotificationEmailsForm {
     }
 
     public List<Long> getApplicationIds() {
-        return applicationIds;
+        return getFundingDecisions() != null ? new ArrayList<>(getFundingDecisions().keySet()) : Collections.EMPTY_LIST;
     }
 
-    public void setApplicationIds(List<Long> applicationIds) {
-        this.applicationIds = applicationIds;
+    public Map<Long, FundingDecision> getFundingDecisions() {
+        return fundingDecisions;
+    }
+
+    public void setFundingDecisions(Map<Long, FundingDecision> fundingDecisions) {
+        this.fundingDecisions = fundingDecisions;
     }
 }
