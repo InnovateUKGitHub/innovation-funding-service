@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static org.innovateuk.ifs.assessment.builder.ApplicationAssessmentFeedbackResourceBuilder.newApplicationAssessmentFeedbackResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeResourceBuilder.newAssessmentRejectOutcomeResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOutcomeResourceBuilder.newAssessmentFundingDecisionOutcomeResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
@@ -104,6 +105,23 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
                 newAssessmentFundingDecisionOutcomeResource().build();
         setupPutWithRestResultExpectations(format("%s/%s/recommend", assessmentRestURL, assessmentId), assessmentFundingDecisionOutcomeResource, OK);
         RestResult<Void> response = service.recommend(assessmentId, assessmentFundingDecisionOutcomeResource);
+        assertTrue(response.isSuccess());
+    }
+
+    @Test
+    public void getApplicationFeedback() throws Exception {
+        long applicationId = 1L;
+
+        ApplicationAssessmentFeedbackResource expectedResource = newApplicationAssessmentFeedbackResource().build();
+
+        setupGetWithRestResultExpectations(
+                format("%s/application/%s/feedback", assessmentRestURL, applicationId),
+                ApplicationAssessmentFeedbackResource.class,
+                expectedResource,
+                OK
+        );
+
+        RestResult<ApplicationAssessmentFeedbackResource> response = service.getApplicationFeedback(applicationId);
         assertTrue(response.isSuccess());
     }
 
