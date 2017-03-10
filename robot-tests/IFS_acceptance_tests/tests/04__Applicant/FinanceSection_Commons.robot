@@ -220,3 +220,10 @@ the user should see all finance subsections incomplete
     the user should see the element  jQuery=li.grid-row.section:nth-of-type(2) img.section-status.assigned
     the user should see the element  jQuery=h3:contains("Your funding")
 
+Remove previous rows
+    [Arguments]  ${element}
+    :FOR    ${i}    IN RANGE  10
+    \  ${status}  run keyword and return status without screenshots  the user should not see the element  ${element}
+    \  Exit For Loop If  ${status}=='PASS'
+    \  run keyword if  ${status}=='FAIL'  the user clicks the button/link  ${element}
+    \  ${i} =  Set Variable  ${i + 1}
