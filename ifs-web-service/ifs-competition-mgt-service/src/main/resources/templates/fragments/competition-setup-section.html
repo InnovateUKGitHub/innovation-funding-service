@@ -866,7 +866,7 @@
                     <tr th:each="milestoneEntry : ${competitionSetupForm.milestoneEntries}"
                         th:if="${milestoneEntry.value.milestoneType.presetDate}">
                         <td th:text="${milestoneEntry.value.milestoneType.milestoneDescription}"></td>
-                        <td th:text="${milestoneEntry.value.time.display}"></td>
+                        <td><th:block th:if="${milestoneEntry.value.timeOption}" th:text="${milestoneEntry.value.time.display}"/></td>
                         <td th:text="${milestoneEntry.value.dayOfWeek}"></td>
                         <td th:text="${#temporals.format(milestoneEntry.value.date, 'd MMMM yyyy')}"></td>
                     </tr>

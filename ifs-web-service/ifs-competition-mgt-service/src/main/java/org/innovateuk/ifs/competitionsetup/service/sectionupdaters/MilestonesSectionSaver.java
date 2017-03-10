@@ -122,18 +122,16 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
     }
 
     private List<Error> validateMilestoneDateOnAutosave(MilestoneResource milestone, String fieldName, String value) {
-        Integer day, month, year, hour = 0;
+        Integer day = null, month = null, year = null, hour = 0;
         LocalDateTime currentDate = milestone.getDate();
 
 	    if(isTimeField(fieldName)) {
-            if(null == currentDate) {
-                currentDate = LocalDateTime.now().plusYears(1);
+            if(null != currentDate) {
+                day = currentDate.getDayOfMonth();
+                month = currentDate.getMonthValue();
+                year = currentDate.getYear();
+                hour = MilestoneTime.valueOf(value).getHour();
             }
-
-            day = currentDate.getDayOfMonth();
-            month = currentDate.getMonthValue();
-            year = currentDate.getYear();
-            hour = MilestoneTime.valueOf(value).getHour();
         } else {
             String[] dateParts = value.split("-");
             day = Integer.parseInt(dateParts[0]);
