@@ -66,18 +66,19 @@ public class ApplicationResearchCategoryServiceImpl extends BaseTransactionalSer
     }
 
     private ServiceResult<Application> saveApplicationWithResearchCategory(Application application, ResearchCategory researchCategory) {
-        application.setResearchCategory(researchCategory);
 
         Application origApplication = applicationRepository.findOne(application.getId());
 
-        if (origApplication.getResearchCategory() == null || origApplication.getResearchCategory().getId().equals(researchCategory.getId())) {
+        if (origApplication.getResearchCategory() == null || !origApplication.getResearchCategory().getId().equals(researchCategory.getId())) {
             resetFundingLevelAndMarkAsIncompleteForAllCollaborators(application.getCompetition().getId(), application.getId());
         }
+
+        application.setResearchCategory(researchCategory);
 
         return serviceSuccess(applicationRepository.save(application));
     }
 
-    public void resetFundingLevelAndMarkAsIncompleteForAllCollaborators(Long competitionId, Long applicationId) {
+    private void resetFundingLevelAndMarkAsIncompleteForAllCollaborators(Long competitionId, Long applicationId) {
 
         Question financeQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.FINANCE).getSuccessObjectOrThrowException();
 

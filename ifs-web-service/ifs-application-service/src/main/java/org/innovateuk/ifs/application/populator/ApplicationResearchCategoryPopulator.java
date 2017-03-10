@@ -42,7 +42,6 @@ public class ApplicationResearchCategoryPopulator extends BaseModelPopulator {
         researchCategoryViewModel.setQuestionId(questionId);
         researchCategoryViewModel.setApplicationId(applicationId);
         researchCategoryViewModel.setCurrentCompetitionName(applicationResource.getCompetitionName());
-        researchCategoryViewModel.setCompetitionId(applicationResource.getCompetition());
 
         setResearchCategoryChoice(applicationResource, researchCategoryViewModel);
         setHasApplicationFinances(researchCategoryViewModel, userId, applicationId);

@@ -261,6 +261,8 @@
                             <dd th:if="${cat.id == rsCategoryId}" th:text="${cat.name}" />
                         </th:block>
                     </th:block>
+                    <dt>Research category</dt>
+                    <dd th:text="${currentApplication.researchCategory.name}"></dd>
                     <dt>Innovation area</dt>
                     <dd th:text="${currentApplication.innovationArea.sectorName}"></dd>
                     <th:block th:unless="${currentApplication.resubmission == null}">

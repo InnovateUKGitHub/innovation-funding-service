@@ -325,7 +325,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(model().attribute("pendingOrganisationNames", Matchers.hasSize(0)))
                 .andExpect(model().attribute("scores", aggregateResource))
                 .andExpect(model().attribute("feedback", expectedFeedback.getFeedback()))
-                .andExpect(model().attribute("scores", aggregateResource)));
+                .andExpect(model().attribute("scores", aggregateResource));
     }
 
     @Test
