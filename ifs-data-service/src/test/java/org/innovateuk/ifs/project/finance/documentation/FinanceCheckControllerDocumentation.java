@@ -98,26 +98,6 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
     }
 
     @Test
-    public void approveFinanceCheck() throws Exception {
-
-        when(financeCheckServiceMock.approve(123L, 456L)).thenReturn(serviceSuccess());
-
-        String url = FinanceCheckURIs.BASE_URL + "/{projectId}" + FinanceCheckURIs.ORGANISATION_PATH + "/{organisationId}" +
-                FinanceCheckURIs.PATH + "/approve";
-
-        mockMvc.perform(post(url, 123L, 456L)).
-                andExpect(status().isOk()).
-                andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project to which the Finance Check is linked"),
-                                parameterWithName("organisationId").description("Id of the organisation to which the Finance Check is linked")
-                        )
-                ));
-
-        verify(financeCheckServiceMock).approve(123L, 456L);
-    }
-
-    @Test
     public void getFinanceCheckApprovalStatus() throws Exception {
 
         FinanceCheckProcessResource status = newFinanceCheckProcessResource().

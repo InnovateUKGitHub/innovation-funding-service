@@ -144,7 +144,6 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
                 IntStream.range(2, costsPerCategory.size()).forEach(i -> costsPerCategory.get(i).setValue(remainingCostPerCategory));
 
                 financeCheckService.save(financeCheckFigures).getSuccessObjectOrThrowException();
-                financeCheckService.approve(data.getProject().getId(), organisation.getId()).getSuccessObjectOrThrowException();
             })
         ));
     }

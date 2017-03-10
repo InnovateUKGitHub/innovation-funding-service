@@ -558,11 +558,8 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
                 ));
     }
 
-    public ServiceResult<Void> approveFinanceCheckFigures(User currentUser, Long projectId, Long organisationId) {
-
-        return getPartnerOrganisation(projectId, organisationId).andOnSuccessReturn(partnerOrg ->
-                        financeCheckWorkflowHandler.approveFinanceCheckFigures(partnerOrg, currentUser)).
-                        andOnSuccess(workflowResult -> workflowResult ? serviceSuccess() : serviceFailure(FINANCE_CHECKS_CANNOT_PROGRESS_WORKFLOW));
+    private ServiceResult<Void> approveFinanceCheckFigures(User currentUser, PartnerOrganisation partnerOrg) {
+        return financeCheckWorkflowHandler.approveFinanceCheckFigures(partnerOrg, currentUser) ? serviceSuccess() : serviceFailure(FINANCE_CHECKS_CANNOT_PROGRESS_WORKFLOW);
     }
 
     private ServiceResult<Void> validateViability(ViabilityState currentViabilityState, Viability viability, ViabilityRagStatus viabilityRagStatus) {
@@ -608,10 +605,10 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
                         .andOnSuccess(() -> getProjectFinance(projectId, organisationId))
                         .andOnSuccess(projectFinance -> triggerEligibilityWorkflowEvent(currentUser, partnerOrganisation, eligibility)
                                 .andOnSuccess(() -> saveEligibility(projectFinance, eligibilityRagStatus))
-                )));
-    }
+                )
 
-//    .andOnSuccess(() -> approveFinanceCheckFigures(currentUser, projectId, organisationId))
+                        .andOnSuccess(() -> approveFinanceCheckFigures(currentUser, partnerOrganisation))));
+    }
 
     private ServiceResult<Void> validateEligibility(EligibilityState currentEligibilityState, Eligibility eligibility, EligibilityRagStatus eligibilityRagStatus) {
 

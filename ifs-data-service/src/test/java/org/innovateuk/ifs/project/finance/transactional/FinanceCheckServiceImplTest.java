@@ -247,41 +247,6 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     }
 
     @Test
-    public void testApprove() {
-
-        User loggedInUser = newUser().build();
-        UserResource loggedInUserResource = newUserResource().withId(loggedInUser.getId()).build();
-        PartnerOrganisation partnerOrganisation = newPartnerOrganisation().build();
-
-        when(userRepositoryMock.findOne(loggedInUserResource.getId())).thenReturn(loggedInUser);
-        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(123L, 456L)).thenReturn(partnerOrganisation);
-        when(financeCheckWorkflowHandlerMock.approveFinanceCheckFigures(partnerOrganisation, loggedInUser)).thenReturn(true);
-
-        setLoggedInUser(loggedInUserResource);
-
-        ServiceResult<Void> result = service.approve(123L, 456L);
-
-        assertTrue(result.isSuccess());
-    }
-
-    @Test
-    public void testApproveButWorkflowStepFails() {
-
-        User loggedInUser = newUser().build();
-        UserResource loggedInUserResource = newUserResource().withId(loggedInUser.getId()).build();
-        PartnerOrganisation partnerOrganisation = newPartnerOrganisation().build();
-
-        when(userRepositoryMock.findOne(loggedInUserResource.getId())).thenReturn(loggedInUser);
-        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(123L, 456L)).thenReturn(partnerOrganisation);
-        when(financeCheckWorkflowHandlerMock.approveFinanceCheckFigures(partnerOrganisation, loggedInUser)).thenReturn(false);
-
-        setLoggedInUser(loggedInUserResource);
-
-        ServiceResult<Void> result = service.approve(123L, 456L);
-        assertTrue(result.getFailure().is(FINANCE_CHECKS_CANNOT_PROGRESS_WORKFLOW));
-    }
-
-    @Test
     public void testGetFinanceCheckSummary(){
 
         Long projectId = 123L;
