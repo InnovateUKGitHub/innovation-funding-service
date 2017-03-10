@@ -3,11 +3,7 @@ package org.innovateuk.ifs.project;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.project.constant.ProjectActivityStates;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckPartnerStatusResource;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
 import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.sections.ProjectSetupSectionPartnerAccessor;
@@ -17,7 +13,6 @@ import org.innovateuk.ifs.project.sections.SectionStatus;
 import org.innovateuk.ifs.project.viewmodel.ProjectSetupStatusViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -33,6 +28,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
+import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
@@ -43,7 +39,6 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 @PreAuthorize("hasAuthority('applicant')")
 public class ProjectSetupStatusController {
 
-    public static final String PROJECT_SETUP_COMPLETE_PAGE = "project/setup-complete-status";
     public static final String PROJECT_SETUP_PAGE = "project/setup-status";
 
     @Autowired
@@ -90,6 +85,7 @@ public class ProjectSetupStatusController {
         ProjectSetupSectionStatus sectionStatus = new ProjectSetupSectionStatus();
 
         boolean leadPartner = teamStatus.getLeadPartnerStatus().getOrganisationId().equals(organisation.getId());
+        boolean isProjectManager = projectService.getProjectManager(projectId).map(pu -> pu.isUser(loggedInUser.getId())).orElse(false);
         boolean isFinanceContact = projectUsers.stream().anyMatch(pu -> pu.isUser(loggedInUser.getId()) && pu.isFinanceContact());
         boolean projectDetailsSubmitted = COMPLETE.equals(teamStatus.getLeadPartnerStatus().getProjectDetailsStatus());
         boolean projectDetailsProcessCompleted = leadPartner ? checkLeadPartnerProjectDetailsProcessCompleted(teamStatus) : statusAccessor.isFinanceContactSubmitted(organisation);
@@ -109,7 +105,7 @@ public class ProjectSetupStatusController {
         SectionStatus bankDetailsStatus = sectionStatus.bankDetailsSectionStatus(ownOrganisation.getBankDetailsStatus());
         SectionStatus financeChecksStatus = sectionStatus.financeChecksSectionStatus(ownOrganisation.getFinanceChecksStatus(), checkAllFinanceChecksApproved(teamStatus), financeChecksAccess);
         SectionStatus spendProfileStatus= sectionStatus.spendProfileSectionStatus(ownOrganisation.getSpendProfileStatus());
-        SectionStatus otherDocumentsStatus = sectionStatus.otherDocumentsSectionStatus(project, leadPartner);
+        SectionStatus otherDocumentsStatus = sectionStatus.otherDocumentsSectionStatus(project, isProjectManager);
         SectionStatus grantOfferStatus = sectionStatus.grantOfferLetterSectionStatus(ownOrganisation.getGrantOfferLetterStatus(), leadPartner);
 
         return new ProjectSetupStatusViewModel(project, competition, monitoringOfficer, organisation, leadPartner,
