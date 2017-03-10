@@ -268,14 +268,24 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                                                                                    Optional<Long> innovationArea,
                                                                                    Optional<ParticipantStatus> status,
                                                                                    Optional<Boolean> contract) {
-        Page<CompetitionParticipant> pagedResult = competitionParticipantRepository
-                .getAssessorsByCompetitionAndInnovationAreaAndStatusAndContract(
-                        competitionId,
-                        innovationArea.orElse(null),
-                        status.orElse(null),
-                        contract.orElse(null),
-                        pageable
-                );
+        Page<CompetitionParticipant> pagedResult;
+
+        if (innovationArea.isPresent() || contract.isPresent()) {
+            // We want to avoid performing the potentially expensive join on Profile if possible
+            pagedResult = competitionParticipantRepository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
+                    competitionId,
+                    innovationArea.orElse(null),
+                    status.orElse(null),
+                    contract.orElse(null),
+                    pageable
+            );
+        } else {
+            pagedResult = competitionParticipantRepository.getAssessorsByCompetitionAndStatus(
+                    competitionId,
+                    status.orElse(null),
+                    pageable
+            );
+        }
 
         List<AssessorInviteOverviewResource> inviteOverviews = simpleMap(
                 pagedResult.getContent(),

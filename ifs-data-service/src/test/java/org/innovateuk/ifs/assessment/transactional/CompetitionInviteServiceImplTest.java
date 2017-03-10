@@ -31,7 +31,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
@@ -40,8 +39,12 @@ import java.util.Optional;
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static java.time.LocalDateTime.now;
+import static java.time.format.DateTimeFormatter.ofPattern;
 import static java.util.Arrays.asList;
 import static java.util.Collections.*;
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
+import static org.hamcrest.Matchers.containsString;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
@@ -56,7 +59,6 @@ import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilesto
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
 import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
-import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteToSendResourceBuilder.newAssessorInviteToSendResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorPageResourceBuilder.newAvailableAssessorPageResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
@@ -68,6 +70,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
 import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
+import static org.innovateuk.ifs.user.builder.ContractBuilder.newContract;
 import static org.innovateuk.ifs.user.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -75,9 +78,9 @@ import static org.innovateuk.ifs.user.resource.AffiliationType.EMPLOYER;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapArray;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.*;
 import static org.springframework.data.domain.Sort.Direction.ASC;
@@ -165,8 +168,8 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
 
         Map<String, Object> expectedNotificationArguments = asMap("name", name,
                 "competitionName", "my competition",
-                "acceptsDate", acceptsDate.format(DateTimeFormatter.ofPattern("dd MMMM yyyy")),
-                "deadlineDate", deadlineDate.format(DateTimeFormatter.ofPattern("dd MMMM yyyy")),
+                "acceptsDate", acceptsDate.format(ofPattern("dd MMMM yyyy")),
+                "deadlineDate", deadlineDate.format(ofPattern("dd MMMM yyyy")),
                 "inviteUrl", format("%s/invite/competition/%s", "https://ifs-local-dev/assessment", invite.getHash()));
 
         AssessorInviteToSendResource expectedAssessorInviteToSendResource = newAssessorInviteToSendResource()
@@ -258,7 +261,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .build();
 
         service.openInvite(INVITE_HASH);
-        ServiceResult<Void> rejectResult = service.rejectInvite(INVITE_HASH, rejectionReason, Optional.of("no time"));
+        ServiceResult<Void> rejectResult = service.rejectInvite(INVITE_HASH, rejectionReason, of("no time"));
         assertTrue(rejectResult.isSuccess());
 
         ServiceResult<CompetitionInviteResource> getResult = service.getInvite(INVITE_HASH);
@@ -345,7 +348,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .build();
 
         service.openInvite(INVITE_HASH);
-        ServiceResult<Void> rejectResult = service.rejectInvite(INVITE_HASH, rejectionReason, Optional.of("no time"));
+        ServiceResult<Void> rejectResult = service.rejectInvite(INVITE_HASH, rejectionReason, of("no time"));
         assertTrue(rejectResult.isSuccess());
 
         ServiceResult<CompetitionInviteResource> getResult = service.openInvite(INVITE_HASH);
@@ -443,7 +446,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withId(1L)
                 .build();
 
-        ServiceResult<Void> serviceResult = service.rejectInvite(INVITE_HASH, rejectionReasonResource, Optional.of("too busy"));
+        ServiceResult<Void> serviceResult = service.rejectInvite(INVITE_HASH, rejectionReasonResource, of("too busy"));
         assertTrue(serviceResult.isSuccess());
         assertEquals(ParticipantStatus.REJECTED, competitionParticipant.getStatus());
 
@@ -471,7 +474,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withId(1L)
                 .build();
 
-        ServiceResult<Void> serviceResult = service.rejectInvite(INVITE_HASH, rejectionReasonResource, Optional.of("too busy"));
+        ServiceResult<Void> serviceResult = service.rejectInvite(INVITE_HASH, rejectionReasonResource, of("too busy"));
 
         assertTrue(serviceResult.isSuccess());
         assertEquals(ParticipantStatus.REJECTED, competitionParticipant.getStatus());
@@ -495,7 +498,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withId(1L)
                 .build();
 
-        ServiceResult<Void> serviceResult = service.rejectInvite("inviteHashNotExists", rejectionReasonResource, Optional.of("too busy"));
+        ServiceResult<Void> serviceResult = service.rejectInvite("inviteHashNotExists", rejectionReasonResource, of("too busy"));
 
         assertTrue(serviceResult.isFailure());
         assertTrue(serviceResult.getFailure().is(notFoundError(CompetitionParticipant.class, "inviteHashNotExists")));
@@ -516,7 +519,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withId(1L)
                 .build();
 
-        ServiceResult<Void> serviceResult = service.rejectInvite(INVITE_HASH, rejectionReasonResource, Optional.of("too busy"));
+        ServiceResult<Void> serviceResult = service.rejectInvite(INVITE_HASH, rejectionReasonResource, of("too busy"));
 
         assertTrue(serviceResult.isFailure());
         assertTrue(serviceResult.getFailure().is(new Error(COMPETITION_PARTICIPANT_CANNOT_REJECT_UNOPENED_INVITE, "my competition")));
@@ -544,7 +547,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withId(1L)
                 .build();
 
-        serviceResult = service.rejectInvite(INVITE_HASH, rejectionReasonResource, Optional.of("too busy"));
+        serviceResult = service.rejectInvite(INVITE_HASH, rejectionReasonResource, of("too busy"));
 
         assertTrue(serviceResult.isFailure());
         assertTrue(serviceResult.getFailure().is(new Error(COMPETITION_PARTICIPANT_CANNOT_REJECT_ALREADY_ACCEPTED_INVITE, "my competition")));
@@ -569,13 +572,13 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .newRejectionReasonResource()
                 .withId(1L)
                 .build();
-        ServiceResult<Void> serviceResult = service.rejectInvite(INVITE_HASH, rejectionReasonResource, Optional.of("too busy"));
+        ServiceResult<Void> serviceResult = service.rejectInvite(INVITE_HASH, rejectionReasonResource, of("too busy"));
         assertTrue(serviceResult.isSuccess());
         assertEquals(ParticipantStatus.REJECTED, competitionParticipant.getStatus());
 
         // reject again
 
-        serviceResult = service.rejectInvite(INVITE_HASH, rejectionReasonResource, Optional.of("still too busy"));
+        serviceResult = service.rejectInvite(INVITE_HASH, rejectionReasonResource, of("still too busy"));
 
         assertTrue(serviceResult.isFailure());
         assertTrue(serviceResult.getFailure().is(new Error(COMPETITION_PARTICIPANT_CANNOT_REJECT_ALREADY_REJECTED_INVITE, "my competition")));
@@ -599,7 +602,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withId(2L)
                 .build();
 
-        ServiceResult<Void> serviceResult = service.rejectInvite(INVITE_HASH, rejectionReasonResource, Optional.of("too busy"));
+        ServiceResult<Void> serviceResult = service.rejectInvite(INVITE_HASH, rejectionReasonResource, of("too busy"));
 
         assertTrue(serviceResult.isFailure());
         assertTrue(serviceResult.getFailure().is(notFoundError(RejectionReason.class, 2L)));
@@ -625,7 +628,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withId(1L)
                 .build();
 
-        ServiceResult<Void> serviceResult = service.rejectInvite(INVITE_HASH, rejectionReasonResource, Optional.of(""));
+        ServiceResult<Void> serviceResult = service.rejectInvite(INVITE_HASH, rejectionReasonResource, of(""));
 
 
         assertTrue(serviceResult.isSuccess());
@@ -763,7 +766,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .build();
 
         when(competitionInviteRepositoryMock.getByHash("hash")).thenReturn(competitionInvite);
-        when(userRepositoryMock.findByEmail("test@test.com")).thenReturn(Optional.of(user));
+        when(userRepositoryMock.findByEmail("test@test.com")).thenReturn(of(user));
 
         assertTrue(service.checkExistingUser("hash").getSuccessObjectOrThrowException());
 
@@ -780,7 +783,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .build();
 
         when(competitionInviteRepositoryMock.getByHash("hash")).thenReturn(competitionInvite);
-        when(userRepositoryMock.findByEmail("test@test.com")).thenReturn(Optional.empty());
+        when(userRepositoryMock.findByEmail("test@test.com")).thenReturn(empty());
 
         assertFalse(service.checkExistingUser("hash").getSuccessObjectOrThrowException());
 
@@ -841,7 +844,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withProfileId(profile.get(0).getId(), profile.get(1).getId())
                 .build(2);
 
-        Optional<Long> innovationAreaId = Optional.of(innovationArea.getId());
+        Optional<Long> innovationAreaId = of(innovationArea.getId());
 
         Pageable pageable = new PageRequest(page, pageSize, new Sort(ASC, "firstName"));
 
@@ -882,7 +885,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         when(userRepositoryMock.findAssessorsByCompetitionAndInnovationArea(competitionId, innovationAreaId, pageable))
                 .thenReturn(assessorPage);
 
-        AvailableAssessorPageResource result = service.getAvailableAssessors(competitionId, pageable, Optional.of(innovationAreaId))
+        AvailableAssessorPageResource result = service.getAvailableAssessors(competitionId, pageable, of(innovationAreaId))
                 .getSuccessObjectOrThrowException();
 
         verify(userRepositoryMock).findAssessorsByCompetitionAndInnovationArea(competitionId, innovationAreaId, pageable);
@@ -906,7 +909,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
 
         when(userRepositoryMock.findAssessorsByCompetition(competitionId, pageable)).thenReturn(assessorPage);
 
-        AvailableAssessorPageResource result = service.getAvailableAssessors(competitionId, pageable, Optional.empty())
+        AvailableAssessorPageResource result = service.getAvailableAssessors(competitionId, pageable, empty())
                 .getSuccessObjectOrThrowException();
 
         verify(userRepositoryMock).findAssessorsByCompetition(competitionId, pageable);
@@ -1031,128 +1034,6 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         inOrder.verifyNoMoreInteractions();
     }
 
-//    @Test
-//    public void getInvitationOverview() throws Exception {
-//        long competitionId = 1L;
-//
-//        List<InnovationArea> innovationAreas = newInnovationArea()
-//                .withName("Earth Observation", "Internet of Things", "Data")
-//                .build(3);
-//        List<InnovationAreaResource> innovationAreaResources = newInnovationAreaResource()
-//                .withName("Earth Observation", "Internet of Things", "Data")
-//                .build(3);
-//
-//        Profile[] profiles = newProfile()
-//                .withBusinessType(BUSINESS, ACADEMIC, BUSINESS)
-//                .withInnovationArea(innovationAreas.get(0), innovationAreas.get(1), innovationAreas.get(2))
-//                .buildArray(3, Profile.class);
-//        List<User> users = newUser()
-//                .withProfileId(simpleMapArray(profiles, Profile::getId, Long.class))
-//                .build(3);
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
-//        LocalDateTime[] sentOn = {LocalDateTime.now(), LocalDateTime.now().plusMinutes(10), LocalDateTime.now().plusHours(1)};
-//
-//        List<CompetitionInvite> invites = newCompetitionInvite()
-//                .withName("John Barnes", "Dave Smith", "Richard Turner")
-//                .withStatus(SENT, SENT, SENT)
-//                .withSentOn(sentOn[0], sentOn[1], sentOn[2])
-//                .build(3);
-//
-//        List<CompetitionParticipant> competitionParticipants = newCompetitionParticipant()
-//                .withCompetition(newCompetition().build())
-//                .withUser(users.get(0), users.get(1), users.get(2))
-//                .withInvite(invites.get(0), invites.get(1), invites.get(2))
-//                .withStatus(ACCEPTED, REJECTED, PENDING)
-//                .withRejectionReason(null, newRejectionReason().withReason("Not available").build(), null)
-//                .build(3);
-//
-//        List<AssessorInviteOverviewResource> expected = newAssessorInviteOverviewResource()
-//                .withId(users.get(0).getId(), users.get(1).getId(), users.get(2).getId())
-//                .withName("John Barnes", "Dave Smith", "Richard Turner")
-//                .withBusinessType(BUSINESS, ACADEMIC, BUSINESS)
-//                .withInnovationAreas(asList(innovationAreaResources.get(0)), asList(innovationAreaResources.get(1)), asList(innovationAreaResources.get(2)))
-//                .withCompliant(false, false, false)
-//                .withStatus(ParticipantStatusResource.ACCEPTED, ParticipantStatusResource.REJECTED, ParticipantStatusResource.PENDING)
-//                .withDetails(null, "Invite declined as not available", "Invite sent: " + sentOn[2].format(formatter))
-//                .build(3);
-//
-//        when(profileRepositoryMock.findOne(profiles[0].getId())).thenReturn(profiles[0]);
-//        when(profileRepositoryMock.findOne(profiles[1].getId())).thenReturn(profiles[1]);
-//        when(profileRepositoryMock.findOne(profiles[2].getId())).thenReturn(profiles[2]);
-//        when(competitionParticipantRepositoryMock.getByCompetitionIdAndRole(competitionId, ASSESSOR)).thenReturn(competitionParticipants);
-//        when(participantStatusMapperMock.mapToResource(ACCEPTED)).thenReturn(ParticipantStatusResource.ACCEPTED);
-//        when(participantStatusMapperMock.mapToResource(REJECTED)).thenReturn(ParticipantStatusResource.REJECTED);
-//        when(participantStatusMapperMock.mapToResource(PENDING)).thenReturn(ParticipantStatusResource.PENDING);
-//        when(innovationAreaMapperMock.mapToResource(innovationAreas.get(0))).thenReturn(innovationAreaResources.get(0));
-//        when(innovationAreaMapperMock.mapToResource(innovationAreas.get(1))).thenReturn(innovationAreaResources.get(1));
-//        when(innovationAreaMapperMock.mapToResource(innovationAreas.get(2))).thenReturn(innovationAreaResources.get(2));
-//
-//        List<AssessorInviteOverviewResource> actual = service.getInvitationOverview(competitionId).getSuccessObjectOrThrowException();
-//        assertEquals(expected, actual);
-//
-//        InOrder inOrder = inOrder(competitionParticipantRepositoryMock, participantStatusMapperMock, profileRepositoryMock, innovationAreaMapperMock);
-//        inOrder.verify(competitionParticipantRepositoryMock).getByCompetitionIdAndRole(competitionId, ASSESSOR);
-//        inOrder.verify(participantStatusMapperMock, calls(3)).mapToResource(isA(ParticipantStatus.class));
-//        inOrder.verify(profileRepositoryMock).findOne(isA(Long.class));
-//        inOrder.verify(innovationAreaMapperMock).mapToResource(isA(InnovationArea.class));
-//
-//        inOrder.verifyNoMoreInteractions();
-//    }
-
-//    @Test
-//    public void getInvitationOverview_notExistingUsers() throws Exception {
-//        long competitionId = 1L;
-//
-//        List<InnovationArea> innovationAreas = newInnovationArea()
-//                .withName("Earth Observation", "Internet of Things", "Data")
-//                .build(3);
-//        List<InnovationAreaResource> innovationAreaResources = newInnovationAreaResource()
-//                .withName("Earth Observation", "Internet of Things", "Data")
-//                .build(3);
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
-//        LocalDateTime[] sentOn = {LocalDateTime.now(), LocalDateTime.now().plusMinutes(10), LocalDateTime.now().plusHours(1)};
-//
-//        CompetitionInvite[] invites = newCompetitionInvite()
-//                .withName("John Barnes", "Dave Smith", "Richard Turner")
-//                .withSentOn(sentOn[0], sentOn[1], sentOn[2])
-//                .withInnovationArea(innovationAreas.get(0), innovationAreas.get(1), innovationAreas.get(2))
-//                .withStatus(SENT, SENT, SENT)
-//                .buildArray(3, CompetitionInvite.class);
-//
-//        List<CompetitionParticipant> competitionParticipants = newCompetitionParticipant()
-//                .withCompetition(newCompetition().build())
-//                .withInvite(invites)
-//                .withStatus(ACCEPTED, REJECTED, PENDING)
-//                .withRejectionReason(null, newRejectionReason().withReason("Not available").build(), null)
-//                .build(3);
-//
-//        List<AssessorInviteOverviewResource> expected = newAssessorInviteOverviewResource()
-//                .withName("John Barnes", "Dave Smith", "Richard Turner")
-//                .withInnovationAreas(asList(innovationAreaResources.get(0)), asList(innovationAreaResources.get(1)), asList(innovationAreaResources.get(2)))
-//                .withCompliant(false, false, false)
-//                .withStatus(ParticipantStatusResource.ACCEPTED, ParticipantStatusResource.REJECTED, ParticipantStatusResource.PENDING)
-//                .withDetails(null, "Invite declined as not available", "Invite sent: " + sentOn[2].format(formatter))
-//                .build(3);
-//
-//        when(competitionParticipantRepositoryMock.getByCompetitionIdAndRole(competitionId, ASSESSOR)).thenReturn(competitionParticipants);
-//        when(participantStatusMapperMock.mapToResource(ACCEPTED)).thenReturn(ParticipantStatusResource.ACCEPTED);
-//        when(participantStatusMapperMock.mapToResource(REJECTED)).thenReturn(ParticipantStatusResource.REJECTED);
-//        when(participantStatusMapperMock.mapToResource(PENDING)).thenReturn(ParticipantStatusResource.PENDING);
-//        when(innovationAreaMapperMock.mapToResource(innovationAreas.get(0))).thenReturn(innovationAreaResources.get(0));
-//        when(innovationAreaMapperMock.mapToResource(innovationAreas.get(1))).thenReturn(innovationAreaResources.get(1));
-//        when(innovationAreaMapperMock.mapToResource(innovationAreas.get(2))).thenReturn(innovationAreaResources.get(2));
-//
-//        List<AssessorInviteOverviewResource> actual = service.getInvitationOverview(competitionId).getSuccessObjectOrThrowException();
-//        assertEquals(expected, actual);
-//
-//        InOrder inOrder = inOrder(competitionParticipantRepositoryMock, participantStatusMapperMock, innovationAreaMapperMock);
-//        inOrder.verify(competitionParticipantRepositoryMock).getByCompetitionIdAndRole(competitionId, ASSESSOR);
-//        inOrder.verify(participantStatusMapperMock, calls(3)).mapToResource(isA(ParticipantStatus.class));
-//        inOrder.verify(innovationAreaMapperMock).mapToResource(isA(InnovationArea.class));
-//
-//        inOrder.verifyNoMoreInteractions();
-//    }
-
     @Test
     public void getInviteStatistics() throws Exception {
         long competitionId = 1L;
@@ -1205,7 +1086,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
 
         CompetitionInviteResource expectedInviteResource = newCompetitionInviteResource().build();
 
-        when(userRepositoryMock.findByEmail(newUser.getEmail())).thenReturn(Optional.of(newUser));
+        when(userRepositoryMock.findByEmail(newUser.getEmail())).thenReturn(of(newUser));
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
 
         CompetitionInvite inviteExpectation = createInviteExpectations(newUser.getName(), newUser.getEmail(), CREATED, competition, null);
@@ -1693,5 +1574,233 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
             assertEquals(ASSESSOR, competitionParticipant.getRole());
             assertEquals(competitionInvite.getUser(), competitionParticipant.getUser());
         });
+    }
+
+    @Test
+    public void getInvitationOverview_allFilters() throws Exception {
+        long competitionId = 1L;
+        Pageable pageable = new PageRequest(0, 5);
+        Long innovationArea = 2L;
+        ParticipantStatus status = ParticipantStatus.PENDING;
+        Boolean contract = true;
+
+        List<CompetitionParticipant> expectedParticipants = newCompetitionParticipant()
+                .withInvite(
+                        newCompetitionInvite()
+                                .withName("Name 1", "Name 2", "Name 3", "Name 4", "Name 5")
+                                .withSentOn(now())
+                                .withStatus(SENT)
+                                .withInnovationArea(newInnovationArea().build())
+                                .buildArray(5, CompetitionInvite.class)
+                )
+                .withStatus(PENDING)
+                .build(5);
+
+        Page<CompetitionParticipant> pageResult = new PageImpl<>(expectedParticipants, pageable, 10);
+
+        when(competitionParticipantRepositoryMock.getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
+                competitionId,
+                innovationArea,
+                status,
+                contract,
+                pageable
+        ))
+                .thenReturn(pageResult);
+        when(participantStatusMapperMock.mapToResource(PENDING)).thenReturn(ParticipantStatusResource.PENDING);
+
+        ServiceResult<AssessorInviteOverviewPageResource> result = service.getInvitationOverview(
+                competitionId,
+                pageable,
+                of(innovationArea),
+                of(status),
+                of(contract)
+        );
+
+        verify(competitionParticipantRepositoryMock).getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
+                competitionId,
+                innovationArea,
+                status,
+                contract,
+                pageable
+        );
+        verify(participantStatusMapperMock, times(5)).mapToResource(PENDING);
+
+        assertTrue(result.isSuccess());
+
+        AssessorInviteOverviewPageResource pageResource = result.getSuccessObjectOrThrowException();
+
+        assertEquals(0, pageResource.getNumber());
+        assertEquals(5, pageResource.getSize());
+        assertEquals(2, pageResource.getTotalPages());
+        assertEquals(10, pageResource.getTotalElements());
+
+        List<AssessorInviteOverviewResource> content = pageResource.getContent();
+        assertEquals(5, content.size());
+        assertEquals("Name 1", content.get(0).getName());
+        assertEquals("Name 2", content.get(1).getName());
+        assertEquals("Name 3", content.get(2).getName());
+        assertEquals("Name 4", content.get(3).getName());
+        assertEquals("Name 5", content.get(4).getName());
+
+        content.forEach(this::assertNotExistingAssessorUser);
+    }
+
+    @Test
+    public void getInvitationOverview_withExistingUser() throws Exception {
+        long competitionId = 1L;
+        Pageable pageable = new PageRequest(0, 2);
+        Long innovationArea = 2L;
+        ParticipantStatus status = ParticipantStatus.PENDING;
+        Boolean contract = true;
+        LocalDateTime contractSignedDate = now().minusDays(5);
+
+        List<InnovationArea> innovationAreas = newInnovationArea()
+                .withName("Innovation 1", "Innovation 2")
+                .build(2);
+
+        Profile profile = newProfile()
+                .withId(1L)
+                .withBusinessType(ACADEMIC)
+                .withInnovationAreas(innovationAreas)
+                .withSkillsAreas("Some skill")
+                .withContract(newContract().build())
+                .withContractSignedDate(contractSignedDate)
+                .build();
+
+        User user = newUser()
+                .withProfileId(1L)
+                .withAffiliations(newAffiliation().build(2))
+                .build();
+
+        List<CompetitionParticipant> expectedParticipants = newCompetitionParticipant()
+                .withInvite(
+                        newCompetitionInvite()
+                                .withName("Existing user", "New user")
+                                .withSentOn(now().minusDays(1))
+                                .withStatus(SENT)
+                                .withInnovationArea(null, innovationAreas.get(1))
+                                .buildArray(2, CompetitionInvite.class)
+                )
+                .withUser(user, null)
+                .withStatus(ACCEPTED, PENDING)
+                .build(2);
+
+        List<InnovationAreaResource> expectedInnovationAreaResources = newInnovationAreaResource()
+                .withName("Innovation 1", "Innovation 2")
+                .build(2);
+
+        Page<CompetitionParticipant> pageResult = new PageImpl<>(expectedParticipants, pageable, 6);
+
+        when(competitionParticipantRepositoryMock.getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
+                competitionId,
+                innovationArea,
+                status,
+                contract,
+                pageable
+        ))
+                .thenReturn(pageResult);
+        when(profileRepositoryMock.findOne(user.getProfileId())).thenReturn(profile);
+        when(participantStatusMapperMock.mapToResource(PENDING)).thenReturn(ParticipantStatusResource.PENDING);
+        when(participantStatusMapperMock.mapToResource(ACCEPTED)).thenReturn(ParticipantStatusResource.ACCEPTED);
+        when(innovationAreaMapperMock.mapToResource(innovationAreas.get(0))).thenReturn(expectedInnovationAreaResources.get(0));
+        when(innovationAreaMapperMock.mapToResource(innovationAreas.get(1))).thenReturn(expectedInnovationAreaResources.get(1));
+
+        ServiceResult<AssessorInviteOverviewPageResource> result = service.getInvitationOverview(
+                competitionId,
+                pageable,
+                of(innovationArea),
+                of(status),
+                of(contract)
+        );
+
+        verify(competitionParticipantRepositoryMock).getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
+                competitionId,
+                innovationArea,
+                status,
+                contract,
+                pageable
+        );
+        verify(profileRepositoryMock, only()).findOne(user.getProfileId());
+        verify(participantStatusMapperMock).mapToResource(PENDING);
+        verify(participantStatusMapperMock).mapToResource(ACCEPTED);
+        verify(innovationAreaMapperMock).mapToResource(innovationAreas.get(0));
+        verify(innovationAreaMapperMock, times(2)).mapToResource(innovationAreas.get(1));
+
+        assertTrue(result.isSuccess());
+
+        AssessorInviteOverviewPageResource pageResource = result.getSuccessObjectOrThrowException();
+
+        assertEquals(0, pageResource.getNumber());
+        assertEquals(2, pageResource.getSize());
+        assertEquals(3, pageResource.getTotalPages());
+        assertEquals(6, pageResource.getTotalElements());
+
+        List<AssessorInviteOverviewResource> content = pageResource.getContent();
+        assertEquals(2, content.size());
+
+        assertEquals("Existing user", content.get(0).getName());
+        assertEquals(ParticipantStatusResource.ACCEPTED, content.get(0).getStatus());
+        assertNull(content.get(0).getDetails());
+        assertEquals(profile.getBusinessType(), content.get(0).getBusinessType());
+        assertTrue(content.get(0).isCompliant());
+        assertEquals(expectedInnovationAreaResources, content.get(0).getInnovationAreas());
+
+        assertEquals("New user", content.get(1).getName());
+        assertEquals(ParticipantStatusResource.PENDING, content.get(1).getStatus());
+        assertThat(content.get(1).getDetails(), containsString("Invite sent"));
+        assertEquals(singletonList(expectedInnovationAreaResources.get(1)), content.get(1).getInnovationAreas());
+        assertNotExistingAssessorUser(content.get(1));
+    }
+
+    @Test
+    public void getInvitationOverview_noFilters() throws Exception {
+        long competitionId = 1L;
+        Pageable pageable = new PageRequest(0, 5);
+        List<CompetitionParticipant> expectedParticipants = newCompetitionParticipant()
+                .withInvite(
+                        newCompetitionInvite()
+                                .withName("Name 1", "Name 2", "Name 3", "Name 4", "Name 5")
+                                .withSentOn(now())
+                                .withStatus(SENT)
+                                .withInnovationArea(newInnovationArea().build())
+                                .buildArray(5, CompetitionInvite.class)
+                )
+                .withStatus(PENDING)
+                .build(5);
+
+        Page<CompetitionParticipant> pageResult = new PageImpl<>(expectedParticipants, pageable, 10);
+
+        when(competitionParticipantRepositoryMock.getAssessorsByCompetitionAndStatus(competitionId, null, pageable))
+                .thenReturn(pageResult);
+        when(participantStatusMapperMock.mapToResource(PENDING)).thenReturn(ParticipantStatusResource.PENDING);
+
+        ServiceResult<AssessorInviteOverviewPageResource> result = service.getInvitationOverview(competitionId, pageable, empty(), empty(), empty());
+
+        verify(competitionParticipantRepositoryMock).getAssessorsByCompetitionAndStatus(competitionId, null, pageable);
+        verify(participantStatusMapperMock, times(5)).mapToResource(PENDING);
+
+        assertTrue(result.isSuccess());
+
+        AssessorInviteOverviewPageResource pageResource = result.getSuccessObjectOrThrowException();
+
+        assertEquals(0, pageResource.getNumber());
+        assertEquals(5, pageResource.getSize());
+        assertEquals(2, pageResource.getTotalPages());
+        assertEquals(10, pageResource.getTotalElements());
+
+        List<AssessorInviteOverviewResource> content = pageResource.getContent();
+        assertEquals("Name 1", content.get(0).getName());
+        assertEquals("Name 2", content.get(1).getName());
+        assertEquals("Name 3", content.get(2).getName());
+        assertEquals("Name 4", content.get(3).getName());
+        assertEquals("Name 5", content.get(4).getName());
+
+        content.forEach(this::assertNotExistingAssessorUser);
+    }
+
+    private void assertNotExistingAssessorUser(AssessorInviteOverviewResource assessorInviteOverviewResource) {
+        assertNull(assessorInviteOverviewResource.getId());
+        assertNull(assessorInviteOverviewResource.getBusinessType());
+        assertFalse(assessorInviteOverviewResource.isCompliant());
     }
 }
