@@ -12,6 +12,8 @@ import java.time.LocalDateTime;
  * Milestone Form Entry for the Milestones form.
  */
 public class MilestoneRowForm {
+    private static final Log LOG = LogFactory.getLog(MilestoneRowForm.class);
+
     @Range(min = 1, max = 31)
     private Integer day;
     @Range(min = 1, max = 12)
@@ -24,8 +26,6 @@ public class MilestoneRowForm {
     private String dayOfWeek;
     private boolean editable;
     private LocalDateTime date;
-
-    private static final Log LOG = LogFactory.getLog(MilestoneRowForm.class);
 
     public MilestoneRowForm() {
 
@@ -96,6 +96,10 @@ public class MilestoneRowForm {
 
     public void setEditable(boolean editable) {
         this.editable = editable;
+    }
+
+    public boolean isTimeOption() {
+        return MilestoneType.SUBMISSION_DATE.equals(milestoneType);
     }
 
     public LocalDateTime getDate() {
