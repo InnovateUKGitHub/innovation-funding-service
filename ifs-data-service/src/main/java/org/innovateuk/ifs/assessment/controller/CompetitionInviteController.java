@@ -14,7 +14,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -77,8 +76,8 @@ public class CompetitionInviteController {
 
     @RequestMapping(value = "/getInvitationOverview/{competitionId}", method = RequestMethod.GET)
     public RestResult<AssessorInviteOverviewPageResource> getInvitationOverview(
-            @PathVariable Long competitionId,
-            @PageableDefault(size = 20, sort = {"firstName", "lastName"}, direction = Sort.Direction.ASC) Pageable pageable,
+            @PathVariable long competitionId,
+            @PageableDefault(size = 20, sort = "invite.name", direction = Sort.Direction.ASC) Pageable pageable,
             @RequestParam Optional<Long> innovationArea,
             @RequestParam Optional<ParticipantStatus> status,
             @RequestParam Optional<Boolean> contract
