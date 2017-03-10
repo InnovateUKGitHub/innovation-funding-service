@@ -136,8 +136,6 @@ public class FinanceChecksEligibilityController {
 
     private String doViewEligibility(CompetitionResource competition, ApplicationResource application, ProjectResource project, List<SectionResource> allSections, UserResource user, boolean isLeadPartnerOrganisation, OrganisationResource organisation, Model model, FinanceChecksEligibilityForm eligibilityForm, ApplicationForm form, BindingResult bindingResult) {
 
-        populateProjectFinanceDetails(competition, application, project, organisation.getId(), allSections, user, form, bindingResult, model);
-
         EligibilityResource eligibility = projectFinanceService.getEligibility(project.getId(), organisation.getId());
 
         if (eligibilityForm == null) {
