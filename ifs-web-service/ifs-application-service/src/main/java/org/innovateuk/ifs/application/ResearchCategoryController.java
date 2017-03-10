@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application;
 
+import org.innovateuk.ifs.application.finance.view.FundingLevelResetHandler;
 import org.innovateuk.ifs.application.form.ResearchCategoryForm;
 import org.innovateuk.ifs.application.populator.ApplicationResearchCategoryPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -82,6 +83,7 @@ public class ResearchCategoryController {
     private RestResult<ApplicationResource> saveResearchCategoryChoice(Long applicationId, ResearchCategoryForm researchCategoryForm) {
 
         Long researchCategoryId = Long.valueOf(researchCategoryForm.getResearchCategoryChoice());
+
         return applicationResearchCategoryRestService.saveApplicationResearchCategoryChoice(applicationId, researchCategoryId);
     }
 }

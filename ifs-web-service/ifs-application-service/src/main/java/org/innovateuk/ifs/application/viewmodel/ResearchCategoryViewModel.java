@@ -11,6 +11,7 @@ public class ResearchCategoryViewModel {
 
     private Long selectedResearchCategoryId;
     private String currentCompetitionName;
+    private Long competitionId;
     private Long applicationId;
     private Long questionId;
     private List<ResearchCategoryResource> availableResearchCategories;
@@ -62,4 +63,6 @@ public class ResearchCategoryViewModel {
     public void setHasApplicationFinances(boolean hasApplicationFinances) {
         this.hasApplicationFinances = hasApplicationFinances;
     }
+
+
 }
