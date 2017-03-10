@@ -16,7 +16,7 @@ public interface ProcessRoleRepository extends PagingAndSortingRepository<Proces
     List<ProcessRole> findByUser(User user);
     List<ProcessRole> findByUserId(Long userId);
     List<ProcessRole> findByUserAndApplicationId(User user, Long applicationId);
-    List<ProcessRole> findByUserIdAndRoleAndApplicationId(Long userId, Role role, Long applicationId);
+    ProcessRole findByUserIdAndRoleAndApplicationId(Long userId, Role role, Long applicationId);
     List<ProcessRole> findByUserIdAndRoleInAndApplicationId(Long userId, List<Role> role, Long applicationId);
     List<ProcessRole> findByApplicationId(Long applicationId);
     List<ProcessRole> findByApplicationIdAndRoleId(Long applicationId, Long roleId);
