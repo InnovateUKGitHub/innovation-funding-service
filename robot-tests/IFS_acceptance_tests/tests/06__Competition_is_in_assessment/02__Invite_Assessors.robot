@@ -50,7 +50,7 @@ The User can Add and Remove Assessors
     And The user should see the element    jQuery=td:contains("Will Smith") ~ td .yes
     And the user should see the element    jQuery=td:contains("Will Smith") ~ td:nth-child(3):contains("Precision Medicine")
     And the user should see the element    jQuery=td:contains("Will Smith") ~ td:nth-child(3):contains("Advanced Materials")
-    And the user should see the element    jQuery=td:contains("Will Smith") ~ td:nth-child(3):contains("Energy Systems")
+    And the user should see the element    jQuery=td:contains("Will Smith") ~ td:nth-child(3):contains("Energy systems")
     And the calculations of the Assessors on invite list should be correct
     When The user clicks the button/link    link=Invite
     And The user clicks the button/link    jQuery=td:contains("Will Smith") ~ td .button:contains("Remove")
