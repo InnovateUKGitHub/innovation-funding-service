@@ -82,10 +82,7 @@ public class CookieUtil {
         Optional<Cookie> cookie = getCookie(request, fieldName);
         if (cookie.isPresent()) {
             try {
-                String value = cookie.get().getValue();
-                if(value.trim().length() > 0) {
-                    return decodeCookieValue(value);
-                }
+                return decodeCookieValue(cookie.get().getValue());
             } catch (UnsupportedEncodingException | ArrayIndexOutOfBoundsException ignore) {
                 LOG.error("Failing cookie (" + fieldName + "):" + ignore.getMessage());
             }
@@ -98,6 +95,12 @@ public class CookieUtil {
     }
 
     private String decodeCookieValue(String encodedValue) throws UnsupportedEncodingException {
-        return URLDecoder.decode(encryptor.decrypt(encodedValue), CharEncoding.UTF_8);
+        String decodedValue = "";
+
+        if(encodedValue.trim().length() > 0) {
+            decodedValue = URLDecoder.decode(encryptor.decrypt(encodedValue), CharEncoding.UTF_8);
+        }
+
+        return decodedValue;
     }
 }
