@@ -286,6 +286,7 @@ The guest user can see updated scope information
     Then the user should see the element      jQuery=.column-third:contains("Heading 1") ~ .column-two-thirds:contains("Content 1")
     And the user should see the element      jQuery=.column-third:contains("Heading 2") ~ .column-two-thirds:contains("Content 2")
     And guest user downloads the file    ${server}/competition/15/download/48    ${DOWNLOAD_FOLDER}/scope.pdf
+    [Teardown]    remove the file from the operating system    scope.pdf
 
 The guest user can see updated date information
    [Documentation]    INFUND-7489
