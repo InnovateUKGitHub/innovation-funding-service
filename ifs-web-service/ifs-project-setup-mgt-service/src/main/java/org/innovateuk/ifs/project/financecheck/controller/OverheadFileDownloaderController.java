@@ -22,31 +22,31 @@ import java.util.concurrent.ExecutionException;
 
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 
-    @RestController
-    @RequestMapping("/download/overheadfile")
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
-    public  class OverheadFileDownloaderController {
-        @Autowired
-        private OverheadFileRestService overheadFileRestService;
+@RestController
+@RequestMapping("/download/overheadfile")
+@PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
+public  class OverheadFileDownloaderController {
+    @Autowired
+    private OverheadFileRestService overheadFileRestService;
 
-        @RequestMapping(value = "/{overheadId}")
-        public ResponseEntity<ByteArrayResource> downloadOverheadFile(
-                @PathVariable("overheadId") final Long overheadId,
-                HttpServletRequest request) throws ExecutionException, InterruptedException {
+    @RequestMapping(value = "/{overheadId}")
+    public ResponseEntity<ByteArrayResource> downloadOverheadFile(
+            @PathVariable("overheadId") final Long overheadId,
+            HttpServletRequest request) throws ExecutionException, InterruptedException {
 
-            final ByteArrayResource resource = overheadFileRestService.getOverheadFile(overheadId).getSuccessObjectOrThrowException();
-            final FileEntryResource fileEntryResource = overheadFileRestService.getOverheadFileDetails(overheadId).getSuccessObjectOrThrowException();
-            return getFileResponseEntity(resource, fileEntryResource);
-        }
-
-        public static ResponseEntity<ByteArrayResource> getFileResponseEntity(ByteArrayResource resource, FileEntryResource fileEntry) {
-            HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.setContentLength(resource.contentLength());
-            httpHeaders.setContentType(MediaType.parseMediaType(fileEntry.getMediaType()));
-            if (StringUtils.hasText(fileEntry.getName())) {
-                httpHeaders.add("Content-Disposition", "inline; filename=\"" + fileEntry.getName() + "\"");
-            }
-            return new ResponseEntity<>(resource, httpHeaders, HttpStatus.OK);
-        }
-
+        final ByteArrayResource resource = overheadFileRestService.getOverheadFile(overheadId).getSuccessObjectOrThrowException();
+        final FileEntryResource fileEntryResource = overheadFileRestService.getOverheadFileDetails(overheadId).getSuccessObjectOrThrowException();
+        return getFileResponseEntity(resource, fileEntryResource);
     }
+
+    public static ResponseEntity<ByteArrayResource> getFileResponseEntity(ByteArrayResource resource, FileEntryResource fileEntry) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentLength(resource.contentLength());
+        httpHeaders.setContentType(MediaType.parseMediaType(fileEntry.getMediaType()));
+        if (StringUtils.hasText(fileEntry.getName())) {
+            httpHeaders.add("Content-Disposition", "inline; filename=\"" + fileEntry.getName() + "\"");
+        }
+        return new ResponseEntity<>(resource, httpHeaders, HttpStatus.OK);
+    }
+
+}
