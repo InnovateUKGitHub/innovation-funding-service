@@ -46,11 +46,6 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
     }
 
     @Test
-    public void testSaveFinanceCheck() {
-        assertRolesCanPerform(() -> classUnderTest.save(null), PROJECT_FINANCE);
-    }
-
-    @Test
     public void testGetFinanceCheckApprovalStatus(){
         assertRolesCanPerform(() -> classUnderTest.getFinanceCheckApprovalStatus(1L, 2L), PROJECT_FINANCE);
     }
@@ -109,11 +104,6 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
 
         @Override
         public ServiceResult<FinanceCheckResource> getByProjectAndOrganisation(ProjectOrganisationCompositeId key) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> save(FinanceCheckResource toUpdate) {
             return null;
         }
 

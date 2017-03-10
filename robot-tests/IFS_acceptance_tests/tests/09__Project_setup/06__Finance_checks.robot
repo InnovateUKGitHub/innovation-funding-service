@@ -729,31 +729,31 @@ Note comment section now becomes read-only
     [Tags]
     When the user should not see the element    css=.editor
 
-
-Finance checks client-side validations
-    [Documentation]    INFUND-5193
-    [Tags]    HappyPath
-    [Setup]    log in as a different user    &{internal_finance_credentials}
-    Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    And the user clicks the button/link     css=a.eligibility-0
-    When the user enters text to a text field    name=costs[0].value    ${Empty}
-    Then the user should see an error    Please enter a labour cost
-    When the user enters text to a text field    name=costs[1].value    ${Empty}
-    Then the user should see an error    Please enter an admin support cost
-    When the user enters text to a text field    name=costs[2].value    ${Empty}
-    Then the user should see an error    Please enter a materials cost
-    When the user enters text to a text field    name=costs[3].value    ${Empty}
-    Then the user should see an error    Please enter a capital usage cost
-    When the user enters text to a text field    name=costs[4].value    ${Empty}
-    Then the user should see an error    Please enter subcontracting cost
-    When the user enters text to a text field    name=costs[5].value    ${Empty}
-    Then the user should see an error    Please enter a travel and subsistence cost
-    When the user enters text to a text field    name=costs[6].value    ${Empty}
-    Then the user should see an error    Please enter any other cost
-    When the user enters text to a text field    name=costs[0].value    -1
-    And the user moves focus to the element    css=[for="costs-reviewed"]
-    Then the user should see an error    This field should be 0 or higher
-    And The user should not see the text in the page    Please enter a labour cost
+#TODO Jay this one is no longer needed I don't think
+#Finance checks client-side validations
+#    [Documentation]    INFUND-5193
+#    [Tags]    HappyPath
+#    [Setup]    log in as a different user    &{internal_finance_credentials}
+#    Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+#    And the user clicks the button/link     css=a.eligibility-0
+#    When the user enters text to a text field    name=costs[0].value    ${Empty}
+#    Then the user should see an error    Please enter a labour cost
+#    When the user enters text to a text field    name=costs[1].value    ${Empty}
+#    Then the user should see an error    Please enter an admin support cost
+#    When the user enters text to a text field    name=costs[2].value    ${Empty}
+#    Then the user should see an error    Please enter a materials cost
+#    When the user enters text to a text field    name=costs[3].value    ${Empty}
+#    Then the user should see an error    Please enter a capital usage cost
+#    When the user enters text to a text field    name=costs[4].value    ${Empty}
+#    Then the user should see an error    Please enter subcontracting cost
+#    When the user enters text to a text field    name=costs[5].value    ${Empty}
+#    Then the user should see an error    Please enter a travel and subsistence cost
+#    When the user enters text to a text field    name=costs[6].value    ${Empty}
+#    Then the user should see an error    Please enter any other cost
+#    When the user enters text to a text field    name=costs[0].value    -1
+#    And the user moves focus to the element    css=[for="costs-reviewed"]
+#    Then the user should see an error    This field should be 0 or higher
+#    And The user should not see the text in the page    Please enter a labour cost
 
 
 Project Finance user can view academic Jes form
@@ -1129,6 +1129,7 @@ Confirming eligibility should show info on a readonly page for partner
     And the user should not see the checkbox    project-eligible
     And the user clicks the button/link    link=Finance checks
 
+#TODO Jay this one can now be finished
 Confirming eligibility should update on the finance checks page
     [Documentation]    INFUND-4823
     [Tags]  Pending
@@ -1136,11 +1137,11 @@ Confirming eligibility should update on the finance checks page
     When the user clicks the button/link    link=Finance checks
     Then the user should see the element    jQuery=table.table-progress tr:nth-child(2) td:nth-child(4) a:contains("Approved")
 
-
+#TODO Jay this is failing, needs to use the new page or be removed
 Approve Eligibility: Lead partner organisation
     [Documentation]    INFUND-5193, INFUND-6149
     [Tags]    HappyPath
-    Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/22
+    Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/22/eligibility
     And the user should see the element    xpath=//a[contains(@href,'mailto:${test_mailbox_one}+fundsuccess@gmail.com')]
     When the user fills in project costs
     And the user selects the checkbox    costs-reviewed
@@ -1150,6 +1151,7 @@ Approve Eligibility: Lead partner organisation
     And The user clicks the button/link    jQuery=.button:contains("Return to finance checks")    #Check that also the button works
     Then the user sees the text in the element    css=a.eligibility-0    Approved
 
+#TODO Jay need to check this uses the non workaround
 Project finance user can see updated finance overview after partner changes to eligibility
     [Documentation]    INFUND-5508
     [Tags]
@@ -1158,6 +1160,7 @@ Project finance user can see updated finance overview after partner changes to e
     And the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(4)    £ 87,847
     And the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(6)    28%
 
+#TODO Jay This one is failing needs to use the new page or be removed
 Approve Eligibility: Collaborator partner organisation
     [Documentation]    INFUND-5193
     [Tags]    HappyPath
@@ -1171,6 +1174,7 @@ Approve Eligibility: Collaborator partner organisation
     And The user clicks the button/link    link=Finance checks
     Then the user sees the text in the element    css=a.eligibility-1    Approved
 
+#TODO Jay needs to check approval of both and SP button available via new page
 Approve Eligibility and verify Viability and RAG: Academic partner organisation
     [Documentation]    INFUND-5193, INFUND-7026, INFUND-7095
     [Tags]    HappyPath
@@ -1185,6 +1189,7 @@ Approve Eligibility and verify Viability and RAG: Academic partner organisation
     And the user should see the text in the element  css=span.viability-rag-2    N/A
     And the user should see the text in the element  css=span.viability-2    N/A
 
+#TODO Jay should be enabled after both viability and eligibility are complete - I'm not sure where spend profile gets generated probably not in this file, but the flow for that will need to go through the new eligibility approval (both approved then the other tests should work fine around SP)
 Generate spend profile button enabled after viability checks are completed
     [Documentation]    INFUND-7076
     [Tags]

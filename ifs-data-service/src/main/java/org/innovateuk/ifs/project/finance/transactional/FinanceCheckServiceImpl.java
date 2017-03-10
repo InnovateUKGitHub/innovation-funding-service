@@ -97,19 +97,6 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     private BigDecimal percentDivisor = new BigDecimal("100");
 
     @Override
-    public ServiceResult<Void> save(FinanceCheckResource financeCheckResource) {
-        return validate(financeCheckResource).andOnSuccess(() -> {
-            FinanceCheck toSave = mapToDomain(financeCheckResource);
-            financeCheckRepository.save(toSave);
-
-            return getCurrentlyLoggedInUser().
-                    andOnSuccess(user -> getPartnerOrganisation(toSave.getProject().getId(), toSave.getOrganisation().getId()).
-                            andOnSuccessReturn(partnerOrganisation -> financeCheckWorkflowHandler.financeCheckFiguresEdited(partnerOrganisation, user))).
-                    andOnSuccess(workflowResult -> workflowResult ? serviceSuccess() : serviceFailure(CommonFailureKeys.FINANCE_CHECKS_CANNOT_PROGRESS_WORKFLOW));
-        });
-    }
-
-    @Override
     public ServiceResult<FinanceCheckProcessResource> getFinanceCheckApprovalStatus(Long projectId, Long organisationId) {
         return getPartnerOrganisation(projectId, organisationId).andOnSuccess(this::getFinanceCheckApprovalStatus);
     }

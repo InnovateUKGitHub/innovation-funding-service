@@ -45,29 +45,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTest<FinanceCheckController> {
 
     @Test
-    public void saveFinanceCheck() throws Exception {
-        CostCategoryResource costCategoryResource = newCostCategoryResource().withName(LABOUR.getName()).build();
-
-        List<CostResource> costs = newCostResource().withCostCategory(costCategoryResource).withValue(new BigDecimal(500.00)).build(7);
-
-        CostGroupResource costGroupResource = newCostGroupResource().withDescription("Finance check cost group").withCosts(costs).build();
-
-        FinanceCheckResource financeCheckResource = newFinanceCheckResource().withProject(123L).withOrganisation(456L).withCostGroup(costGroupResource).build();
-
-        when(financeCheckServiceMock.save(any(FinanceCheckResource.class))).thenReturn(serviceSuccess());
-
-        String url = FinanceCheckURIs.BASE_URL + FinanceCheckURIs.PATH;
-
-        mockMvc.perform(post(url, 123L, 456L).
-                contentType(APPLICATION_JSON).
-                content(toJson(financeCheckResource))).
-                andExpect(status().isOk()).
-                andDo(document("project/{method-name}",
-                        requestFields(financeCheckResourceFields)
-                ));
-    }
-
-    @Test
     public void getByProjectAndOrganisation() throws Exception {
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(123L, 456L);
 

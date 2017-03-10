@@ -76,16 +76,6 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
     }
 
     @Test
-    public void testUpdateFinanceCheck() throws Exception {
-        FinanceCheckResource financeCheckResource = newFinanceCheckResource().build();
-        when(financeCheckServiceMock.save(any(FinanceCheckResource.class))).thenReturn(serviceSuccess());
-        mockMvc.perform(post(FinanceCheckURIs.BASE_URL + FinanceCheckURIs.PATH).
-                contentType(APPLICATION_JSON).
-                content(toJson(financeCheckResource))).
-                andExpect(status().isOk());
-    }
-
-    @Test
     public void testGetFinanceCheckOverview() throws Exception {
         Long projectId = 123L;
         when(financeCheckServiceMock.getFinanceCheckOverview(projectId)).thenReturn(serviceSuccess(new FinanceCheckOverviewResource()));
