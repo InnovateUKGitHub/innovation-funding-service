@@ -40,15 +40,10 @@ Overhead costs
     When the user clicks the button/link    jQuery=button:contains("Overhead costs")
     And The user clicks the button/link     jQuery=label:contains("No overhead costs")
     then the user should see the element     jQuery=h3:contains("No overhead costs")
-    When the user clicks the button/link    jQuery=button:contains("Overhead costs")
-    then the user chooses calculate overheads option
-    and the user enters text to a text field    jQuery=input[id^="cost-overheads"][value="0"]   4000
-    then the total costs should reflect overheads     jQuery=input[id="total-cost"]    £ 52,000
     # Check for 20% Labour costs option
     When the user clicks the button/link    jQuery=button:contains("Overhead costs")
     then the user chooses 20% overheads option
     and admin costs total should be correct    id=section-total-10-default    £ 9,600
-
     [Teardown]    the user clicks the button/link    jQuery=button:contains("Overhead costs")
 
 Materials
