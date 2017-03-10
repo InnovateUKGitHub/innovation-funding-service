@@ -70,10 +70,6 @@ public class ProjectSetupStatusController {
         return PROJECT_SETUP_PAGE;
     }
 
-    private Optional<ProjectUserResource> getProjectManager(Long projectId) {
-        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
-        return simpleFindFirst(projectUsers, pu -> PROJECT_MANAGER.getName().equals(pu.getRoleName()));
-    }
     private ProjectSetupStatusViewModel getProjectSetupStatusViewModel(Long projectId, UserResource loggedInUser) {
 
         ProjectResource project = projectService.getById(projectId);
@@ -89,8 +85,7 @@ public class ProjectSetupStatusController {
         ProjectSetupSectionStatus sectionStatus = new ProjectSetupSectionStatus();
 
         boolean leadPartner = teamStatus.getLeadPartnerStatus().getOrganisationId().equals(organisation.getId());
-        Optional<ProjectUserResource> projectManager = getProjectManager(projectId);
-        boolean isProjectManager = projectManager.isPresent() ? projectManager.get().getUser() == loggedInUser.getId() : false;
+        boolean isProjectManager = projectService.getProjectManager(projectId).map(pu -> pu.isUser(loggedInUser.getId())).orElse(false);
         boolean isFinanceContact = projectUsers.stream().anyMatch(pu -> pu.isUser(loggedInUser.getId()) && pu.isFinanceContact());
         boolean projectDetailsSubmitted = COMPLETE.equals(teamStatus.getLeadPartnerStatus().getProjectDetailsStatus());
         boolean projectDetailsProcessCompleted = leadPartner ? checkLeadPartnerProjectDetailsProcessCompleted(teamStatus) : statusAccessor.isFinanceContactSubmitted(organisation);

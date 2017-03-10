@@ -75,6 +75,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
 
     private Map<String, SectionStatus> partnerStatusFlagChecks = new HashMap<>();
 
+
     @Before
     public void setUpDefaults() {
         partnerStatusFlagChecks.put("projectDetailsStatus", SectionStatus.FLAG);
@@ -126,13 +127,13 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
 
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
-        List<ProjectUserResource> projectUsers = newProjectUserResource()
-                .withUser(loggedInUser.getId(), loggedInUser.getId())
-                .withOrganisation(organisationResource.getId(), organisationResource.getId())
-                .withRoleName(PARTNER, PROJECT_MANAGER)
-                .build(2);
+        ProjectUserResource partnerUser = newProjectUserResource()
+                .withUser(loggedInUser.getId())
+                .withOrganisation(organisationResource.getId())
+                .withRoleName(PARTNER)
+                .build();
 
-        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
+        when(projectService.getProjectManager(project.getId())).thenReturn(Optional.of(partnerUser));
 
         ProjectSetupStatusViewModel viewModel = performViewProjectStatusCallAndAssertBasicDetails(monitoringOfficerNotExpected);
         assertPartnerStatusFlagsCorrect(viewModel,
@@ -243,13 +244,25 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         when(projectService.getMonitoringOfficerForProject(project.getId())).thenReturn(monitoringOfficerNotFoundResult);
         when(projectService.getOrganisationByProjectAndUser(project.getId(), loggedInUser.getId())).thenReturn(organisationResource);
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(Arrays.asList(newProjectUserResource()
-                        .withUser(loggedInUser.getId())
-                        .withOrganisation(organisationResource.getId())
-                        .withRoleName(FINANCE_CONTACT).build(),
+                .withUser(loggedInUser.getId())
+                .withOrganisation(organisationResource.getId())
+                .withRoleName(FINANCE_CONTACT).build(),
                 newProjectUserResource()
                         .withUser(loggedInUser.getId())
                         .withOrganisation(organisationResource.getId())
                         .withRoleName(PARTNER).build()));
+
+                when(projectService.getProjectManager(project.getId())).thenReturn(Optional.of((newProjectUserResource()
+                        .withUser(loggedInUser.getId())
+                        .withOrganisation(organisationResource.getId())
+                        .withRoleName(FINANCE_CONTACT).build())));
+
+        ProjectUserResource partnerUser = newProjectUserResource()
+                .withUser(loggedInUser.getId() + 1000L)
+                .withOrganisation(organisationResource.getId())
+                .withRoleName(PARTNER).build();
+        when(projectService.getProjectManager(project.getId())).thenReturn(Optional.of(partnerUser));
+
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsFoundResult);
         when(projectService.getProjectTeamStatus(project.getId(), Optional.empty())).thenReturn(teamStatus);
 
@@ -423,6 +436,11 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                         .withUser(loggedInUser.getId())
                         .withOrganisation(organisationResource.getId())
                         .withRoleName(PARTNER).build()));
+
+        when(projectService.getProjectManager(project.getId())).thenReturn(Optional.of((newProjectUserResource()
+                .withUser(loggedInUser.getId() + 1000L)
+                .withOrganisation(organisationResource.getId())
+                .withRoleName(FINANCE_CONTACT).build())));
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsFoundResult);
         when(projectService.getProjectTeamStatus(project.getId(), Optional.empty())).thenReturn(teamStatus);
 
@@ -750,13 +768,13 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         project = newProjectResource().withApplication(application).withDocumentsSubmittedDate(LocalDateTime.now()).build();
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
-        List<ProjectUserResource> projectUsers = newProjectUserResource()
+        /*List<ProjectUserResource> projectUsers = newProjectUserResource()
                 .withUser(loggedInUser.getId(), loggedInUser.getId())
                 .withOrganisation(organisationResource.getId(), organisationResource.getId())
                 .withRoleName(PARTNER, PROJECT_MANAGER)
                 .build(2);
 
-        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
+        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);*/
 
         ProjectSetupStatusViewModel viewModel = performViewProjectStatusCallAndAssertBasicDetails(monitoringOfficerNotExpected);
         assertPartnerStatusFlagsCorrect(viewModel,
@@ -791,6 +809,11 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                 .build(2);
 
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
+
+        when(projectService.getProjectManager(project.getId())).thenReturn(Optional.of((newProjectUserResource()
+                .withUser(loggedInUser.getId())
+                .withOrganisation(organisationResource.getId())
+                .withRoleName(PROJECT_MANAGER).build())));
 
         ProjectSetupStatusViewModel viewModel = performViewProjectStatusCallAndAssertBasicDetails(monitoringOfficerNotExpected);
         assertPartnerStatusFlagsCorrect(viewModel,
@@ -870,6 +893,12 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
 
     private void setupLookupProjectDetailsExpectations(Optional<MonitoringOfficerResource> monitoringOfficerResult, RestResult<BankDetailsResource> bankDetailsResult, ProjectTeamStatusResource teamStatus) {
 
+        ProjectUserResource pmUser = newProjectUserResource()
+                .withUser(loggedInUser.getId() + 1000L)
+                .withOrganisation(organisationResource.getId())
+                .withRoleName(PROJECT_MANAGER)
+                .build();
+
         when(applicationService.getById(application.getId())).thenReturn(application);
         when(projectService.getById(project.getId())).thenReturn(project);
         when(competitionService.getById(application.getCompetition())).thenReturn(competition);
@@ -879,6 +908,8 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                 withUser(loggedInUser.getId())
                 .withOrganisation(organisationResource.getId())
                 .withRoleName(PARTNER).build(1));
+
+        when(projectService.getProjectManager(project.getId())).thenReturn(Optional.of(pmUser));
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsResult);
         when(projectService.getProjectTeamStatus(project.getId(), Optional.empty())).thenReturn(teamStatus);
     }
