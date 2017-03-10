@@ -16,6 +16,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.nCopies;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.assessment.builder.ApplicationAssessmentFeedbackResourceBuilder.newApplicationAssessmentFeedbackResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentCreateResourceBuilder.newAssessmentCreateResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOutcomeResourceBuilder.newAssessmentFundingDecisionOutcomeResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeResourceBuilder.newAssessmentRejectOutcomeResource;
@@ -315,6 +316,23 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
                 .andReturn();
 
         verify(assessmentServiceMock, only()).recommend(assessmentId, assessmentFundingDecisionOutcomeResource);
+    }
+
+    @Test
+    public void getApplicationFeedback() throws Exception {
+        long applicationId = 1L;
+
+        ApplicationAssessmentFeedbackResource expectedResource = newApplicationAssessmentFeedbackResource()
+                .withFeedback(asList("Feedback 1", "Feedback 2"))
+                .build();
+
+        when(assessmentServiceMock.getApplicationFeedback(applicationId)).thenReturn(serviceSuccess(expectedResource));
+
+        mockMvc.perform(get("/assessment/application/{applicationId}/feedback", applicationId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(expectedResource)));
+
+        verify(assessmentServiceMock, only()).getApplicationFeedback(applicationId);
     }
 
     @Test

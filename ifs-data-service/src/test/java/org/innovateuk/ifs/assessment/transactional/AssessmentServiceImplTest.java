@@ -34,6 +34,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.assessment.builder.ApplicationAssessmentFeedbackResourceBuilder.newApplicationAssessmentFeedbackResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.assessment.builder.AssessmentCreateResourceBuilder.newAssessmentCreateResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOutcomeBuilder.newAssessmentFundingDecisionOutcome;
@@ -264,6 +265,32 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verify(assessmentFundingDecisionOutcomeMapperMock).mapToDomain(assessmentFundingDecisionOutcomeResource);
         inOrder.verify(assessmentWorkflowHandlerMock).fundingDecision(assessment, assessmentFundingDecisionOutcome);
         inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void getApplicationFeedback() throws Exception {
+        long applicationId = 1L;
+
+        List<Assessment> expectedAssessments = newAssessment()
+                .withFundingDecision(
+                        newAssessmentFundingDecisionOutcome().withFeedback("Feedback 1").build(),
+                        newAssessmentFundingDecisionOutcome().withFeedback("Feedback 2").build(),
+                        newAssessmentFundingDecisionOutcome().withFeedback("Feedback 3").build()
+                )
+                .build(3);
+
+        ApplicationAssessmentFeedbackResource expectedFeedbackResource = newApplicationAssessmentFeedbackResource()
+                .withFeedback(asList("Feedback 1", "Feedback 2", "Feedback 3"))
+                .build();
+
+        when(assessmentRepositoryMock.findByTargetId(applicationId)).thenReturn(expectedAssessments);
+
+        ServiceResult<ApplicationAssessmentFeedbackResource> result = assessmentService.getApplicationFeedback(applicationId);
+
+        verify(assessmentRepositoryMock).findByTargetId(applicationId);
+
+        assertTrue(result.isSuccess());
+        assertEquals(expectedFeedbackResource, result.getSuccessObject());
     }
 
     @Test
