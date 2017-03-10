@@ -951,8 +951,8 @@ public class GenerateTestData extends BaseIntegrationTest {
                 line.familyFinancialInterests
         );
 
-        if (line.contractSigned) {
-            baseBuilder = baseBuilder.addContractSigned();
+        if (line.agreementSigned) {
+            baseBuilder = baseBuilder.addAgreementSigned();
         }
 
         if (!line.rejectionReason.isEmpty()) {
