@@ -64,6 +64,14 @@ Overall scores and application details are correct
     And the application question scores are correct
     And the application details are correct
 
+The finance details are shown
+    [Documentation]
+    [Tags]
+    When the user clicks the button/link     jQuery=.collapsible button
+    Then the user should see the element     jQuery=.collapsible div[aria-hidden="false"]
+    And the user should not see the element    jQuery=.collapsible div[aria-hidden="true"]
+
+
 *** Keywords ***
 the overall scores are correct
     the user should see the element    jQuery=.table-overflow td:nth-child(2):contains("6")
@@ -89,3 +97,10 @@ the application question scores are correct
     the user should see the element    jQuery=.column-two-thirds:contains("Funding") ~ div div:contains("Average score 3 / 10")
     the user should see the element    jQuery=.column-two-thirds:contains("Adding value") ~ div div:contains("Average score 7 / 10")
     the user should see the element    jQuery=p:contains("Average overall: 53%")
+
+the application details are correct
+    the user should see the element    jQuery=p:contains("High Performance Gasoline Stratified")
+    the user should see the element    jQuery=p:contains("Electric Sounds Ltd")
+    the user should see the element    jQuery=p:contains("Project start date: ")
+    the user should see the element    jQuery=p:contains("Duration")
+    the user should see the element    jQuery=h3:contains("Total project cost")
