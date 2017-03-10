@@ -379,8 +379,8 @@ the user should see an error message in the field
     the user should see the element    jQuery=span:contains("${field}") + *:contains("${errmsg}")
 
 the user selects medium organisation size
-    the user clicks the button/link    jQuery=label[for="financePosition-organisationSize-MEDIUM"]
-    the user clicks the button/link    jQuery=label[for="financePosition-organisationSize-MEDIUM"]    # Click it twice
+    the user selects the radio button    financePosition-organisationSize  ${MEDIUM_ORGANISATION_SIZE}
+    the user selects the radio button    financePosition-organisationSize  ${MEDIUM_ORGANISATION_SIZE}
 
 the user populates the project growth table
     the user enters value to field    Annual turnover    65000
@@ -402,7 +402,7 @@ the user should view the project growth table
 
 the user can edit the project growth table
     the user clicks the button/link    css=button.extra-margin.buttonlink
-    then the user selects the radio button    financePosition-organisationSize    SMALL
+    then the user selects the radio button    financePosition-organisationSize    ${SMALL_ORGANISATION_SIZE}
     the user enters text to a text field    jQuery=tr:nth-child(1) .form-control    4000
     the user enters text to a text field    jQuery=td input[value="65000"]    5000
 

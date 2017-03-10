@@ -60,7 +60,7 @@ public class ApplicationFinance extends Finance {
                 .filter(this::isMatchingGrantClaimMaximum)
                 .findAny()
                 .map(GrantClaimMaximum::getMaximum)
-                .orElse(null);
+                .orElse(0);
     }
 
     private boolean isMatchingGrantClaimMaximum(GrantClaimMaximum grantClaimMaximum) {
@@ -75,7 +75,7 @@ public class ApplicationFinance extends Finance {
 
     private boolean isMatchingOrganisationSize(GrantClaimMaximum grantClaimMaximum) {
         return (grantClaimMaximum.getOrganisationSize() == null && getOrganisationSize() == null)
-                || (getOrganisationSize().getId() != null
+                || (getOrganisationSize() != null
                 && grantClaimMaximum.getOrganisationSize().getId().equals(getOrganisationSize().getId()));
     }
 
