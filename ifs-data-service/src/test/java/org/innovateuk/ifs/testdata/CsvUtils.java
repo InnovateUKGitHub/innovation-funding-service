@@ -373,8 +373,8 @@ class CsvUtils {
             rejectReason = rejectReasonString != null ? AssessmentRejectOutcomeValue.valueOf(rejectReasonString) : null;
             rejectComment = nullable(line.get(i++));
             state = AssessmentStates.valueOf(line.get(i++));
-            feedback = line.get(i++);
-            recommendComment = line.get(i++);
+            feedback = nullable(line.get(i++));
+            recommendComment = nullable(line.get(i++));
         }
     }
 
@@ -616,7 +616,7 @@ class CsvUtils {
         String financialInterests;
         List<Map<String, String>> familyAffiliations;
         String familyFinancialInterests;
-        boolean contractSigned;
+        boolean agreementSigned;
 
         private AssessorUserLine(List<String> line) {
 
@@ -643,7 +643,7 @@ class CsvUtils {
             financialInterests = line.get(i++);
             familyAffiliations = extractListOfMaps(line.get(i++));
             familyFinancialInterests = line.get(i++);
-            contractSigned = Boolean.valueOf(line.get(i++));
+            agreementSigned = Boolean.valueOf(line.get(i++));
         }
 
         private List<Map<String, String>> extractListOfMaps(String column) {

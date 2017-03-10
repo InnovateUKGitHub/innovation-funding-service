@@ -42,7 +42,7 @@ Lead partner cannot upload either document
     [Tags]
     [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}    Passw0rd
     Given the user navigates to the page    ${project_in_setup_page}
-    Then the user should see the element    jQuery=.progress-list ul > li.require-action:nth-of-type(7)
+    Then the user should see the element    jQuery=.progress-list ul > li.waiting:nth-of-type(7)
     And The user should see the text in the page    The Project Manager will need to upload the following
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
@@ -354,7 +354,7 @@ After rejection, lead partner cannot upload either document
     [Tags]    HappyPath
     [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}    Passw0rd
     Given the user navigates to the page    ${project_in_setup_page}
-    Then the user should see the element    jQuery=.progress-list ul > li.require-action:nth-of-type(7)
+    Then the user should see the element    jQuery=.progress-list ul > li.waiting:nth-of-type(7)
     And The user should see the text in the page    The Project Manager will need to upload the following
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
