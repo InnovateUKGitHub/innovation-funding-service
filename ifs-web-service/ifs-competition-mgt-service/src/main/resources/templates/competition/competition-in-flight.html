@@ -132,6 +132,7 @@
                                 </button>
                                 <button type="submit"
                                         th:case="'RELEASE_FEEDBACK'"
+                                        th:disabled="${model.keyStatistics.canReleaseFeedback == false}"
                                         th:if="${model.competitionStatus.name() == 'ASSESSOR_FEEDBACK'}"
                                         th:formaction="@{/competition/{competitionId}/release-feedback(competitionId=${model.competitionId})}"
                                         class="button button-large">Release feedback

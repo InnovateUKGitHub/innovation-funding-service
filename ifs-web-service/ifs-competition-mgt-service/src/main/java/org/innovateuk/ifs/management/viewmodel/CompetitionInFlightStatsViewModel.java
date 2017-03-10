@@ -14,6 +14,7 @@ public class CompetitionInFlightStatsViewModel {
     private Integer statFive;
     private Integer statSix;
     private boolean canManageFundingNotifications = true;
+    private boolean canReleaseFeedback = true;
 
     public CompetitionInFlightStatsViewModel() {
 
@@ -23,6 +24,7 @@ public class CompetitionInFlightStatsViewModel {
         this.statOne = keyStatisticsResource.getAssessorsInvited();
         this.statTwo = keyStatisticsResource.getAssessorsAccepted();
         this.canManageFundingNotifications = false;
+        this.canReleaseFeedback = false;
     }
 
     public CompetitionInFlightStatsViewModel(CompetitionOpenKeyStatisticsResource keyStatisticsResource) {
@@ -33,6 +35,7 @@ public class CompetitionInFlightStatsViewModel {
         this.statFive = keyStatisticsResource.getApplicationsPastHalf();
         this.statSix = keyStatisticsResource.getApplicationsSubmitted();
         this.canManageFundingNotifications = false;
+        this.canReleaseFeedback = false;
     }
 
     public CompetitionInFlightStatsViewModel(CompetitionClosedKeyStatisticsResource keyStatisticsResource) {
@@ -43,6 +46,7 @@ public class CompetitionInFlightStatsViewModel {
         this.statFive = keyStatisticsResource.getAssessorsAccepted();
         this.statSix = keyStatisticsResource.getApplicationsPerAssessor();
         this.canManageFundingNotifications = false;
+        this.canReleaseFeedback = false;
     }
 
     public CompetitionInFlightStatsViewModel(CompetitionInAssessmentKeyStatisticsResource keyStatisticsResource) {
@@ -52,6 +56,7 @@ public class CompetitionInFlightStatsViewModel {
         this.statFour = keyStatisticsResource.getAssessmentsStarted();
         this.statFive = keyStatisticsResource.getAssessmentsSubmitted();
         this.canManageFundingNotifications = false;
+        this.canReleaseFeedback = false;
     }
 
     public CompetitionInFlightStatsViewModel(CompetitionFundedKeyStatisticsResource keyStatisticsResource) {
@@ -61,7 +66,8 @@ public class CompetitionInFlightStatsViewModel {
         this.statFour = keyStatisticsResource.getApplicationsOnHold();
         this.statFive = keyStatisticsResource.getApplicationsNotifiedOfDecision();
         this.statSix = keyStatisticsResource.getApplicationsAwaitingDecision();
-        this.canManageFundingNotifications = statTwo > 0 || statThree > 0 || statFour > 0;
+        this.canManageFundingNotifications = keyStatisticsResource.getCanManageFundingNotifications();
+        this.canReleaseFeedback = keyStatisticsResource.getCanReleaseFeedback();
     }
 
     public int getStatOne() {
@@ -116,7 +122,7 @@ public class CompetitionInFlightStatsViewModel {
         return canManageFundingNotifications;
     }
 
-    public void setCanManageFundingNotifications(boolean canManageFundingNotifications) {
-        this.canManageFundingNotifications = canManageFundingNotifications;
+    public boolean isCanReleaseFeedback() {
+        return canReleaseFeedback;
     }
 }
