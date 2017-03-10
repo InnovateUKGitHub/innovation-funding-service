@@ -143,8 +143,10 @@ Applicant chooses Calculate overheads option
     [Tags]
     [Setup]  log in as a different user    &{lead_applicant_credentials}
     When the user navigates to Your-finances page     ${Competition_E2E}
-    then the user fills in the project costs        ${Competition_E2E}
-    and the user
+    then the user clicks the button/link       link=Your project costs
+    And the user fills in Labour
+    and the user chooses calculate overheads option
+
 
 *** Keywords ***
 Custom Suite Setup
