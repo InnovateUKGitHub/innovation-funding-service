@@ -568,8 +568,6 @@ public class ApplicationServiceImpl extends CompetitionSetupTransactionalService
         Long totalSingleStatusQuestions = questions.stream().filter(q -> !q.hasMultipleStatuses()).count();
 
         Long totalQuestions = totalMultipleStatusQuestions + totalSingleStatusQuestions;
-        LOG.info("Total questions" + totalQuestions);
-        LOG.info("Total completed questions" + countCompleted);
 
         return percentage(countCompleted, totalQuestions);
     }

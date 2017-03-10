@@ -55,6 +55,7 @@ import org.innovateuk.ifs.form.transactional.FormInputService;
 import org.innovateuk.ifs.invite.mapper.*;
 import org.innovateuk.ifs.invite.repository.*;
 import org.innovateuk.ifs.invite.transactional.EthnicityService;
+import org.innovateuk.ifs.invite.transactional.InviteOrganisationService;
 import org.innovateuk.ifs.invite.transactional.InviteProjectService;
 import org.innovateuk.ifs.invite.transactional.RejectionReasonService;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
@@ -275,6 +276,12 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected InviteOrganisationRepository inviteOrganisationRepositoryMock;
+
+    @Mock
+    protected InviteOrganisationMapper inviteOrganisationMapperMock;
+
+    @Mock
+    protected InviteOrganisationService inviteOrganisationServiceMock;
 
     @Mock
     protected ApplicationInviteRepository applicationInviteRepositoryMock;

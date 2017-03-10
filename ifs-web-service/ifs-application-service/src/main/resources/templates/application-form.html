@@ -4,7 +4,7 @@
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.title != null ? model.title : 'Application Form'}" />
     </head>
 
-    <body th:with="context='applicant'" class="app-form">
+    <body th:with="context='applicant'" class="app-form finance">
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
