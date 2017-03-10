@@ -866,28 +866,18 @@ project finance approves Viability for
     the user clicks the button/link    jQuery=.modal-confirm-viability .button:contains("Confirm viability")
 
 project finance approves Eligibility
-    the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/finance-check/organisation/${Katz_Id}
-    the user fills in and approves project costs
-    the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/finance-check/organisation/${Meembee_Id}
-    the user fills in and approves project costs
-    the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/finance-check/organisation/${Zooveo_Id}
-    the user selects the checkbox      costs-reviewed
-    the user clicks the button/link    jQuery=.button:contains("Approve finances")
-    the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve eligible costs")
+    the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/finance-check/organisation/${Katz_Id}/eligibility
+    the user approves project costs
+    the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/finance-check/organisation/${Meembee_Id}/eligibility
+    the user approves project costs
+    the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/finance-check/organisation/${Zooveo_Id}/eligibility
+    the user approves project costs
 
-the user fills in and approves project costs
-    Input Text    name=costs[0].value    £ 8,000
-    Input Text    name=costs[1].value    £ 2,000
-    Input Text    name=costs[2].value    £ 10,000
-    Input Text    name=costs[3].value    £ 100
-    Input Text    name=costs[4].value    £ 10,000
-    Input Text    name=costs[5].value    £ 50
-    Input Text    name=costs[6].value    £ 10,000
-    the user moves focus to the element    css=[for="costs-reviewed"]
-    the user sees the text in the element    css=#content tfoot td    £ 40,150
-    the user selects the checkbox    costs-reviewed
+the user approves project costs
+    the user selects the checkbox    project-eligible
+    the user selects the option from the drop-down menu    Green    id=rag-rating
     the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
-    the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve eligible costs")
+    the user clicks the button/link    name=confirm-eligibility
 
 
 the user returns edit rights for the organisation
