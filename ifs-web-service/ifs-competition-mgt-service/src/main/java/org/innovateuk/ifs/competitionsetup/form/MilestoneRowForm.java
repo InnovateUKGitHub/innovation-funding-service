@@ -1,9 +1,10 @@
 package org.innovateuk.ifs.competitionsetup.form;
 
-import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.validator.constraints.Range;
+import org.innovateuk.ifs.commons.validation.constraints.ValidAggregatedDate;
+import org.innovateuk.ifs.competition.resource.MilestoneType;
 
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
@@ -11,15 +12,15 @@ import java.time.LocalDateTime;
 /**
  * Milestone Form Entry for the Milestones form.
  */
+@ValidAggregatedDate(yearField="year", monthField="month", dayField="day", message="{validation.standard.date.format}")
 public class MilestoneRowForm {
-    private static final Log LOG = LogFactory.getLog(MilestoneRowForm.class);
+	private static final Log LOG = LogFactory.getLog(MilestoneRowForm.class);
 
-    @Range(min = 1, max = 31)
-    private Integer day;
-    @Range(min = 1, max = 12)
-    private Integer month;
-    @Range(min = 2016, max = 9000)
+    @Range(min=2000, max = 9999, message="{validation.nonifs.detailsform.yyyy.range.format}")
     private Integer year;
+    private Integer month;
+    private Integer day;
+
     private MilestoneTime time;
 
     private MilestoneType milestoneType;
@@ -146,7 +147,7 @@ public class MilestoneRowForm {
         return null;
     }
 
-    public LocalDateTime getMilestoneAsDateTime(){
+    public LocalDateTime getMilestoneAsDateTime() {
         if (day != null && month != null && year != null){
             if ( time != null) {
                 return LocalDateTime.of(year, month, day, time.getHour(), 0);

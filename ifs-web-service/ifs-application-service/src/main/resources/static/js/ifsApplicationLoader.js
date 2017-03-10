@@ -27,10 +27,6 @@ IFS.application.loadOrder = {
   'app-form': {
     init: function () {
       IFS.core.unsavedChanges.init()
-      IFS.core.repeatableFinanceRows.init()
-    },
-    finalize: function () {
-      IFS.application.financeSpecifics.init()
     }
   },
   'app-details': {
@@ -41,6 +37,9 @@ IFS.application.loadOrder = {
   },
   'app-invite-display': {
     init: function () { IFS.application.inviteDisplay.init() }
+  },
+  'app-org-invite': {
+    init: function () { IFS.application.repeatableOrgApplicantRows.init() }
   },
   'competition-management': {
     init: function () { IFS.application.competitionManagement.init() }

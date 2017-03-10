@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryPageResource;
-import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationCountSummaryRestService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -16,8 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.List;
 
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 
