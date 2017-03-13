@@ -23,7 +23,6 @@ import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.OrganisationSize;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
@@ -68,8 +67,7 @@ import static org.innovateuk.ifs.form.resource.FormInputType.*;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -646,8 +644,8 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
     private List<ApplicationFinanceResource> setupFinances(ApplicationResource app, SortedSet<OrganisationResource> orgSet) {
         List<OrganisationResource> orgList = orgSet.stream().collect(Collectors.toList());
         List<ApplicationFinanceResource> appFinanceList = new ArrayList<>();
-        appFinanceList.add(new ApplicationFinanceResource(1L, orgList.get(0).getId(), app.getId(), OrganisationSize.LARGE));
-        appFinanceList.add(new ApplicationFinanceResource(2L, orgList.get(1).getId(), app.getId(), OrganisationSize.LARGE));
+        appFinanceList.add(new ApplicationFinanceResource(1L, orgList.get(0).getId(), app.getId(), 2L));
+        appFinanceList.add(new ApplicationFinanceResource(2L, orgList.get(1).getId(), app.getId(), 2L));
 
         when(financeService.getApplicationFinanceTotals(app.getId())).thenReturn(appFinanceList);
 
