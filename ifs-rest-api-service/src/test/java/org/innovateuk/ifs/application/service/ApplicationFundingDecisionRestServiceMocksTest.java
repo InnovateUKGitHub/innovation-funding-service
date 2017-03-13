@@ -25,6 +25,7 @@ public class ApplicationFundingDecisionRestServiceMocksTest extends BaseRestServ
     }
 
     @Test
+    @Deprecated
     public void testMakeFundingDecision() {
 
     	Long competitionId = 123L;

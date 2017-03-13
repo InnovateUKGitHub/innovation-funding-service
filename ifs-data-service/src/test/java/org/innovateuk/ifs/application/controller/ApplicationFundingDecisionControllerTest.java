@@ -14,7 +14,8 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorE
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
-import static org.mockito.Mockito.when;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -27,6 +28,7 @@ public class ApplicationFundingDecisionControllerTest extends BaseControllerMock
     }
 
     @Test
+    @Deprecated
     public void applicationFundingDecisionControllerShouldReturnAppropriateStatusCode() throws Exception {
         Long competitionId = 1L;
         Map<Long, FundingDecision> decision = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED);
@@ -43,6 +45,7 @@ public class ApplicationFundingDecisionControllerTest extends BaseControllerMock
     }
 
     @Test
+    @Deprecated
     public void makeFundingDecisionButErrorOccursSendingNotifications() throws Exception {
         Long competitionId = 1L;
         Map<Long, FundingDecision> decision = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED);
@@ -73,7 +76,7 @@ public class ApplicationFundingDecisionControllerTest extends BaseControllerMock
     }
 
     @Test
-    public void testSendNotifications() throws Exception {
+    public void testSendNotificationsShouldReturnAppropriateStatusCode() throws Exception {
 
         Map<Long, FundingDecision> decisions = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED, 3L, FundingDecision.ON_HOLD);
         NotificationResource notification = new NotificationResource("Subject of notification", "Body of notification message.", decisions);
@@ -88,4 +91,36 @@ public class ApplicationFundingDecisionControllerTest extends BaseControllerMock
                 .andExpect(content().string(""));
     }
 
+    @Test
+    public void testSendNotificationsButErrorOccursCreatingProjects() throws Exception {
+
+        Map<Long, FundingDecision> decisions = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED, 3L, FundingDecision.ON_HOLD);
+        NotificationResource notification = new NotificationResource("Subject of notification", "Body of notification message.", decisions);
+
+        when(projectServiceMock.createProjectsFromFundingDecisions(decisions)).thenReturn(serviceFailure(internalServerErrorError()));
+
+        mockMvc.perform(post("/applicationfunding/sendNotifications")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(notification)))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().json(toJson(new RestErrorResponse(internalServerErrorError()))));
+
+        verify(applicationFundingServiceMock, never()).notifyLeadApplicantsOfFundingDecisions(any(NotificationResource.class));
+    }
+
+    @Test
+    public void testSendNotificationsButErrorOccursSendingNotifications() throws Exception {
+
+        Map<Long, FundingDecision> decisions = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED, 3L, FundingDecision.ON_HOLD);
+        NotificationResource notification = new NotificationResource("Subject of notification", "Body of notification message.", decisions);
+
+        when(projectServiceMock.createProjectsFromFundingDecisions(decisions)).thenReturn(serviceSuccess());
+        when(applicationFundingServiceMock.notifyLeadApplicantsOfFundingDecisions(notification)).thenReturn(serviceFailure(internalServerErrorError()));
+
+        mockMvc.perform(post("/applicationfunding/sendNotifications")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(notification)))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().json(toJson(new RestErrorResponse(internalServerErrorError()))));
+    }
 }

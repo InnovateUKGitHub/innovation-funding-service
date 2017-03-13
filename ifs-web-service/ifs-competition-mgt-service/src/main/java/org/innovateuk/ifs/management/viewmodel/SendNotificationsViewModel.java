@@ -5,9 +5,9 @@ import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class SendNotificationsViewModel {
 
@@ -40,12 +40,11 @@ public class SendNotificationsViewModel {
     }
 
     public Map<Long, FundingDecision> getFundingDecisions() {
-        // TODO: INFUND-8624 - Do this in Java 8
-        Map<Long, FundingDecision> fundingDecisions = new HashMap<>();
-        for(ApplicationSummaryResource summary : getApplications())
-        {
-            fundingDecisions.put(summary.getId(), summary.getFundingDecision());
-        }
-        return fundingDecisions;
+
+        return getApplications()
+                .stream()
+                .collect(Collectors.toMap(
+                        ApplicationSummaryResource::getId,
+                        summary -> summary.getFundingDecision()));
     }
 }

@@ -247,6 +247,62 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
         verifyNoMoreInteractions(applicationServiceMock);
 
     }
+    @Test
+    public void testNotifyLeadApplicantsOfFundingDecisionsAndJustLeadApplicants() {
+
+        Application application1 = newApplication().build();
+        Application application2 = newApplication().build();
+
+        // add some collaborators into the mix - they should not receive Notifications
+        User application1LeadApplicant = newUser().build();
+        User application1Collaborator = newUser().build();
+        User application2LeadApplicant = newUser().build();
+        User application2Collaborator = newUser().build();
+
+        Role leadApplicantRole = newRole().with(id(456L)).build();
+        Role collaboratorRole = newRole().with(id(789L)).build();
+
+        List<ProcessRole> allProcessRoles = newProcessRole().
+                withUser(application1LeadApplicant, application1Collaborator, application2LeadApplicant, application2Collaborator).
+                withApplication(application1, application1, application2, application2).
+                withRole(leadApplicantRole, collaboratorRole, leadApplicantRole, collaboratorRole).
+                build(4);
+
+        UserNotificationTarget application1LeadApplicantTarget = new UserNotificationTarget(application1LeadApplicant);
+        UserNotificationTarget application2LeadApplicantTarget = new UserNotificationTarget(application2LeadApplicant);
+        List<NotificationTarget> expectedLeadApplicants = asList(application1LeadApplicantTarget, application2LeadApplicantTarget);
+
+        Map<Long, FundingDecision> decisions = MapFunctions.asMap(
+                application1.getId(), FundingDecision.FUNDED,
+                application2.getId(), FundingDecision.UNFUNDED);
+        NotificationResource notificationResource = new NotificationResource("Subject", "The message body.", decisions);
+
+        Notification expectedFundingNotification =
+                new Notification(systemNotificationSourceMock, expectedLeadApplicants, APPLICATION_FUNDING, emptyMap());
+
+        asList(application1, application2).forEach(application ->
+                when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application)
+        );
+
+        when(roleRepositoryMock.findOneByName(LEADAPPLICANT.getName())).thenReturn(leadApplicantRole);
+
+        allProcessRoles.forEach(processRole ->
+                when(processRoleRepositoryMock.findByApplicationIdAndRoleId(processRole.getApplicationId(), processRole.getRole().getId())).thenReturn(singletonList(processRole))
+        );
+
+        when(notificationServiceMock.sendNotification(createSimpleNotificationExpectationsNew(expectedFundingNotification), eq(EMAIL))).thenReturn(serviceSuccess());
+        when(applicationServiceMock.setApplicationFundingEmailDateTime(any(Long.class), any(LocalDateTime.class))).thenReturn(serviceSuccess(new ApplicationResource()));
+
+        ServiceResult<Void> result = service.notifyLeadApplicantsOfFundingDecisions(notificationResource);
+        assertTrue(result.isSuccess());
+
+        verify(notificationServiceMock).sendNotification(createSimpleNotificationExpectationsNew(expectedFundingNotification), eq(EMAIL));
+        verifyNoMoreInteractions(notificationServiceMock);
+
+        verify(applicationServiceMock).setApplicationFundingEmailDateTime(eq(application1.getId()), any(LocalDateTime.class));
+        verify(applicationServiceMock).setApplicationFundingEmailDateTime(eq(application2.getId()), any(LocalDateTime.class));
+        verifyNoMoreInteractions(applicationServiceMock);
+    }
 
 	@Test
     @Deprecated
@@ -322,7 +378,8 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
 	}
 
     @Test
-    public void testNotifyLeadApplicantsOfFundingDecisionsAndJustLeadApplicants() {
+    @Deprecated
+    public void testDeprecatedNotifyLeadApplicantsOfFundingDecisionsAndJustLeadApplicants() {
 
         Competition competition = newCompetition().withId(111L).build();
 
@@ -434,6 +491,18 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
             assertEquals(expectedNotification.getMessageKey(), notification.getMessageKey());
             assertEquals(expectedNotification.getGlobalArguments(), notification.getGlobalArguments());
 
+        });
+    }
+    public static Notification createSimpleNotificationExpectationsNew(Notification expectedNotification) {
+
+        return createLambdaMatcher(notification -> {
+            assertEquals(expectedNotification.getFrom(), notification.getFrom());
+
+            List<String> expectedToEmailAddresses = simpleMap(expectedNotification.getTo(), NotificationTarget::getEmailAddress);
+            List<String> actualToEmailAddresses = simpleMap(notification.getTo(), NotificationTarget::getEmailAddress);
+            assertEquals(expectedToEmailAddresses, actualToEmailAddresses);
+
+            assertEquals(expectedNotification.getMessageKey(), notification.getMessageKey());
         });
     }
 
