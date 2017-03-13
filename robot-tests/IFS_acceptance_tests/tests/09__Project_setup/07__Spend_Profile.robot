@@ -652,8 +652,10 @@ Non Lead partners should still see a tick instead of an hourglass when spend pro
     Then the user should see the element    jQuery=li.complete:nth-of-type(6)
 
 Lead partner no longer has the 'submitted' view of the spend profiles
-    [Documentation]    INFUND-6977
-    When the user clicks the button/link    link=Spend profile
+    [Documentation]    INFUND-6977, INFUND-7422
+    Given Log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
+    When the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
+    And the user clicks the button/link    link=Spend profile
     Then the user should not see the element    jQuery=.success-alert.extra-margin-bottom p:contains("All project spend profiles have been sent to Innovate UK.")
     And the user should see the text in the page    This overview shows the spend profile status of each partner in your project.
     And the user should see the element    jQuery=.button:contains("Review and send total project profile")
