@@ -50,7 +50,8 @@ public interface CompetitionParticipantRepository extends PagingAndSortingReposi
             "       JOIN profile.innovationAreas innovationAreas " +
             "       WHERE profile.id = competitionParticipant.user.profileId " +
             "       AND innovationAreas.category.id = :innovationAreaId " +
-            ")) " +
+            "   ) " +
+            "   OR competitionParticipant.invite.innovationArea.id = :innovationAreaId) " +
             "AND (:isCompliant IS NULL OR (:isCompliant = true AND (" +
             "   EXISTS(" +
             "       SELECT affiliation.id " +
