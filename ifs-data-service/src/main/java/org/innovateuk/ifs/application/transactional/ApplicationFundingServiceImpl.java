@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.application.transactional;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
@@ -19,7 +17,6 @@ import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.util.EntityLookupCallbacks;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -50,16 +47,11 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
     @Autowired
     private ApplicationService applicationService;
 
-    @Value("${ifs.web.baseURL}")
-    private String webBaseUrl;
-
     enum Notifications {
         APPLICATION_FUNDED,
         APPLICATION_NOT_FUNDED,
         APPLICATION_FUNDING,
     }
-
-    private static final Log LOG = LogFactory.getLog(ApplicationFundingServiceImpl.class);
 
     @Override
     public ServiceResult<Void> saveFundingDecisionData(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
@@ -95,8 +87,8 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
         return applicationRepository.findByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.SUBMITTED.getId());
     }
 
-    private ServiceResult<Void> saveFundingDecisionData(List<Application> applicationsForCompetition, Map<Long, FundingDecision> decision) {
-        decision.forEach((applicationId, decisionValue) -> {
+    private ServiceResult<Void> saveFundingDecisionData(List<Application> applicationsForCompetition, Map<Long, FundingDecision> applicationDecisions) {
+        applicationDecisions.forEach((applicationId, decisionValue) -> {
             Optional<Application> applicationForDecision = applicationsForCompetition.stream().filter(application -> applicationId.equals(application.getId())).findFirst();
             if (applicationForDecision.isPresent()) {
                 Application application = applicationForDecision.get();

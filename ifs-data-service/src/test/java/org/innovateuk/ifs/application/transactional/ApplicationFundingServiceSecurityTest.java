@@ -25,6 +25,56 @@ import static org.junit.Assert.*;
 public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTest<ApplicationFundingService> {
 
 	@Test
+	public void testNotifyLeadApplicantAllowedIfGlobalCompAdminRole() {
+
+		RoleResource compAdminRole = newRoleResource().withType(COMP_ADMIN).build();
+		setLoggedInUser(newUserResource().withRolesGlobal(singletonList(compAdminRole)).build());
+		classUnderTest.notifyLeadApplicantsOfFundingDecisions(new NotificationResource());
+	}
+
+	@Test
+	public void testNotifyLeadApplicantDeniedIfNotLoggedIn() {
+
+		setLoggedInUser(null);
+		try {
+			classUnderTest.notifyLeadApplicantsOfFundingDecisions(new NotificationResource());
+			fail("Should not have been able to notify lead applicants of funding decision without first logging in");
+		} catch (AccessDeniedException e) {
+			// expected behaviour
+		}
+	}
+
+	@Test
+	public void testNotifyLeadApplicantDeniedIfNoGlobalRolesAtAll() {
+
+		try {
+			classUnderTest.notifyLeadApplicantsOfFundingDecisions(new NotificationResource());
+			fail("Should not have been able to notify lead applicants of funding decision without the global comp admin role");
+		} catch (AccessDeniedException e) {
+			// expected behaviour
+		}
+	}
+
+	@Test
+	public void testNotifyLeadApplicantDeniedIfNotCorrectGlobalRoles() {
+
+		List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type != COMP_ADMIN && type != PROJECT_FINANCE)
+				.collect(toList());
+
+		nonCompAdminRoles.forEach(role -> {
+
+			setLoggedInUser(
+					newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
+			try {
+				classUnderTest.notifyLeadApplicantsOfFundingDecisions(new NotificationResource());
+				fail("Should not have been able to notify lead applicants of funding decision without the global Comp Admin role");
+			} catch (AccessDeniedException e) {
+				// expected behaviour
+			}
+		});
+	}
+
+	@Test
 	public void testSaveFundingDecisionDataAllowedIfGlobalCompAdminRole() {
 
 		RoleResource compAdminRole = newRoleResource().withType(COMP_ADMIN).build();
