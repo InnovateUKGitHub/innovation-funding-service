@@ -1,21 +1,27 @@
 *** Settings ***
-Documentation     INFUND-901: As a lead applicant I want to invite application contributors to collaborate with me on the application, so that they can contribute to the application in a collaborative competitio...
+Documentation     INFUND-901: As a lead applicant I want to invite application contributors to collaborate with me on the application, so...
 ...
-...               INFUND-928: As a lead applicant i want a separate screen within the application form, so that i can invite/track partners/contributors throughout the application process
+...               INFUND-928: As a lead applicant i want a separate screen within the application form...
 ...
-...               INFUND-929: As a lead applicant i want to be able to have a separate screen, so that i can invite contributors to the application
+...               INFUND-929: As a lead applicant i want to be able to have a separate screen...
 ...
-...               INFUND-1463: As a user with an invitation to collaborate on an application but not registered with IFS I want to be able to confirm my organisation so that I only have to create my account to work on the application
+...               INFUND-1463: As a user with an invitation to collaborate on an application but not registered with IFS I want to be able to confirm my organisation ...
 ...
 ...               INFUND-3742: The overview with contributors is not matching with actual invites
 ...
-...               INFUND-896: As a lead applicant i want to invite partner organisations to collaborate on line in my application, so that i can create the consortium needed to complete the proposed project
+...               INFUND-896: As a lead applicant i want to invite partner organisations to collaborate on line in my application...
 ...
 ...               INFUND-2375: Error message needed on contributors invite if user tries to add duplicate email address
 ...
-...               INFUND-4807 As an applicant (lead) I want to be able to remove an invited collaborator who is still pending registration so that I can manage members no longer required to be part of the consortium
+...               INFUND-4807 As an applicant (lead) I want to be able to remove an invited collaborator who is still pending registration...
 ...
 ...               INFUND-7974 As a lead applicant I want to edit my organisation
+...
+...               INFUND-7973 As a lead applicant I want to view my application team
+...
+...               INFUND-7979 As an lead applicant I want to add a new organisation
+...
+...               INFUND-7977 As a non lead applicant I want to edit my application team
 Suite Setup       log in and create new application for collaboration if there is not one already
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
@@ -28,6 +34,8 @@ ${INVITE_COLLABORATORS2_PAGE}    ${SERVER}/application/${OPEN_COMPETITION_APPLIC
 *** Test Cases ***
 Application team page
     [Documentation]    INFUND-928
+    ...
+    ...    INFUND-7973
     [Tags]    HappyPath
     [Setup]    The user navigates to the page    ${DASHBOARD_URL}
     Given the user clicks the button/link    link=Invite robot test application
@@ -35,6 +43,7 @@ Application team page
     Then the user should see the text in the page    Application team
     And the user should see the text in the page    View and manage your contributors and partners in the application.
     And the lead applicant should have the correct status
+    And the user should see the element    link=Application overview
 
 Lead Adds/Removes rows
     [Documentation]    INFUND-901
@@ -88,16 +97,20 @@ Autosaved works (in cookie)
 
 Lead Adds/Removes partner organisation
     [Documentation]    INFUND-1039
+    ...
+    ...    INFUND-7973
+    ...
+    ...    INFUND-7979
     [Tags]    HappyPath
     When The user clicks the button/link    jQuery=a:contains('Add partner organisation')
-    The user enters text to a text field    name=organisationName    Fannie May
-    The user enters text to a text field    name=applicants[0].name    Collaborator 2
-    The user enters text to a text field    name=applicants[0].email    ewan+10@hiveit.co.uk
-    The user clicks the button/link    jQuery=button:contains("Add organisation and invite applicants")
+    And The user enters text to a text field    name=organisationName    Fannie May
+    And The user enters text to a text field    name=applicants[0].name    Collaborator 2
+    And The user enters text to a text field    name=applicants[0].email    ewan+10@hiveit.co.uk
+    And The user clicks the button/link    jQuery=button:contains("Add organisation and invite applicants")
     And the user clicks the button/link    jQuery=a:contains("Update Fannie May")
     When The user clicks the button/link    jQuery=button:contains('Remove')
     And the user clicks the button/link    jQuery=.button:contains("Cancel")
-    Then the user should see the text in the page     Fannie May
+    Then the user should see the text in the page    Fannie May
     And the user clicks the button/link    jQuery=a:contains("Update Fannie May")
     And The user clicks the button/link    jQuery=button:contains('Remove')
     And the user clicks the button/link    jQuery=button:contains("Update organisation")
@@ -106,6 +119,8 @@ Lead Adds/Removes partner organisation
 
 Partner organisation Server-side validations
     [Documentation]    INFUND-896
+    ...
+    ...    INFUND-7979
     [Tags]
     Given the user clicks the button/link    jQuery=a:contains('Add partner organisation')
     When The user enters text to a text field    name=organisationName    ${EMPTY}
@@ -118,6 +133,7 @@ Partner organisation Server-side validations
     And the user should see an error    Please enter an email address.
 
 Partner organisation Client-side validations
+    [Documentation]    INFUND-7979
     When The user enters text to a text field    name=organisationName    Fannie May
     And The user enters text to a text field    name=applicants[0].name    Adrian Booth
     And The user enters text to a text field    name=applicants[0].email    ${test_mailbox_one}+inviteorg${unique_email_number}@gmail.com
@@ -172,25 +188,36 @@ Business organisation (partner accepts invitation)
 
 Partner should be able to log-in and see the new company name
     [Documentation]    INFUND-2083
+    ...
+    ...    INFUND-7976
     [Tags]    Email    HappyPath    SmokeTest
     Given the user clicks the button/link    jQuery=.button:contains("Sign in")
     When guest user log-in    ${test_mailbox_one}+inviteorg${unique_email_number}@gmail.com    ${correct_password}
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
     And the user can see the updated company name throughout the application
 
-Partner can invite others to his own organisation
-    [Documentation]    INFUND-2335
-    [Tags]    Email
+Parner can see the Application team
+    [Documentation]    INFUND-7976
     When the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
     And the user clicks the button/link    link=view and add participants to your application
-    And the user clicks the button/link    jQuery=a:contains("Update NOMENSA LTD")
-    Then the user clicks the button/link    jQuery=button:contains("Add new applicant")
+    Then the user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(1):contains("Steve Smith")
+    And the user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(2):contains("steve.smith@empire.com")
+    And the user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(3):contains("Lead")
+    And The user should see the element    link=Application overview
+    And The user should not see the element    link=Update Empire Ltd
 
-Partner cannot invite others to other organisations
+Partner can invite others to his own organisation
     [Documentation]    INFUND-2335
+    ...
+    ...    INFUND-7977
     [Tags]    Email
-    Then the user should not see the element    jQuery=li:nth-child(1) button:contains("Add another person")
+    When the user clicks the button/link    jQuery=a:contains("Update NOMENSA LTD")
+    And the user clicks the button/link    jQuery=button:contains("Add new applicant")
+    And The user enters text to a text field    jQuery=tr:nth-of-type(2) td:nth-of-type(1) input    Mark
+    And The user enters text to a text field    jQuery=tr:nth-of-type(2) td:nth-of-type(2) input    mark21@innovateuk.com
+    And the user clicks the button/link    jQuery=button:contains("Update organisation")
+    Then The user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(3):contains("Pending")
 
 Lead should see the accepted partner in the assign list
     [Documentation]    INFUND-1779
@@ -203,8 +230,11 @@ Lead should see the accepted partner in the assign list
     Then the user should see the element    jQuery=button:contains("Adrian Booth")
 
 Lead applicant invites a non registered user in the same organisation
-    [Documentation]    INFUND-928, INFUND-1463
-    ...    This test checks if the invited partner who are in the same organisation they can go directly to the create account and they don't have to create an organisation first.
+    [Documentation]    INFUND-928
+    ...
+    ...    INFUND-1463
+    ...
+    ...    INFUND-7979
     [Tags]
     [Setup]    Delete the emails from both test mailboxes
     Given the user navigates to the page    ${DASHBOARD_URL}
@@ -222,7 +252,6 @@ Lead applicant invites a non registered user in the same organisation
 
 Registered partner should not create new org but should follow the create account flow
     [Documentation]    INFUND-1463
-    ...    This test checks if the invited partner who are in the same organisation they can go directly to the create account and they don't have to create an organisation first.
     [Tags]    Email
     [Setup]    The guest user opens the browser
     When the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    participate in their application
