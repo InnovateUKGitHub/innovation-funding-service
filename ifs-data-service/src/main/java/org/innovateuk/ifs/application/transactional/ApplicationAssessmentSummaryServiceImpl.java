@@ -85,12 +85,17 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
             Competition competition = application.getCompetition();
             return new ApplicationAssessmentSummaryResource(application.getId(),
                     application.getName(),
+                    getInnovationArea(application),
                     competition.getId(),
                     competition.getName(),
                     competition.getCompetitionStatus(),
                     getLeadOrganisationName(application),
                     getPartnerOrganisationNames(application));
         });
+    }
+
+    private String getInnovationArea(Application application) {
+        return application.getInnovationArea() != null ? application.getInnovationArea().getName() : null;
     }
 
     private List<String> getPartnerOrganisationNames(Application application) {
