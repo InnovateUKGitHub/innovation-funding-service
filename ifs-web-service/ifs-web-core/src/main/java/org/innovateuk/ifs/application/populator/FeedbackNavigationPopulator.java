@@ -10,6 +10,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * Populator for the assessor feedback navigation view model.
+ */
 @Component
 public class FeedbackNavigationPopulator {
 

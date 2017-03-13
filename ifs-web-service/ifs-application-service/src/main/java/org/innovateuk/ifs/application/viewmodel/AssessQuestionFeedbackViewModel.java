@@ -9,17 +9,20 @@ import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 
 import java.util.List;
 
+/**
+ * View model for the individual question assessor feedback page
+ */
 public class AssessQuestionFeedbackViewModel {
 
-    ApplicationResource application;
+    private ApplicationResource application;
 
-    QuestionResource question;
+    private QuestionResource question;
 
-    List<FormInputResponseResource> responses;
+    private List<FormInputResponseResource> responses;
 
-    AssessmentFeedbackAggregateResource aggregateResource;
+    private AssessmentFeedbackAggregateResource aggregateResource;
 
-    NavigationViewModel navigation;
+    private NavigationViewModel navigation;
 
     public AssessQuestionFeedbackViewModel(ApplicationResource application,
                                            QuestionResource question,

@@ -96,6 +96,4 @@ public class AssessorFormInputResponseRestServiceImplTest extends BaseRestServic
 
         assertSame(expected, response);
     }
-
-
 }

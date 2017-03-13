@@ -19,6 +19,9 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Populator for the individual question assessor feedback page
+ */
 @Component
 public class AssessorQuestionFeedbackPopulator {
 

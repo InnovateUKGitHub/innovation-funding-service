@@ -3,14 +3,19 @@ package org.innovateuk.ifs.form.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
+import org.innovateuk.ifs.form.resource.FormInputResponseCommand;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.ArgumentMatcher;
 import org.springframework.http.MediaType;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.DataBinder;
 
 import java.util.List;
 
@@ -26,6 +31,9 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -105,27 +113,37 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
     }
 
     @Test
-    @Ignore("TODO DW - INFUND-1555 - re-establish test")
     public void testSaveQuestionResponse() throws Exception {
+        long appId = 456L;
+        long userId = 123L;
+        long formInputId = 789L;
 
-        Application application = newApplication().withId(456L).build();
-        User user = newUser().with(id(123L)).build();
-        ProcessRole applicantProcessRole = newProcessRole().withRole(newRole().withType(COLLABORATOR).build()).build();
+        FormInputResponse formInputResponse = newFormInputResponse().build();
+        BindingResult bindingResult = new DataBinder(formInputResponse).getBindingResult();
+        ValidationMessages expected = new ValidationMessages(bindingResult);
+        when(validationUtilMock.validateResponse(formInputResponse, false)).thenReturn(bindingResult);
 
-        FormInput formInput = newFormInput().with(id(789L)).build();
+        when(formInputServiceMock.saveQuestionResponse(argThat(new ArgumentMatcher<FormInputResponseCommand>() {
+            @Override
+            public boolean matches(Object argument) {
+                FormInputResponseCommand firArgument = (FormInputResponseCommand) argument;
+                assertEquals(appId, firArgument.getApplicationId());
+                assertEquals(userId, firArgument.getUserId());
+                assertEquals(formInputId, firArgument.getFormInputId());
+                assertEquals("", firArgument.getValue());
+                return true;
+            }
+        }))).thenReturn(serviceSuccess(formInputResponse));
 
-        when(formInputRepositoryMock.findOne(789L)).thenReturn(formInput);
-        when(userRepositoryMock.findOne(123L)).thenReturn(user);
-        when(applicationRepositoryMock.findOne(456L)).thenReturn(application);
-        when(processRoleRepositoryMock.findByUserAndApplicationId(user, application.getId())).thenReturn(singletonList(applicantProcessRole));
-
-        String contentString = "{\"userId\":123,\"applicationId\":456,\"formInputId\":789,\"value\":\"\"}";
+        String contentString = String.format("{\"userId\":%s,\"applicationId\":%s,\"formInputId\":%s,\"value\":\"\"}",userId, appId, formInputId);
         mockMvc.perform(post("/forminputresponse/saveQuestionResponse/")
                     .content(contentString)
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
-                .andExpect(content().string("[]"));
+                .andExpect(content().string(toJson(expected)));
+
+        verify(formInputResponseRepositoryMock, only()).save(formInputResponse);
     }
 }

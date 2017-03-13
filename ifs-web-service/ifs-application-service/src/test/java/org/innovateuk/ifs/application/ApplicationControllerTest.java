@@ -313,9 +313,9 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         AssessQuestionFeedbackViewModel expectedModel =
                 new AssessQuestionFeedbackViewModel(applicationResource,questionResource, responseResources, aggregateResource, expectedNavigation);
 
-        when(questionService.getPreviousQuestion(questionId)).thenReturn(ofNullable(previousQuestion));
+        when(questionService.getPreviousQuestion(questionId)).thenReturn(Optional.ofNullable(previousQuestion));
         when(questionService.getById(questionId)).thenReturn(questionResource);
-        when(questionService.getNextQuestion(questionId)).thenReturn(ofNullable(nextQuestion));
+        when(questionService.getNextQuestion(questionId)).thenReturn(Optional.ofNullable(nextQuestion));
         when(applicationService.getById(applicationId)).thenReturn(applicationResource);
         when(formInputResponseService.getByApplicationIdAndQuestionId(applicationId, questionId)).thenReturn(responseResources);
         when(assessorFormInputResponseRestService.getAssessmentAggregateFeedback(applicationId, questionId))
