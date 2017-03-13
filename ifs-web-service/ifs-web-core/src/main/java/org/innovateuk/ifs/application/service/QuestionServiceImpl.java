@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
  * This class contains methods to retrieve and store {@link QuestionResource} related data,
  * through the RestService {@link QuestionRestService}.
  */
-// TODO DW - INFUND-1555 - handle rest results
 @Service
 public class QuestionServiceImpl implements QuestionService {
     private static final Log LOG = LogFactory.getLog(QuestionServiceImpl.class);

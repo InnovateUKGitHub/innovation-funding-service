@@ -41,8 +41,8 @@ public interface UserRestService {
     RestResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber, String gender, Long ethnicity, String disability);
     RestResult<ProfileSkillsResource> getProfileSkills(Long userId);
     RestResult<Void> updateProfileSkills(Long userId, ProfileSkillsEditResource profileSkills);
-    RestResult<ProfileContractResource> getProfileContract(Long userId);
-    RestResult<Void> updateProfileContract(Long userId);
+    RestResult<ProfileAgreementResource> getProfileAgreement(Long userId);
+    RestResult<Void> updateProfileAgreement(Long userId);
     RestResult<List<AffiliationResource>> getUserAffiliations(Long userId);
     RestResult<Void> updateUserAffiliations(Long userId, List<AffiliationResource> affiliations);
     RestResult<UserProfileResource> getUserProfile(Long userId);
