@@ -53,7 +53,7 @@ public class ApplicationMarkAsCompleteValidator implements Validator {
         }
 
         if (application.getResearchCategory() == null) {
-            LOG.debug("MarkAsComplete application details validation message for research category: " + application.getResearchCategory());
+            LOG.debug("MarkAsComplete application details validation message for research category is null");
             rejectValue(errors, "researchCategory", "validation.application.research.category.required");
         }
 
