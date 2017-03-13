@@ -39,7 +39,7 @@ public class OrganisationSizeControllerDocumentation extends BaseControllerMockM
                 andExpect(status().isOk()).
                 andDo(document("organisation-size/{method-name}",
                         responseFields(
-                                fieldWithPath("[]").description("An array all the organisation sizes in the system"),
+                                fieldWithPath("[]").description("An array of all the organisation sizes in the system"),
                                 fieldWithPath("[].id").description("Database id of the organisation size"),
                                 fieldWithPath("[].description").description("Description id of the organisation size"))
                 ));

@@ -49,4 +49,5 @@ public class GrantClaimValidator implements Validator {
             rejectValue(errors, "grantClaimPercentage", "validation.field.percentage.max.value.or.higher", 0);
         }
     }
+
 }
