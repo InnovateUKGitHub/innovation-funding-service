@@ -273,7 +273,7 @@ public class OrganisationCreationController {
                                           HttpServletRequest request, HttpServletResponse response) {
         addOrganisationType(organisationForm, request);
         organisationForm.setOrganisationSearching(false);
-        organisationForm.setManualEntry(true);
+        organisationForm.setManualEntry(!organisationForm.isManualEntry());
         cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
         return "redirect:/organisation/create/" + FIND_ORGANISATION;
     }
