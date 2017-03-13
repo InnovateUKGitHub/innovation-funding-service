@@ -1090,15 +1090,6 @@ public class ApplicationFormController {
         } else if (fieldName.equals("application.previousApplicationTitle")) {
             application.setPreviousApplicationTitle(value);
             applicationService.save(application);
-        } else if (fieldName.equals("application.researchCategoryId")) {
-
-            /*
-            Long catId = Long.parseLong(value);
-            Set<ResearchCategoryResource> cats =
-                    categoryService.getResearchCategories().stream().filter(cat -> cat.getId().equals(catId)).collect(Collectors.toSet());
-            application.setResearchCategories(cats);
-            applicationService.save(application);
-            */
         }
         return errors;
     }
