@@ -46,13 +46,13 @@ Contribution to project and funding sought should not be negative number
     [Documentation]    INFUND-524
     ...
     ...    This test case still use the old application after the refactoring
-    [Tags]
+    [Tags]    Pending
+    # TODO Pending due to INFUND-8706
     [Setup]  log in as a different user    &{lead_applicant_credentials}
-    #TODO investigate intermittent failure
     When the user navigates to Your-finances page       Providing sustainable childcare
-    and the user fills in the project costs
-    and the user fills in the organisation information       Providing sustainable childcare
-    and the user checks your funding section for the project      Providing sustainable childcare
+    And the user fills in the project costs
+    And the user fills in the organisation information       Providing sustainable childcare
+    And the user checks your funding section for the project      Providing sustainable childcare
     Then the contribution to project and funding sought should be 0 and not a negative number
 
 Your Finance includes Finance summary table for lead applicant
