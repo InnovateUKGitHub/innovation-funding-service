@@ -11,7 +11,7 @@
 
 <main id="content">
   <th:block th:insert="fragments/layout :: main-content-start" />
-  <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${project.id})}"  th:remove="tag"></div>
+  <div th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${project.id})}" th:remove="tag"></div>
 
   <div class="page-title">
       <th:block th:insert="fragments/elements :: project-title (projectId=${applicationId}, projectName=${project.name})" />
@@ -25,6 +25,10 @@
       </h2>
       <ul class="error-summary-list">
           <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+      </ul>
+      <ul class="list-bullet">
+          <li>please check your account number</li>
+          <li>please check your sort code</li>
       </ul>
   </div>
 
@@ -60,18 +64,18 @@
           <span class="form-label-bold">Account number</span>
           <span class="form-hint">For example: 15481965</span>
           <span th:if="${#fields.hasErrors('accountNumber')}" th:remove="tag">
-                <span class="error-message"  th:each="err : ${#fields.errors('accountNumber')}" th:text="${err}" />
+                <span class="error-message" th:each="err : ${#fields.errors('accountNumber')}" th:text="${err}" />
           </span>
         </label>
-        <input type="text" th:attr="data-required-errormessage=#{validation.standard.accountnumber.required},data-pattern-errormessage=#{validation.standard.accountnumber.format}"  th:errorclass="field-error" required="required" pattern="[0-9]{8,}" maxlength="8" id="bank-acc-number" class="form-control width-medium" th:field="*{accountNumber}"/>
+        <input type="text" th:attr="data-required-errormessage=#{validation.standard.accountnumber.required},data-pattern-errormessage=#{validation.standard.accountnumber.format}" th:errorclass="field-error" required="required" pattern="[0-9]{8,}" maxlength="8" id="bank-acc-number" class="form-control width-medium" th:field="*{accountNumber}"/>
       </div>
 
-      <div class="form-group"  th:classappend="${#fields.hasErrors('sortCode') ? 'error' : ''}">
+      <div class="form-group" th:classappend="${#fields.hasErrors('sortCode') ? 'error' : ''}">
         <label for="bank-sort-code">
           <span class="form-label-bold">Sort code</span>
           <span class="form-hint">For example: 311212</span>
           <span th:if="${#fields.hasErrors('sortCode')}" th:remove="tag">
-                <span class="error-message"  th:each="err : ${#fields.errors('sortCode')}" th:text="${err}" />
+                <span class="error-message" th:each="err : ${#fields.errors('sortCode')}" th:text="${err}" />
           </span>
         </label>
         <input type="text" th:attr="data-required-errormessage=#{validation.standard.sortcode.required},data-pattern-errormessage=#{validation.standard.sortcode.format}" th:errorclass="field-error" required="required"  pattern="[0-9]{6,}" maxlength="6" id="bank-sort-code" class="form-control width-medium" th:field="*{sortCode}"/>

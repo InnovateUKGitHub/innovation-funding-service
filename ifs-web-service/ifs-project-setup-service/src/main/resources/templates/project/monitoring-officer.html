@@ -10,7 +10,7 @@
 
 <main id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}"  th:remove="tag"></div>
+    <div th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}" th:remove="tag"></div>
 
     <div class="page-title">
         <th:block th:insert="fragments/elements :: project-title (projectId=${model.applicationId}, projectName=${model.projectName})" />
@@ -20,7 +20,7 @@
     <!--/* has a monitoringOfficer */-->
     <th:block th:if="${model.monitoringOfficerAssigned}">
       <div class="success-alert extra-margin-bottom">
-    		<p><strong>Your project has been assigned a Monitoring Officer</strong></p>
+    		<p><strong>We have assigned a Monitoring Officer to your project.</strong></p>
     	</div>
       <p class="extra-margin">
         No action needs to be taken by your team. The Monitoring Officer will make contact shortly.

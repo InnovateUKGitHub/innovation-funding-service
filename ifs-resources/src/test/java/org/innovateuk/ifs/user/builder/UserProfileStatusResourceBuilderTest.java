@@ -15,19 +15,19 @@ public class UserProfileStatusResourceBuilderTest {
         Long expectedUser = 1L;
         boolean expectedSkillsComplete = true;
         boolean expectedAffiliationsComplete = false;
-        boolean expectedContractComplete = true;
+        boolean expectedAgreementComplete = true;
 
         UserProfileStatusResource userProfileStatusResource = newUserProfileStatusResource()
                 .withUser(1L)
                 .withSkillsComplete(expectedSkillsComplete)
                 .withAffliliationsComplete(expectedAffiliationsComplete)
-                .withContractComplete(expectedContractComplete)
+                .withAgreementComplete(expectedAgreementComplete)
                 .build();
 
         assertEquals(expectedUser, userProfileStatusResource.getUser());
         assertEquals(expectedSkillsComplete, userProfileStatusResource.isSkillsComplete());
         assertEquals(expectedAffiliationsComplete, userProfileStatusResource.isAffiliationsComplete());
-        assertEquals(expectedContractComplete, userProfileStatusResource.isContractComplete());
+        assertEquals(expectedAgreementComplete, userProfileStatusResource.isAgreementComplete());
     }
 
     @Test
@@ -35,26 +35,26 @@ public class UserProfileStatusResourceBuilderTest {
         Long[] expectedUsers = {1L, 2L};
         Boolean[] expectedSkillsComplete = {true, false};
         Boolean[] expectedAffiliationsComplete = {false, true};
-        Boolean[] expectedContractsComplete = {true, false};
+        Boolean[] expectedAgreementComplete = {true, false};
 
         List<UserProfileStatusResource> userRegistrationResources = newUserProfileStatusResource()
                 .withUser(1L, 2L)
                 .withSkillsComplete(expectedSkillsComplete)
                 .withAffliliationsComplete(expectedAffiliationsComplete)
-                .withContractComplete(expectedContractsComplete)
+                .withAgreementComplete(expectedAgreementComplete)
                 .build(2);
 
         UserProfileStatusResource first = userRegistrationResources.get(0);
         assertEquals(expectedUsers[0], first.getUser());
         assertEquals(expectedSkillsComplete[0], first.isSkillsComplete());
         assertEquals(expectedAffiliationsComplete[0], first.isAffiliationsComplete());
-        assertEquals(expectedContractsComplete[0], first.isContractComplete());
+        assertEquals(expectedAgreementComplete[0], first.isAgreementComplete());
 
         UserProfileStatusResource second = userRegistrationResources.get(1);
         assertEquals(expectedUsers[1], second.getUser());
         assertEquals(expectedUsers[1], second.getUser());
         assertEquals(expectedSkillsComplete[1], second.isSkillsComplete());
         assertEquals(expectedAffiliationsComplete[1], second.isAffiliationsComplete());
-        assertEquals(expectedContractsComplete[1], second.isContractComplete());
+        assertEquals(expectedAgreementComplete[1], second.isAgreementComplete());
     }
 }
