@@ -26,4 +26,8 @@ public class SecuredMethodsInStackCountInterceptor implements MethodInterceptor 
     public boolean isStackSecured() {
         return securedMethodsInStackCount.get() != null && securedMethodsInStackCount.get() > 0;
     }
+
+    public boolean isStackSecuredAtHigherLevel() {
+        return securedMethodsInStackCount.get() != null && securedMethodsInStackCount.get() > 1;
+    }
 }

@@ -227,7 +227,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
     @Override
     public boolean hasPermission(final Authentication authentication, final Object targetObject, final Object permission) {
 
-        if (methodSecuredInStackCountInterceptor.isStackSecured()) {
+        if (methodSecuredInStackCountInterceptor.isStackSecuredAtHigherLevel()) {
             return true;
         }
 
@@ -257,11 +257,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         return false;
     }
 
-    public boolean hasPermission(Authentication authentication, Serializable targetId, Class<?> targetType, Object permission) {
-
-        if (methodSecuredInStackCountInterceptor.isStackSecured()) {
-            return true;
-        }
+    private boolean hasPermission(Authentication authentication, Serializable targetId, Class<?> targetType, Object permission) {
 
         final Pair<Object, Method> lookup = lookup(targetId, targetType);
         final Object permissionEntity;
@@ -306,7 +302,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
     @Override
     public boolean hasPermission(Authentication authentication, Serializable targetId, String targetType, Object permission) {
 
-        if (methodSecuredInStackCountInterceptor.isStackSecured()) {
+        if (methodSecuredInStackCountInterceptor.isStackSecuredAtHigherLevel()) {
             return true;
         }
 
@@ -355,17 +351,6 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
                 permission -> hasPermission(authentication, targetDomainObject, permission)
         ).sorted().collect(toList());
     }
-
-    public List<String> getPermissions(final Authentication authentication, final Class<?> dtoClazz, final Serializable key) {
-        return rulesMap.getOrDefault(dtoClazz, emptyPermissions()).keySet().stream().filter(
-                permission -> hasPermission(authentication, key, dtoClazz, permission)
-        ).sorted().collect(toList());
-    }
-
-    private static ListOfOwnerAndMethod emptyMethods() {
-        return new ListOfOwnerAndMethod();
-    }
-
 
     private static PermissionsToPermissionsMethods emptyPermissions() {
         return new PermissionsToPermissionsMethods();

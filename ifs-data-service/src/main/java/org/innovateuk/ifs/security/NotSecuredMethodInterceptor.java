@@ -1,11 +1,9 @@
 package org.innovateuk.ifs.security;
 
-import org.innovateuk.ifs.commons.security.NotSecured;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.security.SecuredMethodsInStackCountInterceptor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,8 +16,6 @@ public class NotSecuredMethodInterceptor implements MethodInterceptor {
 
     @Autowired
     private SecuredMethodsInStackCountInterceptor methodSecuredInStackCountInterceptor;
-
-    private static final Logger LOG = LoggerFactory.getLogger(NotSecuredMethodInterceptor.class);
 
     @Override
     public Object invoke(final MethodInvocation invocation) throws Throwable {
