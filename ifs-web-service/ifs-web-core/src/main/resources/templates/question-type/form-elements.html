@@ -220,20 +220,20 @@
                   th:attr="data-required-errormessage=#{validation.field.please.enter.some.text}"
                   required="required"></textarea>
 
-        <div class="grid-row form-footer">
+        <div class="form-footer">
 
-            <div class="column-quarter">
+            <div class="form-footer__actions">
                 <th:block th:if="${competitionIsOpen} == null or ${competitionIsOpen}">
-                    <!--/* if  readonly we show the edit form button */-->
-                    <th:block th:if="${readonly and userIsLeadApplicant}" th:include="question-type/form-elements :: form-edit-question-button" />
                     <!--/*  we show mark as complete buttons and the question should be assigned to you or */-->
                     <th:block th:if="${userIsLeadApplicant}" th:include="question-type/form-elements :: form-mark-as-complete-buttons" />
+                    <!--/* if  readonly we show the edit form button */-->
+                    <th:block th:if="${readonly and userIsLeadApplicant}" th:include="question-type/form-elements :: form-edit-question-button" />
                 </th:block>
 
                 <th:block th:insert="question-type/form-elements :: ready-for-review" th:if="${!userIsLeadApplicant}" th:with="displayBlock=${true}" />
             </div>
 
-            <div class="column-three-quarters alignright">
+            <div class="form-footer__info">
 
                 <span class="textarea-footer"></span>
 
@@ -283,7 +283,7 @@
   </div>
 </th:block>
 <th:block th:fragment="assign-buttons">
-    <div class="assign-container" th:classappend="${displayBlock} ? 'assign-container--alert'" th:if="${question.isAssignEnabled()}">
+    <div th:class="(${currentUser.getId() == questionAssignee?.assigneeUserId} ? 'assign-container action-required' : 'assign-container')" th:classappend="${displayBlock} ? 'assign-container--alert'" th:if="${question.isAssignEnabled()}">
         <div class="assign-button">
               <th:block th:insert="question-type/form-elements :: assigned-to" />
         </div>
@@ -306,7 +306,7 @@
               </select>
               <button type="submit">Reassign</button>
         </div>
-        <th:block th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
+        <th:block th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} or ${hideAssignedTo}"
                   th:include="question-type/form-elements :: current-assignee" />
     </div>
     <th:block th:unless="${question.isAssignEnabled()}">
@@ -351,19 +351,19 @@
 
 <th:block th:fragment="form-mark-as-complete-buttons">
     <th:block th:unless="${appIsClosed}">
-    <button th:if="${(question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id) and (questionAssignee?.assigneeUserId == currentUser?.getId() or (questionAssignee?.getAssignee() == null)))}"
+        <button th:unless="${readonly}"
+                th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
+                type="submit"
+                name="mark_as_incomplete"
+                th:value="${question.getId()}"
+                th:class="${costCategory!=null} ? 'button' : 'buttonlink'">Edit
+        </button>
+        <button th:if="${(question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id) and (questionAssignee?.assigneeUserId == currentUser?.getId() or (questionAssignee?.getAssignee() == null)))}"
             type="submit"
             name="mark_as_complete"
-            th:value="${question.getId()}"
-            th:class="${readonly} or ${costCategory!=null} ? 'button' : 'buttonlink'">Mark as complete
-    </button>
-    <button th:unless="${readonly}"
-            th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
-            type="submit"
-            name="mark_as_incomplete"
-            th:value="${question.getId()}"
-            th:class="${costCategory!=null} ? 'button' : 'buttonlink'">Edit
-    </button>
+            class="buttonlink"
+            th:value="${question.getId()}">Mark as complete
+        </button>
     </th:block>
 </th:block>
 
@@ -393,14 +393,13 @@
 <!-- ========================= edit link =========================== -->
 
 <th:block th:fragment="form-edit-question-button">
-    <button class="button-secondary"
+    <button class="buttonlink"
             type="submit"
             name="edit_question"
             th:unless="${appIsClosed}"
             th:value="${question.getId()}"
-            th:class="${readonly} or ${costCategory!=null} ? 'button-secondary' : 'buttonlink'"
             th:attrappend="formaction='/application/'+${currentApplication.getId()}+'/form/question/edit/'+${question.getId()}">
-            Edit
+            Return and edit
     </button>
 </th:block>
 

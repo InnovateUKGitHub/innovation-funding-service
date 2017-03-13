@@ -336,16 +336,19 @@ td.autosave-info {
   }
 }
 
-// ------- form footer - edit / mark as complete -------- //
-/*
+
+
+/* SG
+# IFS/Wrapped textarea footers
+Used to show information and CTAs under wrapped textarea used in application questions
 
 ```
 <div>
-  <div class="grid-row form-footer">
-    <div class="column-half">
+  <div class="form-footer">
+    <div class="form-footer__controls">
       <a href="#">Mark as complete</a>
     </div>
-    <div class="column-half alignright">
+    <div class="form-footer__info">
       Last saved 15 January 03:34 by you
     </div>
 </div>
@@ -355,28 +358,34 @@ td.autosave-info {
 
 .form-footer{
   @include core-16;
+  @extend %contain-floats;
   color: $secondary-text-colour;
   background: $panel-colour;
-  padding: 0.5em 0;
+  padding: 0.8em;
   margin: 0;
 
-  .column-quarter{
+  &__actions{
     min-height: 1em;
+    float: left;
   }
 
-  .update-details{
-    margin-right: 1em;
+  &__info{
+    min-height: 1em;
+    float: right;
   }
 
   @include media-down(mobile) {
-    .alignright{
-      text-align: left;
-      margin-top: 0.5em;
+    &__actions,
+    &__info{
+      min-height: 1em;
+      display: block;
+      float: none;
+      text-align: center;
     }
   }
 
   .buttonlink{
-    margin: 0;
+    margin-bottom: 0;
   }
 
   .autosave-info{
@@ -385,4 +394,22 @@ td.autosave-info {
     font-weight: bold;
   }
 
+  .update-details{
+    margin-right: 1em;
+  }
+
+  @include media-down(mobile) {
+    &__actions,
+    &__info{
+      min-height: 1em;
+      display: block;
+      float: none;
+      text-align: center;
+      padding: 0.25em 0;
+    }
+
+    .buttonlink{
+      margin: 0.5em;
+    }
+  }
 }
