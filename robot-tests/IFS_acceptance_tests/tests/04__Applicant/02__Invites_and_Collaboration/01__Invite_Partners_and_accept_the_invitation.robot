@@ -186,19 +186,29 @@ Business organisation (partner accepts invitation)
 
 Partner should be able to log-in and see the new company name
     [Documentation]    INFUND-2083
+    ...
+    ...    INFUND-7976
     [Tags]    Email    HappyPath    SmokeTest
     Given the user clicks the button/link    jQuery=.button:contains("Sign in")
     When guest user log-in    ${test_mailbox_one}+inviteorg${unique_email_number}@gmail.com    ${correct_password}
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
     And the user can see the updated company name throughout the application
 
-Partner can invite others to his own organisation
-    [Documentation]    INFUND-2335
-    [Tags]    Email
+Parner van see the Application team
+    [Documentation]    INFUND-7976
     When the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
     And the user clicks the button/link    link=view and add participants to your application
-    And the user clicks the button/link    jQuery=a:contains("Update NOMENSA LTD")
+    Then the user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(1):contains("Steve Smith")
+    And the user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(2):contains("steve.smith@empire.com")
+    And the user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(3):contains("Lead")
+    And The user should see the element    link=Application overview
+    And The user should not see the element    link=Update Empire Ltd
+
+Partner can invite others to his own organisation
+    [Documentation]    INFUND-2335
+    [Tags]    Email
+    When the user clicks the button/link    jQuery=a:contains("Update NOMENSA LTD")
     Then the user clicks the button/link    jQuery=button:contains("Add new applicant")
 
 Partner cannot invite others to other organisations
