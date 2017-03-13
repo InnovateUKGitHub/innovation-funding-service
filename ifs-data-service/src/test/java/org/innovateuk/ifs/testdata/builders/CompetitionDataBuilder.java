@@ -189,7 +189,8 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             applicationFundingService.saveFundingDecisionData(data.getCompetition().getId(), pairsToMap(applicationIdAndDecisions)).
                     getSuccessObjectOrThrowException();
             NotificationResource notificationResource = new NotificationResource("Subject", "Body", pairsToMap(applicationIdAndDecisions));
-            applicationFundingService.notifyLeadApplicantsOfFundingDecisions(notificationResource);
+            applicationFundingService.notifyLeadApplicantsOfFundingDecisions(notificationResource).
+                    getSuccessObjectOrThrowException();
 
             doAs(anyProjectFinanceUser(),
                     () -> projectService.createProjectsFromFundingDecisions(pairsToMap(applicationIdAndDecisions)).getSuccessObjectOrThrowException());
