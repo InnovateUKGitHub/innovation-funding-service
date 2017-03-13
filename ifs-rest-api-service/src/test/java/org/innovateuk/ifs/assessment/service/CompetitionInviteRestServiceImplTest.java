@@ -165,15 +165,15 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
         int page = 5;
         Optional<Long> innovationArea = of(10L);
         Optional<ParticipantStatusResource> participantStatus = of(ACCEPTED);
-        Optional<Boolean> contract = of(TRUE);
+        Optional<Boolean> compliant = of(TRUE);
 
         AssessorInviteOverviewPageResource expected = newAssessorInviteOverviewPageResource().build();
 
-        String expectedUrl = format("%s/%s/%s?page=5&innovationArea=10&status=ACCEPTED&contract=true", restUrl, "getInvitationOverview", competitionId);
+        String expectedUrl = format("%s/%s/%s?page=5&innovationArea=10&status=ACCEPTED&compliant=true", restUrl, "getInvitationOverview", competitionId);
 
         setupGetWithRestResultExpectations(expectedUrl, AssessorInviteOverviewPageResource.class, expected);
 
-        AssessorInviteOverviewPageResource actual = service.getInvitationOverview(competitionId, page, innovationArea, participantStatus, contract)
+        AssessorInviteOverviewPageResource actual = service.getInvitationOverview(competitionId, page, innovationArea, participantStatus, compliant)
                 .getSuccessObject();
 
         assertEquals(expected, actual);

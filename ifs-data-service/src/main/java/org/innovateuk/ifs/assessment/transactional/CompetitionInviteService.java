@@ -72,7 +72,7 @@ public interface CompetitionInviteService {
                                                                             Pageable pageable,
                                                                             Optional<Long> innovationArea,
                                                                             Optional<ParticipantStatus> status,
-                                                                            Optional<Boolean> contract);
+                                                                            Optional<Boolean> compliant);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ_INVITE_OVERVIEW_BY_COMPETITION",

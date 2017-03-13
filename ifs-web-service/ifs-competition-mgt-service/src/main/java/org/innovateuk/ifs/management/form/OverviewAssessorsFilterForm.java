@@ -12,7 +12,7 @@ public class OverviewAssessorsFilterForm extends BaseBindingResultTarget {
 
     private Optional<Long> innovationArea = Optional.empty();
     private Optional<ParticipantStatusResource> status = Optional.empty();
-    private Optional<Boolean> contract = Optional.empty();
+    private Optional<Boolean> compliant = Optional.empty();
 
     public Optional<Long> getInnovationArea() {
         return innovationArea;
@@ -30,11 +30,11 @@ public class OverviewAssessorsFilterForm extends BaseBindingResultTarget {
         this.status = status;
     }
 
-    public Optional<Boolean> getContract() {
-        return contract;
+    public Optional<Boolean> getCompliant() {
+        return compliant;
     }
 
-    public void setContract(Optional<Boolean> contract) {
-        this.contract = contract;
+    public void setCompliant(Optional<Boolean> compliant) {
+        this.compliant = compliant;
     }
 }

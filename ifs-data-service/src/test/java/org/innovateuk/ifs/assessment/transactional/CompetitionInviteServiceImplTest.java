@@ -70,7 +70,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
 import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
-import static org.innovateuk.ifs.user.builder.ContractBuilder.newContract;
+import static org.innovateuk.ifs.user.builder.AgreementBuilder.newAgreement;
 import static org.innovateuk.ifs.user.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -1582,7 +1582,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         Pageable pageable = new PageRequest(0, 5);
         Long innovationArea = 2L;
         ParticipantStatus status = ParticipantStatus.PENDING;
-        Boolean contract = true;
+        Boolean compliant = true;
 
         List<CompetitionParticipant> expectedParticipants = newCompetitionParticipant()
                 .withInvite(
@@ -1602,7 +1602,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 competitionId,
                 innovationArea,
                 status,
-                contract,
+                compliant,
                 pageable
         ))
                 .thenReturn(pageResult);
@@ -1613,14 +1613,14 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 pageable,
                 of(innovationArea),
                 of(status),
-                of(contract)
+                of(compliant)
         );
 
         verify(competitionParticipantRepositoryMock).getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
                 competitionId,
                 innovationArea,
                 status,
-                contract,
+                compliant,
                 pageable
         );
         verify(participantStatusMapperMock, times(5)).mapToResource(PENDING);
@@ -1651,8 +1651,8 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         Pageable pageable = new PageRequest(0, 2);
         Long innovationArea = 2L;
         ParticipantStatus status = ParticipantStatus.PENDING;
-        Boolean contract = true;
-        LocalDateTime contractSignedDate = now().minusDays(5);
+        Boolean compliant = true;
+        LocalDateTime agreementSignedDate = now().minusDays(5);
 
         List<InnovationArea> innovationAreas = newInnovationArea()
                 .withName("Innovation 1", "Innovation 2")
@@ -1663,8 +1663,8 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withBusinessType(ACADEMIC)
                 .withInnovationAreas(innovationAreas)
                 .withSkillsAreas("Some skill")
-                .withContract(newContract().build())
-                .withContractSignedDate(contractSignedDate)
+                .withAgreement(newAgreement().build())
+                .withAgreementSignedDate(agreementSignedDate)
                 .build();
 
         User user = newUser()
@@ -1695,7 +1695,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 competitionId,
                 innovationArea,
                 status,
-                contract,
+                compliant,
                 pageable
         ))
                 .thenReturn(pageResult);
@@ -1710,14 +1710,14 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 pageable,
                 of(innovationArea),
                 of(status),
-                of(contract)
+                of(compliant)
         );
 
         verify(competitionParticipantRepositoryMock).getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
                 competitionId,
                 innovationArea,
                 status,
-                contract,
+                compliant,
                 pageable
         );
         verify(profileRepositoryMock, only()).findOne(user.getProfileId());

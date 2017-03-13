@@ -32,7 +32,7 @@ public interface CompetitionInviteRestService {
                                                                          int page,
                                                                          Optional<Long> innovationArea,
                                                                          Optional<ParticipantStatusResource> participantStatus,
-                                                                         Optional<Boolean> contract);
+                                                                         Optional<Boolean> compliant);
 
     RestResult<CompetitionInviteStatisticsResource> getInviteStatistics(long competitionId);
 

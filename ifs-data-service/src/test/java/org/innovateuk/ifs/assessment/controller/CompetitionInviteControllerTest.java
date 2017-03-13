@@ -474,7 +474,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
         int size = 10;
         Optional<Long> innovationArea = of(3L);
         Optional<ParticipantStatus> status = of(ACCEPTED);
-        Optional<Boolean> contract = of(TRUE);
+        Optional<Boolean> compliant = of(TRUE);
 
         AssessorInviteOverviewPageResource expectedPageResource = newAssessorInviteOverviewPageResource()
                 .withContent(newAssessorInviteOverviewResource().build(2))
@@ -482,7 +482,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
 
         Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.ASC, "invite.email"));
 
-        when(competitionInviteServiceMock.getInvitationOverview(competitionId, pageable, innovationArea, status, contract))
+        when(competitionInviteServiceMock.getInvitationOverview(competitionId, pageable, innovationArea, status, compliant))
                 .thenReturn(serviceSuccess(expectedPageResource));
 
         mockMvc.perform(get("/competitioninvite/getInvitationOverview/{competitionId}", competitionId)
@@ -491,11 +491,11 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
                 .param("sort", "invite.email")
                 .param("innovationArea", "3")
                 .param("status", "ACCEPTED")
-                .param("contract", "1"))
+                .param("compliant", "1"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expectedPageResource)));
 
-        verify(competitionInviteServiceMock, only()).getInvitationOverview(competitionId, pageable, innovationArea, status, contract);
+        verify(competitionInviteServiceMock, only()).getInvitationOverview(competitionId, pageable, innovationArea, status, compliant);
     }
 
     @Test
@@ -505,7 +505,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
         int size = 20;
         Optional<Long> innovationArea = empty();
         Optional<ParticipantStatus> status = empty();
-        Optional<Boolean> contract = empty();
+        Optional<Boolean> compliant = empty();
 
         Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.ASC, "invite.name"));
 
@@ -513,14 +513,14 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
                 .withContent(newAssessorInviteOverviewResource().build(2))
                 .build();
 
-        when(competitionInviteServiceMock.getInvitationOverview(competitionId, pageable, innovationArea, status, contract))
+        when(competitionInviteServiceMock.getInvitationOverview(competitionId, pageable, innovationArea, status, compliant))
                 .thenReturn(serviceSuccess(expectedPageResource));
 
         mockMvc.perform(get("/competitioninvite/getInvitationOverview/{competitionId}", competitionId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expectedPageResource)));
 
-        verify(competitionInviteServiceMock, only()).getInvitationOverview(competitionId, pageable, innovationArea, status, contract);
+        verify(competitionInviteServiceMock, only()).getInvitationOverview(competitionId, pageable, innovationArea, status, compliant);
     }
 
     @Test

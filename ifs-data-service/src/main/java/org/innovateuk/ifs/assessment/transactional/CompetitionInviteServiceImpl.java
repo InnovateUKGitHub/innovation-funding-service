@@ -267,16 +267,16 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                                                                                    Pageable pageable,
                                                                                    Optional<Long> innovationArea,
                                                                                    Optional<ParticipantStatus> status,
-                                                                                   Optional<Boolean> contract) {
+                                                                                   Optional<Boolean> compliant) {
         Page<CompetitionParticipant> pagedResult;
 
-        if (innovationArea.isPresent() || contract.isPresent()) {
+        if (innovationArea.isPresent() || compliant.isPresent()) {
             // We want to avoid performing the potentially expensive join on Profile if possible
             pagedResult = competitionParticipantRepository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
                     competitionId,
                     innovationArea.orElse(null),
                     status.orElse(null),
-                    contract.orElse(null),
+                    compliant.orElse(null),
                     pageable
             );
         } else {

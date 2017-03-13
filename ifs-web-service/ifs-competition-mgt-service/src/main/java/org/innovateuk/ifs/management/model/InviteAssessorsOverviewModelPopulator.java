@@ -34,7 +34,7 @@ public class InviteAssessorsOverviewModelPopulator extends InviteAssessorsModelP
                                                           int page,
                                                           Optional<Long> innovationArea,
                                                           Optional<ParticipantStatusResource> status,
-                                                          Optional<Boolean> contract,
+                                                          Optional<Boolean> compliant,
                                                           String originQuery) {
         InviteAssessorsOverviewViewModel model = super.populateModel(competition);
 
@@ -46,7 +46,7 @@ public class InviteAssessorsOverviewModelPopulator extends InviteAssessorsModelP
                 page,
                 innovationArea,
                 status,
-                contract
+                compliant
         )
                 .getSuccessObjectOrThrowException();
 

@@ -21,6 +21,7 @@ import java.util.Optional;
 
 import static java.lang.Boolean.TRUE;
 import static java.util.Collections.singletonList;
+import static java.util.Optional.*;
 import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
 import static org.innovateuk.ifs.invite.builder.CompetitionParticipantResourceBuilder.newCompetitionParticipantResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
@@ -152,17 +153,17 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
     @Test
     public void getInvitationOverview() {
         Pageable pageable = new PageRequest(0, 20);
-        Optional<Long> innovationArea = Optional.of(1L);
-        Optional<ParticipantStatus> status = Optional.of(ACCEPTED);
-        Optional<Boolean> contract = Optional.of(TRUE);
+        Optional<Long> innovationArea = of(1L);
+        Optional<ParticipantStatus> status = of(ACCEPTED);
+        Optional<Boolean> compliant = of(TRUE);
 
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getInvitationOverview(1L, pageable, innovationArea, status, contract), COMP_ADMIN,PROJECT_FINANCE);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getInvitationOverview(1L, pageable, innovationArea, status, compliant), COMP_ADMIN,PROJECT_FINANCE);
     }
 
     @Test
     public void getAvailableAssessors() {
         Pageable pageable = new PageRequest(0, 20);
-        Optional<Long> innovationArea = Optional.of(1L);
+        Optional<Long> innovationArea = of(1L);
 
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAvailableAssessors(1L, pageable, innovationArea), COMP_ADMIN, PROJECT_FINANCE);
     }
@@ -264,7 +265,7 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
                                                                                        Pageable pageable,
                                                                                        Optional<Long> innovationArea,
                                                                                        Optional<ParticipantStatus> status,
-                                                                                       Optional<Boolean> contract) {
+                                                                                       Optional<Boolean> compliant) {
             return null;
         }
 

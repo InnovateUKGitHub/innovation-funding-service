@@ -11,19 +11,21 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.invite.domain.*;
+import org.innovateuk.ifs.invite.domain.CompetitionInvite;
+import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
+import org.innovateuk.ifs.invite.domain.ParticipantStatus;
+import org.innovateuk.ifs.invite.domain.RejectionReason;
 import org.innovateuk.ifs.invite.repository.CompetitionInviteRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.resource.*;
-import org.innovateuk.ifs.user.domain.Contract;
+import org.innovateuk.ifs.user.domain.Agreement;
 import org.innovateuk.ifs.user.domain.Profile;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.repository.ContractRepository;
+import org.innovateuk.ifs.user.repository.AgreementRepository;
 import org.innovateuk.ifs.user.repository.ProfileRepository;
 import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.AffiliationType;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
@@ -99,7 +101,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
     private RoleRepository roleRepository;
 
     @Autowired
-    private ContractRepository contractRepository;
+    private AgreementRepository agreementRepository;
 
     private Competition competition;
 
@@ -990,21 +992,21 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         InnovationArea innovationArea = innovationAreaRepository.findOne(5L);
         InnovationArea otherInnovationArea = innovationAreaRepository.findOne(10L);
 
-        Contract contract = contractRepository.findOne(1L);
+        Agreement agreement = agreementRepository.findOne(1L);
 
         Profile profile1 = profileRepository.findOne(paulPlum.getProfileId());
         Profile profile2 = profileRepository.findOne(felixWilson.getProfileId());
 
         profile1.setBusinessType(ACADEMIC);
         profile1.setSkillsAreas("Skill area 1");
-        profile1.setContract(contract);
-        profile1.setContractSignedDate(now().minusDays(5));
+        profile1.setAgreement(agreement);
+        profile1.setAgreementSignedDate(now().minusDays(5));
         profile1.addInnovationArea(innovationArea);
 
         profile2.setBusinessType(BUSINESS);
         profile2.setSkillsAreas("Skill area 2");
-        profile2.setContract(contract);
-        profile2.setContractSignedDate(now().minusDays(10));
+        profile2.setAgreement(agreement);
+        profile2.setAgreementSignedDate(now().minusDays(10));
         profile2.addInnovationArea(innovationArea);
 
         profileRepository.save(asList(profile1, profile2));

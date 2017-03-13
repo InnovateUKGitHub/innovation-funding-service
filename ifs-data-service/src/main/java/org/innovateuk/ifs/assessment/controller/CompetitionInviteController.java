@@ -80,9 +80,9 @@ public class CompetitionInviteController {
             @PageableDefault(size = 20, sort = "invite.name", direction = Sort.Direction.ASC) Pageable pageable,
             @RequestParam Optional<Long> innovationArea,
             @RequestParam Optional<ParticipantStatus> status,
-            @RequestParam Optional<Boolean> contract
+            @RequestParam Optional<Boolean> compliant
     ) {
-        return competitionInviteService.getInvitationOverview(competitionId, pageable, innovationArea, status, contract).toGetResponse();
+        return competitionInviteService.getInvitationOverview(competitionId, pageable, innovationArea, status, compliant).toGetResponse();
     }
 
     @RequestMapping(value = "/getInviteStatistics/{competitionId}", method = RequestMethod.GET)

@@ -58,7 +58,7 @@ public interface CompetitionParticipantRepository extends PagingAndSortingReposi
             "       WHERE affiliation.user.id = competitionParticipant.user.id " +
             "   ) " +
             "   AND profile.skillsAreas IS NOT NULL " +
-            "   AND profile.contract IS NOT NULL " +
+            "   AND profile.agreement IS NOT NULL " +
             ")))")
     Page<CompetitionParticipant> getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(@Param("competitionId") long competitionId,
                                                                                                  @Param("innovationAreaId") Long innovationAreaId,

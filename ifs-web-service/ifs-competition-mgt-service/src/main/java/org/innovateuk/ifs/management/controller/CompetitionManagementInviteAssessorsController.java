@@ -216,7 +216,7 @@ public class CompetitionManagementInviteAssessorsController {
                 page,
                 filterForm.getInnovationArea(),
                 filterForm.getStatus(),
-                filterForm.getContract(),
+                filterForm.getCompliant(),
                 originQuery
         ));
         model.addAttribute("originQuery", originQuery);

@@ -79,7 +79,7 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
                                                                                 int page,
                                                                                 Optional<Long> innovationArea,
                                                                                 Optional<ParticipantStatusResource> participantStatus,
-                                                                                Optional<Boolean> contract) {
+                                                                                Optional<Boolean> compliant) {
         String baseUrl = format("%s/%s/%s", competitionInviteRestUrl, "getInvitationOverview", competitionId);
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
@@ -87,7 +87,7 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
 
         innovationArea.ifPresent(innovationAreaId -> builder.queryParam("innovationArea", innovationAreaId));
         participantStatus.ifPresent(status -> builder.queryParam("status", status.toString()));
-        contract.ifPresent(hasContract -> builder.queryParam("contract", hasContract));
+        compliant.ifPresent(hasContract -> builder.queryParam("compliant", hasContract));
 
         return getWithRestResult(builder.toUriString(), AssessorInviteOverviewPageResource.class);
     }

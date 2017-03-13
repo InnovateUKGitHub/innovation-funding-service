@@ -89,7 +89,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     private ProfileRepository profileRepository;
 
     @Autowired
-    private ContractRepository contractRepository;
+    private AgreementRepository agreementRepository;
 
     @Autowired
     @Override
@@ -549,12 +549,12 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     public void getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant_allFilters() throws Exception {
         loginCompAdmin();
 
-        Contract contract = contractRepository.findOne(1L);
+        Agreement agreement = agreementRepository.findOne(1L);
         InnovationArea otherInnovationArea = innovationAreaRepository.findOne(5L);
 
         List<Profile> profiles = newProfile()
                 .withId()
-                .withContract(contract)
+                .withAgreement(agreement)
                 .withInnovationAreas(singletonList(otherInnovationArea), singletonList(innovationArea), singletonList(otherInnovationArea))
                 .withSkillsAreas("Skill area 1", "Skill area 2", "Skill area 3", "Skill area 4")
                 .build(4);
@@ -739,11 +739,11 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     public void getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant_isCompliant() throws Exception {
         loginCompAdmin();
 
-        Contract contract = contractRepository.findOne(1L);
+        Agreement agreement = agreementRepository.findOne(1L);
 
         List<Profile> profiles = newProfile()
                 .withId()
-                .withContract(contract)
+                .withAgreement(agreement)
                 .withInnovationAreas(singletonList(innovationArea))
                 .withSkillsAreas("Skill area 1", "Skill area 2", "Skill area 3", "Skill area 4")
                 .build(4);

@@ -237,7 +237,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         int page = 1;
         Optional<Long> innovationArea = of(10L);
         Optional<ParticipantStatusResource> status = of(ACCEPTED);
-        Optional<Boolean> contract = of(TRUE);
+        Optional<Boolean> compliant = of(TRUE);
 
         List<AssessorInviteOverviewResource> assessorInviteOverviewResources = setUpAssessorInviteOverviewResources();
 
@@ -246,14 +246,14 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .build();
 
         when(categoryRestServiceMock.getInnovationAreas()).thenReturn(restSuccess(newInnovationAreaResource().build(4)));
-        when(competitionInviteRestService.getInvitationOverview(competition.getId(), page, innovationArea, status, contract))
+        when(competitionInviteRestService.getInvitationOverview(competition.getId(), page, innovationArea, status, compliant))
                 .thenReturn(restSuccess(pageResource));
 
         MvcResult result = mockMvc.perform(get("/competition/{competitionId}/assessors/overview", competition.getId())
                 .param("page", "1")
                 .param("innovationArea", "10")
                 .param("status", "ACCEPTED")
-                .param("contract", "TRUE"))
+                .param("compliant", "TRUE"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("model"))
                 .andExpect(view().name("assessors/overview"))
@@ -261,7 +261,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
         OverviewAssessorsFilterForm filterForm = (OverviewAssessorsFilterForm) result.getModelAndView().getModel().get("filterForm");
 
-        assertEquals(of(TRUE), filterForm.getContract());
+        assertEquals(of(TRUE), filterForm.getCompliant());
         assertEquals(of(10L), filterForm.getInnovationArea());
         assertEquals(of(ACCEPTED), filterForm.getStatus());
 
@@ -271,7 +271,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         InOrder inOrder = inOrder(competitionService, categoryRestServiceMock, competitionInviteRestService);
         inOrder.verify(competitionService).getById(competition.getId());
         inOrder.verify(categoryRestServiceMock).getInnovationAreas();
-        inOrder.verify(competitionInviteRestService).getInvitationOverview(competition.getId(), page, innovationArea, status, contract);
+        inOrder.verify(competitionInviteRestService).getInvitationOverview(competition.getId(), page, innovationArea, status, compliant);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -295,7 +295,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
         OverviewAssessorsFilterForm filterForm = (OverviewAssessorsFilterForm) result.getModelAndView().getModel().get("filterForm");
 
-        assertEquals(empty(), filterForm.getContract());
+        assertEquals(empty(), filterForm.getCompliant());
         assertEquals(empty(), filterForm.getInnovationArea());
         assertEquals(empty(), filterForm.getStatus());
 
