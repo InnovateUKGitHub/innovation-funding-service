@@ -124,7 +124,7 @@
                                 </button>
                                 <button type="submit"
                                         th:case="'FUNDERS_PANEL'"
-                                        th:disabled="${model.keyStatistics.canManageFundingNotifications == false}"
+                                        th:disabled="${!model.keyStatistics.canManageFundingNotifications}"
                                         th:formaction="@{/competition/{competitionId}/manage-funding-applications(competitionId=${model.competitionId})}"
                                         th:if="${model.competitionStatus.name() == 'FUNDERS_PANEL' || model.competitionStatus.name() == 'ASSESSOR_FEEDBACK'}"
                                         class="button button-large"
@@ -132,7 +132,7 @@
                                 </button>
                                 <button type="submit"
                                         th:case="'RELEASE_FEEDBACK'"
-                                        th:disabled="${model.keyStatistics.canReleaseFeedback == false}"
+                                        th:disabled="${!model.keyStatistics.canReleaseFeedback}"
                                         th:if="${model.competitionStatus.name() == 'ASSESSOR_FEEDBACK'}"
                                         th:formaction="@{/competition/{competitionId}/release-feedback(competitionId=${model.competitionId})}"
                                         class="button button-large">Release feedback

@@ -22,7 +22,6 @@ import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 
-import java.util.Collections;
 import java.util.List;
 
 import static java.util.Collections.emptyList;
@@ -117,7 +116,7 @@ public class CompetitionManagementManageFundingApplicationsControllerTest extend
             assertEquals(toMatchCompetitionInFlightViewModel.getKeyStatistics().getStatThree(), matchCompetitionInFlightViewModel.getKeyStatistics().getStatThree());
             assertEquals(toMatchCompetitionInFlightViewModel.getKeyStatistics().getStatFour(), matchCompetitionInFlightViewModel.getKeyStatistics().getStatFour());
             assertEquals(toMatchCompetitionInFlightViewModel.getKeyStatistics().getStatFive(), matchCompetitionInFlightViewModel.getKeyStatistics().getStatFive());
-            assertEquals(toMatchCompetitionInFlightViewModel.getKeyStatistics().getCanManageFundingNotifications(), matchCompetitionInFlightViewModel.getKeyStatistics().getCanManageFundingNotifications());
+            assertEquals(toMatchCompetitionInFlightViewModel.getKeyStatistics().isCanManageFundingNotifications(), matchCompetitionInFlightViewModel.getKeyStatistics().isCanManageFundingNotifications());
             return true;
         });
     }

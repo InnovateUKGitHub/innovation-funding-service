@@ -74,51 +74,27 @@ public class CompetitionInFlightStatsViewModel {
         return statOne;
     }
 
-    public void setStatOne(int statOne) {
-        this.statOne = statOne;
-    }
-
     public int getStatTwo() {
         return statTwo;
-    }
-
-    public void setStatTwo(int statTwo) {
-        this.statTwo = statTwo;
     }
 
     public Integer getStatThree() {
         return statThree;
     }
 
-    public void setStatThree(Integer statThree) {
-        this.statThree = statThree;
-    }
-
     public Integer getStatFour() {
         return statFour;
-    }
-
-    public void setStatFour(Integer statFour) {
-        this.statFour = statFour;
     }
 
     public Integer getStatFive() {
         return statFive;
     }
 
-    public void setStatFive(Integer statFive) {
-        this.statFive = statFive;
-    }
-
     public Integer getStatSix() {
         return statSix;
     }
 
-    public void setStatSix(Integer statSix) {
-        this.statSix = statSix;
-    }
-
-    public boolean getCanManageFundingNotifications() {
+    public boolean isCanManageFundingNotifications() {
         return canManageFundingNotifications;
     }
 
