@@ -7,6 +7,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.apache.commons.lang3.StringEscapeUtils.escapeXml10;
+
 public class OrganisationResource {
     private Long id;
     private String name;
@@ -32,7 +34,7 @@ public class OrganisationResource {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = escapeXml10(name);
     }
 
     public String getCompanyHouseNumber() {

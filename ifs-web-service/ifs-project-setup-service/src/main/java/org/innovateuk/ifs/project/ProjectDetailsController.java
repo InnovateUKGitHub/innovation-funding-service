@@ -14,6 +14,7 @@ import org.innovateuk.ifs.form.AddressForm;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
+import org.innovateuk.ifs.organisation.resource.SortExcept;
 import org.innovateuk.ifs.organisation.service.OrganisationAddressRestService;
 import org.innovateuk.ifs.project.form.FinanceContactForm;
 import org.innovateuk.ifs.project.form.ProjectDetailsAddressForm;
@@ -87,7 +88,9 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
 
 	    List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());
-        List<OrganisationResource> partnerOrganisations = getPartnerOrganisations(projectUsers);
+        OrganisationResource lead = projectService.getLeadOrganisation(projectId);
+        List<OrganisationResource> partnerOrganisations
+                = new SortExcept<>(getPartnerOrganisations(projectUsers), lead, OrganisationResource::getName).unwrap();
         boolean isSubmissionAllowed = projectService.isSubmitAllowed(projectId).getSuccessObject();
 
         ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId, Optional.empty());

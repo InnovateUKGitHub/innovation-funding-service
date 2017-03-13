@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.controller;
 
 import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.organisation.resource.SortExcept;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -55,7 +56,7 @@ public class ProjectDetailsController {
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());
         OrganisationResource leadOrganisationResource = projectService.getLeadOrganisation(projectId);
 
-        List<OrganisationResource> partnerOrganisations = getPartnerOrganisations(projectUsers);
+        List<OrganisationResource> partnerOrganisations = sortedOrganisations(getPartnerOrganisations(projectUsers), leadOrganisationResource);
 
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource,
                 competitionId,
@@ -67,18 +68,16 @@ public class ProjectDetailsController {
     }
 
     private List<OrganisationResource> getPartnerOrganisations(final List<ProjectUserResource> projectRoles) {
-
-        final Comparator<OrganisationResource> compareById =
-                Comparator.comparingLong(OrganisationResource::getId);
-
-        final Supplier<SortedSet<OrganisationResource>> supplier = () -> new TreeSet<>(compareById);
-
-        SortedSet<OrganisationResource> organisationSet = projectRoles.stream()
+        return  projectRoles.stream()
                 .filter(uar -> uar.getRoleName().equals(PARTNER.getName()))
                 .map(uar -> organisationService.getOrganisationById(uar.getOrganisation()))
-                .collect(Collectors.toCollection(supplier));
+                .collect(Collectors.toList());
+    }
 
-        return new ArrayList<>(organisationSet);
+    private List<OrganisationResource> sortedOrganisations(List<OrganisationResource> organisations,
+                                                           OrganisationResource lead)
+    {
+        return new SortExcept<>(organisations, lead, OrganisationResource::getName).unwrap();
     }
 
     private Optional<ProjectUserResource> getProjectManager(List<ProjectUserResource> projectUsers) {
