@@ -46,9 +46,9 @@ Contribution to project and funding sought should not be negative number
     [Documentation]    INFUND-524
     ...
     ...    This test case still use the old application after the refactoring
-    [Tags]
+    [Tags]      Pending
     [Setup]  log in as a different user    &{lead_applicant_credentials}
-    #TODO investigate intermittent failure
+    # TODO Pending due to INFUND-8706
     When the user navigates to Your-finances page       Providing sustainable childcare
     and the user fills in the project costs      Providing sustainable childcare
     and the user fills in the organisation information       Providing sustainable childcare
