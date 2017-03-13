@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.populator;
 
-import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
@@ -11,6 +10,7 @@ import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
+import org.innovateuk.ifs.organisation.resource.SortExcept;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -25,6 +25,7 @@ import java.util.List;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
  * Builds the model for the Application Team view.
@@ -60,14 +61,18 @@ public class ApplicationTeamModelPopulator {
         OrganisationResource leadOrganisation = getLeadOrganisation(applicationId);
 
         List<InviteOrganisationResource> inviteOrganisationResources = getOrganisationInvites(applicationId, leadOrganisation.getId());
+        final InviteOrganisationResource leadOrganisationInvite
+                = simpleFindFirst(inviteOrganisationResources, ior -> ior.getOrganisation().equals(leadOrganisation.getId())).get();
 
+        final List<InviteOrganisationResource> sortedInvites = new SortExcept<>(inviteOrganisationResources, leadOrganisationInvite,
+                InviteOrganisationResource::getOrganisationName).unwrap();
         boolean userLeadApplicant = isUserLeadApplicant(loggedInUserId, leadApplicant);
 
-        List<ApplicationTeamOrganisationRowViewModel> organisationRowViewModelsForInvites = inviteOrganisationResources
-                .stream().map(inviteOrganisationResource -> getOrganisationViewModel(inviteOrganisationResource,
-                        leadOrganisation.getId(), loggedInUserId, userLeadApplicant)).collect(toList());
+        List<ApplicationTeamOrganisationRowViewModel> organisationRowViewModelsForInvites = sortedInvites.stream()
+                .map(inviteOrganisationResource -> getOrganisationViewModel(inviteOrganisationResource, leadOrganisation.getId(),
+                        loggedInUserId, userLeadApplicant)).collect(toList());
 
-        if (isNoInvitesForLeadOrganisation(inviteOrganisationResources, leadOrganisation.getId())) {
+        if (isNoInvitesForLeadOrganisation(sortedInvites, leadOrganisation.getId())) {
             organisationRowViewModelsForInvites = appendLeadOrganisation(organisationRowViewModelsForInvites, leadOrganisation, userLeadApplicant);
         }
 

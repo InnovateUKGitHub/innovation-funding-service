@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.commons.validation.SpendProfileCostValidator;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.organisation.resource.SortExcept;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.form.SpendProfileForm;
 import org.innovateuk.ifs.project.model.SpendProfileSummaryModel;
@@ -44,8 +45,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @RequestMapping("/" + ProjectSpendProfileController.BASE_DIR + "/{projectId}/partner-organisation/{organisationId}/spend-profile")
 public class ProjectSpendProfileController {
 
-    public static final String BASE_DIR = "project";
-    public static final String REVIEW_TEMPLATE_NAME = "spend-profile-review";
+    static final String BASE_DIR = "project";
+    private static final String REVIEW_TEMPLATE_NAME = "spend-profile-review";
     private static final String FORM_ATTR_NAME = "form";
 
     @Autowired
@@ -313,16 +314,19 @@ public class ProjectSpendProfileController {
                                                                                                    final UserResource loggedInUser) {
         ProjectResource projectResource = projectService.getById(projectId);
 
-        List<OrganisationResource> partnerOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
+        final OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
 
-        Map<String, Boolean> partnersSpendProfileProgress = getPartnersSpendProfileProgress(projectId, partnerOrganisations);
+        List<OrganisationResource> organisations = new SortExcept<>(projectService.getPartnerOrganisationsForProject(projectId),
+                leadOrganisation, OrganisationResource::getName).unwrap();
 
-        Map<String, Boolean> editablePartners = determineEditablePartners(projectId, partnerOrganisations, loggedInUser);
+        Map<String, Boolean> partnersSpendProfileProgress = getPartnersSpendProfileProgress(projectId, organisations);
+
+        Map<String, Boolean> editablePartners = determineEditablePartners(projectId, organisations, loggedInUser);
 
         return new ProjectSpendProfileProjectSummaryViewModel(projectId,
                 projectResource.getApplication(), projectResource.getName(),
                 partnersSpendProfileProgress,
-                partnerOrganisations,
+                organisations,
                 projectResource.getSpendProfileSubmittedDate() != null,
                 editablePartners,
                 isApproved(projectId));
