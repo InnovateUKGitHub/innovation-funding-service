@@ -24,7 +24,6 @@ import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -167,10 +166,10 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
                 new Cost("200").withCategory(type1Cat2));
 
         List<Cost> expectedOrganisation1SpendProfileFigures = asList(
-                new Cost("34.00").withCategory(type1Cat1).withTimePeriod(0, MONTH, 1, MONTH),
+                new Cost("34").withCategory(type1Cat1).withTimePeriod(0, MONTH, 1, MONTH),
                 new Cost("33").withCategory(type1Cat1).withTimePeriod(1, MONTH, 1, MONTH),
                 new Cost("33").withCategory(type1Cat1).withTimePeriod(2, MONTH, 1, MONTH),
-                new Cost("68.00").withCategory(type1Cat2).withTimePeriod(0, MONTH, 1, MONTH),
+                new Cost("68").withCategory(type1Cat2).withTimePeriod(0, MONTH, 1, MONTH),
                 new Cost("66").withCategory(type1Cat2).withTimePeriod(1, MONTH, 1, MONTH),
                 new Cost("66").withCategory(type1Cat2).withTimePeriod(2, MONTH, 1, MONTH));
 
@@ -186,7 +185,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
                 new Cost("301").withCategory(type2Cat1));
 
         List<Cost> expectedOrganisation2SpendProfileFigures = asList(
-                new Cost("101.00").withCategory(type2Cat1).withTimePeriod(0, MONTH, 1, MONTH),
+                new Cost("101").withCategory(type2Cat1).withTimePeriod(0, MONTH, 1, MONTH),
                 new Cost("100").withCategory(type2Cat1).withTimePeriod(1, MONTH, 1, MONTH),
                 new Cost("100").withCategory(type2Cat1).withTimePeriod(2, MONTH, 1, MONTH));
 
@@ -357,10 +356,10 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
                 new Cost("200").withCategory(costCategoryMaterials));
 
         List<Cost> expectedOrganisation1SpendProfileFigures = asList(
-                new Cost("34.00").withCategory(costCategoryLabour).withTimePeriod(0, MONTH, 1, MONTH),
+                new Cost("34").withCategory(costCategoryLabour).withTimePeriod(0, MONTH, 1, MONTH),
                 new Cost("33").withCategory(costCategoryLabour).withTimePeriod(1, MONTH, 1, MONTH),
                 new Cost("33").withCategory(costCategoryLabour).withTimePeriod(2, MONTH, 1, MONTH),
-                new Cost("68.00").withCategory(costCategoryMaterials).withTimePeriod(0, MONTH, 1, MONTH),
+                new Cost("68").withCategory(costCategoryMaterials).withTimePeriod(0, MONTH, 1, MONTH),
                 new Cost("66").withCategory(costCategoryMaterials).withTimePeriod(1, MONTH, 1, MONTH),
                 new Cost("66").withCategory(costCategoryMaterials).withTimePeriod(2, MONTH, 1, MONTH));
 
