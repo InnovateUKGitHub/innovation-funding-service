@@ -222,7 +222,7 @@ Lead Partners Spend profile summary gets updated when edited
     [Tags]    HappyPath
     Given the user navigates to the page           ${external_spendprofile_summary}/review
     Then the user should see the text in the page  Project costs for financial year
-    And the user sees the text in the element      jQuery=.grid-container table tr:nth-child(1) td:nth-child(2)    £ 80,009
+    And the user sees the text in the element      jQuery=.grid-container table tr:nth-child(1) td:nth-child(2)    £ 83,761
 
 Project Manager can see Spend Profile in Progress
     [Documentation]    done during refactoring, no ticket attached
