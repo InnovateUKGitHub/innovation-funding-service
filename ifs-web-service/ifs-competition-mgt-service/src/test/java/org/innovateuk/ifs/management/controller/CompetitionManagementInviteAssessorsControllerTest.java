@@ -45,6 +45,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInvitePageResourceBuilder.newAssessorCreatedInvitePageResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
+import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewPageResourceBuilder.newAssessorInviteOverviewPageResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorPageResourceBuilder.newAvailableAssessorPageResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
@@ -224,9 +225,52 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
     @Test
     public void overview() throws Exception {
+        int page = 1;
+        Optional<Long> innovationArea = of(10L);
+        Optional<ParticipantStatusResource> status = of(ParticipantStatusResource.ACCEPTED);
+        Optional<Boolean> contract = of(TRUE);
+
         List<AssessorInviteOverviewResource> assessorInviteOverviewResources = setUpAssessorInviteOverviewResources();
 
-        when(competitionInviteRestService.getInvitationOverview(competition.getId())).thenReturn(restSuccess(assessorInviteOverviewResources));
+        AssessorInviteOverviewPageResource pageResource = newAssessorInviteOverviewPageResource()
+                .withContent(assessorInviteOverviewResources)
+                .build();
+
+        when(categoryRestServiceMock.getInnovationAreas()).thenReturn(restSuccess(newInnovationAreaResource().build(4)));
+        when(competitionInviteRestService.getInvitationOverview(competition.getId(), page, innovationArea, status, contract))
+                .thenReturn(restSuccess(pageResource));
+
+        MvcResult result = mockMvc.perform(get("/competition/{competitionId}/assessors/overview", competition.getId())
+                .param("page", "1")
+                .param("innovationArea", "10")
+                .param("status", "ACCEPTED")
+                .param("contract", "TRUE"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("assessors/overview"))
+                .andReturn();
+
+        assertCompetitionDetails(competition, result);
+        assertInviteOverviews(assessorInviteOverviewResources, result);
+
+        InOrder inOrder = inOrder(competitionService, categoryRestServiceMock, competitionInviteRestService);
+        inOrder.verify(competitionService).getById(competition.getId());
+        inOrder.verify(categoryRestServiceMock).getInnovationAreas();
+        inOrder.verify(competitionInviteRestService).getInvitationOverview(competition.getId(), page, innovationArea, status, contract);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void overview_defaultParams() throws Exception {
+        List<AssessorInviteOverviewResource> assessorInviteOverviewResources = setUpAssessorInviteOverviewResources();
+
+        AssessorInviteOverviewPageResource pageResource = newAssessorInviteOverviewPageResource()
+                .withContent(assessorInviteOverviewResources)
+                .build();
+
+        when(categoryRestServiceMock.getInnovationAreas()).thenReturn(restSuccess(newInnovationAreaResource().build(4)));
+        when(competitionInviteRestService.getInvitationOverview(competition.getId(), 0, empty(), empty(), empty()))
+                .thenReturn(restSuccess(pageResource));
 
         MvcResult result = mockMvc.perform(get("/competition/{competitionId}/assessors/overview", competition.getId()))
                 .andExpect(status().isOk())
@@ -237,9 +281,10 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         assertCompetitionDetails(competition, result);
         assertInviteOverviews(assessorInviteOverviewResources, result);
 
-        InOrder inOrder = inOrder(competitionService, competitionInviteRestService);
+        InOrder inOrder = inOrder(competitionService, categoryRestServiceMock, competitionInviteRestService);
         inOrder.verify(competitionService).getById(competition.getId());
-        inOrder.verify(competitionInviteRestService).getInvitationOverview(competition.getId());
+        inOrder.verify(categoryRestServiceMock).getInnovationAreas();
+        inOrder.verify(competitionInviteRestService).getInvitationOverview(competition.getId(), 0, empty(), empty(), empty());
         inOrder.verifyNoMoreInteractions();
     }
 

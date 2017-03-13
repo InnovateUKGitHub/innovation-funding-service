@@ -11,6 +11,7 @@ import org.innovateuk.ifs.management.controller.CompetitionManagementAssessorPro
 import org.innovateuk.ifs.management.form.FindAssessorsFilterForm;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsForm;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsRowForm;
+import org.innovateuk.ifs.management.form.OverviewAssessorsFilterForm;
 import org.innovateuk.ifs.management.model.InviteAssessorsFindModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsInviteModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsOverviewModelPopulator;
@@ -202,11 +203,9 @@ public class CompetitionManagementInviteAssessorsController {
 
     @RequestMapping(value = "/overview", method = RequestMethod.GET)
     public String overview(Model model,
+                           @Valid @ModelAttribute(FILTER_FORM_ATTR_NAME) OverviewAssessorsFilterForm filterForm,
                            @PathVariable("competitionId") long competitionId,
                            @RequestParam(defaultValue = "0") int page,
-                           @RequestParam Optional<Long> innovationArea,
-                           @RequestParam Optional<ParticipantStatusResource> status,
-                           @RequestParam Optional<Boolean> contract,
                            @RequestParam MultiValueMap<String, String> queryParams) {
         CompetitionResource competition = competitionService.getById(competitionId);
 
@@ -215,9 +214,9 @@ public class CompetitionManagementInviteAssessorsController {
         model.addAttribute("model", inviteAssessorsOverviewModelPopulator.populateModel(
                 competition,
                 page,
-                innovationArea,
-                status,
-                contract,
+                filterForm.getInnovationArea(),
+                filterForm.getStatus(),
+                filterForm.getContract(),
                 originQuery
         ));
         model.addAttribute("originQuery", originQuery);

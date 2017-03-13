@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.management.model;
 
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
+import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewPageResource;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewResource;
@@ -25,6 +27,9 @@ public class InviteAssessorsOverviewModelPopulator extends InviteAssessorsModelP
     @Autowired
     private CompetitionInviteRestService competitionInviteRestService;
 
+    @Autowired
+    private CategoryRestService categoryRestService;
+
     public InviteAssessorsOverviewViewModel populateModel(CompetitionResource competition,
                                                           int page,
                                                           Optional<Long> innovationArea,
@@ -32,6 +37,9 @@ public class InviteAssessorsOverviewModelPopulator extends InviteAssessorsModelP
                                                           Optional<Boolean> contract,
                                                           String originQuery) {
         InviteAssessorsOverviewViewModel model = super.populateModel(competition);
+
+        List<InnovationAreaResource> innovationAreasOptions = categoryRestService.getInnovationAreas()
+                .getSuccessObjectOrThrowException();
 
         AssessorInviteOverviewPageResource pageResource = competitionInviteRestService.getInvitationOverview(
                 competition.getId(),
@@ -45,6 +53,7 @@ public class InviteAssessorsOverviewModelPopulator extends InviteAssessorsModelP
         List<OverviewAssessorRowViewModel> assessors = simpleMap(pageResource.getContent(), this::getRowViewModel);
 
         model.setAssessors(assessors);
+        model.setInnovationAreaOptions(innovationAreasOptions);
         model.setPagination(new PaginationViewModel(pageResource, originQuery));
 
         return model;
