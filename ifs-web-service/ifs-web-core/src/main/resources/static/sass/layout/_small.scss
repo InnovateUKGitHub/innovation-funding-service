@@ -44,6 +44,10 @@ small {
   font-size: 16px;
 }
 
+.list-indent {
+  padding-left: 20px;
+}
+
 .blue-block {
   @include inline-block;
   @include media-down(mobile){
@@ -59,7 +63,11 @@ small {
 .bordered {
   border:1px solid $border-colour;
 }
-
+.no-border,
+table td.no-border,
+table th.no-border {
+  border:none;
+}
 .grey-box {
   padding: 15px;
   background: $grey-4;
@@ -83,6 +91,26 @@ tfoot th {
 
 th[scope="row"]{
   font-weight:bold;
+}
+
+.table-bordered {
+  td,th {
+    padding:0.5em;
+    border: 1px solid $border-colour;
+    vertical-align: top;
+  }
+  td.fixed-half,
+  th.fixed-half {
+    width:50%;
+  }
+  td.w29,
+  th.w29 {
+    width:29%;
+  }
+  caption {
+    font-weight: normal;
+    margin-bottom:0.8em;
+  }
 }
 
 /* SG

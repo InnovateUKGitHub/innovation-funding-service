@@ -8,8 +8,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.innovateuk.ifs.application.resource.ApplicationResource.formatter;
-
 public class ProjectResource {
     private static final int MAX_DURATION_IN_MONTHS_DIGITS = 2;
 
@@ -88,11 +86,6 @@ public class ProjectResource {
 
     public void setProjectUsers(List<Long> projectUsers) {
         this.projectUsers = projectUsers;
-    }
-
-    @JsonIgnore
-    public String getFormattedId(){
-        return formatter.format(id);
     }
 
     public Long getApplication() {

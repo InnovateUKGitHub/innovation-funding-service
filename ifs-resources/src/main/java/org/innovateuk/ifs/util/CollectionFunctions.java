@@ -9,6 +9,7 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.*;
 import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static java.util.Arrays.asList;
@@ -17,6 +18,7 @@ import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.*;
+import static java.util.stream.IntStream.range;
 
 /**
  * Utility class to provide useful reusable Functions around Collections throughout the codebase
@@ -772,7 +774,7 @@ public final class CollectionFunctions {
         return sorted;
     }
 
-    public static final <R, S, T> SortedMap<T, List<R>> toSortedMap(List<S> orderedList, Function<S, T> keyTransform, Function<S, R> valueTransform) {
+    public static final <R, S, T> SortedMap<T, List<R>> toSortedMapWithList(List<S> orderedList, Function<S, T> keyTransform, Function<S, R> valueTransform) {
         SortedMap<T, List<R>> orderedMap = new TreeMap<>();
         if (orderedList != null) {
             orderedList.stream().forEachOrdered(s -> {
@@ -790,6 +792,13 @@ public final class CollectionFunctions {
         return orderedMap;
     }
 
+    public static final <R, S, T> SortedMap<T, R> toSortedMap(List<S> orderedList, Function<S, T> keyTransform, Function<S, R> valueTransform) {
+        return orderedList.stream().collect(Collectors.toMap(keyTransform, valueTransform,
+                (v1,v2) ->{ throw new RuntimeException(String.format("Duplicate key for values %s and %s", v1, v2));},
+                TreeMap::new));
+    }
+
+
     public static <S, T> T unique(Collection<S> collectionToSearch, Function<S, T> property) {
         List<T> distinct = collectionToSearch.stream().map(property).distinct().collect(toList());
         if (distinct.size() != 1) {
@@ -801,5 +810,15 @@ public final class CollectionFunctions {
 
     public static <S> boolean matchAll(Collection<S> collectionToMatch, Predicate<S> predicate){
         return collectionToMatch.stream().allMatch(predicate);
+    }
+
+    /**
+     * A method that a list of length n with t the value of every element.
+     * @param int n - times to replicate t
+     * @param <T>
+     * @return
+     */
+    public static <T> List<T> nOf(int n, T t) {
+        return range(0, n).mapToObj(x -> t).collect(Collectors.toList());
     }
 }

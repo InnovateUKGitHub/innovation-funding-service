@@ -381,9 +381,7 @@
                     </label>
                     <input th:class="${#fields.hasErrors('pafNumber') ? 'form-control field-error width-large' : 'form-control width-large'}"
                            type="text"
-                           th:field="${competitionSetupForm.pafNumber}"
-                           required="required"
-                           th:attr="data-required-errormessage=#{validation.additionalinfoform.pafnumber.required}" />
+                           th:field="${competitionSetupForm.pafNumber}" />
                 </div>
 
                 <div th:class="${#fields.hasErrors('budgetCode')}? 'form-group error':'form-group'">
@@ -395,9 +393,7 @@
                     </label>
                     <input th:class="${#fields.hasErrors('budgetCode') ? 'form-control field-error width-large' : 'form-control width-large'}"
                            type="text"
-                           th:field="${competitionSetupForm.budgetCode}"
-                           required="required"
-                           th:attr="data-required-errormessage=#{validation.additionalinfoform.budgetcode.required}" />
+                           th:field="${competitionSetupForm.budgetCode}" />
                 </div>
 
 
@@ -409,11 +405,10 @@
                         </span>
                     </label>
                     <input  th:class="${#fields.hasErrors('activityCode') ? 'form-control field-error width-large' : 'form-control width-large'}"
-                            type="text" required="required"
+                            type="text"
                             th:field="${competitionSetupForm.activityCode}"
                             maxlength="255"
-                            th:attr="data-maxlength-errormessage=#{validation.additionalinfoform.activitycode.size},
-                                     data-required-errormessage=#{validation.additionalinfoform.activitycode.required}" />
+                            th:attr="data-maxlength-errormessage=#{validation.additionalinfoform.activitycode.size}" />
 
                 </div>
 
@@ -1028,5 +1023,12 @@
                 <span class="pagination-part-title">Application</span>
             </a>
         </li>
+        <li class="next">
+            <a rel="next" title="Navigate to next part" th:href="@{/competition/setup/{sectionPath}/{competitionId}(competitionId=${competition.id},sectionPath='public-content')}">
+                <span class="pagination-label">Next</span>
+                <span class="pagination-part-title">Public content</span>
+            </a>
+        </li>
     </ul>
+
 </th:block>

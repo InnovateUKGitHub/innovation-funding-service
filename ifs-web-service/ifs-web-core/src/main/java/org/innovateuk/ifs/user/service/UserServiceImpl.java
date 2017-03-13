@@ -5,16 +5,12 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.UserApplicationRole;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
@@ -37,11 +33,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResource findById(Long userId) {
-        return userRestService.retrieveUserById(userId).getSuccessObject();
+        return userRestService.retrieveUserById(userId).getSuccessObjectOrThrowException();
     }
 
     @Override
-    // TODO DW - INFUND-1555 - get service to return RestResult
     public List<UserResource> getAssignable(Long applicationId) {
         return userRestService.findAssignableUsers(applicationId).getSuccessObjectOrThrowException();
     }
@@ -90,28 +85,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public RestResult<UserResource> createLeadApplicantForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId) {
-        return userRestService.createLeadApplicantForOrganisation(firstName, lastName, password, email, title, phoneNumber, null, null, null, organisationId);
+    public ServiceResult<UserResource> createUserForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId) {
+        return userRestService.createLeadApplicantForOrganisation(firstName, lastName, password, email, title, phoneNumber, null, null, null, organisationId).toServiceResult();
     }
 
     @Override
-    public RestResult<UserResource> createLeadApplicantForOrganisationWithCompetitionId(String firstName, String lastName, String password, String email,
-                                                                                        String title, String phoneNumber,
-                                                                                        String gender, Long ethnicity, String disability,
-                                                                                        Long organisationId, Long competitionId) {
-        return userRestService.createLeadApplicantForOrganisationWithCompetitionId(firstName, lastName, password, email, title, phoneNumber, gender, ethnicity, disability, organisationId, competitionId);
+    public ServiceResult<UserResource> createLeadApplicantForOrganisationWithCompetitionId(String firstName, String lastName, String password, String email,
+                                                                                           String title, String phoneNumber,
+                                                                                           String gender, Long ethnicity, String disability,
+                                                                                           Long organisationId, Long competitionId) {
+        return userRestService.createLeadApplicantForOrganisationWithCompetitionId(firstName, lastName, password, email, title, phoneNumber, gender, ethnicity, disability, organisationId, competitionId).toServiceResult();
     }
 
     @Override
-    public RestResult<UserResource> createOrganisationUser(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId) {
-        // TODO rationalise and rename - createLeadApplicantForOrganisation isn't actually what this method does - it simply creates a user who is attached to an organisation
-        return createLeadApplicantForOrganisation(firstName, lastName, password, email, title, phoneNumber, organisationId);
+    public ServiceResult<UserResource> createOrganisationUser(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId) {
+        return createUserForOrganisation(firstName, lastName, password, email, title, phoneNumber, organisationId);
     }
 
 
     @Override
-    public RestResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber, String gender, Long ethnicity, String disability) {
-        return userRestService.updateDetails(id, email, firstName, lastName, title, phoneNumber, gender, ethnicity, disability);
+    public ServiceResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber, String gender, Long ethnicity, String disability) {
+        return userRestService.updateDetails(id, email, firstName, lastName, title, phoneNumber, gender, ethnicity, disability).toServiceResult();
     }
 
     @Override
@@ -154,13 +148,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ProfileContractResource getProfileContract(Long userId) {
-        return userRestService.getProfileContract(userId).getSuccessObjectOrThrowException();
+    public ProfileAgreementResource getProfileAgreement(Long userId) {
+        return userRestService.getProfileAgreement(userId).getSuccessObjectOrThrowException();
     }
 
     @Override
-    public ServiceResult<Void> updateProfileContract(Long userId) {
-        return userRestService.updateProfileContract(userId).toServiceResult();
+    public ServiceResult<Void> updateProfileAgreement(Long userId) {
+        return userRestService.updateProfileAgreement(userId).toServiceResult();
     }
 
     @Override
@@ -169,8 +163,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public RestResult<Void> verifyEmail(String hash) {
-        return userRestService.verifyEmail(hash);
+    public Void verifyEmail(String hash) {
+        return userRestService.verifyEmail(hash).getSuccessObjectOrThrowException();
     }
 
     @Override
@@ -185,38 +179,38 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ServiceResult<Boolean> userHasApplicationForCompetition(Long userId, Long competitionId) {
-        return userRestService.userHasApplicationForCompetition(userId, competitionId).toServiceResult();
+    public Boolean userHasApplicationForCompetition(Long userId, Long competitionId) {
+        return userRestService.userHasApplicationForCompetition(userId, competitionId).getSuccessObjectOrThrowException();
     }
 
     @Override
-    public RestResult<UserResource> retrieveUserById(Long id) {
-        return userRestService.retrieveUserById(id);
+    public UserResource retrieveUserById(Long id) {
+        return userRestService.retrieveUserById(id).getSuccessObjectOrThrowException();
     }
 
     @Override
-    public RestResult<Void> sendPasswordResetNotification(String email) {
-        return userRestService.sendPasswordResetNotification(email);
+    public Void sendPasswordResetNotification(String email) {
+        return userRestService.sendPasswordResetNotification(email).getSuccessObjectOrThrowException();
     }
 
     @Override
-    public RestResult<Void> checkPasswordResetHash(String hash) {
-        return userRestService.checkPasswordResetHash(hash);
+    public Void checkPasswordResetHash(String hash) {
+        return userRestService.checkPasswordResetHash(hash).getSuccessObjectOrThrowException();
     }
 
     @Override
-    public RestResult<Void> resetPassword(String hash, String password) {
-        return userRestService.resetPassword(hash,password);
+    public ServiceResult<Void> resetPassword(String hash, String password) {
+        return userRestService.resetPassword(hash,password).toServiceResult();
     }
 
     @Override
-    public RestResult<UserResource> findUserByEmail(String email) {
-        return userRestService.findUserByEmail(email);
+    public Optional<UserResource> findUserByEmail(String email) {
+        return userRestService.findUserByEmail(email).getOptionalSuccessObject();
     }
 
     @Override
-    public RestResult<UserResource> findUserByEmailForAnonymousUserFlow(String email) {
-        return userRestService.findUserByEmail(email);
+    public Optional<UserResource> findUserByEmailForAnonymousUserFlow(String email) {
+        return userRestService.findUserByEmail(email).getOptionalSuccessObject();
     }
 
 }

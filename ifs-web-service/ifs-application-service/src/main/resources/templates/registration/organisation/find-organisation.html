@@ -12,12 +12,15 @@
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='javascript:history.back()',currentApplication=${currentApplication}" />
 
-    <h1 class="heading-large">Create your account</h1>
+    <h1 class="heading-xlarge">
+        <span class="heading-secondary">Create your account</span>
+        Your organisation
+    </h1>
     <p class="form-hint icon-info-small-blue">Your organisation must be UK based to receive funding from Innovate UK</p>
 
     <h2 class="heading-medium" th:text="${organisationForm.organisationType.name} + ''">? organisation</h2>
 
-    <form th:action="@{/organisation/create/find-organisation}" th:object="${organisationForm}" method="POST">
+    <form th:action="@{/organisation/create/find-organisation}" th:object="${organisationForm}" method="POST" class="extra-margin">
         <span th:if="${searchEnabled}">
             <fieldset>
                 <legend class="visuallyhidden" th:text="${organisationForm.organisationType.name} + ''">? organisation</legend>
@@ -34,7 +37,11 @@
                     <input  class="form-control" th:field="*{organisationSearchName}" th:classappend="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'field-error'" type="text" value="" />
                     <button type="submit" id="org-search" name="search-organisation" class="button">Search</button>
                 </div>
-                <span th:if="${organisationForm.organisationSearching and organisationForm.organisationSearchResults.size() > 0}" th:unless="${#fields.hasErrors('*{organisationSearchName}')}">Choose your organisation:</span>
+                <th:block th:if="${organisationForm.organisationSearching and organisationForm.organisationSearchResults.size() > 0}"
+                          th:unless="${#fields.hasErrors('*{organisationSearchName}')}">
+                    <h2 class="heading-medium no-margin">Companies House search results</h2>
+                    <p class="form-hint">Select your organisation from the options below</p>
+                </th:block>
                 <ul id="org-results" class="results-list panel" th:if="${organisationForm.organisationSearching}"
                     th:unless="${#fields.hasErrors('*{organisationSearchName}')}">
                     <li class="type-company" th:each="organisation : ${organisationForm.organisationSearchResults}">
@@ -58,14 +65,21 @@
                 <button type="submit" class="buttonlink" name="not-in-company-house">Not on Companies House?</button>
 
                 <div th:if="${organisationForm.manualEntry}" th:remove="tag">
-                    <th:block th:insert="fragments/addresses :: organisation-name" th:with="form=${organisationForm}" />
-                    <th:block th:insert="fragments/addresses :: company-address-details" th:with="form=${organisationForm}" />
+                    <h2 class="heading-medium">Enter your organisation details</h2>
+
+                    <fieldset>
+                        <legend class="visuallyhidden">Enter your organisation details</legend>
+                        <th:block th:insert="fragments/addresses :: organisation-name"
+                                  th:with="form=${organisationForm},addressType=${'organisation address'}"/>
+                    </fieldset>
+                    <th:block th:insert="fragments/addresses :: company-address-details"
+                              th:with="form=${organisationForm}, addressType=${'organisation address'}"/>
                     <button type="submit button-large extra-margin" name="save-organisation-details" class="button">Continue</button>
+
                 </div>
             </span>
         </span>
         <span th:unless="${searchEnabled}">
-            <legend class="visuallyhidden" th:text="${organisationForm.organisationType.name} + ''">? organisation</legend>
             <th:block th:insert="fragments/addresses :: organisation-name" th:with="form=${organisationForm}" />
             <th:block th:insert="fragments/addresses :: company-address-details" th:with="form=${organisationForm}" />
             <button type="submit button-large extra-margin" name="save-organisation-details" class="button">Continue</button>

@@ -6,6 +6,7 @@ nbijl.xml
 .bundle/config
 
 
+
 # idea files
 */**.iml
 .idea
@@ -122,3 +123,6 @@ ifs-web-service.iws
 ifs-libs/*
 .gradletasknamecache
 EMAIL_VARIABLES_SENSITIVE.robot
+
+os-files-tmp/
+shib-init

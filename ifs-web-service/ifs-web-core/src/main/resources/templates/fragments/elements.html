@@ -72,17 +72,17 @@
 
 <!-- =========================== Element: Application Title =========================== -->
 <th:block th:fragment="application-title (applicationId, applicationName) ">
-    <p class="subtitle" th:text="${#numbers.formatInteger(applicationId,8)} + ': ' + ${applicationName} "/>
+    <p class="subtitle" th:text="${applicationId} + ': ' + ${applicationName} "/>
 </th:block>
 
 <!-- =========================== Element: Competition Title =========================== -->
 <th:block th:fragment="competition-title (competition) ">
-    <p class="subtitle" th:text="${#numbers.formatInteger(competition.id,8)} + ': ' + ${competition.name == null ? 'No competition title defined' : competition.name} "/>
+    <p class="subtitle" th:text="${competition.id} + ': ' + ${competition.name == null ? 'No competition title defined' : competition.name} "/>
 </th:block>
 
 <!-- =========================== Element: Project Title =========================== -->
 <th:block th:fragment="project-title (projectId, projectName) ">
-    <p class="subtitle" th:text="${#numbers.formatInteger(projectId,8)} + ': ' + ${projectName} "/>
+    <p class="subtitle" th:text="${projectId} + ': ' + ${projectName} "/>
 </th:block>
 
 <!-- =========================== Element: Competition Closing soon? =========================== -->
@@ -195,13 +195,10 @@
         </th:block>
         <label class="block-label selection-button-checkbox" for="agree-state-aid-page">
             <input id="agree-state-aid-page" th:field="${form.stateAidAgreed}" type="checkbox" value="yes" data-disable-button-until-checked="#mark-all-as-complete" />
-            I confirm that the project costs entered for my organisation are all eligible.
+            By ticking this box you are accepting that the project costs for your organisation are eligible as defined in the
+            <a href="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance">Project Costs guidance</a>
         </label>
     </div>
-    <span class="form-hint">
-        By ticking this box you are accepting that the project costs for your organisation are eligible as defined in the
-        <a href="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance">Project Costs guidance</a>
-    </span>
 </th:block>
 
 <!-- =========================== Element: Competition status warning ================ -->
@@ -213,19 +210,44 @@
 		<div class="success-alert" th:if="${(app.applicationStatusName == 'approved')}">
 	        <h2 class="heading-small no-margin">Congratulations, your application has been successful</h2>
 	        <p>
-            You have been successful in this round of funding.
-            <th:block th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}" th:text="${'Assessor feedback on your application will be available here on '+ #temporals.format(competition.assessorFeedbackDate, 'd MMMM yyyy')+'.'}" />
-          </p>
-          <p th:if="${currentProject}">
-            <a th:href="@{/project-setup/project/{projectId}(projectId=${currentProject.id})}">Start to plan your project</a>
-          </p>
-    </div>
-	  <div class="warning-alert" th:if="${(app.applicationStatusName == 'rejected')}">
-        <h2 class="heading-small no-margin">Your application has not been successful in this competition.</h2>
-        <p th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}">
-          <th:block th:text="${'Assessor feedback on your application will be available here on '+ #temporals.format(competition.assessorFeedbackDate, 'dd/MM/yyyy')}" />.
-        </p>
-    </div>
+                <th:block th:unless="${competition.competitionStatus.isFeedbackReleased()}">You have been successful in this round of funding.</th:block>
+                <th:block th:if="${competition.competitionStatus.isFeedbackReleased()}">Scores and written feedback from each assessor can be found below.</th:block>
+                <th:block th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}" th:text="${'Assessor feedback on your application will be available here on '+ #temporals.format(competition.assessorFeedbackDate, 'd MMMM yyyy')+'.'}" />
+            </p>
+            <p th:if="${currentProject}">
+                <a th:href="@{/project-setup/project/{projectId}(projectId=${currentProject.id})}">Start to plan your project</a>
+            </p>
+        </div>
+        <div class="warning-alert" th:if="${(app.applicationStatusName == 'rejected')}">
+            <h2 class="heading-small no-margin">Your application has not been successful in this competition.</h2>
+            <p>
+                <th:block th:if="${competition.competitionStatus.isFeedbackReleased()}">Scores and written feedback from each assessor can be found below.</th:block>
+                <th:block th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}" th:text="${'Assessor feedback on your application will be available here on '+ #temporals.format(competition.assessorFeedbackDate, 'dd/MM/yyyy')+'.'}" />
+            </p>
+        </div>
 </th:block>
 
 </html>
+
+<!-- global pagination -->
+<div th:fragment="general-pagination(pagination)" th:remove="tag">
+    <ul class="pagination" th:if="${pagination.totalPages > 1}">
+        <li class="prev" th:if="${pagination.hasPrevious}">
+            <a href="#" th:href="${pagination.pageNames[pagination.currentPage - 1].path}" rel="prev" title="Navigate to previous page">
+                <span class="pagination-label">Previous</span>
+                <span class="pagination-part-title" th:text="${pagination.pageNames[pagination.currentPage - 1].title}">1 to 20</span>
+            </a>
+        </li>
+        <li class="next" th:if="${pagination.hasNext}">
+            <a href="#" th:href="${pagination.pageNames[pagination.currentPage + 1].path}" rel="next" title="Navitate to next page">
+                <span class="pagination-label">Next</span>
+                <span class="pagination-part-title" th:text="${pagination.pageNames[pagination.currentPage + 1].title}">21 to 40</span>
+            </a>
+        </li>
+    </ul>
+    <ul class="pagination-index" th:if="${pagination.totalPages > 1}">
+        <li th:each="page : ${pagination.pageNames}">
+            <a href="#" th:href="${page.path}" th:text="${page.title}">1 to 20</a>
+        </li>
+    </ul>
+</div>

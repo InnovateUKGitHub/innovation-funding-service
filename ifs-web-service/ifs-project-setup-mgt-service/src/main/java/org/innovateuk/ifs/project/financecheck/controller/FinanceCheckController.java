@@ -13,6 +13,7 @@ import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.project.PartnerOrganisationService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
+import org.innovateuk.ifs.project.finance.resource.FinanceCheckOverviewResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
 import org.innovateuk.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
@@ -25,8 +26,8 @@ import org.innovateuk.ifs.project.financecheck.viewmodel.ProjectFinanceCheckSumm
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -47,7 +48,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static org.innovateuk.ifs.application.resource.ApplicationResource.formatter;
 import static org.innovateuk.ifs.project.finance.resource.FinanceCheckState.APPROVED;
 import static org.innovateuk.ifs.project.util.ControllersUtil.isLeadPartner;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
@@ -87,6 +87,9 @@ public class FinanceCheckController {
     @Autowired
     private PartnerOrganisationService partnerOrganisationService;
 
+    @Autowired
+    private FinanceUtil financeUtil;
+
     @RequestMapping(value = "/organisation/{organisationId}", method = GET)
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
     public String view(@PathVariable("projectId") final Long projectId, @PathVariable("organisationId") Long organisationId,
@@ -94,7 +97,7 @@ public class FinanceCheckController {
                        @ModelAttribute("loggedInUser") UserResource loggedInUser,
                        Model model){
         FinanceCheckResource financeCheckResource = getFinanceCheckResource(projectId, organisationId);
-        populateExitingFinanceCheckDetailsInForm(financeCheckResource, form);
+        populateExistingFinanceCheckDetailsInForm(financeCheckResource, form);
         return doViewFinanceCheckForm(projectId, organisationId, model);
     }
 
@@ -174,7 +177,7 @@ public class FinanceCheckController {
         return "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId;
     }
 
-    private void populateExitingFinanceCheckDetailsInForm(FinanceCheckResource financeCheckResource, FinanceCheckForm form){
+    private void populateExistingFinanceCheckDetailsInForm(FinanceCheckResource financeCheckResource, FinanceCheckForm form){
         form.setCosts(simpleMap(financeCheckResource.getCostGroup().getCosts(), c -> {
             CostFormField cf = new CostFormField();
             cf.setId(c.getId());
@@ -192,10 +195,10 @@ public class FinanceCheckController {
         ProjectResource project = projectService.getById(projectId);
         ApplicationResource application = applicationService.getById(project.getApplication());
         String competitionName = application.getCompetitionName();
-        String formattedCompId = formatter.format(application.getCompetition());
 
         OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
-        boolean isResearch = OrganisationTypeEnum.isResearch(organisationResource.getOrganisationType());
+
+        boolean isUsingJesFinances = financeUtil.isUsingJesFinances(organisationResource.getOrganisationTypeName());
         Optional<ProjectUserResource> financeContact = getFinanceContact(projectId, organisationId);
 
         FinanceCheckProcessResource financeCheckStatus = financeCheckService.getFinanceCheckApprovalStatus(projectId, organisationId);
@@ -212,8 +215,8 @@ public class FinanceCheckController {
             jesFileDetailsViewModel = new FileDetailsViewModel(jesFileEntryResource);
         }
 
-        FinanceCheckViewModel financeCheckViewModel = new FinanceCheckViewModel(formattedCompId, competitionName, organisationResource.getName(),
-                isLeadPartner, projectId, organisationId, isResearch, financeChecksApproved, approverName, approvalDate, jesFileDetailsViewModel);
+        FinanceCheckViewModel financeCheckViewModel = new FinanceCheckViewModel(application.getCompetition(), competitionName, organisationResource.getName(),
+                isLeadPartner, projectId, organisationId, isUsingJesFinances, financeChecksApproved, approverName, approvalDate, jesFileDetailsViewModel);
 
         if (financeContact.isPresent()) { // Internal users may still view finance contact page without finance contact being set.  They will see a message warning about this on template.
             financeCheckViewModel.setFinanceContactName(financeContact.get().getUserName());
@@ -251,6 +254,8 @@ public class FinanceCheckController {
     }
 
     private String doViewFinanceCheckSummary(Long projectId, Model model) {
+        FinanceCheckOverviewResource financeCheckOverviewResource = financeCheckService.getFinanceCheckOverview(projectId).getSuccessObjectOrThrowException();
+
         FinanceCheckSummaryResource financeCheckSummaryResource = financeCheckService.getFinanceCheckSummary(projectId).getSuccessObjectOrThrowException();
         ProjectFinanceCheckSummaryViewModel projectFinanceCheckSummaryViewModel = new ProjectFinanceCheckSummaryViewModel(financeCheckSummaryResource);
         model.addAttribute("model", projectFinanceCheckSummaryViewModel);

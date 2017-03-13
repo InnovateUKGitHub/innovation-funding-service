@@ -55,14 +55,14 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
                 FinanceRowType.LABOUR, newLabourCostCategory().
                         withCosts(
                             newLabourCost().
-                                    withGrossAnnualSalary(new BigDecimal("10000.23"), new BigDecimal("5100.11"), BigDecimal.ZERO).
+                                    withGrossAnnualSalary(new BigDecimal("10000"), new BigDecimal("5100"), BigDecimal.ZERO).
                                     withDescription("Developers", "Testers", WORKING_DAYS_PER_YEAR).
                                     withLabourDays(100, 120, 250).
                                     build(3)).
                         build(),
                 FinanceRowType.MATERIALS, newDefaultCostCategory().withCosts(
                         newMaterials().
-                                withCost(new BigDecimal("33.33"), new BigDecimal("98.51")).
+                                withCost(new BigDecimal("33"), new BigDecimal("98")).
                                 withQuantity(1, 2).
                                 build(2)).
                         build());
@@ -86,7 +86,7 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
         when(projectServiceMock.getProjectById(project.getId())).thenReturn(serviceSuccess(project));
         when(organisationServiceMock.findById(organisation.getId())).thenReturn(serviceSuccess(organisation));
         when(projectFinanceRowServiceMock.financeChecksDetails(project.getId(), organisation.getId())).thenReturn(serviceSuccess(projectFinance));
-        when(organisationFinanceDelegateMock.isUsingJesFinances(organisation.getOrganisationTypeName())).thenReturn(false);
+        when(financeUtilMock.isUsingJesFinances(organisation.getOrganisationTypeName())).thenReturn(false);
         when(costCategoryTypeStrategyMock.getOrCreateCostCategoryTypeForSpendProfile(project.getId(), organisation.getId())).thenReturn(serviceSuccess(costCategoryType));
 
         ServiceResult<SpendProfileCostCategorySummaries> result = service.getCostCategorySummaries(project.getId(), organisation.getId());
@@ -103,13 +103,13 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
                 s -> s.getCategory().equals(costCategories.get(1))).get();
 
 
-        assertEquals(new BigDecimal("6448.14480"), summary1.getTotal());
-        assertEquals(new BigDecimal("643"), summary1.getFirstMonthSpend());
-        assertEquals(new BigDecimal("645"), summary1.getOtherMonthsSpend());
+        assertEquals(new BigDecimal("6448.00000"), summary1.getTotal());
+        assertEquals(new BigDecimal("652.00000"), summary1.getFirstMonthSpend());
+        assertEquals(new BigDecimal("644"), summary1.getOtherMonthsSpend());
 
-        assertEquals(new BigDecimal("230.35"), summary2.getTotal());
-        assertEquals(new BigDecimal("23"), summary2.getFirstMonthSpend());
-        assertEquals(new BigDecimal("23"), summary2.getOtherMonthsSpend());
+        assertEquals(new BigDecimal("229"), summary2.getTotal());
+        assertEquals(new BigDecimal("31"), summary2.getFirstMonthSpend());
+        assertEquals(new BigDecimal("22"), summary2.getOtherMonthsSpend());
     }
 
     @Test
@@ -124,7 +124,7 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
         Map<FinanceRowType, FinanceRowCostCategory> finances = asMap(
                 FinanceRowType.LABOUR, newLabourCostCategory().withCosts(
                         newLabourCost().
-                                withGrossAnnualSalary(new BigDecimal("10000.23"), new BigDecimal("5100.11"), new BigDecimal("600.11"), BigDecimal.ZERO).
+                                withGrossAnnualSalary(new BigDecimal("10000"), new BigDecimal("5100"), new BigDecimal("600"), BigDecimal.ZERO).
                                 withDescription("Developers", "Testers", "Something else", WORKING_DAYS_PER_YEAR).
                                 withLabourDays(100, 120, 120, 250).
                                 withName(DIRECTLY_INCURRED_STAFF.getFinanceRowName(), DIRECTLY_INCURRED_STAFF.getFinanceRowName(), INDIRECT_COSTS_STAFF.getFinanceRowName()).
@@ -132,7 +132,7 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
                         build(),
                 FinanceRowType.OTHER_COSTS, newDefaultCostCategory().withCosts(
                         newOtherCost().
-                                withCost(new BigDecimal("33.33"), new BigDecimal("98.51")).
+                                withCost(new BigDecimal("33"), new BigDecimal("98")).
                                 withName(DIRECTLY_INCURRED_OTHER_COSTS.getFinanceRowName(), INDIRECT_COSTS_OTHER_COSTS.getFinanceRowName()).
                                 build(2)).
                         build());
@@ -163,7 +163,7 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
         when(projectServiceMock.getProjectById(project.getId())).thenReturn(serviceSuccess(project));
         when(organisationServiceMock.findById(organisation.getId())).thenReturn(serviceSuccess(organisation));
         when(projectFinanceRowServiceMock.financeChecksDetails(project.getId(), organisation.getId())).thenReturn(serviceSuccess(projectFinance));
-        when(organisationFinanceDelegateMock.isUsingJesFinances(organisation.getOrganisationTypeName())).thenReturn(true);
+        when(financeUtilMock.isUsingJesFinances(organisation.getOrganisationTypeName())).thenReturn(true);
         when(costCategoryTypeStrategyMock.getOrCreateCostCategoryTypeForSpendProfile(project.getId(), organisation.getId())).thenReturn(serviceSuccess(costCategoryType));
 
         ServiceResult<SpendProfileCostCategorySummaries> result = service.getCostCategorySummaries(project.getId(), organisation.getId());
@@ -185,21 +185,21 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
         SpendProfileCostCategorySummary summary4 = simpleFindFirst(summaries.getCosts(),
                 s -> s.getCategory().equals(costCategories.get(3))).get();
 
-        assertEquals(new BigDecimal("6448.14480"), summary1.getTotal());
-        assertEquals(new BigDecimal("643"), summary1.getFirstMonthSpend());
-        assertEquals(new BigDecimal("645"), summary1.getOtherMonthsSpend());
+        assertEquals(new BigDecimal("6448.00000"), summary1.getTotal());
+        assertEquals(new BigDecimal("652.00000"), summary1.getFirstMonthSpend());
+        assertEquals(new BigDecimal("644"), summary1.getOtherMonthsSpend());
 
-        assertEquals(new BigDecimal("288.05280"), summary2.getTotal());
-        assertEquals(new BigDecimal("27"), summary2.getFirstMonthSpend());
-        assertEquals(new BigDecimal("29"), summary2.getOtherMonthsSpend());
+        assertEquals(new BigDecimal("288.00000"), summary2.getTotal());
+        assertEquals(new BigDecimal("36.00000"), summary2.getFirstMonthSpend());
+        assertEquals(new BigDecimal("28"), summary2.getOtherMonthsSpend());
 
-        assertEquals(new BigDecimal("33.33"), summary3.getTotal());
+        assertEquals(new BigDecimal("33"), summary3.getTotal());
         assertEquals(new BigDecimal("6"), summary3.getFirstMonthSpend());
         assertEquals(new BigDecimal("3"), summary3.getOtherMonthsSpend());
 
-        assertEquals(new BigDecimal("98.51"), summary4.getTotal());
-        assertEquals(new BigDecimal("9"), summary4.getFirstMonthSpend());
-        assertEquals(new BigDecimal("10"), summary4.getOtherMonthsSpend());
+        assertEquals(new BigDecimal("98"), summary4.getTotal());
+        assertEquals(new BigDecimal("17"), summary4.getFirstMonthSpend());
+        assertEquals(new BigDecimal("9"), summary4.getOtherMonthsSpend());
     }
 
     @Override

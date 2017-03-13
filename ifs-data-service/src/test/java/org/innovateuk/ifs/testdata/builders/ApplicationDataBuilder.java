@@ -2,7 +2,12 @@ package org.innovateuk.ifs.testdata.builders;
 
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
+import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.category.domain.InnovationArea;
+import org.innovateuk.ifs.category.domain.ResearchCategory;
+import org.innovateuk.ifs.category.mapper.ResearchCategoryMapper;
+import org.innovateuk.ifs.category.mapper.ResearchCategoryMapperImpl;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
@@ -11,24 +16,20 @@ import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.testdata.builders.data.ApplicationData;
 import org.innovateuk.ifs.user.domain.Organisation;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
 
 /**
  * Generates an Application for a Competition.  Additionally generates finances for each Organisationn on the Application
@@ -39,7 +40,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
         return with(data -> data.setCompetition(competition));
     }
 
-    public ApplicationDataBuilder withBasicDetails(UserResource leadApplicant, String applicationName) {
+    public ApplicationDataBuilder withBasicDetails(UserResource leadApplicant, String applicationName, String researchCategory, boolean resubmission) {
 
         return with(data -> {
 
@@ -49,9 +50,45 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                         applicationName, data.getCompetition().getId(), leadApplicant.getId()).
                         getSuccessObjectOrThrowException();
 
+                ResearchCategoryMapper researchCategoryMapper = new ResearchCategoryMapperImpl();
+                ResearchCategory category = researchCategoryRepository.findByName(researchCategory);
+                created.setResearchCategories(Collections.singleton(researchCategoryMapper.mapToResource(category)));
+                created.setResubmission(resubmission);
+                created = applicationService.saveApplicationDetails(created.getId(), created)
+                        .getSuccessObjectOrThrowException();
+
                 data.setLeadApplicant(leadApplicant);
                 data.setApplication(created);
             });
+        });
+    }
+
+    public ApplicationDataBuilder withInnovationArea(String innovationAreaName) {
+        return asLeadApplicant(data -> {
+                if (innovationAreaName.equals("NOT_APPLICABLE")) {
+                    applicationInnovationAreaService.setNoInnovationAreaApplies(data.getApplication().getId());
+                } else if (!innovationAreaName.isEmpty()) {
+                    InnovationArea innovationArea = innovationAreaRepository.findByName(innovationAreaName);
+                    applicationInnovationAreaService.setInnovationArea(data.getApplication().getId(), innovationArea.getId());
+                }
+            });
+    }
+
+    public ApplicationDataBuilder markApplicationDetailsComplete(boolean markAsComplete) {
+        return asLeadApplicant(data -> {
+            if (markAsComplete) {
+                QuestionResource questionResource = simpleFindFirst(questionService.findByCompetition(data
+                                .getCompetition()
+                                .getId())
+                                .getSuccessObjectOrThrowException(),
+                        x -> "Application details".equals(x.getName())).get();
+
+                questionService.markAsComplete(new QuestionApplicationCompositeId(questionResource.getId(), data
+                                .getApplication()
+                                .getId()),
+                        retrieveLeadApplicant(data.getApplication().getId()).getId())
+                        .getSuccessObjectOrThrowException();
+            }
         });
     }
 
@@ -118,7 +155,6 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
     public ApplicationDataBuilder submitApplication() {
 
         return asLeadApplicant(data -> {
-
             applicationService.updateApplicationStatus(data.getApplication().getId(), ApplicationStatusConstants.SUBMITTED.getId()).
                     getSuccessObjectOrThrowException();
 

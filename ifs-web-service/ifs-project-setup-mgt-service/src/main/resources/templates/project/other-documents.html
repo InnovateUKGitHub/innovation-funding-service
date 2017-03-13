@@ -32,7 +32,7 @@
             <p class="heading-small no-margin-top">These documents have been reviewed and rejected. We have returned them to the Project Manager.</p>
         </div>
 
-        <h2 class="heading-medium" th:text="${#numbers.formatInteger(model.applicationId,8)} + ': ' + ${model.projectName} "/>
+        <h2 class="heading-medium" th:text="${model.applicationId} + ': ' + ${model.projectName} "/>
         <ul class="list list-bullet">
             <li th:text="${model.leadPartnerOrganisationName}" />
             <th:block th:unless="${#lists.isEmpty(model.partnerOrganisationNames)}">
@@ -53,7 +53,7 @@
 
         <th:block th:if="${(model.collaborationAgreementFileDetails != null) and (model.exploitationPlanFileDetails != null)}">
 
-            <h2 class="heading-medium">Collaboration Agreement</h2>
+            <h2 class="heading-medium">Collaboration agreement</h2>
             <a th:href="@{/project/{id}/partner/documents/collaboration-agreement(id=${model.projectId})}"
              class="uploaded-file" th:text="${model.collaborationAgreementFileDetails.filename}">The-uploaded-file-example.pdf</a>
 

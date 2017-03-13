@@ -24,7 +24,6 @@ import static java.util.stream.Collectors.toList;
  * This class contains methods to retrieve and store {@link SectionResource} related data,
  * through the RestService {@link SectionRestService}.
  */
-// TODO DW - INFUND-1555 - return RestResults
 @Service
 public class SectionServiceImpl implements SectionService {
     private static final Log LOG = LogFactory.getLog(SectionServiceImpl.class);

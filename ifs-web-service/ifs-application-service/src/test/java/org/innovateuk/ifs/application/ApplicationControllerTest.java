@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.application;
 
+import com.google.common.collect.ImmutableMap;
+import org.hamcrest.Matchers;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
@@ -9,6 +11,8 @@ import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionMod
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
+import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
+import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentFeedbackResource;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -19,7 +23,6 @@ import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,13 +39,16 @@ import org.springframework.ui.Model;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.google.common.collect.Sets.newHashSet;
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.service.Futures.settable;
+import static org.innovateuk.ifs.assessment.builder.ApplicationAssessmentFeedbackResourceBuilder.newApplicationAssessmentFeedbackResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
@@ -87,7 +93,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     }
 
     @Before
-    public void setUp(){
+    public void setUp() {
         super.setUp();
 
         this.setupCompetition();
@@ -100,9 +106,9 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     }
 
     @Test
-     public void testApplicationDetails() throws Exception {
+    public void testApplicationDetails() throws Exception {
         ApplicationResource app = applications.get(0);
-        Set<Long> sections = newHashSet(1L,2L);
+        Set<Long> sections = newHashSet(1L, 2L);
         Map<Long, Set<Long>> mappedSections = new HashMap();
         mappedSections.put(organisations.get(0).getId(), sections);
         when(sectionService.getCompletedSectionsByOrganisation(anyLong())).thenReturn(mappedSections);
@@ -130,9 +136,9 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         LOG.debug("Show dashboard for application: " + app.getId());
         mockMvc.perform(post("/application/" + app.getId()).param(ApplicationController.ASSIGN_QUESTION_PARAM, "1_2"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/application/"+app.getId()));
+                .andExpect(redirectedUrl("/application/" + app.getId()));
     }
-    
+
     @Test
     public void testNonAcceptedInvitationsAffectPendingAssignableUsersAndPendingOrganisationNames() throws Exception {
         ApplicationResource app = applications.get(0);
@@ -145,31 +151,31 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
 
         ApplicationInviteResource inv1 = inviteResource("kirk", "teamA", InviteStatus.CREATED);
         ApplicationInviteResource inv2 = inviteResource("spock", "teamA", InviteStatus.SENT);
-        ApplicationInviteResource inv3 = inviteResource("bones", "teamA",  InviteStatus.OPENED);
+        ApplicationInviteResource inv3 = inviteResource("bones", "teamA", InviteStatus.OPENED);
 
         ApplicationInviteResource inv4 = inviteResource("picard", "teamB", InviteStatus.CREATED);
-       
+
         InviteOrganisationResource inviteOrgResource1 = inviteOrganisationResource(inv1, inv2, inv3);
         InviteOrganisationResource inviteOrgResource2 = inviteOrganisationResource(inv4);
-       
+
         List<InviteOrganisationResource> inviteOrgResources = Arrays.asList(inviteOrgResource1, inviteOrgResource2);
         RestResult<List<InviteOrganisationResource>> invitesResult = RestResult.<List<InviteOrganisationResource>>restSuccess(inviteOrgResources, HttpStatus.OK);
-       
+
         when(inviteRestService.getInvitesByApplication(app.getId())).thenReturn(invitesResult);
-       
+
         LOG.debug("Show dashboard for application: " + app.getId());
         mockMvc.perform(get("/application/" + app.getId()))
-               .andExpect(status().isOk())
-               .andExpect(view().name("application-details"))
-               .andExpect(model().attribute("currentApplication", app))
-               .andExpect(model().attribute("completedSections", sections))
-               .andExpect(model().attribute("currentCompetition", competitionService.getById(app.getCompetition())))
-               .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(3)))
-               .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasItem(inv1)))
-               .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasItem(inv2)))
-               .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasItem(inv4)));
-   }
-    
+                .andExpect(status().isOk())
+                .andExpect(view().name("application-details"))
+                .andExpect(model().attribute("currentApplication", app))
+                .andExpect(model().attribute("completedSections", sections))
+                .andExpect(model().attribute("currentCompetition", competitionService.getById(app.getCompetition())))
+                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(3)))
+                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasItem(inv1)))
+                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasItem(inv2)))
+                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasItem(inv4)));
+    }
+
     @Test
     public void testPendingOrganisationNamesOmitsEmptyOrganisationName() throws Exception {
         ApplicationResource app = applications.get(0);
@@ -183,30 +189,30 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         ApplicationInviteResource inv1 = inviteResource("kirk", "teamA", InviteStatus.CREATED);
 
         ApplicationInviteResource inv2 = inviteResource("picard", "", InviteStatus.CREATED);
-       
-       InviteOrganisationResource inviteOrgResource1 = inviteOrganisationResource(inv1);
-       InviteOrganisationResource inviteOrgResource2 = inviteOrganisationResource(inv2);
-       
-       List<InviteOrganisationResource> inviteOrgResources = Arrays.asList(inviteOrgResource1, inviteOrgResource2);
-       RestResult<List<InviteOrganisationResource>> invitesResult = RestResult.<List<InviteOrganisationResource>>restSuccess(inviteOrgResources, HttpStatus.OK);
-       
-       when(inviteRestService.getInvitesByApplication(app.getId())).thenReturn(invitesResult);
-       
-       LOG.debug("Show dashboard for application: " + app.getId());
-       mockMvc.perform(get("/application/" + app.getId()))
-               .andExpect(status().isOk())
-               .andExpect(view().name("application-details"))
-               .andExpect(model().attribute("currentApplication", app))
-               .andExpect(model().attribute("completedSections", sections))
-               .andExpect(model().attribute("currentCompetition", competitionService.getById(app.getCompetition())))
-               .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(2)))
-               .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasItem(inv1)))
-               .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasItem(inv2)));
-   }
-    
+
+        InviteOrganisationResource inviteOrgResource1 = inviteOrganisationResource(inv1);
+        InviteOrganisationResource inviteOrgResource2 = inviteOrganisationResource(inv2);
+
+        List<InviteOrganisationResource> inviteOrgResources = Arrays.asList(inviteOrgResource1, inviteOrgResource2);
+        RestResult<List<InviteOrganisationResource>> invitesResult = RestResult.<List<InviteOrganisationResource>>restSuccess(inviteOrgResources, HttpStatus.OK);
+
+        when(inviteRestService.getInvitesByApplication(app.getId())).thenReturn(invitesResult);
+
+        LOG.debug("Show dashboard for application: " + app.getId());
+        mockMvc.perform(get("/application/" + app.getId()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("application-details"))
+                .andExpect(model().attribute("currentApplication", app))
+                .andExpect(model().attribute("completedSections", sections))
+                .andExpect(model().attribute("currentCompetition", competitionService.getById(app.getCompetition())))
+                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(2)))
+                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasItem(inv1)))
+                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasItem(inv2)));
+    }
+
     @Test
     public void testPendingOrganisationNamesOmitsOrganisationNamesThatAreAlreadyCollaborators() throws Exception {
-       ApplicationResource app = applications.get(0);
+        ApplicationResource app = applications.get(0);
         Set<Long> sections = newHashSet(1L, 2L);
         Map<Long, Set<Long>> mappedSections = new HashMap();
         mappedSections.put(organisations.get(0).getId(), sections);
@@ -218,55 +224,54 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         ApplicationInviteResource inv1 = inviteResource("kirk", "teamA", InviteStatus.CREATED);
 
         ApplicationInviteResource inv2 = inviteResource("picard", organisations.get(0).getName(), InviteStatus.CREATED);
-       
+
         InviteOrganisationResource inviteOrgResource1 = inviteOrganisationResource(inv1);
         InviteOrganisationResource inviteOrgResource2 = inviteOrganisationResource(inv2);
-       
-       
-       
+
+
         List<InviteOrganisationResource> inviteOrgResources = Arrays.asList(inviteOrgResource1, inviteOrgResource2);
         RestResult<List<InviteOrganisationResource>> invitesResult = RestResult.<List<InviteOrganisationResource>>restSuccess(inviteOrgResources, HttpStatus.OK);
 
         when(inviteRestService.getInvitesByApplication(app.getId())).thenReturn(invitesResult);
-       
+
         LOG.debug("Show dashboard for application: " + app.getId());
         mockMvc.perform(get("/application/" + app.getId()))
-               .andExpect(status().isOk())
-               .andExpect(view().name("application-details"))
-               .andExpect(model().attribute("currentApplication", app))
-               .andExpect(model().attribute("completedSections", sections))
-               .andExpect(model().attribute("currentCompetition", competitionService.getById(app.getCompetition())))
-               .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(2)))
-               .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasItem(inv1)))
-               .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasItem(inv2)));
-   }
+                .andExpect(status().isOk())
+                .andExpect(view().name("application-details"))
+                .andExpect(model().attribute("currentApplication", app))
+                .andExpect(model().attribute("completedSections", sections))
+                .andExpect(model().attribute("currentCompetition", competitionService.getById(app.getCompetition())))
+                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(2)))
+                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasItem(inv1)))
+                .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasItem(inv2)));
+    }
 
     private InviteOrganisationResource inviteOrganisationResource(ApplicationInviteResource... invs) {
-    	InviteOrganisationResource ior = new InviteOrganisationResource();
-    	ior.setInviteResources(Arrays.asList(invs));
-		return ior;
-	}
+        InviteOrganisationResource ior = new InviteOrganisationResource();
+        ior.setInviteResources(Arrays.asList(invs));
+        return ior;
+    }
 
-	private ApplicationInviteResource inviteResource(String name, String organisation, InviteStatus status) {
+    private ApplicationInviteResource inviteResource(String name, String organisation, InviteStatus status) {
         ApplicationInviteResource invRes = new ApplicationInviteResource();
-		invRes.setName(name);
-		invRes.setInviteOrganisationName(organisation);
-		invRes.setStatus(status);
-		return invRes;
-	}
+        invRes.setName(name);
+        invRes.setInviteOrganisationName(organisation);
+        invRes.setStatus(status);
+        return invRes;
+    }
 
-	@Test
+    @Test
     public void testApplicationSummary() throws Exception {
         ApplicationResource app = applications.get(0);
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
         ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(app.getId()).withOrganisation(organisations.get(0).getId()).build();
         when(userRestServiceMock.findProcessRole(loggedInUser.getId(), app.getId())).thenReturn(restSuccess(userApplicationRole));
-        mockMvc.perform(get("/application/" + app.getId()+"/summary"))
+        mockMvc.perform(get("/application/" + app.getId() + "/summary"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("application-summary"))
                 .andExpect(model().attribute("currentApplication", app))
-                .andExpect(model().attribute("currentCompetition",  competitionService.getById(app.getCompetition())))
+                .andExpect(model().attribute("currentCompetition", competitionService.getById(app.getCompetition())))
                 .andExpect(model().attribute("leadOrganisation", organisations.get(0)))
                 .andExpect(model().attribute("applicationOrganisations", Matchers.hasSize(application1Organisations.size())))
                 .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(application1Organisations.get(0))))
@@ -282,6 +287,8 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         CompetitionResource competition = competitionResources.get(0);
         competition.setCompetitionStatus(PROJECT_SETUP);
 
+        ApplicationAssessmentAggregateResource aggregateResource = new ApplicationAssessmentAggregateResource(5, 4, ImmutableMap.of(1L, new BigDecimal("2")), 3L);
+
         ApplicationResource app = applications.get(0);
         app.setCompetition(competition.getId());
         app.setAssessorFeedbackFileEntry(123L);
@@ -295,11 +302,20 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(app.getId()).withOrganisation(organisations.get(0).getId()).build();
         when(userRestServiceMock.findProcessRole(loggedInUser.getId(), app.getId())).thenReturn(restSuccess(userApplicationRole));
 
-        mockMvc.perform(get("/application/" + app.getId()+"/summary"))
+        when(assessorFormInputResponseRestService.getApplicationAssessmentAggregate(app.getId()))
+                .thenReturn(restSuccess(aggregateResource));
+
+        ApplicationAssessmentFeedbackResource expectedFeedback = newApplicationAssessmentFeedbackResource()
+                .withFeedback(asList("Feedback 1", "Feedback 2"))
+                .build();
+
+        when(assessmentRestService.getApplicationFeedback(app.getId())).thenReturn(restSuccess(expectedFeedback));
+
+        mockMvc.perform(get("/application/" + app.getId() + "/summary"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("application-summary"))
+                .andExpect(view().name("application-feedback-summary"))
                 .andExpect(model().attribute("currentApplication", app))
-                .andExpect(model().attribute("currentCompetition",  competitionService.getById(app.getCompetition())))
+                .andExpect(model().attribute("currentCompetition", competitionService.getById(app.getCompetition())))
                 .andExpect(model().attribute("leadOrganisation", organisations.get(0)))
                 .andExpect(model().attribute("applicationOrganisations", Matchers.hasSize(application1Organisations.size())))
                 .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(application1Organisations.get(0))))
@@ -307,6 +323,8 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(model().attribute("responses", formInputsToFormInputResponses))
                 .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(0)))
                 .andExpect(model().attribute("pendingOrganisationNames", Matchers.hasSize(0)))
+                .andExpect(model().attribute("feedback", expectedFeedback.getFeedback()))
+                .andExpect(model().attribute("scores", aggregateResource))
                 .andExpect(model().attribute("rsCategoryId", app.getResearchCategories().stream().findFirst().get().getId()));
     }
 
@@ -362,7 +380,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(view().name("404"))
                 .andExpect(model().attribute("url", "http://localhost/application/1234"))
                 .andExpect(model().attribute("exception", new InstanceOf(ObjectNotFoundException.class)))
-                .andExpect(model().attribute("message","1234 not found"))
+                .andExpect(model().attribute("message", "1234 not found"))
                 .andExpect(model().attributeExists("stacktrace"));
     }
 
@@ -382,7 +400,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(userRestServiceMock.findProcessRole(loggedInUser.getId(), app.getId())).thenReturn(restSuccess(userApplicationRole));
 
         LOG.debug("Show dashboard for application: " + app.getId());
-        mockMvc.perform(get("/application/" + app.getId() +"/section/"+ section.getId()))
+        mockMvc.perform(get("/application/" + app.getId() + "/section/" + section.getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("application-details"))
                 .andExpect(model().attribute("currentApplication", app))
@@ -400,15 +418,15 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
 
     @Test
     public void testApplicationConfirmSubmit() throws Exception {
-            ApplicationResource app = applications.get(0);
+        ApplicationResource app = applications.get(0);
 
-            when(applicationService.getById(app.getId())).thenReturn(app);
-            when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
+        when(applicationService.getById(app.getId())).thenReturn(app);
+        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
-            mockMvc.perform(get("/application/1/confirm-submit"))
-                    .andExpect(view().name("application-confirm-submit"))
-                    .andExpect(model().attribute("currentApplication", app))
-                    .andExpect(model().attribute("responses", formInputsToFormInputResponses));
+        mockMvc.perform(get("/application/1/confirm-submit"))
+                .andExpect(view().name("application-confirm-submit"))
+                .andExpect(model().attribute("currentApplication", app))
+                .andExpect(model().attribute("responses", formInputsToFormInputResponses));
 
     }
 
@@ -421,16 +439,16 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
-        
+
         MvcResult result = mockMvc.perform(post("/application/1/submit")
-        		.param("agreeTerms", "yes"))
+                .param("agreeTerms", "yes"))
                 .andExpect(view().name("application-submitted"))
                 .andExpect(model().attribute("currentApplication", app))
                 .andReturn();
-        
+
         verify(applicationService).updateStatus(app.getId(), ApplicationStatusConstants.SUBMITTED.getId());
     }
-    
+
     @Test
     public void testApplicationSubmitAppisNotSubmittable() throws Exception {
         ApplicationResource app = newApplicationResource().withId(1L).withCompetitionStatus(FUNDERS_PANEL).build();
@@ -440,11 +458,11 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
-        
+
         mockMvc.perform(post("/application/1/submit")
-        		.param("agreeTerms", "yes"))
-        		.andExpect(redirectedUrl("/application/1/confirm-submit"));
-        
+                .param("agreeTerms", "yes"))
+                .andExpect(redirectedUrl("/application/1/confirm-submit"));
+
         verify(cookieFlashMessageFilter).setFlashMessage(isA(HttpServletResponse.class), eq("cannotSubmit"));
         verify(applicationService, never()).updateStatus(any(Long.class), any(Long.class));
     }
@@ -479,7 +497,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     }
 
     @Test
-     public void testApplicationCreateWithoutApplicationName() throws Exception {
+    public void testApplicationCreateWithoutApplicationName() throws Exception {
         ApplicationResource application = new ApplicationResource();
         application.setName("application");
 
@@ -518,7 +536,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(userAuthenticationService.getAuthenticatedUser(anyObject())).thenReturn(user);
         when(applicationService.createApplication(eq(1L), eq(1L), anyString())).thenReturn(application);
         mockMvc.perform(post("/application/create/1").param("application_name", "testApplication"))
-                .andExpect(view().name("redirect:/application/"+application.getId()))
+                .andExpect(view().name("redirect:/application/" + application.getId()))
                 .andExpect(model().attributeDoesNotExist("applicationNameEmpty"));
     }
 
@@ -538,10 +556,10 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(assessorFeedbackRestService.getAssessorFeedbackFileDetails(123L)).thenReturn(restSuccess(fileEntry));
 
         mockMvc.perform(get("/application/123/assessorFeedback"))
-            .andExpect(status().isOk())
-            .andExpect(content().string("File contents"))
-            .andExpect(header().string("Content-Type", "text/special"))
-            .andExpect(header().longValue("Content-Length", "File contents".length()));
+                .andExpect(status().isOk())
+                .andExpect(content().string("File contents"))
+                .andExpect(header().string("Content-Type", "text/special"))
+                .andExpect(header().longValue("Content-Length", "File contents".length()));
 
         verify(assessorFeedbackRestService).getAssessorFeedbackFile(123L);
         verify(assessorFeedbackRestService).getAssessorFeedbackFileDetails(123L);

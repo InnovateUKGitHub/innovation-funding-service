@@ -12,9 +12,13 @@ import java.util.List;
 public class CompetitionOverviewViewModel {
     private String competitionTitle;
     private LocalDateTime competitionOpenDate;
+    private LocalDateTime registrationCloseDate;
     private LocalDateTime competitionCloseDate;
     private Long competitionId;
     private String shortDescription;
+    private String nonIfsUrl;
+    private Boolean nonIfs;
+    private Boolean showApplyButton;
     private List<SectionViewModel> allContentSections;
     private AbstractPublicSectionContentViewModel currentSection;
 
@@ -32,6 +36,14 @@ public class CompetitionOverviewViewModel {
 
     public void setCompetitionOpenDate(LocalDateTime competitionOpenDate) {
         this.competitionOpenDate = competitionOpenDate;
+    }
+
+    public LocalDateTime getRegistrationCloseDate() {
+        return registrationCloseDate;
+    }
+
+    public void setRegistrationCloseDate(LocalDateTime registrationCloseDate) {
+        this.registrationCloseDate = registrationCloseDate;
     }
 
     public LocalDateTime getCompetitionCloseDate() {
@@ -72,5 +84,29 @@ public class CompetitionOverviewViewModel {
 
     public AbstractPublicSectionContentViewModel getCurrentSection() {
         return currentSection;
+    }
+
+    public String getNonIfsUrl() {
+        return nonIfsUrl;
+    }
+
+    public void setNonIfsUrl(String nonIfsUrl) {
+        this.nonIfsUrl = nonIfsUrl;
+    }
+
+    public Boolean getNonIfs() {
+        return nonIfs;
+    }
+
+    public void setNonIfs(Boolean nonIfs) {
+        this.nonIfs = nonIfs;
+    }
+
+    public Boolean getShowApplyButton() {
+        return showApplyButton;
+    }
+
+    public void setShowApplyButton(Boolean showApplyButton) {
+        this.showApplyButton = showApplyButton;
     }
 }

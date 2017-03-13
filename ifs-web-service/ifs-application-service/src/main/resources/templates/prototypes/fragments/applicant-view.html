@@ -206,6 +206,9 @@
                   <p th:if="${param.status != null and param.status[0] == 'notSubmitted'}">Not submitted</p>
                 </th:block>
 
+                <h3 class="heading-small">Application number</h3>
+                <p>3456</p>
+
                 <h3 class="heading-small">Lead organisation</h3>
                 <p>Aptrans Ltd</p>
 
@@ -970,7 +973,7 @@
 
                 <div class="form-group">
                     <label class="form-label" for="org-name">
-                        <span class="form-label-bold">Find your business on Companies House
+                        <span class="form-label-bold">Find your organisation on Companies House
                         <span class="form-hint">Enter your company name or registration number</span>
 
                         <th:block th:if="${status == 'projectSetup'}">

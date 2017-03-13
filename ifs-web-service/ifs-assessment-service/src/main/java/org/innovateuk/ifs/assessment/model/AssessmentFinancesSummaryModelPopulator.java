@@ -1,19 +1,16 @@
 package org.innovateuk.ifs.assessment.model;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.UserApplicationRole;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
-import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.service.AssessmentService;
+import org.innovateuk.ifs.assessment.viewmodel.AssessmentFinancesSummaryViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
@@ -38,61 +35,54 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 @Component
 public class AssessmentFinancesSummaryModelPopulator {
-    private static final Log LOG = LogFactory.getLog(AssessmentFinancesSummaryModelPopulator.class);
 
-    @Autowired
-    private ApplicationService applicationService;
     @Autowired
     private CompetitionService competitionService;
+
     @Autowired
     private AssessmentService assessmentService;
+
     @Autowired
     private ProcessRoleService processRoleService;
-    @Autowired
-    OrganisationRestService organisationRestService;
-    @Autowired
-    FileEntryRestService fileEntryRestService;
-    @Autowired
-    QuestionService questionService;
-    @Autowired
-    FormInputService formInputService;
-    @Autowired
-    ApplicationFinanceRestService applicationFinanceRestService;
-    @Autowired
-    SectionService sectionService;
-    @Autowired
-    FinanceService financeService;
 
+    @Autowired
+    private OrganisationRestService organisationRestService;
 
-    public void populateModel(Long assessmentId, final Model model) {
+    @Autowired
+    private FileEntryRestService fileEntryRestService;
 
-        final AssessmentResource assessment = getAssessment(assessmentId);
-        final ApplicationResource application = getApplication(assessment.getApplication());
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
+    @Autowired
+    private QuestionService questionService;
 
-        addApplicationAndOrganisationDetails(application, model);
-        addFinanceDetails(model, competition.getId(), application.getId());
+    @Autowired
+    private FormInputService formInputService;
 
-        model.addAttribute("assessmentId", assessmentId);
-        model.addAttribute("currentApplication", application);
-        model.addAttribute("currentCompetition", competition);
-     }
+    @Autowired
+    private ApplicationFinanceRestService applicationFinanceRestService;
 
-    private AssessmentResource getAssessment(final Long assessmentId) {
-        return assessmentService.getById(assessmentId);
+    @Autowired
+    private SectionService sectionService;
+
+    @Autowired
+    private FinanceService financeService;
+
+    public AssessmentFinancesSummaryViewModel populateModel(Long assessmentId, Model model) {
+        AssessmentResource assessment = assessmentService.getById(assessmentId);
+        CompetitionResource competition = competitionService.getById(assessment.getCompetition());
+
+        addApplicationAndOrganisationDetails(assessment.getApplication(), model);
+        addFinanceDetails(model, competition.getId(), assessment.getApplication());
+
+        return new AssessmentFinancesSummaryViewModel(assessmentId, assessment.getApplication(),
+                assessment.getApplicationName(), competition.getAssessmentDaysLeft(), competition.getAssessmentDaysLeftPercentage());
     }
 
-    private ApplicationResource getApplication(final Long applicationId) {
-        return applicationService.getById(applicationId);
-    }
-
-    private void addApplicationAndOrganisationDetails(ApplicationResource application, Model model) {
-
-        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
+    private void addApplicationAndOrganisationDetails(long applicationId, Model model) {
+        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
         addOrganisationDetails(model, userApplicationRoles);
     }
 
-    private void addOrganisationDetails(Model model,  List<ProcessRoleResource> userApplicationRoles) {
+    private void addOrganisationDetails(Model model, List<ProcessRoleResource> userApplicationRoles) {
         model.addAttribute("academicOrganisations", getAcademicOrganisations(getApplicationOrganisations(userApplicationRoles)));
         model.addAttribute("applicationOrganisations", getApplicationOrganisations(userApplicationRoles));
 
@@ -153,7 +143,7 @@ public class AssessmentFinancesSummaryModelPopulator {
     private void addFinanceSections(Long competitionId, Model model) {
         SectionResource section = sectionService.getFinanceSection(competitionId);
 
-        if(section == null) {
+        if (section == null) {
             return;
         }
 
@@ -195,7 +185,7 @@ public class AssessmentFinancesSummaryModelPopulator {
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(competitionId);
         List<SectionResource> financeSectionChildren = sectionService.findResourceByIdInList(section.getChildSections(), allSections);
         List<SectionResource> financeSubSectionChildren = new ArrayList<>();
-        financeSectionChildren.stream().forEach(sectionResource -> {
+        financeSectionChildren.forEach(sectionResource -> {
                     if (!sectionResource.getChildSections().isEmpty()) {
                         financeSubSectionChildren.addAll(
                                 sectionService.findResourceByIdInList(sectionResource.getChildSections(), allSections)
@@ -206,11 +196,11 @@ public class AssessmentFinancesSummaryModelPopulator {
         return financeSubSectionChildren;
     }
 
-    private List<QuestionResource> filterQuestions(final List<Long> ids, final List<QuestionResource> list){
+    private List<QuestionResource> filterQuestions(final List<Long> ids, final List<QuestionResource> list) {
         return simpleFilter(list, question -> ids.contains(question.getId()));
     }
 
-    private List<FormInputResource> filterFormInputsByQuestion(final Long id, final List<FormInputResource> list){
+    private List<FormInputResource> filterFormInputsByQuestion(final Long id, final List<FormInputResource> list) {
         return simpleFilter(list, input -> id.equals(input.getQuestion()) && !FormInputType.EMPTY.equals(input.getType()));
     }
 }

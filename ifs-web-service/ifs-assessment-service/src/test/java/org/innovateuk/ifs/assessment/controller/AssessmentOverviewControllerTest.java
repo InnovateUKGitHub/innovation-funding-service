@@ -4,6 +4,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.finance.view.OrganisationFinanceOverview;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.assessment.form.AssessmentOverviewForm;
@@ -17,12 +18,14 @@ import org.innovateuk.ifs.assessment.service.AssessmentService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseService;
 import org.innovateuk.ifs.assessment.viewmodel.*;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationSize;
-import org.junit.Before;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -30,11 +33,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -55,11 +60,13 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.finance.builder.OrganisationFinanceOverviewBuilder.newOrganisationFinanceOverviewBuilder;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.form.resource.FormInputType.*;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -94,14 +101,6 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
     @Override
     protected AssessmentOverviewController supplyControllerUnderTest() {
         return new AssessmentOverviewController();
-    }
-
-    @Before
-    public void setUp() {
-        super.setUp();
-
-        this.setupCompetition();
-        this.setupApplicationWithRoles();
     }
 
     @Test
@@ -300,33 +299,45 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
-    public void assessmentFinance() throws Exception {
-        AssessmentResource assessment = newAssessmentResource().withId(1L).withApplication(1L).build();
-        CompetitionResource competition = newCompetitionResource()
-                .withId(1L)
-                .withAssessorAcceptsDate(now().minusDays(2))
-                .withAssessorDeadlineDate(now().plusDays(4))
+    public void getFinancesSummary() throws Exception {
+        setupCompetition();
+        setupApplicationWithRoles();
+
+        LocalDateTime now = now();
+
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withAssessorAcceptsDate(now.minusDays(2))
+                .withAssessorDeadlineDate(now.plusDays(4))
                 .build();
-        ApplicationResource app = applications.get(0);
-        when(competitionService.getById(app.getCompetition())).thenReturn(competition);
-        when(assessmentService.getById(assessment.getId())).thenReturn(assessment);
+
+        ApplicationResource applicationResource = applications.get(0);
+
+        AssessmentResource assessmentResource = newAssessmentResource()
+                .withApplication(applicationResource.getId())
+                .withApplicationName("Application name")
+                .withCompetition(competitionResource.getId())
+                .build();
+
+        when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
+        when(assessmentService.getById(assessmentResource.getId())).thenReturn(assessmentResource);
 
         SortedSet<OrganisationResource> orgSet = setupOrganisations();
-        List<ApplicationFinanceResource> appFinanceList = setupFinances(app, orgSet);
+        List<ApplicationFinanceResource> appFinanceList = setupFinances(applicationResource, orgSet);
         OrganisationFinanceOverview organisationFinanceOverview = newOrganisationFinanceOverviewBuilder()
-                .withApplicationId(app.getId())
+                .withApplicationId(applicationResource.getId())
                 .withOrganisationFinances(appFinanceList)
                 .build();
 
-        mockMvc.perform(get("/" + assessment.getId() + "/finances"))
+        AssessmentFinancesSummaryViewModel expectedViewModel = new AssessmentFinancesSummaryViewModel(
+                assessmentResource.getId(), applicationResource.getId(), "Application name", 3, 50);
+
+        mockMvc.perform(get("/{assessmentId}/finances", assessmentResource.getId()))
                 .andExpect(status().isOk())
-                .andExpect(view().name("assessment/application-finances-summary"))
-                .andExpect(model().attribute("currentApplication", app))
-                .andExpect(model().attribute("currentCompetition", competitionService.getById(app.getCompetition())))
-                .andExpect(model().attribute("assessmentId", assessment.getId()))
+                .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(model().attribute("applicationOrganisations", orgSet))
                 .andExpect(model().attribute("organisationFinances", organisationFinanceOverview.getFinancesByOrganisation()))
-                .andExpect(model().attribute("financeTotal", organisationFinanceOverview.getTotal()));
+                .andExpect(model().attribute("financeTotal", organisationFinanceOverview.getTotal()))
+                .andExpect(view().name("assessment/application-finances-summary"));
     }
 
     @Test
@@ -593,6 +604,43 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         InOrder inOrder = inOrder(assessmentService);
         inOrder.verify(assessmentService).getRejectableById(assessmentId);
         inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void downloadAppendix() throws Exception {
+        long assessmentId = 1L;
+        long applicationId = 2L;
+        long formInputId = 3L;
+
+        ProcessRoleResource assessorRole = newProcessRoleResource().build();
+        ByteArrayResource fileContents = new ByteArrayResource("The returned file data".getBytes());
+        FileEntryResource fileEntry = newFileEntryResource().withMediaType("text/hello").withFilesizeBytes(1234L).build();
+        FormInputResponseFileEntryResource formInputResponseFileEntry =
+                new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, assessorRole.getId());
+
+        loginDefaultUser();
+        UserResource assessor = getLoggedInUser();
+
+        when(processRoleService.findProcessRole(assessor.getId(), applicationId)).thenReturn(assessorRole);
+        when(formInputResponseService.getFile(formInputId,
+                applicationId,
+                assessorRole.getId()))
+                .thenReturn(restSuccess(fileContents));
+        when(formInputResponseService.getFileDetails(formInputId, applicationId, assessorRole.getId()))
+                .thenReturn(restSuccess(formInputResponseFileEntry));
+
+        mockMvc.perform(get("/{assessmentId}/application/{applicationId}/formInput/{formInputId}/download",
+                    assessmentId,
+                    applicationId,
+                    formInputId))
+                .andExpect(status().isOk())
+                .andExpect(content().string("The returned file data"))
+                .andExpect(header().string("Content-Type", "text/hello"))
+                .andExpect(header().longValue("Content-Length", "The returned file data".length()));
+
+        verify(processRoleService).findProcessRole(assessor.getId(), applicationId);
+        verify(formInputResponseService).getFile(formInputId, applicationId, assessorRole.getId());
+        verify(formInputResponseService).getFileDetails(formInputId, applicationId, assessorRole.getId());
     }
 
     private List<ApplicationFinanceResource> setupFinances(ApplicationResource app, SortedSet<OrganisationResource> orgSet) {

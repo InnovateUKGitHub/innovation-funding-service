@@ -1,0 +1,1 @@
+ALTER TABLE `application` ADD COLUMN `manage_funding_email_date` datetime DEFAULT NULL;

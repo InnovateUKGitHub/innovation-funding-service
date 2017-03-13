@@ -69,7 +69,7 @@ public class CompetitionController {
 
         model.addAttribute("model", overviewPopulator.populateViewModel(
                 publicContentItem,
-                getPopulator(selectedSection.orElse(PublicContentSectionType.SUMMARY)).populate(publicContentItem.getPublicContentResource())));
+                getPopulator(selectedSection.orElse(PublicContentSectionType.SUMMARY)).populate(publicContentItem.getPublicContentResource(), publicContentItem.getNonIfs())));
         return TEMPLATE_PATH + "overview";
     }
 
@@ -81,8 +81,8 @@ public class CompetitionController {
     public ResponseEntity<ByteArrayResource> getFileDetails(Model model,
                                                             @PathVariable("competitionId") Long competitionId,
                                                             @PathVariable("contentGroupId") Long contentGroupId) {
-        final ByteArrayResource resource = competitionService.downloadPublicContentAttachment(contentGroupId).getSuccessObjectOrThrowException();
-        FileEntryResource fileDetails = competitionService.getPublicContentFileDetails(contentGroupId).getSuccessObjectOrThrowException();
+        final ByteArrayResource resource = competitionService.downloadPublicContentAttachment(contentGroupId);
+        FileEntryResource fileDetails = competitionService.getPublicContentFileDetails(contentGroupId);
         return getFileResponseEntity(resource, fileDetails);
     }
 

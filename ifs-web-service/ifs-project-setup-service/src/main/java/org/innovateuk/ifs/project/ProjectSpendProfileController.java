@@ -8,11 +8,11 @@ import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.form.SpendProfileForm;
 import org.innovateuk.ifs.project.model.SpendProfileSummaryModel;
 import org.innovateuk.ifs.project.resource.*;
+import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
 import org.innovateuk.ifs.project.viewmodel.ProjectSpendProfileProjectSummaryViewModel;
 import org.innovateuk.ifs.project.viewmodel.ProjectSpendProfileViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -66,6 +66,9 @@ public class ProjectSpendProfileController {
 
     @Autowired
     private PartnerOrganisationService partnerOrganisationService;
+
+    @Autowired
+    private FinanceUtil financeUtil;
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
     @RequestMapping(method = GET)
@@ -281,7 +284,7 @@ public class ProjectSpendProfileController {
 
         OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
 
-        boolean isResearch = OrganisationTypeEnum.isResearch(organisationResource.getOrganisationType());
+        boolean isUsingJesFinances = financeUtil.isUsingJesFinances(organisationResource.getOrganisationTypeName());
         Map<Long, BigDecimal> categoryToActualTotal = spendProfileTableCalculator.calculateRowTotal(spendProfileTableResource.getMonthlyCostsPerCategoryMap());
         List<BigDecimal> totalForEachMonth = spendProfileTableCalculator.calculateMonthlyTotals(spendProfileTableResource.getMonthlyCostsPerCategoryMap(), spendProfileTableResource.getMonths().size());
 
@@ -295,7 +298,7 @@ public class ProjectSpendProfileController {
         return new ProjectSpendProfileViewModel(projectResource, organisationResource, spendProfileTableResource, summary,
                 spendProfileTableResource.getMarkedAsComplete(), categoryToActualTotal, totalForEachMonth,
                 totalOfAllActualTotals, totalOfAllEligibleTotals, projectResource.getSpendProfileSubmittedDate() != null, spendProfileTableResource.getCostCategoryGroupMap(),
-                spendProfileTableResource.getCostCategoryResourceMap(), isResearch, isUserPartOfThisOrganisation,
+                spendProfileTableResource.getCostCategoryResourceMap(), isUsingJesFinances, isUserPartOfThisOrganisation,
                 projectService.isProjectManager(loggedInUser.getId(), projectResource.getId()),
                 isApproved(projectResource.getId()), leadPartner);
     }

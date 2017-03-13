@@ -31,6 +31,7 @@ public class InnovationAreaRepositoryIntegrationTest extends BaseRepositoryInteg
         InnovationArea innovationArea = newInnovationArea()
                 .with(id(null))
                 .withName(innovationAreaName)
+                .withDescription("Integration tests are the future")
                 .build();
 
         repository.save(innovationArea);
@@ -46,6 +47,8 @@ public class InnovationAreaRepositoryIntegrationTest extends BaseRepositoryInteg
         List<InnovationArea> innovationAreas = newInnovationArea()
                 .with(id(null))
                 .withName("bbb", "aaa", "ccc")
+                .withDescription("bbb description", "aaa description", "ccc description")
+                .withPriority(2, 1, 3)
                 .build(3);
 
         repository.save(innovationAreas);
@@ -54,9 +57,10 @@ public class InnovationAreaRepositoryIntegrationTest extends BaseRepositoryInteg
         List<InnovationArea> expectedInnovationAreas = newInnovationArea()
                 .with(id(null))
                 .withName("aaa", "bbb", "ccc")
+                .withDescription("aaa description", "bbb description", "ccc description")
                 .build(3);
 
-        List<InnovationArea> actual = repository.findAllByOrderByNameAsc();
+        List<InnovationArea> actual = repository.findAllByOrderByPriorityAsc();
 
         assertEquals(expectedInnovationAreas, actual);
     }
@@ -66,6 +70,7 @@ public class InnovationAreaRepositoryIntegrationTest extends BaseRepositoryInteg
         List<InnovationArea> innovationAreas = newInnovationArea()
                 .with(id(null))
                 .withName("bbb", "aaa", "ccc")
+                .withDescription("aaa description", "bbb description", "ccc description")
                 .build(3);
 
         repository.save(innovationAreas);

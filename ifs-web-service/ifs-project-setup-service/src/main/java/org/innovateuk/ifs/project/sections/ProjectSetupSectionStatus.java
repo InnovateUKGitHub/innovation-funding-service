@@ -16,9 +16,9 @@ public class ProjectSetupSectionStatus {
 
     public SectionStatus projectDetailsSectionStatus(final boolean projectDetailsProcessCompleted,
                                                      final boolean awaitingProjectDetailsActionFromPartners,
-                                                     final boolean leadPartner) {
+                                                     final boolean isLeadPartner) {
         if (!projectDetailsProcessCompleted) {
-            if (leadPartner && awaitingProjectDetailsActionFromPartners) {
+            if (isLeadPartner && awaitingProjectDetailsActionFromPartners) {
                 return FLAG;
             }
             return FLAG;
@@ -49,15 +49,20 @@ public class ProjectSetupSectionStatus {
         return EMPTY;
     }
 
-    public SectionStatus financeChecksSectionStatus(final ProjectActivityStates bankDetailsState,
-                                                    final boolean allFinanceChecksApproved) {
-        if (asList(COMPLETE, NOT_REQUIRED).contains(bankDetailsState)) {
-            if (allFinanceChecksApproved) {
-                return TICK;
-            }
-            return HOURGLASS;
+    public SectionStatus financeChecksSectionStatus(final ProjectActivityStates financeCheckState,
+                                                    final boolean allApproved,
+                                                    final SectionAccess access) {
+
+        if(financeCheckState == null || financeCheckState.equals(NOT_STARTED)) {
+            return EMPTY;
         }
-        return EMPTY;
+        if (financeCheckState.equals(COMPLETE) && allApproved) {
+            return TICK;
+        }
+        if (access.equals(SectionAccess.ACCESSIBLE) && financeCheckState.equals(ACTION_REQUIRED)) {
+            return FLAG;
+        }
+        return HOURGLASS;
     }
 
     public SectionStatus spendProfileSectionStatus(final ProjectActivityStates spendProfileState) {
@@ -72,29 +77,29 @@ public class ProjectSetupSectionStatus {
     }
 
     public SectionStatus otherDocumentsSectionStatus(final ProjectResource project,
-                                                     final boolean leadPartner) {
+                                                     final boolean isProjectManager) {
         if (project.isPartnerDocumentsSubmitted()) {
             if (ApprovalType.APPROVED.equals(project.getOtherDocumentsApproved())) {
                 return TICK;
             }
 
-            if (ApprovalType.REJECTED.equals(project.getOtherDocumentsApproved()) && leadPartner) {
+            if (ApprovalType.REJECTED.equals(project.getOtherDocumentsApproved()) && isProjectManager) {
                 return FLAG;
             }
             return HOURGLASS;
-        } else if (leadPartner) {
+        } else if (isProjectManager) {
             return FLAG;
         }
         return HOURGLASS;
     }
 
     public SectionStatus grantOfferLetterSectionStatus(final ProjectActivityStates grantOfferLetterState,
-                                                       final boolean leadPartner) {
+                                                       final boolean isLeadPartner) {
         if(grantOfferLetterState != null) {
             if (COMPLETE.equals(grantOfferLetterState)) {
                 return TICK;
             }
-            if (leadPartner) {
+            if (isLeadPartner) {
                 if (ACTION_REQUIRED.equals(grantOfferLetterState)) {
                     return FLAG;
                 }

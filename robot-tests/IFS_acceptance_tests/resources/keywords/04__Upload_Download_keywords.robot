@@ -9,6 +9,14 @@ The user downloads the file
     Run and Return RC    ./download.py ${user} ${short_password} ${url} ${filename}
     Wait Until Keyword Succeeds Without Screenshots    30s    200ms    Download should be done
 
+Guest user downloads the file
+    [Arguments]    ${url}    ${filename}
+    Run and Return RC    ./download.py ${url} ${filename}
+    Wait Until Keyword Succeeds Without Screenshots    30s    200ms    Download should be done
+
+the user uploads the file
+    [Arguments]  ${selector}  ${file}
+    Choose File  ${selector}  ${UPLOAD_FOLDER}/${file}
 
 Download should be done
     [Documentation]    Verifies that the directory has only one file
@@ -40,10 +48,6 @@ the user can see the option to upload a file on the page
     [Arguments]    ${url}
     The user navigates to the page    ${url}
     Page Should Contain    Upload
-
-the user uploads the file
-    [Arguments]    ${upload_button_id}    ${upload_filename}
-    Choose File      ${upload_button_id}   ${UPLOAD_FOLDER}/${upload_filename}
 
 the user can remove the uploaded file
     [Arguments]  ${name}  ${file_name}

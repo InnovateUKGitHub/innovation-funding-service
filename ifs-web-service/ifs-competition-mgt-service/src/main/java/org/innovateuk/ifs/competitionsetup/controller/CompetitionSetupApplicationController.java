@@ -66,6 +66,9 @@ public class CompetitionSetupApplicationController {
     @RequestMapping(value = "/landing-page", method = RequestMethod.GET)
     public String applicationProcessLandingPage(Model model, @PathVariable(COMPETITION_ID_KEY) Long competitionId) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
+        if(competitionResource.isNonIfs()) {
+            return "redirect:/non-ifs-competition/setup/" + competitionId;
+        }
         competitionSetupService.populateCompetitionSectionModelAttributes(model, competitionResource, APPLICATION_FORM);
         model.addAttribute(COMPETITION_SETUP_FORM_KEY, new LandingPageForm());
         return "competition/setup";
@@ -91,6 +94,9 @@ public class CompetitionSetupApplicationController {
     public String seeApplicationFinances(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                          Model model) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
+        if(competitionResource.isNonIfs()) {
+            return "redirect:/non-ifs-competition/setup/" + competitionId;
+        }
         return getFinancePage(model, competitionResource, false, null);
     }
 
@@ -99,6 +105,9 @@ public class CompetitionSetupApplicationController {
     public String editApplicationFinances(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                           Model model) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
+        if(competitionResource.isNonIfs()) {
+            return "redirect:/non-ifs-competition/setup/" + competitionId;
+        }
         return ifUserCanAccessEditPage(competitionResource, () -> getFinancePage(model, competitionResource, true, null));
     }
 
@@ -123,6 +132,9 @@ public class CompetitionSetupApplicationController {
                                          @PathVariable("questionId") Long questionId,
                                          Model model) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
+        if(competitionResource.isNonIfs()) {
+            return "redirect:/non-ifs-competition/setup/" + competitionId;
+        }
         return getQuestionPage(model, competitionResource, questionId, false, null);
     }
 
@@ -131,6 +143,9 @@ public class CompetitionSetupApplicationController {
                                           @PathVariable("questionId") Long questionId,
                                           Model model) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
+        if(competitionResource.isNonIfs()) {
+            return "redirect:/non-ifs-competition/setup/" + competitionId;
+        }
         return ifUserCanAccessEditPage(competitionResource, () -> getQuestionPage(model, competitionResource, questionId, true, null));
     }
 
@@ -160,6 +175,9 @@ public class CompetitionSetupApplicationController {
 
 
         CompetitionResource competitionResource = competitionService.getById(competitionId);
+        if(competitionResource.isNonIfs()) {
+            return "redirect:/non-ifs-competition/setup/" + competitionId;
+        }
         Supplier<String> failureView = () -> getQuestionPage(model, competitionResource, competitionSetupForm.getQuestion().getQuestionId(), true, competitionSetupForm);
         Supplier<String> successView = () -> String.format(APPLICATION_LANDING_REDIRECT, competitionId);
 
@@ -173,6 +191,9 @@ public class CompetitionSetupApplicationController {
     public String viewApplicationDetails(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                          Model model) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
+        if(competitionResource.isNonIfs()) {
+            return "redirect:/non-ifs-competition/setup/" + competitionId;
+        }
         return getDetailsPage(model, competitionResource, false, null);
     }
 
@@ -180,6 +201,9 @@ public class CompetitionSetupApplicationController {
     public String getEditApplicationDetails(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                             Model model) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
+        if(competitionResource.isNonIfs()) {
+            return "redirect:/non-ifs-competition/setup/" + competitionId;
+        }
         return ifUserCanAccessEditPage(competitionResource, () ->  getDetailsPage(model, competitionResource, true, null));
 
     }

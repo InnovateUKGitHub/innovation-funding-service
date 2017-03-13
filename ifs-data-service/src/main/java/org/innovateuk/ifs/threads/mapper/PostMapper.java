@@ -3,6 +3,8 @@ package org.innovateuk.ifs.threads.mapper;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
+import org.innovateuk.ifs.threads.attachments.domain.Attachment;
+import org.innovateuk.ifs.threads.attachments.mapper.AttachmentMapper;
 import org.innovateuk.ifs.threads.domain.Post;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.threads.resource.PostResource;
@@ -21,12 +23,12 @@ public abstract class PostMapper extends BaseMapper<Post, PostResource, Long> {
     @Autowired
     private UserMapper userMapper;
     @Autowired
-    private FileEntryMapper fileEntryMapper;
+    private AttachmentMapper attachmentMapper;
 
     @Override
     public PostResource mapToResource(Post post) {
         return new PostResource(post.id(), userMapper.mapToResource(post.author()), post.body(),
-                simpleMap(post.attachments(), fileEntryMapper::mapToResource), post.createdOn());
+                simpleMap(post.attachments(), attachmentMapper::mapToResource), post.createdOn());
     }
 
     @Override
@@ -46,7 +48,7 @@ public abstract class PostMapper extends BaseMapper<Post, PostResource, Long> {
     @Override
     public Post mapToDomain(PostResource postResource) {
         return new Post(postResource.id, userMapper.mapToDomain(postResource.author),
-                postResource.body, simpleMap(postResource.attachments, fileEntryMapper::mapToDomain), postResource.createdOn);
+                postResource.body, simpleMap(postResource.attachments, attachmentMapper::mapToDomain), postResource.createdOn);
     }
 
     @Override

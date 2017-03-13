@@ -55,7 +55,10 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
         Long financeFileEntry = 1L;
 
         ProjectOrganisationCompositeId key = new ProjectOrganisationCompositeId(projectId, organisationId);
-        OrganisationResource organisationResource = newOrganisationResource().withId(organisationId).withOrganisationType(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId()).build();
+        OrganisationResource organisationResource = newOrganisationResource().withId(organisationId)
+                .withOrganisationType(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId())
+                .withOrganisationTypeName("BUSINESS")
+                .build();
         ApplicationResource applicationResource = newApplicationResource().withId(applicationId).build();
         ProjectResource projectResource = newProjectResource().withId(projectId).withApplication(applicationResource).build();
         List<PartnerOrganisationResource> partnerOrganisationResources = newPartnerOrganisationResource().withProject(projectId).build(3);
@@ -69,6 +72,8 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
 
         when(organisationService.getOrganisationById(organisationId)).thenReturn(organisationResource);
         when(financeCheckServiceMock.getByProjectAndOrganisation(key)).thenReturn(newFinanceCheckResource().build());
+        when(financeUtilMock.isUsingJesFinances(organisationResource.getOrganisationTypeName())).thenReturn(false);
+
         when(financeCheckServiceMock.getFinanceCheckApprovalStatus(projectId, organisationId)).thenReturn(
                 newFinanceCheckProcessResource().
                         withCanApprove(true).
@@ -91,7 +96,7 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
         assertNull(financeCheckViewModel.getFinanceContactEmail());
         assertNull(financeCheckViewModel.getFinanceContactName());
         assertTrue(financeCheckViewModel.isFinanceChecksApproved());
-        assertFalse(financeCheckViewModel.isResearch());
+        assertFalse(financeCheckViewModel.isUsingJesFinances());
         assertEquals(new FileDetailsViewModel(jesFileEntryResource), financeCheckViewModel.getJesFileDetails());
 
         FinanceCheckForm form = (FinanceCheckForm) result.getModelAndView().getModel().get("form");

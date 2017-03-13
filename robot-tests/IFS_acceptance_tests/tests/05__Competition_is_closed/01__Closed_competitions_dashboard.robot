@@ -21,11 +21,11 @@ Competition dashboard
     ...
     ...    INFUND-7362
     When The user clicks the button/link    link=${CLOSED_COMPETITION_NAME}
-    Then The user should see the text in the page    00000012: Machine learning for transport infrastructure
+    Then The user should see the text in the page    12: Machine learning for transport infrastructure
     And The user should see the text in the page    Closed
     And The user should see the text in the page    Programme
     And The user should see the text in the page    Infrastructure systems
-    And The user should see the text in the page    Transport Systems
+    And The user should see the text in the page    Connected transport
     And the user should not see the element    link=View and update competition setup
     #The following checks test if the correct buttons are disabled
     And the user should see the element    jQuery=.disabled[aria-disabled="true"]:contains("Input and review funding decision")

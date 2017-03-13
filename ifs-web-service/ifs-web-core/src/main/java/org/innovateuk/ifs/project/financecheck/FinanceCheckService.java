@@ -3,10 +3,12 @@ package org.innovateuk.ifs.project.financecheck;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
+import org.innovateuk.ifs.project.finance.resource.FinanceCheckOverviewResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
 import org.innovateuk.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
+import org.innovateuk.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.threads.resource.NoteResource;
 import org.innovateuk.threads.resource.PostResource;
 import org.innovateuk.threads.resource.QueryResource;
@@ -23,19 +25,23 @@ public interface FinanceCheckService {
 
     ServiceResult<FinanceCheckSummaryResource> getFinanceCheckSummary(Long projectId);
 
+    ServiceResult<FinanceCheckOverviewResource> getFinanceCheckOverview(Long projectId);
+
     ServiceResult<Void> approveFinanceCheck(Long projectId, Long organisationId);
 
     FinanceCheckProcessResource getFinanceCheckApprovalStatus(Long projectId, Long organisationId);
 
     FinanceCheckEligibilityResource getFinanceCheckEligibilityDetails(Long projectId, Long organisationId);
 
-    ServiceResult<FileEntryResource> uploadFile(String contentType, long contentLength, String originalFilename, byte[] bytes);
+    ServiceResult<AttachmentResource> uploadFile(Long projectId, String contentType, long contentLength, String originalFilename, byte[] bytes);
 
     ServiceResult<Void> deleteFile(Long fileId);
 
     ServiceResult<Optional<ByteArrayResource>> downloadFile(Long fileId);
 
-    ServiceResult<FileEntryResource> getFileInfo(Long fileId);
+    ServiceResult<AttachmentResource> getAttachment(Long attachmentId);
+
+    ServiceResult<FileEntryResource> getAttachmentInfo(Long attachmentId);
 
     ServiceResult<Long> saveQuery(QueryResource query);
 

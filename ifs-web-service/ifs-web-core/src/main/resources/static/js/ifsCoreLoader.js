@@ -40,10 +40,26 @@ IFS.core.loadOrder = {
       IFS.core.debug.init()
     }
   },
-  //  this should be in a seperate project setup management area loader, however that nidyke doesn't contain any custom js therefore we load this here.
-  'eligibility-form': {
+  commonStateManaged: {
+    mobile: function () {
+      IFS.core.collapsible.init('tabs')
+    },
+    desktop: function () {
+      IFS.core.tabs.init()
+    },
+    mobileLeave: function () {
+      IFS.core.collapsible.destroy('tabs')
+    },
+    desktopLeave: function () {
+      IFS.core.tabs.destroy()
+    }
+  },
+  'finance': {
     init: function () {
       IFS.core.repeatableFinanceRows.init()
+    },
+    finalize: function () {
+      IFS.core.financeSpecifics.init()
     }
   }
 }
