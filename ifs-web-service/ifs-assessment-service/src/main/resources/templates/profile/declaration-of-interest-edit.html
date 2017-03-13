@@ -10,7 +10,7 @@
 
         <main id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
-            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to declaration of interest',linkClass='link-back',linkUrl=@{/profile/declaration}" />
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Declaration of interest',linkClass='link-back',linkUrl=@{/profile/declaration}" />
 
             <div class="hgroup">
                 <h1 class="heading-xlarge">Edit your declaration of interest</h1>
@@ -21,7 +21,9 @@
             <p>Please complete the sections below declaring to the best of your knowledge, all interests held.
                 It is your responsibility to inform us of any changes which may affect this declaration.</p>
 
-            <h2 class="heading-large">Your affiliations</h2>
+            <hr />
+
+            <h2 class="heading-large">Your affiliations (financial interests)</h2>
 
             <form th:action="@{/profile/declaration/edit}" method="post" th:object="${form}" novalidate="novalidate">
                 <div class="error-summary" th:if="${#fields.hasErrors('*')}" data-ignore-errors="true">
@@ -57,7 +59,7 @@
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('professionalAffiliations')}? error">
                     <label class="form-label-bold"  th:for="${#ids.next('professionalAffiliations')}">
-                        Professional affiliations
+                        List any bodies you are currently a member of as part of your profession.
                         <span th:if="${#fields.hasErrors('professionalAffiliations')}" th:remove="tag">
                             <span class="error-message"  th:each="err : ${#fields.errors('professionalAffiliations')}" th:text="${err}" />
                         </span>
@@ -350,7 +352,8 @@
                     </fieldset>
                 </div>
 
-                <button class="button button-large extra-margin" type="submit">Save and continue</button>
+                <button class="button button-large" type="submit">Save and return to your declaration of interest</button>
+                <a class="button button-clear" th:href="@{/profile/declaration}">Cancel</a>
             </form>
             <input type="hidden" id="cacheTest" value="" />
 

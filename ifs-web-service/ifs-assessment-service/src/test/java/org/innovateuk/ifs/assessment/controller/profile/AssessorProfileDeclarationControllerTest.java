@@ -1066,13 +1066,13 @@ public class AssessorProfileDeclarationControllerTest extends BaseControllerMock
         assertTrue(bindingResult.hasFieldErrors("role"));
         assertEquals("Please enter your role with your principal employer.", bindingResult.getFieldError("role").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("hasAppointments"));
-        assertEquals("Please tell us if you have any appointments, directorships or consultancies.", bindingResult.getFieldError("hasAppointments").getDefaultMessage());
+        assertEquals("Please tell us if you have any appointments or directorships.", bindingResult.getFieldError("hasAppointments").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("hasFinancialInterests"));
         assertEquals("Please tell us if you have any other financial interests.", bindingResult.getFieldError("hasFinancialInterests").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("hasFamilyAffiliations"));
-        assertEquals("Please tell us if any of your close family members have any appointments, directorships or consultancies.", bindingResult.getFieldError("hasFamilyAffiliations").getDefaultMessage());
+        assertEquals("Please tell us if any of your immediate family members have any appointments or directorships.", bindingResult.getFieldError("hasFamilyAffiliations").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("hasFamilyFinancialInterests"));
-        assertEquals("Please tell us if any of your close family members have any other financial interests.", bindingResult.getFieldError("hasFamilyFinancialInterests").getDefaultMessage());
+        assertEquals("Please tell us if any of your immediate family members have any other financial interests.", bindingResult.getFieldError("hasFamilyFinancialInterests").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("accurateAccount"));
         assertEquals("You must agree that your account is accurate.", bindingResult.getFieldError("accurateAccount").getDefaultMessage());
 
