@@ -143,10 +143,7 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
             }
         }
 
-        if((day == null
-                || month == null
-                || year == null)
-            || !competitionSetupMilestoneService.isMilestoneDateValid(day, month, year)) {
+        if(!competitionSetupMilestoneService.isMilestoneDateValid(day, month, year)) {
             return asList(fieldError(fieldName, fieldName.toString(), "error.milestone.invalid"));
         }
         else {
