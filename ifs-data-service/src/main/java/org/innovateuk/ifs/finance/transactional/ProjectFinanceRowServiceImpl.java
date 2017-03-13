@@ -143,7 +143,9 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
     public ServiceResult<ProjectFinanceResource> updateCost(Long projectFinanceId, ProjectFinanceResource projectFinance) {
         return getProject(projectFinance.getProject()).andOnSuccess(project ->
                 find(projectFinance(projectFinanceId)).andOnSuccess(dbFinance -> {
-                    dbFinance.setOrganisationSize(organisationSizeRepository.findOne(projectFinance.getOrganisationSize()));
+                    if (projectFinance.getOrganisationSize() != null) {
+                        dbFinance.setOrganisationSize(organisationSizeRepository.findOne(projectFinance.getOrganisationSize()));
+                    }
                     dbFinance = projectFinanceRepository.save(dbFinance);
                     return serviceSuccess(projectFinanceMapper.mapToResource(dbFinance));
                 })

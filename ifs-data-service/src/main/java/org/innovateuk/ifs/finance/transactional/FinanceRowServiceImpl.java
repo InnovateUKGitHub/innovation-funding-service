@@ -274,7 +274,9 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
         Application application = applicationRepository.findOne(applicationFinance.getApplication());
         return getOpenApplication(application.getId()).andOnSuccess(app ->
                 find(applicationFinance(applicationFinanceId)).andOnSuccess(dbFinance -> {
-                    dbFinance.setOrganisationSize(organisationSizeRepository.findOne(applicationFinance.getOrganisationSize()));
+                    if (applicationFinance.getOrganisationSize() != null) {
+                        dbFinance.setOrganisationSize(organisationSizeRepository.findOne(applicationFinance.getOrganisationSize()));
+                    }
                     Long financeFileEntryId = applicationFinance.getFinanceFileEntry();
                     dbFinance = setFinanceUpload(dbFinance, financeFileEntryId);
                     dbFinance = applicationFinanceRepository.save(dbFinance);
