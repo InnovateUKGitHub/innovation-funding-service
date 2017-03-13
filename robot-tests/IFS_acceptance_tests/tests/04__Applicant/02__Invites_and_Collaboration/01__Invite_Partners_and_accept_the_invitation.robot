@@ -20,6 +20,8 @@ Documentation     INFUND-901: As a lead applicant I want to invite application c
 ...               INFUND-7973 As a lead applicant I want to view my application team
 ...
 ...               INFUND-7979 As an lead applicant I want to add a new organisation
+...
+...               INFUND-7977 As a non lead applicant I want to edit my application team
 Suite Setup       log in and create new application for collaboration if there is not one already
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
@@ -194,7 +196,7 @@ Partner should be able to log-in and see the new company name
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
     And the user can see the updated company name throughout the application
 
-Parner van see the Application team
+Parner can see the Application team
     [Documentation]    INFUND-7976
     When the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
@@ -207,9 +209,15 @@ Parner van see the Application team
 
 Partner can invite others to his own organisation
     [Documentation]    INFUND-2335
+    ...
+    ...    INFUND-7977
     [Tags]    Email
     When the user clicks the button/link    jQuery=a:contains("Update NOMENSA LTD")
-    Then the user clicks the button/link    jQuery=button:contains("Add new applicant")
+    And the user clicks the button/link    jQuery=button:contains("Add new applicant")
+    And The user enters text to a text field    jQuery=tr:nth-of-type(2) td:nth-of-type(1) input    Mark
+    And The user enters text to a text field    jQuery=tr:nth-of-type(2) td:nth-of-type(2) input    mark21@innovateuk.com
+    And the user clicks the button/link    jQuery=button:contains("Update organisation")
+    Then The user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(3):contains("Pending")
 
 Partner cannot invite others to other organisations
     [Documentation]    INFUND-2335
