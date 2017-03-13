@@ -6,8 +6,10 @@ import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.invite.resource.*;
+import org.innovateuk.ifs.management.form.FindAssessorsFilterForm;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsForm;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsRowForm;
+import org.innovateuk.ifs.management.form.OverviewAssessorsFilterForm;
 import org.innovateuk.ifs.management.model.AssessorProfileModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsFindModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsInviteModelPopulator;
@@ -145,6 +147,9 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .andExpect(view().name("assessors/find"))
                 .andReturn();
 
+        FindAssessorsFilterForm filterForm = (FindAssessorsFilterForm) result.getModelAndView().getModel().get("filterForm");
+        assertEquals(of(3L), filterForm.getInnovationArea());
+
         assertCompetitionDetails(competition, result);
         assertAvailableAssessors(availableAssessorPageResource.getContent(), result);
         assertFindFilterOptionsAreCorrect(expectedInnovationAreaOptions, result);
@@ -175,6 +180,10 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .andExpect(model().attributeExists("model"))
                 .andExpect(view().name("assessors/find"))
                 .andReturn();
+
+        FindAssessorsFilterForm filterForm = (FindAssessorsFilterForm) result.getModelAndView().getModel().get("filterForm");
+
+        assertEquals(empty(), filterForm.getInnovationArea());
 
         assertCompetitionDetails(competition, result);
         assertAvailableAssessors(availableAssessorPageResource.getContent(), result);
@@ -227,7 +236,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
     public void overview() throws Exception {
         int page = 1;
         Optional<Long> innovationArea = of(10L);
-        Optional<ParticipantStatusResource> status = of(ParticipantStatusResource.ACCEPTED);
+        Optional<ParticipantStatusResource> status = of(ACCEPTED);
         Optional<Boolean> contract = of(TRUE);
 
         List<AssessorInviteOverviewResource> assessorInviteOverviewResources = setUpAssessorInviteOverviewResources();
@@ -249,6 +258,12 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .andExpect(model().attributeExists("model"))
                 .andExpect(view().name("assessors/overview"))
                 .andReturn();
+
+        OverviewAssessorsFilterForm filterForm = (OverviewAssessorsFilterForm) result.getModelAndView().getModel().get("filterForm");
+
+        assertEquals(of(TRUE), filterForm.getContract());
+        assertEquals(of(10L), filterForm.getInnovationArea());
+        assertEquals(of(ACCEPTED), filterForm.getStatus());
 
         assertCompetitionDetails(competition, result);
         assertInviteOverviews(assessorInviteOverviewResources, result);
@@ -277,6 +292,12 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .andExpect(model().attributeExists("model"))
                 .andExpect(view().name("assessors/overview"))
                 .andReturn();
+
+        OverviewAssessorsFilterForm filterForm = (OverviewAssessorsFilterForm) result.getModelAndView().getModel().get("filterForm");
+
+        assertEquals(empty(), filterForm.getContract());
+        assertEquals(empty(), filterForm.getInnovationArea());
+        assertEquals(empty(), filterForm.getStatus());
 
         assertCompetitionDetails(competition, result);
         assertInviteOverviews(assessorInviteOverviewResources, result);
