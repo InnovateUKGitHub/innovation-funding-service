@@ -168,14 +168,14 @@ public class UserController {
         return userProfileService.updateProfileSkills(id, profileSkills).toPutResponse();
     }
 
-    @RequestMapping(value = "/id/{userId}/getProfileContract", method = GET)
-    public RestResult<ProfileContractResource> getProfileContract(@PathVariable("userId") long userId) {
-        return userProfileService.getProfileContract(userId).toGetResponse();
+    @RequestMapping(value = "/id/{userId}/getProfileAgreement", method = GET)
+    public RestResult<ProfileAgreementResource> getProfileAgreement(@PathVariable("userId") long userId) {
+        return userProfileService.getProfileAgreement(userId).toGetResponse();
     }
 
-    @RequestMapping(value = "/id/{userId}/updateProfileContract", method = PUT)
-    public RestResult<Void> updateProfileContract(@PathVariable("userId") long userId) {
-        return userProfileService.updateProfileContract(userId).toPutResponse();
+    @RequestMapping(value = "/id/{userId}/updateProfileAgreement", method = PUT)
+    public RestResult<Void> updateProfileAgreement(@PathVariable("userId") long userId) {
+        return userProfileService.updateProfileAgreement(userId).toPutResponse();
     }
 
     @RequestMapping(value = "/id/{userId}/getUserAffiliations", method = GET)

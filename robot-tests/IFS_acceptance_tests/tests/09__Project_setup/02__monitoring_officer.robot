@@ -161,7 +161,7 @@ MO details can be edited and viewed in the Project setup status page
     And the user should see the element    jQuery=ul li.complete:nth-child(3)
     And Element Should Contain    jQuery=ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Grace Harper.
     And the user clicks the button/link    link=Monitoring Officer
-    Then the user should see the text in the page    Your project has been assigned a Monitoring Officer
+    Then the user should see the text in the page    We have assigned a Monitoring Officer to your project.
     And the user should see the text in the page    Grace Harper
     And the user should see the text in the page    ${test_mailbox_two}+monitoringofficer@gmail.com
     And the user should see the text in the page    08549731414
@@ -186,7 +186,7 @@ MO details accessible/seen by all partners
     Then the user should see the element    jQuery=ul li.complete:nth-child(3)
     And Element Should Contain    jQuery=ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Grace Harper.
     And the user clicks the button/link    link=Monitoring Officer
-    Then the user should see the text in the page    Your project has been assigned a Monitoring Officer
+    Then the user should see the text in the page    We have assigned a Monitoring Officer to your project.
     And the user should see the text in the page    Grace Harper
     And the user should see the text in the page    ${test_mailbox_two}+monitoringofficer@gmail.com
     And the user should see the text in the page    08549731414
@@ -198,7 +198,7 @@ MO details accessible/seen by all partners
     Then the user should see the element    jQuery=ul li.complete:nth-child(3)
     And Element Should Contain    jQuery=ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Grace Harper.
     And the user clicks the button/link    link=Monitoring Officer
-    Then the user should see the text in the page    Your project has been assigned a Monitoring Officer
+    Then the user should see the text in the page    We have assigned a Monitoring Officer to your project.
     And the user should see the text in the page    Grace Harper
     And the user should see the text in the page    ${test_mailbox_two}+monitoringofficer@gmail.com
     And the user should see the text in the page    08549731414

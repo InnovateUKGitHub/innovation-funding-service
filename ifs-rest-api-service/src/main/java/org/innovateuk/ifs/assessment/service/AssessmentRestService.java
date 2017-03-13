@@ -24,6 +24,8 @@ public interface AssessmentRestService {
 
     RestResult<Void> recommend(long id, AssessmentFundingDecisionOutcomeResource assessmentFundingDecision);
 
+    RestResult<ApplicationAssessmentFeedbackResource> getApplicationFeedback(long applicationId);
+
     RestResult<Void> rejectInvitation(long id, AssessmentRejectOutcomeResource assessmentRejectOutcomeResource);
 
     RestResult<Void> acceptInvitation(long id);

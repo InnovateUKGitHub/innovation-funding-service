@@ -18,8 +18,8 @@ Logged in user can create a new application
     Then the user should be redirected to the correct page    ${speed_bump_url}
     And the user selects the radio button    create-application    true
     And the user clicks the button/link    jQuery=.button:contains("Continue")
-    And the user should see the text in the page    Inviting Contributors and Partners
-    And the user clicks the button/link    jQuery=.button:contains("Begin application")
+    And the user should see the text in the page    Application team
+    And the user clicks the button/link    jQuery=a:contains("Begin application")
     And the user should see the text in the page    Application overview
     And the user can see this new application on their dashboard
     And the project start date is blank
@@ -52,8 +52,8 @@ Non-logged in user has the option to log into an existing account
     Then the user should be redirected to the correct page    ${speed_bump_url}
     And the user selects the radio button    create-application    true
     And the user clicks the button/link    jQuery=.button:contains("Continue")
-    And the user should see the text in the page    Inviting Contributors and Partners
-    And the user clicks the button/link    jQuery=.button:contains("Begin application")
+    And the user should see the text in the page    Application team
+    And the user clicks the button/link    jQuery=a:contains("Begin application")
     And the user should see the text in the page    Application overview
     And the user can see this new application on their dashboard
 

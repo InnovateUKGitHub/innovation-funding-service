@@ -26,7 +26,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
 import org.innovateuk.ifs.competition.service.CompetitionsRestService;
-import org.innovateuk.ifs.contract.service.ContractService;
+import org.innovateuk.ifs.agreement.service.AgreementService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.category.GrantClaimCategory;
@@ -145,7 +145,7 @@ public class BaseUnitTest {
     @Mock
     public CompetitionsRestService competitionRestService;
     @Mock
-    public ContractService contractService;
+    public AgreementService agreementService;
     @Mock
     public ProcessRoleService processRoleService;
     @Mock
@@ -734,7 +734,7 @@ public class BaseUnitTest {
         inviteOrganisation.setInviteResources(Arrays.asList(invite));
 
         when(inviteRestService.getInviteByHash(eq(INVITE_HASH))).thenReturn(restSuccess(invite));
-        when(inviteOrganisationRestService.findOne(eq(invite.getInviteOrganisation()))).thenReturn(restSuccess(inviteOrganisation));
+        when(inviteOrganisationRestService.getByIdForAnonymousUserFlow(eq(invite.getInviteOrganisation()))).thenReturn(restSuccess(inviteOrganisation));
         when(inviteOrganisationRestService.put(any())).thenReturn(restSuccess());
         when(inviteRestService.checkExistingUser(eq(INVITE_HASH))).thenReturn(restSuccess(false));
         when(inviteRestService.checkExistingUser(eq(INVALID_INVITE_HASH))).thenReturn(restFailure(notFoundError(UserResource.class, email)));
