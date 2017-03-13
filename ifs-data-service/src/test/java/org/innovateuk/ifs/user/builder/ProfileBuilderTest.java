@@ -1,16 +1,16 @@
 package org.innovateuk.ifs.user.builder;
 
 import org.innovateuk.ifs.address.domain.Address;
-import org.innovateuk.ifs.user.resource.BusinessType;
-import org.innovateuk.ifs.user.domain.Contract;
+import org.innovateuk.ifs.user.domain.Agreement;
 import org.innovateuk.ifs.user.domain.Profile;
+import org.innovateuk.ifs.user.resource.BusinessType;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
-import static org.innovateuk.ifs.user.builder.ContractBuilder.newContract;
+import static org.innovateuk.ifs.user.builder.AgreementBuilder.newAgreement;
 import static org.innovateuk.ifs.user.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
@@ -24,43 +24,42 @@ public class ProfileBuilderTest {
         Address expectedAddress = newAddress().build();
         String expectedSkillsAreas = "skills areas";
         BusinessType expectedBusinessType = BUSINESS;
-        Contract expectedContract = newContract().build();
-        LocalDateTime expectedContractSignedDate = LocalDateTime.now();
-
-
+        Agreement expectedAgreement = newAgreement().build();
+        LocalDateTime expectedAgreementSignedDate = LocalDateTime.now();
+        
         Profile profile = newProfile()
                 .withId(expectedId)
                 .withAddress(expectedAddress)
                 .withSkillsAreas(expectedSkillsAreas)
                 .withBusinessType(expectedBusinessType)
-                .withContract(expectedContract)
-                .withContractSignedDate(expectedContractSignedDate)
+                .withAgreement(expectedAgreement)
+                .withAgreementSignedDate(expectedAgreementSignedDate)
                 .build();
 
         assertEquals(expectedId, profile.getId());
         assertEquals(expectedAddress, profile.getAddress());
         assertEquals(expectedSkillsAreas, profile.getSkillsAreas());
         assertEquals(expectedBusinessType, profile.getBusinessType());
-        assertEquals(expectedContract, profile.getContract());
-        assertEquals(expectedContractSignedDate, profile.getContractSignedDate());
+        assertEquals(expectedAgreement, profile.getAgreement());
+        assertEquals(expectedAgreementSignedDate, profile.getAgreementSignedDate());
     }
 
     @Test
     public void buildMany() {
-        Long[] expectedIds = { 1L, 2L };
+        Long[] expectedIds = {1L, 2L};
         Address[] expectedAddresses = newAddress().buildArray(2, Address.class);
-        String[] expectedSkillsAreas = { "skills areas 1", "skills areas 2" };
-        BusinessType[] expectedBusinessTypes = { BUSINESS, ACADEMIC };
-        Contract[] expectedContracts = newContract().buildArray(2, Contract.class);
-        LocalDateTime[] expectedContractSignedDates = { LocalDateTime.now(), LocalDateTime.now().plusDays(1L) };
+        String[] expectedSkillsAreas = {"skills areas 1", "skills areas 2"};
+        BusinessType[] expectedBusinessTypes = {BUSINESS, ACADEMIC};
+        Agreement[] expectedContracts = newAgreement().buildArray(2, Agreement.class);
+        LocalDateTime[] expectedAgreementSignedDates = {LocalDateTime.now(), LocalDateTime.now().plusDays(1L)};
 
         List<Profile> profiles = newProfile()
                 .withId(expectedIds)
                 .withAddress(expectedAddresses)
                 .withSkillsAreas(expectedSkillsAreas)
                 .withBusinessType(expectedBusinessTypes)
-                .withContract(expectedContracts)
-                .withContractSignedDate(expectedContractSignedDates)
+                .withAgreement(expectedContracts)
+                .withAgreementSignedDate(expectedAgreementSignedDates)
                 .build(2);
 
         Profile first = profiles.get(0);
@@ -69,8 +68,8 @@ public class ProfileBuilderTest {
         assertEquals(expectedAddresses[0], first.getAddress());
         assertEquals(expectedSkillsAreas[0], first.getSkillsAreas());
         assertEquals(expectedBusinessTypes[0], first.getBusinessType());
-        assertEquals(expectedContracts[0], first.getContract());
-        assertEquals(expectedContractSignedDates[0], first.getContractSignedDate());
+        assertEquals(expectedContracts[0], first.getAgreement());
+        assertEquals(expectedAgreementSignedDates[0], first.getAgreementSignedDate());
 
         Profile second = profiles.get(1);
 
@@ -78,7 +77,7 @@ public class ProfileBuilderTest {
         assertEquals(expectedAddresses[1], second.getAddress());
         assertEquals(expectedSkillsAreas[1], second.getSkillsAreas());
         assertEquals(expectedBusinessTypes[1], second.getBusinessType());
-        assertEquals(expectedContracts[1], second.getContract());
-        assertEquals(expectedContractSignedDates[1], second.getContractSignedDate());
+        assertEquals(expectedContracts[1], second.getAgreement());
+        assertEquals(expectedAgreementSignedDates[1], second.getAgreementSignedDate());
     }
 }

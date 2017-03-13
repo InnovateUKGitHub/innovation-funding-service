@@ -21,7 +21,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.test.annotation.Repeat;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MvcResult;
@@ -33,7 +32,6 @@ import java.util.stream.Collectors;
 
 import static java.time.LocalDateTime.now;
 import static java.time.ZoneId.systemDefault;
-import static java.time.temporal.ChronoUnit.DAYS;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -93,7 +91,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
                 .withSkillsComplete(true)
                 .withAffliliationsComplete(false)
-                .withContractComplete(false)
+                .withAgreementComplete(false)
                 .build();
 
         when(competitionParticipantRestService.getParticipants(3L, ASSESSOR)).thenReturn(restSuccess(singletonList(participant)));
@@ -142,7 +140,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
                 .withSkillsComplete(false)
                 .withAffliliationsComplete(true)
-                .withContractComplete(false)
+                .withAgreementComplete(false)
                 .build();
 
         when(competitionParticipantRestService.getParticipants(3L, ASSESSOR)).thenReturn(restSuccess(singletonList(participant)));
@@ -186,7 +184,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
                 .withSkillsComplete(false)
                 .withAffliliationsComplete(false)
-                .withContractComplete(true)
+                .withAgreementComplete(true)
                 .build();
 
         when(competitionParticipantRestService.getParticipants(3L, ASSESSOR)).thenReturn(restSuccess(singletonList(participant)));
@@ -230,7 +228,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
                 .withSkillsComplete(false)
                 .withAffliliationsComplete(false)
-                .withContractComplete(true)
+                .withAgreementComplete(true)
                 .build();
 
         when(competitionParticipantRestService.getParticipants(3L, ASSESSOR)).thenReturn(restSuccess(singletonList(participant)));
@@ -266,7 +264,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
                 .withSkillsComplete(true)
                 .withAffliliationsComplete(true)
-                .withContractComplete(false)
+                .withAgreementComplete(false)
                 .build();
 
         when(competitionParticipantRestService.getParticipants(3L, ASSESSOR)).thenReturn(restSuccess(singletonList(participant)));
@@ -310,7 +308,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
                 .withSkillsComplete(true)
                 .withAffliliationsComplete(false)
-                .withContractComplete(true)
+                .withAgreementComplete(true)
                 .build();
 
         when(competitionParticipantRestService.getParticipants(3L, ASSESSOR)).thenReturn(restSuccess(singletonList(participant)));
@@ -360,7 +358,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
                 .withSkillsComplete(true)
                 .withAffliliationsComplete(true)
-                .withContractComplete(true)
+                .withAgreementComplete(true)
                 .build();
 
         when(competitionParticipantRestService.getParticipants(3L, ASSESSOR)).thenReturn(restSuccess(participantResources));

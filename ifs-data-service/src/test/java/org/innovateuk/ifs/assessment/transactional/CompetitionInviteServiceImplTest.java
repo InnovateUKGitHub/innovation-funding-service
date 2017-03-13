@@ -661,7 +661,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         Notification notification = new Notification(from, singletonList(to), CompetitionInviteServiceImpl.Notifications.INVITE_ASSESSOR, expectedNotificationArguments);
 
         when(competitionInviteRepositoryMock.findOne(invite.getId())).thenReturn(invite);
-        when(notificationSender.sendEmailWithContent(notification, to, content)).thenReturn(serviceSuccess(asList(new EmailAddress(email, name))));
+        when(notificationSender.sendEmailWithContent(notification, to, content)).thenReturn(serviceSuccess(singletonList(new EmailAddress(email, name))));
 
         ServiceResult<AssessorInviteToSendResource> serviceResult = service.sendInvite(invite.getId(), content);
 
@@ -691,7 +691,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         Notification notification = new Notification(from, singletonList(to), CompetitionInviteServiceImpl.Notifications.INVITE_ASSESSOR, expectedNotificationArguments);
 
         when(competitionInviteRepositoryMock.findOne(invite.getId())).thenReturn(invite);
-        when(notificationSender.sendEmailWithContent(notification, to, content)).thenReturn(serviceSuccess(asList(new EmailAddress(email, name))));
+        when(notificationSender.sendEmailWithContent(notification, to, content)).thenReturn(serviceSuccess(singletonList(new EmailAddress(email, name))));
 
         ServiceResult<AssessorInviteToSendResource> serviceResult = service.sendInvite(invite.getId(), content);
 
@@ -828,7 +828,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withSkillsAreas("Java", "Javascript")
                 .withInnovationArea(innovationArea)
                 .withBusinessType(BUSINESS, ACADEMIC)
-                .withContractSignedDate(now())
+                .withAgreementSignedDate(now())
                 .build(2);
         List<User> assessors = newUser()
                 .withId(4L, 8L)
@@ -934,7 +934,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
 
         Profile profile1 = newProfile()
                 .withSkillsAreas("Java")
-                .withContractSignedDate(now())
+                .withAgreementSignedDate(now())
                 .withInnovationArea(innovationArea)
                 .build();
         User compliantUser = newUser()
@@ -949,7 +949,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
 
         Profile profile2 = newProfile()
                 .withSkillsAreas()
-                .withContractSignedDate(now())
+                .withAgreementSignedDate(now())
                 .build();
         User nonCompliantUserNoSkills = newUser()
                 .withAffiliations(newAffiliation()
@@ -963,7 +963,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
 
         Profile profile3 = newProfile()
                 .withSkillsAreas("Java")
-                .withContractSignedDate(now())
+                .withAgreementSignedDate(now())
                 .build();
         User nonCompliantUserNoAffiliations = newUser()
                 .withAffiliations()
@@ -972,9 +972,9 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
 
         Profile profile4 = newProfile()
                 .withSkillsAreas("Java")
-                .withContractSignedDate()
+                .withAgreementSignedDate()
                 .build();
-        User nonCompliantUserNoContract = newUser()
+        User nonCompliantUserNoAgreement = newUser()
                 .withAffiliations(newAffiliation()
                         .withAffiliationType(EMPLOYER)
                         .withOrganisation("Hive IT")
@@ -988,7 +988,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withId(1L, 2L, 3L, 4L)
                 .withName("John Barnes", "Dave Smith", "Richard Turner", "Oliver Romero")
                 .withEmail("john@example.com", "dave@example.com", "richard@example.com", "oliver@example.com")
-                .withUser(compliantUser, nonCompliantUserNoSkills, nonCompliantUserNoAffiliations, nonCompliantUserNoContract)
+                .withUser(compliantUser, nonCompliantUserNoSkills, nonCompliantUserNoAffiliations, nonCompliantUserNoAgreement)
                 .withInnovationArea()
                 .build(4);
 
@@ -1001,7 +1001,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .build();
 
         List<AssessorCreatedInviteResource> expectedInvites = newAssessorCreatedInviteResource()
-                .withId(compliantUser.getId(), nonCompliantUserNoSkills.getId(), nonCompliantUserNoAffiliations.getId(), nonCompliantUserNoContract.getId(), null)
+                .withId(compliantUser.getId(), nonCompliantUserNoSkills.getId(), nonCompliantUserNoAffiliations.getId(), nonCompliantUserNoAgreement.getId(), null)
                 .withInviteId(1L, 2L, 3L, 4L, 5L)
                 .withName("John Barnes", "Dave Smith", "Richard Turner", "Oliver Romero", "Christopher Soames")
                 .withInnovationAreas(innovationAreaList, emptyList(), emptyList(), emptyList(), innovationAreaList)

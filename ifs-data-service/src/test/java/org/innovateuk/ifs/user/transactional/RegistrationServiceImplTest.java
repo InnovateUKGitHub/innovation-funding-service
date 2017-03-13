@@ -151,7 +151,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
             assertEquals(profileId, profile.getId());
             assertNull(profile.getSkillsAreas());
             assertNull(profile.getBusinessType());
-            assertNull(profile.getContract());
+            assertNull(profile.getAgreement());
             assertNull(profile.getCreatedBy());
             assertNull(profile.getCreatedOn());
             assertNull(profile.getModifiedBy());
