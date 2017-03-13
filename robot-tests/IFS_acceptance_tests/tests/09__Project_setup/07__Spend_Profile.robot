@@ -127,19 +127,19 @@ Calculations in the spend profile table
     [Documentation]    INFUND-3764, INFUND-6148
     [Tags]    HappyPath
     Given the user should see the element    jQuery=div.spend-profile-table
-    Then element should contain    css=.spend-profile-table tbody tr:nth-child(1) td:nth-last-child(2)    £ 8,000     #Labour
-    Then element should contain    css=.spend-profile-table tbody tr:nth-child(2) td:nth-last-child(2)    £ 2,000     #Overheads
-    Then element should contain    css=.spend-profile-table tbody tr:nth-child(3) td:nth-last-child(2)    £ 10,000    #Materials
-    Then element should contain    css=.spend-profile-table tbody tr:nth-child(4) td:nth-last-child(2)    £ 100    #Capital usage
-    Then element should contain    css=.spend-profile-table tbody tr:nth-child(5) td:nth-last-child(2)    £ 10,000    #Subcontracting
-    Then element should contain    css=.spend-profile-table tbody tr:nth-child(6) td:nth-last-child(2)    £ 50    #Travel & subsistence
-    Then element should contain    css=.spend-profile-table tbody tr:nth-child(7) td:nth-last-child(2)    £ 10,000    #Other costs
+    Then element should contain    css=.spend-profile-table tbody tr:nth-child(1) td:nth-last-child(2)    £ 4,622     #Labour
+    Then element should contain    css=.spend-profile-table tbody tr:nth-child(2) td:nth-last-child(2)    £ 0     #Overheads
+    Then element should contain    css=.spend-profile-table tbody tr:nth-child(3) td:nth-last-child(2)    £ 150,300    #Materials
+    Then element should contain    css=.spend-profile-table tbody tr:nth-child(4) td:nth-last-child(2)    £ 828    #Capital usage
+    Then element should contain    css=.spend-profile-table tbody tr:nth-child(5) td:nth-last-child(2)    £ 135,000    #Subcontracting
+    Then element should contain    css=.spend-profile-table tbody tr:nth-child(6) td:nth-last-child(2)    £ 8,955    #Travel & subsistence
+    Then element should contain    css=.spend-profile-table tbody tr:nth-child(7) td:nth-last-child(2)    £ 1,650    #Other costs
     #${duration} is No of Months + 1, due to header
-    And the sum of tds equals the total    div.spend-profile-table    1    38    8000     # Labour
-    And the sum of tds equals the total    div.spend-profile-table    3    38    10000    # Materials
-    And the sum of tds equals the total    div.spend-profile-table    5    38    10000    # Subcontracting
-    And the sum of tds equals the total    div.spend-profile-table    6    38    50    # Travel & subsistence
-    And the sum of tds equals the total    div.spend-profile-table    7    38    10000    # Other costs
+    And the sum of tds equals the total    div.spend-profile-table    1    38    4622     # Labour
+    And the sum of tds equals the total    div.spend-profile-table    3    38    150300    # Materials
+    And the sum of tds equals the total    div.spend-profile-table    5    38    135000    # Subcontracting
+    And the sum of tds equals the total    div.spend-profile-table    6    38    8955    # Travel & subsistence
+    And the sum of tds equals the total    div.spend-profile-table    7    38    1650    # Other costs
 
 Lead Partner can see Spend profile summary
     [Documentation]    INFUND-3971, INFUND-6148
@@ -158,46 +158,46 @@ Lead partner can edit his spend profile with invalid values
     # TODO please delete the above two lines when INFUND-8138 is completed
     When the user clicks the button/link               jQuery=.button:contains("Edit spend profile")
     Then the user should not see the text in the element  css=#content > form   -
-    And the text box should be editable               css=#row-24-0  # Labour-June17
-    When the user enters text to a text field          css=#row-24-0    2899
-    And the user moves focus to the element            css=#row-24-2
+    And the text box should be editable               css=#row-40-0  # Labour-June17
+    When the user enters text to a text field          css=#row-40-0    5236
+    And the user moves focus to the element            css=#row-40-2
     Then the user should see the text in the page      Unable to submit spend profile.
     And the user should see the text in the page       Your total costs are higher than your eligible costs
-    Then the field has value                           css=#row-total-24    £ 10,669
+    Then the field has value                           css=#row-total-40    £ 10,000
     And the user should see the element                jQuery=.cell-error #row-total-24
     And the user clicks the button/link                jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should see the text in the page      You cannot submit your spend profile. Your total costs are higher than the eligible project costs.
     And the user should see the element                jQuery=.error-summary-list li:contains("Labour")
     When the user clicks the button/link               jQuery=.button:contains("Edit spend profile")
-    Then the user enters text to a text field          css=#row-24-0    222
+    Then the user enters text to a text field          css=#row-40-0    142
     And the user should not see the element            jQuery=.cell-error #row-total-24
-    When the user enters text to a text field          css=#row-26-2    -55  # Materials-Aug17
-    And the user moves focus to the element            css=#row-26-1
+    When the user enters text to a text field          css=#row-42-2    -55  # Materials-Aug17
+    And the user moves focus to the element            css=#row-42-1
     Then the user should see the element               jQuery=.error-summary-list li:contains("This field should be 0 or higher")
-    When the user enters text to a text field          css=#row-24-2    35.25
-    And the user moves focus to the element            css=#row-25-2
+    When the user enters text to a text field          css=#row-42-2    35.25
+    And the user moves focus to the element            css=#row-42-2
     Then the user should see the text in the page      This field can only accept whole numbers
-    When the user enters text to a text field          css=#row-24-2    abcd
-    And the user moves focus to the element            css=#row-25-2
+    When the user enters text to a text field          css=#row-43-2    abcd
+    And the user moves focus to the element            css=#row-43-2
     Then the user should see the text in the page      Unable to submit spend profile
     When the user clicks the button/link               jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should not see the text in the page  internal server error
-    When the user enters text to a text field          css=#row-26-2    200
-    And the user moves focus to the element            css=#row-26-1
+    When the user enters text to a text field          css=#row-42-2    200
+    And the user moves focus to the element            css=#row-42-1
     And the user should not see the element            jQuery=.error-summary-list li:contains("This field should be 0 or higher")
-    When the user enters text to a text field          css=#row-26-2    278
-    And the user moves focus to the element            css=#row-26-1
+    When the user enters text to a text field          css=#row-42-2    4175
+    And the user moves focus to the element            css=#row-42-1
     Then the user should not see the element           jQuery=.error-summary-list li:contains("This field should be 0 or higher")
-    And the user should not see the element            jQuery=.cell-error #row-total-24
+    And the user should not see the element            jQuery=.cell-error #row-total-40
     Then the user clicks the button/link               jQuery=.button:contains("Save and return to spend profile overview")
 
 
 Lead partner can submit empty cells and this is handled gracefully
     [Documentation]    INFUND-6146
-    When the user enters text to a text field    css=#row-24-0    ${empty}
+    When the user enters text to a text field    css=#row-40-0    ${empty}
     And the user clicks the button/link    jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should not see an error in the page
-    [Teardown]    the user enters text to a text field    css=#row-24-0    2899
+    [Teardown]    the user enters text to a text field    css=#row-40-0    142
 
 Lead partner can edit his spend profile with valid values
     [Documentation]    INFUND-3765
@@ -205,14 +205,14 @@ Lead partner can edit his spend profile with valid values
     Given the user navigates to the page                ${external_spendprofile_summary}/review
     When the user clicks the button/link                jQuery=.button:contains("Edit spend profile")
     And the user should not see the element             css=table a[type="number"]    # checking here that the table is not read-only
-    Then the text box should be editable                css=#row-24-0  # Labour
-    When the user enters text to a text field           css=#row-24-0    200
-    And the user moves focus to the element             css=#row-24-1
-    Then the field has value                            css=#row-total-24    £ 7,970
+    Then the text box should be editable                css=#row-40-0  # Labour
+    When the user enters text to a text field           css=#row-40-0    140
+    And the user moves focus to the element             css=#row-40-1
+    Then the field has value                            css=#row-total-24    £ 4,620
     And the user should not see the text in the page    Unable to save spend profile
-    When the user enters text to a text field           css=#row-28-1    0  # Subcontracting
-    And the user moves focus to the element             css=#row-28-2
-    Then the field has value                            css=#row-total-28    £ 9,723
+    When the user enters text to a text field           css=#row-44-1    0  # Subcontracting
+    And the user moves focus to the element             css=#row-44-2
+    Then the field has value                            css=#row-total-28    £ 131,250
     And the user should not see the text in the page    Unable to save spend profile
     Then the user clicks the button/link                jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should not see the text in the page   You cannot submit your spend profile. Your total costs are higher than the eligible project costs.
@@ -222,7 +222,7 @@ Lead Partners Spend profile summary gets updated when edited
     [Tags]    HappyPath
     Given the user navigates to the page           ${external_spendprofile_summary}/review
     Then the user should see the text in the page  Project costs for financial year
-    And the user sees the text in the element      jQuery=.grid-container table tr:nth-child(1) td:nth-child(2)    £ 10,957
+    And the user sees the text in the element      jQuery=.grid-container table tr:nth-child(1) td:nth-child(2)    £ 83,761
 
 Project Manager can see Spend Profile in Progress
     [Documentation]    done during refactoring, no ticket attached

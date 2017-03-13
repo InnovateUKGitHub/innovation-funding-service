@@ -1009,7 +1009,7 @@ Confirming eligibility should show info on a readonly page
 Confirming eligibility should update on the finance checks page
     [Documentation]    INFUND-4823
     [Tags]
-    When the user clicks the button/link    link=Finance checks
+    When the user clicks the button/link    jQuery=.button-secondary:contains("Return to finance checks")
     Then the user should see the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Approved")
 
 Project finance user can see updated finance overview after lead changes to eligibility
@@ -1093,7 +1093,6 @@ Confirming eligibility should show info on a readonly page for partner
     And the user should see the text in the page  The partner's finance eligibility has been approved by Lee Bowman, ${today}
     And the user should not see the element    id=rag-rating
     And the user should not see the checkbox    project-eligible
-    And the user clicks the button/link    link=Finance checks
 
 Confirming eligibility should update on the finance checks page
     [Documentation]    INFUND-4823, INFUND-7076
@@ -1101,7 +1100,7 @@ Confirming eligibility should update on the finance checks page
     When the user clicks the button/link    link=Finance checks
     Then the user should see the element    jQuery=table.table-progress tr:nth-child(2) td:nth-child(4) a:contains("Approved")
     And The user should see the element    jQuery=.generate-spend-profile-main-button
-    And the user should not see the element    xpath=//*[@class='button generate-spend-profile-main-button' and @disabled='disabled']
+    And the user should see the element    xpath=//*[@class='button generate-spend-profile-main-button' and @disabled='disabled']
 
 
 Project finance user can see updated finance overview after partner changes to eligibility
@@ -1112,17 +1111,18 @@ Project finance user can see updated finance overview after partner changes to e
     And the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(4)    £ 87,847
     And the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(6)    28%
 
-Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
-    [Documentation]    INFUND-4428
-    [Tags]      HappyPath
-    [Setup]    Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
-    When the user navigates to the page    ${project_in_setup_page}
-    And the user should see the element    jQuery=ul li.complete:nth-child(1)
-    And the user should see the text in the page    Successful application
-    And the user should not see the element    jQuery=ul li.complete:nth-child(2)
-    And the user should not see the element    jQuery=ul li.complete:nth-child(4)
-    And the user should not see the element    jQuery=ul li.complete:nth-child(5)
-    And the user should not see the element    jQuery=ul li.read-only:nth-child(6)
+# TODO needs a new test to approve academic eligibility
+#Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
+#    [Documentation]    INFUND-4428
+#    [Tags]      HappyPath
+#    [Setup]    Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
+#    When the user navigates to the page    ${project_in_setup_page}
+#    And the user should see the element    jQuery=ul li.complete:nth-child(1)
+#    And the user should see the text in the page    Successful application
+#    And the user should not see the element    jQuery=ul li.complete:nth-child(2)
+#    And the user should not see the element    jQuery=ul li.complete:nth-child(4)
+#    And the user should not see the element    jQuery=ul li.complete:nth-child(5)
+#    And the user should not see the element    jQuery=ul li.read-only:nth-child(6)
 
 Status updates correctly for internal user's table
      [Documentation]    INFUND-4049,INFUND-5543
