@@ -62,7 +62,7 @@ Internal users can see Project Details not yet completed
     Then the user should not see the element       jQuery=#table-project-status tr:nth-child(1) td.status.ok a    #Check here that there is no Green-Check
     When the user clicks the button/link           jQuery=#table-project-status tr:nth-child(1) td:nth-child(2) a
     Then the user should see the text in the page  These project details were supplied by the lead partner on behalf of the project.
-    And the user should see the text in the page   Each partner must provide a finance contact. We will contact them with any queries around partner finances.
+    And the user should see the text in the page   Each partner must provide a finance contact. We will contact them with any finance queries.
     When the user should see the element           jQuery=#project-details
     Then the user should see the element           jQuery=#project-address:contains("Not yet completed")
     And the user should see the element            jQuery=#no-project-manager:contains("Not yet completed")
@@ -236,7 +236,7 @@ Lead partner can change the Start Date
     And Mouse Out    id=projectStartDate_year
     And wait for autosave
     When the user clicks the button/link    jQuery=.button:contains("Save")
-    Then The user redirects to the page    You are providing these details as the lead applicant on behalf of the overall project    Project details
+    Then The user redirects to the page    You are providing these details as the lead on behalf of the overall project    Project details
     And the user should see the text in the page    1 Jan ${nextyear}
     Then the matching status checkbox is updated    project-details    1    yes
     [Teardown]    the user changes the start date back again
@@ -307,7 +307,7 @@ Invited project manager registration flow
     And the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+invitedprojectmanager@gmail.com    Please verify your email address    Dear Bob Jones
     Then the user should see the text in the page    Account verified
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
-    And the guest user inserts user email & password    ${test_mailbox_one}+invitedprojectmanager@gmail.com    Passw0rd123
+    And the guest user inserts user email & password    ${test_mailbox_one}+invitedprojectmanager@gmail.com  ${correct_password}
     And the guest user clicks the log-in button
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_TITLE}
 
