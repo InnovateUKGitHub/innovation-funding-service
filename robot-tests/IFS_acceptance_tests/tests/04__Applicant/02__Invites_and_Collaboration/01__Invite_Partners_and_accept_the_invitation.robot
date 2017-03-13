@@ -219,11 +219,6 @@ Partner can invite others to his own organisation
     And the user clicks the button/link    jQuery=button:contains("Update organisation")
     Then The user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(3):contains("Pending")
 
-Partner cannot invite others to other organisations
-    [Documentation]    INFUND-2335
-    [Tags]    Email
-    Then the user should not see the element    jQuery=li:nth-child(1) button:contains("Add another person")
-
 Lead should see the accepted partner in the assign list
     [Documentation]    INFUND-1779
     [Tags]    HappyPath    Email
