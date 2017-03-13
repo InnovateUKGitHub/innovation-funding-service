@@ -70,7 +70,10 @@ public class ApplicationResearchCategoryServiceImpl extends BaseTransactionalSer
         Application origApplication = applicationRepository.findOne(application.getId());
 
         if (origApplication.getResearchCategory() == null || !origApplication.getResearchCategory().getId().equals(researchCategory.getId())) {
-            resetFundingLevelAndMarkAsIncompleteForAllCollaborators(application.getCompetition().getId(), application.getId());
+
+            markAsIncompleteForAllCollaborators(application.getCompetition().getId(), application.getId());
+
+            resetFundingLevels(application.getCompetition().getId(), application.getId());
         }
 
         application.setResearchCategory(researchCategory);
@@ -78,9 +81,7 @@ public class ApplicationResearchCategoryServiceImpl extends BaseTransactionalSer
         return serviceSuccess(applicationRepository.save(application));
     }
 
-    private void resetFundingLevelAndMarkAsIncompleteForAllCollaborators(Long competitionId, Long applicationId) {
-
-        Question financeQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.FINANCE).getSuccessObjectOrThrowException();
+    private void markAsIncompleteForAllCollaborators(Long competitionId, Long applicationId) {
 
         List<ProcessRoleResource> processRoles = usersRolesService.getAssignableProcessRolesByApplicationId(applicationId).getSuccessObjectOrThrowException();
 
@@ -93,16 +94,18 @@ public class ApplicationResearchCategoryServiceImpl extends BaseTransactionalSer
                                 sectionService.markSectionAsInComplete(fundingSection.getId(),
                                         applicationId, processRoleId))
         );
-
-        financeRowService.financeDetails(applicationId).getSuccessObjectOrThrowException().stream().forEach(applicationFinance -> {
-            resetFundingLevel(applicationFinance, financeQuestion.getId());
-        });
     }
 
-    private void resetFundingLevel(ApplicationFinanceResource applicationFinance, Long financeQuestionId) {
-        if (applicationFinance.getGrantClaim() != null) {
-            applicationFinance.getGrantClaim().setGrantClaimPercentage(0);
-            financeRowService.addCost(applicationFinance.getId(), financeQuestionId, applicationFinance.getGrantClaim());
-        }
+    private void resetFundingLevels(Long competitionId, Long applicationId) {
+
+        Question financeQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.FINANCE).getSuccessObjectOrThrowException();
+
+        financeRowService.financeDetails(applicationId).getSuccessObjectOrThrowException().stream().forEach(applicationFinance -> {
+
+            if (applicationFinance.getGrantClaim() != null) {
+                applicationFinance.getGrantClaim().setGrantClaimPercentage(0);
+                financeRowService.addCost(applicationFinance.getId(), financeQuestion.getId(), applicationFinance.getGrantClaim());
+            }
+        });
     }
 }
