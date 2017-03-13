@@ -5,7 +5,6 @@ import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.ViabilityRagStatus;
 import org.innovateuk.ifs.user.domain.Organisation;
-import org.innovateuk.ifs.user.resource.OrganisationSize;
 
 import javax.persistence.*;
 

@@ -3,7 +3,6 @@ package org.innovateuk.ifs.finance.resource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
-import org.innovateuk.ifs.user.resource.OrganisationSize;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -21,7 +20,7 @@ public abstract class BaseFinanceResource {
     protected Long id;
     protected Long organisation;
     protected Long target;
-    protected OrganisationSize organisationSize;
+    protected Long organisationSize;
     protected Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = new HashMap<>();
 
     public BaseFinanceResource(BaseFinanceResource originalFinance) {
@@ -37,7 +36,7 @@ public abstract class BaseFinanceResource {
     	// no-arg constructor
     }
 
-    public BaseFinanceResource(Long id, Long organisation, Long target, OrganisationSize organisationSize) {
+    public BaseFinanceResource(Long id, Long organisation, Long target, Long organisationSize) {
         this.id = id;
         this.organisation = organisation;
         this.target = target;
@@ -68,11 +67,11 @@ public abstract class BaseFinanceResource {
         this.target = target;
     }
 
-    public OrganisationSize getOrganisationSize() {
+    public Long getOrganisationSize() {
         return organisationSize;
     }
 
-    public void setOrganisationSize(OrganisationSize organisationSize) {
+    public void setOrganisationSize(Long organisationSize) {
         this.organisationSize = organisationSize;
     }
 

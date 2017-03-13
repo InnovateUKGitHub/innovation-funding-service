@@ -179,7 +179,7 @@ the Applicant edits Project summary and marks it as complete
 
 the question should be marked as complete on the application overview page
     The user clicks the button/link    link=Application Overview
-    The user should see the element    jQuery=#section-1 li:nth-child(2) span:contains("Completed")
+    The user should see the element    jQuery=#section-1 li:nth-child(2) span:contains("Complete")
 
 the text box should be editable
     Wait Until Element Is Enabled Without Screenshots    css=#form-input-11 textarea
@@ -191,7 +191,7 @@ the question should not be marked as complete on the application overview page
     The user clicks the button/link    link=Application Overview
     Run Keyword And Ignore Error Without Screenshots    confirm action
     the user should see the element    jQuery=#section-1 li:nth-child(2)
-    the user should not see the element    jQuery=#section-1 li:nth-child(2) span:contains("Completed")
+    the user should not see the element    jQuery=#section-1 li:nth-child(2) span:contains("Complete")
 
 The applicant navigates to the next section
     The user clicks the button/link    css=.next .pagination-label
