@@ -265,6 +265,8 @@ Guest user can see the updated Summary information
     And the user should see the element    jQuery=.column-third:contains("Funding type") ~ .column-two-thirds:contains("Grant")
     And the user should see the element    jQuery=.column-third:contains("Project size") ~ .column-two-thirds:contains("10 millions")
     And the user should see the element    jQuery=.column-third:contains("A nice new Heading") ~ .column-two-thirds:contains("Ut enim ad minim veniam,")
+    Then guest user downloads the file     ${server}/competition/${competitionId}/download/43  ${DOWNLOAD_FOLDER}/summary.pdf
+    [Teardown]  Remove the file from the operating system  summary.pdf
 
 Guest user can see the updated Eligibility information
     [Documentation]  INFUND-7487
@@ -274,10 +276,15 @@ Guest user can see the updated Eligibility information
     Then the user should see the element    jQuery=.column-third:contains("Minimum Eligibility Threshold") ~ .column-two-thirds:contains("new changes we are introducing")
     Then the user should see the element    jQuery=.column-third:contains("Draft Care and Support - Eligibility Criteria") ~ .column-two-thirds:contains("basic personal care activities")
 
-The guest user is able to download the file in the Summary
-    [Documentation]  INFUND-7486, INFUND-7487
-    [Tags]  Pending
-    # TODO Pending due to INFUND-8536
+Guest user downloads Eligibility files
+    [Documentation]  INFUND-7487
+    [Tags]
+    When guest user downloads the file  ${server}/competition/${competitionId}/download/44  ${DOWNLOAD_FOLDER}/eli.pdf
+    Then Remove the file from the operating system  eli.pdf
+    When guest user downloads the file  ${server}/competition/${competitionId}/download/45  ${DOWNLOAD_FOLDER}/eligi.pdf
+    Then Remove the file from the operating system  eligi.pdf
+    When guest user downloads the file   ${server}/competition/${competitionId}/download/46  ${DOWNLOAD_FOLDER}/eligibility.pdf
+    Then Remove the file from the operating system  eligibility.pdf
 
 The guest user can see updated scope information
     [Documentation]    INFUND-7488
@@ -285,8 +292,8 @@ The guest user can see updated scope information
     Given the user clicks the button/link    link=Scope
     Then the user should see the element      jQuery=.column-third:contains("Heading 1") ~ .column-two-thirds:contains("Content 1")
     And the user should see the element      jQuery=.column-third:contains("Heading 2") ~ .column-two-thirds:contains("Content 2")
-    And guest user downloads the file    ${server}/competition/15/download/48    ${DOWNLOAD_FOLDER}/scope.pdf
-    [Teardown]    remove the file from the operating system    scope.pdf
+    And guest user downloads the file   ${server}/competition/${competitionId}/download/48    ${DOWNLOAD_FOLDER}/scope.pdf
+    [Teardown]  Remove the file from the operating system  scope.pdf
 
 The guest user can see updated date information
    [Documentation]    INFUND-7489
@@ -306,6 +313,7 @@ Custom suite setup
     Set suite variable  ${nextyear}
     User creates a new competition   ${public_content_competition_name}
     ${competitionId}=  get comp id from comp title  ${public_content_competition_name}
+    set suite variable  ${competitionId}
     ${public_content_overview}=    catenate    ${server}/management/competition/setup/public-content/${competitionId}
     Set suite variable  ${public_content_overview}
     ${today} =  get today

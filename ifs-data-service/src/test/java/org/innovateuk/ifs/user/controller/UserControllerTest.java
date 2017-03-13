@@ -1,23 +1,28 @@
 package org.innovateuk.ifs.user.controller;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.*;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.time.LocalDateTime.now;
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.core.Is.is;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.token.resource.TokenType.VERIFY_EMAIL_ADDRESS;
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
-import static org.innovateuk.ifs.user.builder.ProfileContractResourceBuilder.newProfileContractResource;
+import static org.innovateuk.ifs.user.builder.ProfileAgreementResourceBuilder.newProfileAgreementResource;
 import static org.innovateuk.ifs.user.builder.ProfileSkillsEditResourceBuilder.newProfileSkillsEditResource;
 import static org.innovateuk.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
 import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
@@ -28,11 +33,6 @@ import static org.innovateuk.ifs.user.resource.UserRelatedURLs.URL_PASSWORD_RESE
 import static org.innovateuk.ifs.user.resource.UserRelatedURLs.URL_VERIFY_EMAIL;
 import static org.innovateuk.ifs.user.resource.UserStatus.INACTIVE;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
-import static java.time.LocalDateTime.now;
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -321,29 +321,29 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
     }
 
     @Test
-    public void getProfileContract() throws Exception {
+    public void getProfileAgreement() throws Exception {
         Long userId = 1L;
-        ProfileContractResource profileContract = newProfileContractResource().build();
+        ProfileAgreementResource profileAgreementResource = newProfileAgreementResource().build();
 
-        when(userProfileServiceMock.getProfileContract(userId)).thenReturn(serviceSuccess(profileContract));
+        when(userProfileServiceMock.getProfileAgreement(userId)).thenReturn(serviceSuccess(profileAgreementResource));
 
-        mockMvc.perform(get("/user/id/{id}/getProfileContract", userId))
+        mockMvc.perform(get("/user/id/{id}/getProfileAgreement", userId))
                 .andExpect(status().isOk())
-                .andExpect(content().string(toJson(profileContract)));
+                .andExpect(content().string(toJson(profileAgreementResource)));
 
-        verify(userProfileServiceMock, only()).getProfileContract(userId);
+        verify(userProfileServiceMock, only()).getProfileAgreement(userId);
     }
 
     @Test
-    public void updateProfileContract() throws Exception {
+    public void updateProfileAgreement() throws Exception {
         Long userId = 1L;
 
-        when(userProfileServiceMock.updateProfileContract(userId)).thenReturn(serviceSuccess());
+        when(userProfileServiceMock.updateProfileAgreement(userId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/user/id/{id}/updateProfileContract", userId))
+        mockMvc.perform(put("/user/id/{id}/updateProfileAgreement", userId))
                 .andExpect(status().isOk());
 
-        verify(userProfileServiceMock, only()).updateProfileContract(userId);
+        verify(userProfileServiceMock, only()).updateProfileAgreement(userId);
     }
 
     @Test
