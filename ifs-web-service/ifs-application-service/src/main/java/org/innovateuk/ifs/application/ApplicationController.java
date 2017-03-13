@@ -125,7 +125,7 @@ public class ApplicationController {
 
     @ProfileExecution
     @RequestMapping(value= "/{applicationId}", method = RequestMethod.GET)
-    public String applicationDetails(ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
+    public String applicationDetails(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
                                      HttpServletRequest request) {
 
         Long userId = userAuthenticationService.getAuthenticatedUser(request).getId();
@@ -135,7 +135,7 @@ public class ApplicationController {
 
     @ProfileExecution
     @RequestMapping(value= "/{applicationId}", method = RequestMethod.POST)
-    public String applicationDetails(@PathVariable("applicationId") final Long applicationId, HttpServletRequest request) {
+    public String applicationDetails(@PathVariable("applicationId") long applicationId, HttpServletRequest request) {
 
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ProcessRoleResource assignedBy = processRoleService.findProcessRole(user.getId(), applicationId);
@@ -147,8 +147,8 @@ public class ApplicationController {
     @ProfileExecution
     @RequestMapping("/{applicationId}/section/{sectionId}")
     public String applicationDetailsOpenSection(ApplicationForm form, Model model,
-                                     @PathVariable("applicationId") final Long applicationId,
-                                     @PathVariable("sectionId") final Long sectionId,
+                                     @PathVariable("applicationId") long applicationId,
+                                     @PathVariable("sectionId") long sectionId,
                                                 HttpServletRequest request){
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
@@ -168,7 +168,7 @@ public class ApplicationController {
 
     @ProfileExecution
     @RequestMapping(value = "/{applicationId}/summary", method = RequestMethod.GET)
-    public String applicationSummary(@ModelAttribute("form") ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
+    public String applicationSummary(@ModelAttribute("form") ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
                                      HttpServletRequest request) {
         List<FormInputResponseResource> responses = formInputResponseService.getByApplication(applicationId);
         model.addAttribute("incompletedSections", sectionService.getInCompleted(applicationId));
@@ -205,15 +205,15 @@ public class ApplicationController {
     }
 
     @RequestMapping(value = "/{applicationId}/question/{questionId}/feedback")
-    public String applicationAssessorQuestionFeedback(Model model, @PathVariable("applicationId") final Long applicationId,
-                                              @PathVariable("questionId") final Long questionId) {
+    public String applicationAssessorQuestionFeedback(Model model, @PathVariable("applicationId") long applicationId,
+                                              @PathVariable("questionId") long questionId) {
         model.addAttribute("model", assessorQuestionFeedbackPopulator.populate(applicationId, questionId));
         return "application-assessor-feedback";
     }
 
     @ProfileExecution
     @RequestMapping(value = "/{applicationId}/summary", method = RequestMethod.POST)
-    public String applicationSummarySubmit(@PathVariable("applicationId") final Long applicationId,
+    public String applicationSummarySubmit(@PathVariable("applicationId") long applicationId,
                                            HttpServletRequest request) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
 
@@ -242,7 +242,7 @@ public class ApplicationController {
 
     @ProfileExecution
     @RequestMapping("/{applicationId}/confirm-submit")
-    public String applicationConfirmSubmit(ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
+    public String applicationConfirmSubmit(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
                                            HttpServletRequest request){
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
@@ -252,7 +252,7 @@ public class ApplicationController {
     }
 
     @RequestMapping(value = "/{applicationId}/submit", method = RequestMethod.POST)
-    public String applicationSubmit(ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
+    public String applicationSubmit(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
                                     HttpServletRequest request, HttpServletResponse response){
     	UserResource user = userAuthenticationService.getAuthenticatedUser(request);
     	ApplicationResource application = applicationService.getById(applicationId);
@@ -271,7 +271,7 @@ public class ApplicationController {
 
     @ProfileExecution
     @RequestMapping("/{applicationId}/track")
-    public String applicationTrack(ApplicationForm form, Model model, @PathVariable("applicationId") final Long applicationId,
+    public String applicationTrack(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
                                     HttpServletRequest request){
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
@@ -288,7 +288,7 @@ public class ApplicationController {
     @ProfileExecution
     @RequestMapping(value = "/create/{competitionId}", method = RequestMethod.POST)
     public String applicationCreate(Model model,
-                                    @PathVariable("competitionId") final Long competitionId,
+                                    @PathVariable("competitionId") long competitionId,
                                     @RequestParam(value = "application_name", required = true) String applicationName,
                                     HttpServletRequest request){
         Long userId = userAuthenticationService.getAuthenticatedUser(request).getId();
@@ -317,9 +317,9 @@ public class ApplicationController {
 
     @RequestMapping(value = "/{applicationId}/assessorFeedback", method = GET)
     public @ResponseBody ResponseEntity<ByteArrayResource> downloadAssessorFeedbackFile(
-            @PathVariable("applicationId") final Long applicationId) {
+            @PathVariable("applicationId") long applicationId) {
 
-        final ByteArrayResource resource = assessorFeedbackRestService.getAssessorFeedbackFile(applicationId).getSuccessObjectOrThrowException();
+        ByteArrayResource resource = assessorFeedbackRestService.getAssessorFeedbackFile(applicationId).getSuccessObjectOrThrowException();
         FileEntryResource fileDetails = assessorFeedbackRestService.getAssessorFeedbackFileDetails(applicationId).getSuccessObjectOrThrowException();
         return getFileResponseEntity(resource, fileDetails);
     }
@@ -328,7 +328,7 @@ public class ApplicationController {
      * Printable version of the application
      */
     @RequestMapping(value="/{applicationId}/print")
-    public String printApplication(@PathVariable("applicationId") Long applicationId,
+    public String printApplication(@PathVariable("applicationId") long applicationId,
                                              Model model, HttpServletRequest request) {
         return applicationPrintPopulator.print(applicationId, model, request);
     }
@@ -343,8 +343,8 @@ public class ApplicationController {
      */
     @ProfileExecution
     @RequestMapping(value = "/{applicationId}/section/{sectionId}", method = RequestMethod.POST)
-    public String assignQuestion(@PathVariable("applicationId") final Long applicationId,
-                                 @PathVariable("sectionId") final Long sectionId,
+    public String assignQuestion(@PathVariable("applicationId") long applicationId,
+                                 @PathVariable("sectionId") long sectionId,
                                  HttpServletRequest request,
                                  HttpServletResponse response){
 

@@ -46,7 +46,7 @@ public class AssessorQuestionFeedbackPopulator {
     @Autowired
     private AssessorFormInputResponseRestService assessorFormInputResponseRestService;
 
-    public AssessQuestionFeedbackViewModel populate(Long applicationId, Long questionId) {
+    public AssessQuestionFeedbackViewModel populate(long applicationId, long questionId) {
 
         QuestionResource questionResource = questionService.getById(questionId);
 
