@@ -309,4 +309,4 @@ The user gets the expected validation errors
     And the user should see an error    ${ERROR2}
 
 The user enters the funding level
-    The applicant enters Org Size and Funding level  SMALL  20
+    The applicant enters Org Size and Funding level  ${SMALL_ORGANISATION_SIZE}  20
