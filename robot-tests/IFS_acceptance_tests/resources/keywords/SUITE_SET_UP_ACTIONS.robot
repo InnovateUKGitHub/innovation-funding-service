@@ -21,7 +21,7 @@ Login new application invite academic
     ...    AND    Delete the emails from both test mailboxes
     ...    AND    Invite and accept the invitation    ${recipient}    ${subject}    ${pattern}
     ...    AND    the user closes the browser
-git
+
 new account complete all but one
     Run keyword if    ${smoke_test}!=1    create new account for submitting
     Run keyword if    ${smoke_test}!=1    create new submit application
