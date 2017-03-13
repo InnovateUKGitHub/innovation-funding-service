@@ -71,8 +71,8 @@ Applicant visits his Finances
     [Tags]
     Given the user should see the element    jQuery=h1:contains("Application overview")
     When the user clicks the button/link    link=Your finances
-    Then the user should see the element    jQuery=img.assigned[alt*=project]
-    And the user should see the element    jQuery=img.assigned[alt*=organisation]
+    Then the user should see the element    jQuery=li:contains("Your project costs") > .action-required
+    And the user should see the element    jQuery=li:contains("Your organisation") > .action-required
     And the the user should see that the funding depends on the research area
     And the user should see his finances empty
     [Teardown]    the user clicks the button/link    jQuery=a:contains("Return to application overview")
@@ -168,7 +168,7 @@ Mark Organisation as complete when no
     And the user enters text to a text field    jQuery=label:contains("Turnover") + input    17506
     And the user selects medium organisation size
     When the user clicks the button/link    jQuery=button:contains("Mark as complete")
-    Then the user should see the element    jQuery=li:contains("Your organisation") > .complete
+    Then the user should see the element    jQuery=li:contains("Your organisation") > .task-status-complete
     When the user clicks the button/link    link=Your organisation
     # Then the user should see the fields in readonly mode, but currently they are missing this attribute
     # TODO INFUND-8071
@@ -187,8 +187,8 @@ Funding subsection opens when Appl details and organisation info are provided
     And the user clicks the button/link    link=${applicationTitle}
     When the user should see the element   jQuery=li:contains("Application details") > .task-status-complete
     And the user clicks the button/link    link=Your finances
-    And the user should see the element    jQuery=img.complete[alt*="Your organisation"]
-    Then the user should see the element    jQuery=img.assigned[alt*="Your funding"]
+    And the user should see the element    jQuery=li:contains("Your organisation") > .task-status-complete
+    Then the user should see the element    jQuery=li:contains("Your funding") > .action-required
 
 Organisation server side validation when yes
     [Documentation]    INFUND-6393
@@ -253,7 +253,7 @@ Mark Organisation as complete when yes
     #    And the user clicks the button/link    link=Your organisation
     #    Then the user should see the element    jQuery=td:contains("Research and development spend") + td input[value="15000"]
     When the user clicks the button/link    jQuery=button:contains("Mark as complete")
-    Then the user should see the element    jQuery=img.complete[alt*="Your organisation"]
+    Then the user should see the element    jQuery=li:contains("Your organisation") > .task-status-complete
 
 The Lead Applicant is able to edit and re-submit when yes
     [Documentation]  INFUND-8518
@@ -295,7 +295,7 @@ Non-lead can mark Organisation as complete
     Then the user populates the project growth table
     And the user enters text to a text field        jQuery=label:contains("employees") + input  42
     When the user clicks the button/link            jQuery=button:contains("Mark as complete")
-    Then the user should see the element            jQuery=img.complete[alt*="Your organisation"]
+    Then the user should see the element            jQuery=li:contains("Your organisation") > .task-status-complete
 
 Non-lead can can edit and remark Organisation as Complete
     [Documentation]  INFUND-8518
@@ -415,13 +415,13 @@ the applicant enters valid inputs
     The user clicks the button/link    jquery=button:contains("Save changes")
 
 the user can edit resubmit and read only of the organisation
-    the user should see the element             jQuery=img.complete[alt*="Your organisation"]
+    the user should see the element             jQuery=li:contains("Your organisation") > .task-status-complete
     the user clicks the button/link             link=Your organisation
     the user clicks the button/link             jQuery=button:contains("Edit your organisation")
     the user enters text to a text field        jQuery=label:contains("employees") + input  2
     the user clicks the button/link             jQuery=button:contains("Mark as complete")
     the user should not see an error in the page
-    the user should see the element             jQuery=img.complete[alt*="Your organisation"]
+    the user should see the element             jQuery=li:contains("Your organisation") > .task-status-complete
     the user clicks the button/link             link=Your organisation
     the user should see the element             jQuery=dt:contains("employees") + dd:contains("2")
 

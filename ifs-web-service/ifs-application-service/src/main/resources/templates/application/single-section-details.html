@@ -21,7 +21,7 @@
       <div class="task-status-complete"
            th:if="${(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) or completedSections.contains(section.id)}">
           <span class="visuallyhidden" th:text="${section.getName()}"></span>
-          <span>Completed</span>
+          <span>Complete</span>
       </div>
     </li>
   </th:block>
