@@ -23,21 +23,6 @@ public class ApplicationFundingDecisionRestServiceMocksTest extends BaseRestServ
     	applicationFundingDecisionRestService.setApplicationFundingDecisionRestURL(applicationFundingDecisionRestURL);
     	return applicationFundingDecisionRestService;
     }
-
-    @Test
-    @Deprecated
-    public void testMakeFundingDecision() {
-
-    	Long competitionId = 123L;
-    	Map<Long, FundingDecision> applicationIdToFundingDecision = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED, 3L, FundingDecision.FUNDED);
-    	
-        String expectedUrl = applicationFundingDecisionRestURL + "/" + 123 + "/submit";
-        setupPostWithRestResultExpectations(expectedUrl, applicationIdToFundingDecision, HttpStatus.OK);
-
-        RestResult<Void> result = service.makeApplicationFundingDecision(competitionId, applicationIdToFundingDecision);
-        assertNotNull(result);
-        Assert.assertEquals(HttpStatus.OK, result.getStatusCode());
-    }
     
     @Test
     public void testSaveFundingDecision() {

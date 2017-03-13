@@ -42,21 +42,6 @@ public class ApplicationFundingDecisionControllerDocumentation extends BaseContr
     }
     
     @Test
-    public void makeFundingDecision() throws Exception {
-    	Long competitionId = 1L;
-        Map<Long, FundingDecision> decision = MapFunctions.asMap(1L, FUNDED, 2L, UNFUNDED);
-
-        when(applicationFundingServiceMock.makeFundingDecision(competitionId, decision)).thenReturn(serviceSuccess());
-        when(applicationFundingServiceMock.notifyLeadApplicantsOfFundingDecisions(competitionId, decision)).thenReturn(serviceSuccess());
-        when(projectServiceMock.createProjectsFromFundingDecisions(decision)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(post("/applicationfunding/1/submit")
-	        		.contentType(MediaType.APPLICATION_JSON)
-	    			.content(objectMapper.writeValueAsString(decision)))
-                .andDo( this.document.snippets());
-    }
-    
-    @Test
     public void saveFundingDecisionData() throws Exception {
         Long competitionId = 1L;
         Map<Long, FundingDecision> decision = MapFunctions.asMap(1L, FUNDED, 2L, UNFUNDED);

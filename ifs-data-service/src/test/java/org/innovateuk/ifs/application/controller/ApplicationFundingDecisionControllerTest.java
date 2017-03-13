@@ -28,40 +28,6 @@ public class ApplicationFundingDecisionControllerTest extends BaseControllerMock
     }
 
     @Test
-    @Deprecated
-    public void applicationFundingDecisionControllerShouldReturnAppropriateStatusCode() throws Exception {
-        Long competitionId = 1L;
-        Map<Long, FundingDecision> decision = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED);
-
-        when(applicationFundingServiceMock.makeFundingDecision(competitionId, decision)).thenReturn(serviceSuccess());
-        when(applicationFundingServiceMock.notifyLeadApplicantsOfFundingDecisions(competitionId, decision)).thenReturn(serviceSuccess());
-        when(projectServiceMock.createProjectsFromFundingDecisions(decision)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(post("/applicationfunding/1/submit")
-        			.contentType(MediaType.APPLICATION_JSON)
-        			.content(objectMapper.writeValueAsString(decision)))
-                .andExpect(status().isOk())
-                .andExpect(content().string(""));
-    }
-
-    @Test
-    @Deprecated
-    public void makeFundingDecisionButErrorOccursSendingNotifications() throws Exception {
-        Long competitionId = 1L;
-        Map<Long, FundingDecision> decision = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED);
-
-        when(applicationFundingServiceMock.makeFundingDecision(competitionId, decision)).thenReturn(serviceSuccess());
-        when(applicationFundingServiceMock.notifyLeadApplicantsOfFundingDecisions(competitionId, decision)).thenReturn(serviceFailure(internalServerErrorError()));
-        when(projectServiceMock.createProjectsFromFundingDecisions(decision)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(post("/applicationfunding/1/submit")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(decision)))
-                .andExpect(status().isInternalServerError())
-                .andExpect(content().json(toJson(new RestErrorResponse(internalServerErrorError()))));
-    }
-    
-    @Test
     public void testSaveApplicationFundingDecisionData() throws Exception {
         Long competitionId = 1L;
         Map<Long, FundingDecision> decision = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED);

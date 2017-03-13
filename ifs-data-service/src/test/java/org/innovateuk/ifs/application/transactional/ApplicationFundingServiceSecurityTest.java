@@ -25,56 +25,6 @@ import static org.junit.Assert.*;
 public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTest<ApplicationFundingService> {
 
 	@Test
-	public void testFundingDecisionAllowedIfGlobalCompAdminRole() {
-
-		RoleResource compAdminRole = newRoleResource().withType(COMP_ADMIN).build();
-		setLoggedInUser(newUserResource().withRolesGlobal(singletonList(compAdminRole)).build());
-		classUnderTest.makeFundingDecision(123L, new HashMap<Long, FundingDecision>());
-	}
-
-	@Test
-	public void testFundingDecisionDeniedIfNotLoggedIn() {
-
-		setLoggedInUser(null);
-		try {
-			classUnderTest.makeFundingDecision(123L, new HashMap<Long, FundingDecision>());
-			fail("Should not have been able to make funding decision without first logging in");
-		} catch (AccessDeniedException e) {
-			// expected behaviour
-		}
-	}
-
-	@Test
-	public void testFundingDecisionDeniedIfNoGlobalRolesAtAll() {
-
-		try {
-			classUnderTest.makeFundingDecision(123L, new HashMap<Long, FundingDecision>());
-			fail("Should not have been able to make funding decision without the global comp admin role");
-		} catch (AccessDeniedException e) {
-			// expected behaviour
-		}
-	}
-
-	@Test
-	public void testFundingDecisionDeniedIfNotCorrectGlobalRoles() {
-
-		List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type != COMP_ADMIN && type != PROJECT_FINANCE)
-				.collect(toList());
-
-		nonCompAdminRoles.forEach(role -> {
-
-			setLoggedInUser(
-					newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
-			try {
-				classUnderTest.makeFundingDecision(123L, new HashMap<Long, FundingDecision>());
-				fail("Should not have been able to make funding decision without the global Comp Admin role");
-			} catch (AccessDeniedException e) {
-				// expected behaviour
-			}
-		});
-	}
-	
-	@Test
 	public void testSaveFundingDecisionDataAllowedIfGlobalCompAdminRole() {
 
 		RoleResource compAdminRole = newRoleResource().withType(COMP_ADMIN).build();
@@ -132,18 +82,7 @@ public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTe
 	public static class TestApplicationFundingService implements ApplicationFundingService {
 
 		@Override
-		public ServiceResult<Void> makeFundingDecision(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
-			return null;
-		}
-
-		@Override
 		public ServiceResult<Void> notifyLeadApplicantsOfFundingDecisions(NotificationResource notificationResource) {
-			return null;
-		}
-
-		@Override
-		@Deprecated
-		public ServiceResult<Void> notifyLeadApplicantsOfFundingDecisions(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
 			return null;
 		}
 
