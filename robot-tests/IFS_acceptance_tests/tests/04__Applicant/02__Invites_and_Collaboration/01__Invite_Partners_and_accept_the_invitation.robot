@@ -18,6 +18,8 @@ Documentation     INFUND-901: As a lead applicant I want to invite application c
 ...               INFUND-7974 As a lead applicant I want to edit my organisation
 ...
 ...               INFUND-7973 As a lead applicant I want to view my application team
+...
+...               INFUND-7979 As an lead applicant I want to add a new organisation
 Suite Setup       log in and create new application for collaboration if there is not one already
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
@@ -95,12 +97,14 @@ Lead Adds/Removes partner organisation
     [Documentation]    INFUND-1039
     ...
     ...    INFUND-7973
+    ...
+    ...    INFUND-7979
     [Tags]    HappyPath
     When The user clicks the button/link    jQuery=a:contains('Add partner organisation')
-    The user enters text to a text field    name=organisationName    Fannie May
-    The user enters text to a text field    name=applicants[0].name    Collaborator 2
-    The user enters text to a text field    name=applicants[0].email    ewan+10@hiveit.co.uk
-    The user clicks the button/link    jQuery=button:contains("Add organisation and invite applicants")
+    And The user enters text to a text field    name=organisationName    Fannie May
+    And The user enters text to a text field    name=applicants[0].name    Collaborator 2
+    And The user enters text to a text field    name=applicants[0].email    ewan+10@hiveit.co.uk
+    And The user clicks the button/link    jQuery=button:contains("Add organisation and invite applicants")
     And the user clicks the button/link    jQuery=a:contains("Update Fannie May")
     When The user clicks the button/link    jQuery=button:contains('Remove')
     And the user clicks the button/link    jQuery=.button:contains("Cancel")
@@ -113,6 +117,8 @@ Lead Adds/Removes partner organisation
 
 Partner organisation Server-side validations
     [Documentation]    INFUND-896
+    ...
+    ...    INFUND-7979
     [Tags]
     Given the user clicks the button/link    jQuery=a:contains('Add partner organisation')
     When The user enters text to a text field    name=organisationName    ${EMPTY}
@@ -125,6 +131,7 @@ Partner organisation Server-side validations
     And the user should see an error    Please enter an email address.
 
 Partner organisation Client-side validations
+    [Documentation]    INFUND-7979
     When The user enters text to a text field    name=organisationName    Fannie May
     And The user enters text to a text field    name=applicants[0].name    Adrian Booth
     And The user enters text to a text field    name=applicants[0].email    ${test_mailbox_one}+inviteorg${unique_email_number}@gmail.com
@@ -210,8 +217,11 @@ Lead should see the accepted partner in the assign list
     Then the user should see the element    jQuery=button:contains("Adrian Booth")
 
 Lead applicant invites a non registered user in the same organisation
-    [Documentation]    INFUND-928, INFUND-1463
-    ...    This test checks if the invited partner who are in the same organisation they can go directly to the create account and they don't have to create an organisation first.
+    [Documentation]    INFUND-928
+    ...
+    ...    INFUND-1463
+    ...
+    ...    INFUND-7979
     [Tags]
     [Setup]    Delete the emails from both test mailboxes
     Given the user navigates to the page    ${DASHBOARD_URL}
@@ -229,7 +239,6 @@ Lead applicant invites a non registered user in the same organisation
 
 Registered partner should not create new org but should follow the create account flow
     [Documentation]    INFUND-1463
-    ...    This test checks if the invited partner who are in the same organisation they can go directly to the create account and they don't have to create an organisation first.
     [Tags]    Email
     [Setup]    The guest user opens the browser
     When the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    participate in their application
