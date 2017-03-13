@@ -1,21 +1,23 @@
 *** Settings ***
-Documentation     INFUND-901: As a lead applicant I want to invite application contributors to collaborate with me on the application, so that they can contribute to the application in a collaborative competitio...
+Documentation     INFUND-901: As a lead applicant I want to invite application contributors to collaborate with me on the application, so...
 ...
-...               INFUND-928: As a lead applicant i want a separate screen within the application form, so that i can invite/track partners/contributors throughout the application process
+...               INFUND-928: As a lead applicant i want a separate screen within the application form...
 ...
-...               INFUND-929: As a lead applicant i want to be able to have a separate screen, so that i can invite contributors to the application
+...               INFUND-929: As a lead applicant i want to be able to have a separate screen...
 ...
-...               INFUND-1463: As a user with an invitation to collaborate on an application but not registered with IFS I want to be able to confirm my organisation so that I only have to create my account to work on the application
+...               INFUND-1463: As a user with an invitation to collaborate on an application but not registered with IFS I want to be able to confirm my organisation ...
 ...
 ...               INFUND-3742: The overview with contributors is not matching with actual invites
 ...
-...               INFUND-896: As a lead applicant i want to invite partner organisations to collaborate on line in my application, so that i can create the consortium needed to complete the proposed project
+...               INFUND-896: As a lead applicant i want to invite partner organisations to collaborate on line in my application...
 ...
 ...               INFUND-2375: Error message needed on contributors invite if user tries to add duplicate email address
 ...
-...               INFUND-4807 As an applicant (lead) I want to be able to remove an invited collaborator who is still pending registration so that I can manage members no longer required to be part of the consortium
+...               INFUND-4807 As an applicant (lead) I want to be able to remove an invited collaborator who is still pending registration...
 ...
 ...               INFUND-7974 As a lead applicant I want to edit my organisation
+...
+...               INFUND-7973 As a lead applicant I want to view my application team
 Suite Setup       log in and create new application for collaboration if there is not one already
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
@@ -28,6 +30,8 @@ ${INVITE_COLLABORATORS2_PAGE}    ${SERVER}/application/${OPEN_COMPETITION_APPLIC
 *** Test Cases ***
 Application team page
     [Documentation]    INFUND-928
+    ...
+    ...    INFUND-7973
     [Tags]    HappyPath
     [Setup]    The user navigates to the page    ${DASHBOARD_URL}
     Given the user clicks the button/link    link=Invite robot test application
@@ -35,6 +39,7 @@ Application team page
     Then the user should see the text in the page    Application team
     And the user should see the text in the page    View and manage your contributors and partners in the application.
     And the lead applicant should have the correct status
+    And the user should see the element    link=Application overview
 
 Lead Adds/Removes rows
     [Documentation]    INFUND-901
@@ -88,6 +93,8 @@ Autosaved works (in cookie)
 
 Lead Adds/Removes partner organisation
     [Documentation]    INFUND-1039
+    ...
+    ...    INFUND-7973
     [Tags]    HappyPath
     When The user clicks the button/link    jQuery=a:contains('Add partner organisation')
     The user enters text to a text field    name=organisationName    Fannie May
@@ -97,7 +104,7 @@ Lead Adds/Removes partner organisation
     And the user clicks the button/link    jQuery=a:contains("Update Fannie May")
     When The user clicks the button/link    jQuery=button:contains('Remove')
     And the user clicks the button/link    jQuery=.button:contains("Cancel")
-    Then the user should see the text in the page     Fannie May
+    Then the user should see the text in the page    Fannie May
     And the user clicks the button/link    jQuery=a:contains("Update Fannie May")
     And The user clicks the button/link    jQuery=button:contains('Remove')
     And the user clicks the button/link    jQuery=button:contains("Update organisation")
