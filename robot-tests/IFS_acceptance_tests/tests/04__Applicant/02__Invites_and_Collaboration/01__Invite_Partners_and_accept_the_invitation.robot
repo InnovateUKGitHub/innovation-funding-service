@@ -86,15 +86,6 @@ Lead organisation client-side validations
     Then the user cannot see a validation error in the page
     [Teardown]    The user clicks the button/link    link=Application team
 
-Autosaved works (in cookie)
-    [Documentation]    INFUND-1039
-    [Tags]    HappyPath    Pending
-    #Pending Infund 8709
-    #When The user clicks the button/link    jQuery=a:contains('Add partner organisation')
-    #And the applicant can enter Organisation name, Name and E-mail
-    When the user reloads the page
-    Then the applicant's inputs should be visible
-
 Lead Adds/Removes partner organisation
     [Documentation]    INFUND-1039
     ...
@@ -291,14 +282,6 @@ the user can see the updated company name throughout the application
     And the user clicks the button/link    link=${application_name}
     When the user clicks the button/link    link=view and add participants to your application
     Then the user should see the element    jQuery=h2:contains("NOMENSA LTD")
-
-the user fills the name and email field and reloads the page
-    [Arguments]    ${group_number}
-    The user should see the element    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1)
-    The user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    Collaborator01
-    The user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input    ewan+8@hiveit.co.uk
-    wait for autosave
-    the user reloads the page
 
 the lead applicant cannot be removed
     the user should see the text in the element    jQuery=tr:nth-of-type(1) td:nth-of-type(3)    Lead
