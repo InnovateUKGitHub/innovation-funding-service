@@ -30,7 +30,7 @@ Comp Admin starts a new Competition
     Then the user fills in the CS Initial details    ${compWithoutGrowth}    ${day}    ${month}    ${year}
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility
-    And the user fills in the CS Milestones    ${day}    ${month}    ${nextyear}
+    And the user fills in the CS Milestones    ${todayday}    ${day}    ${month}    ${nextyear}
 
 Comp Admin fills in the Milestone Dates and can see them formatted afterwards
     [Documentation]    INFUND-7820
@@ -110,7 +110,7 @@ Once the project growth table is selected
     Then the user fills in the CS Initial details    Competition with growth table    ${day}    ${month}    ${year}
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility
-    And the user fills in the CS Milestones    ${day}    ${month}    ${nextyear}
+    And the user fills in the CS Milestones    ${todayday}    ${day}    ${month}    ${nextyear}
     When the user decides about the growth table    yes    Yes
     Then the user marks the Application as done
     And the user fills in the CS Assessors
@@ -305,6 +305,8 @@ Non-lead can can edit and remark Organisation as Complete
 
 *** Keywords ***
 Custom Suite Setup
+    ${todayday} =    get today day
+    Set suite variable    ${todayday}
     ${day} =    get tomorrow day
     Set suite variable    ${day}
     ${month} =    get tomorrow month
@@ -320,7 +322,7 @@ Custom Suite Setup
     Delete the emails from both test mailboxes
 
 the user should see the dates in full format
-    the user should see the element    jQuery=td:contains("Briefing event") ~ td:contains("${tomorrow_nextyear}")
+    the user should see the element    jQuery=td:contains("Allocate assessors") ~ td:contains("${tomorrow_nextyear}")
 
 the the user should see that the funding depends on the research area
     the user should see the element    jQuery=h3:contains("Your funding") + p:contains("You must select a research category in application details ")
