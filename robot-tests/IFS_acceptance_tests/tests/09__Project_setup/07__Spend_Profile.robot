@@ -159,18 +159,18 @@ Lead partner can edit his spend profile with invalid values
     When the user clicks the button/link               jQuery=.button:contains("Edit spend profile")
     Then the user should not see the text in the element  css=#content > form   -
     And the text box should be editable               css=#row-40-0  # Labour-June17
-    When the user enters text to a text field          css=#row-40-0    5236
+    When the user enters text to a text field          css=#row-40-0    520
     And the user moves focus to the element            css=#row-40-2
     Then the user should see the text in the page      Unable to submit spend profile.
     And the user should see the text in the page       Your total costs are higher than your eligible costs
-    Then the field has value                           css=#row-total-40    £ 10,000
-    And the user should see the element                jQuery=.cell-error #row-total-24
+    Then the field has value                           css=#row-total-40    £ 5,000
+    And the user should see the element                jQuery=.cell-error #row-total-40
     And the user clicks the button/link                jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should see the text in the page      You cannot submit your spend profile. Your total costs are higher than the eligible project costs.
     And the user should see the element                jQuery=.error-summary-list li:contains("Labour")
     When the user clicks the button/link               jQuery=.button:contains("Edit spend profile")
     Then the user enters text to a text field          css=#row-40-0    142
-    And the user should not see the element            jQuery=.cell-error #row-total-24
+    And the user should not see the element            jQuery=.cell-error #row-total-40
     When the user enters text to a text field          css=#row-42-2    -55  # Materials-Aug17
     And the user moves focus to the element            css=#row-42-1
     Then the user should see the element               jQuery=.error-summary-list li:contains("This field should be 0 or higher")
@@ -208,11 +208,11 @@ Lead partner can edit his spend profile with valid values
     Then the text box should be editable                css=#row-40-0  # Labour
     When the user enters text to a text field           css=#row-40-0    140
     And the user moves focus to the element             css=#row-40-1
-    Then the field has value                            css=#row-total-24    £ 4,620
+    Then the field has value                            css=#row-total-40    £ 4,620
     And the user should not see the text in the page    Unable to save spend profile
     When the user enters text to a text field           css=#row-44-1    0  # Subcontracting
     And the user moves focus to the element             css=#row-44-2
-    Then the field has value                            css=#row-total-28    £ 131,250
+    Then the field has value                            css=#row-total-44    £ 131,250
     And the user should not see the text in the page    Unable to save spend profile
     Then the user clicks the button/link                jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should not see the text in the page   You cannot submit your spend profile. Your total costs are higher than the eligible project costs.
@@ -222,7 +222,7 @@ Lead Partners Spend profile summary gets updated when edited
     [Tags]    HappyPath
     Given the user navigates to the page           ${external_spendprofile_summary}/review
     Then the user should see the text in the page  Project costs for financial year
-    And the user sees the text in the element      jQuery=.grid-container table tr:nth-child(1) td:nth-child(2)    £ 83,761
+    And the user sees the text in the element      jQuery=.grid-container table tr:nth-child(1) td:nth-child(2)    £ 80,009
 
 Project Manager can see Spend Profile in Progress
     [Documentation]    done during refactoring, no ticket attached
@@ -353,9 +353,9 @@ Academic partner spend profile server side validations
     [Documentation]    INFUND-5846
     [Tags]
     Given the user clicks the button/link            jQuery=.button:contains("Edit spend profile")
-    When the user enters text to a text field        css=#row-31-0    -1    # Directly incurredStaff
-    And the user enters text to a text field         css=#row-32-2    3306  # Travel and subsistence
-    And the user moves focus to the element          css=#row-33-5
+    When the user enters text to a text field        css=#row-47-0    -1    # Directly incurredStaff
+    And the user enters text to a text field         css=#row-48-2    3306  # Travel and subsistence
+    And the user moves focus to the element          css=#row-49-5
     And the user clicks the button/link              jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should see the text in the page    Your total costs are higher than your eligible costs.
     And the user should see the text in the page     This field should be 0 or higher.
@@ -363,21 +363,21 @@ Academic partner spend profile server side validations
 Academic partner spend profile client side validations
     [Documentation]    INFUND-5846
     [Tags]
-    When the user enters text to a text field          css=#row-31-0    3  # Staff
-    And the user enters text to a text field           css=#row-32-0    1  # Travel
-    And the user enters text to a text field           css=#row-33-0    1  # Other - Directly incurred
-    And the user enters text to a text field           css=#row-35-0    2  # Estates
-    And the user enters text to a text field           css=#row-36-0    0  # Other - Directly allocated
-    And the user enters text to a text field           css=#row-39-0    0  # Other - Exceptions
+    When the user enters text to a text field          css=#row-47-0    3  # Staff
+    And the user enters text to a text field           css=#row-48-0    1  # Travel
+    And the user enters text to a text field           css=#row-49-0    1  # Other - Directly incurred
+    And the user enters text to a text field           css=#row-50-0    2  # Estates
+    And the user enters text to a text field           css=#row-51-0    0  # Other - Directly allocated
+    And the user enters text to a text field           css=#row-55-0    0  # Other - Exceptions
     And the user moves focus to the element            link=Project setup status
     Then the user should not see the text in the page  This field should be 0 or higher
-    When the user makes all values zeros               32    ${project_duration}  # Travel
-    Then the user makes all values zeros               33    ${project_duration}  # Other - Directly incurred
-    And the user makes all values zeros                35    ${project_duration}  # Estates
-    When the user enters text to a text field          css=#row-36-1    0  # Other - Directly allocated
-    And the user enters text to a text field           css=#row-36-2    0  # Other - Directly allocated
-    And the user enters text to a text field           css=#row-39-1    0  # Other - Exceptions
-    And the user enters text to a text field           css=#row-39-2    0  # Other - Exceptions
+    When the user makes all values zeros               48    ${project_duration}  # Travel
+    Then the user makes all values zeros               49    ${project_duration}  # Other - Directly incurred
+    And the user makes all values zeros                51    ${project_duration}  # Estates
+    When the user enters text to a text field          css=#row-52-1    0  # Other - Directly allocated
+    And the user enters text to a text field           css=#row-52-2    0  # Other - Directly allocated
+    And the user enters text to a text field           css=#row-55-1    0  # Other - Exceptions
+    And the user enters text to a text field           css=#row-55-2    0  # Other - Exceptions
     And the user should not see the text in the page   Your total costs are higher than your eligible costs
     #TODO Replace keyword -the user makes all values zeros- ticket: INFUND-6851
 
