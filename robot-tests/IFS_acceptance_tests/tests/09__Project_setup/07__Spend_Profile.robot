@@ -276,7 +276,7 @@ Non-lead partner can view spend profile page
     And the user should see the text in the page    We have reviewed and confirmed your project costs.
     And the user should see the text in the page    ${Meembee_Name} - Spend profile
     And the user clicks the button/link    link=Project setup status
-    And the user should see the text in the page    You need to complete the following steps before this project can begin.
+    And the user should see the text in the page    You need to complete the following steps before you can start your project.
     [Teardown]    the user goes back to the previous page
 
 Non-lead partner can see correct project start date and duration
@@ -332,7 +332,7 @@ Academic partner can view spend profile page
     And the user should see the text in the page    We have reviewed and confirmed your project costs.
     And the user should see the text in the page    ${Zooveo_Name} - Spend profile
     And the user clicks the button/link    link=Project setup status
-    And the user should see the text in the page    You need to complete the following steps before this project can begin.
+    And the user should see the text in the page    You need to complete the following steps before you can start your project.
     [Teardown]    the user goes back to the previous page
 
 Academic partner can see correct project start date and duration

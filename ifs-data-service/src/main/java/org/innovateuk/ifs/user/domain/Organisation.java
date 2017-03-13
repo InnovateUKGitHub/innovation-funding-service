@@ -5,7 +5,6 @@ import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.domain.AddressType;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
-import org.innovateuk.ifs.user.resource.OrganisationSize;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -22,9 +21,6 @@ public class Organisation {
     private Long id;
     private String name;
     private String companyHouseNumber; // might start with zero, so use a string.
-
-    @Enumerated(EnumType.STRING)
-    private OrganisationSize organisationSize;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private OrganisationType organisationType;
@@ -52,11 +48,10 @@ public class Organisation {
         this.id = id;
         this.name = name;
     }
-    public Organisation(Long id, String name, String companyHouseNumber, OrganisationSize organisationSize) {
+    public Organisation(Long id, String name, String companyHouseNumber) {
         this.id = id;
         this.name = name;
         this.companyHouseNumber = companyHouseNumber;
-        this.organisationSize = organisationSize;
     }
 
     public Long getId() {
@@ -107,14 +102,6 @@ public class Organisation {
     public void addAddress(Address address, AddressType addressType){
         OrganisationAddress organisationAddress = new OrganisationAddress(this, address, addressType);
         this.addresses.add(organisationAddress);
-    }
-
-    public OrganisationSize getOrganisationSize() {
-        return organisationSize;
-    }
-
-    public void setOrganisationSize(OrganisationSize organisationSize) {
-        this.organisationSize = organisationSize;
     }
 
     public void setUsers(List<User> users) {

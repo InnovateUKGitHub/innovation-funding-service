@@ -4,7 +4,7 @@
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Eligibility'" />
 </head>
 
-<body th:with="context='project-management'" class="eligibility-form">
+<body th:with="context='project-management'" class="eligibility-form finance">
 <th:block th:insert="fragments/modals :: modal-overlay" />
 
 <th:block th:insert="fragments/layout :: body-start" />
@@ -13,8 +13,8 @@
 <main id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
 
-    <div th:if="${summaryModel.isReadOnly()}" th:include="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/partner-organisation/{organisationId}/finance-checks(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})},currentCompetition=null" />
-    <div th:unless="${summaryModel.isReadOnly()}" th:include="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})},currentCompetition=null" />
+    <div th:if="${summaryModel.isReadOnly()}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/partner-organisation/{organisationId}/finance-checks(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})},currentCompetition=null" />
+    <div th:unless="${summaryModel.isReadOnly()}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})},currentCompetition=null" />
 
     <div class="page-title">
         <th:block th:insert="fragments/elements :: project-title (projectId=${summaryModel.projectId}, projectName=${summaryModel.projectName})" />
@@ -70,8 +70,11 @@
                  th:if="${subSections !=null}">
             <h3>
                 <th:block th:text="${subSection.getName()}"/>
-                <span data-calculation-format="percentage" data-calculation-operations="/,*"
-                      th:attr="data-mirror='#section-percentage-'+${subSection.id},data-calculation-fields='100, #total-cost, #section-total-'+${subSection.id}"></span>
+            <span class="finance-total" th:attr="data-mirror='#section-total-'+${subSection.id}"></span>
+            <span class="finance-total" data-calculation-format="percentage" data-calculation-operations="/,*"
+                  th:attr="data-mirror='#section-percentage-'+${subSection.id},data-calculation-fields='100, #total-cost, #section-total-'+${subSection.id}"></span>
+
+            <span class="finance-total" th:if="${subSection.name == 'Overhead costs'}">(<span data-calculation-format="percentage" data-calculation-operations="/,*" data-calculation-fields="[data-current-overhead-total], #section-total-114,100"></span> of Labour)</span>
             </h3>
             <div class="collapsible-content"
                  th:with="viewmode=${summaryModel.isApproved()} ? 'approved' : (${param.section != null} ? (${param.section[0]} == ${subSection.id} ? 'edit' : 'readonly') : 'readonly')">
@@ -151,7 +154,7 @@
                 </select>
             </div>
             <button type="button" data-js-modal="modal-confirm-eligibility" class="button" id="confirm-button">Approve eligible costs</button>
-            <th:block  th:include="fragments/modals :: modal-confirm-eligibility" />
+            <th:block th:insert="fragments/modals :: modal-confirm-eligibility" />
         </th:block>
         <hr/>
         <button th:if="${summaryModel.showSaveAndContinueButton}" class="button-secondary" name="save-and-continue">Return to finance checks</button>
@@ -161,6 +164,7 @@
         <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId},query_section=${T(org.innovateuk.threads.resource.FinanceChecksSectionType).ELIGIBILITY.name()})}" class="button button-secondary">Queries</a>
         <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/note(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}" class="button button-secondary">Notes</a>
     </div>
+
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 <th:block th:insert="fragments/layout :: footer" />
