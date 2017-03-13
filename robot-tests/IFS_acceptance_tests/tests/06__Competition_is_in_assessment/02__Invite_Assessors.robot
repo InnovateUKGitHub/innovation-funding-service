@@ -24,6 +24,8 @@ Documentation     INFUND-6604 As a member of the competitions team I can view th
 ...               INFUND-6669 As a member of the competitions team I can view an assessors profile so that I can decide if they are suitable to assess the competition
 ...
 ...               INFUND-6388 As a member of the competitions team I can see the key statistics on the Invite Assessors dashboard so that I can easily see how invitations are progressing
+...
+...               INFUND-6403 Filter and Pagination on 'Find' tab of Invite dashboard
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin    Assessor
@@ -57,10 +59,38 @@ The User can Add and Remove Assessors
     Then The user should not see the text in the page    Will Smith
     [Teardown]    The user clicks the button/link    link=Find
 
+Filter on innovation area
+    [Documentation]    INFUND-6403
+    [Tags]
+    Given the user selects the option from the drop-down menu    Offshore wind    id=filterInnovationArea
+    When the user clicks the button/link    jQuery=button:contains(Filter)
+    Then the user should see the element    jQuery=td:contains("Laura Weaver")
+    And the user should not see the element    jQuery=td:contains("Addison Shannon")
+    And the user clicks the button/link    jQuery=a:contains("Clear all filters")
+    And the user should not see the element    jQuery=td:contains("Laura Weaver")
+    And the user should see the element    jQuery=td:contains("Addison Shannon")
+
+Next/Previous pagination on Find tab
+    [Documentation]    INFUND-6403
+    [Tags]
+    When the user clicks the button/link    jQuery=.pagination-label:contains(Next)
+    Then the user should see the element    jQuery=.pagination-part-title:contains(1 to 20)
+    And the user should see the element    jQuery=.pagination-part-title:contains(41 to)
+    And the user clicks the button/link    jQuery=.pagination-label:contains(Previous)
+    And the user should not see the element    jQuery=.pagination-label:contains(Previous)
+    And the user should not see the element    jQuery=.pagination-part-title:contains(41 to)
+
+Page list pagination on Find tab
+    [Documentation]    INFUND-6403
+    [Tags]
+    When the user clicks the button/link    jQuery=a:contains(41 to)
+    Then the user should see the element    jQuery=.pagination-label:contains(Previous)
+    And the user should not see the element    jQuery=.pagination-label:contains("Next)
+
 The user can select the profile link
     [Documentation]    INFUND-6669
     [Tags]
-    [Setup]  the user clicks the button/link    jQuery=a:contains(41 to)
+    [Setup]
     When the user clicks the button/link    link=Will Smith
     Then the user should see the text in the page    will.smith@gmail.com
     And the user should see the text in the page    028572565937

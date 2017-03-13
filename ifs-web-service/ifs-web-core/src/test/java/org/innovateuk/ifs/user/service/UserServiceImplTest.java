@@ -16,7 +16,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
-import static org.innovateuk.ifs.user.builder.ProfileContractResourceBuilder.newProfileContractResource;
+import static org.innovateuk.ifs.user.builder.ProfileAgreementResourceBuilder.newProfileAgreementResource;
 import static org.innovateuk.ifs.user.builder.ProfileSkillsEditResourceBuilder.newProfileSkillsEditResource;
 import static org.innovateuk.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
 import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
@@ -123,27 +123,27 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     }
 
     @Test
-    public void getProfileContract() throws Exception {
+    public void getProfileAgreement() throws Exception {
         Long userId = 1L;
-        ProfileContractResource expected = newProfileContractResource().build();
+        ProfileAgreementResource expected = newProfileAgreementResource().build();
 
-        when(userRestService.getProfileContract(userId)).thenReturn(restSuccess(expected));
+        when(userRestService.getProfileAgreement(userId)).thenReturn(restSuccess(expected));
 
-        ProfileContractResource response = service.getProfileContract(userId);
+        ProfileAgreementResource response = service.getProfileAgreement(userId);
         assertSame(expected, response);
-        verify(userRestService, only()).getProfileContract(userId);
+        verify(userRestService, only()).getProfileAgreement(userId);
     }
 
     @Test
-    public void updateProfileContract() throws Exception {
+    public void updateProfileAgreement() throws Exception {
         Long userId = 1L;
 
-        when(userRestService.updateProfileContract(userId)).thenReturn(restSuccess());
+        when(userRestService.updateProfileAgreement(userId)).thenReturn(restSuccess());
 
-        ServiceResult<Void> response = service.updateProfileContract(userId);
+        ServiceResult<Void> response = service.updateProfileAgreement(userId);
         assertTrue(response.isSuccess());
 
-        verify(userRestService, only()).updateProfileContract(userId);
+        verify(userRestService, only()).updateProfileAgreement(userId);
     }
 
     @Test
