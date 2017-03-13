@@ -139,7 +139,7 @@ File upload mandatory for Academic partner to mark section as complete
     then the user should see a field error     css=a.uploaded-file
 
 Applicant chooses Calculate overheads option
-    [Documentation]     INFUND-6788   INFUND-8191
+    [Documentation]     INFUND-6788, INFUND-8191
     [Tags]
     [Setup]  log in as a different user    &{lead_applicant_credentials}
     When the user navigates to Your-finances page     ${Competition_E2E}
