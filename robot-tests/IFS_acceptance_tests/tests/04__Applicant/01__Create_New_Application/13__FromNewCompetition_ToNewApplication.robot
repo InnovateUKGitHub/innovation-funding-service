@@ -320,7 +320,7 @@ Custom Suite Setup
     Delete the emails from both test mailboxes
 
 the user should see the dates in full format
-    the user should see the element    jQuery=td:contains("Briefing event") ~ td:contains("${tomorrow_nextyear}")
+    the user should see the element    jQuery=td:contains("Allocate assessors") ~ td:contains("${tomorrow_nextyear}")
 
 the the user should see that the funding depends on the research area
     the user should see the element    jQuery=h3:contains("Your funding") + p:contains("You must select a research category in application details ")
