@@ -28,7 +28,7 @@ The assign container is normally a `<select>`, which gets progressivly transform
     position:relative;
     @include inline-block;
 
-    &--block{
+    &--alert{
       display: block;
       margin-bottom: 30px;
       background: $panel-colour;

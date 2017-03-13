@@ -18,7 +18,7 @@
     <div th:fragment="textinput" class="form-group " th:classappend="${#fields.hasErrors(validationId)} ? adminclass : userclass">
 
         <label class="form-label form-label-bold" th:for="${formInput.getId()}">
-          <span th:if="${question.getName()}" th:text="question.getName()" />
+          <span class="heading-medium" th:if="${question.getName()}" th:text="question.getName()" />
           <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.getDescription()})" />
           <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" />
         </label>
@@ -32,8 +32,14 @@
 
     <div th:fragment="textarea"  class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.getId()}__]')} ? error : ''">
 
-        <th:block th:insert="question-type/form-elements :: ready-for-review" th:if="${!userIsLeadApplicant}" th:with="displayBlock=${true}" />
         <th:block th:insert="question-type/form-elements :: assign-buttons" th:unless="${readonly} or ${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} or ${!userIsLeadApplicant}" th:with="displayBlock=${true}" />
+
+        <th:block th:if="${!userIsLeadApplicant}">
+            <div class="assign-container assign-container--alert">
+                <th:block th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
+                          th:include="question-type/form-elements :: current-assignee"/>
+            </div>
+        </th:block>
 
         <div th:unless="${readonly}" class="textarea-header">
 

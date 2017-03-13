@@ -364,6 +364,10 @@ td.autosave-info {
     min-height: 1em;
   }
 
+  .update-details{
+    margin-right: 1em;
+  }
+
   @include media-down(mobile) {
     .alignright{
       text-align: left;

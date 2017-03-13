@@ -229,6 +229,8 @@
                     <!--/*  we show mark as complete buttons and the question should be assigned to you or */-->
                     <th:block th:if="${userIsLeadApplicant}" th:include="question-type/form-elements :: form-mark-as-complete-buttons" />
                 </th:block>
+
+                <th:block th:insert="question-type/form-elements :: ready-for-review" th:if="${!userIsLeadApplicant}" th:with="displayBlock=${true}" />
             </div>
 
             <div class="column-three-quarters alignright">
@@ -249,9 +251,6 @@
             </div>
 
         </div>
-
-        <th:block th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
-                  th:include="question-type/form-elements :: current-assignee" />
 
     </div>
 </th:block>
@@ -284,7 +283,7 @@
   </div>
 </th:block>
 <th:block th:fragment="assign-buttons">
-    <div class="assign-container" th:classappend="${displayBlock} ? 'assign-container--block'" th:if="${question.isAssignEnabled()}">
+    <div class="assign-container" th:classappend="${displayBlock} ? 'assign-container--alert'" th:if="${question.isAssignEnabled()}">
         <div class="assign-button">
               <th:block th:insert="question-type/form-elements :: assigned-to" />
         </div>
@@ -307,10 +306,14 @@
               </select>
               <button type="submit">Reassign</button>
         </div>
+        <th:block th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
+                  th:include="question-type/form-elements :: current-assignee" />
     </div>
     <th:block th:unless="${question.isAssignEnabled()}">
       <th:block th:insert="question-type/form-elements :: assigned-to" />
     </th:block>
+
+
 </th:block>
 <!-- ========================= Assigned to =========================== -->
 <th:block th:fragment="assigned-to">
