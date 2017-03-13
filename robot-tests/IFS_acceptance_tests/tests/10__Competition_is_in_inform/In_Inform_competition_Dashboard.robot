@@ -39,46 +39,48 @@ Milestones for the In inform competition
 
 Release feedback
     [Documentation]    INFUND-8050
+    [Tags]    Email
     When The user clicks the button/link    jQuery=button:contains("Release feedback")
     Then The user should not see the text in the page    Inform
     When The user clicks the button/link    jQuery=a:contains(Live)
     Then The user should not see the text in the page    ${INFORM_COMPETITION_NAME}
-    And the user reads his email    ${test_mailbox_two}+releasefeedback@gmail.com   Feedback for your application    The feedback provided by the independent assessors has been reviewed by Innovate UK
-
+    And the user reads his email    ${test_mailbox_two}+releasefeedback@gmail.com    Feedback for your application    The feedback provided by the independent assessors has been reviewed by Innovate UK
 
 Unsuccessful applicant sees unsuccessful alert
     [Documentation]    INFUND-7861
+    [Tags]    Email
     [Setup]    log in as a different user    &{unsuccessful_released_credentials}
     Given the user should see the element    jQuery=.status:contains("Unsuccessful")
-    When the user clicks the button/link     jQuery=a:contains("Electric Drive")
-    And the user should see the element      jQuery=.warning-alert:contains("Your application has not been successful in this competition")
+    When the user clicks the button/link    jQuery=a:contains("Electric Drive")
+    And the user should see the element    jQuery=.warning-alert:contains("Your application has not been successful in this competition")
 
 Successful applicant see successful alert
     [Documentation]    INFUND-7861
+    [Tags]    Email
     [Setup]    log in as a different user    &{successful_released_credentials}
     Given the user should see the element    jQuery=.status:contains("Successful")
-    When the user clicks the button/link     jQuery=.previous-applications a:contains("High Performance Gasoline Stratified")
-    Then the user should see the element      jQuery=.success-alert:contains("Congratulations, your application has been successful")
+    When the user clicks the button/link    jQuery=.previous-applications a:contains("High Performance Gasoline Stratified")
+    Then the user should see the element    jQuery=.success-alert:contains("Congratulations, your application has been successful")
 
 View feedback from each assessor
     [Documentation]    INFUND-8172
-    [Tags]
+    [Tags]    Email
     Then the user should see the element    jQuery=h3:contains("Assessor 1") ~ p:contains("I have no problem recommending this application")
-    And the user should see the element     jQuery=h3:contains("Assessor 2") ~ p:contains("Very good, but could have been better in areas")
-    And the user should see the element     jQuery=h3:contains("Assessor 3") ~ p:contains("I enjoyed reading this application, well done")
+    And the user should see the element    jQuery=h3:contains("Assessor 2") ~ p:contains("Very good, but could have been better in areas")
+    And the user should see the element    jQuery=h3:contains("Assessor 3") ~ p:contains("I enjoyed reading this application, well done")
 
 Overall scores and application details are correct
-    [Documentation]    INFUND-8169   INFUND-7861
-    [Tags]
+    [Documentation]    INFUND-8169 INFUND-7861
+    [Tags]    Email
     Then the overall scores are correct
     And the application question scores are correct
     And the application details are correct
 
 The finance details are shown
     [Documentation]    INFUND-8168
-    [Tags]
-    When the user clicks the button/link     jQuery=.collapsible button
-    Then the user should see the element     jQuery=.collapsible div[aria-hidden="false"]
+    [Tags]    Email
+    When the user clicks the button/link    jQuery=.collapsible button
+    Then the user should see the element    jQuery=.collapsible div[aria-hidden="false"]
     And the user should not see the element    jQuery=.collapsible div[aria-hidden="true"]
 
 *** Keywords ***
