@@ -26,7 +26,6 @@ import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.OrganisationSize;
 import org.innovateuk.threads.resource.QueryResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -117,7 +116,6 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
         industrialOrganisation = newOrganisationResource().
                 withId(2L).
                 withName("Industrial Org").
-                withOrganisationSize(OrganisationSize.MEDIUM).
                 withCompanyHouseNumber("123456789").
                 withOrganisationTypeName("Business").
                 build();
@@ -125,7 +123,6 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
         academicOrganisation = newOrganisationResource().
                 withId(1L).
                 withName("Academic Org").
-                withOrganisationSize(OrganisationSize.LARGE).
                 build();
 
         // save actions should always succeed.
