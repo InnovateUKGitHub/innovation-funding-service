@@ -150,7 +150,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         CompetitionFundedKeyStatisticsResource keyStatisticsResource =
                 competitionKeyStatisticsService.getFundedKeyStatisticsByCompetition(competitionId)
                         .getSuccessObjectOrThrowException();
-        if (keyStatisticsResource.getCanReleaseFeedback()) {
+        if (keyStatisticsResource.isCanReleaseFeedback()) {
             Competition competition = competitionRepository.findById(competitionId);
             competition.releaseFeedback(LocalDateTime.now());
             return serviceSuccess();

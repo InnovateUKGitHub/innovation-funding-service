@@ -66,8 +66,8 @@ public class CompetitionInFlightStatsViewModel {
         this.statFour = keyStatisticsResource.getApplicationsOnHold();
         this.statFive = keyStatisticsResource.getApplicationsNotifiedOfDecision();
         this.statSix = keyStatisticsResource.getApplicationsAwaitingDecision();
-        this.canManageFundingNotifications = keyStatisticsResource.getCanManageFundingNotifications();
-        this.canReleaseFeedback = keyStatisticsResource.getCanReleaseFeedback();
+        this.canManageFundingNotifications = keyStatisticsResource.isCanManageFundingNotifications();
+        this.canReleaseFeedback = keyStatisticsResource.isCanReleaseFeedback();
     }
 
     public int getStatOne() {

@@ -60,11 +60,11 @@ public class CompetitionFundedKeyStatisticsResource {
         this.applicationsAwaitingDecision = applicationsAwaitingDecision;
     }
 
-    public boolean getCanManageFundingNotifications() {
+    public boolean isCanManageFundingNotifications() {
         return applicationsFunded > 0 || applicationsNotFunded > 0 || applicationsOnHold > 0;
     }
 
-    public boolean getCanReleaseFeedback() {
+    public boolean isCanReleaseFeedback() {
         return applicationsAwaitingDecision == 0 && applicationsSubmitted == applicationsNotifiedOfDecision;
     }
 
