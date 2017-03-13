@@ -20,6 +20,7 @@ Resource          ../../resources/defaultResources.robot
 *** Test Cases ***
 Competition Dashboard
     [Documentation]    INFUND-7365
+    [Tags]    HappyPath
     When The user clicks the button/link    link=${INFORM_COMPETITION_NAME}
     Then The user should see the text in the page    7: Integrated delivery programme - low carbon vehicles
     And The user should see the text in the page    Inform
@@ -39,7 +40,7 @@ Milestones for the In inform competition
 
 Release feedback
     [Documentation]    INFUND-8050
-    [Tags]    Email
+    [Tags]    Email    HappyPath
     When The user clicks the button/link    jQuery=button:contains("Release feedback")
     Then The user should not see the text in the page    Inform
     When The user clicks the button/link    jQuery=a:contains(Live)
@@ -56,7 +57,7 @@ Unsuccessful applicant sees unsuccessful alert
 
 Successful applicant see successful alert
     [Documentation]    INFUND-7861
-    [Tags]    Email
+    [Tags]    Email   HappyPath
     [Setup]    log in as a different user    &{successful_released_credentials}
     Given the user should see the element    jQuery=.status:contains("Successful")
     When the user clicks the button/link    jQuery=.previous-applications a:contains("High Performance Gasoline Stratified")
@@ -64,14 +65,14 @@ Successful applicant see successful alert
 
 View feedback from each assessor
     [Documentation]    INFUND-8172
-    [Tags]    Email
+    [Tags]    Email    HappyPath
     Then the user should see the element    jQuery=h3:contains("Assessor 1") ~ p:contains("I have no problem recommending this application")
     And the user should see the element    jQuery=h3:contains("Assessor 2") ~ p:contains("Very good, but could have been better in areas")
     And the user should see the element    jQuery=h3:contains("Assessor 3") ~ p:contains("I enjoyed reading this application, well done")
 
 Overall scores and application details are correct
     [Documentation]    INFUND-8169 INFUND-7861
-    [Tags]    Email
+    [Tags]    Email    HappyPath
     Then the overall scores are correct
     And the application question scores are correct
     And the application details are correct
