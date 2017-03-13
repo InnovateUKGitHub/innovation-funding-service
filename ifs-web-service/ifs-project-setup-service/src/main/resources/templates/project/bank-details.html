@@ -26,6 +26,10 @@
       <ul class="error-summary-list">
           <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
       </ul>
+      <ul class="list-bullet">
+          <li>please check your account number</li>
+          <li>please check your sort code</li>
+      </ul>
   </div>
 
   <th:block th:unless="${bankDetails == null}" >
