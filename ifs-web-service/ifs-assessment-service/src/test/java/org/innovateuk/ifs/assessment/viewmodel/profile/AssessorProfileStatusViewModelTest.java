@@ -11,7 +11,7 @@ public class AssessorProfileStatusViewModelTest {
     private AssessorProfileStatusViewModel nothingCompleteProfileStatus;
     private AssessorProfileStatusViewModel skillsCompleteProfileStatus;
     private AssessorProfileStatusViewModel affiliationsCompleteProfileStatus;
-    private AssessorProfileStatusViewModel contractCompleteProfileStatus;
+    private AssessorProfileStatusViewModel agreementCompleteProfileStatus;
     private AssessorProfileStatusViewModel allCompleteProfileStatus;
 
     @Before
@@ -19,11 +19,11 @@ public class AssessorProfileStatusViewModelTest {
         nothingCompleteProfileStatus = new AssessorProfileStatusViewModel(newUserProfileStatusResource().build());
         skillsCompleteProfileStatus = new AssessorProfileStatusViewModel(newUserProfileStatusResource().withSkillsComplete(true).build());
         affiliationsCompleteProfileStatus = new AssessorProfileStatusViewModel(newUserProfileStatusResource().withAffliliationsComplete(true).build());
-        contractCompleteProfileStatus = new AssessorProfileStatusViewModel(newUserProfileStatusResource().withContractComplete(true).build());
+        agreementCompleteProfileStatus = new AssessorProfileStatusViewModel(newUserProfileStatusResource().withAgreementComplete(true).build());
         allCompleteProfileStatus = new AssessorProfileStatusViewModel(newUserProfileStatusResource()
                 .withSkillsComplete(true)
                 .withAffliliationsComplete(true)
-                .withContractComplete(true)
+                .withAgreementComplete(true)
                 .build());
     }
 
@@ -32,7 +32,7 @@ public class AssessorProfileStatusViewModelTest {
         assertFalse(nothingCompleteProfileStatus.isSkillsComplete());
         assertTrue(skillsCompleteProfileStatus.isSkillsComplete());
         assertFalse(affiliationsCompleteProfileStatus.isSkillsComplete());
-        assertFalse(contractCompleteProfileStatus.isSkillsComplete());
+        assertFalse(agreementCompleteProfileStatus.isSkillsComplete());
         assertTrue(allCompleteProfileStatus.isSkillsComplete());
     }
 
@@ -41,17 +41,17 @@ public class AssessorProfileStatusViewModelTest {
         assertFalse(nothingCompleteProfileStatus.isAffiliationsComplete());
         assertFalse(skillsCompleteProfileStatus.isAffiliationsComplete());
         assertTrue(affiliationsCompleteProfileStatus.isAffiliationsComplete());
-        assertFalse(contractCompleteProfileStatus.isAffiliationsComplete());
+        assertFalse(agreementCompleteProfileStatus.isAffiliationsComplete());
         assertTrue(allCompleteProfileStatus.isAffiliationsComplete());
     }
 
     @Test
-    public void isContractComplete() throws Exception {
-        assertFalse(nothingCompleteProfileStatus.isContractComplete());
-        assertFalse(skillsCompleteProfileStatus.isContractComplete());
-        assertFalse(affiliationsCompleteProfileStatus.isContractComplete());
-        assertTrue(contractCompleteProfileStatus.isContractComplete());
-        assertTrue(allCompleteProfileStatus.isContractComplete());
+    public void isAgreementComplete() throws Exception {
+        assertFalse(nothingCompleteProfileStatus.isAgreementComplete());
+        assertFalse(skillsCompleteProfileStatus.isAgreementComplete());
+        assertFalse(affiliationsCompleteProfileStatus.isAgreementComplete());
+        assertTrue(agreementCompleteProfileStatus.isAgreementComplete());
+        assertTrue(allCompleteProfileStatus.isAgreementComplete());
     }
 
     @Test
@@ -59,7 +59,7 @@ public class AssessorProfileStatusViewModelTest {
         assertFalse(nothingCompleteProfileStatus.isComplete());
         assertFalse(skillsCompleteProfileStatus.isComplete());
         assertFalse(affiliationsCompleteProfileStatus.isComplete());
-        assertFalse(contractCompleteProfileStatus.isComplete());
+        assertFalse(agreementCompleteProfileStatus.isComplete());
         assertTrue(allCompleteProfileStatus.isComplete());
     }
 }
