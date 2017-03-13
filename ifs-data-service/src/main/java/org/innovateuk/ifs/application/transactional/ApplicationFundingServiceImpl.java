@@ -47,6 +47,9 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
     @Autowired
     private ApplicationService applicationService;
 
+    @Value("${ifs.web.baseURL}")
+    private String webBaseUrl;
+
     enum Notifications {
         APPLICATION_FUNDED,
         APPLICATION_NOT_FUNDED,
