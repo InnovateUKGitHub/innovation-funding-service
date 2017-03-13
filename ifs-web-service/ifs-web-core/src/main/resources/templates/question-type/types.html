@@ -255,12 +255,6 @@
                     <dd th:if="${currentApplication.startDate}" th:text="${#temporals.format(currentApplication.startDate, 'd MMMM yyyy')}"></dd>
                     <dt>Duration in months</dt>
                     <dd><th:block th:text="${currentApplication.durationInMonths}"/> months</dd>
-                    <th:block th:unless="${rsCategoryId == null}">
-                        <dt>Research category</dt>
-                        <th:block th:each="cat : ${researchCategories}">
-                            <dd th:if="${cat.id == rsCategoryId}" th:text="${cat.name}" />
-                        </th:block>
-                    </th:block>
                     <dt>Research category</dt>
                     <dd th:text="${currentApplication.researchCategory.name}"></dd>
                     <dt>Innovation area</dt>

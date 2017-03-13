@@ -164,9 +164,6 @@ public class QuestionModelPopulator extends BaseModelPopulator {
         if(applicationResource.getResearchCategory() != null && applicationResource.getResearchCategory().getName() != null) {
             questionApplicationViewModel.setSelectedResearchCategoryName(applicationResource.getResearchCategory().getName());
         }
-        else {
-            questionApplicationViewModel.setSelectedResearchCategoryName("None selected.");
-        }
     }
 
     private Boolean calculateAllReadOnly(CompetitionResource competition, QuestionResource questionResource, List<QuestionStatusResource> questionStatuses, Long userId, Set<Long> completedDetails) {
