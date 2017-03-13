@@ -13,10 +13,7 @@ import org.innovateuk.ifs.finance.handler.OrganisationFinanceHandler;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.mapper.ProjectFinanceMapper;
 import org.innovateuk.ifs.finance.mapper.ProjectFinanceRowMapper;
-import org.innovateuk.ifs.finance.repository.FinanceRowMetaFieldRepository;
-import org.innovateuk.ifs.finance.repository.FinanceRowMetaValueRepository;
-import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
-import org.innovateuk.ifs.finance.repository.ProjectFinanceRowRepository;
+import org.innovateuk.ifs.finance.repository.*;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResourceId;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
@@ -66,6 +63,9 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
 
     @Autowired
     OrganisationFinanceDefaultHandler organisationFinanceDefaultHandler;
+
+    @Autowired
+    private OrganisationSizeRepository organisationSizeRepository;
 
     @Override
     public ServiceResult<List<? extends FinanceRow>> getCosts(Long projectFinanceId, String costTypeName, Long questionId) {
@@ -143,7 +143,9 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
     public ServiceResult<ProjectFinanceResource> updateCost(Long projectFinanceId, ProjectFinanceResource projectFinance) {
         return getProject(projectFinance.getProject()).andOnSuccess(project ->
                 find(projectFinance(projectFinanceId)).andOnSuccess(dbFinance -> {
-                    dbFinance.setOrganisationSize(projectFinance.getOrganisationSize());
+                    if (projectFinance.getOrganisationSize() != null) {
+                        dbFinance.setOrganisationSize(organisationSizeRepository.findOne(projectFinance.getOrganisationSize()));
+                    }
                     dbFinance = projectFinanceRepository.save(dbFinance);
                     return serviceSuccess(projectFinanceMapper.mapToResource(dbFinance));
                 })
