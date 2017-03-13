@@ -62,7 +62,7 @@ The User can Add and Remove Assessors
 Filter on innovation area
     [Documentation]    INFUND-6403
     [Tags]
-    Given the user selects the option from the drop-down menu    Offshore Renewable Energy    id=filterInnovationArea
+    Given the user selects the option from the drop-down menu    Offshore wind    id=filterInnovationArea
     When the user clicks the button/link    jQuery=button:contains(Filter)
     Then the user should see the element    jQuery=td:contains("Laura Weaver")
     And the user should not see the element    jQuery=td:contains("Addison Shannon")

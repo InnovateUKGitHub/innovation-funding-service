@@ -69,29 +69,29 @@ include::{snippets}/user/verify-email/http-response.adoc[]
 ==== Curl Example
 include::{snippets}/user/verify-email/curl-request.adoc[]
 
-== Retrieve Profile Contract
+== Retrieve Profile Agreement
 === Success case
 === Request
-include::{snippets}/user/get-profile-contract/http-request.adoc[]
-include::{snippets}/user/get-profile-contract/path-parameters.adoc[]
+include::{snippets}/user/get-profile-agreement/http-request.adoc[]
+include::{snippets}/user/get-profile-agreement/path-parameters.adoc[]
 
 === Response
-include::{snippets}/user/get-profile-contract/http-response.adoc[]
+include::{snippets}/user/get-profile-agreement/http-response.adoc[]
 
 === Curl Example
-include::{snippets}/user/get-profile-contract/curl-request.adoc[]
+include::{snippets}/user/get-profile-agreement/curl-request.adoc[]
 
-== Update Profile Contract
+== Update Profile Agreement
 === Success case
 === Request
-include::{snippets}/user/update-profile-contract/http-request.adoc[]
-include::{snippets}/user/update-profile-contract/path-parameters.adoc[]
+include::{snippets}/user/update-profile-agreement/http-request.adoc[]
+include::{snippets}/user/update-profile-agreement/path-parameters.adoc[]
 
 === Response
-include::{snippets}/user/update-profile-contract/http-response.adoc[]
+include::{snippets}/user/update-profile-agreement/http-response.adoc[]
 
 === Curl Example
-include::{snippets}/user/update-profile-contract/curl-request.adoc[]
+include::{snippets}/user/update-profile-agreement/curl-request.adoc[]
 
 == Retrieve Profile Skills
 === Success case
