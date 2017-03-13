@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
@@ -249,12 +250,9 @@ public class ProjectSpendProfileController {
     }
 
     private Map<String, Boolean> getPartnersSpendProfileProgress(Long projectId, List<OrganisationResource> partnerOrganisations) {
-        HashMap<String, Boolean> partnerProgressMap = new HashMap<>();
-        partnerOrganisations.stream().forEach(organisation -> {
-            Optional<SpendProfileResource> spendProfile = projectFinanceService.getSpendProfile(projectId, organisation.getId());
-            partnerProgressMap.put(organisation.getName(), spendProfile.get().isMarkedAsComplete());
-        });
-        return partnerProgressMap;
+        return partnerOrganisations.stream().collect(Collectors.toMap(OrganisationResource::getName,
+                o -> projectFinanceService.getSpendProfile(projectId, o.getId()).map(SpendProfileResource::isMarkedAsComplete).orElse(false),
+                (v1,v2)->v1, LinkedHashMap::new));
     }
 
     private String markSpendProfileComplete(Model model,
