@@ -647,9 +647,13 @@ Non Lead partners should still see a tick instead of an hourglass when spend pro
     Given log in as a different user        ${PS_SP_APPLICATION_PARTNER_EMAIL}    ${short_password}
     When the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
     Then the user should see the element    jQuery=li.complete:nth-of-type(6)
+    When the user clicks the button/link    link=status of my partners
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(5)
     Given log in as a different user        ${PS_SP_APPLICATION_ACADEMIC_EMAIL}   ${short_password}
     When the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
     Then the user should see the element    jQuery=li.complete:nth-of-type(6)
+    When the user clicks the button/link    link=status of my partners
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(5)
 
 Lead partner no longer has the 'submitted' view of the spend profiles
     [Documentation]    INFUND-6977, INFUND-7422
