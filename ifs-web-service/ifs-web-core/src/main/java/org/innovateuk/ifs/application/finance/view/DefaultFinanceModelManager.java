@@ -5,10 +5,7 @@ import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
-import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.application.service.OrganisationService;
-import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
@@ -59,6 +56,9 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
     @Autowired
     private CompetitionService competitionService;
 
+    @Autowired
+    private OrganisationSizeService organisationSizeService;
+
     //TODO: INFUND-7849 - make sure this function is not going to be used anymore
     @Override
     public void addOrganisationFinanceDetails(Model model, Long applicationId, List<QuestionResource> costsQuestions, Long userId, Form form, Long organisationId) {
@@ -72,6 +72,8 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
             model.addAttribute("organisationType", organisationType);
             model.addAttribute("organisationFinanceId", applicationFinanceResource.getId());
             model.addAttribute("organisationFinanceTotal", applicationFinanceResource.getTotal());
+            model.addAttribute("organisationSizes", organisationSizeService.getOrganisationSizes());
+            model.addAttribute("maximumGrantClaimPercentage", applicationFinanceResource.getMaximumFundingLevel());
             model.addAttribute("financeView", "finance");
             addGrantClaim(model, form, applicationFinanceResource);
         }
@@ -99,6 +101,8 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
             financeViewModel.setOrganisationType(organisationType);
             financeViewModel.setOrganisationFinanceId(applicationFinanceResource.getId());
             financeViewModel.setOrganisationFinanceTotal(applicationFinanceResource.getTotal());
+            financeViewModel.setOrganisationSizes(organisationSizeService.getOrganisationSizes());
+            financeViewModel.setMaximumGrantClaimPercentage(applicationFinanceResource.getMaximumFundingLevel());
             financeViewModel.setFinanceView("finance");
             addGrantClaim(financeViewModel, applicationFinanceResource);
         }
