@@ -57,13 +57,8 @@ Controlled with javascript, an alternative standard html page should be used for
 		font-weight: normal;
 	}
 	.buttonlink {
-		box-shadow: none;
 		padding: 8px;
 		margin-left: 22px;
-		&:hover {
-			background-color: transparent;
-			color: $link-colour;
-		}
 	}
 	&.warning-modal {
 		border-top: 10px solid $red;
