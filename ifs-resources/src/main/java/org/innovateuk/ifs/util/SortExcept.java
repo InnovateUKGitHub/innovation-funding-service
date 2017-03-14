@@ -28,6 +28,10 @@ public final class SortExcept<T> {
         sortedList.add(0, exception);
     }
 
+    public <E extends Comparable<? super E>> SortExcept(List<T> list, Function<T, E> field) {
+        sortedList = list.stream().sorted(comparing(field)).collect(toList());
+    }
+
     public List<T> unwrap() {
         return sortedList;
     }

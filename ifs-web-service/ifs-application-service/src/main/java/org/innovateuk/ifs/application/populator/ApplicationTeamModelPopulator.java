@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
@@ -61,11 +62,12 @@ public class ApplicationTeamModelPopulator {
         OrganisationResource leadOrganisation = getLeadOrganisation(applicationId);
 
         List<InviteOrganisationResource> inviteOrganisationResources = getOrganisationInvites(applicationId, leadOrganisation.getId());
-        final InviteOrganisationResource leadOrganisationInvite
-                = simpleFindFirst(inviteOrganisationResources, ior -> ior.getOrganisation().equals(leadOrganisation.getId())).get();
+        final Optional<InviteOrganisationResource> leadOrganisationInvite
+                = simpleFindFirst(inviteOrganisationResources, ior -> ior.getOrganisation().equals(leadOrganisation.getId()));
 
-        final List<InviteOrganisationResource> sortedInvites = new SortExcept<>(inviteOrganisationResources, leadOrganisationInvite,
-                InviteOrganisationResource::getOrganisationName).unwrap();
+        final List<InviteOrganisationResource> sortedInvites = leadOrganisationInvite.map(lead ->
+                new SortExcept<>(inviteOrganisationResources, lead, InviteOrganisationResource::getOrganisationName)).orElse(
+                new SortExcept<>(inviteOrganisationResources, InviteOrganisationResource::getOrganisationName)).unwrap();
         boolean userLeadApplicant = isUserLeadApplicant(loggedInUserId, leadApplicant);
 
         List<ApplicationTeamOrganisationRowViewModel> organisationRowViewModelsForInvites = sortedInvites.stream()
