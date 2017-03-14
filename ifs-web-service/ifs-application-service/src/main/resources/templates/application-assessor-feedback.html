@@ -23,7 +23,14 @@
 
     <h3 class="heading-medium">Your answer:</h3>
     <th:block th:each="item : ${model.responses}">
-        <p th:text="${item.value}" />
+        <th:block th:unless="${item.fileEntry}">
+            <p th:text="${item.value}" />
+        </th:block>
+        <th:block th:if="${item.fileEntry}">
+            <h3 class="heading-small no-margin">View appendix:</h3>
+            <a th:href="@{/application/{appId}/form/question/{questionId}/forminput/{inputId}/download(appId=${model.application.id},questionId=${item.question},inputId=${item.formInput})}"
+               th:text="|${item.filename} (${item.humanReadableFileSize})|">Project-plan.pdf (161.96 KB)</a>
+        </th:block>
     </th:block>
 
     <h2 class="heading-large" th:text="'Average score: '+${model.aggregateResource.avgScore}+ '/ ' + ${model.question.assessorMaximumScore}">Average score: 7/10</h2>
