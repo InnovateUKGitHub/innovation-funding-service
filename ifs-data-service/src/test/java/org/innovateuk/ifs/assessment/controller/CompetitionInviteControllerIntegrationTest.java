@@ -22,6 +22,7 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProfileRepository;
 import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
@@ -707,6 +708,35 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
         RestResult<AssessorInviteToSendResource> serviceResult = controller.sendInvite(createdId, content);
         assertTrue(serviceResult.isSuccess());
+    }
+
+    @Test
+    public void sendInvite_existingApplicant() throws Exception {
+        final UserResource applicantUser = getSteveSmith();
+        long createdId = competitionInviteRepository.save(newCompetitionInvite()
+                .with(id(null))
+                .withName(applicantUser.getName())
+                .withEmail(applicantUser.getEmail())
+                .withUser((User) null)
+                .withHash("hash")
+                .withCompetition(competition)
+                .withStatus(InviteStatus.CREATED)
+                .withInnovationArea(innovationAreaRepository.findOne(INNOVATION_AREA_ID)) // 'new invite'
+                .build())
+                .getId();
+        EmailContent content = newEmailContentResource()
+                .withSubject("subject")
+                .withPlainText("plain")
+                .withHtmlText("html")
+                .build();
+
+        loginCompAdmin();
+
+        RestResult<AssessorInviteToSendResource> serviceResult = controller.sendInvite(createdId, content);
+        assertTrue(serviceResult.isSuccess());
+
+        User invitedUser = userRepository.findByEmail(applicantUser.getEmail()).get();
+        assertTrue(invitedUser.getRoles().contains(roleRepository.findOneByName(UserRoleType.ASSESSOR.getName())));
     }
 
     @Test

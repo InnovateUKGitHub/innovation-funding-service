@@ -21,8 +21,10 @@ import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.user.domain.Profile;
+import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -32,10 +34,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
@@ -69,6 +68,7 @@ import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESS
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
 import static org.innovateuk.ifs.user.builder.ProfileBuilder.newProfile;
+import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.AffiliationType.EMPLOYER;
@@ -91,6 +91,8 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
     private User user;
     private Profile profile;
     private InnovationArea innovationArea;
+    private Role assessorRole;
+    private Role applicantRole;
 
     @Override
     protected CompetitionInviteServiceImpl supplyServiceUnderTest() {
@@ -124,6 +126,9 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         userResource = newUserResource().withId(userId).build();
         profile = newProfile().withId(profileId).build();
         user = newUser().withId(userId).withProfileId(profile.getId()).build();
+
+        assessorRole = newRole().withName(UserRoleType.ASSESSOR.getName()).build();
+        applicantRole = newRole().withName(UserRoleType.APPLICANT.getName()).build();
 
         UserResource senderResource = newUserResource().withId(-1L).withUID(UID).build();
         User sender = newUser().withId(-1L).withUid(UID).build();
@@ -668,6 +673,48 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         InOrder inOrder = inOrder(competitionInviteRepositoryMock, competitionParticipantRepositoryMock, notificationSender, assessorInviteToSendMapperMock);
         inOrder.verify(competitionInviteRepositoryMock).findOne(invite.getId());
         inOrder.verify(competitionParticipantRepositoryMock).save(createCompetitionParticipantExpectations(invite));
+        inOrder.verify(notificationSender).sendEmailWithContent(notification, to, content);
+        inOrder.verify(assessorInviteToSendMapperMock).mapToResource(invite);
+        inOrder.verifyNoMoreInteractions();
+    }
+    @Test
+
+    public void sendInvite_toApplicant() throws Exception {
+        String email = "john@email.com";
+        String name = "John Barnes";
+
+        CompetitionInvite invite = setUpCompetitionInvite(newCompetition().withName("my competition").build(), email, name, CREATED, newInnovationArea().build(), newUser()
+                .withFirstName("Paul")
+                .build());
+
+        User applicant = newUser()
+                .withRoles(new ArrayList(asList(applicantRole)))
+                .build();
+
+        EmailContent content = setUpEmailContent();
+
+        Map<String, Object> expectedNotificationArguments = emptyMap();
+        SystemNotificationSource from = systemNotificationSourceMock;
+        NotificationTarget to = new ExternalUserNotificationTarget(name, email);
+        Notification notification = new Notification(from, singletonList(to), CompetitionInviteServiceImpl.Notifications.INVITE_ASSESSOR, expectedNotificationArguments);
+
+        when(competitionInviteRepositoryMock.findOne(invite.getId())).thenReturn(invite);
+        when(notificationSender.sendEmailWithContent(notification, to, content)).thenReturn(serviceSuccess(singletonList(new EmailAddress(email, name))));
+
+        when(userRepositoryMock.findByEmail(email)).thenReturn(Optional.of(applicant));
+        when(roleRepositoryMock.findOneByName(UserRoleType.ASSESSOR.getName())).thenReturn(assessorRole);
+
+        ServiceResult<AssessorInviteToSendResource> serviceResult = service.sendInvite(invite.getId(), content);
+
+        assertTrue(serviceResult.isSuccess());
+        assertEquals(SENT, invite.getStatus());
+        assertTrue(applicant.getRoles().containsAll(asList(applicantRole, assessorRole)));
+
+        InOrder inOrder = inOrder(competitionInviteRepositoryMock, competitionParticipantRepositoryMock, userRepositoryMock, roleRepositoryMock, notificationSender, assessorInviteToSendMapperMock);
+        inOrder.verify(competitionInviteRepositoryMock).findOne(invite.getId());
+        inOrder.verify(competitionParticipantRepositoryMock).save(createCompetitionParticipantExpectations(invite));
+        inOrder.verify(userRepositoryMock).findByEmail(email);
+        inOrder.verify(roleRepositoryMock).findOneByName(UserRoleType.ASSESSOR.getName());
         inOrder.verify(notificationSender).sendEmailWithContent(notification, to, content);
         inOrder.verify(assessorInviteToSendMapperMock).mapToResource(invite);
         inOrder.verifyNoMoreInteractions();
