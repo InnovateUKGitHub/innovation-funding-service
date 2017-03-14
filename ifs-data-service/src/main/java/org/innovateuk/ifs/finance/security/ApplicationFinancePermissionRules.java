@@ -91,14 +91,6 @@ public class ApplicationFinancePermissionRules {
         return isLeadApplicant || isCollaborator;
     }
 
-//    Removed this permission, one failing test as a result, required extra mock. Technically this is opening this resource to all project partners, can anyone confirm a better way to handle this?
-//    private boolean isAConsortiumMemberOnApplication(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
-//        final boolean isLeadApplicant = checkProcessRole(user, applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), LEADAPPLICANT, roleRepository, processRoleRepository);
-//        final boolean isCollaborator = checkProcessRole(user, applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), COLLABORATOR, roleRepository, processRoleRepository);
-//
-//        return isLeadApplicant || isCollaborator;
-//    }
-
     private boolean isAConsortiumMemberOnApplication(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
         final boolean isLeadApplicant = checkProcessRole(user, applicationFinanceResource.getApplication(), LEADAPPLICANT, processRoleRepository);
         final boolean isCollaborator = checkProcessRole(user, applicationFinanceResource.getApplication(), COLLABORATOR, processRoleRepository);
