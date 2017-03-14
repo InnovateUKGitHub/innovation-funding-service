@@ -66,7 +66,7 @@ the Application details are completed
 the applicant completes the application details
     [Arguments]   ${Application_details}
     the user clicks the button/link       link=${Application_details}
-    the user clicks the button/link       jQuery=span:contains("Choose your research category")
+    the user clicks the button/link       jQuery=button:contains("research category")
     the user clicks the button/link       jQuery=label[for^="researchCategoryChoice"]:contains("Experimental development")
     the user clicks the button/link       jQuery=label[for^="researchCategoryChoice"]:contains("Experimental development")
     the user clicks the button/link       jQuery=button:contains(Save)
