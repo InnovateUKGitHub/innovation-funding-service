@@ -236,7 +236,7 @@
             <div class="form-footer__info">
 
                 <span class="textarea-footer"></span>
-
+                <span class="update-label">Last updated: </span>
                 <th:block th:if="${response?.getUpdateDate()}">
                     <span class="update-details">
                         <th:block th:include="fragments/elements :: pretty-date (date=${response?.getUpdateDate()})"/> by
