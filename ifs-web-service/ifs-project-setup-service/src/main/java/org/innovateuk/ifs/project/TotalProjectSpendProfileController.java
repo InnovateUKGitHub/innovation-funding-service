@@ -27,8 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.stream.Collectors.toMap;
-import static org.innovateuk.ifs.util.CollectionFunctions.orderedMap;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -92,16 +91,13 @@ public class TotalProjectSpendProfileController {
         List<OrganisationResource> organisations = new SortExcept<>(projectService.getPartnerOrganisationsForProject(projectId),
                 leadOrganisation, OrganisationResource::getName).unwrap();
 
+        Map<Long, SpendProfileTableResource> organisationSpendProfiles = simpleToLinkedMap(organisations, OrganisationResource::getId,
+                organisation -> projectFinanceService.getSpendProfileTable(projectId, organisation.getId()));
 
-        Map<Long, SpendProfileTableResource> organisationSpendProfiles = organisations.stream()
-                .collect(toMap(OrganisationResource::getId, organisation -> projectFinanceService.getSpendProfileTable(projectId, organisation.getId()),
-                        (v1, v2) -> v1, LinkedHashMap::new));
-
-        //TODO Nuno: keep order on these maps
-        Map<Long, List<BigDecimal>> monthlyCostsPerOrganisationMap = orderedMap(organisationSpendProfiles, spendTableResource ->
+        Map<Long, List<BigDecimal>> monthlyCostsPerOrganisationMap = simpleLinkedMapValue(organisationSpendProfiles, spendTableResource ->
                 spendProfileTableCalculator.calculateMonthlyTotals(spendTableResource.getMonthlyCostsPerCategoryMap(), spendTableResource.getMonths().size()));
 
-        Map<Long, BigDecimal> eligibleCostPerOrganisationMap = orderedMap(organisationSpendProfiles, tableResource ->
+        Map<Long, BigDecimal> eligibleCostPerOrganisationMap = simpleLinkedMapValue(organisationSpendProfiles, tableResource ->
                 spendProfileTableCalculator.calculateTotalOfAllEligibleTotals(tableResource.getEligibleCostPerCategoryMap()));
 
         List<LocalDateResource> months = organisationSpendProfiles.values().iterator().next().getMonths();
