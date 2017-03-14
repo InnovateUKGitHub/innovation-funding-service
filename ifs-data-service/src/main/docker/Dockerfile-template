@@ -13,7 +13,7 @@ RUN bin/keytool -import -trustcacerts -keystore jre/lib/security/cacerts -storep
 WORKDIR /
 VOLUME /tmp
 
-ADD ifs-data-service-1.0-SNAPSHOT.jar app.jar
+ADD ifs-data-service-@version@.jar app.jar
 RUN sh -c 'touch /app.jar'
 ENTRYPOINT exec java $JAVA_OPTS -jar app.jar
 
