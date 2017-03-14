@@ -9,12 +9,12 @@ import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
-import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.invite.service.InviteService;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
+import org.innovateuk.ifs.registration.model.AcceptRejectApplicationInviteModelPopulator;
 import org.innovateuk.ifs.registration.service.RegistrationService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -23,16 +23,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
+import static org.innovateuk.ifs.invite.service.InviteServiceImpl.INVITE_ALREADY_ACCEPTED;
 import static org.innovateuk.ifs.invite.service.InviteServiceImpl.INVITE_HASH;
+import static org.innovateuk.ifs.registration.OrganisationCreationController.ORGANISATION_FORM;
 
 
 /**
@@ -60,76 +65,81 @@ public class AcceptInviteController extends BaseController {
 
     @Autowired
     private InviteService inviteService;
+
     @Autowired
     private InviteRestService inviteRestService;
+
+    @Autowired
+    private AcceptRejectApplicationInviteModelPopulator acceptRejectApplicationInviteModelPopulator;
+
+    private static final String ALREADY_ACCEPTED_VIEW = "redirect:/login";
+    private static final String LOGGED_IN_WITH_ANOTHER_USER_VIEW = "registration/logged-in-with-another-user-failure";
+//    private static final String LOGGED_IN_WITH_ANOTHER_USER_VIEW = "registration/accept-invite-failure"; // qqRP TODO remove
+    private static final String SUCCESS_VIEW = "registration/accept-invite";
+    // return "redirect:/accept-invite-authenticated/confirm-invited-organisation"; // qqRP TODO remove
 
     @RequestMapping(value = "/accept-invite/{hash}", method = RequestMethod.GET)
     public String inviteEntryPage(
             @PathVariable("hash") final String hash,
+            @ModelAttribute("loggedInUser") UserResource loggedInUser,
             HttpServletResponse response,
-            HttpServletRequest request,
             Model model) {
-        cookieUtil.removeCookie(response, OrganisationCreationController.ORGANISATION_FORM);
-
-        ApplicationInviteResource inviteResource = inviteService.getInviteByHash(hash, response);
-        if (!InviteStatus.SENT.equals(inviteResource.getStatus())) {
-            return "redirect:/login";
-        } else {
-            cookieUtil.saveToCookie(response, INVITE_HASH, hash);
-            InviteOrganisationResource inviteOrganisation = inviteRestService.getInviteOrganisationByHash(hash).getSuccessObjectOrThrowException();
-
-            // check if there already is a user with this emailaddress
-            RestResult<Boolean> existingUserSearch = inviteRestService.checkExistingUser(hash);
-            // User already registered?
-            String redirectUrl = handleExistingUser(hash, response, request, model, inviteResource, existingUserSearch, inviteOrganisation);
-            if (redirectUrl != null) return redirectUrl;
-
-            model.addAttribute("invite", inviteResource);
-            addCreateAccountURL(model, inviteOrganisation);
-            return "registration/accept-invite";
-        }
-    }
-
-    private String handleExistingUser(@PathVariable("hash") String hash, HttpServletResponse response, HttpServletRequest request, Model model, ApplicationInviteResource inviteResource, RestResult<Boolean> existingUserSearch, InviteOrganisationResource inviteOrganisation) {
-        if (existingUserSearch.getSuccessObject()) {
-
-            model.addAttribute("emailAddressRegistered", "true");
-
-            UserResource loggedInUser = userAuthenticationService.getAuthenticatedUser(request);
-            if (loggedInUser != null) {
-                Map<String, String> failureMessages = registrationService.getInvalidInviteMessages(loggedInUser, inviteResource, inviteOrganisation);
-
-                if (failureMessages.size() > 0){
-                    failureMessages.forEach((messageKey, messageValue) -> model.addAttribute(messageKey, messageValue));
-
-                    return "registration/accept-invite-failure";
-                }else{
-                    cookieUtil.saveToCookie(response, INVITE_HASH, hash);
-                    return "redirect:/accept-invite-authenticated/confirm-invited-organisation";
+        clearDownInviteFlowCookies(response); // This is the initial entry point. Clear any previous state from cookies.
+        return inviteRestService.getInviteByHash(hash).andOnSuccess(invite -> {
+                    if (!SENT.equals(invite.getStatus())) {
+                        return restSuccess(alreadyAcceptedView(response));
+                    }
+                    return inviteRestService.getInviteOrganisationByHash(hash).andOnSuccessReturn(inviteOrganisation -> {
+                                if (loggedInAsNonInviteUser(invite, loggedInUser)){
+                                    return LOGGED_IN_WITH_ANOTHER_USER_VIEW;
+                                }
+                                // Success
+                                addInviteHashCookie(response, invite.getHash()); // Add the hash to a cookie for later flow lookup.
+                                model.addAttribute("model", acceptRejectApplicationInviteModelPopulator.populateModel(invite, inviteOrganisation));
+                                return SUCCESS_VIEW;
+                            }
+                    );
                 }
-            }else{
-                cookieUtil.saveToCookie(response, INVITE_HASH, hash);
-                // just show the login link
-            }
-        }else{
-            LOG.debug("Not found a user with hash "+ hash);
-        }
-        return null;
+        ).getSuccessObject();
     }
 
-    private void addCreateAccountURL(Model model, InviteOrganisationResource inviteOrganisation) {
-        if (inviteOrganisation.getOrganisation() != null) {
-            model.addAttribute("createAccountLink", "/accept-invite/confirm-invited-organisation");
-        } else {
-            model.addAttribute("createAccountLink", "/organisation/create/type/new-account-organisation-type");
-        }
+    private void clearDownInviteFlowCookies(HttpServletResponse response) {
+        cookieUtil.removeCookie(response, ORGANISATION_FORM);
+        cookieUtil.removeCookie(response, INVITE_HASH);
     }
+
+    private void addInviteHashCookie(HttpServletResponse response, String hash) {
+        cookieUtil.saveToCookie(response, INVITE_HASH, hash);
+    }
+
+    private String alreadyAcceptedView(HttpServletResponse response) {
+        cookieFlashMessageFilter.setFlashMessage(response, INVITE_ALREADY_ACCEPTED);
+        return ALREADY_ACCEPTED_VIEW;
+    }
+
+    private boolean loggedInAsNonInviteUser(ApplicationInviteResource invite, UserResource loggedInUser) {
+        if (loggedInUser == null){
+            return false;
+        } else if (invite.getEmail().equalsIgnoreCase(loggedInUser.getEmail())){
+            return false;
+        }
+        return true;
+    }
+
+
+//    private void addCreateAccountURL(Model model, InviteOrganisationResource inviteOrganisation) {
+//        if (inviteOrganisation.getOrganisation() != null) {
+//            model.addAttribute("createAccountLink", "/accept-invite/confirm-invited-organisation");
+//        } else {
+//            model.addAttribute("createAccountLink", "/organisation/create/type/new-account-organisation-type");
+//        }
+//    }
 
     @RequestMapping(value = "/accept-invite/confirm-invited-organisation", method = RequestMethod.GET)
     public String confirmInvitedOrganisation(HttpServletResponse response, HttpServletRequest request, Model model) {
 
         ApplicationInviteResource inviteResource = inviteService.getInviteByRequest(request, response);
-        if (InviteStatus.SENT.equals(inviteResource.getStatus())) {
+        if (SENT.equals(inviteResource.getStatus())) {
             InviteOrganisationResource inviteOrganisation = inviteRestService.getInviteOrganisationByHash(inviteResource.getHash()).getSuccessObjectOrThrowException();
             OrganisationResource organisation = organisationService.getOrganisationByIdForAnonymousUserFlow(inviteOrganisation.getOrganisation());
 
