@@ -6,8 +6,6 @@ import org.innovateuk.ifs.BaseController;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.service.OrganisationService;
-import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
@@ -15,7 +13,6 @@ import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.invite.service.InviteService;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.registration.model.AcceptRejectApplicationInviteModelPopulator;
-import org.innovateuk.ifs.registration.service.RegistrationService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.CookieUtil;
@@ -23,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
@@ -46,19 +42,12 @@ import static org.innovateuk.ifs.registration.OrganisationCreationController.ORG
 @Controller
 @PreAuthorize("permitAll")
 public class AcceptInviteController extends BaseController {
-    private static final Log LOG = LogFactory.getLog(AcceptInviteController.class);
-
-    @Autowired
-    private UserAuthenticationService userAuthenticationService;
 
     @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
     @Autowired
     private OrganisationService organisationService;
-
-    @Autowired
-    private RegistrationService registrationService;
 
     @Autowired
     private CookieUtil cookieUtil;
@@ -76,9 +65,6 @@ public class AcceptInviteController extends BaseController {
     private static final String LOGGED_IN_WITH_ANOTHER_USER_VIEW = "registration/logged-in-with-another-user-failure";
     private static final String ACCEPT_INVITE_NEW_USER_VIEW = "registration/accept-invite-new-user";
     private static final String ACCEPT_INVITE_EXISTING_USER_VIEW = "registration/accept-invite-existing-user";
-    private static final String SUCCESS_VIEW = "registration/accept-invite-new-user";
-
-    // return "redirect:/accept-invite-authenticated/confirm-invited-organisation"; // qqRP TODO remove
 
     @RequestMapping(value = "/accept-invite/{hash}", method = RequestMethod.GET)
     public String inviteEntryPage(
@@ -127,15 +113,6 @@ public class AcceptInviteController extends BaseController {
         }
         return true;
     }
-
-
-//    private void addCreateAccountURL(Model model, InviteOrganisationResource inviteOrganisation) {
-//        if (inviteOrganisation.getOrganisation() != null) {
-//            model.addAttribute("createAccountLink", "/accept-invite/confirm-invited-organisation");
-//        } else {
-//            model.addAttribute("createAccountLink", "/organisation/create/type/new-account-organisation-type");
-//        }
-//    }
 
     @RequestMapping(value = "/accept-invite/confirm-invited-organisation", method = RequestMethod.GET)
     public String confirmInvitedOrganisation(HttpServletResponse response, HttpServletRequest request, Model model) {
