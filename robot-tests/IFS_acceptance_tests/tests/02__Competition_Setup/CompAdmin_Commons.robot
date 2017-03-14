@@ -130,8 +130,6 @@ the user fills in the CS Assessors
     the user should see the element  jQuery=img[title$="is done"] + h3:contains("Assessors")
 
 the user fills in the Public content and publishes
-    # Navigate to the public content page
-    the user clicks the button/link  link=Public content
     # Fill in the Competition information and search
     the user clicks the button/link             link=Competition information and search
     the user enters text to a text field        id=short-description        Short public description
