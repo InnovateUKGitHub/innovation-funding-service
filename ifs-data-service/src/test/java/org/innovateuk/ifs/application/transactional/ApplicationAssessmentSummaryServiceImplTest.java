@@ -27,6 +27,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationAssessorResource
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
+import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.CLOSED;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.FUNDERS_PANEL;
@@ -118,6 +119,9 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
 
         Application application = newApplication()
                 .withName("Progressive machines")
+                .withInnovationArea(newInnovationArea()
+                        .withName("Digital Manufacturing")
+                        .build())
                 .withCompetition(newCompetition()
                         .withName("Connected digital additive manufacturing")
                         .withCompetitionStatus(CLOSED)
@@ -131,6 +135,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
         ApplicationAssessmentSummaryResource expected = newApplicationAssessmentSummaryResource()
                 .withId(application.getId())
                 .withName(application.getName())
+                .withInnovationArea(application.getInnovationArea().getName())
                 .withCompetitionId(application.getCompetition().getId())
                 .withCompetitionName(application.getCompetition().getName())
                 .withLeadOrganisation("Liquid Dynamics")
@@ -162,6 +167,9 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
 
         Application application = newApplication()
                 .withName("Progressive machines")
+                .withInnovationArea(newInnovationArea()
+                        .withName("Digital Manufacturing")
+                        .build())
                 .withCompetition(newCompetition()
                         .withName("Connected digital additive manufacturing")
                         .withCompetitionStatus(CLOSED)
@@ -175,6 +183,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
         ApplicationAssessmentSummaryResource expected = newApplicationAssessmentSummaryResource()
                 .withId(application.getId())
                 .withName(application.getName())
+                .withInnovationArea(application.getInnovationArea().getName())
                 .withCompetitionId(application.getCompetition().getId())
                 .withCompetitionName(application.getCompetition().getName())
                 .withLeadOrganisation("")
@@ -206,6 +215,9 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
 
         Application application = newApplication()
                 .withName("Progressive machines")
+                .withInnovationArea(newInnovationArea()
+                        .withName("Digital Manufacturing")
+                        .build())
                 .withCompetition(newCompetition()
                         .withName("Connected digital additive manufacturing")
                         .withCompetitionStatus(FUNDERS_PANEL)
@@ -219,6 +231,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
         ApplicationAssessmentSummaryResource expected = newApplicationAssessmentSummaryResource()
                 .withId(application.getId())
                 .withName(application.getName())
+                .withInnovationArea(application.getInnovationArea().getName())
                 .withCompetitionId(application.getCompetition().getId())
                 .withCompetitionName(application.getCompetition().getName())
                 .withLeadOrganisation("Liquid Dynamics")

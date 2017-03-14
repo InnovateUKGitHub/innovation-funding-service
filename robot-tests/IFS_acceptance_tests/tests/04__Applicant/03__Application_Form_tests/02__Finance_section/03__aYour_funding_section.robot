@@ -22,16 +22,16 @@ Applicant has options to enter funding level and details of any other funding
 Applicant can see maximum funding size available to them
     [Documentation]    INFUND-6794
     [Tags]    HappyPath
-    When the user should see the text in the page    Enter your funding level (maximum 50%)
+    When the user should see the text in the page    Enter your funding level (maximum 25%)
 
 Funding level validations
     [Documentation]    INFUND-6794
     [Tags]
-    When the user enters text to a text field    id=cost-financegrantclaim    78
+    When the user enters text to a text field    id=cost-financegrantclaim    26
     And the user clicks the button/link    jQuery=.button:contains("Mark as complete")
-    Then the user should see the element    jQuery=span.error-message:contains("This field should be 50% or lower.")
-    When the user enters text to a text field    id=cost-financegrantclaim    46
-    Then the user should not see the element    jQuery=span.error-message:contains("This field should be 70% or lower.")
+    Then the user should see the element    jQuery=span.error-message:contains("This field should be 25% or lower.")
+    When the user enters text to a text field    id=cost-financegrantclaim    25
+    Then the user should not see the element    jQuery=span.error-message:contains("This field should be 25% or lower.")
     And the user should not see the element    jQuery=.error-message
 
 Other funding validations
@@ -67,7 +67,7 @@ Changing application details sets funding level to incomplete
     When the user selects the radio button    application.researchCategoryId    34
     And the user clicks the button/link    name=mark_as_complete
     And applicant navigates to the finances of the robot application
-    Then the user should see the element    css=.list-overview .section:nth-of-type(3) .assigned
+    Then the user should see the element    css=.task-list li:nth-of-type(3) .action-required
 
 Funding level has been reset
     [Documentation]    INFUND-6895
@@ -99,7 +99,7 @@ Mark other funding as complete
     Given the user selects the checkbox   termsAgreed
     When the user clicks the button/link  jQuery=.button:contains("Mark as complete")
     Then the user should not see an error in the page
-    And the user should see the element   css=.list-overview .section:nth-of-type(3) .complete
+    And the user should see the element   css=.task-list li:nth-of-type(3) .task-status-complete
 
 Read only view of the other funding
     [Documentation]    INFUND-6895, INFUND-8044
@@ -139,5 +139,3 @@ the user adds more rows in other funding
     the user moves focus to the element   jQuery=.button:contains("Mark as complete")
     wait for autosave
     the user should see the element       jQuery=label:contains("Total other funding") + input:contains("£ 235,000")
-
-
