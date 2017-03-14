@@ -2,6 +2,8 @@ package org.innovateuk.ifs.competition.transactional;
 
 import com.google.common.collect.Lists;
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.resource.*;
@@ -17,6 +19,8 @@ import java.util.Collections;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_RELEASE_FEEDBACK;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_INVITE_CLOSED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
@@ -24,6 +28,7 @@ import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilesto
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -233,10 +238,57 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         Competition competition = newCompetition().withSetupComplete(true)
                 .withMilestones(milestones)
                 .build();
+
+        CompetitionFundedKeyStatisticsResource keyStatistics = new CompetitionFundedKeyStatisticsResource();
+        keyStatistics.setApplicationsAwaitingDecision(0);
+        keyStatistics.setApplicationsSubmitted(5);
+        keyStatistics.setApplicationsNotifiedOfDecision(5);
+
         when(competitionRepositoryMock.findById(competitionId)).thenReturn(competition);
+        when(competitionKeyStatisticsServiceMock.getFundedKeyStatisticsByCompetition(competitionId)).thenReturn(serviceSuccess(keyStatistics));
 
-        service.releaseFeedback(competitionId);
+        ServiceResult<Void> response = service.releaseFeedback(competitionId);
 
+        assertTrue(response.isSuccess());
         assertEquals(CompetitionStatus.PROJECT_SETUP, competition.getCompetitionStatus());
+    }
+
+    @Test
+    public void releaseFeedback_cantRelease() throws Exception {
+        Long competitionId = 1L;
+        List<Milestone> milestones = newMilestone()
+                .withDate(LocalDateTime.now().minusDays(1))
+                .withType(OPEN_DATE,
+                        SUBMISSION_DATE,
+                        ALLOCATE_ASSESSORS,
+                        ASSESSORS_NOTIFIED,
+                        ASSESSMENT_CLOSED,
+                        ASSESSMENT_PANEL,
+                        PANEL_DATE,
+                        FUNDERS_PANEL,
+                        NOTIFICATIONS)
+                .build(9);
+        milestones.addAll(newMilestone()
+                .withDate(LocalDateTime.now().plusDays(1))
+                .withType(RELEASE_FEEDBACK)
+                .build(1));
+
+        Competition competition = newCompetition().withSetupComplete(true)
+                .withMilestones(milestones)
+                .build();
+
+        CompetitionFundedKeyStatisticsResource keyStatistics = new CompetitionFundedKeyStatisticsResource();
+        keyStatistics.setApplicationsAwaitingDecision(0);
+        keyStatistics.setApplicationsSubmitted(5);
+        keyStatistics.setApplicationsNotifiedOfDecision(4);
+
+        when(competitionRepositoryMock.findById(competitionId)).thenReturn(competition);
+        when(competitionKeyStatisticsServiceMock.getFundedKeyStatisticsByCompetition(competitionId)).thenReturn(serviceSuccess(keyStatistics));
+
+        ServiceResult<Void> response = service.releaseFeedback(competitionId);
+
+        assertTrue(response.isFailure());
+        assertTrue(response.getFailure().is(new Error(COMPETITION_CANNOT_RELEASE_FEEDBACK)));
+        assertEquals(CompetitionStatus.ASSESSOR_FEEDBACK, competition.getCompetitionStatus());
     }
 }
