@@ -1,1 +1,1 @@
-DELETE FROM ifs.activity_state WHERE activity_type = 'PROJECT_SETUP_FINANCE_CHECKS' AND state = 'READY_TO_SUBMIT';
+DELETE FROM activity_state WHERE activity_type = 'PROJECT_SETUP_FINANCE_CHECKS' AND state = 'READY_TO_SUBMIT';

@@ -86,7 +86,41 @@ public class FinanceChecksWorkflowHandlerIntegrationTest extends
 
     @Test
     public void testApproveFinanceCheck() throws Exception {
-    //TODO 6716 need test to assert approve is correctly assigned
+
+            callWorkflowAndCheckTransitionAndEventFiredInternalUser(((partnerOrganisation, internalUser) -> financeCheckWorkflowHandler.approveFinanceCheck(partnerOrganisation, internalUser)),
+
+                    // current State, destination State and expected Event to be fired
+                    FinanceCheckState.PENDING, FinanceCheckState.APPROVED, FinanceCheckOutcomes.APPROVE);
+    }
+
+    private void callWorkflowAndCheckTransitionAndEventFiredInternalUser(BiFunction<PartnerOrganisation, User, Boolean> workflowMethodToCall, FinanceCheckState currentState, FinanceCheckState destinationState, FinanceCheckOutcomes expectedEventToBeFired) {
+
+        ProjectUser projectUser = newProjectUser().build();
+        PartnerOrganisation partnerOrganisation = newPartnerOrganisation().build();
+        User internalUser = newUser().build();
+
+        // Set the current state in the GOL Process
+        ActivityState currentActivityState = new ActivityState(PROJECT_SETUP_FINANCE_CHECKS, currentState.getBackingState());
+        FinanceCheckProcess currentProcess = new FinanceCheckProcess(projectUser, partnerOrganisation, currentActivityState);
+        when(financeCheckProcessRepositoryMock.findOneByTargetId(partnerOrganisation.getId())).thenReturn(currentProcess);
+
+        // Set the destination state which we expect when the event is fired
+        ActivityState expectedActivityState = new ActivityState(PROJECT_SETUP_FINANCE_CHECKS, destinationState.getBackingState());
+        when(activityStateRepositoryMock.findOneByActivityTypeAndState(PROJECT_SETUP_FINANCE_CHECKS, destinationState.getBackingState())).thenReturn(expectedActivityState);
+
+        // Call the workflow here
+        boolean result = workflowMethodToCall.apply(partnerOrganisation, internalUser);
+
+        assertTrue(result);
+
+        // Once the workflow is called, check that the correct details (state. events etc) are updated in the process table.
+        // This can be done by building the expected process object (say X) and verifying that X was the object that was saved.
+        FinanceCheckProcess expectedProcess = new FinanceCheckProcess(internalUser, partnerOrganisation, expectedActivityState);
+
+        // Ensure the correct event was fired by the workflow
+        expectedProcess.setProcessEvent(expectedEventToBeFired.getType());
+
+        verify(financeCheckProcessRepositoryMock).save(expectedProcess);
     }
 
     private FinanceCheckProcess processExpectations(Long expectedProjectId, Long expectedProjectUserId, Long expectedUserId, FinanceCheckState expectedState, FinanceCheckOutcomes expectedEvent) {

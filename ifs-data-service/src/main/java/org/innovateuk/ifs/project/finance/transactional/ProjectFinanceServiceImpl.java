@@ -556,9 +556,9 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
                 ));
     }
 
-    private ServiceResult<Void> approveFinanceCheckFigures(User currentUser, PartnerOrganisation partnerOrg, Eligibility eligibility) {
+    private ServiceResult<Void> approveFinanceCheck(User currentUser, PartnerOrganisation partnerOrg, Eligibility eligibility) {
         if(eligibility.equals(Eligibility.APPROVED)) {
-            return financeCheckWorkflowHandler.approveFinanceCheckFigures(partnerOrg, currentUser) ? serviceSuccess() : serviceFailure(FINANCE_CHECKS_CANNOT_PROGRESS_WORKFLOW);
+            return financeCheckWorkflowHandler.approveFinanceCheck(partnerOrg, currentUser) ? serviceSuccess() : serviceFailure(FINANCE_CHECKS_CANNOT_PROGRESS_WORKFLOW);
         }
         return serviceSuccess();
     }
@@ -608,7 +608,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
                                 .andOnSuccess(() -> saveEligibility(projectFinance, eligibilityRagStatus))
                 )
 
-                        .andOnSuccess(() -> approveFinanceCheckFigures(currentUser, partnerOrganisation, eligibility))));
+                        .andOnSuccess(() -> approveFinanceCheck(currentUser, partnerOrganisation, eligibility))));
     }
 
     private ServiceResult<Void> validateEligibility(EligibilityState currentEligibilityState, Eligibility eligibility, EligibilityRagStatus eligibilityRagStatus) {
