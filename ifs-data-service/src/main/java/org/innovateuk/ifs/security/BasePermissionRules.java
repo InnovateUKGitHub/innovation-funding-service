@@ -99,7 +99,6 @@ public abstract class BasePermissionRules {
     }
 
     protected boolean isFinanceContact(long projectId, long userId) {
-        List<ProjectUser> financeContactUsers = projectUserRepository.findByProjectIdAndUserIdAndRole(projectId, userId, PROJECT_FINANCE_CONTACT);
-        return financeContactUsers != null && !financeContactUsers.isEmpty();
+        return !projectUserRepository.findByProjectIdAndUserIdAndRole(projectId, userId, PROJECT_FINANCE_CONTACT).isEmpty();
     }
 }
