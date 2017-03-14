@@ -38,20 +38,14 @@ Valid invitation submit
     Then the user should see the text in the page    Application team
     And the user should see the element    jQuery=.table-overflow:eq(1) td:nth-child(3):contains("Pending")
 
-Pending partners visible in the Application details
-    [Documentation]    INFUND-2966, INFUND-2738
-    [Tags]    HappyPath
-    Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=Invite robot test application
-    And the user clicks the button/link    link=Application details
-    Then the user should see the element   jQuery=ul.list-bullet > li > span:contains("Fannie May")
-
 Pending users visible in the assign list but not clickable
     [Documentation]    INFUND-928
     ...
     ...    INFUND-1962
     [Tags]    HappyPath
-    When the user navigates to the next question
+    Given the user navigates to the page    ${DASHBOARD_URL}
+    And the user clicks the button/link    link=Invite robot test application
+    And the user clicks the button/link    link=Project summary
     Then the applicant cannot assign to pending invitees
     And the user should see the text in the page    Adrian Booth (pending)
 

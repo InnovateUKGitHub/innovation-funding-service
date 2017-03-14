@@ -36,7 +36,7 @@ Complete the org size section
     the user clicks the button/link    link=Your organisation
     ${orgSizeReadonly}=  Run Keyword And Return Status    Element Should Be Visible   jQuery=button:contains("Edit your organisation")
     Run Keyword If    ${orgSizeReadonly}    the user clicks the button/link    jQuery=button:contains("Edit your organisation")
-    the user selects the radio button    financePosition-organisationSize  LARGE
+    the user selects the radio button    financePosition-organisationSize  ${LARGE_ORGANISATION_SIZE}
     run keyword and ignore error without screenshots    the user clicks the button/link    jQuery=button:contains("Mark as complete")
     run keyword and ignore error without screenshots    the user clicks the button/link    link=Your finances
 
@@ -112,18 +112,11 @@ the user has read only view once section is marked complete
 the user fills in Labour
     the user clicks the button/link            jQuery=#form-input-20 button:contains("Labour")
     the user should see the element            css=.labour-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input
-    remove previous rows                       jQuery=.labour-costs-table button:contains("Remove")
-    the user enters text to a text field       jQuery=input[name^="labour-labourDaysYearly"][id$="labourDaysYearly"]    230
-    the user enters large text to a text field     jQuery=.labour-costs-table input[id$="labourGrossSalary"]  120000
-    the user enters text to a text field       jQuery=.labour-costs-table input[id$="role"]  test
-    the user enters text to a text field       jQuery=.labour-costs-table input[id$="labourDays"]  100
-    wait for autosave
-    the user moves focus to the element        jQuery=button:contains('Add another role')
-    the user clicks the button/link            jQuery=button:contains('Add another role')
-    the user enters large text to a text field     jQuery=.labour-costs-table input[id$="role"]:last-of-type  anotherrole
-    the user enters large text to a text field     jQuery=.labour-costs-table input[id$="labourGrossSalary"]:last-of-type  120000
-    the user enters text to a text field       jQuery=.labour-costs-table input[id$="labourDays"]:last-of-type  100
-    wait For autosave
+    the user enters text to a text field       jQuery=input[id$="labourDaysYearly"]    230
+    the user should see the element            jQuery=input.form-control[name^=labour-role]:text[value=""]:first
+    the user enters text to a text field       jQuery=input.form-control[name^=labour-role]:text[value=""]:first    anotherrole
+    the user enters text to a text field       jQuery=input.form-control[name^=labour-gross][value=""]:first    120000
+    the user enters text to a text field       jQuery=input.form-control[name^=labour-labour][value=""]:first    100
     the user clicks the button/link            jQuery=#form-input-20 button:contains("Labour")
 
 the user fills in Overhead costs
@@ -190,7 +183,7 @@ the user fills in the organisation information
     the user clicks the button/link    link=Your organisation
     ${STATUS}    ${VALUE}=  Run Keyword And Ignore Error Without Screenshots  page should contain element  jQuery=button:contains("Edit your organisation")
     Run Keyword If    '${status}' == 'PASS'    the user clicks the button/link  jQuery=button:contains("Edit your organisation")
-    the user selects the radio button  financePosition-organisationSize  financePosition-organisationSize-SMALL
+    the user selects the radio button  financePosition-organisationSize  ${SMALL_ORGANISATION_SIZE}
     the user clicks the button/link    jQuery=button:contains("Mark as complete")
     the user clicks the button/link  link=Your organisation
     the user has read only view once section is marked complete
@@ -210,7 +203,7 @@ the user fills in the funding information
     [Arguments]  ${Application}
     the user navigates to Your-finances page   ${Application}
     the user clicks the button/link       link=Your funding
-    the user enters text to a text field  css=#cost-financegrantclaim  60
+    the user enters text to a text field  css=#cost-financegrantclaim  45
     click element                         jQuery=label:contains("No")
     the user selects the checkbox         agree-terms-page
     the user clicks the button/link       jQuery=button:contains("Mark as complete")
@@ -218,13 +211,13 @@ the user fills in the funding information
     the user has read only view once section is marked complete
 
 the user should see all finance subsections complete
-    the user should see the element  jQuery=li.grid-row.section:nth-of-type(1) img.section-status.complete
-    the user should see the element  jQuery=li.grid-row.section:nth-of-type(2) img.section-status.complete
-    the user should see the element  jQuery=li.grid-row.section:nth-of-type(3) img.section-status.complete
+    the user should see the element  jQuery=li:nth-of-type(1) .task-status-complete
+    the user should see the element  jQuery=li:nth-of-type(2) .task-status-complete
+    the user should see the element  jQuery=li:nth-of-type(3) .task-status-complete
 
 the user should see all finance subsections incomplete
-    the user should see the element  jQuery=li.grid-row.section:nth-of-type(1) img.section-status.assigned
-    the user should see the element  jQuery=li.grid-row.section:nth-of-type(2) img.section-status.assigned
+    the user should see the element  jQuery=li:nth-of-type(1) .action-required
+    the user should see the element  jQuery=li:nth-of-type(2) .action-required
     the user should see the element  jQuery=h3:contains("Your funding")
 
 Remove previous rows

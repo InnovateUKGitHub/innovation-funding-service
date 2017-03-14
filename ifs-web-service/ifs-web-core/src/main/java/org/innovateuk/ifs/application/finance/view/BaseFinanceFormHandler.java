@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.finance.model.FinanceFormField;
 import org.innovateuk.ifs.application.finance.view.item.*;
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
@@ -41,8 +42,8 @@ public abstract class BaseFinanceFormHandler {
         List<Object> args = singletonList(e.getMessage());
         if(IntegerNumberFormatException.class.equals(e.getClass()) || BigDecimalNumberFormatException.class.equals(e.getClass())){
             validationMessages.addError(globalError(e.getMessage(), args));
-        }else{
-            validationMessages.addError(globalError("field.value.not.valid", args));
+        } else{
+            validationMessages.addError(new Error(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR));
         }
         return validationMessages;
     }

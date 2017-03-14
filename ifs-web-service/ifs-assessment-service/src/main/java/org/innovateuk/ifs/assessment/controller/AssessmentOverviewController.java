@@ -23,7 +23,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.function.Supplier;
 
@@ -61,7 +60,7 @@ public class AssessmentOverviewController {
     private ProcessRoleService processRoleService;
 
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public String getOverview(Model model,
                               @ModelAttribute(FORM_ATTR_NAME) AssessmentOverviewForm form,
                               @PathVariable("assessmentId") Long assessmentId,
@@ -71,19 +70,18 @@ public class AssessmentOverviewController {
         return "assessment/application-overview";
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/finances")
+    @GetMapping(value = "/finances")
     public String getFinancesSummary(Model model, @PathVariable("assessmentId") Long assessmentId) {
         model.addAttribute("model", assessmentFinancesSummaryModelPopulator.populateModel(assessmentId, model));
         return "assessment/application-finances-summary";
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/application/{applicationId}/formInput/{formInputId}/download")
+    @GetMapping(value = "/application/{applicationId}/formInput/{formInputId}/download")
     public @ResponseBody ResponseEntity<ByteArrayResource> downloadAppendix (
             @PathVariable("applicationId") Long applicationId,
             @PathVariable("formInputId") Long formInputId,
-            HttpServletRequest request) {
-        final UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), applicationId);
+            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+        ProcessRoleResource processRole = processRoleService.findProcessRole(loggedInUser.getId(), applicationId);
 
         final ByteArrayResource resource = formInputResponseService
                 .getFile(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
@@ -94,7 +92,7 @@ public class AssessmentOverviewController {
         return getFileResponseEntity(resource, fileDetails.getFileEntryResource());
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/reject")
+    @PostMapping(value = "/reject")
     public String rejectInvitation(
             Model model,
             @Valid @ModelAttribute(FORM_ATTR_NAME) AssessmentOverviewForm form,
@@ -112,7 +110,7 @@ public class AssessmentOverviewController {
         });
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/reject/confirm")
+    @GetMapping(value = "/reject/confirm")
     public String rejectInvitationConfirm(
             Model model,
             @ModelAttribute(FORM_ATTR_NAME) AssessmentOverviewForm form,

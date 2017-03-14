@@ -1,6 +1,9 @@
 package org.innovateuk.ifs.assessment.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.security.ApplicationLookupStrategy;
+import org.innovateuk.ifs.application.security.ApplicationPermissionRules;
 import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.transactional.AssessmentService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -12,6 +15,7 @@ import org.springframework.security.access.method.P;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeResourceBuilder.newAssessmentRejectOutcomeResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentCreateResourceBuilder.newAssessmentCreateResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOutcomeResourceBuilder.newAssessmentFundingDecisionOutcomeResource;
@@ -29,6 +33,8 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
 
     private AssessmentPermissionRules assessmentPermissionRules;
     private AssessmentLookupStrategy assessmentLookupStrategy;
+    private ApplicationPermissionRules applicationPermissionRules;
+    private ApplicationLookupStrategy applicationLookupStrategy;
 
     @Override
     protected Class<? extends AssessmentService> getClassUnderTest() {
@@ -39,6 +45,8 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
     public void setUp() throws Exception {
         assessmentPermissionRules = getMockPermissionRulesBean(AssessmentPermissionRules.class);
         assessmentLookupStrategy = getMockPermissionEntityLookupStrategiesBean(AssessmentLookupStrategy.class);
+        applicationPermissionRules = getMockPermissionRulesBean(ApplicationPermissionRules.class);
+        applicationLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ApplicationLookupStrategy.class);
     }
 
     private static Long ID_TO_FIND = 1L;
@@ -132,6 +140,24 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
     }
 
     @Test
+    public void getApplicationFeedback() throws Exception {
+        long applicationId = 1L;
+        ApplicationResource expectedApplicationResource = newApplicationResource()
+                .withId(applicationId)
+                .build();
+
+        when(applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(expectedApplicationResource);
+
+        assertAccessDenied(
+                () -> classUnderTest.getApplicationFeedback(applicationId),
+                () -> {
+                    verify(applicationLookupStrategy).getApplicationResource(applicationId);
+                    verify(applicationPermissionRules).usersConnectedToTheApplicationCanView(isA(ApplicationResource.class), isA(UserResource.class));
+                }
+        );
+    }
+
+    @Test
     public void rejectInvitation() {
         Long assessmentId = 1L;
         AssessmentRejectOutcomeResource assessmentRejectOutcomeResource = newAssessmentRejectOutcomeResource().build();
@@ -215,7 +241,13 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         }
 
         @Override
-        public ServiceResult<Void> recommend(@P("assessmentId") long assessmentId, AssessmentFundingDecisionOutcomeResource assessmentFundingDecision) {
+        public ServiceResult<Void> recommend(@P("assessmentId") long assessmentId,
+                                             AssessmentFundingDecisionOutcomeResource assessmentFundingDecision) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<ApplicationAssessmentFeedbackResource> getApplicationFeedback(long applicationId) {
             return null;
         }
 

@@ -1,11 +1,12 @@
 package org.innovateuk.ifs.application.finance.viewmodel;
 
+import org.innovateuk.ifs.finance.resource.OrganisationSizeResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.user.resource.OrganisationSize;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -13,12 +14,14 @@ import java.util.Map;
  */
 public class FinanceViewModel extends BaseFinanceViewModel {
     protected Map<FinanceRowType, FinanceRowCostCategory> organisationFinance;
-    protected OrganisationSize organisationFinanceSize;
+    protected Long organisationFinanceSize;
     protected OrganisationTypeResource organisationType;
     protected Long organisationFinanceId;
     protected BigDecimal organisationFinanceTotal;
+    protected List<OrganisationSizeResource> organisationSizes;
 
     protected Integer organisationGrantClaimPercentage;
+    protected Integer maximumGrantClaimPercentage;
     protected Long organisationGrantClaimPercentageId;
 
     public Map<FinanceRowType, FinanceRowCostCategory> getOrganisationFinance() {
@@ -29,11 +32,11 @@ public class FinanceViewModel extends BaseFinanceViewModel {
         this.organisationFinance = organisationFinance;
     }
 
-    public OrganisationSize getOrganisationFinanceSize() {
+    public Long getOrganisationFinanceSize() {
         return organisationFinanceSize;
     }
 
-    public void setOrganisationFinanceSize(OrganisationSize organisationFinanceSize) {
+    public void setOrganisationFinanceSize(Long organisationFinanceSize) {
         this.organisationFinanceSize = organisationFinanceSize;
     }
 
@@ -84,5 +87,21 @@ public class FinanceViewModel extends BaseFinanceViewModel {
 
     public String getFilename() {
         return null;
+    }
+
+    public List<OrganisationSizeResource> getOrganisationSizes() {
+        return organisationSizes;
+    }
+
+    public void setOrganisationSizes(List<OrganisationSizeResource> organisationSizes) {
+        this.organisationSizes = organisationSizes;
+    }
+
+    public Integer getMaximumGrantClaimPercentage() {
+        return maximumGrantClaimPercentage;
+    }
+
+    public void setMaximumGrantClaimPercentage(Integer maximumGrantClaimPercentage) {
+        this.maximumGrantClaimPercentage = maximumGrantClaimPercentage;
     }
 }

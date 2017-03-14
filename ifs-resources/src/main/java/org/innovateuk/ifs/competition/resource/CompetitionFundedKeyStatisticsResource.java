@@ -60,6 +60,14 @@ public class CompetitionFundedKeyStatisticsResource {
         this.applicationsAwaitingDecision = applicationsAwaitingDecision;
     }
 
+    public boolean isCanManageFundingNotifications() {
+        return applicationsFunded > 0 || applicationsNotFunded > 0 || applicationsOnHold > 0;
+    }
+
+    public boolean isCanReleaseFeedback() {
+        return applicationsAwaitingDecision == 0 && applicationsSubmitted == applicationsNotifiedOfDecision;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

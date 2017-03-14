@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.competition.domain;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -62,4 +65,34 @@ public class CompetitionType {
     public Competition getTemplate() { return template; }
 
     public void setTemplate(Competition template) { this.template = template; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CompetitionType that = (CompetitionType) o;
+
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(name, that.name)
+                .append(stateAid, that.stateAid)
+                .append(active, that.active)
+                .append(template, that.template)
+                .append(competitions, that.competitions)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(name)
+                .append(stateAid)
+                .append(active)
+                .append(template)
+                .append(competitions)
+                .toHashCode();
+    }
 }

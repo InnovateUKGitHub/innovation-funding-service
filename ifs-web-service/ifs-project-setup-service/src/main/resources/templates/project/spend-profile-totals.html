@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend Profile'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend profile'" />
 </head>
 <body class="spend-profile">
 <th:block th:insert="fragments/layout :: body-start" />
@@ -14,7 +14,7 @@
 
 
         <div class="page-title">
-                <th:block th:insert="fragments/elements :: project-title (projectId=${project.application}, projectName=${project.name})"                   />
+                <th:block th:insert="fragments/elements :: project-title (projectId=${project.application}, projectName=${project.name})" />
             <h1 class="heading-xlarge">Spend profile</h1>
         </div>
 
@@ -78,7 +78,7 @@
                 <tfoot>
                 <tr class="form-group-row">
                     <th scope="row" class="fix-left">Total</th>
-                    <th:block  th:each="monthTotal,status : ${model.table.totalForEachMonth}">
+                    <th:block th:each="monthTotal,status : ${model.table.totalForEachMonth}">
                         <td th:text="${'&pound; '+#numbers.formatInteger(monthTotal,1,'COMMA')}" />
                     </th:block>
                     <td class="fix-right">
