@@ -94,7 +94,7 @@
             <li class="read-only" th:if="${model.bankDetailsSection.notAccessible}">
                 <div class="task">
                     <h2 class="heading-small">Bank details</h2>
-                    <p class="no-margin">We need bank details for each consortium member so that we can pay the grant.</p>
+                    <p class="no-margin">We need bank details for those partners eligible for funding.</p>
                 </div>
             </li>
 
@@ -108,7 +108,7 @@
                            th:href="@{/project/{id}/bank-details/readonly(id=${model.projectId})}">Bank details</a>
                         <th:block th:if="${model.bankDetailsSection.notRequired}">Bank details (not required)</th:block>
                     </h2>
-                    <p class="no-margin">We need bank details for each consortium member so that we can pay the grant.</p>
+                    <p class="no-margin">We need bank details for those partners eligible for funding.</p>
                 </div>
                 <th:block th:insert="project/fragments :: project-setup-status-indicator(${model.bankDetailsStatus.getSectionStatus()})"/>
             </li>
