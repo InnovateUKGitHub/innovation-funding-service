@@ -70,7 +70,7 @@ Other documents section is read-only
     Then the user should not see the text in the page    Remove
     And the user should not see the element    name=removeCollaborationAgreementClicked
     And the user should not see the element    name=removeExploitationPlanClicked
-    And the user should not see the element    jQuery=.button:contains("Submit partner documents")
+    And the user should not see the element    jQuery=.button:contains("Submit documents")
     [Teardown]    the user goes back to the previous page
 
 
@@ -146,7 +146,7 @@ Other documents section is read-only for industrial partner
     Then the user should not see the text in the page    Remove
     And the user should not see the element    name=removeCollaborationAgreementClicked
     And the user should not see the element    name=removeExploitationPlanClicked
-    And the user should not see the element    jQuery=.button:contains("Submit partner documents")
+    And the user should not see the element    jQuery=.button:contains("Submit documents")
     [Teardown]    the user goes back to the previous page
 
 
@@ -223,7 +223,7 @@ Other documents section is read-only for academic partner
     Then the user should not see the text in the page    Remove
     And the user should not see the element    name=removeCollaborationAgreementClicked
     And the user should not see the element    name=removeExploitationPlanClicked
-    And the user should not see the element    jQuery=.button:contains("Submit partner documents")
+    And the user should not see the element    jQuery=.button:contains("Submit documents")
     [Teardown]    the user goes back to the previous page
 
 
@@ -278,7 +278,7 @@ other documents have been uploaded and approved
     choose file    name=collaborationAgreement    ${upload_folder}/testing.pdf
     choose file    name=exploitationPlan    ${upload_folder}/testing.pdf
     the user reloads the page
-    the user clicks the button/link    jQuery=.button:contains("Submit partner documents")
+    the user clicks the button/link    jQuery=.button:contains("Submit documents")
     the user clicks the button/link    jQuery=.button:contains("Submit")
     log in as a different user         &{internal_finance_credentials}
     the user navigates to the page     ${SERVER}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/partner/documents
