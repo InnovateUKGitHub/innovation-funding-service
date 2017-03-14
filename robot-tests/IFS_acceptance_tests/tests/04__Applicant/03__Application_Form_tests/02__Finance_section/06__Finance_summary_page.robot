@@ -46,13 +46,13 @@ Contribution to project and funding sought should not be negative number
     [Documentation]    INFUND-524
     ...
     ...    This test case still use the old application after the refactoring
-    [Tags]    Failing
+    [Tags]    Pending
+    # TODO Pending due to INFUND-8706
     [Setup]  log in as a different user    &{lead_applicant_credentials}
-    #TODO investigate intermittent failure
     When the user navigates to Your-finances page       Providing sustainable childcare
-    and the user fills in the project costs
-    and the user fills in the organisation information       Providing sustainable childcare
-    and the user checks your funding section for the project      Providing sustainable childcare
+    And the user fills in the project costs
+    And the user fills in the organisation information       Providing sustainable childcare
+    And the user checks your funding section for the project      Providing sustainable childcare
     Then the contribution to project and funding sought should be 0 and not a negative number
 
 Your Finance includes Finance summary table for lead applicant
@@ -86,7 +86,7 @@ Red warning should show when the finances are incomplete
 
 Green check should show when the finances are complete
     [Documentation]    INFUND-927, INFUND-894, INFUND-446
-    [Tags]    Failing
+    [Tags]
     [Setup]
     #TODO   investigate intermmitent failure
     When the user navigates to Your-finances page    Robot test application
@@ -104,13 +104,13 @@ Alert shows If the academic research participation is too high
     And The user navigates to the academic application finances
     And The user clicks the button/link       link=Your project costs
     When the user enters text to a text field      id=incurred-staff    1000
-    And Guest user log-in    &{lead_applicant_credentials}
+    And log in as a different user  &{lead_applicant_credentials}
     And the user navigates to the finance overview of the academic
     Then the user should see the text in the page    The participation levels of this project are not within the required range
     And the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=Review and submit
-    And the user clicks the button/link    jquery=button:contains("Finances Summary")
+    And the user clicks the button/link    jQuery=button:contains("Finances summary")
     Then the user should see the text in the page    The participation levels of this project are not within the required range
     [Teardown]
 
@@ -124,9 +124,9 @@ Alert should not show If research participation is below the maximum level
     And the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=Review and submit
-    And the user clicks the button/link    jquery=button:contains("Finances Summary")
+    And the user clicks the button/link    jquery=button:contains("Finances summary")
     Then the user should see the text in the page    The participation levels of this project are within the required range
-    [Teardown]
+
 
 *** Keywords ***
 

@@ -40,7 +40,7 @@
    </div>
 
     <form th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post">
-        <th:block th:unless="${model.research}">
+        <th:block th:unless="${model.usingJesFinances}">
             <h3 class="heading-medium">Finance contact</h3>
             <p>
                 <th:block th:text="${model.financeContactName}">Dave Norman</th:block> <br />
@@ -133,7 +133,7 @@
             </table>
         </th:block>
 
-        <th:block th:if="${model.research}">
+        <th:block th:if="${model.usingJesFinances}">
             <h2 class="heading-medium">Academic finances</h2>
             <p>These finances were originally submitted at the application stage in Je-S.</p>
             <div class="upload-section">
@@ -144,10 +144,10 @@
         </th:block>
 
         <th:block th:if="${model.showApproveButton}">
-            <th:block th:unless="${model.research}">
+            <th:block th:unless="${model.usingJesFinances}">
               <h3 class="heading-medium">Eligible costs</h3>
               <p>After any required alterations have been made, eligible costs should be approved.</p>
-              <p>If changes are made ensure that the applicant has reviewed and understand the changes to their finances before approval.</p>
+              <p>Changes should be reviewed and understood by the partner before they are approved.</p>
               <div class="form-group">
                   <label class="block-label selection-button-checkbox" for="costs-reviewed">
                       <input id="costs-reviewed" value="costs-reviewed" type="checkbox" data-switches-button-status="#approve-eligibility" />
@@ -159,7 +159,7 @@
               <button class="button button-secondary extra-margin">Save and return to finance checks</button>
             </th:block>
 
-            <th:block th:if="${model.research}">
+            <th:block th:if="${model.usingJesFinances}">
               <h3 class="heading-medium">Approve eligibility</h3>
               <p>After review finance checks should be approved.</p>
               <div class="form-group">

@@ -133,7 +133,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
             assertEquals(toMatchCompetitionInFlightViewModel.getStatThree(), matchCompetitionInFlightViewModel.getStatThree());
             assertEquals(toMatchCompetitionInFlightViewModel.getStatFour(), matchCompetitionInFlightViewModel.getStatFour());
             assertEquals(toMatchCompetitionInFlightViewModel.getStatFive(), matchCompetitionInFlightViewModel.getStatFive());
-            assertEquals(toMatchCompetitionInFlightViewModel.getCanManageFundingNotifications(), matchCompetitionInFlightViewModel.getCanManageFundingNotifications());
+            assertEquals(toMatchCompetitionInFlightViewModel.isCanManageFundingNotifications(), matchCompetitionInFlightViewModel.isCanManageFundingNotifications());
             return true;
         });
     }

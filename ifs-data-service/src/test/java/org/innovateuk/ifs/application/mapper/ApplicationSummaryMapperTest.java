@@ -24,6 +24,7 @@ import java.math.BigDecimal;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.clearUniqueIds;
+import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -67,6 +68,10 @@ public class ApplicationSummaryMapperTest {
         source = newApplication()
                 .withId(APPLICATION_ID)
                 .withName("appname")
+                .withInnovationArea(
+                        newInnovationArea()
+                                .withName("Digital Manufacturing")
+                                .build())
                 .withApplicationStatus(openStatus)
                 .withDurationInMonths(7L)
                 .withFundingDecision(FundingDecisionStatus.FUNDED)
@@ -112,10 +117,11 @@ public class ApplicationSummaryMapperTest {
 
         assertEquals(APPLICATION_ID, result.getId());
         assertEquals("appname", result.getName());
+        assertEquals("Digital Manufacturing", result.getInnovationArea());
         assertEquals("In Progress", result.getStatus());
         assertEquals(66, result.getCompletedPercentage());
         assertEquals("leadorg", result.getLead());
-        assertEquals("User 4", result.getLeadApplicant());
+        assertEquals("User 5", result.getLeadApplicant());
         assertEquals(2, result.getNumberOfPartners());
         assertEquals(new BigDecimal("1.23"), result.getGrantRequested());
         assertEquals(new BigDecimal("9.87"), result.getTotalProjectCost());
