@@ -32,7 +32,7 @@ Submit button disabled when application is incomplete
     Then the submit button should be disabled
 
 Applicant submits the application
-    [Documentation]
+    [Documentation]    INFUND-8599
     [Tags]
     When the user navigates to the page    ${DASHBOARD_URL}
     and the user clicks the button/link      link=${application_name}
