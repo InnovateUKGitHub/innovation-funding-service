@@ -1431,12 +1431,10 @@
                 </tfoot>
                 <tbody>
                     <th:block th:each="summary : ${summaries.financeCheckSummariesResources}" th:with="partner=${summaries.getPartnerFromSummary(summary.organisationId)}">
-                        <tr >
+                        <tr>
                             <th scope="col">
-                                <strong>
-                                    <th:block th:text="${partner.organisationName}">Organisation Name</th:block>
-                                    <th:block th:if="${partner.isLeadOrganisation()}"> (Lead)</th:block>
-                                </strong>
+                                <strong th:text="${partner.getOrganisationName()}">Organisation Name<br /></strong>
+                                <small th:if="${partner.isLeadOrganisation()}">Lead</small>
                             </th>
                             <td class="numeric"><strong>&pound; <th:block th:text="${#numbers.formatInteger(summary.totalCost,1,'COMMA')}" /></strong></td>
                             <td th:text="${#numbers.formatInteger(summary.percentageGrant,1,'NONE')+'%'}" class="numeric" />
