@@ -144,6 +144,19 @@ release {
 
 }
 
+
+
+task myTask(type: Copy) {
+    println "Doing stuff"
+     from '.'
+        into '.'
+        include 'docker-compose.yml'
+        rename 'docker-compose.yml', 'docker-compose-two.yml'
+    }
+
+afterReleaseBuild.dependsOn myTask
+
+
 sonarqube {
     properties {
         property "sonar.projectName", "IFS_Project"
