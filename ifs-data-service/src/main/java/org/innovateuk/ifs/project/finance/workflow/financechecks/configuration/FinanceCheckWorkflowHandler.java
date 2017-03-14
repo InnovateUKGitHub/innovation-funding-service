@@ -49,7 +49,7 @@ public class FinanceCheckWorkflowHandler extends BaseWorkflowEventHandler<Financ
         return fireEvent(projectCreatedEvent(partnerOrganisation, originalLeadApplicantProjectUser), FinanceCheckState.PENDING);
     }
 
-    public boolean approveFinanceCheckFigures(PartnerOrganisation partnerOrganisation, User financeTeamUser) {
+    public boolean approveFinanceCheck(PartnerOrganisation partnerOrganisation, User financeTeamUser) {
         return fireEvent(approveFinanceCheckMessage(financeTeamUser, partnerOrganisation), partnerOrganisation);
     }
 

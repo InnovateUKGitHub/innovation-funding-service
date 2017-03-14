@@ -395,8 +395,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         List<PartnerOrganisation> partnerOrganisations = partnerOrganisationRepository.findByProjectId(project.getId());
 
         Optional<PartnerOrganisation> existingReviewablePartnerOrganisation = simpleFindFirst(partnerOrganisations, partnerOrganisation ->
-                        getViabilityProcess(partnerOrganisation)
-                .andOnSuccessReturn(viabilityProcess -> ViabilityState.REVIEW == viabilityProcess.getActivityState()).getSuccessObjectOrThrowException());
+                ViabilityState.REVIEW == viabilityWorkflowHandler.getState(partnerOrganisation));
 
         if (!existingReviewablePartnerOrganisation.isPresent()) {
             return serviceSuccess();
@@ -471,8 +470,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         List<PartnerOrganisation> partnerOrganisations = partnerOrganisationRepository.findByProjectId(project.getId());
 
         Optional<PartnerOrganisation> existingReviewablePartnerOrganisation = simpleFindFirst(partnerOrganisations, partnerOrganisation ->
-                getEligibilityProcess(partnerOrganisation)
-                        .andOnSuccessReturn(eligibilityProcess -> EligibilityState.REVIEW == eligibilityProcess.getActivityState()).getSuccessObjectOrThrowException());
+                        EligibilityState.REVIEW == eligibilityWorkflowHandler.getState(partnerOrganisation));
 
         if (!existingReviewablePartnerOrganisation.isPresent()) {
             return serviceSuccess();
@@ -558,9 +556,9 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
                 ));
     }
 
-    private ServiceResult<Void> approveFinanceCheckFigures(User currentUser, PartnerOrganisation partnerOrg, Eligibility eligibility) {
+    private ServiceResult<Void> approveFinanceCheck(User currentUser, PartnerOrganisation partnerOrg, Eligibility eligibility) {
         if(eligibility.equals(Eligibility.APPROVED)) {
-            return financeCheckWorkflowHandler.approveFinanceCheckFigures(partnerOrg, currentUser) ? serviceSuccess() : serviceFailure(FINANCE_CHECKS_CANNOT_PROGRESS_WORKFLOW);
+            return financeCheckWorkflowHandler.approveFinanceCheck(partnerOrg, currentUser) ? serviceSuccess() : serviceFailure(FINANCE_CHECKS_CANNOT_PROGRESS_WORKFLOW);
         }
         return serviceSuccess();
     }
@@ -597,7 +595,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     }
 
     @Override
-    public ServiceResult<Void> saveEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, Eligibility eligibility, EligibilityRagStatus eligibilityRagStatus){
+    public ServiceResult<Void> saveAndApproveEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, Eligibility eligibility, EligibilityRagStatus eligibilityRagStatus){
 
         Long projectId = projectOrganisationCompositeId.getProjectId();
         Long organisationId = projectOrganisationCompositeId.getOrganisationId();
@@ -610,7 +608,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
                                 .andOnSuccess(() -> saveEligibility(projectFinance, eligibilityRagStatus))
                 )
 
-                        .andOnSuccess(() -> approveFinanceCheckFigures(currentUser, partnerOrganisation, eligibility))));
+                        .andOnSuccess(() -> approveFinanceCheck(currentUser, partnerOrganisation, eligibility))));
     }
 
     private ServiceResult<Void> validateEligibility(EligibilityState currentEligibilityState, Eligibility eligibility, EligibilityRagStatus eligibilityRagStatus) {

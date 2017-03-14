@@ -1117,7 +1117,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> result = service.saveEligibility(projectOrganisationCompositeId, Eligibility.APPROVED, EligibilityRagStatus.AMBER);
+        ServiceResult<Void> result = service.saveAndApproveEligibility(projectOrganisationCompositeId, Eligibility.APPROVED, EligibilityRagStatus.AMBER);
 
         assertTrue(result.isFailure());
 
@@ -1125,7 +1125,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         verify(projectFinanceRepositoryMock, never()).save(projectFinanceInDB);
         verify(eligibilityWorkflowHandlerMock, never()).eligibilityApproved(partnerOrganisationInDB, user);
-        verify(financeCheckWorkflowHandlerMock, never()).approveFinanceCheckFigures(partnerOrganisationInDB, user);
+        verify(financeCheckWorkflowHandlerMock, never()).approveFinanceCheck(partnerOrganisationInDB, user);
     }
 
     @Test
@@ -1142,7 +1142,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> result = service.saveEligibility(projectOrganisationCompositeId, Eligibility.APPROVED, EligibilityRagStatus.UNSET);
+        ServiceResult<Void> result = service.saveAndApproveEligibility(projectOrganisationCompositeId, Eligibility.APPROVED, EligibilityRagStatus.UNSET);
 
         assertTrue(result.isFailure());
 
@@ -1150,7 +1150,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         verify(projectFinanceRepositoryMock, never()).save(projectFinanceInDB);
         verify(eligibilityWorkflowHandlerMock, never()).eligibilityApproved(partnerOrganisationInDB, user);
-        verify(financeCheckWorkflowHandlerMock, never()).approveFinanceCheckFigures(partnerOrganisationInDB, user);
+        verify(financeCheckWorkflowHandlerMock, never()).approveFinanceCheck(partnerOrganisationInDB, user);
 
     }
 
@@ -1169,14 +1169,14 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> result = service.saveEligibility(projectOrganisationCompositeId, Eligibility.REVIEW, EligibilityRagStatus.UNSET);
+        ServiceResult<Void> result = service.saveAndApproveEligibility(projectOrganisationCompositeId, Eligibility.REVIEW, EligibilityRagStatus.UNSET);
 
         assertTrue(result.isSuccess());
 
         assertSaveEligibilityResults(projectFinanceInDB, EligibilityRagStatus.UNSET);
 
         verify(eligibilityWorkflowHandlerMock, never()).eligibilityApproved(partnerOrganisationInDB, user);
-        verify(financeCheckWorkflowHandlerMock, never()).approveFinanceCheckFigures(partnerOrganisationInDB, user);
+        verify(financeCheckWorkflowHandlerMock, never()).approveFinanceCheck(partnerOrganisationInDB, user);
     }
 
     @Test
@@ -1194,14 +1194,14 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> result = service.saveEligibility(projectOrganisationCompositeId, Eligibility.REVIEW, EligibilityRagStatus.AMBER);
+        ServiceResult<Void> result = service.saveAndApproveEligibility(projectOrganisationCompositeId, Eligibility.REVIEW, EligibilityRagStatus.AMBER);
 
         assertTrue(result.isSuccess());
 
         assertSaveEligibilityResults(projectFinanceInDB, EligibilityRagStatus.AMBER);
 
         verify(eligibilityWorkflowHandlerMock, never()).eligibilityApproved(partnerOrganisationInDB, user);
-        verify(financeCheckWorkflowHandlerMock, never()).approveFinanceCheckFigures(partnerOrganisationInDB, user);
+        verify(financeCheckWorkflowHandlerMock, never()).approveFinanceCheck(partnerOrganisationInDB, user);
 
     }
 
@@ -1218,10 +1218,10 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         ProjectFinance projectFinanceInDB = setUpSaveEligibilityMocking(partnerOrganisationInDB, user, EligibilityState.REVIEW);
 
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
-        when(financeCheckWorkflowHandlerMock.approveFinanceCheckFigures(partnerOrganisationInDB, user)).thenReturn(true);
+        when(financeCheckWorkflowHandlerMock.approveFinanceCheck(partnerOrganisationInDB, user)).thenReturn(true);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> result = service.saveEligibility(projectOrganisationCompositeId, Eligibility.APPROVED, EligibilityRagStatus.GREEN);
+        ServiceResult<Void> result = service.saveAndApproveEligibility(projectOrganisationCompositeId, Eligibility.APPROVED, EligibilityRagStatus.GREEN);
 
         assertTrue(result.isSuccess());
 

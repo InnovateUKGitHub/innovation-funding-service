@@ -29,7 +29,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
-public class ByFinanceCheckCostCategorySummaryStrategyTest extends BaseServiceUnitTest<ByFinanceCheckCostCategorySummaryStrategy> {
+public class ByFinanceCheckCostCategorySummaryStrategyTest extends BaseServiceUnitTest<ByProjectFinanceCostCategorySummaryStrategy> {
 
     @Test
     public void testGetCostCategorySummaries(){
@@ -94,7 +94,7 @@ public class ByFinanceCheckCostCategorySummaryStrategyTest extends BaseServiceUn
     }
 
     @Override
-    protected ByFinanceCheckCostCategorySummaryStrategy supplyServiceUnderTest() {
-        return new ByFinanceCheckCostCategorySummaryStrategy();
+    protected ByProjectFinanceCostCategorySummaryStrategy supplyServiceUnderTest() {
+        return new ByProjectFinanceCostCategorySummaryStrategy();
     }
 }

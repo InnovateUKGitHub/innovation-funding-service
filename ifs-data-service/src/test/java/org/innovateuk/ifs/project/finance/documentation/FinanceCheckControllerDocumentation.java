@@ -25,17 +25,14 @@ import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStat
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckProcessResourceBuilder.newFinanceCheckProcessResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckResourceBuilder.newFinanceCheckResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckSummaryResourceBuilder.newFinanceCheckSummaryResource;
-import static org.innovateuk.ifs.project.finance.resource.FinanceCheckState.READY_TO_APPROVE;
+import static org.innovateuk.ifs.project.finance.resource.FinanceCheckState.APPROVED;
+import static org.innovateuk.ifs.project.finance.resource.FinanceCheckState.PENDING;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
@@ -81,7 +78,7 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
                 withCanApprove(true).
                 withInternalParticipant(newUserResource().withFirstName("John").withLastName("Doe").withEmail("john.doe@innovateuk.gov.uk").build()).
                 withParticipant(newProjectUserResource().withUserName("Steve Smith").withEmail("steve.smith@empire.com").withProject(123L).withOrganisation(456L).build()).
-                withState(READY_TO_APPROVE).
+                withState(PENDING).
                 withModifiedDate(LocalDateTime.of(2016, 10, 04, 12, 10, 02)).
                 build();
 
