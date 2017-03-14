@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.financechecks.controller;
 
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.PartnerOrganisationService;
+import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckOverviewResource;
@@ -11,6 +12,7 @@ import org.innovateuk.ifs.project.financecheck.viewmodel.FinanceCheckSummariesVi
 import org.innovateuk.ifs.project.financecheck.viewmodel.ProjectFinanceCostBreakdownViewModel;
 import org.innovateuk.ifs.project.financecheck.viewmodel.ProjectFinanceOverviewViewModel;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -41,14 +43,19 @@ public class ProjectFinanceChecksOverviewController {
     @Autowired
     private ProjectFinanceService financeService;
 
+    @Autowired
+    private ProjectService projectService;
+
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping
     public String viewOverview(Model model,
                                @PathVariable("projectId") final Long projectId,
                                @PathVariable("organisationId") final Long organisationId) {
         FinanceCheckOverviewViewModel financeCheckOverviewViewModel = buildFinanceCheckOverviewViewModel(projectId);
+        ProjectResource project = projectService.getById(projectId);
         model.addAttribute("model", financeCheckOverviewViewModel);
         model.addAttribute("organisation", organisationId);
+        model.addAttribute("project", project);
 
         return "project/finance-checks-overview";
     }
@@ -58,11 +65,6 @@ public class ProjectFinanceChecksOverviewController {
         return new FinanceCheckOverviewViewModel(null, getProjectFinanceSummaries(projectId, partnerOrgs),
                 getProjectFinanceCostBreakdown(projectId, partnerOrgs));
     }
-//
-//    private ProjectFinanceOverviewViewModel getProjectFinanceOverviewViewModel(Long projectId) {
-//        FinanceCheckOverviewResource financeCheckOverviewResource = financeCheckService.getFinanceCheckOverview(projectId).getSuccessObjectOrThrowException();
-//        return new ProjectFinanceOverviewViewModel(financeCheckOverviewResource);
-//    }
 
     private FinanceCheckSummariesViewModel getProjectFinanceSummaries(Long projectId, List<PartnerOrganisationResource> partnerOrgs) {
         List<FinanceCheckEligibilityResource> summaries = mapWithIndex(partnerOrgs, (i, org) -> {
