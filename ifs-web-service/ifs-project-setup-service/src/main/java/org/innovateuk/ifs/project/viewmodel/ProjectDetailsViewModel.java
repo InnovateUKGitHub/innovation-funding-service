@@ -23,6 +23,8 @@ public class ProjectDetailsViewModel {
     private UserResource currentUser;
     private List<Long> usersPartnerOrganisations;
     private List<OrganisationResource> partnerOrganisations;
+
+    private OrganisationResource leadOrganisation;
     private ApplicationResource app;
     private CompetitionResource competition;
     private boolean projectDetailsSubmitted;
@@ -37,6 +39,7 @@ public class ProjectDetailsViewModel {
     public ProjectDetailsViewModel(ProjectResource project, UserResource currentUser,
                                    List<Long> usersPartnerOrganisations,
                                    List<OrganisationResource> partnerOrganisations,
+                                   OrganisationResource leadOrganisation,
                                    ApplicationResource app,
                                    List<ProjectUserResource> projectUsers,
                                    CompetitionResource competition,
@@ -49,6 +52,7 @@ public class ProjectDetailsViewModel {
         this.currentUser = currentUser;
         this.usersPartnerOrganisations = usersPartnerOrganisations;
         this.partnerOrganisations = partnerOrganisations;
+        this.leadOrganisation = leadOrganisation;
         this.app = app;
         this.competition = competition;
         this.projectDetailsSubmitted = projectDetailsSubmitted;
@@ -88,6 +92,14 @@ public class ProjectDetailsViewModel {
 
     public Map<Long, ProjectUserResource> getFinanceContactsByOrganisationId() {
         return financeContactsByOrganisationId;
+    }
+
+    public OrganisationResource getLeadOrganisation() {
+        return leadOrganisation;
+    }
+
+    public void setLeadOrganisation(OrganisationResource leadOrganisation) {
+        this.leadOrganisation = leadOrganisation;
     }
 
     public boolean isUserLeadPartner() {

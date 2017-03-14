@@ -88,9 +88,9 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
 
 	    List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());
-        OrganisationResource lead = projectService.getLeadOrganisation(projectId);
+        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
         List<OrganisationResource> partnerOrganisations
-                = new PrioritySorting<>(getPartnerOrganisations(projectUsers), lead, OrganisationResource::getName).unwrap();
+                = new PrioritySorting<>(getPartnerOrganisations(projectUsers), leadOrganisation, OrganisationResource::getName).unwrap();
         boolean isSubmissionAllowed = projectService.isSubmitAllowed(projectId).getSuccessObject();
 
         ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId, Optional.empty());
@@ -99,7 +99,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource, loggedInUser,
                 getUsersPartnerOrganisations(loggedInUser, projectUsers),
-                partnerOrganisations, applicationResource, projectUsers, competitionResource,
+                partnerOrganisations, leadOrganisation, applicationResource, projectUsers, competitionResource,
                 projectService.isUserLeadPartner(projectId, loggedInUser.getId()), projectDetailsSubmitted,
                 getProjectManager(projectResource.getId()).orElse(null), isSubmissionAllowed, false));
 
@@ -116,14 +116,14 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
 
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());
-        List<OrganisationResource> partnerOrganisations = getPartnerOrganisations(projectUsers);
-
+        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
+        List<OrganisationResource> partnerOrganisations
+                = new PrioritySorting<>(getPartnerOrganisations(projectUsers), leadOrganisation, OrganisationResource::getName).unwrap();
         ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId, Optional.empty());
-
 
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource, loggedInUser,
                 getUsersPartnerOrganisations(loggedInUser, projectUsers),
-                partnerOrganisations, applicationResource, projectUsers, competitionResource,
+                partnerOrganisations, leadOrganisation, applicationResource, projectUsers, competitionResource,
                 projectService.isUserLeadPartner(projectId, loggedInUser.getId()), true,
                 getProjectManager(projectResource.getId()).orElse(null), false, true));
 
