@@ -6,6 +6,8 @@ package org.innovateuk.ifs.project.finance.resource;
 public class FinanceCheckPartnerStatusResource {
     private Long id;
     private String name;
+
+    private boolean isLead;
     private Viability viability;
     private ViabilityRagStatus viabilityRagStatus;
     private Eligibility eligibility;
@@ -15,9 +17,12 @@ public class FinanceCheckPartnerStatusResource {
     public FinanceCheckPartnerStatusResource() {
     }
 
-    public FinanceCheckPartnerStatusResource(Long id, String name, Viability viability, ViabilityRagStatus viabilityRagStatus, Eligibility eligibility, EligibilityRagStatus eligibilityRagStatus, boolean awaitingResponse) {
+    public FinanceCheckPartnerStatusResource(Long id, String name, boolean isLead, Viability viability,
+                                             ViabilityRagStatus viabilityRagStatus, Eligibility eligibility,
+                                             EligibilityRagStatus eligibilityRagStatus, boolean awaitingResponse) {
         this.id = id;
         this.name = name;
+        this.isLead = isLead;
         this.viability = viability;
         this.viabilityRagStatus = viabilityRagStatus;
         this.eligibility = eligibility;
@@ -39,6 +44,14 @@ public class FinanceCheckPartnerStatusResource {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean isLead() {
+        return isLead;
+    }
+
+    public void setLead(boolean lead) {
+        isLead = lead;
     }
 
     public Eligibility getEligibility() {

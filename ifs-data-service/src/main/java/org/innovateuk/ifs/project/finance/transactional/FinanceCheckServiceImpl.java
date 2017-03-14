@@ -145,7 +145,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         Application application = project.getApplication();
         Competition competition = application.getCompetition();
         List<PartnerOrganisation> partnerOrganisations = partnerOrganisationRepository.findByProjectId(projectId);
-        final PartnerOrganisation leadPartner = simpleFindFirst(partnerOrganisations, PartnerOrganisation::isLeadOrganisation).get(); //NUNO
+        final PartnerOrganisation leadPartner = simpleFindFirst(partnerOrganisations, PartnerOrganisation::isLeadOrganisation).get();
         final List<PartnerOrganisation> sortedPartnersList = new PrioritySorting<>(partnerOrganisations, leadPartner, po -> po.getOrganisation().getName()).unwrap();
         Optional<SpendProfile> spendProfile = spendProfileRepository.findOneByProjectIdAndOrganisationId(projectId, partnerOrganisations.get(0).getOrganisation().getId());
         boolean financeChecksAllApproved = getFinanceCheckApprovalStatus(projectId);
@@ -228,12 +228,9 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
             boolean anyQueryAwaitingResponse = isQueryActionRequired(projectId, org.getOrganisation().getId()).getSuccessObject();
 
-            return new FinanceCheckPartnerStatusResource(
-                org.getOrganisation().getId(),
-                org.getOrganisation().getName(),
-                viability.getLeft(), viability.getRight(),
-                eligibility.getLeft(), eligibility.getRight(),
-                anyQueryAwaitingResponse);
+            return new FinanceCheckPartnerStatusResource(org.getOrganisation().getId(), org.getOrganisation().getName(),
+                    org.isLeadOrganisation(), viability.getLeft(), viability.getRight(), eligibility.getLeft(),
+                    eligibility.getRight(), anyQueryAwaitingResponse);
         });
     }
 
