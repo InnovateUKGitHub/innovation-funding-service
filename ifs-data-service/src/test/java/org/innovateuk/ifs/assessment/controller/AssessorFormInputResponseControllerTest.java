@@ -8,6 +8,7 @@ import org.innovateuk.ifs.commons.rest.RestErrorResponse;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
@@ -129,7 +130,7 @@ public class AssessorFormInputResponseControllerTest extends BaseControllerMockM
     @Test
     public void getApplicationAggregateScores() throws Exception {
         long applicationId = 7;
-        ApplicationAssessmentAggregateResource expected = new ApplicationAssessmentAggregateResource(5, 3);
+        ApplicationAssessmentAggregateResource expected = new ApplicationAssessmentAggregateResource(5, 3, Collections.emptyMap(),20L);
 
         when(assessorFormInputResponseServiceMock.getApplicationAggregateScores(applicationId)).thenReturn(serviceSuccess(expected));
 

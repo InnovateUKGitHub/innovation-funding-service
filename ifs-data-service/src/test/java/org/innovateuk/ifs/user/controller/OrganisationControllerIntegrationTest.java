@@ -8,7 +8,6 @@ import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.user.domain.OrganisationType;
 import org.innovateuk.ifs.user.repository.OrganisationTypeRepository;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.OrganisationSize;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +17,7 @@ import java.util.Set;
 
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class OrganisationControllerIntegrationTest extends BaseControllerIntegrationTest<OrganisationController> {
 
@@ -109,7 +107,7 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
         loginSystemRegistrationUser();
 
         OrganisationResource organisation = newOrganisationResource().
-                withName(companyName).withCompanyHouseNumber(companyHouseId).withOrganisationSize(OrganisationSize.LARGE).
+                withName(companyName).withCompanyHouseNumber(companyHouseId).
                 build();
 
         OrganisationResource organisationResource = controller.create(organisation).getSuccessObject();
@@ -118,12 +116,10 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
 
         assertEquals(companyHouseId, organisationResource.getCompanyHouseNumber());
         assertEquals(companyName, organisationResource.getName());
-        assertEquals(OrganisationSize.LARGE, organisationResource.getOrganisationSize());
 
         OrganisationResource org = controller.findById(organisationResource.getId()).getSuccessObject();
         assertEquals(companyHouseId, org.getCompanyHouseNumber());
         assertEquals(companyName, org.getName());
-        assertEquals(OrganisationSize.LARGE, org.getOrganisationSize());
     }
 
     @Rollback

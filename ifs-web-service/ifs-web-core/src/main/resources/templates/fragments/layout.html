@@ -110,7 +110,7 @@
                 <a href="#proposition-links" class="js-header-toggle menu" th:if="${#authentication} ? ${#authorization.expression('isAuthenticated()')} : ${false}">Menu</a>
 
                 <nav id="proposition-menu">
-                    <div th:include="fragments/elements :: header-links" th:with="hideDashboardLink=${hideDashboardLink}"></div>
+                    <div th:insert="fragments/elements :: header-links" th:with="hideDashboardLink=${hideDashboardLink}"></div>
                 </nav>
               </div>
             </div>

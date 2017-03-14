@@ -85,6 +85,10 @@ class CsvUtils {
         return simpleMap(readCsvLines("assessments"), AssessmentLine::new);
     }
 
+    static List<AssessorResponseLine> readAssessorResponses() {
+        return simpleMap(readCsvLines("assessor-responses"), AssessorResponseLine::new);
+    }
+
     static List<InviteLine> readInvites() {
         return simpleMap(readCsvLines("invites"), InviteLine::new);
     }
@@ -357,6 +361,8 @@ class CsvUtils {
         AssessmentRejectOutcomeValue rejectReason;
         String rejectComment;
         AssessmentStates state;
+        String feedback;
+        String recommendComment;
 
         private AssessmentLine(List<String> line) {
 
@@ -367,6 +373,29 @@ class CsvUtils {
             rejectReason = rejectReasonString != null ? AssessmentRejectOutcomeValue.valueOf(rejectReasonString) : null;
             rejectComment = nullable(line.get(i++));
             state = AssessmentStates.valueOf(line.get(i++));
+            feedback = nullable(line.get(i++));
+            recommendComment = nullable(line.get(i++));
+        }
+    }
+
+    static class AssessorResponseLine {
+        String competitionName;
+        String applicationName;
+        String assessorEmail;
+        String shortName;
+        String description;
+        boolean isResearchCategory;
+        String value;
+
+        private AssessorResponseLine(List<String> line) {
+            int i = 0;
+            competitionName = line.get(i++);
+            applicationName = line.get(i++);
+            assessorEmail = line.get(i++);
+            shortName = line.get(i++);
+            description = line.get(i++);
+            isResearchCategory = nullableBoolean(line.get(i++));
+            value = line.get(i++);
         }
     }
 
@@ -587,7 +616,7 @@ class CsvUtils {
         String financialInterests;
         List<Map<String, String>> familyAffiliations;
         String familyFinancialInterests;
-        boolean contractSigned;
+        boolean agreementSigned;
 
         private AssessorUserLine(List<String> line) {
 
@@ -614,7 +643,7 @@ class CsvUtils {
             financialInterests = line.get(i++);
             familyAffiliations = extractListOfMaps(line.get(i++));
             familyFinancialInterests = line.get(i++);
-            contractSigned = Boolean.valueOf(line.get(i++));
+            agreementSigned = Boolean.valueOf(line.get(i++));
         }
 
         private List<Map<String, String>> extractListOfMaps(String column) {

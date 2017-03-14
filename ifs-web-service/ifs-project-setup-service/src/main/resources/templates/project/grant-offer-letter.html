@@ -9,7 +9,7 @@
 
 <main id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}"  th:remove="tag"></div>
+    <div th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}" th:remove="tag"></div>
 
     <div class="page-title">
         <th:block th:insert="fragments/elements :: project-title (projectId=${model.projectId}, projectName=${model.projectName})" />
@@ -57,7 +57,7 @@
             <p th:unless="${model.submitted}">This document is awaiting signature by the Project Manager.</p>
 
             <th:block th:if="${model.isGrantOfferLetterSent()}">
-                <p><a th:href="@{/project/{id}/offer/grant-offer-letter(id=${model.projectId})}"  th:text="${model.grantOfferLetterFile?.filename}" class="grant-offer-download">Grant offer letter 2016-07-28a.PDF</a></p>
+                <p><a th:href="@{/project/{id}/offer/grant-offer-letter(id=${model.projectId})}" th:text="${model.grantOfferLetterFile?.filename}" class="grant-offer-download">Grant offer letter 2016-07-28a.PDF</a></p>
             </th:block>
 
             <th:block th:if="${model.signedGrantOfferLetterFile != null && model.signedGrantOfferLetterFile.filename != null}">
@@ -126,8 +126,7 @@
             </th:block>
 
             <h2 class="heading-medium">Grant offer letter</h2>
-            <p th:unless="${model.submitted}">This document is awaiting signature by the Project Manager.</p>
-            <p><a th:href="@{/project/{id}/offer/grant-offer-letter(id=${model.projectId})}"  th:text="${model.grantOfferLetterFile?.filename}" class="grant-offer-download">Grant offer letter 2016-07-28a.PDF</a></p>
+            <p><a th:href="@{/project/{id}/offer/grant-offer-letter(id=${model.projectId})}" th:text="${model.grantOfferLetterFile?.filename}" class="grant-offer-download">Grant offer letter 2016-07-28a.PDF</a></p>
 
             <th:block th:if="${model.additionalContractFile}">
                 <h2 class="heading-medium">Annex</h2>

@@ -285,31 +285,6 @@
   </div>
 </th:block>
 
-<!-- Confirmation on removing collaborators -->
-<th:block th:fragment="modal-submit-remove-collaborator" th:if="${userIsLead}">
-    <div class="modal-submit-remove-collaborator" role="dialog" aria-hidden="true">
-        <th:block th:insert="fragments/modals :: close-button" />
-
-        <h2 class="heading-medium no-margin">Removing collaborator</h2>
-        <p>Are you sure you wish to remove this collaborator from this application?</p>
-        <p>This step cannot be undone.</p>
-        <hr/>
-        <div class="grid-row extra-margin">
-            <form method="post"
-                  th:action="@{/application/{appId}/contributors/remove(appId = ${currentApplication.getId()})}"
-                  th:object="${removeContributorForm}" id="submit-remove-collaborator-form">
-                <input type="hidden" value="" name="applicationInviteId"/>
-                <div class="column-half">
-                    <button type="button" class="js-close buttonlink large">Cancel</button>
-                </div>
-                <div class="column-half alignright-button">
-                    <button class="button large" name="publish" value="publish" type="submit">Remove</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</th:block>
-
 <th:block th:fragment="modal-confirm-grant-offer-letter">
     <div class="modal-confirm-grant-offer-letter" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
@@ -355,7 +330,7 @@
 <!-- Confirm return of edit rights to partner for spend profiles. -->
 <th:block th:fragment="modal-confirm-allow-spend-profile-edits (orgName)">
     <div class="modal-confirm-allow-spend-profile-edits" role="dialog" aria-hidden="true">
-        <div th:include="fragments/modals :: close-button" th:remove="tag"/>
+        <div th:insert="fragments/modals :: close-button" th:remove="tag"/>
         <h2 class="heading-medium no-margin">Allow partner to edit</h2>
         <p><span class="heading-small no-margin"><th:block th:text="${orgName}" />'s</span> spend profile will be returned to them. They will be informed by email. If you have any specific requirements please contact them directly.</p>
         <hr />
@@ -475,6 +450,24 @@
         </div>
         <div class="column-half alignright-button">
             <button class="button" name="confirm-eligibility">Approve eligible costs</button>
+        </div>
+    </div>
+</th:block>
+
+<!-- confirmation new organisation -->
+<th:block th:fragment="modal-delete-organisation">
+    <div class="modal-delete-organisation" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+        <h2 class="heading-medium no-margin">Delete organisation</h2>
+        <p>Are you sure you wish to remove this organisation from the application. The innovate funding system will not inform collaborators of their removal, this action should be discussed with all applicants beforehand.</p>
+        <p>This will remove all collaborators, and they will no longer be able to access this application. It will also delete the organisations financial details, and any assigned questions will be returned to you as the lead applicant.</p>
+        <hr />
+
+        <div class="column-half">
+            <button type="button" class="js-close buttonlink large">Cancel</button>
+        </div>
+        <div class="column-half alignright-button">
+            <button class="button large" name="remove_person" value="remove_person" type="submit">Delete organisation</button>
         </div>
     </div>
 </th:block>

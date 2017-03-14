@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
-
 <!-- ========Applicant view - sign in - create account content====== -->
 <div th:fragment="prototype-signin(url)">
     <h1 class="heading-large">Sign in</h1>
@@ -33,6 +32,35 @@
     </form>
 </div>
 
+<!-- ========Applicant view - sign in makeover====== -->
+<div th:fragment="prototype-signinnew(url)">
+    <h1 class="heading-large">Sign into Innovation Funding Service</h1>
+    <p>Enter the email address and password you used to create your Innovation Funding Service account.</p>
+    <div class="grid-row">
+        <section class="column-half">
+            <form action="#" method="GET">
+                <fieldset>
+                    <legend class="visuallyhidden">Sign in</legend>
+                    <div class="form-group">
+                        <label class="form-label" for="id_email">Email address</label>
+                        <input class="form-control width-full" type="text" id="id_email" name="email" value="" />
+                    </div><!-- .form-group -->
+                    <div class="form-group">
+                        <label class="form-label" for="id_password" style="position: relative">
+                            Password
+                            <input class="form-control width-full" type="password" id="id_password" name="password1" value="" />
+                            <th:block th:if="${param.action != null and param.action[0] == 'toggle'}">
+                                <a th:href="@{?action=password}" class="password-toggle" style="position: absolute; top: 1.7em; right: 0.3em;">Show</a>
+                            </th:block>
+                        </label>
+                    </div><!-- .form-group -->
+                </fieldset>
+                <a th:href="${url}" class="button button-large">Sign in</a>
+            </form>
+        </section>
+    </div>
+</div>
+
 <!-- ========Applicant view - sign in - create account content====== -->
 <div th:fragment="prototype-signin-create-acc(url)">
     <h1 class="heading-large">New to this service?</h1>
@@ -47,6 +75,7 @@
     </ul>
 
     <a th:href="${url}" class="button button-large">Create account</a>
+
 </div>
 
 <!-- ========Applicant view - sub header back to comp dashboard======= -->
@@ -205,6 +234,9 @@
 
                   <p th:if="${param.status != null and param.status[0] == 'notSubmitted'}">Not submitted</p>
                 </th:block>
+
+                <h3 class="heading-small">Application number</h3>
+                <p>3456</p>
 
                 <h3 class="heading-small">Lead organisation</h3>
                 <p>Aptrans Ltd</p>

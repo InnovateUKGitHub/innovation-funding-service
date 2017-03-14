@@ -7,8 +7,8 @@
             <th:block th:unless="${readonly}">
                 <div th:class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ organisationGrantClaimPercentageId +'-grantClaimPercentage]}') or #fields.hasErrors('${form.formInput[cost-'+ organisationGrantClaimPercentageId +']}')}? 'error'">
                     <label class="form-label form-label-bold" for="cost-financegrantclaim">
-                        <div th:text="'Enter your funding level (maximum ' + ${organisationFinanceSize?.getMaxGrantClaimPercentage()} + '%).'" />
-                        <span class="form-hint" th:text="'Based on the project research area and your organisation size your maximum funding level is ' + ${organisationFinanceSize?.getMaxGrantClaimPercentage()} + '%.'" />
+                        <div th:text="'Enter your funding level (maximum ' + ${maximumGrantClaimPercentage} + '%).'" />
+                        <span class="form-hint" th:text="'Based on the project research area and your organisation size your maximum funding level is ' + ${maximumGrantClaimPercentage} + '%.'" />
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+organisationGrantClaimPercentageId+'-grantClaimPercentage'})" />
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+organisationGrantClaimPercentageId})" />
                     </label>
@@ -16,9 +16,9 @@
                     <input type="number"
                            min="0"
                            required="required"
-                           th:max="${organisationFinanceSize?.getMaxGrantClaimPercentage()}"
+                           th:max="${maximumGrantClaimPercentage}"
                            th:readonly="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
-                           th:class="${organisationFinanceSize?.getMaxGrantClaimPercentage() != null and organisationFinanceSize?.getMaxGrantClaimPercentage() &lt; organisationGrantClaimPercentage} ? 'width-small form-control field-error' : 'width-small form-control'"
+                           th:class="${maximumGrantClaimPercentage != null and maximumGrantClaimPercentage &lt; organisationGrantClaimPercentage} ? 'width-small form-control field-error' : 'width-small form-control'"
                            id="cost-financegrantclaim"
                            th:name="${'finance-grantclaimpercentage-' + question.id + '-' + organisationGrantClaimPercentageId}"
                            th:value="${organisationGrantClaimPercentage}"
@@ -55,14 +55,14 @@
                             <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" />
                         </legend>
                         <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
-                        <label class="block-label selection-button-radio" th:for="'financePosition-organisationSize-'+${size}" th:each="size : ${T(org.innovateuk.ifs.user.resource.OrganisationSize).values()}">
+                        <label class="block-label selection-button-radio" th:for="'financePosition-organisationSize-'+${size.id}" th:each="size : ${organisationSizes}">
                             <input type="radio"
-                                   th:id="'financePosition-organisationSize-'+${size}"
+                                   th:id="'financePosition-organisationSize-'+${size.id}"
                                    th:name="'financePosition-organisationSize'"
-                                   th:value="${size}"
-                                   th:checked="${size == model.finance.organisationFinanceSize}"
+                                   th:value="${size.id}"
+                                   th:checked="${size.id == model.finance.organisationFinanceSize}"
                                    required="required" />
-                            <th:block th:text="${size.name}" />
+                            <th:block th:text="${size.description}" />
                         </label>
                     </fieldset>
                 </div>
@@ -71,7 +71,10 @@
                 <!--/* view  */-->
                 <dl class="readonly-data">
                     <dt th:text="${formInput.description}">Organisation size</dt>
-                    <dd th:unless="${model.finance.organisationFinanceSize == null}" th:text="${model.finance.organisationFinanceSize.name}">Micro / small: claim up to 70%</dd>
+
+                    <th:block th:unless="${model.finance.organisationFinanceSize == null}" th:each="size : ${organisationSizes}">
+                        <dd th:if="${model.finance.organisationFinanceSize == size.id}" th:text="${size.description}">Micro / small: claim up to 70%</dd>
+                    </th:block>
                 </dl>
             </th:block>
         </th:block>
@@ -150,7 +153,7 @@
             <div class="date-group" data-past-date="">
                 <!--/* this is added for javascript date validation, if we have more mm yyyy fields we might want to do this in a cleaner way */-->
                 <div class="day">
-                    <input type="hidden" value="1" class="js-visited" disabled="disabled" />
+                    <input th:id="'year-end-day-'+${formInput.id}" type="hidden" value="1" class="js-visited day" disabled="disabled" />
                 </div>
                 <div class="month" th:with="month=${#strings.substringBefore(value, '-')}">
                     <label class="form-label" th:for="${formInput.id}+'.MMYYYY.month'">
