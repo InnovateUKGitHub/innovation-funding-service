@@ -175,8 +175,6 @@ the user fills in the Public content and publishes
     the user should see the element         css=img[title='The "Supporting information" section is marked as done']
     # Publish and return
     the user clicks the button/link         jQuery=button:contains("Publish public content")
-    the user clicks the button/link         link=Return to setup overview
-    the user should see the element         css=img[title='The "Public content" section is done']
 
 Change the open date of the Competition in the database to one day before
     [Arguments]  ${competition}
