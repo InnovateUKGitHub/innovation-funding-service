@@ -859,7 +859,7 @@ project manager submits other documents
     choose file                       name=collaborationAgreement    ${upload_folder}/testing.pdf
     choose file                       name=exploitationPlan    ${upload_folder}/testing.pdf
     the user reloads the page
-    the user clicks the button/link    jQuery=.button:contains("Submit partner documents")
+    the user clicks the button/link    jQuery=.button:contains("Submit documents")
     the user clicks the button/link    jQuery=.button:contains("Submit")
 
 project finance approves other documents
