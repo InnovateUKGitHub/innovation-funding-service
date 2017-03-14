@@ -11,22 +11,19 @@
 <main id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
 
-    <h2 class="heading-large">Your organisation</h2>
+    <div class="page-title">
+        <p class="subtitle">Create your account</p>
+        <h1 class="heading-xlarge no-margin" >Choose your organisation type</h1>
+    </div>
     <th:block th:unless="${organisationParentType}">
-        <div class="panel">
-            <p>You have been invited to join a collaborative application for the competition <a th:href="${'/competition/'+invite.competitionId+'/details'}" th:text="${invite.competitionName}" />.</p>
-            <p>Lead organisation: <strong><span th:text="${invite.leadOrganisation}"></span></strong><br />
-                Lead applicant: <strong><span th:text="${invite.leadApplicant}"></span></strong></p>
+        <p>You have been invited to collaborate as part of the organisation:
+            <strong>
+                <span th:if="${invite.inviteOrganisationNameConfirmed}" th:text="${invite.inviteOrganisationNameConfirmed}"></span>
+                <span th:unless="${invite.inviteOrganisationNameConfirmed}" th:text="${invite.inviteOrganisationName}"></span>
+            </strong>
+        </p>
 
-            <p>The lead applicant has invited you to join this application on behalf of the following organisation:
-                <strong>
-                    <span th:if="${invite.inviteOrganisationNameConfirmed}" th:text="${invite.inviteOrganisationNameConfirmed}"></span>
-                    <span th:unless="${invite.inviteOrganisationNameConfirmed}" th:text="${invite.inviteOrganisationName}"></span>
-                </strong>
-            </p>
-            <p>If this is not the correct organisation <a th:href="'mailto:'+ ${invite.leadApplicantEmail}">email the application lead</a></p>
-        </div>
-        <h2 class="heading-medium" th:unless="${organisationParentType}">Please select your organisation type</h2>
+        <h2 class="heading-medium">Please select your type of research organisation</h2>
     </th:block>
 
     <th:block th:if="${organisationParentType}">
@@ -46,9 +43,8 @@
                 </label>
             </div>
         </fieldset>
-        <button class="button button-large extra-margin" name="select-company-type" type="submit" >Continue</button>
+        <button class="button button-large extra-margin" name="select-company-type" type="submit">Continue</button>
     </form>
-
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 

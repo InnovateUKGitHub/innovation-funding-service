@@ -5,7 +5,6 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
-import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
@@ -66,9 +65,7 @@ public class OrganisationTypeCreationController {
                                          BindingResult bindingResult,
                                          HttpServletResponse response,
                                          @RequestParam(value = ORGANISATION_TYPE, required = false) Long organisationTypeId,
-                                         @RequestParam(value = "invalid", required = false) String invalid
-
-    ) {
+                                         @RequestParam(value = "invalid", required = false) String invalid) {
         String hash = cookieUtil.getCookieValue(request, INVITE_HASH);
         cookieUtil.removeCookie(response, OrganisationCreationController.ORGANISATION_FORM);
         RestResult<ApplicationInviteResource> invite = inviteRestService.getInviteByHash(hash);
@@ -78,8 +75,6 @@ public class OrganisationTypeCreationController {
         }
 
         if (invite.isSuccess() && InviteStatus.SENT.equals(invite.getSuccessObject().getStatus())) {
-            InviteOrganisationResource inviteOrganisation = inviteRestService.getInviteOrganisationByHash(hash).getSuccessObject();
-
             List<OrganisationTypeResource> types = organisationTypeRestService.getAll().getSuccessObjectOrThrowException();
             if (organisationTypeId == null) {
                 types = types.stream()
@@ -98,7 +93,6 @@ public class OrganisationTypeCreationController {
             }
             model.addAttribute("organisationTypeForm", organisationTypeForm);
             model.addAttribute("organisationTypes", types);
-            model.addAttribute("inviteOrganisation", inviteOrganisation);
             model.addAttribute("invite", invite.getSuccessObject());
         } else {
             return "redirect:/login";
