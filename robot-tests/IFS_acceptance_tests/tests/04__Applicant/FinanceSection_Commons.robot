@@ -36,7 +36,7 @@ Complete the org size section
     the user clicks the button/link    link=Your organisation
     ${orgSizeReadonly}=  Run Keyword And Return Status    Element Should Be Visible   jQuery=button:contains("Edit your organisation")
     Run Keyword If    ${orgSizeReadonly}    the user clicks the button/link    jQuery=button:contains("Edit your organisation")
-    the user selects the radio button    financePosition-organisationSize  LARGE
+    the user selects the radio button    financePosition-organisationSize  ${LARGE_ORGANISATION_SIZE}
     run keyword and ignore error without screenshots    the user clicks the button/link    jQuery=button:contains("Mark as complete")
     run keyword and ignore error without screenshots    the user clicks the button/link    link=Your finances
 
@@ -183,7 +183,7 @@ the user fills in the organisation information
     the user clicks the button/link    link=Your organisation
     ${STATUS}    ${VALUE}=  Run Keyword And Ignore Error Without Screenshots  page should contain element  jQuery=button:contains("Edit your organisation")
     Run Keyword If    '${status}' == 'PASS'    the user clicks the button/link  jQuery=button:contains("Edit your organisation")
-    the user selects the radio button  financePosition-organisationSize  financePosition-organisationSize-SMALL
+    the user selects the radio button  financePosition-organisationSize  ${SMALL_ORGANISATION_SIZE}
     the user clicks the button/link    jQuery=button:contains("Mark as complete")
     the user clicks the button/link  link=Your organisation
     the user has read only view once section is marked complete
@@ -203,7 +203,7 @@ the user fills in the funding information
     [Arguments]  ${Application}
     the user navigates to Your-finances page   ${Application}
     the user clicks the button/link       link=Your funding
-    the user enters text to a text field  css=#cost-financegrantclaim  60
+    the user enters text to a text field  css=#cost-financegrantclaim  45
     click element                         jQuery=label:contains("No")
     the user selects the checkbox         agree-terms-page
     the user clicks the button/link       jQuery=button:contains("Mark as complete")
