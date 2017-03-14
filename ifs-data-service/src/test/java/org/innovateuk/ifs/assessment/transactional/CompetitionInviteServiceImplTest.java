@@ -688,7 +688,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .build());
 
         User applicant = newUser()
-                .withRoles(new ArrayList(asList(applicantRole)))
+                .withRoles(new HashSet(asList(applicantRole)))
                 .build();
 
         EmailContent content = setUpEmailContent();

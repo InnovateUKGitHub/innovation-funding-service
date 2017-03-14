@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
+import static java.util.Collections.singleton;
 import static java.util.Optional.empty;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
 import static org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
@@ -394,7 +394,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
         Profile profile = profileRepository.findOne(getPaulPlum().getProfileId());
 
-        assertEquals(Collections.singleton(innovationArea), profile.getInnovationAreas());
+        assertEquals(singleton(innovationArea), profile.getInnovationAreas());
     }
 
     @Test
@@ -864,7 +864,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                 .withUid("uid1", "uid2", "uid3", "uid4")
                 .withFirstName("Robert", "Robert", "Alexis", "Alexis")
                 .withLastName("Stark", "Salt", "Kinney", "Colon")
-                .withRoles(singletonList(assessorRole))
+                .withRoles(singleton(assessorRole))
                 .withProfileId(profileIds)
                 .build(4);
 
@@ -911,7 +911,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                 .withUid("uid1", "uid2", "uid3", "uid4")
                 .withFirstName("Victoria", "James", "Jessica", "Andrew")
                 .withLastName("Beckham", "Blake", "Alba", "Marr")
-                .withRoles(singletonList(assessorRole))
+                .withRoles(singleton(assessorRole))
                 .withProfileId(profileIds[0], profileIds[1], profileIds[2], profileIds[3])
                 .build(4);
 

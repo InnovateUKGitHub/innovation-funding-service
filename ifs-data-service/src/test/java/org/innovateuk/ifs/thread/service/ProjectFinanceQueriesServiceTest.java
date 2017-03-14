@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -264,7 +265,7 @@ public class ProjectFinanceQueriesServiceTest extends BaseUnitTestMocksTest {
     public void test_addPost() throws Exception {
         Long queryId = 1L;
 
-        User user = newUser().withId(33L).withRoles(asList(RoleBuilder.newRole(UserRoleType.PROJECT_FINANCE).build())).build();
+        User user = newUser().withId(33L).withRoles(singleton(RoleBuilder.newRole(UserRoleType.PROJECT_FINANCE).build())).build();
         PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build())).build(), null, null, null);
         Post mappedPost = new Post(null, user, null, null, null);
         Query targetedQuery = new Query(queryId, 22L, null, null, null, null, null);
@@ -319,7 +320,7 @@ public class ProjectFinanceQueriesServiceTest extends BaseUnitTestMocksTest {
     @Test
     public void test_addPostNotFinanceTeam() throws Exception {
         Long queryId = 1L;
-        User user = newUser().withId(33L).withRoles(asList(RoleBuilder.newRole(UserRoleType.COMP_ADMIN).build())).build();
+        User user = newUser().withId(33L).withRoles(singleton(RoleBuilder.newRole(UserRoleType.COMP_ADMIN).build())).build();
         PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.COMP_ADMIN).build())).build(), null, null, null);
         Post mappedPost = new Post(null, user, null, null, null);
         Query targetedQuery = new Query(queryId, 22L, null, null, null, null, null);
@@ -358,7 +359,7 @@ public class ProjectFinanceQueriesServiceTest extends BaseUnitTestMocksTest {
     @Test
     public void test_addPostNoFinanceContact() throws Exception {
         Long queryId = 1L;
-        User user = newUser().withId(33L).withRoles(asList(RoleBuilder.newRole(UserRoleType.PROJECT_FINANCE).build())).build();
+        User user = newUser().withId(33L).withRoles(singleton(RoleBuilder.newRole(UserRoleType.PROJECT_FINANCE).build())).build();
         PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build())).build(), null, null, null);
         Post mappedPost = new Post(null, user, null, null, null);
         Query targetedQuery = new Query(queryId, 22L, null, null, null, null, null);
@@ -402,7 +403,7 @@ public class ProjectFinanceQueriesServiceTest extends BaseUnitTestMocksTest {
     @Test
     public void test_addPostNotificationNotSent() throws Exception {
         Long queryId = 1L;
-        User user = newUser().withId(33L).withRoles(asList(RoleBuilder.newRole(UserRoleType.PROJECT_FINANCE).build())).build();
+        User user = newUser().withId(33L).withRoles(singleton(RoleBuilder.newRole(UserRoleType.PROJECT_FINANCE).build())).build();
         PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build())).build(), null, null, null);
         Post mappedPost = new Post(null, user, null, null, null);
         Query targetedQuery = new Query(queryId, 22L, null, null, null, null, null);

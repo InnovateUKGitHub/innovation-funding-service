@@ -10,7 +10,9 @@ import org.innovateuk.ifs.user.resource.*;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.joining;
@@ -44,11 +46,11 @@ public class User implements Serializable {
     @Column(unique = true)
     private String email;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "user_role",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
-    private List<Role> roles = new ArrayList<>();
+    private Set<Role> roles = new HashSet<>();
 
     @Enumerated(STRING)
     private Gender gender;
@@ -105,15 +107,19 @@ public class User implements Serializable {
         return uid;
     }
 
-    public List<Role> getRoles() {
+    public Set<Role> getRoles() {
         return roles;
+    }
+
+    public void addRole(Role role) {
+        roles.add(role);
     }
 
     public boolean hasRole(UserRoleType type) {
         return simpleMap(getRoles(), Role::getName).contains(type.getName());
     }
 
-    public void setRoles(List<Role> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 

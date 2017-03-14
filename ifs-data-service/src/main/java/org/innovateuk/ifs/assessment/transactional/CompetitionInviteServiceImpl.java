@@ -412,9 +412,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     private void addAssessorRoleToUser(User user) {
         Role assessorRole = roleRepository.findOneByName(UserRoleType.ASSESSOR.getName());
-        if (!user.getRoles().contains(assessorRole)) {
-            user.getRoles().add(assessorRole);
-        }
+        user.addRole(assessorRole);
     }
 
     @Override
