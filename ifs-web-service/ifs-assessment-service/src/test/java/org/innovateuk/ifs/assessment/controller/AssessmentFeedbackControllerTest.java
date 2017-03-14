@@ -18,6 +18,7 @@ import org.innovateuk.ifs.assessment.viewmodel.AssessmentFeedbackViewModel;
 import org.innovateuk.ifs.assessment.viewmodel.AssessmentNavigationViewModel;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -150,6 +151,89 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
                 false,
                 false,
                 null,
+                null);
+
+        mockMvc.perform(get("/{assessmentId}/question/{questionId}", assessmentResource.getId(), questionResource.getId()))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("form", expectedForm))
+                .andExpect(model().attribute("model", expectedViewModel))
+                .andExpect(model().attribute("navigation", expectedNavigation))
+                .andExpect(view().name("assessment/application-question"));
+
+        InOrder inOrder = inOrder(questionService, formInputService, assessorFormInputResponseService, assessmentService,
+                competitionService, formInputResponseService, categoryServiceMock);
+        inOrder.verify(questionService).getByIdAndAssessmentId(questionResource.getId(), assessmentResource.getId());
+        inOrder.verify(formInputService).findApplicationInputsByQuestion(questionResource.getId());
+        inOrder.verify(assessorFormInputResponseService).getAllAssessorFormInputResponsesByAssessmentAndQuestion(
+                assessmentResource.getId(), questionResource.getId());
+        inOrder.verify(assessmentService).getById(assessmentResource.getId());
+        inOrder.verify(competitionService).getById(competitionResource.getId());
+        inOrder.verify(formInputService).findApplicationInputsByQuestion(questionResource.getId());
+        applicationFormInputs.forEach(formInput -> inOrder.verify(formInputResponseService).getByFormInputIdAndApplication(formInput.getId(), applicationId));
+        inOrder.verify(formInputService).findAssessmentInputsByQuestion(questionResource.getId());
+        inOrder.verify(questionService).getPreviousQuestion(questionResource.getId());
+        inOrder.verify(questionService).getNextQuestion(questionResource.getId());
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void getQuestion_withAppendix() throws Exception {
+        Long applicationId = 1L;
+
+        CompetitionResource competitionResource = setupCompetitionResource();
+
+        AssessmentResource assessmentResource = setupAssessment(competitionResource.getId(), applicationId);
+
+        SectionResource sectionResource = setupSection(SectionType.GENERAL);
+
+        QuestionResource questionResource = setupQuestion(assessmentResource.getId());
+
+        QuestionResource previousQuestionResource = newQuestionResource()
+                .withShortName("Previous question")
+                .withSection(sectionResource.getId())
+                .build();
+
+        QuestionResource nextQuestionResource = newQuestionResource()
+                .withShortName("Next question")
+                .withSection(sectionResource.getId())
+                .build();
+
+        setupQuestionNavigation(questionResource.getId(), of(previousQuestionResource), of(nextQuestionResource));
+
+        List<FormInputResource> applicationFormInputs = setupApplicationFormInputs(questionResource.getId(), TEXTAREA, FILEUPLOAD);
+        setupApplicantResponses(applicationId, applicationFormInputs);
+
+        List<FormInputResource> assessmentFormInputs = setupAssessmentFormInputs(questionResource.getId(), TEXTAREA, ASSESSOR_SCORE);
+        List<AssessorFormInputResponseResource> assessorResponses = setupAssessorResponses(assessmentResource.getId(),
+                questionResource.getId(), assessmentFormInputs);
+
+        Form expectedForm = new Form();
+        expectedForm.setFormInput(simpleToMap(assessorResponses, assessorFormInputResponseResource ->
+                String.valueOf(assessorFormInputResponseResource.getFormInput()), AssessorFormInputResponseResource::getValue));
+
+        AssessmentNavigationViewModel expectedNavigation = new AssessmentNavigationViewModel(assessmentResource.getId(),
+                of(previousQuestionResource), of(nextQuestionResource));
+
+        FileDetailsViewModel expectedFileDetailsViewModel = new FileDetailsViewModel(applicationFormInputs.get(1).getId(),
+                "File 1",
+                1024L);
+
+        AssessmentFeedbackViewModel expectedViewModel = new AssessmentFeedbackViewModel(assessmentResource.getId(),
+                3,
+                50,
+                applicationId,
+                "Application name",
+                questionResource.getId(),
+                "1",
+                "Market opportunity",
+                "1. What is the business opportunity that this project addresses?",
+                50,
+                "Applicant response",
+                assessmentFormInputs,
+                true,
+                false,
+                true,
+                expectedFileDetailsViewModel,
                 null);
 
         mockMvc.perform(get("/{assessmentId}/question/{questionId}", assessmentResource.getId(), questionResource.getId()))
@@ -640,11 +724,21 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
     }
 
     private List<FormInputResponseResource> setupApplicantResponses(Long applicationId, List<FormInputResource> formInputs) {
-        List<FormInputResponseResource> applicantResponses = formInputs.stream().map(formInput ->
-                newFormInputResponseResource()
-                        .withFormInputs(formInput.getId())
-                        .withValue("Applicant response")
-                        .build()
+        List<FormInputResponseResource> applicantResponses = formInputs.stream().map(formInput -> {
+                 if (formInput.getType() == FILEUPLOAD) {
+                     return newFormInputResponseResource()
+                             .withFormInputs(formInput.getId())
+                             .withValue("Applicant response")
+                             .withFileName("File 1")
+                             .withFilesizeBytes(1024L)
+                             .build();
+                 } else {
+                    return newFormInputResponseResource()
+                            .withFormInputs(formInput.getId())
+                            .withValue("Applicant response")
+                            .build();
+                 }
+                }
         ).collect(Collectors.toList());
         applicantResponses.forEach(formInputResponse -> when(formInputResponseService.getByFormInputIdAndApplication(
                 formInputResponse.getFormInput(), applicationId)).thenReturn(restSuccess(singletonList(formInputResponse))));
