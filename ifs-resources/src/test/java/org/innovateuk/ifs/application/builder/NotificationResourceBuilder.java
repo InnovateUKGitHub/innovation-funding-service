@@ -1,10 +1,11 @@
 package org.innovateuk.ifs.application.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.NotificationResource;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
@@ -35,8 +36,8 @@ public class NotificationResourceBuilder extends BaseBuilder<NotificationResourc
         return withArray((messageBody, object) -> setField("messageBody", messageBody, object), messageBodies);
     }
 
-    public NotificationResourceBuilder withApplicationIds(List<Long> applicationIds) {
-        return with(notification -> setField("applicationIds", new ArrayList<>(applicationIds), notification));
+    public NotificationResourceBuilder withFundingDecisions(Map<Long, FundingDecision> fundingDecisions) {
+        return with(notification -> setField("fundingDecisions", fundingDecisions, notification));
     }
 
     @Override

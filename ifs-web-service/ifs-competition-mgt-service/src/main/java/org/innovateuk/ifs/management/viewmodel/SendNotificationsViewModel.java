@@ -2,9 +2,12 @@ package org.innovateuk.ifs.management.viewmodel;
 
 
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
+import org.innovateuk.ifs.application.resource.FundingDecision;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class SendNotificationsViewModel {
 
@@ -13,16 +16,11 @@ public class SendNotificationsViewModel {
     private String competitionName;
     private CompetitionInFlightStatsViewModel keyStatistics;
 
-
     public SendNotificationsViewModel(List<ApplicationSummaryResource> applications, CompetitionInFlightStatsViewModel keyStatistics, long competitionId, String competitionName) {
         this.keyStatistics = keyStatistics;
         this.applications = applications;
         this.competitionId = competitionId;
         this.competitionName = competitionName;
-    }
-
-    public List<ApplicationSummaryResource> getResults() {
-        return applications;
     }
 
     public long getCompetitionId() {
@@ -39,5 +37,14 @@ public class SendNotificationsViewModel {
 
     public CompetitionInFlightStatsViewModel getKeyStatistics() {
         return keyStatistics;
+    }
+
+    public Map<Long, FundingDecision> getFundingDecisions() {
+
+        return getApplications()
+                .stream()
+                .collect(Collectors.toMap(
+                        ApplicationSummaryResource::getId,
+                        summary -> summary.getFundingDecision()));
     }
 }
