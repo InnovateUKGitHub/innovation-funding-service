@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.form.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.io.FileUtils;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -162,5 +163,10 @@ public class FormInputResponseResource {
 
     public void setFilesizeBytes(Long filesizeBytes) {
         this.filesizeBytes = filesizeBytes;
+    }
+
+    @JsonIgnore
+    public String getHumanReadableFileSize() {
+        return FileUtils.byteCountToDisplaySize(filesizeBytes);
     }
 }
