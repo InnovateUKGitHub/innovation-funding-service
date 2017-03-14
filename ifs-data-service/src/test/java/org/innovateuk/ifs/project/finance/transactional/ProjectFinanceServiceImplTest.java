@@ -151,15 +151,10 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         when(partnerOrganisationRepositoryMock.findByProjectId(project.getId())).thenReturn(
                 asList(partnerOrganisation1, partnerOrganisation2));
 
-        ViabilityProcess viabilityProcess1 = new ViabilityProcess((User)null, partnerOrganisation1, new ActivityState(ActivityType.PROJECT_SETUP_VIABILITY, ViabilityState.APPROVED.getBackingState()));
-        ViabilityProcess viabilityProcess2 = new ViabilityProcess((User)null, partnerOrganisation2, new ActivityState(ActivityType.PROJECT_SETUP_VIABILITY, ViabilityState.APPROVED.getBackingState()));
-        EligibilityProcess eligibilityProcess1 = new EligibilityProcess((User)null, partnerOrganisation1, new ActivityState(ActivityType.PROJECT_SETUP_ELIGIBILITY, EligibilityState.APPROVED.getBackingState()));
-        EligibilityProcess eligibilityProcess2 = new EligibilityProcess((User)null, partnerOrganisation2, new ActivityState(ActivityType.PROJECT_SETUP_ELIGIBILITY, EligibilityState.APPROVED.getBackingState()));
-
-        when(viabilityWorkflowHandlerMock.getProcess(partnerOrganisation1)).thenReturn(viabilityProcess1);
-        when(viabilityWorkflowHandlerMock.getProcess(partnerOrganisation2)).thenReturn(viabilityProcess2);
-        when(eligibilityWorkflowHandlerMock.getProcess(partnerOrganisation1)).thenReturn(eligibilityProcess1);
-        when(eligibilityWorkflowHandlerMock.getProcess(partnerOrganisation2)).thenReturn(eligibilityProcess2);
+        when(viabilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(ViabilityState.APPROVED);
+        when(viabilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(ViabilityState.APPROVED);
+        when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(EligibilityState.APPROVED);
+        when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(EligibilityState.APPROVED);
 
         List<Cost> expectedOrganisation1EligibleCosts = asList(
                 new Cost("100").withCategory(type1Cat1),
@@ -265,12 +260,10 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         when(partnerOrganisationRepositoryMock.findByProjectId(project.getId())).thenReturn(
                 asList(partnerOrganisation1, partnerOrganisation2));
 
-        ViabilityProcess viabilityProcess1 = new ViabilityProcess((User)null, partnerOrganisation1, new ActivityState(ActivityType.PROJECT_SETUP_VIABILITY, ViabilityState.APPROVED.getBackingState()));
-        ViabilityProcess viabilityProcess2 = new ViabilityProcess((User)null, partnerOrganisation2, new ActivityState(ActivityType.PROJECT_SETUP_VIABILITY, ViabilityState.REVIEW.getBackingState()));
-
-        when(viabilityWorkflowHandlerMock.getProcess(partnerOrganisation1)).thenReturn(viabilityProcess1);
-        when(viabilityWorkflowHandlerMock.getProcess(partnerOrganisation2)).thenReturn(viabilityProcess2);
-
+        when(viabilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(ViabilityState.APPROVED);
+        when(viabilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(ViabilityState.REVIEW);
+        when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(EligibilityState.APPROVED);
+        when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(EligibilityState.APPROVED);
 
         ServiceResult<Void> generateResult = service.generateSpendProfile(projectId);
         assertTrue(generateResult.isFailure());
@@ -297,16 +290,10 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         when(partnerOrganisationRepositoryMock.findByProjectId(project.getId())).thenReturn(
                 asList(partnerOrganisation1, partnerOrganisation2));
 
-        ViabilityProcess viabilityProcess1 = new ViabilityProcess((User)null, partnerOrganisation1, new ActivityState(ActivityType.PROJECT_SETUP_VIABILITY, ViabilityState.APPROVED.getBackingState()));
-        ViabilityProcess viabilityProcess2 = new ViabilityProcess((User)null, partnerOrganisation2, new ActivityState(ActivityType.PROJECT_SETUP_VIABILITY, ViabilityState.NOT_APPLICABLE.getBackingState()));
-
-        EligibilityProcess eligibilityProcess1 = new EligibilityProcess((User)null, partnerOrganisation1, new ActivityState(ActivityType.PROJECT_SETUP_ELIGIBILITY, EligibilityState.APPROVED.getBackingState()));
-        EligibilityProcess eligibilityProcess2 = new EligibilityProcess((User)null, partnerOrganisation2, new ActivityState(ActivityType.PROJECT_SETUP_ELIGIBILITY, EligibilityState.APPROVED.getBackingState()));
-
-        when(viabilityWorkflowHandlerMock.getProcess(partnerOrganisation1)).thenReturn(viabilityProcess1);
-        when(viabilityWorkflowHandlerMock.getProcess(partnerOrganisation2)).thenReturn(viabilityProcess2);
-        when(eligibilityWorkflowHandlerMock.getProcess(partnerOrganisation1)).thenReturn(eligibilityProcess1);
-        when(eligibilityWorkflowHandlerMock.getProcess(partnerOrganisation2)).thenReturn(eligibilityProcess2);
+        when(viabilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(ViabilityState.APPROVED);
+        when(viabilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(ViabilityState.NOT_APPLICABLE);
+        when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(EligibilityState.APPROVED);
+        when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(EligibilityState.APPROVED);
 
         ServiceResult<Void> generateResult = service.generateSpendProfile(projectId);
         assertTrue(generateResult.isSuccess());
