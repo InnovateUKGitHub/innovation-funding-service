@@ -34,7 +34,7 @@ public class OrganisationResource {
     }
 
     public void setName(String name) {
-        this.name = escapeXml10(name);
+        this.name = name;
     }
 
     public String getCompanyHouseNumber() {

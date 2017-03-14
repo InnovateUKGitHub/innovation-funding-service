@@ -287,7 +287,6 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
     @Test
     public void testGetFinanceCheckSummary(){
-
         Long projectId = 123L;
         Long applicationId = 456L;
 

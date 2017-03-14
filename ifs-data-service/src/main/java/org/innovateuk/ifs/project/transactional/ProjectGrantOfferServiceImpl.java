@@ -255,10 +255,10 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         final List<String> addresses = getAddresses(project);
         List<String> organisationNames = new LinkedList<>();
         YearlyGOLProfileTable yearlyGolProfileTable = getYearlyGOLProfileTableExcludingNonAcademicUnfundedNonLeadPartners(project, leadOrganisation, organisationNames);
-        templateReplacements.put("SortedOrganisations", new SortExcept<>(organisationNames, leadOrganisation.getName(), identity()).unwrap());
+        templateReplacements.put("SortedOrganisations", sortedOrganisations(organisationNames, leadOrganisation.getName()));
         templateReplacements.put("LeadContact", project.getApplication().getLeadApplicant().getName());
         templateReplacements.put("LeadOrgName", leadOrganisation.getName());
-        templateReplacements.put("Address1", addresses.size() == 0 ? "" : addresses.get(0));
+        templateReplacements.put("Address1", addresses.isEmpty() ? "" : addresses.get(0));
         templateReplacements.put("Address2", addresses.size() < 2 ? "" : addresses.get(1));
         templateReplacements.put("Address3", addresses.size() < 3 ? "" : addresses.get(2));
         templateReplacements.put("TownCity", addresses.size() < 4 ? "" : addresses.get(3));
@@ -272,6 +272,10 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         templateReplacements.put("ApplicationNumber", project.getApplication().getId());
         templateReplacements.put("TableData", yearlyGolProfileTable);
         return templateReplacements;
+    }
+
+    private List<String> sortedOrganisations(List<String> orgs, String lead) {
+        return new SortExcept<>(orgs, lead, identity()).unwrap().stream().map(StringEscapeUtils::escapeXml10).collect(toList());
     }
 
     private List<String> getAddresses(Project project) {
