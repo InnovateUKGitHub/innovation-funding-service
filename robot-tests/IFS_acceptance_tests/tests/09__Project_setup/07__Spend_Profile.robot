@@ -56,6 +56,9 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               INFUND-5549 As a Competitions team member I want to see the Innovation Lead  listed in the Spend profile approval page so that I can confirm who is required to approve the Spend Profiles
 ...
 ...               INFUND-6148 Negative numbers on spend profile table generation not disallowed by rounding logic
+...
+...               INFUND-7422 On rejection non-lead partners should still see a tick instead of an hourglass, until edit rights have been returned to them
+
 Suite Setup       all previous sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -276,7 +279,7 @@ Non-lead partner can view spend profile page
     And the user should see the text in the page    We have reviewed and confirmed your project costs.
     And the user should see the text in the page    ${Meembee_Name} - Spend profile
     And the user clicks the button/link    link=Project setup status
-    And the user should see the text in the page    You need to complete the following steps before this project can begin.
+    And the user should see the text in the page    You need to complete the following steps before you can start your project.
     [Teardown]    the user goes back to the previous page
 
 Non-lead partner can see correct project start date and duration
@@ -332,7 +335,7 @@ Academic partner can view spend profile page
     And the user should see the text in the page    We have reviewed and confirmed your project costs.
     And the user should see the text in the page    ${Zooveo_Name} - Spend profile
     And the user clicks the button/link    link=Project setup status
-    And the user should see the text in the page    You need to complete the following steps before this project can begin.
+    And the user should see the text in the page    You need to complete the following steps before you can start your project.
     [Teardown]    the user goes back to the previous page
 
 Academic partner can see correct project start date and duration
@@ -638,9 +641,25 @@ Lead partner can see that the spend profile has been rejected
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
     [Teardown]    the user goes back to the previous page
 
+Non Lead partners should still see a tick instead of an hourglass when spend profile has been rejected
+    [Documentation]    INFUND-7422
+    [Tags]
+    Given log in as a different user        ${PS_SP_APPLICATION_PARTNER_EMAIL}    ${short_password}
+    When the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
+    Then the user should see the element    jQuery=li.complete:nth-of-type(6)
+    When the user clicks the button/link    link=status of my partners
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(5)
+    Given log in as a different user        ${PS_SP_APPLICATION_ACADEMIC_EMAIL}   ${short_password}
+    When the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
+    Then the user should see the element    jQuery=li.complete:nth-of-type(6)
+    When the user clicks the button/link    link=status of my partners
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(5)
+
 Lead partner no longer has the 'submitted' view of the spend profiles
-    [Documentation]    INFUND-6977
-    When the user clicks the button/link    link=Spend profile
+    [Documentation]    INFUND-6977, INFUND-7422
+    Given Log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
+    When the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
+    And the user clicks the button/link    link=Spend profile
     Then the user should not see the element    jQuery=.success-alert.extra-margin-bottom p:contains("All project spend profiles have been sent to Innovate UK.")
     And the user should see the text in the page    This overview shows the spend profile status of each partner in your project.
     And the user should see the element    jQuery=.button:contains("Review and send total project profile")
