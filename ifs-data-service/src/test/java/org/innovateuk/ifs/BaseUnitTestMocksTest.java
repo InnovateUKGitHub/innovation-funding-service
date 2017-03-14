@@ -555,13 +555,13 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected FinanceCheckRepository financeCheckRepositoryMock;
 
     @Mock
-    protected ContractService contractServiceMock;
+    protected AgreementService agreementServiceMock;
 
     @Mock
-    protected ContractRepository contractRepositoryMock;
+    protected AgreementRepository agreementRepositoryMock;
 
     @Mock
-    protected ContractMapper contractMapperMock;
+    protected AgreementMapper agreementMapperMock;
 
     @Mock
     protected FileTemplateRenderer rendererMock;

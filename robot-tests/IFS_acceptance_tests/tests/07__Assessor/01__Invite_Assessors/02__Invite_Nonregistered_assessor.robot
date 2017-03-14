@@ -112,6 +112,7 @@ Create assessor account: Accepted competitions should be displayed in dashboard
     Then the user should see the element    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And The user should see the text in the page    ${IN_ASSESSMENT_COMPETITION_NAME}
+    And the user should see the text in the page    There are currently no assessments for you to review.
 
 Innovation area on assessor profile for invited user
     [Documentation]    INFUND-7960

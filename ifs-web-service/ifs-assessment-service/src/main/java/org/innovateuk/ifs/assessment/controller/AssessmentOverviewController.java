@@ -1,23 +1,27 @@
 package org.innovateuk.ifs.assessment.controller;
 
+import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.assessment.form.AssessmentOverviewForm;
 import org.innovateuk.ifs.assessment.model.AssessmentFinancesSummaryModelPopulator;
 import org.innovateuk.ifs.assessment.model.AssessmentOverviewModelPopulator;
 import org.innovateuk.ifs.assessment.model.RejectAssessmentModelPopulator;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.service.AssessmentService;
+import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.form.service.FormInputResponseService;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.function.Supplier;
@@ -25,6 +29,7 @@ import java.util.function.Supplier;
 import static java.lang.String.format;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
+import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 
 @Controller
 @RequestMapping(value = "/{assessmentId}")
@@ -45,7 +50,17 @@ public class AssessmentOverviewController {
     @Autowired
     private AssessmentService assessmentService;
 
-    @RequestMapping(method = RequestMethod.GET)
+    @Autowired
+    private UserAuthenticationService userAuthenticationService;
+
+    @Autowired
+    private FormInputResponseService formInputResponseService;
+
+    @Autowired
+    private ProcessRoleService processRoleService;
+
+
+    @GetMapping
     public String getOverview(Model model,
                               @ModelAttribute(FORM_ATTR_NAME) AssessmentOverviewForm form,
                               @PathVariable("assessmentId") Long assessmentId,
@@ -55,13 +70,29 @@ public class AssessmentOverviewController {
         return "assessment/application-overview";
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/finances")
+    @GetMapping(value = "/finances")
     public String getFinancesSummary(Model model, @PathVariable("assessmentId") Long assessmentId) {
         model.addAttribute("model", assessmentFinancesSummaryModelPopulator.populateModel(assessmentId, model));
         return "assessment/application-finances-summary";
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/reject")
+    @GetMapping(value = "/application/{applicationId}/formInput/{formInputId}/download")
+    public @ResponseBody ResponseEntity<ByteArrayResource> downloadAppendix (
+            @PathVariable("applicationId") Long applicationId,
+            @PathVariable("formInputId") Long formInputId,
+            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+        ProcessRoleResource processRole = processRoleService.findProcessRole(loggedInUser.getId(), applicationId);
+
+        final ByteArrayResource resource = formInputResponseService
+                .getFile(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
+
+        final FormInputResponseFileEntryResource fileDetails = formInputResponseService
+                .getFileDetails(formInputId, applicationId, processRole.getId()).getSuccessObjectOrThrowException();
+
+        return getFileResponseEntity(resource, fileDetails.getFileEntryResource());
+    }
+
+    @PostMapping(value = "/reject")
     public String rejectInvitation(
             Model model,
             @Valid @ModelAttribute(FORM_ATTR_NAME) AssessmentOverviewForm form,
@@ -79,7 +110,7 @@ public class AssessmentOverviewController {
         });
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/reject/confirm")
+    @GetMapping(value = "/reject/confirm")
     public String rejectInvitationConfirm(
             Model model,
             @ModelAttribute(FORM_ATTR_NAME) AssessmentOverviewForm form,

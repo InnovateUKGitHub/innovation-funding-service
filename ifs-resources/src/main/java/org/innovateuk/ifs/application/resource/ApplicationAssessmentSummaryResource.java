@@ -13,6 +13,7 @@ public class ApplicationAssessmentSummaryResource {
 
     private long id;
     private String name;
+    private String innovationArea;
     private Long competitionId;
     private String competitionName;
     private CompetitionStatus competitionStatus;
@@ -22,9 +23,10 @@ public class ApplicationAssessmentSummaryResource {
     public ApplicationAssessmentSummaryResource() {
     }
 
-    public ApplicationAssessmentSummaryResource(long id, String name, Long competitionId, String competitionName, CompetitionStatus competitionStatus, String leadOrganisation, List<String> partnerOrganisations) {
+    public ApplicationAssessmentSummaryResource(long id, String name, String innovationArea, Long competitionId, String competitionName, CompetitionStatus competitionStatus, String leadOrganisation, List<String> partnerOrganisations) {
         this.id = id;
         this.name = name;
+        this.innovationArea = innovationArea;
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.competitionStatus = competitionStatus;
@@ -46,6 +48,14 @@ public class ApplicationAssessmentSummaryResource {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getInnovationArea() {
+        return innovationArea;
+    }
+
+    public void setInnovationArea(String innovationArea) {
+        this.innovationArea = innovationArea;
     }
 
     public Long getCompetitionId() {
@@ -99,6 +109,7 @@ public class ApplicationAssessmentSummaryResource {
         return new EqualsBuilder()
                 .append(id, that.id)
                 .append(name, that.name)
+                .append(innovationArea, that.innovationArea)
                 .append(competitionId, that.competitionId)
                 .append(competitionName, that.competitionName)
                 .append(competitionStatus, that.competitionStatus)
@@ -112,6 +123,7 @@ public class ApplicationAssessmentSummaryResource {
         return new HashCodeBuilder(17, 37)
                 .append(id)
                 .append(name)
+                .append(innovationArea)
                 .append(competitionId)
                 .append(competitionName)
                 .append(competitionStatus)

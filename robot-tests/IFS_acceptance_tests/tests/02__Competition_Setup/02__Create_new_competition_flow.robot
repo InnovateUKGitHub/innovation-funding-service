@@ -576,19 +576,19 @@ the user fills the milestones with valid data
     wait for autosave
 
 the weekdays should be correct
-    element should contain    css=tr:nth-child(1) td:nth-child(2)    Thu
-    element should contain    css=tr:nth-child(2) td:nth-child(2)    Fri
-    element should contain    css=tr:nth-child(3) td:nth-child(2)    Sat
-    element should contain    css=tr:nth-child(4) td:nth-child(2)    Sun
-    element should contain    css=tr:nth-child(5) td:nth-child(2)    Mon
-    element should contain    css=tr:nth-child(6) td:nth-child(2)    Tue
-    element should contain    css=tr:nth-child(7) td:nth-child(2)    Wed
-    element should contain    css=tr:nth-child(8) td:nth-child(2)    Thu
-    element should contain    css=tr:nth-child(9) td:nth-child(2)    Fri
-    element should contain    css=tr:nth-child(10) td:nth-child(2)    Sat
-    element should contain    css=tr:nth-child(11) td:nth-child(2)    Sun
-    element should contain    css=tr:nth-child(12) td:nth-child(2)    Mon
-    element should contain    css=tr:nth-child(13) td:nth-child(2)    Tue
+    element should contain    css=tr:nth-child(1) td:nth-child(3)    Thu
+    element should contain    css=tr:nth-child(2) td:nth-child(3)    Fri
+    element should contain    css=tr:nth-child(3) td:nth-child(3)    Sat
+    element should contain    css=tr:nth-child(4) td:nth-child(3)    Sun
+    element should contain    css=tr:nth-child(5) td:nth-child(3)    Mon
+    element should contain    css=tr:nth-child(6) td:nth-child(3)    Tue
+    element should contain    css=tr:nth-child(7) td:nth-child(3)    Wed
+    element should contain    css=tr:nth-child(8) td:nth-child(3)    Thu
+    element should contain    css=tr:nth-child(9) td:nth-child(3)    Fri
+    element should contain    css=tr:nth-child(10) td:nth-child(3)    Sat
+    element should contain    css=tr:nth-child(11) td:nth-child(3)    Sun
+    element should contain    css=tr:nth-child(12) td:nth-child(3)    Mon
+    element should contain    css=tr:nth-child(13) td:nth-child(3)    Tue
 
 the pre-field date should be correct
     Element Should Contain    css=#milestone-OPEN_DATE~ .js-addWeekDay    Sat
