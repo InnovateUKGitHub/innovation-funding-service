@@ -31,8 +31,8 @@ Submit button disabled when application is incomplete
     And the user clicks the button/link    jQuery=.button:contains("Review and submit")
     Then the submit button should be disabled
 
-Applicant submits the application
-    [Documentation]    INFUND-8599
+Applicant has read only view after submission
+    [Documentation]    INFUND-7405, INFUND-8599
     [Tags]
     When the user navigates to the page    ${DASHBOARD_URL}
     and the user clicks the button/link      link=${application_name}
