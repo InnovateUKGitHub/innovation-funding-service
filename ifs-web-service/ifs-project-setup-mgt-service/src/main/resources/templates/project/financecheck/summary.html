@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend Profile Summary'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend profile Summary'" />
 </head>
 <body th:with="context='project-management'" class="competition-management finance-checks-overview">
 <th:block th:insert="fragments/modals :: modal-overlay" />
@@ -100,7 +100,7 @@
 
         <button th:if="${model.showDisabledGenerateSpendProfilesButton}" disabled="disabled" class="button generate-spend-profile-main-button">Generate spend profile</button>
         <a th:unless="${model.showDisabledGenerateSpendProfilesButton}" th:href="@{/project/{projectId}/finance-check/generate/confirm(projectId=${model.financeCheckSummaryResource.projectId})}" data-js-modal="generate-spend-profile" class="button generate-spend-profile-main-button">Generate spend profile</a>
-        <th:block th:unless="${model.showDisabledGenerateSpendProfilesButton}"  th:include="fragments/modals :: generate-spend-profile" />
+        <th:block th:unless="${model.showDisabledGenerateSpendProfilesButton}" th:insert="fragments/modals :: generate-spend-profile" />
     </form>
 
     <th:block th:insert="fragments/layout :: main-content-end" />

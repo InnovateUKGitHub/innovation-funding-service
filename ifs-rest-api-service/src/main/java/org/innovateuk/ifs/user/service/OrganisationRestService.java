@@ -3,6 +3,7 @@ package org.innovateuk.ifs.user.service;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.finance.resource.OrganisationSizeResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 
 import java.util.List;
