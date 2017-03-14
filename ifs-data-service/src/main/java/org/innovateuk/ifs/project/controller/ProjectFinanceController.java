@@ -149,7 +149,7 @@ public class ProjectFinanceController {
                                             @PathVariable("eligibility") final Eligibility eligibility,
                                             @PathVariable("eligibilityRagStatus") final EligibilityRagStatus eligibilityRagStatus) {
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        return projectFinanceService.saveAndApproveEligibility(projectOrganisationCompositeId, eligibility, eligibilityRagStatus).toPostResponse();
+        return projectFinanceService.saveEligibility(projectOrganisationCompositeId, eligibility, eligibilityRagStatus).toPostResponse();
     }
 
     @RequestMapping(value = "/{projectId}/partner-organisation/{organisationId}/credit-report/{reportPresent}", method = POST)

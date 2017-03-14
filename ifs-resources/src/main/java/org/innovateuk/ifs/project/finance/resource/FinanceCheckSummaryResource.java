@@ -155,7 +155,6 @@ public class FinanceCheckSummaryResource {
         return financeChecksAllApproved && isViabilityAllApprovedOrNotRequired() && isEligibilityAllApprovedOrNotRequired();
     }
 
-    @JsonIgnore
     private boolean isViabilityAllApprovedOrNotRequired() {
 
         List<Viability> relevantStatuses = asList(
@@ -165,7 +164,6 @@ public class FinanceCheckSummaryResource {
         return partnerStatusResources.stream().allMatch(org -> relevantStatuses.contains(org.getViability()));
     }
 
-    @JsonIgnore
     private boolean isEligibilityAllApprovedOrNotRequired() {
 
         List<Eligibility> relevantStatuses = asList(
