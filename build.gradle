@@ -1,6 +1,6 @@
 allprojects {
     group 'innovateuk'
-    version '1.0-SNAPSHOT'
+    version project.version
 
     apply plugin: 'idea'
     apply plugin: 'java'
@@ -38,6 +38,15 @@ subprojects {
                 fileTree(dir: it,
                         exclude: ['**/*Mapper**'])
             })
+        }
+
+        task prepareDockerFile (type: Copy) {
+            outputs.upToDateWhen { false }
+            from 'src/main/docker/'
+            into 'src/main/docker/'
+            include 'Dockerfile-template'
+            rename 'Dockerfile-template', 'Dockerfile'
+            filter(ReplaceTokens, tokens: [version : project.properties['version']])
         }
     }
 
@@ -158,6 +167,16 @@ dockerCompose {
 
 }
 
+task prepareComposeFile (type: Copy) {
+    outputs.upToDateWhen { false }
+    from '.'
+    into '.'
+    include 'docker-compose-template.yml'
+    rename 'docker-compose-template.yml', 'docker-compose.yml'
+    filter(ReplaceTokens, tokens: [version : project.properties['version']])
+}
+
+composeUp.dependsOn prepareComposeFile
 
 task robotTestsFilter (type: Copy) {
     from 'robot-tests/IFS_acceptance_tests/resources/variables/'
