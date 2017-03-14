@@ -155,10 +155,8 @@ release {
     failOnSnapshotDependencies = false
     failOnUnversionedFiles = false
     failOnUpdateNeeded = false
-    revertOnFail = true
-    preTagCommitMessage = '[Gradle Release Plugin] - pre tag commit: '
-    tagCommitMessage = '[Gradle Release Plugin] - creating tag: '
-    newVersionCommitMessage = '[Gradle Release Plugin] - new version commit: '
+    preTagCommitMessage = '[Gradle Release Plugin] - Performing release: '
+    newVersionCommitMessage = '[Gradle Release Plugin] - Preparing new release version: '
     tagTemplate = '${version}'
 
     scmAdapters = [
