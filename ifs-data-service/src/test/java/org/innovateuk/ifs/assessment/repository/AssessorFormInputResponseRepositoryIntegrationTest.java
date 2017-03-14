@@ -30,6 +30,7 @@ import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESS
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<AssessorFormInputResponseRepository> {
 
@@ -277,5 +278,51 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
         List<AssessorFormInputResponse> responses = repository.findByAssessmentTargetId(application.getId());
 
         assertEquals(saved, responses);
+    }
+
+    @Test
+    public void findByAssessmentTargetIdAndFormInputQuestionId() {
+
+        ProcessRole processRole = processRoleRepository.findOne(1L);
+        Application application = applicationRepository.findOne(1L);
+        ActivityState openState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, AssessmentStates.OPEN.getBackingState());
+
+        List<Assessment> assessments =
+                newAssessment().
+                        withParticipant(processRole).
+                        withApplication(application).
+                        withActivityState(openState).
+                        build(2);
+
+        List<Assessment> savedAssessments = simpleMap(assessments, assessmentRepository::save);
+
+        // Save a question
+        Question question = questionRepository.save(new Question());
+        Question otherQuestion = questionRepository.save(new Question());
+
+        // Save two form inputs for the question
+        List<FormInput> formInputs = newFormInput()
+                .withId(null, null, null)
+                .withQuestion(question, question, otherQuestion)
+                .withPriority(0, 1,2)
+                .withType(TEXTAREA, TEXTAREA, TEXTAREA)
+                .withScope(ASSESSMENT, ASSESSMENT, ASSESSMENT)
+                .build(3).stream().map(formInput -> formInputRepository.save(formInput)).collect(toList());
+
+        // For each of the assessments, save one response for each of the two form inputs
+        List<AssessorFormInputResponse> saved = newAssessorFormInputResponse()
+                .withId(null, null, null, null, null, null)
+                .withAssessment(savedAssessments.get(0), savedAssessments.get(0),savedAssessments.get(0), savedAssessments.get(1), savedAssessments.get(1), savedAssessments.get(1))
+                .withFormInput(formInputs.get(0), formInputs.get(1), formInputs.get(2), formInputs.get(0), formInputs.get(1), formInputs.get(2))
+                .withValue("Sample response 1", "Sample response 2", "Sample response 3", "Sample response 4", "Sample response 5", "Sample response 6")
+                .withUpdatedDate(LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now())
+                .build(6).stream().map(assessorFormInputResponse -> repository.save(assessorFormInputResponse)).collect(toList());
+
+        List<AssessorFormInputResponse> expected = saved.stream().filter(x -> !x.getFormInput().equals(formInputs.get(2))).collect(toList());
+
+        // There should be a response found for each of the form inputs, for each assessment
+        List<AssessorFormInputResponse> responses = repository.findByAssessmentTargetIdAndFormInputQuestionId(application.getId(), question.getId());
+        assertEquals(expected.size(), responses.size());
+        assertTrue(expected.containsAll(responses));
     }
 }

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
+  <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-overview">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+  <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+  <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition eligibility'}, ${'/prototypes/920-comp-eligibility'})" th:remove="tag" th:unless="${param.user != null and param.user[0] == 'assessor'}"/>
+
+  <!-- HARDCODED PROTOTYPE HTML -->
+
+  <div th:include="prototypes/fragments/applicant-view :: prototype-signinnew(${'/prototypes/650-create-application?status'})" th:remove="tag" th:unless="${param.user != null and param.user[0] == 'assessor'}" />
+  <th:block th:if="${param.user != null and param.user[0] == 'assessor'}" th:include="prototypes/fragments/applicant-view :: prototype-signinnew(${'/prototypes/865-assessor-dashboard-invites?accepted=yes&#38;user=assessor&#38;version=v2'})" />
+
+  <div class="grid-row">
+    <div class="column-two-thirds">
+      <details class="extra-margin-top">
+        <summary><span class="summary">Need help signing in or creating an account?</span></summary>
+        <div class="panel">
+          <h2 class="heading-small">My username and/or password isn't working</h2>
+          <p>The Innovation Funding Service (IFS) will not accept your sign in details for the previous Innovate UK process.</p>
+          <p><a href="/login/reset-password">Forgotten your password</a></p>
+          <h2 class="heading-small">I don't have an Innovation Funding Service account</h2>
+          <p>Please create a new IFS account by visiting our <a href="/competition/search">competitions listings page</a>.</p>
+        </div>
+      </details>
+    </div>
+  </div>
+
+
+
+  <!-- END OFHARDCODED PROTOTYPE HTML -->
+
+
+  <!-- =========================== Place: Sign In Help  =========================== -->
+  <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+  <!--</div>-->
+
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script type="text/javascript">
+// <![CDATA[
+  jQuery(document).ready(function(){
+
+    jQuery('.password-toggle').on('click',function(e){
+      e.preventDefault();
+
+      var inputType = jQuery('#id_password').attr('type');
+
+      //alert(inputType);
+
+      if (inputType == 'password'){
+        jQuery('#id_password').attr('type', 'text');
+        jQuery(this).text('Hide');
+      }else{
+        jQuery('#id_password').attr('type', 'password');
+        jQuery(this).text('Show');
+      }
+
+    });
+
+
+  });
+  // ]]>
+</script>
+</body>
+</html>
