@@ -140,12 +140,14 @@ File upload mandatory for Academic partner to mark section as complete
 
 Applicant chooses Calculate overheads option
     [Documentation]     INFUND-6788, INFUND-8191, INFUND-7405
-    [Tags]
+    [Tags]      Pending
     [Setup]  log in as a different user    &{lead_applicant_credentials}
+    #TODO Pending due to INFUND-8706
     # This test also checks read only view of the overheads once section is marked as complete
     When the user navigates to Your-finances page     ${Competition_E2E}
     then the user fills in the project costs       ${Competition_E2E}
-    When the user clicks the button/link    jQuery=button:contains("Overhead costs")
+    When the user clicks the button/link    link=Your project costs
+    and the user clicks the button/link    jQuery=button:contains("Overhead costs")
     then the user should not see the element      css=input
 
 *** Keywords ***
