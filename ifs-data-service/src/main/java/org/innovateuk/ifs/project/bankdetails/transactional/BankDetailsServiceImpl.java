@@ -13,7 +13,7 @@ import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.mapper.OrganisationAddressMapper;
 import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
-import org.innovateuk.ifs.util.SortExcept;
+import org.innovateuk.ifs.util.PrioritySorting;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
 import org.innovateuk.ifs.project.bankdetails.domain.VerificationCondition;
 import org.innovateuk.ifs.project.bankdetails.mapper.BankDetailsMapper;
@@ -131,7 +131,7 @@ public class BankDetailsServiceImpl implements BankDetailsService {
         Project project = projectRepository.findOne(projectId);
         ProcessRole leadProcessRole = project.getApplication().getLeadApplicantProcessRole();
         Organisation leadOrganisation = organisationRepository.findOne(leadProcessRole.getOrganisationId());
-        List<Organisation> sortedOrganisations = new SortExcept<>(projectUsersHelper.getPartnerOrganisations(projectId), leadOrganisation, Organisation::getName).unwrap();
+        List<Organisation> sortedOrganisations = new PrioritySorting<>(projectUsersHelper.getPartnerOrganisations(projectId), leadOrganisation, Organisation::getName).unwrap();
         final List<BankDetailsStatusResource> bankDetailsStatusResources = simpleMap(sortedOrganisations, org -> getBankDetailsStatusForOrg(project, org));
 
         ProjectBankDetailsStatusSummary projectBankDetailsStatusSummary = new ProjectBankDetailsStatusSummary(project.getApplication().getCompetition().getId(), project.getApplication().getCompetition().getName(), project.getId(), project.getApplication().getId(), bankDetailsStatusResources);

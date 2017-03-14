@@ -24,7 +24,7 @@ import org.innovateuk.ifs.file.service.FileTemplateRenderer;
 import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.transactional.FinanceRowService;
-import org.innovateuk.ifs.util.SortExcept;
+import org.innovateuk.ifs.util.PrioritySorting;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
 import org.innovateuk.ifs.project.finance.transactional.FinanceCheckService;
@@ -275,7 +275,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     }
 
     private List<String> sortedOrganisations(List<String> orgs, String lead) {
-        return new SortExcept<>(orgs, lead, identity()).unwrap().stream().map(StringEscapeUtils::escapeXml10).collect(toList());
+        return new PrioritySorting<>(orgs, lead, identity()).unwrap().stream().map(StringEscapeUtils::escapeXml10).collect(toList());
     }
 
     private List<String> getAddresses(Project project) {

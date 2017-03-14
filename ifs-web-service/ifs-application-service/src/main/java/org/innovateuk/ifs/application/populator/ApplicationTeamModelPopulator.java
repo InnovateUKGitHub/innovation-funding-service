@@ -10,7 +10,7 @@ import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
-import org.innovateuk.ifs.util.SortExcept;
+import org.innovateuk.ifs.util.PrioritySorting;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -66,8 +66,9 @@ public class ApplicationTeamModelPopulator {
                 = simpleFindFirst(inviteOrganisationResources, ior -> ior.getOrganisation().equals(leadOrganisation.getId()));
 
         final List<InviteOrganisationResource> sortedInvites = leadOrganisationInvite.map(lead ->
-                new SortExcept<>(inviteOrganisationResources, lead, InviteOrganisationResource::getOrganisationName)).orElse(
-                new SortExcept<>(inviteOrganisationResources, InviteOrganisationResource::getOrganisationName)).unwrap();
+                new PrioritySorting<>(inviteOrganisationResources, lead, InviteOrganisationResource::getOrganisationName))
+                .orElse(new PrioritySorting<>(inviteOrganisationResources, InviteOrganisationResource::getOrganisationName)).unwrap();
+
         boolean userLeadApplicant = isUserLeadApplicant(loggedInUserId, leadApplicant);
 
         List<ApplicationTeamOrganisationRowViewModel> organisationRowViewModelsForInvites = sortedInvites.stream()

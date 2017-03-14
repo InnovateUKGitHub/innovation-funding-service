@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.controller;
 
 import org.innovateuk.ifs.application.service.OrganisationService;
-import org.innovateuk.ifs.util.SortExcept;
+import org.innovateuk.ifs.util.PrioritySorting;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -72,7 +72,7 @@ public class ProjectDetailsController {
     private List<OrganisationResource> sortedOrganisations(List<OrganisationResource> organisations,
                                                            OrganisationResource lead)
     {
-        return new SortExcept<>(organisations, lead, OrganisationResource::getName).unwrap();
+        return new PrioritySorting<>(organisations, lead, OrganisationResource::getName).unwrap();
     }
 
     private Optional<ProjectUserResource> getProjectManager(List<ProjectUserResource> projectUsers) {

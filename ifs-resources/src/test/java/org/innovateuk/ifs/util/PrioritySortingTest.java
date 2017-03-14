@@ -11,18 +11,18 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
-public class SortExceptTest {
+public class PrioritySortingTest {
 
     @Test
     public void sortingEmptyListWillAddExceptionElement() {
-        List<String> list = new SortExcept<>(new ArrayList<String>(), "exceptionElement", Function.identity()).unwrap();
+        List<String> list = new PrioritySorting<>(new ArrayList<String>(), "exceptionElement", Function.identity()).unwrap();
         assertTrue(list.size() == 1);
         assertTrue(list.get(0).equals("exceptionElement"));
     }
 
     @Test
     public void sortingListWorksAsExpectedWithIdentity() {
-        List<String> list = new SortExcept<>(Arrays.asList("C", "A", "exceptionElement"), "exceptionElement", Function.identity()).unwrap();
+        List<String> list = new PrioritySorting<>(Arrays.asList("C", "A", "exceptionElement"), "exceptionElement", Function.identity()).unwrap();
         assertTrue(list.size() == 3);
         assertEquals(list, Arrays.asList("exceptionElement", "A", "C"));
     }
@@ -30,7 +30,7 @@ public class SortExceptTest {
     @Test
     public void sortingListWorksAsExpectedWithFunction() {
         List<OrganisationResource> orgs = newOrganisationResource().withName("C", "A", "exceptionElement").build(3);
-        List<OrganisationResource> list = new SortExcept<>(orgs, newOrganisationResource().withName("exceptionElement").build(), OrganisationResource::getName).unwrap();
+        List<OrganisationResource> list = new PrioritySorting<>(orgs, newOrganisationResource().withName("exceptionElement").build(), OrganisationResource::getName).unwrap();
         assertTrue(list.size() == 3);
         assertEquals(CollectionFunctions.simpleMap(list, OrganisationResource::getName),
                 CollectionFunctions.simpleMap(newOrganisationResource().withName("exceptionElement", "A", "C").build(3), OrganisationResource::getName));

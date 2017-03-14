@@ -4,7 +4,7 @@ import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.commons.validation.SpendProfileCostValidator;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.util.SortExcept;
+import org.innovateuk.ifs.util.PrioritySorting;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.form.SpendProfileForm;
 import org.innovateuk.ifs.project.model.SpendProfileSummaryModel;
@@ -314,7 +314,7 @@ public class ProjectSpendProfileController {
 
         final OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
 
-        List<OrganisationResource> organisations = new SortExcept<>(projectService.getPartnerOrganisationsForProject(projectId),
+        List<OrganisationResource> organisations = new PrioritySorting<>(projectService.getPartnerOrganisationsForProject(projectId),
                 leadOrganisation, OrganisationResource::getName).unwrap();
 
         Map<String, Boolean> partnersSpendProfileProgress = getPartnersSpendProfileProgress(projectId, organisations);

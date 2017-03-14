@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project;
 
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.util.SortExcept;
+import org.innovateuk.ifs.util.PrioritySorting;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.form.TotalSpendProfileForm;
 import org.innovateuk.ifs.project.model.SpendProfileSummaryModel;
@@ -87,7 +87,7 @@ public class TotalProjectSpendProfileController {
 
     private TotalProjectSpendProfileTableViewModel buildTableViewModel(final Long projectId) {
         final OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
-        List<OrganisationResource> organisations = new SortExcept<>(projectService.getPartnerOrganisationsForProject(projectId),
+        List<OrganisationResource> organisations = new PrioritySorting<>(projectService.getPartnerOrganisationsForProject(projectId),
                 leadOrganisation, OrganisationResource::getName).unwrap();
 
         Map<Long, SpendProfileTableResource> organisationSpendProfiles = simpleToLinkedMap(organisations, OrganisationResource::getId,

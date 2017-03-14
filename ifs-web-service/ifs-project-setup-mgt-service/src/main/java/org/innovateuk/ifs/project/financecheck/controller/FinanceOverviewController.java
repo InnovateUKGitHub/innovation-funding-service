@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.financecheck.controller;
 
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
-import org.innovateuk.ifs.util.SortExcept;
+import org.innovateuk.ifs.util.PrioritySorting;
 import org.innovateuk.ifs.project.PartnerOrganisationService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
@@ -61,7 +61,7 @@ public class FinanceOverviewController {
         List<PartnerOrganisationResource> partnerOrgs = partnerOrganisationService.getPartnerOrganisations(projectId).getSuccessObject();
         final PartnerOrganisationResource lead = simpleFindFirst(partnerOrgs, PartnerOrganisationResource::isLeadOrganisation).get();
         final List<PartnerOrganisationResource> sortedOrganisations
-                = new SortExcept<>(partnerOrgs, lead, PartnerOrganisationResource::getOrganisationName).unwrap();
+                = new PrioritySorting<>(partnerOrgs, lead, PartnerOrganisationResource::getOrganisationName).unwrap();
         return new FinanceCheckOverviewViewModel(getProjectFinanceOverviewViewModel(projectId), getProjectFinanceSummaries(projectId, sortedOrganisations),
                 getProjectFinanceCostBreakdown(projectId, sortedOrganisations));
     }

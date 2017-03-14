@@ -11,7 +11,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.monitoringofficer.form.ProjectMonitoringOfficerForm;
 import org.innovateuk.ifs.monitoringofficer.viewmodel.ProjectMonitoringOfficerViewModel;
-import org.innovateuk.ifs.util.SortExcept;
+import org.innovateuk.ifs.util.PrioritySorting;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -185,7 +185,7 @@ public class ProjectMonitoringOfficerController {
     private List<String> getPartnerOrganisationNames(Long projectId) {
         final OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
         final List<OrganisationResource> partnerOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
-        return simpleMap(new SortExcept<>(partnerOrganisations, leadOrganisation, OrganisationResource::getName).unwrap(),
+        return simpleMap(new PrioritySorting<>(partnerOrganisations, leadOrganisation, OrganisationResource::getName).unwrap(),
                 OrganisationResource::getName);
     }
 }
