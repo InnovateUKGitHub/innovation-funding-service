@@ -66,7 +66,8 @@ public class FinanceOverviewControllerTest extends BaseControllerMockMVCTest<Fin
         Long projectId = 123L;
         Long organisationId = 456L;
 
-        List<PartnerOrganisationResource> partnerOrganisationResources = newPartnerOrganisationResource().withProject(projectId).build(3);
+        List<PartnerOrganisationResource> partnerOrganisationResources = newPartnerOrganisationResource()
+                .withOrganisationName("EGGS", "Ludlow", "Empire").withLeadOrganisation(false, false, true).withProject(projectId).build(3);
         FinanceCheckEligibilityResource financeCheckEligibilityResource = newFinanceCheckEligibilityResource().withTotalCost(BigDecimal.valueOf(280009)).build();
         when(partnerOrganisationServiceMock.getPartnerOrganisations(projectId)).thenReturn(serviceSuccess(partnerOrganisationResources));
         when(financeCheckServiceMock.getFinanceCheckOverview(projectId)).thenReturn(serviceSuccess(mockFinanceOverview()));
@@ -76,7 +77,7 @@ public class FinanceOverviewControllerTest extends BaseControllerMockMVCTest<Fin
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check-overview")).
                 andExpect(view().name("project/financecheck/overview")).
                 andReturn();
-
+    
         FinanceCheckOverviewViewModel financeCheckOverviewViewModel = (FinanceCheckOverviewViewModel) result.getModelAndView().getModel().get("model");
         assertEquals(LocalDate.of(2016, 01, 01), financeCheckOverviewViewModel.getOverview().getProjectStartDate());
         assertEquals("test-project", financeCheckOverviewViewModel.getOverview().getProjectName());
