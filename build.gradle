@@ -36,6 +36,8 @@ subprojects {
                         exclude: ['**/*Mapper**'])
             })
         }
+
+
     }
 
     task codeCoverage {
@@ -117,12 +119,19 @@ buildscript {
 }
 
 
+
 apply plugin: 'net.researchgate.release'
 apply plugin: "org.sonarqube"
 apply plugin: 'docker-compose'
 
 
 release {
+
+    failOnCommitNeeded = false
+    failOnPublishNeeded = false
+    failOnUnversionedFiles = false
+    failOnUpdateNeeded = false
+
 
     scmAdapters = [
             net.researchgate.release.GitAdapter
