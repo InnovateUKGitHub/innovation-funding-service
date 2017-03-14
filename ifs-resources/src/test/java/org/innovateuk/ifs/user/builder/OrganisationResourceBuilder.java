@@ -3,13 +3,12 @@ package org.innovateuk.ifs.user.builder;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.OrganisationSize;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
 
 /**
  * Builder for OrganisationResource entities.
@@ -60,10 +59,6 @@ public class OrganisationResourceBuilder extends BaseBuilder<OrganisationResourc
         return withArray((processRoleList, organisation) -> organisation.setProcessRoles(processRoleList), processRoles);
     }
 
-    public OrganisationResourceBuilder withOrganisationSize(OrganisationSize... size) {
-        return withArray((organisationSize, organisation) -> organisation.setOrganisationSize(organisationSize), size);
-    }
-    
     public OrganisationResourceBuilder withAddress(List<OrganisationAddressResource>... organisationAddressResource) {
     	return withArray((orgAddress, organisation) -> setField("addresses", orgAddress, organisation), organisationAddressResource);
     }

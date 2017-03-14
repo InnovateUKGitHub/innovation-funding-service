@@ -107,6 +107,9 @@ ${unsuccessful_login_message}    Your sign in was unsuccessful because of the fo
 ${application_name}    Submit test application
 ${Competition_E2E}    A new innovative solution
 ${test_title}     test title
+${SMALL_ORGANISATION_SIZE}     1
+${MEDIUM_ORGANISATION_SIZE}    2
+${LARGE_ORGANISATION_SIZE}     3
 # File related variables
 ${UPLOAD_FOLDER}    uploaded_files
 ${DOWNLOAD_FOLDER}    download_files
