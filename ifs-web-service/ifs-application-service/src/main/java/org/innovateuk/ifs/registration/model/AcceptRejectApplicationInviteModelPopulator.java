@@ -17,6 +17,7 @@ public class AcceptRejectApplicationInviteModelPopulator {
         String leadApplicantName = invite.getLeadApplicant();
         String leadApplicantEmail = invite.getLeadApplicantEmail();
         String leadOrganisationName = invite.getLeadOrganisation();
-        return new AcceptRejectApplicationInviteViewModel(leadApplicantName, leadApplicantEmail, leadOrganisationName, inviteOrganisationName, competitionName, competitionId);
+        boolean inviteOrganisationExists = inviteOrganisation.getOrganisation() != null;
+        return new AcceptRejectApplicationInviteViewModel(leadApplicantName, leadApplicantEmail, leadOrganisationName, inviteOrganisationName, competitionName, competitionId, inviteOrganisationExists);
     }
 }

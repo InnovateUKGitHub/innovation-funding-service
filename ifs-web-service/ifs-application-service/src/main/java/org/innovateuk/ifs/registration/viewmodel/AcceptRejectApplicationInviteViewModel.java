@@ -2,67 +2,51 @@ package org.innovateuk.ifs.registration.viewmodel;
 
 public class AcceptRejectApplicationInviteViewModel {
 
-    private String leadOrganisation;
+    private String leadOrganisationName;
     private String leadApplicantName;
     private String inviteOrganisationName;
     private String leadApplicantEmail;
     private String competitionName;
-    private Long competionId;
+    private Long competitionId;
+    private boolean inviteOrganisationExists;
 
-    public AcceptRejectApplicationInviteViewModel(String leadApplicantName, String leadApplicantEmail, String leadOrganisationName, String inviteOrganisationName, String competitionName, Long competetionId) {
-        this.leadOrganisation = leadOrganisationName;
+    public AcceptRejectApplicationInviteViewModel(String leadApplicantName, String leadApplicantEmail, String leadOrganisationName, String inviteOrganisationName, String competitionName, Long competitionId, boolean inviteOrganisationExists) {
+        this.leadOrganisationName = leadOrganisationName;
         this.leadApplicantName = leadApplicantName;
         this.inviteOrganisationName = inviteOrganisationName;
         this.leadApplicantEmail = leadApplicantEmail;
         this.competitionName = competitionName;
-        this.competionId = competetionId;
+        this.competitionId = competitionId;
+        this.inviteOrganisationExists = inviteOrganisationExists;
     }
 
-    public String getLeadOrganisation() {
-        return leadOrganisation;
-    }
-
-    public void setLeadOrganisation(String leadOrganisation) {
-        this.leadOrganisation = leadOrganisation;
+    public String getLeadOrganisationName() {
+        return leadOrganisationName;
     }
 
     public String getLeadApplicantName() {
         return leadApplicantName;
     }
 
-    public void setLeadApplicantName(String leadApplicantName) {
-        this.leadApplicantName = leadApplicantName;
-    }
-
     public String getInviteOrganisationName() {
         return inviteOrganisationName;
-    }
-
-    public void setInviteOrganisationName(String inviteOrganisationName) {
-        this.inviteOrganisationName = inviteOrganisationName;
     }
 
     public String getLeadApplicantEmail() {
         return leadApplicantEmail;
     }
 
-    public void setLeadApplicantEmail(String leadApplicantEmail) {
-        this.leadApplicantEmail = leadApplicantEmail;
-    }
-
     public String getCompetitionName() {
         return competitionName;
     }
 
-    public void setCompetitionName(String competitionName) {
-        this.competitionName = competitionName;
+    public Long getCompetitionId() {
+        return competitionId;
     }
 
-    public Long getCompetionId() {
-        return competionId;
-    }
-
-    public void setCompetionId(Long competionId) {
-        this.competionId = competionId;
+    public boolean isInviteOrganisationExists() {
+        return inviteOrganisationExists;
     }
 }
+
+

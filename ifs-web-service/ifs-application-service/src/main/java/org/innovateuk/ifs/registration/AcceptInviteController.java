@@ -74,8 +74,10 @@ public class AcceptInviteController extends BaseController {
 
     private static final String ALREADY_ACCEPTED_VIEW = "redirect:/login";
     private static final String LOGGED_IN_WITH_ANOTHER_USER_VIEW = "registration/logged-in-with-another-user-failure";
-//    private static final String LOGGED_IN_WITH_ANOTHER_USER_VIEW = "registration/accept-invite-failure"; // qqRP TODO remove
-    private static final String SUCCESS_VIEW = "registration/accept-invite";
+    private static final String ACCEPT_INVITE_NEW_USER_VIEW = "registration/accept-invite-new-user";
+    private static final String ACCEPT_INVITE_EXISTING_USER_VIEW = "registration/accept-invite-existing-user";
+    private static final String SUCCESS_VIEW = "registration/accept-invite-new-user";
+
     // return "redirect:/accept-invite-authenticated/confirm-invited-organisation"; // qqRP TODO remove
 
     @RequestMapping(value = "/accept-invite/{hash}", method = RequestMethod.GET)
@@ -96,7 +98,7 @@ public class AcceptInviteController extends BaseController {
                                 // Success
                                 addInviteHashCookie(response, invite.getHash()); // Add the hash to a cookie for later flow lookup.
                                 model.addAttribute("model", acceptRejectApplicationInviteModelPopulator.populateModel(invite, inviteOrganisation));
-                                return SUCCESS_VIEW;
+                                return invite.getUser() == null ? ACCEPT_INVITE_NEW_USER_VIEW : ACCEPT_INVITE_EXISTING_USER_VIEW;
                             }
                     );
                 }
