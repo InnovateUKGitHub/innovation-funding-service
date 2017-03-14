@@ -302,7 +302,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         QuestionResource previousQuestion = newQuestionResource().withId(1L).withShortName("previous").build();
         QuestionResource questionResource = newQuestionResource().withId(questionId).build();
         QuestionResource nextQuestion = newQuestionResource().withId(3L).withShortName("next").build();
-        ApplicationResource applicationResource = newApplicationResource().build();
+        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withCompetitionStatus(PROJECT_SETUP).build();
         List<FormInputResponseResource> responseResources = newFormInputResponseResource().build(2);
         AssessmentFeedbackAggregateResource aggregateResource = newAssessmentFeedbackAggregateResource().build();
         NavigationViewModel expectedNavigation = new NavigationViewModel();
