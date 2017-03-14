@@ -395,8 +395,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         List<PartnerOrganisation> partnerOrganisations = partnerOrganisationRepository.findByProjectId(project.getId());
 
         Optional<PartnerOrganisation> existingReviewablePartnerOrganisation = simpleFindFirst(partnerOrganisations, partnerOrganisation ->
-                        getViabilityProcess(partnerOrganisation)
-                .andOnSuccessReturn(viabilityProcess -> ViabilityState.REVIEW == viabilityProcess.getActivityState()).getSuccessObjectOrThrowException());
+                ViabilityState.REVIEW == viabilityWorkflowHandler.getState(partnerOrganisation));
 
         if (!existingReviewablePartnerOrganisation.isPresent()) {
             return serviceSuccess();
@@ -471,8 +470,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         List<PartnerOrganisation> partnerOrganisations = partnerOrganisationRepository.findByProjectId(project.getId());
 
         Optional<PartnerOrganisation> existingReviewablePartnerOrganisation = simpleFindFirst(partnerOrganisations, partnerOrganisation ->
-                getEligibilityProcess(partnerOrganisation)
-                        .andOnSuccessReturn(eligibilityProcess -> EligibilityState.REVIEW == eligibilityProcess.getActivityState()).getSuccessObjectOrThrowException());
+                        EligibilityState.REVIEW == eligibilityWorkflowHandler.getState(partnerOrganisation));
 
         if (!existingReviewablePartnerOrganisation.isPresent()) {
             return serviceSuccess();
@@ -597,7 +595,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     }
 
     @Override
-    public ServiceResult<Void> saveEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, Eligibility eligibility, EligibilityRagStatus eligibilityRagStatus){
+    public ServiceResult<Void> saveAndApproveEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, Eligibility eligibility, EligibilityRagStatus eligibilityRagStatus){
 
         Long projectId = projectOrganisationCompositeId.getProjectId();
         Long organisationId = projectOrganisationCompositeId.getOrganisationId();
