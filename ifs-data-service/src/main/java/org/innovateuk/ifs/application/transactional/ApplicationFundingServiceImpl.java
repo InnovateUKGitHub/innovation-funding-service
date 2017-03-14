@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.transactional;
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.ApplicationStatus;
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.mapper.FundingDecisionMapper;
 import org.innovateuk.ifs.application.resource.FundingDecision;
@@ -21,11 +22,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
+import static org.innovateuk.ifs.application.constant.ApplicationStatusConstants.*;
+import static org.innovateuk.ifs.application.resource.FundingDecision.FUNDED;
+import static org.innovateuk.ifs.application.resource.FundingDecision.UNFUNDED;
 import static org.innovateuk.ifs.application.transactional.ApplicationFundingServiceImpl.Notifications.APPLICATION_FUNDING;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_DETERMINE_NOTIFICATION_TARGETS;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
@@ -66,8 +67,11 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
         });
     }
 
+
     @Override
     public ServiceResult<Void> notifyLeadApplicantsOfFundingDecisions(NotificationResource notificationResource) {
+
+        setApplicationStatus(notificationResource.getFundingDecisions());
 
         List<ServiceResult<Pair<Long, NotificationTarget>>> fundingNotificationTargets = getLeadApplicantNotificationTargets(notificationResource.calculateApplicationIds());
         ServiceResult<List<Pair<Long, NotificationTarget>>> aggregatedFundingTargets = aggregate(fundingNotificationTargets);
@@ -85,6 +89,24 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
                                             applicationService.setApplicationFundingEmailDateTime(applicationId, LocalDateTime.now()))))
                             .andOnSuccessReturnVoid();
                 });
+    }
+
+    private void setApplicationStatus(Map<Long, FundingDecision> applicationFundingDecisions) {
+
+        List<Long> applicationIds = new ArrayList<>(applicationFundingDecisions.keySet());
+        List<Application> applications = findApplicationsByIds(applicationIds);
+
+        applications.forEach(app -> {
+            FundingDecision applicationFundingDecision = applicationFundingDecisions.get(app.getId());
+            ApplicationStatus status = statusFromDecision(applicationFundingDecision);
+            app.setApplicationStatus(status);
+        });
+
+        return;
+    }
+
+    private List<Application> findApplicationsByIds(List<Long> applicationIds) {
+        return (List) applicationRepository.findAll(applicationIds);
     }
 
     private List<Application> findSubmittedApplicationsForCompetition(Long competitionId) {
@@ -121,4 +143,13 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
         });
     }
 
+    private ApplicationStatus statusFromDecision(FundingDecision applicationFundingDecision) {
+        if (FUNDED.equals(applicationFundingDecision)) {
+            return applicationStatusRepository.findOne(APPROVED.getId());
+        } else if (UNFUNDED.equals(applicationFundingDecision)) {
+            return applicationStatusRepository.findOne(REJECTED.getId());
+        } else {
+            return applicationStatusRepository.findOne(SUBMITTED.getId());
+        }
+    }
 }

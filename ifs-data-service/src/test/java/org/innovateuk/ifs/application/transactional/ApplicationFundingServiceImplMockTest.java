@@ -37,6 +37,9 @@ import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.application.constant.ApplicationStatusConstants.APPROVED;
+import static org.innovateuk.ifs.application.constant.ApplicationStatusConstants.REJECTED;
+import static org.innovateuk.ifs.application.constant.ApplicationStatusConstants.SUBMITTED;
 import static org.innovateuk.ifs.application.resource.FundingDecision.UNDECIDED;
 import static org.innovateuk.ifs.application.transactional.ApplicationFundingServiceImpl.Notifications.APPLICATION_FUNDING;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
@@ -134,6 +137,13 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
 
         Notification expectedFundingNotification = new Notification(systemNotificationSourceMock, expectedLeadApplicants, APPLICATION_FUNDING, expectedGlobalNotificationArguments);
 
+        List<Long> applicationIds = Arrays.asList(application1.getId(), application2.getId(), application3.getId());
+        List<Application> applications = Arrays.asList(application1, application2, application3);
+        when(applicationRepositoryMock.findAll(applicationIds)).thenReturn(applications);
+        when(applicationStatusRepositoryMock.findOne(APPROVED.getId())).thenReturn(ApplicationStatusBuilder.newApplicationStatus().withName(APPROVED).build());
+        when(applicationStatusRepositoryMock.findOne(REJECTED.getId())).thenReturn(ApplicationStatusBuilder.newApplicationStatus().withName(REJECTED).build());
+        when(applicationStatusRepositoryMock.findOne(SUBMITTED.getId())).thenReturn(ApplicationStatusBuilder.newApplicationStatus().withName(SUBMITTED).build());
+
         when(roleRepositoryMock.findOneByName(LEADAPPLICANT.getName())).thenReturn(leadApplicantRole);
         leadApplicantProcessRoles.forEach(processRole ->
                 when(processRoleRepositoryMock.findByApplicationIdAndRoleId(processRole.getApplicationId(), processRole.getRole().getId())).thenReturn(singletonList(processRole))
@@ -151,8 +161,8 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
         verify(applicationServiceMock).setApplicationFundingEmailDateTime(eq(application2.getId()), any(LocalDateTime.class));
         verify(applicationServiceMock).setApplicationFundingEmailDateTime(eq(application3.getId()), any(LocalDateTime.class));
         verifyNoMoreInteractions(applicationServiceMock);
-
     }
+
     @Test
     public void testNotifyLeadApplicantsOfFundingDecisionsAndJustLeadApplicants() {
 
@@ -185,6 +195,12 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
 
         Notification expectedFundingNotification =
                 new Notification(systemNotificationSourceMock, expectedLeadApplicants, APPLICATION_FUNDING, emptyMap());
+        
+        List<Long> applicationIds = Arrays.asList(application1.getId(), application2.getId());
+        List<Application> applications = Arrays.asList(application1, application2);
+        when(applicationRepositoryMock.findAll(applicationIds)).thenReturn(applications);
+        when(applicationStatusRepositoryMock.findOne(APPROVED.getId())).thenReturn(ApplicationStatusBuilder.newApplicationStatus().withName(APPROVED).build());
+        when(applicationStatusRepositoryMock.findOne(REJECTED.getId())).thenReturn(ApplicationStatusBuilder.newApplicationStatus().withName(REJECTED).build());
 
         asList(application1, application2).forEach(application ->
                 when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application)
