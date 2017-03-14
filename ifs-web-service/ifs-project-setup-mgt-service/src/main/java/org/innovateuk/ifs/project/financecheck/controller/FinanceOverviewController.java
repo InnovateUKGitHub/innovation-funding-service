@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.financecheck.controller;
 
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
-import org.innovateuk.ifs.organisation.resource.SortExcept;
+import org.innovateuk.ifs.util.SortExcept;
 import org.innovateuk.ifs.project.PartnerOrganisationService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;

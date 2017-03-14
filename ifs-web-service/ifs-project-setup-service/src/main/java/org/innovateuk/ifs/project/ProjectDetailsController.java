@@ -14,7 +14,7 @@ import org.innovateuk.ifs.form.AddressForm;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
-import org.innovateuk.ifs.organisation.resource.SortExcept;
+import org.innovateuk.ifs.util.SortExcept;
 import org.innovateuk.ifs.organisation.service.OrganisationAddressRestService;
 import org.innovateuk.ifs.project.form.FinanceContactForm;
 import org.innovateuk.ifs.project.form.ProjectDetailsAddressForm;

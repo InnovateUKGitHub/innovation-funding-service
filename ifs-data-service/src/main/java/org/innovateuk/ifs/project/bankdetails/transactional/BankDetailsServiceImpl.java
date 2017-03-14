@@ -13,7 +13,7 @@ import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.mapper.OrganisationAddressMapper;
 import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
-import org.innovateuk.ifs.organisation.resource.SortExcept;
+import org.innovateuk.ifs.util.SortExcept;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
 import org.innovateuk.ifs.project.bankdetails.domain.VerificationCondition;
 import org.innovateuk.ifs.project.bankdetails.mapper.BankDetailsMapper;
