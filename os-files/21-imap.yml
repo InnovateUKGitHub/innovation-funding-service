@@ -5,70 +5,30 @@ items:
   kind: DeploymentConfig
   metadata:
     creationTimestamp: null
-    name: imap
+    name: mail
   spec:
     replicas: 1
     selector:
-      deploymentconfig: imap
+      deploymentconfig: mail
     strategy:
       resources: {}
     template:
       metadata:
         creationTimestamp: null
         labels:
-          deploymentconfig: imap
+          deploymentconfig: mail
       spec:
         containers:
-        - image: camptocamp/courier-imap
-          name: imap
+        - image: davidrums/local-webmail-sink
+          name: mail
           imagePullPolicy: IfNotPresent
           ports:
-          - containerPort: 143
-          resources: {}
-          volumeMounts:
-          - name: smtp-maildir-storage
-            mountPath: /home/smtp/Maildir
+          - containerPort: 8025
+          - containerPort: 8080
+          - containerPort: 8143
           resources:
             limits:
-              memory: 50M
-        - image: camptocamp/smtp-sink
-          name: smtp
-          ports:
-          - containerPort: 25
-          lifecycle:
-            postStart:
-              exec:
-                command:
-                  - "sh"
-                  - "-c"
-                  - >
-                    maildirmake test &&
-                    mv test/* Maildir/ &&
-                    chown -R smtp:smtp Maildir/
-          resources:
-            limits:
-              memory: 50M
-          volumeMounts:
-          - name: smtp-maildir-storage
-            mountPath: /home/smtp/Maildir
-        - image: camptocamp/sqwebmail
-          readinessProbe:
-            httpGet:
-              path: /
-              port: 80
-          name: webmail
-          ports:
-          - containerPort: 80
-          resources: {}
-          volumeMounts:
-          - name: smtp-maildir-storage
-            mountPath: /home/smtp/Maildir
-          resources:
-            limits:
-              memory: 50M
-        volumes:
-        - emptyDir: {}
-          name: smtp-maildir-storage
+              memory: 100M
     test: false
     triggers:
     - type: ConfigChange
@@ -77,43 +37,30 @@ items:
   kind: Service
   metadata:
     creationTimestamp: null
-    name: imap
+    name: mail
   spec:
     ports:
-    - name: 25-tcp
-      port: 25
-      targetPort: 25
-    - name: 80-tcp
-      port: 80
-      targetPort: 80
-    - name: 143-tcp
-      port: 143
-      targetPort: 143
+    - name: 8025-tcp
+      port: 8025
+      targetPort: 8025
+    - name: 8080-tcp
+      port: 8080
+      targetPort: 8080
+    - name: 8143-tcp
+      port: 8143
+      targetPort: 8143
     selector:
-      deploymentconfig: imap
-  status:
-    loadBalancer: {}
-- apiVersion: v1
-  kind: Service
-  metadata:
-    name: smtp
-  spec:
-    ports:
-    - name: 25-tcp
-      port: 25
-      targetPort: 25
-    selector:
-      deploymentconfig: imap
+      deploymentconfig: mail
   status:
     loadBalancer: {}
 - apiVersion: v1
   kind: Route
   metadata:
-    name: imap
+    name: mail
   spec:
-    host: <<IMAP-ADDRESS>>
+    host: <<MAIL-ADDRESS>>
     port:
-      targetPort: 80-tcp
+      targetPort: 8080-tcp
     to:
       kind: Service
-      name: imap
+      name: mail
