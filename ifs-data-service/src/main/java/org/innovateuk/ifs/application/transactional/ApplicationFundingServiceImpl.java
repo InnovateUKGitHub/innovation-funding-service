@@ -101,8 +101,6 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
             ApplicationStatus status = statusFromDecision(applicationFundingDecision);
             app.setApplicationStatus(status);
         });
-
-        return;
     }
 
     private List<Application> findApplicationsByIds(List<Long> applicationIds) {
