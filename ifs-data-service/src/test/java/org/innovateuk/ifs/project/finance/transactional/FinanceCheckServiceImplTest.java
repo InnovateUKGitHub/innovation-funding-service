@@ -205,7 +205,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Long projectId = 1L;
         Long organisationId = 2L;
 
-        Organisation organisation = newOrganisation().withId(organisationId).withOrganisationType(OrganisationTypeEnum.ACADEMIC).build();
+        Organisation organisation = newOrganisation().withId(organisationId).withOrganisationType(OrganisationTypeEnum.RESEARCH).build();
         PartnerOrganisation partnerOrganisation = newPartnerOrganisation().withOrganisation(organisation).build();
 
         FinanceCheckResource financeCheckResource = newFinanceCheckResource().
@@ -292,7 +292,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).build();
 
         Organisation[] organisations = newOrganisation().
-                withOrganisationType(OrganisationTypeEnum.BUSINESS, OrganisationTypeEnum.ACADEMIC, OrganisationTypeEnum.BUSINESS).
+                withOrganisationType(OrganisationTypeEnum.BUSINESS, OrganisationTypeEnum.RESEARCH, OrganisationTypeEnum.BUSINESS).
                 buildArray(3, Organisation.class);
 
         List<PartnerOrganisation> partnerOrganisations = newPartnerOrganisation().
@@ -647,7 +647,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
 
         Organisation[] organisations = newOrganisation().
-                withOrganisationType(OrganisationTypeEnum.BUSINESS, OrganisationTypeEnum.ACADEMIC, OrganisationTypeEnum.BUSINESS).
+                withOrganisationType(OrganisationTypeEnum.BUSINESS, OrganisationTypeEnum.RESEARCH, OrganisationTypeEnum.BUSINESS).
                 buildArray(3, Organisation.class);
 
         List<PartnerOrganisation> partnerOrganisations = newPartnerOrganisation().
@@ -716,7 +716,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
 
         Organisation[] organisations = newOrganisation().
-                withOrganisationType(OrganisationTypeEnum.BUSINESS, OrganisationTypeEnum.ACADEMIC, OrganisationTypeEnum.BUSINESS).
+                withOrganisationType(OrganisationTypeEnum.BUSINESS, OrganisationTypeEnum.RESEARCH, OrganisationTypeEnum.BUSINESS).
                 buildArray(3, Organisation.class);
 
         List<PartnerOrganisation> partnerOrganisations = newPartnerOrganisation().
@@ -785,7 +785,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
 
         Organisation[] organisations = newOrganisation().
-                withOrganisationType(OrganisationTypeEnum.BUSINESS, OrganisationTypeEnum.ACADEMIC, OrganisationTypeEnum.BUSINESS).
+                withOrganisationType(OrganisationTypeEnum.BUSINESS, OrganisationTypeEnum.RESEARCH, OrganisationTypeEnum.BUSINESS).
                 buildArray(3, Organisation.class);
 
         List<PartnerOrganisation> partnerOrganisations = newPartnerOrganisation().

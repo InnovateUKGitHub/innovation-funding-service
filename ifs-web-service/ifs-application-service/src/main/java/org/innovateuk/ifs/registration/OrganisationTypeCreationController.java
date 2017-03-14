@@ -110,10 +110,10 @@ public class OrganisationTypeCreationController {
         if (bindingResult.hasErrors()) {
             LOG.debug("redirect because validation errors");
             return "redirect:/organisation/create/type/new-account-organisation-type?invalid";
-        } else if (OrganisationTypeEnum.getFromId(organisationTypeId).hasChildren()) {
+        } else if (OrganisationTypeEnum.getFromId(organisationTypeId).equals(OrganisationTypeEnum.RESEARCH)) {
             String orgTypeForm = JsonUtil.getSerializedObject(organisationTypeForm);
             cookieUtil.saveToCookie(response, ORGANISATION_TYPE, orgTypeForm);
-            LOG.debug("redirect for organisation subtype");
+            LOG.debug("redirect for research organisation");
             return "redirect:/organisation/create/type/new-account-organisation-type/?" + ORGANISATION_TYPE + '=' + organisationTypeForm.getOrganisationType();
         } else {
             String orgTypeForm = JsonUtil.getSerializedObject(organisationTypeForm);

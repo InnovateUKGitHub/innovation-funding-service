@@ -332,7 +332,7 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
     }
 
     private boolean isAcademic(OrganisationType type) {
-        return OrganisationTypeEnum.ACADEMIC.getOrganisationTypeId().equals(type.getId());
+        return OrganisationTypeEnum.RESEARCH.getOrganisationTypeId().equals(type.getId());
     }
 
     private void setFinanceDetails(OrganisationType organisationType, ApplicationFinanceResource applicationFinanceResource) {

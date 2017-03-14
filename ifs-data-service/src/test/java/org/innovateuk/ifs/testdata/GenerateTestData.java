@@ -604,7 +604,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                             finances.applicationName.equals(line.title) &&
                             finances.organisationName.equals(organisationName));
 
-            if (organisationType.equals(OrganisationTypeEnum.ACADEMIC)) {
+            if (organisationType.equals(OrganisationTypeEnum.RESEARCH)) {
 
                 if (organisationFinances.isPresent()) {
                     return generateAcademicFinancesFromSuppliedData(user, organisationName, organisationFinances.get(), line.markFinancesComplete);
@@ -1018,7 +1018,7 @@ public class GenerateTestData extends BaseIntegrationTest {
     private OrganisationTypeEnum lookupOrganisationType(String organisationType) {
         switch (organisationType) {
             case UNIVERSITY_HEI:
-                return OrganisationTypeEnum.ACADEMIC;
+                return OrganisationTypeEnum.RESEARCH;
             default:
                 return OrganisationTypeEnum.valueOf(organisationType.toUpperCase().replace(" ", "_"));
         }

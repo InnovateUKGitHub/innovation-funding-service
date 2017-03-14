@@ -145,7 +145,7 @@ public class OrganisationCreationController {
         model.addAttribute("searchHint", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchHint",  request.getLocale()));
 
         if(OrganisationTypeEnum.BUSINESS.equals(organisationForm.getOrganisationTypeEnum()) ||
-                OrganisationTypeEnum.ACADEMIC.equals(organisationForm.getOrganisationTypeEnum())
+                OrganisationTypeEnum.RESEARCH.equals(organisationForm.getOrganisationTypeEnum())
                 ){
             model.addAttribute("searchEnabled", true);
         }else{

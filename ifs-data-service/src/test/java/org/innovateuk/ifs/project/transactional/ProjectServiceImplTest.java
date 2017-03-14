@@ -1439,7 +1439,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
          * 2 Business, 1 Academic
          * **/
         OrganisationType businessOrganisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
-        OrganisationType academicOrganisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.ACADEMIC).build();
+        OrganisationType academicOrganisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.RESEARCH).build();
         List<Organisation> organisations = new ArrayList<>();
         Organisation leadOrganisation = organisationRepositoryMock.findOne(application.getLeadOrganisationId());
         leadOrganisation.setOrganisationType(businessOrganisationType);
