@@ -39,23 +39,41 @@ Controlled with javascript, an alternative standard html page should be used for
 
 
 	.close,
-  .ui-dialog-titlebar-close {
+    .ui-dialog-titlebar-close {
 		background:none;
 		border:1px solid #000;
 		position: absolute;
-		right:15px;
+		right:30px;
 		top:15px;
 		cursor:pointer;
-		padding:5px;
-		font-size:16px;
 		line-height:1;
-		&:hover {
-			background-color: $grey-4;
-		}
+		padding:0;
+		font-size:19px;
+		font-weight: normal;
+		color: $link-colour;
 	}
 	.close.close {
 		border: none;
-		font-weight: bold;
+		font-weight: normal;
+	}
+	.buttonlink {
+		box-shadow: none;
+		padding: 8px;
+		margin-left: 22px;
+		&:hover {
+			background-color: transparent;
+			color: $link-colour;
+		}
+	}
+	&.warning-modal {
+		border-top: 10px solid $red;
+		.modal-content {
+			padding-left: 60px;
+			background-repeat: no-repeat;
+			background-position: 20px 0;
+			background-size: 20px 20px;
+			background-image: url('../images/icons/icon-messages/alert-icon.png');
+		}
 	}
 }
 .modal-overlay,
@@ -73,3 +91,42 @@ Controlled with javascript, an alternative standard html page should be used for
 	background: rgba(0,0,0,0.5);
 	z-index: 9;
 }
+
+
+
+
+//[role="dialog"]{
+//	.close,
+//	.ui-dialog-titlebar-close {
+//		background:none;
+//		padding:0;
+//		font-size:19px;
+//		font-weight: normal;
+//		color: $link-colour;
+//		right: 30px;
+//		// Overwritting style in modal css - can be removed when this gets rolled out into dev
+//		&:hover {
+//			background-color: transparent;
+//		}
+//	}
+//
+//	.close.close {
+//		border: none;
+//		font-weight: normal;
+//	}
+//
+//	&.warning-modal {
+//		border-top: 10px solid $red;
+//		.modal-content {
+//			padding-left: 60px;
+//			background-repeat: no-repeat;
+//			background-position: 20px 0;
+//			background-size: 20px 20px;
+//			background-image: url('../images/icons/icon-messages/alert-icon.png');
+//			background-image:
+//							linear-gradient(transparent, transparent),
+//							url('../images/icons/icon-messages/alert-icon.svg');
+//		}
+//	}
+//}
+
