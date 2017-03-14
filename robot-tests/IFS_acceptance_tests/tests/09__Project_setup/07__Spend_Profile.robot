@@ -158,46 +158,46 @@ Lead partner can edit his spend profile with invalid values
     # TODO please delete the above two lines when INFUND-8138 is completed
     When the user clicks the button/link               jQuery=.button:contains("Edit spend profile")
     Then the user should not see the text in the element  css=#content > form   -
-    And the text box should be editable               css=#row-40-0  # Labour-June17
-    When the user enters text to a text field          css=#row-40-0    520
-    And the user moves focus to the element            css=#row-40-2
+    And the text box should be editable               css=.spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(1) input  # Labour-June17
+    When the user enters text to a text field          css=.spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(1) input   520
+    And the user moves focus to the element            css=.spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(3) input
     Then the user should see the text in the page      Unable to submit spend profile.
     And the user should see the text in the page       Your total costs are higher than your eligible costs
-    Then the field has value                           css=#row-total-40    £ 5,000
-    And the user should see the element                jQuery=.cell-error #row-total-40
+    Then the field has value                           css=.spend-profile-table tbody .form-group-row:nth-child(1) input[id^='row-total-']    £ 5,000
+    And the user should see the element                jQuery=.form-group-row:nth-child(1) .cell-error input[id^='row-total-']
     And the user clicks the button/link                jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should see the text in the page      You cannot submit your spend profile. Your total costs are higher than the eligible project costs.
     And the user should see the element                jQuery=.error-summary-list li:contains("Labour")
     When the user clicks the button/link               jQuery=.button:contains("Edit spend profile")
-    Then the user enters text to a text field          css=#row-40-0    142
-    And the user should not see the element            jQuery=.cell-error #row-total-40
-    When the user enters text to a text field          css=#row-42-2    -55  # Materials-Aug17
-    And the user moves focus to the element            css=#row-42-1
+    Then the user enters text to a text field          css=.spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(1) input    142
+    And the user should not see the element            jQuery=.form-group-row:nth-child(1) .cell-error input[id^='row-total-']
+    When the user enters text to a text field          css=.spend-profile-table tbody .form-group-row:nth-child(2) td:nth-of-type(3) input    -55  # Materials-Aug17
+    And the user moves focus to the element            css=.spend-profile-table tbody .form-group-row:nth-child(2) td:nth-of-type(2) input
     Then the user should see the element               jQuery=.error-summary-list li:contains("This field should be 0 or higher")
-    When the user enters text to a text field          css=#row-42-2    35.25
-    And the user moves focus to the element            css=#row-42-2
+    When the user enters text to a text field          css=.spend-profile-table tbody .form-group-row:nth-child(2) td:nth-of-type(3) input    35.25
+    And the user moves focus to the element            css=.spend-profile-table tbody .form-group-row:nth-child(2) td:nth-of-type(3) input
     Then the user should see the text in the page      This field can only accept whole numbers
-    When the user enters text to a text field          css=#row-43-2    abcd
-    And the user moves focus to the element            css=#row-43-2
+    When the user enters text to a text field          css=.spend-profile-table tbody .form-group-row:nth-child(3) td:nth-of-type(3) input    abcd
+    And the user moves focus to the element            css=.spend-profile-table tbody .form-group-row:nth-child(3) td:nth-of-type(3) input
     Then the user should see the text in the page      Unable to submit spend profile
     When the user clicks the button/link               jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should not see the text in the page  internal server error
-    When the user enters text to a text field          css=#row-42-2    200
-    And the user moves focus to the element            css=#row-42-1
+    When the user enters text to a text field          css=.spend-profile-table tbody .form-group-row:nth-child(3) td:nth-of-type(3) input    200
+    And the user moves focus to the element            css=.spend-profile-table tbody .form-group-row:nth-child(3) td:nth-of-type(2) input
     And the user should not see the element            jQuery=.error-summary-list li:contains("This field should be 0 or higher")
-    When the user enters text to a text field          css=#row-42-2    4175
-    And the user moves focus to the element            css=#row-42-1
+    When the user enters text to a text field          css=.spend-profile-table tbody .form-group-row:nth-child(3) td:nth-of-type(3) input    4175
+    And the user moves focus to the element            css=.spend-profile-table tbody .form-group-row:nth-child(3) td:nth-of-type(2) input
     Then the user should not see the element           jQuery=.error-summary-list li:contains("This field should be 0 or higher")
-    And the user should not see the element            jQuery=.cell-error #row-total-40
+    And the user should not see the element            jQuery=.form-group-row:nth-child(1) .cell-error input[id^='row-total-']
     Then the user clicks the button/link               jQuery=.button:contains("Save and return to spend profile overview")
 
 
 Lead partner can submit empty cells and this is handled gracefully
     [Documentation]    INFUND-6146
-    When the user enters text to a text field    css=#row-40-0    ${empty}
+    When the user enters text to a text field    css=.spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(1) input    ${empty}
     And the user clicks the button/link    jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should not see an error in the page
-    [Teardown]    the user enters text to a text field    css=#row-40-0    142
+    [Teardown]    the user enters text to a text field    css=.spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(1) input    142
 
 Lead partner can edit his spend profile with valid values
     [Documentation]    INFUND-3765
@@ -205,14 +205,14 @@ Lead partner can edit his spend profile with valid values
     Given the user navigates to the page                ${external_spendprofile_summary}/review
     When the user clicks the button/link                jQuery=.button:contains("Edit spend profile")
     And the user should not see the element             css=table a[type="number"]    # checking here that the table is not read-only
-    Then the text box should be editable                css=#row-40-0  # Labour
-    When the user enters text to a text field           css=#row-40-0    140
-    And the user moves focus to the element             css=#row-40-1
-    Then the field has value                            css=#row-total-40    £ 4,620
+    Then the text box should be editable                css=.spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(1) input  # Labour
+    When the user enters text to a text field           css=.spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(1) input    140
+    And the user moves focus to the element             css=.spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(2) input
+    Then the field has value                            css=.spend-profile-table tbody .form-group-row:nth-child(1) input[id^='row-total-']    £ 4,620
     And the user should not see the text in the page    Unable to save spend profile
-    When the user enters text to a text field           css=#row-44-1    0  # Subcontracting
-    And the user moves focus to the element             css=#row-44-2
-    Then the field has value                            css=#row-total-44    £ 131,250
+    When the user enters text to a text field           css=.spend-profile-table tbody .form-group-row:nth-child(5) td:nth-of-type(2) input    0  # Subcontracting
+    And the user moves focus to the element             css=.spend-profile-table tbody .form-group-row:nth-child(5) td:nth-of-type(3) input
+    Then the field has value                            css=.spend-profile-table tbody .form-group-row:nth-child(5) input[id^='row-total-']    £ 131,250
     And the user should not see the text in the page    Unable to save spend profile
     Then the user clicks the button/link                jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should not see the text in the page   You cannot submit your spend profile. Your total costs are higher than the eligible project costs.
@@ -353,9 +353,9 @@ Academic partner spend profile server side validations
     [Documentation]    INFUND-5846
     [Tags]
     Given the user clicks the button/link            jQuery=.button:contains("Edit spend profile")
-    When the user enters text to a text field        css=#row-47-0    -1    # Directly incurredStaff
-    And the user enters text to a text field         css=#row-48-2    3306  # Travel and subsistence
-    And the user moves focus to the element          css=#row-49-5
+    When the user enters text to a text field        css=.spend-profile-table tbody .form-group-row:nth-child(5) td:nth-of-type(1) input    -1    # Directly incurredStaff
+    And the user enters text to a text field         css=.spend-profile-table tbody .form-group-row:nth-child(6) td:nth-of-type(3) input    3306  # Travel and subsistence
+    And the user moves focus to the element          css=.spend-profile-table tbody .form-group-row:nth-child(7) td:nth-of-type(6) input
     And the user clicks the button/link              jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should see the text in the page    Your total costs are higher than your eligible costs.
     And the user should see the text in the page     This field should be 0 or higher.
@@ -363,21 +363,21 @@ Academic partner spend profile server side validations
 Academic partner spend profile client side validations
     [Documentation]    INFUND-5846
     [Tags]
-    When the user enters text to a text field          css=#row-47-0    3  # Staff
-    And the user enters text to a text field           css=#row-48-0    1  # Travel
-    And the user enters text to a text field           css=#row-49-0    1  # Other - Directly incurred
-    And the user enters text to a text field           css=#row-50-0    2  # Estates
-    And the user enters text to a text field           css=#row-51-0    0  # Other - Directly allocated
-    And the user enters text to a text field           css=#row-55-0    0  # Other - Exceptions
+    When the user enters text to a text field          css=.spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(1) input    3  # Staff
+    And the user enters text to a text field           css=.spend-profile-table tbody .form-group-row:nth-child(2) td:nth-of-type(1) input    1  # Travel
+    And the user enters text to a text field           css=.spend-profile-table tbody .form-group-row:nth-child(3) td:nth-of-type(1) input    1  # Other - Directly incurred
+    And the user enters text to a text field           css=.spend-profile-table tbody .form-group-row:nth-child(5) td:nth-of-type(1) input    2  # Estates
+    And the user enters text to a text field           css=.spend-profile-table tbody .form-group-row:nth-child(6) td:nth-of-type(1) input    0  # Other - Directly allocated
+    And the user enters text to a text field           css=.spend-profile-table tbody .form-group-row:nth-child(9) td:nth-of-type(1) input    0  # Other - Exceptions
     And the user moves focus to the element            link=Project setup status
     Then the user should not see the text in the page  This field should be 0 or higher
-    When the user makes all values zeros               48    ${project_duration}  # Travel
-    Then the user makes all values zeros               49    ${project_duration}  # Other - Directly incurred
-    And the user makes all values zeros                51    ${project_duration}  # Estates
-    When the user enters text to a text field          css=#row-52-1    0  # Other - Directly allocated
-    And the user enters text to a text field           css=#row-52-2    0  # Other - Directly allocated
-    And the user enters text to a text field           css=#row-55-1    0  # Other - Exceptions
-    And the user enters text to a text field           css=#row-55-2    0  # Other - Exceptions
+    When the user makes all values zeros               2    ${project_duration}  # Travel
+    Then the user makes all values zeros               3    ${project_duration}  # Other - Directly incurred
+    And the user makes all values zeros                5    ${project_duration}  # Estates
+    When the user enters text to a text field          css=.spend-profile-table tbody .form-group-row:nth-child(6) td:nth-of-type(2) input   0  # Other - Directly allocated
+    And the user enters text to a text field           css=.spend-profile-table tbody .form-group-row:nth-child(6) td:nth-of-type(3) input    0  # Other - Directly allocated
+    And the user enters text to a text field           css=.spend-profile-table tbody .form-group-row:nth-child(9) td:nth-of-type(2) input    0  # Other - Exceptions
+    And the user enters text to a text field           css=.spend-profile-table tbody .form-group-row:nth-child(9) td:nth-of-type(3) input    0  # Other - Exceptions
     And the user should not see the text in the page   Your total costs are higher than your eligible costs
     #TODO Replace keyword -the user makes all values zeros- ticket: INFUND-6851
 
@@ -764,10 +764,11 @@ the sum of tds equals the total
     \    ${sum} =    Evaluate    ${sum}+${cell}
     Should Be Equal As Integers    ${sum}    ${total}
 
+
 the user makes all values zeros
     [Arguments]    ${row}    ${project_duration}
-    : FOR    ${i}    IN RANGE    0    ${project_duration}
-    \    the user enters text to a text field  css=#row-${row}-${i}  0
+    : FOR    ${i}    IN RANGE    1    ${project_duration}
+    \    the user enters text to a text field  css=.spend-profile-table tbody .form-group-row:nth-child(${row}) td:nth-of-type(${i}) input  0
 
 the text box should be editable
     [Arguments]    ${element}
