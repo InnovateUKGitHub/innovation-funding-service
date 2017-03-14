@@ -62,6 +62,7 @@ public class FinanceOverviewController {
         final PartnerOrganisationResource lead = simpleFindFirst(partnerOrgs, PartnerOrganisationResource::isLeadOrganisation).orElse(null);
         final List<PartnerOrganisationResource> sortedOrganisations
                 = new PrioritySorting<>(partnerOrgs, lead, PartnerOrganisationResource::getOrganisationName).unwrap();
+
         return new FinanceCheckOverviewViewModel(getProjectFinanceOverviewViewModel(projectId), getProjectFinanceSummaries(projectId, sortedOrganisations),
                 getProjectFinanceCostBreakdown(projectId, sortedOrganisations));
     }
