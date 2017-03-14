@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.finance.resource;
 
-import org.innovateuk.ifs.user.resource.OrganisationSize;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -17,7 +16,7 @@ public class ProjectFinanceResource extends BaseFinanceResource {
         super.setTarget(target);
     }
 
-    public ProjectFinanceResource(Long id, Long organisation, Long projectId, OrganisationSize organisationSize) {
+    public ProjectFinanceResource(Long id, Long organisation, Long projectId, Long organisationSize) {
         super(id, organisation, projectId, organisationSize);
     }
 

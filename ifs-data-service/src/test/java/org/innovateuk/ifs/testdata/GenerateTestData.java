@@ -10,6 +10,7 @@ import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.email.resource.EmailAddress;
 import org.innovateuk.ifs.email.service.EmailService;
+import org.innovateuk.ifs.finance.repository.OrganisationSizeRepository;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.notifications.service.senders.email.EmailNotificationSender;
@@ -25,7 +26,10 @@ import org.innovateuk.ifs.testdata.builders.data.BaseUserData;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.junit.Before;
@@ -77,7 +81,7 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_TECHNOLOGIST;
 import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -127,6 +131,9 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     @Autowired
     private BankDetailsService bankDetailsService;
+
+    @Autowired
+    private OrganisationSizeRepository organisationSizeRepository;
 
     private CompetitionDataBuilder competitionDataBuilder;
     private CompetitionFunderDataBuilder competitionFunderDataBuilder;
@@ -650,7 +657,7 @@ public class GenerateTestData extends BaseIntegrationTest {
             case "Grant claim":
                 return builder.withGrantClaim(Integer.valueOf(financeRow.metadata.get(0)));
             case "Organisation size":
-                return builder.withOrganisationSize(OrganisationSize.valueOf(financeRow.metadata.get(0).toUpperCase()));
+                return builder.withOrganisationSize(Long.valueOf(financeRow.metadata.get(0)));
             case "Labour":
                 return builder.withLabourEntry(financeRow.metadata.get(0), Integer.valueOf(financeRow.metadata.get(1)), Integer.valueOf(financeRow.metadata.get(2)));
             case "Overheads":
@@ -701,7 +708,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                                         withSubcontractingCost("Developers", "UK", "To develop stuff", bd("45000")).
                                         withTravelAndSubsistence("To visit colleagues", 15, bd("199")).
                                         withOtherCosts("Some more costs", bd("550")).
-                                        withOrganisationSize(OrganisationSize.MEDIUM))
+                                        withOrganisationSize(1L))
                         .markAsComplete(markAsComplete);
     }
 
@@ -944,8 +951,8 @@ public class GenerateTestData extends BaseIntegrationTest {
                 line.familyFinancialInterests
         );
 
-        if (line.contractSigned) {
-            baseBuilder = baseBuilder.addContractSigned();
+        if (line.agreementSigned) {
+            baseBuilder = baseBuilder.addAgreementSigned();
         }
 
         if (!line.rejectionReason.isEmpty()) {

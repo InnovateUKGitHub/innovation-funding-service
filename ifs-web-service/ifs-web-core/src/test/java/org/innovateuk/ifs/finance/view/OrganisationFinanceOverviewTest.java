@@ -4,7 +4,6 @@ import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanc
 import org.innovateuk.ifs.application.finance.view.OrganisationFinanceOverview;
 import org.innovateuk.ifs.finance.builder.OrganisationFinanceOverviewBuilder;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.user.resource.OrganisationSize;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,8 +28,8 @@ public class OrganisationFinanceOverviewTest {
 
     @Before
     public void setUp() throws Exception {
-        applicationFinanceResource1 = new ApplicationFinanceResource(1L, 1L, 1L, OrganisationSize.LARGE);
-        applicationFinanceResource2 = new ApplicationFinanceResource(2L, 2L, 2L, OrganisationSize.MEDIUM);
+        applicationFinanceResource1 = new ApplicationFinanceResource(1L, 1L, 1L, 1L);
+        applicationFinanceResource2 = new ApplicationFinanceResource(2L, 2L, 2L, 1L);
 
         MockitoAnnotations.initMocks(this);
 

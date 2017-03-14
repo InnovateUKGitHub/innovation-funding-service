@@ -12,7 +12,7 @@ import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
-import static org.innovateuk.ifs.user.builder.ProfileContractResourceBuilder.newProfileContractResource;
+import static org.innovateuk.ifs.user.builder.ProfileAgreementResourceBuilder.newProfileAgreementResource;
 import static org.innovateuk.ifs.user.builder.ProfileSkillsEditResourceBuilder.newProfileSkillsEditResource;
 import static org.innovateuk.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
 import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
@@ -65,26 +65,26 @@ public class UserProfileServiceSecurityTest extends BaseServiceSecurityTest<User
     }
 
     @Test
-    public void getProfileContract() {
+    public void getProfileAgreement() {
         Long userId = 1L;
 
         assertAccessDenied(
-                () -> classUnderTest.getProfileContract(userId),
+                () -> classUnderTest.getProfileAgreement(userId),
                 () -> {
-                    verify(rules).usersCanViewTheirOwnProfileContract(isA(ProfileContractResource.class), isA(UserResource.class));
+                    verify(rules).usersCanViewTheirOwnProfileAgreement(isA(ProfileAgreementResource.class), isA(UserResource.class));
                     verifyNoMoreInteractions(rules);
                 }
         );
     }
 
     @Test
-    public void updateProfileContract() {
+    public void updateProfileAgreement() {
         Long userId = 1L;
 
         UserResource user = newUserResource().build();
         when(userLookupStrategies.findById(userId)).thenReturn(user);
 
-        assertAccessDenied(() -> classUnderTest.updateProfileContract(userId), () -> {
+        assertAccessDenied(() -> classUnderTest.updateProfileAgreement(userId), () -> {
             verify(rules).usersCanUpdateTheirOwnProfiles(user, getLoggedInUser());
             verifyNoMoreInteractions(rules);
         });
@@ -181,12 +181,12 @@ public class UserProfileServiceSecurityTest extends BaseServiceSecurityTest<User
         }
 
         @Override
-        public ServiceResult<ProfileContractResource> getProfileContract(long userId) {
-            return serviceSuccess(newProfileContractResource().build());
+        public ServiceResult<ProfileAgreementResource> getProfileAgreement(long userId) {
+            return serviceSuccess(newProfileAgreementResource().build());
         }
 
         @Override
-        public ServiceResult<Void> updateProfileContract(long userId) {
+        public ServiceResult<Void> updateProfileAgreement(long userId) {
             return null;
         }
 

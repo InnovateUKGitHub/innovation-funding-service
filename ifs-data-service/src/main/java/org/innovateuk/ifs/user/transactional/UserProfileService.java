@@ -21,10 +21,10 @@ public interface UserProfileService {
     ServiceResult<Void> updateProfileSkills(long userId, ProfileSkillsEditResource profileResource);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
-    ServiceResult<ProfileContractResource> getProfileContract(long userId);
+    ServiceResult<ProfileAgreementResource> getProfileAgreement(long userId);
 
     @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'UPDATE')")
-    ServiceResult<Void> updateProfileContract(long userId);
+    ServiceResult<Void> updateProfileAgreement(long userId);
 
     @PreAuthorize("hasPermission(#userBeingUpdated, 'UPDATE')")
     ServiceResult<Void> updateDetails(@P("userBeingUpdated") UserResource userBeingUpdated);

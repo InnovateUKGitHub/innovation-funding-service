@@ -132,4 +132,15 @@ public class FormInputResponseControllerIntegrationTest extends BaseControllerIn
         assertEquals(15L, formInputResponseResource.getId().longValue());
         assertTrue(formInputResponseResource.getValue().startsWith("The Project aims to identify,"));
     }
+
+    @Test
+    public void findByApplicationIdAndQuestionId() {
+        long applicationId = 1L;
+        long questionId = 1L;
+
+        List<FormInputResponseResource> formInputResponseResource = controller.findByApplicationIdAndQuestionId(applicationId, questionId).getSuccessObjectOrThrowException();
+        assertEquals(1, formInputResponseResource.size());
+        assertEquals(1L, (long)formInputResponseResource.get(0).getId());
+        assertTrue(formInputResponseResource.get(0).getValue().startsWith("Within the Industry one issue has caused progress"));
+    }
 }
