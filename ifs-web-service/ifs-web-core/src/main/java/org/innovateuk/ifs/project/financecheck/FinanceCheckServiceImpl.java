@@ -46,11 +46,6 @@ public class FinanceCheckServiceImpl implements FinanceCheckService {
     }
 
     @Override
-    public ServiceResult<Void> update(FinanceCheckResource toUpdate) {
-        return financeCheckRestService.update(toUpdate).toServiceResult();
-    }
-
-    @Override
     public ServiceResult<FinanceCheckSummaryResource> getFinanceCheckSummary(Long projectId) {
         return financeCheckRestService.getFinanceCheckSummary(projectId).toServiceResult();
     }
