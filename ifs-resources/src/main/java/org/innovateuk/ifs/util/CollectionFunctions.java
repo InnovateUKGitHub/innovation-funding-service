@@ -347,6 +347,15 @@ public final class CollectionFunctions {
     }
 
     /**
+     * A simple wrapper around a 1-stage mapping function, to remove boilerplate from production code.
+     * It keeps the order of the map whose values are being mapped.
+     */
+    public static <S, T, R> Map<S, R> orderedMap(Map<S, T> map, Function<T, R> mappingFn) {
+        return map.entrySet().stream().collect(toMap(Entry::getKey, entry -> mappingFn.apply(entry.getValue()),
+                (v1,v2) -> v1, LinkedHashMap::new));
+    }
+
+    /**
      * A simple wrapper, producing a Linked Hash Map, around a 1-stage mapping function, to remove boilerplate from production code
      */
     public static <S, T, R> Map<S, R> simpleLinkedMapValue(Map<S, T> map, Function<T, R> mappingFn) {
