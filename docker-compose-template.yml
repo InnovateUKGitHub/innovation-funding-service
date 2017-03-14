@@ -40,32 +40,32 @@ services:
       ifs:
 
   application-svc:
-    image: innovateuk/application-service:1.0-SNAPSHOT
+    image: innovateuk/application-service:@version@
     networks:
       - ifs
 
   assessment-svc:
-    image: innovateuk/assessment-service:1.0-SNAPSHOT
+    image: innovateuk/assessment-service:@version@
     networks:
       - ifs
 
   competition-mgt-svc:
-    image: innovateuk/competition-management-service:1.0-SNAPSHOT
+    image: innovateuk/competition-management-service:@version@
     networks:
       - ifs
 
   project-setup-mgt-svc:
-    image: innovateuk/project-setup-management-service:1.0-SNAPSHOT
+    image: innovateuk/project-setup-management-service:@version@
     networks:
       - ifs
 
   project-setup-svc:
-    image: innovateuk/project-setup-service:1.0-SNAPSHOT
+    image: innovateuk/project-setup-service:@version@
     networks:
       - ifs
 
   data-service:
-    image: innovateuk/data-service:1.0-SNAPSHOT
+    image: innovateuk/data-service:@version@
     networks:
       ifs:
         aliases:
