@@ -139,14 +139,13 @@ File upload mandatory for Academic partner to mark section as complete
     then the user should see a field error     css=a.uploaded-file
 
 Applicant chooses Calculate overheads option
-    [Documentation]     INFUND-6788, INFUND-8191
+    [Documentation]     INFUND-6788, INFUND-8191, INFUND-7405
     [Tags]
     [Setup]  log in as a different user    &{lead_applicant_credentials}
     When the user navigates to Your-finances page     ${Competition_E2E}
-    then the user clicks the button/link       link=Your project costs
-    And the user fills in Labour
-    and the user chooses calculate overheads option
-
+    then the user fills in the project costs       ${Competition_E2E}
+    When the user clicks the button/link    jQuery=button:contains("Overhead costs")
+    then the user should not see the element      css=input
 
 *** Keywords ***
 Custom Suite Setup

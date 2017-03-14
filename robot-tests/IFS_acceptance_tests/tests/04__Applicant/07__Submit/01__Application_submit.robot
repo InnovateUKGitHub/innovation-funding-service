@@ -43,6 +43,15 @@ Applicant has read only view after submission
     when the user clicks the button/link     link=Review and submit
     then the user should not see the element     css=input
 
+Your Project costs section is read-only once application is submitted
+    [Documentation]     INFUND-6788,INFUND-7405
+    [Tags]
+    When the user navigates to Your-finances page     ${application_name}
+    then the user clicks the button/link    link=Your project costs
+    and the user should not see the element     css=input
+    When the user clicks the button/link    jQuery=button:contains("Overhead costs")
+    then the user should not see the element      css=input
+
 Submit flow (complete application)
     [Documentation]    INFUND-205
     ...
