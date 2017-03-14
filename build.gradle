@@ -1,6 +1,6 @@
 allprojects {
     group 'innovateuk'
-    version ext.version
+    version project.properties['version']
 
     apply plugin: 'idea'
     apply plugin: 'java'
