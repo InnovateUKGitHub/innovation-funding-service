@@ -7,6 +7,7 @@ import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
+import org.innovateuk.ifs.registration.viewmodel.OrganisationCreationViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
@@ -76,24 +77,11 @@ public class OrganisationTypeCreationController {
 
         if (invite.isSuccess() && InviteStatus.SENT.equals(invite.getSuccessObject().getStatus())) {
             List<OrganisationTypeResource> types = organisationTypeRestService.getAll().getSuccessObjectOrThrowException();
-            if (organisationTypeId == null) {
-                types = types.stream()
+            types = types.stream()
                         .filter(t -> t.getParentOrganisationType() == null)
                         .collect(Collectors.toList());
-            } else {
-                model.addAttribute("organisationParentType", OrganisationTypeEnum.getFromId(organisationTypeId));
-                organisationTypeRestService.findOne(organisationTypeId).andOnSuccessReturn(r -> {
-                    model.addAttribute("organisationParentTypeTitle", r.getName());
-                    return r;
-                });
-                types = types.stream()
-                        .filter(t -> t.getParentOrganisationType() != null)
-                        .filter(t -> t.getParentOrganisationType().equals(organisationTypeId))
-                        .collect(Collectors.toList());
-            }
-            model.addAttribute("organisationTypeForm", organisationTypeForm);
-            model.addAttribute("organisationTypes", types);
-            model.addAttribute("invite", invite.getSuccessObject());
+            model.addAttribute("form", organisationTypeForm);
+            model.addAttribute("model", new OrganisationCreationViewModel(types, invite.getSuccessObject()));
         } else {
             return "redirect:/login";
         }
