@@ -43,7 +43,6 @@ public interface CompetitionParticipantRepository extends PagingAndSortingReposi
             "AND competitionParticipant.role = 'ASSESSOR' " +
             "AND (:status IS NULL OR competitionParticipant.status = :status) " +
             "AND (:innovationAreaId IS NULL " +
-            "   OR competitionParticipant.invite.innovationArea.id = :innovationAreaId " +
             "   OR EXISTS(" +
             "       SELECT profile.id " +
             "       FROM Profile profile " +
