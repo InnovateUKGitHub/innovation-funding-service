@@ -104,7 +104,7 @@ open email locally assessor
     click the link assessor    ${email_to_test}    ${pattern}
 
 open email remotely assessor
-    [Arguments]    ${recipient}    ${subject}    ${pattern}
+    [Arguments]    ${recipient}    ${subject}    ${pattern}    ${mailbox}    ${mailbox_password}
     Open Mailbox    server=imap.googlemail.com    user=${mailbox}@gmail.com    password=${mailbox_password}
     ${email_to_test} =    wait for email    sender=${sender}    recipient=${recipient}    subject=${subject}    timeout=200
     log    ${subject}
@@ -123,7 +123,7 @@ click the link assessor
     go to    ${LINK}
     delete email    ${email_to_test}
     close mailbox
-    ######################## DELETING EMAILS #####################################
+
 
 The user fills and submits the registration form
     When The user enters text to a text field    id=firstName    Tom

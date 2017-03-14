@@ -73,12 +73,12 @@ the user fills in the CS Eligibility
     #Elements in this page need double clicking
 
 the user fills in the CS Milestones
-    [Arguments]  ${day}  ${month}  ${nextyear}
+    [Arguments]  ${todayday}  ${day}  ${month}  ${nextyear}
     the user clicks the button/link       link=Milestones
-    the user enters text to a text field  jQuery=th:contains("Briefing event") ~ td.day input    ${day}
+    the user enters text to a text field  jQuery=th:contains("Briefing event") ~ td.day input    ${todayday}
     the user enters text to a text field  jQuery=th:contains("Briefing event") ~ td.month input  ${month}
     the user enters text to a text field  jQuery=th:contains("Briefing event") ~ td.year input  ${nextyear}
-    the user enters text to a text field  jQuery=th:contains("Submission date") ~ td.day input  ${day}
+    the user enters text to a text field  jQuery=th:contains("Submission date") ~ td.day input  ${todayday}
     the user enters text to a text field  jQuery=th:contains("Submission date") ~ td.month input  ${month}
     the user enters text to a text field  jQuery=th:contains("Submission date") ~ td.year input  ${nextyear}
     the user enters text to a text field  jQuery=th:contains("Allocate assessors") ~ td.day input  ${day}
