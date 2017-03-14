@@ -80,82 +80,9 @@
         www.innovateuk.gov.uk <br/>
     </p>
 </#macro>
+
 <!-- ====================== Page 2 of the Grant offer letter  ======================  -->
-
 <#macro page2>
-    <h1>Eligible cost and grant allocations</h1>
-    <p class="bold">
-        Application number: ${ApplicationNumber}<br/>
-        Date: ${sendDate?string["d MMMM yyyy"]}<br/>
-        ${CompetitionName}<br/>
-        Project Title: ${ProjectTitle}
-    </p>
-    <table>
-        <thead>
-        <tr>
-            <th colspan="2" scope="col" class="no-border"></th>
-            <#list TableData.yearEligibleCostTotal?keys as year>
-                <th colspan="2">${year} to ${(year?number+1)?c}</th>
-            </#list>
-            <th colspan="2" scope="col">Total</th>
-        </tr>
-        <tr>
-            <th scope="col">Organisation</th>
-            <th scope="col">% Grant</th>
-            <#list TableData.yearEligibleCostTotal?keys as year>
-                <th scope="col">Eligible Cost (&#163;)</th>
-                <th scope="col">Grant available (&#163;)</th>
-            </#list>
-            <!--  for the totals -->
-            <th scope="col">Eligible Cost (&#163;)</th>
-            <th scope="col">Grant available (&#163;)</th>
-        </tr>
-        </thead>
-        <tbody>
-        <#list SortedOrganisations as org>
-            <tr>
-                <td>${org}</td>
-                <td>${TableData.organisationAndGrantPercentageMap[org]}</td>
-                <#assign costLength = TableData.organisationEligibleCostTotal[org]?size-1>
-                <#list 0..costLength as i>
-                    <td class="textright">${TableData.organisationEligibleCostTotal[org][i]?round}</td>
-                    <td class="textright">${TableData.organisationGrantAllocationTotal[org][i]?round}</td>
-                </#list>
-                <td class="textright">${TableData.getEligibleCostGrandTotalPerOrganisation()[org]?round}</td>
-                <td class="textright">${TableData.getGrantAllocationGrandTotalPerOrganisation()[org]?round}</td>
-            </tr>
-        </#list>
-        </tbody>
-        <tfoot>
-        <tr>
-            <td>Total (per annum)</td>
-            <td></td>
-            <#list 0..costLength as i>
-                <#assign YearlyEligible = 0>
-                <#assign YearlyGrant = 0>
-
-                <#list SortedOrganisations as org>
-                    <#assign YearlyEligible += TableData.organisationEligibleCostTotal[org][i]>
-                    <#assign YearlyGrant += TableData.organisationGrantAllocationTotal[org][i]>
-                </#list>
-                <td class="textright">${YearlyEligible?round}</td>
-                <td class="textright">${YearlyGrant?round}</td>
-            </#list>
-
-            <#assign grandTotalEligible = 0>
-            <#assign grandTotalGrant = 0>
-            <#list SortedOrganisations as org>
-                <#assign grandTotalEligible += TableData.getEligibleCostGrandTotalPerOrganisation()[org]>
-                <#assign grandTotalGrant += TableData.getGrantAllocationGrandTotalPerOrganisation()[org]>
-            </#list>
-            <td class="textright">${grandTotalEligible?round}</td>
-            <td class="textright">${grandTotalGrant?round}</td>
-        </tr>
-        </tfoot>
-    </table>
-</#macro>
-<!-- ====================== Page 3 of the Grant offer letter  ======================  -->
-<#macro page3>
     <h1>Acceptance of award</h1>
     <p class="bold">
         Application number: ${ApplicationNumber}<br/>
@@ -182,3 +109,4 @@
     <p class="signature">* insert name:.……………………………………......................... </p>
     <p>Date: …………………………………………………………….</p>
 </#macro>
+
