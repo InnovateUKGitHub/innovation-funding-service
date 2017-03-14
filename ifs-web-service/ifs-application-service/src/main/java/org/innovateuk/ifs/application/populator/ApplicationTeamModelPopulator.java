@@ -65,9 +65,8 @@ public class ApplicationTeamModelPopulator {
         final Optional<InviteOrganisationResource> leadOrganisationInvite
                 = simpleFindFirst(inviteOrganisationResources, ior -> ior.getOrganisation().equals(leadOrganisation.getId()));
 
-        final List<InviteOrganisationResource> sortedInvites = leadOrganisationInvite.map(lead ->
-                new PrioritySorting<>(inviteOrganisationResources, lead, InviteOrganisationResource::getOrganisationName))
-                .orElse(new PrioritySorting<>(inviteOrganisationResources, InviteOrganisationResource::getOrganisationName)).unwrap();
+        final List<InviteOrganisationResource> sortedInvites = new PrioritySorting<>(inviteOrganisationResources,
+                leadOrganisationInvite.orElse(null), InviteOrganisationResource::getOrganisationName).unwrap();
 
         boolean userLeadApplicant = isUserLeadApplicant(loggedInUserId, leadApplicant);
 

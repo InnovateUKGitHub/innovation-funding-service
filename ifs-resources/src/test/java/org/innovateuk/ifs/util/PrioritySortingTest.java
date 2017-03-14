@@ -14,10 +14,9 @@ import java.util.function.Function;
 public class PrioritySortingTest {
 
     @Test
-    public void sortingEmptyListWillAddExceptionElement() {
+    public void sortingEmptyListReturnsEmptyList() {
         List<String> list = new PrioritySorting<>(new ArrayList<String>(), "exceptionElement", Function.identity()).unwrap();
-        assertTrue(list.size() == 1);
-        assertTrue(list.get(0).equals("exceptionElement"));
+        assertTrue(list.isEmpty());
     }
 
     @Test
@@ -30,9 +29,23 @@ public class PrioritySortingTest {
     @Test
     public void sortingListWorksAsExpectedWithFunction() {
         List<OrganisationResource> orgs = newOrganisationResource().withName("C", "A", "exceptionElement").build(3);
-        List<OrganisationResource> list = new PrioritySorting<>(orgs, newOrganisationResource().withName("exceptionElement").build(), OrganisationResource::getName).unwrap();
+        List<OrganisationResource> list = new PrioritySorting<>(orgs, newOrganisationResource()
+                .withName("exceptionElement").build(), OrganisationResource::getName).unwrap();
         assertTrue(list.size() == 3);
         assertEquals(CollectionFunctions.simpleMap(list, OrganisationResource::getName),
-                CollectionFunctions.simpleMap(newOrganisationResource().withName("exceptionElement", "A", "C").build(3), OrganisationResource::getName));
+                CollectionFunctions.simpleMap(newOrganisationResource().withName("exceptionElement", "A", "C")
+                        .build(3), OrganisationResource::getName));
     }
+
+    @Test
+    public void sortingListWithoutPriorityStillSortsElementsByField() {
+        List<OrganisationResource> orgs = newOrganisationResource().withName("C", "A", "exceptionElement").build(3);
+        List<OrganisationResource> list = new PrioritySorting<>(orgs, null, OrganisationResource::getName).unwrap();
+        assertTrue(list.size() == 3);
+        assertEquals(CollectionFunctions.simpleMap(list, OrganisationResource::getName),
+                CollectionFunctions.simpleMap(newOrganisationResource().withName("A", "C", "exceptionElement")
+                        .build(3), OrganisationResource::getName));
+    }
+
+
 }

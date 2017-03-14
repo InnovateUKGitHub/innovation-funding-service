@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.function.Function;
 
 import static java.util.Comparator.comparing;
+import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -23,8 +24,10 @@ public final class PrioritySorting<T> {
      * @param <E> - the comparable type used to sort, returned by the field function.
      */
     public <E extends Comparable<? super E>> PrioritySorting(List<T> list, T priority, Function<T, E> field) {
-        sortedList = list.stream().sorted((a, b) -> field.apply(a).equals(field.apply(priority)) ? -1
-                : field.apply(b).equals(field.apply(priority)) ? 1 : field.apply(a).compareTo(field.apply(b))).collect(toList());
+        sortedList = list.stream().sorted((a, b)
+                -> field.apply(a).equals(ofNullable(priority).map(field).orElse(null)) ? -1
+                    : field.apply(b).equals(ofNullable(priority).map(field).orElse(null)) ? 1
+                        : field.apply(a).compareTo(field.apply(b))).collect(toList());
     }
 
     public List<T> unwrap() {
