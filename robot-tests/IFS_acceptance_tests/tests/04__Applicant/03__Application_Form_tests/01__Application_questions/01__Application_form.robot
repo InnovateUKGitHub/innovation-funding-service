@@ -76,7 +76,7 @@ Mark a question as incomplete
     ...    INFUND-202
     [Tags]    HappyPath
     Given the user clicks the button/link    link=Project summary
-    When the user clicks the button/link    css=#form-input-11 div.textarea-footer > button[name="mark_as_incomplete"]
+    When the user clicks the button/link    css=#form-input-11 div.form-footer .form-footer__actions > button[name="mark_as_incomplete"]
     Then the text box should be editable
     And the button state should change to 'Mark as complete'
     And the question should not be marked as complete on the application overview page
