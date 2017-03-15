@@ -38,7 +38,7 @@ create new account for submitting
     And the user clicks the button/link    link=HIVE IT LIMITED
     And the user selects the checkbox    address-same
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
-    And the user clicks the button/link    jQuery=.button:contains("Save")
+    And the user clicks the button/link    jQuery=.button:contains("Confirm and continue")
     And the user enters text to a text field    name=email    ${test_mailbox_one}+submittest@gmail.com
     And the user fills the create account form    Temur    Ketsbaia
     When the user reads his email and clicks the link    ${test_mailbox_one}+submittest@gmail.com    Please verify your email address    If you did not request an account with us
@@ -62,7 +62,6 @@ the user marks every section but one as complete
     the user marks the section as complete    8
     the user marks the section as complete    15
     the user marks the section as complete    16
-    the user marks finances as complete
 
 the user marks the section as complete
     [Arguments]    ${form-id}
