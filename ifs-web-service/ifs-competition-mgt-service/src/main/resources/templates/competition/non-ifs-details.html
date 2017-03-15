@@ -86,11 +86,12 @@
                             <span class="error-message"  th:each="err : ${#fields.errors('openDate*')}" th:text="${err}" />
                       </span>
                     </legend>
-                    <input type="hidden"
-                           th:field="${form.openDate.milestoneType}" />
-                    <input type="hidden"
-                           th:field="${form.openDate.editable}" />
-                    <div class="date-group" data-future-date="">
+                    <div class="date-group"
+                         th:attr="data-date-invalid-errormessage=#{validation.standard.date.format}">
+                        <input type="hidden"
+                               th:field="${form.openDate.milestoneType}" />
+                        <input type="hidden"
+                               th:field="${form.openDate.editable}" />
                         <div class="day">
                             <label class="form-label" for="openDate-day">
                                 <div>Day</div>
@@ -142,11 +143,12 @@
                             <span class="error-message"  th:each="err : ${#fields.errors('closeDate*')}" th:text="${err}" />
                       </span>
                     </legend>
-                    <input type="hidden"
-                           th:field="${form.closeDate.milestoneType}" />
-                    <input type="hidden"
-                           th:field="${form.closeDate.editable}" />
-                    <div class="date-group" data-future-date="">
+                    <div class="date-group"
+                         th:attr="data-date-invalid-errormessage=#{validation.standard.date.format}">
+                        <input type="hidden"
+                               th:field="${form.closeDate.milestoneType}" />
+                        <input type="hidden"
+                               th:field="${form.closeDate.editable}" />
                         <div class="day">
                             <label class="form-label" for="closeDate-day">
                                 <div>Day</div>
@@ -208,15 +210,16 @@
                     <h3 class="heading-small no-margin">Applicants notified date</h3>
                     <legend>
                         <span class="visuallyhidden">Applicants notified date</span>
-                        <span th:if="${#fields.hasErrors('openDate*')}" th:remove="tag">
+                        <span th:if="${#fields.hasErrors('applicantNotifiedDate*')}" th:remove="tag">
                             <span class="error-message"  th:each="err : ${#fields.errors('applicantNotifiedDate*')}" th:text="${err}" />
                       </span>
                     </legend>
-                    <input type="hidden"
-                           th:field="${form.applicantNotifiedDate.milestoneType}" />
-                    <input type="hidden"
-                           th:field="${form.applicantNotifiedDate.editable}" />
-                    <div class="date-group" data-future-date="">
+                    <div class="date-group"
+                         th:attr="data-date-invalid-errormessage=#{validation.standard.date.format}">
+                        <input type="hidden"
+                               th:field="${form.applicantNotifiedDate.milestoneType}" />
+                        <input type="hidden"
+                               th:field="${form.applicantNotifiedDate.editable}" />
                         <div class="day">
                             <label class="form-label" for="applicantNotifiedDate-day">
                                 <div>Day</div>
