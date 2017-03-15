@@ -40,7 +40,7 @@ Milestones for the In inform competition
 
 Release feedback
     [Documentation]    INFUND-8050
-    [Tags]    Email    HappyPath  Peding
+    [Tags]    Email    HappyPath  Pending
     # TODO Pending due to INFUND-8757
     When The user clicks the button/link    jQuery=button:contains("Release feedback")
     Then The user should not see the text in the page    Inform

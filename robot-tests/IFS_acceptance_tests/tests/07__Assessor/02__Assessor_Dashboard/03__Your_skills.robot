@@ -24,7 +24,6 @@ Client-side validations
     Given The user should see the text in the page    Complete your assessor account
     And The user should see the element    jQuery=.message-alert.extra-margin-bottom a:contains("your skills")    #this checks the alert message on the top od the page
     When the user clicks the button/link    jQuery=a:contains("your skills")
-    When the user clicks the button/link    jQuery=a:contains("Edit")
     And the user should see the text in the page    Innovation areas
     And the user enters multiple strings into a text field    id=skillAreas    w${SPACE}    101
     And the user clicks the button/link    jQuery=button:contains("Save and return to your skills")

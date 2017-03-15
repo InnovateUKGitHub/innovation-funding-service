@@ -56,7 +56,7 @@ public class FormInputResponseRestServiceImpl extends BaseRestService implements
                 "&processRoleId=" + processRoleId +
                 "&filename=" + originalFilename;
 
-        final HttpHeaders headers = createFileUploadHeader(contentType,  contentLength);
+        final HttpHeaders headers = createFileUploadHeader(contentType, contentLength);
 
         return postWithRestResult(url, file, headers, FileEntryResource.class);
     }
@@ -102,5 +102,11 @@ public class FormInputResponseRestServiceImpl extends BaseRestService implements
     public RestResult<FormInputResponseResource> getByApplicationIdAndQuestionName(long applicationId, String questionName) {
         return getWithRestResult(format("%s/%s/%s/%s", formInputResponseRestURL, "findByApplicationIdAndQuestionName",
                 applicationId, questionName), FormInputResponseResource.class);
+    }
+
+    @Override
+    public RestResult<List<FormInputResponseResource>> getByApplicationIdAndQuestionId(long applicationId, long questionId) {
+        return getWithRestResult(format("%s/%s/%s/%s", formInputResponseRestURL, "findByApplicationIdAndQuestionId",
+                applicationId, questionId), formInputResponseListType());
     }
 }

@@ -33,9 +33,9 @@ public class FormInputResponseServiceImpl implements FormInputResponseService {
     @Override
     public Map<Long, FormInputResponseResource> mapFormInputResponsesToFormInput(List<FormInputResponseResource> responses) {
         return simpleToMap(
-            responses,
-            response -> response.getFormInput(),
-            response -> response
+                responses,
+                response -> response.getFormInput(),
+                response -> response
         );
     }
 
@@ -72,6 +72,12 @@ public class FormInputResponseServiceImpl implements FormInputResponseService {
     @Override
     public FormInputResponseResource getByApplicationIdAndQuestionName(long applicationId, String questionName) {
         return responseRestService.getByApplicationIdAndQuestionName(applicationId, questionName)
+                .getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public List<FormInputResponseResource> getByApplicationIdAndQuestionId(long applicationId, long questionId) {
+        return responseRestService.getByApplicationIdAndQuestionId(applicationId, questionId)
                 .getSuccessObjectOrThrowException();
     }
 }
