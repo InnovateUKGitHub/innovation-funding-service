@@ -10,6 +10,7 @@ import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.BaseWorkflowEventHandler;
+import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ProcessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +64,11 @@ public class EligibilityWorkflowHandler extends BaseWorkflowEventHandler<Eligibi
 
     public EligibilityProcess getProcess(PartnerOrganisation partnerOrganisation) {
         return getCurrentProcess(partnerOrganisation);
+    }
+
+    public EligibilityState getState(PartnerOrganisation partnerOrganisation) {
+        EligibilityProcess process = getCurrentProcess(partnerOrganisation);
+        return process != null ? process.getActivityState() : EligibilityState.REVIEW;
     }
 
     @Override

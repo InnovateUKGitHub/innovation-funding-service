@@ -3,12 +3,18 @@ package org.innovateuk.ifs.finance.security;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
+import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.checkProcessRole;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isInternal;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
@@ -86,8 +92,8 @@ public class ApplicationFinancePermissionRules {
     }
 
     private boolean isAConsortiumMemberOnApplication(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
-        final boolean isLeadApplicant = checkProcessRole(user, applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), LEADAPPLICANT, roleRepository, processRoleRepository);
-        final boolean isCollaborator = checkProcessRole(user, applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), COLLABORATOR, roleRepository, processRoleRepository);
+        final boolean isLeadApplicant = checkProcessRole(user, applicationFinanceResource.getApplication(), LEADAPPLICANT, processRoleRepository);
+        final boolean isCollaborator = checkProcessRole(user, applicationFinanceResource.getApplication(), COLLABORATOR, processRoleRepository);
 
         return isLeadApplicant || isCollaborator;
     }
