@@ -1186,15 +1186,11 @@ the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project se
 
 the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/funding
-    the user selects the checkbox    jQuery=
-
-
     the user selects the option from the drop-down menu    Yes    id=fund63
     the user selects the option from the drop-down menu    No    id=fund64
     the user clicks the button/link    jQuery=.button:contains("Notify applicants")
     the user clicks the button/link    name=publish
     the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/funding
-
     the user should see the text in the page    Assessor Feedback
     the user can see the option to upload a file on the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/application/${FUNDERS_PANEL_APPLICATION_1}
     the user uploads the file    id=assessorFeedback    ${valid_pdf}
