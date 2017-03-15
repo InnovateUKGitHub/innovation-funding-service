@@ -152,14 +152,16 @@ apply plugin: 'net.researchgate.release'
 release {
     preTagCommitMessage = '[Gradle Release Plugin] - Performing release: '
     newVersionCommitMessage = '[Gradle Release Plugin] - Preparing new release version: '
-    tagTemplate = '${version}' // change when testing release versions so that we dont create tag's that may be used for real releases..
+    //Note: When testing releases (i.e. not performing real releases) this tagTemplate should be changed to something different
+    // for example tagTemplate = 'TEST RELEASE ${version} ' this will ensure that we don't pollute our tags with fake releases.
+    tagTemplate = '${version}'
 
     scmAdapters = [
             net.researchgate.release.GitAdapter,
     ]
 
     git {
-        requireBranch = 'master' // change back to master
+        requireBranch = 'master'
         pushToRemote = 'origin'
         pushToBranchPrefix = ''
         commitVersionFileOnly = false
