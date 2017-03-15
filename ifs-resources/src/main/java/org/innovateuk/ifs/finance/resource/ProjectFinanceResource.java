@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.finance.resource;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.finance.resource.category.ChangedFinanceRowPair;
-import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.user.resource.OrganisationSize;
 
 import java.util.List;
 import java.util.Map;
@@ -16,15 +16,7 @@ public class ProjectFinanceResource extends BaseFinanceResource {
 
     private Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> costChanges;
 
-    public Long getProject() {
-        return super.getTarget();
-    }
-
-    public void setProject(Long target) {
-        super.setTarget(target);
-    }
-
-    public ProjectFinanceResource(Long id, Long organisation, Long projectId, OrganisationSize organisationSize) {
+    public ProjectFinanceResource(Long id, Long organisation, Long projectId, Long organisationSize) {
         super(id, organisation, projectId, organisationSize);
     }
 
@@ -36,11 +28,47 @@ public class ProjectFinanceResource extends BaseFinanceResource {
     public ProjectFinanceResource() {
     }
 
+    public Long getProject() {
+        return super.getTarget();
+    }
+
+    public void setProject(Long target) {
+        super.setTarget(target);
+    }
+
     public Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> getCostChanges() {
         return costChanges;
     }
 
     public void setCostChanges(Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> costChanges) {
         this.costChanges = costChanges;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ProjectFinanceResource that = (ProjectFinanceResource) o;
+
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(organisation, that.organisation)
+                .append(target, that.target)
+                .append(organisationSize, that.organisationSize)
+                .append(financeOrganisationDetails, that.financeOrganisationDetails)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(organisation)
+                .append(target)
+                .append(organisationSize)
+                .append(financeOrganisationDetails)
+                .toHashCode();
     }
 }

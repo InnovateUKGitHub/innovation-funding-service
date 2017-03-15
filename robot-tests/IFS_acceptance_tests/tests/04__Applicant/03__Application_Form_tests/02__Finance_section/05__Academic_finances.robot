@@ -184,7 +184,7 @@ the finance table should be correct
 Lead applicant marks the finances as complete
     Given guest user log-in    steve.smith@empire.com    Passw0rd
     The user navigates to the academic application finances
-    the user selects the radio button    financePosition-organisationSize    SMALL
+    the user selects the radio button    financePosition-organisationSize    ${SMALL_ORGANISATION_SIZE}
     The user enters text to a text field    id=cost-financegrantclaim    20
     The user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No)
     When the user marks the finances as complete

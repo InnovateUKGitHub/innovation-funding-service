@@ -106,6 +106,9 @@ ${OPEN_COMPETITION_LINK_2}    ${OPEN_COMPETITION_NAME_2}
 ${unsuccessful_login_message}    Your sign in was unsuccessful because of the following issue(s)
 ${application_name}    Submit test application
 ${test_title}     test title
+${SMALL_ORGANISATION_SIZE}     1
+${MEDIUM_ORGANISATION_SIZE}    2
+${LARGE_ORGANISATION_SIZE}     3
 # File related variables
 ${UPLOAD_FOLDER}    uploaded_files
 ${DOWNLOAD_FOLDER}    download_files

@@ -193,8 +193,6 @@
                         </label>
                         <select th:class="${#fields.hasErrors('closeDate.time') ? 'form-control field-error' : 'form-control'}"
                                 id="closeDate-time"
-                                type="number"
-                                placeholder="YYYY"
                                 required="required"
                                 th:readonly="${!form.closeDate.editable}"
                                 th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateyear.required}"

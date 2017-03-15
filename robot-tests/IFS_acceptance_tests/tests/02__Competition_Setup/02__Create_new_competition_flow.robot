@@ -246,7 +246,7 @@ Eligibility: Contain the correct options
     And the user should see the element    jQuery=label:contains(Either)
     And the user should see the element    jQuery=div:nth-child(7) label:contains("Yes")
     And the user should see the element    jQuery=div:nth-child(7) label:contains("No")
-    And the user should see the element    jQuery=label:contains(Technical feasibility)
+    And the user should see the element    jQuery=label:contains(Feasibility studies)
     And the user should see the element    jQuery=label:contains(Industrial research)
     And the user should see the element    jQuery=label:contains(Experimental development)
     And the resubmission should not have a default selection
@@ -271,7 +271,7 @@ Eligibility: Mark as Done then Edit again
     And the user should see the text in the page    Single
     And the user should see the text in the page    Business
     And the user should see the text in the page    50%
-    And the user should see the text in the page    Technical feasibility
+    And the user should see the text in the page    Feasibility studies
     And the user should see the text in the page    Industrial research
     And the user should see the text in the page    Experimental development
     And The user should not see the element    id=streamName
@@ -576,19 +576,19 @@ the user fills the milestones with valid data
     wait for autosave
 
 the weekdays should be correct
-    element should contain    css=tr:nth-child(1) td:nth-child(2)    Thu
-    element should contain    css=tr:nth-child(2) td:nth-child(2)    Fri
-    element should contain    css=tr:nth-child(3) td:nth-child(2)    Sat
-    element should contain    css=tr:nth-child(4) td:nth-child(2)    Sun
-    element should contain    css=tr:nth-child(5) td:nth-child(2)    Mon
-    element should contain    css=tr:nth-child(6) td:nth-child(2)    Tue
-    element should contain    css=tr:nth-child(7) td:nth-child(2)    Wed
-    element should contain    css=tr:nth-child(8) td:nth-child(2)    Thu
-    element should contain    css=tr:nth-child(9) td:nth-child(2)    Fri
-    element should contain    css=tr:nth-child(10) td:nth-child(2)    Sat
-    element should contain    css=tr:nth-child(11) td:nth-child(2)    Sun
-    element should contain    css=tr:nth-child(12) td:nth-child(2)    Mon
-    element should contain    css=tr:nth-child(13) td:nth-child(2)    Tue
+    element should contain    css=tr:nth-child(1) td:nth-child(3)    Thu
+    element should contain    css=tr:nth-child(2) td:nth-child(3)    Fri
+    element should contain    css=tr:nth-child(3) td:nth-child(3)    Sat
+    element should contain    css=tr:nth-child(4) td:nth-child(3)    Sun
+    element should contain    css=tr:nth-child(5) td:nth-child(3)    Mon
+    element should contain    css=tr:nth-child(6) td:nth-child(3)    Tue
+    element should contain    css=tr:nth-child(7) td:nth-child(3)    Wed
+    element should contain    css=tr:nth-child(8) td:nth-child(3)    Thu
+    element should contain    css=tr:nth-child(9) td:nth-child(3)    Fri
+    element should contain    css=tr:nth-child(10) td:nth-child(3)    Sat
+    element should contain    css=tr:nth-child(11) td:nth-child(3)    Sun
+    element should contain    css=tr:nth-child(12) td:nth-child(3)    Mon
+    element should contain    css=tr:nth-child(13) td:nth-child(3)    Tue
 
 the pre-field date should be correct
     Element Should Contain    css=#milestone-OPEN_DATE~ .js-addWeekDay    Sat

@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.finance.domain;
 
 import org.innovateuk.ifs.user.domain.Organisation;
-import org.innovateuk.ifs.user.resource.OrganisationSize;
 
 import javax.persistence.*;
 
@@ -19,7 +18,8 @@ public abstract class Finance {
     @JoinColumn(name="organisationId", referencedColumnName="id")
     private Organisation organisation;
 
-    @Enumerated(EnumType.STRING)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="organisationSizeId", referencedColumnName="id")
     private OrganisationSize organisationSize;
 
     public Finance(Organisation organisation, OrganisationSize organisationSize) {

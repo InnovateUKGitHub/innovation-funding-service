@@ -14,6 +14,8 @@ import java.time.LocalDateTime;
  */
 @ValidAggregatedDate(yearField="year", monthField="month", dayField="day", message="{validation.standard.date.format}")
 public class MilestoneRowForm {
+	private static final Log LOG = LogFactory.getLog(MilestoneRowForm.class);
+
     @Range(min=2000, max = 9999, message="{validation.nonifs.detailsform.yyyy.range.format}")
     private Integer year;
     private Integer month;
@@ -25,8 +27,6 @@ public class MilestoneRowForm {
     private String dayOfWeek;
     private boolean editable;
     private LocalDateTime date;
-
-    private static final Log LOG = LogFactory.getLog(MilestoneRowForm.class);
 
     public MilestoneRowForm() {
 
@@ -97,6 +97,10 @@ public class MilestoneRowForm {
 
     public void setEditable(boolean editable) {
         this.editable = editable;
+    }
+
+    public boolean isTimeOption() {
+        return MilestoneType.SUBMISSION_DATE.equals(milestoneType);
     }
 
     public LocalDateTime getDate() {

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend Profile Summary'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend profile Summary'" />
 </head>
 <body th:with="context='comp-management'" class="competition-management finance-checks-overview">
 <th:block th:insert="fragments/modals :: modal-overlay" />
@@ -14,7 +14,7 @@
 <main id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
 
-    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{id}/status (id=${model.competitionSummary.competitionId})}"  th:remove="tag"></div>
+    <div th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{id}/status (id=${model.competitionSummary.competitionId})}" th:remove="tag"></div>
 
     <div class="grid-row">
         <div class="column-two-thirds">
