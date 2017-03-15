@@ -17,7 +17,7 @@ Back to the dashboard link
     ...
     ...    INFUND-7060
     Given The user should see the element    jQuery=.message-alert.extra-margin-bottom a:contains("your declaration of interest")    #this checks the alert message on the top of the page
-    When the user clicks the button/link    jQuery=a:contains("your declaration of interest")
+    When the user clicks the button/link    jQuery=h2:contains("Your contract") + ul a:contains("your declaration of interest")
     And The user should see the text in the element    css=p:nth-child(4)    Not answered
     And The user should see the text in the element    css=p:nth-child(14)    Not answered
     And the user clicks the button/link    jQuery=a:contains("Assessor dashboard")
@@ -29,7 +29,6 @@ Server-side validations when No selected at yes/no
     ...    INFUND-7060
     [Tags]    HappyPath
     Given the user clicks the button/link    jQuery=a:contains("your declaration of interest")
-    When the user clicks the button/link    jQuery=a:contains("Edit")
     Then the user clicks the button/link    jQuery=button:contains("Save and return to your declaration of interest")
     Then The user should see a summary error    Please correct the errors in the form below.
     And the user should see a field error    Please enter a principal employer.
