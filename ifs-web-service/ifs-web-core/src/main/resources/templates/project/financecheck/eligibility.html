@@ -141,12 +141,12 @@
             <p>Make sure the applicant has reviewed and understood all changes before you approve.</p>
             <div class="form-group">
                 <label class="block-label selection-button-checkbox" for="project-eligible" data-target="add-rag-rating">
-                    <input  id="project-eligible" type="checkbox" th:field="*{confirmEligibilityChecked}" data-disable-button-until-checked="#confirm-button" />These funding costs have been reviewed and are acceptable
+                    <input  id="project-eligible" type="checkbox" th:field="*{confirmEligibilityChecked}" data-switches-button-status="#confirm-button" />These funding costs have been reviewed and are acceptable
                 </label>
             </div>
             <div class="form-group" id="add-rag-rating">
                 <label for="rag-rating" class="form-label">Please enter the RAG rating for this eligibility review</label>
-                <select th:field="*{eligibilityRagStatus}" id="rag-rating" class="form-control" data-disable-button-until-checked="#confirm-button">
+                <select th:field="*{eligibilityRagStatus}" id="rag-rating" class="form-control" data-switches-button-status="#confirm-button">
                     <option value="UNSET" th:selected="${eligibilityForm.eligibilityRagStatus == null}">--</option>
                     <option value="GREEN">Green</option>
                     <option value="AMBER">Amber</option>
