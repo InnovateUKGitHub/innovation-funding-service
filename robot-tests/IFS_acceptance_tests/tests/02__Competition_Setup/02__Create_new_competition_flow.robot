@@ -53,7 +53,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               INFUND-6922 Update 'Competition setup' menu page to include a link to new 'Public content' page
 Suite Setup       Custom suite setup
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        CompAdmin
+Force Tags        CompAdmin  Pending
+# TODO This suite needs to be re-enabled when INFUND-8090 and INFUND-8086
 Resource          ../../resources/defaultResources.robot
 Resource          CompAdmin_Commons.robot
 
@@ -246,7 +247,7 @@ Eligibility: Contain the correct options
     And the user should see the element    jQuery=label:contains(Either)
     And the user should see the element    jQuery=div:nth-child(7) label:contains("Yes")
     And the user should see the element    jQuery=div:nth-child(7) label:contains("No")
-    And the user should see the element    jQuery=label:contains(Technical feasibility)
+    And the user should see the element    jQuery=label:contains(Feasibility studies)
     And the user should see the element    jQuery=label:contains(Industrial research)
     And the user should see the element    jQuery=label:contains(Experimental development)
     And the resubmission should not have a default selection
@@ -271,7 +272,7 @@ Eligibility: Mark as Done then Edit again
     And the user should see the text in the page    Single
     And the user should see the text in the page    Business
     And the user should see the text in the page    50%
-    And the user should see the text in the page    Technical feasibility
+    And the user should see the text in the page    Feasibility studies
     And the user should see the text in the page    Industrial research
     And the user should see the text in the page    Experimental development
     And The user should not see the element    id=streamName
