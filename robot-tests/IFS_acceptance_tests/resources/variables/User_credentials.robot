@@ -5,7 +5,9 @@
 &{worth_test_credentials}                 email=${test_mailbox_one}+submit@gmail.com    password=Passw0rd
 &{Comp_admin1_credentials}                email=john.doe@innovateuk.test    password=Passw0rd
 &{successful_applicant_credentials}       email=${test_mailbox_one}+fundsuccess@gmail.com    password=Passw0rd
+&{successful_released_credentials}        email=worth.email.test.two+releasefeedback@gmail.com    password=Passw0rd
 &{unsuccessful_applicant_credentials}     email=${test_mailbox_two}+fundfailure@gmail.com    password=Passw0rd
+&{unsuccessful_released_credentials}      email=james.lewis@example.com    password=Passw0rd
 &{assessor_credentials}                   email=paul.plum@gmail.com    password=Passw0rd
 &{assessor2_credentials}                  email=felix.wilson@gmail.com    password=Passw0rd
 &{existing_assessor1_credentials}         email=${test_mailbox_one}+jeremy.alufson@gmail.com    password=Passw0rd

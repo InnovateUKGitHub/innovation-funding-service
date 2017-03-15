@@ -38,7 +38,7 @@ The type of organisation navigates to the correct page
     [Tags]
     When the user selects the radio button    organisationType    1
     And the user clicks the button/link    jQuery=.button:contains("Continue")
-    Then the user should see the text in the page    Find your organisation on Companies House
+    Then the user should see the text in the page    Enter your organisation name or registration number.
     When the user goes back to the previous page
 #    Given the user selects the radio button    organisationType    2
 #    And the user clicks the button/link    jQuery=.button:contains("Continue")
