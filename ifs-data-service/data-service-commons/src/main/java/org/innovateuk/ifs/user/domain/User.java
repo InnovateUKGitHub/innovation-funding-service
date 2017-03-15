@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
 import static javax.persistence.EnumType.STRING;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -46,7 +47,7 @@ public class User implements Serializable {
     @Column(unique = true)
     private String email;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(name = "user_role",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
@@ -120,6 +121,7 @@ public class User implements Serializable {
     }
 
     public void setRoles(Set<Role> roles) {
+        requireNonNull(roles);
         this.roles = roles;
     }
 

@@ -178,8 +178,6 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     }
 
     private ServiceResult<User> addRoleToUser(User user, String roleName) {
-        requireNonNull(user.getRoles());
-
         return getRole(roleName).andOnSuccessReturn(role -> {
             user.addRole(role);
             return user;
