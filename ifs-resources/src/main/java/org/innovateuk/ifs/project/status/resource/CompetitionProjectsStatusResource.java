@@ -4,7 +4,11 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
+import static java.util.function.Function.identity;
+
+import static java.util.Optional.ofNullable;
 
 public class CompetitionProjectsStatusResource {
     private Long competitionNumber;
@@ -39,7 +43,7 @@ public class CompetitionProjectsStatusResource {
     }
 
     public List<ProjectStatusResource> getProjectStatusResources() {
-        return projectStatusResources;
+        return ofNullable(projectStatusResources).map(identity()).orElse(new ArrayList<>());
     }
 
     public void setProjectStatusResources(List<ProjectStatusResource> projectStatusResources) {
