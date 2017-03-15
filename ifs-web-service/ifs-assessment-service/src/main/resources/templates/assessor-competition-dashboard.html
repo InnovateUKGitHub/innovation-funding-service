@@ -26,6 +26,12 @@
                         <li><strong>Submit applications deadline:</strong> <span th:text="|${#strings.toLowerCase(#temporals.format(model.submitDeadline, 'hh:mma'))} ${#temporals.format(model.submitDeadline, 'EEEE d MMMM yyyy')}|" th:remove="tag"/></li>
                     </ul>
                 </div>
+
+                <div class="column-one-third">
+                    <ul class="list list-bullet">
+                        <li><a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}">competition brief</a></li>
+                    </ul>
+                </div>
             </div>
 
             <div class="my-applications">

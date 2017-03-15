@@ -30,6 +30,7 @@ import org.innovateuk.ifs.finance.resource.FinanceRowMetaFieldResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.OrganisationType;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
@@ -237,6 +238,15 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
     @Override
     public ServiceResult<Double> getResearchParticipationPercentage(Long applicationId) {
         return getResearchPercentage(applicationId).andOnSuccessReturn(BigDecimal::doubleValue);
+    }
+
+    @Override
+    public ServiceResult<Double> getResearchParticipationPercentageFromProject(Long projectId) {
+        return getResearchPercentageFromProject(projectId).andOnSuccessReturn(BigDecimal::doubleValue);
+    }
+
+    private ServiceResult<BigDecimal> getResearchPercentageFromProject(Long projectId) {
+        return find(applicationFinanceHandler.getResearchParticipationPercentageFromProject(projectId), notFoundError(Project.class, projectId));
     }
 
     private ServiceResult<BigDecimal> getResearchPercentage(Long applicationId) {
