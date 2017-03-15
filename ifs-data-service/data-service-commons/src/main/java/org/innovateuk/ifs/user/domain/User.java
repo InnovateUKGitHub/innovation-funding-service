@@ -117,7 +117,7 @@ public class User implements Serializable {
     }
 
     public boolean hasRole(UserRoleType type) {
-        return simpleMap(getRoles(), Role::getName).contains(type.getName());
+        return getRoles().stream().anyMatch(role -> getName().equals(type.getName()));
     }
 
     public void setRoles(Set<Role> roles) {

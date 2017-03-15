@@ -216,7 +216,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
             assertEquals(Disability.YES, user.getDisability());
             assertEquals(Long.valueOf(2), user.getEthnicity().getId());
             assertEquals(1, user.getRoles().size());
-            assertEquals(applicantRole, user.getRoles().toArray()[0]);
+            assertTrue(user.getRoles().contains(applicantRole));
             List<Organisation> orgs = organisationRepositoryMock.findByUsersId(user.getId());
             assertEquals(1, orgs.size());
             assertEquals(selectedOrganisation, orgs.get(0));
@@ -374,7 +374,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
             assertEquals(Mr, user.getTitle());
             assertEquals("new-uid", user.getUid());
             assertEquals(1, user.getRoles().size());
-            assertEquals(compAdminRole, user.getRoles().toArray()[0]);
+            assertTrue(user.getRoles().contains(compAdminRole));
             List<Organisation> orgs = organisationRepositoryMock.findByUsersId(user.getId());
             assertEquals(1, orgs.size());
             assertEquals(selectedOrganisation, orgs.get(0));
@@ -467,7 +467,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
             assertEquals(Mr, user.getTitle());
             assertEquals("new-uid", user.getUid());
             assertEquals(1, user.getRoles().size());
-            assertEquals(projectFinanceRole, user.getRoles().toArray()[0]);
+            assertTrue(user.getRoles().contains(projectFinanceRole));
             List<Organisation> orgs = organisationRepositoryMock.findByUsersId(user.getId());
             assertEquals(1, orgs.size());
             assertEquals(selectedOrganisation, orgs.get(0));
