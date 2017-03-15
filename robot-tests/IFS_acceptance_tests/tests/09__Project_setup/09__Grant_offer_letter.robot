@@ -81,7 +81,7 @@ Project finance user selects the grant offer letter
     Then the user navigates to the page     ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
     And the user should see the element     jQuery=h2:contains("Grant offer letter")
     And the user should see the element     link=grant_offer_letter.pdf
-    And the user should see the element     jQuery=button.button-secondary:contains("Remove")
+    And the user should see the element     jQuery=button:contains("Remove")
 
 Project Finance can download GOL
     [Documentation]  INFUND-6377
@@ -141,12 +141,12 @@ Comp Admin user uploads new grant offer letter
     [Setup]  log in as a different user    &{Comp_admin1_credentials}
     Given the user navigates to the page   ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
     Then the user uploads a file           grantOfferLetter  ${valid_pdf}
-    And the user should see the element    jQuery=button.button-secondary:contains("Remove")
+    And the user should see the element    jQuery=button:contains("Remove")
     When the user uploads a file           annex  ${valid_pdf}
     And the user clicks the button/link    id=send-gol
     And the user clicks the button/link    jQuery=.modal-accept-send-gol .button:contains("Publish to project team")
     Then the user should not see the element  jQuery=.button:contains("Publish to project team")
-    And the user should not see the element   jQuery=button.button-secondary:contains("Remove")
+    And the user should not see the element   jQuery=button:contains("Remove")
     When the user navigates to the page      ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status
     Then the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(7).status.waiting   # GOL
 
@@ -311,7 +311,7 @@ PM can remove the signed grant offer letter
 
 PM can upload new signed grant offer letter
     [Documentation]    INFUND-6780
-    [Tags]  
+    [Tags]
     When the user uploads a file    signedGrantOfferLetter    ${valid_pdf}
     And the user reloads the page
     Then the user should see the element    jQuery=.button:contains("Send to Innovate UK")
