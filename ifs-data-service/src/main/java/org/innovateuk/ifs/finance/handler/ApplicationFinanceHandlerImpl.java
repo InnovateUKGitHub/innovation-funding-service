@@ -133,6 +133,31 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
     }
 
     @Override
+    public BigDecimal getResearchParticipationPercentageFromProject(Long projectId){
+        List<ProjectFinanceResource> applicationFinanceResources = this.getFinanceChecksTotals(projectId);
+
+        BigDecimal totalCosts = applicationFinanceResources.stream()
+                .map(ProjectFinanceResource::getTotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+
+        BigDecimal researchCosts = applicationFinanceResources.stream()
+                .filter(f ->
+                        OrganisationTypeEnum.isResearch(organisationRepository.findOne(f.getOrganisation()).getOrganisationType().getId())
+                )
+                .map(ProjectFinanceResource::getTotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal researchParticipation = BigDecimal.ZERO;
+
+        if(totalCosts.compareTo(BigDecimal.ZERO)!=0) {
+            researchParticipation = researchCosts.divide(totalCosts, 6, BigDecimal.ROUND_HALF_UP);
+        }
+        researchParticipation = researchParticipation.multiply(BigDecimal.valueOf(100));
+        return researchParticipation.setScale(2, BigDecimal.ROUND_HALF_UP);
+    }
+
+    @Override
     public List<ProjectFinanceResource> getFinanceChecksTotals(Long projectId) {
         List<ProjectFinance> finances = projectFinanceRepository.findByProjectId(projectId);
         List<ProjectFinanceResource> financeResources = new ArrayList<>();
