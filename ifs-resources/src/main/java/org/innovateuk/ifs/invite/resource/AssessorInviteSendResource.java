@@ -12,7 +12,6 @@ public class AssessorInviteSendResource {
     private String content;
 
     public AssessorInviteSendResource() {
-
     }
 
     public AssessorInviteSendResource(String subject, String content) {
