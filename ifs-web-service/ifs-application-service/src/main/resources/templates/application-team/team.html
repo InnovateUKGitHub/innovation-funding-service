@@ -19,9 +19,9 @@
                 <h1 class="heading-xlarge">Application team</h1>
             </div>
 
-            <p>View and manage your contributors and partners in the application. If an individual is ‘pending’ they have not yet confirmed their role within this project. Click on a name to send this person an email.</p>
+            <p>View and manage your participants in the application. If an individual is 'pending' they have not yet joined the application.</p>
 
-            <p th:unless="${model.applicationCanBegin}">To change the lead applicant for this application please email Innovate UK <a href="mailto:support@innovateuk.gov.uk">support@innovateuk.gov.uk</a>.</p>
+            <p th:unless="${model.applicationCanBegin}">To change the lead applicant please email Innovate UK <a href="mailto:support@innovateuk.gov.uk">support@innovateuk.gov.uk</a>.</p>
 
             <div th:if="${model.applicationCanBegin}" class="message-alert">
                 <h2 class="heading-medium no-margin-bottom">As the lead applicant you can:</h2>

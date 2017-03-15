@@ -41,7 +41,7 @@ Application team page
     Given the user clicks the button/link    link=Invite robot test application
     When the user clicks the button/link    link=view and add participants to your application
     Then the user should see the text in the page    Application team
-    And the user should see the text in the page    View and manage your contributors and partners in the application.
+    And the user should see the text in the page    View and manage your participants in the application.
     And the lead applicant should have the correct status
     And the user should see the element    link=Application overview
 
