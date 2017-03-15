@@ -183,6 +183,6 @@ Change the open date of the Competition in the database to one day before
 
 the internal user navigates to public content
     [Arguments]  ${comp}
-    the user navigates to the page      ${CA_UpcomingComp}
+    the user navigates to the page     ${CA_UpcomingComp}
     the user clicks the button/link    link=${comp}
     the user clicks the button/link    link=Public content
