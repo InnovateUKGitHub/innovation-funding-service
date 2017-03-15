@@ -52,11 +52,6 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return isInternal(user);
     }
 
-    @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "The internal users can see the participation percentage for applications they assess")
-    public boolean internalUsersCanSeeTheResearchParticipantPercentageInProjects(final Long projectId, UserResource user) {
-        return isInternal(user);
-    }
-
     @PermissionRule(value = "READ_FINANCE_TOTALS",
             description = "The consortium can see the application finance totals",
             additionalComments = "This rule secures ApplicationResource which can contain more information than this rule should allow. Consider a new cut down object based on ApplicationResource")
