@@ -25,16 +25,14 @@
         Dear ${LeadContact},
     </p>
 
-    <h1>Award confirmation letter</h1>
+    <h1>Grant Offer Letter</h1>
     <p class="bold">
-        ${CompetitionName}<br/>
+        Competition: ${CompetitionName}<br/>
         Project Title: ${ProjectTitle}
     </p>
-    <p>
-        We are pleased to confirm your grant, subject to our terms and conditions.
-        Your individual grant allocations are detailed in the Annexes. These allocations are final and not subject to further negotiation or amendment.
-        Any additional terms or conditions of this award are included with this grant offer letter.
-    </p>
+    <p>We are pleased to confirm your grant, subject to our terms and conditions.</p>
+    <p>Your individual grant allocations are detailed in the Annexes. These allocations are final and not subject to further negotiation or amendment.</p>
+    <p>Any additional terms or conditions of this award are included with this grant offer letter. </p>
 
     <h2>Acceptance: Start and End Dates</h2>
     <p>
@@ -47,22 +45,16 @@
     <p>Your approved project start and end dates can only be changed by submitting a request through your Monitoring Officer.</p>
     <p>We wish you every success with your Project</p>
     <p>Yours sincerely</p>
-    <p>Peter Hollinswaite<br/>
+    <p><br/>
+        Peter Hollinswaite<br/>
         Head of Post-Award
     </p>
-
-    <!--<p class="textcenter"><br/>
-        Innovate UK is the trading name of the Technology Strategy Board <br/>
-        Innovate UK, Polaris House, North Star Avenue, Swindon SN2 1UE <br/>
-        Tel:+44 (0)1793 442 700 <br/>
-        Email: support@innovateuk.org <br/>
-        www.innovateuk.gov.uk <br/>
-    </p>-->
 </#macro>
 
 <!-- ====================== Page 2 of the Grant offer letter  ======================  -->
 <#macro page2>
-    <h1>Acceptance of award</h1>
+    <h1>ANNEX</h1>
+    <h2 class="bold">ACCEPTANCE OF AWARD</h2>
     <p class="bold">
         Application number: ${ApplicationNumber}<br/>
         Date: ${sendDate?string["d MMMM yyyy"]}<br/>
@@ -88,4 +80,3 @@
     <p class="signature">* Print name:.……………………………………......................... </p>
     <p>Date: …………………………………………………………….</p>
 </#macro>
-
