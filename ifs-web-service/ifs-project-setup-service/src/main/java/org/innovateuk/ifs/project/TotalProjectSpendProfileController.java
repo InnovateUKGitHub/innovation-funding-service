@@ -105,8 +105,9 @@ public class TotalProjectSpendProfileController {
         BigDecimal totalOfAllActualTotals = spendProfileTableCalculator.calculateTotalOfAllActualTotals(monthlyCostsPerOrganisationMap);
         BigDecimal totalOfAllEligibleTotals = spendProfileTableCalculator.calculateTotalOfAllEligibleTotals(eligibleCostPerOrganisationMap);
 
-        return new TotalProjectSpendProfileTableViewModel(months, monthlyCostsPerOrganisationMap, eligibleCostPerOrganisationMap, organisationToActualTotal, totalForEachMonth,
-                totalOfAllActualTotals, totalOfAllEligibleTotals, simpleToMap(organisations, OrganisationResource::getId, OrganisationResource::getName));
+        return new TotalProjectSpendProfileTableViewModel(months, monthlyCostsPerOrganisationMap, eligibleCostPerOrganisationMap,
+                organisationToActualTotal, totalForEachMonth, totalOfAllActualTotals, totalOfAllEligibleTotals,
+                simpleToMap(organisations, OrganisationResource::getId, OrganisationResource::getName), leadOrganisation);
 
     }
 }
