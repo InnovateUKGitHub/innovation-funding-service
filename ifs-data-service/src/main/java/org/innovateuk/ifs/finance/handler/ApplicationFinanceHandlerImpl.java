@@ -10,7 +10,9 @@ import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResourceId;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResourceId;
+import org.innovateuk.ifs.finance.resource.category.ChangedFinanceRowPair;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
@@ -79,8 +81,7 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
 
     @Override
     public ProjectFinanceResource getProjectOrganisationFinances(ProjectFinanceResourceId projectFinanceResourceId) {
-        ProjectFinance projectFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(
-                projectFinanceResourceId.getProjectId(), projectFinanceResourceId.getOrganisationId());
+        ProjectFinance projectFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(projectFinanceResourceId.getProjectId(), projectFinanceResourceId.getOrganisationId());
         ProjectFinanceResource projectFinanceResource = null;
 
         //TODO: INFUND-5102 This to me seems like a very messy way of building resource object. You don't only need to map the domain object using the mapper, but then also do a bunch of things in setApplicationFinanceDetails.  We should find a better way to handle this.
@@ -158,5 +159,8 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
         OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(organisation.getOrganisationType().getName());
         Map<FinanceRowType, FinanceRowCostCategory> costs = organisationFinanceHandler.getProjectOrganisationFinances(projectFinanceResource.getId());
         projectFinanceResource.setFinanceOrganisationDetails(costs);
+
+        Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> costChanges = organisationFinanceHandler.getProjectOrganisationFinanceChanges(projectFinanceResource.getId());
+        projectFinanceResource.setCostChanges(costChanges);
     }
 }
