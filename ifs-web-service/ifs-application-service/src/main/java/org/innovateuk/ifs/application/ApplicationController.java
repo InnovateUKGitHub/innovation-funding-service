@@ -5,13 +5,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.form.ApplicationForm;
-import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
-import org.innovateuk.ifs.application.populator.ApplicationOverviewModelPopulator;
-import org.innovateuk.ifs.application.populator.ApplicationPrintPopulator;
-import org.innovateuk.ifs.application.populator.AssessorQuestionFeedbackPopulator;
+import org.innovateuk.ifs.application.populator.*;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.service.*;
+import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentFeedbackResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -23,6 +21,7 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
+import org.innovateuk.ifs.form.service.FormInputService;
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.profiling.ProfileExecution;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -100,10 +99,16 @@ public class ApplicationController {
     private FormInputResponseService formInputResponseService;
 
     @Autowired
+    private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
+
+    @Autowired
     private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
 
     @Autowired
     private AssessorQuestionFeedbackPopulator assessorQuestionFeedbackPopulator;
+
+    @Autowired
+    private FormInputService formInputService;
 
     @Autowired
     private UserRestService userRestService;
@@ -176,6 +181,7 @@ public class ApplicationController {
         ProcessRoleResource userApplicationRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccessObjectOrThrowException();
 
         applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form, userApplicationRole.getOrganisationId());
+        applicationModelPopulator.addResearchCategoryId(application, model);
 
         model.addAttribute("applicationReadyForSubmit", applicationService.isApplicationReadyForSubmit(application.getId()));
 
