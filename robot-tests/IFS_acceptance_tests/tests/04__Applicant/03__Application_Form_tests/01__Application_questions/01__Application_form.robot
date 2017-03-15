@@ -160,7 +160,7 @@ the Applicant edits the Project description question (300 words)
     wait for autosave
 
 the text box should turn to green
-    the user should see the element    css=#form-input-11 div.marked-as-complete img.marked-as-complete
+    the user should see the element    css=#form-input-11 div.success-alert
     Element Should Be Disabled    css=#form-input-11 textarea
 
 the button state should change to 'Edit'
