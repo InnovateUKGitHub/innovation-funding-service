@@ -258,7 +258,7 @@ Status is displayed in the collapsible header area.
     &.assigned-to-me .editor,
     &.assigned-to-me textarea,
     &.assigned-to-me .textarea-header {
-        border: 2px solid $govuk-blue;
+        border: 2px solid $text-colour;
     }
 
     &.assigned-to-me .textarea-header + .editor,

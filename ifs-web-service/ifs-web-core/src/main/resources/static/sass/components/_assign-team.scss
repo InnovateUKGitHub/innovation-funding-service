@@ -28,21 +28,10 @@ The assign container is normally a `<select>`, which gets progressivly transform
   @include inline-block;
   position:relative;
 
-  &--alert{
-    @include core-16;
+  &.assigned-alert,
+  &.assign-alert{
     display: block;
-    margin-bottom: 30px;
-    background: $panel-colour;
-    border-left: 5px solid $text-colour;
-    padding: 0.8em;
-
-    &.action-required{
-      background-image: url('../images/icons/icon-pencil.png');
-      background-repeat: no-repeat;
-      background-size: 14px;
-      padding-left: 1.8em;
-      background-position: 0.5em 50%;
-    }
+    margin-bottom: 1em;
   }
 
   .assign-team {
