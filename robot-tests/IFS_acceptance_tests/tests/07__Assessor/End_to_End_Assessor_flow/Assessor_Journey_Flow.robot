@@ -79,7 +79,7 @@ CompAdmin Invites assessor to assess an application
 
 Assessor is notified by Email
     [Setup]    The guest user opens the browser
-    Given the user reads his email and clicks the link    ${test_mailbox_one}+AJE2E@gmail.com    Applications ready for assessment    You have been allocated applications
+    Given the user reads his email and clicks the link    ${test_mailbox_one}+AJE2E@gmail.com    Your applications for the competition    You have been allocated some applications
 
 Assessor accepts the invite for the Application
     When The user enters text to a text field    id=username    ${test_mailbox_one}+AJE2E@gmail.com
