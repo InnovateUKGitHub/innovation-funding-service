@@ -2,7 +2,6 @@ package org.innovateuk.ifs.assessment.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
-import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.resource.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -11,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.lang.String.format;
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.assessorInviteOverviewResourceListType;
 
 /**
  * REST service for managing {@link org.innovateuk.ifs.invite.resource.InviteResource} to {@link org.innovateuk.ifs.competition.resource.CompetitionResource}s
@@ -97,7 +96,7 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
     }
 
     @Override
-    public RestResult<AssessorInviteToSendResource> sendInvite(long inviteId, EmailContent content) {
-        return postWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "sendInvite", inviteId), content, AssessorInviteToSendResource.class);
+    public RestResult<Void> sendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource) {
+        return postWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "sendInvite", inviteId), assessorInviteSendResource, Void.class);
     }
 }

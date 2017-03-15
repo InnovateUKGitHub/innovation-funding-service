@@ -40,7 +40,6 @@ Complete the org size section
     run keyword and ignore error without screenshots    the user clicks the button/link    jQuery=button:contains("Mark as complete")
     run keyword and ignore error without screenshots    the user clicks the button/link    link=Your finances
 
-
 mark application details incomplete the user closes the browser
     Mark application details as incomplete
     the user closes the browser
@@ -84,7 +83,7 @@ the applicant completes the application details
 
 the user marks the finances as complete
     [Arguments]  ${Application}
-    the user fills in the project costs
+    the user fills in the project costs     ${Application}
     the user fills in the organisation information  ${Application}
     the user checks Your Funding section     ${Application}
     the user should see all finance subsections complete
@@ -92,9 +91,10 @@ the user marks the finances as complete
     the user should see the element  jQuery=li:contains("Your finances") > .task-status-complete
 
 the user fills in the project costs
+    [Arguments]     ${Application_name}
     the user clicks the button/link  link=Your project costs
     the user fills in Labour
-    the user fills in Overhead costs
+    the user fills in Overhead costs  ${Application_name}
     the user fills in Material
     the user fills in Capital usage
     the user fills in Subcontracting costs
@@ -120,6 +120,25 @@ the user fills in Labour
     the user clicks the button/link            jQuery=#form-input-20 button:contains("Labour")
 
 the user fills in Overhead costs
+    [Arguments]     ${Application_name}
+    Run Keyword If  '${Application_name}'=='A new innovative solution'    the user chooses Calculate overheads option
+    Run Keyword If  '${Application_name}'!= 'A new innovative solution'     the user chooses 20% overheads option
+
+the user chooses Calculate overheads option
+    When the user clicks the button/link    jQuery=button:contains("Overhead costs")
+    and the user clicks the button/link     jQuery=label:contains("Custom overhead costs")
+    then the user should see the element     jQuery=h3:contains("Custom overhead costs")
+    and the user enters text to a text field    jQuery=input[name^="overheads-customRate"]   40
+    wait for autosave
+    and the total overhead costs should reflect rate entered    jQuery=input[name^="overheads-totalCosts"]   £ 28,261
+
+the total overhead costs should reflect rate entered
+    [Arguments]    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
+    the element should be disabled      jQuery=input[name^="overheads-totalCosts"]
+    Textfield Value Should Be    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
+
+the user chooses 20% overheads option
+    # overheads option : 20% Labour
     the user clicks the button/link    jQuery=#form-input-20 button:contains("Overhead costs")
     the user clicks the button/link    css=label[data-target="overhead-default-percentage"]
     the user clicks the button/link    jQuery=#form-input-20 button:contains("Overhead costs")
@@ -151,8 +170,8 @@ the user fills in Subcontracting costs
     the user enters text to a text field  jQuery=input.form-control[name^=subcontracting-country]  Netherlands
     the user enters text to a text field  jQuery=textarea.form-control[name^=subcontracting-role]  Quality Assurance
     the user enters text to a text field  jQuery=input.form-control[name^=subcontracting-subcontractingCost]  1000
-    #focus                                 css=#section-total-13[readonly]  # commented as this section can be used and the values will differ with runs. Would like to romove it after review.
-    #textfield should contain              css=#section-total-13[readonly]  £ 1,000  # commented as this section can be used and the values will differ with runs. Would like to romove it after review.
+    #focus                                 css=#section-total-13[readonly]  # values will differ with runs. INFUND-8152
+    #textfield should contain              css=#section-total-13[readonly]  £ 1,000  # values will differ with runs. INFUND-8152.
     the user clicks the button/link       jQuery=#form-input-20 button:contains("Subcontracting costs")
 
 the user fills in Travel and subsistence
@@ -160,8 +179,8 @@ the user fills in Travel and subsistence
     the user enters text to a text field  css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    test
     the user enters text to a text field  css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    10
     the user enters text to a text field  css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    100
-    focus                                 css=#section-total-14[readonly]
-    textfield should contain              css=#section-total-14[readonly]  £ 1,000
+    #focus                                css=#section-total-14[readonly]    # values will differ with runs. INFUND-8152
+    #textfield should contain             css=#section-total-14[readonly]    £ 1,000 # values will differ with runs. INFUND-8152.
     the user clicks the button/link       jQuery=#form-input-20 button:contains("Travel and subsistence")
 
 the user fills in Other costs
@@ -169,8 +188,6 @@ the user fills in Other costs
     the user removes prev costs if there are any
     the user enters text to a text field  jQuery=textarea.form-control[name^=other_costs-description]  some other costs
     the user enters text to a text field  jQuery=input.form-control[name^=other_costs-otherCost]  50
-    #focus                                 css=#section-total-15./   # commented as this section can be used and the values will differ with runs. Would like to romove it after review.
-    #textfield should contain              css=#section-total-15  £ 50  #This is commented out because the value in the field differs in full run vs run only the suite.
     the user clicks the button/link       jQuery=#form-input-20 button:contains("Other costs")
 
 the user removes prev costs if there are any
