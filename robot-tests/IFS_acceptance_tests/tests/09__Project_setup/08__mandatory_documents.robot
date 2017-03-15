@@ -223,7 +223,7 @@ Mandatory document submission
     And the user clicks the button/link    link=Other documents
     And the user reloads the page
     When the user clicks the button/link    jQuery=.button:contains("Submit documents")
-    And the user clicks the button/link    jQuery=.button:contains("Cancel")
+    And the user clicks the button/link    jQuery=.buttonlink:contains("Cancel")
     Then the user should see the element    name=removeExploitationPlanClicked    # testing here that the section has not become read-only
     When the user clicks the button/link    jQuery=.button:contains("Submit documents")
     And the user clicks the button/link    jQuery=.button:contains("Submit")
@@ -485,7 +485,7 @@ After rejection, mandatory document submission
     And the user clicks the button/link    link=Other documents
     And the user reloads the page
     When the user clicks the button/link    jQuery=.button:contains("Submit documents")
-    And the user clicks the button/link    jQuery=.button:contains("Cancel")
+    And the user clicks the button/link    jQuery=.buttonlink:contains("Cancel")
     Then the user should see the element    name=removeExploitationPlanClicked    # testing here that the section has not become read-only
     When the user clicks the button/link    jQuery=.button:contains("Submit documents")
     And the user clicks the button/link    jQuery=.button:contains("Submit")
