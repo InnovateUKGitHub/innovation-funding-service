@@ -136,7 +136,7 @@ Valid invitation submit
     [Setup]    Delete the emails from both test mailboxes
     When The user clicks the button/link    jQuery=button:contains("Add organisation and invite applicants")
     Then the user should see the element    jQuery=.table-overflow tr:contains("Steve Smith") td:nth-child(3):contains("Lead")
-    And the user should see the element    jQuery=.table-overflow tr:contains("Adrian Booth") td:nth-child(3):contains("Pending")
+    And the user should see the element    jQuery=.table-overflow tr:contains("Adrian Booth") td:nth-child(3):contains("Invite pending")
 
 The Lead's inputs should not be visible in other application invites
     [Documentation]    INFUND-901
@@ -208,7 +208,7 @@ Partner can invite others to his own organisation
     And The user enters text to a text field    jQuery=tr:nth-of-type(2) td:nth-of-type(1) input    Mark
     And The user enters text to a text field    jQuery=tr:nth-of-type(2) td:nth-of-type(2) input    mark21@innovateuk.com
     And the user clicks the button/link    jQuery=button:contains("Update organisation")
-    Then The user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(3):contains("Pending")
+    Then The user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(3):contains("Invite pending")
 
 Lead should see the accepted partner in the assign list
     [Documentation]    INFUND-1779
@@ -269,7 +269,7 @@ the applicant cannot assign to pending invitees
 
 the status of the people should be correct in the Manage contributors page
     the user should see the element    jQuery=.table-overflow tr:contains("Steve Smith") td:nth-child(3):contains("Lead")
-    the user should see the element    jQuery=.table-overflow tr:contains("Adrian Booth") td:nth-child(3):contains("Pending")
+    the user should see the element    jQuery=.table-overflow tr:contains("Adrian Booth") td:nth-child(3):contains("Invite pending")
 
 the user can see the updated company name throughout the application
     Given the user navigates to the page    ${DASHBOARD_URL}
