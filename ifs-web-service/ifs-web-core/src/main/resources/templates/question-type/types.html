@@ -102,7 +102,7 @@
                 <a th:if="${isCompManagementDownload}" th:href="@{${compManagementDownloadURL}}" class="uploaded-file" th:text="${filename}">The-uploaded-file-example.pdf</a>
                 <a th:unless="${isCompManagementDownload}" th:href="@{${downloadURL}}" class="uploaded-file" th:text="${filename}">The-uploaded-file-example.pdf</a>
             </div>
-            <div th:unless="${readonly}" class="alignright" th:if="${(not question.isMarkAsCompletedEnabled() or (question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id) and (questionAssignee?.assigneeUserId == currentUser?.getId() or (questionAssignee?.getAssignee() == null))))}">
+            <div th:unless="${readonly}" class="alignleft" th:if="${(not question.isMarkAsCompletedEnabled() or (question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id) and (questionAssignee?.assigneeUserId == currentUser?.getId() or (questionAssignee?.getAssignee() == null))))}">
                 <button class="button-secondary no-margin-right" type="submit" th:name="${removeName}">Remove</button>
             </div>
         </div>

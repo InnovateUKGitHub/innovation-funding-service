@@ -204,12 +204,20 @@ tr.form-group-row.error {
 }
 
 .question{
+
+  margin-bottom: 30px;
+
   .heading-medium{
     margin: 0.8em 0 0.4em 0;
     display: inline-block;
   }
 
+  .form-hint{
+    margin-bottom: 0.8em;
+  }
+
   details{
+    margin-top: 0.4em;
     margin-bottom: 0.8em;
   }
 }
@@ -302,7 +310,6 @@ td.autosave-info {
 
 .upload-section{
   overflow: hidden;
-  border: 1px solid $border-colour;
   background: $grey-4;
   padding: 16px 16px 8px 16px;
   margin: 16px 0;
@@ -343,9 +350,6 @@ td.autosave-info {
 
 .upload-section	.uploaded-file{
   display: block;
-  background: $panel-colour;
-  padding: 20px;
-  font-weight: bold;
   margin: 10px 0;
 }
 

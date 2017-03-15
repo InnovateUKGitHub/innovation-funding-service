@@ -251,7 +251,7 @@ Status is displayed in the collapsible header area.
     &.marked-as-complete .readonly,
     &.marked-as-complete .textarea-header {
         border-width: 2px;
-        border-color: $button-colour;
+        border-color: $panel-colour;
         background-color: $grey-4;
     }
 
