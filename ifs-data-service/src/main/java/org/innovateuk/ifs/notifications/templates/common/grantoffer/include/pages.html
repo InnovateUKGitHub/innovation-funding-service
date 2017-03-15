@@ -9,7 +9,7 @@
     <p>
         <#if LeadContact?has_content>${LeadContact}<br/></#if>
         <#if LeadOrgName?has_content>${LeadOrgName}<br/></#if>
-        <#if Address1?has_content>${Address1}<br/></#if>
+        <#if Address1?has_content>${Address1} </#if>
         <#if Address2?has_content>${Address2}<br/></#if>
         <#if Address3?has_content>${Address3}<br/></#if>
         <#if TownCity?has_content>${TownCity}<br/></#if>
@@ -25,7 +25,7 @@
         Dear ${LeadContact},
     </p>
 
-    <h1>Grant Offer Letter</h1>
+    <p class="bold">Grant Offer Letter</p>
     <p class="bold">
         Competition: ${CompetitionName}<br/>
         Project Title: ${ProjectTitle}
@@ -53,7 +53,7 @@
 
 <!-- ====================== Page 2 of the Grant offer letter  ======================  -->
 <#macro page2>
-    <h1>ANNEX</h1>
+    <h2>ANNEX</h2>
     <h2 class="bold">ACCEPTANCE OF AWARD</h2>
     <p class="bold">
         Application number: ${ApplicationNumber}<br/>
