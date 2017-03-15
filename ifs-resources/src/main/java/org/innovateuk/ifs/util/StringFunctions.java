@@ -28,7 +28,7 @@ public class StringFunctions {
      * Strips any HTML markup by parsing the content into a HTML Document and extracting the text content.
      *
      * @param content
-     * @return
+     * @return the given content without any HTML tags or attributes.
      */
     public static String stripHtml(String content) {
         return ofNullable(content).map(contentValue -> {
@@ -42,7 +42,7 @@ public class StringFunctions {
      * Escapes characters in the content with HTML entities. Adds HTML line break elements.
      *
      * @param content
-     * @return
+     * @return the given content with characters escaped by HTML entities and line breaks replaced with HTML line break elements.
      */
     public static String plainTextToHtml(String content) {
         String escaped = StringEscapeUtils.escapeHtml4(content);
