@@ -334,8 +334,8 @@ the user selects technical feasibility and no to resubmission and an innovation 
     # Often those labels need double click. Thus i made a separate keyword to looks more tidy
     the user clicks the button/link    jQuery=legend:contains("Research category")
     the user clicks the button/link    jQuery=button:contains("Choose your research category")
-    the user clicks the button/link    jQuery=label[for^="researchCategoryChoice"]:contains("Technical feasibility")
-    the user clicks the button/link    jQuery=label[for^="researchCategoryChoice"]:contains("Technical feasibility")
+    the user clicks the button/link    jQuery=label[for^="researchCategoryChoice"]:contains("Feasibility studies")
+    the user clicks the button/link    jQuery=label[for^="researchCategoryChoice"]:contains("Feasibility studies")
     the user clicks the button/link    jQuery=button:contains(Save)
     the user clicks the button/link    jQuery=button:contains("Change your innovation area")
     the user clicks the button/link    jQuery=label[for="innovationAreaChoice-5"]
