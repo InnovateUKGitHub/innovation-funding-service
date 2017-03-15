@@ -10,14 +10,10 @@ Controlled with javascript, an alternative standard html page should be used for
 	<button class="js-close close" type="button" aria-label="Close Popup">X</button>
 	<p>Content goes here</p>
 	<hr/>
-	<div class="grid-row">
-			<div class="column-half">
-					<button class="js-close button buttonlink large" type="button">Cancel</button>
-			</div>
-			<div class="column-half alignright">
-					<button class="button large">Submit</button>
-			</div>
-		</div>
+	<div>
+		<button class="button">Submit</button>
+		<button class="js-close buttonlink" type="button">Cancel</button>
+	</div>
 </div>
 ```
 
@@ -56,9 +52,13 @@ Controlled with javascript, an alternative standard html page should be used for
 		border: none;
 		font-weight: normal;
 	}
+	.button {
+		font-size: 19px;
+	}
 	.buttonlink {
 		padding: 8px;
 		margin-left: 22px;
+		font-size: 19px;
 	}
 	&.warning-modal {
 		border-top: 10px solid $red;
