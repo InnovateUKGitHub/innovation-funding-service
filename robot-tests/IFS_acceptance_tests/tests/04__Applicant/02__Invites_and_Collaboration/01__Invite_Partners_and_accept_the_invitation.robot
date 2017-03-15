@@ -238,7 +238,7 @@ Lead applicant invites a non registered user in the same organisation
     And The user enters text to a text field    name=applicants[0].email    ${test_mailbox_one}+inviteorg2@gmail.com
     And the user clicks the button/link    jQuery=button:contains("Update organisation")
     Then the user should see the text in the page    Application team
-    And the user should see the text in the page    View and manage your contributors and partners in the application
+    And the user should see the text in the page    View and manage your participants in the application
     [Teardown]    the user closes the browser
 
 Registered partner should not create new org but should follow the create account flow
