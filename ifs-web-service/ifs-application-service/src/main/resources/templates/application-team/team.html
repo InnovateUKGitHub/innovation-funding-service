@@ -40,14 +40,14 @@
                         <tr>
                             <th class="width-30-percent" scope="col">Applicant</th>
                             <th class="width-50-percent" scope="col">Email</th>
-                            <th scope="col">Status</th>
+                            <th scope="col"><span class="visually-hidden">Additional details</span></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr th:each="applicant : ${organisation.applicants}">
                             <td th:text="${applicant.name}">Steve Smith</td>
                             <td th:text="${applicant.email}">steve.smith@empire.com</td>
-                            <td th:text="${applicant.lead} ? 'Lead' : (${applicant.pending} ? 'Pending' : '')">Lead</td>
+                            <td th:text="${applicant.lead} ? 'Lead' : (${applicant.pending} ? 'Invite pending' : '')">Lead</td>
                         </tr>
                     </tbody>
                 </table>
