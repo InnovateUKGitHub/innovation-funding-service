@@ -67,7 +67,7 @@ public class CompetitionManagementSendInviteController {
     }
 
     private void populateFormWithExistingValues(SendInviteForm form, AssessorInviteToSendResource assessorInviteToSendResource) {
-        form.setSubject(format("Invitation to assess %s", assessorInviteToSendResource.getCompetitionName()));
+        form.setSubject(format("Invitation to assess '%s'", assessorInviteToSendResource.getCompetitionName()));
         form.setContent(assessorInviteToSendResource.getContent());
     }
 }

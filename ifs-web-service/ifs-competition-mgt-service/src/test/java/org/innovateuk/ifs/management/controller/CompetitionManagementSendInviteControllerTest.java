@@ -59,7 +59,7 @@ public class CompetitionManagementSendInviteControllerTest extends BaseControlle
         when(competitionInviteRestService.getCreated(inviteId)).thenReturn(restSuccess(invite));
 
         SendInviteForm expectedForm = new SendInviteForm();
-        expectedForm.setSubject("Invitation to assess Photonics for health");
+        expectedForm.setSubject("Invitation to assess 'Photonics for health'");
         expectedForm.setContent("Editable content...");
 
         SendInviteViewModel expectedViewModel = new SendInviteViewModel(1L, inviteId, "Photonics for health", "Jessica Doe");
