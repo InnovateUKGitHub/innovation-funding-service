@@ -40,8 +40,8 @@ Milestones for the In inform competition
 
 Release feedback
     [Documentation]    INFUND-8050
-    [Tags]    Email    HappyPath  Peding
-    # TODO Pending due to INFUND-8757
+    [Tags]    Email    HappyPath    Pending
+    #TODO Pending funding decisions to be ready
     When The user clicks the button/link    jQuery=button:contains("Release feedback")
     Then The user should not see the text in the page    Inform
     When The user clicks the button/link    jQuery=a:contains(Live)
@@ -58,7 +58,7 @@ Unsuccessful applicant sees unsuccessful alert
 
 Successful applicant see successful alert
     [Documentation]    INFUND-7861
-    [Tags]    Email   HappyPath
+    [Tags]    Email    HappyPath
     [Setup]    log in as a different user    &{successful_released_credentials}
     Given the user should see the element    jQuery=.status:contains("Successful")
     When the user clicks the button/link    jQuery=.previous-applications a:contains("High Performance Gasoline Stratified")

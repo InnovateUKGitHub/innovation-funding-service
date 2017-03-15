@@ -83,9 +83,10 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
             otherApplicationFinance = newApplicationFinanceResource().withOrganisation(otherOrganisation.getId()).withApplication(otherApplicationId).build();
             otherLeadApplicant = newUserResource().build();
             when(processRoleRepositoryMock.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(otherLeadApplicant.getId(), getRole(LEADAPPLICANT).getId(), otherApplicationId, otherOrganisationId)).thenReturn(newProcessRole().build());
+            when(processRoleRepositoryMock.findByUserIdAndApplicationId(otherLeadApplicant.getId(), otherApplicationId)).thenReturn(newProcessRole().withRole(LEADAPPLICANT).build());
+
         }
     }
-
 
     @Test
     public void consortiumCanSeeTheApplicationFinancesForTheirOrganisationTest() {
