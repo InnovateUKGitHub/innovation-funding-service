@@ -135,7 +135,8 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         AssessmentNavigationViewModel expectedNavigation = new AssessmentNavigationViewModel(assessmentResource.getId(),
                 of(previousQuestionResource), of(nextQuestionResource));
 
-        AssessmentFeedbackViewModel expectedViewModel = new AssessmentFeedbackViewModel(assessmentResource.getId(),
+        AssessmentFeedbackViewModel expectedViewModel = new AssessmentFeedbackViewModel(
+                assessmentResource.getId(),
                 3,
                 50,
                 applicationId,
@@ -725,19 +726,19 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
 
     private List<FormInputResponseResource> setupApplicantResponses(Long applicationId, List<FormInputResource> formInputs) {
         List<FormInputResponseResource> applicantResponses = formInputs.stream().map(formInput -> {
-                 if (formInput.getType() == FILEUPLOAD) {
-                     return newFormInputResponseResource()
-                             .withFormInputs(formInput.getId())
-                             .withValue("Applicant response")
-                             .withFileName("File 1")
-                             .withFilesizeBytes(1024L)
-                             .build();
-                 } else {
-                    return newFormInputResponseResource()
-                            .withFormInputs(formInput.getId())
-                            .withValue("Applicant response")
-                            .build();
-                 }
+                    if (formInput.getType() == FILEUPLOAD) {
+                        return newFormInputResponseResource()
+                                .withFormInputs(formInput.getId())
+                                .withValue("Applicant response")
+                                .withFileName("File 1")
+                                .withFilesizeBytes(1024L)
+                                .build();
+                    } else {
+                        return newFormInputResponseResource()
+                                .withFormInputs(formInput.getId())
+                                .withValue("Applicant response")
+                                .build();
+                    }
                 }
         ).collect(Collectors.toList());
         applicantResponses.forEach(formInputResponse -> when(formInputResponseService.getByFormInputIdAndApplication(
