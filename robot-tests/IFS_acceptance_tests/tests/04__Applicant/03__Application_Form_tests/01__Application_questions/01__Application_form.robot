@@ -32,9 +32,13 @@ Application details: Previous submission
 
 Application details: Research category
     [Documentation]    INFUND-6823
+    Given The user clicks the button/link   jQuery=button:contains("Choose your research category")
     Then the user should see the element    jQuery=label:contains("Industrial research")
     And the user should see the element    jQuery=label:contains("Feasibility studies")
     And the user should see the element    jQuery=label:contains("Experimental development")
+    the user clicks the button/link    jQuery=label[for^="researchCategoryChoice"]:contains("Technical feasibility")
+    the user clicks the button/link    jQuery=label[for^="researchCategoryChoice"]:contains("Technical feasibility")
+    and the user clicks the button/link     jQuery=button:contains(Save)
     And the finance summary page should show a warning
 
 Autosave in the form questions

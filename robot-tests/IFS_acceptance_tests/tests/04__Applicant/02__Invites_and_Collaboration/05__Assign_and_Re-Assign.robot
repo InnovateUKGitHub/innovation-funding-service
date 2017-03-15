@@ -194,6 +194,7 @@ Lead selects Research Area
     When the user navigates to the page       ${DASHBOARD_URL}
     Then the user clicks the button/link      link=Assign test
     When the user clicks the button/link      link=Application details
+    and the user clicks the button/link      jQuery=button:contains("research category")
     # The following line has been commented  as 'alert message' is commented in application details section html due to upcoming functionality
     #Then the user should see the element      jQuery=h2:contains("Research category determines funding")
     Then the user should see the element       jQuery=legend:contains("Research category")
