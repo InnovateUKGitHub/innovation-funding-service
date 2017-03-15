@@ -52,7 +52,6 @@ public class FreemarkerGOLTemplateRendererIntegrationTest extends BaseIntegratio
                 "ProjectStartDate", DUMMY_PROJECT_START_DATE,
                 "ProjectLength", "3",
                 "ApplicationNumber", "12334"
-                /*"TableData", getYearlyGOLProfileTable()*/
         );
         assertRenderedGOLFileExpectedLines(GOL_HTML_TEMPLATE_NAME, templateArguments);
     }
