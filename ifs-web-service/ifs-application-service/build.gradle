@@ -36,7 +36,7 @@ dependencies {
     testCompile project(":ifs-commons").sourceSets.test.output
     testCompile project(':ifs-web-service:ifs-web-core').sourceSets.test.output
 
-    testCompile "com.openpojo:openpojo:0.8.3"
+    testCompile "com.openpojo:openpojo:0.8.4"
     testCompile "org.skyscreamer:jsonassert:1.3.0"
     testCompile "net.sf.opencsv:opencsv:2.3"
 }
@@ -67,3 +67,4 @@ task buildDocker( type:Docker, dependsOn: build) {
     }
 }
 
+buildDocker.dependsOn prepareDockerFile

@@ -53,7 +53,7 @@
                 <ul th:each="appendix : ${model.appendices}">
                     <li class="form-group download">
                         <div class="heading-small no-margin" th:text="|${appendix.title}:|">View project management appendix:</div>
-                        <a th:href="@{~/{applicationId}/forminput/{formInputId}/download(applicationId=${model.applicationId},formInputId=${appendix.formInputId})}" th:text="|${appendix.name} (${appendix.size})|">Project-plan.pdf (161.96 KB)</a>
+                        <a th:href="@{/{assessmentId}/application/{applicationId}/formInput/{formInputId}/download(assessmentId=${model.assessmentId},applicationId=${model.applicationId},formInputId=${appendix.formInputId})}" th:text="|${appendix.name} (${appendix.size})|">Project-plan.pdf (161.96 KB)</a>
                     </li>
                 </ul>
             </div>

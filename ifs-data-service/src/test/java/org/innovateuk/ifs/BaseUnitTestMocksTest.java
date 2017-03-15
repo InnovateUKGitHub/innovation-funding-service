@@ -106,6 +106,7 @@ import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.user.mapper.*;
 import org.innovateuk.ifs.user.repository.*;
 import org.innovateuk.ifs.user.transactional.*;
+import org.innovateuk.ifs.validator.util.ValidationUtil;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.junit.Before;
 import org.mockito.Mock;
@@ -554,13 +555,13 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected FinanceCheckRepository financeCheckRepositoryMock;
 
     @Mock
-    protected ContractService contractServiceMock;
+    protected AgreementService agreementServiceMock;
 
     @Mock
-    protected ContractRepository contractRepositoryMock;
+    protected AgreementRepository agreementRepositoryMock;
 
     @Mock
-    protected ContractMapper contractMapperMock;
+    protected AgreementMapper agreementMapperMock;
 
     @Mock
     protected FileTemplateRenderer rendererMock;
@@ -633,6 +634,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ApplicationAssessorPageMapper applicationAssessorPageMapperMock;
+
+    @Mock
+    protected ValidationUtil validationUtilMock;
 
     @Mock
     protected ApplicationResearchCategoryService applicationResearchCategoryService;

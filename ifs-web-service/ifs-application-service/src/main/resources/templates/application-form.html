@@ -46,8 +46,6 @@
                         <div th:replace="question-type/types :: ${formInput.type.nameLower}" />
                     </th:block>
                 </div>
-
-
                 <th:block th:if="${model.isSection}">
                     <p class="subtitle" th:if="${model.currentSection.getDescription()}" th:text="${model.currentSection.getDescription()}" />
                     <th:block th:unless="${model.hasFinanceView}">
@@ -77,7 +75,8 @@
                                     <th:block th:if="${formInput.type.isDisplayableFinanceType(model.finance.financeView) and model.finance.hasOrganisationFinance}"
                                               th:with="organisationFinance=(${model.finance.organisationFinance}), organisationGrantClaimPercentage=(${model.finance.organisationGrantClaimPercentage}),
                                                        organisationGrantClaimPercentageId=(${model.finance.organisationGrantClaimPercentageId}), organisationFinanceTotal=(${model.finance.organisationFinanceTotal}),
-                                                       organisationFinanceSize=(${model.finance.organisationFinanceSize})">
+                                                       organisationFinanceSize=(${model.finance.organisationFinanceSize}), organisationSizes=(${model.finance.organisationSizes}),
+                                                       maximumGrantClaimPercentage=(${model.finance.maximumGrantClaimPercentage})">
                                         <div th:replace="'finance/'+${model.finance.financeView} :: ${formInput.type.nameLower}" />
                                     </th:block>
 
