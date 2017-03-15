@@ -66,7 +66,8 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...               INFUND-7756 Project finance can post an update to an existing note
 Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 Suite Teardown    the user closes the browser
-Force Tags        Project Setup
+Force Tags        Project Setup  Pending
+# TODO Re-enable this suite when INFUND-8090 and INFUND-8086
 Resource          ../../resources/defaultResources.robot
 Resource          PS_Variables.robot
 Resource          ../04__Applicant/FinanceSection_Commons.robot
