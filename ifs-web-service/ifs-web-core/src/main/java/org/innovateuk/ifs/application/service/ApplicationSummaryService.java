@@ -1,9 +1,12 @@
 package org.innovateuk.ifs.application.service;
 
+import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.springframework.core.io.ByteArrayResource;
 
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
+
+import java.util.Optional;
 
 public interface ApplicationSummaryService {
 
@@ -17,7 +20,13 @@ public interface ApplicationSummaryService {
 
 	ApplicationSummaryPageResource getApplicationsRequiringFeedbackByCompetitionId(Long competitionId, String sortField, Integer pageNumber, Integer pageSize, String filter);
 
-	ApplicationSummaryPageResource getWithFundingDecisionApplications(Long competitionId, String sortField, Integer pageNumber, Integer pageSize, String filter);
+	ApplicationSummaryPageResource getWithFundingDecisionApplications(Long competitionId,
+																	  String sortField,
+																	  Integer pageNumber,
+																	  Integer pageSize,
+																	  String filter,
+																	  Optional<Boolean> sendFilter,
+																	  Optional<FundingDecision> fundingFilter);
 
 	Long getApplicationsRequiringFeedbackCountByCompetitionId(Long competitionId);
 

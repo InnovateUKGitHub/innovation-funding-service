@@ -120,7 +120,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
 
     private Matcher<ManageFundingApplicationViewModel> manageFundingApplicationViewModelMatcher(ManageFundingApplicationViewModel toMatch) {
         return new LambdaMatcher<>(match -> {
-            assertEquals(toMatch.getFilter(), match.getFilter());
+            assertEquals(toMatch.getStringFilter(), match.getStringFilter());
             assertEquals(toMatch.getCompetitionName(), match.getCompetitionName());
             assertEquals(toMatch.getSortField(), match.getSortField());
             assertEquals(toMatch.getCompetitionId(), match.getCompetitionId());
