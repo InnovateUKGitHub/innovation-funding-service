@@ -29,10 +29,12 @@
 
     <ul>
         <li>
-            <a th:href="@{/project/{projectId}/partner-organisation/{organisationId}/finance-checks/eligibility(projectId=${model.projectId},organisationId=${model.organisationId})}" class="heading-medium">View finances</a>
+            <a th:href="@{/project/{projectId}/partner-organisation/{organisationId}/finance-checks/eligibility(projectId=${model.projectId},organisationId=${model.organisationId})}"
+               class="heading-medium">View finances</a>
         </li>
         <li>
-            <a href="#" class="heading-medium">Project finance overview</a>
+            <a th:href="@{/project/{projectId}/partner-organisation/{organisationId}/finance-checks/overview(projectId=${model.projectId},organisationId=${model.organisationId})}"
+               class="heading-medium">Project finance overview</a>
         </li>
     </ul>
 
