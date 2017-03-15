@@ -1,16 +1,13 @@
 package org.innovateuk.ifs.application.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.competition.domain.Competition;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
  * Section defines database relations and a model to use client side and server side.
@@ -43,11 +40,9 @@ public class Section implements Comparable<Section> {
 
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="parentSectionId", referencedColumnName="id")
-    @JsonBackReference
     private Section parentSection;
 
     @OneToMany(mappedBy="parentSection",fetch=FetchType.LAZY)
-    @JsonManagedReference
     @OrderBy("priority ASC")
     private List<Section> childSections;
 
@@ -87,17 +82,10 @@ public class Section implements Comparable<Section> {
     /**
      * Get questions from this section and childSections.
      */
-    @JsonIgnore
-    public List<Question> fetchAllChildQuestions() {
-        LinkedList<Question> sectionQuestions = new LinkedList<>(questions);
-        if(childSections != null && !childSections.isEmpty()){
-            LinkedList<Question> childQuestions = childSections.stream()
-                    .filter(s -> s.fetchAllChildQuestions() != null && s.fetchAllChildQuestions().size() > 0)
-                    .flatMap(s -> s.fetchAllChildQuestions().stream())
-                    .collect(Collectors.toCollection(LinkedList::new));
-            sectionQuestions.addAll(childQuestions);
-        }
-        return sectionQuestions;
+    public List<Question> fetchAllQuestionsAndChildQuestions() {
+        List<Section> nonEmptyChildSections = simpleFilterNot(childSections, child -> child.getChildSections().isEmpty());
+        List<List<Question>> allChildQuestions = simpleMap(nonEmptyChildSections, Section::fetchAllQuestionsAndChildQuestions);
+        return combineLists(questions, flattenLists(allChildQuestions));
     }
 
 
@@ -121,7 +109,6 @@ public class Section implements Comparable<Section> {
         this.competition = competition;
     }
 
-    @JsonIgnore
     public Competition getCompetition() {
         return competition;
     }

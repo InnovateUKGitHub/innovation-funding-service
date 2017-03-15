@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.application.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.innovateuk.ifs.application.resource.QuestionType;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
@@ -32,7 +34,8 @@ public class Question {
 
     private Integer priority;
 
-    @OneToMany(mappedBy = "question")
+    @Fetch(value = FetchMode.SUBSELECT)
+    @OneToMany(mappedBy = "question", fetch = FetchType.EAGER)
     private List<FormInput> formInputs = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -43,7 +46,8 @@ public class Question {
     @JoinColumn(name = "sectionId", referencedColumnName = "id")
     private Section section;
 
-    @OneToMany(mappedBy = "question")
+    @Fetch(value = FetchMode.SUBSELECT)
+    @OneToMany(mappedBy = "question", fetch = FetchType.EAGER)
     private List<QuestionStatus> questionStatuses;
 
     @OneToMany(mappedBy = "question")
