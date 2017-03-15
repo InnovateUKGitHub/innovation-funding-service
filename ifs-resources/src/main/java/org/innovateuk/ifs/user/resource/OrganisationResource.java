@@ -13,7 +13,6 @@ public class OrganisationResource {
     private Long id;
     private String name;
     private String companyHouseNumber;
-    private OrganisationSize organisationSize;
     private List<Long> processRoles = new ArrayList<>();
     private List<Long> applicationFinances = new ArrayList<>();
     private List<OrganisationAddressResource> addresses = new ArrayList<>();
@@ -43,14 +42,6 @@ public class OrganisationResource {
 
     public void setCompanyHouseNumber(String companyHouseNumber) {
         this.companyHouseNumber = companyHouseNumber;
-    }
-
-    public OrganisationSize getOrganisationSize() {
-        return organisationSize;
-    }
-
-    public void setOrganisationSize(OrganisationSize organisationSize) {
-        this.organisationSize = organisationSize;
     }
 
     public List<Long> getProcessRoles() {

@@ -90,30 +90,6 @@ public class FinanceCheckController {
     @Autowired
     private FinanceUtil financeUtil;
 
-    @RequestMapping(value = "/organisation/{organisationId}", method = GET)
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
-    public String view(@PathVariable("projectId") final Long projectId, @PathVariable("organisationId") Long organisationId,
-                       @ModelAttribute(FORM_ATTR_NAME) FinanceCheckForm form,
-                       @ModelAttribute("loggedInUser") UserResource loggedInUser,
-                       Model model){
-        FinanceCheckResource financeCheckResource = getFinanceCheckResource(projectId, organisationId);
-        populateExistingFinanceCheckDetailsInForm(financeCheckResource, form);
-        return doViewFinanceCheckForm(projectId, organisationId, model);
-    }
-
-    @RequestMapping(value = "/organisation/{organisationId}", method = POST)
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
-    public String update(@PathVariable("projectId") Long projectId,
-                         @PathVariable("organisationId") Long organisationId,
-                         @ModelAttribute(FORM_ATTR_NAME) @Valid FinanceCheckForm form,
-                         @SuppressWarnings("unused") BindingResult bindingResult,
-                         ValidationHandler validationHandler) {
-
-        return validationHandler.failNowOrSucceedWith(
-                () -> redirectToFinanceCheckForm(projectId, organisationId),
-                () -> updateFinanceCheck(getFinanceCheckResource(projectId, organisationId), form, validationHandler));
-    }
-
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
     @RequestMapping(method = GET)
     public String viewFinanceCheckSummary(@PathVariable Long projectId, Model model,
@@ -137,23 +113,6 @@ public class FinanceCheckController {
     }
 
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
-    @RequestMapping(value = "/organisation/{organisationId}", params = "approve", method = POST)
-    public String approveFinanceCheck(@PathVariable Long projectId, @PathVariable Long organisationId, Model model,
-                                       @ModelAttribute FinanceCheckForm form,
-                                       @SuppressWarnings("unused") BindingResult bindingResult,
-                                       ValidationHandler validationHandler) {
-
-        Supplier<String> failureView = () -> doViewFinanceCheckForm(projectId, organisationId, model);
-
-        ServiceResult<Void> updateResult = doUpdateFinanceCheck(getFinanceCheckResource(projectId, organisationId), form);
-        ServiceResult<Void> approveResult = updateResult.andOnSuccess(() -> financeCheckService.approveFinanceCheck(projectId, organisationId));
-
-        return validationHandler.addAnyErrors(approveResult).failNowOrSucceedWith(failureView, () ->
-                redirectToFinanceCheckForm(projectId, organisationId)
-        );
-    }
-
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
     @RequestMapping(value = "/organisation/{organisationId}/jes-file", method = GET)
     public @ResponseBody ResponseEntity<ByteArrayResource> downloadJesFile(@PathVariable("projectId") final Long projectId,
                                                                            @PathVariable("organisationId") Long organisationId) {
@@ -171,86 +130,6 @@ public class FinanceCheckController {
 
         return new ResponseEntity<>(null, null, HttpStatus.NO_CONTENT);
 
-    }
-
-    private String redirectToFinanceCheckForm(Long projectId, Long organisationId){
-        return "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId;
-    }
-
-    private void populateExistingFinanceCheckDetailsInForm(FinanceCheckResource financeCheckResource, FinanceCheckForm form){
-        form.setCosts(simpleMap(financeCheckResource.getCostGroup().getCosts(), c -> {
-            CostFormField cf = new CostFormField();
-            cf.setId(c.getId());
-            cf.setValue(c.getValue());
-            return cf;
-        }));
-    }
-
-    private String doViewFinanceCheckForm(Long projectId, Long organisationId, Model model){
-        populateFinanceCheckModel(projectId, organisationId, model);
-        return "project/financecheck/partner-project-eligibility";
-    }
-
-    private void populateFinanceCheckModel(Long projectId, Long organisationId, Model model){
-        ProjectResource project = projectService.getById(projectId);
-        ApplicationResource application = applicationService.getById(project.getApplication());
-        String competitionName = application.getCompetitionName();
-
-        OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
-
-        boolean isUsingJesFinances = financeUtil.isUsingJesFinances(organisationResource.getOrganisationTypeName());
-        Optional<ProjectUserResource> financeContact = getFinanceContact(projectId, organisationId);
-
-        FinanceCheckProcessResource financeCheckStatus = financeCheckService.getFinanceCheckApprovalStatus(projectId, organisationId);
-        boolean financeChecksApproved = APPROVED.equals(financeCheckStatus.getCurrentState());
-        String approverName = financeCheckStatus.getInternalParticipant() != null ? financeCheckStatus.getInternalParticipant().getName() : null;
-        LocalDate approvalDate = financeCheckStatus.getModifiedDate().toLocalDate();
-
-        boolean isLeadPartner = isLeadPartner(partnerOrganisationService, projectId, organisationId);
-
-        FileDetailsViewModel jesFileDetailsViewModel = null;
-        ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceByApplicationIdAndOrganisationId(application.getId(), organisationId);
-        if (applicationFinanceResource.getFinanceFileEntry() != null) {
-            FileEntryResource jesFileEntryResource = financeService.getFinanceEntry(applicationFinanceResource.getFinanceFileEntry()).getSuccessObject();
-            jesFileDetailsViewModel = new FileDetailsViewModel(jesFileEntryResource);
-        }
-
-        FinanceCheckViewModel financeCheckViewModel = new FinanceCheckViewModel(application.getCompetition(), competitionName, organisationResource.getName(),
-                isLeadPartner, projectId, organisationId, isUsingJesFinances, financeChecksApproved, approverName, approvalDate, jesFileDetailsViewModel);
-
-        if (financeContact.isPresent()) { // Internal users may still view finance contact page without finance contact being set.  They will see a message warning about this on template.
-            financeCheckViewModel.setFinanceContactName(financeContact.get().getUserName());
-            financeCheckViewModel.setFinanceContactEmail(financeContact.get().getEmail());
-        }
-
-        model.addAttribute("model", financeCheckViewModel);
-    }
-
-    private Optional<ProjectUserResource> getFinanceContact(Long projectId, Long organisationId){
-        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
-        return simpleFindFirst(projectUsers, pr -> pr.isFinanceContact() && organisationId.equals(pr.getOrganisation()));
-    }
-
-    private FinanceCheckResource getFinanceCheckResource(Long projectId, Long organisationId){
-        ProjectOrganisationCompositeId key = new ProjectOrganisationCompositeId(projectId, organisationId);
-        return financeCheckService.getByProjectAndOrganisation(key);
-    }
-
-    private String updateFinanceCheck(FinanceCheckResource currentFinanceCheckResource, FinanceCheckForm financeCheckForm, ValidationHandler validationHandler){
-
-        Supplier<String> failureView = () -> redirectToFinanceCheckForm(currentFinanceCheckResource.getProject(), currentFinanceCheckResource.getOrganisation());
-        Supplier<String> successView = () -> redirectToViewFinanceCheckSummary(currentFinanceCheckResource.getProject());
-
-        ServiceResult<Void> updateResult = doUpdateFinanceCheck(currentFinanceCheckResource, financeCheckForm);
-        return validationHandler.addAnyErrors(updateResult).failNowOrSucceedWith(failureView, successView);
-    }
-
-    private ServiceResult<Void> doUpdateFinanceCheck(FinanceCheckResource currentFinanceCheckResource, FinanceCheckForm financeCheckForm) {
-        for (int i = 0; i < financeCheckForm.getCosts().size(); i++) {
-            currentFinanceCheckResource.getCostGroup().getCosts().get(i).setValue(financeCheckForm.getCosts().get(i).getValue());
-        }
-
-        return financeCheckService.update(currentFinanceCheckResource);
     }
 
     private String doViewFinanceCheckSummary(Long projectId, Model model) {

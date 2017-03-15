@@ -24,10 +24,10 @@
                 </p>
                 <ul class="list list-bullet extra-margin-top">
                     <li th:unless="${model.profileStatus.skillsComplete}">
-                        <a th:href="@{/profile/skills}">your skills</a>
+                        <a th:href="@{/profile/skills/edit}">your skills</a>
                     </li>
                     <li th:unless="${model.profileStatus.affiliationsComplete}">
-                        <a th:href="@{/profile/declaration}">your declaration of interest</a>
+                        <a th:href="@{/profile/declaration/edit}">your declaration of interest</a>
                     </li>
                     <li th:unless="${model.profileStatus.agreementComplete}">
                         <a th:href="@{/profile/agreement}">your assessor agreement</a>

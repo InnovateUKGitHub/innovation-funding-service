@@ -98,28 +98,6 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     private BigDecimal percentDivisor = new BigDecimal("100");
 
     @Override
-    public ServiceResult<Void> save(FinanceCheckResource financeCheckResource) {
-        return validate(financeCheckResource).andOnSuccess(() -> {
-            FinanceCheck toSave = mapToDomain(financeCheckResource);
-            financeCheckRepository.save(toSave);
-
-            return getCurrentlyLoggedInUser().
-                    andOnSuccess(user -> getPartnerOrganisation(toSave.getProject().getId(), toSave.getOrganisation().getId()).
-                            andOnSuccessReturn(partnerOrganisation -> financeCheckWorkflowHandler.financeCheckFiguresEdited(partnerOrganisation, user))).
-                    andOnSuccess(workflowResult -> workflowResult ? serviceSuccess() : serviceFailure(CommonFailureKeys.FINANCE_CHECKS_CANNOT_PROGRESS_WORKFLOW));
-        });
-    }
-
-    @Override
-    public ServiceResult<Void> approve(Long projectId, Long organisationId) {
-
-        return getCurrentlyLoggedInUser().andOnSuccess(currentUser ->
-                getPartnerOrganisation(projectId, organisationId).andOnSuccessReturn(partnerOrg ->
-                        financeCheckWorkflowHandler.approveFinanceCheckFigures(partnerOrg, currentUser)).
-                        andOnSuccess(workflowResult -> workflowResult ? serviceSuccess() : serviceFailure(FINANCE_CHECKS_CANNOT_PROGRESS_WORKFLOW)));
-    }
-
-    @Override
     public ServiceResult<FinanceCheckProcessResource> getFinanceCheckApprovalStatus(Long projectId, Long organisationId) {
         return getPartnerOrganisation(projectId, organisationId).andOnSuccess(this::getFinanceCheckApprovalStatus);
     }
@@ -215,16 +193,9 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
         return mapWithIndex(partnerOrganisations, (i, org) -> {
 
-            FinanceCheckProcessResource financeCheckStatus = getFinanceCheckApprovalStatus(org).getSuccessObjectOrThrowException();
-            boolean financeChecksApproved = APPROVED.equals(financeCheckStatus.getCurrentState());
-
             ProjectOrganisationCompositeId compositeId = getCompositeId(org);
             Pair<Viability, ViabilityRagStatus> viability = getViability(compositeId);
-
-            //TODO INFUND-6716 remove and use above.
-            Pair<Eligibility, EligibilityRagStatus> eligibility = financeChecksApproved ?
-                    Pair.of(Eligibility.APPROVED, EligibilityRagStatus.UNSET) :
-                    Pair.of(Eligibility.REVIEW, EligibilityRagStatus.UNSET);
+            Pair<Eligibility, EligibilityRagStatus> eligibility = getEligibility(compositeId);
 
             boolean anyQueryAwaitingResponse = isQueryActionRequired(projectId, org.getOrganisation().getId()).getSuccessObject();
 
