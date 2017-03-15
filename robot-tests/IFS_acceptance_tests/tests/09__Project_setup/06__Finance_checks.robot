@@ -1184,26 +1184,23 @@ the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project se
     run keyword if    '${update_comp}' == 'PASS'    the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 
 the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
-    the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/fundin
-    the user selects the checkbox      jQuery=input[id="applicationIds"][value="63"]
-    #the user selects the option from the drop-down menu    Yes    id=fund63
-    #the user selects the option from the drop-down menu    No    id=fund64
-    the user selects the checkbox      jQuery=input[id="applicationIds"][value="64"]
-    the user clicks the button/link    xpath=//*[@id="content"]/form[1]/div[1]/div[2]/fieldset/button[1]
-    the user clicks the button/link     link=competition
-    the user clicks the button/link     button:contains(Manage funding notifications)
-    the user selects the checkbox      JQuery=input[id="applicationIds"][value="64"]
-    the user clicks the button/link     button:contains("write and send email")
-    the user enters text to a text field      id=subject
-    the user enters text to a text field      id=message
-    the user clicks the button/link     button:contains("Send email to all applicants")
-    the user clicks the button/link    jQuery=.button:contains("Notify applicants")
-    the user clicks the button/link    name=publish
-    the user navi
-    the user selects the option from the drop-down menu    Yes    id=fund63
-    the user selects the option from the drop-down menu    No    id=fund64
-    the user clicks the button/link    jQuery=.button:contains("Notify applicants")
-    the user clicks the button/link    name=publish
+    the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/funding
+    the user moves focus to the element     id=app-row-1
+    the user selects the checkbox      id=app-row-1
+    the user moves focus to the element     id=app-row-2
+    the user selects the checkbox      id=app-row-2
+    the user clicks the button/link     xpath=//*[@id="content"]/form[1]/div[1]/div[2]/fieldset/button[1]
+    the user should see the element    jQuery=td:contains("Successful")
+    the user clicks the button/link     jQuery=a:contains("Competition")
+    the user clicks the button/link     jQuery=button:contains("Manage funding notifications")
+    the user selects the checkbox      id=app-row-1
+    the user selects the checkbox      id=app-row-2
+    the user clicks the button/link     xpath=//*[@id="content"]/form/div[1]/div[2]/fieldset/button
+    the user enters text to a text field     id=subject
+    the user enters text to a text field     id=message
+    the user clicks the button/link     jQuery=button:contains("Send email to all applicants")
+   # the user clicks the button/link    jQuery=button:contains("Notify applicants")
+   # the user clicks the button/link    name=publish
     the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/funding
     the user should see the text in the page    Assessor Feedback
     the user can see the option to upload a file on the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/application/${FUNDERS_PANEL_APPLICATION_1}
