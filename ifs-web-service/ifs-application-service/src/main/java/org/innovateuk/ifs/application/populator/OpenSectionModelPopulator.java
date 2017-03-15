@@ -255,7 +255,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         addApplicationDetails(viewModel, sectionApplicationViewModel, application, competition, userId, section, form, userApplicationRoles, allSections);
         addSectionDetails(viewModel, section, formInputService.findApplicationInputsByCompetition(competition.getId()));
 
-        viewModel.setCompletedQuestionsPercentage(application.getCompletion());
+        viewModel.setCompletedQuestionsPercentage(application.getCompletion() == null ? 0 : application.getCompletion().intValue());
     }
 
     //TODO - INFUND-7482 - remove usages of Model model
