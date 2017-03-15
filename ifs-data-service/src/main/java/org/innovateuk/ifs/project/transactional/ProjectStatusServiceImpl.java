@@ -29,7 +29,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import static java.util.Comparator.comparing;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
@@ -61,14 +63,19 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
     @Override
     public ServiceResult<CompetitionProjectsStatusResource> getCompetitionStatus(Long competitionId) {
         Competition competition = competitionRepository.findOne(competitionId);
-
         List<Project> projects = projectRepository.findByApplicationCompetitionId(competitionId);
-
-        List<ProjectStatusResource> projectStatusResources = simpleMap(projects, project -> getProjectStatusResourceByProject(project));
-
-        CompetitionProjectsStatusResource competitionProjectsStatusResource = new CompetitionProjectsStatusResource(competition.getId(), competition.getName(), projectStatusResources);
+        List<ProjectStatusResource> projectStatuses = projectStatuses(projects);
+        CompetitionProjectsStatusResource competitionProjectsStatusResource
+                = new CompetitionProjectsStatusResource(competition.getId(), competition.getName(), projectStatuses);
 
         return ServiceResult.serviceSuccess(competitionProjectsStatusResource);
+    }
+
+    private List<ProjectStatusResource> projectStatuses(List<Project> projects) {
+        return projects.stream()
+                .map(this::getProjectStatusResourceByProject)
+                .sorted(comparing(ProjectStatusResource::getApplicationNumber).reversed())
+                .collect(Collectors.toList());
     }
 
     @Override
