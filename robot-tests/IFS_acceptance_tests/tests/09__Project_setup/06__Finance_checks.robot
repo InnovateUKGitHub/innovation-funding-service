@@ -1185,17 +1185,20 @@ the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project se
 
 the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/funding
-    the user moves focus to the element     id=app-row-1
-    the user selects the checkbox      id=app-row-1
-    the user moves focus to the element     id=app-row-2
-    the user selects the checkbox      id=app-row-2
+    the user moves focus to the element     jQuery=label[for="app-row-1"]
+    the user selects the checkbox       app-row-1
+    the user moves focus to the element     jQuery=label[for="app-row-2"]
+    the user selects the checkbox       app-row-2
     the user clicks the button/link     xpath=//*[@id="content"]/form[1]/div[1]/div[2]/fieldset/button[1]
     the user should see the element    jQuery=td:contains("Successful")
     the user clicks the button/link     jQuery=a:contains("Competition")
     the user clicks the button/link     jQuery=button:contains("Manage funding notifications")
-    the user selects the checkbox      id=app-row-1
-    the user selects the checkbox      id=app-row-2
-    the user clicks the button/link     xpath=//*[@id="content"]/form/div[1]/div[2]/fieldset/button
+    the user moves focus to the element     jQuery=input[id="app-row-63"]
+    #the user moves focus to the element     jQuery=label[for="app-row-63"]
+    the user selects the checkbox      ids[0]
+    the user moves focus to the element     jQuery=label[for="app-row-64"]
+    the user selects the checkbox      ids[1]
+    the user clicks the button/link     xpath=//*[@id="content"]/form/div[1]/div[2]/fieldset/button[1]
     the user enters text to a text field     id=subject
     the user enters text to a text field     id=message
     the user clicks the button/link     jQuery=button:contains("Send email to all applicants")
