@@ -6,7 +6,6 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.domain.Section;
-import org.innovateuk.ifs.application.mapper.QuestionMapper;
 import org.innovateuk.ifs.application.mapper.SectionMapper;
 import org.innovateuk.ifs.application.repository.SectionRepository;
 import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
@@ -27,7 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.tuple.Pair.of;
@@ -53,9 +51,6 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
 
     @Autowired
     private SectionMapper sectionMapper;
-
-    @Autowired
-    private QuestionMapper questionMapper;
 
     @Autowired
     private QuestionService questionService;
@@ -111,7 +106,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
 
     @Override
     public ServiceResult<Set<Long>> getQuestionsForSectionAndSubsections(final Long sectionId) {
-        return find(sectionRepository.findOne(sectionId), notFoundError(Section.class, sectionId)).andOnSuccessReturn(section ->
+        return find(section(sectionId)).andOnSuccessReturn(section ->
                 new HashSet<>(simpleMap(section.fetchAllQuestionsAndChildQuestions(), Question::getId)));
     }
 
@@ -141,12 +136,11 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
     }
 
     private void markSectionAsComplete(Section section, Application application, Long markedAsCompleteById) {
-        Set<Long> questions = collectAllQuestionFrom(section);
-        questions.forEach(q -> {
+        getQuestionsForSectionAndSubsections(section.getId()).andOnSuccessReturnVoid(questions -> questions.forEach(q -> {
             questionService.markAsComplete(new QuestionApplicationCompositeId(q, application.getId()), markedAsCompleteById);
             // Assign back to lead applicant.
             questionService.assign(new QuestionApplicationCompositeId(q, application.getId()), application.getLeadApplicantProcessRole().getId(), markedAsCompleteById);
-        });
+        }));
     }
 
 
@@ -154,30 +148,11 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
     public ServiceResult<Void> markSectionAsInComplete(final Long sectionId,
                                                        final Long applicationId,
                                                        final Long markedAsInCompleteById) {
-        Section section = sectionRepository.findOne(sectionId);
-        Set<Long> questions = collectAllQuestionFrom(section);
 
-        questions.forEach(q ->
+        return getQuestionsForSectionAndSubsections(sectionId).andOnSuccessReturnVoid(questions -> questions.forEach(q ->
             questionService.markAsInComplete(new QuestionApplicationCompositeId(q, applicationId), markedAsInCompleteById)
-        );
-
-        return serviceSuccess();
+        ));
     }
-
-    private Set<Long> collectAllQuestionFrom(final Section section) {
-        final Set<Long> questions = new HashSet<>();
-
-        questions.addAll(section.getQuestions().stream().map(questionMapper::questionToId).collect(Collectors.toSet()));
-
-        if (section.getChildSections() != null) {
-            for (Section childSection : section.getChildSections()) {
-                questions.addAll(collectAllQuestionFrom(childSection));
-            }
-        }
-
-        return questions;
-    }
-
 
     @Override
     public ServiceResult<List<Long>> getIncompleteSections(final Long applicationId) {
