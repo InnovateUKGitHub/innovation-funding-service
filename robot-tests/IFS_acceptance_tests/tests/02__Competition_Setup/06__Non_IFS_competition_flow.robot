@@ -56,6 +56,13 @@ Non-IFS public content
     When the user fills in the Public content and publishes
     Then the user clicks the button/link  link=Return to non-IFS competition details
     And the user clicks the button/link   jQuery=button:contains("Save and continue")
+
+Internal user can see the Non-IFS comp and its brief information
+    [Documentation]  INFUND-7963 INFUND-7964
+    [Tags]
+    Given the user navigates to the Non IFS competitions tab
+    Then the user should see the element  jQuery=div:contains("Test non-IFS competition") ~ *:contains("Manufacturing Readiness")
+    And the user should see the element   jQuery=div:contains("Test non-IFS competition") ~ *:contains("Last published")
     [Teardown]  the user can log out
 
 Guest user can apply to a Non-IFS competition at the FrontDoor
@@ -89,7 +96,8 @@ the user fills out the non-IFS details
     And the user enters text to a text field   id=applicantNotifiedDate-year    2020
 
 the user navigates to the Non IFS competitions tab
-    the user clicks the button/link    jQuery=a:contains(Non-IFS)
+    the user navigates to the page   ${CA_Live}
+    the user clicks the button/link  jQuery=a:contains(Non-IFS)
     # We have used the JQuery selector for the link because the title will change according to the competitions number
 
 the competition is open
