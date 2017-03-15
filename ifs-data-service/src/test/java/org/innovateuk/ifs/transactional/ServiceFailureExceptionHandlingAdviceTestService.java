@@ -10,25 +10,25 @@ import org.springframework.security.access.prepost.PreAuthorize;
  */
 public interface ServiceFailureExceptionHandlingAdviceTestService {
 
-    @NotSecured("just a test method")
+    @NotSecured(value = "just a test method", mustBeSecuredByOtherServices = false)
     ServiceResult<String> successfulMethod();
 
-    @NotSecured("just a test method")
+    @NotSecured(value = "just a test method", mustBeSecuredByOtherServices = false)
     ServiceResult<String> restoreSuccessfulMethod();
 
-    @NotSecured("just a test method")
+    @NotSecured(value = "just a test method", mustBeSecuredByOtherServices = false)
     ServiceResult<String> failingMethod();
 
-    @NotSecured("just a test method")
+    @NotSecured(value = "just a test method", mustBeSecuredByOtherServices = false)
     ServiceResult<String> exceptionThrowingMethod();
 
     @SecuredBySpring(value="TODO", description = "TODO")
     @PreAuthorize("hasAuthority('nonexistentrole')")
     ServiceResult<String> accessDeniedMethod();
 
-    @NotSecured("just a test method")
+    @NotSecured(value = "just a test method", mustBeSecuredByOtherServices = false)
     ServiceResult<String> successfulMethodWithInternalFailingCall();
 
-    @NotSecured("just a test method")
+    @NotSecured(value = "just a test method", mustBeSecuredByOtherServices = false)
     ServiceResult<String> failingMethodWithInternalFailingCall();
 }
