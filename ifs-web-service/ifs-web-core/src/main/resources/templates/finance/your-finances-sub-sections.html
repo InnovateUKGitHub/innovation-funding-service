@@ -25,7 +25,7 @@
 
             <h2 class="heading-medium">Finance summary</h2>
             <p>This is a breakdown of your project costs and sources of funding for this project.</p>
-            <div th:include="finance/your-finances-sub-sections :: your_finance_summary"/>
+            <div th:insert="finance/your-finances-sub-sections :: your_finance_summary"/>
 
         </th:block>
     </th:block>
@@ -34,7 +34,9 @@
     <!-- =========================== Your organisation =========================== -->
     <th:block th:fragment="your_organisation">
         <th:block th:with="markedAsComplete=(${model.application.markedAsComplete}),
-                           organisationFinanceSize=(${model.finance.organisationFinanceSize})">
+                           organisationFinanceSize=(${model.finance.organisationFinanceSize}),
+                           organisationSizes=(${model.finance.organisationSizes}),
+                           maximumGrantClaimPercentage=(${model.finance.maximumGrantClaimPercentage})">
             <div class="question" th:each="formInput, status : ${model.getFormInputsOrganisationSize(question.id)}" th:id="'form-input-'+${formInput.getId()}">
                 <th:block th:if="${formInput.type.isDisplayableFinanceType(model.finance.financeView) and model.finance.hasOrganisationFinance}">
                     <div th:replace="'finance/'+${model.finance.financeView} :: organisation_size" />
@@ -64,7 +66,7 @@
                                     <td>
                                         <label th:for="${'input-'+formInput.id}">
                                             <span th:text="${formInput.description}"></span>
-                                            <th:block th:include="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
+                                            <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
                                         </label>
                                     </td>
                                     <td class="numeric">

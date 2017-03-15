@@ -15,17 +15,16 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.Materials;
-import org.innovateuk.ifs.project.financecheck.eligibility.form.FinanceChecksEligibilityForm;
-import org.innovateuk.ifs.project.financecheck.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
 import org.innovateuk.ifs.project.finance.resource.Eligibility;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRowService;
 import org.innovateuk.ifs.project.finance.view.ProjectFinanceFormHandler;
+import org.innovateuk.ifs.project.financecheck.eligibility.form.FinanceChecksEligibilityForm;
+import org.innovateuk.ifs.project.financecheck.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.OrganisationSize;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -50,9 +49,7 @@ import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEn
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -117,7 +114,6 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
         industrialOrganisation = newOrganisationResource().
                 withId(2L).
                 withName("Industrial Org").
-                withOrganisationSize(OrganisationSize.MEDIUM).
                 withCompanyHouseNumber("123456789").
                 withOrganisationTypeName("Business").
                 build();
@@ -125,7 +121,6 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
         academicOrganisation = newOrganisationResource().
                 withId(1L).
                 withName("Academic Org").
-                withOrganisationSize(OrganisationSize.LARGE).
                 withOrganisationTypeName("Academic").
                 build();
 
@@ -482,6 +477,17 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
                         param("save-eligibility", "")).
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/" + projectId + "/finance-check/organisation/" + 2 +"/eligibility"));
+    }
+
+    @Test
+    public void testEligibiltiyChanges() throws Exception {
+        Long projectId = 1L;
+        Long organisationId = 2L;
+
+        mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes", projectId, organisationId)).
+                andExpect(status().isOk()).
+                andExpect(view().name("project/financecheck/eligibility-changes")).
+                andReturn();
     }
 
     @Override

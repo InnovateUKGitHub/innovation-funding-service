@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.transactional;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.hamcrest.Matchers;
+import org.hamcrest.*;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.domain.AddressType;
@@ -36,7 +36,6 @@ import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.user.builder.UserBuilder;
 import org.innovateuk.ifs.user.domain.*;
-import org.innovateuk.ifs.user.resource.OrganisationSize;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Assert;
@@ -48,12 +47,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -105,7 +99,6 @@ import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
@@ -145,7 +138,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     public void setUp() {
 
         organisation = newOrganisation().
-                withOrganisationSize(OrganisationSize.MEDIUM).
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
 

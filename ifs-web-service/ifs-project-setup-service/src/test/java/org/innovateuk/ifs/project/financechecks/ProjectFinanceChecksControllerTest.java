@@ -26,7 +26,6 @@ import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.OrganisationSize;
 import org.innovateuk.threads.resource.QueryResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -117,7 +116,6 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
         industrialOrganisation = newOrganisationResource().
                 withId(2L).
                 withName("Industrial Org").
-                withOrganisationSize(OrganisationSize.MEDIUM).
                 withCompanyHouseNumber("123456789").
                 withOrganisationTypeName("Business").
                 build();
@@ -125,7 +123,6 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
         academicOrganisation = newOrganisationResource().
                 withId(1L).
                 withName("Academic Org").
-                withOrganisationSize(OrganisationSize.LARGE).
                 build();
 
         // save actions should always succeed.
@@ -226,7 +223,7 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
 
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
 
-        MvcResult result = mockMvc.perform(get("/project/" + project.getId() +" /partner-organisation/" + industrialOrganisation.getId() + "/finance-checks/eligibility")).
+        MvcResult result = mockMvc.perform(get("/project/" + project.getId() + " /partner-organisation/" + industrialOrganisation.getId() + "/finance-checks/eligibility")).
                 andExpect(status().isOk()).
                 andExpect(view().name("project/financecheck/eligibility")).
                 andReturn();
@@ -252,7 +249,16 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
         when(projectFinanceService.getEligibility(project.getId(), industrialOrganisation.getId())).thenReturn(eligibility);
     }
 
-        @Override
+    @Test
+    public void testEligibilityChanges() throws Exception {
+        when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
+        mockMvc.perform(get("/project/" + project.getId() + " /partner-organisation/" + industrialOrganisation.getId() + "/finance-checks/eligibility/changes"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("project/financecheck/eligibility-changes"))
+                .andReturn();
+    }
+
+    @Override
     protected ProjectFinanceChecksController supplyControllerUnderTest() {
         return new ProjectFinanceChecksController();
     }

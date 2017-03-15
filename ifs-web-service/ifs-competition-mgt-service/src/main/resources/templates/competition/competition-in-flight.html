@@ -71,7 +71,7 @@
                         </div>
                     </th:block>
 
-                    <div th:replace="competition/key-statistics :: key-statistics(keyStatistics=${model})" />
+                    <div th:replace="competition/key-statistics :: key-statistics(keyStatistics=${model.keyStatistics})" />
 
                     <h2 class="heading-medium">Competition navigation</h2>
                     <ul class="link-list">
@@ -86,9 +86,9 @@
                         </li>
                         <li>
                             <a class="disabled" aria-disabled="true"
-                               th:if="${model.competitionStatus.name() == 'READY_TO_OPEN' or model.competitionStatus.name() == 'OPEN'}">Assessor management - assignment to applications</a>
+                               th:if="${model.competitionStatus.name() == 'READY_TO_OPEN' or model.competitionStatus.name() == 'OPEN'}">Assessor management - assignments</a>
                             <a th:unless="${model.competitionStatus.name() == 'READY_TO_OPEN' or model.competitionStatus.name() == 'OPEN'}"
-                               th:href="@{/assessment/competition/{competitionId}(competitionId=${model.competitionId})}">Assessor management - assignment to applications</a>
+                               th:href="@{/assessment/competition/{competitionId}(competitionId=${model.competitionId})}">Assessor management - assignments</a>
                         </li>
                         <li>
                             <a class="disabled" aria-disabled="true"
@@ -124,7 +124,7 @@
                                 </button>
                                 <button type="submit"
                                         th:case="'FUNDERS_PANEL'"
-                                        th:disabled="${model.keyStatistics.canManageFundingNotifications == false}"
+                                        th:disabled="${!model.keyStatistics.canManageFundingNotifications}"
                                         th:formaction="@{/competition/{competitionId}/manage-funding-applications(competitionId=${model.competitionId})}"
                                         th:if="${model.competitionStatus.name() == 'FUNDERS_PANEL' || model.competitionStatus.name() == 'ASSESSOR_FEEDBACK'}"
                                         class="button button-large"
@@ -132,6 +132,7 @@
                                 </button>
                                 <button type="submit"
                                         th:case="'RELEASE_FEEDBACK'"
+                                        th:disabled="${!model.keyStatistics.canReleaseFeedback}"
                                         th:if="${model.competitionStatus.name() == 'ASSESSOR_FEEDBACK'}"
                                         th:formaction="@{/competition/{competitionId}/release-feedback(competitionId=${model.competitionId})}"
                                         class="button button-large">Release feedback
