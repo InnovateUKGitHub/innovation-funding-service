@@ -66,14 +66,16 @@ Successful applicant see successful alert
 
 View feedback from each assessor
     [Documentation]    INFUND-8172
-    [Tags]    Email    HappyPath
+    [Tags]    Email    HappyPath  Pending
+    # TODO Pending due to INFUND-8757
     Then the user should see the element    jQuery=h3:contains("Assessor 1") ~ p:contains("I have no problem recommending this application")
     And the user should see the element    jQuery=h3:contains("Assessor 2") ~ p:contains("Very good, but could have been better in areas")
     And the user should see the element    jQuery=h3:contains("Assessor 3") ~ p:contains("I enjoyed reading this application, well done")
 
 Overall scores and application details are correct
     [Documentation]    INFUND-8169 INFUND-7861
-    [Tags]    Email    HappyPath
+    [Tags]    Email    HappyPath  Pending
+    # TODO Pending due to INFUND-8757
     Then the overall scores are correct
     And the application question scores are correct
     And the application details are correct
