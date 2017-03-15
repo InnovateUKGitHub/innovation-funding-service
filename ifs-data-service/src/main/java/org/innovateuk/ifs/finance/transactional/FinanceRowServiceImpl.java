@@ -23,10 +23,7 @@ import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.mapper.ApplicationFinanceMapper;
 import org.innovateuk.ifs.finance.mapper.ApplicationFinanceRowMapper;
 import org.innovateuk.ifs.finance.mapper.FinanceRowMetaFieldMapper;
-import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
-import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
-import org.innovateuk.ifs.finance.repository.FinanceRowMetaFieldRepository;
-import org.innovateuk.ifs.finance.repository.FinanceRowMetaValueRepository;
+import org.innovateuk.ifs.finance.repository.*;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResourceId;
 import org.innovateuk.ifs.finance.resource.FinanceRowMetaFieldResource;
@@ -98,6 +95,9 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
 
     @Autowired
     private FileEntryMapper fileEntryMapper;
+
+    @Autowired
+    private OrganisationSizeRepository organisationSizeRepository;
 
     @Override
     public ServiceResult<FinanceRowMetaField> getCostFieldById(Long id) {
@@ -274,7 +274,9 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
         Application application = applicationRepository.findOne(applicationFinance.getApplication());
         return getOpenApplication(application.getId()).andOnSuccess(app ->
                 find(applicationFinance(applicationFinanceId)).andOnSuccess(dbFinance -> {
-                    dbFinance.setOrganisationSize(applicationFinance.getOrganisationSize());
+                    if (applicationFinance.getOrganisationSize() != null) {
+                        dbFinance.setOrganisationSize(organisationSizeRepository.findOne(applicationFinance.getOrganisationSize()));
+                    }
                     Long financeFileEntryId = applicationFinance.getFinanceFileEntry();
                     dbFinance = setFinanceUpload(dbFinance, financeFileEntryId);
                     dbFinance = applicationFinanceRepository.save(dbFinance);

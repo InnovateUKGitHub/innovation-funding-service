@@ -30,7 +30,7 @@ Comp Admin starts a new Competition
     Then the user fills in the CS Initial details    ${compWithoutGrowth}    ${day}    ${month}    ${year}
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility
-    And the user fills in the CS Milestones    ${day}    ${month}    ${nextyear}
+    And the user fills in the CS Milestones    ${todayday}    ${day}    ${month}    ${nextyear}
 
 Comp Admin fills in the Milestone Dates and can see them formatted afterwards
     [Documentation]    INFUND-7820
@@ -71,8 +71,8 @@ Applicant visits his Finances
     [Tags]
     Given the user should see the element    jQuery=h1:contains("Application overview")
     When the user clicks the button/link    link=Your finances
-    Then the user should see the element    jQuery=img.assigned[alt*=project]
-    And the user should see the element    jQuery=img.assigned[alt*=organisation]
+    Then the user should see the element    jQuery=li:contains("Your project costs") > .action-required
+    And the user should see the element    jQuery=li:contains("Your organisation") > .action-required
     And the the user should see that the funding depends on the research area
     And the user should see his finances empty
     [Teardown]    the user clicks the button/link    jQuery=a:contains("Return to application overview")
@@ -110,7 +110,7 @@ Once the project growth table is selected
     Then the user fills in the CS Initial details    Competition with growth table    ${day}    ${month}    ${year}
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility
-    And the user fills in the CS Milestones    ${day}    ${month}    ${nextyear}
+    And the user fills in the CS Milestones    ${todayday}    ${day}    ${month}    ${nextyear}
     When the user decides about the growth table    yes    Yes
     Then the user marks the Application as done
     And the user fills in the CS Assessors
@@ -168,7 +168,7 @@ Mark Organisation as complete when no
     And the user enters text to a text field    jQuery=label:contains("Turnover") + input    17506
     And the user selects medium organisation size
     When the user clicks the button/link    jQuery=button:contains("Mark as complete")
-    Then the user should see the element    jQuery=li:contains("Your organisation") > .complete
+    Then the user should see the element    jQuery=li:contains("Your organisation") > .task-status-complete
     When the user clicks the button/link    link=Your organisation
     # Then the user should see the fields in readonly mode, but currently they are missing this attribute
     # TODO INFUND-8071
@@ -187,8 +187,8 @@ Funding subsection opens when Appl details and organisation info are provided
     And the user clicks the button/link    link=${applicationTitle}
     When the user should see the element   jQuery=li:contains("Application details") > .task-status-complete
     And the user clicks the button/link    link=Your finances
-    And the user should see the element    jQuery=img.complete[alt*="Your organisation"]
-    Then the user should see the element    jQuery=img.assigned[alt*="Your funding"]
+    And the user should see the element    jQuery=li:contains("Your organisation") > .task-status-complete
+    Then the user should see the element    jQuery=li:contains("Your funding") > .action-required
 
 Organisation server side validation when yes
     [Documentation]    INFUND-6393
@@ -253,7 +253,7 @@ Mark Organisation as complete when yes
     #    And the user clicks the button/link    link=Your organisation
     #    Then the user should see the element    jQuery=td:contains("Research and development spend") + td input[value="15000"]
     When the user clicks the button/link    jQuery=button:contains("Mark as complete")
-    Then the user should see the element    jQuery=img.complete[alt*="Your organisation"]
+    Then the user should see the element    jQuery=li:contains("Your organisation") > .task-status-complete
 
 The Lead Applicant is able to edit and re-submit when yes
     [Documentation]  INFUND-8518
@@ -295,7 +295,7 @@ Non-lead can mark Organisation as complete
     Then the user populates the project growth table
     And the user enters text to a text field        jQuery=label:contains("employees") + input  42
     When the user clicks the button/link            jQuery=button:contains("Mark as complete")
-    Then the user should see the element            jQuery=img.complete[alt*="Your organisation"]
+    Then the user should see the element            jQuery=li:contains("Your organisation") > .task-status-complete
 
 Non-lead can can edit and remark Organisation as Complete
     [Documentation]  INFUND-8518
@@ -305,6 +305,8 @@ Non-lead can can edit and remark Organisation as Complete
 
 *** Keywords ***
 Custom Suite Setup
+    ${todayday} =    get today day
+    Set suite variable    ${todayday}
     ${day} =    get tomorrow day
     Set suite variable    ${day}
     ${month} =    get tomorrow month
@@ -320,7 +322,7 @@ Custom Suite Setup
     Delete the emails from both test mailboxes
 
 the user should see the dates in full format
-    the user should see the element    jQuery=td:contains("Briefing event") ~ td:contains("${tomorrow_nextyear}")
+    the user should see the element    jQuery=td:contains("Allocate assessors") ~ td:contains("${tomorrow_nextyear}")
 
 the the user should see that the funding depends on the research area
     the user should see the element    jQuery=h3:contains("Your funding") + p:contains("You must select a research category in application details ")
@@ -379,8 +381,8 @@ the user should see an error message in the field
     the user should see the element    jQuery=span:contains("${field}") + *:contains("${errmsg}")
 
 the user selects medium organisation size
-    the user clicks the button/link    jQuery=label[for="financePosition-organisationSize-MEDIUM"]
-    the user clicks the button/link    jQuery=label[for="financePosition-organisationSize-MEDIUM"]    # Click it twice
+    the user selects the radio button    financePosition-organisationSize  ${MEDIUM_ORGANISATION_SIZE}
+    the user selects the radio button    financePosition-organisationSize  ${MEDIUM_ORGANISATION_SIZE}
 
 the user populates the project growth table
     the user enters value to field    Annual turnover    65000
@@ -402,7 +404,7 @@ the user should view the project growth table
 
 the user can edit the project growth table
     the user clicks the button/link    css=button.extra-margin.buttonlink
-    then the user selects the radio button    financePosition-organisationSize    SMALL
+    then the user selects the radio button    financePosition-organisationSize    ${SMALL_ORGANISATION_SIZE}
     the user enters text to a text field    jQuery=tr:nth-child(1) .form-control    4000
     the user enters text to a text field    jQuery=td input[value="65000"]    5000
 
@@ -415,13 +417,13 @@ the applicant enters valid inputs
     The user clicks the button/link    jquery=button:contains("Save changes")
 
 the user can edit resubmit and read only of the organisation
-    the user should see the element             jQuery=img.complete[alt*="Your organisation"]
+    the user should see the element             jQuery=li:contains("Your organisation") > .task-status-complete
     the user clicks the button/link             link=Your organisation
     the user clicks the button/link             jQuery=button:contains("Edit your organisation")
     the user enters text to a text field        jQuery=label:contains("employees") + input  2
     the user clicks the button/link             jQuery=button:contains("Mark as complete")
     the user should not see an error in the page
-    the user should see the element             jQuery=img.complete[alt*="Your organisation"]
+    the user should see the element             jQuery=li:contains("Your organisation") > .task-status-complete
     the user clicks the button/link             link=Your organisation
     the user should see the element             jQuery=dt:contains("employees") + dd:contains("2")
 

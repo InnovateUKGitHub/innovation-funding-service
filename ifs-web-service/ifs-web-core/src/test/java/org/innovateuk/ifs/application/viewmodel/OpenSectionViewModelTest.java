@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.*;
 
 import static java.util.Arrays.asList;
@@ -21,12 +22,12 @@ import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrg
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OpenSectionViewModelTest {
 
     private OpenSectionViewModel viewModel;
-
     private Long sectionId = 23456L;
     private SectionResource currentSection;
     private List<String> pendingNames;
@@ -35,10 +36,8 @@ public class OpenSectionViewModelTest {
     private SectionAssignableViewModel sectionAssignableViewModel;
     private NavigationViewModel navigationViewModel;
     private SectionApplicationViewModel applicationViewModel;
-
     private SortedSet<OrganisationResource> academicOrganisations;
     private SortedSet<OrganisationResource> applicationOrganisations;
-
 
     @Before
     public void setup() {
@@ -76,11 +75,10 @@ public class OpenSectionViewModelTest {
         viewModel.setFinanceSectionId(sectionId);
         viewModel.setCurrentUser(currentUser);
         viewModel.setSubFinanceSection(Boolean.FALSE);
-
         viewModel.setAcademicOrganisations(academicOrganisations);
         viewModel.setAllQuestionsCompleted(Boolean.FALSE);
         viewModel.setApplicationOrganisations(applicationOrganisations);
-        viewModel.setCompletedQuestionsPercentage(BigDecimal.TEN);
+        viewModel.setCompletedQuestionsPercentage(10);
         viewModel.setCompletedSectionsByOrganisation(asMap());
         viewModel.setEachCollaboratorFinanceSectionId(sectionId);
         viewModel.setLeadOrganisation(organisation);
@@ -101,11 +99,10 @@ public class OpenSectionViewModelTest {
         assertEquals(navigationViewModel, viewModel.getNavigation());
         assertEquals(currentUser, viewModel.getCurrentUser());
         assertEquals(applicationViewModel, viewModel.getApplication());
-
         assertEquals(academicOrganisations, viewModel.getAcademicOrganisations());
         assertEquals(Boolean.FALSE, viewModel.getAllQuestionsCompleted());
         assertEquals(applicationOrganisations, viewModel.getApplicationOrganisations());
-        assertEquals(BigDecimal.TEN, viewModel.getCompletedQuestionsPercentage());
+        assertTrue(viewModel.getCompletedQuestionsPercentage() == 10);
         assertEquals(asMap(), viewModel.getCompletedSectionsByOrganisation());
         assertEquals(sectionId, viewModel.getEachCollaboratorFinanceSectionId());
         assertEquals(organisation, viewModel.getLeadOrganisation());
@@ -233,5 +230,4 @@ public class OpenSectionViewModelTest {
 
         assertEquals(expected, viewModel.getFormInputsFinancialStaffCount(questionId));
     }
-
 }

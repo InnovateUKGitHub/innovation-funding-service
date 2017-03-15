@@ -22,14 +22,6 @@ public interface FinanceCheckService {
     @SecuredBySpring(value = "VIEW", securedType = FinanceCheck.class, description = "Project finance user should be able to view any finance check")
     ServiceResult<FinanceCheckResource> getByProjectAndOrganisation(ProjectOrganisationCompositeId key);
 
-    @PreAuthorize("hasAuthority('project_finance')")
-    @SecuredBySpring(value = "EDIT", securedType = FinanceCheck.class, description = "Project finance user should be able to edit any finance check")
-    ServiceResult<Void> save(FinanceCheckResource toUpdate);
-
-    @PreAuthorize("hasAuthority('project_finance')")
-    @SecuredBySpring(value = "APPROVE", securedType = FinanceCheck.class, description = "Project finance users have the ability to approve Finance Checks" )
-    ServiceResult<Void> approve(Long projectId, Long organisationId);
-
     // TODO: Open this up to partners for updating status on project setup status page
     @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "VIEW", securedType = FinanceCheck.class, description = "Project finance users have the ability to view the current status of Finance Checks approvals" )
