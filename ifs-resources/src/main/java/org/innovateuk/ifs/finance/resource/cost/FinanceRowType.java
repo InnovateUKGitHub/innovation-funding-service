@@ -2,6 +2,10 @@ package org.innovateuk.ifs.finance.resource.cost;
 
 import org.innovateuk.ifs.form.resource.FormInputType;
 
+import java.util.Optional;
+
+import static java.util.Arrays.asList;
+
 /**
  * FinanceRow types are used to identify the different categories that costs can have
  */
@@ -63,5 +67,9 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
     @Override
     public String getName() {
         return name;
+    }
+
+    public static Optional<FinanceRowType> getByTypeName(String typeName) {
+        return asList(FinanceRowType.values()).stream().filter(frt -> frt.getType().equals(typeName)).findFirst();
     }
 }

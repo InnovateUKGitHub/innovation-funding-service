@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.transactional;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -13,7 +14,6 @@ import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -26,15 +26,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyMap;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.constant.ApplicationStatusConstants.APPROVED;
 import static org.innovateuk.ifs.application.constant.ApplicationStatusConstants.REJECTED;
-import static org.innovateuk.ifs.application.transactional.ApplicationFundingServiceImplMockTest.createFullNotificationExpectations;
+import static org.innovateuk.ifs.application.transactional.ApplicationFundingServiceImplMockTest.createNotificationExpectationsWithGlobalArgs;
 import static org.innovateuk.ifs.application.transactional.ApplicationFundingServiceImplMockTest.createSimpleNotificationExpectations;
 import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.FUNDING_DECISIONS_MADE_STATUS_IDS;
 import static org.innovateuk.ifs.application.transactional.AssessorFeedbackServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED;
 import static org.innovateuk.ifs.application.transactional.AssessorFeedbackServiceImpl.Notifications.APPLICATION_NOT_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -46,9 +49,6 @@ import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyMap;
-import static java.util.Collections.singletonList;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
@@ -333,14 +333,14 @@ public class AssessorFeedbackServiceImplTest extends BaseServiceUnitTest<Assesso
                 when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application)
         );
 
-        when(notificationServiceMock.sendNotification(createFullNotificationExpectations(expectedFundedNotification), eq(EMAIL))).thenReturn(serviceSuccess());
-        when(notificationServiceMock.sendNotification(createFullNotificationExpectations(expectedUnfundedNotification), eq(EMAIL))).thenReturn(serviceSuccess());
+        when(notificationServiceMock.sendNotification(createNotificationExpectationsWithGlobalArgs(expectedFundedNotification), eq(EMAIL))).thenReturn(serviceSuccess());
+        when(notificationServiceMock.sendNotification(createNotificationExpectationsWithGlobalArgs(expectedUnfundedNotification), eq(EMAIL))).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.notifyLeadApplicantsOfAssessorFeedback(competition.getId());
         assertTrue(result.isSuccess());
 
-        verify(notificationServiceMock).sendNotification(createFullNotificationExpectations(expectedFundedNotification), eq(EMAIL));
-        verify(notificationServiceMock).sendNotification(createFullNotificationExpectations(expectedUnfundedNotification), eq(EMAIL));
+        verify(notificationServiceMock).sendNotification(createNotificationExpectationsWithGlobalArgs(expectedFundedNotification), eq(EMAIL));
+        verify(notificationServiceMock).sendNotification(createNotificationExpectationsWithGlobalArgs(expectedUnfundedNotification), eq(EMAIL));
         verifyNoMoreInteractions(notificationServiceMock);
     }
 
