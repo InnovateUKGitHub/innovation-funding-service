@@ -73,9 +73,8 @@ public class CompetitionManagementFundingController {
 
         switch (competitionSummary.getCompetitionStatus()) {
             case FUNDERS_PANEL:
-                return fundersPanelCompetition(model, competitionId, competitionSummary, fundingDecisionForm, queryForm, bindingResult);
             case ASSESSOR_FEEDBACK:
-                return assessorFeedbackCompetition(model, competitionSummary, queryForm, bindingResult);
+                return fundersPanelCompetition(model, competitionId, competitionSummary, fundingDecisionForm, queryForm, bindingResult);
             default:
                 return "redirect:/login";
         }
