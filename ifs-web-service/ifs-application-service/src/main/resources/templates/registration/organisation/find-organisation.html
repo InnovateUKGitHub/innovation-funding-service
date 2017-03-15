@@ -16,10 +16,14 @@
         <span class="heading-secondary">Create your account</span>
         <th:block th:text="${organisationForm.organisationType.name}" />
     </h1>
-    <p class="form-hint icon-info-small-blue">Your organisation must be UK based to receive funding from Innovate UK.</p>
-
-    <p>There are 2 ways to identify your organisation. Through Companies House lookup or of you are not registered you can enter your organisation details manually.</p>
-    <h2 class="heading-medium">Search on Companies House</h2>
+    <th:block th:if="${organisationForm.isBusiness()}">
+        <p class="form-hint icon-info-small-blue">Your organisation must be UK based to receive funding from Innovate UK.</p>
+        <p>There are 2 ways to identify your organisation. Through Companies House lookup or of you are not registered you can enter your organisation details manually.</p>
+        <h2 class="heading-medium">Search on Companies House</h2>
+    </th:block>
+    <th:block th:if="${organisationForm.isResearch()}">
+        <p class="form-hint icon-info-small-blue">Your organisation must be on Je-S before we will consider you to be a research organisation.</p>
+    </th:block>
 
     <form th:action="@{/organisation/create/find-organisation}" th:object="${organisationForm}" method="POST" class="extra-margin">
         <span th:if="${searchEnabled}">
@@ -40,14 +44,20 @@
                 </div>
                 <th:block th:if="${organisationForm.organisationSearching and organisationForm.organisationSearchResults.size() > 0}"
                           th:unless="${#fields.hasErrors('*{organisationSearchName}')}">
-                    <h2 class="heading-medium no-margin">Companies House search results</h2>
-                    <p class="form-hint">Select your organisation from the options below</p>
+                    <th:block th:if="${organisationForm.research}">
+                        <p class="form-hint">Choose your organisation:</p>
+                    </th:block>
+                    <th:block th:unless="${organisationForm.research}">
+                        <h2 class="heading-medium no-margin">Companies House search results</h2>
+                        <p class="form-hint">Select your organisation from the options below</p>
+                    </th:block>
                 </th:block>
                 <ul id="org-results" class="results-list panel" th:if="${organisationForm.organisationSearching}"
                     th:unless="${#fields.hasErrors('*{organisationSearchName}')}">
                     <li class="type-company" th:each="organisation : ${organisationForm.organisationSearchResults}">
                         <h3>
-                            <a th:href="${'/organisation/create/selected-organisation/'+ organisation.organisationSearchId}" title="View organisation"
+                            <a th:href="${'/organisation/create/selected-organisation/'+ organisation.organisationSearchId}"
+                               title="View organisation"
                                th:text="${organisation.name}">
                             </a>
                         </h3>

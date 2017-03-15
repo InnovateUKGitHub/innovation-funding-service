@@ -8,7 +8,6 @@ import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.innovateuk.ifs.registration.viewmodel.OrganisationCreationViewModel;
-import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
 import org.innovateuk.ifs.util.CookieUtil;
@@ -91,18 +90,11 @@ public class OrganisationTypeCreationController {
     @RequestMapping(value = "/new-account-organisation-type", method = RequestMethod.POST)
     public String chooseOrganisationType(HttpServletResponse response,
                                          @ModelAttribute @Valid OrganisationTypeForm organisationTypeForm,
-                                         BindingResult bindingResult
-    ) {
+                                         BindingResult bindingResult) {
         cookieUtil.removeCookie(response, OrganisationCreationController.ORGANISATION_FORM);
-        Long organisationTypeId = organisationTypeForm.getOrganisationType();
         if (bindingResult.hasErrors()) {
             LOG.debug("redirect because validation errors");
             return "redirect:/organisation/create/type/new-account-organisation-type?invalid";
-        } else if (OrganisationTypeEnum.getFromId(organisationTypeId).equals(OrganisationTypeEnum.RESEARCH)) {
-            String orgTypeForm = JsonUtil.getSerializedObject(organisationTypeForm);
-            cookieUtil.saveToCookie(response, ORGANISATION_TYPE, orgTypeForm);
-            LOG.debug("redirect for research organisation");
-            return "redirect:/organisation/create/type/new-account-organisation-type/?" + ORGANISATION_TYPE + '=' + organisationTypeForm.getOrganisationType();
         } else {
             String orgTypeForm = JsonUtil.getSerializedObject(organisationTypeForm);
             cookieUtil.saveToCookie(response, ORGANISATION_TYPE, orgTypeForm);
