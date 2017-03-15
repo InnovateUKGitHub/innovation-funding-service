@@ -129,8 +129,10 @@ public class TotalProjectSpendProfileControllerTest extends BaseControllerMockMV
         List<BigDecimal> totalForEachMonth = asList(new BigDecimal("300"), new BigDecimal("170"), new BigDecimal("200"));
         BigDecimal totalOfAllActualTotals = new BigDecimal("670");
         BigDecimal totalOfAllEligibleTotals = new BigDecimal("610");
-        TotalProjectSpendProfileTableViewModel table = new TotalProjectSpendProfileTableViewModel(months, monthlyCostsPerOrganisationMap, eligibleCostPerOrganisationMap,
-                organisationToActualTotal, totalForEachMonth, totalOfAllActualTotals, totalOfAllEligibleTotals, simpleToMap(organisations, OrganisationResource::getId, OrganisationResource::getName));
+        TotalProjectSpendProfileTableViewModel table = new TotalProjectSpendProfileTableViewModel(months, monthlyCostsPerOrganisationMap,
+                eligibleCostPerOrganisationMap, organisationToActualTotal, totalForEachMonth, totalOfAllActualTotals,
+                totalOfAllEligibleTotals, simpleToMap(organisations, OrganisationResource::getId, OrganisationResource::getName),
+                organisations.get(0));
 
 
         return new TotalSpendProfileViewModel(projectResource, table, summary);
