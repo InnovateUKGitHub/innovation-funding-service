@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project;
 
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.util.PrioritySorting;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.form.TotalSpendProfileForm;
 import org.innovateuk.ifs.project.model.SpendProfileSummaryModel;
@@ -12,6 +11,7 @@ import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
 import org.innovateuk.ifs.project.viewmodel.TotalProjectSpendProfileTableViewModel;
 import org.innovateuk.ifs.project.viewmodel.TotalSpendProfileViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -25,7 +25,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;

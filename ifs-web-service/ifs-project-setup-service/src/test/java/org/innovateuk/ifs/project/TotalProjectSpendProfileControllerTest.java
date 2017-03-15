@@ -57,9 +57,10 @@ public class TotalProjectSpendProfileControllerTest extends BaseControllerMockMV
         Long organisationOneId = 1L;
         Long organisationTwoId = 2L;
         List<OrganisationResource> organisations = asList(
-                OrganisationResourceBuilder.newOrganisationResource().withName("Org1").withId(organisationOneId).build(),
-                OrganisationResourceBuilder.newOrganisationResource().withName("Org2").withId(organisationTwoId).build());
+                OrganisationResourceBuilder.newOrganisationResource().withName("Org2").withId(organisationTwoId).build(),
+                OrganisationResourceBuilder.newOrganisationResource().withName("Org1").withId(organisationOneId).build());
 
+        when(projectService.getLeadOrganisation(projectResource.getId())).thenReturn(organisations.get(0));
         when(projectService.getPartnerOrganisationsForProject(projectResource.getId())).thenReturn(organisations);
         when(projectService.getById(projectResource.getId())).thenReturn(projectResource);
 
@@ -69,13 +70,12 @@ public class TotalProjectSpendProfileControllerTest extends BaseControllerMockMV
         when(projectFinanceService.getSpendProfileTable(projectResource.getId(), organisationOneId)).thenReturn(tableOne);
         when(projectFinanceService.getSpendProfileTable(projectResource.getId(), organisationTwoId)).thenReturn(tableTwo);
 
-        TotalSpendProfileViewModel expectedViewModel = buildTotalSpendProfileViewModel(organisations, projectResource, tableOne, tableTwo);
+        TotalSpendProfileViewModel expectedViewModel = buildTotalSpendProfileViewModel(organisations, projectResource, tableTwo, tableOne);
 
         mockMvc.perform(get("/project/{projectId}/spend-profile/total", projectResource.getId()))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(view().name("project/spend-profile-totals"));
-
     }
 
     private SpendProfileTableResource buildSpendProfileTableResource(ProjectResource projectResource) {
@@ -133,7 +133,6 @@ public class TotalProjectSpendProfileControllerTest extends BaseControllerMockMV
                 eligibleCostPerOrganisationMap, organisationToActualTotal, totalForEachMonth, totalOfAllActualTotals,
                 totalOfAllEligibleTotals, simpleToMap(organisations, OrganisationResource::getId, OrganisationResource::getName),
                 organisations.get(0));
-
 
         return new TotalSpendProfileViewModel(projectResource, table, summary);
     }
