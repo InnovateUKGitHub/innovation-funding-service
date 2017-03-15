@@ -479,6 +479,17 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
                 andExpect(view().name("redirect:/project/" + projectId + "/finance-check/organisation/" + 2 +"/eligibility"));
     }
 
+    @Test
+    public void testEligibiltiyChanges() throws Exception {
+        Long projectId = 1L;
+        Long organisationId = 2L;
+
+        mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes", projectId, organisationId)).
+                andExpect(status().isOk()).
+                andExpect(view().name("project/financecheck/eligibility-changes")).
+                andReturn();
+    }
+
     @Override
     protected FinanceChecksEligibilityController supplyControllerUnderTest() {
         return new FinanceChecksEligibilityController();
