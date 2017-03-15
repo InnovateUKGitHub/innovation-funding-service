@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.domain.QuestionStatus;
+import org.innovateuk.ifs.application.repository.QuestionStatusRepository;
 import org.innovateuk.ifs.application.security.ApplicationPermissionRules;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
@@ -38,6 +39,9 @@ public class FormInputResponsePermissionRules {
 
     @Autowired
     private FormInputRepository formInputRepository;
+
+    @Autowired
+    private QuestionStatusRepository questionStatueRepository;
 
     @PermissionRule(value = "READ", description = "The consortium can see the input responses of their organisation and application")
     public boolean consortiumCanSeeTheInputResponsesForTheirOrganisationAndApplication(final FormInputResponseResource response, final UserResource user) {
@@ -99,8 +103,8 @@ public class FormInputResponsePermissionRules {
     }
 
     private List<QuestionStatus> getQuestionStatuses(FormInputResponseCommand responseCommand) {
-        FormInput formInput = formInputRepository.findOne(responseCommand.getFormInputId());
-        List<QuestionStatus> questionStatuses = formInput.getQuestion().getQuestionStatuses();
+
+        List<QuestionStatus> questionStatuses = questionStatueRepository.findByApplicationId(responseCommand.getApplicationId());
 
         return questionStatuses.stream()
                 .filter(questionStatus -> questionStatus.getApplication().getId().equals(responseCommand.getApplicationId())).collect(Collectors.toList());
