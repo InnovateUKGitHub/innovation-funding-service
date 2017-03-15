@@ -13,7 +13,7 @@ Resource          ../../resources/defaultResources.robot
 Search for applications
     [Documentation]    INFUND-8061
     Given The user clicks the button/link    link=${CLOSED_COMPETITION_NAME}
-    And the user clicks the button/Link    jQuery=a:contains("Assessor management - assignments")
+    And the user clicks the button/Link    jQuery=a:contains("Assessor management: assignments")
     When The user enters text to a text field    css=#filterSearch    96
     and The user clicks the button/link    jQuery=button:contains(Filter)
     Then the user should see the element    jQuery=tr:nth-child(1) td:nth-child(1):contains("96")
