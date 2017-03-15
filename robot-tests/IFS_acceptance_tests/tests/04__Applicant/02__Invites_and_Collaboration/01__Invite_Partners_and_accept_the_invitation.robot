@@ -217,7 +217,7 @@ Lead should see the accepted partner in the assign list
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
     And the user clicks the button/link    link=Project summary
-    When the user clicks the button/link    css=.assign-button
+    When the user clicks the button/link    css=.assign-button > button
     Then the user should see the element    jQuery=button:contains("Adrian Booth")
 
 Lead applicant invites a non registered user in the same organisation
