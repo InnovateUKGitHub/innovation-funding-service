@@ -62,7 +62,7 @@ public class OrganisationTypeCreationController {
     @RequestMapping(value = "/new-account-organisation-type", method = RequestMethod.GET)
     public String chooseOrganisationType(HttpServletRequest request,
                                          Model model,
-                                         @ModelAttribute OrganisationTypeForm organisationTypeForm,
+                                         @ModelAttribute(name = "form") OrganisationTypeForm form,
                                          BindingResult bindingResult,
                                          HttpServletResponse response,
                                          @RequestParam(value = ORGANISATION_TYPE, required = false) Long organisationTypeId,
@@ -72,7 +72,7 @@ public class OrganisationTypeCreationController {
         RestResult<ApplicationInviteResource> invite = inviteRestService.getInviteByHash(hash);
 
         if (invalid != null) {
-            validator.validate(organisationTypeForm, bindingResult);
+            validator.validate(form, bindingResult);
         }
 
         if (invite.isSuccess() && InviteStatus.SENT.equals(invite.getSuccessObject().getStatus())) {
@@ -80,7 +80,7 @@ public class OrganisationTypeCreationController {
             types = types.stream()
                         .filter(t -> t.getParentOrganisationType() == null)
                         .collect(Collectors.toList());
-            model.addAttribute("form", organisationTypeForm);
+            model.addAttribute("form", form);
             model.addAttribute("model", new OrganisationCreationViewModel(types, invite.getSuccessObject()));
         } else {
             return "redirect:/login";
