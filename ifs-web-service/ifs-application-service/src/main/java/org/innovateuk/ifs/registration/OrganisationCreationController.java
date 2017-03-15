@@ -144,13 +144,6 @@ public class OrganisationCreationController {
         model.addAttribute("searchLabel",getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchLabel",  request.getLocale()));
         model.addAttribute("searchHint", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchHint",  request.getLocale()));
 
-        if(OrganisationTypeEnum.BUSINESS.equals(organisationForm.getOrganisationTypeEnum()) ||
-                OrganisationTypeEnum.RESEARCH.equals(organisationForm.getOrganisationTypeEnum())
-                ){
-            model.addAttribute("searchEnabled", true);
-        }else{
-            model.addAttribute("searchEnabled", false);
-        }
         return TEMPLATE_PATH + "/" + FIND_ORGANISATION;
     }
 
