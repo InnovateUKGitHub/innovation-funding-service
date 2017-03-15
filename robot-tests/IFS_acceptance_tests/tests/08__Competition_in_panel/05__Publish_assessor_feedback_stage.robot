@@ -5,10 +5,8 @@ Documentation     INFUND-2672 As a competition administrator I want to be able t
 Suite Setup       Run Keywords    Log in as user    email=lee.bowman@innovateuk.test    password=Passw0rd
 ...               AND    Run Keyword And Ignore Error Without Screenshots    Delete the emails from both test mailboxes
 Suite Teardown    the user closes the browser
-Force Tags        Upload    CompAdmin  Pending
-# TODO This suite needs to be re-enabled when INFUND-8090 and INFUND-8086
+Force Tags        Upload    CompAdmin
 Resource          ../../resources/defaultResources.robot
-#TODO once all the new funding working is done INFUND-7376
 
 *** Variables ***
 ${assessor_feedback_competition_url}    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/funding

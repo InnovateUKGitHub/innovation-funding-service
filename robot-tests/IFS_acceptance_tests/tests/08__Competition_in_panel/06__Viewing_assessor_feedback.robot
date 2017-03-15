@@ -1,9 +1,8 @@
 *** Settings ***
 Documentation     INFUND-2607 As an applicant I want to have a link to the feedback for my application from the Application Overview page when it becomes available so I can review the assessor feedback for my application
 Suite Teardown    the user closes the browser
-Force Tags        Upload    CompAdmin  Pending
+Force Tags        Upload    CompAdmin
 Resource          ../../resources/defaultResources.robot
-# TODO This test needs to be re-enabled when INFUND-8090 and INFUND-8086
 *** Variables ***
 ${successful_application_overview}    ${server}/application/${FUNDERS_PANEL_APPLICATION_1}
 ${unsuccessful_application_overview}    ${server}/application/${FUNDERS_PANEL_APPLICATION_2}
