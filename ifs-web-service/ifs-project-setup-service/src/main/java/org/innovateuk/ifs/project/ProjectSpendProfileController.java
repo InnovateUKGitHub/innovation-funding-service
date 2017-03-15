@@ -325,6 +325,7 @@ public class ProjectSpendProfileController {
                 projectResource.getApplication(), projectResource.getName(),
                 partnersSpendProfileProgress,
                 organisations,
+                leadOrganisation,
                 projectResource.getSpendProfileSubmittedDate() != null,
                 editablePartners,
                 isApproved(projectId));
