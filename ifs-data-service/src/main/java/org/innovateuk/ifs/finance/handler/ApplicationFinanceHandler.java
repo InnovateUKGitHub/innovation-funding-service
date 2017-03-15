@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.finance.handler;
 
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResourceId;
@@ -29,8 +30,6 @@ public interface ApplicationFinanceHandler {
     @PostAuthorize("hasPermission(returnObject, 'READ_PROJECT_FINANCE')")
     ProjectFinanceResource getProjectOrganisationFinances(ProjectFinanceResourceId projectFinanceResourceId);
 
-    @PreAuthorize("hasAuthority('project_finance')")
-    @SecuredBySpring(value = "READ", securedType = ProjectFinanceResource.class, description = "Project Finance users " +
-            "can view the overall Project Finances for a Project during the Finance Checks process")
+    @NotSecured(value = "This service must be secured by other services", mustBeSecuredByOtherServices = true)
     List<ProjectFinanceResource> getFinanceChecksTotals(Long projectId);
 }
