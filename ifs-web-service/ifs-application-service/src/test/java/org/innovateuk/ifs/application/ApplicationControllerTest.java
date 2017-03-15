@@ -328,6 +328,20 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     }
 
     @Test
+    public void applicationAssessorQuestionFeedback_invalidState() throws Exception {
+        long applicationId = 1L;
+        long questionId = 2L;
+
+        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withCompetitionStatus(ASSESSOR_FEEDBACK).build();
+
+        when(applicationService.getById(applicationId)).thenReturn(applicationResource);
+
+        mockMvc.perform(get("/application/{applicationId}/question/{questionId}/feedback", applicationId, questionId))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/application/" + applicationId + "/summary"));
+    }
+
+    @Test
     public void testApplicationSummaryWithProjectSetupStatus() throws Exception {
         CompetitionResource competition = competitionResources.get(0);
         competition.setCompetitionStatus(PROJECT_SETUP);
