@@ -679,7 +679,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
     }
     @Test
 
-    public void sendInvite_toApplicant() throws Exception {
+    public void sendInvite_toExistingApplicant() throws Exception {
         String email = "john@email.com";
         String name = "John Barnes";
 

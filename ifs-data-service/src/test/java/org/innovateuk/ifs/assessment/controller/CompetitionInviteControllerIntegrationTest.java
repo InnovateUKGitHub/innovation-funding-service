@@ -711,7 +711,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
     }
 
     @Test
-    public void sendInvite_existingApplicant() throws Exception {
+    public void sendInvite_toExistingApplicant() throws Exception {
         final UserResource applicantUser = getSteveSmith();
         long createdId = competitionInviteRepository.save(newCompetitionInvite()
                 .with(id(null))
