@@ -71,8 +71,7 @@
                       th:classappend="${'viability-rag-' + status.index}">Green</span>
             </td>
             <td class="aligncentre">
-                <!--/*TODO INFUND-6716 redirect to eligibility page*/-->
-                <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
+                <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
                    th:text="${#messages.msg('ifs.project.setup.eligibility.' + orgDetails.eligibility)}"
                    th:classappend="${'eligibility-' + status.index}"/>
             </td>

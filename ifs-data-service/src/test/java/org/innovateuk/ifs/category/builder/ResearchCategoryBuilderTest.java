@@ -12,7 +12,7 @@ public class ResearchCategoryBuilderTest {
     @Test
     public void buildOne() {
         Long expectedId = 7L;
-        String expectedName = "Technical feasibility";
+        String expectedName = "Feasibility studies";
 
         ResearchCategory innovationSector = newResearchCategory()
                 .withId(expectedId)
@@ -26,7 +26,7 @@ public class ResearchCategoryBuilderTest {
     @Test
     public void buildMany() {
         Long[] expectedIds = { 7L, 13L };
-        String[] expectedNames = { "Technical feasibility", "Industrial research" };
+        String[] expectedNames = { "Feasibility studies", "Industrial research" };
 
         List<ResearchCategory> innovationSectors = newResearchCategory()
                 .withId(expectedIds)

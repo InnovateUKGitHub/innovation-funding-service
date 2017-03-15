@@ -21,8 +21,6 @@ public interface FinanceCheckService {
 
     FinanceCheckResource getByProjectAndOrganisation(ProjectOrganisationCompositeId key);
 
-    ServiceResult<Void> update(FinanceCheckResource toUpdate);
-
     ServiceResult<FinanceCheckSummaryResource> getFinanceCheckSummary(Long projectId);
 
     ServiceResult<FinanceCheckOverviewResource> getFinanceCheckOverview(Long projectId);
