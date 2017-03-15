@@ -31,9 +31,11 @@ import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -64,7 +66,9 @@ import static org.innovateuk.ifs.user.resource.UserRoleType.APPLICANT;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
+import static org.innovateuk.ifs.util.MapFunctions.toListOfPairs;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
@@ -208,10 +212,16 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
         assertTrue(result.isSuccess());
 
         CompetitionProjectsStatusResource competitionProjectsStatusResource = result.getSuccessObject();
+        assertTrue(projectsGetSortedByApplicationId(competitionProjectsStatusResource.getProjectStatusResources()));
         assertEquals(3, competitionProjectsStatusResource.getProjectStatusResources().size());
         assertEquals(new Integer(3), competitionProjectsStatusResource.getProjectStatusResources().get(0).getNumberOfPartners());
         assertEquals(new Integer(3), competitionProjectsStatusResource.getProjectStatusResources().get(1).getNumberOfPartners());
         assertEquals(new Integer(3), competitionProjectsStatusResource.getProjectStatusResources().get(2).getNumberOfPartners());
+    }
+
+    private boolean projectsGetSortedByApplicationId(List<ProjectStatusResource> after) {
+        return after.stream().sorted(Comparator.comparing(ProjectStatusResource::getApplicationNumber).reversed()).collect(Collectors.toList())
+                    .equals(after);
     }
 
     @Test
