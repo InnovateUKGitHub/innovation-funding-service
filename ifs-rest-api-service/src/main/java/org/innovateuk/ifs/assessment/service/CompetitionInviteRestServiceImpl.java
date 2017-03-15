@@ -3,7 +3,6 @@ package org.innovateuk.ifs.assessment.service;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
-import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.resource.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -113,7 +112,7 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
     }
 
     @Override
-    public RestResult<AssessorInviteToSendResource> sendInvite(long inviteId, EmailContent content) {
-        return postWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "sendInvite", inviteId), content, AssessorInviteToSendResource.class);
+    public RestResult<Void> sendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource) {
+        return postWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "sendInvite", inviteId), assessorInviteSendResource, Void.class);
     }
 }

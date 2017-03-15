@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.assessment.controller;
 
-
 import com.google.common.collect.Lists;
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.category.domain.InnovationArea;
@@ -9,7 +8,6 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.CompetitionInvite;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
@@ -52,7 +50,7 @@ import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnov
 import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
-import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
+import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
 import static org.innovateuk.ifs.invite.builder.CompetitionInviteStatisticsResourceBuilder.newCompetitionInviteStatisticsResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonResourceBuilder.newRejectionReasonResource;
@@ -150,8 +148,10 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         assertTrue(serviceResult.isSuccess());
 
         AssessorInviteToSendResource inviteResource = serviceResult.getSuccessObjectOrThrowException();
+        assertEquals(1L, inviteResource.getCompetitionId());
         assertEquals("Connected digital additive manufacturing", inviteResource.getCompetitionName());
         assertEquals("tom poly", inviteResource.getRecipient());
+        assertTrue(inviteResource.getContent().startsWith("Dear tom poly\n\nWe are inviting you to assess "));
     }
 
     @Test
@@ -715,15 +715,15 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                 .withStatus(InviteStatus.CREATED)
                 .build())
                 .getId();
-        EmailContent content = newEmailContentResource()
+
+        AssessorInviteSendResource assessorInviteSendResource = newAssessorInviteSendResource()
                 .withSubject("subject")
-                .withPlainText("plain")
-                .withHtmlText("html")
+                .withContent("content")
                 .build();
 
         loginCompAdmin();
 
-        RestResult<AssessorInviteToSendResource> serviceResult = controller.sendInvite(createdId, content);
+        RestResult<Void> serviceResult = controller.sendInvite(createdId, assessorInviteSendResource);
         assertTrue(serviceResult.isSuccess());
     }
 

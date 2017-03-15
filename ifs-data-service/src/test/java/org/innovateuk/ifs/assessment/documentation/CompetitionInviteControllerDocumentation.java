@@ -51,8 +51,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class CompetitionInviteControllerDocumentation extends BaseControllerMockMVCTest<CompetitionInviteController> {
 
-    private RestDocumentationResultHandler document;
-
     @Override
     protected CompetitionInviteController supplyControllerUnderTest() {
         return new CompetitionInviteController();
@@ -71,7 +69,7 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
                         pathParameters(
                                 parameterWithName("inviteId").description("Id of the created invite being requested")
                         ),
-                        responseFields(assessorToSendFields)
+                        responseFields(assessorInviteToSendResourceFields)
                 ));
     }
 
@@ -384,25 +382,19 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
     @Test
     public void sendInvite() throws Exception {
         long inviteId = 1L;
-        EmailContent content = newEmailContentResource()
-                .withSubject("subject")
-                .withPlainText("plain text")
-                .withHtmlText("<html>html text</htm>")
-                .build();
 
-        AssessorInviteToSendResource resource = assessorInviteToSendResourceBuilder.build();
-
-        when(competitionInviteServiceMock.sendInvite(inviteId, content)).thenReturn(serviceSuccess(resource));
+        AssessorInviteSendResource assessorInviteSendResource = assessorInviteSendResourceBuilder.build();
+        when(competitionInviteServiceMock.sendInvite(inviteId, assessorInviteSendResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/competitioninvite/sendInvite/{inviteId}", inviteId)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(content)))
+                .content(objectMapper.writeValueAsString(assessorInviteSendResource)))
                 .andExpect(status().isOk())
                 .andDo(document("competitioninvite/{method-name}",
                         pathParameters(
                                 parameterWithName("inviteId").description("Id of the created invite being sent")
                         ),
-                        responseFields(assessorToSendFields)
+                        requestFields(assessorInviteSendResourceFields)
                 ));
     }
 }

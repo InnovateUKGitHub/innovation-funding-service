@@ -1,62 +1,67 @@
 package org.innovateuk.ifs.management.viewmodel;
 
-import org.innovateuk.ifs.email.resource.EmailContent;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * Holder of model attributes for the Send Invites view.
  */
 public class SendInviteViewModel {
-    private Long competitionId;
-    private Long inviteId;
+    private long competitionId;
+    private long inviteId;
     private String competitionName;
     private String recipient;
-    private EmailContent emailContent;
 
-    public SendInviteViewModel(Long competitionId, Long inviteId, String competitionName, String recipient, EmailContent emailContent) {
+    public SendInviteViewModel(long competitionId, long inviteId, String competitionName, String recipient) {
         this.competitionId = competitionId;
         this.inviteId = inviteId;
         this.competitionName = competitionName;
         this.recipient = recipient;
-        this.emailContent = emailContent;
     }
 
-    public Long getCompetitionId() {
+    public long getCompetitionId() {
         return competitionId;
     }
 
-    public void setCompetitionId(Long competitionId) {
-        this.competitionId = competitionId;
-    }
-
-    public Long getInviteId() {
+    public long getInviteId() {
         return inviteId;
-    }
-
-    public void setInviteId(Long inviteId) {
-        this.inviteId = inviteId;
     }
 
     public String getCompetitionName() {
         return competitionName;
     }
 
-    public void setCompetitionName(String competitionName) {
-        this.competitionName = competitionName;
-    }
-
     public String getRecipient() {
         return recipient;
     }
 
-    public void setRecipient(String recipient) {
-        this.recipient = recipient;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        SendInviteViewModel that = (SendInviteViewModel) o;
+
+        return new EqualsBuilder()
+                .append(competitionId, that.competitionId)
+                .append(inviteId, that.inviteId)
+                .append(competitionName, that.competitionName)
+                .append(recipient, that.recipient)
+                .isEquals();
     }
 
-    public EmailContent getEmailContent() {
-        return emailContent;
-    }
-
-    public void setEmailContent(EmailContent emailContent) {
-        this.emailContent = emailContent;
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(competitionId)
+                .append(inviteId)
+                .append(competitionName)
+                .append(recipient)
+                .toHashCode();
     }
 }

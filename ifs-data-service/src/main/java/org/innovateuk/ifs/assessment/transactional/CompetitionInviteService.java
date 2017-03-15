@@ -97,7 +97,7 @@ public interface CompetitionInviteService {
     @SecuredBySpring(value = "SEND_INVITE",
             description = "The Competition Admin user, or the Competition Executive user can send a competition invite")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
-    ServiceResult<AssessorInviteToSendResource> sendInvite(long inviteId, EmailContent content);
+    ServiceResult<Void> sendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource);
 
     @SecuredBySpring(value = "DELETE_INVITE",
             description = "The Competition Admin user, or the Competition Executive user can delete a competition invite")
