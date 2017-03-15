@@ -2,7 +2,7 @@
 
 task osDeployRemote(type:Exec) {
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
-    args = [openshiftEnv, "remote"]
+    args = [openshiftEnv, "remote", project.version]
 }
 
 task osDeployLocal(type:Exec) {
@@ -12,7 +12,7 @@ task osDeployLocal(type:Exec) {
 
 task osDeployProduction(type:Exec) {
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
-    args = [openshiftEnv, "production"]
+    args = [openshiftEnv, "production", project.version]
 }
 
 task osUpgradeProduction(type:Exec) {

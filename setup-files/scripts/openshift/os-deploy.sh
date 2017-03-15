@@ -4,6 +4,7 @@ set -e
 
 PROJECT=$1
 TARGET=$2
+VERSION=$3
 
 if [[ (${TARGET} == "remote") ||  (${TARGET} == "production") ]]
 then
@@ -12,7 +13,7 @@ else
     HOST=ifs-local
 fi
 
-SVC_ACCOUNT_TOKEN="gDrv6i22oi9uqIUjq8wqHULadJleza36ehvpqAijej8"
+SVC_ACCOUNT_TOKEN=${bamboo_openshift_svc_account_token}
 SVC_ACCOUNT_CLAUSE="--namespace=${PROJECT} --token=${SVC_ACCOUNT_TOKEN} --server=https://console.prod.ifs-test-clusters.com:443 --insecure-skip-tls-verify=true"
 
 ROUTE_DOMAIN=apps.$HOST
@@ -29,6 +30,7 @@ function tailorAppInstance() {
     sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/*.yml
     sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/shib/*.yml
     sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/shib/prod/*.yml
+    sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/*.yml
     sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/shib/*.yml
     sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/shib/prod/*.yml
 
