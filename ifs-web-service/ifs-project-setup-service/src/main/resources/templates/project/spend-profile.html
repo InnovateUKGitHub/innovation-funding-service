@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend Profile'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend profile'" />
 </head>
 <body th:with="context='project'" class="project spend-profile">
 <th:block th:insert="fragments/layout :: body-start" />
@@ -84,7 +84,7 @@
     <th:block th:with="readonly=${form == null ? true : false}">
         <form method="post" autocomplete="off"
               th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit(projectId=${model.projectId},organisationId=${model.organisationId})}">
-            <div class="spend-profile-table" th:classappend="${model.research ? 'academic':''}">
+            <div class="spend-profile-table" th:classappend="${model.usingJesFinances ? 'academic':''}">
                 <div class="flex-table-before"></div>
                 <div class="flex-table-wrap">
                     <table>
@@ -97,8 +97,8 @@
                         </colgroup>
                         <thead>
                         <tr>
-                            <th scope="row" th:if="${model.research}" id="month" colspan="2">Je-S category</th>
-                            <th scope="row" th:unless="${model.research}" id="month">Month</th>
+                            <th scope="row" th:if="${model.usingJesFinances}" id="month" colspan="2">Je-S category</th>
+                            <th scope="row" th:unless="${model.usingJesFinances}" id="month">Month</th>
                             <th:block th:each="month,stats : ${model.table.getMonths()}">
                                 <th scope="col" th:text="${#temporals.format(month.localDate, 'MMM yyyy')}"
                                     th:id="${'month'+stats.index}"/>
@@ -109,7 +109,7 @@
                         </thead>
                         <tbody>
                         <!--/* non-academic */-->
-                        <th:block th:unless="${model.research}">
+                        <th:block th:unless="${model.usingJesFinances}">
                             <!--/* readonly */-->
                             <th:block th:if="${readonly}">
                                 <tr th:each="row : ${model.table.getMonthlyCostsPerCategoryMap()}"
@@ -175,7 +175,7 @@
                             </th:block>
                         </th:block>
                         <!--/* academic */-->
-                        <th:block th:if="${model.research}">
+                        <th:block th:if="${model.usingJesFinances}">
                             <th:block th:each="section : ${model.table.getCostCategoryGroupMap()}">
                                 <th:block th:each="rowList,iteration : ${section.value}">
                                     <!--/* readonly */-->
@@ -243,7 +243,7 @@
                         </tbody>
                         <tfoot>
                         <tr class="form-group-row">
-                            <th scope="row" th:attr="colspan=${model.research ? 2 : 1}">Total</th>
+                            <th scope="row" th:attr="colspan=${model.usingJesFinances ? 2 : 1}">Total</th>
                             <th:block th:each="monthTotal,status : ${model.totalForEachMonth}">
                                 <td th:text="${'&pound; '+#numbers.formatInteger(monthTotal,1,'COMMA')}"
                                     th:attr="data-calculation-fields=${'input[class*='+#strings.toLowerCase(#temporals.format(model.table.months[status.index].localDate,'MMM-yyyy'))+']'}"

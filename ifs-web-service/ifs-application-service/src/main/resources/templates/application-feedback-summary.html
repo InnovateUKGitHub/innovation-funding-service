@@ -22,29 +22,27 @@
 
             <th:block th:insert="fragments/elements :: competition-status-message (app=${currentApplication}, competition=${currentCompetition})" />
 
-            <!--/* TODO INFUND-8169
             <h2 class="heading-medium">Overall scores</h2>
             <div class="table-overflow">
-                <table>
+                <table th:each="section : ${sections.values()}" th:if="${!section.name.equals('Project details') && !section.name.equals('Finances')}">
                     <thead>
                         <tr>
                             <th class="width-150" scope="row">Question</th>
-                            <th th:each="question : ${model.questionsForScoreOverview}" scope="col">
-                                <a th:href="@{/{id}/question/{quid}(id=${model.assessmentId}, quid=${question.questionId})}" th:text="${question.displayLabelShort}">Q1</a>
+                            <th th:each="question : ${sectionQuestions.get(section.id)}" scope="col">
+                                <a th:text="|Q${question.questionNumber}|">Q1</a>
                             </th>
                         </tr>
-                    </head>
+                    </thead>
                     <tbody>
                         <tr>
                             <th class="width-150" scope="row">Score</th>
-                            <td th:each="question : ${model.questionsForScoreOverview}">
-                                <span th:text="${question.scoreGiven}" th:remove="tag" />
+                            <td th:each="question : ${sectionQuestions.get(section.id)}">
+                                <span th:text="${scores.scores.get(question.id)}" th:remove="tag" />
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            */-->
 
             <h2 class="heading-medium no-margin-bottom">Application details</h2>
             <p class="form-hint">Assessors do not provide scores on these sections of the application.</p>
@@ -104,11 +102,12 @@
                         <div class="grid-row">
                             <div class="column-two-thirds">
                                 <h3 class="heading-small">
-                                    <a th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.shortName}">1. Business opportunity</a>
+                                    <a th:href="@{/application/{apId}/question/{qId}/feedback(apId=${currentApplication.id},qId=${question.id})}"
+                                        th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.shortName}">1. Business opportunity</a>
                                 </h3>
                             </div>
                             <div>
-                                <div class="column-third">Average score 7 / 10</div>
+                                <div class="column-third" th:text="|Average score ${scores.scores.get(question.id)} / ${question.assessorMaximumScore}|">Average score 7 / 10</div>
                             </div>
                         </div>
                         </li>
@@ -118,7 +117,7 @@
                             &nbsp;
                         </div>
                         <div class="column-third">
-                            <p>Average overall: <strong class="heading-">70%</strong></p>
+                            <p>Average overall: <strong class="heading-" th:text="|${scores.averagePercentage}%|">70%</strong></p>
                         </div>
                     </div>
                 </th:block>
@@ -136,8 +135,7 @@
 
                         <div th:if="${academicOrganisations != null and academicOrganisations.size() > 0}">
                             <h2 class="heading-medium">Academic partner breakdown</h2>
-                            <p>Academic partners submit their project costs through the Je-S system. For a full breakdown of their project costs, please see the
-                                below documents.</p>
+                            <p>Academic partners submit their project costs through the Je-S system. For a full breakdown of their project costs, please see the documents below.</p>
                             <th:block th:insert="finance/finance-summary :: academic_partner_breakdown" />
                         </div>
                     </div>
@@ -253,14 +251,15 @@
                 </div>
             </div>*/-->
 
-            <!--/* TODO INFUND-8172
-            <h2 class="heading-medium">Assessor feedback</h2>
-            <ul class="boxed-list">
-                <li>
-                    <h3 class="heading-small">Assessor 1</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
-                </li>
-            </ul>*/-->
+            <div th:if="!${#lists.isEmpty(feedback)}">
+                <h2 class="heading-medium">Assessor feedback</h2>
+                <ul class="boxed-list">
+                    <li th:each="item, iterStat : ${feedback}">
+                        <h3 class="heading-small" th:text="|Assessor ${iterStat.count}|">Assessor 1</h3>
+                        <p th:text="${item}">Feedback text</p>
+                    </li>
+                </ul>
+            </div>
 
             <th:block th:insert="fragments/layout :: main-content-end" />
         </main>

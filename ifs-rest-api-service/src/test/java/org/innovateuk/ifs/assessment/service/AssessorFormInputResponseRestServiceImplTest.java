@@ -2,16 +2,21 @@ package org.innovateuk.ifs.assessment.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
+import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
+import static org.innovateuk.ifs.assessment.builder.AssessmentFeedbackAggregateResourceBuilder.newAssessmentFeedbackAggregateResource;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.assessorFormInputResponseResourceListType;
 import static java.lang.String.format;
 import static org.junit.Assert.assertSame;
@@ -69,10 +74,25 @@ public class AssessorFormInputResponseRestServiceImplTest extends BaseRestServic
     @Test
     public void getApplicationAssessmentAggregate() {
         long applicationId = 7;
-        ApplicationAssessmentAggregateResource expected = new ApplicationAssessmentAggregateResource(13, 11);
+        Map<Long, BigDecimal> expectedScores = new HashMap<>();
+        expectedScores.put(17L, new BigDecimal(20));
+        ApplicationAssessmentAggregateResource expected = new ApplicationAssessmentAggregateResource(13, 11, expectedScores, 17);
 
         setupGetWithRestResultExpectations(format("%s/application/%s/scores", assessorFormInputResponseRestUrl, applicationId), ApplicationAssessmentAggregateResource.class, expected, OK);
         ApplicationAssessmentAggregateResource response = service.getApplicationAssessmentAggregate(applicationId).getSuccessObjectOrThrowException();
+
+        assertSame(expected, response);
+    }
+
+    @Test
+    public void getAssessmentAggregateFeedback() {
+        long applicationId = 1L;
+        long questionId = 2L;
+
+        AssessmentFeedbackAggregateResource expected = newAssessmentFeedbackAggregateResource().build();
+
+        setupGetWithRestResultExpectations(format("%s/application/%s/question/%s/feedback", assessorFormInputResponseRestUrl, applicationId, questionId), AssessmentFeedbackAggregateResource.class, expected, OK);
+        AssessmentFeedbackAggregateResource response = service.getAssessmentAggregateFeedback(applicationId, questionId).getSuccessObjectOrThrowException();
 
         assertSame(expected, response);
     }

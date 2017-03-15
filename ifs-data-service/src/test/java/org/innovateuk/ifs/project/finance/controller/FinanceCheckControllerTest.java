@@ -2,10 +2,7 @@ package org.innovateuk.ifs.project.finance.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.project.controller.FinanceCheckController;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckResource;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckURIs;
+import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.junit.Test;
@@ -79,25 +76,13 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
     }
 
     @Test
-    public void testApproveFinanceCheck() throws Exception {
+    public void testGetFinanceCheckOverview() throws Exception {
         Long projectId = 123L;
-        Long organisationId = 456L;
-        when(financeCheckServiceMock.approve(projectId, organisationId)).thenReturn(serviceSuccess());
+        when(financeCheckServiceMock.getFinanceCheckOverview(projectId)).thenReturn(serviceSuccess(new FinanceCheckOverviewResource()));
 
-        mockMvc.perform(post(FinanceCheckURIs.BASE_URL + "/{projectId}" + FinanceCheckURIs.ORGANISATION_PATH + "/{organisationId}" +  FinanceCheckURIs.PATH + "/approve", projectId, organisationId))
-                .andExpect(status().isOk());
+        mockMvc.perform(get(FinanceCheckURIs.BASE_URL + "/{projectId}" + FinanceCheckURIs.PATH + "/overview", projectId)).andExpect(status().isOk());
 
-        verify(financeCheckServiceMock).approve(123L, 456L);
-    }
-
-    @Test
-    public void testUpdateFinanceCheck() throws Exception {
-        FinanceCheckResource financeCheckResource = newFinanceCheckResource().build();
-        when(financeCheckServiceMock.save(any(FinanceCheckResource.class))).thenReturn(serviceSuccess());
-        mockMvc.perform(post(FinanceCheckURIs.BASE_URL + FinanceCheckURIs.PATH).
-                contentType(APPLICATION_JSON).
-                content(toJson(financeCheckResource))).
-                andExpect(status().isOk());
+        verify(financeCheckServiceMock).getFinanceCheckOverview(projectId);
     }
 
     @Override

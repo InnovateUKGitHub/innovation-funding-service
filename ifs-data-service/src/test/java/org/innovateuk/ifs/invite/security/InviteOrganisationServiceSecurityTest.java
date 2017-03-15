@@ -76,6 +76,16 @@ public class InviteOrganisationServiceSecurityTest extends BaseServiceSecurityTe
         }
 
         @Override
+        public ServiceResult<InviteOrganisationResource> getByIdWithInvitesForApplication(long inviteOrganisationId, long applicationId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<InviteOrganisationResource> getByOrganisationIdWithInvitesForApplication(long organisationId, long applicationId) {
+            return null;
+        }
+
+        @Override
         public ServiceResult<Iterable<InviteOrganisationResource>> findAll() {
             return serviceSuccess(newInviteOrganisationResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
         }

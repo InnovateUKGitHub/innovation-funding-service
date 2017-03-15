@@ -24,7 +24,7 @@ View the list of the applications
     [Documentation]    INFUND-7042
     [Tags]
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    When The user clicks the button/link    jQuery=a:contains("Assessor management - assignment to applications")
+    When The user clicks the button/link    jQuery=a:contains("Assessor management - assignments")
     Then the application list is correct before changes
 
 Filtering of the applications
@@ -108,7 +108,7 @@ Remove and notify an assessor (Notified)
     [Tags]
     [Setup]    Log in as a different user    &{Comp_admin1_credentials}
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    And the user clicks the button/link    jQuery=a:contains("Assessor management - assignment to applications")
+    And the user clicks the button/link    jQuery=a:contains("Assessor management - assignments")
     And the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
     When the user clicks the button/link    jQuery=tr:nth-child(1) a:contains("Remove")
     And the user clicks the button/link    jQuery=.buttonlink:contains(Cancel)
@@ -149,7 +149,7 @@ the assigned list is correct before notification
     the user should see the element    jQuery=.assessors-assigned td:nth-child(1):contains("Paul Plum")
     the user should see the element    jQuery=.assessors-assigned td:nth-child(2):contains("ACADEMIC")
     the user should see the element    jQuery=.assessors-assigned td:nth-child(3):contains("Urban living")
-    the user should see the element    jQuery=.assessors-assigned td:nth-child(3):contains("Infrastructure")
+    the user should see the element    jQuery=.assessors-assigned td:nth-child(3):contains("infrastructure")
     #the user should see the element    jQuery=tr:eq(1) td:nth-child(4):contains("9")
     #the user should see the element    jQuery=tr:eq(1) td:nth-child(5):contains("5")
     #the user should see the element    jQuery=tr:eq(1) td:nth-child(6):contains("-")
@@ -162,7 +162,7 @@ the previously assigned list is correct
     the user should see the element    jQuery=.assessors-previous td:nth-child(1):contains('Paul Plum')
     the user should see the element    jQuery=.assessors-previous td:nth-child(2):contains('ACADEMIC')
     the user should see the element    jQuery=.assessors-previous td:nth-child(3):contains('Urban living')
-    the user should see the element    jQuery=.assessors-previous td:nth-child(3):contains('Infrastructure')
+    the user should see the element    jQuery=.assessors-previous td:nth-child(3):contains('infrastructure')
     #the user should see the element    jQuery=.assessors-previous td:nth-child(4):contains('8')
     #the user should see the element    jQuery=.assessors-previous td:nth-child(5):contains('4')
     #TODO checks disabled due toINFUND-7745

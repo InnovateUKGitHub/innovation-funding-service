@@ -1,10 +1,7 @@
 package org.innovateuk.ifs.project.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckURIs;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckResource;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
+import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.finance.transactional.FinanceCheckService;
 import org.innovateuk.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -33,16 +30,6 @@ public class FinanceCheckController {
         return financeCheckService.getByProjectAndOrganisation(projectOrganisationCompositeId).toGetResponse();
     }
 
-    @RequestMapping(value = FinanceCheckURIs.PATH, method = POST)
-    public RestResult<Void> updateFinanceCheck(@RequestBody FinanceCheckResource financeCheckResource) {
-        return financeCheckService.save(financeCheckResource).toPostResponse();
-    }
-
-    @RequestMapping(value = "/{projectId}" + FinanceCheckURIs.ORGANISATION_PATH + "/{organisationId}" + FinanceCheckURIs.PATH + "/approve", method = POST)
-    public RestResult<Void> approveFinanceCheck(@PathVariable("projectId") Long projectId, @PathVariable("organisationId") Long organisationId) {
-        return financeCheckService.approve(projectId, organisationId).toPostResponse();
-    }
-
     @RequestMapping(value = "/{projectId}" + FinanceCheckURIs.ORGANISATION_PATH + "/{organisationId}" + FinanceCheckURIs.PATH + "/status", method = GET)
     public RestResult<FinanceCheckProcessResource> getFinanceCheckApprovalStatus(@PathVariable("projectId") Long projectId, @PathVariable("organisationId") Long organisationId) {
         return financeCheckService.getFinanceCheckApprovalStatus(projectId, organisationId).toGetResponse();
@@ -51,6 +38,11 @@ public class FinanceCheckController {
     @RequestMapping(value = "/{projectId}" + FinanceCheckURIs.PATH, method = GET)
     public RestResult<FinanceCheckSummaryResource> getFinanceCheckSummary(@PathVariable("projectId") Long projectId){
         return financeCheckService.getFinanceCheckSummary(projectId).toGetResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}" + FinanceCheckURIs.PATH + "/overview", method = GET)
+    public RestResult<FinanceCheckOverviewResource> getFinanceCheckOverview(@PathVariable("projectId") Long projectId){
+        return financeCheckService.getFinanceCheckOverview(projectId).toGetResponse();
     }
 
     @RequestMapping(value = "/{projectId}" + FinanceCheckURIs.ORGANISATION_PATH + "/{organisationId}" + FinanceCheckURIs.PATH + "/eligibility", method = GET)

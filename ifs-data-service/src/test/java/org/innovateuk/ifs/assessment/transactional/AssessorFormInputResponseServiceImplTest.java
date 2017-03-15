@@ -1,9 +1,11 @@
 package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
+import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessorFormInputResponse;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
+import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -16,24 +18,27 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
+import static java.time.LocalDateTime.now;
+import static java.util.Collections.nCopies;
 import static org.innovateuk.ifs.application.builder.QuestionBuilder.newQuestion;
-import static org.innovateuk.ifs.application.builder.SectionBuilder.newSection;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseBuilder.newAssessorFormInputResponse;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
+import static org.innovateuk.ifs.commons.service.ServiceResult.aggregate;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_RESEARCH_CATEGORY;
-import static java.time.LocalDateTime.now;
-import static java.util.Collections.nCopies;
+import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_SCORE;
+import static org.innovateuk.ifs.form.resource.FormInputType.TEXTAREA;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.*;
@@ -419,11 +424,62 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
                 .withValue("true", "true", "false")
                 .build(3);
 
+        List<FormInput> scoreFormInputs = newFormInput()
+                .withType(ASSESSOR_SCORE)
+                .withQuestion(newQuestion().withId(1L, 2L).withAssessorMaximumScore(5, 10).buildArray(2, Question.class))
+                .build(2);
+
+        List<AssessorFormInputResponse> assessorFormInputScores = newAssessorFormInputResponse()
+                .withFormInput(scoreFormInputs.get(0), scoreFormInputs.get(0), scoreFormInputs.get(0),
+                        scoreFormInputs.get(1), scoreFormInputs.get(1), scoreFormInputs.get(1))
+                .withValue("1", "2", "3", "4", "6", "7")
+                .build(6);
+
+        assessorFormInputResponses.addAll(assessorFormInputScores);
+
         when(assessorFormInputResponseRepositoryMock.findByAssessmentTargetId(applicationId)).thenReturn(assessorFormInputResponses);
 
         ApplicationAssessmentAggregateResource scores = assessorFormInputResponseService.getApplicationAggregateScores(applicationId).getSuccessObjectOrThrowException();
 
         assertEquals(2, scores.getTotalScope());
         assertEquals(1, scores.getInScope());
+        assertEquals(2,scores.getScores().keySet().size());
+        assertTrue(scores.getScores().containsKey(1L));
+        assertTrue(new BigDecimal("2").equals(scores.getScores().get(1L)));
+        assertTrue(scores.getScores().containsKey(2L));
+        assertTrue(new BigDecimal("6").equals(scores.getScores().get(2L)));
+        assertEquals(48L, scores.getAveragePercentage());
+    }
+
+    @Test
+    public void getAssessmentAggregateFeedback() {
+        long applicationId = 1L;
+        long questionId = 2L;
+
+        List<FormInput> scoreFormInputs = newFormInput()
+                .withType(ASSESSOR_SCORE)
+                .build(2);
+
+        List<FormInput> feedbackFormInputs = newFormInput()
+                .withType(TEXTAREA)
+                .build(2);
+
+        FormInput[] formInputs = newFormInput()
+                .withType(ASSESSOR_SCORE, TEXTAREA, ASSESSOR_SCORE, TEXTAREA)
+                .buildArray(4, FormInput.class);
+
+        List<AssessorFormInputResponse> assessorFormInputResponses = newAssessorFormInputResponse()
+                .withFormInput(formInputs)
+                .withValue("2","Feedback 1", "4", "Feedback 2")
+                .build(4);
+
+        when(assessorFormInputResponseRepositoryMock.findByAssessmentTargetIdAndFormInputQuestionId(applicationId, questionId)).thenReturn(assessorFormInputResponses);
+
+        AssessmentFeedbackAggregateResource feedback = assessorFormInputResponseService.getAssessmentAggregateFeedback(applicationId, questionId).getSuccessObjectOrThrowException();
+
+        assertEquals(new BigDecimal("3"), feedback.getAvgScore());
+        assertEquals(2, feedback.getFeedback().size());
+        assertEquals("Feedback 1", feedback.getFeedback().get(0));
+        assertEquals("Feedback 2", feedback.getFeedback().get(1));
     }
 }

@@ -206,25 +206,25 @@ Post new query server side validations
     [Documentation]    INFUND-4840
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Post Query")
-    Then the user should see the text in the page    The title cannot be empty.
-    And the user should see the text in the page    The query cannot be empty.
+    Then the user should see the element   jQuery=label[for="queryTitle"] span:nth-child(2) span:contains(This field cannot be left blank.)
+    And the user should see the element    jQuery=label[for="query"] span:nth-child(2) span:contains(This field cannot be left blank.)
 
 Post new query client side validations
     [Documentation]    INFUND-4840
     [Tags]
     When the user enters text to a text field    id=queryTitle    this is a title
-    Then the user should not see the text in the page    The title cannot be empty.
+    Then the user should not see the element    jQuery=label[for="queryTitle"] span:nth-child(2) span:contains(This field cannot be left blank.)
     When the user enters text to a text field    css=.editor    this is some query text
-    Then the user should not see the text in the page    The query should not be empty.
+    Then the user should not see the element    jQuery=label[for="query] span:nth-child(2) span:contains(This field cannot be left blank.)
 
 
 Word count validations
     [Documentation]    INFUND-4840
     [Tags]
     When the user enters text to a text field    css=.editor    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin elementum condimentum ex, ut tempus nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sed pretium tellus. Vestibulum sollicitudin semper scelerisque. Sed tristique, erat in gravida gravida, felis tortor fermentum ligula, vitae gravida velit ipsum vel magna. Aenean in pharetra ex. Integer porttitor suscipit lectus eget ornare. Maecenas sed metus quis sem dapibus vestibulum vel vitae purus. Etiam sodales nisl at enim tempus, sed malesuada elit accumsan. Aliquam faucibus neque vitae commodo rhoncus. Sed orci sem, varius vitae justo quis, cursus porttitor lectus. Pellentesque eu nibh nunc. Duis laoreet enim et justo sagittis, at posuere lectus laoreet. Suspendisse rutrum odio id iaculis varius. Phasellus gravida, mi vel vehicula dignissim, lectus nunc eleifend justo, elementum lacinia enim tellus a nulla. Pellentesque consectetur sollicitudin ante, ac vehicula lorem laoreet laoreet. Fusce consequat libero mi. Quisque luctus risus neque, ut gravida quam tincidunt id. Aliquam id ante arcu. Nulla ut est ipsum. Praesent accumsan efficitur malesuada. Ut tempor auctor felis eu dapibus. Sed felis quam, aliquet sit amet urna nec, consectetur feugiat nibh. Nam id libero nec augue convallis euismod quis vitae nibh. Integer lectus velit, malesuada ut neque mollis, mattis euismod diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Etiam aliquet porta enim sit amet rhoncus. Curabitur ornare turpis eros, sodales hendrerit tellus rutrum a. Ut efficitur feugiat turpis, eu ultrices velit pharetra non. Curabitur condimentum lacus ac ligula auctor egestas. Aliquam feugiat tellus neque, a ornare tortor imperdiet at. Integer varius turpis eu mi efficitur, at imperdiet ex posuere. Suspendisse blandit, mi at mollis placerat, magna nibh malesuada nisi, ultrices semper augue enim sit amet nisi. Donec molestie tellus vitae risus interdum, nec finibus risus interdum. Integer purus justo, fermentum id urna eu, aliquam rutrum erat. Phasellus volutpat odio metus, sed interdum magna luctus ac. Nam ullamcorper maximus sapien vitae dapibus. Vivamus ullamcorper quis sapien et mattis. Aenean aliquam arcu lacus, vel mollis ligula ultrices nec. Sed cursus placerat tortor elementum tincidunt. Pellentesque at arcu ut felis euismod vestibulum pulvinar nec neque. Quisque ipsum purus, tincidunt quis iaculis eu, malesuada nec lectus. Vivamus tempor, enim quis vestibulum convallis, ex odio pharetra tellus, eget posuere justo ligula sit amet dolor. Cras scelerisque neque id porttitor semper. Sed ut ultrices lorem. Pellentesque sed libero a velit vestibulum fermentum id et velit. Vivamus turpis risus, venenatis ac quam nec, pulvinar fringilla libero. Donec eget vestibulum orci, id lacinia mi. Aenean sed lectus viverra est feugiat suscipit. Proin eget justo turpis. Nullam maximus fringilla sapien, at pharetra odio pretium ut. Cras imperdiet mauris at bibendum dapibus.
-    Then the user should see the text in the page    The query is too long, please reduce it to 400 words.
+    Then the user should see the text in the page    Maximum word count exceeded. Please reduce your word count to 400.
     When the user enters text to a text field    css=.editor    this is some query text
-    Then the user should not see the text in the page    The query is too long, please reduce it to 400 words.
+    Then the user should not see the text in the page    Maximum word count exceeded. Please reduce your word count to 400.
 
 New query can be cancelled
     [Documentation]    INFUND-4840
@@ -395,7 +395,7 @@ Response to query server side validations
     [Documentation]    INFUND-4843
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Post response")
-    Then the user should see the text in the page    The response cannot be empty.
+    Then the user should see the text in the page    This field cannot be left blank.
 
 
 Response to query client side validations
@@ -403,17 +403,17 @@ Response to query client side validations
     [Tags]
     When the user enters text to a text field    css=.editor    this is some response text
     And the user moves focus to the element    jQuery=.button:contains("Post response")
-    Then the user should not see the text in the page    The response cannot be empty
+    Then the user should not see the text in the page    This field cannot be left blank.
 
 Word count validations for response
     [Documentation]    INFUND-4843
     When the user enters text to a text field    css=.editor    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin elementum condimentum ex, ut tempus nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sed pretium tellus. Vestibulum sollicitudin semper scelerisque. Sed tristique, erat in gravida gravida, felis tortor fermentum ligula, vitae gravida velit ipsum vel magna. Aenean in pharetra ex. Integer porttitor suscipit lectus eget ornare. Maecenas sed metus quis sem dapibus vestibulum vel vitae purus. Etiam sodales nisl at enim tempus, sed malesuada elit accumsan. Aliquam faucibus neque vitae commodo rhoncus. Sed orci sem, varius vitae justo quis, cursus porttitor lectus. Pellentesque eu nibh nunc. Duis laoreet enim et justo sagittis, at posuere lectus laoreet. Suspendisse rutrum odio id iaculis varius. Phasellus gravida, mi vel vehicula dignissim, lectus nunc eleifend justo, elementum lacinia enim tellus a nulla. Pellentesque consectetur sollicitudin ante, ac vehicula lorem laoreet laoreet. Fusce consequat libero mi. Quisque luctus risus neque, ut gravida quam tincidunt id. Aliquam id ante arcu. Nulla ut est ipsum. Praesent accumsan efficitur malesuada. Ut tempor auctor felis eu dapibus. Sed felis quam, aliquet sit amet urna nec, consectetur feugiat nibh. Nam id libero nec augue convallis euismod quis vitae nibh. Integer lectus velit, malesuada ut neque mollis, mattis euismod diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Etiam aliquet porta enim sit amet rhoncus. Curabitur ornare turpis eros, sodales hendrerit tellus rutrum a. Ut efficitur feugiat turpis, eu ultrices velit pharetra non. Curabitur condimentum lacus ac ligula auctor egestas. Aliquam feugiat tellus neque, a ornare tortor imperdiet at. Integer varius turpis eu mi efficitur, at imperdiet ex posuere. Suspendisse blandit, mi at mollis placerat, magna nibh malesuada nisi, ultrices semper augue enim sit amet nisi. Donec molestie tellus vitae risus interdum, nec finibus risus interdum. Integer purus justo, fermentum id urna eu, aliquam rutrum erat. Phasellus volutpat odio metus, sed interdum magna luctus ac. Nam ullamcorper maximus sapien vitae dapibus. Vivamus ullamcorper quis sapien et mattis. Aenean aliquam arcu lacus, vel mollis ligula ultrices nec. Sed cursus placerat tortor elementum tincidunt. Pellentesque at arcu ut felis euismod vestibulum pulvinar nec neque. Quisque ipsum purus, tincidunt quis iaculis eu, malesuada nec lectus. Vivamus tempor, enim quis vestibulum convallis, ex odio pharetra tellus, eget posuere justo ligula sit amet dolor. Cras scelerisque neque id porttitor semper. Sed ut ultrices lorem. Pellentesque sed libero a velit vestibulum fermentum id et velit. Vivamus turpis risus, venenatis ac quam nec, pulvinar fringilla libero. Donec eget vestibulum orci, id lacinia mi. Aenean sed lectus viverra est feugiat suscipit. Proin eget justo turpis. Nullam maximus fringilla sapien, at pharetra odio pretium ut. Cras imperdiet mauris at bibendum dapibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin elementum condimentum ex, ut tempus nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sed pretium tellus. Vestibulum sollicitudin semper scelerisque. Sed tristique, erat in gravida gravida, felis tortor fermentum ligula, vitae gravida velit ipsum vel magna. Aenean in pharetra ex. Integer porttitor suscipit lectus eget ornare. Maecenas sed metus quis sem dapibus vestibulum vel vitae purus. Etiam sodales nisl at enim tempus, sed malesuada elit accumsan. Aliquam faucibus neque vitae commodo rhoncus. Sed orci sem, varius vitae justo quis, cursus porttitor lectus. Pellentesque eu nibh nunc. Duis laoreet enim et justo sagittis, at posuere lectus laoreet. Suspendisse rutrum odio id iaculis varius. Phasellus gravida, mi vel vehicula dignissim, lectus nunc eleifend justo, elementum lacinia enim tellus a nulla. Pellentesque consectetur sollicitudin ante, ac vehicula lorem laoreet laoreet. Fusce consequat libero mi. Quisque luctus risus neque, ut gravida quam tincidunt id. Aliquam id ante arcu. Nulla ut est ipsum. Praesent accumsan efficitur malesuada. Ut tempor auctor felis eu dapibus. Sed felis quam, aliquet sit amet urna nec, consectetur feugiat nibh. Nam id libero nec augue convallis euismod quis vitae nibh. Integer lectus velit, malesuada ut neque mollis, mattis euismod diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Etiam aliquet porta enim sit amet rhoncus. Curabitur ornare turpis eros, sodales hendrerit tellus rutrum a. Ut efficitur feugiat turpis, eu ultrices velit pharetra non. Curabitur condimentum lacus ac ligula auctor egestas. Aliquam feugiat tellus neque, a ornare tortor imperdiet at. Integer varius turpis eu mi efficitur, at imperdiet ex posuere. Suspendisse blandit, mi at mollis placerat, magna nibh malesuada nisi, ultrices semper augue enim sit amet nisi. Donec molestie tellus vitae risus interdum, nec finibus risus interdum. Integer purus justo, fermentum id urna eu, aliquam rutrum erat. Phasellus volutpat odio metus, sed interdum magna luctus ac. Nam ullamcorper maximus sapien vitae dapibus. Vivamus ullamcorper quis sapien et mattis. Aenean aliquam arcu lacus, vel mollis ligula ultrices nec. Sed cursus placerat tortor elementum tincidunt. Pellentesque at arcu ut felis euismod vestibulum pulvinar nec neque. Quisque ipsum purus, tincidunt quis iaculis eu, malesuada nec lectus. Vivamus tempor, enim quis vestibulum convallis, ex odio pharetra tellus, eget posuere justo ligula sit amet dolor. Cras scelerisque neque id porttitor semper. Sed ut ultrices lorem. Pellentesque sed libero a velit vestibulum fermentum id et velit. Vivamus turpis risus, venenatis ac quam nec, pulvinar fringilla libero. Donec eget vestibulum orci, id lacinia mi. Aenean sed lectus viverra est feugiat suscipit. Proin eget justo turpis. Nullam maximus fringilla sapien, at pharetra odio pretium ut. Cras imperdiet mauris at bibendum dapibus.
     And the user moves focus to the element    jQuery=.button:contains("Post response")
-    Then the user should see the text in the page    The query is too long, please reduce it to 400 words.
-    And the user should see the text in the page    The query is too long, please reduce it to 4,000 characters.
+    Then the user should see the text in the page    Maximum word count exceeded. Please reduce your word count to 400.
+    And the user should see the text in the page    This field cannot contain more than 4,000 characters.
     When the user enters text to a text field    css=.editor    this is some response text
-    Then the user should not see the text in the page    The query is too long, please reduce it to 400 words.
-    And the user should not see the text in the page    The query is too long, please reduce it to 4,000 characters.
+    Then the user should not see the text in the page    Maximum word count exceeded. Please reduce your word count to 400.
+    And the user should not see the text in the page    This field cannot contain more than 4,000 characters.
 
 Query response can be posted
     [Documentation]    INFUND-4843
@@ -577,25 +577,25 @@ Create new note server side validations
     [Documentation]    INFUND-4845
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Save note")
-    Then the user should see the text in the page    The title cannot be empty.
-    And the user should see the text in the page    The note cannot be empty.
+    Then the user should see the element   jQuery=label[for="noteTitle"] span:nth-child(2) span:contains(This field cannot be left blank.)
+    And the user should see the element    jQuery=label[for="note"] span:nth-child(2) span:contains(This field cannot be left blank.)
 
 Create new note client side validations
     [Documentation]    INFUND-4845
     [Tags]
     When the user enters text to a text field    id=noteTitle    this is a title
-    Then the user should not see the text in the page    The title cannot be empty.
+    Then the user should not see the element    jQuery=label[for="noteTitle"] span:nth-child(2) span:contains(This field cannot be left blank.)
     When the user enters text to a text field    css=.editor    this is some note text
-    Then the user should not see the text in the page    The note should not be empty.
+    Then the user should not see the element    jQuery=label[for="note"] span:nth-child(2) span:contains(This field cannot be left blank.)
 
 
 Word count validations for notes
     [Documentation]    INFUND-4845
     [Tags]
     When the user enters text to a text field    css=.editor    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin elementum condimentum ex, ut tempus nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sed pretium tellus. Vestibulum sollicitudin semper scelerisque. Sed tristique, erat in gravida gravida, felis tortor fermentum ligula, vitae gravida velit ipsum vel magna. Aenean in pharetra ex. Integer porttitor suscipit lectus eget ornare. Maecenas sed metus quis sem dapibus vestibulum vel vitae purus. Etiam sodales nisl at enim tempus, sed malesuada elit accumsan. Aliquam faucibus neque vitae commodo rhoncus. Sed orci sem, varius vitae justo quis, cursus porttitor lectus. Pellentesque eu nibh nunc. Duis laoreet enim et justo sagittis, at posuere lectus laoreet. Suspendisse rutrum odio id iaculis varius. Phasellus gravida, mi vel vehicula dignissim, lectus nunc eleifend justo, elementum lacinia enim tellus a nulla. Pellentesque consectetur sollicitudin ante, ac vehicula lorem laoreet laoreet. Fusce consequat libero mi. Quisque luctus risus neque, ut gravida quam tincidunt id. Aliquam id ante arcu. Nulla ut est ipsum. Praesent accumsan efficitur malesuada. Ut tempor auctor felis eu dapibus. Sed felis quam, aliquet sit amet urna nec, consectetur feugiat nibh. Nam id libero nec augue convallis euismod quis vitae nibh. Integer lectus velit, malesuada ut neque mollis, mattis euismod diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Etiam aliquet porta enim sit amet rhoncus. Curabitur ornare turpis eros, sodales hendrerit tellus rutrum a. Ut efficitur feugiat turpis, eu ultrices velit pharetra non. Curabitur condimentum lacus ac ligula auctor egestas. Aliquam feugiat tellus neque, a ornare tortor imperdiet at. Integer varius turpis eu mi efficitur, at imperdiet ex posuere. Suspendisse blandit, mi at mollis placerat, magna nibh malesuada nisi, ultrices semper augue enim sit amet nisi. Donec molestie tellus vitae risus interdum, nec finibus risus interdum. Integer purus justo, fermentum id urna eu, aliquam rutrum erat. Phasellus volutpat odio metus, sed interdum magna luctus ac. Nam ullamcorper maximus sapien vitae dapibus. Vivamus ullamcorper quis sapien et mattis. Aenean aliquam arcu lacus, vel mollis ligula ultrices nec. Sed cursus placerat tortor elementum tincidunt. Pellentesque at arcu ut felis euismod vestibulum pulvinar nec neque. Quisque ipsum purus, tincidunt quis iaculis eu, malesuada nec lectus. Vivamus tempor, enim quis vestibulum convallis, ex odio pharetra tellus, eget posuere justo ligula sit amet dolor. Cras scelerisque neque id porttitor semper. Sed ut ultrices lorem. Pellentesque sed libero a velit vestibulum fermentum id et velit. Vivamus turpis risus, venenatis ac quam nec, pulvinar fringilla libero. Donec eget vestibulum orci, id lacinia mi. Aenean sed lectus viverra est feugiat suscipit. Proin eget justo turpis. Nullam maximus fringilla sapien, at pharetra odio pretium ut. Cras imperdiet mauris at bibendum dapibus.
-    Then the user should see the text in the page    The note is too long, please reduce it to 400 words.
+    Then the user should see the text in the page    Maximum word count exceeded. Please reduce your word count to 400.
     When the user enters text to a text field    css=.editor    this is some note text
-    Then the user should not see the text in the page    The note is too long, please reduce it to 400 words.
+    Then the user should not see the text in the page    Maximum word count exceeded. Please reduce your word count to 400.
 
 New note can be cancelled
     [Documentation]    INFUND-4845
@@ -699,7 +699,7 @@ Note comments server side validations
     [Documentation]    INFUND-7756
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Save comment")
-    Then the user should see the text in the page    The comment cannot be empty.
+    Then the user should see the element    jQuery=label[for="comment"] span:nth-child(2) span:contains(This field cannot be left blank.)
 
 
 Note comments client side validations
@@ -707,17 +707,17 @@ Note comments client side validations
     [Tags]
     When the user enters text to a text field    css=.editor    this is some comment text
     And the user moves focus to the element    jQuery=.button:contains("Save comment")
-    Then the user should not see the text in the page    The comment cannot be empty.
+    Then the user should not see the element    jQuery=label[for="comment"] span:nth-child(2) span:contains(This field cannot be left blank.)
 
 Word count validations for note comments
     [Documentation]    INFUND-7756
     When the user enters text to a text field    css=.editor    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin elementum condimentum ex, ut tempus nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sed pretium tellus. Vestibulum sollicitudin semper scelerisque. Sed tristique, erat in gravida gravida, felis tortor fermentum ligula, vitae gravida velit ipsum vel magna. Aenean in pharetra ex. Integer porttitor suscipit lectus eget ornare. Maecenas sed metus quis sem dapibus vestibulum vel vitae purus. Etiam sodales nisl at enim tempus, sed malesuada elit accumsan. Aliquam faucibus neque vitae commodo rhoncus. Sed orci sem, varius vitae justo quis, cursus porttitor lectus. Pellentesque eu nibh nunc. Duis laoreet enim et justo sagittis, at posuere lectus laoreet. Suspendisse rutrum odio id iaculis varius. Phasellus gravida, mi vel vehicula dignissim, lectus nunc eleifend justo, elementum lacinia enim tellus a nulla. Pellentesque consectetur sollicitudin ante, ac vehicula lorem laoreet laoreet. Fusce consequat libero mi. Quisque luctus risus neque, ut gravida quam tincidunt id. Aliquam id ante arcu. Nulla ut est ipsum. Praesent accumsan efficitur malesuada. Ut tempor auctor felis eu dapibus. Sed felis quam, aliquet sit amet urna nec, consectetur feugiat nibh. Nam id libero nec augue convallis euismod quis vitae nibh. Integer lectus velit, malesuada ut neque mollis, mattis euismod diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Etiam aliquet porta enim sit amet rhoncus. Curabitur ornare turpis eros, sodales hendrerit tellus rutrum a. Ut efficitur feugiat turpis, eu ultrices velit pharetra non. Curabitur condimentum lacus ac ligula auctor egestas. Aliquam feugiat tellus neque, a ornare tortor imperdiet at. Integer varius turpis eu mi efficitur, at imperdiet ex posuere. Suspendisse blandit, mi at mollis placerat, magna nibh malesuada nisi, ultrices semper augue enim sit amet nisi. Donec molestie tellus vitae risus interdum, nec finibus risus interdum. Integer purus justo, fermentum id urna eu, aliquam rutrum erat. Phasellus volutpat odio metus, sed interdum magna luctus ac. Nam ullamcorper maximus sapien vitae dapibus. Vivamus ullamcorper quis sapien et mattis. Aenean aliquam arcu lacus, vel mollis ligula ultrices nec. Sed cursus placerat tortor elementum tincidunt. Pellentesque at arcu ut felis euismod vestibulum pulvinar nec neque. Quisque ipsum purus, tincidunt quis iaculis eu, malesuada nec lectus. Vivamus tempor, enim quis vestibulum convallis, ex odio pharetra tellus, eget posuere justo ligula sit amet dolor. Cras scelerisque neque id porttitor semper. Sed ut ultrices lorem. Pellentesque sed libero a velit vestibulum fermentum id et velit. Vivamus turpis risus, venenatis ac quam nec, pulvinar fringilla libero. Donec eget vestibulum orci, id lacinia mi. Aenean sed lectus viverra est feugiat suscipit. Proin eget justo turpis. Nullam maximus fringilla sapien, at pharetra odio pretium ut. Cras imperdiet mauris at bibendum dapibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin elementum condimentum ex, ut tempus nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sed pretium tellus. Vestibulum sollicitudin semper scelerisque. Sed tristique, erat in gravida gravida, felis tortor fermentum ligula, vitae gravida velit ipsum vel magna. Aenean in pharetra ex. Integer porttitor suscipit lectus eget ornare. Maecenas sed metus quis sem dapibus vestibulum vel vitae purus. Etiam sodales nisl at enim tempus, sed malesuada elit accumsan. Aliquam faucibus neque vitae commodo rhoncus. Sed orci sem, varius vitae justo quis, cursus porttitor lectus. Pellentesque eu nibh nunc. Duis laoreet enim et justo sagittis, at posuere lectus laoreet. Suspendisse rutrum odio id iaculis varius. Phasellus gravida, mi vel vehicula dignissim, lectus nunc eleifend justo, elementum lacinia enim tellus a nulla. Pellentesque consectetur sollicitudin ante, ac vehicula lorem laoreet laoreet. Fusce consequat libero mi. Quisque luctus risus neque, ut gravida quam tincidunt id. Aliquam id ante arcu. Nulla ut est ipsum. Praesent accumsan efficitur malesuada. Ut tempor auctor felis eu dapibus. Sed felis quam, aliquet sit amet urna nec, consectetur feugiat nibh. Nam id libero nec augue convallis euismod quis vitae nibh. Integer lectus velit, malesuada ut neque mollis, mattis euismod diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Etiam aliquet porta enim sit amet rhoncus. Curabitur ornare turpis eros, sodales hendrerit tellus rutrum a. Ut efficitur feugiat turpis, eu ultrices velit pharetra non. Curabitur condimentum lacus ac ligula auctor egestas. Aliquam feugiat tellus neque, a ornare tortor imperdiet at. Integer varius turpis eu mi efficitur, at imperdiet ex posuere. Suspendisse blandit, mi at mollis placerat, magna nibh malesuada nisi, ultrices semper augue enim sit amet nisi. Donec molestie tellus vitae risus interdum, nec finibus risus interdum. Integer purus justo, fermentum id urna eu, aliquam rutrum erat. Phasellus volutpat odio metus, sed interdum magna luctus ac. Nam ullamcorper maximus sapien vitae dapibus. Vivamus ullamcorper quis sapien et mattis. Aenean aliquam arcu lacus, vel mollis ligula ultrices nec. Sed cursus placerat tortor elementum tincidunt. Pellentesque at arcu ut felis euismod vestibulum pulvinar nec neque. Quisque ipsum purus, tincidunt quis iaculis eu, malesuada nec lectus. Vivamus tempor, enim quis vestibulum convallis, ex odio pharetra tellus, eget posuere justo ligula sit amet dolor. Cras scelerisque neque id porttitor semper. Sed ut ultrices lorem. Pellentesque sed libero a velit vestibulum fermentum id et velit. Vivamus turpis risus, venenatis ac quam nec, pulvinar fringilla libero. Donec eget vestibulum orci, id lacinia mi. Aenean sed lectus viverra est feugiat suscipit. Proin eget justo turpis. Nullam maximus fringilla sapien, at pharetra odio pretium ut. Cras imperdiet mauris at bibendum dapibus.
     And the user moves focus to the element    jQuery=.button:contains("Save comment")
-    Then the user should see the text in the page    The comment is too long, please reduce it to 400 words.    # subject to change of course
-    And the user should see the text in the page    The comment is too long, please reduce it to 4,000 characters.
+    Then the user should see the text in the page    Maximum word count exceeded. Please reduce your word count to 400.    # subject to change of course
+    And the user should see the text in the page    This field cannot contain more than 4,000 characters.
     When the user enters text to a text field    css=.editor    this is some comment text
-    Then the user should not see the text in the page    The comment is too long, please reduce it to 400 words.    # subject to change of course
-    And the user should not see the text in the page    The comment is too long, please reduce it to 4,000 characters.
+    Then the user should not see the text in the page    Maximum word count exceeded. Please reduce your word count to 400.    # subject to change of course
+    And the user should not see the text in the page    This field cannot contain more than 4,000 characters.
 
 Note comment can be posted
     [Documentation]    INFUND-7756
@@ -728,33 +728,6 @@ Note comment section now becomes read-only
     [Documentation]    INFUND-7756
     [Tags]
     When the user should not see the element    css=.editor
-
-
-Finance checks client-side validations
-    [Documentation]    INFUND-5193
-    [Tags]    HappyPath
-    [Setup]    log in as a different user    &{internal_finance_credentials}
-    Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    And the user clicks the button/link     css=a.eligibility-0
-    When the user enters text to a text field    name=costs[0].value    ${Empty}
-    Then the user should see an error    Please enter a labour cost
-    When the user enters text to a text field    name=costs[1].value    ${Empty}
-    Then the user should see an error    Please enter an admin support cost
-    When the user enters text to a text field    name=costs[2].value    ${Empty}
-    Then the user should see an error    Please enter a materials cost
-    When the user enters text to a text field    name=costs[3].value    ${Empty}
-    Then the user should see an error    Please enter a capital usage cost
-    When the user enters text to a text field    name=costs[4].value    ${Empty}
-    Then the user should see an error    Please enter subcontracting cost
-    When the user enters text to a text field    name=costs[5].value    ${Empty}
-    Then the user should see an error    Please enter a travel and subsistence cost
-    When the user enters text to a text field    name=costs[6].value    ${Empty}
-    Then the user should see an error    Please enter any other cost
-    When the user enters text to a text field    name=costs[0].value    -1
-    And the user moves focus to the element    css=[for="costs-reviewed"]
-    Then the user should see an error    This field should be 0 or higher
-    And The user should not see the text in the page    Please enter a labour cost
-
 
 Project Finance user can view academic Jes form
     [Documentation]     INFUND-5220
@@ -915,8 +888,7 @@ Confirming viability should update on the finance checks page for partner
 
 Eligibility checks are populated in the table
     [Documentation]    INFUND-4823
-    [Tags]    Pending
-    # TODO Pending due to INFUND-4823 as story has not yet been merged to dev
+    [Tags]
     And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(4)    Review
     And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(5)    Not set
     And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(2) td:nth-child(4)    Review
@@ -984,8 +956,7 @@ Finance checks eligibility validations
     Then the user should see the text in the page    This field cannot be left blank
     And the user clicks the button/link             jQuery=section:nth-of-type(7) button:contains("Other costs")
     When the user clicks the button/link             link=Finance checks
-  #  When the user clicks the button/link             jQuery=table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Review")    # TODO this is to be uncommented once the switch to new eligibility page is done with 4823
-    And the user navigates to the page               ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/22/eligibility   # TODO to delete this when the new eligibility page is switched to
+    When the user clicks the button/link             jQuery=table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Review")
 
 Project finance user can amend all sections of eligibility for lead
     [Documentation]    INFUND-4834
@@ -1007,8 +978,7 @@ Checking the approve eligibility checkbox enables RAG selection but not Approve 
 
 RAG choices update on the finance checks page for eligibility
     [Documentation]    INFUND-4839, INFUND-4823
-    [Tags]  Pending
-    # TODO Pending due to INFUND-4823 as story has not yet been merged to dev
+    [Tags]
     When the rag rating updates on the finance check page for lead for eligibility   Green
     And the rag rating updates on the finance check page for lead for eligibility    Amber
     And the rag rating updates on the finance check page for lead for eligibility   Red
@@ -1038,9 +1008,8 @@ Confirming eligibility should show info on a readonly page
 
 Confirming eligibility should update on the finance checks page
     [Documentation]    INFUND-4823
-    [Tags]  Pending
-    # TODO Pending due to INFUND-4823 as story has not yet been merged to dev
-    When the user clicks the button/link    link=Finance checks
+    [Tags]
+    When the user clicks the button/link    jQuery=.button-secondary:contains("Return to finance checks")
     Then the user should see the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Approved")
 
 Project finance user can see updated finance overview after lead changes to eligibility
@@ -1083,8 +1052,7 @@ Project finance user can amend all sections of eligibility for partner
 
 Project finance user can see the eligibility checks for the industrial partner
     [Documentation]    INFUND-4823
-    [Tags]  Pending
-    # TODO Pending due to INFUND-4823 as story has not yet been merged to dev
+    [Tags]
     When the user clicks the button/link   link=Finance checks
     And the user clicks the button/link    jQuery=table.table-progress tr:nth-child(2) td:nth-child(4) a:contains("Review")
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
@@ -1092,15 +1060,13 @@ Project finance user can see the eligibility checks for the industrial partner
 Checking the approve eligibility checkbox enables RAG selection but not confirm viability button for partner
     [Documentation]    INFUND-4839
     [Tags]
-    When the user navigates to the page  ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/39/eligibility  # TODO to be removed after 4823
-    And the user selects the checkbox    project-eligible
+    When the user selects the checkbox    project-eligible
     Then the user should see the element    id=rag-rating
     And the user should see the element    jQuery=.button.disabled:contains("Approve eligible costs")
 
 RAG choices update on the finance checks page for eligibility for partner
     [Documentation]    INFUND-4839, INFUND-4823
-    [Tags]  Pending
-    # TODO Pending due to INFUND-4823 as story has not yet been merged to dev
+    [Tags]
     When the rag rating updates on the finance check page for partner for eligibility   Green
     And the rag rating updates on the finance check page for partner for eligibility    Amber
     And the rag rating updates on the finance check page for partner for eligibility    Red
@@ -1127,28 +1093,15 @@ Confirming eligibility should show info on a readonly page for partner
     And the user should see the text in the page  The partner's finance eligibility has been approved by Lee Bowman, ${today}
     And the user should not see the element    id=rag-rating
     And the user should not see the checkbox    project-eligible
-    And the user clicks the button/link    link=Finance checks
 
 Confirming eligibility should update on the finance checks page
-    [Documentation]    INFUND-4823
-    [Tags]  Pending
-    # TODO Pending due to INFUND-4823 as story has not yet been merged to dev
+    [Documentation]    INFUND-4823, INFUND-7076
+    [Tags]
     When the user clicks the button/link    link=Finance checks
     Then the user should see the element    jQuery=table.table-progress tr:nth-child(2) td:nth-child(4) a:contains("Approved")
+    And The user should see the element    jQuery=.generate-spend-profile-main-button
+    And the user should see the element    xpath=//*[@class='button generate-spend-profile-main-button' and @disabled='disabled']
 
-
-Approve Eligibility: Lead partner organisation
-    [Documentation]    INFUND-5193, INFUND-6149
-    [Tags]    HappyPath
-    Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/22
-    And the user should see the element    xpath=//a[contains(@href,'mailto:${test_mailbox_one}+fundsuccess@gmail.com')]
-    When the user fills in project costs
-    And the user selects the checkbox    costs-reviewed
-    Then the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
-    And the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve eligible costs")
-    And the user should see the text in the page    The partner finance eligibility has been approved
-    And The user clicks the button/link    jQuery=.button:contains("Return to finance checks")    #Check that also the button works
-    Then the user sees the text in the element    css=a.eligibility-0    Approved
 
 Project finance user can see updated finance overview after partner changes to eligibility
     [Documentation]    INFUND-5508
@@ -1158,51 +1111,18 @@ Project finance user can see updated finance overview after partner changes to e
     And the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(4)    £ 87,847
     And the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(6)    28%
 
-Approve Eligibility: Collaborator partner organisation
-    [Documentation]    INFUND-5193
-    [Tags]    HappyPath
-    Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/
-    When the user clicks the button/link    css=a.eligibility-1
-    When the user fills in project costs
-    And the user selects the checkbox    costs-reviewed
-    Then the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
-    And the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve eligible costs")
-    And the user should see the text in the page    The partner finance eligibility has been approved
-    And The user clicks the button/link    link=Finance checks
-    Then the user sees the text in the element    css=a.eligibility-1    Approved
-
-Approve Eligibility and verify Viability and RAG: Academic partner organisation
-    [Documentation]    INFUND-5193, INFUND-7026, INFUND-7095
-    [Tags]    HappyPath
-    When the user clicks the button/link    css=a.eligibility-2
-    And the user selects the checkbox    costs-reviewed
-    Then the user clicks the button/link    jQuery=.button:contains("Approve finances")
-    And the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve eligible costs")
-    Then the user should see the text in the page    The partner finance eligibility has been approved
-    And The user clicks the button/link    link=Finance checks
-    Then the user sees the text in the element    css=a.eligibility-2    Approved
-    And The user should see the element    jQuery=.generate-spend-profile-main-button
-    And the user should see the text in the element  css=span.viability-rag-2    N/A
-    And the user should see the text in the element  css=span.viability-2    N/A
-
-Generate spend profile button enabled after viability checks are completed
-    [Documentation]    INFUND-7076
-    [Tags]
-    When the user should not see the element    xpath=//*[@class='button generate-spend-profile-main-button' and @disabled='disabled']
-
-Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
-    [Documentation]    INFUND-4428
-    [Tags]      HappyPath
-    [Setup]    Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
-    When the user navigates to the page    ${project_in_setup_page}
-    And the user should see the element    jQuery=ul li.complete:nth-child(1)
-    And the user should see the text in the page    Successful application
-#    And the user should not see the element    link = Bank details
-#    And the user should not see the element    link = Finance checks
-#    And the user should not see the element    link = Spend profile
-#    And the user should not see the element    link = Grant offer letter
-    # MO link is not added because suite fails when ran independently
-    #TODO please update links when working on INFUND-6815
+# TODO needs a new test to approve academic eligibility
+#Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
+#    [Documentation]    INFUND-4428
+#    [Tags]      HappyPath
+#    [Setup]    Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
+#    When the user navigates to the page    ${project_in_setup_page}
+#    And the user should see the element    jQuery=ul li.complete:nth-child(1)
+#    And the user should see the text in the page    Successful application
+#    And the user should not see the element    jQuery=ul li.complete:nth-child(2)
+#    And the user should not see the element    jQuery=ul li.complete:nth-child(4)
+#    And the user should not see the element    jQuery=ul li.complete:nth-child(5)
+#    And the user should not see the element    jQuery=ul li.read-only:nth-child(6)
 
 Status updates correctly for internal user's table
      [Documentation]    INFUND-4049,INFUND-5543

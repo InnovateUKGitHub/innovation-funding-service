@@ -55,6 +55,7 @@ import org.innovateuk.ifs.form.transactional.FormInputService;
 import org.innovateuk.ifs.invite.mapper.*;
 import org.innovateuk.ifs.invite.repository.*;
 import org.innovateuk.ifs.invite.transactional.EthnicityService;
+import org.innovateuk.ifs.invite.transactional.InviteOrganisationService;
 import org.innovateuk.ifs.invite.transactional.InviteProjectService;
 import org.innovateuk.ifs.invite.transactional.RejectionReasonService;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
@@ -86,6 +87,7 @@ import org.innovateuk.ifs.project.transactional.ProjectGrantOfferService;
 import org.innovateuk.ifs.project.transactional.ProjectService;
 import org.innovateuk.ifs.project.transactional.ProjectStatusService;
 import org.innovateuk.ifs.project.users.ProjectUsersHelper;
+import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
 import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
@@ -93,7 +95,6 @@ import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.sil.experian.service.SilExperianEndpoint;
 import org.innovateuk.ifs.threads.attachments.mapper.AttachmentMapper;
 import org.innovateuk.ifs.threads.attachments.repository.AttachmentRepository;
-import org.innovateuk.ifs.threads.attachments.service.AttachmentsService;
 import org.innovateuk.ifs.threads.attachments.service.ProjectFinanceAttachmentService;
 import org.innovateuk.ifs.threads.mapper.NoteMapper;
 import org.innovateuk.ifs.threads.mapper.PostMapper;
@@ -105,6 +106,7 @@ import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.user.mapper.*;
 import org.innovateuk.ifs.user.repository.*;
 import org.innovateuk.ifs.user.transactional.*;
+import org.innovateuk.ifs.validator.util.ValidationUtil;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.junit.Before;
 import org.mockito.Mock;
@@ -275,6 +277,12 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected InviteOrganisationRepository inviteOrganisationRepositoryMock;
+
+    @Mock
+    protected InviteOrganisationMapper inviteOrganisationMapperMock;
+
+    @Mock
+    protected InviteOrganisationService inviteOrganisationServiceMock;
 
     @Mock
     protected ApplicationInviteRepository applicationInviteRepositoryMock;
@@ -547,13 +555,13 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected FinanceCheckRepository financeCheckRepositoryMock;
 
     @Mock
-    protected ContractService contractServiceMock;
+    protected AgreementService agreementServiceMock;
 
     @Mock
-    protected ContractRepository contractRepositoryMock;
+    protected AgreementRepository agreementRepositoryMock;
 
     @Mock
-    protected ContractMapper contractMapperMock;
+    protected AgreementMapper agreementMapperMock;
 
     @Mock
     protected FileTemplateRenderer rendererMock;
@@ -578,6 +586,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected OrganisationFinanceDelegate organisationFinanceDelegateMock;
+
+    @Mock
+    protected FinanceUtil financeUtilMock;
 
     @Mock
     protected OrganisationMapper organisationMapperMock;
@@ -623,6 +634,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ApplicationAssessorPageMapper applicationAssessorPageMapperMock;
+
+    @Mock
+    protected ValidationUtil validationUtilMock;
 
     @Before
     public void setupMockInjection() {

@@ -79,7 +79,7 @@ Create new application with the same user
     And the user clicks the button/link    jQuery=.button:contains("Apply now")
     And the user clicks the button/link    jQuery=Label:contains("Yes I want to create a new application")
     And the user clicks the button/link    jQuery=.button:contains("Continue")
-    And the user clicks the button/link    jQuery=.button:contains("Begin application")
+    And the user clicks the button/link    jQuery=a:contains("Begin application")
     And the user clicks the button/link    link=Application details
     And the user enters text to a text field    id=application_details-title    Robot test application
     And the user clicks the button/link    jQuery=button:contains("Save and return")
@@ -93,7 +93,7 @@ create new submit application
     And the guest user clicks the log-in button
     And the user clicks the button/link    jQuery=Label:contains("Yes I want to create a new application")
     And the user clicks the button/link    jQuery=.button:contains("Continue")
-    And the user clicks the button/link    jQuery=.button:contains("Begin application")
+    And the user clicks the button/link    jQuery=a:contains("Begin application")
     And the user clicks the button/link    link=Application details
     And the user enters text to a text field    id=application_details-title    ${application_name}
     And the user clicks the button/link    jQuery=button:contains("Save and return")
@@ -104,7 +104,7 @@ Create new invite application with the same user
     And the user clicks the button/link    jQuery=.button:contains("Apply now")
     And the user clicks the button/link    jQuery=Label:contains("Yes I want to create a new application")
     And the user clicks the button/link    jQuery=.button:contains("Continue")
-    And the user clicks the button/link    jQuery=.button:contains("Begin application")
+    And the user clicks the button/link    jQuery=a:contains("Begin application")
     And the user clicks the button/link    link=Application details
     And the user enters text to a text field    id=application_details-title    Invite robot test application
     And the user clicks the button/link    jQuery=button:contains("Save and return")
@@ -115,7 +115,7 @@ Create new academic application with the same user
     And the user clicks the button/link    jQuery=.button:contains("Apply now")
     And the user clicks the button/link    jQuery=Label:contains("Yes I want to create a new application")
     And the user clicks the button/link    jQuery=.button:contains("Continue")
-    And the user clicks the button/link    jQuery=.button:contains("Begin application")
+    And the user clicks the button/link    jQuery=a:contains("Begin application")
     And the user clicks the button/link    link=Application details
     And the user enters text to a text field    id=application_details-title    Academic robot test application
     And the user clicks the button/link    jQuery=button:contains("Save and return")
@@ -126,13 +126,11 @@ Invite and accept the invitation
     And the user clicks the button/link    link=Academic robot test application
     And the user should see the text in the page    view and add participants to your application
     When the user clicks the button/link    link=view and add participants to your application
-    And the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
-    And the user clicks the button/link    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
-    Input Text    name=organisations[1].organisationName    Academic Test
-    Input Text    name=organisations[1].invites[0].personName    Arsene Wenger
-    Input Text    name=organisations[1].invites[0].email    ${test_mailbox_one}+academictest@gmail.com
-    focus    jquery=button:contains("Save changes")
-    And the user clicks the button/link    jquery=button:contains("Save changes")
+    And the user clicks the button/link    jQuery=a:contains("Add partner organisation")
+    And the user enters text to a text field    name=organisationName    Academic Test
+    And the user enters text to a text field    name=applicants[0].name     Arsene Wenger
+    And the user enters text to a text field    name=applicants[0].email    ${test_mailbox_one}+academictest@gmail.com
+    And the user clicks the button/link    jQuery=button:contains("Add organisation and invite applicants")
     And the user closes the browser
     And the guest user opens the browser
     When the user reads his email and clicks the link    ${recipient}    ${subject}    ${pattern}
@@ -154,7 +152,7 @@ Invite and accept the invitation
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     And the user clicks the button/link    jQuery=.button:contains("Confirm and continue")
     And the user fills the create account form    Arsene    Wenger
-    And the user reads his email and clicks the link    ${test_mailbox_one}+academictest@gmail.com    Please verify your email address    Verify account
+    And the user reads his email and clicks the link    ${test_mailbox_one}+academictest@gmail.com    Please verify your email address    Please click on the verification link to confirm your email address
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
     And guest user log-in    ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
 
@@ -215,11 +213,12 @@ invite a registered user
     the guest user inserts user email & password    ${EMAIL_LEAD}  ${correct_password}
     the guest user clicks the log-in button
     the user clicks the button/link    link=${OPEN_COMPETITION_LINK}
-    the user clicks the button/link    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
-    Input Text    name=organisations[1].organisationName    innovate
-    Input Text    name=organisations[1].invites[0].personName    Partner name
-    Input Text    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input    ${EMAIL_INVITED}
-    the user clicks the button/link    jQuery=.button:contains("Begin application")
+    the user clicks the button/link    jQuery=a:contains("Add partner organisation")
+    the user enters text to a text field    name=organisationName    innovate
+    the user enters text to a text field    name=applicants[0].name    Partner name
+    the user enters text to a text field    name=applicants[0].email    ${EMAIL_INVITED}
+    the user clicks the button/link    jQuery=button:contains("Add organisation and invite applicants")
+    the user clicks the button/link    jQuery=a:contains("Begin application")
     the user should see the text in the page    Application overview
     the user closes the browser
     the guest user opens the browser

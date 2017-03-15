@@ -8,7 +8,7 @@
             <dt>Project funding range</dt>
             <dd th:text="${form.projectFundingRange}"></dd>
             <dt>Eligibility summary</dt>
-            <dd th:text="${form.eligibilitySummary}"></dd>
+            <dd><div class="wysiwyg-styles" ifs:utext="${form.eligibilitySummary}"></div></dd>
             <dt>Keywords</dt>
             <dd th:text="${form.keywords}"></dd>
         </dl>
@@ -22,6 +22,7 @@
                 </label>
                 <input class="form-control width-full" id="short-description" type="text" th:field="${form.shortDescription}"
                        required="required"
+                       maxlength="255"
                        th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.shortDescription.required}" />
             </div>
             <div class="form-group">
@@ -31,6 +32,7 @@
                 </label>
                 <input class="form-control" id="funding-range" type="text" th:field="${form.projectFundingRange}"
                        required="required"
+                       maxlength="255"
                        th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.projectFundingRange.required}" />
             </div>
             <div class="form-group">
@@ -38,9 +40,15 @@
                     Eligibility summary
                     <span class="form-hint">Appears against the competition search result.</span>
                 </label>
-                <input class="form-control" id="eligibility-summary" type="text" th:field="${form.eligibilitySummary}"
-                       required="required"
-                       th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.eligibilitySummary.required}" />
+                <div class="textarea-wrapped">
+                    <textarea data-editor="html"
+                           class="form-control"
+                           id="eligibility-summary"
+                           ifs:utext="${form.eligibilitySummary}"
+                           th:field="${form.eligibilitySummary}"
+                           required="required"
+                           th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.eligibilitySummary.required}"></textarea>
+                </div>
             </div>
             <div class="form-group">
                 <label class="form-label-bold" for="keywords">
@@ -49,6 +57,7 @@
                 </label>
                 <input class="form-control width-full" id="keywords" type="text" th:field="${form.keywords}"
                        required="required"
+                       maxlength="255"
                        th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.keywords.required}"/>
             </div>
         </fieldset>
@@ -61,7 +70,7 @@
     <th:block th:if="${model.readOnly}">
         <dl class="readonly-data">
             <dt>Competition description</dt>
-            <dd ifs:utext="${form.description}"></dd>
+            <dd><div class="wysiwyg-styles" ifs:utext="${form.description}"></div></dd>
             <dt>Funding type</dt>
             <dd th:text="${form.fundingType}"></dd>
             <dt>Project size</dt>

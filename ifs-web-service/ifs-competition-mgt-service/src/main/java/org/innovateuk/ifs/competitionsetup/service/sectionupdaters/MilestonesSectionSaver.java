@@ -12,6 +12,7 @@ import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
+import org.innovateuk.ifs.competitionsetup.form.MilestoneTime;
 import org.innovateuk.ifs.competitionsetup.form.MilestonesForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.util.CollectionFunctions;
@@ -121,20 +122,39 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
     }
 
     private List<Error> validateMilestoneDateOnAutosave(MilestoneResource milestone, String fieldName, String value) {
-        String[] dateParts = value.split("-");
-        Integer day = Integer.parseInt(dateParts[0]);
-        Integer month = Integer.parseInt(dateParts[1]);
-        Integer year = Integer.parseInt(dateParts[2]);
+        Integer day = null, month = null, year = null, hour = 0;
+        LocalDateTime currentDate = milestone.getDate();
 
-        if(day == null || month == null || year == null || !competitionSetupMilestoneService.isMilestoneDateValid(day, month, year)) {
+	    if(isTimeField(fieldName)) {
+            if(null != currentDate) {
+                day = currentDate.getDayOfMonth();
+                month = currentDate.getMonthValue();
+                year = currentDate.getYear();
+                hour = MilestoneTime.valueOf(value).getHour();
+            }
+        } else {
+            String[] dateParts = value.split("-");
+            day = Integer.parseInt(dateParts[0]);
+            month = Integer.parseInt(dateParts[1]);
+            year = Integer.parseInt(dateParts[2]);
 
+            if(null != currentDate) {
+                hour = milestone.getDate().getHour();
+            }
+        }
+
+        if(!competitionSetupMilestoneService.isMilestoneDateValid(day, month, year)) {
             return asList(fieldError(fieldName, fieldName.toString(), "error.milestone.invalid"));
         }
         else {
-            milestone.setDate(LocalDateTime.of(year, month, day, 0,0));
+            milestone.setDate(LocalDateTime.of(year, month, day, hour, 0));
         }
 
         return Collections.emptyList();
+    }
+
+    private boolean isTimeField(String fieldName) {
+	    return fieldName.endsWith(".time");
     }
 
     private List<Error> makeErrorList()  {

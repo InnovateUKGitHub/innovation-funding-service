@@ -191,10 +191,10 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
         });
     }
 
-    public AssessorDataBuilder addContractSigned() {
+    public AssessorDataBuilder addAgreementSigned() {
         return with((AssessorData data) ->
                 doAs(data.getUser(), () -> {
-                    userProfileService.updateProfileContract(data.getUser().getId());
+                    userProfileService.updateProfileAgreement(data.getUser().getId());
                     testService.flushAndClearSession();
                 })
         );
