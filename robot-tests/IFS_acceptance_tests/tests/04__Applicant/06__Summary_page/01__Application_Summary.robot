@@ -32,7 +32,7 @@ Edit link navigates to the application form
     [Documentation]    INFUND-193
     [Tags]    HappyPath
     Given the user clicks the button/link    jQuery=button:contains("Project summary")
-    When the user clicks the button/link    jQuery=#form-input-11 button:contains("Edit")
+    When the user clicks the button/link    jQuery=#form-input-11 button:contains("Return and edit")
     Then the user redirects to the page    Please provide a short summary of your project    Project summary
     And The user enters text to a text field    css=#form-input-11 .editor    Test text 123
     [Teardown]    The user clicks the button/link    jQuery=Button:contains(Save and return to application overview)

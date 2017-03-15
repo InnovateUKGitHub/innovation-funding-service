@@ -175,7 +175,7 @@ the Applicant edits Project summary and marks it as complete
     Press Key    css=#form-input-11 .editor    \\8
     focus    css=#form-input-11 .editor
     The user enters text to a text field    css=#form-input-11 .editor    Hi, I’m a robot @#$@#$@#$
-    the user clicks the button/link    css=#form-input-11 div.textarea-footer button[name="mark_as_complete"]
+    the user clicks the button/link    css=#form-input-11 .form-footer .form-footer__actions button[name="mark_as_complete"]
 
 the question should be marked as complete on the application overview page
     The user clicks the button/link    link=Application Overview
