@@ -1,14 +1,14 @@
 Email,First name,Last name,Status,Organisation name,Phone number,Disability,Ethnicity,Gender,Competition name,Hash,Invite Status,Rejection reason,Rejection comment,Skill areas,Business Type,Innovation Areas,Principal employer,Role,Professional affiliations,Appointments,Financial interests,Family affiliations,Family financial interests,Agreement signed
 worth.email.test+jeremy.alufson@gmail.com,Jeremy,Alufson,ACTIVE,,032317431918,No,Black British,Male,Home and industrial efficiency programme,,OPENED,,,,,Resource efficiency,,,,,,,,FALSE
-paul.plum@gmail.com,Paul,Plum,ACTIVE,,054106122665,Yes,Asian/Asian British,Prefer not to say,Sustainable living models for the future,,OPENED,,,"Town Planning, Construction",ACADEMIC,"Urban Living
-Infrastructure",University of Sheffield,Professor,,Organisation: Plum Planning | Position: CEO,,Relation: Wife | Organisation: Robotics International | Position: CTO,,TRUE
+paul.plum@gmail.com,Paul,Plum,ACTIVE,,054106122665,Yes,Asian/Asian British,Prefer not to say,Sustainable living models for the future,,OPENED,,,"Town Planning, Construction",ACADEMIC,"Urban living
+Smart infrastructure",University of Sheffield,Professor,,Organisation: Plum Planning | Position: CEO,,Relation: Wife | Organisation: Robotics International | Position: CTO,,TRUE
 felix.wilson@gmail.com,Felix,Wilson,ACTIVE,,094073497201,,,,Sustainable living models for the future,,OPENED,,,Industrial modernisation consultation,ACADEMIC,"Early Stage Manufacturing
 Manufacturing Readiness",,,,,,,,TRUE
 jo.peters@ntag.example.com,Josephine,Peters,ACTIVE,,,Prefer not to say,White,Female,Sustainable living models for the future,,OPENED,Not available,I do not have the time sorry,Automation process streamlining,ACADEMIC,Manufacturing Readiness,University of Northumbria,Doctor,,,,,,TRUE
-will.smith@gmail.com,Will,Smith,ACTIVE,,028572565937,No,Black British,Male,Photonics for health,,OPENED,,,Solar energy research,BUSINESS,"Energy Systems
+will.smith@gmail.com,Will,Smith,ACTIVE,,028572565937,No,Black British,Male,Photonics for health,,OPENED,,,Solar energy research,BUSINESS,"Energy systems
 Advanced Materials
 Precision Medicine",Smith Systems,CTO,,,,,,TRUE
-laura.weaver@gmail.com,Laura,Weaver,ACTIVE,,047682659263,No,White,Female,Photonics for health,,OPENED,,,Renewable energy analysis,BUSINESS,Offshore Renewable Energy,Solar Wind Engineering,CEO,,,,,,FALSE
+laura.weaver@gmail.com,Laura,Weaver,ACTIVE,,047682659263,No,White,Female,Photonics for health,,OPENED,,,Renewable energy analysis,BUSINESS,Offshore wind,Solar Wind Engineering,CEO,,,,,,FALSE
 sarah.chung@gmail.com,Sarah,Chung,ACTIVE,,047682659263,No,Asian/Asian British,Female,Photonics for health,,OPENED,,,Materials Science in cutting edge technologies,ACADEMIC,"Advanced Materials
 Emerging Technology",University of Leeds,Professor,,,I have shares in multiple companies such as Advanced Thermoblastics Ltd and Future Polymers Ltd,,,TRUE
 matt.roberts@gmail.com,Matt,Roberts,ACTIVE,,047682659263,No,White,Male,Photonics for health,,OPENED,,,,,Resource efficiency,,,,,,,,TRUE
@@ -37,7 +37,7 @@ danni.elliott@gmail.com,Danni,Elliott,ACTIVE,,,No,,Female,Photonics for health,,
 ryan.burton@gmail.com,Ryan,Burton,ACTIVE,,,No,,Male,Photonics for health,,OPENED,,,,,Digital Manufacturing,,,,,,,,TRUE
 glen.rose@gmail.com,Glen,Rose,ACTIVE,,,No,,Male,Photonics for health,,OPENED,,,,,Resource efficiency,,,,,,,,TRUE
 kris.lewis@gmail.com,Kris,Lewis,ACTIVE,,,No,,Male,Photonics for health,,OPENED,,,,,Creative Industries,,,,,,,,TRUE
-simon.bates@gmail.com,Simon,Bates,ACTIVE,,,No,,Male,Photonics for health,,OPENED,,,,,Nuclear,,,,,,,,TRUE
+simon.bates@gmail.com,Simon,Bates,ACTIVE,,,No,,Male,Photonics for health,,OPENED,,,,,Nuclear fission,,,,,,,,TRUE
 alexis.kinney@gmail.com,Alexis,Kinney,ACTIVE,,,No,,Female,Photonics for health,,OPENED,,,,,Digital Manufacturing,,,,,,,,TRU
 terry.fitzgerald@gmail.com,Terry,Fitzgerald,ACTIVE,,,No,,Male,Photonics for health,,OPENED,,,,,Resource efficiency,,,,,,,,TRUE
 skylar.walter@gmail.com,Skylar,Walter,ACTIVE,,,No,,Male,Photonics for health,,OPENED,,,,,Creative Industries,,,,,,,,TRUE
@@ -54,7 +54,7 @@ addison.shannon@gmail.com,Addison,Shannon,ACTIVE,,,No,,Female,Photonics for heal
 bret.alvarez@gmail.com,Bret,Alvarez,ACTIVE,,,No,,Male,Photonics for health,,OPENED,,,,,Creative Industries,,,,,,,,TRUE
 angel.witt@gmail.com,Angel,Witt,ACTIVE,,,No,,Female,Photonics for health,,OPENED,,,,,Resource efficiency,,,,,,,,TRUE
 elliot.gordon@gmail.com,Elliot,Gordon,ACTIVE,,,No,,Male,Photonics for health,,OPENED,,,,,Manufacturing Readiness,,,,,,,,TRUE
-sammy.klein@gmail.com,Sammy,Klein,ACTIVE,,047682659263,No,White,Female,Sustainable living models for the future,,OPENED,,,,,Nuclear,,,,,,,,TRUE
+sammy.klein@gmail.com,Sammy,Klein,ACTIVE,,047682659263,No,White,Female,Sustainable living models for the future,,OPENED,,,,,Nuclear fission,,,,,,,,TRUE
 myra.cole@gmail.com,Myra,Cole,ACTIVE,,063898252575,No,White,Female,Sustainable living models for the future,,OPENED,,,,,Creative Industries,,,,,,,,TRUE
 jenna.diaz@gmail.com,Jenna,Diaz,ACTIVE,,,No,,Female,Sustainable living models for the future,,OPENED,,,,,Digital Manufacturing,,,,,,,,TRUE
 dominic.watkins@gmail.com,Dominic,Watkins,ACTIVE,,,No,,Male,Sustainable living models for the future,,OPENED,,,,,Resource efficiency,,,,,,,,TRUE
@@ -67,7 +67,7 @@ jill.patrick@gmail.com,Jill,Patrick,ACTIVE,,,No,,Female,Sustainable living model
 geraldine.dennis@gmail.com,Geraldine,Dennis,ACTIVE,,,No,,Female,Sustainable living models for the future,,OPENED,,,,,Resource efficiency,,,,,,,,TRUE
 judy.gibson@gmail.com,Judy,Gibson,ACTIVE,,,No,,Female,Sustainable living models for the future,,OPENED,,,,,Digital Manufacturing,,,,,,,,TRUE
 ricky.blair@gmail.com,Ricky,Blair,ACTIVE,,,No,,Male,Sustainable living models for the future,,OPENED,,,,,Urban living,,,,,,,,TRUE
-lorene.ingram@gmail.com,Lorene,Ingram,ACTIVE,,,No,,Female,Sustainable living models for the future,,OPENED,,,,,Nuclear,,,,,,,,TRUE
+lorene.ingram@gmail.com,Lorene,Ingram,ACTIVE,,,No,,Female,Sustainable living models for the future,,OPENED,,,,,Nuclear fission,,,,,,,,TRUE
 olga.hale@gmail.com,Olga,Hale,ACTIVE,,,No,,Female,Sustainable living models for the future,,OPENED,,,,,Creative Industries,,,,,,,,TRUE
 jesse.stevens@gmail.com,Jesse,Stevens,ACTIVE,,,No,,Female,Sustainable living models for the future,,OPENED,,,,,Resource efficiency,,,,,,,,TRUE
 jeannie.newton@gmail.com,Jeannie,Newton,ACTIVE,,,No,,Female,Sustainable living models for the future,,OPENED,,,,,Manufacturing Readiness,,,,,,,,TRUE
@@ -89,7 +89,7 @@ alexis.colon@gmail.com,Alexis,Colon,ACTIVE,,,No,,Female,Sustainable living model
 madeline.chapman@gmail.com,Madeline,Chapman,ACTIVE,,,No,,Female,Sustainable living models for the future,,OPENED,,,,,Resource efficiency,,,,,,,,TRUE
 clayton.edwards@gmail.com,Clayton,Edwards,ACTIVE,,,No,,Male,Sustainable living models for the future,,OPENED,,,,,Creative Industries,,,,,,,,TRUE
 camille.shelton@gmail.com,Camille,Shelton,ACTIVE,,,No,,Female,Sustainable living models for the future,,OPENED,,,,,Resource efficiency,,,,,,,,TRUE
-grady.garza@gmail.com,Grady,Garza,ACTIVE,,,No,,Female,Sustainable living models for the future,,OPENED,,,,,Nuclear,,,,,,,,TRUE
+grady.garza@gmail.com,Grady,Garza,ACTIVE,,,No,,Female,Sustainable living models for the future,,OPENED,,,,,Nuclear fission,,,,,,,,TRUE
 lance.sparks@gmail.com,Lance,Sparks,ACTIVE,,,No,,Male,Sustainable living models for the future,,OPENED,,,,,Urban living,,,,,,,,TRUE
 doug.carter@gmail.com,Doug,Carter,ACTIVE,,,No,,Male,Sustainable living models for the future,,OPENED,,,,,Resource efficiency,,,,,,,,TRUE
 milton.evans@gmail.com,Milton,Evans,ACTIVE,,,No,,Male,Sustainable living models for the future,,OPENED,,,,,Digital Manufacturing,,,,,,,,TRUE

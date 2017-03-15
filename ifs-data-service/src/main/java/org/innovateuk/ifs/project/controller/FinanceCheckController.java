@@ -30,16 +30,6 @@ public class FinanceCheckController {
         return financeCheckService.getByProjectAndOrganisation(projectOrganisationCompositeId).toGetResponse();
     }
 
-    @RequestMapping(value = FinanceCheckURIs.PATH, method = POST)
-    public RestResult<Void> updateFinanceCheck(@RequestBody FinanceCheckResource financeCheckResource) {
-        return financeCheckService.save(financeCheckResource).toPostResponse();
-    }
-
-    @RequestMapping(value = "/{projectId}" + FinanceCheckURIs.ORGANISATION_PATH + "/{organisationId}" + FinanceCheckURIs.PATH + "/approve", method = POST)
-    public RestResult<Void> approveFinanceCheck(@PathVariable("projectId") Long projectId, @PathVariable("organisationId") Long organisationId) {
-        return financeCheckService.approve(projectId, organisationId).toPostResponse();
-    }
-
     @RequestMapping(value = "/{projectId}" + FinanceCheckURIs.ORGANISATION_PATH + "/{organisationId}" + FinanceCheckURIs.PATH + "/status", method = GET)
     public RestResult<FinanceCheckProcessResource> getFinanceCheckApprovalStatus(@PathVariable("projectId") Long projectId, @PathVariable("organisationId") Long organisationId) {
         return financeCheckService.getFinanceCheckApprovalStatus(projectId, organisationId).toGetResponse();
