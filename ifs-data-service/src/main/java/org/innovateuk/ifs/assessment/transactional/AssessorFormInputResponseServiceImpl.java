@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.assessment.transactional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.application.transactional.QuestionService;
 import org.innovateuk.ifs.assessment.domain.AssessorFormInputResponse;
 import org.innovateuk.ifs.assessment.mapper.AssessorFormInputResponseMapper;
 import org.innovateuk.ifs.assessment.repository.AssessorFormInputResponseRepository;
@@ -30,6 +32,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_SCORE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.StringFunctions.countWords;
@@ -55,6 +58,9 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
     @Autowired
     private CategoryService categoryService;
 
+    @Autowired
+    private QuestionService questionService;
+
     @Override
     public ServiceResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponses(Long assessmentId) {
         return serviceSuccess(simpleMap(assessorFormInputResponseRepository.findByAssessmentId(assessmentId), assessorFormInputResponseMapper::mapToResource));
@@ -77,7 +83,7 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
         int totalScope = 0;
         int totalInScope = 0;
         Map<Long, BigDecimal> avgScores = responses.stream()
-                .filter(input -> input.getFormInput().getType() == FormInputType.ASSESSOR_SCORE)
+                .filter(input -> input.getFormInput().getType() == ASSESSOR_SCORE)
                 .collect(
                         Collectors.groupingBy(
                                 x -> x.getFormInput().getQuestion().getId(),
@@ -86,7 +92,7 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
                                         new AssessorScoreAverageCollector())));
 
         long averagePercentage = Math.round(responses.stream()
-                .filter(input -> input.getFormInput().getType() == FormInputType.ASSESSOR_SCORE)
+                .filter(input -> input.getFormInput().getType() == ASSESSOR_SCORE)
                 .mapToDouble(value -> (Double.parseDouble(value.getValue()) / value.getFormInput().getQuestion().getAssessorMaximumScore()) * 100.0)
                 .average()
                 .orElse(0.0));
@@ -107,7 +113,7 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
     public ServiceResult<AssessmentFeedbackAggregateResource> getAssessmentAggregateFeedback(long applicationId, long questionId) {
         List<AssessorFormInputResponse> responses = assessorFormInputResponseRepository.findByAssessmentTargetIdAndFormInputQuestionId(applicationId, questionId);
         BigDecimal avgScore = responses.stream()
-                .filter(input -> input.getFormInput().getType() == FormInputType.ASSESSOR_SCORE)
+                .filter(input -> input.getFormInput().getType() == ASSESSOR_SCORE)
                 .map(AssessorFormInputResponse::getValue)
                 .collect(new AssessorScoreAverageCollector());
         List<String> feedback = responses.stream()
@@ -141,13 +147,9 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
     }
 
     private ServiceResult<Void> validate(AssessorFormInputResponseResource response) {
-        ServiceResult<Void> result = validateWordCount(response);
-
-        if (result.isSuccess()) {
-            return validateResearchCategory(response);
-        }
-
-        return result;
+        return validateWordCount(response)
+                .andOnSuccess(() -> validateResearchCategory(response))
+                .andOnSuccess(() -> validateScore(response));
     }
 
     private ServiceResult<Void> validateWordCount(AssessorFormInputResponseResource response) {
@@ -176,6 +178,27 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
         }
 
         return serviceSuccess();
+    }
+
+    private ServiceResult<Void> validateScore(AssessorFormInputResponseResource response) {
+        FormInputResource formInputResource = formInputService.findFormInput(response.getFormInput()).getSuccessObject();
+        QuestionResource questionResource = questionService.getQuestionById(formInputResource.getQuestion()).getSuccessObject();
+        if (ASSESSOR_SCORE != formInputResource.getType()) {
+            return serviceSuccess();
+        }
+
+        String value = response.getValue();
+
+        try {
+            int intValue = Integer.parseInt(value);
+            if (intValue >= 0 && intValue <= questionResource.getAssessorMaximumScore()) {
+                return serviceSuccess();
+            } else {
+                return serviceFailure(fieldError("value", value, "validation.assessor.score.betweenZeroAndMax", questionResource.getAssessorMaximumScore()));
+            }
+        } catch (NumberFormatException e) {
+            return serviceFailure(fieldError("value", value, "validation.assessor.score.notAnInteger"));
+        }
     }
 
     private void saveAndNotifyWorkflowHandler(AssessorFormInputResponseResource response) {
