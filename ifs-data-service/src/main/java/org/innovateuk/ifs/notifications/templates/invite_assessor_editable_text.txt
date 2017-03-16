@@ -4,12 +4,8 @@ We are inviting you to assess applications for the competition '${competitionNam
 
 We recognise your expertise and would greatly appreciate your comments on the scientific / business merit of the applications.
 
-<#if innovationArea??>
-The innovation area you have been assigned is: ${innovationArea.name}
+Assessment period: ${acceptsDate} to ${deadlineDate}
 
-</#if>
-Assessment period: ${acceptsDate} - ${deadlineDate}
-
-Please visit our new online Innovation funding service to respond to this request: ${inviteUrl}
+Please visit our new online Innovation Funding Service to respond to this request: ${inviteUrl}
 
 Yours sincerely,

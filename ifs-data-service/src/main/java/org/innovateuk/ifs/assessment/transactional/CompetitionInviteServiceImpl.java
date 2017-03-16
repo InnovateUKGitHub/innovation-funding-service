@@ -11,10 +11,7 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.invite.domain.CompetitionInvite;
-import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
-import org.innovateuk.ifs.invite.domain.Participant;
-import org.innovateuk.ifs.invite.domain.RejectionReason;
+import org.innovateuk.ifs.invite.domain.*;
 import org.innovateuk.ifs.invite.mapper.ParticipantStatusMapper;
 import org.innovateuk.ifs.invite.repository.CompetitionInviteRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
@@ -28,10 +25,13 @@ import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.Profile;
+import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProfileRepository;
+import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -121,6 +121,9 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     @Autowired
     private LoggedInUserSupplier loggedInUserSupplier;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -269,8 +272,32 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     @Override
-    public ServiceResult<List<AssessorInviteOverviewResource>> getInvitationOverview(long competitionId) {
-        return serviceSuccess(simpleMap(competitionParticipantRepository.getByCompetitionIdAndRole(competitionId, ASSESSOR),
+    public ServiceResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
+                                                                                   Pageable pageable,
+                                                                                   Optional<Long> innovationArea,
+                                                                                   Optional<ParticipantStatus> status,
+                                                                                   Optional<Boolean> compliant) {
+        Page<CompetitionParticipant> pagedResult;
+
+        if (innovationArea.isPresent() || compliant.isPresent()) {
+            // We want to avoid performing the potentially expensive join on Profile if possible
+            pagedResult = competitionParticipantRepository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
+                    competitionId,
+                    innovationArea.orElse(null),
+                    status.orElse(null),
+                    compliant.orElse(null),
+                    pageable
+            );
+        } else {
+            pagedResult = competitionParticipantRepository.getAssessorsByCompetitionAndStatus(
+                    competitionId,
+                    status.orElse(null),
+                    pageable
+            );
+        }
+
+        List<AssessorInviteOverviewResource> inviteOverviews = simpleMap(
+                pagedResult.getContent(),
                 participant -> {
                     AssessorInviteOverviewResource assessorInviteOverview = new AssessorInviteOverviewResource();
                     assessorInviteOverview.setName(participant.getInvite().getName());
@@ -285,11 +312,21 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                         assessorInviteOverview.setCompliant(profile.isCompliant(participant.getUser()));
                         assessorInviteOverview.setInnovationAreas(simpleMap(profile.getInnovationAreas(), innovationAreaMapper::mapToResource));
                     } else {
-                        assessorInviteOverview.setInnovationAreas(singletonList(innovationAreaMapper.mapToResource(participant.getInvite().getInnovationArea())));
+                        assessorInviteOverview.setInnovationAreas(singletonList(
+                                innovationAreaMapper.mapToResource(participant.getInvite().getInnovationArea())
+                        ));
                     }
 
                     return assessorInviteOverview;
-                }));
+                });
+
+        return serviceSuccess(new AssessorInviteOverviewPageResource(
+                pagedResult.getTotalElements(),
+                pagedResult.getTotalPages(),
+                inviteOverviews,
+                pagedResult.getNumber(),
+                pagedResult.getSize()
+        ));
     }
 
     @Override
@@ -392,6 +429,10 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
         return getById(inviteId).andOnSuccess(invite -> {
             competitionParticipantRepository.save(new CompetitionParticipant(invite.send(loggedInUserSupplier.get(), LocalDateTime.now())));
 
+            if (invite.isNewAssessorInvite()) {
+                userRepository.findByEmail(invite.getEmail()).ifPresent(this::addAssessorRoleToUser);
+            }
+
             // Strip any HTML that may have been added to the content by the user.
             String bodyPlain = stripHtml(assessorInviteSendResource.getContent());
 
@@ -408,6 +449,11 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
             return notificationSender.sendNotification(notification);
         }).andOnSuccessReturnVoid();
+    }
+
+    private void addAssessorRoleToUser(User user) {
+        Role assessorRole = roleRepository.findOneByName(UserRoleType.ASSESSOR.getName());
+        user.addRole(assessorRole);
     }
 
     @Override
@@ -467,10 +513,6 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     private ServiceResult<CompetitionParticipant> getParticipantByInviteHash(String inviteHash) {
         return find(competitionParticipantRepository.getByInviteHash(inviteHash), notFoundError(CompetitionParticipant.class, inviteHash));
-    }
-
-    private ServiceResult<List<CompetitionParticipant>> getParticipantsByCompetition(long competitionId) {
-        return find(competitionParticipantRepository.getByCompetitionIdAndRole(competitionId, ASSESSOR), notFoundError(CompetitionParticipant.class, competitionId));
     }
 
     private ServiceResult<CompetitionParticipant> accept(CompetitionParticipant participant, User user) {
