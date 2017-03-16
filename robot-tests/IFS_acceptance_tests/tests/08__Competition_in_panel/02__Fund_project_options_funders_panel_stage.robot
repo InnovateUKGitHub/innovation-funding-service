@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation     INFUND-2601 As a competition administrator I want a view of all applications at the 'Funders Panel' stage
-Suite Setup       Log in as user    email=lee.bowman@innovateuk.test    password=Passw0rd
+Suite Setup       guest user log-in  &{internal_finance_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
@@ -14,10 +14,19 @@ ${email_failure_message}    Unfortunately Innovate UK is unable to fund
 *** Test Cases ***
 Notify applicants should be disabled
     [Documentation]    INFUND-2601
-    [Tags]    HappyPath
+    [Tags]
     When the user navigates to the page    ${funders_panel_competition_url}
-    Then the user should see the text in the page    Funders Panel
-    And the option to notify applicants is disabled
+    Then the user should see the element   jQuery=.blue-block:contains("Funders Panel")
+    And the user should see the option to notify applicants disabled
+
+User should be able to make a Funding decision
+    [Documentation]  INFUND-8624
+    [Tags]  HappyPath
+    Given the user navigates to the page  ${funders_panel_competition_url}
+    When the user clicks the button/link  jQuery=label[for="app-row-1"]
+    Then the user should see the option to notify applicants enabled
+    When the user clicks the button/link  jQuery=button:contains("On hold")
+    Then the user should see the element  jQuery=tr:first-of-type():contains("On hold")
 
 User should be able to Notify applicants when the fund project have chosen
     [Documentation]    INFUND-2601
@@ -38,7 +47,7 @@ A Fund Project option is unselected and the Notify button becomes disabled
     [Documentation]    INFUND-2601
     [Tags]
     When the user selects the option from the drop-down menu    -    id=fund63
-    Then the option to notify applicants is disabled
+    Then the user should see the option to notify applicants disabled
 
 Pushing the notify applicants button brings up a warning dialogue
     [Documentation]    INFUND-2646
@@ -62,7 +71,7 @@ Choosing Notify applicants on the dialogue redirects to the Assessor feedback pa
     [Tags]    HappyPath
     When the user clicks the button/link    name=publish
     Then the user navigates to the page    ${funders_panel_competition_url}
-    #Then the user should be redirected to the correct page    ${funders_panel_competition_url}
+    Then the user should be redirected to the correct page    ${funders_panel_competition_url}
     #TODO update redirect when new page is implemented INFUND 7376
 
 Once applicants are notified, the whole state of the competition changes to Assessor feedback
@@ -112,8 +121,15 @@ Unsuccessful applicants can see the assessment outcome on the overview page
     And the user should see the text in the page    Your application has not been successful in this competition
 
 *** Keywords ***
-The option to notify applicants is disabled
-    the user should see the element    css=#publish-funding-decision.button.disabled
+the user should see the option to notify applicants disabled
+    the user should see the element  jQuery=button:contains("Successful")[disabled]
+    the user should see the element  jQuery=button:contains("Unsuccessful")[disabled]
+    the user should see the element  jQuery=button:contains("On hold")[disabled]
+
+the user should see the option to notify applicants enabled
+    the user should not see the element  jQuery=button:contains("Successful")[disabled]
+    the user should not see the element  jQuery=button:contains("Unsuccessful")[disabled]
+    the user should not see the element  jQuery=button:contains("On hold")[disabled]
 
 The option to notify applicants is enabled
     the user should see the element    id=publish-funding-decision
