@@ -30,7 +30,7 @@ public class InviteOrganisationControllerDocumentation extends BaseControllerMoc
         when(inviteOrganisationServiceMock.getByIdWithInvitesForApplication(inviteOrganisationResource.getId(), applicationId))
                 .thenReturn(serviceSuccess(inviteOrganisationResource));
 
-        mockMvc.perform(get("/inviteorganisation/{id}/application/{applicationId}",
+        mockMvc.perform(get("/invite-organisation/{id}/application/{applicationId}",
                 inviteOrganisationResource.getId(), applicationId))
                 .andExpect(status().isOk())
                 .andDo(document("invite-organisation/{method-name}",
@@ -51,7 +51,7 @@ public class InviteOrganisationControllerDocumentation extends BaseControllerMoc
         when(inviteOrganisationServiceMock.getByOrganisationIdWithInvitesForApplication(organisationId, applicationId))
                 .thenReturn(serviceSuccess(inviteOrganisationResource));
 
-        mockMvc.perform(get("/inviteorganisation/organisation/{organisationId}/application/{applicationId}",
+        mockMvc.perform(get("/invite-organisation/organisation/{organisationId}/application/{applicationId}",
                 organisationId, applicationId))
                 .andExpect(status().isOk())
                 .andDo(document("invite-organisation/{method-name}",
