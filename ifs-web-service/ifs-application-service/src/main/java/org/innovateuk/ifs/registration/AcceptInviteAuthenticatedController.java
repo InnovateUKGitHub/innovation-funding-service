@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import static org.innovateuk.ifs.exception.CommonErrorControllerAdvice.URL_HASH_INVALID_TEMPLATE;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 
 
@@ -67,7 +68,7 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
                         }
                 )
         ).andOnFailure(clearDownInviteFlowCookiesFn(response));
-        return view.getSuccessObjectOrThrowException();
+        return view.getStatusCode().is4xxClientError() ? URL_HASH_INVALID_TEMPLATE : view.getSuccessObject();
     }
 
     @RequestMapping(value = "/accept-invite-authenticated/confirm-invited-organisation/confirm", method = RequestMethod.GET)
@@ -88,7 +89,7 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
                     return "redirect:/application/" + invite.getApplication();
                 })
         ).andOnFailure(clearDownInviteFlowCookiesFn(response));
-        return view.getSuccessObjectOrThrowException();
+        return view.getStatusCode().is4xxClientError() ? URL_HASH_INVALID_TEMPLATE : view.getSuccessObject();
     }
 
     private OrganisationResource getInviteOrganisationOrElseUserOrganisation(UserResource loggedInUser, InviteOrganisationResource inviteOrganisation) {

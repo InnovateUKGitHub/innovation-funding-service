@@ -5,7 +5,6 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
-import org.innovateuk.ifs.invite.service.InviteServiceImpl;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -17,13 +16,16 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.util.Optional;
 
-import static org.innovateuk.ifs.invite.service.InviteServiceImpl.INVITE_ALREADY_ACCEPTED;
-import static org.innovateuk.ifs.invite.service.InviteServiceImpl.INVITE_HASH;
 import static org.innovateuk.ifs.registration.OrganisationCreationController.ORGANISATION_FORM;
 import static org.innovateuk.ifs.registration.RegistrationController.ORGANISATION_ID_PARAMETER_NAME;
 
 
 public class AbstractAcceptInviteController extends BaseController {
+
+    private static final String ALREADY_ACCEPTED_VIEW = "redirect:/login";
+    public static final String ORGANISATION_TYPE = "organisationType";
+    public static final String INVITE_ALREADY_ACCEPTED = "inviteAlreadyAccepted";
+    public static final String INVITE_HASH = "invite_hash";
 
     @Autowired
     protected CookieFlashMessageFilter cookieFlashMessageFilter;
@@ -31,11 +33,11 @@ public class AbstractAcceptInviteController extends BaseController {
     @Autowired
     protected CookieUtil cookieUtil;
 
-    private static final String ALREADY_ACCEPTED_VIEW = "redirect:/login";
+
     protected static final String LOGGED_IN_WITH_ANOTHER_USER_VIEW = "registration/logged-in-with-another-user-failure";
 
     protected final String getInviteHashCookie(HttpServletRequest request){
-        return cookieUtil.getCookieValue(request, InviteServiceImpl.INVITE_HASH);
+        return cookieUtil.getCookieValue(request, INVITE_HASH);
     }
 
     protected final Runnable clearDownInviteFlowCookiesFn(HttpServletResponse response) {

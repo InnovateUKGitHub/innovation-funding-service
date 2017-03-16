@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import static org.innovateuk.ifs.exception.CommonErrorControllerAdvice.URL_HASH_INVALID_TEMPLATE;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 
 
@@ -46,7 +47,6 @@ public class AcceptInviteController extends AbstractAcceptInviteController {
             @ModelAttribute("loggedInUser") UserResource loggedInUser,
             HttpServletResponse response,
             Model model) {
-        clearDownInviteFlowCookies(response); // This is the initial entry point. Clear any previous state from cookies.
         RestResult<String> view = inviteRestService.getInviteByHash(hash).andOnSuccess(invite ->
                 inviteRestService.getInviteOrganisationByHash(hash).andOnSuccessReturn(inviteOrganisation -> {
                             if (!SENT.equals(invite.getStatus())) {
@@ -62,7 +62,7 @@ public class AcceptInviteController extends AbstractAcceptInviteController {
                         }
                 )
         ).andOnFailure(clearDownInviteFlowCookiesFn(response));
-        return view.getSuccessObjectOrThrowException();
+        return view.getStatusCode().is4xxClientError() ? URL_HASH_INVALID_TEMPLATE : view.getSuccessObject();
     }
 
     @RequestMapping(value = "/accept-invite/confirm-invited-organisation", method = RequestMethod.GET)
@@ -89,6 +89,6 @@ public class AcceptInviteController extends AbstractAcceptInviteController {
                         }
                 )
         ).andOnFailure(clearDownInviteFlowCookiesFn(response));
-        return view.getSuccessObjectOrThrowException();
+        return view.getStatusCode().is4xxClientError() ? URL_HASH_INVALID_TEMPLATE : view.getSuccessObject();
     }
 }
