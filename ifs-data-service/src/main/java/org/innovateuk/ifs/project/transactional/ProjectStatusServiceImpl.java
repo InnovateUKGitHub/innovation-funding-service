@@ -74,7 +74,7 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
     private List<ProjectStatusResource> projectStatuses(List<Project> projects) {
         return projects.stream()
                 .map(this::getProjectStatusResourceByProject)
-                .sorted(comparing(ProjectStatusResource::getApplicationNumber).reversed())
+                .sorted(comparing(ProjectStatusResource::getApplicationNumber))
                 .collect(Collectors.toList());
     }
 

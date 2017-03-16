@@ -23,14 +23,12 @@ import org.innovateuk.ifs.user.domain.*;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
-
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -205,7 +203,7 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
     }
 
     private boolean projectsGetSortedByApplicationId(List<ProjectStatusResource> after) {
-        return after.stream().sorted(Comparator.comparing(ProjectStatusResource::getApplicationNumber).reversed()).collect(Collectors.toList())
+        return after.stream().sorted(Comparator.comparing(ProjectStatusResource::getApplicationNumber)).collect(Collectors.toList())
                 .equals(after);
     }
 
