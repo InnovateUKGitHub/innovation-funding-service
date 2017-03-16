@@ -8,6 +8,9 @@ import org.innovateuk.ifs.competition.resource.MilestoneType;
 
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
+import java.util.Set;
+
+import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 
 /**
  * Milestone Form Entry for the Milestones form.
@@ -15,6 +18,7 @@ import java.time.LocalDateTime;
 @ValidAggregatedDate(yearField="year", monthField="month", dayField="day", message="{validation.standard.date.format}")
 public class MilestoneRowForm {
 	private static final Log LOG = LogFactory.getLog(MilestoneRowForm.class);
+	private static final Set<MilestoneType> WITH_TIME_TYPES = asSet(MilestoneType.SUBMISSION_DATE);
 
     @Range(min=2000, max = 9999, message="{validation.nonifs.detailsform.yyyy.range.format}")
     private Integer year;
@@ -38,12 +42,16 @@ public class MilestoneRowForm {
             this.setDay(dateTime.getDayOfMonth());
             this.setMonth(dateTime.getMonth().getValue());
             this.setYear(dateTime.getYear());
-            this.setTime(MilestoneTime.fromLocalDateTime(dateTime));
             this.setDate(dateTime);
             this.editable = LocalDateTime.now().isBefore(dateTime);
+            if (WITH_TIME_TYPES.contains(milestoneType)) {
+                this.setTime(MilestoneTime.fromLocalDateTime(dateTime));
+            }
         } else {
             this.editable = true;
-            this.setTime(MilestoneTime.TWELVE_PM);
+            if (WITH_TIME_TYPES.contains(milestoneType)) {
+                this.setTime(MilestoneTime.TWELVE_PM);
+            }
         }
     }
 
@@ -100,7 +108,7 @@ public class MilestoneRowForm {
     }
 
     public boolean isTimeOption() {
-        return MilestoneType.SUBMISSION_DATE.equals(milestoneType);
+        return WITH_TIME_TYPES.contains(milestoneType);
     }
 
     public LocalDateTime getDate() {
@@ -149,7 +157,7 @@ public class MilestoneRowForm {
 
     public LocalDateTime getMilestoneAsDateTime() {
         if (day != null && month != null && year != null){
-            if ( time != null) {
+            if ( time != null && WITH_TIME_TYPES.contains(milestoneType)) {
                 return LocalDateTime.of(year, month, day, time.getHour(), 0);
             } else {
                 return LocalDateTime.of(year, month, day, 0, 0);
