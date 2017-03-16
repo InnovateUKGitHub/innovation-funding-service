@@ -73,7 +73,7 @@ Collaborator should see the terms and conditions from the overview page
     Given the user clicks the button/link    link=Application Overview
     When The user clicks the button/link    link= view conditions of grant offer
     Then the user should see the text in the page    Terms and conditions of an Innovate UK grant award
-    And the user should see the text in the page    Entire Agreement
+    And the user should see the text in the page    Entire agreement
 
 Collaborator should see the review button instead of the review and submit
     [Documentation]    INFUND-2451
@@ -212,7 +212,7 @@ Lead marks finances as complete
     Then the user should see the element   link=Your project costs
     And the user should see the element    link=Your organisation
     And the user should see the element    jQuery=h3:contains("Your funding")
-    When the user fills in the project costs
+    When the user fills in the project costs     Assign test
     And the user navigates to Your-finances page  Assign test
     Then the user fills in the organisation information      Assign test
     And the user fills in the funding information  Assign test
@@ -278,7 +278,7 @@ the question should contain the correct status/name
     Element Should Contain    ${ELEMENT}    ${STATUS}
 
 the collaborator is able to edit the finances
-    the user fills in the project costs
+    the user fills in the project costs     Assign test
     the user navigates to Your-finances page    Assign test
     the user fills in the organisation information      Assign test
     the user fills in the funding information  Assign test

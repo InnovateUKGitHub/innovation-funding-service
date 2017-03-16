@@ -32,7 +32,7 @@ public abstract class IdentifiableEnumConverter<T extends Enum<T> & Identifiable
     @Override
     public Long convertToDatabaseColumn(final T attribute) {
         if (attribute == null) {
-            throw new NullPointerException("null enum of type" + attribute.getDeclaringClass());
+            return null;
         }
         return attribute.getId();
     }

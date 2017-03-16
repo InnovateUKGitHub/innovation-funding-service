@@ -60,6 +60,7 @@ import org.innovateuk.ifs.invite.transactional.InviteProjectService;
 import org.innovateuk.ifs.invite.transactional.RejectionReasonService;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.service.NotificationService;
+import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
@@ -598,6 +599,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected NotificationSender notificationSender;
+
+    @Mock
+    protected NotificationTemplateRenderer notificationTemplateRendererMock;
 
     @Mock
     protected ActivityStateRepository activityStateRepositoryMock;
