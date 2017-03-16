@@ -24,8 +24,8 @@ public class RegistrationServiceImpl implements RegistrationService {
     public boolean isInviteForDifferentOrganisationThanUsersAndDifferentName(ApplicationInviteResource invite, InviteOrganisationResource inviteOrganisation){
         return userService.findUserByEmail(invite.getEmail()).map(user -> {
             OrganisationResource userOrganisation = organisationService.getOrganisationForUser(user.getId()); // Will exist as the user does
-            if (userOrganisation.getId().equals(inviteOrganisation.getOrganisation())){
-                if (inviteOrganisation.getOrganisationNameConfirmed().equalsIgnoreCase(userOrganisation.getName())){
+            if (!userOrganisation.getId().equals(inviteOrganisation.getOrganisation())){
+                if (userOrganisation.getName().equalsIgnoreCase(inviteOrganisation.getOrganisationNameConfirmed())){
                     return true;
                 }
             }
@@ -37,8 +37,9 @@ public class RegistrationServiceImpl implements RegistrationService {
     public boolean isInviteForDifferentOrganisationThanUsersButSameName(ApplicationInviteResource invite, InviteOrganisationResource inviteOrganisation){
         return userService.findUserByEmail(invite.getEmail()).map(user -> {
             OrganisationResource userOrganisation = organisationService.getOrganisationForUser(user.getId()); // Will exist as the user does
-            if (userOrganisation.getId().equals(inviteOrganisation.getOrganisation())){
-                if (!inviteOrganisation.getOrganisationNameConfirmed().equalsIgnoreCase(userOrganisation.getName())){
+            Long inviteOrganisationId = inviteOrganisation.getOrganisation(); // Can be null for new orgs
+            if (inviteOrganisationId  != null && !userOrganisation.getId().equals(inviteOrganisation.getOrganisation())){
+                if (!userOrganisation.getName().equalsIgnoreCase(inviteOrganisation.getOrganisationNameConfirmed())){
                     return true;
                 }
             }
