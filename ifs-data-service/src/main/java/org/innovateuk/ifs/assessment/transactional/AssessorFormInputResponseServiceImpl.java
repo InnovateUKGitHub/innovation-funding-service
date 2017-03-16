@@ -182,11 +182,12 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
 
     private ServiceResult<Void> validateScore(AssessorFormInputResponseResource response) {
         FormInputResource formInputResource = formInputService.findFormInput(response.getFormInput()).getSuccessObject();
-        QuestionResource questionResource = questionService.getQuestionById(formInputResource.getQuestion()).getSuccessObject();
+
         if (ASSESSOR_SCORE != formInputResource.getType()) {
             return serviceSuccess();
         }
 
+        QuestionResource questionResource = questionService.getQuestionById(formInputResource.getQuestion()).getSuccessObject();
         String value = response.getValue();
 
         try {
