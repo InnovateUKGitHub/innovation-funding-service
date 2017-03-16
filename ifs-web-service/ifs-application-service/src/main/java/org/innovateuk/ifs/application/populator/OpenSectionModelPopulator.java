@@ -268,7 +268,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         boolean hasFinanceSection = !financeSections.isEmpty();
 
         if(hasFinanceSection) {
-            String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
+            Long organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
             List<QuestionResource> costsQuestions = questionService.getQuestionsBySectionIdAndType(financeSections.get(0).getId(), QuestionType.COST);
 
             applicationFinanceOverviewModelManager.addFinanceDetails(model, competitionId, applicationId, Optional.of(organisationId));

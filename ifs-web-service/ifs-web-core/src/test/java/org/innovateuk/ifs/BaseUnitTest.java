@@ -660,7 +660,7 @@ public class BaseUnitTest {
 
         when(organisationService.getOrganisationById(organisationSet.first().getId())).thenReturn(organisationSet.first());
         when(organisationService.getOrganisationByIdForAnonymousUserFlow(organisationSet.first().getId())).thenReturn(organisationSet.first());
-        when(organisationService.getOrganisationType(loggedInUser.getId(), applications.get(0).getId())).thenReturn("Business");
+        when(organisationService.getOrganisationType(loggedInUser.getId(), applications.get(0).getId())).thenReturn(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId());
         when(organisationService.getOrganisationForUser(loggedInUser.getId(), application1ProcessRoles)).thenReturn(Optional.of(organisationSet.first()));
         when(userService.isLeadApplicant(loggedInUser.getId(), applications.get(0))).thenReturn(true);
         when(userService.getLeadApplicantProcessRoleOrNull(applications.get(0))).thenReturn(processRole1);
@@ -709,8 +709,8 @@ public class BaseUnitTest {
         when(financeService.getApplicationFinanceDetails(loggedInUser.getId(), application.getId())).thenReturn(applicationFinanceResource);
         when(financeService.getApplicationFinance(loggedInUser.getId(), application.getId())).thenReturn(applicationFinanceResource);
         when(applicationFinanceRestService.getResearchParticipationPercentage(anyLong())).thenReturn(restSuccess(0.0));
-        when(financeHandler.getFinanceFormHandler("Business")).thenReturn(defaultFinanceFormHandler);
-        when(financeHandler.getFinanceModelManager("Business")).thenReturn(defaultFinanceModelManager);
+        when(financeHandler.getFinanceFormHandler(1L)).thenReturn(defaultFinanceFormHandler);
+        when(financeHandler.getFinanceModelManager(1L)).thenReturn(defaultFinanceModelManager);
     }
 
     public void setupInvites() {

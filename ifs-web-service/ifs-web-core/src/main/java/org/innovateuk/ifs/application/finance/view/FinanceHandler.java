@@ -8,45 +8,41 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
+import static org.innovateuk.ifs.user.resource.OrganisationTypeEnum.RESEARCH;
+
 @Component
 @Configuration
 public class FinanceHandler {
 
-    private final static String RESEARCH_ORGANISATIONS = "Research";
-
-    public FinanceFormHandler getFinanceFormHandler(String organisationType) {
-        switch(organisationType) {
-            case RESEARCH_ORGANISATIONS:
-                return getJESFinanceFormHandler();
-            default:
-                return getDefaultFinanceFormHandler();
+    public FinanceFormHandler getFinanceFormHandler(Long organisationType) {
+        if(RESEARCH.getOrganisationTypeId().equals(organisationType)) {
+            return getJESFinanceFormHandler();
+        } else {
+            return getDefaultFinanceFormHandler();
         }
     }
 
-    public FinanceFormHandler getProjectFinanceFormHandler(String organisationType) {
-        switch(organisationType) {
-            case RESEARCH_ORGANISATIONS:
-                return getJESFinanceFormHandler();
-            default:
-                return getProjectFinanceFormHandler();
+    public FinanceFormHandler getProjectFinanceFormHandler(Long organisationType) {
+        if(RESEARCH.getOrganisationTypeId().equals(organisationType)) {
+            return getJESFinanceFormHandler();
+        } else {
+            return getProjectFinanceFormHandler();
         }
     }
 
-    public FinanceModelManager getFinanceModelManager(String organisationType) {
-        switch(organisationType) {
-            case RESEARCH_ORGANISATIONS:
-                return getJESFinanceModelManager();
-            default:
-                return getDefaultFinanceModelManager();
+    public FinanceModelManager getFinanceModelManager(Long organisationType) {
+        if(RESEARCH.getOrganisationTypeId().equals(organisationType)) {
+            return getJESFinanceModelManager();
+        } else {
+            return getDefaultFinanceModelManager();
         }
     }
 
-    public FinanceModelManager getProjectFinanceModelManager(String organisationType) {
-        switch(organisationType) {
-            case RESEARCH_ORGANISATIONS:
-                return getJESProjectFinanceModelManager();
-            default:
-                return getDefaultProjectFinanceModelManager();
+    public FinanceModelManager getProjectFinanceModelManager(Long organisationType) {
+        if(RESEARCH.getOrganisationTypeId().equals(organisationType)) {
+            return getJESProjectFinanceModelManager();
+        } else {
+            return getDefaultProjectFinanceModelManager();
         }
     }
 

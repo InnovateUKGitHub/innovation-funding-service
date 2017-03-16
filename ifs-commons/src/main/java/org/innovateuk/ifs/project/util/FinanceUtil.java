@@ -1,18 +1,12 @@
 package org.innovateuk.ifs.project.util;
 
+import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.springframework.stereotype.Component;
 
 @Component
 public class FinanceUtil {
 
-    public static final String RESEARCH_ORGANISATIONS = "Research";
-
-    public boolean isUsingJesFinances(String organisationType) {
-        switch(organisationType) {
-            case RESEARCH_ORGANISATIONS:
-                return true;
-            default:
-                return false;
-        }
+    public boolean isUsingJesFinances(Long organisationType) {
+        return OrganisationTypeEnum.RESEARCH.getOrganisationTypeId().equals(organisationType);
     }
 }

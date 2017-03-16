@@ -41,6 +41,7 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputService;
 import org.innovateuk.ifs.profiling.ProfileExecution;
+import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
@@ -409,7 +410,7 @@ public class ApplicationFormController {
 
         Set<Long> markedAsComplete = new TreeSet<>();
         model.addAttribute("markedAsComplete", markedAsComplete);
-        String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
+        Long organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
 
         financeHandler.getFinanceModelManager(organisationType).addCost(model, costItem, applicationId, organisationId, user.getId(), questionId, costType);
 
@@ -427,7 +428,7 @@ public class ApplicationFormController {
 
     private FinanceRowItem addCost(Long applicationId, Long questionId, HttpServletRequest request) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
+        Long organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
         return financeHandler.getFinanceFormHandler(organisationType).addCostWithoutPersisting(applicationId, user.getId(), questionId);
     }
 
@@ -490,7 +491,7 @@ public class ApplicationFormController {
         errors.addAll(overheadFileSaver.handleOverheadFileRequest(request));
 
         if(!isMarkSectionAsIncompleteRequest(params) ) {
-            String organisationType = organisationService.getOrganisationType(user.getId(), application.getId());
+            Long organisationType = organisationService.getOrganisationType(user.getId(), application.getId());
             ValidationMessages saveErrors = financeHandler.getFinanceFormHandler(organisationType).update(request, user.getId(), application.getId(), competition.getId());
 
             if(!overheadFileSaver.isOverheadFileRequest(request)) {
@@ -536,10 +537,10 @@ public class ApplicationFormController {
         }
     }
 
-    private void markOrganisationFinancesAsNotRequired(String organisationType, SectionResource selectedSection, Long applicationId, Long competitionId, Long processRoleId) {
+    private void markOrganisationFinancesAsNotRequired(Long organisationType, SectionResource selectedSection, Long applicationId, Long competitionId, Long processRoleId) {
 
         if (selectedSection != null && (SectionType.FUNDING_FINANCES.equals(selectedSection.getType()) || SectionType.PROJECT_COST_FINANCES.equals(selectedSection.getType()))
-                && "Research".equals(organisationType)) {
+                && OrganisationTypeEnum.RESEARCH.getOrganisationTypeId().equals(organisationType)) {
             SectionResource organisationSection = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.ORGANISATION_FINANCES).get(0);
             sectionService.markAsNotRequired(organisationSection.getId(), applicationId, processRoleId);
         }
@@ -784,8 +785,8 @@ public class ApplicationFormController {
 
         if(SectionType.ORGANISATION_FINANCES.equals(section.getType())) {
             List<String> financePositionKeys = params.keySet().stream().filter(k -> k.contains("financePosition-")).collect(Collectors.toList());
-            String organisationType = organisationService.getOrganisationType(userId, applicationId);
-            if (financePositionKeys.isEmpty() && !"Research".equals(organisationType)) {
+            Long organisationType = organisationService.getOrganisationType(userId, applicationId);
+            if (financePositionKeys.isEmpty() && !OrganisationTypeEnum.RESEARCH.getOrganisationTypeId().equals(organisationType)) {
                 bindingResult.reject("APPLICATION_ORGANISATION_SIZE_REQUIRED");
                 return false;
             }
@@ -1008,7 +1009,7 @@ public class ApplicationFormController {
     }
 
     private StoreFieldResult storeField(Long applicationId, Long userId, Long competitionId, String fieldName, String inputIdentifier, String value) {
-        String organisationType = organisationService.getOrganisationType(userId, applicationId);
+        Long organisationType = organisationService.getOrganisationType(userId, applicationId);
 
         if (fieldName.startsWith("application.")) {
 
