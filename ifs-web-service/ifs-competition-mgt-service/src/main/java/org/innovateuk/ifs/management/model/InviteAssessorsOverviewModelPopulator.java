@@ -1,16 +1,22 @@
 package org.innovateuk.ifs.management.model;
 
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
+import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewPageResource;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewResource;
+import org.innovateuk.ifs.invite.resource.ParticipantStatusResource;
 import org.innovateuk.ifs.management.viewmodel.InviteAssessorsOverviewViewModel;
 import org.innovateuk.ifs.management.viewmodel.OverviewAssessorRowViewModel;
+import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
-import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * Build the model for the Invite assessors 'Overview' view.
@@ -21,18 +27,36 @@ public class InviteAssessorsOverviewModelPopulator extends InviteAssessorsModelP
     @Autowired
     private CompetitionInviteRestService competitionInviteRestService;
 
-    @Override
-    public InviteAssessorsOverviewViewModel populateModel(CompetitionResource competition) {
-        InviteAssessorsOverviewViewModel model = super.populateModel(competition);
-        model.setAssessors(getAssessors(competition));
-        return model;
-    }
+    @Autowired
+    private CategoryRestService categoryRestService;
 
-    private List<OverviewAssessorRowViewModel> getAssessors(CompetitionResource competition) {
-        return competitionInviteRestService.getInvitationOverview(competition.getId()).getSuccessObject()
-                .stream()
-                .map(this::getRowViewModel)
-                .collect(toList());
+    public InviteAssessorsOverviewViewModel populateModel(CompetitionResource competition,
+                                                          int page,
+                                                          Optional<Long> innovationArea,
+                                                          Optional<ParticipantStatusResource> status,
+                                                          Optional<Boolean> compliant,
+                                                          String originQuery) {
+        InviteAssessorsOverviewViewModel model = super.populateModel(competition);
+
+        List<InnovationAreaResource> innovationAreasOptions = categoryRestService.getInnovationAreas()
+                .getSuccessObjectOrThrowException();
+
+        AssessorInviteOverviewPageResource pageResource = competitionInviteRestService.getInvitationOverview(
+                competition.getId(),
+                page,
+                innovationArea,
+                status,
+                compliant
+        )
+                .getSuccessObjectOrThrowException();
+
+        List<OverviewAssessorRowViewModel> assessors = simpleMap(pageResource.getContent(), this::getRowViewModel);
+
+        model.setAssessors(assessors);
+        model.setInnovationAreaOptions(innovationAreasOptions);
+        model.setPagination(new PaginationViewModel(pageResource, originQuery));
+
+        return model;
     }
 
     private OverviewAssessorRowViewModel getRowViewModel(AssessorInviteOverviewResource assessorInviteOverviewResource) {
