@@ -1193,17 +1193,17 @@ the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project se
     the user should see the element    jQuery=td:contains("Successful")
     the user clicks the button/link     jQuery=a:contains("Competition")
     the user clicks the button/link     jQuery=button:contains("Manage funding notifications")
-    the user moves focus to the element     jQuery=input[id="app-row-63"]
     #the user moves focus to the element     jQuery=label[for="app-row-63"]
     the user selects the checkbox      ids[0]
     the user moves focus to the element     jQuery=label[for="app-row-64"]
     the user selects the checkbox      ids[1]
     the user clicks the button/link     xpath=//*[@id="content"]/form/div[1]/div[2]/fieldset/button[1]
-    the user enters text to a text field     id=subject
-    the user enters text to a text field     id=message
-    the user clicks the button/link     jQuery=button:contains("Send email to all applicants")
+    the user enters text to a text field     id=subject   testEmail
+    #the user enters text to a text field     id=message   SuccessfulApplicant
+    #the user clicks the button/link     jQuery=button:contains("Send email to all applicants")
    # the user clicks the button/link    jQuery=button:contains("Notify applicants")
    # the user clicks the button/link    name=publish
+    the user clicks the button/link        jQuery=a:contains("Manage funding notifications")
     the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/funding
     the user should see the text in the page    Assessor Feedback
     the user can see the option to upload a file on the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/application/${FUNDERS_PANEL_APPLICATION_1}
