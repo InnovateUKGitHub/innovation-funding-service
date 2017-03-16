@@ -31,7 +31,7 @@
         </div>
     </div>
 
-    <p>This overview shows the spend profile status of each partner in your project.</p>
+    <p>This overview shows the spend profile status of each organisation in your project.</p>
 
     <div th:if="${model.submitted}" th:remove="tag">
         <h2 class="heading-medium">Spend profile</h2>
@@ -90,11 +90,9 @@
 
     <div th:if="${model.markAsComplete and !model.submitted}" th:remove="tag">
 
-        <p class="extra-margin">Please review each partner's spend profile once they are marked as complete. You must
-            make sure they fit the timelines of your project plan.</p>
+        <p class="extra-margin">Please review each partner's spend profile once they are marked as complete.</p>
 
-        <a th:href="@{/project/{id}/spend-profile/total(id=${model.projectId})}" class="button">Review and send total project profile
-            spend</a>
+        <a th:href="@{/project/{id}/spend-profile/total(id=${model.projectId})}" class="button">Review spend profiles</a>
 
     </div>
 
