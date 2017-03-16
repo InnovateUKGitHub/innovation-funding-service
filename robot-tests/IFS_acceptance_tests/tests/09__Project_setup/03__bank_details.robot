@@ -14,6 +14,8 @@ Documentation     INFUND-3010 As a partner I want to be able to supply bank deta
 ...               INFUND-7109 Bank Details Status - Internal user
 ...
 ...               INFUND-6482 Extra validation message showing on fields
+...
+...               INFUND-8276 Content: Bank Details: should not say "each"
 Suite Setup       finance contacts are submitted by all users
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -54,7 +56,7 @@ Project Finance should not be able to access bank details page
     And the user should not see the element    jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(3).status.ok
 
 Bank details page
-    [Documentation]    INFUND-3010, INFUND-6018
+    [Documentation]    INFUND-3010, INFUND-6018, INFUND-7173
     [Tags]    HappyPath
     Given log in as a different user        ${PS_BD_APPLICATION_LEAD_PARTNER_EMAIL}  ${short_password}
     When the user clicks the button/link    link=${PS_BD_APPLICATION_HEADER}
@@ -64,6 +66,7 @@ Bank details page
     And the user should see the text in the page    Project team status
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(3)
     And the user clicks the button/link     link=Project setup status
+    And the user should see the text in the page   We need bank details for those partners eligible for funding
     And the user clicks the button/link     link=Bank details
     Then the user should see the element    jQuery=.button:contains("Submit bank account details")
     And the user should see the text in the page    Bank account
