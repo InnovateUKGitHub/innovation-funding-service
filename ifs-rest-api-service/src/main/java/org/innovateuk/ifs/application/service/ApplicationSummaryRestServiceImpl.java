@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.service;
 
+import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -9,6 +10,8 @@ import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
+
+import java.util.Optional;
 
 import static java.util.Collections.singletonList;
 
@@ -26,9 +29,15 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
 	}
 
 	@Override
-	public RestResult<ApplicationSummaryPageResource> getSubmittedApplications(long competitionId, String sortField, Integer pageNumber, Integer pageSize, String filter) {
+	public RestResult<ApplicationSummaryPageResource> getSubmittedApplications(long competitionId, String sortField, Integer pageNumber, Integer pageSize, String filter, Optional<FundingDecision> fundingFilter) {
 		String baseUrl = applicationSummaryRestUrl + "/findByCompetition/" + competitionId + "/submitted";
-		return getApplicationSummaryPage(baseUrl, pageNumber, pageSize, sortField, filter);
+		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+		if (filter != null) {
+			params.put("filter", singletonList(filter));
+		}
+		fundingFilter.ifPresent(f -> params.put("fundingFilter", singletonList(f.toString())));
+		String uriWithParams = buildPaginationUri(baseUrl, pageNumber, pageSize, sortField, params);
+		return getWithRestResult(uriWithParams, ApplicationSummaryPageResource.class);
 	}
 
 	@Override

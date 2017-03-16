@@ -11,6 +11,7 @@ import org.innovateuk.ifs.competition.form.ApplicationSummaryQueryForm;
 import org.innovateuk.ifs.competition.form.FundingDecisionForm;
 import org.innovateuk.ifs.competition.service.ApplicationSummarySortFieldService;
 import org.innovateuk.ifs.management.controller.CompetitionManagementApplicationController.ApplicationOverviewOrigin;
+import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -69,18 +70,25 @@ public class CompetitionManagementFundingController {
         CompetitionSummaryResource competitionSummary = applicationSummaryService.getCompetitionSummaryByCompetitionId(competitionId);
 
         model.addAttribute("competitionSummary", competitionSummary);
-        model.addAttribute("originQuery", buildOriginQueryString(ApplicationOverviewOrigin.FUNDING_APPLICATIONS, queryParams));
+        String originQuery = buildOriginQueryString(ApplicationOverviewOrigin.FUNDING_APPLICATIONS, queryParams);
+        model.addAttribute("originQuery", originQuery);
 
         switch (competitionSummary.getCompetitionStatus()) {
             case FUNDERS_PANEL:
             case ASSESSOR_FEEDBACK:
-                return fundersPanelCompetition(model, competitionId, competitionSummary, fundingDecisionForm, queryForm, bindingResult);
+                return fundersPanelCompetition(model, competitionId, competitionSummary, fundingDecisionForm, originQuery, queryForm, bindingResult);
             default:
                 return "redirect:/login";
         }
     }
 
-    private String fundersPanelCompetition(Model model, Long competitionId, CompetitionSummaryResource competitionSummary, FundingDecisionForm fundingDecisionForm, ApplicationSummaryQueryForm queryForm, BindingResult bindingResult) {
+    private String fundersPanelCompetition(Model model,
+                                           Long competitionId,
+                                           CompetitionSummaryResource competitionSummary,
+                                           FundingDecisionForm fundingDecisionForm,
+                                           String originQuery,
+                                           ApplicationSummaryQueryForm queryForm,
+                                           BindingResult bindingResult) {
         if(fundingDecisionForm.getFundingDecision() != null) {
             validator.validate(fundingDecisionForm, bindingResult);
             if(!bindingResult.hasErrors()) {
@@ -91,20 +99,22 @@ public class CompetitionManagementFundingController {
             }
         }
 
-        populateSubmittedModel(model, competitionSummary, queryForm);
+        populateSubmittedModel(model, competitionSummary, queryForm, originQuery);
 
         return "comp-mgt-funders-panel";
     }
 
-    private void populateSubmittedModel(Model model, CompetitionSummaryResource competitionSummary, ApplicationSummaryQueryForm queryForm) {
+    private void populateSubmittedModel(Model model, CompetitionSummaryResource competitionSummary, ApplicationSummaryQueryForm queryForm, String originQuery) {
         String sort = applicationSummarySortFieldService.sortFieldForSubmittedApplications(queryForm.getSort());
         ApplicationSummaryPageResource results = applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(
                 competitionSummary.getCompetitionId(),
                 sort,
-                queryForm.getPage() - 1,
+                queryForm.getPage(),
                 PAGE_SIZE,
-                null);
+                queryForm.getStringFilter(),
+                queryForm.getFundingFilter());
 
+        model.addAttribute("pagination", new PaginationViewModel(results, originQuery));
         model.addAttribute("results", results);
         model.addAttribute("activeTab", "submitted");
         model.addAttribute("activeSortField", sort);

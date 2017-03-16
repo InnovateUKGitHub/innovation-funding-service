@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.transactional;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.mapper.ApplicationSummaryMapper;
 import org.innovateuk.ifs.application.mapper.ApplicationSummaryPageMapper;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
@@ -80,11 +81,12 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 
     @Override
     public ServiceResult<ApplicationSummaryPageResource> getSubmittedApplicationSummariesByCompetitionId(
-            Long competitionId, String sortBy, int pageIndex, int pageSize, Optional<String> filter) {
+            Long competitionId, String sortBy, int pageIndex, int pageSize, Optional<String> filter, Optional<FundingDecisionStatus> fundingFilter) {
         String filterStr = filter.map(String::trim).orElse("");
+        String fundingFilterStr = fundingFilter.map(Enum::name).orElse(null);
         return applicationSummaries(sortBy, pageIndex, pageSize,
-                pageable -> applicationRepository.findByCompetitionIdAndApplicationStatusIdInAndIdLike(competitionId, SUBMITTED_STATUS_IDS, filterStr, pageable),
-                () -> applicationRepository.findByCompetitionIdAndApplicationStatusIdInAndIdLike(competitionId, SUBMITTED_STATUS_IDS, filterStr));
+                pageable -> applicationRepository.findByCompetitionIdAndApplicationStatusIdInAndIdLike(competitionId, SUBMITTED_STATUS_IDS, filterStr, fundingFilterStr, pageable),
+                () -> applicationRepository.findByCompetitionIdAndApplicationStatusIdInAndIdLike(competitionId, SUBMITTED_STATUS_IDS, filterStr, fundingFilterStr));
     }
 
     @Override

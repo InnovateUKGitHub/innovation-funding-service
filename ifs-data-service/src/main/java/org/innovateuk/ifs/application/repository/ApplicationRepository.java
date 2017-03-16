@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.innovateuk.ifs.application.domain.Application;
 
+import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
+import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -27,11 +29,13 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 	static final String COMP_STATUS_FILTER = "SELECT a FROM Application a WHERE " +
 			"a.competition.id = :compId " +
 			"AND (a.applicationStatus.id IN :statuses) " +
-			"AND (str(a.id) LIKE CONCAT('%', :filter, '%'))";
+			"AND (str(a.id) LIKE CONCAT('%', :filter, '%')) " +
+			"AND (:funding IS NULL " +
+			"	OR (:funding = 'UNDECIDED' AND a.fundingDecision IS NULL)" +
+			"	OR (str(a.fundingDecision) = :funding))";
 
     @Override
     List<Application> findAll();
-    
     Page<Application> findByCompetitionId(Long competitionId, Pageable pageable);
 
     @Query(COMP_FILTER)
@@ -48,12 +52,14 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 	Page<Application> findByCompetitionIdAndApplicationStatusIdInAndIdLike(@Param("compId") Long competitionId,
 																		   @Param("statuses") Collection<Long> applicationStatusIds,
 																		   @Param("filter") String filter,
+																		   @Param("funding") String funding,
 																		   Pageable pageable);
 
 	@Query(COMP_STATUS_FILTER)
 	List<Application> findByCompetitionIdAndApplicationStatusIdInAndIdLike(@Param("compId") Long competitionId,
 																		   @Param("statuses") Collection<Long> applicationStatusIds,
-																		   @Param("filter") String filter);
+																		   @Param("filter") String filter,
+																		   @Param("funding") String funding);
 
 	Page<Application> findByCompetitionIdAndApplicationStatusIdNotIn(Long competitionId, Collection<Long> applicationStatusIds, Pageable pageable);
 

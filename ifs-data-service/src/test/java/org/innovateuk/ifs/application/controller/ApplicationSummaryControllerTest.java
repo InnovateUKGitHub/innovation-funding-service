@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.controller;
 
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
+import static org.innovateuk.ifs.application.domain.FundingDecisionStatus.FUNDED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -69,38 +70,38 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
     public void searchSubmittedByCompetitionId() throws Exception {
     	ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
 
-    	when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(Long.valueOf(3), null, 6, 20, empty())).thenReturn(serviceSuccess(resource));
+    	when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(Long.valueOf(3), null, 6, 20, empty(), empty())).thenReturn(serviceSuccess(resource));
         
     	mockMvc.perform(get("/applicationSummary/findByCompetition/3/submitted?page=6"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(resource)));
     	
-    	verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(Long.valueOf(3), null, 6, 20, empty());
+    	verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(Long.valueOf(3), null, 6, 20, empty(), empty());
     }
     
     @Test
     public void searchSubmittedByCompetitionIdWithSortField() throws Exception {
     	ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
 
-    	when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(Long.valueOf(3), "id", 6, 20, empty())).thenReturn(serviceSuccess(resource));
+    	when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(Long.valueOf(3), "id", 6, 20, empty(), empty())).thenReturn(serviceSuccess(resource));
         
     	mockMvc.perform(get("/applicationSummary/findByCompetition/3/submitted?page=6&sort=id"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(resource)));
     	
-    	verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(Long.valueOf(3), "id", 6, 20, empty());
+    	verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(Long.valueOf(3), "id", 6, 20, empty(), empty());
     }
      @Test
     public void searchSubmittedByCompetitionIdWithFilter() throws Exception {
     	ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
 
-    	when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(Long.valueOf(3), null, 6, 20, of("filter"))).thenReturn(serviceSuccess(resource));
+    	when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(Long.valueOf(3), null, 6, 20, of("filter"), of(FUNDED))).thenReturn(serviceSuccess(resource));
 
-    	mockMvc.perform(get("/applicationSummary/findByCompetition/3/submitted?page=6&filter=filter"))
+    	mockMvc.perform(get("/applicationSummary/findByCompetition/3/submitted?page=6&filter=filter&fundingFilter=FUNDED"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(resource)));
 
-    	verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(Long.valueOf(3), null, 6, 20, of("filter"));
+    	verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(Long.valueOf(3), null, 6, 20, of("filter"), of(FUNDED));
     }
 
     @Test
