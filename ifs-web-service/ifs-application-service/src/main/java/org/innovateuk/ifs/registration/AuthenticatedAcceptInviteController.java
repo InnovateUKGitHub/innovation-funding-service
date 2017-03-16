@@ -1,14 +1,11 @@
 package org.innovateuk.ifs.registration;
 
-import org.innovateuk.ifs.BaseController;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.service.OrganisationService;
-import org.innovateuk.ifs.commons.error.exception.InvalidURLException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
-import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
@@ -23,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -31,13 +29,17 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 import java.util.Optional;
 
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
+import static org.innovateuk.ifs.invite.service.InviteServiceImpl.INVITE_ALREADY_ACCEPTED;
+
 
 /**
  * This class is use as an entry point to accept a invite, to a application.
  */
 @Controller
 @PreAuthorize("hasAuthority('applicant')")
-public class AcceptInviteAuthenticatedController extends BaseController{
+public class AuthenticatedAcceptInviteController extends AbstractAcceptInviteController {
     @Autowired
     private InviteRestService inviteRestService;
 
@@ -58,41 +60,48 @@ public class AcceptInviteAuthenticatedController extends BaseController{
 
     @Autowired
     private InviteService inviteService;
+    private static final String INVITE_FOR_DIFFERENT_ORGANISATION_THAN_USERS_VIEW = "TODO";
+    private static final String INVITE_FOR_DIFFERENT_ORGANISATION_THAN_USERS_BUT_SAME_NAME_VIEW = "TODO";
+
+    private String inviteForDifferentOrganisationThanUsers(HttpServletResponse response) {
+        clearDownInviteFlowCookies(response);
+        return INVITE_FOR_DIFFERENT_ORGANISATION_THAN_USERS_VIEW;
+    }
+
+    private String inviteForDifferentOrganisationThanUsersButSameName(HttpServletResponse response) {
+        clearDownInviteFlowCookies(response);
+        return INVITE_FOR_DIFFERENT_ORGANISATION_THAN_USERS_BUT_SAME_NAME_VIEW;
+    }
 
     @RequestMapping(value = "/accept-invite-authenticated/confirm-invited-organisation", method = RequestMethod.GET)
-    public String confirmInvite(HttpServletResponse response, HttpServletRequest request, Model model) {
-        UserResource loggedInUser = userAuthenticationService.getAuthenticatedUser(request);
-
-        String hash = cookieUtil.getCookieValue(request, InviteServiceImpl.INVITE_HASH);
-        RestResult<ApplicationInviteResource> invite = inviteRestService.getInviteByHash(hash);
-
-        if (invite.isSuccess()) {
-            ApplicationInviteResource inviteResource = invite.getSuccessObject();
-            if (InviteStatus.SENT.equals(inviteResource.getStatus())) {
-                InviteOrganisationResource inviteOrganisation = inviteRestService.getInviteOrganisationByHash(hash).getSuccessObjectOrThrowException();
-
-                Map<String, String> failureMessages = registrationService.getInvalidInviteMessages(loggedInUser, inviteResource, inviteOrganisation);
-
-                if (failureMessages.size() > 0){
-                    failureMessages.forEach((messageKey, messageValue) -> model.addAttribute(messageKey, messageValue));
-                    return "registration/accept-invite-failure";
-                }
-                OrganisationResource organisation = getUserOrInviteOrganisation(loggedInUser, inviteOrganisation);
-
-                model.addAttribute("invite", inviteResource);
-                model.addAttribute("organisation", organisation);
-                model.addAttribute("organisationAddress", getOrganisationAddress(organisation));
-                model.addAttribute("acceptInviteUrl", "/accept-invite-authenticated/confirm-invited-organisation/confirm");
-                return "registration/confirm-registered-organisation";
-            } else {
-                cookieUtil.removeCookie(response, InviteServiceImpl.INVITE_HASH);
-                cookieFlashMessageFilter.setFlashMessage(response, "inviteAlreadyAccepted");
-                return "redirect:/login";
+    public String confirmInvite(HttpServletResponse response,
+                                HttpServletRequest request,
+                                @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                Model model) {
+        String hash = getInviteHashCookie(request);
+        RestResult<String> view = inviteRestService.getInviteByHash(getInviteHashCookie(request)).andOnSuccessReturn(invite -> {
+            if (!SENT.equals(invite.getStatus())) {
+                return restSuccess(alreadyAcceptedView(response));
             }
-        } else {
-            cookieUtil.removeCookie(response, InviteServiceImpl.INVITE_HASH);
-            throw new InvalidURLException("Invite url is not valid", null);
-        }
+            return inviteRestService.getInviteOrganisationByHash(hash).andOnSuccessReturn(inviteOrganisation -> {
+                        if (loggedInAsNonInviteUser(invite, loggedInUser)) {
+                            return LOGGED_IN_WITH_ANOTHER_USER_VIEW;
+                        } else if (registrationService.isInviteForDifferentOrganisationThanUsers(invite, inviteOrganisation)) {
+                            return inviteForDifferentOrganisationThanUsers(response);
+                        } else if (registrationService.isInviteForDifferentOrganisationThanUsersButSameName(invite, inviteOrganisation)) {
+                            return inviteForDifferentOrganisationThanUsersButSameName(response);
+                        }
+                        // Success
+                        OrganisationResource organisation = getInviteOrganisationOrElseUserOrganisation(loggedInUser, inviteOrganisation);
+                        model.addAttribute("invite", invite);
+                        model.addAttribute("organisation", organisation);
+                        model.addAttribute("organisationAddress", getOrganisationAddress(organisation));
+                        model.addAttribute("acceptInviteUrl", "/accept-invite-authenticated/confirm-invited-organisation/confirm");
+                        return "registration/confirm-registered-organisation";
+                    }
+            );
+        }).andOnFailure(clearDownInviteFlowCookiesFn(response));
+        return view.getSuccessObjectOrThrowException();
     }
 
     @RequestMapping(value = "/accept-invite-authenticated/confirm-invited-organisation/confirm", method = RequestMethod.GET)
@@ -100,7 +109,7 @@ public class AcceptInviteAuthenticatedController extends BaseController{
         UserResource loggedInUser = userAuthenticationService.getAuthenticatedUser(request);
 
         ApplicationInviteResource inviteResource = inviteService.getInviteByRequest(request, response);
-        if (InviteStatus.SENT.equals(inviteResource.getStatus())) {
+        if (SENT.equals(inviteResource.getStatus())) {
             InviteOrganisationResource inviteOrganisation = inviteRestService.getInviteOrganisationByHash(inviteResource.getHash()).getSuccessObjectOrThrowException();
 
             Map<String, String> failureMessages = registrationService.getInvalidInviteMessages(loggedInUser, inviteResource, inviteOrganisation);
@@ -119,15 +128,14 @@ public class AcceptInviteAuthenticatedController extends BaseController{
         }
     }
 
-    private OrganisationResource getUserOrInviteOrganisation(UserResource loggedInUser, InviteOrganisationResource inviteOrganisation) {
-        OrganisationResource organisation;
-        if(inviteOrganisation.getOrganisation() == null){
-            // no one has confirmed the InviteOrganisation, we can use the users organisation.
-            organisation = organisationService.getOrganisationForUser(loggedInUser.getId());
-        }else{
-            organisation = organisationService.getOrganisationById(inviteOrganisation.getOrganisation());
+    private OrganisationResource getInviteOrganisationOrElseUserOrganisation(UserResource loggedInUser, InviteOrganisationResource inviteOrganisation) {
+        if (inviteOrganisation.getOrganisation() == null) {
+            // No one has confirmed the InviteOrganisation, we can use the users Organisation.
+            // Note that this makes the assumption that the user will have an organisation
+            return organisationService.getOrganisationForUser(loggedInUser.getId());
+        } else {
+            return organisationService.getOrganisationById(inviteOrganisation.getOrganisation());
         }
-        return organisation;
     }
 
     /**

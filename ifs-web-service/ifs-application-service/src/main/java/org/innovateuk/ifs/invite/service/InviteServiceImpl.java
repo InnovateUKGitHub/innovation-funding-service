@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * TODO qqRP can this class go?
  * A service class for common invite methods.
  */
 @Service

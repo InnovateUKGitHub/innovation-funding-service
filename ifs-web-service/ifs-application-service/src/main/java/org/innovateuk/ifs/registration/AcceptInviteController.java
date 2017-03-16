@@ -1,12 +1,8 @@
 package org.innovateuk.ifs.registration;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.BaseController;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.service.OrganisationService;
-import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
@@ -15,7 +11,6 @@ import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.registration.model.AcceptRejectApplicationInviteModelPopulator;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -31,9 +26,6 @@ import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
-import static org.innovateuk.ifs.invite.service.InviteServiceImpl.INVITE_ALREADY_ACCEPTED;
-import static org.innovateuk.ifs.invite.service.InviteServiceImpl.INVITE_HASH;
-import static org.innovateuk.ifs.registration.OrganisationCreationController.ORGANISATION_FORM;
 
 
 /**
@@ -41,16 +33,10 @@ import static org.innovateuk.ifs.registration.OrganisationCreationController.ORG
  */
 @Controller
 @PreAuthorize("permitAll")
-public class AcceptInviteController extends BaseController {
-
-    @Autowired
-    private CookieFlashMessageFilter cookieFlashMessageFilter;
+public class AcceptInviteController extends AbstractAcceptInviteController {
 
     @Autowired
     private OrganisationService organisationService;
-
-    @Autowired
-    private CookieUtil cookieUtil;
 
     @Autowired
     private InviteService inviteService;
@@ -60,9 +46,7 @@ public class AcceptInviteController extends BaseController {
 
     @Autowired
     private AcceptRejectApplicationInviteModelPopulator acceptRejectApplicationInviteModelPopulator;
-
-    private static final String ALREADY_ACCEPTED_VIEW = "redirect:/login";
-    private static final String LOGGED_IN_WITH_ANOTHER_USER_VIEW = "registration/logged-in-with-another-user-failure";
+    
     private static final String ACCEPT_INVITE_NEW_USER_VIEW = "registration/accept-invite-new-user";
     private static final String ACCEPT_INVITE_EXISTING_USER_VIEW = "registration/accept-invite-existing-user";
 
@@ -78,40 +62,17 @@ public class AcceptInviteController extends BaseController {
                         return restSuccess(alreadyAcceptedView(response));
                     }
                     return inviteRestService.getInviteOrganisationByHash(hash).andOnSuccessReturn(inviteOrganisation -> {
-                                if (loggedInAsNonInviteUser(invite, loggedInUser)){
+                                if (loggedInAsNonInviteUser(invite, loggedInUser)) {
                                     return LOGGED_IN_WITH_ANOTHER_USER_VIEW;
                                 }
                                 // Success
-                                addInviteHashCookie(response, invite.getHash()); // Add the hash to a cookie for later flow lookup.
+                                putInviteHashCookie(response, invite.getHash()); // Add the hash to a cookie for later flow lookup.
                                 model.addAttribute("model", acceptRejectApplicationInviteModelPopulator.populateModel(invite, inviteOrganisation));
                                 return invite.getUser() == null ? ACCEPT_INVITE_NEW_USER_VIEW : ACCEPT_INVITE_EXISTING_USER_VIEW;
                             }
                     );
                 }
         ).getSuccessObject();
-    }
-
-    private void clearDownInviteFlowCookies(HttpServletResponse response) {
-        cookieUtil.removeCookie(response, ORGANISATION_FORM);
-        cookieUtil.removeCookie(response, INVITE_HASH);
-    }
-
-    private void addInviteHashCookie(HttpServletResponse response, String hash) {
-        cookieUtil.saveToCookie(response, INVITE_HASH, hash);
-    }
-
-    private String alreadyAcceptedView(HttpServletResponse response) {
-        cookieFlashMessageFilter.setFlashMessage(response, INVITE_ALREADY_ACCEPTED);
-        return ALREADY_ACCEPTED_VIEW;
-    }
-
-    private boolean loggedInAsNonInviteUser(ApplicationInviteResource invite, UserResource loggedInUser) {
-        if (loggedInUser == null){
-            return false;
-        } else if (invite.getEmail().equalsIgnoreCase(loggedInUser.getEmail())){
-            return false;
-        }
-        return true;
     }
 
     @RequestMapping(value = "/accept-invite/confirm-invited-organisation", method = RequestMethod.GET)
