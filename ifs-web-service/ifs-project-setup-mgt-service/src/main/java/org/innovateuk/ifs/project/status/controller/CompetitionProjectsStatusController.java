@@ -3,15 +3,10 @@ package org.innovateuk.ifs.project.status.controller;
 import org.apache.commons.io.IOUtils;
 import org.innovateuk.ifs.bankdetails.BankDetailsService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.project.sections.ProjectSetupSectionInternalUser;
 import org.innovateuk.ifs.project.status.ProjectStatusService;
-import org.innovateuk.ifs.project.status.populator.PopulatedProjectStatusViewModel;
-import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
-import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
+import org.innovateuk.ifs.project.status.populator.PopulatedCompetitionProjectsStatusViewModel;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionProjectStatusViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
-import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,8 +21,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Map;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
@@ -47,10 +40,9 @@ public class CompetitionProjectsStatusController {
     @GetMapping
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
     public String viewCompetitionStatus(Model model, @ModelAttribute("loggedInUser") UserResource loggedInUser,
-                                        @PathVariable Long competitionId)
-    {
+                                        @PathVariable Long competitionId) {
         model.addAttribute("model",
-                new PopulatedProjectStatusViewModel(projectStatusService.getCompetitionStatus(competitionId), loggedInUser).get());
+                new PopulatedCompetitionProjectsStatusViewModel(projectStatusService.getCompetitionStatus(competitionId), loggedInUser).get());
         return "project/competition-status";
     }
 

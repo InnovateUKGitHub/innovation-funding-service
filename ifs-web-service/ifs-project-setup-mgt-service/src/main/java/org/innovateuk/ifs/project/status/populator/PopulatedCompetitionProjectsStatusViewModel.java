@@ -16,12 +16,12 @@ import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 /**
  * This class represents a populated CompetitionProjectStatusViewModel.
  */
-public class PopulatedProjectStatusViewModel {
+public class PopulatedCompetitionProjectsStatusViewModel {
     private final UserResource user;
     private final CompetitionProjectsStatusResource competitionProjectsStatus;
     private final CompetitionProjectStatusViewModel viewModel;
 
-    public PopulatedProjectStatusViewModel(CompetitionProjectsStatusResource competitionProjectsStatus, UserResource user) {
+    public PopulatedCompetitionProjectsStatusViewModel(CompetitionProjectsStatusResource competitionProjectsStatus, UserResource user) {
         this.user = user;
         this.competitionProjectsStatus = competitionProjectsStatus;
         final boolean canExportBankDetails = user.hasRole(PROJECT_FINANCE);
