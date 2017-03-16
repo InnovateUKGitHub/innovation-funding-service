@@ -266,7 +266,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(projectFinanceQueriesService.findAll(234L)).thenReturn(serviceSuccess(Arrays.asList(queryResource1)));
         when(projectFinanceQueriesService.findAll(345L)).thenReturn(serviceSuccess(new ArrayList<>()));
         when(projectFinanceQueriesService.findAll(456L)).thenReturn(serviceSuccess(Arrays.asList(queryResource2)));
-        when(financeRowServiceMock.getResearchParticipationPercentage(applicationId)).thenReturn(serviceSuccess(Double.valueOf(3.0)));
+        when(financeRowServiceMock.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(Double.valueOf(3.0)));
         ServiceResult<FinanceCheckSummaryResource> result = service.getFinanceCheckSummary(projectId);
         assertTrue(result.isSuccess());
 
@@ -611,7 +611,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(projectFinanceRowServiceMock.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
-        when(financeRowServiceMock.getResearchParticipationPercentage(applicationId)).thenReturn(serviceSuccess(Double.valueOf(3.0)));
+        when(financeRowServiceMock.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(Double.valueOf(3.0)));
 
         ServiceResult<FinanceCheckOverviewResource> result = service.getFinanceCheckOverview(projectId);
         assertTrue(result.isSuccess());
@@ -680,7 +680,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(projectFinanceRowServiceMock.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
-        when(financeRowServiceMock.getResearchParticipationPercentage(applicationId)).thenReturn(serviceFailure(GENERAL_FORBIDDEN));
+        when(financeRowServiceMock.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceFailure(GENERAL_FORBIDDEN));
 
         ServiceResult<FinanceCheckOverviewResource> result = service.getFinanceCheckOverview(projectId);
         assertTrue(result.isSuccess());
@@ -749,7 +749,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(projectFinanceRowServiceMock.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
-        when(financeRowServiceMock.getResearchParticipationPercentage(applicationId)).thenReturn(serviceSuccess(null));
+        when(financeRowServiceMock.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(null));
 
         ServiceResult<FinanceCheckOverviewResource> result = service.getFinanceCheckOverview(projectId);
         assertTrue(result.isSuccess());

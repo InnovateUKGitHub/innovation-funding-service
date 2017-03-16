@@ -27,7 +27,6 @@ import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessm
 import static org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionClosedKeyStatisticsResourceBuilder.newCompetitionClosedKeyStatisticsResource;
-import static org.innovateuk.ifs.competition.builder.CompetitionFundedKeyStatisticsResourceBuilder.newCompetitionFundedKeyStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionInAssessmentKeyStatisticsResourceBuilder.newCompetitionInAssessmentKeyStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionOpenKeyStatisticsResourceBuilder.newCompetitionOpenKeyStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionReadyToOpenKeyStatisticsResourceBuilder.newCompetitionReadyToOpenKeyStatisticsResource;
@@ -36,7 +35,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 import static org.innovateuk.ifs.workflow.resource.State.*;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 public class CompetitionKeyStatisticsServiceImplTest extends BaseServiceUnitTest<CompetitionKeyStatisticsServiceImpl> {
@@ -183,17 +182,25 @@ public class CompetitionKeyStatisticsServiceImplTest extends BaseServiceUnitTest
     @Test
     public void getFundedKeyStatisticsByCompetition() throws Exception {
         long competitionId = 1L;
+        int applicationsNotifiedOfDecision = 1;
+        int applicationsAwaitingDecision = 2;
 
-        List<Application> applications = newApplication().withApplicationStatus(ApplicationStatusConstants.SUBMITTED).withFundingDecision(FundingDecisionStatus.FUNDED).build(2);
+        List<Application> applications = newApplication()
+                .withApplicationStatus(ApplicationStatusConstants.SUBMITTED)
+                .withFundingDecision(FundingDecisionStatus.FUNDED, FundingDecisionStatus.UNFUNDED, FundingDecisionStatus.ON_HOLD)
+                .build(3);
 
         when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusIdIn(competitionId, SUBMITTED_STATUS_IDS)).thenReturn(applications);
+        when(applicationRepositoryMock.countByCompetitionIdAndFundingDecisionIsNotNullAndManageFundingEmailDateIsNotNull(competitionId)).thenReturn(applicationsNotifiedOfDecision);
+        when(applicationRepositoryMock.countByCompetitionIdAndFundingDecisionIsNotNullAndManageFundingEmailDateIsNull(competitionId)).thenReturn(applicationsAwaitingDecision);
 
         CompetitionFundedKeyStatisticsResource response = service.getFundedKeyStatisticsByCompetition(competitionId).getSuccessObjectOrThrowException();
-        assertEquals(2, response.getApplicationsSubmitted());
-        assertEquals(2, response.getApplicationsFunded());
-        assertEquals(0, response.getApplicationsNotFunded());
-        assertEquals(0, response.getApplicationsOnHold());
-        assertEquals(0, response.getApplicationsNotifiedOfDecision());
-        assertEquals(0, response.getApplicationsAwaitingDecision());
+
+        assertEquals(3, response.getApplicationsSubmitted());
+        assertEquals(1, response.getApplicationsFunded());
+        assertEquals(1, response.getApplicationsNotFunded());
+        assertEquals(1, response.getApplicationsOnHold());
+        assertEquals(applicationsNotifiedOfDecision, response.getApplicationsNotifiedOfDecision());
+        assertEquals(applicationsAwaitingDecision, response.getApplicationsAwaitingDecision());
     }
 }

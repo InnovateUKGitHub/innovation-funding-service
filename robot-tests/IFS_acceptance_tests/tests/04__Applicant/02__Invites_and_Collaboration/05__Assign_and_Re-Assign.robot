@@ -211,7 +211,7 @@ Lead marks finances as complete
     Then the user should see the element   link=Your project costs
     And the user should see the element    link=Your organisation
     And the user should see the element    jQuery=h3:contains("Your funding")
-    When the user fills in the project costs
+    When the user fills in the project costs     Assign test
     And the user navigates to Your-finances page  Assign test
     Then the user fills in the organisation information      Assign test
     And the user fills in the funding information  Assign test
@@ -277,7 +277,7 @@ the question should contain the correct status/name
     Element Should Contain    ${ELEMENT}    ${STATUS}
 
 the collaborator is able to edit the finances
-    the user fills in the project costs
+    the user fills in the project costs     Assign test
     the user navigates to Your-finances page    Assign test
     the user fills in the organisation information      Assign test
     the user fills in the funding information  Assign test

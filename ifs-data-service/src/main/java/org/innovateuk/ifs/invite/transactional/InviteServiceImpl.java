@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.invite.transactional;
 
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -54,7 +53,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_INVITE_INVALID;
-import static org.innovateuk.ifs.commons.error.Error.globalError;
+import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
@@ -322,7 +321,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         try {
             ApplicationInvite applicationInvite = applicationInviteMapper.mapIdToDomain(applicationInviteId);
             if(applicationInvite == null) {
-               return serviceFailure(notFoundError(ApplicationInvite.class));
+                return serviceFailure(notFoundError(ApplicationInvite.class));
             }
 
             ProcessRole leadApplicantProcessRole = applicationInvite.getTarget().getLeadApplicantProcessRole();
@@ -455,17 +454,18 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         return true;
     }
 
-
     private List<Error> validateUniqueEmails(List<ApplicationInviteResource> inviteResources) {
         List<Error> errors = new ArrayList<>();
+        int inviteIndex = 0;
 
-        Iterables.concat(findDuplicatesInResourceList(inviteResources),
-                inviteResources
-                        .stream()
-                        .filter(inviteResource -> validateUniqueEmail(inviteResource).equals(false))
-                        .collect(Collectors.toList())
-        )
-                .forEach(inviteResource -> errors.add(globalError("email.already.in.invite", singletonList(inviteResource.getEmail()))));
+        List<ApplicationInviteResource> duplicatesInList = findDuplicatesInResourceList(inviteResources);
+
+        for (ApplicationInviteResource invite : inviteResources) {
+            if (duplicatesInList.contains(invite) || validateUniqueEmail(invite).equals(false)) {
+                errors.add(fieldError("applicants[" + inviteIndex + "].email", invite.getEmail(), "email.already.in.invite"));
+            }
+            inviteIndex++;
+        }
 
         return errors;
     }

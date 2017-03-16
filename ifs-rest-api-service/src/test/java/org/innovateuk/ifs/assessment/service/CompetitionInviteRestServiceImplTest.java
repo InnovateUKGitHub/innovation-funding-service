@@ -2,7 +2,6 @@ package org.innovateuk.ifs.assessment.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.resource.*;
 import org.junit.Test;
 
@@ -14,10 +13,10 @@ import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
-import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInvitePageResourceBuilder.newAssessorCreatedInvitePageResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
+import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteToSendResourceBuilder.newAssessorInviteToSendResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorPageResourceBuilder.newAvailableAssessorPageResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
@@ -222,11 +221,13 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
     @Test
     public void sendInvite() {
         long inviteId = 5L;
-        AssessorInviteToSendResource expected = newAssessorInviteToSendResource().build();
-        EmailContent email = newEmailContentResource().build();
-        setupPostWithRestResultExpectations(format("%s/%s/%s", restUrl, "sendInvite", inviteId), AssessorInviteToSendResource.class, email, expected, OK);
+        AssessorInviteSendResource assessorInviteSendResource = newAssessorInviteSendResource()
+                .withSubject("subject")
+                .withContent("content")
+                .build();
 
-        AssessorInviteToSendResource actual = service.sendInvite(inviteId, email).getSuccessObject();
-        assertEquals(expected, actual);
+        setupPostWithRestResultExpectations(format("%s/%s/%s", restUrl, "sendInvite", inviteId), assessorInviteSendResource, OK);
+
+        assertTrue(service.sendInvite(inviteId, assessorInviteSendResource).isSuccess());
     }
 }
