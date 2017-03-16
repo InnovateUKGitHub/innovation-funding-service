@@ -84,9 +84,9 @@ public class OrganisationTypeCreationControllerTest extends BaseControllerMockMV
                         .param("organisationType", "1")
 
         )
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/organisation/create/find-organisation"))
-                .andReturn();
+        .andExpect(status().is3xxRedirection())
+        .andExpect(view().name("redirect:/organisation/create/find-organisation"))
+        .andReturn();
 
         assertEquals(URLEncoder.encode("{\"organisationType\":1}", CharEncoding.UTF_8), getDecryptedCookieValue(result.getResponse().getCookies(), "organisationType"));
 
@@ -104,9 +104,9 @@ public class OrganisationTypeCreationControllerTest extends BaseControllerMockMV
                         .param("organisationType", "2")
 
         )
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/organisation/create/type/new-account-organisation-type/?organisationType=2"))
-                .andReturn();
+        .andExpect(status().is3xxRedirection())
+        .andExpect(view().name("redirect:/organisation/create/find-organisation"))
+        .andReturn();
 
         assertEquals(URLEncoder.encode("{\"organisationType\":2}", CharEncoding.UTF_8), getDecryptedCookieValue(result.getResponse().getCookies(), "organisationType"));
     }
