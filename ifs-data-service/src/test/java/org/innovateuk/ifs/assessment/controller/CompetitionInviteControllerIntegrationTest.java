@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.assessment.controller;
 
-
 import com.google.common.collect.Lists;
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.category.domain.InnovationArea;
@@ -9,7 +8,6 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.CompetitionInvite;
 import org.innovateuk.ifs.invite.domain.RejectionReason;
@@ -22,6 +20,7 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProfileRepository;
 import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,7 +34,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
+import static java.util.Collections.singleton;
 import static java.util.Optional.empty;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
 import static org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
@@ -44,7 +43,7 @@ import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnov
 import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
-import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
+import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
 import static org.innovateuk.ifs.invite.builder.CompetitionInviteStatisticsResourceBuilder.newCompetitionInviteStatisticsResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonResourceBuilder.newRejectionReasonResource;
@@ -132,8 +131,10 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         assertTrue(serviceResult.isSuccess());
 
         AssessorInviteToSendResource inviteResource = serviceResult.getSuccessObjectOrThrowException();
+        assertEquals(1L, inviteResource.getCompetitionId());
         assertEquals("Connected digital additive manufacturing", inviteResource.getCompetitionName());
         assertEquals("tom poly", inviteResource.getRecipient());
+        assertTrue(inviteResource.getContent().startsWith("Dear tom poly\n\nWe are inviting you to assess "));
     }
 
     @Test
@@ -393,7 +394,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
         Profile profile = profileRepository.findOne(getPaulPlum().getProfileId());
 
-        assertEquals(Collections.singleton(innovationArea), profile.getInnovationAreas());
+        assertEquals(singleton(innovationArea), profile.getInnovationAreas());
     }
 
     @Test
@@ -697,16 +698,44 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                 .withStatus(InviteStatus.CREATED)
                 .build())
                 .getId();
-        EmailContent content = newEmailContentResource()
+
+        AssessorInviteSendResource assessorInviteSendResource = newAssessorInviteSendResource()
                 .withSubject("subject")
-                .withPlainText("plain")
-                .withHtmlText("html")
+                .withContent("content")
                 .build();
 
         loginCompAdmin();
 
-        RestResult<AssessorInviteToSendResource> serviceResult = controller.sendInvite(createdId, content);
+        RestResult<Void> serviceResult = controller.sendInvite(createdId, assessorInviteSendResource);
         assertTrue(serviceResult.isSuccess());
+    }
+
+    @Test
+    public void sendInvite_toExistingApplicant() throws Exception {
+        final UserResource applicantUser = getSteveSmith();
+        long createdId = competitionInviteRepository.save(newCompetitionInvite()
+                .with(id(null))
+                .withName(applicantUser.getName())
+                .withEmail(applicantUser.getEmail())
+                .withUser((User) null)
+                .withHash("hash")
+                .withCompetition(competition)
+                .withStatus(InviteStatus.CREATED)
+                .withInnovationArea(innovationAreaRepository.findOne(INNOVATION_AREA_ID)) // 'new invite'
+                .build())
+                .getId();
+
+        AssessorInviteSendResource assessorInviteSendResource = newAssessorInviteSendResource()
+                .withSubject("subject")
+                .withContent("content")
+                .build();
+
+        loginCompAdmin();
+
+        controller.sendInvite(createdId, assessorInviteSendResource).getSuccessObjectOrThrowException();
+
+        User invitedUser = userRepository.findByEmail(applicantUser.getEmail()).get();
+        assertTrue(invitedUser.getRoles().contains(roleRepository.findOneByName(UserRoleType.ASSESSOR.getName())));
     }
 
     @Test
@@ -834,7 +863,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                 .withUid("uid1", "uid2", "uid3", "uid4")
                 .withFirstName("Robert", "Robert", "Alexis", "Alexis")
                 .withLastName("Stark", "Salt", "Kinney", "Colon")
-                .withRoles(singletonList(assessorRole))
+                .withRoles(singleton(assessorRole))
                 .withProfileId(profileIds)
                 .build(4);
 
@@ -881,7 +910,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                 .withUid("uid1", "uid2", "uid3", "uid4")
                 .withFirstName("Victoria", "James", "Jessica", "Andrew")
                 .withLastName("Beckham", "Blake", "Alba", "Marr")
-                .withRoles(singletonList(assessorRole))
+                .withRoles(singleton(assessorRole))
                 .withProfileId(profileIds[0], profileIds[1], profileIds[2], profileIds[3])
                 .build(4);
 
