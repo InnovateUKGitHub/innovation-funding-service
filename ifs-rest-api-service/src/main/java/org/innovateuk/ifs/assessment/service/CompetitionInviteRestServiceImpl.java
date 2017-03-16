@@ -1,17 +1,14 @@
 package org.innovateuk.ifs.assessment.service;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.invite.resource.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 import static java.lang.String.format;
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.assessorInviteOverviewResourceListType;
 
 /**
  * REST service for managing {@link org.innovateuk.ifs.invite.resource.InviteResource} to {@link org.innovateuk.ifs.competition.resource.CompetitionResource}s
