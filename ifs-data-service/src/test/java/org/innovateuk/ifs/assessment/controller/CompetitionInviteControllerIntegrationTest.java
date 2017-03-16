@@ -24,6 +24,7 @@ import org.innovateuk.ifs.user.repository.AgreementRepository;
 import org.innovateuk.ifs.user.repository.ProfileRepository;
 import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,7 +41,7 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.time.LocalDateTime.now;
 import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
+import static java.util.Collections.singleton;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
@@ -411,7 +412,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
         Profile profile = profileRepository.findOne(getPaulPlum().getProfileId());
 
-        assertEquals(Collections.singleton(innovationArea), profile.getInnovationAreas());
+        assertEquals(singleton(innovationArea), profile.getInnovationAreas());
     }
 
     @Test
@@ -728,6 +729,34 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
     }
 
     @Test
+    public void sendInvite_toExistingApplicant() throws Exception {
+        final UserResource applicantUser = getSteveSmith();
+        long createdId = competitionInviteRepository.save(newCompetitionInvite()
+                .with(id(null))
+                .withName(applicantUser.getName())
+                .withEmail(applicantUser.getEmail())
+                .withUser((User) null)
+                .withHash("hash")
+                .withCompetition(competition)
+                .withStatus(InviteStatus.CREATED)
+                .withInnovationArea(innovationAreaRepository.findOne(INNOVATION_AREA_ID)) // 'new invite'
+                .build())
+                .getId();
+
+        AssessorInviteSendResource assessorInviteSendResource = newAssessorInviteSendResource()
+                .withSubject("subject")
+                .withContent("content")
+                .build();
+
+        loginCompAdmin();
+
+        controller.sendInvite(createdId, assessorInviteSendResource).getSuccessObjectOrThrowException();
+
+        User invitedUser = userRepository.findByEmail(applicantUser.getEmail()).get();
+        assertTrue(invitedUser.getRoles().contains(roleRepository.findOneByName(UserRoleType.ASSESSOR.getName())));
+    }
+
+    @Test
     public void getInviteStatistics() throws Exception {
         loginCompAdmin();
         competitionInviteRepository.save(newCompetitionInvite()
@@ -852,7 +881,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                 .withUid("uid1", "uid2", "uid3", "uid4")
                 .withFirstName("Robert", "Robert", "Alexis", "Alexis")
                 .withLastName("Stark", "Salt", "Kinney", "Colon")
-                .withRoles(singletonList(assessorRole))
+                .withRoles(singleton(assessorRole))
                 .withProfileId(profileIds)
                 .build(4);
 
@@ -899,7 +928,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                 .withUid("uid1", "uid2", "uid3", "uid4")
                 .withFirstName("Victoria", "James", "Jessica", "Andrew")
                 .withLastName("Beckham", "Blake", "Alba", "Marr")
-                .withRoles(singletonList(assessorRole))
+                .withRoles(singleton(assessorRole))
                 .withProfileId(profileIds[0], profileIds[1], profileIds[2], profileIds[3])
                 .build(4);
 

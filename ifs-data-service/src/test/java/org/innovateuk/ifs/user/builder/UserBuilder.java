@@ -8,6 +8,7 @@ import org.innovateuk.ifs.user.resource.Title;
 import org.innovateuk.ifs.user.resource.UserStatus;
 
 import java.util.List;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -41,7 +42,7 @@ public class UserBuilder extends BaseBuilder<User, UserBuilder> {
         return withArray((email, user) -> user.setEmail(email), emailAddresses);
     }
 
-    public UserBuilder withRoles(List<Role>... rolesList) {
+    public UserBuilder withRoles(Set<Role>... rolesList) {
         return withArray((roles, user) -> setField("roles", roles, user), rolesList);
     }
 

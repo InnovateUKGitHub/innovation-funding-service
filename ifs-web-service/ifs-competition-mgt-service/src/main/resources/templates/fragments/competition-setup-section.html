@@ -129,6 +129,7 @@
                             <span class="error-message"  th:each="err : ${#fields.errors('openingDate*')}" th:text="${err}" />
                       </span>
                   </legend>
+                  <p class="form-hint">You are able to edit this date if needed in the milestones section.</p>
                   <div class="date-group" data-future-date="">
                       <input type="hidden" name="openingDate" />
                       <div class="day">

@@ -25,10 +25,13 @@ import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.Profile;
+import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProfileRepository;
+import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -118,6 +121,9 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     @Autowired
     private LoggedInUserSupplier loggedInUserSupplier;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -423,6 +429,10 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
         return getById(inviteId).andOnSuccess(invite -> {
             competitionParticipantRepository.save(new CompetitionParticipant(invite.send(loggedInUserSupplier.get(), LocalDateTime.now())));
 
+            if (invite.isNewAssessorInvite()) {
+                userRepository.findByEmail(invite.getEmail()).ifPresent(this::addAssessorRoleToUser);
+            }
+
             // Strip any HTML that may have been added to the content by the user.
             String bodyPlain = stripHtml(assessorInviteSendResource.getContent());
 
@@ -439,6 +449,11 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
             return notificationSender.sendNotification(notification);
         }).andOnSuccessReturnVoid();
+    }
+
+    private void addAssessorRoleToUser(User user) {
+        Role assessorRole = roleRepository.findOneByName(UserRoleType.ASSESSOR.getName());
+        user.addRole(assessorRole);
     }
 
     @Override
@@ -498,10 +513,6 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     private ServiceResult<CompetitionParticipant> getParticipantByInviteHash(String inviteHash) {
         return find(competitionParticipantRepository.getByInviteHash(inviteHash), notFoundError(CompetitionParticipant.class, inviteHash));
-    }
-
-    private ServiceResult<List<CompetitionParticipant>> getParticipantsByCompetition(long competitionId) {
-        return find(competitionParticipantRepository.getByCompetitionIdAndRole(competitionId, ASSESSOR), notFoundError(CompetitionParticipant.class, competitionId));
     }
 
     private ServiceResult<CompetitionParticipant> accept(CompetitionParticipant participant, User user) {
