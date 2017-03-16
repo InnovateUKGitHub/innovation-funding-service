@@ -207,8 +207,13 @@ public class ApplicationController {
     @RequestMapping(value = "/{applicationId}/question/{questionId}/feedback")
     public String applicationAssessorQuestionFeedback(Model model, @PathVariable("applicationId") long applicationId,
                                               @PathVariable("questionId") long questionId) {
-        model.addAttribute("model", assessorQuestionFeedbackPopulator.populate(applicationId, questionId));
+        ApplicationResource applicationResource = applicationService.getById(applicationId);
+        if (!applicationResource.getCompetitionStatus().isFeedbackReleased()) {
+            return "redirect:/application/" + applicationId + "/summary";
+        }
+        model.addAttribute("model", assessorQuestionFeedbackPopulator.populate(applicationResource, questionId));
         return "application-assessor-feedback";
+
     }
 
     @ProfileExecution
