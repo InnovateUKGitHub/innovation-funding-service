@@ -66,7 +66,8 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...               INFUND-7756 Project finance can post an update to an existing note
 Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 Suite Teardown    the user closes the browser
-Force Tags        Project Setup
+Force Tags        Project Setup  Pending
+# TODO Re-enable this suite when INFUND-8090 and INFUND-8086
 Resource          ../../resources/defaultResources.robot
 Resource          PS_Variables.robot
 Resource          ../04__Applicant/FinanceSection_Commons.robot
@@ -1185,8 +1186,20 @@ the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project se
 
 the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/funding
-    the user selects the option from the drop-down menu    Yes    id=fund63
-    the user selects the option from the drop-down menu    No    id=fund64
+    then the user selects the checkbox      jQuery=input[id="applicationIds"][value="63"]
+    #the user selects the option from the drop-down menu    Yes    id=fund63
+    #the user selects the option from the drop-down menu    No    id=fund64
+    the user selects the checkbox      jQuery=input[id="applicationIds"][value="64"]
+    the user clicks the button/link    jQuery=button:contains("Successful")
+    the user clicks the button/link     link=competition
+    the user clicks the button/link     button:contains(Manage funding notifications)
+    the user selects the checkbox      JQuery=input[id="applicationIds"][value="64"]
+    the user clicks the button/link     button:contains("write and send email")
+    the user enters text to a text field       id=subject
+    the user enters text to a text field      id=message
+    the user clicks the button/link     button:contains("Send email to all applicants")
+
+
     the user clicks the button/link    jQuery=.button:contains("Notify applicants")
     the user clicks the button/link    name=publish
     the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/funding

@@ -6,8 +6,8 @@
         <ul class="grid-row">
             <li class="column-third">
                 <div class="highlight-panel highlight-panel-padded">
-                    <span class="heading-large" th:text="${keyStatistics.keyStatistics.statOne}">1</span><br/>
-                    <th:block th:switch="${keyStatistics.competitionStatus.name()}">
+                    <span class="heading-large" th:text="${keyStatistics.statOne}">1</span><br/>
+                    <th:block th:switch="${keyStatistics.status.name()}">
                         <small th:case="READY_TO_OPEN">Assessors invited</small>
                         <small th:case="OPEN">Assessors invited</small>
                         <small th:case="CLOSED">Applications requiring additional assessors</small>
@@ -20,8 +20,8 @@
 
             <li class="column-third">
                 <div class="highlight-panel highlight-panel-padded">
-                    <span class="heading-large" th:text="${keyStatistics.keyStatistics.statTwo}">2</span><br/>
-                    <th:block th:switch="${keyStatistics.competitionStatus.name()}">
+                    <span class="heading-large" th:text="${keyStatistics.statTwo}">2</span><br/>
+                    <th:block th:switch="${keyStatistics.status.name()}">
                         <small th:case="READY_TO_OPEN">Invitations accepted</small>
                         <small th:case="OPEN">Invitations accepted</small>
                         <small th:case="CLOSED">Assignments made</small>
@@ -32,10 +32,10 @@
                 </div>
             </li>
 
-            <li th:if="${keyStatistics.keyStatistics.statThree != null}" class="column-third">
+            <li th:if="${keyStatistics.statThree != null}" class="column-third">
                 <div class="highlight-panel highlight-panel-padded">
-                    <span class="heading-large" th:text="${keyStatistics.keyStatistics.statThree}">3</span><br/>
-                    <th:block th:switch="${keyStatistics.competitionStatus.name()}">
+                    <span class="heading-large" th:text="${keyStatistics.statThree}">3</span><br/>
+                    <th:block th:switch="${keyStatistics.status.name()}">
                         <small th:case="OPEN">Applications per assessor</small>
                         <small th:case="CLOSED">Assessors without applications</small>
                         <small th:case="IN_ASSESSMENT">Assignments accepted</small>
@@ -47,10 +47,10 @@
         </ul>
 
         <ul class="grid-row extra-margin">
-            <li th:if="${keyStatistics.keyStatistics.statFour != null}" class="column-third">
+            <li th:if="${keyStatistics.statFour != null}" class="column-third">
                 <div class="highlight-panel highlight-panel-padded">
-                    <span class="heading-large" th:text="${keyStatistics.keyStatistics.statFour}">4</span><br/>
-                    <th:block th:switch="${keyStatistics.competitionStatus.name()}">
+                    <span class="heading-large" th:text="${keyStatistics.statFour}">4</span><br/>
+                    <th:block th:switch="${keyStatistics.status.name()}">
                         <small th:case="OPEN">Applications started</small>
                         <small th:case="CLOSED">Assessors invited</small>
                         <small th:case="IN_ASSESSMENT">Assessments started</small>
@@ -60,10 +60,10 @@
                 </div>
             </li>
 
-            <li th:if="${keyStatistics.keyStatistics.statFive != null}" class="column-third">
+            <li th:if="${keyStatistics.statFive != null}" class="column-third">
                 <div class="highlight-panel highlight-panel-padded">
-                    <span class="heading-large" th:text="${keyStatistics.keyStatistics.statFive}">5</span><br/>
-                    <th:block th:switch="${keyStatistics.competitionStatus.name()}">
+                    <span class="heading-large" th:text="${keyStatistics.statFive}">5</span><br/>
+                    <th:block th:switch="${keyStatistics.status.name()}">
                         <small th:case="OPEN">Applications (beyond 50%)</small>
                         <small th:case="CLOSED">Invitations accepted</small>
                         <small th:case="IN_ASSESSMENT">Assessments submitted</small>
@@ -73,10 +73,10 @@
                 </div>
             </li>
 
-            <li th:if="${keyStatistics.keyStatistics.statSix != null}" class="column-third">
+            <li th:if="${keyStatistics.statSix != null}" class="column-third">
                 <div class="highlight-panel highlight-panel-padded">
-                    <span class="heading-large" th:text="${keyStatistics.keyStatistics.statSix}">6</span><br/>
-                    <th:block th:switch="${keyStatistics.competitionStatus.name()}">
+                    <span class="heading-large" th:text="${keyStatistics.statSix}">6</span><br/>
+                    <th:block th:switch="${keyStatistics.status.name()}">
                         <small th:case="OPEN">Applications submitted</small>
                         <small th:case="CLOSED">Applications per assessor</small>
                         <small th:case="FUNDERS_PANEL">Applications awaiting a decision</small>

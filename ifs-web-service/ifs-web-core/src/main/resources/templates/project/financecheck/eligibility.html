@@ -61,13 +61,27 @@
     </div>
 
     <th:block th:unless="${summaryModel.usingJesFinances}">
-        <h2 class="heading-medium">Finances overview</h2>
-        <p>These finances were initially submitted at the application stage. All saved changes to finances will be viewable
-            by the applicants.</p>
-        <p>All potential changes must be discussed with the lead applicant. You can do this by raising queries through
-            IFS.</p>
-        <section class="collapsible" th:each="subSection, subSectionstats : ${subSections.get(currentSectionId)}"
-                 th:if="${subSections !=null}">
+    <th:block th:if="${summaryModel.isReadOnly()}">
+        <h2 class="heading-medium">Detailed finances</h2>
+        <p>Changes made to your finances will be visible here. Please review this section carefully as you are responsible for the accuracy of any approved finances.</p>
+        <a th:href="@{/project/{projectId}/partner-organisation/{organisationId}/finance-checks/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}">View changes to finances</a>
+    </th:block>
+
+    <th:block th:unless="${summaryModel.isReadOnly()}">
+        <th:block th:unless="${summaryModel.isApproved()}">
+            <h2 class="heading-medium">Project finance overview</h2>
+            <p>These finances were initially submitted at the application stage. All saved changes to finances will be viewable by the applicants.</p>
+            <p>All potential changes must be discussed with the lead applicant. You can do this by raising queries through IFS.</p>
+            <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}">Review all changes to project finances</a>
+        </th:block>
+
+        <th:block th:if="${summaryModel.isApproved()}">
+            <h2 class="heading-medium">Detailed finances</h2>
+            <p>These finances were submitted by the applicant during the application stage. They include all changes made during the eligibility checks.</p>
+            <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}">View changes to finances</a>
+        </th:block>
+
+        <section class="collapsible" th:each="subSection, subSectionstats : ${subSections.get(currentSectionId)}" th:if="${subSections !=null}">
             <h3>
                 <th:block th:text="${subSection.getName()}"/>
                 <span class="finance-total" th:attr="data-mirror='#section-total-'+${subSection.id}"></span>
@@ -83,40 +97,41 @@
                     <th:block th:each="question : ${subsectionQuestions.get(subSection.id)}">
                         <th:block th:each="formInput, status : ${subSectionQuestionFormInputs.get(question.id)}">
 
-                            <th:block th:if="${formInput.type.isDisplayableFinanceType(model.finance.financeView) and model.finance.hasOrganisationFinance}"
-                                      th:with="organisationFinance=(${model.finance.organisationFinance}), organisationGrantClaimPercentage=(${model.finance.organisationGrantClaimPercentage}),
-                                                       organisationGrantClaimPercentageId=(${model.finance.organisationGrantClaimPercentageId}), organisationFinanceTotal=(${model.finance.organisationFinanceTotal}),
-                                                       organisationFinanceSize=(${model.finance.organisationFinanceSize})">
-                                <!--/*
-                                    viewmode=approved; generates the inputs as text,
-                                    viewmode=readonly, generates readonly inputs,
-                                    viewmode=edit, generates the editable inputs + repeating row elements)
-                                */-->
-                                <th:block th:replace="project/financecheck/fragments/finance :: ${formInput.type.nameLower} (viewmode=${viewmode})" th:with="formInputIndex=(${status.index})" />
+                                <th:block th:if="${formInput.type.isDisplayableFinanceType(model.finance.financeView) and model.finance.hasOrganisationFinance}"
+                                          th:with="organisationFinance=(${model.finance.organisationFinance}), organisationGrantClaimPercentage=(${model.finance.organisationGrantClaimPercentage}),
+                                                           organisationGrantClaimPercentageId=(${model.finance.organisationGrantClaimPercentageId}), organisationFinanceTotal=(${model.finance.organisationFinanceTotal}),
+                                                           organisationFinanceSize=(${model.finance.organisationFinanceSize})">
+                                    <!--/*
+                                        viewmode=approved; generates the inputs as text,
+                                        viewmode=readonly, generates readonly inputs,
+                                        viewmode=edit, generates the editable inputs + repeating row elements)
+                                    */-->
+                                    <th:block th:replace="project/financecheck/fragments/finance :: ${formInput.type.nameLower} (viewmode=${viewmode})" th:with="formInputIndex=(${status.index})" />
+                                </th:block>
                             </th:block>
                         </th:block>
-                    </th:block>
-                    <div class="alignright-button" th:unless="${summaryModel.isReadOnly()}">
-                        <a th:href="@{?section={sectionId}(sectionId=${subSection.id})}" th:if="${viewmode=='readonly'}" class="button button-secondary">Edit</a>
-                        <button th:if="${viewmode=='edit'}" name="save-eligibility" class="button">Save</button>
-                    </div>
-                </form>
+                        <div class="alignright-button" th:unless="${summaryModel.isReadOnly()}">
+                            <a th:href="@{?section={sectionId}(sectionId=${subSection.id})}" th:if="${viewmode=='readonly'}" class="button button-secondary">Edit</a>
+                            <button th:if="${viewmode=='edit'}" name="save-eligibility" class="button">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+            <div class="grid-row total-cost">
+                <div class="column-half">
+                    <label for="total-cost" class="heading-medium">Total project costs</label>
+                </div>
+                <div class="column-half alignright">
+                    <input type="text"
+                           id="total-cost"
+                           readonly="readonly"
+                           class="heading-medium width-full alignright"
+                           data-calculation-fields="[id*=section-total]"
+                           data-calculation-operations="+"
+                           th:value="'£ ' + ${#numbers.formatDecimal(model.finance.organisationFinanceTotal, 0, 'COMMA', 0, 'POINT')}"/>
+                </div>
             </div>
-        </section>
-        <div class="grid-row total-cost">
-            <div class="column-half">
-                <label for="total-cost" class="heading-medium">Total project costs</label>
-            </div>
-            <div class="column-half alignright">
-                <input type="text"
-                       id="total-cost"
-                       readonly="readonly"
-                       class="heading-medium width-full alignright"
-                       data-calculation-fields="[id*=section-total]"
-                       data-calculation-operations="+"
-                       th:value="'£ ' + ${#numbers.formatDecimal(model.finance.organisationFinanceTotal, 0, 'COMMA', 0, 'POINT')}"/>
-            </div>
-        </div>
+        </th:block>
     </th:block>
 
     <th:block th:if="${summaryModel.usingJesFinances}">
@@ -141,12 +156,12 @@
             <p>Make sure the applicant has reviewed and understood all changes before you approve.</p>
             <div class="form-group">
                 <label class="block-label selection-button-checkbox" for="project-eligible" data-target="add-rag-rating">
-                    <input  id="project-eligible" type="checkbox" th:field="*{confirmEligibilityChecked}" data-disable-button-until-checked="#confirm-button" />These funding costs have been reviewed and are acceptable
+                    <input  id="project-eligible" type="checkbox" th:field="*{confirmEligibilityChecked}" data-switches-button-status="#confirm-button" />These funding costs have been reviewed and are acceptable
                 </label>
             </div>
             <div class="form-group" id="add-rag-rating">
                 <label for="rag-rating" class="form-label">Please enter the RAG rating for this eligibility review</label>
-                <select th:field="*{eligibilityRagStatus}" id="rag-rating" class="form-control" data-disable-button-until-checked="#confirm-button">
+                <select th:field="*{eligibilityRagStatus}" id="rag-rating" class="form-control" data-switches-button-status="#confirm-button">
                     <option value="UNSET" th:selected="${eligibilityForm.eligibilityRagStatus == null}">--</option>
                     <option value="GREEN">Green</option>
                     <option value="AMBER">Amber</option>

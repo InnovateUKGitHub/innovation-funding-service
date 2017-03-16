@@ -1,10 +1,13 @@
 package org.innovateuk.ifs.management.controller;
 
+import org.innovateuk.ifs.application.resource.NotificationResource;
+import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.competition.form.ManageFundingApplicationsQueryForm;
+import org.innovateuk.ifs.competition.form.NotificationEmailsForm;
 import org.innovateuk.ifs.competition.form.SelectApplicationsForEmailForm;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.management.model.CompetitionInFlightModelPopulator;
 import org.innovateuk.ifs.management.model.ManageFundingApplicationsModelPopulator;
+import org.innovateuk.ifs.management.model.SendNotificationsModelPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -20,25 +23,60 @@ import java.util.Objects;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static java.net.URLEncoder.encode;
 import static java.util.stream.Collectors.toList;
 
 
 @Controller
-@RequestMapping("/competition/{competitionId}/manage-funding-applications")
-@PreAuthorize("hasAuthority('comp_admin')")
-public class CompetitionManagementManageFundingApplicationsController {
+@RequestMapping("/competition/{competitionId}")
+@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+public class CompetitionManagementFundingNotificationsController {
 
 
     private static final String MANAGE_FUNDING_APPLICATIONS_VIEW = "comp-mgt-manage-funding-applications";
+    private static final String FUNDING_DECISION_NOTIFICATION_VIEW = "comp-mgt-send-notifications";
+
 
     @Autowired
     private ManageFundingApplicationsModelPopulator manageFundingApplicationsModelPopulator;
 
     @Autowired
-    private CompetitionInFlightModelPopulator competitionInFlightModelPopulator;
+    private SendNotificationsModelPopulator sendNotificationsModelPopulator;
 
-    @GetMapping
+    @Autowired
+    private ApplicationFundingDecisionService applicationFundingService;
+
+    @GetMapping(value = "/funding/send")
+    public String sendNotifications(Model model,
+                               @PathVariable("competitionId") Long competitionId,
+                               @RequestParam("application_ids") List<Long> applicationIds) {
+
+        NotificationEmailsForm form = new NotificationEmailsForm();
+        return getFundingDecisionPage(model, form, competitionId, applicationIds);
+    }
+
+    @PostMapping(value = "/funding/send")
+    public String sendNotificationsSubmit(Model model,
+                                    @PathVariable("competitionId") Long competitionId,
+                                    @ModelAttribute("form") @Valid NotificationEmailsForm form,
+                                    BindingResult bindingResult,
+                                    ValidationHandler validationHandler) {
+
+        NotificationResource notificationResource = new NotificationResource(form.getSubject(), form.getMessage(), form.getFundingDecisions());
+
+        Supplier<String> failureView = () -> getFundingDecisionPage(model, form, competitionId, form.getApplicationIds());
+        Supplier<String> successView = () -> successfulEmailRedirect(competitionId);
+
+        return validationHandler.performActionOrBindErrorsToField("", failureView, successView,
+                () -> applicationFundingService.sendFundingNotifications(notificationResource));
+    }
+
+    private String getFundingDecisionPage(Model model, NotificationEmailsForm form, Long competitionId, List<Long> applicationIds) {
+        model.addAttribute("model", sendNotificationsModelPopulator.populate(competitionId, applicationIds));
+        model.addAttribute("form", form);
+        return FUNDING_DECISION_NOTIFICATION_VIEW;
+    }
+
+    @GetMapping(value = "/manage-funding-applications")
     public String applications(Model model,
                                @RequestParam MultiValueMap<String, String> params,
                                @PathVariable("competitionId") Long competitionId,
@@ -54,7 +92,7 @@ public class CompetitionManagementManageFundingApplicationsController {
 
     }
 
-    @PostMapping
+    @PostMapping(value = "/manage-funding-applications")
     public String selectApplications(Model model,
                                      @RequestParam MultiValueMap<String, String> params,
                                      @PathVariable("competitionId") Long competitionId,
@@ -79,8 +117,12 @@ public class CompetitionManagementManageFundingApplicationsController {
         );
     }
 
-    private String rootPath(long competitionId){
+    private String getManageFundingApplicationsPage(long competitionId){
         return "/competition/" + competitionId + "/manage-funding-applications";
+    }
+
+    private String successfulEmailRedirect(long competitionId) {
+        return "redirect:" + getManageFundingApplicationsPage(competitionId);
     }
 
     private String composeEmailRedirect(long competitionId, List<Long> ids) {
