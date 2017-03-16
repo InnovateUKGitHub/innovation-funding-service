@@ -25,3 +25,4 @@ Allocate Applications
     ...    INFUND-7729
     When the user clicks the button/Link    jQuery=tr:contains(Neural Industries) .no-margin
     Then The user should see the text in the page    12: Machine learning for transport infrastructure
+    And the user should see the element    jQuery=h3:contains("Innovation area") ~ span:contains("Urban living")
