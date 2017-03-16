@@ -54,7 +54,7 @@ Terms and Conditions
     [Documentation]    INFUND-1481
     [Tags]
     When the user clicks the button/link    link=Download assessor agreement
-    Then the user should be redirected to the correct page without the usual headers    ${Server}/assessment/documents/New%20simple%20assessor%20agreement%202017%20SV%20010317.pdf
+    Then the user should be redirected to the correct page without the usual headers    ${Server}/assessment/documents/New%20simple%20assessor%20agreement.pdf
     And The user goes back to the previous page
     [Teardown]    The user navigates to the page    ${Server}/assessment/profile/agreement
 
