@@ -21,7 +21,7 @@
                  th:id="'form-input-'+${formInput.getId()}">
 
                 <th:block th:if="${formInput.type.displayableQuestionType && formInput.type != T(org.innovateuk.ifs.form.resource.FormInputType).FINANCE}">
-                    <div th:replace="question-type/types :: ${formInput.type.nameLower}" th:with="formFooterHalf=${true}" />
+                    <div th:replace="question-type/types :: ${formInput.type.nameLower}" />
                 </th:block>
 
             </div>
