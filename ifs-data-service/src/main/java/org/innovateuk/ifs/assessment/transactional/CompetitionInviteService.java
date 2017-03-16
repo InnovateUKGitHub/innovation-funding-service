@@ -3,6 +3,7 @@ package org.innovateuk.ifs.assessment.transactional;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.email.resource.EmailContent;
+import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.data.domain.Pageable;
@@ -67,7 +68,11 @@ public interface CompetitionInviteService {
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ_INVITE_OVERVIEW_BY_COMPETITION",
             description = "Competition Administrators and Executives can retrieve invitation overview by competition")
-    ServiceResult<List<AssessorInviteOverviewResource>> getInvitationOverview(long competitionId);
+    ServiceResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
+                                                                            Pageable pageable,
+                                                                            Optional<Long> innovationArea,
+                                                                            Optional<ParticipantStatus> status,
+                                                                            Optional<Boolean> compliant);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ_INVITE_OVERVIEW_BY_COMPETITION",
@@ -80,7 +85,7 @@ public interface CompetitionInviteService {
     ServiceResult<CompetitionInviteResource> inviteUser(NewUserStagedInviteResource stagedInvite);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
-    @SecuredBySpring(value="INVITE_NEW_USERS",
+    @SecuredBySpring(value = "INVITE_NEW_USERS",
             description = "The Competition Admin user, or the Competition Executive user can create competition invites for new users")
     ServiceResult<Void> inviteNewUsers(List<NewUserStagedInviteResource> newUserStagedInvites, long competitionId);
 
@@ -92,7 +97,7 @@ public interface CompetitionInviteService {
     @SecuredBySpring(value = "SEND_INVITE",
             description = "The Competition Admin user, or the Competition Executive user can send a competition invite")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
-    ServiceResult<AssessorInviteToSendResource> sendInvite(long inviteId, EmailContent content);
+    ServiceResult<Void> sendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource);
 
     @SecuredBySpring(value = "DELETE_INVITE",
             description = "The Competition Admin user, or the Competition Executive user can delete a competition invite")

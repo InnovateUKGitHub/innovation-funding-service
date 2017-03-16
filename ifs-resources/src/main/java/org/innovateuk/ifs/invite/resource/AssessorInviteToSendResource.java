@@ -2,7 +2,6 @@ package org.innovateuk.ifs.invite.resource;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.email.resource.EmailContent;
 
 /**
  * Resource for invites to be sent
@@ -11,17 +10,17 @@ public class AssessorInviteToSendResource {
     private String recipient;
     private long competitionId;
     private String competitionName;
-    private EmailContent emailContent;
+    private String content;
 
     public AssessorInviteToSendResource() {
 
     }
 
-    public AssessorInviteToSendResource(String recipient, long competitionId, String competitionName, EmailContent emailContent) {
+    public AssessorInviteToSendResource(String recipient, long competitionId, String competitionName, String content) {
         this.recipient = recipient;
         this.competitionId = competitionId;
         this.competitionName = competitionName;
-        this.emailContent = emailContent;
+        this.content = content;
     }
 
     public String getRecipient() {
@@ -48,19 +47,23 @@ public class AssessorInviteToSendResource {
         this.competitionName = competitionName;
     }
 
-    public EmailContent getEmailContent() {
-        return emailContent;
+    public String getContent() {
+        return content;
     }
 
-    public void setEmailContent(EmailContent emailContent) {
-        this.emailContent = emailContent;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
+        if (this == o) {
+            return true;
+        }
 
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         AssessorInviteToSendResource that = (AssessorInviteToSendResource) o;
 
@@ -68,7 +71,7 @@ public class AssessorInviteToSendResource {
                 .append(competitionId, that.competitionId)
                 .append(recipient, that.recipient)
                 .append(competitionName, that.competitionName)
-                .append(emailContent, that.emailContent)
+                .append(content, that.content)
                 .isEquals();
     }
 
@@ -78,7 +81,7 @@ public class AssessorInviteToSendResource {
                 .append(recipient)
                 .append(competitionId)
                 .append(competitionName)
-                .append(emailContent)
+                .append(content)
                 .toHashCode();
     }
 }

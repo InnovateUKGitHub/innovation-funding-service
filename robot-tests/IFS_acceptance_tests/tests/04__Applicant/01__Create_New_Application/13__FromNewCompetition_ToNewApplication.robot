@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation     INFUND-6390 As an Applicant I will be invited to add project costs, organisation and funding details via links within the 'Finances' section of my application
+Documentation     INFUND-6390 As an Applicant I will be invited to add project costs, organisation and funding details via links ƒin the 'Finances' section of my application
 ...
 ...               INFUND-6393 As an Applicant I will be invited to add Staff count and Turnover where the include projected growth table is set to 'No' within the Finances page of Competition setup
 ...
@@ -193,7 +193,7 @@ Funding subsection opens when Appl details and organisation info are provided
 Organisation server side validation when yes
     [Documentation]    INFUND-6393
     [Tags]
-    [Setup]    the user navigates to Your-finances page    ${compWITHGrowth}
+    [Setup]    the user navigates to the growth table finances
     Given the user clicks the button/link    link=Your organisation
     When the user clicks the button/link    jQuery=button:contains("Mark as complete")
     #Then the user should see the element    jQuery=.error-summary-list:contains("Enter your organisation size.")
@@ -241,7 +241,7 @@ Organisation client side validation when yes
 Mark Organisation as complete when yes
     [Documentation]    INFUND-6393
     [Tags]
-    [Setup]    the user navigates to Your-finances page    ${compWITHGrowth}
+    [Setup]    the user navigates to the growth table finances
     Given the user clicks the button/link    link=Your organisation
     And the user selects medium organisation size
     Then the user enters text to a text field    css=input[name$="month"]    12
@@ -263,7 +263,7 @@ The Lead Applicant is able to edit and re-submit when yes
 Applicant can view and edit project growth table
     [Documentation]    INFUND-6395
     [Tags]
-    Given the user navigates to Your-finances page    ${compWITHGrowth}
+    Given the user navigates to the growth table finances
     When the user clicks the button/link    link=Your organisation
     Then the user should view the project growth table
     And the user can edit the project growth table
@@ -438,3 +438,8 @@ the lead applicant invites an existing user
     Input Text                         css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input  ${EMAIL_INVITED}
     the user clicks the button/link    jQuery=.button:contains("Save changes")
     the user logs out if they are logged in
+
+the user navigates to the growth table finances
+    the user navigates to the page  ${DASHBOARD_URL}
+    the user clicks the button/link    jQuery=a:contains('Untitled application'):last
+    the user clicks the button/link  link=Your finances

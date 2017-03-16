@@ -6,8 +6,10 @@ import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.invite.resource.*;
+import org.innovateuk.ifs.management.form.FindAssessorsFilterForm;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsForm;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsRowForm;
+import org.innovateuk.ifs.management.form.OverviewAssessorsFilterForm;
 import org.innovateuk.ifs.management.model.AssessorProfileModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsFindModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsInviteModelPopulator;
@@ -45,6 +47,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInvitePageResourceBuilder.newAssessorCreatedInvitePageResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
+import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewPageResourceBuilder.newAssessorInviteOverviewPageResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorPageResourceBuilder.newAvailableAssessorPageResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
@@ -144,6 +147,9 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .andExpect(view().name("assessors/find"))
                 .andReturn();
 
+        FindAssessorsFilterForm filterForm = (FindAssessorsFilterForm) result.getModelAndView().getModel().get("filterForm");
+        assertEquals(of(3L), filterForm.getInnovationArea());
+
         assertCompetitionDetails(competition, result);
         assertAvailableAssessors(availableAssessorPageResource.getContent(), result);
         assertFindFilterOptionsAreCorrect(expectedInnovationAreaOptions, result);
@@ -174,6 +180,10 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .andExpect(model().attributeExists("model"))
                 .andExpect(view().name("assessors/find"))
                 .andReturn();
+
+        FindAssessorsFilterForm filterForm = (FindAssessorsFilterForm) result.getModelAndView().getModel().get("filterForm");
+
+        assertEquals(empty(), filterForm.getInnovationArea());
 
         assertCompetitionDetails(competition, result);
         assertAvailableAssessors(availableAssessorPageResource.getContent(), result);
@@ -224,9 +234,58 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
     @Test
     public void overview() throws Exception {
+        int page = 1;
+        Optional<Long> innovationArea = of(10L);
+        Optional<ParticipantStatusResource> status = of(ACCEPTED);
+        Optional<Boolean> compliant = of(TRUE);
+
         List<AssessorInviteOverviewResource> assessorInviteOverviewResources = setUpAssessorInviteOverviewResources();
 
-        when(competitionInviteRestService.getInvitationOverview(competition.getId())).thenReturn(restSuccess(assessorInviteOverviewResources));
+        AssessorInviteOverviewPageResource pageResource = newAssessorInviteOverviewPageResource()
+                .withContent(assessorInviteOverviewResources)
+                .build();
+
+        when(categoryRestServiceMock.getInnovationAreas()).thenReturn(restSuccess(newInnovationAreaResource().build(4)));
+        when(competitionInviteRestService.getInvitationOverview(competition.getId(), page, innovationArea, status, compliant))
+                .thenReturn(restSuccess(pageResource));
+
+        MvcResult result = mockMvc.perform(get("/competition/{competitionId}/assessors/overview", competition.getId())
+                .param("page", "1")
+                .param("innovationArea", "10")
+                .param("status", "ACCEPTED")
+                .param("compliant", "TRUE"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("assessors/overview"))
+                .andReturn();
+
+        OverviewAssessorsFilterForm filterForm = (OverviewAssessorsFilterForm) result.getModelAndView().getModel().get("filterForm");
+
+        assertEquals(of(TRUE), filterForm.getCompliant());
+        assertEquals(of(10L), filterForm.getInnovationArea());
+        assertEquals(of(ACCEPTED), filterForm.getStatus());
+
+        assertCompetitionDetails(competition, result);
+        assertInviteOverviews(assessorInviteOverviewResources, result);
+
+        InOrder inOrder = inOrder(competitionService, categoryRestServiceMock, competitionInviteRestService);
+        inOrder.verify(competitionService).getById(competition.getId());
+        inOrder.verify(categoryRestServiceMock).getInnovationAreas();
+        inOrder.verify(competitionInviteRestService).getInvitationOverview(competition.getId(), page, innovationArea, status, compliant);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void overview_defaultParams() throws Exception {
+        List<AssessorInviteOverviewResource> assessorInviteOverviewResources = setUpAssessorInviteOverviewResources();
+
+        AssessorInviteOverviewPageResource pageResource = newAssessorInviteOverviewPageResource()
+                .withContent(assessorInviteOverviewResources)
+                .build();
+
+        when(categoryRestServiceMock.getInnovationAreas()).thenReturn(restSuccess(newInnovationAreaResource().build(4)));
+        when(competitionInviteRestService.getInvitationOverview(competition.getId(), 0, empty(), empty(), empty()))
+                .thenReturn(restSuccess(pageResource));
 
         MvcResult result = mockMvc.perform(get("/competition/{competitionId}/assessors/overview", competition.getId()))
                 .andExpect(status().isOk())
@@ -234,12 +293,19 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .andExpect(view().name("assessors/overview"))
                 .andReturn();
 
+        OverviewAssessorsFilterForm filterForm = (OverviewAssessorsFilterForm) result.getModelAndView().getModel().get("filterForm");
+
+        assertEquals(empty(), filterForm.getCompliant());
+        assertEquals(empty(), filterForm.getInnovationArea());
+        assertEquals(empty(), filterForm.getStatus());
+
         assertCompetitionDetails(competition, result);
         assertInviteOverviews(assessorInviteOverviewResources, result);
 
-        InOrder inOrder = inOrder(competitionService, competitionInviteRestService);
+        InOrder inOrder = inOrder(competitionService, categoryRestServiceMock, competitionInviteRestService);
         inOrder.verify(competitionService).getById(competition.getId());
-        inOrder.verify(competitionInviteRestService).getInvitationOverview(competition.getId());
+        inOrder.verify(categoryRestServiceMock).getInnovationAreas();
+        inOrder.verify(competitionInviteRestService).getInvitationOverview(competition.getId(), 0, empty(), empty(), empty());
         inOrder.verifyNoMoreInteractions();
     }
 

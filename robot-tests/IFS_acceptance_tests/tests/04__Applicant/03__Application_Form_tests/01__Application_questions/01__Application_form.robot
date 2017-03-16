@@ -33,7 +33,7 @@ Application details: Previous submission
 Application details: Research category
     [Documentation]    INFUND-6823
     Then the user should see the element    jQuery=label:contains("Industrial research")
-    And the user should see the element    jQuery=label:contains("Technical feasibility")
+    And the user should see the element    jQuery=label:contains("Feasibility studies")
     And the user should see the element    jQuery=label:contains("Experimental development")
     And the finance summary page should show a warning
 

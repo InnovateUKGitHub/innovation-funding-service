@@ -89,7 +89,7 @@ public class ApplicationOverviewModelPopulator {
         model.addAttribute("currentProject", projectResource);
         model.addAttribute("currentCompetition", competition);
         model.addAttribute("userOrganisation", userOrganisation.orElse(null));
-        model.addAttribute("completedQuestionsPercentage", application.getCompletion());
+        model.addAttribute("completedQuestionsPercentage", application.getCompletion() == null ? 0 : application.getCompletion().intValue());
 
         FileDetailsViewModel assessorFeedbackViewModel = getAssessorFeedbackViewModel(application);
         model.addAttribute("assessorFeedback", assessorFeedbackViewModel);
