@@ -318,7 +318,17 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
     public void testRemoveApplicationInvite() {
         User user = newUser().build();
         Application application = newApplication().build();
-        ApplicationInvite applicationInvite = newApplicationInvite().withId(24521L).withUser(user).withApplication(application).build();
+        ApplicationInvite applicationInvite = newApplicationInvite()
+                .withId(24521L)
+                .withUser(user)
+                .withApplication(application)
+                .withInviteOrganisation(
+                        newInviteOrganisation()
+                                .withInvites(newInvite().build(2))
+                                .build()
+                )
+                .build();
+
         List<ProcessRole> processRoles = newProcessRole().build(3);
         ProcessRole manyMembersOfOrg = processRoles.get(0);
         manyMembersOfOrg.setOrganisationId(1L);

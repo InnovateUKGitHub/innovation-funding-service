@@ -50,12 +50,10 @@ public class ApplicationTeamManagementModelPopulator {
 
     public ApplicationTeamManagementViewModel populateModelByInviteOrganisationId(long applicationId, long inviteOrganisationId, long loggedInUserId) {
         OrganisationResource leadOrganisationResource = getLeadOrganisation(applicationId);
-        InviteOrganisationResource inviteOrganisationResource = getInviteOrganisationByInviteOrganisationId(
-                applicationId, inviteOrganisationId);
+        InviteOrganisationResource inviteOrganisationResource = getInviteOrganisationByInviteOrganisationId(inviteOrganisationId);
         boolean requestForLeadOrganisation = isRequestForLeadOrganisation(inviteOrganisationResource, leadOrganisationResource);
 
-        return populateModel(applicationId, loggedInUserId, leadOrganisationResource, requestForLeadOrganisation,
-                inviteOrganisationResource);
+        return populateModel(applicationId, loggedInUserId, leadOrganisationResource, requestForLeadOrganisation, inviteOrganisationResource);
     }
 
     private ApplicationTeamManagementViewModel populateModel(long applicationId,
@@ -133,8 +131,8 @@ public class ApplicationTeamManagementModelPopulator {
                 .toOptionalIfNotFound().getSuccessObjectOrThrowException();
     }
 
-    private InviteOrganisationResource getInviteOrganisationByInviteOrganisationId(long applicationId, long inviteOrganisationId) {
-        return inviteOrganisationRestService.getByIdWithInvitesForApplication(inviteOrganisationId, applicationId)
+    private InviteOrganisationResource getInviteOrganisationByInviteOrganisationId(long inviteOrganisationId) {
+        return inviteOrganisationRestService.getById(inviteOrganisationId)
                 .getSuccessObjectOrThrowException();
     }
 
