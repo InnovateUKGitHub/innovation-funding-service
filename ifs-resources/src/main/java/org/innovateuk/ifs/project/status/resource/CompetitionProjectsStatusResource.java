@@ -6,14 +6,16 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
-import static java.util.function.Function.identity;
 
 import static java.util.Optional.ofNullable;
+import static java.util.function.Function.identity;
 
+/**
+ * Resource that holds the status of a Competition's Projects.
+ */
 public class CompetitionProjectsStatusResource {
     private Long competitionNumber;
     private String competitionName;
-
     private List<ProjectStatusResource> projectStatusResources;
 
     public CompetitionProjectsStatusResource(Long competitionNumber, String competitionName, List<ProjectStatusResource> projectStatusResources) {

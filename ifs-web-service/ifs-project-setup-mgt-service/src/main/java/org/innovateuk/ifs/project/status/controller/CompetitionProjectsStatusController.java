@@ -5,6 +5,7 @@ import org.innovateuk.ifs.bankdetails.BankDetailsService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.project.sections.ProjectSetupSectionInternalUser;
 import org.innovateuk.ifs.project.status.ProjectStatusService;
+import org.innovateuk.ifs.project.status.populator.PopulatedProjectStatusViewModel;
 import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionProjectStatusViewModel;
@@ -30,6 +31,10 @@ import java.util.Map;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
+/**
+ * This RestController exposes ways of fetching the current status of a competition projects in a view-friendly
+ * format  using {@link CompetitionProjectStatusViewModel}
+ */
 @Controller
 @RequestMapping("/competition/{competitionId}/status")
 public class CompetitionProjectsStatusController {
@@ -42,8 +47,10 @@ public class CompetitionProjectsStatusController {
     @GetMapping
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
     public String viewCompetitionStatus(Model model, @ModelAttribute("loggedInUser") UserResource loggedInUser,
-                                        @PathVariable Long competitionId) {
-        model.addAttribute("model", populateCompetitionProjectStatusViewModel(competitionId, loggedInUser));
+                                        @PathVariable Long competitionId)
+    {
+        model.addAttribute("model",
+                new PopulatedProjectStatusViewModel(projectStatusService.getCompetitionStatus(competitionId), loggedInUser).get());
         return "project/competition-status";
     }
 
@@ -61,34 +68,5 @@ public class CompetitionProjectsStatusController {
         final ByteArrayResource resource = bankDetailsService.downloadByCompetition(competitionId);
         IOUtils.copy(resource.getInputStream(), response.getOutputStream());
         response.flushBuffer();
-    }
-
-    private CompetitionProjectStatusViewModel populateCompetitionProjectStatusViewModel(Long competitionId, UserResource userResource) {
-        CompetitionProjectsStatusResource competitionProjectsStatus = projectStatusService.getCompetitionStatus(competitionId);
-        Map<Long, ProjectStatusPermission> projectStatusPermissionMap
-                = projectStatusPermissions(userResource, competitionProjectsStatus.getProjectStatusResources());
-        boolean canExportBankDetails = userResource.hasRole(UserRoleType.PROJECT_FINANCE);
-        return new CompetitionProjectStatusViewModel(competitionProjectsStatus, canExportBankDetails, projectStatusPermissionMap);
-    }
-
-    private Map<Long, ProjectStatusPermission> projectStatusPermissions(UserResource user, List<ProjectStatusResource> projectStatuses) {
-        return CollectionFunctions.simpleToLinkedMap(projectStatuses,
-                ProjectStatusResource::getApplicationNumber,
-                projectStatus -> projectStatusPermission(new ProjectSetupSectionInternalUser(projectStatus), user));
-    }
-
-    private ProjectStatusPermission projectStatusPermission(ProjectSetupSectionInternalUser internalUser,
-                                                            UserResource userResource) {
-        return new ProjectStatusPermission(
-                internalUser.canAccessCompaniesHouseSection(userResource).isAccessibleOrNotRequired(),
-                internalUser.canAccessProjectDetailsSection(userResource).isAccessibleOrNotRequired(),
-                internalUser.canAccessMonitoringOfficerSection(userResource).isAccessibleOrNotRequired(),
-                internalUser.canAccessBankDetailsSection(userResource).isAccessibleOrNotRequired(),
-                internalUser.canAccessFinanceChecksSection(userResource).isAccessibleOrNotRequired(),
-                internalUser.canAccessSpendProfileSection(userResource).isAccessibleOrNotRequired(),
-                internalUser.canAccessOtherDocumentsSection(userResource).isAccessibleOrNotRequired(),
-                internalUser.canAccessGrantOfferLetterSection(userResource).isAccessibleOrNotRequired(),
-                internalUser.canAccessGrantOfferLetterSendSection(userResource).isAccessibleOrNotRequired(),
-                internalUser.grantOfferLetterActivityStatus(userResource));
     }
 }
