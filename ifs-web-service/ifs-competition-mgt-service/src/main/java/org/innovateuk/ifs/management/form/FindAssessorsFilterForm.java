@@ -4,6 +4,9 @@ import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 
 import java.util.Optional;
 
+/**
+ * Form for the list filters on the Invite Assessors Find tab.
+ */
 public class FindAssessorsFilterForm extends BaseBindingResultTarget {
 
     private Optional<Long> innovationArea = Optional.empty();

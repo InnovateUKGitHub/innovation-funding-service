@@ -3,6 +3,7 @@ package org.innovateuk.ifs.assessment.security;
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.assessment.transactional.CompetitionInviteService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -14,11 +15,14 @@ import org.springframework.security.access.method.P;
 import java.util.List;
 import java.util.Optional;
 
+import static java.lang.Boolean.TRUE;
 import static java.util.Collections.singletonList;
+import static java.util.Optional.of;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
 import static org.innovateuk.ifs.invite.builder.CompetitionParticipantResourceBuilder.newCompetitionParticipantResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
@@ -134,13 +138,18 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
 
     @Test
     public void getInvitationOverview() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getInvitationOverview(1L), COMP_ADMIN, PROJECT_FINANCE);
+        Pageable pageable = new PageRequest(0, 20);
+        Optional<Long> innovationArea = of(1L);
+        Optional<ParticipantStatus> status = of(ACCEPTED);
+        Optional<Boolean> compliant = of(TRUE);
+
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getInvitationOverview(1L, pageable, innovationArea, status, compliant), COMP_ADMIN,PROJECT_FINANCE);
     }
 
     @Test
     public void getAvailableAssessors() {
-        Optional<Long> innovationArea = Optional.of(1L);
         Pageable pageable = new PageRequest(0, 20);
+        Optional<Long> innovationArea = of(1L);
 
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAvailableAssessors(1L, pageable, innovationArea), COMP_ADMIN, PROJECT_FINANCE);
     }
@@ -219,8 +228,13 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
             return null;
         }
 
+
         @Override
-        public ServiceResult<List<AssessorInviteOverviewResource>> getInvitationOverview(long competitionId) {
+        public ServiceResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
+                                                                                       Pageable pageable,
+                                                                                       Optional<Long> innovationArea,
+                                                                                       Optional<ParticipantStatus> status,
+                                                                                       Optional<Boolean> compliant) {
             return null;
         }
 
