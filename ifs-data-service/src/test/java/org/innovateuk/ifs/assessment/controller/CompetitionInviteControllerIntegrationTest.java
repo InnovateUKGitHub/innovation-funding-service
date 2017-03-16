@@ -724,16 +724,15 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                 .withInnovationArea(innovationAreaRepository.findOne(INNOVATION_AREA_ID)) // 'new invite'
                 .build())
                 .getId();
-        EmailContent content = newEmailContentResource()
+
+        AssessorInviteSendResource assessorInviteSendResource = newAssessorInviteSendResource()
                 .withSubject("subject")
-                .withPlainText("plain")
-                .withHtmlText("html")
+                .withContent("content")
                 .build();
 
         loginCompAdmin();
 
-        RestResult<AssessorInviteToSendResource> serviceResult = controller.sendInvite(createdId, content);
-        assertTrue(serviceResult.isSuccess());
+        controller.sendInvite(createdId, assessorInviteSendResource).getSuccessObjectOrThrowException();
 
         User invitedUser = userRepository.findByEmail(applicantUser.getEmail()).get();
         assertTrue(invitedUser.getRoles().contains(roleRepository.findOneByName(UserRoleType.ASSESSOR.getName())));

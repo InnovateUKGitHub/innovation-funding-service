@@ -679,8 +679,8 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         inOrder.verify(notificationSender).sendNotification(notification);
         inOrder.verifyNoMoreInteractions();
     }
-    @Test
 
+    @Test
     public void sendInvite_toExistingApplicant() throws Exception {
         String email = "john@email.com";
         String name = "John Barnes";
@@ -693,34 +693,39 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withRoles(new HashSet(asList(applicantRole)))
                 .build();
 
-        EmailContent content = setUpEmailContent();
+        AssessorInviteSendResource assessorInviteSendResource = setUpAssessorInviteSendResource();
 
-        Map<String, Object> expectedNotificationArguments = emptyMap();
+        Map<String, Object> expectedNotificationArguments = asMap(
+                "subject", assessorInviteSendResource.getSubject(),
+                "bodyPlain", "content",
+                "bodyHtml", "content"
+        );
+
         SystemNotificationSource from = systemNotificationSourceMock;
         NotificationTarget to = new ExternalUserNotificationTarget(name, email);
         Notification notification = new Notification(from, singletonList(to), CompetitionInviteServiceImpl.Notifications.INVITE_ASSESSOR, expectedNotificationArguments);
 
         when(competitionInviteRepositoryMock.findOne(invite.getId())).thenReturn(invite);
-        when(notificationSender.sendEmailWithContent(notification, to, content)).thenReturn(serviceSuccess(singletonList(new EmailAddress(email, name))));
+        when(notificationSender.sendNotification(notification)).thenReturn(serviceSuccess(notification));
 
         when(userRepositoryMock.findByEmail(email)).thenReturn(Optional.of(applicant));
         when(roleRepositoryMock.findOneByName(UserRoleType.ASSESSOR.getName())).thenReturn(assessorRole);
 
-        ServiceResult<AssessorInviteToSendResource> serviceResult = service.sendInvite(invite.getId(), content);
+        service.sendInvite(invite.getId(), assessorInviteSendResource).getSuccessObjectOrThrowException();
 
-        assertTrue(serviceResult.isSuccess());
         assertEquals(SENT, invite.getStatus());
         assertTrue(applicant.getRoles().containsAll(asList(applicantRole, assessorRole)));
 
-        InOrder inOrder = inOrder(competitionInviteRepositoryMock, competitionParticipantRepositoryMock, userRepositoryMock, roleRepositoryMock, notificationSender, assessorInviteToSendMapperMock);
+
+        InOrder inOrder = inOrder(competitionInviteRepositoryMock, competitionParticipantRepositoryMock, userRepositoryMock, roleRepositoryMock,  notificationSender);
         inOrder.verify(competitionInviteRepositoryMock).findOne(invite.getId());
         inOrder.verify(competitionParticipantRepositoryMock).save(createCompetitionParticipantExpectations(invite));
         inOrder.verify(userRepositoryMock).findByEmail(email);
         inOrder.verify(roleRepositoryMock).findOneByName(UserRoleType.ASSESSOR.getName());
-        inOrder.verify(notificationSender).sendEmailWithContent(notification, to, content);
-        inOrder.verify(assessorInviteToSendMapperMock).mapToResource(invite);
+        inOrder.verify(notificationSender).sendNotification(notification);
         inOrder.verifyNoMoreInteractions();
     }
+
 
     @Test
     public void sendInvite_withoutUser() throws Exception {
