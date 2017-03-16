@@ -201,7 +201,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
     }
 
     private ServiceResult<Boolean> isSectionComplete(Section section, Long applicationId, Long organisationId) {
-        return isMainSectionComplete(section, applicationId, organisationId, true).andOnSuccess(
+        return isMainSectionComplete(section, applicationId, organisationId).andOnSuccess(
                 mainSectionComplete -> {
                     // If there are child sections are they complete?
                     if (mainSectionComplete && section.hasChildSections()) {
@@ -219,16 +219,9 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
                 });
     }
 
-    private ServiceResult<Boolean> isMainSectionComplete(Section section, Long applicationId, Long organisationId, boolean ignoreOtherOrganisations) {
+    private ServiceResult<Boolean> isMainSectionComplete(Section section, Long applicationId, Long organisationId) {
+
         for (Question question : section.getQuestions()) {
-            if (!ignoreOtherOrganisations && question.getName() != null && "FINANCE_SUMMARY_INDICATOR_STRING".equals(question.getName()) && section.getParentSection() != null) {
-                final ServiceResult<Boolean> childSectionsAreCompleteForAllOrganisations = childSectionsAreCompleteForAllOrganisations(section.getParentSection(), applicationId, section);
-                if (childSectionsAreCompleteForAllOrganisations.isFailure()) {
-                    return childSectionsAreCompleteForAllOrganisations;
-                } else if (!childSectionsAreCompleteForAllOrganisations.getSuccessObject()) {
-                    return serviceSuccess(false);
-                }
-            }
 
             if (question.isMarkAsCompletedEnabled()) {
                 final ServiceResult<Boolean> markedAsComplete = questionService.isMarkedAsComplete(question, applicationId, organisationId);
@@ -263,7 +256,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
         List<ApplicationFinance> applicationFinanceList = application.getApplicationFinances();
         for (Section section : sections) {
             for (ApplicationFinance applicationFinance : applicationFinanceList) {
-                if (!this.isMainSectionComplete(section, application.getId(), applicationFinance.getOrganisation().getId(), true).getSuccessObject()) {
+                if (!this.isMainSectionComplete(section, application.getId(), applicationFinance.getOrganisation().getId()).getSuccessObject()) {
                     allSectionsWithSubsectionsAreComplete = false;
                     break;
                 }

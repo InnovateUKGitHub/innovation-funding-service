@@ -20,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.security.SecurityRuleUtil.checkProcessRole;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isInternal;
@@ -41,7 +40,7 @@ public class FormInputResponsePermissionRules {
     private FormInputRepository formInputRepository;
 
     @Autowired
-    private QuestionStatusRepository questionStatueRepository;
+    private QuestionStatusRepository questionStatusRepository;
 
     @PermissionRule(value = "READ", description = "The consortium can see the input responses of their organisation and application")
     public boolean consortiumCanSeeTheInputResponsesForTheirOrganisationAndApplication(final FormInputResponseResource response, final UserResource user) {
@@ -103,11 +102,8 @@ public class FormInputResponsePermissionRules {
     }
 
     private List<QuestionStatus> getQuestionStatuses(FormInputResponseCommand responseCommand) {
-
-        List<QuestionStatus> questionStatuses = questionStatueRepository.findByApplicationId(responseCommand.getApplicationId());
-
-        return questionStatuses.stream()
-                .filter(questionStatus -> questionStatus.getApplication().getId().equals(responseCommand.getApplicationId())).collect(Collectors.toList());
+        FormInput formInput = formInputRepository.findOne(responseCommand.getFormInputId());
+        return questionStatusRepository.findByQuestionIdAndApplicationId(formInput.getQuestion().getId(), responseCommand.getApplicationId());
     }
 
 

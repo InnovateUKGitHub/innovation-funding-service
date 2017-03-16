@@ -32,7 +32,7 @@ public class Question {
 
     private Integer priority;
 
-    @OneToMany(mappedBy = "question", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "question")
     private List<FormInput> formInputs = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)

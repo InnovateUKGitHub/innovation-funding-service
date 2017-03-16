@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.commons.security;
 
-import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.access.AccessDeniedException;
@@ -21,10 +21,10 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.Map.Entry;
 
-import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
 
@@ -41,9 +41,16 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
     @Autowired
     private SecuredMethodsInStackCountInterceptor methodSecuredInStackCountInterceptor;
 
+    @Autowired
+    private CustomPermissionEvaluatorTransactionManager transactionManager;
+
     private PermissionedObjectClassToPermissionsToPermissionsMethods rulesMap;
 
     private PermissionedObjectClassesToListOfLookup lookupStrategyMap;
+
+    private Map<Pair<Class<?>, Object>, ListOfOwnerAndMethod> securingMethodsPerClass = new HashMap<>();
+
+    private Map<Pair<Object, Method>, Pair<Long, Long>> averageResponseTimesPerPermissionCheck = new HashMap<>();
 
     public static boolean isAnonymous(UserResource user) {
         return user == ANONYMOUS_USER;
@@ -57,6 +64,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
     void generateRules() {
         Collection<Object> permissionRuleBeans = applicationContext.getBeansWithAnnotation(PermissionRules.class).values();
         ListOfOwnerAndMethod allRulesMethods = findRules(permissionRuleBeans);
+        allRulesMethods.forEach(objectMethodPair -> averageResponseTimesPerPermissionCheck.put(objectMethodPair, Pair.of(0L, 0L)));
 
         List<Pair<Object, Method>> failed = failedPermissionMethodSignatures(allRulesMethods);
         if (!failed.isEmpty()) {
@@ -234,44 +242,119 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         if (targetObject == null) {
             return true;
         }
+
         final Class<?> targetClass = targetObject.getClass();
+        final ListOfOwnerAndMethod permissionMethodsForPermissionAggregate = getSortedSecuringMethodsForClass(permission, targetClass);
+
+        return transactionManager.doWithinTransaction(() -> {
+
+            for (Pair<Object, Method> methodAndBean : permissionMethodsForPermissionAggregate) {
+
+                Pair<Boolean, Long> hasPermissionWithTiming = hasPermissionWithTiming(authentication, targetObject, methodAndBean);
+                Boolean hasPermission = hasPermissionWithTiming.getLeft();
+                Long time = hasPermissionWithTiming.getRight();
+
+                updateAverageAndCount(methodAndBean, time);
+
+                if (hasPermission) {
+                    return true;
+                }
+            }
+
+            return false;
+        });
+    }
+
+    private void updateAverageAndCount(Pair<Object, Method> methodAndBean, Long time) {
+
+        Pair<Long, Long> averageAndCount = averageResponseTimesPerPermissionCheck.get(methodAndBean);
+
+        Long currentAverage = averageAndCount.getLeft();
+        Long currentCount = averageAndCount.getRight();
+        long newCount = currentCount + 1;
+        long totalSoFar = ((currentAverage * currentCount) + time);
+
+        final Pair<Long, Long> newAverageAndCount;
+
+        if (totalSoFar >= 0 && newCount >= 0) {
+            long newAverage = totalSoFar / newCount;
+            newAverageAndCount = Pair.of(newAverage, newCount);
+        } else {
+            newAverageAndCount = Pair.of(time, 1L);
+        }
+        averageResponseTimesPerPermissionCheck.put(methodAndBean, newAverageAndCount);
+    }
+
+    private Pair<Boolean, Long> hasPermissionWithTiming(Authentication authentication, Object targetObject, Pair<Object, Method> methodAndBean) {
+
+        long before = System.currentTimeMillis();
+        boolean hasPermission = callHasPermissionMethod(methodAndBean, targetObject, authentication);
+        long after = System.currentTimeMillis();
+        long time = (after - before);
+
+        return Pair.of(hasPermission, time);
+    }
+
+    private ListOfOwnerAndMethod getSortedSecuringMethodsForClass(Object permission, Class<?> targetClass) {
+
+        ListOfOwnerAndMethod securingMethods = getSecuringMethodsForClass(permission, targetClass);
+        ListOfOwnerAndMethod sortedMethods = sortSecuringMethodsByAverageTime(securingMethods);
+        securingMethodsPerClass.put(Pair.of(targetClass, permission), sortedMethods);
+        return sortedMethods;
+    }
+
+    private ListOfOwnerAndMethod sortSecuringMethodsByAverageTime(ListOfOwnerAndMethod unsorted) {
+        List<Pair<Object, Method>> toSort = new ArrayList<>(unsorted);
+        toSort.sort(Comparator.comparing(o -> averageResponseTimesPerPermissionCheck.get(o).getLeft()));
+        return ListOfOwnerAndMethod.from(toSort);
+    }
+
+    private ListOfOwnerAndMethod getSecuringMethodsForClass(Object permission, Class<?> targetClass) {
+
+        if (securingMethodsPerClass.get(targetClass) != null) {
+            return securingMethodsPerClass.get(targetClass);
+        }
+
+        ListOfOwnerAndMethod permissionMethodsForPermissionAggregate = findSecuringMethodsPerClass(permission, targetClass);
+        securingMethodsPerClass.put(Pair.of(targetClass, permission), permissionMethodsForPermissionAggregate);
+        return permissionMethodsForPermissionAggregate;
+    }
+
+    private ListOfOwnerAndMethod findSecuringMethodsPerClass(Object permission, Class<?> targetClass) {
+
         final List<PermissionsToPermissionsMethods> permissionsWithPermissionsMethodsForTargetClassList
                 = rulesMap.entrySet().stream().
                 filter(e -> e.getKey().isAssignableFrom(targetClass)). // Any super class of the target class will do.
                 map(Entry::getValue).collect(toList());
+
         final List<ListOfOwnerAndMethod> permissionMethodsForPermissionList
                 = permissionsWithPermissionsMethodsForTargetClassList.stream().
                 map(permissionsToPermissionsMethods -> permissionsToPermissionsMethods.get(permission)).
                 filter(Objects::nonNull). // Filter any nulls
                 collect(toList());
-        final ListOfOwnerAndMethod permissionMethodsForPermissionAggregate
-                = permissionMethodsForPermissionList.stream().
+
+        return permissionMethodsForPermissionList.stream().
                 reduce(new ListOfOwnerAndMethod(), (f1, f2) -> ListOfOwnerAndMethod.from(combineLists(f1, f2)));
-
-        for (Pair<Object, Method> methodAndBean : permissionMethodsForPermissionAggregate) {
-            if (callHasPermissionMethod(methodAndBean, targetObject, authentication)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     private boolean hasPermission(Authentication authentication, Serializable targetId, Class<?> targetType, Object permission) {
 
-        final Pair<Object, Method> lookup = lookup(targetId, targetType);
-        final Object permissionEntity;
-        try {
-            permissionEntity = lookup.getRight().invoke(lookup.getLeft(), targetId);
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            throw new AccessDeniedException("Could not successfully call permission entity lookup method", e);
-        }
+        return transactionManager.doWithinTransaction(() -> {
 
-        if (permissionEntity == null) {
-            throw new AccessDeniedException("Could not find entity of type " + targetType + " with id " + targetId);
-        }
+            final Pair<Object, Method> lookup = lookup(targetId, targetType);
+            final Object permissionEntity;
+            try {
+                permissionEntity = lookup.getRight().invoke(lookup.getLeft(), targetId);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                throw new AccessDeniedException("Could not successfully call permission entity lookup method", e);
+            }
 
-        return hasPermission(authentication, permissionEntity, permission);
+            if (permissionEntity == null) {
+                throw new AccessDeniedException("Could not find entity of type " + targetType + " with id " + targetId);
+            }
+
+            return hasPermission(authentication, permissionEntity, permission);
+        });
     }
 
     private Pair<Object, Method> lookup(final Serializable targetId, final Class<?> targetType) {

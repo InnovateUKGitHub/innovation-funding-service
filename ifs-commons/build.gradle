@@ -4,6 +4,7 @@ dependencies {
     compile 'org.apache.commons:commons-lang3:3.4'
     compile "commons-beanutils:commons-beanutils:1.8.3"
     compile "org.springframework.boot:spring-boot-starter-security"
+    compile "org.springframework.boot:spring-boot-starter-security"
     compile 'org.jsoup:jsoup:1.9.1'
     compile "org.javassist:javassist:3.18.1-GA"
     compile project(":ifs-resources")
