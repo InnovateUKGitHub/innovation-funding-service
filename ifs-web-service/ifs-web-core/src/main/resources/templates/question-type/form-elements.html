@@ -224,10 +224,14 @@
 
             <div class="form-footer__actions">
                 <th:block th:if="${competitionIsOpen} == null or ${competitionIsOpen}">
-                    <!--/*  we show mark as complete buttons and the question should be assigned to you or */-->
-                    <th:block th:if="${userIsLeadApplicant}" th:include="question-type/form-elements :: form-mark-as-complete-buttons" />
-                    <!--/* if  readonly we show the edit form button */-->
-                    <th:block th:if="${readonly and userIsLeadApplicant}" th:include="question-type/form-elements :: form-edit-question-button" />
+
+                    <th:block th:if="${userIsLeadApplicant}">
+                        <!--/*  we show mark as complete buttons and the question should be assigned to you or */-->
+                        <th:block th:include="question-type/form-elements :: form-mark-as-complete-buttons" />
+                        <!--/* if  readonly we show the edit form button */-->
+                        <th:block th:if="${readonly}" th:include="question-type/form-elements :: form-edit-question-button" />
+                    </th:block>
+                    
                 </th:block>
 
                 <th:block th:insert="question-type/form-elements :: ready-for-review" th:if="${!userIsLeadApplicant}" th:with="displayBlock=${true}" />
