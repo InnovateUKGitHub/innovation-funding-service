@@ -43,6 +43,7 @@ public class ApplicationTeamManagementModelPopulator {
     public ApplicationTeamManagementViewModel populateModelByOrganisationId(long applicationId, long organisationId, long loggedInUserId) {
         OrganisationResource leadOrganisationResource = getLeadOrganisation(applicationId);
         boolean requestForLeadOrganisation = isRequestForLeadOrganisation(organisationId, leadOrganisationResource);
+
         return populateModel(applicationId, loggedInUserId, leadOrganisationResource, requestForLeadOrganisation,
                 getInviteOrganisationByOrganisationId(applicationId, organisationId).orElse(null));
     }
@@ -52,6 +53,7 @@ public class ApplicationTeamManagementModelPopulator {
         InviteOrganisationResource inviteOrganisationResource = getInviteOrganisationByInviteOrganisationId(
                 applicationId, inviteOrganisationId);
         boolean requestForLeadOrganisation = isRequestForLeadOrganisation(inviteOrganisationResource, leadOrganisationResource);
+
         return populateModel(applicationId, loggedInUserId, leadOrganisationResource, requestForLeadOrganisation,
                 inviteOrganisationResource);
     }
@@ -64,10 +66,12 @@ public class ApplicationTeamManagementModelPopulator {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
         UserResource leadApplicant = getLeadApplicant(applicationResource);
         boolean userLeadApplicant = isUserLeadApplicant(loggedInUserId, leadApplicant);
+
         if (requestForLeadOrganisation) {
             return populateModelForLeadOrganisation(leadOrganisationResource.getId(), leadOrganisationResource.getName(),
                     applicationResource, leadApplicant, userLeadApplicant, inviteOrganisationResource);
         }
+
         return populateModelForNonLeadOrganisation(applicationResource, userLeadApplicant, inviteOrganisationResource);
     }
 
@@ -78,6 +82,7 @@ public class ApplicationTeamManagementModelPopulator {
                                                                                 InviteOrganisationResource inviteOrganisationResource) {
         List<ApplicationInviteResource> invites = ofNullable(inviteOrganisationResource)
                 .map(InviteOrganisationResource::getInviteResources).orElse(emptyList());
+
         return new ApplicationTeamManagementViewModel(applicationResource.getId(),
                 applicationResource.getApplicationDisplayName(),
                 organisationId,

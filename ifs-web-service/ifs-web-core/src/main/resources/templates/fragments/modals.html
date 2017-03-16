@@ -467,7 +467,12 @@
             <button type="button" class="js-close buttonlink large">Cancel</button>
         </div>
         <div class="column-half alignright-button">
-            <button class="button large" name="remove_person" value="remove_person" type="submit">Delete organisation</button>
+            <button class="button large"
+                    name="deleteLastApplicant"
+                    type="submit"
+                    th:value="${model.applicants.get(0).applicationInviteId}">
+                Delete organisation
+            </button>
         </div>
     </div>
 </th:block>
