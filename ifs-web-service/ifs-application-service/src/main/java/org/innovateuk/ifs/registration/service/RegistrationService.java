@@ -12,11 +12,7 @@ import java.util.Map;
  */
 public interface RegistrationService {
 
-    Map<String, String> getInvalidInviteMessages(UserResource loggedInUser, ApplicationInviteResource inviteResource, InviteOrganisationResource inviteOrganisation);
-
-    List<String> validateInvite(ApplicationInviteResource inviteResource, InviteOrganisationResource inviteOrganisation);
-
-    boolean isInviteForDifferentOrganisationThanUsers(ApplicationInviteResource inviteResource, InviteOrganisationResource inviteOrganisation);
+    boolean isInviteForDifferentOrganisationThanUsersAndDifferentName(ApplicationInviteResource inviteResource, InviteOrganisationResource inviteOrganisation);
 
     boolean isInviteForDifferentOrganisationThanUsersButSameName(ApplicationInviteResource inviteResource, InviteOrganisationResource inviteOrganisation);
 }

@@ -9,8 +9,4 @@ import javax.servlet.http.HttpServletResponse;
  * A Service interface for common invite methods.
  */
 public interface InviteService {
-
-    ApplicationInviteResource getInviteByRequest(HttpServletRequest request, HttpServletResponse response);
-    ApplicationInviteResource getInviteByHash(String hash, HttpServletResponse response);
-
 }
