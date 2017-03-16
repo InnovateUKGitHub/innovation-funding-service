@@ -100,7 +100,7 @@ Lead Adds/Removes partner organisation
     And The user clicks the button/link    jQuery=button:contains("Add organisation and invite applicants")
     And the user clicks the button/link    jQuery=a:contains("Update Fannie May")
     When The user clicks the button/link    jQuery=button:contains('Remove')
-    And the user clicks the button/link    jQuery=.buttonlink:contains("Cancel")
+    And the user clicks the button/link    jQuery=.button:contains("Cancel")
     Then the user should see the text in the page    Fannie May
     And the user clicks the button/link    jQuery=a:contains("Update Fannie May")
     And The user clicks the button/link    jQuery=button:contains('Remove')
