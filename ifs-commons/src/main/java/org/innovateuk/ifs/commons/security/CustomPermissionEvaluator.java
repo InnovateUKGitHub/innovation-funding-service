@@ -64,7 +64,6 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
     void generateRules() {
         Collection<Object> permissionRuleBeans = applicationContext.getBeansWithAnnotation(PermissionRules.class).values();
         ListOfOwnerAndMethod allRulesMethods = findRules(permissionRuleBeans);
-        allRulesMethods.forEach(objectMethodPair -> averageResponseTimesPerPermissionCheck.put(objectMethodPair, Pair.of(0L, 0L)));
 
         List<Pair<Object, Method>> failed = failedPermissionMethodSignatures(allRulesMethods);
         if (!failed.isEmpty()) {
@@ -244,17 +243,21 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         }
 
         final Class<?> targetClass = targetObject.getClass();
-        final ListOfOwnerAndMethod permissionMethodsForPermissionAggregate = getSortedSecuringMethodsForClass(permission, targetClass);
+        ListOfOwnerAndMethod securingMethods = getSecuringMethodsForClass(permission, targetClass);
 
         return transactionManager.doWithinTransaction(() -> {
 
-            for (Pair<Object, Method> methodAndBean : permissionMethodsForPermissionAggregate) {
+            for (Pair<Object, Method> methodAndBean : securingMethods) {
 
                 Pair<Boolean, Long> hasPermissionWithTiming = hasPermissionWithTiming(authentication, targetObject, methodAndBean);
                 Boolean hasPermission = hasPermissionWithTiming.getLeft();
                 Long time = hasPermissionWithTiming.getRight();
 
-                updateAverageAndCount(methodAndBean, time);
+                if (Math.random() < 0.05) {
+                    updateAverageAndCount(methodAndBean, time);
+                    ListOfOwnerAndMethod sortedMethods = sortSecuringMethodsByAverageTime(securingMethods);
+                    securingMethodsPerClass.put(Pair.of(targetClass, permission), sortedMethods);
+                }
 
                 if (hasPermission) {
                     return true;
@@ -268,6 +271,10 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
     private void updateAverageAndCount(Pair<Object, Method> methodAndBean, Long time) {
 
         Pair<Long, Long> averageAndCount = averageResponseTimesPerPermissionCheck.get(methodAndBean);
+
+        if (averageAndCount == null) {
+            averageAndCount = Pair.of(0L, 0L);
+        }
 
         Long currentAverage = averageAndCount.getLeft();
         Long currentCount = averageAndCount.getRight();
@@ -290,22 +297,33 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         long before = System.currentTimeMillis();
         boolean hasPermission = callHasPermissionMethod(methodAndBean, targetObject, authentication);
         long after = System.currentTimeMillis();
-        long time = (after - before);
+        long time = after - before;
 
         return Pair.of(hasPermission, time);
     }
 
-    private ListOfOwnerAndMethod getSortedSecuringMethodsForClass(Object permission, Class<?> targetClass) {
-
-        ListOfOwnerAndMethod securingMethods = getSecuringMethodsForClass(permission, targetClass);
-        ListOfOwnerAndMethod sortedMethods = sortSecuringMethodsByAverageTime(securingMethods);
-        securingMethodsPerClass.put(Pair.of(targetClass, permission), sortedMethods);
-        return sortedMethods;
-    }
-
     private ListOfOwnerAndMethod sortSecuringMethodsByAverageTime(ListOfOwnerAndMethod unsorted) {
+
         List<Pair<Object, Method>> toSort = new ArrayList<>(unsorted);
-        toSort.sort(Comparator.comparing(o -> averageResponseTimesPerPermissionCheck.get(o).getLeft()));
+        toSort.sort((o1, o2) -> {
+
+            Pair<Long, Long> o1Average = averageResponseTimesPerPermissionCheck.get(o1);
+            Pair<Long, Long> o2Average = averageResponseTimesPerPermissionCheck.get(o2);
+
+            if (o1Average == null && o2Average == null) {
+                return 0;
+            }
+
+            if (o1Average == null) {
+                return -1;
+            }
+
+            if (o2Average == null) {
+                return 1;
+            }
+
+            return o1Average.getLeft().compareTo(o2Average.getLeft());
+        });
         return ListOfOwnerAndMethod.from(toSort);
     }
 
