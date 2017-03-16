@@ -203,7 +203,9 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
     }
 
     private boolean projectsGetSortedByApplicationId(List<ProjectStatusResource> after) {
-        return after.stream().sorted(Comparator.comparing(ProjectStatusResource::getApplicationNumber)).collect(Collectors.toList())
+        return after.stream()
+                .sorted(Comparator.comparing(ProjectStatusResource::getApplicationNumber))
+                .collect(Collectors.toList())
                 .equals(after);
     }
 
