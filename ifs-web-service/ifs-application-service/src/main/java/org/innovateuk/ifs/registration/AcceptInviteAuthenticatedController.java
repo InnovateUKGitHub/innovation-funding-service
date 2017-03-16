@@ -28,7 +28,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
  */
 @Controller
 @PreAuthorize("hasAuthority('applicant')")
-public class AuthenticatedAcceptInviteController extends AbstractAcceptInviteController {
+public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteController {
     @Autowired
     private InviteRestService inviteRestService;
 
@@ -51,7 +51,7 @@ public class AuthenticatedAcceptInviteController extends AbstractAcceptInviteCon
                                 @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                 Model model) {
         String hash = getInviteHashCookie(request);
-        RestResult<String> view = inviteRestService.getInviteByHash(getInviteHashCookie(request)).andOnSuccessReturn(invite ->
+        RestResult<String> view = inviteRestService.getInviteByHash(getInviteHashCookie(request)).andOnSuccess(invite ->
                 inviteRestService.getInviteOrganisationByHash(hash).andOnSuccessReturn(inviteOrganisation -> {
                             String validateView = validate(invite, inviteOrganisation, response, loggedInUser, model);
                             if (validateView != null) {
@@ -76,7 +76,7 @@ public class AuthenticatedAcceptInviteController extends AbstractAcceptInviteCon
                                   @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                   Model model) {
         String hash = getInviteHashCookie(request);
-        RestResult<String> view = inviteRestService.getInviteByHash(getInviteHashCookie(request)).andOnSuccessReturn(invite ->
+        RestResult<String> view = inviteRestService.getInviteByHash(getInviteHashCookie(request)).andOnSuccess(invite ->
                 inviteRestService.getInviteOrganisationByHash(hash).andOnSuccessReturn(inviteOrganisation -> {
                     String validateView = validate(invite, inviteOrganisation, response, loggedInUser, model);
                     if (validateView != null) {
