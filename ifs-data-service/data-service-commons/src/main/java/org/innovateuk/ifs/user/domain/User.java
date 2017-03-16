@@ -10,9 +10,12 @@ import org.innovateuk.ifs.user.resource.*;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
+import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
 import static javax.persistence.EnumType.STRING;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -48,7 +51,7 @@ public class User implements Serializable {
     @JoinTable(name = "user_role",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
-    private List<Role> roles = new ArrayList<>();
+    private Set<Role> roles = new HashSet<>();
 
     @Enumerated(STRING)
     private Gender gender;
@@ -105,15 +108,20 @@ public class User implements Serializable {
         return uid;
     }
 
-    public List<Role> getRoles() {
+    public Set<Role> getRoles() {
         return roles;
     }
 
-    public boolean hasRole(UserRoleType type) {
-        return simpleMap(getRoles(), Role::getName).contains(type.getName());
+    public void addRole(Role role) {
+        roles.add(role);
     }
 
-    public void setRoles(List<Role> roles) {
+    public boolean hasRole(UserRoleType type) {
+        return getRoles().stream().anyMatch(role -> role.getName().equals(type.getName()));
+    }
+
+    public void setRoles(Set<Role> roles) {
+        requireNonNull(roles);
         this.roles = roles;
     }
 

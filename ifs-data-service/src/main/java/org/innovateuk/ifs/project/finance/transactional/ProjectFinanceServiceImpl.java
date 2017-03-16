@@ -22,6 +22,7 @@ import org.innovateuk.ifs.project.finance.repository.FinanceCheckProcessReposito
 import org.innovateuk.ifs.project.finance.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.finance.workflow.financechecks.configuration.EligibilityWorkflowHandler;
+import org.innovateuk.ifs.project.finance.workflow.financechecks.configuration.FinanceCheckWorkflowHandler;
 import org.innovateuk.ifs.project.finance.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
@@ -124,6 +125,9 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     @Autowired
     private ProjectGrantOfferService projectGrantOfferService;
+
+    @Autowired
+    private FinanceCheckWorkflowHandler financeCheckWorkflowHandler;
 
     @Autowired
     private OrganisationFinanceDelegate organisationFinanceDelegate;
@@ -368,7 +372,8 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     private ServiceResult<Void> validateSpendProfileCanBeGenerated(Project project) {
         return validateFinanceChecksApprovedForSpendProfileGenerate(project).andOnSuccess(() ->
-                validateViabilityApprovedOrNotApplicableForSpendProfileGenerate(project));
+                validateViabilityApprovedOrNotApplicableForSpendProfileGenerate(project).andOnSuccess(() ->
+                validateEligibilityApprovedOrNotApplicableForSpendProfileGenerate(project)));
     }
 
     private ServiceResult<Void> validateFinanceChecksApprovedForSpendProfileGenerate(Project project) {
@@ -390,8 +395,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         List<PartnerOrganisation> partnerOrganisations = partnerOrganisationRepository.findByProjectId(project.getId());
 
         Optional<PartnerOrganisation> existingReviewablePartnerOrganisation = simpleFindFirst(partnerOrganisations, partnerOrganisation ->
-                        getViabilityProcess(partnerOrganisation)
-                .andOnSuccessReturn(viabilityProcess -> ViabilityState.REVIEW == viabilityProcess.getActivityState()).getSuccessObjectOrThrowException());
+                ViabilityState.REVIEW == viabilityWorkflowHandler.getState(partnerOrganisation));
 
         if (!existingReviewablePartnerOrganisation.isPresent()) {
             return serviceSuccess();
@@ -461,6 +465,20 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         }
     }
 
+    private ServiceResult<Void> validateEligibilityApprovedOrNotApplicableForSpendProfileGenerate(Project project) {
+
+        List<PartnerOrganisation> partnerOrganisations = partnerOrganisationRepository.findByProjectId(project.getId());
+
+        Optional<PartnerOrganisation> existingReviewablePartnerOrganisation = simpleFindFirst(partnerOrganisations, partnerOrganisation ->
+                        EligibilityState.REVIEW == eligibilityWorkflowHandler.getState(partnerOrganisation));
+
+        if (!existingReviewablePartnerOrganisation.isPresent()) {
+            return serviceSuccess();
+        } else {
+            return serviceFailure(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_VIABILITY_APPROVED);
+        }
+    }
+
     @Override
     public ServiceResult<EligibilityResource> getEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId){
 
@@ -527,14 +545,22 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         Long projectId = projectOrganisationCompositeId.getProjectId();
         Long organisationId = projectOrganisationCompositeId.getOrganisationId();
 
-        return getPartnerOrganisation(projectId, organisationId)
+        return getCurrentlyLoggedInUser().andOnSuccess(currentUser ->
+                getPartnerOrganisation(projectId, organisationId)
                 .andOnSuccess(partnerOrganisation -> getViabilityProcess(partnerOrganisation)
                         .andOnSuccess(viabilityProcess -> validateViability(viabilityProcess.getActivityState(), viability, viabilityRagStatus))
                         .andOnSuccess(() -> getProjectFinance(projectId, organisationId))
-                        .andOnSuccess(projectFinance -> triggerViabilityWorkflowEvent(partnerOrganisation, viability)
+                        .andOnSuccess(projectFinance -> triggerViabilityWorkflowEvent(currentUser, partnerOrganisation, viability)
                                 .andOnSuccess(() -> saveViability(projectFinance, viabilityRagStatus))
                         )
-                );
+                ));
+    }
+
+    private ServiceResult<Void> approveFinanceCheck(User currentUser, PartnerOrganisation partnerOrg, Eligibility eligibility) {
+        if(eligibility.equals(Eligibility.APPROVED)) {
+            return financeCheckWorkflowHandler.approveFinanceCheck(partnerOrg, currentUser) ? serviceSuccess() : serviceFailure(FINANCE_CHECKS_CANNOT_PROGRESS_WORKFLOW);
+        }
+        return serviceSuccess();
     }
 
     private ServiceResult<Void> validateViability(ViabilityState currentViabilityState, Viability viability, ViabilityRagStatus viabilityRagStatus) {
@@ -550,16 +576,13 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         return serviceSuccess();
     }
 
-    private ServiceResult<Void> triggerViabilityWorkflowEvent(PartnerOrganisation partnerOrganisation, Viability viability) {
+    private ServiceResult<Void> triggerViabilityWorkflowEvent(User currentUser, PartnerOrganisation partnerOrganisation, Viability viability) {
 
         if (Viability.APPROVED == viability) {
-
-            return getCurrentlyLoggedInUser().andOnSuccessReturnVoid(currentUser ->
-                    viabilityWorkflowHandler.viabilityApproved(partnerOrganisation, currentUser));
-        } else {
-            return serviceSuccess();
+            viabilityWorkflowHandler.viabilityApproved(partnerOrganisation, currentUser);
         }
 
+        return serviceSuccess();
     }
 
     private ServiceResult<Void> saveViability(ProjectFinance projectFinance, ViabilityRagStatus viabilityRagStatus) {
@@ -577,14 +600,15 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         Long projectId = projectOrganisationCompositeId.getProjectId();
         Long organisationId = projectOrganisationCompositeId.getOrganisationId();
 
-        return getPartnerOrganisation(projectId, organisationId)
+        return getCurrentlyLoggedInUser().andOnSuccess(currentUser -> getPartnerOrganisation(projectId, organisationId)
                 .andOnSuccess(partnerOrganisation -> getEligibilityProcess(partnerOrganisation)
                         .andOnSuccess(eligibilityProcess -> validateEligibility(eligibilityProcess.getActivityState(), eligibility, eligibilityRagStatus))
                         .andOnSuccess(() -> getProjectFinance(projectId, organisationId))
-                        .andOnSuccess(projectFinance -> triggerEligibilityWorkflowEvent(partnerOrganisation, eligibility)
+                        .andOnSuccess(projectFinance -> triggerEligibilityWorkflowEvent(currentUser, partnerOrganisation, eligibility)
                                 .andOnSuccess(() -> saveEligibility(projectFinance, eligibilityRagStatus))
-                        )
-                );
+                )
+                        //saving eligibility is now linked with saving the finance check as approved
+                        .andOnSuccess(() -> approveFinanceCheck(currentUser, partnerOrganisation, eligibility))));
     }
 
     private ServiceResult<Void> validateEligibility(EligibilityState currentEligibilityState, Eligibility eligibility, EligibilityRagStatus eligibilityRagStatus) {
@@ -600,16 +624,12 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         return serviceSuccess();
     }
 
-    private ServiceResult<Void> triggerEligibilityWorkflowEvent(PartnerOrganisation partnerOrganisation, Eligibility eligibility) {
+    private ServiceResult<Void> triggerEligibilityWorkflowEvent(User currentUser, PartnerOrganisation partnerOrganisation, Eligibility eligibility) {
 
         if (Eligibility.APPROVED == eligibility) {
-
-            return getCurrentlyLoggedInUser().andOnSuccessReturnVoid(currentUser ->
-                    eligibilityWorkflowHandler.eligibilityApproved(partnerOrganisation, currentUser));
-        } else {
-            return serviceSuccess();
+            eligibilityWorkflowHandler.eligibilityApproved(partnerOrganisation, currentUser);
         }
-
+        return serviceSuccess();
     }
 
     private ServiceResult<Void> saveEligibility(ProjectFinance projectFinance, EligibilityRagStatus eligibilityRagStatus) {

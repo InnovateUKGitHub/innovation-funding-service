@@ -38,7 +38,8 @@ Check the initial key statistics
     Given the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the user clicks the button/link    jQuery=a:contains("Invite assessors to assess the competition")
     And the user clicks the button/link    link=Overview
-    And the key statistics are calculated
+    #TODO check as part of INFUND-6453 testing
+    #And the key statistics are calculated
 
 The User can Add and Remove Assessors
     [Documentation]    INFUND-6602 INFUND-6604 INFUND-6392 INFUND-6412 INFUND-6388
@@ -114,7 +115,7 @@ Invite Individual Assessors
     Given The user clicks the button/link    jQuery=td:contains("Will Smith") ~ td .button:contains("Add")
     And The user clicks the button/link    link=Invite
     When the user clicks the button/link    jQuery=td:contains("Will Smith") .button:contains("Invite individual")
-    And The user should see the text in the page    Please visit our new online Innovation funding service to respond to this request
+    And The user should see the text in the page    Please visit our new online Innovation Funding Service to respond to this request
     And The user enters text to a text field    css=#subject    Invitation to assess 'Sustainable living models for the future' @
     And the user clicks the button/link    jQuery=.button:contains("Send invite")
     Then The user should not see the text in the page    Will Smith
@@ -156,9 +157,12 @@ Assessor overview information
     ...    INFUND-6449
     [Tags]
     Given The user clicks the button/link    link=Overview
+    And the user clicks the button/link      jQuery=.pagination-label:contains("Next")
     Then the user should see the element    jQuery=td:contains("Paul Plum") ~ td:contains("Invite accepted")
+    And the user clicks the button/link      jQuery=.pagination-label:contains("Next")
     And the user should see the element    jQuery=td:contains("Will Smith") ~ td:nth-of-type(5):contains("Awaiting response")
     And the user should see the element    jQuery=td:contains("Will Smith") ~ td:nth-of-type(6):contains("Invite sent:")
+    And the user clicks the button/link      jQuery=.pagination-label:contains("Previous")
     And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:nth-of-type(5):contains("Invite declined")
     And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:contains("Academic")
     And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:contains("Yes")
