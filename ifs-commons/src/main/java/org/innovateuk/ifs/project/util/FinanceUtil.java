@@ -5,11 +5,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class FinanceUtil {
 
-    public static final String UNIVERSITY_HEI = "University (HEI)";
+    public static final String RESEARCH_ORGANISATIONS = "Research";
 
     public boolean isUsingJesFinances(String organisationType) {
         switch(organisationType) {
-            case UNIVERSITY_HEI:
+            case RESEARCH_ORGANISATIONS:
                 return true;
             default:
                 return false;

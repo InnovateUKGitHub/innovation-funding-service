@@ -539,7 +539,7 @@ public class ApplicationFormController {
     private void markOrganisationFinancesAsNotRequired(String organisationType, SectionResource selectedSection, Long applicationId, Long competitionId, Long processRoleId) {
 
         if (selectedSection != null && (SectionType.FUNDING_FINANCES.equals(selectedSection.getType()) || SectionType.PROJECT_COST_FINANCES.equals(selectedSection.getType()))
-                && "University (HEI)".equals(organisationType)) {
+                && "Research".equals(organisationType)) {
             SectionResource organisationSection = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.ORGANISATION_FINANCES).get(0);
             sectionService.markAsNotRequired(organisationSection.getId(), applicationId, processRoleId);
         }
@@ -785,7 +785,7 @@ public class ApplicationFormController {
         if(SectionType.ORGANISATION_FINANCES.equals(section.getType())) {
             List<String> financePositionKeys = params.keySet().stream().filter(k -> k.contains("financePosition-")).collect(Collectors.toList());
             String organisationType = organisationService.getOrganisationType(userId, applicationId);
-            if (financePositionKeys.isEmpty() && !"University (HEI)".equals(organisationType)) {
+            if (financePositionKeys.isEmpty() && !"Research".equals(organisationType)) {
                 bindingResult.reject("APPLICATION_ORGANISATION_SIZE_REQUIRED");
                 return false;
             }

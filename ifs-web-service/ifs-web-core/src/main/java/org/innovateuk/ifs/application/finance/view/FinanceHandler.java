@@ -12,9 +12,11 @@ import org.springframework.stereotype.Component;
 @Configuration
 public class FinanceHandler {
 
+    private final static String RESEARCH_ORGANISATIONS = "Research";
+
     public FinanceFormHandler getFinanceFormHandler(String organisationType) {
         switch(organisationType) {
-            case "University (HEI)":
+            case RESEARCH_ORGANISATIONS:
                 return getJESFinanceFormHandler();
             default:
                 return getDefaultFinanceFormHandler();
@@ -23,7 +25,7 @@ public class FinanceHandler {
 
     public FinanceFormHandler getProjectFinanceFormHandler(String organisationType) {
         switch(organisationType) {
-            case "University (HEI)":
+            case RESEARCH_ORGANISATIONS:
                 return getJESFinanceFormHandler();
             default:
                 return getProjectFinanceFormHandler();
@@ -32,7 +34,7 @@ public class FinanceHandler {
 
     public FinanceModelManager getFinanceModelManager(String organisationType) {
         switch(organisationType) {
-            case "University (HEI)":
+            case RESEARCH_ORGANISATIONS:
                 return getJESFinanceModelManager();
             default:
                 return getDefaultFinanceModelManager();
@@ -41,7 +43,7 @@ public class FinanceHandler {
 
     public FinanceModelManager getProjectFinanceModelManager(String organisationType) {
         switch(organisationType) {
-            case "University (HEI)":
+            case RESEARCH_ORGANISATIONS:
                 return getJESProjectFinanceModelManager();
             default:
                 return getDefaultProjectFinanceModelManager();
