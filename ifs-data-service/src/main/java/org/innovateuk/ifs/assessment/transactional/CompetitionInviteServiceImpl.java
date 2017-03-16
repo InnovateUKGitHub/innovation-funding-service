@@ -11,11 +11,7 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.email.resource.EmailContent;
-import org.innovateuk.ifs.invite.domain.CompetitionInvite;
-import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
-import org.innovateuk.ifs.invite.domain.Participant;
-import org.innovateuk.ifs.invite.domain.RejectionReason;
+import org.innovateuk.ifs.invite.domain.*;
 import org.innovateuk.ifs.invite.mapper.ParticipantStatusMapper;
 import org.innovateuk.ifs.invite.repository.CompetitionInviteRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
@@ -36,7 +32,6 @@ import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
-import org.innovateuk.ifs.user.transactional.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -277,8 +272,32 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     @Override
-    public ServiceResult<List<AssessorInviteOverviewResource>> getInvitationOverview(long competitionId) {
-        return serviceSuccess(simpleMap(competitionParticipantRepository.getByCompetitionIdAndRole(competitionId, ASSESSOR),
+    public ServiceResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
+                                                                                   Pageable pageable,
+                                                                                   Optional<Long> innovationArea,
+                                                                                   Optional<ParticipantStatus> status,
+                                                                                   Optional<Boolean> compliant) {
+        Page<CompetitionParticipant> pagedResult;
+
+        if (innovationArea.isPresent() || compliant.isPresent()) {
+            // We want to avoid performing the potentially expensive join on Profile if possible
+            pagedResult = competitionParticipantRepository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
+                    competitionId,
+                    innovationArea.orElse(null),
+                    status.orElse(null),
+                    compliant.orElse(null),
+                    pageable
+            );
+        } else {
+            pagedResult = competitionParticipantRepository.getAssessorsByCompetitionAndStatus(
+                    competitionId,
+                    status.orElse(null),
+                    pageable
+            );
+        }
+
+        List<AssessorInviteOverviewResource> inviteOverviews = simpleMap(
+                pagedResult.getContent(),
                 participant -> {
                     AssessorInviteOverviewResource assessorInviteOverview = new AssessorInviteOverviewResource();
                     assessorInviteOverview.setName(participant.getInvite().getName());
@@ -293,11 +312,21 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                         assessorInviteOverview.setCompliant(profile.isCompliant(participant.getUser()));
                         assessorInviteOverview.setInnovationAreas(simpleMap(profile.getInnovationAreas(), innovationAreaMapper::mapToResource));
                     } else {
-                        assessorInviteOverview.setInnovationAreas(singletonList(innovationAreaMapper.mapToResource(participant.getInvite().getInnovationArea())));
+                        assessorInviteOverview.setInnovationAreas(singletonList(
+                                innovationAreaMapper.mapToResource(participant.getInvite().getInnovationArea())
+                        ));
                     }
 
                     return assessorInviteOverview;
-                }));
+                });
+
+        return serviceSuccess(new AssessorInviteOverviewPageResource(
+                pagedResult.getTotalElements(),
+                pagedResult.getTotalPages(),
+                inviteOverviews,
+                pagedResult.getNumber(),
+                pagedResult.getSize()
+        ));
     }
 
     @Override
