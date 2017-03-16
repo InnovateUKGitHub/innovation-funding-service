@@ -73,7 +73,7 @@ Collaborator should see the terms and conditions from the overview page
     Given the user clicks the button/link    link=Application Overview
     When The user clicks the button/link    link= view conditions of grant offer
     Then the user should see the text in the page    Terms and conditions of an Innovate UK grant award
-    And the user should see the text in the page    Entire Agreement
+    And the user should see the text in the page    Entire agreement
 
 Collaborator should see the review button instead of the review and submit
     [Documentation]    INFUND-2451

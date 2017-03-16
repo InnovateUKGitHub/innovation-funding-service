@@ -74,7 +74,7 @@
                             <td th:class="${#fields.hasErrors('applicants[__${applicantStat.index}__].email') ? 'form-group error':'form-group'}">
                                 <label th:for="'applicants'+${applicantStat.index}+'.email'">
                                     <span class="visually-hidden">Applicant email</span>
-                                    <th:block th:if="${#fields.hasErrors('applicants[__${applicantStat.index}__].name')}">
+                                    <th:block th:if="${#fields.hasErrors('applicants[__${applicantStat.index}__].email')}">
                                         <span th:each="err : ${#fields.errors('applicants[__${applicantStat.index}__].email')}"
                                               th:text="${err}"
                                               class="error-message"
@@ -87,7 +87,8 @@
                                        th:errorclass="field-error"
                                        required="required"
                                        th:attr="data-required-errormessage=#{validation.invite.email.required},
-                                                data-email-errormessage=#{validation.standard.email.format}" />
+                                                data-email-errormessage=#{validation.standard.email.format},
+                                                data-email-duplication-errormessage=#{email.already.in.invite}" />
                             </td>
                             <td></td>
                             <td class="alignright">

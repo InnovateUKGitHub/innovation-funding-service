@@ -31,14 +31,12 @@ import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static java.lang.String.format;
 import static java.time.LocalDateTime.now;
 import static java.util.Collections.singletonList;
+import static java.util.Objects.requireNonNull;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -180,16 +178,8 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     }
 
     private ServiceResult<User> addRoleToUser(User user, String roleName) {
-
         return getRole(roleName).andOnSuccessReturn(role -> {
-
-            List<Role> newRoles = user.getRoles() != null ? new ArrayList<>(user.getRoles()) : new ArrayList<>();
-
-            if (!newRoles.contains(role)) {
-                newRoles.add(role);
-            }
-
-            user.setRoles(newRoles);
+            user.addRole(role);
             return user;
         });
 
