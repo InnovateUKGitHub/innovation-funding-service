@@ -45,7 +45,7 @@ Mark as complete possible for questions with text
     When the user clicks the button/link    jQuery=#form-input-11 button:contains("Mark as complete")
     Then the Project summary question should be marked as complete
     And The user should not see the element    jQuery=#form-input-11 button:contains("Mark as complete")
-    [Teardown]  the user clicks the button/link    jQuery=#form-input-11 button:contains("Edit")
+    [Teardown]  the user clicks the button/link    jQuery=#form-input-11 button:contains("Return and edit")
 
 Mark as complete not possible for empty questions
     [Documentation]    INFUND-3954
