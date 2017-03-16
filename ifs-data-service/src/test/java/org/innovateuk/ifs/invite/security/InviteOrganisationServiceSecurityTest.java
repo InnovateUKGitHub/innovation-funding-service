@@ -32,7 +32,7 @@ public class InviteOrganisationServiceSecurityTest extends BaseServiceSecurityTe
     }
 
     @Test
-    public void testFindAll() {
+    public void findAll() {
         final ServiceResult<Iterable<InviteOrganisationResource>> all = classUnderTest.findAll();
         assertFalse(all.getSuccessObject().iterator().hasNext());
         verify(inviteOrganisationPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).leadApplicantCanViewOrganisationInviteToTheApplication(isA(InviteOrganisationResource.class), isA(UserResource.class));
@@ -41,7 +41,7 @@ public class InviteOrganisationServiceSecurityTest extends BaseServiceSecurityTe
 
 
     @Test
-    public void testFindOne() {
+    public void findOne() {
         final long inviteId = 1L;
         assertAccessDenied(
                 () -> classUnderTest.findOne(inviteId),
@@ -52,13 +52,32 @@ public class InviteOrganisationServiceSecurityTest extends BaseServiceSecurityTe
     }
 
     @Test
-    public void testSave() {
+    public void getByIdWithInvitesForApplication() {
+        assertAccessDenied(
+                () -> classUnderTest.getByIdWithInvitesForApplication(1L, 2L),
+                () -> {
+                    verify(inviteOrganisationPermissionRules).collaboratorCanViewOrganisationInviteToTheApplication(isA(InviteOrganisationResource.class), isA(UserResource.class));
+                    verify(inviteOrganisationPermissionRules).leadApplicantCanViewOrganisationInviteToTheApplication(isA(InviteOrganisationResource.class), isA(UserResource.class));
+                });
+    }
+
+    @Test
+    public void getByOrganisationIdWithInvitesForApplication() {
+        assertAccessDenied(
+                () -> classUnderTest.getByOrganisationIdWithInvitesForApplication(1L, 2L),
+                () -> {
+                    verify(inviteOrganisationPermissionRules).collaboratorCanViewOrganisationInviteToTheApplication(isA(InviteOrganisationResource.class), isA(UserResource.class));
+                    verify(inviteOrganisationPermissionRules).leadApplicantCanViewOrganisationInviteToTheApplication(isA(InviteOrganisationResource.class), isA(UserResource.class));
+                });
+    }
+
+    @Test
+    public void save() {
         assertAccessDenied(
                 () -> classUnderTest.save(newInviteOrganisationResource().build()),
                 () -> verify(inviteOrganisationPermissionRules).leadApplicantCanSaveInviteAnOrganisationToTheApplication(isA(InviteOrganisationResource.class), isA(UserResource.class))
         );
     }
-
 
     @Override
     protected Class<TestInviteOrganisationService> getClassUnderTest() {
@@ -77,12 +96,12 @@ public class InviteOrganisationServiceSecurityTest extends BaseServiceSecurityTe
 
         @Override
         public ServiceResult<InviteOrganisationResource> getByIdWithInvitesForApplication(long inviteOrganisationId, long applicationId) {
-            return null;
+            return serviceSuccess(newInviteOrganisationResource().build());
         }
 
         @Override
         public ServiceResult<InviteOrganisationResource> getByOrganisationIdWithInvitesForApplication(long organisationId, long applicationId) {
-            return null;
+            return serviceSuccess(newInviteOrganisationResource().build());
         }
 
         @Override

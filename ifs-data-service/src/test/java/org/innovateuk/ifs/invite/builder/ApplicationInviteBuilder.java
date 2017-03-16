@@ -10,9 +10,9 @@ import org.innovateuk.ifs.user.domain.User;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static java.util.Collections.emptyList;
 
 public class ApplicationInviteBuilder extends BaseBuilder<ApplicationInvite, ApplicationInviteBuilder> {
 
@@ -43,6 +43,14 @@ public class ApplicationInviteBuilder extends BaseBuilder<ApplicationInvite, App
 
     public ApplicationInviteBuilder withApplication(Application... applications) {
         return withArray((application, invite) -> invite.setTarget(application), applications);
+    }
+
+    public ApplicationInviteBuilder withName(String... names) {
+        return withArray((name, invite) -> invite.setName(name), names);
+    }
+
+    public ApplicationInviteBuilder withEmail(String... emails) {
+        return withArray((email, invite) -> invite.setEmail(email), emails);
     }
 
     public ApplicationInviteBuilder withUser(User... users) {

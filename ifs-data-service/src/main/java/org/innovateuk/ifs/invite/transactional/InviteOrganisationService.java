@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.invite.transactional;
 
-import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.springframework.security.access.method.P;
@@ -13,10 +12,10 @@ public interface InviteOrganisationService {
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<InviteOrganisationResource> findOne(Long id);
 
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<InviteOrganisationResource> getByIdWithInvitesForApplication(long id, long applicationId);
 
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<InviteOrganisationResource> getByOrganisationIdWithInvitesForApplication(long organisationId, long applicationId);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
