@@ -120,7 +120,7 @@ Verify the name of the new application
     And the progress indicator should show 0
     And the user clicks the button/link    link=view and add participants to your application
     And the user should see the text in the page    Application team
-    And the user should see the text in the page    View and manage your contributors and partners
+    And the user should see the text in the page    View and manage your participants
     And the new application should be visible in the dashboard page
     And the user clicks the button/link    link=${test_title}
     And the user should see the text in the page    ${test_title}

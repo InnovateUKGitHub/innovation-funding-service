@@ -25,13 +25,18 @@ import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
+import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.Profile;
+import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProfileRepository;
+import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.transactional.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -44,12 +49,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.lowerCase;
@@ -66,6 +70,8 @@ import static org.innovateuk.ifs.util.CollectionFunctions.mapWithIndex;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
+import static org.innovateuk.ifs.util.StringFunctions.plainTextToHtml;
+import static org.innovateuk.ifs.util.StringFunctions.stripHtml;
 
 /**
  * Service for managing {@link org.innovateuk.ifs.invite.domain.CompetitionInvite}s.
@@ -113,10 +119,16 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     private NotificationSender notificationSender;
 
     @Autowired
+    private NotificationTemplateRenderer renderer;
+
+    @Autowired
     private SystemNotificationSource systemNotificationSource;
 
     @Autowired
     private LoggedInUserSupplier loggedInUserSupplier;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -132,16 +144,15 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                 return ServiceResult.serviceFailure(new Error(COMPETITION_INVITE_ALREADY_SENT, invite.getTarget().getName()));
             }
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
-            NotificationTarget recipient = new ExternalUserNotificationTarget(invite.getName(), invite.getEmail());
-            Notification notification = new Notification(systemNotificationSource, singletonList(recipient), Notifications.INVITE_ASSESSOR,
-                    asMap("name", invite.getName(),
-                            "competitionName", invite.getTarget().getName(),
-                            "acceptsDate", invite.getTarget().getAssessorAcceptsDate().format(formatter),
-                            "deadlineDate", invite.getTarget().getAssessorDeadlineDate().format(formatter),
-                            "inviteUrl", format("%s/invite/competition/%s", webBaseUrl + WEB_CONTEXT, invite.getHash())));
-            EmailContent content = notificationSender.renderTemplates(notification).getSuccessObject().get(recipient);
+            NotificationTarget notificationTarget = new ExternalUserNotificationTarget(invite.getName(), invite.getEmail());
+
             AssessorInviteToSendResource resource = toSendMapper.mapToResource(invite);
-            resource.setEmailContent(content);
+            resource.setContent(getInviteContent(notificationTarget, asMap("name", invite.getName(),
+                    "competitionName", invite.getTarget().getName(),
+                    "acceptsDate", invite.getTarget().getAssessorAcceptsDate().format(formatter),
+                    "deadlineDate", invite.getTarget().getAssessorDeadlineDate().format(formatter),
+                    "inviteUrl", format("%s/invite/competition/%s", webBaseUrl + WEB_CONTEXT, invite.getHash()))));
+
             return serviceSuccess(resource);
         });
     }
@@ -282,7 +293,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                         assessorInviteOverview.setCompliant(profile.isCompliant(participant.getUser()));
                         assessorInviteOverview.setInnovationAreas(simpleMap(profile.getInnovationAreas(), innovationAreaMapper::mapToResource));
                     } else {
-                        assessorInviteOverview.setInnovationAreas(asList(innovationAreaMapper.mapToResource(participant.getInvite().getInnovationArea())));
+                        assessorInviteOverview.setInnovationAreas(singletonList(innovationAreaMapper.mapToResource(participant.getInvite().getInnovationArea())));
                     }
 
                     return assessorInviteOverview;
@@ -385,18 +396,35 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     @Override
-    public ServiceResult<AssessorInviteToSendResource> sendInvite(long inviteId, EmailContent content) {
-        return getById(inviteId).andOnSuccessReturn(invite -> sendInvite(invite, content)).andOnSuccessReturn(toSendMapper::mapToResource);
+    public ServiceResult<Void> sendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource) {
+        return getById(inviteId).andOnSuccess(invite -> {
+            competitionParticipantRepository.save(new CompetitionParticipant(invite.send(loggedInUserSupplier.get(), LocalDateTime.now())));
+
+            if (invite.isNewAssessorInvite()) {
+                userRepository.findByEmail(invite.getEmail()).ifPresent(this::addAssessorRoleToUser);
+            }
+
+            // Strip any HTML that may have been added to the content by the user.
+            String bodyPlain = stripHtml(assessorInviteSendResource.getContent());
+
+            // HTML'ify the plain content to add line breaks.
+            String bodyHtml = plainTextToHtml(bodyPlain);
+
+            NotificationTarget recipient = new ExternalUserNotificationTarget(invite.getName(), invite.getEmail());
+            Notification notification = new Notification(systemNotificationSource, singletonList(recipient),
+                    Notifications.INVITE_ASSESSOR, asMap(
+                    "subject", assessorInviteSendResource.getSubject(),
+                    "bodyPlain", bodyPlain,
+                    "bodyHtml", bodyHtml
+            ));
+
+            return notificationSender.sendNotification(notification);
+        }).andOnSuccessReturnVoid();
     }
 
-    private CompetitionInvite sendInvite(CompetitionInvite invite, EmailContent content) {
-        competitionParticipantRepository.save(new CompetitionParticipant(invite.send(loggedInUserSupplier.get(), LocalDateTime.now())));
-
-        NotificationTarget recipient = new ExternalUserNotificationTarget(invite.getName(), invite.getEmail());
-        Notification notification = new Notification(systemNotificationSource, singletonList(recipient), Notifications.INVITE_ASSESSOR, emptyMap());
-        notificationSender.sendEmailWithContent(notification, recipient, content);
-
-        return invite;
+    private void addAssessorRoleToUser(User user) {
+        Role assessorRole = roleRepository.findOneByName(UserRoleType.ASSESSOR.getName());
+        user.addRole(assessorRole);
     }
 
     @Override
@@ -410,6 +438,11 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     private ServiceResult<CompetitionInvite> getById(long id) {
         return find(competitionInviteRepository.findOne(id), notFoundError(CompetitionInvite.class, id));
+    }
+
+    private String getInviteContent(NotificationTarget notificationTarget, Map<String, Object> arguments) {
+        return renderer.renderTemplate(systemNotificationSource, notificationTarget, "invite_assessor_editable_text.txt",
+                arguments).getSuccessObject();
     }
 
     private ServiceResult<CompetitionInvite> getByEmailAndCompetition(String email, long competitionId) {
@@ -451,10 +484,6 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     private ServiceResult<CompetitionParticipant> getParticipantByInviteHash(String inviteHash) {
         return find(competitionParticipantRepository.getByInviteHash(inviteHash), notFoundError(CompetitionParticipant.class, inviteHash));
-    }
-
-    private ServiceResult<List<CompetitionParticipant>> getParticipantsByCompetition(long competitionId) {
-        return find(competitionParticipantRepository.getByCompetitionIdAndRole(competitionId, ASSESSOR), notFoundError(CompetitionParticipant.class, competitionId));
     }
 
     private ServiceResult<CompetitionParticipant> accept(CompetitionParticipant participant, User user) {
@@ -518,7 +547,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     private List<InnovationAreaResource> getInnovationAreasForInvite(CompetitionInvite competitionInvite) {
         if (competitionInvite.isNewAssessorInvite()) {
-            return asList(innovationAreaMapper.mapToResource(competitionInvite.getInnovationArea()));
+            return singletonList(innovationAreaMapper.mapToResource(competitionInvite.getInnovationArea()));
         } else {
             return profileRepository.findOne(competitionInvite.getUser().getProfileId()).getInnovationAreas().stream()
                     .map(innovationAreaMapper::mapToResource)
