@@ -15,13 +15,30 @@ task osDeployProduction(type:Exec) {
     args = [openshiftEnv, "production", project.version]
 }
 
+task osDeployUat(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-deploy.sh'
+    args = [openshiftEnv, "uat", project.version]
+}
+
+task osDeployDemo(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-deploy.sh'
+    args = [openshiftEnv, "demo", project.version]
+}
+
 task osUpgradeProduction(type:Exec) {
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "production", project.version]
 }
 
+task osUpgradeUat(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-upgrade.sh'
+    args = [openshiftEnv, "uat", project.version]
+}
 
-
+task osUpgradeDemo(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-upgrade.sh'
+    args = [openshiftEnv, "demo", project.version]
+}
 
 task robotTestsFilter (type: Copy) {
     from 'robot-tests/IFS_acceptance_tests/resources/variables/'
