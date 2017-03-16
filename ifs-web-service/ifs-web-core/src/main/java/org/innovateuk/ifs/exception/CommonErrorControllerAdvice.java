@@ -3,6 +3,7 @@ package org.innovateuk.ifs.exception;
 import org.innovateuk.ifs.commons.error.exception.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.invite.resource.CompetitionInviteStatisticsResource;
 import org.springframework.context.MessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -211,5 +212,12 @@ public abstract class CommonErrorControllerAdvice extends BaseErrorControllerAdv
     public ModelAndView assessmentWithdrawnException(HttpServletRequest req, AssessmentWithdrawnException e) {
         return createErrorModelAndViewWithTitleAndMessage(e, req, e. getArguments(), HttpStatus.FORBIDDEN,
                 "error.title.assessment.withdrawn", e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = CompetitionFeedbackCantSendException.class)
+    public ModelAndView competitionFeedackCantSendException(HttpServletRequest req, CompetitionFeedbackCantSendException e) {
+        return createErrorModelAndViewWithTitleAndMessage(e, req, e.getArguments(), HttpStatus.BAD_REQUEST,
+                "error.title.competition.feedbackCantSend", e.getMessage());
     }
 }

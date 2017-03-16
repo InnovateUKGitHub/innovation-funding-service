@@ -103,7 +103,7 @@ Scope: Autosave
     ...    INFUND-3780
     [Tags]    HappyPath
     When the user clicks the button/link    link=Scope
-    And the user should see the text in the page    Technical feasibility
+    And the user should see the text in the page    Feasibility studies
     And the user should see the text in the page    Testing feedback field when "Yes" is selected.
 
 Scope: Word count

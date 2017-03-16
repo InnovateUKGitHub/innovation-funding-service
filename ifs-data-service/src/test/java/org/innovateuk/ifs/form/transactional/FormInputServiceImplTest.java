@@ -6,6 +6,8 @@ import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.innovateuk.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
 import static org.innovateuk.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.junit.Assert.assertEquals;
@@ -34,6 +36,27 @@ public class FormInputServiceImplTest extends BaseServiceUnitTest<FormInputServi
 
         verify(formInputResponseRepositoryMock, only()).findOneByApplicationIdAndFormInputQuestionName(applicationId,
                 questionName);
+    }
+
+    @Test
+    public void findResponseByApplicationIdAndQuestionId() {
+        long applicationId = 1L;
+        long questionId = 2L;
+
+        List<FormInputResponse> responses = newFormInputResponse().build(2);
+        List<FormInputResponseResource> responseResources = newFormInputResponseResource().build(2);
+
+        when(formInputResponseRepositoryMock.findByApplicationIdAndFormInputQuestionId(applicationId, questionId))
+                .thenReturn(responses);
+
+        when(formInputResponseMapperMock.mapToResource(responses.get(0))).thenReturn(responseResources.get(0));
+        when(formInputResponseMapperMock.mapToResource(responses.get(1))).thenReturn(responseResources.get(1));
+
+        List<FormInputResponseResource> serviceResult = service.findResponseByApplicationIdAndQuestionId(applicationId, questionId).getSuccessObjectOrThrowException();
+
+        assertEquals(responseResources, serviceResult);
+
+        verify(formInputResponseRepositoryMock, only()).findByApplicationIdAndFormInputQuestionId(applicationId, questionId);
     }
 
     @Override

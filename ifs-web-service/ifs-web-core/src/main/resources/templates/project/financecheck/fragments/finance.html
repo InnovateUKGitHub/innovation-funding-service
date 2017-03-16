@@ -1344,7 +1344,7 @@
 
     <!-- ===========================Research Participation =========================== -->
     <th:block th:fragment="research_participation(researchParticipationPercentage,maxResearchPercentage)">
-        <div th:class="${researchParticipationPercentage &gt; maxResearchPercentage} ? 'eligibility warning' : 'eligibility'" >
+        <div class="extra-margin-top extra-margin-bottom" th:class="${researchParticipationPercentage &gt; maxResearchPercentage} ? 'eligibility warning' : 'eligibility'" >
             <dl class="list-eligibility">
                 <dt>Maximum research participation</dt>
                 <dd th:text="${maxResearchPercentage}+' %'"></dd>
@@ -1399,7 +1399,7 @@
 
     <!-- ===========================Project Finance Summaries =========================== -->
     <th:block th:fragment="project-finance-summaries(summaries)">
-        <div class="extra-margin-bottom">
+        <div>
             <table>
                 <thead>
                     <tr>

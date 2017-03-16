@@ -23,7 +23,7 @@
     </th:block>
 </div>
 
-<div th:fragment="project-setup-status-indicator(status)">
+<th:block th:fragment="project-setup-status-indicator(status)">
     <div class="status">
         <div class="status-msg msg-progress">
             <th:block th:switch="${status}">
@@ -35,5 +35,5 @@
             </th:block>
         </div>
     </div>
-</div>
+</th:block>
 </html>
