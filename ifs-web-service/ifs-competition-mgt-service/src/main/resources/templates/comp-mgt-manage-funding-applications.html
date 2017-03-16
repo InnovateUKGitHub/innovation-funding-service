@@ -23,7 +23,7 @@
                 <li th:classappend="list-header" th:text="${err}"></li>
             </th:block>
         </ul>
-    </div>#
+    </div>
 
     <div th:replace="competition/key-statistics :: key-statistics(keyStatistics=${model.keyStatistics})" />
     <form method="GET" th:object="${manageFundingApplicationsQueryForm}">
