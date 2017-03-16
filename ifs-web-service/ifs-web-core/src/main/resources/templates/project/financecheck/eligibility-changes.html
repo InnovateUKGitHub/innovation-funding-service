@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Finance Checks'"/>
+</head>
+<body th:with="context='project'" class="project spend-profile">
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
+
+<main id="content">
+    <th:block th:insert="fragments/layout :: main-content-start"/>
+
+    <div th:if="${model.internal}"
+         th:include="fragments/layout :: header-sub"
+         th:with="linkTitle='Eligibility',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check/organisation/{orgId}/eligibility(projectId=${model.projectId},orgId=${model.organisationId})}"
+         th:remove="tag"></div>
+
+    <div th:unless="${model.internal}"
+         th:include="fragments/layout :: header-sub"
+         th:with="linkTitle='Eligibility',linkClass='link-back',linkUrl=@{/project/{projectId}/partner-organisation/{orgId}/finance-checks/eligibility(projectId=${model.projectId},orgId=${model.organisationId})}"
+         th:remove="tag"></div>
+
+    <div class="page-title">
+        <th:block
+            th:insert="fragments/elements :: project-title (projectId=${model.projectId}, projectName=${model.projectName})"/>
+        <h1 class="heading-xlarge">Changes to finances</h1>
+    </div>
+
+    <hr/>
+
+    <th:block th:fragment="summary" th:with="summaryModel=${model.financeCheckEligibility}">
+        <h2 class="heading-medium">Project finances</h2>
+        <div class="table-overflow">
+            <table class="table-overview">
+                <thead>
+                <tr>
+                    <th scope="col">Total costs</th>
+                    <th scope="col" class="numeric">% Grant</th>
+                    <th scope="col" class="numeric">Funding sought</th>
+                    <th scope="col" class="numeric">Other public sector funding</th>
+                    <th scope="col" class="numeric">Contribution to project</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="numeric">&pound;
+                            <th:block th:text="${#numbers.formatInteger(summaryModel.totalCost,1,'COMMA')}"/>
+                        </td>
+                        <td class="numeric" th:text="${#numbers.formatInteger(summaryModel.percentageGrant,1,'NONE')+'%'}"/>
+                        <td class="numeric">&pound;
+                            <th:block th:text="${#numbers.formatInteger(summaryModel.fundingSought,1,'COMMA')}"/>
+                        </td>
+                        <td class="numeric">&pound;
+                            <th:block th:text="${#numbers.formatInteger(summaryModel.otherPublicSectorFunding,1,'COMMA')}"/>
+                        </td>
+                        <td class="numeric">&pound;
+                            <th:block th:text="${#numbers.formatInteger(summaryModel.contributionToProject,1,'COMMA')}"/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </th:block>
+
+    <th:block th:fragment="section_changes" th:with="sectionDiffs=${model.sectionDifferences}">
+        <h2 class="heading-medium">Section changes</h2>
+        <div class="table-overflow">
+            <table class="table-overview">
+                <thead>
+                <tr>
+                    <th:block th:each="rowType : ${sectionDiffs.keySet()}">
+                        <th th:unless="${#strings.isEmpty(rowType.name)}" scope="col" class="numeric"
+                            th:text="${rowType.name}"></th>
+                    </th:block>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th:block th:each="rowType : ${sectionDiffs.keySet()}">
+                        <td th:unless="${#strings.isEmpty(rowType.name)}" class="numeric">&pound;
+                            <th:block th:text="${#numbers.formatInteger(sectionDiffs.get(rowType),1,'COMMA')}"/>
+                        </td>
+                    </th:block>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </th:block>
+
+    <th:block th:fragment="row_changes">
+        <h2 class="heading-medium">Changes from submitted finances</h2>
+        <div class="table-overflow">
+            <table class="project-changes">
+                <thead>
+                <tr>
+                    <th scope="col" style="width: 15%">Action</th>
+                    <th scope="col" style="width: 15%">Section</th>
+                    <th scope="col" style="width: 15%">Detail</th>
+                    <th scope="col" style="width: 20%">Submitted</th>
+                    <th scope="col" style="width: 20%">Updated</th>
+                    <th scope="col" style="width: 15%" class="numeric">Cost</th>
+                </tr>
+                </thead>
+                <tfoot>
+                <tr>
+                    <th>Overall</th>
+                    <th colspan="5" class="numeric" th:text="${#numbers.formatInteger(model.getDifferenceInTotalCostsAfterChanges(),1,'COMMA')}"></th>
+                </tr>
+                </tfoot>
+                <tbody>
+
+                <th:block th:each="rowType : ${model.changes.keySet()}">
+                    <th:block th:each="changePairLst : ${model.changes.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).getByTypeName(rowType.type))}">
+                        <th:block th:each="changePair : ${changePairLst}" th:with="typeOfChange=${changePair.typeOfChange.typeName},rowTypeName=${rowType.name}">
+                            <th:block th:insert="project/financecheck/fragments/changes :: ${rowType.type}"/>
+                        </th:block>
+                    </th:block>
+                </th:block>
+
+                </tbody>
+            </table>
+        </div>
+    </th:block>
+
+    <hr/>
+
+    <a th:if="${model.internal}" class="button button-secondary" th:href="@{/project/{projectId}/finance-check/organisation/{orgId}/eligibility(projectId=${model.projectId},orgId=${model.organisationId})}">Return to eligibility</a>
+    <a th:unless="${model.internal}" class="button button-secondary" th:href="@{/project/{projectId}/partner-organisation/{orgId}/finance-checks/eligibility(projectId=${model.projectId},orgId=${model.organisationId})}">Return to eligibility</a>
+
+    <th:block th:insert="fragments/layout :: main-content-end"/>
+</main>
+
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
+
+</body>
+</html>

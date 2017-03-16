@@ -27,6 +27,9 @@ public interface ApplicationFinanceHandler {
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ_RESEARCH_PARTICIPATION_PERCENTAGE')")
     BigDecimal getResearchParticipationPercentage(@P("applicationId")final Long applicationId);
 
+    @PreAuthorize("hasPermission(#projectId, 'READ_OVERVIEW')")
+    BigDecimal getResearchParticipationPercentageFromProject(@P("projectId")final Long projectId);
+
     @PostAuthorize("hasPermission(returnObject, 'READ_PROJECT_FINANCE')")
     ProjectFinanceResource getProjectOrganisationFinances(ProjectFinanceResourceId projectFinanceResourceId);
 
