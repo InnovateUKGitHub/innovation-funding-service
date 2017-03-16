@@ -9,11 +9,11 @@ import org.innovateuk.ifs.application.service.AssessorFeedbackService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.form.ApplicationSummaryQueryForm;
 import org.innovateuk.ifs.competition.form.FundingDecisionForm;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.ApplicationSummarySortFieldService;
 import org.innovateuk.ifs.management.controller.CompetitionManagementApplicationController.ApplicationOverviewOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
@@ -31,6 +31,7 @@ import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
  */
 @Controller
 @RequestMapping("/competition/{competitionId}/funding")
+@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public class CompetitionManagementFundingController {
 
     private static final int PAGE_SIZE = 20;
@@ -54,7 +55,6 @@ public class CompetitionManagementFundingController {
     @Qualifier("mvcValidator")
     private Validator validator;
 
-
     @RequestMapping(method = {RequestMethod.GET, RequestMethod.POST})
     public String applications(Model model,
                                @PathVariable("competitionId") Long competitionId,
@@ -73,9 +73,8 @@ public class CompetitionManagementFundingController {
 
         switch (competitionSummary.getCompetitionStatus()) {
             case FUNDERS_PANEL:
-                return fundersPanelCompetition(model, competitionId, competitionSummary, fundingDecisionForm, queryForm, bindingResult);
             case ASSESSOR_FEEDBACK:
-                return assessorFeedbackCompetition(model, competitionSummary, queryForm, bindingResult);
+                return fundersPanelCompetition(model, competitionId, competitionSummary, fundingDecisionForm, queryForm, bindingResult);
             default:
                 return "redirect:/login";
         }
@@ -95,47 +94,6 @@ public class CompetitionManagementFundingController {
         populateSubmittedModel(model, competitionSummary, queryForm);
 
         return "comp-mgt-funders-panel";
-    }
-
-    private String assessorFeedbackCompetition(Model model, CompetitionSummaryResource competitionSummary, ApplicationSummaryQueryForm queryForm, BindingResult bindingResult) {
-        populateModelBasedOnAssessorTabState(model, competitionSummary, queryForm, bindingResult);
-        return "comp-mgt-assessor-feedback";
-    }
-
-    private void populateModelBasedOnAssessorTabState(Model model, CompetitionSummaryResource competitionSummary, ApplicationSummaryQueryForm queryForm, BindingResult bindingResult) {
-        if ("overview".equals(queryForm.getTab())) {
-            populateOverviewModel(model, competitionSummary);
-        } else if ("notSubmitted".equals(queryForm.getTab())) {
-            populateNotSubmittedModel(model, competitionSummary, queryForm);
-        } else {
-            boolean canPublishAssessorFeedback = assessorFeedbackService.feedbackUploaded(competitionSummary.getCompetitionId());
-            model.addAttribute("canPublishAssessorFeedback", canPublishAssessorFeedback);
-            populateSubmittedModel(model, competitionSummary, queryForm);
-        }
-    }
-
-    private void populateNotSubmittedModel(Model model, CompetitionSummaryResource competitionSummary, ApplicationSummaryQueryForm queryForm) {
-        String sort = applicationSummarySortFieldService.sortFieldForNotSubmittedApplications(queryForm.getSort());
-        ApplicationSummaryPageResource results = applicationSummaryService.getNotSubmittedApplicationSummariesByCompetitionId(
-                competitionSummary.getCompetitionId(),
-                sort, queryForm.getPage() - 1,
-                PAGE_SIZE,
-                null);
-        model.addAttribute("results", results);
-        model.addAttribute("activeTab", "notSubmitted");
-        model.addAttribute("activeSortField", sort);
-    }
-
-    private void populateOverviewModel(Model model, CompetitionSummaryResource competitionSummary) {
-        model.addAttribute("applicationsRequiringFeedback", applicationSummaryService.getApplicationsRequiringFeedbackCountByCompetitionId(competitionSummary.getCompetitionId()));
-
-        CompetitionResource competition = competitionService.getById(competitionSummary.getCompetitionId());
-
-        model.addAttribute("assessmentEndDate", competition.getFundersPanelDate());
-        model.addAttribute("assessmentDaysLeft", competition.getAssessmentDaysLeft());
-        model.addAttribute("assessmentDaysLeftPercentage", competition.getAssessmentDaysLeftPercentage());
-
-        model.addAttribute("activeTab", "overview");
     }
 
     private void populateSubmittedModel(Model model, CompetitionSummaryResource competitionSummary, ApplicationSummaryQueryForm queryForm) {
