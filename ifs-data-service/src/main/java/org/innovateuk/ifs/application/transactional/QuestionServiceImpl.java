@@ -111,14 +111,14 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         return find(application(applicationId)).andOnSuccess(application -> {
 
             List<Question> questions = questionRepository.findByCompetitionId(application.getCompetition().getId());
+            List<QuestionStatus> questionStatuses = questionStatusRepository.findByApplicationId(applicationId);
+
             Set<Long> markedAsCompleteQuestions = questions
                     .stream()
-                    .filter(q -> q.isMarkAsCompletedEnabled() && questionStatusRepository.findByQuestionIdAndApplicationId(q.getId(), applicationId)
-                            .stream()
-                            .anyMatch(qs ->
-                                    (q.hasMultipleStatuses() && isMarkedAsCompleteForOrganisation(qs, organisationId).orElse(Boolean.FALSE)) ||
-                                            (!q.hasMultipleStatuses() && isMarkedAsCompleteForSingleStatus(qs).orElse(Boolean.FALSE))))
-                    .map(Question::getId).collect(Collectors.toSet());
+                    .filter(q -> q.isMarkAsCompletedEnabled() && simpleAnyMatch(questionStatuses, qs -> {
+                        return q.hasMultipleStatuses() && isMarkedAsCompleteForOrganisation(qs, organisationId).orElse(Boolean.FALSE) ||
+                                (!q.hasMultipleStatuses() && isMarkedAsCompleteForSingleStatus(qs).orElse(Boolean.FALSE));
+                    })).map(Question::getId).collect(Collectors.toSet());
             return serviceSuccess(markedAsCompleteQuestions);
         });
     }

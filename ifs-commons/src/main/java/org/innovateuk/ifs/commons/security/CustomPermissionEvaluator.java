@@ -272,7 +272,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         Long currentAverage = averageAndCount.getLeft();
         Long currentCount = averageAndCount.getRight();
         long newCount = currentCount + 1;
-        long totalSoFar = ((currentAverage * currentCount) + time);
+        long totalSoFar = (currentAverage * currentCount) + time;
 
         final Pair<Long, Long> newAverageAndCount;
 
