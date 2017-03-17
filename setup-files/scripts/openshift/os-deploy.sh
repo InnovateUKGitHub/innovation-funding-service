@@ -47,7 +47,15 @@ fi
 
 echo "Deploying the $PROJECT Openshift project"
 
+function convertFileToBlock() {
+   cat $1 | tail -n +2 | sed '$ d' | tr -d '\r' | tr '\n' ' ' |  rev | cut -c 2- | rev
+}
+
 function tailorAppInstance() {
+    if [ -z "$SSLCERTFILE" ]; then echo "Set SSLCERTFILE, SSLCACERTFILE, and SSLKEYFILE environment variables"; exit -1; fi
+    sed -i.bak $"s#<<SSLCERT>>#$(convertFileToBlock $SSLCERTFILE)#g" os-files-tmp/shib/*.yml
+    sed -i.bak $"s#<<SSLCACERT>>#$(convertFileToBlock $SSLCACERTFILE)#g" os-files-tmp/shib/*.yml
+    sed -i.bak $"s#<<SSLKEY>>#$(convertFileToBlock $SSLKEYFILE)#g" os-files-tmp/shib/*.yml
     sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/*.yml
     sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/shib/*.yml
     sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/shib/named-envs/*.yml
