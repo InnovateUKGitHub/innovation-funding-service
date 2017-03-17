@@ -16,6 +16,7 @@ import org.innovateuk.ifs.management.model.InviteAssessorsInviteModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsOverviewModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.*;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -600,7 +601,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         InviteNewAssessorsForm returnedForm = (InviteNewAssessorsForm) result.getModelAndView().getModel().get("form");
         BindingResult bindingResult = returnedForm.getBindingResult();
 
-        assertEquals("Please select an innovation area.", bindingResult.getFieldError("selectedInnovationArea").getDefaultMessage());
+        assertEquals("Please enter an innovation sector and area.", bindingResult.getFieldError("selectedInnovationArea").getDefaultMessage());
 
         InOrder inOrder = inOrder(competitionInviteRestService, categoryServiceMock);
         inOrder.verify(competitionInviteRestService).getCreatedInvites(competition.getId(), page);

@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
  */
 public class UpcomingCompetitionViewModel {
 
+    private long competitionId;
     private String competitionName;
     private String competitionDescription;
     private LocalDateTime assessmentPeriodDateFrom;
@@ -19,14 +20,18 @@ public class UpcomingCompetitionViewModel {
     private LocalDateTime assessorBriefingDate;
     private BigDecimal assessorPay;
 
-
     public UpcomingCompetitionViewModel(CompetitionResource competitionResource) {
+        this.competitionId = competitionResource.getId();
         this.competitionName = competitionResource.getName();
         this.competitionDescription = competitionResource.getDescription();
         this.assessmentPeriodDateFrom = competitionResource.getAssessorAcceptsDate();
         this.assessmentPeriodDateTo = competitionResource.getAssessorDeadlineDate();
         this.assessorPay = competitionResource.getAssessorPay();
         this.assessorBriefingDate = competitionResource.getAssessorBriefingDate();
+    }
+
+    public long getCompetitionId() {
+        return competitionId;
     }
 
     public String getCompetitionName() {
@@ -90,6 +95,7 @@ public class UpcomingCompetitionViewModel {
         UpcomingCompetitionViewModel that = (UpcomingCompetitionViewModel) o;
 
         return new EqualsBuilder()
+                .append(competitionId, that.competitionId)
                 .append(competitionName, that.competitionName)
                 .append(competitionDescription, that.competitionDescription)
                 .append(assessmentPeriodDateFrom, that.assessmentPeriodDateFrom)
@@ -102,6 +108,7 @@ public class UpcomingCompetitionViewModel {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .append(competitionId)
                 .append(competitionName)
                 .append(competitionDescription)
                 .append(assessmentPeriodDateFrom)
