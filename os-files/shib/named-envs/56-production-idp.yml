@@ -42,7 +42,7 @@ items:
           - name: LDAPBINDDN
             value: "cn=admin,dc=int,dc=g2g3digital,dc=net"
           - name: LDAPBINDDNCRED
-            value: "weizeisoNg2Oo"
+            value: "<<LDAP-PASSWORD>>"
           - name: LDAPUSERFILTER
             value: "(&(mail={user})(!(employeeType=inactive)))"
           - name: LDAPRURL
@@ -52,7 +52,7 @@ items:
           - name: LDAPRBINDDN
             value: "cn=admin,dc=int,dc=g2g3digital,dc=net"
           - name: LDAPRBINDDNCRED
-            value: "weizeisoNg2Oo"
+            value: "<<LDAP-PASSWORD>>"
           - name: LDAPRUSESTARTTLS
             value: "false"
           - name: LDAPRTRUSTCERT

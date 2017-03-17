@@ -34,7 +34,7 @@ items:
           - name: HTTPPORT
             value: "9080"
           - name: LDAPURL
-            value: "ldap://oldap.org.iuk.local:389"
+            value: "ldap://oldap5.demo.org.iuk.local:389"
           - name: LDAPUSESTARTTLS
             value: "false"
           - name: LDAPBASEDN
@@ -42,17 +42,17 @@ items:
           - name: LDAPBINDDN
             value: "cn=admin,dc=int,dc=g2g3digital,dc=net"
           - name: LDAPBINDDNCRED
-            value: "weizeisoNg2Oo"
+            value: "<<LDAP-PASSWORD>>"
           - name: LDAPUSERFILTER
             value: "(&(mail={user})(!(employeeType=inactive)))"
           - name: LDAPRURL
-            value: "ldap://oldap.org.iuk.local:389"
+            value: "ldap://oldap5.demo.org.iuk.local:389"
           - name: LDAPRBASEDN
             value: "dc=int,dc=g2g3digital,dc=net"
           - name: LDAPRBINDDN
             value: "cn=admin,dc=int,dc=g2g3digital,dc=net"
           - name: LDAPRBINDDNCRED
-            value: "weizeisoNg2Oo"
+            value: "<<LDAP-PASSWORD>>"
           - name: LDAPRUSESTARTTLS
             value: "false"
           - name: LDAPRTRUSTCERT

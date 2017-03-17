@@ -30,6 +30,8 @@ else
 fi
 
 SVC_ACCOUNT_TOKEN=${bamboo_openshift_svc_account_token}
+LDAP_PASSWORD=${bamboo_ldap_password}
+
 SVC_ACCOUNT_CLAUSE="--namespace=${PROJECT} --token=${SVC_ACCOUNT_TOKEN} --server=https://console.prod.ifs-test-clusters.com:443 --insecure-skip-tls-verify=true"
 
 ROUTE_DOMAIN=apps.$HOST
@@ -55,6 +57,8 @@ function tailorAppInstance() {
     if [[ ${TARGET} == "production" || ${TARGET} == "demo" || ${TARGET} == "uat" ]]
     then
         sed -i.bak "s/claimName: file-upload-claim/claimName: ${TARGET}-file-upload-claim/g" os-files-tmp/*.yml
+        sed -i.bak "s/<<LDAP-PASSWORD>>/${LDAP_PASSWORD}/g" os-files-tmp/shib/named-envs/*.yml
+
     fi
 
     if [[ ${TARGET} == "production" || ${TARGET} == "uat" ]]
