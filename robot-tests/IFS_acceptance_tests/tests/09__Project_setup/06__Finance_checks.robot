@@ -1185,7 +1185,7 @@ the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project se
 
 the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     # TODO once INFUND-8624 is fixed
-    the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/funding
+     the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/funding
     the user moves focus to the element     jQuery=label[for="app-row-1"]
     the user selects the checkbox       app-row-1
     the user moves focus to the element     jQuery=label[for="app-row-2"]
@@ -1201,6 +1201,14 @@ the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project se
     the user enters text to a text field     id=subject   testEmail
     Execute Javascript       jQuery(id="message").append("Successfulmessage")
     the user clicks the button/link     jQuery=button:contains("Send email to all applicants")
+    Connect to Database    @{database}
+    #execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='2017-01-20 00:00:00' WHERE `competition_id`='${la_fromage_overview}' and type = 'NOTIFICATIONS';
+    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='2017-01-20 00:00:00' WHERE `competition_id`='5' and type = 'ASSESSOR_DEADLINE';
+    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='2017-01-21 00:00:00' WHERE `competition_id`='5' and type = 'ASSESSMENT_PANEL';
+    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='2017-01-22 00:00:00' WHERE `competition_id`='5' and type = 'PANEL_DATE';
+    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='2017-01-23 00:00:00' WHERE `competition_id`='5' and type = 'FUNDERS_PANEL';
+    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='2017-01-24 00:00:00' WHERE `competition_id`='5' and type = 'NOTIFICATIONS';
+    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='2017-01-25 00:00:00' WHERE `competition_id`='5' and type = 'RELEASE_FEEDBACK';
     #the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/funding
     #the user should see the text in the page    Assessor Feedback
     #the user can see the option to upload a file on the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/application/${FUNDERS_PANEL_APPLICATION_1}
@@ -1599,3 +1607,4 @@ Project finance user amends other costs details in eligibility for lead
 the user goes back to the previous page ignoring form submission
     the user goes back to the previous page
     the user reloads the page
+
