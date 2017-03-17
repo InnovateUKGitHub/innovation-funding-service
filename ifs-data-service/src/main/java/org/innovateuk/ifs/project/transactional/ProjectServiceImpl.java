@@ -934,6 +934,12 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     private ServiceResult<ProjectResource> createProjectFromApplicationId(final Long applicationId) {
 
+        // never allow another project to be created for the same application
+        ServiceResult<ProjectResource> existingProjectResult = getByApplicationId(applicationId);
+        if (existingProjectResult != null && existingProjectResult.isSuccess()) {
+            return existingProjectResult;
+        }
+
         return getApplication(applicationId).andOnSuccess(application -> {
 
             Project project = new Project();

@@ -295,6 +295,32 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
+    public void testCreateProjectFromApplicationAlreadyExists() {
+
+        ProjectResource existingProjectResource = newProjectResource().build();
+        Project existingProject = newProject().withApplication(application).build();
+
+        when(projectRepositoryMock.findOneByApplicationId(applicationId)).thenReturn(existingProject);
+        when(projectMapperMock.mapToResource(existingProject)).thenReturn(existingProjectResource);
+
+        ServiceResult<ProjectResource> project = service.createProjectFromApplication(applicationId);
+        assertTrue(project.isSuccess());
+        assertEquals(existingProjectResource, project.getSuccessObject());
+
+        verify(projectRepositoryMock).findOneByApplicationId(applicationId);
+        verify(projectMapperMock).mapToResource(existingProject);
+
+        verify(costCategoryTypeStrategyMock, never()).getOrCreateCostCategoryTypeForSpendProfile(any(Long.class), any(Long.class));
+        verify(financeChecksGeneratorMock, never()).createMvpFinanceChecksFigures(any(Project.class), any(Organisation.class), any(CostCategoryType.class));
+        verify(financeChecksGeneratorMock, never()).createFinanceChecksFigures(any(Project.class), any(Organisation.class));
+        verify(projectDetailsWorkflowHandlerMock, never()).projectCreated(any(Project.class), any(ProjectUser.class));
+        verify(financeCheckWorkflowHandlerMock, never()).projectCreated(any(PartnerOrganisation.class), any(ProjectUser.class));
+        verify(golWorkflowHandlerMock, never()).projectCreated(any(Project.class), any(ProjectUser.class));
+        verify(projectWorkflowHandlerMock, never()).projectCreated(any(Project.class), any(ProjectUser.class));
+
+    }
+
+    @Test
     public void testInvalidProjectManagerProvided() {
 
         ServiceResult<Void> result = service.setProjectManager(projectId, otherUserId);
