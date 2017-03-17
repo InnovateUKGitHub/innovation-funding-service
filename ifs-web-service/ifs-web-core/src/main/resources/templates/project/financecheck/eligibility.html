@@ -84,11 +84,11 @@
         <section class="collapsible" th:each="subSection, subSectionstats : ${subSections.get(currentSectionId)}" th:if="${subSections !=null}">
             <h3>
                 <th:block th:text="${subSection.getName()}"/>
-            <span class="finance-total" th:attr="data-mirror='#section-total-'+${subSection.id}"></span>
-            <span class="finance-total" data-calculation-format="percentage" data-calculation-operations="/,*"
-                  th:attr="data-mirror='#section-percentage-'+${subSection.id},data-calculation-fields='100, #total-cost, #section-total-'+${subSection.id}"></span>
+                <span class="finance-total" th:attr="data-mirror='#section-total-'+${subSection.id}"></span>
+                <span class="finance-total" data-calculation-format="percentage" data-calculation-operations="/,*"
+                      th:attr="data-mirror='#section-percentage-'+${subSection.id},data-calculation-fields='100, #total-cost, #section-total-'+${subSection.id}"></span>
 
-            <span class="finance-total" th:if="${subSection.name == 'Overhead costs'}">(<span data-calculation-format="percentage" data-calculation-operations="/,*" data-calculation-fields="[data-current-overhead-total], #section-total-114,100"></span> of Labour)</span>
+                <span class="finance-total" th:if="${subSection.name == 'Overhead costs'}">(<span data-calculation-format="percentage" data-calculation-operations="/,*" data-calculation-fields="[data-current-overhead-total], [class~=labour-total] ,100"></span> of Labour)</span>
             </h3>
             <div class="collapsible-content"
                  th:with="viewmode=${summaryModel.isApproved()} ? 'approved' : (${param.section != null} ? (${param.section[0]} == ${subSection.id} ? 'edit' : 'readonly') : 'readonly')">
