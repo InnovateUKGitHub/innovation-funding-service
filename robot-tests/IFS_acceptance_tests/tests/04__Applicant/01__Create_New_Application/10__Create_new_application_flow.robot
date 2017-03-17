@@ -54,7 +54,7 @@ Non registered users CH route (email step)
     And the guest user inserts user email & password    ${test_mailbox_one}+${unique_email_number}@gmail.com    Passw0rd123
     And the guest user clicks the log-in button
     Then the user should see the text in the page    Your dashboard
-    And the user clicks the button/link    link=${OPEN_COMPETITION_LINK}
+    And the user clicks the button/link    link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
     And the user clicks the button/link    jQuery=a:contains("Begin application")
     And the user should see the text in the page    Application overview
 
@@ -104,7 +104,7 @@ Non registered users non CH route (email step)
     And the guest user inserts user email & password    ${test_mailbox_one}+2@gmail.com    Passw0rd123
     And the guest user clicks the log-in button
     Then the user should see the text in the page    Your dashboard
-    And the user clicks the button/link    link=${OPEN_COMPETITION_LINK}
+    And the user clicks the button/link    link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
     And the user clicks the button/link    jQuery=a:contains("Begin application")
     And the user should see the text in the page    Application overview
 
@@ -166,7 +166,7 @@ the user clicks the Not on company house link
     the user clicks the button/link    jQuery=.button:contains("Continue")
 
 the user edits the competition title
-    the user clicks the button/link    link=${OPEN_COMPETITION_LINK}
+    the user clicks the button/link    link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user should see the element    link=Application details
     the user clicks the button/link    link=Application details
     The user enters text to a text field    id=application_details-title    ${test_title}

@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.populator;
 
-import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.viewmodel.ApplicationTeamManagementApplicantRowViewModel;
@@ -82,7 +81,7 @@ public class ApplicationTeamManagementModelPopulator {
                 .map(InviteOrganisationResource::getInviteResources).orElse(emptyList());
 
         return new ApplicationTeamManagementViewModel(applicationResource.getId(),
-                applicationResource.getApplicationDisplayName(),
+                applicationResource.getName(),
                 organisationId,
                 ofNullable(inviteOrganisationResource).map(InviteOrganisationResource::getId).orElse(null),
                 organisationName,
@@ -97,7 +96,7 @@ public class ApplicationTeamManagementModelPopulator {
                                                                                    boolean userLeadApplicant,
                                                                                    InviteOrganisationResource inviteOrganisationResource) {
         return new ApplicationTeamManagementViewModel(applicationResource.getId(),
-                applicationResource.getApplicationDisplayName(),
+                applicationResource.getName(),
                 inviteOrganisationResource.getOrganisation(),
                 inviteOrganisationResource.getId(),
                 getOrganisationName(inviteOrganisationResource),
