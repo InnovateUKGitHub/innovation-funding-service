@@ -68,9 +68,6 @@ the assessor updates profile details
 the saved changes are visible
     the user should see the text in the page    Joy
     the user should see the text in the page    Archer
-    the user should see the text in the page    Male
-    the user should see the text in the page    White
-    the user should see the text in the page    Prefer not to say
     the user should see the text in the page    18549731414
 
 User opens the edit details form

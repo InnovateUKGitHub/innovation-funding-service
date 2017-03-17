@@ -39,7 +39,7 @@ public class AssessorProfileEditDetailsForm extends BaseBindingResultTarget {
     private Gender gender = Gender.NOT_STATED;
 
     @NotNull(message = "{validation.standard.ethnicity.selectionrequired}")
-    private EthnicityResource ethnicity = new EthnicityResource();
+    private EthnicityResource ethnicity;
 
     @NotNull(message = "{validation.standard.disability.selectionrequired}")
     private Disability disability = Disability.NOT_STATED;
