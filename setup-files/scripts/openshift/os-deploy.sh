@@ -54,8 +54,11 @@ function convertFileToBlock() {
 function tailorAppInstance() {
     if [ -z "$SSLCERTFILE" ]; then echo "Set SSLCERTFILE, SSLCACERTFILE, and SSLKEYFILE environment variables"; exit -1; fi
     sed -i.bak $"s#<<SSLCERT>>#$(convertFileToBlock $SSLCERTFILE)#g" os-files-tmp/shib/*.yml
+    sed -i.bak $"s#<<SSLCERT>>#$(convertFileToBlock $SSLCERTFILE)#g" os-files-tmp/shib/named-envs/*.yml
     sed -i.bak $"s#<<SSLCACERT>>#$(convertFileToBlock $SSLCACERTFILE)#g" os-files-tmp/shib/*.yml
+    sed -i.bak $"s#<<SSLCACERT>>#$(convertFileToBlock $SSLCACERTFILE)#g" os-files-tmp/shib/named-envs/*.yml
     sed -i.bak $"s#<<SSLKEY>>#$(convertFileToBlock $SSLKEYFILE)#g" os-files-tmp/shib/*.yml
+    sed -i.bak $"s#<<SSLKEY>>#$(convertFileToBlock $SSLKEYFILE)#g" os-files-tmp/shib/named-envs/*.yml
 
     sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/*.yml
     sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/shib/*.yml
