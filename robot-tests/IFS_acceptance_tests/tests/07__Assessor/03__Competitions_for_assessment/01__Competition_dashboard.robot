@@ -16,6 +16,8 @@ Documentation     INFUND-1188 As an assessor I want to be able to review my asse
 ...               INFUND-3725 As an Assessor I want to see the scores that I have given for applications I have completed assessing so that I can compare all the applications I am assessing.
 ...
 ...               INFUND-4797 Handle scenario where invitation to assess an application has been removed from this user before they have responded
+...
+...               INFUND-5494 An assessor CAN follow a link to the competition brief from the competition dashboard
 Suite Setup       Log in as user    email=felix.wilson@gmail.com    password=Passw0rd
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
@@ -49,6 +51,22 @@ Details of the competition are visible
     And the user should see the text in the page    Submit applications deadline
     And the user should see the text in the page    12:00am Thursday 12 January 2068
     And the user should see the text in the page    12:00am Saturday 28 January 2068
+
+Competition brief link can be seen
+    [Documentation]  INFUND-5494
+    [Tags]
+    Then the user should see the element    link=competition brief
+
+User can view the competition brief
+     [Documentation]  INFUND-5494
+     [Tags]
+     When the user clicks the button/link   link=competition brief
+     Then the user should not see an error in the page
+     And the user should see the text in the page   ${IN_ASSESSMENT_COMPETITION_NAME}
+     And the user should see the text in the page   Competition opens
+     And the user should see the text in the page   Competition closes
+     And the user should see the element    jQuery=.button:contains("Start or continue your application")
+     [Teardown]    the user goes back to the previous page
 
 Applications should have correct status and order
     [Documentation]    INFUND-6040
