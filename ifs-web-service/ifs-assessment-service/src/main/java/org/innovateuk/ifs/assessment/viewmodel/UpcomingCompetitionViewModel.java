@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  */
 public class UpcomingCompetitionViewModel {
 
-    private Long competitionId;
+    private long competitionId;
     private String competitionName;
     private String competitionDescription;
     private LocalDateTime assessmentPeriodDateFrom;
@@ -30,7 +30,7 @@ public class UpcomingCompetitionViewModel {
         this.assessorBriefingDate = competitionResource.getAssessorBriefingDate();
     }
 
-    public Long getCompetitionId() {
+    public long getCompetitionId() {
         return competitionId;
     }
 
