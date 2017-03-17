@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.profile.form;
 
 import org.hibernate.validator.constraints.NotEmpty;
+import org.innovateuk.ifs.user.resource.Disability;
+import org.innovateuk.ifs.user.resource.Gender;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -13,8 +15,6 @@ import javax.validation.constraints.Size;
 public class UserDetailsForm {
     private String email;
 
-    @NotEmpty(message = "{validation.standard.title.required}")
-    @Size(max = 5, message = "{validation.standard.title.length.max}")
     private String title;
 
     @NotEmpty(message = "{validation.standard.firstname.required}")
@@ -34,13 +34,13 @@ public class UserDetailsForm {
     private String lastName;
 
     @NotEmpty(message = "{validation.standard.gender.selectionrequired}")
-    private String gender;
+    private String gender = Gender.NOT_STATED.name();
 
     @NotEmpty(message = "{validation.standard.ethnicity.selectionrequired}")
-    private String ethnicity;
+    private String ethnicity = "7";
 
     @NotEmpty(message = "{validation.standard.disability.selectionrequired}")
-    private String disability;
+    private String disability = Disability.NOT_STATED.name();
 
     @NotEmpty(message = "{validation.standard.phonenumber.required}")
     @Size.List ({
@@ -81,10 +81,6 @@ public class UserDetailsForm {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getFirstName() {
         return firstName;
     }
@@ -105,24 +101,12 @@ public class UserDetailsForm {
         return gender;
     }
 
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
     public String getEthnicity() {
         return ethnicity;
     }
 
-    public void setEthnicity(String ethnicity) {
-        this.ethnicity = ethnicity;
-    }
-
     public String getDisability() {
         return disability;
-    }
-
-    public void setDisability(String disability) {
-        this.disability = disability;
     }
 
     public String getPhoneNumber() {
