@@ -3,6 +3,7 @@ package org.innovateuk.ifs.testdata.builders;
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.NotificationResource;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
@@ -185,7 +186,10 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 return Pair.of(application.getId(), decision);
             });
 
-            applicationFundingService.makeFundingDecision(data.getCompetition().getId(), pairsToMap(applicationIdAndDecisions)).
+            applicationFundingService.saveFundingDecisionData(data.getCompetition().getId(), pairsToMap(applicationIdAndDecisions)).
+                    getSuccessObjectOrThrowException();
+            NotificationResource notificationResource = new NotificationResource("Subject", "Body", pairsToMap(applicationIdAndDecisions));
+            applicationFundingService.notifyLeadApplicantsOfFundingDecisions(notificationResource).
                     getSuccessObjectOrThrowException();
 
             doAs(anyProjectFinanceUser(),
@@ -195,7 +199,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     }
 
     private UserResource anyProjectFinanceUser() {
-        List<User> projectFinanceUsers = userRepository.findByRoles_Name(UserRoleType.PROJECT_FINANCE.getName());
+        List<User> projectFinanceUsers = userRepository.findByRolesName(UserRoleType.PROJECT_FINANCE.getName());
         return retrieveUserById(projectFinanceUsers.get(0).getId());
     }
 

@@ -25,6 +25,7 @@ import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemResource
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -49,7 +50,7 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
     public void setup() {
         when(sectionContentViewModel.getSectionType()).thenReturn(PublicContentSectionType.SUMMARY);
         when(summaryViewModelPopulator.getType()).thenReturn(PublicContentSectionType.SUMMARY);
-        when(summaryViewModelPopulator.populate(any(PublicContentResource.class))).thenReturn(new SummaryViewModel());
+        when(summaryViewModelPopulator.populate(any(PublicContentResource.class), anyBoolean())).thenReturn(new SummaryViewModel());
         controller.setSectionPopulator(asList(summaryViewModelPopulator));
     }
 

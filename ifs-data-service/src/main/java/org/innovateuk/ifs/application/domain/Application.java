@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.application.domain;
 
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
+import org.innovateuk.ifs.category.domain.ApplicationInnovationAreaLink;
 import org.innovateuk.ifs.category.domain.ApplicationResearchCategoryLink;
+import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.file.domain.FileEntry;
@@ -76,6 +78,11 @@ public class Application implements ProcessActivity {
 
     @OneToMany(mappedBy = "application", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ApplicationResearchCategoryLink> researchCategories = new HashSet<>();
+
+    @OneToOne(mappedBy = "application", cascade = CascadeType.ALL, orphanRemoval = true)
+    private ApplicationInnovationAreaLink innovationArea;
+
+    private boolean noInnovationAreaApplicable;
 
     private Boolean stateAidAgreed;
 
@@ -270,8 +277,8 @@ public class Application implements ProcessActivity {
         this.formInputResponses = formInputResponses;
     }
 
-    public void addFormInputResponse(FormInputResponse formInputResponse) {
-        Optional<FormInputResponse> existing = getFormInputResponseByFormInput(formInputResponse.getFormInput());
+    public void addFormInputResponse(FormInputResponse formInputResponse, ProcessRole processRole) {
+        Optional<FormInputResponse> existing = getFormInputResponseByFormInputAndProcessRole(formInputResponse.getFormInput(), processRole);
         if (existing.isPresent()) {
             existing.get().setFileEntry(formInputResponse.getFileEntry());
             existing.get().setUpdateDate(formInputResponse.getUpdateDate());
@@ -282,9 +289,17 @@ public class Application implements ProcessActivity {
         }
     }
 
-    public Optional<FormInputResponse> getFormInputResponseByFormInput(FormInput formInput) {
-        return formInputResponses.stream().filter(fir -> formInput.equals(fir.getFormInput())).findFirst();
+    public Optional<FormInputResponse> getFormInputResponseByFormInputAndProcessRole(FormInput formInput, ProcessRole processRole) {
+        if (formInput.getQuestion().getMultipleStatuses()) {
+            return formInputResponses.stream().filter(fir -> formInput.equals(fir.getFormInput())
+                    && fir.getUpdatedBy().getOrganisationId().equals(processRole.getOrganisationId())).findFirst();
+        } else {
+            return formInputResponses.stream().filter(fir -> formInput.equals(fir.getFormInput())).findFirst();
+        }
     }
+
+
+
 
     public BigDecimal getCompletion() {
         return completion;
@@ -309,5 +324,38 @@ public class Application implements ProcessActivity {
     public void addResearchCategory(ResearchCategory researchCategory) {
         researchCategories.clear();
         researchCategories.add(new ApplicationResearchCategoryLink(this, researchCategory));
+    }
+
+    public InnovationArea getInnovationArea() {
+        if(innovationArea!=null) {
+            return innovationArea.getCategory();
+        }
+
+        return null;
+    }
+
+    public void setInnovationArea(InnovationArea newInnovationArea) {
+        if (newInnovationArea == null) {
+            innovationArea = null;
+        }
+        else {
+            if (this.noInnovationAreaApplicable) {
+                throw new IllegalStateException("InnovationArea not reconcilable with current value of noInnovationAreaApplies.");
+            }
+            innovationArea = new ApplicationInnovationAreaLink(this, newInnovationArea);
+        }
+    }
+
+    public boolean getNoInnovationAreaApplicable()
+    {
+        return noInnovationAreaApplicable;
+    }
+
+    public void setNoInnovationAreaApplicable(boolean noInnovationAreaApplicable) {
+        if (noInnovationAreaApplicable && innovationArea != null) {
+            throw new IllegalStateException("noInnovationAreaApplicable cannot be set while an innovationArea is not null.");
+        }
+
+        this.noInnovationAreaApplicable = noInnovationAreaApplicable;
     }
 }

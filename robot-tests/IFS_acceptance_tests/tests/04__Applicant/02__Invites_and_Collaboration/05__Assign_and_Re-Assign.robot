@@ -60,7 +60,7 @@ The question is enabled for the assignee
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link= Assign test  #Application Title
     Then the user should see the browser notification    Stuart ANDERSON has assigned a question to you
-    And the question should contain the correct status/name    jQuery=#section-1 .section:nth-child(3) .assign-container    You
+    And the user should see the element  jQuery=li:contains("Public description") > .action-required
     And the user clicks the button/link    link= Public description
     And the user should see the element    css=#form-input-12 .editor
     And the user should not see the element    css=#form-input-12 .readonly
@@ -72,8 +72,8 @@ Collaborator should see the terms and conditions from the overview page
     [Tags]    Email
     Given the user clicks the button/link    link=Application Overview
     When The user clicks the button/link    link= view conditions of grant offer
-    Then the user should see the text in the page    Terms and Conditions of an Innovate UK Grant Award
-    And the user should see the text in the page    Entire Agreement
+    Then the user should see the text in the page    Terms and conditions of an Innovate UK grant award
+    And the user should see the text in the page    Entire agreement
 
 Collaborator should see the review button instead of the review and submit
     [Documentation]    INFUND-2451
@@ -155,7 +155,7 @@ The question should be reassigned to the lead applicant
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link= Assign test
     Then the user should see the browser notification    Dennis Bergkamp has assigned a question to you
-    And the question should contain the correct status/name    jQuery=#section-1 .section:nth-child(3) .assign-container    You
+    And the question should contain the correct status/name    jQuery=#section-1 li:nth-child(3) .assign-container    you
     And the user clicks the button/link    link= Public description
     And the user should see the element    css=#form-input-12 .editor
     And the user should not see the element    css=#form-input-12 .readonly
@@ -197,7 +197,7 @@ Lead selects Research Area
     # The following line has been commented  as 'alert message' is commented in application details section html due to upcoming functionality
     #Then the user should see the element      jQuery=h2:contains("Research category determines funding")
     Then the user should see the element       jQuery=legend:contains("Research category")
-    And the user selects the radio button     application.researchCategoryId   financePosition-cat-35
+    And the user fills out innovation area and research category
 
 Lead marks finances as complete
     [Documentation]    INFUND-3016
@@ -211,7 +211,7 @@ Lead marks finances as complete
     Then the user should see the element   link=Your project costs
     And the user should see the element    link=Your organisation
     And the user should see the element    jQuery=h3:contains("Your funding")
-    When the user fills in the project costs
+    When the user fills in the project costs     Assign test
     And the user navigates to Your-finances page  Assign test
     Then the user fills in the organisation information      Assign test
     And the user fills in the funding information  Assign test
@@ -254,9 +254,11 @@ Lead applicant should be able to remove the registered partner
     [Setup]    log in as a different user    ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
     Given the user clicks the button/link    link= Assign test
     And the user clicks the button/link    link=view and add participants to your application
-    When the user clicks the button/link    jQuery=div:nth-child(6) a:contains("Remove")
-    And the user clicks the button/link    jQuery=button:contains("Remove")
+    And the user clicks the button/link    jQuery=.table-overflow:contains("Dennis") ~ p a
+    When the user clicks the button/link    jQuery=button:contains("Remove")
     Then the user should not see the element    link=Dennis Bergkamp
+    #And the user clicks the button/link    jQuery=a:contains("Update organisation")
+    And the user clicks the button/link    jQuery=button:contains("Update organisation")
     #The following steps check if the collaborator should not see the application in the dashboard page
     And log in as a different user  ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     And the user should not see the element    link= Assign test
@@ -275,7 +277,7 @@ the question should contain the correct status/name
     Element Should Contain    ${ELEMENT}    ${STATUS}
 
 the collaborator is able to edit the finances
-    the user fills in the project costs
+    the user fills in the project costs     Assign test
     the user navigates to Your-finances page    Assign test
     the user fills in the organisation information      Assign test
     the user fills in the funding information  Assign test
@@ -289,3 +291,12 @@ the applicant changes the name of the application
 Steve smith assigns a question to the collaborator
     the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
     When the applicant assigns the question to the collaborator  css=#form-input-12 .editor  test1233  Jessica Doe
+
+the user fills out innovation area and research category
+    # Often those labels need double click. Thus i made a separate keyword to looks more tidy
+    the user clicks the button/link    jQuery=button:contains(Change your innovation area)
+    the user clicks the button/link    jQuery=label[for="innovationAreaChoice-26"]
+    the user clicks the button/link    jQuery=label[for="innovationAreaChoice-26"]
+    the user clicks the button/link    jQuery=button:contains(Save)
+    the user clicks the button/link    jQuery=label[for="financePosition-cat-33"]
+    the user clicks the button/link    jQuery=label[for="financePosition-cat-33"]

@@ -1,16 +1,21 @@
 package org.innovateuk.ifs.management.model;
 
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
+import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.invite.resource.AvailableAssessorPageResource;
 import org.innovateuk.ifs.invite.resource.AvailableAssessorResource;
 import org.innovateuk.ifs.management.viewmodel.AvailableAssessorRowViewModel;
 import org.innovateuk.ifs.management.viewmodel.InviteAssessorsFindViewModel;
+import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
-import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * Build the model for the Invite assessors 'Find' view.
@@ -21,19 +26,30 @@ public class InviteAssessorsFindModelPopulator extends InviteAssessorsModelPopul
     @Autowired
     private CompetitionInviteRestService competitionInviteRestService;
 
-    @Override
-    public InviteAssessorsFindViewModel populateModel(CompetitionResource competition) {
+    @Autowired
+    private CategoryRestService categoryRestService;
+
+    public InviteAssessorsFindViewModel populateModel(CompetitionResource competition,
+                                                      int page,
+                                                      Optional<Long> innovationArea,
+                                                      String originQuery) {
         InviteAssessorsFindViewModel model = super.populateModel(competition);
-        model.setAssessors(getAssessors(competition));
+
+        List<InnovationAreaResource> innovationAreas = categoryRestService.getInnovationAreas()
+                .getSuccessObjectOrThrowException();
+
+        AvailableAssessorPageResource pageResource = competitionInviteRestService.getAvailableAssessors(competition.getId(), page, innovationArea)
+                .getSuccessObjectOrThrowException();
+
+        List<AvailableAssessorRowViewModel> assessors = simpleMap(pageResource.getContent(), this::getRowViewModel);
+
+        model.setInnovationAreaOptions(innovationAreas);
+        model.setAssessors(assessors);
+        model.setPagination(new PaginationViewModel(pageResource, originQuery));
+
         return model;
     }
 
-    private List<AvailableAssessorRowViewModel> getAssessors(CompetitionResource competition) {
-        return competitionInviteRestService.getAvailableAssessors(competition.getId()).getSuccessObjectOrThrowException()
-                .stream()
-                .map(this::getRowViewModel)
-                .collect(toList());
-    }
 
     private AvailableAssessorRowViewModel getRowViewModel(AvailableAssessorResource availableAssessorResource) {
         return new AvailableAssessorRowViewModel(
@@ -42,8 +58,8 @@ public class InviteAssessorsFindModelPopulator extends InviteAssessorsModelPopul
                 availableAssessorResource.getInnovationAreas(),
                 availableAssessorResource.isCompliant(),
                 availableAssessorResource.getEmail(),
-                availableAssessorResource.getBusinessType(),
-                availableAssessorResource.isAdded());
+                availableAssessorResource.getBusinessType()
+        );
     }
 
     @Override

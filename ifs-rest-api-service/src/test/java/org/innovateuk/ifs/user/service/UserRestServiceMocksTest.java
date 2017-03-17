@@ -12,7 +12,7 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.affiliationResourceListType;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.userListType;
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
-import static org.innovateuk.ifs.user.builder.ProfileContractResourceBuilder.newProfileContractResource;
+import static org.innovateuk.ifs.user.builder.ProfileAgreementResourceBuilder.newProfileAgreementResource;
 import static org.innovateuk.ifs.user.builder.ProfileSkillsEditResourceBuilder.newProfileSkillsEditResource;
 import static org.innovateuk.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
 import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
@@ -262,24 +262,24 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
     }
 
     @Test
-    public void getProfileContract() {
+    public void getProfileAgreement() {
         Long userId = 1L;
-        ProfileContractResource expected = newProfileContractResource().build();
+        ProfileAgreementResource expected = newProfileAgreementResource().build();
 
-        setupGetWithRestResultExpectations(format("%s/id/%s/getProfileContract", usersUrl, userId), ProfileContractResource.class, expected, OK);
+        setupGetWithRestResultExpectations(format("%s/id/%s/getProfileAgreement", usersUrl, userId), ProfileAgreementResource.class, expected, OK);
 
-        ProfileContractResource response = service.getProfileContract(userId).getSuccessObjectOrThrowException();
+        ProfileAgreementResource response = service.getProfileAgreement(userId).getSuccessObjectOrThrowException();
         assertEquals(expected, response);
     }
 
 
     @Test
-    public void updateProfileContract() {
+    public void updateProfileAgreement() {
         Long userId = 1L;
 
-        setupPutWithRestResultExpectations(format("%s/id/%s/updateProfileContract", usersUrl, userId), null, OK);
+        setupPutWithRestResultExpectations(format("%s/id/%s/updateProfileAgreement", usersUrl, userId), null, OK);
 
-        RestResult<Void> response = service.updateProfileContract(userId);
+        RestResult<Void> response = service.updateProfileAgreement(userId);
         assertTrue(response.isSuccess());
     }
 

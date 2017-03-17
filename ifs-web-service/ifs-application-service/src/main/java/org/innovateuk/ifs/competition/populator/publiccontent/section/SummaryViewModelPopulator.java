@@ -21,12 +21,12 @@ public class SummaryViewModelPopulator extends AbstractPublicContentGroupViewMod
     }
 
     @Override
-    protected void populateSection(SummaryViewModel model, PublicContentResource publicContentResource, PublicContentSectionResource section) {
+    protected void populateSection(SummaryViewModel model, PublicContentResource publicContentResource, PublicContentSectionResource section, Boolean nonIFS) {
         model.setDescription(publicContentResource.getSummary());
         model.setFundingType(publicContentResource.getFundingType().getDisplayName());
         model.setProjectSize(publicContentResource.getProjectSize());
 
-        super.populateSection(model, publicContentResource, section);
+        super.populateSection(model, publicContentResource, section, nonIFS);
     }
 
     @Override

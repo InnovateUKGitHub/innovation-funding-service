@@ -528,7 +528,7 @@ public class OrganisationCreationController {
 
             inviteRestService.getInviteByHash(cookieHash).andOnSuccess(
                     s ->
-                            inviteOrganisationRestService.findOne(s.getInviteOrganisation()).handleSuccessOrFailure(
+                            inviteOrganisationRestService.getByIdForAnonymousUserFlow(s.getInviteOrganisation()).handleSuccessOrFailure(
                                     f -> restFailure(HttpStatus.NOT_FOUND),
                                     i -> {
                                         if (i.getOrganisation() == null) {

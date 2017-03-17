@@ -62,7 +62,7 @@ Internal users can see Project Details not yet completed
     Then the user should not see the element       jQuery=#table-project-status tr:nth-child(1) td.status.ok a    #Check here that there is no Green-Check
     When the user clicks the button/link           jQuery=#table-project-status tr:nth-child(1) td:nth-child(2) a
     Then the user should see the text in the page  These project details were supplied by the lead partner on behalf of the project.
-    And the user should see the text in the page   Each partner must provide a finance contact. We will contact them with any queries around partner finances.
+    And the user should see the text in the page   Each partner must provide a finance contact. We will contact them with any finance queries.
     When the user should see the element           jQuery=#project-details
     Then the user should see the element           jQuery=#project-address:contains("Not yet completed")
     And the user should see the element            jQuery=#no-project-manager:contains("Not yet completed")
@@ -106,7 +106,7 @@ Non-lead partner can see the project setup page
     And the user should see the text in the page    The application ${PROJECT_SETUP_APPLICATION_1_TITLE} has been successful within the ${PROJECT_SETUP_COMPETITION_NAME} competition
     And the user should see the element    link=View application and feedback
     And the user clicks the button/link    link=View terms and conditions of grant offer
-    And the user should see the text in the page     Terms and Conditions of an Innovate UK Grant Award
+    And the user should see the text in the page     Terms and conditions of an Innovate UK grant award
     And the user goes back to the previous page
     And the user should see the text in the page    Project details
     And the user should see the text in the page    Monitoring Officer
@@ -151,7 +151,8 @@ Non-lead partner can see the application overview
     And the user should see the text in the page    Other documents
     When the user clicks the button/link    link=View application and feedback
     Then the user should see the text in the page    Congratulations, your application has been successful
-    And the user should see the text in the page    Application details
+    # And the user should see the text in the page    Application details
+    # Pending due to INFUND-7861
     And the user should not see an error in the page
 
 Lead partner can see the project setup page
@@ -192,13 +193,14 @@ Lead partner can see the application overview
     Given the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=View application and feedback
     Then the user should see the element    jQuery=.success-alert h2:contains("Congratulations, your application has been successful")
-    And the user should see the element     jQuery=h2:contains("Application details")
+    # And the user should see the element     jQuery=h2:contains("Application details")
+    # Pending due to INFUND-7861
     And the user should not see an error in the page
 
 Lead partner is able to see finances without an error
     [Documentation]  INFUND-7634
     [Tags]
-    Given the user clicks the button/link  jQuery=button:contains("Finances Summary")
+    Given the user clicks the button/link  jQuery=button:contains("Finances summaries")
     When the user clicks the button/link   link=Detailed Organisation Finances
     Then the user should not see an error in the page
     And the user should see the element    jQuery=h2:contains("Finance summary")
@@ -234,7 +236,7 @@ Lead partner can change the Start Date
     And Mouse Out    id=projectStartDate_year
     And wait for autosave
     When the user clicks the button/link    jQuery=.button:contains("Save")
-    Then The user redirects to the page    You are providing these details as the lead applicant on behalf of the overall project    Project details
+    Then The user redirects to the page    You are providing these details as the lead on behalf of the overall project    Project details
     And the user should see the text in the page    1 Jan ${nextyear}
     Then the matching status checkbox is updated    project-details    1    yes
     [Teardown]    the user changes the start date back again
@@ -305,7 +307,7 @@ Invited project manager registration flow
     And the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+invitedprojectmanager@gmail.com    Please verify your email address    Dear Bob Jones
     Then the user should see the text in the page    Account verified
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
-    And the guest user inserts user email & password    ${test_mailbox_one}+invitedprojectmanager@gmail.com    Passw0rd123
+    And the guest user inserts user email & password    ${test_mailbox_one}+invitedprojectmanager@gmail.com  ${correct_password}
     And the guest user clicks the log-in button
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_TITLE}
 
@@ -355,11 +357,11 @@ Lead partner can change the project address
     Then the user should see the element    css=#select-address-block
     And the user clicks the button/link    css=#select-address-block > button
     And the address fields should be filled
-    And the user clicks the button/link    jQuery=.button:contains("Save")
+    And the user clicks the button/link    jQuery=.button:contains("Save project address")
     And the user should see the address data
     When the user clicks the button/link    link=Project address
     And the user selects the radio button    addressType    REGISTERED
-    And the user clicks the button/link    jQuery=.button:contains("Save")
+    And the user clicks the button/link    jQuery=.button:contains("Save project address")
     Then the user should see the text in the page    1, Sheffield, S1 2ED
 
 Project details can be submitted with PM, project address and start date
@@ -568,7 +570,7 @@ Lead partner can see the status update when all Project details are submitted
     When the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element   jQuery=ul li.complete:nth-child(2)
     And the user should see the element    jQuery=ul li.require-action:nth-child(4)
-    And the user should see the element    jQuery=ul li.require-action:nth-child(7)
+    And the user should see the element    jQuery=ul li.waiting:nth-child(7)
     When the user clicks the button/link   link=status of my partners
     Then the user should see the element   id=table-project-status
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)

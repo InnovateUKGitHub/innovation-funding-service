@@ -20,6 +20,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -85,6 +86,11 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
     }
 
     @Override
+    public ServiceResult<List<FormInputResponseResource>> findResponseByApplicationIdAndQuestionId(long applicationId, long questionId) {
+        return serviceSuccess(formInputResponsesToResources(formInputResponseRepository.findByApplicationIdAndFormInputQuestionId(applicationId, questionId)));
+    }
+
+    @Override
     public ServiceResult<FormInputResponse> saveQuestionResponse(FormInputResponseCommand formInputResponseCommand) {
         long applicationId = formInputResponseCommand.getApplicationId();
         long formInputId = formInputResponseCommand.getFormInputId();
@@ -99,7 +105,7 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
                         response.setUpdatedBy(userAppRole);
                     }
                     response.setValue(htmlUnescapedValue);
-                    application.addFormInputResponse(response);
+                    application.addFormInputResponse(response, userAppRole);
                     applicationRepository.save(application);
                     return response;
                 })
@@ -119,7 +125,7 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
 
     private ServiceResult<FormInputResponse> getOrCreateResponse(Application application, FormInput formInput, ProcessRole userAppRole) {
 
-    	Optional<FormInputResponse> existingResponse = application.getFormInputResponseByFormInput(formInput);
+    	Optional<FormInputResponse> existingResponse = application.getFormInputResponseByFormInputAndProcessRole(formInput, userAppRole);
 
         return existingResponse != null && existingResponse.isPresent() ?
                 serviceSuccess(existingResponse.get()) :
@@ -137,4 +143,5 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
     private List<FormInputResponseResource> formInputResponsesToResources(List<FormInputResponse> filtered) {
         return simpleMap(filtered, formInputResponse -> formInputResponseMapper.mapToResource(formInputResponse));
     }
+
 }

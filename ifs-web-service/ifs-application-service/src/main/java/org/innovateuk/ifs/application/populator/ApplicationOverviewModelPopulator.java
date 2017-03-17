@@ -20,6 +20,7 @@ import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserService;
+import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
@@ -88,7 +89,7 @@ public class ApplicationOverviewModelPopulator {
         model.addAttribute("currentProject", projectResource);
         model.addAttribute("currentCompetition", competition);
         model.addAttribute("userOrganisation", userOrganisation.orElse(null));
-        model.addAttribute("completedQuestionsPercentage", application.getCompletion());
+        model.addAttribute("completedQuestionsPercentage", application.getCompletion() == null ? 0 : application.getCompletion().intValue());
 
         FileDetailsViewModel assessorFeedbackViewModel = getAssessorFeedbackViewModel(application);
         model.addAttribute("assessorFeedback", assessorFeedbackViewModel);
@@ -100,9 +101,8 @@ public class ApplicationOverviewModelPopulator {
         final List<SectionResource> parentSections = sectionService.filterParentSections(allSections);
         final List<QuestionResource> questions = questionService.findByCompetition(competition.getId());
 
-        final Map<Long, SectionResource> sections =
-            parentSections.stream().collect(Collectors.toMap(SectionResource::getId,
-                Function.identity()));
+        final SortedMap<Long, SectionResource> sections = CollectionFunctions.toSortedMap(parentSections, SectionResource::getId,
+                Function.identity());
 
         final Map<Long, List<SectionResource>>   subSections = parentSections.stream()
             .collect(Collectors.toMap(

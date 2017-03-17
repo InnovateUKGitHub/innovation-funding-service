@@ -35,12 +35,13 @@
               <div th:remove="tag" th:text="${#temporals.format(currentCompetition.endDate, 'EEEE d MMMM yyyy')}" />
             </dt>
           </dl>
-            <div th:include="fragments/elements :: progress-indicator" th:with="percentage=${completedQuestionsPercentage},size='medium'" class="extra-margin" />
+          <h2 class="heading-medium no-margin-bottom">Application progress</h2>
+          <div th:include="fragments/elements :: progress-indicator" th:with="percentage=${completedQuestionsPercentage},size='medium'" class="extra-margin" />
         </div>
         <div class="column-half">
             <ul class="list list-bullet">
-                <li><a th:href="'/application/'+${currentApplication.getId()}+'/contributors'">view and add participants to your application</a></li>
-                <li><a th:href="'/competition/'+${currentCompetition.id}+'/info/terms-and-conditions'">view conditions of grant offer</a></li>
+                <li><a th:href="@{/application/{applicationId}/team(applicationId=${currentApplication.id})}">view and add participants to your application</a></li>
+                <li><a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${currentCompetition.id})}">view conditions of grant offer</a></li>
             </ul>
         </div>
     </div>
@@ -59,39 +60,27 @@
             <section th:id="'section-'+${section.getId()}">
                 <h2 th:text="${section.name}" th:class="${iteration.index==0} ? 'bold-medium': 'heading-medium no-margin-bottom'"/>
                 <p th:text="${section.description}"></p>
-                <ul th:with="currentUser=${#authentication.getDetails()}" class="list-overview">
-                    <div th:if="${subSections.get(section.id).size() ==0}" th:remove="tag">
+                <ul th:with="currentUser=${#authentication.getDetails()}" class="task-list">
+                    <th:block th:if="${subSections.get(section.id).size() ==0}">
                         <div th:replace="application/single-section-details :: sectionDetails (question=${question}, questionAssignee=${questionAssignee}, questionAssignees=${questionAssignees}, responses=${responses}, currentUser=${currentUser}, userIsLeadApplicant=${userIsLeadApplicant}, leadApplicant=${leadApplicant}, section=${section}, currentApplication=${currentApplication})"></div>
-                    </div>
-                    <!--/* sections with children like the finance */-->
-                    <div th:unless="${subSections.get(section.id).size() ==0 }" th:remove="tag">
-                        <li class="grid-row" th:classappend="section" th:each="childSection : ${subSections.get(section.id)}">
-                            <div class="column-two-thirds">
+                    </th:block>
+                    <th:block th:unless="${subSections.get(section.id).size() ==0 }">
+                        <li th:each="childSection : ${subSections.get(section.id)}">
+                            <div class="task">
                                 <h3 class="heading-small">
                                     <a th:href="'/application/'+${currentApplication.getId()}+'/form/section/'+${childSection.getId()}"
                                        th:text="${childSection.getName()}" />
                                 </h3>
                             </div>
-                            <div th:if="${childSection.getId().equals(financeSectionId)}">
-                                <img class="section-status complete"
-                                     src="/images/field/field-done-right.png"
-                                     th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done-right.png')}"
-                                     width="30"
-                                     height="30"
-                                     th:alt="'The &quot;'+${childSection.getName()}+'&quot; section is marked as done'"
-                                     th:title="'The &quot;'+${childSection.getName()}+'&quot; section is marked as done'"
-                                     th:if="${userFinanceSectionCompleted}"/>
-                                <img class="section-status assigned"
-                                     src="/images/field/field-assigned-right.png"
-                                     th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-assigned-right.png')}"
-                                     width="30"
-                                     height="30"
-                                     th:alt="'The &quot;'+${childSection.getName()}+'&quot; section is assigned to you'"
-                                     th:title="'The &quot;'+${childSection.getName()}+'&quot; section is assigned to you'"
-                                     th:unless="${userFinanceSectionCompleted}"/>
-                            </div>
+                            <th:block th:if="${childSection.getId().equals(financeSectionId)}">
+                                <span th:unless="${userFinanceSectionCompleted}" class="action-required"><strong>Incomplete</strong></span>
+                                <div th:if="${userFinanceSectionCompleted}"
+                                     class="task-status-complete">
+                                    <span>Complete</span>
+                                </div>
+                            </th:block>
                         </li>
-                    </div>
+                    </th:block>
                 </ul>
             </section>
         </div>

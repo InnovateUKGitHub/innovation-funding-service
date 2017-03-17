@@ -1,0 +1,76 @@
+version: '2'
+services:
+
+  shib:
+    image: innovateuk/ifs-shib-sp:0.4.0
+    ports:
+      - "443:443"
+    environment:
+      - "SPHOST=ifs.local-dev"
+      - "IDPHOST=auth.local-dev:9443"
+      - "HTTPSPORT=443"
+      - "HTTPPORT=80"
+    networks:
+      ifs:
+        aliases:
+          - ifs.local-dev
+
+  idp:
+    image: innovateuk/ifs-shib-idp:0.4.1
+    ports:
+      - "9443:9443"
+    environment:
+      - "SPHOST=ifs.local-dev"
+      - "IDPHOST=auth.local-dev:9443"
+      - "HTTPSPORT=9443"
+      - "HTTPPORT=9080"
+    networks:
+      ifs:
+        aliases:
+          - auth.local-dev
+          - iuk-auth-localdev
+
+  ldap:
+    image: innovateuk/ifs-ldap:0.4.0
+    ports:
+      - "389:389"
+    environment:
+      - "LDAPPORT=389"
+    networks:
+      ifs:
+
+  application-svc:
+    image: innovateuk/application-service:@version@
+    networks:
+      - ifs
+
+  assessment-svc:
+    image: innovateuk/assessment-service:@version@
+    networks:
+      - ifs
+
+  competition-mgt-svc:
+    image: innovateuk/competition-management-service:@version@
+    networks:
+      - ifs
+
+  project-setup-mgt-svc:
+    image: innovateuk/project-setup-management-service:@version@
+    networks:
+      - ifs
+
+  project-setup-svc:
+    image: innovateuk/project-setup-service:@version@
+    networks:
+      - ifs
+
+  data-service:
+    image: innovateuk/data-service:@version@
+    networks:
+      ifs:
+        aliases:
+          - ifs-data-service
+
+networks:
+  ifs:
+    driver: bridge

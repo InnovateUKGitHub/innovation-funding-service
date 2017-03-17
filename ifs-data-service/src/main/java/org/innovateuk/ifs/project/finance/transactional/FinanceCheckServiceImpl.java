@@ -97,28 +97,6 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     private BigDecimal percentDivisor = new BigDecimal("100");
 
     @Override
-    public ServiceResult<Void> save(FinanceCheckResource financeCheckResource) {
-        return validate(financeCheckResource).andOnSuccess(() -> {
-            FinanceCheck toSave = mapToDomain(financeCheckResource);
-            financeCheckRepository.save(toSave);
-
-            return getCurrentlyLoggedInUser().
-                    andOnSuccess(user -> getPartnerOrganisation(toSave.getProject().getId(), toSave.getOrganisation().getId()).
-                            andOnSuccessReturn(partnerOrganisation -> financeCheckWorkflowHandler.financeCheckFiguresEdited(partnerOrganisation, user))).
-                    andOnSuccess(workflowResult -> workflowResult ? serviceSuccess() : serviceFailure(CommonFailureKeys.FINANCE_CHECKS_CANNOT_PROGRESS_WORKFLOW));
-        });
-    }
-
-    @Override
-    public ServiceResult<Void> approve(Long projectId, Long organisationId) {
-
-        return getCurrentlyLoggedInUser().andOnSuccess(currentUser ->
-                getPartnerOrganisation(projectId, organisationId).andOnSuccessReturn(partnerOrg ->
-                        financeCheckWorkflowHandler.approveFinanceCheckFigures(partnerOrg, currentUser)).
-                        andOnSuccess(workflowResult -> workflowResult ? serviceSuccess() : serviceFailure(FINANCE_CHECKS_CANNOT_PROGRESS_WORKFLOW)));
-    }
-
-    @Override
     public ServiceResult<FinanceCheckProcessResource> getFinanceCheckApprovalStatus(Long projectId, Long organisationId) {
         return getPartnerOrganisation(projectId, organisationId).andOnSuccess(this::getFinanceCheckApprovalStatus);
     }
@@ -145,6 +123,23 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         Competition competition = application.getCompetition();
         List<PartnerOrganisation> partnerOrganisations = partnerOrganisationRepository.findByProjectId(projectId);
         Optional<SpendProfile> spendProfile = spendProfileRepository.findOneByProjectIdAndOrganisationId(projectId, partnerOrganisations.get(0).getOrganisation().getId());
+        boolean financeChecksAllApproved = getFinanceCheckApprovalStatus(projectId);
+
+        FinanceCheckOverviewResource overviewResource = getFinanceCheckOverview(projectId).getSuccessObjectOrThrowException();
+
+        String spendProfileGeneratedBy = spendProfile.map(p -> p.getGeneratedBy().getName()).orElse(null);
+        LocalDate spendProfileGeneratedDate = spendProfile.map(p -> LocalDate.from(p.getGeneratedDate().toInstant().atOffset(ZoneOffset.UTC))).orElse(null);
+
+        return serviceSuccess(new FinanceCheckSummaryResource(overviewResource, competition.getId(), competition.getName(), spendProfile.isPresent(), getPartnerStatuses(partnerOrganisations,
+                projectId), financeChecksAllApproved, spendProfileGeneratedBy, spendProfileGeneratedDate));
+    }
+
+    @Override
+    public ServiceResult<FinanceCheckOverviewResource> getFinanceCheckOverview(Long projectId) {
+        Project project = projectRepository.findOne(projectId);
+        Application application = project.getApplication();
+        Competition competition = application.getCompetition();
+
         List<ProjectFinanceResource> projectFinanceResourceList = projectFinanceRowService.financeChecksTotals(projectId).getSuccessObject();
 
         BigDecimal totalProjectCost = calculateTotalForAllOrganisations(projectFinanceResourceList, ProjectFinanceResource::getTotal);
@@ -152,14 +147,13 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         BigDecimal totalOtherFunding = calculateTotalForAllOrganisations(projectFinanceResourceList, ProjectFinanceResource::getTotalOtherFunding);
         BigDecimal totalPercentageGrant = calculateGrantPercentage(totalProjectCost, totalFundingSought);
 
-        boolean financeChecksAllApproved = getFinanceCheckApprovalStatus(projectId);
+        ServiceResult<Double> researchParticipationPercentage = financeRowService.getResearchParticipationPercentageFromProject(project.getId());
+        BigDecimal researchParticipationPercentageValue = getResearchParticipationPercentage(researchParticipationPercentage);
 
-        String spendProfileGeneratedBy = spendProfile.map(p -> p.getGeneratedBy().getName()).orElse(null);
-        LocalDate spendProfileGeneratedDate = spendProfile.map(p -> LocalDate.from(p.getGeneratedDate().toInstant().atOffset(ZoneOffset.UTC))).orElse(null);
+        BigDecimal competitionMaximumResearchPercentage = BigDecimal.valueOf(competition.getMaxResearchRatio());
 
-        return serviceSuccess(new FinanceCheckSummaryResource(project.getId(), project.getName(), competition.getId(), competition.getName(), project.getTargetStartDate(),
-                project.getDurationInMonths().intValue(), totalProjectCost, totalFundingSought, totalOtherFunding, totalPercentageGrant, spendProfile.isPresent(),
-                getPartnerStatuses(partnerOrganisations, projectId), financeChecksAllApproved, spendProfileGeneratedBy, spendProfileGeneratedDate));
+        return serviceSuccess(new FinanceCheckOverviewResource(projectId, project.getName(), project.getTargetStartDate(), project.getDurationInMonths().intValue(),
+                totalProjectCost, totalFundingSought, totalOtherFunding, totalPercentageGrant, researchParticipationPercentageValue, competitionMaximumResearchPercentage));
     }
 
     public ServiceResult<FinanceCheckEligibilityResource> getFinanceCheckEligibilityDetails(Long projectId, Long organisationId) {
@@ -195,17 +189,9 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
         return mapWithIndex(partnerOrganisations, (i, org) -> {
 
-            FinanceCheckProcessResource financeCheckStatus = getFinanceCheckApprovalStatus(org).getSuccessObjectOrThrowException();
-            boolean financeChecksApproved = APPROVED.equals(financeCheckStatus.getCurrentState());
-
             ProjectOrganisationCompositeId compositeId = getCompositeId(org);
             Pair<Viability, ViabilityRagStatus> viability = getViability(compositeId);
-//            Pair<Eligibility, EligibilityRagStatus> eligibility = getEligibility(compositeId);
-
-            //TODO INFUND-6716 remove and use above.
-            Pair<Eligibility, EligibilityRagStatus> eligibility = financeChecksApproved ?
-                    Pair.of(Eligibility.APPROVED, EligibilityRagStatus.UNSET) :
-                    Pair.of(Eligibility.REVIEW, EligibilityRagStatus.UNSET);
+            Pair<Eligibility, EligibilityRagStatus> eligibility = getEligibility(compositeId);
 
             boolean anyQueryAwaitingResponse = isQueryActionRequired(projectId, org.getOrganisation().getId()).getSuccessObject();
 
@@ -364,5 +350,13 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
             }
         }
         return serviceSuccess();
+    }
+
+    private BigDecimal getResearchParticipationPercentage(ServiceResult<Double> researchParticipationPercentage) {
+        BigDecimal researchParticipationPercentageValue = BigDecimal.ZERO;
+        if (researchParticipationPercentage.isSuccess() && researchParticipationPercentage.getSuccessObject() != null) {
+            researchParticipationPercentageValue = BigDecimal.valueOf(researchParticipationPercentage.getSuccessObject());
+        }
+        return researchParticipationPercentageValue;
     }
 }

@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.assessment.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.resource.*;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * REST service for managing {@link org.innovateuk.ifs.invite.resource.InviteResource} to {@link org.innovateuk.ifs.competition.resource.CompetitionResource }
@@ -23,19 +23,23 @@ public interface CompetitionInviteRestService {
 
     RestResult<Boolean> checkExistingUser(String inviteHash);
 
-    RestResult<List<AvailableAssessorResource>> getAvailableAssessors(long competitionId);
+    RestResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, int page, Optional<Long> innovationArea);
 
-    RestResult<List<AssessorCreatedInviteResource>> getCreatedInvites(long competitionId);
+    RestResult<AssessorCreatedInvitePageResource> getCreatedInvites(long competitionId, int page);
 
-    RestResult<List<AssessorInviteOverviewResource>> getInvitationOverview(long competitionId);
+    RestResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
+                                                                         int page,
+                                                                         Optional<Long> innovationArea,
+                                                                         Optional<ParticipantStatusResource> participantStatus,
+                                                                         Optional<Boolean> compliant);
 
     RestResult<CompetitionInviteStatisticsResource> getInviteStatistics(long competitionId);
 
     RestResult<CompetitionInviteResource> inviteUser(ExistingUserStagedInviteResource existingUserStagedInvite);
 
-    RestResult<Void> inviteNewUsers(NewUserStagedInviteListResource newUserStagedInvites, long competionId);
+    RestResult<Void> inviteNewUsers(NewUserStagedInviteListResource newUserStagedInvites, long competitionId);
 
     RestResult<Void> deleteInvite(String email, long competitionId);
 
-    RestResult<AssessorInviteToSendResource> sendInvite(long inviteId, EmailContent content);
+    RestResult<Void> sendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource);
 }

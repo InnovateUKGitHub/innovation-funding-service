@@ -1,13 +1,12 @@
 package org.innovateuk.ifs.invite.repository;
 
-import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
@@ -17,7 +16,7 @@ import java.util.List;
  * For more info:
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
-public interface CompetitionParticipantRepository extends CrudRepository<CompetitionParticipant, Long> {
+public interface CompetitionParticipantRepository extends PagingAndSortingRepository<CompetitionParticipant, Long> {
 
     @Override
     List<CompetitionParticipant> findAll();
@@ -27,6 +26,45 @@ public interface CompetitionParticipantRepository extends CrudRepository<Competi
     List<CompetitionParticipant> getByUserIdAndRole(Long userId, CompetitionParticipantRole role);
 
     List<CompetitionParticipant> getByCompetitionIdAndRole(Long competitionId, CompetitionParticipantRole role);
+
+    @Query("SELECT competitionParticipant " +
+            "FROM CompetitionParticipant competitionParticipant " +
+            "WHERE competitionParticipant.competition.id = :competitionId " +
+            "AND competitionParticipant.role = 'ASSESSOR' " +
+            "AND (:status IS NULL OR competitionParticipant.status = :status)")
+    Page<CompetitionParticipant> getAssessorsByCompetitionAndStatus(@Param("competitionId") long competitionId,
+                                                                    @Param("status") ParticipantStatus status,
+                                                                    Pageable pageable);
+
+    @Query("SELECT competitionParticipant " +
+            "FROM CompetitionParticipant competitionParticipant " +
+            "LEFT JOIN Profile profile ON profile.id = competitionParticipant.user.profileId " +
+            "WHERE competitionParticipant.competition.id = :competitionId " +
+            "AND competitionParticipant.role = 'ASSESSOR' " +
+            "AND (:status IS NULL OR competitionParticipant.status = :status) " +
+            "AND (:innovationAreaId IS NULL " +
+            "   OR EXISTS(" +
+            "       SELECT profile.id " +
+            "       FROM Profile profile " +
+            "       JOIN profile.innovationAreas innovationAreas " +
+            "       WHERE profile.id = competitionParticipant.user.profileId " +
+            "       AND innovationAreas.category.id = :innovationAreaId " +
+            "   ) " +
+            "   OR competitionParticipant.invite.innovationArea.id = :innovationAreaId) " +
+            "AND (:isCompliant IS NULL OR (:isCompliant = true AND (" +
+            "   EXISTS(" +
+            "       SELECT affiliation.id " +
+            "       FROM Affiliation affiliation " +
+            "       WHERE affiliation.user.id = competitionParticipant.user.id " +
+            "   ) " +
+            "   AND profile.skillsAreas IS NOT NULL " +
+            "   AND profile.agreement IS NOT NULL " +
+            ")))")
+    Page<CompetitionParticipant> getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(@Param("competitionId") long competitionId,
+                                                                                                 @Param("innovationAreaId") Long innovationAreaId,
+                                                                                                 @Param("status") ParticipantStatus status,
+                                                                                                 @Param("isCompliant") Boolean isCompliant,
+                                                                                                 Pageable pageable);
 
     List<CompetitionParticipant> getByCompetitionIdAndRoleAndStatus(Long competitionId, CompetitionParticipantRole role, ParticipantStatus status);
 

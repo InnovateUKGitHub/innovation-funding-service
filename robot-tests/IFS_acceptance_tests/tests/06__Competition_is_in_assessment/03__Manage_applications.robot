@@ -12,6 +12,8 @@ Documentation     INFUND-7042 As a member of the competitions team I can see lis
 ...               INFUND-7237 Implement Assessor Total Applications and Assigned Counts for Application Progress within Assessor Management
 ...
 ...               INFUND-7232 As a member of the competitions team I can view previously assigned assessors so I can see who has previously been removed from assessing the application
+...
+...               INFUND-8061 Filter and pagination on Allocate Applications (Closed competition) and Manage applications (In assessment) dashboards
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin    Assessor
@@ -22,8 +24,16 @@ View the list of the applications
     [Documentation]    INFUND-7042
     [Tags]
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    When The user clicks the button/link    jQuery=a:contains("Assessor management - assignment to applications")
+    When The user clicks the button/link    jQuery=a:contains("Assessor management: Assignments")
     Then the application list is correct before changes
+
+Filtering of the applications
+    [Documentation]    INFUND-8061
+    When The user enters text to a text field    css=#filterSearch    22
+    and The user clicks the button/link    jQuery=button:contains(Filter)
+    Then the user should see the element    jQuery=tr:nth-child(1) td:nth-child(1):contains("22")
+    And The user clicks the button/link    link=Clear all filters
+    then the user should not see the element    jQuery=tr:nth-child(1) td:nth-child(1):contains("22")
 
 Application number navigates to Overview
     [Documentation]    INFUND-7042
@@ -55,6 +65,7 @@ View the available assessors
     [Documentation]    INFUND-7233\\
     [Tags]
     Then the user should see the element    jQuery=.column-two-thirds:contains("Assessors")
+    And the user clicks the button/link    jQuery=.pagination-label:contains(Next)
     And the available assessors information is correct
 
 View the assigned list
@@ -73,6 +84,7 @@ Remove an assigned user (Not notified)
     Given the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
     And the user clicks the button/link    jQuery=tr:nth-child(1) a:contains("Remove")
     And the user clicks the button/link    jQuery=button:contains("Remove assessor")
+    And the user clicks the button/link    jQuery=.pagination-label:contains(Next)
     And the available assessors information is correct
 
 Notify an assigned user
@@ -96,7 +108,7 @@ Remove and notify an assessor (Notified)
     [Tags]
     [Setup]    Log in as a different user    &{Comp_admin1_credentials}
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    And the user clicks the button/link    jQuery=a:contains("Assessor management - assignment to applications")
+    And the user clicks the button/link    jQuery=a:contains("Assessor management: Assignments")
     And the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
     When the user clicks the button/link    jQuery=tr:nth-child(1) a:contains("Remove")
     And the user clicks the button/link    jQuery=.buttonlink:contains(Cancel)
@@ -137,7 +149,7 @@ the assigned list is correct before notification
     the user should see the element    jQuery=.assessors-assigned td:nth-child(1):contains("Paul Plum")
     the user should see the element    jQuery=.assessors-assigned td:nth-child(2):contains("ACADEMIC")
     the user should see the element    jQuery=.assessors-assigned td:nth-child(3):contains("Urban living")
-    the user should see the element    jQuery=.assessors-assigned td:nth-child(3):contains("Infrastructure")
+    the user should see the element    jQuery=.assessors-assigned td:nth-child(3):contains("infrastructure")
     #the user should see the element    jQuery=tr:eq(1) td:nth-child(4):contains("9")
     #the user should see the element    jQuery=tr:eq(1) td:nth-child(5):contains("5")
     #the user should see the element    jQuery=tr:eq(1) td:nth-child(6):contains("-")
@@ -150,7 +162,7 @@ the previously assigned list is correct
     the user should see the element    jQuery=.assessors-previous td:nth-child(1):contains('Paul Plum')
     the user should see the element    jQuery=.assessors-previous td:nth-child(2):contains('ACADEMIC')
     the user should see the element    jQuery=.assessors-previous td:nth-child(3):contains('Urban living')
-    the user should see the element    jQuery=.assessors-previous td:nth-child(3):contains('Infrastructure')
+    the user should see the element    jQuery=.assessors-previous td:nth-child(3):contains('infrastructure')
     #the user should see the element    jQuery=.assessors-previous td:nth-child(4):contains('8')
     #the user should see the element    jQuery=.assessors-previous td:nth-child(5):contains('4')
     #TODO checks disabled due toINFUND-7745

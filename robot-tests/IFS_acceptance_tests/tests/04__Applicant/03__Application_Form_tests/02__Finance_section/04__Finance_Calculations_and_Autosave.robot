@@ -34,11 +34,16 @@ Labour
     [Teardown]    the user clicks the button/link    jQuery=button:contains("Labour")
 
 Overhead costs
-    [Documentation]    INFUND-192, INFUND-736, INFUND-6390
+    [Documentation]    INFUND-192, INFUND-736, INFUND -6390 , INFUND-6788
     [Tags]
+    # Check for No overheads costs option
     When the user clicks the button/link    jQuery=button:contains("Overhead costs")
-    And the user clicks the button/link    jQuery=label:contains("20% of labour costs")
-    Then admin costs total should be correct    id=section-total-10-default    £ 9,600
+    And The user clicks the button/link     jQuery=label:contains("No overhead costs")
+    then the user should see the element     jQuery=h3:contains("No overhead costs")
+    # Check for 20% Labour costs option
+    When the user clicks the button/link    jQuery=button:contains("Overhead costs")
+    then the user chooses 20% overheads option
+    and admin costs total should be correct    id=section-total-10-default    £ 9,600
     [Teardown]    the user clicks the button/link    jQuery=button:contains("Overhead costs")
 
 Materials
@@ -74,10 +79,7 @@ Subcontracting costs
     [Documentation]    INFUND-192, INFUND-736, INFUND-2303, INFUND-6390
     [Tags]
     When the applicant edits the Subcontracting costs section
-    Then Totals should be correct    css=#section-total-13    £ 200    css=[aria-controls="collapsible-4"] [data-mirror]    £ 200
-    And the user clicks the button/link    css=#subcontracting [data-repeatable-row]:nth-child(1) button
-    And the user reloads the page
-    Then Totals should be correct    css=#section-total-13    £ 100    css=[aria-controls="collapsible-4"] [data-mirror]    £ 100
+    Then the user should see the element  jQuery=button:contains("Subcontracting") > *:contains("£ 200")
     [Teardown]    the user clicks the button/link    jQuery=button:contains("Subcontracting costs")
 
 Travel and subsistence
@@ -252,9 +254,12 @@ Totals should be correct
 
 Admin costs total should be correct
     [Arguments]    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
-    the user should see the element    ${ADMIN_TOTAL}
     Textfield Value Should Be    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
     Element Should Contain    jQuery=button:contains("Overhead costs")    ${ADMIN_VALUE}
+
+the total costs should reflect overheads
+     [Arguments]    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
+     Textfield Value Should Be    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
 
 the grant value should be correct in the finance summary page
     The user navigates to the next page

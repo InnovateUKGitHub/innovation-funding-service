@@ -69,6 +69,7 @@ ${IN_ASSESSMENT_APPLICATION_5_LEAD_PARTNER_EMAIL}    paula.fuller@example.com
 ${IN_ASSESSMENT_APPLICATION_5_TITLE}    Products and Services Personalised
 ${INFORM_COMPETITION_NAME}    Integrated delivery programme - low carbon vehicles
 ${INFORM_APPLICATION_1_PROJECT}    4
+${NON_IFS_COMPETITION_NAME}     Transforming big data
 ${STEVE_SMITH_ID}    55
 ${DASHBOARD_URL}    ${SERVER}/applicant/dashboard
 ${SUMMARY_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1}/summary
@@ -83,7 +84,7 @@ ${ACCOUNT_CREATION_FORM_URL}    ${SERVER}/registration/register?organisationId=1
 ${ELIGIBILITY_INFO_URL}    ${SERVER}/competition/1/info/eligibility
 ${SPEED_BUMP_URL}    ${SERVER}/application/create-authenticated/1
 ${EDIT_PROFILE_URL}    ${SERVER}/profile/edit
-${APPLICATION_TEAM_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1}/contributors
+${APPLICATION_TEAM_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1}/team
 ${COMP_MANAGEMENT_APPLICATIONS_LIST}    ${SERVER}/management/competition/${OPEN_COMPETITION}/applications
 ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}    ${SERVER}/management/competition/${OPEN_COMPETITION}/application/${OPEN_COMPETITION_APPLICATION_1}
 ${COMP_MANAGEMENT_COMP_SETUP}    ${SERVER}/management/competition/setup/${COMP_SETUP_COMPETITION}
@@ -104,7 +105,11 @@ ${OPEN_COMPETITION_LINK}    ${OPEN_COMPETITION_NAME}
 ${OPEN_COMPETITION_LINK_2}    ${OPEN_COMPETITION_NAME_2}
 ${unsuccessful_login_message}    Your sign in was unsuccessful because of the following issue(s)
 ${application_name}    Submit test application
+${Competition_E2E}    A new innovative solution
 ${test_title}     test title
+${SMALL_ORGANISATION_SIZE}     1
+${MEDIUM_ORGANISATION_SIZE}    2
+${LARGE_ORGANISATION_SIZE}     3
 # File related variables
 ${UPLOAD_FOLDER}    uploaded_files
 ${DOWNLOAD_FOLDER}    download_files
@@ -112,6 +117,7 @@ ${empty_field_warning_message}    This field cannot be left blank.
 ${valid_pdf}      testing.pdf
 ${too_large_pdf}    large.pdf
 ${text_file}      testing.txt
+${excel_file}     testing.xlsx
 ${valid_pdf excerpt}    Adobe PDF is an ideal format for electronic document distribution
 # Assessor variables
 ${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}    123
