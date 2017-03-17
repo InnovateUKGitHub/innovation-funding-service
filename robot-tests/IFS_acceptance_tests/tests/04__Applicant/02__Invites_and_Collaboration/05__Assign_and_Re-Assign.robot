@@ -282,7 +282,7 @@ the collaborator is able to edit the finances
     the user fills in the funding information  Assign test
 
 the applicant changes the name of the application
-    Given the user clicks the button/link     link= ${OPEN_COMPETITION_NAME}
+    Given the user clicks the button/link     link= ${UNTITLED_APPLICATION_DASHBOARD_LINK}
     And the user clicks the button/link       link= Application details
     And the user enters text to a text field  id=application_details-title  Assign test
     And The user clicks the button/link       jQuery=button:contains("Save and return")
