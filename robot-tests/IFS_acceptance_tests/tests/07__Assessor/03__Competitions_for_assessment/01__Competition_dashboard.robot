@@ -16,6 +16,8 @@ Documentation     INFUND-1188 As an assessor I want to be able to review my asse
 ...               INFUND-3725 As an Assessor I want to see the scores that I have given for applications I have completed assessing so that I can compare all the applications I am assessing.
 ...
 ...               INFUND-4797 Handle scenario where invitation to assess an application has been removed from this user before they have responded
+...
+...               INFUND-5494 An assessor CAN follow a link to the competition brief from the competition dashboard
 Suite Setup       Log in as user    email=felix.wilson@gmail.com    password=Passw0rd
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
