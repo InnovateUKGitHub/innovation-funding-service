@@ -103,6 +103,7 @@ get next year
 
 get comp id from comp title
     [Arguments]  ${title}
+    Connect to Database     @{database}
     ${result} =  query  SELECT `id` FROM `${database_name}`.`competition` WHERE `name`='${title}';
     Log  ${result}
     # the result of this query looks like ((13,),) so you need get the value array[0][0]

@@ -200,6 +200,8 @@ function runTests() {
 
     cd ${scriptDir}
 
+    startPybot IFS_acceptance_tests/resources/keywords/GLOBAL_KEYWORDS.robot
+
     if [[ ${parallel} -eq 1 ]]
     then
       for D in `find ${testDirectory}/* -maxdepth 0 -type d`
