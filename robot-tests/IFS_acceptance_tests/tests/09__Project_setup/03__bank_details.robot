@@ -225,7 +225,7 @@ Bank details for non-lead partner
     And the user clicks the button/link            jQuery=.button:contains("Use selected address")
     And the address fields should be filled
     When the user clicks the button/link           jQuery=.button:contains("Submit bank account details")
-    And the user clicks the button/link            jquery=.button:contains("Cancel")
+    And the user clicks the button/link            jquery=.buttonlink:contains("Cancel")
     Then the user should not see an error in the page
     And the user should not see the text in the page  The bank account details below are being reviewed
     When the user clicks the button/link           jQuery=.button:contains("Submit bank account details")
