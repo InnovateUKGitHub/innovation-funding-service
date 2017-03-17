@@ -1,11 +1,14 @@
 package org.innovateuk.ifs.application.service;
 
+import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
+
+import java.util.Optional;
 
 @Service
 public class ApplicationSummaryServiceImpl implements ApplicationSummaryService {
@@ -42,8 +45,14 @@ public class ApplicationSummaryServiceImpl implements ApplicationSummaryService 
 	}
 
 	@Override
-	public ApplicationSummaryPageResource getWithFundingDecisionApplications(Long competitionId, String sortField, Integer pageNumber, Integer pageSize, String filter) {
-		return applicationSummaryRestService.getWithFundingDecisionApplications(competitionId, sortField, pageNumber, pageSize, filter).getSuccessObjectOrThrowException();
+	public ApplicationSummaryPageResource getWithFundingDecisionApplications(Long competitionId,
+																			 String sortField,
+																			 Integer pageNumber,
+																			 Integer pageSize,
+																			 String filter,
+																			 Optional<Boolean> sendFilter,
+																			 Optional<FundingDecision> fundingFilter) {
+		return applicationSummaryRestService.getWithFundingDecisionApplications(competitionId, sortField, pageNumber, pageSize, filter,sendFilter, fundingFilter).getSuccessObjectOrThrowException();
 	}
 
 	@Override
