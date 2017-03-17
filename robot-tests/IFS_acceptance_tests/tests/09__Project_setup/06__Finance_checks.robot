@@ -777,7 +777,7 @@ Project Finance user can Edit, Save, Change selection from 0% to 20% for Lead-Pa
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     Then the user enters text to a text field     jQuery=section:nth-of-type(2) input[id^="cost-overheads"][id$="calculate"]  rkk6382DJJ%$^&*£@W
     And the user clicks the button/link     jQuery=section:nth-of-type(2) button:contains("Save")
-    Then the user clicks the button/link     jQuery=.button-secondary:contains("Return to finance checks")
+    Then the user clicks the button/link    jQuery=.button-secondary:contains("Return to finance checks")
 
 Project Finance user can provide overhead value for Lead-Partner manually instead of calculations from spreadsheet.
     [Documentation]     INFUND-7577
@@ -791,7 +791,7 @@ Project Finance user can provide overhead value for Lead-Partner manually instea
     When the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Overhead costs")
     Then the user should see the element    jQuery=label[for="total-cost"]
     And the user should see the element     jQuery=input[id^="total-cost"][value="£ 303,309"]
-    Then the user clicks the button/link     jQuery=.button-secondary:contains("Return to finance checks")
+    Then the user clicks the button/link    jQuery=.button-secondary:contains("Return to finance checks")
 
 Project Finance user can Edit, Save, Change selection from 0% to 20% for Partner to Calculate overhead, contains spreadsheet when uploaded
     [Documentation]     INFUND-7577
@@ -833,7 +833,7 @@ Project Finance user can Edit, Save, Change selection from 0% to 20% for Partner
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     Then the user enters text to a text field     jQuery=section:nth-of-type(2) input[id^="cost-overheads"][id$="calculate"]  430KFL$%£@%&*@£$%^0
     And the user clicks the button/link     jQuery=section:nth-of-type(2) button:contains("Save")
-    Then the user clicks the button/link     jQuery=.button-secondary:contains("Return to finance checks")
+    Then the user clicks the button/link    jQuery=.button-secondary:contains("Return to finance checks")
 
 Project Finance user can provide overhead value for Partner manually instead of calculations from spreadsheet.
     [Documentation]     INFUND-7577
@@ -847,12 +847,11 @@ Project Finance user can provide overhead value for Partner manually instead of 
     When the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Overhead costs")
     Then the user should see the element    jQuery=label[for="total-cost"]
     And the user should see the element     jQuery=input[id^="total-cost"][value="£ 201,981"]
-    Then the user clicks the button/link     jQuery=.button-secondary:contains("Return to finance checks")
+    Then the user clicks the button/link    jQuery=.button-secondary:contains("Return to finance checks")
 
 Project Finance user can view academic Jes form
     [Documentation]     INFUND-5220,    INFUND-7577
     [Tags]    HappyPath
-    #Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     # note that we are viewing the file above rather than the same project as the other tests in this suite due to INFUND-6724
     When the user clicks the button/link    css=a.eligibility-2
     Then the user should see the text in the page    Download Je-S form
