@@ -1,14 +1,5 @@
 package org.innovateuk.ifs.application.service;
 
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
-import static org.innovateuk.ifs.application.resource.FundingDecision.FUNDED;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Assert;
-import org.junit.Test;
-
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -17,11 +8,11 @@ import org.junit.Test;
 
 import java.util.Optional;
 
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static org.innovateuk.ifs.application.resource.FundingDecision.FUNDED;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-
-import java.util.Optional;
 
 public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitTest<ApplicationSummaryRestServiceImpl> {
 

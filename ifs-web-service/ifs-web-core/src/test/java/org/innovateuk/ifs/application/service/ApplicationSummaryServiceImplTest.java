@@ -1,11 +1,5 @@
 package org.innovateuk.ifs.application.service;
 
-import static org.innovateuk.ifs.application.resource.FundingDecision.UNFUNDED;
-import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
-
-import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.junit.Test;

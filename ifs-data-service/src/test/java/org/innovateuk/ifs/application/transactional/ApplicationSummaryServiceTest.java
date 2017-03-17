@@ -367,7 +367,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 		ApplicationSummaryPageResource resource = mock(ApplicationSummaryPageResource.class);
 		when(applicationSummaryPageMapper.mapToResource(page)).thenReturn(resource);
 		
-		when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusIdInAndIdLike(eq(COMP_ID), eq(Arrays.asList(3L,4L,2L)), eq(""), eq("UNFUNDED"), argThat(new PageableMatcher(0, 20, srt("id", ASC))))).thenReturn(page);
+		when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusIdInAndIdLike(eq(COMP_ID), eq(Arrays.asList(3L,4L,2L)), eq(""), eq(UNFUNDED), argThat(new PageableMatcher(0, 20, srt("id", ASC))))).thenReturn(page);
 
 		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(COMP_ID, "id", 0, 20, of(""), of(UNFUNDED));
 		
