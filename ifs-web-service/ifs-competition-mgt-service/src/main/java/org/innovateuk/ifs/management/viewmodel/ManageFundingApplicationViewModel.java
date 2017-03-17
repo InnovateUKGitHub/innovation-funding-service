@@ -7,6 +7,9 @@ import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * View model for manage funding applications page
+ */
 public class ManageFundingApplicationViewModel {
 
     private ApplicationSummaryPageResource results;

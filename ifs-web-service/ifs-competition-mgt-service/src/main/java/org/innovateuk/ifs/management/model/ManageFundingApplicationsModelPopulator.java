@@ -12,6 +12,9 @@ import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Populator for the manage funding applications view model
+ */
 @Component
 public class ManageFundingApplicationsModelPopulator {
 
