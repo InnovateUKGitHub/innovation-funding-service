@@ -263,9 +263,6 @@ the user enters the details and clicks the create account
     Input Text    id=lastName    ANDERSON
     Input Text    id=phoneNumber    23232323
     Input Text    id=email    ${REG_EMAIL}
-    And the user selects the radio button    gender    gender2
-    And the user selects the radio button    ethnicity    ethnicity2
-    And the user selects the radio button    disability    disability2
     Input Password    id=password    Passw0rd123
     Input Password    id=retypedPassword    Passw0rd123
     the user selects the checkbox  termsAndConditions
@@ -275,9 +272,6 @@ the user fills the create account form
     [Arguments]    ${NAME}    ${LAST_NAME}
     Input Text    id=firstName    ${NAME}
     Input Text    id=lastName    ${LAST_NAME}
-    the user selects the radio button  gender  gender2
-    the user selects the radio button  ethnicity  ethnicity2
-    the user selects the radio button  disability  disability2
     Input Text        id=phoneNumber    0612121212
     Input Password    id=password    Passw0rd123
     Input Password    id=retypedPassword    Passw0rd123

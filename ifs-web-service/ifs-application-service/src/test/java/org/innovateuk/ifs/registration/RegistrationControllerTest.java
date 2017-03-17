@@ -264,7 +264,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "password"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "email"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "retypedPassword"))
-                .andExpect(model().attributeHasFieldErrors("registrationForm", "title"))
+//                .andExpect(model().attributeHasFieldErrors("registrationForm", "title"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "firstName"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "lastName"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "phoneNumber"))
@@ -401,17 +401,17 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
 
         when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
-        when(userService.createLeadApplicantForOrganisationWithCompetitionId(userResource.getFirstName(),
-                userResource.getLastName(),
-                userResource.getPassword(),
-                userResource.getEmail(),
-                userResource.getTitle() != null ? userResource.getTitle().toString() : null,
-                userResource.getPhoneNumber(),
-                userResource.getGender() != null ? userResource.getGender().toString() : null,
-                userResource.getEthnicity(),
-                userResource.getDisability() != null ? userResource.getDisability().toString() : null,
-                1L,
-                null)).thenReturn(serviceSuccess(userResource));
+        when(userService.createLeadApplicantForOrganisationWithCompetitionId(eq(userResource.getFirstName()),
+                eq(userResource.getLastName()),
+                eq(userResource.getPassword()),
+                eq(userResource.getEmail()),
+                anyString(), //userResource.getTitle() != null ? userResource.getTitle().toString() : null,
+                eq(userResource.getPhoneNumber()),
+                anyString(), //userResource.getGender() != null ? userResource.getGender().toString() : null,
+                anyLong(), //userResource.getEthnicity(),
+                anyString(), //userResource.getDisability() != null ? userResource.getDisability().toString() : null,
+                eq(1L),
+                eq(null))).thenReturn(serviceSuccess(userResource));
         when(userService.findUserByEmailForAnonymousUserFlow("test@test.test")).thenReturn(Optional.empty());
 
         mockMvc.perform(post("/registration/register")
@@ -452,17 +452,17 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .build();
 
         when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
-        when(userService.createLeadApplicantForOrganisationWithCompetitionId(userResource.getFirstName(),
-                userResource.getLastName(),
-                userResource.getPassword(),
-                userResource.getEmail(),
-                userResource.getTitle() != null ? userResource.getTitle().toString() : null,
-                userResource.getPhoneNumber(),
-                userResource.getGender() != null ? userResource.getGender().toString() : null,
-                userResource.getEthnicity(),
-                userResource.getDisability() != null ? userResource.getDisability().toString() : null,
-                1L,
-                null)).thenReturn(serviceSuccess(userResource));
+        when(userService.createLeadApplicantForOrganisationWithCompetitionId(eq(userResource.getFirstName()),
+                eq(userResource.getLastName()),
+                eq(userResource.getPassword()),
+                eq(userResource.getEmail()),
+                anyString(), //userResource.getTitle() != null ? userResource.getTitle().toString() : null,
+                eq(userResource.getPhoneNumber()),
+                anyString(), //userResource.getGender() != null ? userResource.getGender().toString() : null,
+                anyLong(), //userResource.getEthnicity(),
+                anyString(), //userResource.getDisability() != null ? userResource.getDisability().toString() : null,
+                eq(1L),
+                eq(null))).thenReturn(serviceSuccess(userResource));
         when(userService.findUserByEmailForAnonymousUserFlow(eq("invited@email.com"))).thenReturn(Optional.empty());
         when(inviteRestService.acceptInvite(eq(INVITE_HASH), anyLong())).thenReturn(restSuccess());
 
