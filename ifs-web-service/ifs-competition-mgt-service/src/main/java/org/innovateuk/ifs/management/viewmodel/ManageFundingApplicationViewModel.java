@@ -7,21 +7,22 @@ import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * View model for manage funding applications page
+ */
 public class ManageFundingApplicationViewModel {
 
     private ApplicationSummaryPageResource results;
     private String sortField;
-    private String filter;
     private long competitionId;
     private String competitionName;
     private CompetitionInFlightStatsViewModel keyStatistics;
     private PaginationViewModel pagination;
 
 
-    public ManageFundingApplicationViewModel(ApplicationSummaryPageResource results, CompetitionInFlightStatsViewModel keyStatistics, PaginationViewModel pagination, String sortField, String filter, long competitionId, String competitionName) {
+    public ManageFundingApplicationViewModel(ApplicationSummaryPageResource results, CompetitionInFlightStatsViewModel keyStatistics, PaginationViewModel pagination, String sortField, long competitionId, String competitionName) {
         this.results = results;
         this.sortField = sortField;
-        this.filter = filter;
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.keyStatistics = keyStatistics;
@@ -46,10 +47,6 @@ public class ManageFundingApplicationViewModel {
 
     public String getCompetitionName() {
         return competitionName;
-    }
-
-    public String getFilter() {
-        return filter;
     }
 
     public List<ApplicationSummaryResource> getContent(){

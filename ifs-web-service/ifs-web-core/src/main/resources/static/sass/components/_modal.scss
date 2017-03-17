@@ -10,14 +10,10 @@ Controlled with javascript, an alternative standard html page should be used for
 	<button class="js-close close" type="button" aria-label="Close Popup">X</button>
 	<p>Content goes here</p>
 	<hr/>
-	<div class="grid-row">
-			<div class="column-half">
-					<button class="js-close button buttonlink large" type="button">Cancel</button>
-			</div>
-			<div class="column-half alignright">
-					<button class="button large">Submit</button>
-			</div>
-		</div>
+	<div>
+		<button class="button">Submit</button>
+		<button class="js-close buttonlink" type="button">Cancel</button>
+	</div>
 </div>
 ```
 
@@ -32,6 +28,7 @@ Controlled with javascript, an alternative standard html page should be used for
 	background-color: #FFF;
 	top:50%;
 	padding: 40px 30px 30px 30px;
+	font-size: 19px;
 	@include box-sizing(border-box);
 	z-index: 20;
 	@include transition-property(top,margin);
@@ -39,23 +36,40 @@ Controlled with javascript, an alternative standard html page should be used for
 
 
 	.close,
-  .ui-dialog-titlebar-close {
+    .ui-dialog-titlebar-close {
 		background:none;
 		border:1px solid #000;
 		position: absolute;
-		right:15px;
+		right:30px;
 		top:15px;
 		cursor:pointer;
-		padding:5px;
-		font-size:16px;
 		line-height:1;
-		&:hover {
-			background-color: $grey-4;
-		}
+		padding:0;
+		font-size:19px;
+		font-weight: normal;
+		color: $link-colour;
 	}
 	.close.close {
 		border: none;
-		font-weight: bold;
+		font-weight: normal;
+	}
+	.button {
+		font-size: 19px;
+	}
+	.buttonlink {
+		padding: 8px;
+		margin-left: 22px;
+		font-size: 19px;
+	}
+	&.warning-modal {
+		border-top: 10px solid $red;
+		.modal-content {
+			padding-left: 60px;
+			background-repeat: no-repeat;
+			background-position: 20px 0;
+			background-size: 20px 20px;
+			background-image: url('../images/icons/icon-messages/alert-icon.png');
+		}
 	}
 }
 .modal-overlay,
