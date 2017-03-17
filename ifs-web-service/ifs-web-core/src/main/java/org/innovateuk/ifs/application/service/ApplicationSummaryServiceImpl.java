@@ -45,8 +45,14 @@ public class ApplicationSummaryServiceImpl implements ApplicationSummaryService 
 	}
 
 	@Override
-	public ApplicationSummaryPageResource getWithFundingDecisionApplications(Long competitionId, String sortField, Integer pageNumber, Integer pageSize, String filter) {
-		return applicationSummaryRestService.getWithFundingDecisionApplications(competitionId, sortField, pageNumber, pageSize, filter).getSuccessObjectOrThrowException();
+	public ApplicationSummaryPageResource getWithFundingDecisionApplications(Long competitionId,
+																			 String sortField,
+																			 Integer pageNumber,
+																			 Integer pageSize,
+																			 String filter,
+																			 Optional<Boolean> sendFilter,
+																			 Optional<FundingDecision> fundingFilter) {
+		return applicationSummaryRestService.getWithFundingDecisionApplications(competitionId, sortField, pageNumber, pageSize, filter,sendFilter, fundingFilter).getSuccessObjectOrThrowException();
 	}
 
 	@Override

@@ -46,7 +46,7 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
     @Test
     public void test_getWithFundingDecisionApplicationSummariesByCompetitionId() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(
-                () -> classUnderTest.getWithFundingDecisionApplicationSummariesByCompetitionId(1L, null, 0, 20),
+                () -> classUnderTest.getWithFundingDecisionApplicationSummariesByCompetitionId(1L, null, 0, 20, empty(), empty(), empty()),
                 PROJECT_FINANCE, COMP_ADMIN);
     }
 
@@ -80,7 +80,7 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
         }
 
         @Override
-        public ServiceResult<ApplicationSummaryPageResource> getWithFundingDecisionApplicationSummariesByCompetitionId(long competitionId, String sortBy, int pageIndex, int pageSize) {
+        public ServiceResult<ApplicationSummaryPageResource> getWithFundingDecisionApplicationSummariesByCompetitionId(long competitionId, String sortBy, int pageIndex, int pageSize, Optional<String> filter, Optional<Boolean> sendFilter, Optional<FundingDecisionStatus> fundingFilter) {
             return null;
         }
     }

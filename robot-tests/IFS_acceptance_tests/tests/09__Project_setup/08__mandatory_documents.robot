@@ -33,7 +33,7 @@ Non-lead partner cannot upload either document
     [Tags]
     Given the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element    jQuery=.progress-list ul > li.waiting:nth-of-type(7)
-    And The user should see the text in the page    The Project Manager will need to upload the following
+    And The user should see the text in the page    Your Project Manager will need to upload the following
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
 
@@ -43,7 +43,7 @@ Lead partner cannot upload either document
     [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}    Passw0rd
     Given the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element    jQuery=.progress-list ul > li.waiting:nth-of-type(7)
-    And The user should see the text in the page    The Project Manager will need to upload the following
+    And The user should see the text in the page    Your Project Manager will need to upload the following
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
 
@@ -223,7 +223,7 @@ Mandatory document submission
     And the user clicks the button/link    link=Other documents
     And the user reloads the page
     When the user clicks the button/link    jQuery=.button:contains("Submit documents")
-    And the user clicks the button/link    jQuery=.button:contains("Cancel")
+    And the user clicks the button/link    jQuery=.buttonlink:contains("Cancel")
     Then the user should see the element    name=removeExploitationPlanClicked    # testing here that the section has not become read-only
     When the user clicks the button/link    jQuery=.button:contains("Submit documents")
     And the user clicks the button/link    jQuery=.button:contains("Submit")
@@ -355,7 +355,7 @@ After rejection, lead partner cannot upload either document
     [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}    Passw0rd
     Given the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element    jQuery=.progress-list ul > li.waiting:nth-of-type(7)
-    And The user should see the text in the page    The Project Manager will need to upload the following
+    And The user should see the text in the page    Your Project Manager will need to upload the following
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
 
@@ -424,7 +424,7 @@ After rejection, non-lead partner cannot upload either document
     [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}    Passw0rd
     Given the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element    jQuery=.progress-list ul > li.waiting:nth-of-type(7)
-    And The user should see the text in the page    The Project Manager will need to upload the following
+    And The user should see the text in the page    Your Project Manager will need to upload the following
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
 
@@ -485,7 +485,7 @@ After rejection, mandatory document submission
     And the user clicks the button/link    link=Other documents
     And the user reloads the page
     When the user clicks the button/link    jQuery=.button:contains("Submit documents")
-    And the user clicks the button/link    jQuery=.button:contains("Cancel")
+    And the user clicks the button/link    jQuery=.buttonlink:contains("Cancel")
     Then the user should see the element    name=removeExploitationPlanClicked    # testing here that the section has not become read-only
     When the user clicks the button/link    jQuery=.button:contains("Submit documents")
     And the user clicks the button/link    jQuery=.button:contains("Submit")

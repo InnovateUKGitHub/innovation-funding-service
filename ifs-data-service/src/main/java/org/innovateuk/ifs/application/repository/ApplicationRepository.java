@@ -34,6 +34,16 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 			"	OR (str(:funding) = 'UNDECIDED' AND a.fundingDecision IS NULL)" +
 			"	OR (a.fundingDecision = :funding))";
 
+	static final String COMP_FUNDING_FILTER = "SELECT a FROM Application a WHERE " +
+			"a.competition.id = :compId " +
+			"AND (a.fundingDecision IS NOT NULL) " +
+			"AND (str(a.id) LIKE CONCAT('%', :filter, '%')) " +
+			"AND (:sent IS NULL " +
+			"	OR (:sent = true AND a.manageFundingEmailDate IS NOT NULL) " +
+			"	OR (:sent = false AND a.manageFundingEmailDate IS NULL))" +
+			"AND (:funding IS NULL " +
+			"	OR (a.fundingDecision = :funding))";
+
     @Override
     List<Application> findAll();
     Page<Application> findByCompetitionId(Long competitionId, Pageable pageable);
@@ -73,9 +83,18 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 
 	Page<Application> findByCompetitionIdAndApplicationStatusIdInAndAssessorFeedbackFileEntryIsNull(Long competitionId, Collection<Long> applicationStatusIds, Pageable pageable);
 
-	Page<Application> findByCompetitionIdAndFundingDecisionIsNotNull(Long competitionId, Pageable pageable);
+	@Query(COMP_FUNDING_FILTER)
+	Page<Application> findByCompetitionIdAndFundingDecisionIsNotNull(@Param("compId") Long competitionId,
+																	 @Param("filter") String filter,
+																	 @Param("sent") Boolean sent,
+																	 @Param("funding") FundingDecisionStatus funding,
+																	 Pageable pageable);
 
-	List<Application> findByCompetitionIdAndFundingDecisionIsNotNull(Long competitionId);
+	@Query(COMP_FUNDING_FILTER)
+	List<Application> findByCompetitionIdAndFundingDecisionIsNotNull(@Param("compId") Long competitionId,
+																	 @Param("filter") String filter,
+																	 @Param("sent") Boolean sent,
+																	 @Param("funding") FundingDecisionStatus funding);
 
 	int countByCompetitionIdAndFundingDecisionIsNotNullAndManageFundingEmailDateIsNotNull(Long competitionId);
 

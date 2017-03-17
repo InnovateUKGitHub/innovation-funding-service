@@ -211,7 +211,7 @@ invite a registered user
     the user clicks the button/link    jQuery=.button:contains("Sign in")
     the guest user inserts user email & password    ${EMAIL_LEAD}  ${correct_password}
     the guest user clicks the log-in button
-    the user clicks the button/link    link=${OPEN_COMPETITION_LINK}
+    the user clicks the button/link    link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user clicks the button/link    jQuery=a:contains("Add partner organisation")
     the user enters text to a text field    name=organisationName    innovate
     the user enters text to a text field    name=applicants[0].name    Partner name
@@ -263,9 +263,6 @@ the user enters the details and clicks the create account
     Input Text    id=lastName    ANDERSON
     Input Text    id=phoneNumber    23232323
     Input Text    id=email    ${REG_EMAIL}
-    And the user selects the radio button    gender    gender2
-    And the user selects the radio button    ethnicity    ethnicity2
-    And the user selects the radio button    disability    disability2
     Input Password    id=password    Passw0rd123
     Input Password    id=retypedPassword    Passw0rd123
     the user selects the checkbox  termsAndConditions
@@ -275,9 +272,6 @@ the user fills the create account form
     [Arguments]    ${NAME}    ${LAST_NAME}
     Input Text    id=firstName    ${NAME}
     Input Text    id=lastName    ${LAST_NAME}
-    the user selects the radio button  gender  gender2
-    the user selects the radio button  ethnicity  ethnicity2
-    the user selects the radio button  disability  disability2
     Input Text        id=phoneNumber    0612121212
     Input Password    id=password    Passw0rd123
     Input Password    id=retypedPassword    Passw0rd123

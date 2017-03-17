@@ -103,9 +103,6 @@ Valid account creation
     And the user enters text to a text field    id=email    ${valid_email}
     And the user enters text to a text field    id=password    ${correct_password}
     And the user enters text to a text field    id=retypedPassword    ${correct_password}
-    And the user selects the radio button    gender    gender2
-    And the user selects the radio button    ethnicity    ethnicity2
-    And the user selects the radio button    disability    disability2
     And the user submits their information
 
 Email duplication check
@@ -118,9 +115,6 @@ Email duplication check
     And the user enters text to a text field    id=email    ${valid_email}
     And the user enters text to a text field    id=password    ${correct_password}
     And the user enters text to a text field    id=retypedPassword    ${correct_password}
-    And the user selects the radio button    gender    gender2
-    And the user selects the radio button    ethnicity    ethnicity2
-    And the user selects the radio button    disability    disability2
     And the user submits their information
     Then the user should see an error    The email address is already registered with us. Please sign into your account
 

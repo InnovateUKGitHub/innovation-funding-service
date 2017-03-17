@@ -44,5 +44,11 @@ public interface ApplicationSummaryService {
 
 	@PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
 	@SecuredBySpring(value = "READ", description = "Comp Admins can see all Application Summaries with funding decisions across the whole system", securedType = ApplicationSummaryPageResource.class)
-	ServiceResult<ApplicationSummaryPageResource> getWithFundingDecisionApplicationSummariesByCompetitionId(long competitionId, String sortBy, int pageIndex, int pageSize);
+	ServiceResult<ApplicationSummaryPageResource> getWithFundingDecisionApplicationSummariesByCompetitionId(long competitionId,
+																											String sortBy,
+																											int pageIndex,
+																											int pageSize,
+																											Optional<String> filter,
+																											Optional<Boolean> sendFilter,
+																											Optional<FundingDecisionStatus> fundingFilter);
 }

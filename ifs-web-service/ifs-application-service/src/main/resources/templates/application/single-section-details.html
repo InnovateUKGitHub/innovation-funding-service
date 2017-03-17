@@ -14,7 +14,7 @@
       </div>
       <th:block th:unless="${(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) or completedSections.contains(section.id)}">
         <!--/* lead */-->
-        <th:block th:if="${userIsLeadApplicant}" th:insert="question-type/form-elements :: assign-buttons"  />
+        <th:block th:if="${userIsLeadApplicant}" th:insert="question-type/form-elements :: assign-buttons" th:with="hideAssignedTo=${true}" />
         <!--/* collabr */-->
         <th:block th:if="${!userIsLeadApplicant}" th:insert="question-type/form-elements :: assigned-to" />
       </th:block>

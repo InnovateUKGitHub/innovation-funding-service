@@ -53,9 +53,22 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
 	}
 
 	@Override
-	public RestResult<ApplicationSummaryPageResource> getWithFundingDecisionApplications(Long competitionId, String sortField, Integer pageNumber, Integer pageSize, String filter) {
+	public RestResult<ApplicationSummaryPageResource> getWithFundingDecisionApplications(Long competitionId,
+																						 String sortField,
+																						 Integer pageNumber,
+																						 Integer pageSize,
+																						 String filter,
+																						 Optional<Boolean> sendFilter,
+																						 Optional<FundingDecision> fundingFilter) {
 		String baseUrl = applicationSummaryRestUrl + "/findByCompetition/" + competitionId + "/with-funding-decision";
-		return getApplicationSummaryPage(baseUrl, pageNumber, pageSize, sortField, filter);
+		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+		if (filter != null) {
+			params.put("filter", singletonList(filter));
+		}
+		sendFilter.ifPresent(f -> params.put("sendFilter", singletonList(f.toString())));
+		fundingFilter.ifPresent(f -> params.put("fundingFilter", singletonList(f.toString())));
+		String uriWithParams = buildPaginationUri(baseUrl, pageNumber, pageSize, sortField, params);
+		return getWithRestResult(uriWithParams, ApplicationSummaryPageResource.class);
 	}
 	
 	private RestResult<ApplicationSummaryPageResource> getApplicationSummaryPage(String url, Integer pageNumber, Integer pageSize, String sortField, String filter) {

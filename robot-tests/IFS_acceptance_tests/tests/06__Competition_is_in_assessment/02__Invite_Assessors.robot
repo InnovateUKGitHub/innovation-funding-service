@@ -128,7 +128,7 @@ Invite non-registered assessors server side validations
     Given the user clicks the button/link    link=Invite
     When the user clicks the button/link    jQuery=span:contains("Add a non-registered assessor to your list")
     And the user clicks the button/link    jQuery=.button:contains("Add assessors to list")
-    Then the user should see a field error    Please select an innovation area.
+    Then the user should see a field error    Please enter an innovation sector and area.
     And the user should see a field error    Please enter a name.
     And the user should see a field error    Please enter an email address.
 
@@ -143,7 +143,7 @@ Invite non-registered users
     And The user should not see the text in the page    Please enter a name.    #check for the client side validation
     And the user selects the option from the drop-down menu    Emerging and enabling technologies    css=.js-progressive-group-select
     And the user selects the option from the drop-down menu    Emerging Technology    id=grouped-innovation-area
-    And The user should not see the text in the page    Please select an innovation area.    #check for the client side validation
+    And The user should not see the text in the page    Please enter an innovation sector and area.    #check for the client side validation
     And the user clicks the button/link    jQuery=.button:contains("Add assessors to list")
     Then the user should see the element    css=.no
     And The user should see the element    jQuery=td:contains("Olivier Giroud")
