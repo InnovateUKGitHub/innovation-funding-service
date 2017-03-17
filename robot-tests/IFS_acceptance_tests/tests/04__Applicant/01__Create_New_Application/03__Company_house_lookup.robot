@@ -72,7 +72,7 @@ the search criteria should be displayed
     the user clicks the button/link    link=INNOVATE LTD
     the user should see the text in the page    Business
     the user should see the text in the page    Registered name
-    Element Should Contain    css=.form-block p:nth-child(3)    INNOVATE LTD
+    Element Should Contain    jQuery=h3:contains("Registered name") + p    INNOVATE LTD
     the user should see the text in the page    Registration number
     the user should see the text in the page    05493105
 
