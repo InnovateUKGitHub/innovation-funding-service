@@ -4,3 +4,5 @@ ext.ifsIdpLogoutUrl="https://ifs-local-dev/Logout/"
 
 ext.serverPort=""
 ext.activeProfile="environment"
+
+ext.ifsWebGoogleanalyticsTrackingid=""
