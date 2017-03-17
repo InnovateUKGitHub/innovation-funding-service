@@ -579,7 +579,6 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         verify(competitionInviteRestService, only()).inviteNewUsers(expectedInviteListResource, competition.getId());
     }
 
-    @Ignore
     @Test
     public void inviteNewUsersFromInviteView_noInnovationArea() throws Exception {
         int page = 0;
@@ -602,7 +601,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         InviteNewAssessorsForm returnedForm = (InviteNewAssessorsForm) result.getModelAndView().getModel().get("form");
         BindingResult bindingResult = returnedForm.getBindingResult();
 
-        assertEquals("Please select an innovation area.", bindingResult.getFieldError("selectedInnovationArea").getDefaultMessage());
+        assertEquals("Please enter an innovation sector and area.", bindingResult.getFieldError("selectedInnovationArea").getDefaultMessage());
 
         InOrder inOrder = inOrder(competitionInviteRestService, categoryServiceMock);
         inOrder.verify(competitionInviteRestService).getCreatedInvites(competition.getId(), page);
