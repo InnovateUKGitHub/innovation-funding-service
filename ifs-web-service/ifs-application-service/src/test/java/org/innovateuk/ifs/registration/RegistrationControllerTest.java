@@ -264,7 +264,6 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "password"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "email"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "retypedPassword"))
-//                .andExpect(model().attributeHasFieldErrors("registrationForm", "title"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "firstName"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "lastName"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "phoneNumber"))
@@ -405,11 +404,11 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 eq(userResource.getLastName()),
                 eq(userResource.getPassword()),
                 eq(userResource.getEmail()),
-                anyString(), //userResource.getTitle() != null ? userResource.getTitle().toString() : null,
+                anyString(),
                 eq(userResource.getPhoneNumber()),
-                anyString(), //userResource.getGender() != null ? userResource.getGender().toString() : null,
-                anyLong(), //userResource.getEthnicity(),
-                anyString(), //userResource.getDisability() != null ? userResource.getDisability().toString() : null,
+                anyString(),
+                anyLong(),
+                anyString(),
                 eq(1L),
                 eq(null))).thenReturn(serviceSuccess(userResource));
         when(userService.findUserByEmailForAnonymousUserFlow("test@test.test")).thenReturn(Optional.empty());
@@ -456,11 +455,11 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 eq(userResource.getLastName()),
                 eq(userResource.getPassword()),
                 eq(userResource.getEmail()),
-                anyString(), //userResource.getTitle() != null ? userResource.getTitle().toString() : null,
+                anyString(),
                 eq(userResource.getPhoneNumber()),
-                anyString(), //userResource.getGender() != null ? userResource.getGender().toString() : null,
-                anyLong(), //userResource.getEthnicity(),
-                anyString(), //userResource.getDisability() != null ? userResource.getDisability().toString() : null,
+                anyString(),
+                anyLong(),
+                anyString(),
                 eq(1L),
                 eq(null))).thenReturn(serviceSuccess(userResource));
         when(userService.findUserByEmailForAnonymousUserFlow(eq("invited@email.com"))).thenReturn(Optional.empty());

@@ -90,9 +90,6 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
         assertEquals(userProfile.getLastName(), form.getLastName());
         assertEquals(userProfile.getEmail(), user.getEmail());
         assertEquals(userProfile.getPhoneNumber(), form.getPhoneNumber());
-//        assertEquals(userProfile.getGender(), form.getGender());
-//        assertEquals(userProfile.getDisability(), form.getDisability());
-//        assertEquals(userProfile.getEthnicity(), form.getEthnicity());
         assertEquals(userProfile.getAddress(), form.getAddressForm());
     }
 
@@ -138,9 +135,6 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
         String firstName = "Felicia";
         String lastName = "Wilkinson";
         String phoneNumber = "87654321";
-//        Gender gender = Gender.FEMALE;
-//        EthnicityResource ethnicity = buildTestEthnicity();
-//        Disability disability = Disability.YES;
         Gender gender = Gender.NOT_STATED;
         EthnicityResource ethnicity = buildTestEthnicity();
         Disability disability = Disability.NOT_STATED;
@@ -261,9 +255,6 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
                 .andExpect(model().attributeHasFieldErrors("form", "firstName"))
                 .andExpect(model().attributeHasFieldErrors("form", "lastName"))
                 .andExpect(model().attributeHasFieldErrors("form", "phoneNumber"))
-//                .andExpect(model().attributeHasFieldErrors("form", "gender"))
-//                .andExpect(model().attributeHasFieldErrors("form", "ethnicity"))
-//                .andExpect(model().attributeHasFieldErrors("form", "disability"))
                 .andExpect(model().attributeHasFieldErrors("form", "addressForm.addressLine1"))
                 .andExpect(model().attributeHasFieldErrors("form", "addressForm.town"))
                 .andExpect(model().attributeHasFieldErrors("form", "addressForm.postcode"))
@@ -275,14 +266,10 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
 
         assertTrue(bindingResult.hasErrors());
         assertEquals(0, bindingResult.getGlobalErrorCount());
-//        assertEquals(9, bindingResult.getFieldErrorCount());
         assertEquals(6, bindingResult.getFieldErrorCount());
         assertEquals("Please enter a first name.", bindingResult.getFieldError("firstName").getDefaultMessage());
         assertEquals("Please enter a last name.", bindingResult.getFieldError("lastName").getDefaultMessage());
         assertEquals("Please enter a phone number.", bindingResult.getFieldError("phoneNumber").getDefaultMessage());
-//        assertEquals("Please select a gender.", bindingResult.getFieldError("gender").getDefaultMessage());
-//        assertEquals("Please select an ethnicity.", bindingResult.getFieldError("ethnicity").getDefaultMessage());
-//        assertEquals("Please select a disability.", bindingResult.getFieldError("disability").getDefaultMessage());
         assertEquals("The address cannot be blank.", bindingResult.getFieldError("addressForm.addressLine1").getDefaultMessage());
         assertEquals("The town cannot be blank.", bindingResult.getFieldError("addressForm.town").getDefaultMessage());
         assertEquals("The postcode cannot be blank.", bindingResult.getFieldError("addressForm.postcode").getDefaultMessage());
@@ -305,9 +292,6 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
                 .withLastName("Wilson")
                 .withPhoneNumber("12345678")
                 .withEmail("felix.wilson@gmail.com")
-//                .withGender(Gender.MALE)
-//                .withEthnicity(buildTestEthnicity())
-//                .withDisability(Disability.NO)
                 .withGender(Gender.NOT_STATED)
                 .withEthnicity(buildTestEthnicity())
                 .withDisability(Disability.NOT_STATED)
@@ -316,7 +300,6 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
     }
 
     private EthnicityResource buildTestEthnicity() {
-//        return newEthnicityResource().withId(1L).build();
         return newEthnicityResource().withId(7L).build();
     }
 }
