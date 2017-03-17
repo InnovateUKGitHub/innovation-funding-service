@@ -59,7 +59,7 @@
         <th:block
             th:if="${model.markedAsComplete and model.submitted and !model.approved and model.userPartOfThisOrganisation}">
             <div class="success-alert extra-margin-bottom">
-                <p>Your spend profile is now with us awaiting acceptance.</p>
+                <p>Your spend profile has been completed.</p>
             </div>
         </th:block>
         <th:block th:if="${model.approved and model.userPartOfThisOrganisation}">
@@ -78,7 +78,7 @@
         </dl>
 
         <h2 class="heading-medium"><th:block th:text="${model.organisationName}"/> - Spend profile</h2>
-        <p>Your project costs have been profiled equally across the time periods. Please edit to show your planned expenditure across the life of your project. Please note that costs cannot be moved across cost categories.</p>
+        <p>We have reviewed and approved your project costs. Each organisation should now edit their spend profile costs to reflect your proposed project costs.</p>
     </div>
 
     <th:block th:with="readonly=${form == null ? true : false}">
@@ -310,7 +310,7 @@
                 <a class="button button-secondary extra-margin"
                    th:href="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit(projectId=${model.projectId},organisationId=${model.organisationId})}">Edit spend profile</a>
 
-                <p class="extra-margin">Before you submit to the lead partner, make sure you are satisfied with your spend profile. It should match the eligible project costs. The lead partner will send all costs to Innovate UK.</p>
+                <p class="extra-margin">Once you are satisfied with your spend profile please submit to the lead partner.</p>
                 <th:block th:unless="${#lists.size(model.table.validationMessages.errors) > 0}">
                 <a th:href="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/confirm(projectId=${model.projectId},organisationId=${model.organisationId})}"
                    class="button extra-margin" data-js-modal="modal-confirm-spend-profile-submit">Submit to lead partner</a>
@@ -325,7 +325,7 @@
                    th:href="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit(projectId=${model.projectId},organisationId=${model.organisationId})}">Edit spend profile</a>
 
                 <th:block th:if="${!model.markedAsComplete}">
-                    <p class="extra-margin">You can still edit this spend profile but you cannot submit until the section is marked as complete.</p>
+                    <p class="extra-margin">You need to mark this section as complete. You can then send completed spend profiles to Innovate UK.</p>
                     <form method="post"
                           th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete(projectId=${model.projectId},organisationId=${model.organisationId})}">
                         <button class="button" name="mark-as-complete" th:disabled="${#lists.size(model.table.validationMessages.errors) > 0}">Mark as complete</button>
