@@ -55,6 +55,25 @@ Assessor dashboard contains the correct competitions
     And The user should see the text in the page    ${UPCOMING_COMPETITION_TO_ASSESS_NAME}
     And The user should see the text in the page    Invitations to assess
 
+Competition brief link can be seen
+    [Documentation]     INFUND-5494
+    [Tags]
+    When the user clicks the button/link    link=${UPCOMING_COMPETITION_TO_ASSESS_NAME}
+    Then the user should see the element    link=See competition brief
+
+User can view the competition brief
+     [Documentation]    INFUND-5494
+     [Tags]
+     When the user clicks the button/link   link=See competition brief
+     Then the user should not see an error in the page
+     And the user should see the text in the page   ${UPCOMING_COMPETITION_TO_ASSESS_NAME}
+     And the user should see the text in the page   Competition opens
+     And the user should see the text in the page   Competition closes
+     And the user should see the element    jQuery=.button:contains("Start or continue your application")
+     [Teardown]
+     Then the user goes back to the previous page
+     And the user clicks the button/link    link=Assessor dashboard
+
 Calculation of the Upcoming competitions and Invitations to assess should be correct
     [Documentation]    INFUND-7107
     ...
