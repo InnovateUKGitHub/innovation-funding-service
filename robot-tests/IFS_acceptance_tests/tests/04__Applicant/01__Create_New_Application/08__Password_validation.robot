@@ -16,6 +16,9 @@ Password from the blacklist
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567
     And the user enters text to a text field    id=email    ${valid_email2}
+    And the user selects the radio button    gender    gender2
+    And the user selects the radio button    ethnicity    ethnicity2
+    And the user selects the radio button    disability    disability2
     And the user enters text to a text field    id=password    ${blacklisted_password}
     And the user enters text to a text field    id=retypedPassword    ${blacklisted_password}
     And the user submits their information
@@ -29,6 +32,9 @@ Password all lower case
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567
     And the user enters text to a text field    id=email    ${valid_email2}
+    And the user selects the radio button    gender    gender2
+    And the user selects the radio button    ethnicity    ethnicity2
+    And the user selects the radio button    disability    disability2
     And the user enters text to a text field    id=password    ${lower_case_password}
     And the user enters text to a text field    id=retypedPassword    ${lower_case_password}
     And the user submits their information
@@ -43,6 +49,9 @@ Password all upper case
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567
     And the user enters text to a text field    id=email    ${valid_email2}
+    And the user selects the radio button    gender    gender2
+    And the user selects the radio button    ethnicity    ethnicity2
+    And the user selects the radio button    disability    disability2
     And the user enters text to a text field    id=password    ${upper_case_password}
     And the user enters text to a text field    id=retypedPassword    ${upper_case_password}
     And the user submits their information
@@ -57,6 +66,9 @@ Password without numbers
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567
     And the user enters text to a text field    id=email    ${valid_email2}
+    And the user selects the radio button    gender    gender2
+    And the user selects the radio button    ethnicity    ethnicity2
+    And the user selects the radio button    disability    disability2
     And the user enters text to a text field    id=password    ${no_numbers_password}
     And the user enters text to a text field    id=retypedPassword    ${no_numbers_password}
     And the user submits their information
@@ -70,6 +82,9 @@ Password with personal information
     And the user enters text to a text field    id=lastName    Smith
     And the user enters text to a text field    id=phoneNumber    01141234567
     And the user enters text to a text field    id=email    ${valid_email2}
+    And the user selects the radio button    gender    gender2
+    And the user selects the radio button    ethnicity    ethnicity2
+    And the user selects the radio button    disability    disability2
     And the user enters text to a text field    id=password    ${personal_info_password}
     And the user enters text to a text field    id=retypedPassword    ${personal_info_password}
     And the user submits their information

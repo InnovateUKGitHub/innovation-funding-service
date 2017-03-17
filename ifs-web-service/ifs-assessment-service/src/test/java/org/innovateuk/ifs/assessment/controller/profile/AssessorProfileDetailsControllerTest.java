@@ -5,9 +5,10 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.assessment.form.profile.AssessorProfileEditDetailsForm;
 import org.innovateuk.ifs.assessment.model.profile.AssessorProfileDetailsModelPopulator;
 import org.innovateuk.ifs.assessment.model.profile.AssessorProfileEditDetailsModelPopulator;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.user.resource.UserProfileResource;
-import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.invite.service.EthnicityRestService;
+import org.innovateuk.ifs.user.resource.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -19,11 +20,16 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.junit.Assert.*;
+import static org.innovateuk.ifs.user.resource.Title.Mr;
+import static org.innovateuk.ifs.user.resource.Title.Mrs;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
@@ -43,6 +49,9 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
     private AssessorProfileEditDetailsModelPopulator assessorProfileEditDetailsModelPopulator;
 
     @Mock
+    private EthnicityRestService ethnicityRestService;
+
+    @Mock
     private Validator validator;
 
     @Override
@@ -55,6 +64,7 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
         UserResource user = buildTestUser();
         setLoggedInUser(user);
 
+        when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(buildTestEthnicity())));
         when(userService.getUserProfile(user.getId())).thenReturn(buildTestUserProfile());
 
         mockMvc.perform(get("/profile/details"))
@@ -68,6 +78,7 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
         setLoggedInUser(user);
         UserProfileResource userProfile = buildTestUserProfile();
 
+        when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(buildTestEthnicity())));
         when(userService.getUserProfile(user.getId())).thenReturn(userProfile);
 
         MvcResult result = mockMvc.perform(get("/profile/details/edit"))
@@ -82,6 +93,9 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
         assertEquals(userProfile.getLastName(), form.getLastName());
         assertEquals(userProfile.getEmail(), user.getEmail());
         assertEquals(userProfile.getPhoneNumber(), form.getPhoneNumber());
+        assertEquals(userProfile.getGender(), form.getGender());
+        assertEquals(userProfile.getDisability(), form.getDisability());
+        assertEquals(userProfile.getEthnicity(), form.getEthnicity());
         assertEquals(userProfile.getAddress(), form.getAddressForm());
     }
 
@@ -93,12 +107,16 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
         UserProfileResource profileDetails = buildTestUserProfile();
 
         when(userService.updateUserProfile(user.getId(), profileDetails)).thenReturn(ServiceResult.serviceSuccess());
+        when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(buildTestEthnicity())));
 
         MvcResult result = mockMvc.perform(post("/profile/details/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("firstName", profileDetails.getFirstName())
                 .param("lastName", profileDetails.getLastName())
                 .param("phoneNumber", profileDetails.getPhoneNumber())
+                .param("gender", profileDetails.getGender().name())
+                .param("ethnicity", profileDetails.getEthnicity().getId().toString())
+                .param("disability", profileDetails.getDisability().name())
                 .param("addressForm.addressLine1", profileDetails.getAddress().getAddressLine1())
                 .param("addressForm.town", profileDetails.getAddress().getTown())
                 .param("addressForm.postcode", profileDetails.getAddress().getPostcode()))
@@ -110,6 +128,9 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
         assertEquals(profileDetails.getFirstName(), form.getFirstName());
         assertEquals(profileDetails.getLastName(), form.getLastName());
         assertEquals(profileDetails.getPhoneNumber(), form.getPhoneNumber());
+        assertEquals(profileDetails.getGender(), form.getGender());
+        assertEquals(profileDetails.getEthnicity(), form.getEthnicity());
+        assertEquals(profileDetails.getDisability(), form.getDisability());
         assertEquals(profileDetails.getAddress().getPostcode(), form.getAddressForm().getPostcode());
 
         verify(userService).updateUserProfile(user.getId(), profileDetails);
@@ -120,6 +141,9 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
         String firstName = "Felicia";
         String lastName = "Wilkinson";
         String phoneNumber = "87654321";
+        Gender gender = Gender.FEMALE;
+        EthnicityResource ethnicity = buildTestEthnicity();
+        Disability disability = Disability.YES;
         String addressLine1 = "notAddress1";
         String town = "notTown";
         String postcode = "notPost";
@@ -132,6 +156,9 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
                 .withLastName(lastName)
                 .withPhoneNumber(phoneNumber)
                 .withEmail(user.getEmail())
+                .withGender(gender)
+                .withEthnicity(ethnicity)
+                .withDisability(disability)
                 .withAddress(newAddressResource()
                         .with(id(null))
                         .withAddressLine1(addressLine1)
@@ -141,12 +168,16 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
                 .build();
 
         when(userService.updateUserProfile(user.getId(), profileDetails)).thenReturn(ServiceResult.serviceSuccess());
+        when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(ethnicity)));
 
         MvcResult result = mockMvc.perform(post("/profile/details/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("firstName", firstName)
                 .param("lastName", lastName)
                 .param("phoneNumber", phoneNumber)
+                .param("gender", gender.name())
+                .param("ethnicity", ethnicity.getId().toString())
+                .param("disability", disability.name())
                 .param("addressForm.addressLine1", addressLine1)
                 .param("addressForm.town", town)
                 .param("addressForm.postcode", postcode))
@@ -158,6 +189,9 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
         assertEquals(form.getFirstName(), firstName);
         assertEquals(form.getLastName(), lastName);
         assertEquals(form.getPhoneNumber(), phoneNumber);
+        assertEquals(form.getGender(), gender);
+        assertEquals(form.getEthnicity(), ethnicity);
+        assertEquals(form.getDisability(), disability);
         assertEquals(form.getAddressForm().getAddressLine1(), addressLine1);
         assertEquals(form.getAddressForm().getTown(), town);
         assertEquals(form.getAddressForm().getPostcode(), postcode);
@@ -172,11 +206,16 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
 
         UserProfileResource profileDetails = buildTestUserProfile();
 
+        when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(buildTestEthnicity())));
+
         MvcResult result = mockMvc.perform(post("/profile/details/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .param("firstName", "")
                 .param("lastName", "")
                 .param("phoneNumber", profileDetails.getPhoneNumber())
+                .param("gender", profileDetails.getGender().name())
+                .param("ethnicity", profileDetails.getEthnicity().getId().toString())
+                .param("disability", profileDetails.getDisability().name())
                 .param("addressForm.addressLine1", profileDetails.getAddress().getAddressLine1())
                 .param("addressForm.town", profileDetails.getAddress().getTown())
                 .param("addressForm.postcode", profileDetails.getAddress().getPostcode()))
@@ -212,6 +251,7 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
     public void submitDetails_emptyRequest() throws Exception {
         UserResource user = buildTestUser();
         setLoggedInUser(user);
+        when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(buildTestEthnicity())));
 
         MvcResult result = mockMvc.perform(post("/profile/details/edit")
                 .contentType(APPLICATION_FORM_URLENCODED))
@@ -221,6 +261,9 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
                 .andExpect(model().attributeHasFieldErrors("form", "firstName"))
                 .andExpect(model().attributeHasFieldErrors("form", "lastName"))
                 .andExpect(model().attributeHasFieldErrors("form", "phoneNumber"))
+                .andExpect(model().attributeHasFieldErrors("form", "gender"))
+                .andExpect(model().attributeHasFieldErrors("form", "ethnicity"))
+                .andExpect(model().attributeHasFieldErrors("form", "disability"))
                 .andExpect(model().attributeHasFieldErrors("form", "addressForm.addressLine1"))
                 .andExpect(model().attributeHasFieldErrors("form", "addressForm.town"))
                 .andExpect(model().attributeHasFieldErrors("form", "addressForm.postcode"))
@@ -232,10 +275,13 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
 
         assertTrue(bindingResult.hasErrors());
         assertEquals(0, bindingResult.getGlobalErrorCount());
-        assertEquals(6, bindingResult.getFieldErrorCount());
+        assertEquals(9, bindingResult.getFieldErrorCount());
         assertEquals("Please enter a first name.", bindingResult.getFieldError("firstName").getDefaultMessage());
         assertEquals("Please enter a last name.", bindingResult.getFieldError("lastName").getDefaultMessage());
         assertEquals("Please enter a phone number.", bindingResult.getFieldError("phoneNumber").getDefaultMessage());
+        assertEquals("Please select a gender.", bindingResult.getFieldError("gender").getDefaultMessage());
+        assertEquals("Please select an ethnicity.", bindingResult.getFieldError("ethnicity").getDefaultMessage());
+        assertEquals("Please select a disability.", bindingResult.getFieldError("disability").getDefaultMessage());
         assertEquals("The address cannot be blank.", bindingResult.getFieldError("addressForm.addressLine1").getDefaultMessage());
         assertEquals("The town cannot be blank.", bindingResult.getFieldError("addressForm.town").getDefaultMessage());
         assertEquals("The postcode cannot be blank.", bindingResult.getFieldError("addressForm.postcode").getDefaultMessage());
@@ -258,8 +304,14 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
                 .withLastName("Wilson")
                 .withPhoneNumber("12345678")
                 .withEmail("felix.wilson@gmail.com")
+                .withGender(Gender.MALE)
+                .withEthnicity(buildTestEthnicity())
+                .withDisability(Disability.NO)
                 .withAddress(address)
                 .build();
     }
 
+    private EthnicityResource buildTestEthnicity() {
+        return newEthnicityResource().withId(1L).build();
+    }
 }

@@ -2,9 +2,11 @@ package org.innovateuk.ifs.profile.viewmodel;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
+import org.innovateuk.ifs.user.resource.EthnicityResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.util.ProfileUtil.getAddress;
@@ -28,7 +30,7 @@ public class UserDetailsViewModel {
     private String gender;
     private String disability;
 
-    public UserDetailsViewModel(final UserResource user, final OrganisationResource organisation) {
+    public UserDetailsViewModel(final UserResource user, final OrganisationResource organisation, final List<EthnicityResource> ethnicityResourceList) {
         if(organisation != null) {
             this.organisationName = organisation.getName();
             this.registrationNumber = organisation.getCompanyHouseNumber();
@@ -46,10 +48,27 @@ public class UserDetailsViewModel {
             }
         }
 
-        this.name = user.getName();
+        if(user.getTitle() != null) {
+            this.name = user.getTitle() + " " + user.getName().trim();
+        } else {
+            this.name = user.getName();
+        }
         this.phoneNumber = user.getPhoneNumber();
         this.emailAddress = user.getEmail();
 
+        setEthnicityName(user.getEthnicity(), ethnicityResourceList);
+        if(user.getGender() != null) {
+            this.gender = user.getGender().getDisplayName();
+        }
+        if(user.getDisability() != null) {
+            this.disability = user.getDisability().getDisplayName();
+        }
+    }
+
+    private void setEthnicityName(final Long ethnicityId, final List<EthnicityResource> ethnicityResourceList) {
+        ethnicityResourceList.stream().filter(ethnicityResource -> ethnicityResource.getId().equals(ethnicityId))
+                .findAny()
+                .ifPresent(ethnicityResource -> this.ethnicity = ethnicityResource.getDescription());
     }
 
     public String getOrganisationName() {

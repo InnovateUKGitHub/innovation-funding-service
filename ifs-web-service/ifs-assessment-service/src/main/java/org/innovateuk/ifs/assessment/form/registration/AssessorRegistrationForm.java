@@ -1,13 +1,17 @@
 package org.innovateuk.ifs.assessment.form.registration;
 
+import org.innovateuk.ifs.controller.BaseBindingResultTarget;
+import org.innovateuk.ifs.form.AddressForm;
+import org.innovateuk.ifs.user.resource.Disability;
+import org.innovateuk.ifs.user.resource.EthnicityResource;
+import org.innovateuk.ifs.user.resource.Gender;
+import org.innovateuk.ifs.validator.constraints.FieldMatch;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.innovateuk.ifs.controller.BaseBindingResultTarget;
-import org.innovateuk.ifs.form.AddressForm;
-import org.innovateuk.ifs.validator.constraints.FieldMatch;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
@@ -46,6 +50,15 @@ public class AssessorRegistrationForm extends BaseBindingResultTarget {
             @Size(max=30, message="{validation.standard.password.length.max}"),
     })
     private String retypedPassword;
+
+    @NotNull(message = "{validation.standard.gender.selectionrequired}")
+    private Gender gender;
+
+    @NotNull(message = "{validation.standard.ethnicity.selectionrequired}")
+    private EthnicityResource ethnicity;
+
+    @NotNull(message = "{validation.standard.disability.selectionrequired}")
+    private Disability disability;
 
     @Valid
     private AddressForm addressForm = new AddressForm();
@@ -90,6 +103,30 @@ public class AssessorRegistrationForm extends BaseBindingResultTarget {
         this.retypedPassword = retypedPassword;
     }
 
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    public EthnicityResource getEthnicity() {
+        return ethnicity;
+    }
+
+    public void setEthnicity(EthnicityResource ethnicity) {
+        this.ethnicity = ethnicity;
+    }
+
+    public Disability getDisability() {
+        return disability;
+    }
+
+    public void setDisability(Disability disability) {
+        this.disability = disability;
+    }
+
     public AddressForm getAddressForm() {
         return addressForm;
     }
@@ -120,6 +157,9 @@ public class AssessorRegistrationForm extends BaseBindingResultTarget {
                 .append(lastName, that.lastName)
                 .append(password, that.password)
                 .append(retypedPassword, that.retypedPassword)
+                .append(gender, that.gender)
+                .append(ethnicity, that.ethnicity)
+                .append(disability, that.disability)
                 .append(addressForm, that.addressForm)
                 .append(phoneNumber, that.phoneNumber)
                 .isEquals();
@@ -132,6 +172,9 @@ public class AssessorRegistrationForm extends BaseBindingResultTarget {
                 .append(lastName)
                 .append(password)
                 .append(retypedPassword)
+                .append(gender)
+                .append(ethnicity)
+                .append(disability)
                 .append(addressForm)
                 .append(phoneNumber)
                 .toHashCode();

@@ -116,6 +116,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected ProjectFinanceEmailRepository projectFinanceEmailRepository;
     protected UsersRolesService usersRolesService;
     protected ApplicationInviteRepository applicationInviteRepository;
+    protected EthnicityRepository ethnicityRepository;
     protected RoleService roleService;
     protected CompetitionInviteRepository competitionInviteRepository;
     protected CompetitionRepository competitionRepository;
@@ -173,6 +174,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         this.projectFinanceEmailRepository = serviceLocator.getBean(ProjectFinanceEmailRepository.class);
         this.usersRolesService = serviceLocator.getBean(UsersRolesService.class);
         this.applicationInviteRepository = serviceLocator.getBean(ApplicationInviteRepository.class);
+        this.ethnicityRepository = serviceLocator.getBean(EthnicityRepository.class);
         this.roleService = serviceLocator.getBean(RoleService.class);
         this.competitionInviteRepository = serviceLocator.getBean(CompetitionInviteRepository.class);
         this.competitionRepository = serviceLocator.getBean(CompetitionRepository.class);

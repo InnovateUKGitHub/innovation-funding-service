@@ -11,6 +11,8 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.AddressForm;
+import org.innovateuk.ifs.invite.service.EthnicityRestService;
+import org.innovateuk.ifs.user.resource.EthnicityResource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -51,6 +53,9 @@ public class AssessorRegistrationController {
 
     @Autowired
     private AssessorService assessorService;
+
+    @Autowired
+    private EthnicityRestService ethnicityRestService;
 
     @Autowired
     private AssessorRegistrationBecomeAnAssessorModelPopulator becomeAnAssessorModelPopulator;
@@ -228,7 +233,11 @@ public class AssessorRegistrationController {
 
     private String doViewYourDetails(Model model, String inviteHash) {
         model.addAttribute("model", yourDetailsModelPopulator.populateModel(inviteHash));
+        model.addAttribute("ethnicityOptions", getEthnicityOptions());
         return "registration/register";
     }
 
+    private List<EthnicityResource> getEthnicityOptions() {
+        return ethnicityRestService.findAllActive().getSuccessObjectOrThrowException();
+    }
 }

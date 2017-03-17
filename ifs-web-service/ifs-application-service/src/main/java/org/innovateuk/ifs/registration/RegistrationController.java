@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.registration;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.ApplicationCreationController;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.Error;
@@ -14,13 +12,17 @@ import org.innovateuk.ifs.exception.InviteAlreadyAcceptedException;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
+import org.innovateuk.ifs.invite.service.EthnicityRestService;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.registration.form.RegistrationForm;
 import org.innovateuk.ifs.registration.form.ResendEmailVerificationForm;
+import org.innovateuk.ifs.user.resource.EthnicityResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.CookieUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -40,8 +42,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.invite.service.InviteServiceImpl.INVITE_HASH;
 import static org.innovateuk.ifs.login.HomeController.getRedirectUrlForUser;
+import static org.innovateuk.ifs.invite.service.InviteServiceImpl.INVITE_HASH;
 
 @Controller
 @RequestMapping("/registration")
@@ -66,6 +68,8 @@ public class RegistrationController {
     private OrganisationService organisationService;
     @Autowired
     private InviteRestService inviteRestService;
+    @Autowired
+    private EthnicityRestService ethnicityRestService;
 
     @Autowired
     protected UserAuthenticationService userAuthenticationService;
@@ -136,6 +140,10 @@ public class RegistrationController {
         return destination;
     }
 
+    private List<EthnicityResource> getEthnicityOptions() {
+        return ethnicityRestService.findAllActive().getSuccessObjectOrThrowException();
+    }
+
     private boolean processOrganisation(HttpServletRequest request, Model model) {
         boolean success = true;
 
@@ -154,6 +162,7 @@ public class RegistrationController {
         setOrganisationIdCookie(registrationForm, request, response);
         setInviteeEmailAddress(registrationForm, request, model);
         model.addAttribute("registrationForm", registrationForm);
+        model.addAttribute("ethnicityOptions", getEthnicityOptions());
     }
 
     /**
@@ -211,6 +220,7 @@ public class RegistrationController {
         String destination = "registration-register";
 
         checkForExistingEmail(registrationForm.getEmail(), bindingResult);
+        model.addAttribute("ethnicityOptions", getEthnicityOptions());
 
         if(!bindingResult.hasErrors()) {
             //TODO : INFUND-3691
@@ -308,7 +318,11 @@ public class RegistrationController {
                 registrationForm.getLastName(),
                 registrationForm.getPassword(),
                 registrationForm.getEmail(),
+                registrationForm.getTitle(),
                 registrationForm.getPhoneNumber(),
+                registrationForm.getGender(),
+                Long.parseLong(registrationForm.getEthnicity()),
+                registrationForm.getDisability(),
                 organisationId,
                 competitionId);
     }

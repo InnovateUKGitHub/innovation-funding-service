@@ -2,6 +2,8 @@ package org.innovateuk.ifs.documentation;
 
 import org.innovateuk.ifs.assessment.builder.AssessorProfileResourceBuilder;
 import org.innovateuk.ifs.user.resource.BusinessType;
+import org.innovateuk.ifs.user.resource.Disability;
+import org.innovateuk.ifs.user.resource.Gender;
 import org.innovateuk.ifs.user.resource.UserStatus;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
@@ -12,12 +14,14 @@ import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.AffiliationType.PROFESSIONAL;
+import static org.innovateuk.ifs.user.resource.Title.Mr;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class AssessorProfileResourceDocs {
     public static final FieldDescriptor[] assessorProfileResourceFields = {
             fieldWithPath("user.id").description("Id of the user"),
             fieldWithPath("user.uid").description("Unique id returned from the authentication identity provider when the user is created"),
+            fieldWithPath("user.title").description("Title of the user"),
             fieldWithPath("user.firstName").description("First name of the user"),
             fieldWithPath("user.lastName").description("Last name of the user"),
             fieldWithPath("user.inviteName").description("Not used"),
@@ -27,6 +31,9 @@ public class AssessorProfileResourceDocs {
             fieldWithPath("user.password").description("Password of the user"),
             fieldWithPath("user.status").description("Status of the user"),
             fieldWithPath("user.roles").description("Roles that the user is associated with"),
+            fieldWithPath("user.gender").description("Gender of the user"),
+            fieldWithPath("user.disability").description("Disability of the user"),
+            fieldWithPath("user.ethnicity").description("Ethnic group of the user"),
             fieldWithPath("user.profileId").description("Profile id of the user"),
             fieldWithPath("user.inviteName").description("Invite name of the user"),
             fieldWithPath("profile.address").description("Address of the user"),
@@ -39,11 +46,15 @@ public class AssessorProfileResourceDocs {
     public static final AssessorProfileResourceBuilder assessorProfileResourceBuilder = newAssessorProfileResource()
             .withUser(
                     newUserResource()
+                            .withTitle(Mr)
                             .withUid("abcdefg")
                             .withFirstName("First")
                             .withLastName("Last")
                             .withEmail("test@test.com")
                             .withPhoneNumber("012434 567890")
+                            .withGender(Gender.MALE)
+                            .withDisability(Disability.NOT_STATED)
+                            .withEthnicity(1L)
                             .withProfile(2L)
                             .withStatus(UserStatus.ACTIVE)
                             .withInviteName("First Last")

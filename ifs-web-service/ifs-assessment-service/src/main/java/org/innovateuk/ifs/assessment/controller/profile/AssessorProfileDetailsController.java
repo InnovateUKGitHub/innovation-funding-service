@@ -5,6 +5,8 @@ import org.innovateuk.ifs.assessment.model.profile.AssessorProfileDetailsModelPo
 import org.innovateuk.ifs.assessment.model.profile.AssessorProfileEditDetailsModelPopulator;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.invite.service.EthnicityRestService;
+import org.innovateuk.ifs.user.resource.EthnicityResource;
 import org.innovateuk.ifs.user.resource.UserProfileResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
@@ -39,6 +42,9 @@ public class AssessorProfileDetailsController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private EthnicityRestService ethnicityRestService;
 
     private static final String FORM_ATTR_NAME = "form";
 
@@ -68,6 +74,9 @@ public class AssessorProfileDetailsController {
             UserProfileResource profileDetails = new UserProfileResource();
             profileDetails.setFirstName(form.getFirstName());
             profileDetails.setLastName(form.getLastName());
+            profileDetails.setEthnicity(form.getEthnicity());
+            profileDetails.setGender(form.getGender());
+            profileDetails.setDisability(form.getDisability());
             profileDetails.setPhoneNumber(form.getPhoneNumber());
             profileDetails.setAddress(form.getAddressForm());
             profileDetails.setEmail(loggedInUser.getEmail());
@@ -88,12 +97,19 @@ public class AssessorProfileDetailsController {
             UserProfileResource profileDetails = userService.getUserProfile(loggedInUser.getId());
             form.setFirstName(profileDetails.getFirstName());
             form.setLastName(profileDetails.getLastName());
+            form.setGender(profileDetails.getGender());
+            form.setEthnicity(profileDetails.getEthnicity());
+            form.setDisability(profileDetails.getDisability());
             form.setPhoneNumber(profileDetails.getPhoneNumber());
             form.setAddressForm(profileDetails.getAddress());
         }
 
+        model.addAttribute("ethnicityOptions", getEthnicityOptions());
         model.addAttribute("model", assessorEditDetailsModelPopulator.populateModel(loggedInUser));
         return "profile/details-edit";
     }
 
+    private List<EthnicityResource> getEthnicityOptions() {
+        return ethnicityRestService.findAllActive().getSuccessObjectOrThrowException();
+    }
 }

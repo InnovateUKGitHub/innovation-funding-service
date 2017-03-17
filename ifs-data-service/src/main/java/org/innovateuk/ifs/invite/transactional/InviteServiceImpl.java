@@ -188,7 +188,11 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         notificationArguments.put("leadOrganisation", organisation.getName());
         notificationArguments.put("leadApplicant", invite.getTarget().getLeadApplicant().getName());
 
-        notificationArguments.put("leadApplicantTitle", "");
+        if (invite.getTarget().getLeadApplicant().getTitle() != null) {
+            notificationArguments.put("leadApplicantTitle", invite.getTarget().getLeadApplicant().getTitle());
+        } else {
+            notificationArguments.put("leadApplicantTitle", "");
+        }
         notificationArguments.put("leadApplicantEmail", invite.getTarget().getLeadApplicant().getEmail());
 
         Notification notification = new Notification(from, singletonList(to), Notifications.INVITE_COLLABORATOR, notificationArguments);

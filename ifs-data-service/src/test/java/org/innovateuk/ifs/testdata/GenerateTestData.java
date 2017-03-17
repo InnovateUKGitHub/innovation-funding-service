@@ -926,6 +926,9 @@ public class GenerateTestData extends BaseIntegrationTest {
                     line.lastName,
                     line.emailAddress,
                     line.phoneNumber,
+                    line.ethnicity,
+                    line.gender,
+                    line.disability,
                     inviteHash
             );
         } else {

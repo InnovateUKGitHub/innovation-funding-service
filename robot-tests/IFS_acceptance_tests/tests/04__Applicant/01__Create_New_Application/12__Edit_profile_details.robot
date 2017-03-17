@@ -103,6 +103,9 @@ the user enters profile details
     The user enters text to a text field    id=firstName    Chris
     The user enters text to a text field    id=lastName    Brown
     The user enters text to a text field    id=phoneNumber    +-0123456789
+    And the user selects the radio button    gender    gender2
+    And the user selects the radio button    ethnicity    ethnicity2
+    And the user selects the radio button    disability    disability2
     the user clicks the button/link    css=[name="create-account"]
 
 the user fills in the first name

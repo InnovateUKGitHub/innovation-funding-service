@@ -7,9 +7,11 @@ import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.invite.service.EthnicityRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.profile.form.UserDetailsForm;
 import org.innovateuk.ifs.profile.viewmodel.UserDetailsViewModel;
+import org.innovateuk.ifs.user.resource.EthnicityResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
@@ -48,6 +50,9 @@ public class ProfileController {
     private OrganisationService organisationService;
 
     @Autowired
+    private EthnicityRestService ethnicityRestService;
+
+    @Autowired
     UserAuthenticationService userAuthenticationService;
 
 
@@ -56,7 +61,7 @@ public class ProfileController {
         final UserResource userResource = userAuthenticationService.getAuthenticatedUser(request, true);
         final OrganisationResource organisationResource = organisationService.getOrganisationForUser(userResource.getId());
 
-        model.addAttribute("model", new UserDetailsViewModel(userResource, organisationResource));
+        model.addAttribute("model", new UserDetailsViewModel(userResource, organisationResource, ethnicityRestService.findAllActive().getSuccessObjectOrThrowException()));
         model.addAttribute("userIsLoggedIn", userIsLoggedIn(request));
         return "profile/user-profile";
     }
@@ -74,7 +79,11 @@ public class ProfileController {
         form.setEmail(user.getEmail());
         form.setFirstName(user.getFirstName());
         form.setLastName(user.getLastName());
+        form.setTitle(user.getTitle() != null ? user.getTitle().name() : null);
         form.setPhoneNumber(user.getPhoneNumber());
+        form.setEthnicity(user.getEthnicity() != null ? user.getEthnicity().toString() : null);
+        form.setGender(user.getGender() != null ? user.getGender().name() : null);
+        form.setDisability(user.getDisability() != null ? user.getDisability().name() : null);
 
         if(organisation == null) {
         	LOG.warn("No organisation retrieved for user" + user.getId());
@@ -127,7 +136,12 @@ public class ProfileController {
         populateUserDetailsForm(model, request);
         boolean userIsLoggedIn = userIsLoggedIn(request);
         model.addAttribute("userIsLoggedIn", userIsLoggedIn);
+        model.addAttribute("ethnicityOptions", getEthnicityOptions());
         return "profile/edit-user-profile";
+    }
+
+    private List<EthnicityResource> getEthnicityOptions() {
+        return ethnicityRestService.findAllActive().getSuccessObjectOrThrowException();
     }
 
     private boolean userIsLoggedIn(HttpServletRequest request) {
@@ -146,7 +160,11 @@ public class ProfileController {
                 loggedInUser.getEmail(),
                 userDetailsForm.getFirstName(),
                 userDetailsForm.getLastName(),
-                userDetailsForm.getPhoneNumber());
+                userDetailsForm.getTitle(),
+                userDetailsForm.getPhoneNumber(),
+                userDetailsForm.getGender(),
+                Long.parseLong(userDetailsForm.getEthnicity()),
+                userDetailsForm.getDisability());
     }
 
     private void addEnvelopeErrorsToBindingResultErrors(List<Error> errors, BindingResult bindingResult) {

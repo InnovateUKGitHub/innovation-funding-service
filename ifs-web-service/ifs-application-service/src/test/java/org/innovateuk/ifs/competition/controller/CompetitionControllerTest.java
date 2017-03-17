@@ -74,9 +74,7 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
         viewModel.setCompetitionOpenDate(openDate);
         viewModel.setCompetitionCloseDate(closeDate);
         viewModel.setCompetitionTitle("Title");
-        viewModel.setUserIsLoggedIn(false);
 
-        when(userAuthenticationService.getAuthentication(any(HttpServletRequest.class))).thenReturn(null);
         when(overviewPopulator.populateViewModel(any(PublicContentItemResource.class), anyBoolean(), any(AbstractPublicSectionContentViewModel.class))).thenReturn(viewModel);
 
         mockMvc.perform(get("/competition/{id}/overview", compId))

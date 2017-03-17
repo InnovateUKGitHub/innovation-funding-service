@@ -128,6 +128,9 @@ click the link assessor
 The user fills and submits the registration form
     When The user enters text to a text field    id=firstName    Tom
     And The user enters text to a text field    id=lastName    Fister
+    And the user selects the radio button    gender    gender2
+    And the user selects the radio button    ethnicity    ethnicity2
+    And the user selects the radio button    disability    disability2
     And the user enters text to a text field    id=phoneNumber    1234567891011
     And The user enters text to a text field    id=addressForm.postcodeInput    BS14NT
     And the user clicks the button/link    id=postcode-lookup

@@ -5,8 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.user.resource.UserRoleType;
-import org.innovateuk.ifs.user.resource.UserStatus;
+import org.innovateuk.ifs.user.resource.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -19,6 +18,7 @@ import java.util.stream.Stream;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
 import static javax.persistence.EnumType.STRING;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * User object for saving user details to the db. This is used so we can check authentication and authorization.
@@ -31,6 +31,8 @@ public class User implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Enumerated(STRING)
+    private Title title;
     private String firstName;
     private String lastName;
     private String inviteName;
@@ -50,6 +52,16 @@ public class User implements Serializable {
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
     private Set<Role> roles = new HashSet<>();
+
+    @Enumerated(STRING)
+    private Gender gender;
+
+    @Enumerated(STRING)
+    private Disability disability;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="ethnicity_id", referencedColumnName = "id")
+    private Ethnicity ethnicity;
 
     @OneToMany(mappedBy="user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Affiliation> affiliations = new ArrayList<>();
@@ -111,6 +123,14 @@ public class User implements Serializable {
     public void setRoles(Set<Role> roles) {
         requireNonNull(roles);
         this.roles = roles;
+    }
+
+    public Title getTitle() {
+        return title;
+    }
+
+    public void setTitle(Title title) {
+        this.title = title;
     }
 
     @JsonIgnore
@@ -184,6 +204,30 @@ public class User implements Serializable {
 
     public void setStatus(UserStatus status) {
         this.status = status;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    public Disability getDisability() {
+        return disability;
+    }
+
+    public void setDisability(Disability disability) {
+        this.disability = disability;
+    }
+
+    public Ethnicity getEthnicity() {
+        return ethnicity;
+    }
+
+    public void setEthnicity(Ethnicity ethnicity) {
+        this.ethnicity = ethnicity;
     }
 
     public Long getProfileId() {
