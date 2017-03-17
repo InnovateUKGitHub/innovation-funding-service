@@ -21,10 +21,18 @@ items:
           deploymentconfig: idp
       spec:
         containers:
-        - image: innovateuk/ifs-shib-idp:0.4.6
+        - image: innovateuk/ifs-shib-idp:0.4.6.1
+          command: ["sleep"]
+          args: ["1000000"]
           name: idp
           imagePullPolicy: IfNotPresent
           env:
+          - name: SSLCERT
+            value: "<<SSLCERT>>"
+          - name: SSLCACERT
+            value: "<<SSLCACERT>>"
+          - name: SSLKEY
+            value: "<<SSLKEY>>"
           - name: SPHOST
             value: <<SHIB-ADDRESS>>
           - name: IDPHOST
