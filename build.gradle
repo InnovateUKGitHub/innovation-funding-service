@@ -201,14 +201,6 @@ task prepareComposeFile (type: Copy) {
 
 composeUp.dependsOn prepareComposeFile
 
-task robotTestsFilter (type: Copy) {
-    from 'robot-tests/IFS_acceptance_tests/resources/variables/'
-    into 'robot-tests/IFS_acceptance_tests/resources/variables/'
-    include 'EMAIL_VARIABLES_TEMPLATE.robot'
-    rename 'EMAIL_VARIABLES_TEMPLATE.robot', 'EMAIL_VARIABLES_SENSITIVE.robot'
-    filter(ReplaceTokens, tokens: [test_mailbox_one_password : project.properties['ifs.robot.mailbox.one.password'], test_mailbox_two_password : project.properties['ifs.robot.mailbox.two.password']])
-}
-
 import org.apache.tools.ant.filters.*
 
 task happyRobotTests(type:Exec) {
