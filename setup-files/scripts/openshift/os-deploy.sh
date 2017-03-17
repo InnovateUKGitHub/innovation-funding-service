@@ -38,8 +38,12 @@ ROUTE_DOMAIN=apps.$HOST
 REGISTRY=docker-registry-default.apps.prod.ifs-test-clusters.com
 INTERNAL_REGISTRY=172.30.80.28:5000
 
-REGISTRY_TOKEN=${SVC_ACCOUNT_TOKEN}
-
+if [ -z "$SVC_ACCOUNT_TOKEN" ]
+then
+    REGISTRY_TOKEN=$(oc whoami -t)
+else
+    REGISTRY_TOKEN=${SVC_ACCOUNT_TOKEN}
+fi
 
 echo "Deploying the $PROJECT Openshift project"
 
