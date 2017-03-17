@@ -41,6 +41,7 @@ public class InviteOrganisationBuilderTest {
         };
 
         List<InviteOrganisation> inviteOrganisations = newInviteOrganisation()
+                .withOrganisationName(expectedOrganisationNames)
                 .withOrganisation(expectedOrganisations)
                 .withInvites(expectedInvites)
                 .build(2);
