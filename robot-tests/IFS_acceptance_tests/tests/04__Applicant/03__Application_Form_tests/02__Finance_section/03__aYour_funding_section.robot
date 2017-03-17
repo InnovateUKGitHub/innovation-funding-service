@@ -58,7 +58,7 @@ If funding is complete. application details has a warning message
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Robot test application
     When the user clicks the button/link    link=Application details
-    And the user clicks the button/link    jQuery=button:contains(Edit)
+    And the user clicks the button/link    jQuery=button:contains(Return and edit)
     And the user clicks the button/link    jQuery=button:contains("Change your research category")
     Then the user should see the text in the page    Changing the research category will reset the funding level for all business participants
 
@@ -144,6 +144,6 @@ the user adds more rows in other funding
 the user changes the research category
     [Documentation]    INFUND-8260
     # Often those labels need double click. Thus i made a separate keyword to looks more tidy
-    the user clicks the button/link    jQuery=label[for="researchCategoryChoice-35"]
-    the user clicks the button/link    jQuery=label[for="researchCategoryChoice-35"]
+    the user clicks the button/link    jQuery=label[for="researchCategoryChoice-34"]
+    the user clicks the button/link    jQuery=label[for="researchCategoryChoice-34"]
     the user clicks the button/link    jQuery=button:contains(Save)
