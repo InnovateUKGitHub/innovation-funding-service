@@ -32,6 +32,7 @@ Validations for invalid inputs
     [Documentation]    INFUND-1480
     [Tags]
     Given the user should see the text in the page    Edit your details
+    And the user should see the element    jQuery=h3:contains("Email") ~ p:contains("felix.wilson@gmail.com")
     When The user enters text to a text field    id=firstName    Joy12
     And The user enters text to a text field    id=lastName    Archer12
     And the user enters text to a text field    id=phoneNumber    18549731414test

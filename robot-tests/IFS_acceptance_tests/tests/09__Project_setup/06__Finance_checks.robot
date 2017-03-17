@@ -66,8 +66,7 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...               INFUND-7756 Project finance can post an update to an existing note
 Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 Suite Teardown    the user closes the browser
-Force Tags        Project Setup  Pending
-# TODO Re-enable this suite when INFUND-8090 and INFUND-8086
+Force Tags        Project Setup
 Resource          ../../resources/defaultResources.robot
 Resource          PS_Variables.robot
 Resource          ../04__Applicant/FinanceSection_Commons.robot
@@ -959,9 +958,10 @@ Finance checks eligibility validations
     When the user clicks the button/link             link=Finance checks
     When the user clicks the button/link             jQuery=table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Review")
 
+# TODO: INFUND-8090 and INFUND-8086 PS fixes for breaks while finance checks tests were disabled
 Project finance user can amend all sections of eligibility for lead
     [Documentation]    INFUND-4834
-    [Tags]
+    [Tags]    Pending
     When Project finance user amends labour details in eligibility for lead
     And Project finance user amends materials details in eligibility for lead
     And Project finance user amends capital usage details in eligibility for lead
@@ -1013,9 +1013,10 @@ Confirming eligibility should update on the finance checks page
     When the user clicks the button/link    jQuery=.button-secondary:contains("Return to finance checks")
     Then the user should see the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Approved")
 
+# TODO: INFUND-8090 and INFUND-8086 PS fixes for breaks while finance checks tests were disabled
 Project finance user can see updated finance overview after lead changes to eligibility
     [Documentation]    INFUND-5508
-    [Tags]
+    [Tags]    Pending
     When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     Then the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(3)    £ 406,806
     And the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(4)    £ 116,565
@@ -1041,9 +1042,10 @@ Project finance user can see the partner's information about eligibility
     When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(5)    £ 2,468
     When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(6)    £ 138,164
 
+# TODO: INFUND-8090 and INFUND-8086 PS fixes for breaks while finance checks tests were disabled
 Project finance user can amend all sections of eligibility for partner
     [Documentation]    INFUND-4834
-    [Tags]
+    [Tags]    Pending
     When Project finance user amends labour details in eligibility for partner
     And Project finance user amends materials details in eligibility for partner
     And Project finance user amends capital usage details in eligibility for partner
@@ -1103,10 +1105,10 @@ Confirming eligibility should update on the finance checks page
     And The user should see the element    jQuery=.generate-spend-profile-main-button
     And the user should see the element    xpath=//*[@class='button generate-spend-profile-main-button' and @disabled='disabled']
 
-
+# TODO: INFUND-8090 and INFUND-8086 PS fixes for breaks while finance checks tests were disabled
 Project finance user can see updated finance overview after partner changes to eligibility
     [Documentation]    INFUND-5508
-    [Tags]
+    [Tags]    Pending
     When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/
     Then the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(3)    £ 311,081
     And the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(4)    £ 87,847
@@ -1186,31 +1188,22 @@ the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project se
 
 the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/funding
-    then the user selects the checkbox      jQuery=input[id="applicationIds"][value="63"]
-    #the user selects the option from the drop-down menu    Yes    id=fund63
-    #the user selects the option from the drop-down menu    No    id=fund64
-    the user selects the checkbox      jQuery=input[id="applicationIds"][value="64"]
-    the user clicks the button/link    jQuery=button:contains("Successful")
-    the user clicks the button/link     link=competition
-    the user clicks the button/link     button:contains(Manage funding notifications)
-    the user selects the checkbox      JQuery=input[id="applicationIds"][value="64"]
-    the user clicks the button/link     button:contains("write and send email")
-    the user enters text to a text field       id=subject
-    the user enters text to a text field      id=message
-    the user clicks the button/link     button:contains("Send email to all applicants")
-
-
-    the user clicks the button/link    jQuery=.button:contains("Notify applicants")
-    the user clicks the button/link    name=publish
-    the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/funding
-    the user should see the text in the page    Assessor Feedback
-    the user can see the option to upload a file on the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/application/${FUNDERS_PANEL_APPLICATION_1}
-    the user uploads the file    id=assessorFeedback    ${valid_pdf}
-    the user can see the option to upload a file on the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/application/${FUNDERS_PANEL_APPLICATION_2}
-    the user uploads the file    id=assessorFeedback    ${valid_pdf}
-    the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/funding
-    the user clicks the button/link    jQuery=.button:contains("Publish assessor feedback")
-    the user clicks the button/link    name=publish
+    the user moves focus to the element     jQuery=label[for="app-row-1"]
+    the user selects the checkbox       app-row-1
+    the user moves focus to the element     jQuery=label[for="app-row-2"]
+    the user selects the checkbox       app-row-2
+    the user clicks the button/link     jQuery=button:contains("Successful")
+    #the user clicks the button/link     xpath=//*[@id="content"]/form[1]/div[1]/div[2]/fieldset/button[1]
+    the user should see the element    jQuery=td:contains("Successful")
+    the user clicks the button/link     jQuery=a:contains("Competition")
+    the user clicks the button/link     jQuery=button:contains("Manage funding notifications")
+    the user selects the checkbox      ids[0]
+    the user selects the checkbox      ids[1]
+    the user clicks the button/link     xpath=//*[@id="content"]/form/div[1]/div[2]/fieldset/button[1]
+    the user enters text to a text field     id=subject   testEmail
+    the user enters text to a text field     css=[labelledby="message"]      testMessage
+    the user clicks the button/link     jQuery=button:contains("Send email to all applicants")
+    the user should see the text in the page    Manage funding applications
 
 the users fill out project details
     When Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
