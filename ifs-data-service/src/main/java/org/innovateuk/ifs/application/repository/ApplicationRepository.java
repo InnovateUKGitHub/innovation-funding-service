@@ -31,8 +31,8 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 			"AND (a.applicationStatus.id IN :statuses) " +
 			"AND (str(a.id) LIKE CONCAT('%', :filter, '%')) " +
 			"AND (:funding IS NULL " +
-			"	OR (:funding = 'UNDECIDED' AND a.fundingDecision IS NULL)" +
-			"	OR (str(a.fundingDecision) = :funding))";
+			"	OR (str(:funding) = 'UNDECIDED' AND a.fundingDecision IS NULL)" +
+			"	OR (a.fundingDecision = :funding))";
 
     @Override
     List<Application> findAll();
@@ -52,14 +52,14 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 	Page<Application> findByCompetitionIdAndApplicationStatusIdInAndIdLike(@Param("compId") Long competitionId,
 																		   @Param("statuses") Collection<Long> applicationStatusIds,
 																		   @Param("filter") String filter,
-																		   @Param("funding") String funding,
+																		   @Param("funding") FundingDecisionStatus funding,
 																		   Pageable pageable);
 
 	@Query(COMP_STATUS_FILTER)
 	List<Application> findByCompetitionIdAndApplicationStatusIdInAndIdLike(@Param("compId") Long competitionId,
 																		   @Param("statuses") Collection<Long> applicationStatusIds,
 																		   @Param("filter") String filter,
-																		   @Param("funding") String funding);
+																		   @Param("funding") FundingDecisionStatus funding);
 
 	Page<Application> findByCompetitionIdAndApplicationStatusIdNotIn(Long competitionId, Collection<Long> applicationStatusIds, Pageable pageable);
 
