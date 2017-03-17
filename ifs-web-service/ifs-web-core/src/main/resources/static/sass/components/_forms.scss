@@ -22,39 +22,43 @@ select[readonly],
 select[disabled],
 div.readonly,
 .textarea-wrapped div.readonly{
-    color: $black;
-    background: $grey-4;
-    border-color: $border-colour;
+  color: $black;
+  background: $grey-4;
+  border-color: $border-colour;
 }
 
 .form-group{
-    .form-finances-subcontracting-cost{
-        text-align: right;
-    }
-    &.inline label {
-      display:inline-block;
-      margin-right: 1em;
-    }
+  .form-finances-subcontracting-cost{
+    text-align: right;
+  }
+  &.inline label {
+    display:inline-block;
+    margin-right: 1em;
+  }
 }
+
 td.form-group,
 tr.form-group {
   float:none;
   width:auto;
   padding-left:0;
+
   input {
     vertical-align: top;
   }
+
   &.error  {
     border-left:none;
   }
 }
+
 .field-error {
   @include box-shadow(none);
   border: 4px solid $error-colour;
 }
 
 table td input[type="number"]{
-        text-align: right;
+  text-align: right;
 }
 
 
@@ -94,69 +98,78 @@ Used to define input widths, so they can be more specific to digits that need to
 
 
 .width-extra-small{
-    width: 65px;
+  width: 65px;
 }
+
 .width-small{
-    width: 80px;
+  width: 80px;
 }
+
 .width-small-medium{
-    width: 100px;
+  width: 100px;
 }
+
 .width-medium{
-    width: 150px;
+  width: 150px;
 }
+
 .width-large{
-    width: 200px;
+  width: 200px;
 }
+
 .width-full{
-    width: 100%;
+  width: 100%;
 }
+
 select.form-control.width-x-large,
 .width-x-large{
-    width:60%;
+  width:60%;
 }
+
 input.form-control + button.button,
 select.form-control + button.button {
-    line-height:1.15;
-    @include media (mobile) {
-      margin-top:15px;
-    }
+  line-height:1.15;
+  @include media (mobile) {
+    margin-top:15px;
+  }
 }
+
 input.form-control.field-error + button.button,
 select.form-control.field-error + button.button {
-    line-height:1.35;
+  line-height:1.35;
 }
 
 table .cell-border-right {
-    border-right:1px solid $border-colour;
+  border-right:1px solid $border-colour;
 }
 
 table td{
 
-    &.bold {
-        font-weight: 700;
-    }
+  &.bold {
+    font-weight: 700;
+  }
 
-    &.numeric{
-        text-align: right;
+  &.numeric{
+    text-align: right;
 
-        input{
-            text-align: right;
-        }
+    input{
+      text-align: right;
     }
-    .control{
-        padding-left: 20px
-    }
+  }
+
+  .control{
+    padding-left: 20px
+  }
 
 }
 
 .date-group {
-    overflow: hidden;
-    max-width:300px;
-    > div {
-        width:33%;
-        float:left;
-    }
+  overflow: hidden;
+  max-width:300px;
+  > div {
+    width:33%;
+    float:left;
+  }
 }
 
 tr.form-group-row.error {
@@ -174,72 +187,94 @@ tr.form-group-row.error {
     color:#000;
     white-space: nowrap;
   }
+
   td,
   th {
     background: $highlight-colour;
   }
+
   td:first-child {
     border-left: 5px solid $red;
   }
 }
 
-
 .form-date{
-    overflow: hidden;
-    margin-bottom: 30px;
+  overflow: hidden;
+  margin-bottom: 30px;
+}
+
+.question{
+
+  margin-bottom: 30px;
+
+  .heading-medium{
+    margin: 0.8em 0 0.4em 0;
+    display: inline-block;
+  }
+
+  .form-hint{
+    margin-bottom: 0.8em;
+  }
+
+  details{
+    margin-top: 0.4em;
+    margin-bottom: 0.8em;
+  }
 }
 
 .textarea-wrapped {
-    position: relative;
+  position: relative;
 
-    .textarea-header {
-        font-size:14px;
-        border:  2px solid $border-colour;
-        border-bottom:none;
-        background: $grey-4 0 0 no-repeat;
-        min-height:60px;
-    }
+  .textarea-header {
+    font-size: 14px;
+    border: 2px solid $border-colour;
+    border-bottom: none;
+    background: $grey-4 0 0 no-repeat;
+    min-height:60px;
+  }
 
-    .assignee {
-        padding:20px 15px  5px;
-    }
-    .assignee span + span {
-        font-weight:bold;
-    }
-    img + .assignee {
-        padding:20px 15px 0 55px;
-    }
+  .assignee {
+    padding:20px 15px 5px;
+  }
+
+  .assignee span + span {
+    font-weight:bold;
+  }
+
+  img + .assignee {
+    padding:20px 15px 0 55px;
+  }
+
+  .textarea-header + textarea,
+  .textarea-header + [contenteditable="true"],
+  .textarea-header + .readonly {
+    border-top:none;
+  }
+
+  textarea,
+  [contenteditable="true"],
+  .readonly {
+    border:  2px solid;
+    min-height: 250px;
+    margin: 0;
+    padding: 5px 10px;
+    resize: vertical;
+    vertical-align: top;
+    width:100%;
+    @include box-sizing(border-box);
+    overflow:auto; //needed for resize [contenteditable] div
+  }
 
 
-    .textarea-header + textarea,
-    .textarea-header + [contenteditable="true"],
-    .textarea-header + .readonly {
-        border-top:none;
-    }
+  .textarea-footer {
+    font-size:16px;
+    padding: 10px 0px;
+  }
 
-    textarea,
-    [contenteditable="true"],
-    .readonly {
-        border:  2px solid;
-        min-height: 250px;
-        margin: 0;
-        padding: 5px 10px;
-        resize: vertical;
-        vertical-align: top;
-        width:100%;
-        @include box-sizing(border-box);
-        overflow:auto; //needed for resize [contenteditable] div
-    }
-
-
-    .textarea-footer {
-        font-size:16px;
-        padding: 10px 0px;
-    }
-    .textarea-footer .buttonlink {
-        vertical-align:top;
-        padding: 0 10px 0 0;
-    }
+  .textarea-footer .buttonlink {
+    vertical-align:top;
+    padding: 0 10px 0 0;
+  }
 
 }
 
@@ -251,74 +286,80 @@ td.autosave-info {
 
 .textarea-footer .count-label,
 .textarea-footer .autosave-info {
-    padding:2px 0;
-    float:right;
-    color: $grey-1;
-    clear:right;
+  padding:2px 0;
+  float:right;
+  color: $grey-1;
+  clear:right;
 }
+
 .count-label .negative{
-    color: $orange;
-    font-weight: 700;
+  color: $orange;
+  font-weight: 700;
 }
+
 .count-label .word-count-reached .count-down{
-    color: $orange;
-    font-weight: 700;
+  color: $orange;
+  font-weight: 700;
 }
+
 .feedback .textarea-wrapped textarea{
-    border: 1px solid $border-colour;
+  border: 1px solid $border-colour;
 }
 
 // ------- file upload -------- //
 
 .upload-section{
   overflow: hidden;
-	border: 1px solid $border-colour;
-	background: $grey-4;
-	padding: 16px 16px 8px 16px;
-	margin: 16px 0;
+  background: $grey-4;
+  padding: 16px 16px 8px 16px;
+  margin: 16px 0;
 }
+
 .upload-section.error{
   @extend .warning-alert;
   background: none;
   padding-left: 16px;
 }
+
 .no-js .upload-section .inputfile + label{
-    visibility: hidden;
-    display: none;
+  visibility: hidden;
+  display: none;
 }
+
 .no-js .upload-section .inputfile {
-    margin:16px 0;
-    font-size:17px;
+  margin:16px 0;
+  font-size:17px;
 }
+
 .js-enabled [data-for-file-upload] {
-    display:none;
+  display:none;
 }
+
 .js-enabled .upload-section .inputfile{
-	width: 0.1px;
-	height: 0.1px;
-	opacity: 0;
-	overflow: hidden;
-	position: absolute;
-	z-index: -1;
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
 }
+
 .upload-section .inputfile + label{
   margin-top: 20px;
 }
 
 .upload-section	.uploaded-file{
-	display: block;
-	background: $panel-colour;
-	padding: 20px;
-	font-weight: bold;
-	margin: 10px 0;
-}
-.form-group.download{
-		padding: 5px 0 0 50px;
-		background: url(../images/icons/icon-download.png) no-repeat;
+  display: block;
+  margin: 10px 0;
 }
 
+.form-group.download{
+  padding: 5px 0 0 50px;
+  background: url(../images/icons/icon-download.png) no-repeat;
+}
 
 // ------- progressive group select -------- //
+
 .js-progressive-group-select {
   display: block;
   margin: 0 0 1em 0;
@@ -333,5 +374,84 @@ td.autosave-info {
 .js-enabled [data-progressive-group-select] {
   @include media (tablet) {
     max-width: 40%;
+  }
+}
+
+
+
+/* SG
+
+# IFS/Wrapped textarea footers
+Used to show information and CTAs under wrapped textarea used in application questions
+
+```
+<div>
+  <div class="form-footer">
+    <div class="form-footer__controls">
+      <a href="#">Mark as complete</a>
+    </div>
+    <div class="form-footer__info">
+      Last saved 15 January 03:34 by you
+    </div>
+</div>
+```
+
+*/
+
+.form-footer{
+  @include core-16;
+  @extend %contain-floats;
+  color: $secondary-text-colour;
+  background: $grey-4;
+  padding: 0.8em;
+  margin: 0;
+
+  &__actions{
+    min-height: 1em;
+    float: left;
+  }
+
+  &__info{
+    min-height: 1em;
+    float: right;
+  }
+
+  @include media-down(mobile) {
+    &__actions,
+    &__info{
+      min-height: 1em;
+      display: block;
+      float: none;
+      text-align: center;
+    }
+  }
+
+  .buttonlink{
+    margin-bottom: 0;
+  }
+
+  .autosave-info{
+    padding: 0;
+    float: none;
+    font-weight: bold;
+  }
+
+  .update-details{
+    margin-right: 1em;
+  }
+
+  @include media-down(mobile) {
+    &__actions,
+    &__info{
+      min-height: 1em;
+      display: block;
+      float: none;
+      text-align: center;
+      padding: 0.25em 0;
+    }
+
+    .buttonlink{
+      margin: 0.5em;
+    }
   }
 }
