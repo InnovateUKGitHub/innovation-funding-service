@@ -24,7 +24,6 @@ Create a new application
     the user clicks the button/link    jQuery=button:contains("Add new applicant")
     The user enters text to a text field    name=applicants[0].name    ${NAME}
     The user enters text to a text field    name=applicants[0].email   ${EMAIL}
-    #the user clicks the button/link    jQuery=a:contains("Update organisation")
     the user clicks the button/link    jQuery=button:contains("Update organisation")
     the user clicks the button/link    jQuery=a:contains("Begin application")
     the user clicks the button/link    link=Application details
