@@ -35,6 +35,7 @@
 
 %icon-tick {
   background-image: url('../images/field/tick-icon.png');
+  background-size: 14px;
   background-repeat: no-repeat;
 }
 
@@ -286,6 +287,8 @@ span.status {
 
     &.ok {
         @extend %icon-tick;
+        color: $button-colour;
+        padding-left: 205x;
     }
 
     &.rejected {
@@ -293,27 +296,58 @@ span.status {
     }
 
     &.action {
-        @extend %icon-assigned-to-me;
+        //@extend %icon-assigned-to-me;
     }
 
     &.waiting {
-        @extend %icon-timer;
-
-        background-size: 33px 30px;
+        //@extend %icon-timer;
+        //background-size: 33px 30px;
+        color: $secondary-text-colour;
     }
 
     a {
         display: block;
-        height: 70px;
+        padding-top: 50px;
     }
 }
+
+#table-project-status {
+  td.status {
+    vertical-align: bottom;
+    background-position: center center;
+    &.ok {
+      background-size: 18px;
+      a:link {
+        color: $button-colour;
+      }
+    }
+
+    &.rejected {
+      a:link {
+        color: $red;
+      }
+    }
+
+    &.action {
+      @extend %action-required;
+      background-position: center center;
+    }
+
+    &.waiting {
+      @extend %icon-timer;
+      background-size: 33px 30px;
+    }
+  }
+
+}
+
 
 td.status,
 th.status {
     text-align: center;
     padding-left: 0.625em;
     padding-right: 0.625em;
-    background-position: 50% 50%;
+    background-position: 10px 19px;
     width: 70px;
 }
 
