@@ -33,6 +33,10 @@ public class ApplicationStatistics {
 
     private Long competition;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "applicationStatusId", referencedColumnName = "id")
+    private ApplicationStatus applicationStatus;
+
     @OneToMany(mappedBy = "applicationId")
     private List<ProcessRole> processRoles = new ArrayList<>();
 
@@ -63,6 +67,14 @@ public class ApplicationStatistics {
 
     public void setCompetition(Long competition) {
         this.competition = competition;
+    }
+
+    public ApplicationStatus getApplicationStatus() {
+        return applicationStatus;
+    }
+
+    public void setApplicationStatus(ApplicationStatus applicationStatus) {
+        this.applicationStatus = applicationStatus;
     }
 
     private Optional<ProcessRole> getLeadProcessRole() {
