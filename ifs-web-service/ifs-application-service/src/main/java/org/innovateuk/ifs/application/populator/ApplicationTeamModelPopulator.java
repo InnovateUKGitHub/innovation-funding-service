@@ -48,7 +48,7 @@ public class ApplicationTeamModelPopulator {
         UserResource leadApplicant = getLeadApplicant(applicationResource);
         boolean userIsLeadApplicant = isUserLeadApplicant(loggedInUserId, leadApplicant);
         boolean applicationCanBegin = isApplicationStatusCreated(applicationResource) && userIsLeadApplicant;
-        return new ApplicationTeamViewModel(applicationResource.getId(), applicationResource.getApplicationDisplayName(),
+        return new ApplicationTeamViewModel(applicationResource.getId(), applicationResource.getName(),
                 getOrganisationViewModels(applicationResource.getId(), loggedInUserId, leadApplicant),
                 userIsLeadApplicant, applicationCanBegin);
     }

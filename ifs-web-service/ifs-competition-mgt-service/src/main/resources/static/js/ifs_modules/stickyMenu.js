@@ -1,3 +1,5 @@
+// it looks like this whole sticky menu style is getting removed by Prot, please keep an eye if there are still any templates with
+// class="info-area", if not we can safely remove this + css
 IFS.competitionManagement.stickyMenu = (function () {
   'use strict'
   var calculatedValues = {}
@@ -11,31 +13,33 @@ IFS.competitionManagement.stickyMenu = (function () {
     },
     init: function () {
       s = this.settings
-      IFS.competitionManagement.stickyMenu.getWindowWidth()
-      IFS.competitionManagement.stickyMenu.getMenuHeight()
-      IFS.competitionManagement.stickyMenu.getContainerHeight()
+      if (s.menu.length) {
+        IFS.competitionManagement.stickyMenu.getWindowWidth()
+        IFS.competitionManagement.stickyMenu.getMenuHeight()
+        IFS.competitionManagement.stickyMenu.getContainerHeight()
 
-      if (IFS.competitionManagement.stickyMenu.stickyEnabled()) {
-        IFS.competitionManagement.stickyMenu.getMenuWidth()
-        IFS.competitionManagement.stickyMenu.getMenuOffset()
-        IFS.competitionManagement.stickyMenu.getContainerOffset()
-        IFS.competitionManagement.stickyMenu.menuPxToPercentage()
-      }
-
-      jQuery(window).resize(function () {
-        clearTimeout(resizeTimer)
-        resizeTimer = setTimeout(function () {
-          IFS.competitionManagement.stickyMenu.getMenuHeight()
+        if (IFS.competitionManagement.stickyMenu.stickyEnabled()) {
           IFS.competitionManagement.stickyMenu.getMenuWidth()
-          IFS.competitionManagement.stickyMenu.getContainerHeight()
-          IFS.competitionManagement.stickyMenu.getWindowWidth()
+          IFS.competitionManagement.stickyMenu.getMenuOffset()
+          IFS.competitionManagement.stickyMenu.getContainerOffset()
           IFS.competitionManagement.stickyMenu.menuPxToPercentage()
+        }
+
+        jQuery(window).resize(function () {
+          clearTimeout(resizeTimer)
+          resizeTimer = setTimeout(function () {
+            IFS.competitionManagement.stickyMenu.getMenuHeight()
+            IFS.competitionManagement.stickyMenu.getMenuWidth()
+            IFS.competitionManagement.stickyMenu.getContainerHeight()
+            IFS.competitionManagement.stickyMenu.getWindowWidth()
+            IFS.competitionManagement.stickyMenu.menuPxToPercentage()
+            IFS.competitionManagement.stickyMenu.stickyScroll()
+          }, 250)
+        })
+        jQuery(document).scroll(function () {
           IFS.competitionManagement.stickyMenu.stickyScroll()
-        }, 250)
-      })
-      jQuery(document).scroll(function () {
-        IFS.competitionManagement.stickyMenu.stickyScroll()
-      })
+        })
+      }
     },
     getWindowWidth: function () {
       calculatedValues.windowWidth = jQuery(window).width()

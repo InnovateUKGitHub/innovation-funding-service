@@ -55,6 +55,7 @@
             })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
             ga('create', '#springMessageText('ifs.webserver.googleanalytics.trackingid', '#')', 'auto');
             ga('send', 'pageview');
+            ga('set', 'anonymizeIp', true); 
         </script>
 
       <meta name="viewport" content="width=device-width, initial-scale=1" />

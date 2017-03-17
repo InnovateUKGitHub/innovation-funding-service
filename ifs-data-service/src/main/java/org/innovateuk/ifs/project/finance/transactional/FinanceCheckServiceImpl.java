@@ -151,7 +151,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         BigDecimal totalOtherFunding = calculateTotalForAllOrganisations(projectFinanceResourceList, ProjectFinanceResource::getTotalOtherFunding);
         BigDecimal totalPercentageGrant = calculateGrantPercentage(totalProjectCost, totalFundingSought);
 
-        ServiceResult<Double> researchParticipationPercentage = financeRowService.getResearchParticipationPercentage(application.getId());
+        ServiceResult<Double> researchParticipationPercentage = financeRowService.getResearchParticipationPercentageFromProject(project.getId());
         BigDecimal researchParticipationPercentageValue = getResearchParticipationPercentage(researchParticipationPercentage);
 
         BigDecimal competitionMaximumResearchPercentage = BigDecimal.valueOf(competition.getMaxResearchRatio());

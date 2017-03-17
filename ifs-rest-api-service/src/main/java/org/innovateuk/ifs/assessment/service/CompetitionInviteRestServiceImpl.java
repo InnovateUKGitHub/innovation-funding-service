@@ -2,16 +2,13 @@ package org.innovateuk.ifs.assessment.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
-import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.resource.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.List;
 import java.util.Optional;
 
 import static java.lang.String.format;
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
 
 /**
  * REST service for managing {@link org.innovateuk.ifs.invite.resource.InviteResource} to {@link org.innovateuk.ifs.competition.resource.CompetitionResource}s
@@ -54,9 +51,10 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
     @Override
     public RestResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, int page, Optional<Long> innovationArea) {
         String baseUrl = format("%s/%s/%s", competitionInviteRestUrl, "getAvailableAssessors", competitionId);
-        UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl);
 
-        builder.queryParam("page", page);
+        UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
+                .queryParam("page", page);
+
         innovationArea.ifPresent(innovationAreaId -> builder.queryParam("innovationArea", innovationAreaId));
 
         return getWithRestResult(builder.toUriString(), AvailableAssessorPageResource.class);
@@ -65,15 +63,29 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
     @Override
     public RestResult<AssessorCreatedInvitePageResource> getCreatedInvites(long competitionId, int page) {
         String baseUrl = format("%s/%s/%s", competitionInviteRestUrl, "getCreatedInvites", competitionId);
-        UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl);
 
-        builder.queryParam("page", page);
+        UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
+                .queryParam("page", page);
 
         return getWithRestResult(builder.toUriString(), AssessorCreatedInvitePageResource.class);
     }
 
-    public RestResult<List<AssessorInviteOverviewResource>> getInvitationOverview(long competitionId) {
-        return getWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "getInvitationOverview", competitionId), assessorInviteOverviewResourceListType());
+    @Override
+    public RestResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
+                                                                                int page,
+                                                                                Optional<Long> innovationArea,
+                                                                                Optional<ParticipantStatusResource> participantStatus,
+                                                                                Optional<Boolean> compliant) {
+        String baseUrl = format("%s/%s/%s", competitionInviteRestUrl, "getInvitationOverview", competitionId);
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
+                .queryParam("page", page);
+
+        innovationArea.ifPresent(innovationAreaId -> builder.queryParam("innovationArea", innovationAreaId));
+        participantStatus.ifPresent(status -> builder.queryParam("status", status.toString()));
+        compliant.ifPresent(hasContract -> builder.queryParam("compliant", hasContract));
+
+        return getWithRestResult(builder.toUriString(), AssessorInviteOverviewPageResource.class);
     }
 
     @Override
@@ -97,7 +109,7 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
     }
 
     @Override
-    public RestResult<AssessorInviteToSendResource> sendInvite(long inviteId, EmailContent content) {
-        return postWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "sendInvite", inviteId), content, AssessorInviteToSendResource.class);
+    public RestResult<Void> sendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource) {
+        return postWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "sendInvite", inviteId), assessorInviteSendResource, Void.class);
     }
 }
