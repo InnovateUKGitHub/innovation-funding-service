@@ -1,9 +1,11 @@
 package org.innovateuk.ifs.application.service;
 
+import static org.innovateuk.ifs.application.resource.FundingDecision.UNFUNDED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
+import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -48,9 +50,9 @@ public class ApplicationSummaryServiceImplTest {
 	@Test
 	public void testFindSubmittedByCompetitionId() {
 		ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
-		when(applicationSummaryRestService.getSubmittedApplications(Long.valueOf(123L), "sort", 0, 20, "filter")).thenReturn(restSuccess(resource));
+		when(applicationSummaryRestService.getSubmittedApplications(Long.valueOf(123L), "sort", 0, 20, "filter", Optional.of(UNFUNDED))).thenReturn(restSuccess(resource));
 
-		ApplicationSummaryPageResource result = service.getSubmittedApplicationSummariesByCompetitionId(Long.valueOf(123L), "sort", 0, 20, "filter");
+		ApplicationSummaryPageResource result = service.getSubmittedApplicationSummariesByCompetitionId(Long.valueOf(123L), "sort", 0, 20, "filter", Optional.of(UNFUNDED));
 
 		assertEquals(resource, result);
 	}
