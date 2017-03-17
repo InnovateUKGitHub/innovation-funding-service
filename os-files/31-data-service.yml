@@ -42,7 +42,7 @@ items:
           - name: IFS_WEB_BASEURL
             value: 'https://<<SHIB-ADDRESS>>'
           - name: IDP_REST_BASEURL
-            value: 'https://<<SHIB-IDP-ADDRESS>>/regapi'
+            value: 'https://iuk-auth-localdev/regapi'
           ports:
           - containerPort: 8080
           resources:
