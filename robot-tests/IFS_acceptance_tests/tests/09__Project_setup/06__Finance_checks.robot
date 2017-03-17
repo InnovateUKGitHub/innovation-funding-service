@@ -958,16 +958,16 @@ Finance checks eligibility validations
     When the user clicks the button/link             link=Finance checks
     When the user clicks the button/link             jQuery=table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Review")
 
-# TODO: PS fixes for breaks while finance checks tests were disabled
-#Project finance user can amend all sections of eligibility for lead
-#    [Documentation]    INFUND-4834
-#    [Tags]
-#    When Project finance user amends labour details in eligibility for lead
-#    And Project finance user amends materials details in eligibility for lead
-#    And Project finance user amends capital usage details in eligibility for lead
-#    And Project finance user amends subcontracting usage details in eligibility for lead
-#    And Project finance user amends travel details in eligibility for lead
-#    And Project finance user amends other costs details in eligibility for lead
+# TODO: INFUND-8090 and INFUND-8086 PS fixes for breaks while finance checks tests were disabled
+Project finance user can amend all sections of eligibility for lead
+    [Documentation]    INFUND-4834
+    [Tags]    Pending
+    When Project finance user amends labour details in eligibility for lead
+    And Project finance user amends materials details in eligibility for lead
+    And Project finance user amends capital usage details in eligibility for lead
+    And Project finance user amends subcontracting usage details in eligibility for lead
+    And Project finance user amends travel details in eligibility for lead
+    And Project finance user amends other costs details in eligibility for lead
 
 Checking the approve eligibility checkbox enables RAG selection but not Approve eligibility button
     [Documentation]    INFUND-4839
@@ -1013,14 +1013,14 @@ Confirming eligibility should update on the finance checks page
     When the user clicks the button/link    jQuery=.button-secondary:contains("Return to finance checks")
     Then the user should see the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Approved")
 
-# TODO: PS fixes for breaks while finance checks tests were disabled
-#Project finance user can see updated finance overview after lead changes to eligibility
-#    [Documentation]    INFUND-5508
-#    [Tags]
-#    When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-#    Then the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(3)    £ 406,806
-#    And the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(4)    £ 116,565
-#    And the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(6)    29%
+# TODO: INFUND-8090 and INFUND-8086 PS fixes for breaks while finance checks tests were disabled
+Project finance user can see updated finance overview after lead changes to eligibility
+    [Documentation]    INFUND-5508
+    [Tags]    Pending
+    When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+    Then the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(3)    £ 406,806
+    And the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(4)    £ 116,565
+    And the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(6)    29%
 
 
 Project finance user can see the Eligibility check page for the partner
@@ -1042,16 +1042,16 @@ Project finance user can see the partner's information about eligibility
     When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(5)    £ 2,468
     When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(6)    £ 138,164
 
-# TODO: PS fixes for breaks while finance checks tests were disabled
-#Project finance user can amend all sections of eligibility for partner
-#    [Documentation]    INFUND-4834
-#    [Tags]
-#    When Project finance user amends labour details in eligibility for partner
-#    And Project finance user amends materials details in eligibility for partner
-#    And Project finance user amends capital usage details in eligibility for partner
-#    And Project finance user amends subcontracting usage details in eligibility for partner
-#    And Project finance user amends travel details in eligibility for partner
-#    And Project finance user amends other costs details in eligibility for partner
+# TODO: INFUND-8090 and INFUND-8086 PS fixes for breaks while finance checks tests were disabled
+Project finance user can amend all sections of eligibility for partner
+    [Documentation]    INFUND-4834
+    [Tags]    Pending
+    When Project finance user amends labour details in eligibility for partner
+    And Project finance user amends materials details in eligibility for partner
+    And Project finance user amends capital usage details in eligibility for partner
+    And Project finance user amends subcontracting usage details in eligibility for partner
+    And Project finance user amends travel details in eligibility for partner
+    And Project finance user amends other costs details in eligibility for partner
 
 Project finance user can see the eligibility checks for the industrial partner
     [Documentation]    INFUND-4823
@@ -1105,14 +1105,14 @@ Confirming eligibility should update on the finance checks page
     And The user should see the element    jQuery=.generate-spend-profile-main-button
     And the user should see the element    xpath=//*[@class='button generate-spend-profile-main-button' and @disabled='disabled']
 
-# TODO: PS fixes for breaks while finance checks tests were disabled
-#Project finance user can see updated finance overview after partner changes to eligibility
-#    [Documentation]    INFUND-5508
-#    [Tags]
-#    When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/
-#    Then the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(3)    £ 311,081
-#    And the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(4)    £ 87,847
-#    And the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(6)    28%
+# TODO: INFUND-8090 and INFUND-8086 PS fixes for breaks while finance checks tests were disabled
+Project finance user can see updated finance overview after partner changes to eligibility
+    [Documentation]    INFUND-5508
+    [Tags]    Pending
+    When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/
+    Then the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(3)    £ 311,081
+    And the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(4)    £ 87,847
+    And the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(6)    28%
 
 # TODO needs a new test to approve academic eligibility
 #Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
