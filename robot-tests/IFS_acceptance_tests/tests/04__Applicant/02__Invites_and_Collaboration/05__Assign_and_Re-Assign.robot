@@ -194,11 +194,9 @@ Lead selects Research Area
     When the user navigates to the page       ${DASHBOARD_URL}
     Then the user clicks the button/link      link=Assign test
     When the user clicks the button/link      link=Application details
-    and the user clicks the button/link      jQuery=button:contains("research category")
-    # The following line has been commented  as 'alert message' is commented in application details section html due to upcoming functionality
-    #Then the user should see the element      jQuery=h2:contains("Research category determines funding")
-    Then the user should see the element       jQuery=legend:contains("Research category")
-    And the user fills out innovation area and research category
+    and  the user clicks the button/link      jQuery=button:contains("Choose your research category")
+    Then the user should see the element      jQuery=legend:contains("Research category")
+    And the user fills out the research category
 
 Lead marks finances as complete
     [Documentation]    INFUND-3016
@@ -293,11 +291,8 @@ Steve smith assigns a question to the collaborator
     the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
     When the applicant assigns the question to the collaborator  css=#form-input-12 .editor  test1233  Jessica Doe
 
-the user fills out innovation area and research category
+the user fills out the research category
     # Often those labels need double click. Thus i made a separate keyword to looks more tidy
-    the user clicks the button/link    jQuery=button:contains(Change your innovation area)
-    the user clicks the button/link    jQuery=label[for="innovationAreaChoice-26"]
-    the user clicks the button/link    jQuery=label[for="innovationAreaChoice-26"]
+    the user clicks the button/link    jQuery=label[for="researchCategoryChoice-33"]
+    the user clicks the button/link    jQuery=label[for="researchCategoryChoice-33"]
     the user clicks the button/link    jQuery=button:contains(Save)
-    the user clicks the button/link    jQuery=label[for="financePosition-cat-33"]
-    the user clicks the button/link    jQuery=label[for="financePosition-cat-33"]
