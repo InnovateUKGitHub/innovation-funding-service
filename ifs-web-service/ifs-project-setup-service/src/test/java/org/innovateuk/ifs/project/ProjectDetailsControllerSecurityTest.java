@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project;
 
+import org.innovateuk.ifs.project.status.security.ProjectSetupSectionsPermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 

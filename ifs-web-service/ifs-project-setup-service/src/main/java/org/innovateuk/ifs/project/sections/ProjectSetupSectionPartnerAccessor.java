@@ -85,10 +85,10 @@ public class ProjectSetupSectionPartnerAccessor {
             return fail("Unable to access Finance Checks section until the Project Details section is complete");
         }
 
-        if (!isBankDetailsApproved(organisation)) {
+        if (!projectSetupProgressChecker.isFinanceContactSubmitted(organisation)) {
 
-            return fail("Unable to access Finance Checks section until this Partner Organisation has had its " +
-                    "Bank Details approved or queried");
+            return fail("Unable to access Bank Details section until this Partner Organisation has submitted " +
+                    "its Finance Contact");
         }
 
         return ACCESSIBLE;

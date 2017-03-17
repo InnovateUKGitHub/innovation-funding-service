@@ -194,26 +194,13 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     }
 
     @Test
-    public void testProjectFinanceContactCanViewFinanceChecks() throws Exception {
-        ProjectResource project = newProjectResource().build();
-        UserResource user = newUserResource().build();
-
-        setupFinanceContactExpectations(project, user, true);
-        List<RoleResource> financeContact = newRoleResource().withType(UserRoleType.FINANCE_CONTACT).build(1);
-        financeContact.add(newRoleResource().withType(UserRoleType.PARTNER).build());
-        user.setRoles(financeContact);
-
-        assertTrue(rules.financeContactsCanSeeTheProjectFinanceOverviewsForTheirProject(project.getId(), user));
-    }
-
-    @Test
-    public void testNonProjectFinanceContactCannotViewFinanceChecks() throws Exception {
+    public void testProjectUsersCanViewFinanceChecks() throws Exception {
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
 
         setupUserAsPartner(project, user);
 
-        assertFalse(rules.financeContactsCanSeeTheProjectFinanceOverviewsForTheirProject(project.getId(), user));
+        assertTrue(rules.partnersCanSeeTheProjectFinanceOverviewsForTheirProject(project.getId(), user));
     }
 
     protected void setupFinanceContactExpectations(ProjectResource project, UserResource user, boolean userIsPartner) {

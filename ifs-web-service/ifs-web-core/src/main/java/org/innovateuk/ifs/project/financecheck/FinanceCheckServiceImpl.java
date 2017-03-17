@@ -56,16 +56,6 @@ public class FinanceCheckServiceImpl implements FinanceCheckService {
     }
 
     @Override
-    public ServiceResult<Void> approveFinanceCheck(Long projectId, Long organisationId) {
-        return financeCheckRestService.approveFinanceCheck(projectId, organisationId).toServiceResult();
-    }
-
-    @Override
-    public FinanceCheckProcessResource getFinanceCheckApprovalStatus(Long projectId, Long organisationId) {
-        return financeCheckRestService.getFinanceCheckApprovalStatus(projectId, organisationId).getSuccessObjectOrThrowException();
-    }
-
-    @Override
     public FinanceCheckEligibilityResource getFinanceCheckEligibilityDetails(Long projectId, Long organisationId) {
         return financeCheckRestService.getFinanceCheckEligibilityDetails(projectId, organisationId).getSuccessObjectOrThrowException();
     }
@@ -102,7 +92,7 @@ public class FinanceCheckServiceImpl implements FinanceCheckService {
     }
 
     @Override
-    public ServiceResult<List<QueryResource>> loadQueries(Long projectFinanceId) {
+    public ServiceResult<List<QueryResource>> getQueries(Long projectFinanceId) {
         return queryService.findAll(projectFinanceId).toServiceResult();
     }
 

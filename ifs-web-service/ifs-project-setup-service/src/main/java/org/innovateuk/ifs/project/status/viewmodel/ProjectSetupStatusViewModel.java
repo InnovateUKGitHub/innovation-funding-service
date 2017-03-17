@@ -1,10 +1,11 @@
-package org.innovateuk.ifs.project.viewmodel;
+package org.innovateuk.ifs.project.status.viewmodel;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.project.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.sections.SectionAccess;
 import org.innovateuk.ifs.project.sections.SectionStatus;
+import org.innovateuk.ifs.project.viewmodel.BasicProjectDetailsViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 
 import java.util.Optional;
@@ -14,7 +15,7 @@ import static org.innovateuk.ifs.project.sections.SectionStatus.TICK;
 /**
  * A view model that backs the Project Status page
  */
-public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel {
+public class  ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel {
 
     private Long projectId;
     private String projectName;
@@ -42,6 +43,8 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
     private SectionStatus spendProfileStatus;
     private SectionStatus otherDocumentsStatus;
     private SectionStatus grantOfferLetterStatus;
+
+    public ProjectSetupStatusViewModel() {};
 
     public ProjectSetupStatusViewModel(ProjectResource project, CompetitionResource competition,
                                        Optional<MonitoringOfficerResource> monitoringOfficerResource, OrganisationResource organisation, boolean leadPartner,

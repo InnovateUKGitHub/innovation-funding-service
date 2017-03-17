@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.finance.security;
 
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
-import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.threads.attachments.mapper.AttachmentMapper;
@@ -65,7 +64,7 @@ public class AttachmentPermissionsRules {
 
     private boolean userCanAccessQueryLinkedToTheAttachment(UserResource user, AttachmentResource attachment) {
         return findQueryTheAttachmentIsLinkedTo(attachment)
-                .map(query -> projectFinanceQueryPermissionRules.onlyProjectFinanceUsersOrFinanceContactCanViewTheirQueries(queryMapper.mapToResource(query), user))
+                .map(query -> projectFinanceQueryPermissionRules.onlyProjectFinanceUsersOrPartnersCanViewTheirQueries(queryMapper.mapToResource(query), user))
                 .orElse(false);
     }
 

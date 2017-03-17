@@ -151,17 +151,13 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
 
         PartnerOrganisation partnerOrg = partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(project.getId(), organisation.getId());
 
-        if (asList(COMPLETE, NOT_REQUIRED).contains(bankDetailsStatus)) {
-            if (financeCheckWorkflowHandler.isApproved(partnerOrg)) {
+            if (financeCheckWorkflowHandler.isApproved(partnerOrg) && asList(COMPLETE, NOT_REQUIRED).contains(bankDetailsStatus)) {
                 return COMPLETE;
             }
             if (isAwaitingResponse) {
                 return ACTION_REQUIRED;
             }
             return PENDING;
-        } else {
-            return NOT_STARTED;
-        }
     }
 
     protected ProjectActivityStates createLeadSpendProfileStatus(final Project project, final ProjectActivityStates spendProfileStatus, final Optional<SpendProfile> spendProfile) {

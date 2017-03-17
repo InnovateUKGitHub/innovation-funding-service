@@ -93,7 +93,7 @@ public class ProjectFinanceAttachmentPermissionRulesTest extends BasePermissionR
         when(queryMapper.mapToResource(query)).thenReturn(queryResource);
         when(attachmentMapperMock.mapToDomain(attachmentResource)).thenReturn(asDomain(attachmentResource, projectFinanceUser.getId()));
         when(projectFinanceRepositoryMock.findOne(query.contextClassPk())).thenReturn(projectFinanceWithUserAsFinanceContact(financeContactUser));
-        when(queryPermissionRulesMock.onlyProjectFinanceUsersOrFinanceContactCanViewTheirQueries(queryResource, financeContactUser)).thenReturn(true);
+        when(queryPermissionRulesMock.onlyProjectFinanceUsersOrPartnersCanViewTheirQueries(queryResource, financeContactUser)).thenReturn(true);
         assertTrue(rules.financeContactUsersCanOnlyFetchAnAttachmentIfUploaderOrIfRelatedToItsQuery(attachmentResource, financeContactUser));
     }
 
@@ -106,7 +106,7 @@ public class ProjectFinanceAttachmentPermissionRulesTest extends BasePermissionR
         when(attachmentMapperMock.mapToDomain(attachmentResource)).thenReturn(asDomain(attachmentResource, projectFinanceUser.getId()));
         final UserResource unrelatedFinanceContactUser = newUserResource().withId(financeContactUser.getId() * 7).build();
         when(projectFinanceRepositoryMock.findOne(query.contextClassPk())).thenReturn(projectFinanceWithUserAsFinanceContact(financeContactUser));
-        when(queryPermissionRulesMock.onlyProjectFinanceUsersOrFinanceContactCanViewTheirQueries(queryResource, unrelatedFinanceContactUser)).thenReturn(false);
+        when(queryPermissionRulesMock.onlyProjectFinanceUsersOrPartnersCanViewTheirQueries(queryResource, unrelatedFinanceContactUser)).thenReturn(false);
         assertFalse(rules.financeContactUsersCanOnlyFetchAnAttachmentIfUploaderOrIfRelatedToItsQuery(attachmentResource, unrelatedFinanceContactUser));
     }
 

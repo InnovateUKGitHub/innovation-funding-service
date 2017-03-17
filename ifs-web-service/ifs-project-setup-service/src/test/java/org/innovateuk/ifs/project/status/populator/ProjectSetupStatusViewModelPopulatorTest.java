@@ -1,7 +1,7 @@
-package org.innovateuk.ifs.project;
+package org.innovateuk.ifs.project.status.populator;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -10,18 +10,16 @@ import org.innovateuk.ifs.project.builder.ProjectResourceBuilder;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.sections.SectionAccess;
 import org.innovateuk.ifs.project.sections.SectionStatus;
-import org.innovateuk.ifs.project.viewmodel.ProjectSetupStatusViewModel;
+import org.innovateuk.ifs.project.status.viewmodel.ProjectSetupStatusViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static junit.framework.TestCase.assertFalse;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -38,9 +36,7 @@ import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilde
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.FINANCE_CONTACT;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
+import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -48,12 +44,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<ProjectSetupStatusController> {
+public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
-    @Override
-    protected ProjectSetupStatusController supplyControllerUnderTest() {
-        return new ProjectSetupStatusController();
-    }
+    @InjectMocks
+    private ProjectSetupStatusViewModelPopulator populator;
 
     private static final boolean monitoringOfficerNotExpected = false;
     private static final boolean monitoringOfficerExpected = true;
@@ -102,7 +96,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
 
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
-        ProjectSetupStatusViewModel viewModel = performViewProjectStatusCallAndAssertBasicDetails(monitoringOfficerNotExpected);
+        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
 
         assertStatuses(viewModel);
 
@@ -135,7 +129,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
 
         when(projectService.getProjectManager(project.getId())).thenReturn(Optional.of(partnerUser));
 
-        ProjectSetupStatusViewModel viewModel = performViewProjectStatusCallAndAssertBasicDetails(monitoringOfficerNotExpected);
+        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
                 Pair.of("otherDocumentsStatus", SectionStatus.FLAG));
@@ -161,7 +155,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
 
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
-        ProjectSetupStatusViewModel viewModel = performViewProjectStatusCallAndAssertBasicDetails(monitoringOfficerNotExpected);
+        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
                 Pair.of("otherDocumentsStatus", SectionStatus.HOURGLASS));
@@ -176,6 +170,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                 .withProjectLeadStatus(newProjectLeadStatusResource()
                         .withProjectDetailsStatus(COMPLETE)
                         .withFinanceContactStatus(COMPLETE)
+                        .withFinanceChecksStatus(PENDING)
                         .withSpendProfileStatus(NOT_REQUIRED)
                         .withOrganisationId(organisationResource.getId())
                         .build())
@@ -186,10 +181,11 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
 
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
-        ProjectSetupStatusViewModel viewModel = performViewProjectStatusCallAndAssertBasicDetails(monitoringOfficerNotExpected);
+        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("projectDetailsStatus", SectionStatus.TICK),
-                Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS));
+                Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
+                Pair.of("financeChecksStatus", SectionStatus.HOURGLASS));
 
         assertFalse(viewModel.isProjectComplete());
     }
@@ -201,6 +197,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                 .withProjectLeadStatus(newProjectLeadStatusResource()
                         .withProjectDetailsStatus(COMPLETE)
                         .withFinanceContactStatus(COMPLETE)
+                        .withFinanceChecksStatus(PENDING)
                         .withSpendProfileStatus(NOT_REQUIRED)
                         .withOrganisationId(organisationResource.getId())
                         .build())
@@ -211,12 +208,12 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
 
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
-        ProjectSetupStatusViewModel viewModel = performViewProjectStatusCallAndAssertBasicDetails(monitoringOfficerNotExpected);
+        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("projectDetailsStatus", SectionStatus.TICK),
                 Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
-                Pair.of("financeChecksStatus", SectionStatus.EMPTY));
-        assertEquals(viewModel.getFinanceChecksSection(), SectionAccess.NOT_ACCESSIBLE);
+                Pair.of("financeChecksStatus", SectionStatus.HOURGLASS));
+        assertEquals(viewModel.getFinanceChecksSection(), SectionAccess.ACCESSIBLE);
 
         assertFalse(viewModel.isProjectComplete());
     }
@@ -244,18 +241,18 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         when(projectService.getMonitoringOfficerForProject(project.getId())).thenReturn(monitoringOfficerNotFoundResult);
         when(projectService.getOrganisationByProjectAndUser(project.getId(), loggedInUser.getId())).thenReturn(organisationResource);
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(Arrays.asList(newProjectUserResource()
-                .withUser(loggedInUser.getId())
-                .withOrganisation(organisationResource.getId())
-                .withRoleName(FINANCE_CONTACT).build(),
+                        .withUser(loggedInUser.getId())
+                        .withOrganisation(organisationResource.getId())
+                        .withRoleName(FINANCE_CONTACT).build(),
                 newProjectUserResource()
                         .withUser(loggedInUser.getId())
                         .withOrganisation(organisationResource.getId())
                         .withRoleName(PARTNER).build()));
 
-                when(projectService.getProjectManager(project.getId())).thenReturn(Optional.of((newProjectUserResource()
-                        .withUser(loggedInUser.getId())
-                        .withOrganisation(organisationResource.getId())
-                        .withRoleName(FINANCE_CONTACT).build())));
+        when(projectService.getProjectManager(project.getId())).thenReturn(Optional.of((newProjectUserResource()
+                .withUser(loggedInUser.getId())
+                .withOrganisation(organisationResource.getId())
+                .withRoleName(FINANCE_CONTACT).build())));
 
         ProjectUserResource partnerUser = newProjectUserResource()
                 .withUser(loggedInUser.getId() + 1000L)
@@ -266,7 +263,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsFoundResult);
         when(projectService.getProjectTeamStatus(project.getId(), Optional.empty())).thenReturn(teamStatus);
 
-        ProjectSetupStatusViewModel viewModel = performViewProjectStatusCallAndAssertBasicDetails(monitoringOfficerNotExpected);
+        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("projectDetailsStatus", SectionStatus.TICK),
                 Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
@@ -284,6 +281,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                 withProjectLeadStatus(newProjectLeadStatusResource()
                         .withProjectDetailsStatus(COMPLETE)
                         .withFinanceContactStatus(COMPLETE)
+                        .withFinanceChecksStatus(PENDING)
                         .withSpendProfileStatus(NOT_REQUIRED)
                         .withOrganisationId(organisationResource.getId())
                         .build())
@@ -294,8 +292,9 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
 
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
-        ProjectSetupStatusViewModel viewModel = performViewProjectStatusCallAndAssertBasicDetails(monitoringOfficerNotExpected);
+        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
+                Pair.of("financeChecksStatus", SectionStatus.HOURGLASS),
                 Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS));
 
         assertFalse(viewModel.isProjectComplete());
@@ -308,16 +307,18 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                 withProjectLeadStatus(newProjectLeadStatusResource().
                         withProjectDetailsStatus(COMPLETE).
                         withSpendProfileStatus(NOT_REQUIRED).
+                        withFinanceChecksStatus(PENDING).
                         withOrganisationId(organisationResource.getId()).
                         build()).
                 build();
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsNotFoundResult, teamStatus);
 
-        ProjectSetupStatusViewModel viewModel = performViewProjectStatusCallAndAssertBasicDetails(monitoringOfficerExpected);
+        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("projectDetailsStatus", SectionStatus.TICK),
                 Pair.of("monitoringOfficerStatus", SectionStatus.TICK),
+                Pair.of("financeChecksStatus", SectionStatus.HOURGLASS),
                 Pair.of("bankDetailsStatus", SectionStatus.EMPTY));
 
         assertFalse(viewModel.isProjectComplete());
@@ -338,7 +339,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsNotFoundResult, teamStatus);
 
-        ProjectSetupStatusViewModel viewModel = performViewProjectStatusCallAndAssertBasicDetails(monitoringOfficerExpected);
+        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("projectDetailsStatus", SectionStatus.TICK),
                 Pair.of("monitoringOfficerStatus", SectionStatus.TICK),
@@ -367,7 +368,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsNotFoundResult, teamStatus);
 
-        ProjectSetupStatusViewModel viewModel = performViewProjectStatusCallAndAssertBasicDetails(monitoringOfficerExpected);
+        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("projectDetailsStatus", SectionStatus.TICK),
                 Pair.of("monitoringOfficerStatus", SectionStatus.TICK),
@@ -396,12 +397,12 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsNotFoundResult, teamStatus);
 
-        ProjectSetupStatusViewModel viewModel = performViewProjectStatusCallAndAssertBasicDetails(monitoringOfficerExpected);
+        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("projectDetailsStatus", SectionStatus.TICK),
                 Pair.of("monitoringOfficerStatus", SectionStatus.TICK),
                 Pair.of("bankDetailsStatus", SectionStatus.TICK),
-                Pair.of("financeChecksStatus", SectionStatus.HOURGLASS));
+                Pair.of("financeChecksStatus", SectionStatus.FLAG));
 
         assertFalse(viewModel.isProjectComplete());
     }
@@ -444,7 +445,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsFoundResult);
         when(projectService.getProjectTeamStatus(project.getId(), Optional.empty())).thenReturn(teamStatus);
 
-        ProjectSetupStatusViewModel viewModel = performViewProjectStatusCallAndAssertBasicDetails(monitoringOfficerExpected);
+        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("projectDetailsStatus", SectionStatus.TICK),
                 Pair.of("monitoringOfficerStatus", SectionStatus.TICK),
@@ -473,7 +474,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
 
-        ProjectSetupStatusViewModel viewModel = performViewProjectStatusCallAndAssertBasicDetails(monitoringOfficerExpected);
+        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("projectDetailsStatus", SectionStatus.TICK),
                 Pair.of("monitoringOfficerStatus", SectionStatus.TICK),
@@ -503,7 +504,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
 
-        ProjectSetupStatusViewModel viewModel = performViewProjectStatusCallAndAssertBasicDetails(monitoringOfficerExpected);
+        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("projectDetailsStatus", SectionStatus.TICK),
                 Pair.of("monitoringOfficerStatus", SectionStatus.TICK),
@@ -534,7 +535,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
 
-        ProjectSetupStatusViewModel viewModel = performViewProjectStatusCallAndAssertBasicDetails(monitoringOfficerExpected);
+        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("projectDetailsStatus", SectionStatus.TICK),
                 Pair.of("monitoringOfficerStatus", SectionStatus.TICK),
@@ -565,7 +566,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
 
-        ProjectSetupStatusViewModel viewModel = performViewProjectStatusCallAndAssertBasicDetails(monitoringOfficerExpected);
+        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("projectDetailsStatus", SectionStatus.TICK),
                 Pair.of("monitoringOfficerStatus", SectionStatus.TICK),
@@ -596,7 +597,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
 
-        ProjectSetupStatusViewModel viewModel = performViewProjectStatusCallAndAssertBasicDetails(monitoringOfficerExpected);
+        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("projectDetailsStatus", SectionStatus.TICK),
                 Pair.of("monitoringOfficerStatus", SectionStatus.TICK),
@@ -629,7 +630,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
 
-        ProjectSetupStatusViewModel viewModel = performViewProjectStatusCallAndAssertBasicDetails(monitoringOfficerExpected);
+        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("projectDetailsStatus", SectionStatus.TICK),
                 Pair.of("monitoringOfficerStatus", SectionStatus.TICK),
@@ -663,7 +664,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
 
-        ProjectSetupStatusViewModel viewModel = performViewProjectStatusCallAndAssertBasicDetails(monitoringOfficerExpected);
+        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("projectDetailsStatus", SectionStatus.TICK),
                 Pair.of("monitoringOfficerStatus", SectionStatus.TICK),
@@ -697,7 +698,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
 
-        ProjectSetupStatusViewModel viewModel = performViewProjectStatusCallAndAssertBasicDetails(monitoringOfficerExpected);
+        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("projectDetailsStatus", SectionStatus.TICK),
                 Pair.of("monitoringOfficerStatus", SectionStatus.TICK),
@@ -731,12 +732,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
 
         setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsFoundResult, teamStatus);
 
-        MvcResult result = mockMvc.perform(get("/project/{id}", project.getId()))
-                .andExpect(status().isOk())
-                .andExpect(view().name("project/setup-status"))
-                .andReturn();
-
-        ProjectSetupStatusViewModel viewModel = (ProjectSetupStatusViewModel) result.getModelAndView().getModel().get("model");
+        ProjectSetupStatusViewModel viewModel = populator.populateViewModel(project.getId(), loggedInUser);
         assertStandardViewModelValuesCorrect(viewModel, monitoringOfficerExpected);
 
         assertPartnerStatusFlagsCorrect(viewModel,
@@ -776,7 +772,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
 
         when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);*/
 
-        ProjectSetupStatusViewModel viewModel = performViewProjectStatusCallAndAssertBasicDetails(monitoringOfficerNotExpected);
+        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
                 Pair.of("otherDocumentsStatus", SectionStatus.HOURGLASS));
@@ -815,7 +811,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                 .withOrganisation(organisationResource.getId())
                 .withRoleName(PROJECT_MANAGER).build())));
 
-        ProjectSetupStatusViewModel viewModel = performViewProjectStatusCallAndAssertBasicDetails(monitoringOfficerNotExpected);
+        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
                 Pair.of("otherDocumentsStatus", SectionStatus.FLAG));
@@ -841,7 +837,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         project = newProjectResource().withApplication(application).withDocumentsSubmittedDate(LocalDateTime.now()).withOtherDocumentsApproved(ApprovalType.REJECTED).build();
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
-        ProjectSetupStatusViewModel viewModel = performViewProjectStatusCallAndAssertBasicDetails(monitoringOfficerNotExpected);
+        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
                 Pair.of("otherDocumentsStatus", SectionStatus.HOURGLASS));
@@ -867,7 +863,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         project = newProjectResource().withApplication(application).withDocumentsSubmittedDate(LocalDateTime.now()).withOtherDocumentsApproved(ApprovalType.APPROVED).build();
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
-        ProjectSetupStatusViewModel viewModel = performViewProjectStatusCallAndAssertBasicDetails(monitoringOfficerNotExpected);
+        ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
                 Pair.of("otherDocumentsStatus", SectionStatus.TICK));
@@ -875,20 +871,8 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
         assertFalse(viewModel.isProjectComplete());
     }
 
-    private ProjectSetupStatusViewModel performViewProjectStatusCallAndAssertBasicDetails(boolean expectedMonitoringOfficer) throws Exception {
-
-        MvcResult result = performViewProjectStatusCall();
-
-        ProjectSetupStatusViewModel viewModel = (ProjectSetupStatusViewModel) result.getModelAndView().getModel().get("model");
-        assertStandardViewModelValuesCorrect(viewModel, expectedMonitoringOfficer);
-        return viewModel;
-    }
-
-    private MvcResult performViewProjectStatusCall() throws Exception {
-        return mockMvc.perform(get("/project/{id}", project.getId()))
-                .andExpect(status().isOk())
-                .andExpect(view().name("project/setup-status"))
-                .andReturn();
+    private ProjectSetupStatusViewModel performPopulateView(Long projectId, UserResource loggedInUser) throws Exception {
+        return populator.populateViewModel(projectId, loggedInUser);
     }
 
     private void setupLookupProjectDetailsExpectations(Optional<MonitoringOfficerResource> monitoringOfficerResult, RestResult<BankDetailsResource> bankDetailsResult, ProjectTeamStatusResource teamStatus) {

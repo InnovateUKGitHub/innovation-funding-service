@@ -1,5 +1,6 @@
-package org.innovateuk.ifs.project;
+package org.innovateuk.ifs.project.status.controller;
 
+import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.consortiumoverview.viewmodel.ProjectConsortiumStatusViewModel;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;

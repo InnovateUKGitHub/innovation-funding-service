@@ -179,9 +179,9 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
         return isInternal(user);
     }
 
-    @PermissionRule(value="READ_OVERVIEW", description = "Finance contacts can see the project finance overview")
-    public boolean financeContactsCanSeeTheProjectFinanceOverviewsForTheirProject(final Long projectId, final UserResource user) {
-        return isPartner(projectId, user.getId()) && isFinanceContact(projectId, user.getId());
+    @PermissionRule(value="READ_OVERVIEW", description = "Project partners can see their project finance overview")
+    public boolean partnersCanSeeTheProjectFinanceOverviewsForTheirProject(final Long projectId, final UserResource user) {
+        return isPartner(projectId, user.getId());
     }
 
 }

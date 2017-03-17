@@ -1,10 +1,11 @@
-package org.innovateuk.ifs.project;
+package org.innovateuk.ifs.project.status.security;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
+import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -59,7 +60,7 @@ public class ProjectSetupSectionsPermissionRules {
     @PermissionRule(value = "ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL", description = "A partner can access the Bank Details " +
             "section when their Companies House details are complete or not required, and the Project Details have been submitted")
     public boolean partnerCanAccessFinanceChecksSection(Long projectId, UserResource user) {
-            return isProjectFinanceContact(projectId, user) && doSectionCheck(projectId, user, ProjectSetupSectionPartnerAccessor::canAccessFinanceChecksSection);
+            return doSectionCheck(projectId, user, ProjectSetupSectionPartnerAccessor::canAccessFinanceChecksSection);
     }
 
     @PermissionRule(value = "ACCESS_SPEND_PROFILE_SECTION", description = "A partner can access the Spend Profile " +
@@ -133,15 +134,7 @@ public class ProjectSetupSectionsPermissionRules {
         });
     }
 
-    private boolean isProjectFinanceContact(Long projectId, UserResource user) {
-        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
-
-        return simpleFindFirst(projectUsers, pu ->
-                user.getId().equals(pu.getUser()) && pu.isFinanceContact())
-                .isPresent();
-    }
-
-    class ProjectSetupSectionPartnerAccessorSupplier implements Function<ProjectTeamStatusResource, ProjectSetupSectionPartnerAccessor> {
+    public class ProjectSetupSectionPartnerAccessorSupplier implements Function<ProjectTeamStatusResource, ProjectSetupSectionPartnerAccessor> {
 
         @Override
         public ProjectSetupSectionPartnerAccessor apply(ProjectTeamStatusResource teamStatus) {

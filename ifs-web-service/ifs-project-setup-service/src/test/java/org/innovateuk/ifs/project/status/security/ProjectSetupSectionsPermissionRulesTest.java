@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project;
+package org.innovateuk.ifs.project.status.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
@@ -9,13 +9,13 @@ import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.sections.ProjectSetupSectionPartnerAccessor;
 import org.innovateuk.ifs.project.sections.SectionAccess;
+import org.innovateuk.ifs.project.status.security.ProjectSetupSectionsPermissionRules;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 
 import java.util.Collections;
 import java.util.List;
@@ -122,7 +122,7 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
     }
 
     @Test
-    public void testFinanceChecksFinanceContactAccess() {
+    public void testPartnerFinanceContactAccess() {
         long projectId = 123L;
         long organisationId = 234L;
 
@@ -133,9 +133,8 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
         OrganisationResource o = newOrganisationResource().withId(organisationId).build();
 
         ProjectPartnerStatusResource partnerStatus = newProjectPartnerStatusResource().withProjectDetailsStatus(ProjectActivityStates.COMPLETE).withOrganisationId(organisationId).withOrganisationType(OrganisationTypeEnum.valueOf(BUSINESS.toString())).build();
-        List<ProjectUserResource> pu = newProjectUserResource().withProject(projectId).withOrganisation(o.getId()).withUser(user.getId()).build(2);
+        List<ProjectUserResource> pu = newProjectUserResource().withProject(projectId).withOrganisation(o.getId()).withUser(user.getId()).build(1);
         pu.get(0).setRoleName(PARTNER.getName());
-        pu.get(1).setRoleName(FINANCE_CONTACT.getName());
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().withPartnerStatuses(Collections.singletonList(partnerStatus)).build();
 
@@ -149,7 +148,7 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
     }
 
     @Test
-    public void testFinanceChecksFinanceContactNoAccess() {
+    public void testFinanceChecksNoAccess() {
         long projectId = 123L;
         long organisationId = 234L;
 
@@ -160,9 +159,8 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
         OrganisationResource o = newOrganisationResource().withId(organisationId).build();
 
         ProjectPartnerStatusResource partnerStatus = newProjectPartnerStatusResource().withProjectDetailsStatus(ProjectActivityStates.COMPLETE).withOrganisationId(organisationId).withOrganisationType(OrganisationTypeEnum.valueOf(BUSINESS.toString())).build();
-        List<ProjectUserResource> pu = newProjectUserResource().withProject(projectId).withOrganisation(o.getId()).withUser(user.getId()).build(2);
+        List<ProjectUserResource> pu = newProjectUserResource().withProject(projectId).withOrganisation(o.getId()).withUser(user.getId()).build(1);
         pu.get(0).setRoleName(PARTNER.getName());
-        pu.get(1).setRoleName(FINANCE_CONTACT.getName());
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().withPartnerStatuses(Collections.singletonList(partnerStatus)).build();
         when(projectServiceMock.getProjectUsersForProject(projectId)).thenReturn(pu);
@@ -172,32 +170,6 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
         assertFalse(rules.partnerCanAccessFinanceChecksSection(123L, user));
 
         verify(accessor).canAccessFinanceChecksSection(any());
-    }
-
-    @Test
-    public void testFinanceChecksNonFinanceContactNoAccess() {
-        long projectId = 123L;
-        long organisationId = 234L;
-
-        UserResource user = newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(PARTNER).build())).build();
-
-        BaseIntegrationTest.setLoggedInUser(user);
-
-        OrganisationResource o = newOrganisationResource().withId(organisationId).build();
-
-        ProjectPartnerStatusResource partnerStatus = newProjectPartnerStatusResource().withProjectDetailsStatus(ProjectActivityStates.COMPLETE).withOrganisationId(organisationId).withOrganisationType(OrganisationTypeEnum.valueOf(BUSINESS.toString())).build();
-        List<ProjectUserResource> pu = newProjectUserResource().withProject(projectId).withOrganisation(o.getId()).withUser(user.getId()).build(2);
-        pu.get(0).setRoleName(PARTNER.getName());
-        pu.get(1).setRoleName(PROJECT_MANAGER.getName());
-
-        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().withPartnerStatuses(Collections.singletonList(partnerStatus)).build();
-
-        when(projectServiceMock.getProjectUsersForProject(projectId)).thenReturn(pu);
-        when(projectServiceMock.getProjectTeamStatus(projectId, Optional.of(user.getId()))).thenReturn(teamStatus);
-
-        assertFalse(rules.partnerCanAccessFinanceChecksSection(123L, user));
-
-        verifyZeroInteractions(accessor);
     }
 
     private void assertLeadPartnerSuccessfulAccess(BiFunction<ProjectSetupSectionPartnerAccessor, OrganisationResource, SectionAccess> accessorCheck,

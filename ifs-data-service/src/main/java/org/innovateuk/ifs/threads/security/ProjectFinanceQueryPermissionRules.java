@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.threads.resource.QueryResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,18 +31,18 @@ public class ProjectFinanceQueryPermissionRules  {
     }
 
     @PermissionRule(value = "PF_READ", description = "Only Project Finance or Finance Contact Users can view Queries")
-    public boolean onlyProjectFinanceUsersOrFinanceContactCanViewTheirQueries(final QueryResource query, final UserResource user) {
-        return isProjectFinanceUser(user) || isFinanceContact(user, query.contextClassPk);
+    public boolean onlyProjectFinanceUsersOrPartnersCanViewTheirQueries(final QueryResource query, final UserResource user) {
+        return isProjectFinanceUser(user) || isPartner(user, query.contextClassPk);
     }
 
     @PermissionRule(value = "PF_ADD_POST", description = "Project Finance users or Finance Contact Users can add posts to a query")
-    public boolean onlyProjectFinanceUsersOrFinanceContactAddPostToTheirQueries(final QueryResource query, final UserResource user) {
-        return query.posts.isEmpty() ? isProjectFinanceUser(user) : isProjectFinanceUser(user) || isFinanceContact(user, query.contextClassPk);
+    public boolean onlyProjectFinanceUsersOrPartnersAddPostToTheirQueries(final QueryResource query, final UserResource user) {
+        return query.posts.isEmpty() ? isProjectFinanceUser(user) : isProjectFinanceUser(user) || isPartner(user, query.contextClassPk);
     }
 
-    private boolean isFinanceContact(UserResource user, Long projectFinance) {
+    private boolean isPartner(UserResource user, Long projectFinance) {
         return findProjectFinance(projectFinance)
-                .map(pf -> pf.isFinanceContact(user.getId())).orElse(false);
+                .map(pf -> pf.isPartner(user.getId())).orElse(false);
     }
 
     private Optional<ProjectFinance> findProjectFinance(Long id) {
