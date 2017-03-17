@@ -41,7 +41,7 @@ Application team page
     Given the user clicks the button/link    link=Invite robot test application
     When the user clicks the button/link    link=view and add participants to your application
     Then the user should see the text in the page    Application team
-    And the user should see the text in the page    View and manage your contributors and partners in the application.
+    And the user should see the text in the page    View and manage your participants in the application.
     And the lead applicant should have the correct status
     And the user should see the element    link=Application overview
 
@@ -80,7 +80,7 @@ Lead organisation client-side validations
     [Documentation]    INFUND-901
     ...
     ...    INFUND-7974
-    [Tags]
+    [Tags]    HappyPath
     When The user enters text to a text field    jQuery=tr:nth-of-type(2) td:nth-of-type(1) input    Florian
     And The user enters text to a text field    jQuery=tr:nth-of-type(2) td:nth-of-type(2) input    florian21@florian.com
     Then the user cannot see a validation error in the page
@@ -112,7 +112,7 @@ Partner organisation Server-side validations
     [Documentation]    INFUND-896
     ...
     ...    INFUND-7979
-    [Tags]
+    [Tags]    HappyPath
     Given the user clicks the button/link    jQuery=a:contains('Add partner organisation')
     When The user enters text to a text field    name=organisationName    ${EMPTY}
     And The user enters text to a text field    name=applicants[0].name    ${EMPTY}
@@ -125,6 +125,7 @@ Partner organisation Server-side validations
 
 Partner organisation Client-side validations
     [Documentation]    INFUND-7979
+    [Tags]    HappyPath
     When The user enters text to a text field    name=organisationName    Fannie May
     And The user enters text to a text field    name=applicants[0].name    Adrian Booth
     And The user enters text to a text field    name=applicants[0].email    ${test_mailbox_one}+inviteorg${unique_email_number}@gmail.com
@@ -136,7 +137,7 @@ Valid invitation submit
     [Setup]    Delete the emails from both test mailboxes
     When The user clicks the button/link    jQuery=button:contains("Add organisation and invite applicants")
     Then the user should see the element    jQuery=.table-overflow tr:contains("Steve Smith") td:nth-child(3):contains("Lead")
-    And the user should see the element    jQuery=.table-overflow tr:contains("Adrian Booth") td:nth-child(3):contains("Pending")
+    And the user should see the element    jQuery=.table-overflow tr:contains("Adrian Booth") td:nth-child(3):contains("Invite pending")
 
 The Lead's inputs should not be visible in other application invites
     [Documentation]    INFUND-901
@@ -148,7 +149,7 @@ Pending users visible in the assign list but not clickable
     [Documentation]    INFUND-928
     ...
     ...    INFUND-1962
-    [Tags]    HappyPath
+    [Tags]
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
     And the user clicks the button/link    link=Project summary
@@ -208,7 +209,7 @@ Partner can invite others to his own organisation
     And The user enters text to a text field    jQuery=tr:nth-of-type(2) td:nth-of-type(1) input    Mark
     And The user enters text to a text field    jQuery=tr:nth-of-type(2) td:nth-of-type(2) input    mark21@innovateuk.com
     And the user clicks the button/link    jQuery=button:contains("Update organisation")
-    Then The user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(3):contains("Pending")
+    Then The user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(3):contains("Invite pending")
 
 Lead should see the accepted partner in the assign list
     [Documentation]    INFUND-1779
@@ -238,7 +239,7 @@ Lead applicant invites a non registered user in the same organisation
     And The user enters text to a text field    name=applicants[0].email    ${test_mailbox_one}+inviteorg2@gmail.com
     And the user clicks the button/link    jQuery=button:contains("Update organisation")
     Then the user should see the text in the page    Application team
-    And the user should see the text in the page    View and manage your contributors and partners in the application
+    And the user should see the text in the page    View and manage your participants in the application
     [Teardown]    the user closes the browser
 
 Registered partner should not create new org but should follow the create account flow
@@ -269,7 +270,7 @@ the applicant cannot assign to pending invitees
 
 the status of the people should be correct in the Manage contributors page
     the user should see the element    jQuery=.table-overflow tr:contains("Steve Smith") td:nth-child(3):contains("Lead")
-    the user should see the element    jQuery=.table-overflow tr:contains("Adrian Booth") td:nth-child(3):contains("Pending")
+    the user should see the element    jQuery=.table-overflow tr:contains("Adrian Booth") td:nth-child(3):contains("Invite pending")
 
 the user can see the updated company name throughout the application
     Given the user navigates to the page    ${DASHBOARD_URL}

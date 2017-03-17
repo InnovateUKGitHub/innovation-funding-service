@@ -36,7 +36,7 @@ public class AssessorServiceImpl implements AssessorService {
     private CompetitionInviteService competitionInviteService;
 
     @Autowired
-    private RegistrationService userRegistrationService;
+    private RegistrationService registrationService;
 
     @Autowired
     private RoleService roleService;
@@ -123,7 +123,7 @@ public class AssessorServiceImpl implements AssessorService {
     }
 
     private ServiceResult<User> createUser(UserRegistrationResource userRegistrationResource) {
-        return userRegistrationService.createUser(userRegistrationResource).andOnSuccess(
-                created -> userRegistrationService.activateUser(created.getId()).andOnSuccessReturn(result -> userRepository.findOne(created.getId())));
+        return registrationService.createUser(userRegistrationResource).andOnSuccess(
+                created -> registrationService.activateUser(created.getId()).andOnSuccessReturn(result -> userRepository.findOne(created.getId())));
     }
 }
