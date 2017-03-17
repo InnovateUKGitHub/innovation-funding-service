@@ -73,6 +73,7 @@ function tailorAppInstance() {
     if [[ ${TARGET} == "production" || ${TARGET} == "demo" || ${TARGET} == "uat" ]]
     then
         sed -i.bak "s/claimName: file-upload-claim/claimName: ${TARGET}-file-upload-claim/g" os-files-tmp/*.yml
+        if [ -z "$LDAP_PASSWORD" ]; then echo "Set LDAP_PASSWORD environment variable"; exit -1; fi
         sed -i.bak "s/<<LDAP-PASSWORD>>/${LDAP_PASSWORD}/g" os-files-tmp/shib/named-envs/*.yml
 
     fi

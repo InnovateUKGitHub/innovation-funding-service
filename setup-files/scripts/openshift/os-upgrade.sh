@@ -17,7 +17,12 @@ INTERNAL_REGISTRY=172.30.80.28:5000
 SVC_ACCOUNT_TOKEN=${bamboo_openshift_svc_account_token}
 SVC_ACCOUNT_CLAUSE="--namespace=${PROJECT} --token=${SVC_ACCOUNT_TOKEN} --server=https://console.prod.ifs-test-clusters.com:443 --insecure-skip-tls-verify=true"
 
-REGISTRY_TOKEN=${SVC_ACCOUNT_TOKEN}
+if [ -z "$SVC_ACCOUNT_TOKEN" ]
+then
+    REGISTRY_TOKEN=$(oc whoami -t)
+else
+    REGISTRY_TOKEN=${SVC_ACCOUNT_TOKEN}
+fi
 
 function uploadToRegistry() {
     docker tag innovateuk/data-service:${VERSION} \
