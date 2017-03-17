@@ -184,7 +184,7 @@ Collaborator can see that Research area is not selected
     Given the user navigates to Your-finances page    Assign test
     Then The user should see the element     jQuery=p:contains("You must select a research category in application details")
 
-Lead selects Research Area
+Lead selects Research category
     [Documentation]  INFUND-6823
     [Tags]  Email
     [Setup]  log in as a different user       ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
@@ -194,7 +194,7 @@ Lead selects Research Area
     When the user navigates to the page       ${DASHBOARD_URL}
     Then the user clicks the button/link      link=Assign test
     When the user clicks the button/link      link=Application details
-    and  the user clicks the button/link      jQuery=button:contains("Choose your research category")
+    And the user clicks the button/link      jQuery=button:contains("Choose your research category")
     Then the user should see the element      jQuery=legend:contains("Research category")
     And the user fills out the research category
 
