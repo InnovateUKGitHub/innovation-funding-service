@@ -22,8 +22,6 @@ items:
       spec:
         containers:
         - image: innovateuk/ifs-shib-idp:0.4.6.1
-          command: ["sleep"]
-          args: ["1000000"]
           name: idp
           imagePullPolicy: IfNotPresent
           env:
