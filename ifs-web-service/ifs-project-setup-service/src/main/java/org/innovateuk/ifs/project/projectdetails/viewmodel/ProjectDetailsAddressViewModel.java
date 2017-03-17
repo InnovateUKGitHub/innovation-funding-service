@@ -3,6 +3,9 @@ package org.innovateuk.ifs.project.projectdetails.viewmodel;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 
+/**
+ * The view model that backs the project address
+ */
 public class ProjectDetailsAddressViewModel implements BasicProjectDetailsViewModel {
     private Long applicationId;
     private Long projectId;

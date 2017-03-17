@@ -1,7 +1,8 @@
 package org.innovateuk.ifs.project.projectdetails.viewmodel;
 
-// model for selecting project users
-
+/**
+ * model for selecting project users
+ */
 public class ProjectUserInviteModel {
     private String name;
     private String status;

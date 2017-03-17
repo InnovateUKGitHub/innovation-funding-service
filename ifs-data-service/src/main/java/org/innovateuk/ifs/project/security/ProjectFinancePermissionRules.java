@@ -15,6 +15,9 @@ import static org.innovateuk.ifs.security.SecurityRuleUtil.isCompAdmin;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isInternal;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isProjectFinanceUser;
 
+/**
+ * Defines the permissions for interaction with project finances.
+ */
 @PermissionRules
 public class ProjectFinancePermissionRules extends BasePermissionRules {
 

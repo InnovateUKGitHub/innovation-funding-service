@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.project.projectdetails.viewmodel;
 
-
+/**
+ * The view model that backs joining a project
+ */
 public class JoinAProjectViewModel {
     private String projectName;
     private String competitionName;

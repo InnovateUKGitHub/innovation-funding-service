@@ -7,9 +7,11 @@ import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 
 import javax.validation.constraints.NotNull;
 
+/**
+ * Form field model for the finance contact content
+ */
 @FieldRequiredIfOptionIs(required = "name", argument = "financeContact", predicate = -1L, message = "{validation.project.invite.name.required}")
 @EmailRequiredIfOptionIs(required = "email", argument = "financeContact", predicate = -1L, regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.project.invite.email.required}", invalidMessage= "{validation.project.invite.email.invalid}")
-
 public class FinanceContactForm extends BaseBindingResultTarget {
 
 	@NotNull(message = "{validation.financecontactform.financecontact.required}")

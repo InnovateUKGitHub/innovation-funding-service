@@ -24,6 +24,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Service for handling finance checks functionality
+ */
 @Service
 public class FinanceCheckServiceImpl implements FinanceCheckService {
 

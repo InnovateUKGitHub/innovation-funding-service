@@ -27,8 +27,9 @@ import static org.innovateuk.ifs.commons.error.Error.fieldError;
 
 /**
  * This controller handles address lookups
- * TODO this is a candidate for refactor
  */
+//TODO this is a candidate for refactor
+
 public class AddressLookupBaseController {
     public static final String FORM_ATTR_NAME = "form";
     protected static final String MANUAL_ADDRESS = "manual-address";

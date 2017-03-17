@@ -15,6 +15,9 @@ import java.util.Optional;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isProjectFinanceUser;
 
+/**
+ * Defines the permissions for interaction with project finance queries.
+ */
 @Component
 @PermissionRules
 public class ProjectFinanceQueryPermissionRules  {

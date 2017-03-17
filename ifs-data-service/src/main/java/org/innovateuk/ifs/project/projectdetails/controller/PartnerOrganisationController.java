@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * This controller handles calls for partner organisations
+ */
 @RestController
 @RequestMapping("/project/{projectId}")
 public class PartnerOrganisationController {

@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.sections;
 
 import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -21,7 +20,7 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
     private ProjectSetupProgressChecker projectSetupProgressCheckerMock;
 
     @InjectMocks
-    private ProjectSetupSectionPartnerAccessor accessor;
+    private ProjectSetupSectionsAccessibilityHelper accessor;
 
     private OrganisationResource organisation = newOrganisationResource().build();
 

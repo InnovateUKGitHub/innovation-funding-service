@@ -6,6 +6,9 @@ import org.innovateuk.ifs.project.projectdetails.form.ProjectDetailsAddressForm;
 
 import javax.validation.constraints.Pattern;
 
+/**
+ * Form field model for the bank details content
+ */
 public class BankDetailsForm extends ProjectDetailsAddressForm {
     @Pattern(regexp = "\\d{6}", message = "{validation.standard.sortcode.format}")
     private String sortCode;

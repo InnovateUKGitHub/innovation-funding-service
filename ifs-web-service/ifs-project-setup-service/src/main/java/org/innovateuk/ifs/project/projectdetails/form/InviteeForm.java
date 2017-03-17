@@ -1,13 +1,15 @@
 package org.innovateuk.ifs.project.projectdetails.form;
 
-// this class defines the form for inviting new users to the project
-
 import org.innovateuk.ifs.commons.validation.ValidationConstants;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
+
+/**
+ * Form field model for the partner invitation content
+ */
 public class InviteeForm extends BaseBindingResultTarget {
 
     private Long userId;

@@ -14,14 +14,7 @@ import java.util.Map;
  */
 public class TotalProjectSpendProfileTableViewModel {
 
-    /*
-    * Dynamically holds the months for the duration of the project
-    */
     private List<LocalDateResource> months;
-
-    /*
-     * Holds the cost per organisation for each month, the first entry in the list representing the first month and so on.
-     */
     private Map<Long, List<BigDecimal>> monthlyCostsPerOrganisationMap;
     private Map<Long, BigDecimal> eligibleCostPerOrganisationMap;
     private Map<Long, BigDecimal> organisationToActualTotal;

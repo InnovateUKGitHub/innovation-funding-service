@@ -3,6 +3,9 @@ package org.innovateuk.ifs.project.bankdetails.viewmodel;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 
+/**
+ * A view model that backs the bank details
+ */
 public class BankDetailsViewModel {
     private Long projectId;
     private String projectName;
