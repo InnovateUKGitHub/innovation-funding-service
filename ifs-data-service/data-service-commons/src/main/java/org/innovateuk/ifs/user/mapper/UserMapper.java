@@ -13,7 +13,6 @@ import org.mapstruct.Mappings;
         config = GlobalMapperConfig.class,
         uses = {
             RoleMapper.class,
-            EthnicityMapper.class,
         }
 )
 public abstract class UserMapper extends BaseMapper<User, UserResource, Long> {

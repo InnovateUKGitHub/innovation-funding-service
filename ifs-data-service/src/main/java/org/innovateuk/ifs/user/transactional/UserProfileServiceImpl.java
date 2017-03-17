@@ -10,7 +10,6 @@ import org.innovateuk.ifs.user.domain.Profile;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.AffiliationMapper;
 import org.innovateuk.ifs.user.mapper.AgreementMapper;
-import org.innovateuk.ifs.user.mapper.EthnicityMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.AgreementRepository;
 import org.innovateuk.ifs.user.repository.ProfileRepository;
@@ -56,9 +55,6 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
 
     @Autowired
     private AddressMapper addressMapper;
-
-    @Autowired
-    private EthnicityMapper ethnicityMapper;
 
     @Autowired
     private InnovationAreaMapper innovationAreaMapper;
@@ -198,12 +194,8 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
     }
 
     private void updateBasicDetails(User user, UserProfileResource profileDetails) {
-        user.setTitle(profileDetails.getTitle());
         user.setFirstName(profileDetails.getFirstName());
         user.setLastName(profileDetails.getLastName());
-        user.setGender(profileDetails.getGender());
-        user.setDisability(profileDetails.getDisability());
-        user.setEthnicity(ethnicityMapper.mapIdToDomain(profileDetails.getEthnicity().getId()));
         user.setPhoneNumber(profileDetails.getPhoneNumber());
     }
 
@@ -211,12 +203,8 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
         UserProfileResource profile = new UserProfileResource();
 
         profile.setUser(user.getId());
-        profile.setTitle(user.getTitle());
         profile.setFirstName(user.getFirstName());
         profile.setLastName(user.getLastName());
-        profile.setGender(user.getGender());
-        profile.setDisability(user.getDisability());
-        profile.setEthnicity(ethnicityMapper.mapToResource(user.getEthnicity()));
         profile.setEmail(user.getEmail());
         profile.setPhoneNumber(user.getPhoneNumber());
 
@@ -243,12 +231,8 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
 
     private ServiceResult<Void> updateUser(UserResource existingUserResource, UserResource updatedUserResource) {
         existingUserResource.setPhoneNumber(updatedUserResource.getPhoneNumber());
-        existingUserResource.setTitle(updatedUserResource.getTitle());
         existingUserResource.setLastName(updatedUserResource.getLastName());
         existingUserResource.setFirstName(updatedUserResource.getFirstName());
-        existingUserResource.setGender(updatedUserResource.getGender());
-        existingUserResource.setDisability(updatedUserResource.getDisability());
-        existingUserResource.setEthnicity(updatedUserResource.getEthnicity());
         User existingUser = userMapper.mapToDomain(existingUserResource);
         return serviceSuccess(userRepository.save(existingUser)).andOnSuccessReturnVoid();
     }

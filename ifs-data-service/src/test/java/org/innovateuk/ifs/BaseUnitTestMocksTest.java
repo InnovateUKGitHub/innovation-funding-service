@@ -54,7 +54,6 @@ import org.innovateuk.ifs.form.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.form.transactional.FormInputService;
 import org.innovateuk.ifs.invite.mapper.*;
 import org.innovateuk.ifs.invite.repository.*;
-import org.innovateuk.ifs.invite.transactional.EthnicityService;
 import org.innovateuk.ifs.invite.transactional.InviteOrganisationService;
 import org.innovateuk.ifs.invite.transactional.InviteProjectService;
 import org.innovateuk.ifs.invite.transactional.RejectionReasonService;
@@ -509,15 +508,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ProjectDetailsWorkflowHandler projectDetailsWorkflowHandlerMock;
-
-    @Mock
-    protected EthnicityRepository ethnicityRepositoryMock;
-
-    @Mock
-    protected EthnicityMapper ethnicityMapperMock;
-
-    @Mock
-    protected EthnicityService ethnicityServiceMock;
 
     @Mock
     protected AssessorService assessorServiceMock;

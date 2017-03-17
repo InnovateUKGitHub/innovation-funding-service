@@ -6,7 +6,10 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.user.domain.*;
+import org.innovateuk.ifs.user.domain.Affiliation;
+import org.innovateuk.ifs.user.domain.Agreement;
+import org.innovateuk.ifs.user.domain.Profile;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.*;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -33,8 +36,6 @@ import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static org.innovateuk.ifs.user.builder.AgreementBuilder.newAgreement;
 import static org.innovateuk.ifs.user.builder.AgreementResourceBuilder.newAgreementResource;
-import static org.innovateuk.ifs.user.builder.EthnicityBuilder.newEthnicity;
-import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static org.innovateuk.ifs.user.builder.ProfileAgreementResourceBuilder.newProfileAgreementResource;
 import static org.innovateuk.ifs.user.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.ProfileSkillsEditResourceBuilder.newProfileSkillsEditResource;
@@ -802,16 +803,13 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
                 .build();
         User existingUser = newUser()
                 .withProfileId(existingProfile.getId())
-                .withEthnicity(newEthnicity().build())
                 .build();
 
         AddressResource addressResource = newAddressResource().withId(1L).build();
-        EthnicityResource ethnicityResource = newEthnicityResource().build();
 
         when(profileRepositoryMock.findOne(existingProfile.getId())).thenReturn(existingProfile);
         when(userRepositoryMock.findOne(existingUser.getId())).thenReturn(existingUser);
         when(addressMapperMock.mapToResource(existingProfile.getAddress())).thenReturn(addressResource);
-        when(ethnicityMapperMock.mapToResource(existingUser.getEthnicity())).thenReturn(ethnicityResource);
 
         UserProfileResource expected = newUserProfileResource()
                 .withUser(existingUser.getId())
@@ -819,15 +817,13 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
                 .withLastName(existingUser.getLastName())
                 .withEmail(existingUser.getEmail())
                 .withAddress(addressResource)
-                .withEthnicity(ethnicityResource)
                 .build();
 
         UserProfileResource response = service.getUserProfile(existingUser.getId()).getSuccessObject();
         assertEquals(expected, response);
 
-        InOrder inOrder = inOrder(userRepositoryMock, ethnicityMapperMock, addressMapperMock);
+        InOrder inOrder = inOrder(userRepositoryMock, addressMapperMock);
         inOrder.verify(userRepositoryMock).findOne(existingUser.getId());
-        inOrder.verify(ethnicityMapperMock).mapToResource(existingUser.getEthnicity());
         inOrder.verify(addressMapperMock).mapToResource(existingProfile.getAddress());
         inOrder.verifyNoMoreInteractions();
     }
@@ -835,7 +831,6 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
     @Test
     public void getUserProfile_userDoesNotHaveProfileYet() {
         User existingUser = newUser()
-                .withEthnicity(newEthnicity().build())
                 .build();
 
         when(userRepositoryMock.findOne(existingUser.getId())).thenReturn(existingUser);
@@ -850,9 +845,8 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
         UserProfileResource response = service.getUserProfile(existingUser.getId()).getSuccessObject();
         assertEquals(expected, response);
 
-        InOrder inOrder = inOrder(userRepositoryMock, ethnicityMapperMock);
+        InOrder inOrder = inOrder(userRepositoryMock);
         inOrder.verify(userRepositoryMock).findOne(existingUser.getId());
-        inOrder.verify(ethnicityMapperMock).mapToResource(existingUser.getEthnicity());
         inOrder.verifyNoMoreInteractions();
 
         verifyZeroInteractions(addressMapperMock);
@@ -867,15 +861,10 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
                 .build();
         User existingUser = newUser()
                 .withProfileId(originalProfile.getId())
-                .withEthnicity(newEthnicity().build())
                 .build();
 
         when(profileRepositoryMock.findOne(originalProfile.getId())).thenReturn(originalProfile);
         when(userRepositoryMock.findOne(userId)).thenReturn(existingUser);
-
-        EthnicityResource ethnicityResource = newEthnicityResource().build();
-        Ethnicity ethnicity = newEthnicity().build();
-        when(ethnicityMapperMock.mapIdToDomain(ethnicityResource.getId())).thenReturn(ethnicity);
 
         AddressResource addressResource = newAddressResource().build();
         Address address = newAddress().build();
@@ -888,15 +877,13 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
         when(profileRepositoryMock.save(updatedProfile)).thenReturn(updatedProfile);
 
         ServiceResult<Void> result = service.updateUserProfile(userId, newUserProfileResource()
-                .withEthnicity(ethnicityResource)
                 .withAddress(addressResource)
                 .build());
 
         assertTrue(result.isSuccess());
 
-        InOrder inOrder = inOrder(userRepositoryMock, ethnicityMapperMock, addressMapperMock, profileRepositoryMock);
+        InOrder inOrder = inOrder(userRepositoryMock, addressMapperMock, profileRepositoryMock);
         inOrder.verify(userRepositoryMock).findOne(userId);
-        inOrder.verify(ethnicityMapperMock).mapIdToDomain(ethnicityResource.getId());
         inOrder.verify(profileRepositoryMock).findOne(originalProfile.getId());
         inOrder.verify(addressMapperMock).mapToDomain(addressResource);
         inOrder.verify(profileRepositoryMock).save(updatedProfile);
@@ -907,14 +894,6 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
     private User createUserExpectations(Long userId, Profile profile) {
         return createLambdaMatcher(user -> {
             assertEquals(userId, user.getId());
-            assertEquals(profile, user.getProfileId());
-        });
-    }
-
-    private User createUserExpectations(Long userId, Ethnicity ethnicity, Profile profile) {
-        return createLambdaMatcher(user -> {
-            assertEquals(userId, user.getId());
-            assertEquals(ethnicity, user.getEthnicity());
             assertEquals(profile, user.getProfileId());
         });
     }

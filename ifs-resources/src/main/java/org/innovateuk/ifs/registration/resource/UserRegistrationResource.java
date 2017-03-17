@@ -25,14 +25,10 @@ public class UserRegistrationResource extends UserProfileBaseResource{
     public UserRegistrationResource() {
     }
 
-    public UserRegistrationResource(Title title, String firstName, String lastName, String phoneNumber, Gender gender, Disability disability, EthnicityResource ethnicity, String password, AddressResource address) {
-        setTitle(title);
+    public UserRegistrationResource(String firstName, String lastName, String phoneNumber, String password, AddressResource address) {
         setFirstName(firstName);
         setLastName(lastName);
         setPhoneNumber(phoneNumber);
-        setGender(gender);
-        setDisability(disability);
-        setEthnicity(ethnicity);
         this.password = password;
         setAddress(address);
     }
@@ -79,13 +75,9 @@ public class UserRegistrationResource extends UserProfileBaseResource{
 
     public UserResource toUserResource() {
         UserResource userResource = new UserResource();
-        userResource.setTitle(this.getTitle());
         userResource.setFirstName(this.getFirstName());
         userResource.setLastName(this.getLastName());
         userResource.setPhoneNumber(this.getPhoneNumber());
-        userResource.setGender(this.getGender());
-        userResource.setDisability(this.getDisability());
-        userResource.setEthnicity(this.getEthnicity().getId());
         userResource.setPassword(this.getPassword());
         userResource.setEmail(this.getEmail());
         userResource.setRoles(this.getRoles());

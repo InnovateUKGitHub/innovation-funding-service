@@ -13,10 +13,6 @@ import javax.validation.constraints.Size;
 public class UserDetailsForm {
     private String email;
 
-    @NotEmpty(message = "{validation.standard.title.required}")
-    @Size(max = 5, message = "{validation.standard.title.length.max}")
-    private String title;
-
     @NotEmpty(message = "{validation.standard.firstname.required}")
     @Pattern(regexp = "[\\p{L} -]*", message = "{validation.standard.firstname.required}")
     @Size.List ({
@@ -32,15 +28,6 @@ public class UserDetailsForm {
         @Size(max=70, message="{validation.standard.lastname.length.max}"),
     })
     private String lastName;
-
-    @NotEmpty(message = "{validation.standard.gender.selectionrequired}")
-    private String gender;
-
-    @NotEmpty(message = "{validation.standard.ethnicity.selectionrequired}")
-    private String ethnicity;
-
-    @NotEmpty(message = "{validation.standard.disability.selectionrequired}")
-    private String disability;
 
     @NotEmpty(message = "{validation.standard.phonenumber.required}")
     @Size.List ({
@@ -77,14 +64,6 @@ public class UserDetailsForm {
         this.actionUrl = actionUrl;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getFirstName() {
         return firstName;
     }
@@ -99,30 +78,6 @@ public class UserDetailsForm {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public String getEthnicity() {
-        return ethnicity;
-    }
-
-    public void setEthnicity(String ethnicity) {
-        this.ethnicity = ethnicity;
-    }
-
-    public String getDisability() {
-        return disability;
-    }
-
-    public void setDisability(String disability) {
-        this.disability = disability;
     }
 
     public String getPhoneNumber() {

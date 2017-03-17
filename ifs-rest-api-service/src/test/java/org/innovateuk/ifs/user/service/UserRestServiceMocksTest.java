@@ -20,9 +20,6 @@ import static org.innovateuk.ifs.user.builder.UserProfileStatusResourceBuilder.n
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.user.resource.Title.Miss;
-import static org.innovateuk.ifs.user.resource.Title.Mr;
-import static org.innovateuk.ifs.user.resource.Title.Mrs;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.OK;
@@ -92,7 +89,6 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         UserResource userResource = newUserResource()
                 .with(id(null))
                 .withEmail("testemail@test.test")
-                .withTitle(Mr)
                 .withFirstName("testFirstName")
                 .withLastName("testLastName")
                 .withPassword("testPassword")
@@ -107,11 +103,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
                 userResource.getLastName(),
                 userResource.getPassword(),
                 userResource.getEmail(),
-                userResource.getTitle() != null ? userResource.getTitle().toString() : null,
                 userResource.getPhoneNumber(),
-                userResource.getGender() != null ? userResource.getGender().toString() : null,
-                userResource.getEthnicity(),
-                userResource.getDisability() != null ? userResource.getDisability().toString() : null,
                 organisationId
         ).getSuccessObject();
 
@@ -126,14 +118,10 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         UserResource userResource = newUserResource()
                 .with(id(null))
                 .withEmail("testemail@test.test")
-                .withTitle(Mr)
                 .withFirstName("testFirstName")
                 .withLastName("testLastName")
                 .withPassword("testPassword")
                 .withPhoneNumber("1234567890")
-                .withGender(Gender.MALE)
-                .withEthnicity(2L)
-                .withDisability(Disability.YES)
                 .build();
 
         Long organisationId = 1L;
@@ -144,11 +132,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
                 userResource.getLastName(),
                 userResource.getPassword(),
                 userResource.getEmail(),
-                userResource.getTitle() != null ? userResource.getTitle().toString() : null,
                 userResource.getPhoneNumber(),
-                userResource.getGender() != null ? userResource.getGender().toString() : null,
-                userResource.getEthnicity(),
-                userResource.getDisability() != null ? userResource.getDisability().toString() : null,
                 organisationId
         ).getSuccessObject();
 
@@ -162,7 +146,6 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         UserResource userResource = newUserResource()
                 .with(id(null))
                 .withEmail("testemail@test.test")
-                .withTitle(Mrs)
                 .withFirstName("testFirstName")
                 .withLastName("testLastName")
                 .withPassword("testPassword")
@@ -178,11 +161,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
                 userResource.getLastName(),
                 userResource.getPassword(),
                 userResource.getEmail(),
-                userResource.getTitle() != null ? userResource.getTitle().toString() : null,
                 userResource.getPhoneNumber(),
-                userResource.getGender() != null ? userResource.getGender().toString() : "",
-                userResource.getEthnicity(),
-                userResource.getDisability() != null ? userResource.getDisability().toString() : "",
                 organisationId,
                 competitionId
         ).getSuccessObject();
@@ -198,14 +177,10 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         UserResource userResource = newUserResource()
                 .with(id(null))
                 .withEmail("testemail@test.test")
-                .withTitle(Miss)
                 .withFirstName("testFirstName")
                 .withLastName("testLastName")
                 .withPassword("testPassword")
                 .withPhoneNumber("1234567890")
-                .withDisability(Disability.YES)
-                .withEthnicity(2L)
-                .withGender(Gender.FEMALE)
                 .build();
 
         Long organisationId = 1L;
@@ -217,11 +192,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
                 userResource.getLastName(),
                 userResource.getPassword(),
                 userResource.getEmail(),
-                userResource.getTitle() != null ? userResource.getTitle().toString() : null,
                 userResource.getPhoneNumber(),
-                userResource.getGender() != null ? userResource.getGender().toString() : "",
-                userResource.getEthnicity(),
-                userResource.getDisability() != null ? userResource.getDisability().toString() : "",
                 organisationId,
                 competitionId
         ).getSuccessObject();

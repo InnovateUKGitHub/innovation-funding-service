@@ -9,35 +9,20 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * Holder of model attributes for the Assessor details view.
  */
 public class AssessorProfileDetailsViewModel {
-    private Title title;
     private String firstName;
     private String lastName;
-    private Gender gender;
     private AddressResource address;
-    private EthnicityResource ethnicity;
-    private Disability disability;
     private String phoneNumber;
     private String email;
 
     public AssessorProfileDetailsViewModel(UserProfileResource profileDetails) {
-        this.title = profileDetails.getTitle();
         this.firstName = profileDetails.getFirstName();
         this.lastName = profileDetails.getLastName();
-        this.gender = profileDetails.getGender();
         this.address = profileDetails.getAddress();
-        this.ethnicity = profileDetails.getEthnicity();
-        this.disability = profileDetails.getDisability();
         this.phoneNumber = profileDetails.getPhoneNumber();
         this.email = profileDetails.getEmail();
     }
 
-    public Title getTitle() {
-        return title;
-    }
-
-    public void setTitle(Title title) {
-        this.title = title;
-    }
 
     public String getFirstName() {
         return firstName;
@@ -55,36 +40,12 @@ public class AssessorProfileDetailsViewModel {
         this.lastName = lastName;
     }
 
-    public Gender getGender() {
-        return gender;
-    }
-
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
-
     public AddressResource getAddress() {
         return address;
     }
 
     public void setAddress(AddressResource address) {
         this.address = address;
-    }
-
-    public EthnicityResource getEthnicity() {
-        return ethnicity;
-    }
-
-    public void setEthnicity(EthnicityResource ethnicity) {
-        this.ethnicity = ethnicity;
-    }
-
-    public Disability getDisability() {
-        return disability;
-    }
-
-    public void setDisability(Disability disability) {
-        this.disability = disability;
     }
 
     public String getPhoneNumber() {
@@ -112,13 +73,9 @@ public class AssessorProfileDetailsViewModel {
         AssessorProfileDetailsViewModel that = (AssessorProfileDetailsViewModel) o;
 
         return new EqualsBuilder()
-                .append(title, that.title)
                 .append(firstName, that.firstName)
                 .append(lastName, that.lastName)
-                .append(gender, that.gender)
                 .append(address, that.address)
-                .append(ethnicity, that.ethnicity)
-                .append(disability, that.disability)
                 .append(phoneNumber, that.phoneNumber)
                 .append(email, that.email)
                 .isEquals();
@@ -127,13 +84,9 @@ public class AssessorProfileDetailsViewModel {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(title)
                 .append(firstName)
                 .append(lastName)
-                .append(gender)
                 .append(address)
-                .append(ethnicity)
-                .append(disability)
                 .append(phoneNumber)
                 .append(email)
                 .toHashCode();

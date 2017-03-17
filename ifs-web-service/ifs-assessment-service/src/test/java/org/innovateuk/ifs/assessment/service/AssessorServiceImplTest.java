@@ -4,17 +4,13 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.assessment.form.registration.AssessorRegistrationForm;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
-import org.innovateuk.ifs.user.resource.Disability;
-import org.innovateuk.ifs.user.resource.EthnicityResource;
-import org.innovateuk.ifs.user.resource.Gender;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
-import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class AssessorServiceImplTest extends BaseServiceUnitTest<AssessorService> {
@@ -38,27 +34,18 @@ public class AssessorServiceImplTest extends BaseServiceUnitTest<AssessorService
         String firstName = "Felix";
         String lastName = "Wilson";
         String phoneNumber = "12345678";
-        Gender gender = Gender.MALE;
-        EthnicityResource ethnicity = newEthnicityResource().build();
-        Disability disability = Disability.NO;
         String password = "password";
 
         AssessorRegistrationForm form = new AssessorRegistrationForm();
         form.setFirstName(firstName);
         form.setLastName(lastName);
         form.setPhoneNumber(phoneNumber);
-        form.setGender(gender);
-        form.setEthnicity(ethnicity);
-        form.setDisability(disability);
         form.setPassword(password);
 
         UserRegistrationResource userRegistration = newUserRegistrationResource()
                 .withFirstName(firstName)
                 .withLastName(lastName)
                 .withPhoneNumber(phoneNumber)
-                .withGender(gender)
-                .withEthnicity(ethnicity)
-                .withDisability(disability)
                 .withPassword(password)
                 .build();
 

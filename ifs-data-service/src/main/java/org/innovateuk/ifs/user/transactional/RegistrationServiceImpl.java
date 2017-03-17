@@ -16,8 +16,10 @@ import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.resource.TokenType;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.innovateuk.ifs.user.domain.*;
-import org.innovateuk.ifs.user.mapper.EthnicityMapper;
+import org.innovateuk.ifs.user.domain.CompAdminEmail;
+import org.innovateuk.ifs.user.domain.Profile;
+import org.innovateuk.ifs.user.domain.ProjectFinanceEmail;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.CompAdminEmailRepository;
 import org.innovateuk.ifs.user.repository.ProfileRepository;
@@ -31,12 +33,13 @@ import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import static java.lang.String.format;
 import static java.time.LocalDateTime.now;
 import static java.util.Collections.singletonList;
-import static java.util.Objects.requireNonNull;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -89,9 +92,6 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Autowired
     private PasswordPolicyValidator passwordPolicyValidator;
-
-    @Autowired
-    private EthnicityMapper ethnicityMapper;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -197,12 +197,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         newUser.setFirstName(userResource.getFirstName());
         newUser.setLastName(userResource.getLastName());
         newUser.setEmail(userResource.getEmail());
-        newUser.setTitle(userResource.getTitle());
         newUser.setPhoneNumber(userResource.getPhoneNumber());
-        newUser.setDisability(userResource.getDisability());
-        newUser.setGender(userResource.getGender());
-        newUser.setEthnicity(ethnicityMapper.mapIdToDomain(userResource.getEthnicity()));
-
         return newUser;
     }
 

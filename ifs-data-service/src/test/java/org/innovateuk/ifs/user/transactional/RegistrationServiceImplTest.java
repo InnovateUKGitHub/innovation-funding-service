@@ -16,7 +16,7 @@ import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.resource.TokenType;
 import org.innovateuk.ifs.user.domain.*;
-import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -45,17 +45,12 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
 import static org.innovateuk.ifs.user.builder.CompAdminEmailBuilder.newCompAdminEmail;
-import static org.innovateuk.ifs.user.builder.EthnicityBuilder.newEthnicity;
-import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.ProjectFinanceEmailBuilder.newProjectFinanceEmail;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Disability.NO;
-import static org.innovateuk.ifs.user.resource.Gender.NOT_STATED;
-import static org.innovateuk.ifs.user.resource.Title.Mr;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
@@ -85,18 +80,12 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
     @Test
     public void createUser() throws Exception {
         Set<Role> roles = newRole().buildSet(1);
-        EthnicityResource ethnicityResource = newEthnicityResource().with(id(1L)).build();
-        Ethnicity ethnicity = newEthnicity().withId(1L).build();
         AddressResource addressResource = newAddressResource().withAddressLine1("Electric Works").withTown("Sheffield").withPostcode("S1 2BJ").build();
         Address address = newAddress().withAddressLine1("Electric Works").withTown("Sheffield").withPostcode("S1 2BJ").build();
 
         UserRegistrationResource userToCreateResource = newUserRegistrationResource()
-                .withTitle(Mr)
                 .withFirstName("First")
                 .withLastName("Last")
-                .withGender(NOT_STATED)
-                .withEthnicity(ethnicityResource)
-                .withDisability(NO)
                 .withPhoneNumber("01234 567890")
                 .withEmail("email@example.com")
                 .withPassword("Passw0rd123")
@@ -111,12 +100,8 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         User userToCreate = newUser()
                 .withId((Long) null)
-                .withTitle(Mr)
                 .withFirstName("First")
                 .withLastName("Last")
-                .withGender(NOT_STATED)
-                .withEthnicity(ethnicity)
-                .withDisability(NO)
                 .withPhoneNumber("01234 567890")
                 .withEmailAddress("email@example.com")
                 .withRoles(roles)
@@ -133,13 +118,9 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         User userToSave = createLambdaMatcher(user -> {
             assertNull(user.getId());
-            assertEquals(Mr, user.getTitle());
             assertEquals("First Last", user.getName());
             assertEquals("First", user.getFirstName());
             assertEquals("Last", user.getLastName());
-            assertEquals(NOT_STATED, user.getGender());
-            assertEquals(ethnicity, user.getEthnicity());
-            assertEquals(NO, user.getDisability());
             assertEquals("01234 567890", user.getPhoneNumber());
             assertEquals("email@example.com", user.getEmail());
 
@@ -183,16 +164,11 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 withEmail("email@example.com").
                 withPhoneNumber("01234 567890").
                 withPassword("thepassword").
-                withTitle(Mr).
-                withDisability(Disability.YES).
-                withGender(Gender.MALE).
-                withEthnicity(2L).
                 build();
 
         Organisation selectedOrganisation = newOrganisation().withId(123L).build();
         Role applicantRole = newRole().withName(APPLICANT.getName()).build();
 
-        when(ethnicityMapperMock.mapIdToDomain(2L)).thenReturn(newEthnicity().withId(2L).build());
         when(organisationRepositoryMock.findOne(123L)).thenReturn(selectedOrganisation);
         when(organisationRepositoryMock.findByUsersId(anyLong())).thenReturn(singletonList(selectedOrganisation));
         when(roleRepositoryMock.findOneByName(APPLICANT.getName())).thenReturn(applicantRole);
@@ -210,11 +186,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
             assertEquals("email@example.com", user.getEmail());
             assertEquals("01234 567890", user.getPhoneNumber());
-            assertEquals(Mr, user.getTitle());
             assertEquals("new-uid", user.getUid());
-            assertEquals(Gender.MALE, user.getGender());
-            assertEquals(Disability.YES, user.getDisability());
-            assertEquals(Long.valueOf(2), user.getEthnicity().getId());
             assertEquals(1, user.getRoles().size());
             assertTrue(user.getRoles().contains(applicantRole));
             List<Organisation> orgs = organisationRepositoryMock.findByUsersId(user.getId());
@@ -256,7 +228,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 withEmail("email@example.com").
                 withPhoneNumber("01234 567890").
                 withPassword("thepassword").
-                withTitle(Mr).
                 build();
 
         when(organisationRepositoryMock.findOne(123L)).thenReturn(null);
@@ -278,7 +249,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 withEmail("email@example.com").
                 withPhoneNumber("01234 567890").
                 withPassword("thepassword").
-                withTitle(Mr).
                 build();
 
         Organisation selectedOrganisation = newOrganisation().build();
@@ -303,7 +273,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 withEmail("email@example.com").
                 withPhoneNumber("01234 567890").
                 withPassword("thepassword").
-                withTitle(Mr).
                 build();
 
         Organisation selectedOrganisation = newOrganisation().build();
@@ -348,7 +317,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 withEmail("email@example.com").
                 withPhoneNumber("01234 567890").
                 withPassword("thepassword").
-                withTitle(Mr).
                 build();
 
         Organisation selectedOrganisation = newOrganisation().build();
@@ -371,7 +339,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
             assertEquals("email@example.com", user.getEmail());
             assertEquals("01234 567890", user.getPhoneNumber());
-            assertEquals(Mr, user.getTitle());
             assertEquals("new-uid", user.getUid());
             assertEquals(1, user.getRoles().size());
             assertTrue(user.getRoles().contains(compAdminRole));
@@ -416,7 +383,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 withEmail("email@example.com").
                 withPhoneNumber("01234 567890").
                 withPassword("thepassword").
-                withTitle(Mr).
                 build();
 
         Organisation selectedOrganisation = newOrganisation().build();
@@ -441,7 +407,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 withEmail("email@example.com").
                 withPhoneNumber("01234 567890").
                 withPassword("thepassword").
-                withTitle(Mr).
                 build();
 
         Organisation selectedOrganisation = newOrganisation().build();
@@ -464,7 +429,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
             assertEquals("email@example.com", user.getEmail());
             assertEquals("01234 567890", user.getPhoneNumber());
-            assertEquals(Mr, user.getTitle());
             assertEquals("new-uid", user.getUid());
             assertEquals(1, user.getRoles().size());
             assertTrue(user.getRoles().contains(projectFinanceRole));

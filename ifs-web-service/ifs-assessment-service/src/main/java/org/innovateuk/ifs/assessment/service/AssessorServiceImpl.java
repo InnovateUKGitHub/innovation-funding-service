@@ -22,9 +22,6 @@ public class AssessorServiceImpl implements AssessorService {
         userRegistrationResource.setFirstName(registrationForm.getFirstName());
         userRegistrationResource.setLastName(registrationForm.getLastName());
         userRegistrationResource.setPhoneNumber(registrationForm.getPhoneNumber());
-        userRegistrationResource.setGender(registrationForm.getGender());
-        userRegistrationResource.setDisability(registrationForm.getDisability());
-        userRegistrationResource.setEthnicity(registrationForm.getEthnicity());
         userRegistrationResource.setPassword(registrationForm.getPassword());
         userRegistrationResource.setAddress(registrationForm.getAddressForm().getSelectedPostcode());
 

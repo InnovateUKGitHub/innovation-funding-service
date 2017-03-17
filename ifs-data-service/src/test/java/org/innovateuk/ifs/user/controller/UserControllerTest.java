@@ -28,7 +28,6 @@ import static org.innovateuk.ifs.user.builder.ProfileSkillsResourceBuilder.newPr
 import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
 import static org.innovateuk.ifs.user.builder.UserProfileStatusResourceBuilder.newUserProfileStatusResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Title.Mr;
 import static org.innovateuk.ifs.user.resource.UserRelatedURLs.URL_PASSWORD_RESET;
 import static org.innovateuk.ifs.user.resource.UserRelatedURLs.URL_VERIFY_EMAIL;
 import static org.innovateuk.ifs.user.resource.UserStatus.INACTIVE;
@@ -249,7 +248,6 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         user.setPhoneNumber("testPhoneNumber");
         user.setFirstName("testFirstName");
         user.setLastName("testLastName");
-        user.setTitle(Mr);
 
         when(userServiceMock.findByEmail(user.getEmail())).thenReturn(serviceFailure(notFoundError(User.class, user.getEmail())));
 

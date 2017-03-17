@@ -1,12 +1,11 @@
 package org.innovateuk.ifs.registration.form;
 
-import org.innovateuk.ifs.commons.validation.ValidationConstants;
-import org.innovateuk.ifs.validator.constraints.FieldMatch;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.innovateuk.ifs.commons.validation.ValidationConstants;
+import org.innovateuk.ifs.validator.constraints.FieldMatch;
 
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
@@ -40,11 +39,6 @@ public class RegistrationForm {
     })
     private String retypedPassword;
 
-    @NotEmpty(message = "{validation.standard.title.selectionrequired}")
-    @Size(max = 5, message = "{validation.standard.title.length.max}")
-    @Pattern(regexp = "^(Mr|Miss|Mrs|Ms|Dr)$", message = "{validation.standard.title.format}")
-    private String title;
-
     @NotEmpty(message = "{validation.standard.firstname.required}")
     @Pattern(regexp = "[\\p{L} -]*", message = "{validation.standard.firstname.required}")
     @Size.List ({
@@ -60,15 +54,6 @@ public class RegistrationForm {
         @Size(max=70, message="{validation.standard.lastname.length.max}"),
     })
     private String lastName;
-
-    @NotNull(message = "{validation.standard.gender.selectionrequired}")
-    private String gender;
-
-    @NotNull(message = "{validation.standard.ethnicity.selectionrequired}")
-    private String ethnicity;
-
-    @NotNull(message = "{validation.standard.disability.selectionrequired}")
-    private String disability;
 
     @NotEmpty(message = "{validation.standard.phonenumber.required}")
     @Size.List ({
@@ -110,14 +95,6 @@ public class RegistrationForm {
         this.retypedPassword = retypedPassword;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getFirstName() {
         return firstName;
     }
@@ -150,27 +127,4 @@ public class RegistrationForm {
         this.termsAndConditions = termsAndConditions;
     }
 
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public String getEthnicity() {
-        return ethnicity;
-    }
-
-    public void setEthnicity(String ethnicity) {
-        this.ethnicity = ethnicity;
-    }
-
-    public String getDisability() {
-        return disability;
-    }
-
-    public void setDisability(String disability) {
-        this.disability = disability;
-    }
 }

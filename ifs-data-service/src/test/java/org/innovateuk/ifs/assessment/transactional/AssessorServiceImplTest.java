@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
-import org.innovateuk.ifs.BuilderAmendFunctions;
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
 import org.innovateuk.ifs.assessment.resource.ProfileResource;
 import org.innovateuk.ifs.authentication.service.RestIdentityProviderService;
@@ -36,17 +35,12 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
-import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static org.innovateuk.ifs.user.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Disability.NO;
-import static org.innovateuk.ifs.user.resource.Gender.NOT_STATED;
-import static org.innovateuk.ifs.user.resource.Title.Mr;
 import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
@@ -61,13 +55,9 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         String email = "email@example.com";
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
-                .withTitle(Mr)
                 .withFirstName("First")
                 .withLastName("Last")
                 .withPhoneNumber("01234 567890")
-                .withGender(NOT_STATED)
-                .withEthnicity(newEthnicityResource().with(BuilderAmendFunctions.id(1L)).build())
-                .withDisability(NO)
                 .withPassword("Password123")
                 .withAddress(newAddressResource()
                         .withAddressLine1("Electric Works")
@@ -134,13 +124,9 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         String hash = "inviteHashNotExists";
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
-                .withTitle(Mr)
                 .withFirstName("First")
                 .withLastName("Last")
                 .withPhoneNumber("01234 567890")
-                .withGender(NOT_STATED)
-                .withEthnicity(newEthnicityResource().with(BuilderAmendFunctions.id(1L)).build())
-                .withDisability(NO)
                 .withPassword("Password123")
                 .build();
 
@@ -164,13 +150,9 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         String hash = "testhash";
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
-                .withTitle(Mr)
                 .withFirstName("First")
                 .withLastName("Last")
                 .withPhoneNumber("01234 567890")
-                .withGender(NOT_STATED)
-                .withEthnicity(newEthnicityResource().with(BuilderAmendFunctions.id(1L)).build())
-                .withDisability(NO)
                 .withPassword("Password123")
                 .build();
 

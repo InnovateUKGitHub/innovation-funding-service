@@ -21,7 +21,6 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static java.lang.Boolean.TRUE;
@@ -35,15 +34,13 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VER
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static org.innovateuk.ifs.user.builder.AgreementBuilder.newAgreement;
-import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static org.innovateuk.ifs.user.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.ProfileSkillsEditResourceBuilder.newProfileSkillsEditResource;
 import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
 import static org.innovateuk.ifs.user.builder.UserProfileStatusResourceBuilder.newUserProfileStatusResource;
 import static org.innovateuk.ifs.user.resource.AffiliationType.*;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Integration tests for {@link UserController}.
@@ -280,7 +277,6 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
         userResource.setLastName("How");
         userResource.setPassword("Password123");
         userResource.setEmail("email@Nope.com");
-        userResource.setTitle(Title.Miss);
         userResource.setPhoneNumber("0123335787888");
 
         RestResult<UserResource> restResult = controller.createUser(1L, 1L, userResource);
@@ -385,16 +381,12 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
         Long userId = user.getId();
 
         user.setPhoneNumber("12345678");
-        user.setDisability(Disability.NO);
         userRepository.save(user);
 
         UserProfileResource saveResponse = controller.getUserProfile(userId).getSuccessObjectOrThrowException();
         assertEquals("12345678", saveResponse.getPhoneNumber());
-        assertEquals(Disability.NO, saveResponse.getDisability());
 
         UserProfileResource profileDetails = newUserProfileResource()
-                .withEthnicity(newEthnicityResource().build())
-                .withDisability(Disability.YES)
                 .withPhoneNumber("87654321")
                 .build();
 
@@ -403,7 +395,6 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
 
         UserProfileResource updateResponse = controller.getUserProfile(userId).getSuccessObjectOrThrowException();
         assertEquals("87654321", updateResponse.getPhoneNumber());
-        assertEquals(Disability.YES, updateResponse.getDisability());
     }
 
     @Test

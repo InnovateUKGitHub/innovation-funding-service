@@ -2,14 +2,12 @@ package org.innovateuk.ifs.assessment.controller;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.BuilderAmendFunctions;
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
 import org.innovateuk.ifs.invite.domain.CompetitionInvite;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.user.domain.User;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -25,11 +23,7 @@ import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
-import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Disability.NO;
-import static org.innovateuk.ifs.user.resource.Gender.NOT_STATED;
-import static org.innovateuk.ifs.user.resource.Title.Mr;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.JsonMappingUtil.fromJson;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
@@ -53,13 +47,9 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
         String hash = "testhash";
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
-                .withTitle(Mr)
                 .withFirstName("First")
                 .withLastName("Last")
                 .withPhoneNumber("01234 56789890")
-                .withGender(NOT_STATED)
-                .withDisability(NO)
-                .withEthnicity(newEthnicityResource().with(BuilderAmendFunctions.id(1L)).build())
                 .withPassword("Passw0rd123")
                 .withAddress(newAddressResource()
                         .withAddressLine1("Electric Works")
@@ -86,13 +76,9 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
         String hash = "testhash";
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
-                .withTitle(Mr)
                 .withFirstName("First")
                 .withLastName("Last")
                 .withPhoneNumber("01234 56789890")
-                .withGender(NOT_STATED)
-                .withDisability(NO)
-                .withEthnicity(newEthnicityResource().with(BuilderAmendFunctions.id(1L)).build())
                 .withPassword("Passw0rd123")
                 .withAddress(newAddressResource()
                         .build())
@@ -136,7 +122,7 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
         Error passwordError = fieldError("password", null, "validation.standard.password.required", "");
         Error addressError = fieldError("address", null, "validation.standard.address.required", "");
 
-        verifyResponseErrors(result, firstNameError, lastNameError, phoneNumberError, genderError, disabilityError, ethnicityError, passwordError, addressError);
+        verifyResponseErrors(result, firstNameError, lastNameError, phoneNumberError, passwordError, addressError);
 
         verify(assessorServiceMock, never()).registerAssessorByHash(isA(String.class), isA(UserRegistrationResource.class));
     }
@@ -146,13 +132,9 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
         String firstName = "A";
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
-                .withTitle(Mr)
                 .withFirstName(firstName)
                 .withLastName("Last")
                 .withPhoneNumber("01234 56789890")
-                .withGender(NOT_STATED)
-                .withDisability(NO)
-                .withEthnicity(newEthnicityResource().with(BuilderAmendFunctions.id(1L)).build())
                 .withPassword("Passw0rd123")
                 .withAddress(newAddressResource()
                         .withAddressLine1("Electric Works")
@@ -175,13 +157,9 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
         String firstName = RandomStringUtils.random(71, "abcdefghijklmnopqrstuvwxyz");
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
-                .withTitle(Mr)
                 .withFirstName(firstName)
                 .withLastName("Last")
                 .withPhoneNumber("01234 56789890")
-                .withGender(NOT_STATED)
-                .withDisability(NO)
-                .withEthnicity(newEthnicityResource().with(BuilderAmendFunctions.id(1L)).build())
                 .withPassword("Passw0rd123")
                 .withAddress(newAddressResource()
                         .withAddressLine1("Electric Works")
@@ -204,13 +182,9 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
         String lastName = "A";
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
-                .withTitle(Mr)
                 .withFirstName("First")
                 .withLastName(lastName)
                 .withPhoneNumber("01234 56789890")
-                .withGender(NOT_STATED)
-                .withDisability(NO)
-                .withEthnicity(newEthnicityResource().with(BuilderAmendFunctions.id(1L)).build())
                 .withPassword("Passw0rd123")
                 .withAddress(newAddressResource()
                         .withAddressLine1("Electric Works")
@@ -233,13 +207,9 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
         String lastName = RandomStringUtils.random(71, "abcdefghijklmnopqrstuvwxyz");
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
-                .withTitle(Mr)
                 .withFirstName("First")
                 .withLastName(lastName)
                 .withPhoneNumber("01234 56789890")
-                .withGender(NOT_STATED)
-                .withDisability(NO)
-                .withEthnicity(newEthnicityResource().with(BuilderAmendFunctions.id(1L)).build())
                 .withPassword("Passw0rd123")
                 .withAddress(newAddressResource()
                         .withAddressLine1("Electric Works")
@@ -262,13 +232,9 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
         String phoneNumber = "01234 567890 ext.123";
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
-                .withTitle(Mr)
                 .withFirstName("First")
                 .withLastName("Last")
                 .withPhoneNumber(phoneNumber)
-                .withGender(NOT_STATED)
-                .withDisability(NO)
-                .withEthnicity(newEthnicityResource().with(BuilderAmendFunctions.id(1L)).build())
                 .withPassword("Passw0rd123")
                 .withAddress(newAddressResource()
                         .withAddressLine1("Electric Works")
@@ -291,13 +257,9 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
         String phoneNumber = RandomStringUtils.random(7, "01234567890 +-");
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
-                .withTitle(Mr)
                 .withFirstName("First")
                 .withLastName("Last")
                 .withPhoneNumber(phoneNumber)
-                .withGender(NOT_STATED)
-                .withDisability(NO)
-                .withEthnicity(newEthnicityResource().with(BuilderAmendFunctions.id(1L)).build())
                 .withPassword("Passw0rd123")
                 .withAddress(newAddressResource()
                         .withAddressLine1("Electric Works")
@@ -320,13 +282,9 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
         String phoneNumber = RandomStringUtils.random(21, "01234567890 +-");
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
-                .withTitle(Mr)
                 .withFirstName("First")
                 .withLastName("Last")
                 .withPhoneNumber(phoneNumber)
-                .withGender(NOT_STATED)
-                .withDisability(NO)
-                .withEthnicity(newEthnicityResource().with(BuilderAmendFunctions.id(1L)).build())
                 .withPassword("Passw0rd123")
                 .withAddress(newAddressResource()
                         .withAddressLine1("Electric Works")
@@ -349,13 +307,9 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
         String password = RandomStringUtils.random(9, "abcdefghijklmnopqrstuvwxyz");
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
-                .withTitle(Mr)
                 .withFirstName("First")
                 .withLastName("Last")
                 .withPhoneNumber("01234 56789890")
-                .withGender(NOT_STATED)
-                .withDisability(NO)
-                .withEthnicity(newEthnicityResource().with(BuilderAmendFunctions.id(1L)).build())
                 .withPassword(password)
                 .withAddress(newAddressResource()
                         .withAddressLine1("Electric Works")
@@ -378,13 +332,9 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
         String password = RandomStringUtils.random(31, "abcdefghijklmnopqrstuvwxyz");
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
-                .withTitle(Mr)
                 .withFirstName("First")
                 .withLastName("Last")
                 .withPhoneNumber("01234 56789890")
-                .withGender(NOT_STATED)
-                .withDisability(NO)
-                .withEthnicity(newEthnicityResource().with(BuilderAmendFunctions.id(1L)).build())
                 .withPassword(password)
                 .withAddress(newAddressResource()
                         .withAddressLine1("Electric Works")
@@ -407,13 +357,9 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
         String hash = "testhash";
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
-                .withTitle(Mr)
                 .withFirstName("First")
                 .withLastName("Last")
                 .withPhoneNumber("01234 56789890")
-                .withGender(NOT_STATED)
-                .withDisability(NO)
-                .withEthnicity(newEthnicityResource().with(BuilderAmendFunctions.id(1L)).build())
                 .withPassword("Passw0rd123")
                 .withAddress(newAddressResource()
                         .withAddressLine1("Electric Works")

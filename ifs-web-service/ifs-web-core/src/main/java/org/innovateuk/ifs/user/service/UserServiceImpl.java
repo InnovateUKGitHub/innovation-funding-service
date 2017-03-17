@@ -85,27 +85,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ServiceResult<UserResource> createUserForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId) {
-        return userRestService.createLeadApplicantForOrganisation(firstName, lastName, password, email, title, phoneNumber, null, null, null, organisationId).toServiceResult();
+    public ServiceResult<UserResource> createUserForOrganisation(String firstName, String lastName, String password, String email, String phoneNumber, Long organisationId) {
+        return userRestService.createLeadApplicantForOrganisation(firstName, lastName, password, email, phoneNumber, organisationId).toServiceResult();
     }
 
     @Override
     public ServiceResult<UserResource> createLeadApplicantForOrganisationWithCompetitionId(String firstName, String lastName, String password, String email,
-                                                                                           String title, String phoneNumber,
-                                                                                           String gender, Long ethnicity, String disability,
+                                                                                           String phoneNumber,
                                                                                            Long organisationId, Long competitionId) {
-        return userRestService.createLeadApplicantForOrganisationWithCompetitionId(firstName, lastName, password, email, title, phoneNumber, gender, ethnicity, disability, organisationId, competitionId).toServiceResult();
+        return userRestService.createLeadApplicantForOrganisationWithCompetitionId(firstName, lastName, password, email, phoneNumber, organisationId, competitionId).toServiceResult();
     }
 
     @Override
-    public ServiceResult<UserResource> createOrganisationUser(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId) {
-        return createUserForOrganisation(firstName, lastName, password, email, title, phoneNumber, organisationId);
+    public ServiceResult<UserResource> createOrganisationUser(String firstName, String lastName, String password, String email, String phoneNumber, Long organisationId) {
+        return createUserForOrganisation(firstName, lastName, password, email, phoneNumber, organisationId);
     }
 
 
     @Override
-    public ServiceResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber, String gender, Long ethnicity, String disability) {
-        return userRestService.updateDetails(id, email, firstName, lastName, title, phoneNumber, gender, ethnicity, disability).toServiceResult();
+    public ServiceResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String phoneNumber) {
+        return userRestService.updateDetails(id, email, firstName, lastName, phoneNumber).toServiceResult();
     }
 
     @Override

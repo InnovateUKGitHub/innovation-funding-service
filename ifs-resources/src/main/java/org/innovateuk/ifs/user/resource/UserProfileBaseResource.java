@@ -14,7 +14,6 @@ import javax.validation.constraints.Size;
  * Base class for user profile DTOs
  */
 public abstract class UserProfileBaseResource {
-    private Title title;
 
     @NotEmpty(message = "{validation.standard.firstname.required}")
     @Pattern(regexp = "[\\p{L} -]*", message = "{validation.standard.firstname.required}")
@@ -40,28 +39,11 @@ public abstract class UserProfileBaseResource {
     @Pattern(regexp = "([0-9\\ +-])+", message = "{validation.standard.phonenumber.format}")
     private String phoneNumber;
 
-    @NotNull(message = "validation.standard.gender.selectionrequired")
-    private Gender gender;
-
-    @NotNull(message = "validation.standard.disability.selectionrequired")
-    private Disability disability;
-
-    @NotNull(message = "validation.standard.ethnicity.selectionrequired")
-    private EthnicityResource ethnicity;
-
     @NotNull(message = "{validation.standard.address.required}")
     @Valid
     private AddressResource address;
 
     private String email;
-
-    public Title getTitle() {
-        return title;
-    }
-
-    public void setTitle(Title title) {
-        this.title = title;
-    }
 
     public String getFirstName() {
         return firstName;
@@ -85,30 +67,6 @@ public abstract class UserProfileBaseResource {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
-    }
-
-    public Gender getGender() {
-        return gender;
-    }
-
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
-
-    public Disability getDisability() {
-        return disability;
-    }
-
-    public void setDisability(Disability disability) {
-        this.disability = disability;
-    }
-
-    public EthnicityResource getEthnicity() {
-        return ethnicity;
-    }
-
-    public void setEthnicity(EthnicityResource ethnicity) {
-        this.ethnicity = ethnicity;
     }
 
     public AddressResource getAddress() {
@@ -136,13 +94,9 @@ public abstract class UserProfileBaseResource {
         UserProfileBaseResource that = (UserProfileBaseResource) o;
 
         return new EqualsBuilder()
-                .append(title, that.title)
                 .append(firstName, that.firstName)
                 .append(lastName, that.lastName)
                 .append(phoneNumber, that.phoneNumber)
-                .append(gender, that.gender)
-                .append(disability, that.disability)
-                .append(ethnicity, that.ethnicity)
                 .append(address, that.address)
                 .append(email, that.email)
                 .isEquals();
@@ -151,13 +105,9 @@ public abstract class UserProfileBaseResource {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(title)
                 .append(firstName)
                 .append(lastName)
                 .append(phoneNumber)
-                .append(gender)
-                .append(disability)
-                .append(ethnicity)
                 .append(address)
                 .append(email)
                 .toHashCode();

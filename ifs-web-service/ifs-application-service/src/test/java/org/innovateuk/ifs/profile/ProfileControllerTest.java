@@ -1,21 +1,17 @@
 package org.innovateuk.ifs.profile;
 
-import org.hamcrest.Matchers;
+import org.hamcrest.*;
 import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.service.EthnicityRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
-import org.innovateuk.ifs.user.resource.Disability;
-import org.innovateuk.ifs.user.resource.Gender;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -28,13 +24,9 @@ import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddre
 import static org.innovateuk.ifs.address.builder.AddressTypeResourceBuilder.newAddressTypeResource;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.OPERATING;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGISTERED;
-import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourceBuilder.newOrganisationAddressResource;
-import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Title.Mrs;
-import static org.innovateuk.ifs.user.resource.Title.Ms;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -45,9 +37,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ProfileControllerTest extends BaseUnitTest {
     @InjectMocks
     private ProfileController profileController;
-
-    @Mock
-    private EthnicityRestService ethnicityRestService;
 
     private UserResource user;
 
@@ -61,18 +50,13 @@ public class ProfileControllerTest extends BaseUnitTest {
         mockMvc = setupMockMvc(profileController, () -> loggedInUser, env, messageSource);
 
         user = newUserResource()
-                .withTitle(Ms)
                 .withFirstName("firstname")
                 .withLastName("lastname")
                 .withPhoneNumber("1234567890")
                 .withEmail("email@provider.com")
-                .withDisability(Disability.YES)
-                .withGender(Gender.FEMALE)
-                .withEthnicity(2L)
                 .build();
         when(userAuthenticationService.getAuthenticatedUser(isA(HttpServletRequest.class))).thenReturn(user);
         when(userAuthenticationService.getAuthenticatedUser(isA(HttpServletRequest.class), eq(true))).thenReturn(user);
-        when(ethnicityRestService.findAllActive()).thenReturn(restSuccess(newEthnicityResource().build(4)));
     }
 
     @SuppressWarnings("unchecked")
@@ -109,15 +93,13 @@ public class ProfileControllerTest extends BaseUnitTest {
 
         ResultActions result = mockMvc.perform(get("/profile/view"))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(model().attribute("model", Matchers.hasProperty("name", Matchers.equalTo(user.getTitle() + " " +
+                .andExpect(model().attribute("model", Matchers.hasProperty("name", Matchers.equalTo(
                         user.getFirstName() + " " +
                         user.getLastName()))))
                 .andExpect(model().attribute("model", Matchers.hasProperty("phoneNumber", Matchers.equalTo(user.getPhoneNumber()))))
                 .andExpect(model().attribute("model", Matchers.hasProperty("emailAddress", Matchers.equalTo(user.getEmail()))))
                 .andExpect(model().attribute("model", Matchers.hasProperty("organisationName", Matchers.equalTo(organisation.getName()))))
-                .andExpect(model().attribute("model", Matchers.hasProperty("registrationNumber", Matchers.equalTo(organisation.getCompanyHouseNumber()))))
-                .andExpect(model().attribute("model", Matchers.hasProperty("gender", Matchers.equalTo(user.getGender().getDisplayName()))))
-                .andExpect(model().attribute("model", Matchers.hasProperty("disability", Matchers.equalTo(user.getDisability().getDisplayName()))));
+                .andExpect(model().attribute("model", Matchers.hasProperty("registrationNumber", Matchers.equalTo(organisation.getCompanyHouseNumber()))));
 
         verifyOrganisationAddress(result, operatingOrgAddress, "model");
     }
@@ -177,7 +159,6 @@ public class ProfileControllerTest extends BaseUnitTest {
     public void userProfileDetailsAreAddedToModelWhenViewingDetailsForm() throws Exception {
         mockMvc.perform(get("/profile/edit"))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("title", Matchers.equalTo(user.getTitle().name()))))
                 .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("firstName", Matchers.equalTo(user.getFirstName()))))
                 .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("lastName", Matchers.equalTo(user.getLastName()))))
                 .andExpect(model().attribute("userDetailsForm", Matchers.hasProperty("phoneNumber", Matchers.equalTo(user.getPhoneNumber()))))
@@ -187,17 +168,12 @@ public class ProfileControllerTest extends BaseUnitTest {
     @Test
     public void userServiceSaveMethodIsCalledWhenSubmittingValidDetailsForm() throws Exception {
 
-        when(userService.updateDetails(user.getId(), user.getEmail(), "newfirstname", "newlastname",
-                "Mrs", "0987654321", "MALE", 2L,"NO"))
+        when(userService.updateDetails(user.getId(), user.getEmail(), "newfirstname", "newlastname","0987654321"))
                 .thenReturn(ServiceResult.serviceSuccess(newUserResource().build()));
         mockMvc.perform(post("/profile/edit")
-                .param("title", Mrs.toString())
                 .param("firstName", "newfirstname")
                 .param("lastName", "newlastname")
                 .param("phoneNumber", "0987654321")
-                .param("gender", Gender.MALE.toString())
-                .param("ethnicity", "2")
-                .param("disability", Disability.NO.toString())
 
         );
 
@@ -206,11 +182,7 @@ public class ProfileControllerTest extends BaseUnitTest {
                 user.getEmail(),
                 "newfirstname",
                 "newlastname",
-                "Mrs",
-                "0987654321",
-                Gender.MALE.toString(),
-                2L,
-                Disability.NO.toString());
+                "0987654321");
     }
 
     @Test
@@ -220,9 +192,6 @@ public class ProfileControllerTest extends BaseUnitTest {
                 .param("firstName", "illegalcharacters:!@#$%^&*()")
                 .param("lastName", "illegalcharacters:!@#$%^&*()")
                 .param("phoneNumber", "illegalcharacters:!@#$%^&*()")
-                .param("gender", "illegalcharacters:!@#$%^&*()")
-                .param("ethnicity", "illegalcharacters:!@#$%^&*()")
-                .param("disability", "illegalcharacters:!@#$%^&*()")
         );
 
         verify(userService, times(0)).updateDetails(
@@ -230,28 +199,20 @@ public class ProfileControllerTest extends BaseUnitTest {
                 isA(String.class),
                 isA(String.class),
                 isA(String.class),
-                isA(String.class),
-                isA(String.class),
-                isA(String.class),
-                isA(Long.class),
                 isA(String.class));
     }
 
     @Test
     public void whenSubmittingAValidFormTheUserProfileDetailsViewIsReturned() throws Exception {
 
-        when(userService.updateDetails(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getTitle().name(),
-                user.getPhoneNumber(), user.getGender().name(), user.getEthnicity(), user.getDisability().name()))
+        when(userService.updateDetails(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(),
+                user.getPhoneNumber()))
                 .thenReturn(ServiceResult.serviceSuccess(newUserResource().build()));
 
         mockMvc.perform(post("/profile/edit")
-                .param("title", user.getTitle().name())
                 .param("firstName", user.getFirstName())
                 .param("lastName", user.getLastName())
                 .param("phoneNumber", user.getPhoneNumber())
-                .param("gender", user.getGender().name())
-                .param("ethnicity", user.getEthnicity().toString())
-                .param("disability", user.getDisability().name())
 
         )
                 .andExpect(status().is2xxSuccessful())
@@ -265,9 +226,6 @@ public class ProfileControllerTest extends BaseUnitTest {
                 .param("firstName", "illegalcharacters:!@#$%^&*()")
                 .param("lastName", "illegalcharacters:!@#$%^&*()")
                 .param("phoneNumber", "illegalcharacters:!@#$%^&*()")
-                .param("gender", "")
-                .param("ethnicity", "")
-                .param("disability", "")
         )
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("profile/edit-user-profile"));
@@ -277,17 +235,13 @@ public class ProfileControllerTest extends BaseUnitTest {
     public void userServiceResponseErrorsAreAddedTheModel() throws Exception {
 
         Error error = new Error("objectName", singletonList("fieldName"), BAD_REQUEST);
-        when(userService.updateDetails(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getTitle().name(),
-                user.getPhoneNumber(), user.getGender().name(), user.getEthnicity(), user.getDisability().name())).thenReturn(ServiceResult.serviceFailure(error));
+        when(userService.updateDetails(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(),
+                user.getPhoneNumber())).thenReturn(ServiceResult.serviceFailure(error));
 
         mockMvc.perform(post("/profile/edit")
-                .param("title", user.getTitle().name())
                 .param("firstName", user.getFirstName())
                 .param("lastName", user.getLastName())
                 .param("phoneNumber", user.getPhoneNumber())
-                .param("gender", user.getGender().name())
-                .param("ethnicity", user.getEthnicity().toString())
-                .param("disability", user.getDisability().name())
 
         )
                 .andExpect(model().hasErrors());
