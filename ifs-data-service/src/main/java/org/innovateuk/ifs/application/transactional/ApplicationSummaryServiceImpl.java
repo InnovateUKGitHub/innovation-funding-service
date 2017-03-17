@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.transactional;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.mapper.ApplicationSummaryMapper;
 import org.innovateuk.ifs.application.mapper.ApplicationSummaryPageMapper;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
@@ -106,10 +107,21 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
     }
 
     @Override
-    public ServiceResult<ApplicationSummaryPageResource> getWithFundingDecisionApplicationSummariesByCompetitionId(long competitionId, String sortBy, int pageIndex, int pageSize) {
+    public ServiceResult<ApplicationSummaryPageResource> getWithFundingDecisionApplicationSummariesByCompetitionId(
+            long competitionId, String sortBy, int pageIndex, int pageSize, Optional<String> filter, Optional<Boolean> sendFilter, Optional<FundingDecisionStatus> fundingFilter) {
+        String filterStr = filter.map(String::trim).orElse("");
         return applicationSummaries(sortBy, pageIndex, pageSize,
-                pageable -> applicationRepository.findByCompetitionIdAndFundingDecisionIsNotNull(competitionId, pageable),
-                () -> applicationRepository.findByCompetitionIdAndFundingDecisionIsNotNull(competitionId));
+                pageable -> applicationRepository.findByCompetitionIdAndFundingDecisionIsNotNull(
+                        competitionId,
+                        filterStr,
+                        sendFilter.orElse(null),
+                        fundingFilter.orElse(null),
+                        pageable),
+                () -> applicationRepository.findByCompetitionIdAndFundingDecisionIsNotNull(
+                        competitionId,
+                        filterStr,
+                        sendFilter.orElse(null),
+                        fundingFilter.orElse(null)));
     }
 
 

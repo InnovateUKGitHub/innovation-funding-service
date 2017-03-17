@@ -58,7 +58,7 @@ If funding is complete. application details has a warning message
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Robot test application
     When the user clicks the button/link    link=Application details
-    And the user clicks the button/link    jQuery=button:contains(Edit)
+    And the user clicks the button/link    jQuery=button:contains(Return and edit)
     Then the user should see the text in the page    Research category determines funding
 
 Changing application details sets funding level to incomplete
