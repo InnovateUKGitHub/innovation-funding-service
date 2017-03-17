@@ -60,7 +60,6 @@ Invite a user with the same organisation under the same organisation
 
 *** Keywords ***
 the user enters profile details
-    The user should see the element    id=title
     The user enters text to a text field    id=firstName    Dennis
     The user enters text to a text field    id=lastName    Bergkamp
     focus    css=[name="create-account"]

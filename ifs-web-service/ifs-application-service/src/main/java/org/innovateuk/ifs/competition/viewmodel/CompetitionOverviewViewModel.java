@@ -21,6 +21,7 @@ public class CompetitionOverviewViewModel {
     private Boolean showApplyButton;
     private List<SectionViewModel> allContentSections;
     private AbstractPublicSectionContentViewModel currentSection;
+    private boolean userIsLoggedIn = false;
 
     public String getCompetitionTitle() {
         return competitionTitle;
@@ -108,5 +109,13 @@ public class CompetitionOverviewViewModel {
 
     public void setShowApplyButton(Boolean showApplyButton) {
         this.showApplyButton = showApplyButton;
+    }
+
+    public boolean isUserIsLoggedIn() {
+        return userIsLoggedIn;
+    }
+
+    public void setUserIsLoggedIn(boolean userIsLoggedIn) {
+        this.userIsLoggedIn = userIsLoggedIn;
     }
 }
