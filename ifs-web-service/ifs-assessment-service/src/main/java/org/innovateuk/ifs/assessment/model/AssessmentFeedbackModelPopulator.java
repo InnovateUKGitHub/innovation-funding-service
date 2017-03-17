@@ -69,7 +69,9 @@ public class AssessmentFeedbackModelPopulator {
             FormInputResponseResource applicantAppendixResponse = applicantResponses.get(appendixFormInput.getId());
             boolean applicantAppendixResponseExists = applicantAppendixResponse != null;
             if (applicantAppendixResponseExists) {
-                appendixDetails = new FileDetailsViewModel(applicantAppendixResponse.getFilename(), applicantAppendixResponse.getFilesizeBytes());
+                appendixDetails = new FileDetailsViewModel(appendixFormInput.getId(),
+                        applicantAppendixResponse.getFilename(),
+                        applicantAppendixResponse.getFilesizeBytes());
             }
         }
 

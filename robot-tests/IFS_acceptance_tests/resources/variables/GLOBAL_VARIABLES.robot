@@ -105,7 +105,11 @@ ${OPEN_COMPETITION_LINK}    ${OPEN_COMPETITION_NAME}
 ${OPEN_COMPETITION_LINK_2}    ${OPEN_COMPETITION_NAME_2}
 ${unsuccessful_login_message}    Your sign in was unsuccessful because of the following issue(s)
 ${application_name}    Submit test application
+${Competition_E2E}    A new innovative solution
 ${test_title}     test title
+${SMALL_ORGANISATION_SIZE}     1
+${MEDIUM_ORGANISATION_SIZE}    2
+${LARGE_ORGANISATION_SIZE}     3
 # File related variables
 ${UPLOAD_FOLDER}    uploaded_files
 ${DOWNLOAD_FOLDER}    download_files
@@ -113,6 +117,7 @@ ${empty_field_warning_message}    This field cannot be left blank.
 ${valid_pdf}      testing.pdf
 ${too_large_pdf}    large.pdf
 ${text_file}      testing.txt
+${excel_file}     testing.xlsx
 ${valid_pdf excerpt}    Adobe PDF is an ideal format for electronic document distribution
 # Assessor variables
 ${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}    123

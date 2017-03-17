@@ -13,6 +13,7 @@ public class ApplicationAssessmentProgressViewModel {
 
     private long applicationId;
     private String applicationName;
+    private String applicationInnovationArea;
     private Long competitionId;
     private String competitionName;
     private boolean inAssessment;
@@ -28,6 +29,7 @@ public class ApplicationAssessmentProgressViewModel {
 
     public ApplicationAssessmentProgressViewModel(long applicationId,
                                                   String applicationName,
+                                                  String applicationInnovationArea,
                                                   Long competitionId,
                                                   String competitionName,
                                                   boolean inAssessment,
@@ -42,6 +44,7 @@ public class ApplicationAssessmentProgressViewModel {
                                                   PaginationViewModel pagination) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
+        this.applicationInnovationArea = applicationInnovationArea;
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.inAssessment = inAssessment;
@@ -62,6 +65,10 @@ public class ApplicationAssessmentProgressViewModel {
 
     public String getApplicationName() {
         return applicationName;
+    }
+
+    public String getApplicationInnovationArea() {
+        return applicationInnovationArea;
     }
 
     public Long getCompetitionId() {
@@ -124,6 +131,7 @@ public class ApplicationAssessmentProgressViewModel {
                 .append(applicationId, that.applicationId)
                 .append(inAssessment, that.inAssessment)
                 .append(applicationName, that.applicationName)
+                .append(applicationInnovationArea, that.applicationInnovationArea)
                 .append(competitionId, that.competitionId)
                 .append(competitionName, that.competitionName)
                 .append(leadOrganisation, that.leadOrganisation)
@@ -143,6 +151,7 @@ public class ApplicationAssessmentProgressViewModel {
         return new HashCodeBuilder(17, 37)
                 .append(applicationId)
                 .append(applicationName)
+                .append(applicationInnovationArea)
                 .append(competitionId)
                 .append(competitionName)
                 .append(inAssessment)

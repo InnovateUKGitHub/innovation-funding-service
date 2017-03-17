@@ -148,10 +148,8 @@
     <div class="modal-bank" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
 
-        <h2 class="heading-medium no-margin">Submit Bank Details</h2>
-        <p>Are you sure you wish to submit your bank details?</p>
-        <p>After you submit, your bank details will be reviewed by Innovate UK. We may contact you to clarify any issues
-            before we perform finance checks.</p>
+        <h2 class="heading-medium no-margin">Submit bank details</h2>
+        <p>Your bank details will now be submitted to Innovate UK.</p>
         <hr/>
         <div class="grid-row">
             <div class="column-half">
@@ -189,7 +187,7 @@
 <th:block th:fragment="modal-partner-documents">
     <div class="modal-partner-documents" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
-        <h2 class="heading-medium no-margin">Submit partner documents</h2>
+        <h2 class="heading-medium no-margin">Submit documents</h2>
         <p>Are you sure that you wish to submit your documents to Innovate UK?</p>
         <hr/>
         <div class="grid-row">
@@ -330,7 +328,7 @@
 <!-- Confirm return of edit rights to partner for spend profiles. -->
 <th:block th:fragment="modal-confirm-allow-spend-profile-edits (orgName)">
     <div class="modal-confirm-allow-spend-profile-edits" role="dialog" aria-hidden="true">
-        <div th:include="fragments/modals :: close-button" th:remove="tag"/>
+        <div th:insert="fragments/modals :: close-button" th:remove="tag"/>
         <h2 class="heading-medium no-margin">Allow partner to edit</h2>
         <p><span class="heading-small no-margin"><th:block th:text="${orgName}" />'s</span> spend profile will be returned to them. They will be informed by email. If you have any specific requirements please contact them directly.</p>
         <hr />

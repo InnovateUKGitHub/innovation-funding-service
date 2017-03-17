@@ -16,14 +16,16 @@ import org.mapstruct.Mappings;
     uses = {
             OrganisationMapper.class,
             ProjectMapper.class,
-            FileEntryMapper.class
+            FileEntryMapper.class,
+            OrganisationSizeMapper.class
     }
 )
 public abstract class ProjectFinanceMapper extends BaseMapper<ProjectFinance, ProjectFinanceResource, Long> {
 
     @Mappings({
-        @Mapping(target = "financeOrganisationDetails", ignore = true ),
-        @Mapping(source = "project", target = "target")
+            @Mapping(target = "financeOrganisationDetails", ignore = true ),
+            @Mapping(target = "costChanges", ignore = true ),
+            @Mapping(source = "project", target = "target")
     })
 
     @Override

@@ -129,6 +129,7 @@
                             <span class="error-message"  th:each="err : ${#fields.errors('openingDate*')}" th:text="${err}" />
                       </span>
                   </legend>
+                  <p class="form-hint">You are able to edit this date if needed in the milestones section.</p>
                   <div class="date-group" data-future-date="">
                       <input type="hidden" name="openingDate" />
                       <div class="day">
@@ -769,6 +770,7 @@
                 <thead>
                 <tr>
                     <th scope="col" id="milestone">Milestone</th>
+                    <th scope="col">Time</th>
                     <th scope="col">Weekday</th>
                     <th scope="col">Day</th>
                     <th scope="col">Month</th>
@@ -794,6 +796,17 @@
                              required="required"
                              th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].editable'"
                              th:value="${milestoneEntry.value.editable}" />
+                      <td class="time">
+                          <select th:if="${milestoneEntry.value.timeOption}"
+                                  th:id="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
+                                  class="form-control width-large"
+                                  required="required"
+                                  th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
+                                  th:readonly="${!milestoneEntry.value.editable}">
+                              <option th:each="time : ${T(org.innovateuk.ifs.competitionsetup.form.MilestoneTime).values()}"
+                                      th:text="${time.display}" th:value="${time}" th:selected="${time == milestoneEntry.value.time}"></option>
+                          </select>
+                      </td>
                       <td class="js-addWeekDay" th:text="${milestoneEntry.value.dayOfWeek}"></td>
                       <td class="day">
                           <input type="number"
@@ -844,15 +857,17 @@
             <table>
                 <thead>
                     <tr>
-                      <th scope="col" id="milestone">Milestone</th>
-                      <th scope="col">Weekday</th>
-                      <th scope="col">Date</th>
+                        <th scope="col" id="milestone">Milestone</th>
+                        <th scope="col">Time</th>
+                        <th scope="col">Weekday</th>
+                        <th scope="col">Date</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr th:each="milestoneEntry : ${competitionSetupForm.milestoneEntries}"
                         th:if="${milestoneEntry.value.milestoneType.presetDate}">
                         <td th:text="${milestoneEntry.value.milestoneType.milestoneDescription}"></td>
+                        <td><th:block th:if="${milestoneEntry.value.timeOption}" th:text="${milestoneEntry.value.time.display}"/></td>
                         <td th:text="${milestoneEntry.value.dayOfWeek}"></td>
                         <td th:text="${#temporals.format(milestoneEntry.value.date, 'd MMMM yyyy')}"></td>
                     </tr>

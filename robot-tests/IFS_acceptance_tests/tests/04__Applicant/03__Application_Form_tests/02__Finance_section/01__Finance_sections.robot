@@ -40,16 +40,16 @@ Not requesting funding button
     And the user clicks the button/link                 jQuery=button:contains("Not requesting funding")
     Then the user should see the funding guidance
     And the user should see the element                 jQuery=button:contains("Requesting funding")
-    And the user should see the element                 jQuery=li:nth-of-type(2) span:contains("Not required")
-    And the user should see the element                 jQuery=li:nth-of-type(3) span:contains("Not required")
+    And the user should see the element                 jQuery=li:nth-of-type(2) span:contains("No action required")
+    And the user should see the element                 jQuery=li:nth-of-type(3) span:contains("No action required")
 
 Requesting funding button
     [Documentation]    INFUND-7093
     [Tags]
     When the user clicks the button/link                jQuery=button:contains("Requesting funding")
-    Then the user should see the element                 jQuery=li:nth-of-type(2) img.assigned
-    And the user should not see the element             jQuery=li:nth-of-type(3) span:contains("Not required")
-    And the user should not see the element             jQuery=li:nth-of-type(3) img.complete
+    Then the user should see the element                jQuery=li:nth-of-type(2) > .action-required
+    And the user should not see the element             jQuery=li:nth-of-type(3) span:contains("No action required")
+    And the user should not see the element             jQuery=li:nth-of-type(3) > .task-status-complete
     And the user should not see the funding guidance
 
 Organisation name visible in the Finance section
@@ -131,11 +131,24 @@ File upload mandatory for Academic partner to mark section as complete
     #TODO pending due to INFUND-8469
     # This will also check the auto-save as we hvaen't marked finances as complete yet
     Given the user navigates to Your-finances page      Providing sustainable childcare
-    and the user clicks the button/link          link=Your funding
+    and the user clicks the button/link      link=Your funding
+    and the user clicks the button/link      jQuery=button:contains("Edit your funding")
     and the user clicks the button/link       jQuery=button:contains("Remove")
     When the user selects the checkbox      jQuery=label[for="agree-terms-page"]
     and the user clicks the button/link     jQuery=button:contains("Mark as complete")
     then the user should see a field error     css=a.uploaded-file
+
+Applicant chooses Calculate overheads option
+    [Documentation]     INFUND-6788, INFUND-8191, INFUND-7405
+    [Tags]      Pending
+    [Setup]  log in as a different user    &{lead_applicant_credentials}
+    #TODO Pending due to INFUND-8706
+    # This test also checks read only view of the overheads once section is marked as complete
+    When the user navigates to Your-finances page     ${Competition_E2E}
+    then the user fills in the project costs       ${Competition_E2E}
+    When the user clicks the button/link    link=Your project costs
+    and the user clicks the button/link    jQuery=button:contains("Overhead costs")
+    then the user should not see the element      css=input
 
 *** Keywords ***
 Custom Suite Setup
