@@ -55,6 +55,10 @@ function tailorAppInstance() {
     if [[ ${TARGET} == "production" || ${TARGET} == "demo" || ${TARGET} == "uat" ]]
     then
         sed -i.bak "s/claimName: file-upload-claim/claimName: ${TARGET}-file-upload-claim/g" os-files-tmp/*.yml
+    fi
+
+    if [[ ${TARGET} == "production" || ${TARGET} == "uat" ]]
+    then
         sed -i.bak "s/replicas: 1/replicas: 2/g" os-files-tmp/3*.yml
         sed -i.bak "s/replicas: 1/replicas: 2/g" os-files-tmp/4*.yml
         sed -i.bak "s/replicas: 1/replicas: 2/g" os-files-tmp/shib/*.yml
