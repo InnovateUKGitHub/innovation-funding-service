@@ -24,16 +24,16 @@
 
     <div class="grid-row">
         <div class="column-half">
-          <dl class="dl-left">
-            <dd>Competition:</dd>
-            <dt th:text="${currentCompetition.name}" />
-            <dd>Funding body:</dd>
-            <dt>Innovate UK</dt>
-            <dd>Application deadline:</dd>
-            <dt>
+          <dl class="font-xsmall">
+            <dt>Competition:</dt>
+            <dd th:text="${currentCompetition.name}" />
+            <dt>Funding body:</dt>
+            <dd>Innovate UK</dd>
+            <dt>Application deadline:</dt>
+            <dd>
               <div th:remove="tag" th:text="${#strings.toLowerCase(#temporals.format(currentCompetition.endDate, 'hh:mma '))}" />
               <div th:remove="tag" th:text="${#temporals.format(currentCompetition.endDate, 'EEEE d MMMM yyyy')}" />
-            </dt>
+            </dd>
           </dl>
           <h2 class="heading-medium no-margin-bottom">Application progress</h2>
           <div th:include="fragments/elements :: progress-indicator" th:with="percentage=${completedQuestionsPercentage},size='medium'" class="extra-margin" />
