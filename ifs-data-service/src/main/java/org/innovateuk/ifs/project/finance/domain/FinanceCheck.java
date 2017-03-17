@@ -15,15 +15,15 @@ public class FinanceCheck {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "projectId", referencedColumnName = "id", nullable = false)
     private Project project;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organisationId", referencedColumnName = "id", nullable = false)
     private Organisation organisation;
 
-    @OneToOne(cascade = ALL)
+    @OneToOne(cascade = ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "costGroupId", referencedColumnName = "id", nullable = false)
     private CostGroup costGroup;
 

@@ -26,7 +26,7 @@ public class Cost {
     @JoinColumn(name = "cost_group_id")
     private CostGroup costGroup;
 
-    @OneToOne(cascade = ALL, mappedBy = "cost", orphanRemoval = true)
+    @OneToOne(cascade = ALL, mappedBy = "cost", orphanRemoval = true, fetch = FetchType.LAZY)
     private CostTimePeriod costTimePeriod;
 
     @ManyToOne(fetch = FetchType.LAZY)
