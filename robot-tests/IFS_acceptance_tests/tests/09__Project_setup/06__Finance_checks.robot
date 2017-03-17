@@ -791,7 +791,6 @@ Project Finance user can provide overhead value for Lead-Partner manually instea
 Project Finance user can Edit, Save, Change selection from 0% to 20% for Partner to Calculate overhead, contains spreadsheet when uploaded
     [Documentation]     INFUND-7577
     [Tags]    HappyPath
-    #Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     When the user clicks the button/link    css=a.eligibility-1
     When the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Overhead costs")
     Then the user should see the element    jQuery=label[data-target="overhead-none"]
