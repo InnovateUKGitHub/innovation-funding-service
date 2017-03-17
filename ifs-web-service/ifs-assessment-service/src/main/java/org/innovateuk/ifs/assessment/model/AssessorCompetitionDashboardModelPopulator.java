@@ -92,7 +92,7 @@ public class AssessorCompetitionDashboardModelPopulator {
         Optional<OrganisationResource> leadOrganisation = getApplicationLeadOrganisation(userApplicationRoles);
         return new AssessorCompetitionDashboardApplicationViewModel(application.getId(),
                 assessment.getId(),
-                application.getApplicationDisplayName(),
+                application.getName(),
                 leadOrganisation.get().getName(),
                 assessment.getAssessmentState(),
                 getOverallScore(assessment),

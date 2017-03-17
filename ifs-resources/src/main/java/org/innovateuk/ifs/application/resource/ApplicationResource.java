@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
@@ -87,15 +86,6 @@ public class ApplicationResource {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    @JsonIgnore
-    public String getApplicationDisplayName() {
-        if(StringUtils.isNotEmpty(name)) {
-            return name;
-        } else {
-            return competitionName;
-        }
     }
 
     public LocalDate getStartDate() {
