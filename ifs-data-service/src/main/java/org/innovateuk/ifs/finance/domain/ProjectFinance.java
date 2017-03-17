@@ -69,8 +69,7 @@ public class ProjectFinance extends Finance {
     }
 
     public boolean isPartner(Long userId) {
-        return ofNullable(project.getExistingProjectUserWithRoleForOrganisation(PROJECT_PARTNER, getOrganisation()))
-                .map(pu -> pu.isUser(userId)).orElse(false);
+        return ofNullable(project.getProjectUsersWithRole(PROJECT_PARTNER).stream().anyMatch(pu -> pu.isUser(userId) && pu.getOrganisation().equals(getOrganisation()))).orElse(false);
     }
 
     public boolean isFinanceContact(Long userId) {
