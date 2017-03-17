@@ -38,7 +38,7 @@ create new account for submitting
     And the user clicks the button/link    link=HIVE IT LIMITED
     And the user selects the checkbox    address-same
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
-    And the user clicks the button/link    jQuery=.button:contains("Confirm and continue")
+    And the user clicks the button/link    jQuery=.button:contains("Save and continue")
     And the user enters text to a text field    name=email    ${test_mailbox_one}+submittest@gmail.com
     And the user fills the create account form    Temur    Ketsbaia
     When the user reads his email and clicks the link    ${test_mailbox_one}+submittest@gmail.com    Please verify your email address    If you did not request an account with us
@@ -76,7 +76,7 @@ Create new application with the same user
     When the user navigates to the page    ${COMPETITION_DETAILS_URL}
     And the user clicks the button/link    jQuery=.button:contains("Apply now")
     And the user clicks the button/link    jQuery=.button:contains("Apply now")
-    And the user clicks the button/link    jQuery=Label:contains("Yes I want to create a new application")
+    And the user clicks the button/link    jQuery=Label:contains("I want to create a new application")
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user clicks the button/link    jQuery=a:contains("Begin application")
     And the user clicks the button/link    link=Application details
@@ -90,7 +90,7 @@ create new submit application
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
     And the guest user inserts user email & password    ${test_mailbox_one}+submittest@gmail.com    Passw0rd123
     And the guest user clicks the log-in button
-    And the user clicks the button/link    jQuery=Label:contains("Yes I want to create a new application")
+    And the user clicks the button/link    jQuery=Label:contains("I want to create a new application")
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user clicks the button/link    jQuery=a:contains("Begin application")
     And the user clicks the button/link    link=Application details
@@ -101,7 +101,7 @@ Create new invite application with the same user
     When the user navigates to the page    ${COMPETITION_DETAILS_URL}
     And the user clicks the button/link    jQuery=.button:contains("Apply now")
     And the user clicks the button/link    jQuery=.button:contains("Apply now")
-    And the user clicks the button/link    jQuery=Label:contains("Yes I want to create a new application")
+    And the user clicks the button/link    jQuery=Label:contains("I want to create a new application")
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user clicks the button/link    jQuery=a:contains("Begin application")
     And the user clicks the button/link    link=Application details
@@ -112,7 +112,7 @@ Create new academic application with the same user
     When the user navigates to the page    ${COMPETITION_DETAILS_URL}
     And the user clicks the button/link    jQuery=.button:contains("Apply now")
     And the user clicks the button/link    jQuery=.button:contains("Apply now")
-    And the user clicks the button/link    jQuery=Label:contains("Yes I want to create a new application")
+    And the user clicks the button/link    jQuery=Label:contains("I want to create a new application")
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user clicks the button/link    jQuery=a:contains("Begin application")
     And the user clicks the button/link    link=Application details
@@ -149,7 +149,7 @@ Invite and accept the invitation
     And the user enters text to a text field    id=addressForm.selectedPostcode.county    Poppleshire
     And the user enters text to a text field    id=addressForm.selectedPostcode.postcode    POPPS123
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
-    And the user clicks the button/link    jQuery=.button:contains("Confirm and continue")
+    And the user clicks the button/link    jQuery=.button:contains("Save and continue")
     And the user fills the create account form    Arsene    Wenger
     And the user reads his email and clicks the link    ${test_mailbox_one}+academictest@gmail.com    Please verify your email address    Please click on the verification link to confirm your email address
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
@@ -203,7 +203,7 @@ invite a registered user
     the user clicks the button/link    LINK=INNOVATE LTD
     the user selects the checkbox    address-same
     the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
-    the user clicks the button/link    jQuery=.button:contains("Confirm and continue")
+    the user clicks the button/link    jQuery=.button:contains("Save and continue")
     the user enters the details and clicks the create account    ${EMAIL_LEAD}
     the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
     the user reads his email and clicks the link    ${EMAIL_LEAD}    Please verify your email address    If you did not request an account with us
@@ -233,7 +233,7 @@ we create a new user
     The user clicks the button/link    LINK=INNOVATE LTD
     The user selects the checkbox    address-same
     The user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
-    The user clicks the button/link    jQuery=.button:contains("Confirm and continue")
+    The user clicks the button/link    jQuery=.button:contains("Save and continue")
     The user enters the details and clicks the create account    ${EMAIL_INVITED}
     The user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
     the user reads his email and clicks the link    ${EMAIL_INVITED}    Please verify your email address    If you did not request an account with us
@@ -253,7 +253,7 @@ the user follows the flow to register their organisation
     And the user clicks the button/link    link=INNOVATE LTD
     And the user selects the checkbox    address-same
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
-    And the user clicks the button/link    jQuery=.button:contains("Confirm and continue")
+    And the user clicks the button/link    jQuery=.button:contains("Save and continue")
 
 the user enters the details and clicks the create account
     [Arguments]    ${REG_EMAIL}
