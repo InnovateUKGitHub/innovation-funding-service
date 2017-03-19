@@ -107,7 +107,7 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
     }
 
     private List<Application> findSubmittedApplicationsForCompetition(Long competitionId) {
-        return applicationRepository.findByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.SUBMITTED.getId());
+        return applicationRepository.findByCompetitionIdAndApplicationStatusId(competitionId, SUBMITTED.getId());
     }
 
     private List<Application> findAllApplicationsForCompetition(Long competitionId) {
