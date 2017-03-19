@@ -80,9 +80,7 @@ public abstract class ApplicationSummaryMapper {
         BigDecimal totalProjectCost = getTotalProjectCost(source);
         result.setTotalProjectCost(totalProjectCost);
 
-        // TODO: Map innovation area once it has been defined for an application - INFUND-7966
-
-        result.setInnovationArea("");
+        result.setInnovationArea(source.getInnovationArea() != null ? source.getInnovationArea().getName() : null);
 
         return result;
     }

@@ -73,12 +73,12 @@ the user fills in the CS Eligibility
     #Elements in this page need double clicking
 
 the user fills in the CS Milestones
-    [Arguments]  ${day}  ${month}  ${nextyear}
+    [Arguments]  ${todayday}  ${day}  ${month}  ${nextyear}
     the user clicks the button/link       link=Milestones
-    the user enters text to a text field  jQuery=th:contains("Briefing event") ~ td.day input    ${day}
+    the user enters text to a text field  jQuery=th:contains("Briefing event") ~ td.day input    ${todayday}
     the user enters text to a text field  jQuery=th:contains("Briefing event") ~ td.month input  ${month}
     the user enters text to a text field  jQuery=th:contains("Briefing event") ~ td.year input  ${nextyear}
-    the user enters text to a text field  jQuery=th:contains("Submission date") ~ td.day input  ${day}
+    the user enters text to a text field  jQuery=th:contains("Submission date") ~ td.day input  ${todayday}
     the user enters text to a text field  jQuery=th:contains("Submission date") ~ td.month input  ${month}
     the user enters text to a text field  jQuery=th:contains("Submission date") ~ td.year input  ${nextyear}
     the user enters text to a text field  jQuery=th:contains("Allocate assessors") ~ td.day input  ${day}
@@ -129,6 +129,52 @@ the user fills in the CS Assessors
     the user clicks the button/link  link=Competition setup
     the user should see the element  jQuery=img[title$="is done"] + h3:contains("Assessors")
 
+the user fills in the Public content and publishes
+    # Fill in the Competition information and search
+    the user clicks the button/link             link=Competition information and search
+    the user enters text to a text field        id=short-description        Short public description
+    the user enters text to a text field        id=funding-range            Up to £1million
+    the user enters text to a text field        css=[labelledby="eligibility-summary"]      Summary of eligiblity
+    the user enters text to a text field        id=keywords  Search, Testing, Robot
+    the user clicks the button/link             jQuery=button:contains("Save and return")
+    the user should see the element             css=img[title='The "Competition information and search" section is marked as done']
+    # Fill in the Summary
+    the user clicks the button/link         link=Summary
+    the user enters text to a text field    css=.editor  This is a Summary description
+    the user selects the radio button       fundingType    Grant
+    the user enters text to a text field    id=project-size   10 millions
+    the user clicks the button/link         jQuery=button:contains("Save and return")
+    the user should see the element         css=img[title='The "Summary" section is marked as done']
+    # Fill in the Eligibility
+    the user clicks the button/link         link=Eligibility
+    the user enters text to a text field    id=heading-0    Heading 1
+    the user enters text to a text field    jQuery=div.editor:first-of-type     Content 1
+    the user clicks the button/link         jQuery=button:contains("Save and return")
+    the user should see the element         css=img[title='The "Eligibility" section is marked as done']
+    # Fill in the Scope
+    the user clicks the button/link         link=Scope
+    the user enters text to a text field    id=heading-0    Heading 1
+    the user enters text to a text field    jQuery=div.editor:first-of-type     Content 1
+    the user clicks the button/link         jQuery=button:contains("Save and return")
+    the user should see the element         css=img[title='The "Scope" section is marked as done']
+    # Save the dates
+    the user clicks the button/link  link=Dates
+    the user clicks the button/link  jQuery=button:contains("Save and return")
+    the user should see the element  css=img[title='The "Dates" section is marked as done']
+    # Fill in the How to apply
+    the user clicks the button/link         link=How to apply
+    the user enters text to a text field    id=heading-0    Heading 1
+    the user enters text to a text field    jQuery=div.editor:first-of-type     Content 1
+    the user clicks the button/link         jQuery=button:contains("Save and return")
+    the user should see the element         css=img[title='The "How to apply" section is marked as done']
+    # Fill in the Supporting information
+    the user clicks the button/link         link=Supporting information
+    the user enters text to a text field    id=heading-0    Heading 1
+    the user enters text to a text field    jQuery=div.editor:first-of-type     Content 1
+    the user clicks the button/link         jQuery=button:contains("Save and return")
+    the user should see the element         css=img[title='The "Supporting information" section is marked as done']
+    # Publish and return
+    the user clicks the button/link         jQuery=button:contains("Publish public content")
 
 Change the open date of the Competition in the database to one day before
     [Arguments]  ${competition}
@@ -137,6 +183,6 @@ Change the open date of the Competition in the database to one day before
 
 the internal user navigates to public content
     [Arguments]  ${comp}
-    the user navigates to the page      ${CA_UpcomingComp}
+    the user navigates to the page     ${CA_UpcomingComp}
     the user clicks the button/link    link=${comp}
     the user clicks the button/link    link=Public content

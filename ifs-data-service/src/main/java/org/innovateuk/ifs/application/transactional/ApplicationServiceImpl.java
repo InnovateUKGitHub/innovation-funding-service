@@ -369,6 +369,15 @@ public class ApplicationServiceImpl extends CompetitionSetupTransactionalService
     }
 
     @Override
+    public ServiceResult<ApplicationResource> setApplicationFundingEmailDateTime(final Long applicationId, final LocalDateTime fundingEmailDateTime) {
+        return getApplication(applicationId).andOnSuccessReturn(application -> {
+            application.setManageFundingEmailDate(fundingEmailDateTime);
+            Application savedApplication = applicationRepository.save(application);
+            return applicationMapper.mapToResource(savedApplication);
+        });
+    }
+
+    @Override
     public ServiceResult<CompletedPercentageResource> getProgressPercentageByApplicationId(final Long applicationId) {
         return getApplicationById(applicationId).andOnSuccessReturn(applicationResource -> {
             CompletedPercentageResource resource = new CompletedPercentageResource();
@@ -573,8 +582,6 @@ public class ApplicationServiceImpl extends CompetitionSetupTransactionalService
         Long totalSingleStatusQuestions = questions.stream().filter(q -> !q.hasMultipleStatuses()).count();
 
         Long totalQuestions = totalMultipleStatusQuestions + totalSingleStatusQuestions;
-        LOG.info("Total questions" + totalQuestions);
-        LOG.info("Total completed questions" + countCompleted);
 
         return percentage(countCompleted, totalQuestions);
     }

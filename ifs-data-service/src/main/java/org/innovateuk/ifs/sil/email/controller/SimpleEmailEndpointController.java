@@ -32,7 +32,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
  */
 @RestController
 @RequestMapping("/silstub/sendmail")
-@Profile("local")
+@Profile({"local", "integration-test"})
 public class SimpleEmailEndpointController {
 
     private static final Log LOG = LogFactory.getLog(SimpleEmailEndpointController.class);
@@ -127,7 +127,7 @@ public class SimpleEmailEndpointController {
                 mimeMessage.setContent(content);
 
                 text.setText(plainTextBody.getContent());
-                html.setText(htmlBody.getContent());
+                html.setContent(htmlBody.getContent(), "text/html; charset=utf-8");
 
                 // SEND THE MESSAGE
                 mimeMessage.setSentDate(new Date());

@@ -189,6 +189,10 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
             throw new AssessmentWithdrawnException(error.getErrorKey(), error.getArguments());
         }
 
+        if (restFailure.has(COMPETITION_CANNOT_RELEASE_FEEDBACK)) {
+            throw new CompetitionFeedbackCantSendException(error.getErrorKey(), error.getArguments());
+        }
+
         throw new RuntimeException();
     }
 

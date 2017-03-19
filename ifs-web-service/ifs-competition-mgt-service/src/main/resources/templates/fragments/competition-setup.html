@@ -9,31 +9,18 @@
                     <img width="30" height="30" th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done-right.png')}" th:title="'The &quot;'+${section.name}+'&quot; section is done'" th:alt="'The &quot;'+${section.name}+'&quot; section is done'"
                          th:if="${section.isComplete(competition) and !competition.isSetupAndLive()}" class="section-status" />
                     <h3 class="heading-small">
-                        <a th:if="(${isInitialComplete} or ${section.toString() == 'INITIAL_DETAILS'}) and ${section.toString() != 'APPLICATION_FORM'}"
+                        <a th:if="(${isInitialComplete} or ${section.toString() == 'INITIAL_DETAILS'})"
                            th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath=${section.path})}"
-                           th:text="${section.name}">Section Name</a>
-                        <a th:if="${isInitialComplete} and ${section.toString() == 'APPLICATION_FORM'}"
-                           th:href="@{/competition/setup/{competitionId}/section/application/landing-page(competitionId=${competition.id})}"
                            th:text="${section.name}">Section Name</a>
                         <th:block th:unless="${isInitialComplete} or ${section.toString() == 'INITIAL_DETAILS'}"
                            th:text="${section.name}">Section Name</th:block>
                     </h3>
                 </div>
-            </li>
-            <li th:with="sectionName='Public content'" class="grid-row section">
-                <div class="column-two-thirds">
-                    <h3 class="heading-small">
-                        <a th:if="${isInitialComplete}" th:href="@{/competition/setup/public-content/{competitionId}(competitionId=${competition.id})}"
-                           th:text="${sectionName}">Section Name</a>
-                        <th:block th:unless="${isInitialComplete}"
-                                  th:text="${sectionName}">Section Name</th:block>
-                    </h3>
-                </div>
-                <div class="column-third">
+                <div th:if="${isPublicContentPublished and section.toString() == 'CONTENT'}" class="column-third">
                     <p class="form-hint font-small"
                        th:if="${isPublicContentPublished}"
                        th:with="publishDay=${#temporals.format(publishDate, 'd MMMM yyyy')},
-                             publishTime=${#strings.toLowerCase(#temporals.format(publishDate, ' h:mma'))}"
+                         publishTime=${#strings.toLowerCase(#temporals.format(publishDate, ' h:mma'))}"
                        th:text="${'Last published ' + publishDay + ' ' + publishTime}">Last published</p>
                 </div>
             </li>
@@ -79,10 +66,10 @@
 
         <form th:action="'#'" method="post" novalidate="novalidate">
             <th:block th:insert="fragments/competition-setup :: comp-setup-remove-assigned-assessor-content" />
-
-            <div class="alignright-button">
-                <button type="button" class="js-close buttonlink large">Cancel</button>
-                <button class="button large" type="submit">Remove assessor</button>
+            <hr />
+            <div>
+                <button class="button" type="submit">Remove assessor</button>
+                <button type="button" class="js-close buttonlink">Cancel</button>
             </div>
         </form>
 

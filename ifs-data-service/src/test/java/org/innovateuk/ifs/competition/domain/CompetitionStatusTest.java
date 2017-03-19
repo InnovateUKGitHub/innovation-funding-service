@@ -154,7 +154,7 @@ public class CompetitionStatusTest {
     	competition.setAssessorFeedbackDate(future);
 
         assertEquals(CompetitionStatus.ASSESSOR_FEEDBACK, competition.getCompetitionStatus());
-        assertTrue(competition.getCompetitionStatus().isFeedbackReleased());
+        assertFalse(competition.getCompetitionStatus().isFeedbackReleased());
     }
     
     @Test
@@ -168,7 +168,7 @@ public class CompetitionStatusTest {
     	competition.setAssessorFeedbackDate(future);
 
         assertEquals(CompetitionStatus.ASSESSOR_FEEDBACK, competition.getCompetitionStatus());
-        assertTrue(competition.getCompetitionStatus().isFeedbackReleased());
+        assertFalse(competition.getCompetitionStatus().isFeedbackReleased());
     }
     
     @Test
@@ -181,7 +181,7 @@ public class CompetitionStatusTest {
     	competition.setFundersPanelEndDate(past);
 
         assertEquals(CompetitionStatus.ASSESSOR_FEEDBACK, competition.getCompetitionStatus());
-        assertTrue(competition.getCompetitionStatus().isFeedbackReleased());
+        assertFalse(competition.getCompetitionStatus().isFeedbackReleased());
     }
     
     @Test
@@ -195,7 +195,7 @@ public class CompetitionStatusTest {
     	competition.setAssessorFeedbackDate(future);
 
         assertEquals(CompetitionStatus.ASSESSOR_FEEDBACK, competition.getCompetitionStatus());
-        assertTrue(competition.getCompetitionStatus().isFeedbackReleased());
+        assertFalse(competition.getCompetitionStatus().isFeedbackReleased());
     }
     
     @Test

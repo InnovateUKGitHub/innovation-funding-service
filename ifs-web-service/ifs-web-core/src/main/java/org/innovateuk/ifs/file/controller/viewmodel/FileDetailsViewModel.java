@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.file.controller.viewmodel;
 
-import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 
 import java.math.BigDecimal;
 
@@ -15,6 +15,7 @@ public class FileDetailsViewModel {
 
     public static final BigDecimal ONE_THOUSAND = BigDecimal.valueOf(1000L);
 
+    private long formInputId;
     private String filename;
     private BigDecimal filesizeKbytes;
 
@@ -25,6 +26,15 @@ public class FileDetailsViewModel {
     public FileDetailsViewModel(String filename, long filesizeBytes) {
         this.filename = filename;
         this.filesizeKbytes = BigDecimal.valueOf(filesizeBytes).divide(ONE_THOUSAND, 2, ROUND_HALF_EVEN);
+    }
+
+    public FileDetailsViewModel(long formInputId, String filename, long filesizeBytes) {
+        this(filename, filesizeBytes);
+        this.formInputId = formInputId;
+    }
+
+    public long getFormInputId() {
+        return formInputId;
     }
 
     public String getFilename() {
@@ -44,6 +54,7 @@ public class FileDetailsViewModel {
         FileDetailsViewModel that = (FileDetailsViewModel) o;
 
         return new EqualsBuilder()
+                .append(formInputId, that.formInputId)
                 .append(filename, that.filename)
                 .append(filesizeKbytes, that.filesizeKbytes)
                 .isEquals();
@@ -52,6 +63,7 @@ public class FileDetailsViewModel {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .append(formInputId)
                 .append(filename)
                 .append(filesizeKbytes)
                 .toHashCode();

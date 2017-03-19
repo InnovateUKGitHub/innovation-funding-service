@@ -10,17 +10,20 @@
 
         <main id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
-            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to declaration of interest',linkClass='link-back',linkUrl=@{/profile/declaration}" />
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Declaration of interest',linkClass='link-back',linkUrl=@{/profile/declaration}" />
 
             <div class="hgroup">
                 <h1 class="heading-xlarge">Edit your declaration of interest</h1>
             </div>
 
-            <p>We will need to report if you, or a close family member, is connected to a body which conducts material financial transactions.</p>
+            <p>We need to record if you, or an immediate family member, is connected to a body which has any financial interests.</p>
 
-            <p>Please complete the sections below, declaring all interests held during the financial year ending 31 March 2017.</p>
+            <p>Please complete the sections below declaring to the best of your knowledge, all interests held.
+                It is your responsibility to inform us of any changes which may affect this declaration.</p>
 
-            <h2 class="heading-large">Your affiliations</h2>
+            <hr />
+
+            <h2 class="heading-large">Your affiliations (financial interests)</h2>
 
             <form th:action="@{/profile/declaration/edit}" method="post" th:object="${form}" novalidate="novalidate">
                 <div class="error-summary" th:if="${#fields.hasErrors('*')}" data-ignore-errors="true">
@@ -29,7 +32,6 @@
                 </div>
 
                 <h3 class="heading-medium no-margin">Principal employer and role</h3>
-                <p class="form-hint">Tell us about your current employer and position</p>
 
                 <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('principalEmployer')}? error">
                     <label class="form-label-bold" th:for="${#ids.next('principalEmployer')}">
@@ -57,7 +59,7 @@
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('professionalAffiliations')}? error">
                     <label class="form-label-bold"  th:for="${#ids.next('professionalAffiliations')}">
-                        Professional affiliations
+                        List any bodies you are currently a member of as part of your profession.
                         <span th:if="${#fields.hasErrors('professionalAffiliations')}" th:remove="tag">
                             <span class="error-message"  th:each="err : ${#fields.errors('professionalAffiliations')}" th:text="${err}" />
                         </span>
@@ -68,7 +70,7 @@
                 <div class="form-group" th:classappend="${#fields.hasErrors('hasAppointments')}? error">
                     <fieldset class="inline">
                         <legend class="heading-small">
-                            Do you have any appointments, directorships or consultancies?
+                            Do you hold any appointments or directorships?
                             <span th:if="${#fields.hasErrors('hasAppointments')}" th:remove="tag">
                                 <span class="error-message" th:each="err : ${#fields.errors('hasAppointments')}" th:text="${err}" />
                             </span>
@@ -191,12 +193,12 @@
                     </fieldset>
                 </div>
 
-                <h3 class="heading-medium">Close family member affiliations</h3>
+                <h3 class="heading-medium">Family member affiliations</h3>
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('hasFamilyAffiliations')}? error">
                     <fieldset class="inline">
                         <legend class="heading-small">
-                            Do any of your close family members have any appointments, directorships or consultancies?
+                            Do any of your immediate family members have any appointments or directorships?
                             <span th:if="${#fields.hasErrors('hasFamilyAffiliations')}" th:remove="tag">
                                 <span class="error-message"
                                       th:each="err : ${#fields.errors('hasFamilyAffiliations')}"
@@ -293,14 +295,13 @@
                 <div class="form-group" th:classappend="${#fields.hasErrors('hasFamilyFinancialInterests')}? error">
                     <fieldset class="inline">
                         <legend class="heading-small">
-                            Do any of your close family members have any other financial interests?
+                            Do any of your immediate family members have any other financial interests?
                             <span th:if="${#fields.hasErrors('hasFamilyFinancialInterests')}" th:remove="tag">
                                 <span class="error-message"
                                       th:each="err : ${#fields.errors('hasFamilyFinancialInterests')}"
                                       th:text="${err}" />
                             </span>
                         </legend>
-                        <p class="form-hint">Do any of your close family members have a position or investment in a company from which you can benefit financially?</p>
 
                         <label class="block-label selection-button-radio" data-target="toggle-family-interest">
                             <input value="Yes" type="radio" th:field="*{hasFamilyFinancialInterests}"
@@ -344,12 +345,14 @@
                         <label class="block-label selection-button-checkbox">
                             <input type="checkbox" th:field="*{accurateAccount}" required="required"
                                    th:attr="data-required-errormessage=#{validation.assessorprofiledeclarationform.accurateAccount.required}" />
-                            <span th:text="|I confirm that for the financial year ending ${#temporals.format(model.declarationDate, 'd MMMM yyyy')} the above is an accurate account of my interests outside Innovate UK|" th:remove="tag" />
+                            I confirm that the above is an accurate account, to the best of my knowledge, of my financial interests.
+                            I agree to inform Innovate UK immediately of any changes which may affect this declaration.
                         </label>
                     </fieldset>
                 </div>
 
-                <button class="button button-large extra-margin" type="submit">Save and continue</button>
+                <button class="button button-large" type="submit">Save and return to your declaration of interest</button>
+                <a class="button button-clear" th:href="@{/profile/declaration}">Cancel</a>
             </form>
             <input type="hidden" id="cacheTest" value="" />
 

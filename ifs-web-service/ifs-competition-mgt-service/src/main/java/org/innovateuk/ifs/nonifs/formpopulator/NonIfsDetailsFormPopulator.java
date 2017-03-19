@@ -6,6 +6,8 @@ import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
 import org.innovateuk.ifs.nonifs.form.NonIfsDetailsForm;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 /**
  * Populates a {@link org.innovateuk.ifs.nonifs.form.NonIfsDetailsForm}
  */
@@ -18,9 +20,16 @@ public class NonIfsDetailsFormPopulator {
         form.setInnovationSectorCategoryId(competitionResource.getInnovationSector());
         form.setInnovationAreaCategoryId(competitionResource.getInnovationAreas().stream().findAny().orElse(null));
         form.setUrl(competitionResource.getNonIfsUrl());
-        form.setApplicantNotifiedDate(new MilestoneRowForm(MilestoneType.RELEASE_FEEDBACK, competitionResource.getReleaseFeedbackDate()));
-        form.setOpenDate(new MilestoneRowForm(MilestoneType.OPEN_DATE, competitionResource.getStartDate()));
-        form.setCloseDate(new MilestoneRowForm(MilestoneType.SUBMISSION_DATE, competitionResource.getEndDate()));
+        form.setApplicantNotifiedDate(createEditableMilestoneRowForm(MilestoneType.RELEASE_FEEDBACK, competitionResource.getReleaseFeedbackDate()));
+        form.setOpenDate(createEditableMilestoneRowForm(MilestoneType.OPEN_DATE, competitionResource.getStartDate()));
+        form.setCloseDate(createEditableMilestoneRowForm(MilestoneType.SUBMISSION_DATE, competitionResource.getEndDate()));
         return form;
+    }
+
+    private MilestoneRowForm createEditableMilestoneRowForm(MilestoneType milestoneType, LocalDateTime date) {
+        MilestoneRowForm milestoneRowForm = new MilestoneRowForm(milestoneType, date);
+        milestoneRowForm.setEditable(true);
+        return milestoneRowForm;
+
     }
 }

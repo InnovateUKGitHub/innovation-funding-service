@@ -29,19 +29,16 @@ public class ProjectFinanceOverviewModelManager implements FinanceOverviewModelM
     private SectionService sectionService;
     private QuestionService questionService;
     private FormInputService formInputService;
-    private FinanceHandler financeHandler;
     private ProjectFinanceService financeService;
 
     @Autowired
     public ProjectFinanceOverviewModelManager(SectionService sectionService,
                                               QuestionService questionService,
                                               FormInputService formInputService,
-                                              FinanceHandler financeHandler,
                                               ProjectFinanceService financeService) {
         this.sectionService = sectionService;
         this.questionService = questionService;
         this.formInputService = formInputService;
-        this.financeHandler = financeHandler;
         this.financeService = financeService;
     }
 

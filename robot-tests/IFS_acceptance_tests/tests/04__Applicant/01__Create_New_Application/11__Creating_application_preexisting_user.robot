@@ -18,8 +18,8 @@ Logged in user can create a new application
     Then the user should be redirected to the correct page    ${speed_bump_url}
     And the user selects the radio button    create-application    true
     And the user clicks the button/link    jQuery=.button:contains("Continue")
-    And the user should see the text in the page    Inviting Contributors and Partners
-    And the user clicks the button/link    jQuery=.button:contains("Begin application")
+    And the user should see the text in the page    Application team
+    And the user clicks the button/link    jQuery=a:contains("Begin application")
     And the user should see the text in the page    Application overview
     And the user can see this new application on their dashboard
     And the project start date is blank
@@ -52,8 +52,8 @@ Non-logged in user has the option to log into an existing account
     Then the user should be redirected to the correct page    ${speed_bump_url}
     And the user selects the radio button    create-application    true
     And the user clicks the button/link    jQuery=.button:contains("Continue")
-    And the user should see the text in the page    Inviting Contributors and Partners
-    And the user clicks the button/link    jQuery=.button:contains("Begin application")
+    And the user should see the text in the page    Application team
+    And the user clicks the button/link    jQuery=a:contains("Begin application")
     And the user should see the text in the page    Application overview
     And the user can see this new application on their dashboard
 
@@ -77,10 +77,10 @@ Non-logged in user can log in and continue with an existing application
 *** Keywords ***
 The user can see this new application on their dashboard
     the user navigates to the page    ${DASHBOARD_URL}
-    the user should see the text in the page    ${OPEN_COMPETITION_LINK}
+    the user should see the text in the page    ${UNTITLED_APPLICATION_NAME}
 
 The project start date is blank
-    the user clicks the button/link    link=${OPEN_COMPETITION_LINK}
+    the user clicks the button/link    link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user clicks the button/link    link=Application details
     the user should see the element    xpath=//*[@id="application_details-startdate_day" and @placeholder="DD"]
     the user should see the element    xpath=//*[@id="application_details-startdate_month" and @placeholder="MM"]
@@ -91,4 +91,4 @@ The user can save the page with the blank date
     # note that the below validation is being used rather than a specific application number so that the test is
     # not broken by other tests that run before it and may change this application's number
     the user should see the text in the page    Application overview
-    the user should see the text in the page    ${OPEN_COMPETITION_LINK}
+    the user should see the text in the page    ${UNTITLED_APPLICATION_NAME}
