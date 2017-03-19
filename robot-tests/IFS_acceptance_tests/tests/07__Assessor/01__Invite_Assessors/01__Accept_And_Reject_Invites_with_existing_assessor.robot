@@ -26,6 +26,8 @@ Documentation     INFUND-228: As an Assessor I can see competitions that I have 
 ...               INFUND-6455 As an assessor with an account, I can see invitations to assess competitions on my dashboard...
 ...
 ...               INFUND-6450 As a member of the competitions team, I can see the status of each assessor invite s0...
+...
+...               INFUND-5494 An assessor CAN follow a link to the competition brief from the competition dashboard
 Suite Setup       log in as user    &{existing_assessor1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
@@ -54,6 +56,25 @@ Assessor dashboard contains the correct competitions
     And The user should see the text in the page    Upcoming competitions to assess
     And The user should see the text in the page    ${UPCOMING_COMPETITION_TO_ASSESS_NAME}
     And The user should see the text in the page    Invitations to assess
+
+Competition brief link can be seen
+    [Documentation]     INFUND-5494
+    [Tags]
+    When the user clicks the button/link    link=${UPCOMING_COMPETITION_TO_ASSESS_NAME}
+    Then the user should see the element    link=See competition brief
+
+User can view the competition brief
+     [Documentation]    INFUND-5494
+     [Tags]
+     When the user clicks the button/link   link=See competition brief
+     Then the user should not see an error in the page
+     And the user should see the text in the page   ${UPCOMING_COMPETITION_TO_ASSESS_NAME}
+     And the user should see the text in the page   Competition opens
+     And the user should see the text in the page   Competition closes
+     And the user should see the element    jQuery=.button:contains("Start or continue your application")
+     [Teardown]
+     Then the user goes back to the previous page
+     And the user clicks the button/link    link=Assessor dashboard
 
 Calculation of the Upcoming competitions and Invitations to assess should be correct
     [Documentation]    INFUND-7107

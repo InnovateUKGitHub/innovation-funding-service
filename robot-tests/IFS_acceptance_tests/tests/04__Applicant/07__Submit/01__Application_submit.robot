@@ -139,4 +139,4 @@ the applicant marks the first section as complete
 the applicant clicks the submit and then clicks the "close button" in the modal
     Wait Until Element Is Enabled Without Screenshots    jQuery=.button:contains("Submit application")
     the user clicks the button/link    jQuery=.button:contains("Submit application")
-    the user clicks the button/link    jQuery=button:contains("X")
+    the user clicks the button/link    jQuery=button:contains("Close")
