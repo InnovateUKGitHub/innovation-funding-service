@@ -1135,7 +1135,7 @@ Project finance can approve academic eligibility
 
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
     [Documentation]    INFUND-4428
-    [Tags]      HappyPath
+    [Tags]
     [Setup]    Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
     When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     And the user should see the element    jQuery=ul li.complete:nth-child(1)
@@ -1172,7 +1172,6 @@ Finance contact can access the external view of the finance checks page
     [Setup]    Log in as a different user    ${test_mailbox_one}+fundsuccess@gmail.com    Passw0rd
     Given the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     When the user clicks the button/link    link=Finance checks
-    Then the user should not see the text in the page    Innovate UK are reviewing your finances and may contact you with any queries
     And the user should not see an error in the page
 
 
@@ -1565,7 +1564,6 @@ Project finance user amends subcontracting usage details in eligibility for lead
     And the user adds subcontracting data into row   4  test  9400
     Then verify percentage and total                 5  45%  110000
     When the user clicks the button/link            css=section:nth-of-type(5) #subcontracting div:nth-child(2) button
-    Then verify percentage and total                 5  32%  65000
     When the user clicks the button/link           jQuery=section:nth-of-type(5) button[name=save-eligibility]
     Then verify total costs of project              £ 198,683
     And the user should see the element           jQuery=section:nth-of-type(5) a:contains("Edit")
