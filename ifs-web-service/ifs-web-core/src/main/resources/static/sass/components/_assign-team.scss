@@ -25,56 +25,72 @@ The assign container is normally a `<select>`, which gets progressivly transform
 */
 
 .assign-container {
-    position:relative;
-    @include inline-block;
+  @include inline-block;
+  position:relative;
 
-    .assign-team {
-        @include border-radius(2px);
-        border: 1px solid $grey-3;
-        padding:10px 15px;
-        position:absolute;
-        z-index: 1;
-        background-color:#fff;
-        width:200px;
-        color:$secondary-text-colour;
-        margin-top:10px;
-    }
-    .assign-button button {
-        @extend .buttonlink;
-    }
+  &.assigned-alert,
+  &.assign-alert{
+    display: block;
+    margin-bottom: 1em;
+  }
 
-    .assign-button button[aria-expanded]:after {
-            content: '\0020\0020\25bc';
-            font-size:12px;
-    }
-    .assign-button button[aria-expanded="true"]:after {
-            content: '\0020\0020\25b2';
-    }
-    .assign-button button[aria-hidden="true"]{
-      display: none;
-    }
-    ul {
-        margin-bottom:0;
-    }
-    .reassign-status {
-      display: inline;
-      text-align:left;
-    }
+  .assign-team {
+    @include border-radius(2px);
+    border: 1px solid $grey-3;
+    padding:10px 15px;
+    position:absolute;
+    z-index: 1;
+    background-color:#fff;
+    width:200px;
+    color:$secondary-text-colour;
+    margin-top:10px;
+  }
+
+  .assign-button button {
+    @extend .buttonlink;
+  }
+
+ .assign-button button[aria-expanded]:after {
+    content: '\0020\0020\25bc';
+    font-size:12px;
+ }
+
+ .assign-button button[aria-expanded="true"]:after {
+    content: '\0020\0020\25b2';
+ }
+
+ .assign-button button[aria-hidden="true"]{
+    display: none;
+ }
+
+  ul {
+    margin-bottom:0;
+  }
+  .reassign-status {
+    display: inline;
+    text-align:left;
+  }
 }
+
 //double class to be more specific as the @extend gets processed last by compass
 .assign-container.assign-container .assign-button button,
 .assign-container.assign-container  .buttonlink {
-    padding:0;
-    margin: 0 5px 0 0;
-    text-align: left;
-    vertical-align:top;
+  padding:0;
+  margin: 0 5px 0 0;
+  text-align: left;
+  vertical-align:top;
 }
 
 .no-js .assign-container .assign-team {
-    position:relative;
-    border:none;
-    margin: 0;
-    padding-left: 0;
-    padding-top:0;
-    padding-bottom:2px;
+  position:relative;
+  border:none;
+  margin: 0;
+  padding-left: 0;
+  padding-top:0;
+  padding-bottom:2px;
+}
+
+.no-js .assign-container--alert .assign-team{
+  background: $panel-colour;
+  margin-bottom: 1em;
 }

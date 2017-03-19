@@ -53,7 +53,7 @@ Mark application details as incomplete
     Given the user navigates to the page  ${DASHBOARD_URL}
     And the user clicks the button/link   link=Robot test application
     the user clicks the button/link       link=Application details
-    the user clicks the button/link       jQuery=button:contains("Edit")
+    the user clicks the button/link       jQuery=button:contains("Return and edit")
     the user clicks the button/link       jQuery=button:contains("Save and return to application overview")
     the user should see the element       jQuery=li:contains("Application details") > .action-required
 
