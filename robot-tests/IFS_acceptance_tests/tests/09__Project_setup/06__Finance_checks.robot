@@ -90,7 +90,6 @@ Project Finance user can see the finance check summary page
     And the table row has expected values
     And the user should see the element    link=Projects in setup
 
-
 Status of the Eligibility column (workaround for private beta competition)
     [Documentation]    INFUND-5190
     [Tags]
@@ -100,7 +99,6 @@ Status of the Eligibility column (workaround for private beta competition)
     And The user should see the text in the page    Notes
     When the user should see the element    link=Review
     Then the user should see that the element is disabled    jQuery=.generate-spend-profile-main-button
-
 
 Queries section is linked from eligibility and this selects eligibility on the query dropdown
     [Documentation]    INFUND-4840
@@ -112,7 +110,6 @@ Queries section is linked from eligibility and this selects eligibility on the q
     Then the user should see the dropdown option selected    Eligibility    section
     [Teardown]    the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
 
-
 Queries section is linked from viability and this selects viability on the query dropdown
     [Documentation]    INFUND-4840
     [Tags]
@@ -122,7 +119,6 @@ Queries section is linked from viability and this selects viability on the query
     When the user clicks the button/link    jQuery=.button:contains("Post a new query")
     Then the user should see the dropdown option selected    Viability    section
     [Teardown]    the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-
 
 Queries section is linked to from the main finance check summary page
     [Documentation]    INFUND-4840
@@ -144,7 +140,6 @@ Viability and eligibility sections both available
     Then the user should see the option in the drop-down menu    Viability    section
     And the user should see the option in the drop-down menu    Eligibility    section
 
-
 Large pdf uploads not allowed
     [Documentation]    INFUND-4840
     [Tags]
@@ -157,7 +152,6 @@ Non pdf uploads not allowed
     [Tags]
     When the user uploads the file      name=attachment    ${text_file}
     Then the user should see the text in the page    ${wrong_filetype_validation_error}
-
 
 Project finance user can upload a pdf file
     [Documentation]    INFUND-4840
@@ -188,13 +182,11 @@ Project finance user can view the file
     And the user goes back to the previous page ignoring form submission
     [Teardown]    the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
 
-
 Project finance user can upload more than one file
     [Documentation]    INFUND-4840
     [Tags]
     When the user uploads the file      name=attachment    ${valid_pdf}
     Then the user should see the element    jQuery=a:contains("testing.pdf"):nth-of-type(2)
-
 
 Project finance user can still view both files
     [Documentation]    INFUND-4840
@@ -223,7 +215,6 @@ Post new query client side validations
     When the user enters text to a text field    css=.editor    this is some query text
     Then the user should not see the element    jQuery=label[for="query] span:nth-child(2) span:contains(This field cannot be left blank.)
 
-
 Word count validations
     [Documentation]    INFUND-4840
     [Tags]
@@ -240,7 +231,6 @@ New query can be cancelled
     And the user should not see the element    id=queryTitle
     And the user should not see the element    css=.editor
 
-
 Query can be re-entered
     [Documentation]    INFUND-4840
     [Tags]
@@ -250,13 +240,11 @@ Query can be re-entered
     And the user uploads the file    name=attachment    ${valid_pdf}
     And the user uploads the file    name=attachment    ${valid_pdf}
 
-
 New query can be posted
     [Documentation]    INFUND-4840
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Post Query")
     Then the user should see the text in the page    Lee Bowman - Innovate UK (Finance team)
-
 
 Query sections are no longer editable
     [Documentation]    INFUND-4840
@@ -269,12 +257,10 @@ Queries raised column updates to 'awaiting response'
     When the user clicks the button/link    link=Finance checks
     Then the user should see the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(6) a:contains("Awaiting response")
 
-
 Finance contact receives an email when new query is posted
     [Documentation]    INFUND-4841
     [Tags]    Email
     Then the user reads his email    ${test_mailbox_one}+fundsuccess@gmail.com    Query regarding your finances    We have raised a query around your project finances.
-
 
 Project finance user can add another query
     [Documentation]    INFUND-4840
@@ -292,13 +278,14 @@ Queries show in reverse chronological order
     When the user should see the element    jQuery=h2:nth-of-type(4):contains("this is a title")    #
     And the user should see the element    jQuery=h2:nth-of-type(3):contains("another query title")
 
-Non finance contact can view query
+Non finance contact cannot view query
     [Documentation]    INFUND-4843
     [Tags]
     Given log in as a different user    steve.smith@empire.com    ${short_password}
     When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
-    Then the user should see the element    link=Finance checks
-    And the user should see the element    jQuery=ul li.require-action:nth-child(5)
+    Then the user should not see the element    link=Finance checks
+    #  TODO The below line can be uncommented once 8787 is done
+    # And the user should not see the element    flag status for finance checks
 
 Finance checks section status updated for finance contact
     [Documentation]    INFUND-4843
@@ -306,8 +293,8 @@ Finance checks section status updated for finance contact
     Given log in as a different user    ${test_mailbox_one}+fundsuccess@gmail.com    ${short_password}
     When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     Then the user should see the element    link=Finance checks
-     And the user should see the element    jQuery=ul li.require-action:nth-child(5)
-
+    #  TODO The below line can be uncommented once 8787 is done
+    # And the user should see the element    flag status for finance checks
 
 Finance contact can view query
     [Documentation]    INFUND-4843
@@ -315,7 +302,6 @@ Finance contact can view query
     When the user clicks the button/link    link=Finance checks
     Then the user should see the text in the page    this is a title
     And the user should see the text in the page    this is some query text
-
 
 Finance contact can view the project finance user's uploads
     [Documentation]    INFUND-4843
@@ -327,13 +313,11 @@ Finance contact can view the project finance user's uploads
     Then the user should not see an error in the page
     And the user goes back to the previous page
 
-
 Queries show in reverse chronological order for finance contact
     [Documentation]    INFUND-4843
     [Tags]
     When the user should see the element    jQuery=#content h2:nth-of-type(3):contains("this is a title")
     Then the user should see the element    jQuery=#content h2:nth-of-type(2):contains("another query title")
-
 
 Large pdf uploads not allowed for query response
     [Documentation]    INFUND-4843
@@ -349,7 +333,6 @@ Non pdf uploads not allowed for query response
     [Tags]  Pending
     When the user uploads the file      name=attachment    ${text_file}
     Then the user should see the text in the page    ${wrong_filetype_validation_error}
-
 
 Finance contact can upload a pdf file
     [Documentation]    INFUND-4843
@@ -395,13 +378,11 @@ Finance contact can still view both files
     Then the user should not see an error in the page
     And the user goes back to the previous page ignoring form submission
 
-
 Response to query server side validations
     [Documentation]    INFUND-4843
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Post response")
     Then the user should see the text in the page    This field cannot be left blank.
-
 
 Response to query client side validations
     [Documentation]    INFUND-4843
@@ -442,7 +423,8 @@ Finance checks section status changes to hourglass
     [Documentation]    INFUND-4843
     [Tags]
     When the user clicks the button/link    link=Project setup status
-    Then the user should see the element    jQuery=ul li.waiting:nth-child(5)
+    #  TODO The below line can be uncommented once 8787 is done
+    # Then the user should see the element    flag status for finance checks
 
 Queries raised column updates to 'view'
     [Documentation]    INFUND-4843
@@ -578,7 +560,6 @@ Finance contact can still view both files in notes
     And the user goes back to the previous page ignoring form submission
     And the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
 
-
 Create new note server side validations
     [Documentation]    INFUND-4845
     [Tags]
@@ -593,7 +574,6 @@ Create new note client side validations
     Then the user should not see the element    jQuery=label[for="noteTitle"] span:nth-child(2) span:contains(This field cannot be left blank.)
     When the user enters text to a text field    css=.editor    this is some note text
     Then the user should not see the element    jQuery=label[for="note"] span:nth-child(2) span:contains(This field cannot be left blank.)
-
 
 Word count validations for notes
     [Documentation]    INFUND-4845
@@ -610,7 +590,6 @@ New note can be cancelled
     Then the user should not see the text in the page    ${valid_pdf}
     And the user should not see the element    id=noteTitle
     And the user should not see the element    css=.editor
-
 
 Note can be re-entered
     [Documentation]    INFUND-4845
@@ -633,7 +612,6 @@ Note sections are no longer editable
     When the user should not see the element    css=.editor
     And the user should not see the element    id=noteTitle
 
-
 Project finance user can comment on the note
     [Documentation]    INFUND-7756
     [Tags]
@@ -654,7 +632,6 @@ Non pdf uploads not allowed for note comments
     [Tags]
     When the user uploads the file      name=attachment    ${text_file}
     Then the user should see the text in the page    ${wrong_filetype_validation_error}
-
 
 Finance contact can upload a pdf file to note comments
     [Documentation]    INFUND-7756
@@ -702,13 +679,11 @@ Finance contact can still view both files in note comments
     And the user goes back to the previous page ignoring form submission
     And the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
 
-
 Note comments server side validations
     [Documentation]    INFUND-7756
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Save comment")
     Then the user should see the element    jQuery=label[for="comment"] span:nth-child(2) span:contains(This field cannot be left blank.)
-
 
 Note comments client side validations
     [Documentation]    INFUND-7756
@@ -1300,8 +1275,8 @@ Non finance contact can't view finance checks page
     [Tags]
     [Setup]    Log in as a different user    steve.smith@empire.com    Passw0rd
     When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
-    Then the user should see the element    link=Finance checks
-    And the user navigates to the page    ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/partner-organisation/${EMPIRE_LTD_ID}/finance-checks
+    Then the user should not see the element    link=Finance checks
+    And the user navigates to the page and gets a custom error message    ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/partner-organisation/${EMPIRE_LTD_ID}/finance-checks    ${403_error_message}
 
 
 *** Keywords ***
@@ -1469,7 +1444,6 @@ the rag rating updates on the finance check page for partner for eligibility
    And the user clicks the button/link    jQuery=table.table-progress tr:nth-child(2) td:nth-child(4) a:contains("Review")
    And the user should see the element    jQuery=.button:contains("Approve eligible costs"):not(.disabled)    # Checking here both that the button exists and that it isn't disabled
 
-
 verify total costs of project
     [Arguments]    ${total_costs}
     the user should see the text in the element      jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(2)     ${total_costs}
@@ -1506,7 +1480,6 @@ the user adds subcontracting data into row
     the user enters text to a text field        css=section:nth-of-type(5) #subcontracting div:nth-child(${row_number}) div:nth-of-type(2) input   UK
     the user enters text to a text field        css=section:nth-of-type(5) #subcontracting div:nth-child(${row_number}) div:nth-of-type(3) textarea   Develop
     the user enters text to a text field        css=section:nth-of-type(5) #subcontracting div:nth-child(${row_number}) div:nth-of-type(4) input   ${cost}
-
 
 the user adds travel data into row
     [Arguments]  ${row_number}  ${description}  ${number_of_times}  ${cost}

@@ -25,6 +25,10 @@ public interface FinanceCheckService {
 
     ServiceResult<FinanceCheckOverviewResource> getFinanceCheckOverview(Long projectId);
 
+    ServiceResult<Void> approveFinanceCheck(Long projectId, Long organisationId);
+
+    FinanceCheckProcessResource getFinanceCheckApprovalStatus(Long projectId, Long organisationId);
+
     FinanceCheckEligibilityResource getFinanceCheckEligibilityDetails(Long projectId, Long organisationId);
 
     ServiceResult<AttachmentResource> uploadFile(Long projectId, String contentType, long contentLength, String originalFilename, byte[] bytes);
@@ -41,7 +45,7 @@ public interface FinanceCheckService {
 
     ServiceResult<Void> saveQueryPost(PostResource post, long threadId);
 
-    ServiceResult<List<QueryResource>> getQueries(Long projectFinanceId);
+    ServiceResult<List<QueryResource>> loadQueries(Long projectFinanceId);
 
     ServiceResult<Long> saveNote(NoteResource note);
 

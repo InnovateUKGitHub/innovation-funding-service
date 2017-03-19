@@ -154,7 +154,7 @@ public class ApplicationModelPopulator {
             List<QuestionResource> costsQuestions = questionService.getQuestionsBySectionIdAndType(financeSection.getId(), QuestionType.COST);
             // NOTE: This code is terrible.  It does nothing if none of below two conditions don't match.  This is not my code RB.
             if(!form.isAdminMode() || optionalOrganisationId.isPresent()) {
-                Long organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
+                String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
                 financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form, organisationId);
             }
         }

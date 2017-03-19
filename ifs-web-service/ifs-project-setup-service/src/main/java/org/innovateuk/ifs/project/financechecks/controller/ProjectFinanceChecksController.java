@@ -90,34 +90,34 @@ public class ProjectFinanceChecksController {
     private static final String FORM_ATTR = "form";
 
     @Autowired
-    private ProjectService projectService;
+    ProjectService projectService;
 
     @Autowired
-    private ApplicationService applicationService;
+    ApplicationService applicationService;
 
     @Autowired
-    private UserService userService;
+    UserService userService;
 
     @Autowired
-    private ProjectFinanceService projectFinanceService;
+    ProjectFinanceService projectFinanceService;
 
     @Autowired
-    private FinanceService applicationFinanceService;
+    FinanceService applicationFinanceService;
 
     @Autowired
-    private FinanceCheckService financeCheckService;
+    FinanceCheckService financeCheckService;
 
     @Autowired
-    private OrganisationService organisationService;
+    OrganisationService organisationService;
 
     @Autowired
-    private UserAuthenticationService userAuthenticationService;
+    UserAuthenticationService userAuthenticationService;
 
     @Autowired
-    private SectionService sectionService;
+    SectionService sectionService;
 
     @Autowired
-    private CompetitionService competitionService;
+    CompetitionService competitionService;
 
     @Autowired
     private ApplicationModelPopulator applicationModelPopulator;
@@ -397,7 +397,7 @@ public class ProjectFinanceChecksController {
 
         return new ProjectFinanceChecksViewModel(projectResource,
                 organisationResource,
-                getQueriesAndPopulateViewModel(compositeId.getProjectId(),compositeId.getOrganisationId()),
+                loadQueryModel(compositeId.getProjectId(),compositeId.getOrganisationId()),
                 approved,
                 attachmentLinks,
                 FinanceChecksQueryConstraints.MAX_QUERY_WORDS,
@@ -411,12 +411,12 @@ public class ProjectFinanceChecksController {
         return COMPLETE.equals(organisationStatus.map(ProjectPartnerStatusResource::getFinanceChecksStatus).orElse(null));
     }
 
-    private List<ThreadViewModel> getQueriesAndPopulateViewModel(Long projectId, Long organisationId) {
+    private List<ThreadViewModel> loadQueryModel(Long projectId, Long organisationId) {
 
         List<ThreadViewModel> queryModel = new LinkedList<>();
 
         ProjectFinanceResource projectFinance = projectFinanceService.getProjectFinance(projectId, organisationId);
-        ServiceResult<List<QueryResource>> queries = financeCheckService.getQueries(projectFinance.getId());
+        ServiceResult<List<QueryResource>> queries = financeCheckService.loadQueries(projectFinance.getId());
         if (queries.isSuccess()) {
             // order queries by most recent post
             List<QueryResource> sortedQueries = queries.getSuccessObject().stream().
@@ -545,7 +545,7 @@ public class ProjectFinanceChecksController {
     }
 
     private String doViewEligibilityChanges(ProjectResource project, OrganisationResource organisation, Long userId, Model model) {
-        ProjectFinanceChangesViewModel projectFinanceChangesViewModel = ((DefaultProjectFinanceModelManager)financeHandler.getProjectFinanceModelManager(organisation.getOrganisationType())).getProjectFinanceChangesViewModel(false, project, organisation, userId);
+        ProjectFinanceChangesViewModel projectFinanceChangesViewModel = ((DefaultProjectFinanceModelManager)financeHandler.getProjectFinanceModelManager(organisation.getOrganisationTypeName())).getProjectFinanceChangesViewModel(false, project, organisation, userId);
         model.addAttribute("model", projectFinanceChangesViewModel);
         return "project/financecheck/eligibility-changes";
     }

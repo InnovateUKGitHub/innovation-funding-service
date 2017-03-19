@@ -7,8 +7,13 @@ import java.util.TreeMap;
 public enum OrganisationTypeEnum {
     BUSINESS(1, false, true, null),
     RESEARCH(2, false, false, null),
-    RTO(3, false, false, null),
-    PUBLICSECTOR_OR_CHARITY(4, false, false, null);
+    PUBLIC_SECTOR(3, false, false, null),
+    CHARITY(4, false, false, null),
+    ACADEMIC(5, true, true, RESEARCH),
+    RESEARCH_TECHNOLOGY_ORGANISATION(6, false, false, RESEARCH),
+    CATAPULT(7, false, false, RESEARCH),
+    PUBLIC_SECTOR_RESEARCH_ESTABLISHMENT(8, false, false, RESEARCH),
+    RESEARCH_COUNCIL_INSTITUTE(9, false, false, RESEARCH);
 
     private static final Map<Long, OrganisationTypeEnum> lookup = new TreeMap<>();
 

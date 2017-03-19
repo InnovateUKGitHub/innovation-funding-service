@@ -19,11 +19,8 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
 import static org.innovateuk.ifs.application.builder.ApplicationSummaryResourceBuilder.newApplicationSummaryResource;
 import static org.innovateuk.ifs.application.builder.CompetitionSummaryResourceBuilder.newCompetitionSummaryResource;
-import static org.innovateuk.ifs.application.resource.FundingDecision.FUNDED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -247,7 +244,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         ApplicationSummaryPageResource expectedSummaryPageResource = new ApplicationSummaryPageResource();
         expectedSummaryPageResource.setContent(expectedSummaries);
 
-        when(applicationSummaryRestService.getSubmittedApplications(COMPETITION_ID, "", 0, 20, "", empty()))
+        when(applicationSummaryRestService.getSubmittedApplications(COMPETITION_ID, "", 0, 20, ""))
                 .thenReturn(restSuccess(expectedSummaryPageResource));
         when(applicationSummaryRestService.getCompetitionSummary(COMPETITION_ID))
                 .thenReturn(restSuccess(defaultExpectedCompetitionSummary));
@@ -260,7 +257,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
 
         SubmittedApplicationsViewModel model = (SubmittedApplicationsViewModel) result.getModelAndView().getModel().get("model");
 
-        verify(applicationSummaryRestService).getSubmittedApplications(COMPETITION_ID, "", 0, 20, "", empty());
+        verify(applicationSummaryRestService).getSubmittedApplications(COMPETITION_ID, "", 0, 20, "");
         verify(applicationSummaryRestService).getCompetitionSummary(COMPETITION_ID);
 
         assertEquals(COMPETITION_ID, model.getCompetitionId());
@@ -301,7 +298,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         ApplicationSummaryPageResource expectedSummaryPageResource = new ApplicationSummaryPageResource(50, 3,expectedSummaries, 1, 20);
 
 
-        when(applicationSummaryRestService.getSubmittedApplications(COMPETITION_ID, "id", 1, 20, "filter", empty()))
+        when(applicationSummaryRestService.getSubmittedApplications(COMPETITION_ID, "id", 1, 20, "filter"))
                 .thenReturn(restSuccess(expectedSummaryPageResource));
         when(applicationSummaryRestService.getCompetitionSummary(COMPETITION_ID))
                 .thenReturn(restSuccess(defaultExpectedCompetitionSummary));
@@ -314,7 +311,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
 
         SubmittedApplicationsViewModel model = (SubmittedApplicationsViewModel) result.getModelAndView().getModel().get("model");
 
-        verify(applicationSummaryRestService).getSubmittedApplications(COMPETITION_ID, "id", 1, 20, "filter", empty());
+        verify(applicationSummaryRestService).getSubmittedApplications(COMPETITION_ID, "id", 1, 20, "filter");
         verify(applicationSummaryRestService).getCompetitionSummary(COMPETITION_ID);
 
         assertEquals(COMPETITION_ID, model.getCompetitionId());
@@ -337,7 +334,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         ApplicationSummaryPageResource expectedSummaryPageResource = new ApplicationSummaryPageResource();
         expectedSummaryPageResource.setContent(emptyList());
 
-        when(applicationSummaryRestService.getSubmittedApplications(COMPETITION_ID, "", 0, 20, "", empty()))
+        when(applicationSummaryRestService.getSubmittedApplications(COMPETITION_ID, "", 0, 20, ""))
                 .thenReturn(restSuccess(expectedSummaryPageResource));
         when(applicationSummaryRestService.getCompetitionSummary(COMPETITION_ID))
                 .thenReturn(restSuccess(defaultExpectedCompetitionSummary));
@@ -348,7 +345,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
                 .andExpect(model().attribute("originQuery", "?origin=SUBMITTED_APPLICATIONS&param1=abc&param2=def"))
                 .andReturn();
 
-        verify(applicationSummaryRestService).getSubmittedApplications(COMPETITION_ID, "", 0, 20, "", empty());
+        verify(applicationSummaryRestService).getSubmittedApplications(COMPETITION_ID, "", 0, 20, "");
         verify(applicationSummaryRestService).getCompetitionSummary(COMPETITION_ID);
     }
 }

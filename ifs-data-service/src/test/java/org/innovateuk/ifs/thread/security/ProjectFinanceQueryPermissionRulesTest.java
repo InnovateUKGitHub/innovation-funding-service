@@ -11,13 +11,11 @@ import org.junit.Test;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 
 import static org.innovateuk.ifs.thread.security.ProjectFinanceThreadsTestData.projectFinanceWithUserAsFinanceContact;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.FINANCE_CONTACT;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -26,20 +24,20 @@ import static org.mockito.Mockito.when;
 public class ProjectFinanceQueryPermissionRulesTest extends BasePermissionRulesTest<ProjectFinanceQueryPermissionRules> {
     private QueryResource queryResource;
     private UserResource projectFinanceUser;
-    private UserResource partner;
-    private UserResource incorrectPartner;
+    private UserResource financeContactUser;
+    private UserResource incorrectFinanceContactUser;
 
     @Before
     public void setUp() throws Exception {
         projectFinanceUser = projectFinanceUser();
-        partner = getUserWithRole(PARTNER);
+        financeContactUser = getUserWithRole(FINANCE_CONTACT);
 
         queryResource = queryWithoutPosts();
         queryResource.posts.add(new PostResource(1L, projectFinanceUser, "The body", new ArrayList<>(), LocalDateTime.now()));
 
-        incorrectPartner = newUserResource().withId(1993L).withRolesGlobal(newRoleResource()
-                .withType(PARTNER).build(1)).build();
-        incorrectPartner.setId(1993L);
+        incorrectFinanceContactUser = newUserResource().withId(1993L).withRolesGlobal(newRoleResource()
+                .withType(FINANCE_CONTACT).build(1)).build();
+        incorrectFinanceContactUser.setId(1993L);
     }
 
     private QueryResource queryWithoutPosts() {
@@ -55,13 +53,13 @@ public class ProjectFinanceQueryPermissionRulesTest extends BasePermissionRulesT
     @Test
     public void testThatOnlyProjectFinanceProjectFinanceUsersCanCreateQueries() throws Exception {
         assertTrue(rules.onlyProjectFinanceUsersCanCreateQueries(queryResource, projectFinanceUser));
-        assertFalse(rules.onlyProjectFinanceUsersCanCreateQueries(queryResource, partner));
+        assertFalse(rules.onlyProjectFinanceUsersCanCreateQueries(queryResource, financeContactUser));
     }
 
     @Test
     public void testThatNewQueryMustContainInitialPost() throws Exception {
         assertTrue(rules.onlyProjectFinanceUsersCanCreateQueries(queryResource, projectFinanceUser));
-        assertFalse(rules.onlyProjectFinanceUsersCanCreateQueries(queryWithoutPosts(), partner));
+        assertFalse(rules.onlyProjectFinanceUsersCanCreateQueries(queryWithoutPosts(), financeContactUser));
     }
 
     @Test
@@ -75,27 +73,27 @@ public class ProjectFinanceQueryPermissionRulesTest extends BasePermissionRulesT
     @Test
     public void testThatFirstPostMustComeFromTheProjectFinanceUser() throws Exception {
         QueryResource queryWithoutPosts = queryWithoutPosts();
-        assertTrue(rules.projectFinanceUsersCanAddPostToTheirQueries(queryWithoutPosts, projectFinanceUser));
+        assertTrue(rules.onlyProjectFinanceUsersOrFinanceContactAddPostToTheirQueries(queryWithoutPosts, projectFinanceUser));
         when(projectFinanceRepositoryMock.findOne(queryWithoutPosts.contextClassPk))
-                .thenReturn(projectFinanceWithUserAsFinanceContact(partner));
-        assertFalse(rules.projectFinanceUsersCanAddPostToTheirQueries(queryWithoutPosts, partner));
+                .thenReturn(projectFinanceWithUserAsFinanceContact(financeContactUser));
+        assertFalse(rules.onlyProjectFinanceUsersOrFinanceContactAddPostToTheirQueries(queryWithoutPosts, financeContactUser));
     }
 
     @Test
     public void testThatOnlyTheProjectFinanceUserOrTheCorrectFinanceContactCanReplyToAQuery() throws Exception {
         when(projectFinanceRepositoryMock.findOne(queryResource.contextClassPk))
-                .thenReturn(projectFinanceWithUserAsFinanceContact(partner));
-        assertTrue(rules.projectFinanceUsersCanAddPostToTheirQueries(queryResource, projectFinanceUser));
-        assertTrue(rules.projectPartnersCanAddPostToTheirQueries(queryResource, partner));
-        assertFalse(rules.projectPartnersCanAddPostToTheirQueries(queryResource, incorrectPartner));
+                .thenReturn(projectFinanceWithUserAsFinanceContact(financeContactUser));
+        assertTrue(rules.onlyProjectFinanceUsersOrFinanceContactAddPostToTheirQueries(queryResource, projectFinanceUser));
+        assertTrue(rules.onlyProjectFinanceUsersOrFinanceContactAddPostToTheirQueries(queryResource, financeContactUser));
+        assertFalse(rules.onlyProjectFinanceUsersOrFinanceContactAddPostToTheirQueries(queryResource, incorrectFinanceContactUser));
     }
 
     @Test
-    public void testThatOnlyProjectFinanceUsersOrProjectUsersCanViewTheirQueries() {
-        assertTrue(rules.projectFinanceUsersCanViewQueries(queryResource, projectFinanceUser));
+    public void testThatOnlyProjectFinanceUsersOrFinanceContactCanViewTheirQueries() {
+        assertTrue(rules.onlyProjectFinanceUsersOrFinanceContactCanViewTheirQueries(queryResource, projectFinanceUser));
         when(projectFinanceRepositoryMock.findOne(queryResource.contextClassPk))
-                .thenReturn(projectFinanceWithUserAsFinanceContact(partner));
-        assertTrue(rules.projectPartnersCanViewQueries(queryResource, partner));
-        assertFalse(rules.projectPartnersCanViewQueries(queryResource, incorrectPartner));
+                .thenReturn(projectFinanceWithUserAsFinanceContact(financeContactUser));
+        assertTrue(rules.onlyProjectFinanceUsersOrFinanceContactCanViewTheirQueries(queryResource, financeContactUser));
+        assertFalse(rules.onlyProjectFinanceUsersOrFinanceContactCanViewTheirQueries(queryResource, incorrectFinanceContactUser));
     }
 }

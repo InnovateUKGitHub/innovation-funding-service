@@ -66,17 +66,9 @@ public class OrganisationCreationForm implements Serializable {
     }
 
     @JsonIgnore
-    public boolean isNotResearch(){
+    public boolean isBusiness(){
         if(this.organisationTypeEnum!=null){
-            return !OrganisationTypeEnum.RESEARCH.equals(this.organisationTypeEnum);
-        }
-        return false;
-    }
-
-    @JsonIgnore
-    public boolean isResearch(){
-        if(this.organisationTypeEnum!=null){
-            return OrganisationTypeEnum.RESEARCH.equals(this.organisationTypeEnum);
+            return OrganisationTypeEnum.BUSINESS.equals(this.organisationTypeEnum);
         }
         return false;
     }

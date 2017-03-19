@@ -286,7 +286,7 @@ public class BaseUnitTest {
     private Random randomGenerator;
     public OrganisationTypeResource businessOrganisationTypeResource;
     public OrganisationTypeResource researchOrganisationTypeResource;
-    public OrganisationTypeResource rtoOrganisationTypeResource;
+    public OrganisationTypeResource academicOrganisationTypeResource;
     public OrganisationTypeResource businessOrganisationType;
     public OrganisationTypeResource researchOrganisationType;
     public OrganisationTypeResource academicOrganisationType;
@@ -371,25 +371,31 @@ public class BaseUnitTest {
 
         businessOrganisationTypeResource = newOrganisationTypeResource().with(id(1L)).with(name("Business")).build();
         researchOrganisationTypeResource = newOrganisationTypeResource().with(id(2L)).with(name("Research")).build();
-        rtoOrganisationTypeResource = newOrganisationTypeResource().with(id(3L)).with(name("Research and technology organisations (RTO's)")).build();
+        academicOrganisationTypeResource = newOrganisationTypeResource().with(id(3L)).with(name("Academic")).build();
 
         // TODO DW - INFUND-1604 - remove when process roles are converted to DTOs
         businessOrganisationType = newOrganisationTypeResource().with(id(1L)).with(name("Business")).build();
         researchOrganisationType = newOrganisationTypeResource().with(id(2L)).with(name("Research")).build();
-        academicOrganisationType = newOrganisationTypeResource().with(id(3L)).with(name("Research and technology organisations (RTO's)")).build();
+        academicOrganisationType = newOrganisationTypeResource().with(id(3L)).with(name("Academic")).build();
 
         ArrayList<OrganisationTypeResource> organisationTypes = new ArrayList<>();
         organisationTypes.add(businessOrganisationTypeResource);
         organisationTypes.add(researchOrganisationTypeResource);
-        organisationTypes.add(rtoOrganisationTypeResource);
+        organisationTypes.add(academicOrganisationTypeResource);
 
-        organisationTypes.add(new OrganisationTypeResource(4L, "Public sector organisation or charity", null));
+        organisationTypes.add(new OrganisationTypeResource(3L, "Public Sector", null));
+        organisationTypes.add(new OrganisationTypeResource(4L, "Charity", null));
+        organisationTypes.add(new OrganisationTypeResource(5L, "University (HEI)", 2L));
+        organisationTypes.add(new OrganisationTypeResource(6L, "Research & technology organisation (RTO)", 2L));
+        organisationTypes.add(new OrganisationTypeResource(7L, "Catapult", 2L));
+        organisationTypes.add(new OrganisationTypeResource(8L, "Public sector research establishment", 2L));
+        organisationTypes.add(new OrganisationTypeResource(9L, "Research council institute", 2L));
 
         when(organisationTypeRestService.getAll()).thenReturn(restSuccess(organisationTypes));
         when(organisationTypeRestService.findOne(anyLong())).thenReturn(restSuccess(new OrganisationTypeResource(99L, "Unknown organisation type", null)));
         when(organisationTypeRestService.findOne(1L)).thenReturn(restSuccess(businessOrganisationTypeResource));
         when(organisationTypeRestService.findOne(2L)).thenReturn(restSuccess(researchOrganisationTypeResource));
-        when(organisationTypeRestService.findOne(3L)).thenReturn(restSuccess(rtoOrganisationTypeResource));
+        when(organisationTypeRestService.findOne(3L)).thenReturn(restSuccess(academicOrganisationTypeResource));
     }
 
     public void loginDefaultUser(){
@@ -577,7 +583,7 @@ public class BaseUnitTest {
 
         OrganisationResource organisation1 = newOrganisationResource().withId(1L).withOrganisationType(businessOrganisationTypeResource.getId()).withName("Empire Ltd").build();
         OrganisationResource organisation2 = newOrganisationResource().withId(2L).withOrganisationType(researchOrganisationTypeResource.getId()).withName("Ludlow").build();
-        OrganisationResource organisation3 = newOrganisationResource().withId(3L).withOrganisationType(rtoOrganisationTypeResource.getId()).withName("Ludlow Ltd").build();
+        OrganisationResource organisation3 = newOrganisationResource().withId(3L).withOrganisationType(academicOrganisationTypeResource.getId()).withName("Ludlow Ltd").build();
 
         organisations = asList(organisation1, organisation2, organisation3);
         Comparator<OrganisationResource> compareById = Comparator.comparingLong(OrganisationResource::getId);
@@ -661,7 +667,7 @@ public class BaseUnitTest {
 
         when(organisationService.getOrganisationById(organisationSet.first().getId())).thenReturn(organisationSet.first());
         when(organisationService.getOrganisationByIdForAnonymousUserFlow(organisationSet.first().getId())).thenReturn(organisationSet.first());
-        when(organisationService.getOrganisationType(loggedInUser.getId(), applications.get(0).getId())).thenReturn(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId());
+        when(organisationService.getOrganisationType(loggedInUser.getId(), applications.get(0).getId())).thenReturn("Business");
         when(organisationService.getOrganisationForUser(loggedInUser.getId(), application1ProcessRoles)).thenReturn(Optional.of(organisationSet.first()));
         when(userService.isLeadApplicant(loggedInUser.getId(), applications.get(0))).thenReturn(true);
         when(userService.getLeadApplicantProcessRoleOrNull(applications.get(0))).thenReturn(processRole1);
@@ -710,8 +716,8 @@ public class BaseUnitTest {
         when(financeService.getApplicationFinanceDetails(loggedInUser.getId(), application.getId())).thenReturn(applicationFinanceResource);
         when(financeService.getApplicationFinance(loggedInUser.getId(), application.getId())).thenReturn(applicationFinanceResource);
         when(applicationFinanceRestService.getResearchParticipationPercentage(anyLong())).thenReturn(restSuccess(0.0));
-        when(financeHandler.getFinanceFormHandler(1L)).thenReturn(defaultFinanceFormHandler);
-        when(financeHandler.getFinanceModelManager(1L)).thenReturn(defaultFinanceModelManager);
+        when(financeHandler.getFinanceFormHandler("Business")).thenReturn(defaultFinanceFormHandler);
+        when(financeHandler.getFinanceModelManager("Business")).thenReturn(defaultFinanceModelManager);
     }
 
     public void setupInvites() {

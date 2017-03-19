@@ -47,9 +47,8 @@ public class ApplicationSummaryController {
             @RequestParam(value = "sort", required = false) String sortBy,
             @RequestParam(value = "page", defaultValue = "0") int pageIndex,
             @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
-            @RequestParam(value = "filter", required = false) Optional<String> filter,
-            @RequestParam(value = "fundingFilter", required = false) Optional<FundingDecisionStatus> fundingFilter) {
-        return applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(competitionId, sortBy, pageIndex, pageSize, filter, fundingFilter).toGetResponse();
+            @RequestParam(value = "filter", required = false) Optional<String> filter) {
+        return applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(competitionId, sortBy, pageIndex, pageSize, filter).toGetResponse();
     }
 
     @GetMapping("/findByCompetition/{competitionId}/not-submitted")
