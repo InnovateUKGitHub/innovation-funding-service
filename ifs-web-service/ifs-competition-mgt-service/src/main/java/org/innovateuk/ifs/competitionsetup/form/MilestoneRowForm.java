@@ -44,12 +44,12 @@ public class MilestoneRowForm {
             this.setYear(dateTime.getYear());
             this.setDate(dateTime);
             this.editable = LocalDateTime.now().isBefore(dateTime);
-            if (WITH_TIME_TYPES.contains(milestoneType)) {
+            if (isTimeOption()) {
                 this.setTime(MilestoneTime.fromLocalDateTime(dateTime));
             }
         } else {
             this.editable = true;
-            if (WITH_TIME_TYPES.contains(milestoneType)) {
+            if (isTimeOption()) {
                 this.setTime(MilestoneTime.TWELVE_PM);
             }
         }
@@ -157,7 +157,7 @@ public class MilestoneRowForm {
 
     public LocalDateTime getMilestoneAsDateTime() {
         if (day != null && month != null && year != null){
-            if ( time != null && WITH_TIME_TYPES.contains(milestoneType)) {
+            if ( time != null && isTimeOption()) {
                 return LocalDateTime.of(year, month, day, time.getHour(), 0);
             } else {
                 return LocalDateTime.of(year, month, day, 0, 0);
