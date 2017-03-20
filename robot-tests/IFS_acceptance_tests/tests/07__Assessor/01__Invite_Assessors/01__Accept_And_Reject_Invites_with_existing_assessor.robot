@@ -39,7 +39,7 @@ ${Invitation_for_upcoming_comp_assessor1}    ${server}/assessment/invite/competi
 ${Invitation_nonexisting_assessor2}    ${server}/assessment/invite/competition/396d0782-01d9-48d0-97ce-ff729eb555b0 #invitation for assessor:${test_mailbox_one}+david.peters@gmail.com
 ${ASSESSOR_DASHBOARD}    ${server}/assessment/assessor/dashboard
 ${Correct_date}    12 January to 29 January
-${Correct_date_start}   12 January
+${Correct_date_start}    12 January
 ${Correct_date_end}    29 January
 
 *** Test Cases ***
@@ -58,23 +58,23 @@ Assessor dashboard contains the correct competitions
     And The user should see the text in the page    Invitations to assess
 
 Competition brief link can be seen
-    [Documentation]     INFUND-5494
+    [Documentation]    INFUND-5494
     [Tags]
     When the user clicks the button/link    link=${UPCOMING_COMPETITION_TO_ASSESS_NAME}
     Then the user should see the element    link=See competition brief
 
 User can view the competition brief
-     [Documentation]    INFUND-5494
-     [Tags]
-     When the user clicks the button/link   link=See competition brief
-     Then the user should not see an error in the page
-     And the user should see the text in the page   ${UPCOMING_COMPETITION_TO_ASSESS_NAME}
-     And the user should see the text in the page   Competition opens
-     And the user should see the text in the page   Competition closes
-     And the user should see the element    jQuery=.button:contains("Start or continue your application")
-     [Teardown]
-     Then the user goes back to the previous page
-     And the user clicks the button/link    link=Assessor dashboard
+    [Documentation]    INFUND-5494
+    [Tags]
+    When the user clicks the button/link    link=See competition brief
+    Then the user should not see an error in the page
+    And the user should see the text in the page    ${UPCOMING_COMPETITION_TO_ASSESS_NAME}
+    And the user should see the text in the page    Competition opens
+    And the user should see the text in the page    Competition closes
+    And the user should see the element    jQuery=.button:contains("Start new application")
+    Then the user goes back to the previous page
+    And the user clicks the button/link    link=Assessor dashboard
+    [Teardown]
 
 Calculation of the Upcoming competitions and Invitations to assess should be correct
     [Documentation]    INFUND-7107
@@ -162,7 +162,6 @@ Upcoming competition should be visible
     Then The user should see the text in the page    Upcoming competitions to assess
 
 The assessment period starts the comp moves to the comp for assessment
-    [Documentation]
     [Tags]    MySQL    HappyPath
     [Setup]    Connect to Database    @{database}
     Given the assessment start period changes in the db in the past
