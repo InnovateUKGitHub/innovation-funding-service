@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.finance.transactional;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -49,7 +48,6 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.NOT_REQUIRED;
-import static org.innovateuk.ifs.project.finance.resource.FinanceCheckState.APPROVED;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -147,7 +145,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         BigDecimal totalOtherFunding = calculateTotalForAllOrganisations(projectFinanceResourceList, ProjectFinanceResource::getTotalOtherFunding);
         BigDecimal totalPercentageGrant = calculateGrantPercentage(totalProjectCost, totalFundingSought);
 
-        ServiceResult<Double> researchParticipationPercentage = financeRowService.getResearchParticipationPercentage(application.getId());
+        ServiceResult<Double> researchParticipationPercentage = financeRowService.getResearchParticipationPercentageFromProject(project.getId());
         BigDecimal researchParticipationPercentageValue = getResearchParticipationPercentage(researchParticipationPercentage);
 
         BigDecimal competitionMaximumResearchPercentage = BigDecimal.valueOf(competition.getMaxResearchRatio());
@@ -316,7 +314,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         return getPartnerOrganisation(toSave.getProject(), toSave.getOrganisation()).andOnSuccess(
                 partnerOrganisation -> {
                     OrganisationType organisationType = partnerOrganisation.getOrganisation().getOrganisationType();
-                    if(organisationType.getId().equals(OrganisationTypeEnum.ACADEMIC.getOrganisationTypeId())){
+                    if(organisationType.getId().equals(OrganisationTypeEnum.RESEARCH.getOrganisationTypeId())){
                         return aggregate(costNull(costs), costLessThanZeroErrors(costs)).andOnSuccess(() -> serviceSuccess());
                     } else {
                         return aggregate(costNull(costs), costFractional(costs), costLessThanZeroErrors(costs)).andOnSuccess(() -> serviceSuccess());

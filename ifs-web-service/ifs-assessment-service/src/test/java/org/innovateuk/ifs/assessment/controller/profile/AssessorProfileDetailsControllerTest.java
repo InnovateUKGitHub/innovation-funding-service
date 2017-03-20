@@ -26,10 +26,7 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.Title.Mr;
-import static org.innovateuk.ifs.user.resource.Title.Mrs;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
@@ -93,9 +90,6 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
         assertEquals(userProfile.getLastName(), form.getLastName());
         assertEquals(userProfile.getEmail(), user.getEmail());
         assertEquals(userProfile.getPhoneNumber(), form.getPhoneNumber());
-        assertEquals(userProfile.getGender(), form.getGender());
-        assertEquals(userProfile.getDisability(), form.getDisability());
-        assertEquals(userProfile.getEthnicity(), form.getEthnicity());
         assertEquals(userProfile.getAddress(), form.getAddressForm());
     }
 
@@ -141,9 +135,9 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
         String firstName = "Felicia";
         String lastName = "Wilkinson";
         String phoneNumber = "87654321";
-        Gender gender = Gender.FEMALE;
+        Gender gender = Gender.NOT_STATED;
         EthnicityResource ethnicity = buildTestEthnicity();
-        Disability disability = Disability.YES;
+        Disability disability = Disability.NOT_STATED;
         String addressLine1 = "notAddress1";
         String town = "notTown";
         String postcode = "notPost";
@@ -261,9 +255,6 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
                 .andExpect(model().attributeHasFieldErrors("form", "firstName"))
                 .andExpect(model().attributeHasFieldErrors("form", "lastName"))
                 .andExpect(model().attributeHasFieldErrors("form", "phoneNumber"))
-                .andExpect(model().attributeHasFieldErrors("form", "gender"))
-                .andExpect(model().attributeHasFieldErrors("form", "ethnicity"))
-                .andExpect(model().attributeHasFieldErrors("form", "disability"))
                 .andExpect(model().attributeHasFieldErrors("form", "addressForm.addressLine1"))
                 .andExpect(model().attributeHasFieldErrors("form", "addressForm.town"))
                 .andExpect(model().attributeHasFieldErrors("form", "addressForm.postcode"))
@@ -275,13 +266,10 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
 
         assertTrue(bindingResult.hasErrors());
         assertEquals(0, bindingResult.getGlobalErrorCount());
-        assertEquals(9, bindingResult.getFieldErrorCount());
+        assertEquals(6, bindingResult.getFieldErrorCount());
         assertEquals("Please enter a first name.", bindingResult.getFieldError("firstName").getDefaultMessage());
         assertEquals("Please enter a last name.", bindingResult.getFieldError("lastName").getDefaultMessage());
         assertEquals("Please enter a phone number.", bindingResult.getFieldError("phoneNumber").getDefaultMessage());
-        assertEquals("Please select a gender.", bindingResult.getFieldError("gender").getDefaultMessage());
-        assertEquals("Please select an ethnicity.", bindingResult.getFieldError("ethnicity").getDefaultMessage());
-        assertEquals("Please select a disability.", bindingResult.getFieldError("disability").getDefaultMessage());
         assertEquals("The address cannot be blank.", bindingResult.getFieldError("addressForm.addressLine1").getDefaultMessage());
         assertEquals("The town cannot be blank.", bindingResult.getFieldError("addressForm.town").getDefaultMessage());
         assertEquals("The postcode cannot be blank.", bindingResult.getFieldError("addressForm.postcode").getDefaultMessage());
@@ -304,14 +292,14 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
                 .withLastName("Wilson")
                 .withPhoneNumber("12345678")
                 .withEmail("felix.wilson@gmail.com")
-                .withGender(Gender.MALE)
+                .withGender(Gender.NOT_STATED)
                 .withEthnicity(buildTestEthnicity())
-                .withDisability(Disability.NO)
+                .withDisability(Disability.NOT_STATED)
                 .withAddress(address)
                 .build();
     }
 
     private EthnicityResource buildTestEthnicity() {
-        return newEthnicityResource().withId(1L).build();
+        return newEthnicityResource().withId(7L).build();
     }
 }

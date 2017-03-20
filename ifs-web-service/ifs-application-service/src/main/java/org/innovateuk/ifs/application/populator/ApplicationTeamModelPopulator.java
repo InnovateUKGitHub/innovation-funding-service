@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.populator;
 
-import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
@@ -46,7 +45,7 @@ public class ApplicationTeamModelPopulator {
         UserResource leadApplicant = getLeadApplicant(applicationResource);
         boolean userIsLeadApplicant = isUserLeadApplicant(loggedInUserId, leadApplicant);
         boolean applicationCanBegin = isApplicationStatusCreated(applicationResource) && userIsLeadApplicant;
-        return new ApplicationTeamViewModel(applicationResource.getId(), applicationResource.getApplicationDisplayName(),
+        return new ApplicationTeamViewModel(applicationResource.getId(), applicationResource.getName(),
                 getOrganisationViewModels(applicationResource.getId(), loggedInUserId, leadApplicant),
                 userIsLeadApplicant, applicationCanBegin);
     }
