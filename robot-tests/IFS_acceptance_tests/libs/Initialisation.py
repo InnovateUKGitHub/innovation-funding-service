@@ -23,7 +23,7 @@ cursor.execute("""SELECT `id`,`name` FROM competition""")
 competition_ids = {}
 for comp in cursor.fetchall():
 
-    competition_ids[comp[1]] = str(comp[0])
+    competition_ids[comp[1]] = int(comp[0])
 print(competition_ids)
 # disconnect from server
 db.close()
