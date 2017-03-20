@@ -131,8 +131,13 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return usersConnectedToTheApplicationCanView(applicationResource, user);
     }
 
-    @PermissionRule(value = "UPDATE_INNOVATION_AREA", description = "A user can update their application's Innovation Area")
+    @PermissionRule(value = "UPDATE_INNOVATION_AREA", description = "A lead applicant can update their application's Innovation Area")
     public boolean leadApplicantCanUpdateApplicationResource(ApplicationResource applicationResource, UserResource user) {
+        return isLeadApplicant(applicationResource.getId(), user);
+    }
+
+    @PermissionRule(value = "UPDATE_RESEARCH_CATEGORY", description = "A lead applicant can update their application's Research Category")
+    public boolean leadApplicantCanUpdateResearchCategory(ApplicationResource applicationResource, UserResource user) {
         return isLeadApplicant(applicationResource.getId(), user);
     }
 

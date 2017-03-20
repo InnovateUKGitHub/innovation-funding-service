@@ -27,9 +27,9 @@ public class ApplicationSummaryServiceImplTest {
     @Test
     public void testSummaryByCompetitionId() {
         CompetitionSummaryResource resource = new CompetitionSummaryResource();
-        when(applicationSummaryRestService.getCompetitionSummary(Long.valueOf(123L))).thenReturn(restSuccess(resource));
+        when(applicationSummaryRestService.getCompetitionSummary(123L)).thenReturn(restSuccess(resource));
 
-        CompetitionSummaryResource result = service.getCompetitionSummaryByCompetitionId(Long.valueOf(123L));
+        CompetitionSummaryResource result = service.getCompetitionSummaryByCompetitionId(123L);
 
         assertEquals(resource, result);
     }
@@ -37,19 +37,19 @@ public class ApplicationSummaryServiceImplTest {
     @Test
     public void testFindByCompetitionId() {
         ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
-        when(applicationSummaryRestService.getAllApplications(Long.valueOf(123L), "sort", 0, 20, "filter")).thenReturn(restSuccess(resource));
+        when(applicationSummaryRestService.getAllApplications(123L, "sort", 0, 20, "filter")).thenReturn(restSuccess(resource));
 
-        ApplicationSummaryPageResource result = service.findByCompetitionId(Long.valueOf(123L), "sort", 0, 20, "filter");
+        ApplicationSummaryPageResource result = service.findByCompetitionId(123L, "sort", 0, 20, "filter");
 
         assertEquals(resource, result);
     }
 
-    @Test
-    public void testFindSubmittedByCompetitionId() {
-        ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
-        when(applicationSummaryRestService.getSubmittedApplications(Long.valueOf(123L), "sort", 0, 20, "filter")).thenReturn(restSuccess(resource));
+	@Test
+	public void testFindSubmittedByCompetitionId() {
+		ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
+		when(applicationSummaryRestService.getSubmittedApplications(123L, "sort", 0, 20, "filter", Optional.of(UNFUNDED))).thenReturn(restSuccess(resource));
 
-        ApplicationSummaryPageResource result = service.getSubmittedApplicationSummariesByCompetitionId(Long.valueOf(123L), "sort", 0, 20, "filter");
+		ApplicationSummaryPageResource result = service.getSubmittedApplicationSummariesByCompetitionId(123L, "sort", 0, 20, "filter", Optional.of(UNFUNDED));
 
         assertEquals(resource, result);
     }
@@ -57,9 +57,9 @@ public class ApplicationSummaryServiceImplTest {
     @Test
     public void testFindNotSubmittedByCompetitionId() {
         ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
-        when(applicationSummaryRestService.getNonSubmittedApplications(Long.valueOf(123L), "sort", 0, 20, "filter")).thenReturn(restSuccess(resource));
+        when(applicationSummaryRestService.getNonSubmittedApplications(123L, "sort", 0, 20, "filter")).thenReturn(restSuccess(resource));
 
-        ApplicationSummaryPageResource result = service.getNotSubmittedApplicationSummariesByCompetitionId(Long.valueOf(123L), "sort", 0, 20, "filter");
+        ApplicationSummaryPageResource result = service.getNotSubmittedApplicationSummariesByCompetitionId(123L, "sort", 0, 20, "filter");
 
         assertEquals(resource, result);
     }
@@ -67,9 +67,9 @@ public class ApplicationSummaryServiceImplTest {
     @Test
     public void testFindRequiringFeedbackByCompetitionId() {
         ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
-        when(applicationSummaryRestService.getFeedbackRequiredApplications(Long.valueOf(123L), "sort", 0, 20, "filter")).thenReturn(restSuccess(resource));
+        when(applicationSummaryRestService.getFeedbackRequiredApplications(123L, "sort", 0, 20, "filter")).thenReturn(restSuccess(resource));
 
-        ApplicationSummaryPageResource result = service.getApplicationsRequiringFeedbackByCompetitionId(Long.valueOf(123L), "sort", 0, 20, "filter");
+        ApplicationSummaryPageResource result = service.getApplicationsRequiringFeedbackByCompetitionId(123L, "sort", 0, 20, "filter");
 
         assertEquals(resource, result);
     }
@@ -78,19 +78,19 @@ public class ApplicationSummaryServiceImplTest {
     public void testFindRequiringFeedbackCountByCompetitionId() {
         ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
         resource.setTotalElements(987L);
-        when(applicationSummaryRestService.getFeedbackRequiredApplications(Long.valueOf(123L), null, 0, 1, null)).thenReturn(restSuccess(resource));
+        when(applicationSummaryRestService.getFeedbackRequiredApplications(123L, null, 0, 1, null)).thenReturn(restSuccess(resource));
 
-        Long result = service.getApplicationsRequiringFeedbackCountByCompetitionId(Long.valueOf(123L));
+        Long result = service.getApplicationsRequiringFeedbackCountByCompetitionId(123L);
 
-        assertEquals(Long.valueOf(987L), result);
+        assertEquals(987L, (long) result);
     }
 
     @Test
     public void testGetApplicationsWithFundingDecisionByCompetitionId() {
         ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
-        when(applicationSummaryRestService.getWithFundingDecisionApplications(Long.valueOf(123L), "sort", 0, 20, "", Optional.of(true), Optional.of(UNFUNDED))).thenReturn(restSuccess(resource));
+        when(applicationSummaryRestService.getWithFundingDecisionApplications(123L, "sort", 0, 20, "", Optional.of(true), Optional.of(UNFUNDED))).thenReturn(restSuccess(resource));
 
-        ApplicationSummaryPageResource result = service.getWithFundingDecisionApplications(Long.valueOf(123L), "sort", 0, 20, "", Optional.of(true), Optional.of(UNFUNDED));
+        ApplicationSummaryPageResource result = service.getWithFundingDecisionApplications(123L, "sort", 0, 20, "", Optional.of(true), Optional.of(UNFUNDED));
 
         assertEquals(resource, result);
     }
