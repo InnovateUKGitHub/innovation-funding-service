@@ -333,7 +333,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
             InviteOrganisation inviteOrganisation = applicationInvite.getInviteOrganisation();
             List<ApplicationInvite> organisationInvites = inviteOrganisation.getInvites();
 
-            if (organisationInvites.size() == 1) {
+            if (organisationInvites.size() < 2) {
                 inviteOrganisationRepository.delete(inviteOrganisation);
             } else {
                 organisationInvites.remove(applicationInvite);
