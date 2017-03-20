@@ -751,7 +751,7 @@ Project Finance user can Edit, enters invalid values and saves in Lead-Partner's
     Then the user should see the element    jQuery=section:nth-of-type(2) button span:contains("0%")
     And the user should see the element     jQuery=section:nth-of-type(2) button span:contains("£ 0")
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
-    Then the user enters text to a text field     jQuery=section:nth-of-type(2) input[id^="cost-overheads"][id$="calculate"]  rkk6382DJJ%$^&*£@W
+    Then the user enters text to a text field     jQuery=section:nth-of-type(2) input[id^="cost-overheads"][id$="calculate"]  ${empty}
     And the user clicks the button/link     jQuery=section:nth-of-type(2) button:contains("Save")
     And the user should see the element     jQuery=section:nth-of-type(2) label:nth-child(1):contains("Enter the total cost of overheads as calculated in the spreadsheet £")
     Then the user clicks the button/link    jQuery=.button-secondary:contains("Return to finance checks")
@@ -817,7 +817,7 @@ Project Finance user can Edit, enters invalid values and saves in Partner's Calc
     Then the user should see the element    jQuery=section:nth-of-type(2) button span:contains("0%")
     And the user should see the element     jQuery=section:nth-of-type(2) button span:contains("£ 0")
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
-    Then the user enters text to a text field     jQuery=section:nth-of-type(2) input[id^="cost-overheads"][id$="calculate"]  430KFL$%£@%&*@£$%^0
+    Then the user enters text to a text field     jQuery=section:nth-of-type(2) input[id^="cost-overheads"][id$="calculate"]  ${empty}
     And the user clicks the button/link     jQuery=section:nth-of-type(2) button:contains("Save")
     And the user should see the element     jQuery=section:nth-of-type(2) label:nth-child(1):contains("Enter the total cost of overheads as calculated in the spreadsheet £")
     Then the user clicks the button/link    jQuery=.button-secondary:contains("Return to finance checks")
