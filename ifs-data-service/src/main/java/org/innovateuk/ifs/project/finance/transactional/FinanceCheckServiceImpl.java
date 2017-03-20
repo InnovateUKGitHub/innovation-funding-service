@@ -314,7 +314,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         return getPartnerOrganisation(toSave.getProject(), toSave.getOrganisation()).andOnSuccess(
                 partnerOrganisation -> {
                     OrganisationType organisationType = partnerOrganisation.getOrganisation().getOrganisationType();
-                    if(organisationType.getId().equals(OrganisationTypeEnum.ACADEMIC.getOrganisationTypeId())){
+                    if(organisationType.getId().equals(OrganisationTypeEnum.RESEARCH.getOrganisationTypeId())){
                         return aggregate(costNull(costs), costLessThanZeroErrors(costs)).andOnSuccess(() -> serviceSuccess());
                     } else {
                         return aggregate(costNull(costs), costFractional(costs), costLessThanZeroErrors(costs)).andOnSuccess(() -> serviceSuccess());

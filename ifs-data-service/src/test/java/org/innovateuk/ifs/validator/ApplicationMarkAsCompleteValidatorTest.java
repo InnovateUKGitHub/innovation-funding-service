@@ -9,6 +9,7 @@ import org.springframework.validation.Validator;
 import java.time.LocalDate;
 
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
+import static org.innovateuk.ifs.category.builder.ResearchCategoryBuilder.newResearchCategory;
 import static org.junit.Assert.*;
 
 /**
@@ -43,7 +44,7 @@ public class ApplicationMarkAsCompleteValidatorTest {
         validator.validate(application, bindingResult);
 
         assertTrue(bindingResult.hasErrors());
-        assertEquals(5, bindingResult.getErrorCount());
+        assertEquals(6, bindingResult.getErrorCount());
 
         application.setName(null);
         application.setStartDate(currentDate.minusDays(1));
@@ -57,7 +58,7 @@ public class ApplicationMarkAsCompleteValidatorTest {
 
         validator.validate(application, bindingResult);
         assertTrue(bindingResult.hasErrors());
-        assertEquals(6, bindingResult.getErrorCount());
+        assertEquals(7, bindingResult.getErrorCount());
 
         application.setDurationInMonths(37L);
         application.setResubmission(false);
@@ -67,7 +68,7 @@ public class ApplicationMarkAsCompleteValidatorTest {
 
         validator.validate(application, bindingResult);
         assertTrue(bindingResult.hasErrors());
-        assertEquals(4, bindingResult.getErrorCount());
+        assertEquals(5, bindingResult.getErrorCount());
     }
 
     @Test
@@ -108,6 +109,7 @@ public class ApplicationMarkAsCompleteValidatorTest {
         application.setPreviousApplicationNumber("A Number");
         application.setPreviousApplicationTitle("Failed Application");
         application.setNoInnovationAreaApplicable(true);
+        application.setResearchCategory(newResearchCategory().build());
 
         DataBinder binder = new DataBinder(application);
         bindingResult = binder.getBindingResult();
@@ -128,6 +130,7 @@ public class ApplicationMarkAsCompleteValidatorTest {
         application.setPreviousApplicationTitle("Failed Application");
         application.setNoInnovationAreaApplicable(false);
         application.setInnovationArea(newInnovationArea().build());
+        application.setResearchCategory(newResearchCategory().build());
 
         DataBinder binder = new DataBinder(application);
         bindingResult = binder.getBindingResult();
