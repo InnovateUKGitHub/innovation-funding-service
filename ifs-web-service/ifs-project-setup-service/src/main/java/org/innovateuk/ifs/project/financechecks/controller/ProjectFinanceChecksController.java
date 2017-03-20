@@ -397,7 +397,7 @@ public class ProjectFinanceChecksController {
 
         return new ProjectFinanceChecksViewModel(projectResource,
                 organisationResource,
-                loadQueryModel(compositeId.getProjectId(),compositeId.getOrganisationId()),
+                getQueriesAndPopulateViewModel(compositeId.getProjectId(),compositeId.getOrganisationId()),
                 approved,
                 attachmentLinks,
                 FinanceChecksQueryConstraints.MAX_QUERY_WORDS,
@@ -411,12 +411,12 @@ public class ProjectFinanceChecksController {
         return COMPLETE.equals(organisationStatus.map(ProjectPartnerStatusResource::getFinanceChecksStatus).orElse(null));
     }
 
-    private List<ThreadViewModel> loadQueryModel(Long projectId, Long organisationId) {
+    private List<ThreadViewModel> getQueriesAndPopulateViewModel(Long projectId, Long organisationId) {
 
         List<ThreadViewModel> queryModel = new LinkedList<>();
 
         ProjectFinanceResource projectFinance = projectFinanceService.getProjectFinance(projectId, organisationId);
-        ServiceResult<List<QueryResource>> queries = financeCheckService.loadQueries(projectFinance.getId());
+        ServiceResult<List<QueryResource>> queries = financeCheckService.getQueries(projectFinance.getId());
         if (queries.isSuccess()) {
             // order queries by most recent post
             List<QueryResource> sortedQueries = queries.getSuccessObject().stream().

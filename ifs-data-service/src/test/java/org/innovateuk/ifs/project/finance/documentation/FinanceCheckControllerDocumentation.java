@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.finance.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.project.controller.FinanceCheckController;
+import org.innovateuk.ifs.project.projectdetails.controller.FinanceCheckController;
 import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -25,7 +25,6 @@ import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStat
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckProcessResourceBuilder.newFinanceCheckProcessResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckResourceBuilder.newFinanceCheckResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckSummaryResourceBuilder.newFinanceCheckSummaryResource;
-import static org.innovateuk.ifs.project.finance.resource.FinanceCheckState.APPROVED;
 import static org.innovateuk.ifs.project.finance.resource.FinanceCheckState.PENDING;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;

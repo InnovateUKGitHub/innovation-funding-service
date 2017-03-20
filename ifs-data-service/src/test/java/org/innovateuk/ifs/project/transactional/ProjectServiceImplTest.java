@@ -1562,7 +1562,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withProjectDetailsStatus(ACTION_REQUIRED).
                 withMonitoringOfficerStatus(NOT_STARTED).
                 withBankDetailsStatus(PENDING).
-                withFinanceChecksStatus(NOT_STARTED).
+                withFinanceChecksStatus(PENDING).
                 withSpendProfileStatus(NOT_STARTED).
                 withOtherDocumentsStatus(ACTION_REQUIRED).
                 withGrantOfferStatus(NOT_REQUIRED).
@@ -1577,7 +1577,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withProjectDetailsStatus(ACTION_REQUIRED, ACTION_REQUIRED).
                 withMonitoringOfficerStatus(NOT_REQUIRED, NOT_REQUIRED).
                 withBankDetailsStatus(NOT_REQUIRED, NOT_STARTED).
-                withFinanceChecksStatus(PENDING, NOT_STARTED).
+                withFinanceChecksStatus(PENDING, ACTION_REQUIRED).
                 withSpendProfileStatus(NOT_STARTED, NOT_STARTED).
                 withOtherDocumentsStatus(NOT_REQUIRED, NOT_REQUIRED).
                 withGrantOfferStatus(NOT_REQUIRED, NOT_REQUIRED).
@@ -1601,7 +1601,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withProjectDetailsStatus(ACTION_REQUIRED).
                 withMonitoringOfficerStatus(NOT_REQUIRED).
                 withBankDetailsStatus(NOT_STARTED).
-                withFinanceChecksStatus(NOT_STARTED).
+                withFinanceChecksStatus(ACTION_REQUIRED).
                 withSpendProfileStatus(NOT_STARTED).
                 withOtherDocumentsStatus(NOT_REQUIRED).
                 withGrantOfferStatus(NOT_REQUIRED).
@@ -1639,7 +1639,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withProjectDetailsStatus(COMPLETE).
                 withMonitoringOfficerStatus(PENDING).
                 withBankDetailsStatus(PENDING).
-                withFinanceChecksStatus(NOT_STARTED).
+                withFinanceChecksStatus(PENDING).
                 withSpendProfileStatus(NOT_STARTED).
                 withOtherDocumentsStatus(ACTION_REQUIRED).
                 withGrantOfferStatus(NOT_REQUIRED).
