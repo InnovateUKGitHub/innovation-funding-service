@@ -1032,7 +1032,7 @@ Project finance user can see the Eligibility check page for the partner
     [Documentation]    INFUND-4823
     [Tags]
     Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(2) td:nth-child(4) a:contains("Review")
+    When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(3) td:nth-child(4) a:contains("Review")
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
 
 Project finance user can see the partner's information about eligibility
@@ -1121,7 +1121,7 @@ Project finance can approve academic eligibility
     [Documentation]    INFUND-4428
     [Tags]      HappyPath
     ${today} =  get today
-    When the user clicks the button/link     jQuery=table.table-progress tr:nth-child(3) td:nth-child(4) a:contains("Review")
+    When the user clicks the button/link     jQuery=table.table-progress tr:nth-child(2) td:nth-child(4) a:contains("Review")
     Then the user should see the text in the page   Je-S Form overview
     When the user selects the checkbox    project-eligible
     When the user selects the option from the drop-down menu    Green    id=rag-rating
