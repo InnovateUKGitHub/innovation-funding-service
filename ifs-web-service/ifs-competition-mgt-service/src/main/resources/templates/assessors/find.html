@@ -83,7 +83,6 @@
                             <label class="form-label" for="filterInnovationArea">Innovation area</label>
                             <select name="innovationArea"
                                     id="filterInnovationArea" class="form-control extra-margin-bottom"
-                                    aria-labelledby="innovation-area"
                                     th:field="*{innovationArea}">
                                 <option value="">Any</option>
                                 <optgroup th:each="innovationSector : ${model.innovationSectorOptions}" th:label="${innovationSector.name}">
