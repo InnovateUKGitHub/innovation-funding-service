@@ -26,7 +26,7 @@ public class OverheadFileDownloaderControllerTest extends BaseControllerMockMVCT
     @Test
     public void testDownloadJesFileSuccess() throws Exception {
         final String fileName = "overhead-spread-sheet";
-        final String extension =".xlsx";
+        final String extension = ".xlsx";
         Long projectId = 1L;
         Long overheadId = 1L;
 
