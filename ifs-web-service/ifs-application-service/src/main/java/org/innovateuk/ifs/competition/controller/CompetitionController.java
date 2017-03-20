@@ -65,21 +65,19 @@ public class CompetitionController {
         model.addAttribute("model", overviewPopulator.populateViewModel(
                 publicContentItem,
                 userIsLoggedIn(request),
-                getAllViewModels(publicContentItem, PublicContentSectionType.SUMMARY)));
+                triggerAllSectionPopulators(publicContentItem, PublicContentSectionType.SUMMARY)));
         return TEMPLATE_PATH + "overview";
     }
 
 
 
-    private List<AbstractPublicSectionContentViewModel> getAllViewModels(PublicContentItemResource publicContentItem, PublicContentSectionType currentSectionType) {
+    private List<AbstractPublicSectionContentViewModel> triggerAllSectionPopulators(PublicContentItemResource publicContentItem, PublicContentSectionType currentSectionType) {
         List<AbstractPublicSectionContentViewModel> contentViewModels = new ArrayList<>();
 
         Arrays.stream(PublicContentSectionType.values()).forEach(sectionType -> {
             if (!excludeSectionTypes.contains(sectionType)) {
-                AbstractPublicSectionContentViewModel sectionContentViewModel = getPopulator(sectionType).populate(publicContentItem.getPublicContentResource(), publicContentItem.getNonIfs());
-                sectionContentViewModel.setActive(currentSectionType.equals(sectionType));
-                sectionContentViewModel.setPath(sectionType.getPath());
-                sectionContentViewModel.setText(sectionType.getText());
+                AbstractPublicSectionContentViewModel sectionContentViewModel = getPopulator(sectionType).populate(
+                        publicContentItem.getPublicContentResource(), publicContentItem.getNonIfs(), sectionType, currentSectionType);
                 contentViewModels.add(sectionContentViewModel);
             }
         });
