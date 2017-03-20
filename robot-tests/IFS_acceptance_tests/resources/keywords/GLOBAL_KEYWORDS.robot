@@ -1,5 +1,4 @@
 *** Settings ***
-Resource          GLOBAL_LIBRARIES.robot
 #Resource          MYSQL_AND_DATE_KEYWORDS.robot
 #Resource          ../variables/GLOBAL_VARIABLES.robot
 Resource          ../GLOBAL_LIBRARIES.robot
@@ -21,8 +20,8 @@ Custom keyword
     Set Global Variable  ${READY_TO_OPEN_COMPETITION}
     ${FUNDERS_PANEL_COMPETITION}   get comp id from comp title  Internet of Things
     Set global variable     ${FUNDERS_PANEL_COMPETITION}
-    ${IN_ASSESSMENT_COMPETITION}   get comp id from comp title  Sustainable living models for the future
-    Set global variable     ${IN_ASSESSMENT_COMPETITION}
+    ${IN_ASSESSMENT_COMPETITION} =  get comp id from comp title  Sustainable living models for the future
+    Set global variable  ${IN_ASSESSMENT_COMPETITION}
 
 *** Keywords ***
 get comp id from comp title
