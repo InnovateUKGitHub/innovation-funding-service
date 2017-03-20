@@ -55,13 +55,13 @@
         <td th:case="'PENDING'" class="status waiting">
           <th:block th:if="${url}">
               <a th:href="${url}">
-                <th:block th:if="${columnType == 'MO'}">Incomplete</th:block>
-                <th:block th:unless="${columnType == 'MO'}">Pending</th:block>
+                <th:block th:if="${columnType == 'project-details'}"><span>Incomplete</span></th:block>
+                <th:block th:unless="${columnType == 'project-details'}">Pending</th:block>
               </a>
           </th:block>
           <th:block th:unless="${url}">
-              <th:block th:if="${columnType == 'MO'}">Incomplete</th:block>
-              <th:block th:unless="${columnType == 'MO'}">Pending</th:block>
+              <th:block th:if="${columnType == 'project-details'}"><span>Incomplete</span></th:block>
+              <th:block th:unless="${columnType == 'project-details'}">Pending</th:block>
           </th:block>
         </td>
         <td th:case="'REJECTED'" class="status rejected">

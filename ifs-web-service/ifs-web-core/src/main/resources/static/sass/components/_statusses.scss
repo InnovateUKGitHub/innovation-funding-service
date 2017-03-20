@@ -288,7 +288,7 @@ span.status {
     &.ok {
         @extend %icon-tick;
         color: $button-colour;
-        padding-left: 205x;
+        padding-left: 25px;
     }
 
     &.rejected {
@@ -311,12 +311,13 @@ span.status {
     }
 }
 
-#table-project-status {
+.icon-table {
   td.status {
     vertical-align: bottom;
     background-position: center center;
     &.ok {
       background-size: 18px;
+      padding-left: 0.625em;
       a:link {
         color: $button-colour;
       }
@@ -336,6 +337,9 @@ span.status {
     &.waiting {
       @extend %icon-timer;
       background-size: 33px 30px;
+      a {
+        color: $secondary-text-colour;
+      }
     }
   }
 
