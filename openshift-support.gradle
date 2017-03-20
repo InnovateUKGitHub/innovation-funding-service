@@ -1,5 +1,10 @@
 //support tasks for dealing with Openshift
 
+
+if(project.hasProperty('profile') && profile == 'automated') {
+    ext.openshiftEnv = project.properties['openshiftEnv'] ?: "automated"
+}
+
 task osDeployRemote(type:Exec) {
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
     args = [openshiftEnv, "remote", project.version]
