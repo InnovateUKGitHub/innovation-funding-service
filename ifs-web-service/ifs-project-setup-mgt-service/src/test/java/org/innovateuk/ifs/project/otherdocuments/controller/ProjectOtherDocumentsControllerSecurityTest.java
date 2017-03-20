@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.otherdocuments.controller;
 
 import org.innovateuk.ifs.project.BaseProjectSetupControllerSecurityTest;
-import org.innovateuk.ifs.project.ProjectSetupSectionsPermissionRules;
+import org.innovateuk.ifs.project.sections.security.ProjectSetupSectionsPermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 

@@ -475,7 +475,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
                 monthlyCostsPerOrganisationMap, months, financeCheckSummary.getTotalPercentageGrant());
 
         Set<Organisation> organisationsExcludedFromGrantOfferLetter = project.getOrganisations().stream().filter(organisation ->
-                !financeUtil.isUsingJesFinances(organisation.getOrganisationType().getName())
+                !financeUtil.isUsingJesFinances(organisation.getOrganisationType().getId())
                         && !organisation.getName().equals(leadOrganisation.getName())
                         && organisationAndGrantPercentageMap.get(organisation.getName()).equals(0)
                         && organisationGrantAllocationTotal.get(organisation.getName()).stream().reduce(BigDecimal.ZERO, BigDecimal::add).compareTo(BigDecimal.ZERO) == 0)
@@ -563,7 +563,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
 
     private ServiceResult<Void> grantPercentagePerOrganisation(ApplicationFinanceResource applicationFinanceResource, Organisation organisation, Map<String, Integer> organisationAndGrantPercentageMap) {
         organisationAndGrantPercentageMap.put(organisation.getName(),
-                financeUtil.isUsingJesFinances(organisation.getOrganisationType().getName())
+                financeUtil.isUsingJesFinances(organisation.getOrganisationType().getId())
                         ? 100 : applicationFinanceResource.getGrantClaimPercentage());
         return serviceSuccess();
     }
