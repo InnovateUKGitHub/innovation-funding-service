@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.project.bankdetails;
 
-import org.innovateuk.ifs.project.BankDetailsController;
+import org.innovateuk.ifs.project.bankdetails.controller.BankDetailsController;
 import org.innovateuk.ifs.project.BaseProjectSetupControllerSecurityTest;
-import org.innovateuk.ifs.project.ProjectSetupSectionsPermissionRules;
+import org.innovateuk.ifs.project.status.security.ProjectSetupSectionsPermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 
