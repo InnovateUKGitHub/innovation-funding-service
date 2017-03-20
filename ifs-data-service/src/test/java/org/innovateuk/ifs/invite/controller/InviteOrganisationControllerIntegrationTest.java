@@ -3,6 +3,7 @@ package org.innovateuk.ifs.invite.controller;
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.mapper.InviteOrganisationMapper;
 import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
@@ -16,15 +17,23 @@ import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.RoleRepository;
+import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder.newApplicationInvite;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationBuilder.newInviteOrganisation;
+import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -56,85 +65,139 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
     private RoleRepository roleRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     @Override
     protected void setControllerUnderTest(InviteOrganisationController controller) {
         this.controller = controller;
     }
 
     @Test
-    public void findById() throws Exception {
+    public void findById_userIsLeadApplicant() throws Exception {
         Application application = applicationRepository.findOne(1L);
-        Organisation organisation = organisationRepository.findOneByName("Manchester University");
-        InviteOrganisation inviteOrganisation = setupInviteOrganisation(application, organisation);
+        Organisation organisation = setupOrganisation("Hive IT Limited");
+        InviteOrganisation inviteOrganisation = setupInviteOrganisationWithOrganisation(application, organisation);
 
-        User leadApplicant = getLeadApplicantForApplication(application);
-        setLoggedInUser(userMapper.mapToResource(leadApplicant));
-
-        InviteOrganisationResource found = controller.findById(inviteOrganisation.getId()).getSuccessObjectOrThrowException();
-
-        assertEquals(inviteOrganisation.getId(), found.getId());
-        assertEquals(inviteOrganisation.getOrganisationName(), found.getOrganisationName());
-        assertEquals(organisation.getId(), found.getOrganisation());
-        assertEquals(organisation.getName(), found.getOrganisationNameConfirmed());
-        assertEquals(1, found.getInviteResources().size());
-        assertEquals(application.getId(), found.getInviteResources().get(0).getApplication());
-        assertEquals("example+user1@example.com", found.getInviteResources().get(0).getEmail());
+        setLoggedInUser(getLeadApplicantForApplication(application));
+        assertInviteOrganisationIsFound(inviteOrganisation, organisation, () -> controller.findById(inviteOrganisation.getId()));
     }
 
     @Test
-    public void getByIdWithInvitesForApplication() throws Exception {
-        Application application1 = applicationRepository.findOne(1L);
-        Application application2 = applicationRepository.findOne(2L);
-        Organisation organisation = organisationRepository.findOneByName("Manchester University");
+    public void findById_userIsCollaborator() throws Exception {
+        Application application = applicationRepository.findOne(1L);
+        Organisation organisation = setupOrganisation("Hive IT Limited");
+        InviteOrganisation inviteOrganisation = setupInviteOrganisationWithOrganisation(application, organisation);
 
-        InviteOrganisation inviteOrganisation = setupInviteOrganisationForMultipleApplications(application1, application2, organisation);
 
-        User leadApplicant = getLeadApplicantForApplication(application1);
-        setLoggedInUser(userMapper.mapToResource(leadApplicant));
-
-        InviteOrganisationResource found = controller.getByIdWithInvitesForApplication(inviteOrganisation.getId(), application1.getId()).getSuccessObjectOrThrowException();
-
-        assertEquals(inviteOrganisation.getId(), found.getId());
-        assertEquals(inviteOrganisation.getOrganisationName(), found.getOrganisationName());
-        assertEquals(organisation.getId(), found.getOrganisation());
-        assertEquals(organisation.getName(), found.getOrganisationNameConfirmed());
-        assertEquals(1, found.getInviteResources().size());
-        assertEquals(application1.getId(), found.getInviteResources().get(0).getApplication());
-        assertEquals("example+user1@example.com", found.getInviteResources().get(0).getEmail());
+        setLoggedInUser(setupCollaboratorForApplicationAndOrganisation(application, organisation));
+        assertInviteOrganisationIsFound(inviteOrganisation, organisation, () -> controller.findById(inviteOrganisation.getId()));
     }
 
     @Test
-    public void getByOrganisationIdWithInvitesForApplication() throws Exception {
+    public void findById_userIsCollaboratorAndOrganisationUnconfirmed() throws Exception {
+        Application application = applicationRepository.findOne(1L);
+        InviteOrganisation inviteOrganisation = setupInviteOrganisationUnconfirmed(application);
+
+        setLoggedInUser(setupCollaboratorForApplicationAndOrganisation(application, setupOrganisation("Other Company Limited")));
+        assertAccessDeniedForInviteOrganisation(() -> controller.findById(inviteOrganisation.getId()));
+    }
+
+    @Test
+    public void findById_userIsCollaboratorForDifferentOrganisation() throws Exception {
+        Application application = applicationRepository.findOne(1L);
+        Organisation organisation = setupOrganisation("Hive IT Limited");
+        InviteOrganisation inviteOrganisation = setupInviteOrganisationWithOrganisation(application, organisation);
+
+        setLoggedInUser(setupCollaboratorForApplicationAndOrganisation(application, setupOrganisation("Other Company Limited")));
+        assertAccessDeniedForInviteOrganisation(() -> controller.findById(inviteOrganisation.getId()));
+    }
+
+    @Test
+    public void getByIdWithInvitesForApplication_userIsLeadApplicant() throws Exception {
         Application application1 = applicationRepository.findOne(1L);
         Application application2 = applicationRepository.findOne(2L);
-        Organisation organisation = organisationRepository.findOneByName("Manchester University");
-
+        Organisation organisation = setupOrganisation("Hive IT Limited");
         InviteOrganisation inviteOrganisation = setupInviteOrganisationForMultipleApplications(application1, application2, organisation);
 
-        User leadApplicant = getLeadApplicantForApplication(application1);
-        setLoggedInUser(userMapper.mapToResource(leadApplicant));
+        setLoggedInUser(getLeadApplicantForApplication(application1));
+        assertInviteOrganisationIsFound(inviteOrganisation, organisation,
+                () -> controller.getByIdWithInvitesForApplication(inviteOrganisation.getId(), application1.getId()));
+    }
 
-        InviteOrganisationResource found = controller.getByOrganisationIdWithInvitesForApplication(organisation.getId(), application1.getId()).getSuccessObjectOrThrowException();
+    @Test
+    public void getByIdWithInvitesForApplication_userIsCollaborator() throws Exception {
+        Application application1 = applicationRepository.findOne(1L);
+        Application application2 = applicationRepository.findOne(2L);
+        Organisation organisation = setupOrganisation("Hive IT Limited");
+        InviteOrganisation inviteOrganisation = setupInviteOrganisationForMultipleApplications(application1, application2, organisation);
 
-        assertEquals(inviteOrganisation.getId(), found.getId());
-        assertEquals(inviteOrganisation.getOrganisationName(), found.getOrganisationName());
-        assertEquals(organisation.getId(), found.getOrganisation());
-        assertEquals(organisation.getName(), found.getOrganisationNameConfirmed());
-        assertEquals(1, found.getInviteResources().size());
-        assertEquals(application1.getId(), found.getInviteResources().get(0).getApplication());
-        assertEquals("example+user1@example.com", found.getInviteResources().get(0).getEmail());
+        setLoggedInUser(setupCollaboratorForApplicationAndOrganisation(application1, organisation));
+        assertInviteOrganisationIsFound(inviteOrganisation, organisation,
+                () -> controller.getByIdWithInvitesForApplication(inviteOrganisation.getId(), application1.getId()));
+    }
+
+    @Test
+    public void getByIdWithInvitesForApplication_userIsCollaboratorAndOrganisationUnconfirmed() throws Exception {
+        Application application = applicationRepository.findOne(1L);
+        InviteOrganisation inviteOrganisation = setupInviteOrganisationUnconfirmed(application);
+
+        setLoggedInUser(setupCollaboratorForApplicationAndOrganisation(application, setupOrganisation("Other Company Limited")));
+        assertAccessDeniedForInviteOrganisation(() -> controller.getByIdWithInvitesForApplication(inviteOrganisation.getId(), application.getId()));
+    }
+
+    @Test
+    public void getByIdWithInvitesForApplication_userIsCollaboratorForDifferentOrganisation() throws Exception {
+        Application application1 = applicationRepository.findOne(1L);
+        Application application2 = applicationRepository.findOne(2L);
+        Organisation organisation = setupOrganisation("Hive IT Limited");
+        InviteOrganisation inviteOrganisation = setupInviteOrganisationForMultipleApplications(application1, application2, organisation);
+
+        setLoggedInUser(setupCollaboratorForApplicationAndOrganisation(application1, setupOrganisation("Other Company Limited")));
+        assertAccessDeniedForInviteOrganisation(() -> controller.getByIdWithInvitesForApplication(inviteOrganisation.getId(), application1.getId()));
+    }
+
+    @Test
+    public void getByOrganisationIdWithInvitesForApplication_userIsLeadApplicant() throws Exception {
+        Application application1 = applicationRepository.findOne(1L);
+        Application application2 = applicationRepository.findOne(2L);
+        Organisation organisation = setupOrganisation("Hive IT Limited");
+        InviteOrganisation inviteOrganisation = setupInviteOrganisationForMultipleApplications(application1, application2, organisation);
+
+        setLoggedInUser(getLeadApplicantForApplication(application1));
+        assertInviteOrganisationIsFound(inviteOrganisation, organisation, () -> controller.getByOrganisationIdWithInvitesForApplication(organisation.getId(), application1.getId()));
+    }
+
+    @Test
+    public void getByOrganisationIdWithInvitesForApplication_userIsCollaborator() throws Exception {
+        Application application1 = applicationRepository.findOne(1L);
+        Application application2 = applicationRepository.findOne(2L);
+        Organisation organisation = setupOrganisation("Hive IT Limited");
+        InviteOrganisation inviteOrganisation = setupInviteOrganisationForMultipleApplications(application1, application2, organisation);
+
+        setLoggedInUser(setupCollaboratorForApplicationAndOrganisation(application1, organisation));
+        assertInviteOrganisationIsFound(inviteOrganisation, organisation, () -> controller.getByOrganisationIdWithInvitesForApplication(organisation.getId(), application1.getId()));
+    }
+
+    @Test
+    public void getByOrganisationIdWithInvitesForApplication_userIsCollaboratorForDifferentOrganisation() throws Exception {
+        Application application1 = applicationRepository.findOne(1L);
+        Application application2 = applicationRepository.findOne(2L);
+        Organisation organisation = setupOrganisation("Hive IT Limited");
+        setupInviteOrganisationForMultipleApplications(application1, application2, organisation);
+
+        setLoggedInUser(setupCollaboratorForApplicationAndOrganisation(application1, setupOrganisation("Other Company Limited")));
+        assertAccessDeniedForInviteOrganisation(() -> controller.getByOrganisationIdWithInvitesForApplication(organisation.getId(), application1.getId()));
     }
 
     @Test
     public void put() throws Exception {
         Application application = applicationRepository.findOne(1L);
-        Organisation organisation = organisationRepository.findOneByName("Manchester University");
+        Organisation organisation = setupOrganisation("Hive IT Limited");
 
-        InviteOrganisation inviteOrganisation = setupInviteOrganisation(application, organisation);
+        InviteOrganisation inviteOrganisation = setupInviteOrganisationWithOrganisation(application, organisation);
 
-        User leadApplicant = getLeadApplicantForApplication(application);
-        setLoggedInUser(userMapper.mapToResource(leadApplicant));
-
+        setLoggedInUser(getLeadApplicantForApplication(application));
         InviteOrganisationResource inviteOrganisationResource = inviteOrganisationMapper.mapToResource(inviteOrganisation);
 
         assertTrue(controller.put(inviteOrganisationResource).isSuccess());
@@ -146,6 +209,16 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
         return roleRepository.findOneByName(userRoleType.getName());
     }
 
+    private Organisation setupOrganisation(String name) {
+        Organisation organisation = organisationRepository.save(newOrganisation()
+                .with(id(null))
+                .withName(name)
+                .build());
+
+        flushAndClearSession();
+        return organisation;
+    }
+
     private User getLeadApplicantForApplication(Application application) {
         List<ProcessRole> processRoles = processRoleRepository.findByApplicationIdAndRoleId(application.getId(),
                 getRoleByUserRoleType(LEADAPPLICANT).getId());
@@ -153,7 +226,29 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
         return processRoles.get(0).getUser();
     }
 
-    private InviteOrganisation setupInviteOrganisation(Application application, Organisation organisation) {
+    private User setupCollaboratorForApplicationAndOrganisation(Application application, Organisation organisation) {
+        User user = userRepository.save(newUser()
+                .with(id(null))
+                .withFirstName("Example")
+                .withLastName("User1")
+                .withEmailAddress("example+user1@example.com")
+                .withUid("f6b9ddeb-f169-4ac4-b606-90cb877ce8c8")
+                .build());
+
+        ProcessRole processRole = processRoleRepository.save(newProcessRole()
+                .with(id(null))
+                .withUser(user)
+                .withRole(getRoleByUserRoleType(COLLABORATOR))
+                .withOrganisationId(organisation.getId())
+                .build());
+
+        processRole.setApplicationId(application.getId());
+        flushAndClearSession();
+
+        return user;
+    }
+
+    private InviteOrganisation setupInviteOrganisationWithOrganisation(Application application, Organisation organisation) {
         InviteOrganisation inviteOrganisation = inviteOrganisationRepository.save(newInviteOrganisation()
                 .with(id(null))
                 .withOrganisationName("Hive")
@@ -172,10 +267,28 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
         return inviteOrganisationRepository.findOne(inviteOrganisation.getId());
     }
 
+    private InviteOrganisation setupInviteOrganisationUnconfirmed(Application application) {
+        InviteOrganisation inviteOrganisation = inviteOrganisationRepository.save(newInviteOrganisation()
+                .with(id(null))
+                .withOrganisationName("Hive")
+                .build());
+
+        applicationInviteRepository.save(newApplicationInvite()
+                .with(id(null))
+                .withApplication(application)
+                .withName("Example User1")
+                .withEmail("example+user1@example.com")
+                .withInviteOrganisation(inviteOrganisation)
+                .build());
+
+        flushAndClearSession();
+        return inviteOrganisationRepository.findOne(inviteOrganisation.getId());
+    }
+
     private InviteOrganisation setupInviteOrganisationForMultipleApplications(Application application1, Application application2, Organisation organisation) {
         InviteOrganisation inviteOrganisation = inviteOrganisationRepository.save(newInviteOrganisation()
                 .with(id(null))
-                .withOrganisationName("Manchester Uni")
+                .withOrganisationName("Hive")
                 .withOrganisation(organisation)
                 .build());
 
@@ -189,5 +302,26 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
 
         flushAndClearSession();
         return inviteOrganisationRepository.findOne(inviteOrganisation.getId());
+    }
+
+    private void setLoggedInUser(User user) {
+        setLoggedInUser(userMapper.mapToResource(user));
+    }
+
+    private void assertInviteOrganisationIsFound(InviteOrganisation expectedInviteOrganisation,
+                                                 Organisation expectedOrganisation,
+                                                 Supplier<RestResult<InviteOrganisationResource>> inviteOrganisationSupplier) {
+        InviteOrganisationResource found = inviteOrganisationSupplier.get().getSuccessObjectOrThrowException();
+
+        assertEquals(expectedInviteOrganisation.getId(), found.getId());
+        assertEquals(expectedInviteOrganisation.getOrganisationName(), found.getOrganisationName());
+        assertEquals(expectedOrganisation.getId(), found.getOrganisation());
+        assertEquals(expectedOrganisation.getName(), found.getOrganisationNameConfirmed());
+        assertEquals(1, found.getInviteResources().size());
+        assertEquals("example+user1@example.com", found.getInviteResources().get(0).getEmail());
+    }
+
+    private void assertAccessDeniedForInviteOrganisation(Supplier<RestResult<InviteOrganisationResource>> inviteOrganisationSupplier) {
+        assertTrue(inviteOrganisationSupplier.get().getFailure().is(forbiddenError(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION)));
     }
 }

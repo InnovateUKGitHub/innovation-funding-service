@@ -4,14 +4,14 @@ import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
-import org.innovateuk.ifs.security.SecurityRuleUtil;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
+import static org.innovateuk.ifs.security.SecurityRuleUtil.checkProcessRole;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 
@@ -23,38 +23,57 @@ import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 public class InviteOrganisationPermissionRules {
 
     @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
     private ProcessRoleRepository processRoleRepository;
 
     @PermissionRule(value = "SEND", description = "lead applicant can send an organisation invite for the application")
-    public boolean leadApplicantCanInviteAnOrganisationToTheApplication(final InviteOrganisationResource inviteOrganisation, final UserResource user) {
-        return hasRoleForAllApplicationsInOrganisationInvite(LEADAPPLICANT, inviteOrganisation, user);
+    public boolean leadApplicantCanInviteAnOrganisationToTheApplication(InviteOrganisationResource inviteOrganisation, UserResource user) {
+        return isLeadApplicantForAllApplications(inviteOrganisation, user);
     }
 
-    @PermissionRule(value = "READ", description = "a lead applicant can view an organisation invite to the application")
-    public boolean leadApplicantCanViewOrganisationInviteToTheApplication(final InviteOrganisationResource inviteOrganisation, final UserResource user) {
-        return hasRoleForAllApplicationsInOrganisationInvite(LEADAPPLICANT, inviteOrganisation, user);
-    }
-
-    @PermissionRule(value = "READ", description = "a collaborator can view an organisation invite to the application")
-    public boolean collaboratorCanViewOrganisationInviteToTheApplication(final InviteOrganisationResource inviteOrganisation, final UserResource user) {
-        return hasRoleForAllApplicationsInOrganisationInvite(COLLABORATOR, inviteOrganisation, user);
+    @PermissionRule(value = "READ", description = "a consortium member can view the invites of their own organisation or if lead applicant")
+    public boolean consortiumCanViewAnInviteOrganisation(InviteOrganisationResource inviteOrganisation, UserResource user) {
+        if (inviteOrganisation.getOrganisation() == null) {
+            // Organisation is not confirmed yet so only the lead can view it to perform an update
+            return isLeadApplicantForAllApplications(inviteOrganisation, user);
+        }
+        return isAConsortiumMemberOrIsLeadApplicantForAllApplications(inviteOrganisation, user);
     }
 
     @PermissionRule(value = "SAVE", description = "lead applicant can save an organisation invite for the application")
-    public boolean leadApplicantCanSaveInviteAnOrganisationToTheApplication(final InviteOrganisationResource inviteOrganisation, final UserResource user) {
-        return hasRoleForAllApplicationsInOrganisationInvite(LEADAPPLICANT, inviteOrganisation, user);
+    public boolean leadApplicantCanSaveInviteAnOrganisationToTheApplication(InviteOrganisationResource inviteOrganisation, UserResource user) {
+        return isLeadApplicantForAllApplications(inviteOrganisation, user);
     }
 
-    private final boolean hasRoleForAllApplicationsInOrganisationInvite(final UserRoleType userRoleType, final InviteOrganisationResource inviteOrganisation, final UserResource user) {
-        final List<ApplicationInviteResource> invites = inviteOrganisation.getInviteResources();
+    private boolean isLeadApplicantForAllApplications(InviteOrganisationResource inviteOrganisation, UserResource user) {
+        List<ApplicationInviteResource> invites = inviteOrganisation.getInviteResources();
         if (invites == null || invites.isEmpty()) {
             return false; // Unable to check the application so default to false;
         }
-        return invites.stream()
-                .allMatch(inviteResource -> hasRoleOnApplication(userRoleType, user, inviteResource.getApplication()));
+        return invites.stream().allMatch(applicationInviteResource -> isLeadApplicant(applicationInviteResource, user));
     }
 
-    private boolean hasRoleOnApplication(final UserRoleType userRoleType, final UserResource user, final Long applicationId) {
-        return SecurityRuleUtil.checkProcessRole(user, applicationId, userRoleType, processRoleRepository);
+    private boolean isAConsortiumMemberOrIsLeadApplicantForAllApplications(InviteOrganisationResource inviteOrganisation, UserResource user) {
+        List<ApplicationInviteResource> invites = inviteOrganisation.getInviteResources();
+        if (invites == null || invites.isEmpty()) {
+            return false; // Unable to check the application so default to false;
+        }
+        return invites.stream().allMatch(applicationInviteResource -> isAConsortiumMemberOrIsLeadApplicant(
+                inviteOrganisation, applicationInviteResource, user));
+    }
+
+    private boolean isAConsortiumMemberOrIsLeadApplicant(InviteOrganisationResource inviteOrganisationResource, ApplicationInviteResource applicationInviteResource, UserResource userResource) {
+        return isLeadApplicant(applicationInviteResource, userResource) || isAConsortiumMember(
+                inviteOrganisationResource, applicationInviteResource, userResource);
+    }
+
+    private boolean isAConsortiumMember(InviteOrganisationResource inviteOrganisationResource, ApplicationInviteResource applicationInviteResource, UserResource userResource) {
+        return checkProcessRole(userResource, applicationInviteResource.getApplication(), inviteOrganisationResource.getOrganisation(), COLLABORATOR, roleRepository, processRoleRepository);
+    }
+
+    private boolean isLeadApplicant(ApplicationInviteResource applicationInviteResource, UserResource userResource) {
+        return checkProcessRole(userResource, applicationInviteResource.getApplication(), LEADAPPLICANT, processRoleRepository);
     }
 }

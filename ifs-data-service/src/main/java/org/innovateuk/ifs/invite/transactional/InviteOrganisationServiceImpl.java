@@ -51,11 +51,6 @@ public class InviteOrganisationServiceImpl extends BaseTransactionalService impl
     }
 
     @Override
-    public ServiceResult<Iterable<InviteOrganisationResource>> findAll() {
-        return find(inviteOrganisationRepository.findAll(), notFoundError(InviteOrganisation.class)).andOnSuccessReturn(mapper::mapToResource);
-    }
-
-    @Override
     public ServiceResult<InviteOrganisationResource> save(InviteOrganisationResource inviteOrganisationResource) {
         InviteOrganisation inviteOrganisation = inviteOrganisationRepository.save(mapper.mapToDomain(inviteOrganisationResource));
         return serviceSuccess(mapper.mapToResource(inviteOrganisation));
