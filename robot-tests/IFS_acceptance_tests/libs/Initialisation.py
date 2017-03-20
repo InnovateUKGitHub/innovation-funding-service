@@ -22,8 +22,8 @@ cursor.execute("""SELECT `id`,`name` FROM competition""")
 # Fetch a single row using fetchone() method.
 competition_ids = {}
 for comp in cursor.fetchall():
-
     competition_ids[comp[1]] = int(comp[0])
-print(competition_ids)
+    #print(competition_ids)
+
 # disconnect from server
 db.close()
