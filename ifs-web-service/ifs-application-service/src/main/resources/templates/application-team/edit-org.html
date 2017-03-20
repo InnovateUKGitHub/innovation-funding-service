@@ -39,7 +39,7 @@
                         <tr>
                             <th class="width-30-percent" scope="col">Applicant</th>
                             <th class="width-40-percent" scope="col">Email</th>
-                            <th class="width-15-percent" scope="col">Status</th>
+                            <th class="width-15-percent" scope="col"><span class="visually-hidden">Additional details</span></th>
                             <th class="width-15-percent alignright" scope="col"><span class="visually-hidden">Actions</span></th>
                         </tr>
                     </thead>
@@ -47,7 +47,7 @@
                         <tr th:each="applicant, applicantStat : ${model.applicants}" th:unless="${#sets.contains(form.markedForRemoval, applicant.applicationInviteId)}">
                             <td th:text="${applicant.name}">Steve Smith</td>
                             <td th:text="${applicant.email}">steve.smith@empire.com</td>
-                            <td th:text="${applicant.lead} ? 'Lead' : (${applicant.pending} ? 'Pending' : '')">Lead</td>
+                            <td th:text="${applicant.lead} ? 'Lead' : (${applicant.pending} ? 'Invite pending' : '')">Lead</td>
                             <td class="alignright">
                                 <button th:if="${applicant.removable}" class="buttonlink" th:value="${applicant.applicationInviteId}" name="markForRemoval" type="submit">Remove</button>
                             </td>
