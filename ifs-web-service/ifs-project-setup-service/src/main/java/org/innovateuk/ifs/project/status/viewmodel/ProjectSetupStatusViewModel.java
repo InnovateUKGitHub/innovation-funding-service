@@ -15,7 +15,7 @@ import static org.innovateuk.ifs.project.sections.SectionStatus.TICK;
 /**
  * A view model that backs the Project Status page
  */
-public class  ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel {
+public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel {
 
     private Long projectId;
     private String projectName;

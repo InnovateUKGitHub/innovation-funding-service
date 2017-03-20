@@ -33,14 +33,24 @@ public class ProjectFinanceQueryPermissionRules  {
         return query.posts.size() == 1 && query.posts.get(0).author.getId().equals(user.getId());
     }
 
-    @PermissionRule(value = "PF_READ", description = "Only Project Finance or Partner Users can view Queries")
-    public boolean onlyProjectFinanceUsersOrPartnersCanViewTheirQueries(final QueryResource query, final UserResource user) {
-        return isProjectFinanceUser(user) || isPartner(user, query.contextClassPk);
+    @PermissionRule(value = "PF_READ", description = "Project Finance can view Queries")
+    public boolean projectFinanceUsersCanViewQueries(final QueryResource query, final UserResource user) {
+        return isProjectFinanceUser(user);
     }
 
-    @PermissionRule(value = "PF_ADD_POST", description = "Project Finance users or Partner Users can add posts to a query")
-    public boolean onlyProjectFinanceUsersOrPartnersAddPostToTheirQueries(final QueryResource query, final UserResource user) {
-        return query.posts.isEmpty() ? isProjectFinanceUser(user) : isProjectFinanceUser(user) || isPartner(user, query.contextClassPk);
+    @PermissionRule(value = "PF_READ", description = "Project partners can view Queries")
+    public boolean projectPartnersCanViewQueries(final QueryResource query, final UserResource user) {
+        return isPartner(user, query.contextClassPk);
+    }
+
+    @PermissionRule(value = "PF_ADD_POST", description = "Project Finance users can add posts to a query")
+    public boolean projectFinanceUsersCanAddPostToTheirQueries(final QueryResource query, final UserResource user) {
+        return isProjectFinanceUser(user);
+    }
+
+    @PermissionRule(value = "PF_ADD_POST", description = "Project partners can add posts to a query")
+    public boolean projectPartnersCanAddPostToTheirQueries(final QueryResource query, final UserResource user) {
+        return !query.posts.isEmpty() && isPartner(user, query.contextClassPk);
     }
 
     private boolean isPartner(UserResource user, Long projectFinance) {

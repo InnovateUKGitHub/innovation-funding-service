@@ -18,6 +18,7 @@ import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
+import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isProjectFinanceUser;
 
 /*
@@ -42,13 +43,18 @@ public class AttachmentPermissionsRules {
     private ProjectUserRepository projectUserRepository;
 
 
-    @PermissionRule(value = "PF_ATTACHMENT_UPLOAD", description = "Only Project Finance and Finance Contacts can upload attachments.")
-    public boolean onlyProjectFinanceAndFinanceContactCanUploadAttachments(final ProjectResource project, final UserResource user) {
-        return isProjectFinanceUser(user) || isFinanceContactInProject(user, project);
+    @PermissionRule(value = "PF_ATTACHMENT_UPLOAD", description = "Project Finance can upload attachments.")
+    public boolean projectFinanceCanUploadAttachments(final ProjectResource project, final UserResource user) {
+        return isProjectFinanceUser(user);
     }
 
-    private boolean isFinanceContactInProject(UserResource user, ProjectResource project) {
-        return ofNullable(projectUserRepository.findByProjectIdAndRoleAndUserId(project.getId(), PROJECT_FINANCE_CONTACT,  user.getId()))
+    @PermissionRule(value = "PF_ATTACHMENT_UPLOAD", description = "Project partners can upload attachments.")
+    public boolean projectPartnersCanUploadAttachments(final ProjectResource project, final UserResource user) {
+        return isProjectPartner(user, project);
+    }
+
+    private boolean isProjectPartner(UserResource user, ProjectResource project) {
+        return ofNullable(projectUserRepository.findByProjectIdAndRoleAndUserId(project.getId(), PROJECT_PARTNER,  user.getId()))
                     .isPresent();
     }
 
@@ -64,7 +70,7 @@ public class AttachmentPermissionsRules {
 
     private boolean userCanAccessQueryLinkedToTheAttachment(UserResource user, AttachmentResource attachment) {
         return findQueryTheAttachmentIsLinkedTo(attachment)
-                .map(query -> projectFinanceQueryPermissionRules.onlyProjectFinanceUsersOrPartnersCanViewTheirQueries(queryMapper.mapToResource(query), user))
+                .map(query -> projectFinanceQueryPermissionRules.projectFinanceUsersCanViewQueries(queryMapper.mapToResource(query), user))
                 .orElse(false);
     }
 

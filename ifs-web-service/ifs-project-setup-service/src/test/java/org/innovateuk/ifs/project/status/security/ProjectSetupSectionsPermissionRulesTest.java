@@ -120,7 +120,7 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
     }
 
     @Test
-    public void testPartnerFinanceContactAccess() {
+    public void testPartnerAccess() {
         long projectId = 123L;
         long organisationId = 234L;
 
@@ -146,7 +146,7 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
     }
 
     @Test
-    public void testFinanceChecksNoAccess() {
+    public void testPartnerNoAccess() {
         long projectId = 123L;
         long organisationId = 234L;
 
@@ -168,6 +168,34 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
         assertFalse(rules.partnerCanAccessFinanceChecksSection(123L, user));
 
         verify(accessor).canAccessFinanceChecksSection(any());
+    }
+
+    @Test
+    public void testFinanceContactAccess() {
+        long projectId = 123L;
+        long organisationId = 234L;
+
+        UserResource user = newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(FINANCE_CONTACT).build())).build();
+
+        BaseIntegrationTest.setLoggedInUser(user);
+
+        OrganisationResource o = newOrganisationResource().withId(organisationId).build();
+
+        ProjectPartnerStatusResource partnerStatus = newProjectPartnerStatusResource().withProjectDetailsStatus(ProjectActivityStates.COMPLETE).withOrganisationId(organisationId).withOrganisationType(OrganisationTypeEnum.valueOf(BUSINESS.toString())).build();
+        List<ProjectUserResource> pu = newProjectUserResource().withProject(projectId).withOrganisation(o.getId()).withUser(user.getId()).build(2);
+        pu.get(0).setRoleName(PARTNER.getName());
+        pu.get(1).setRoleName(FINANCE_CONTACT.getName());
+
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().withPartnerStatuses(Collections.singletonList(partnerStatus)).build();
+
+        when(projectServiceMock.getProjectUsersForProject(projectId)).thenReturn(pu);
+        when(projectServiceMock.getProjectTeamStatus(projectId, Optional.of(user.getId()))).thenReturn(teamStatus);
+        when(accessor.canAccessFinanceChecksSection(any())).thenReturn(ACCESSIBLE);
+
+        assertTrue(rules.partnerCanAccessFinanceChecksSection(123L, user));
+
+        verify(projectServiceMock).getProjectUsersForProject(projectId);
+        verify(projectServiceMock).getProjectTeamStatus(projectId, Optional.of(user.getId()));
     }
 
     private void assertLeadPartnerSuccessfulAccess(BiFunction<ProjectSetupSectionsAccessibilityHelper, OrganisationResource, SectionAccess> accessorCheck,

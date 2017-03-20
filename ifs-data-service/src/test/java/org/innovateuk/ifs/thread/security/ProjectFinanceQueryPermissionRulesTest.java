@@ -75,27 +75,27 @@ public class ProjectFinanceQueryPermissionRulesTest extends BasePermissionRulesT
     @Test
     public void testThatFirstPostMustComeFromTheProjectFinanceUser() throws Exception {
         QueryResource queryWithoutPosts = queryWithoutPosts();
-        assertTrue(rules.onlyProjectFinanceUsersOrPartnersAddPostToTheirQueries(queryWithoutPosts, projectFinanceUser));
+        assertTrue(rules.projectFinanceUsersCanAddPostToTheirQueries(queryWithoutPosts, projectFinanceUser));
         when(projectFinanceRepositoryMock.findOne(queryWithoutPosts.contextClassPk))
                 .thenReturn(projectFinanceWithUserAsFinanceContact(partner));
-        assertFalse(rules.onlyProjectFinanceUsersOrPartnersAddPostToTheirQueries(queryWithoutPosts, partner));
+        assertFalse(rules.projectFinanceUsersCanAddPostToTheirQueries(queryWithoutPosts, partner));
     }
 
     @Test
     public void testThatOnlyTheProjectFinanceUserOrTheCorrectFinanceContactCanReplyToAQuery() throws Exception {
         when(projectFinanceRepositoryMock.findOne(queryResource.contextClassPk))
                 .thenReturn(projectFinanceWithUserAsFinanceContact(partner));
-        assertTrue(rules.onlyProjectFinanceUsersOrPartnersAddPostToTheirQueries(queryResource, projectFinanceUser));
-        assertTrue(rules.onlyProjectFinanceUsersOrPartnersAddPostToTheirQueries(queryResource, partner));
-        assertFalse(rules.onlyProjectFinanceUsersOrPartnersAddPostToTheirQueries(queryResource, incorrectPartner));
+        assertTrue(rules.projectFinanceUsersCanAddPostToTheirQueries(queryResource, projectFinanceUser));
+        assertTrue(rules.projectPartnersCanAddPostToTheirQueries(queryResource, partner));
+        assertFalse(rules.projectPartnersCanAddPostToTheirQueries(queryResource, incorrectPartner));
     }
 
     @Test
     public void testThatOnlyProjectFinanceUsersOrProjectUsersCanViewTheirQueries() {
-        assertTrue(rules.onlyProjectFinanceUsersOrPartnersCanViewTheirQueries(queryResource, projectFinanceUser));
+        assertTrue(rules.projectFinanceUsersCanViewQueries(queryResource, projectFinanceUser));
         when(projectFinanceRepositoryMock.findOne(queryResource.contextClassPk))
                 .thenReturn(projectFinanceWithUserAsFinanceContact(partner));
-        assertTrue(rules.onlyProjectFinanceUsersOrPartnersCanViewTheirQueries(queryResource, partner));
-        assertFalse(rules.onlyProjectFinanceUsersOrPartnersCanViewTheirQueries(queryResource, incorrectPartner));
+        assertTrue(rules.projectPartnersCanViewQueries(queryResource, partner));
+        assertFalse(rules.projectPartnersCanViewQueries(queryResource, incorrectPartner));
     }
 }

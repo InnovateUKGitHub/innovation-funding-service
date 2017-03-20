@@ -16,7 +16,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
-import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -40,16 +39,12 @@ import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
     @InjectMocks
     private ProjectSetupStatusViewModelPopulator populator;
 
-    private static final boolean monitoringOfficerNotExpected = false;
     private static final boolean monitoringOfficerExpected = true;
 
     private CompetitionResource competition = newCompetitionResource().build();
