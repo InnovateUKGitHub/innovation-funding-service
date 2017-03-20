@@ -116,15 +116,15 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
         Long userId = 2L;
         Long applicationId = 3L;
         Long organisationId = 4L;
-        String organisationType = "Type";
+        Long organisationType = 2L;
         ProcessRoleResource processRole = new ProcessRoleResource();
         processRole.setOrganisationId(organisationId);
         OrganisationResource organisation = new OrganisationResource();
-        organisation.setOrganisationTypeName(organisationType);
+        organisation.setOrganisationType(organisationType);
         when(processRoleService.findProcessRole(userId, applicationId)).thenReturn(processRole);
         when(organisationRestService.getOrganisationById(organisationId)).thenReturn(restSuccess(organisation));
 
-        String returnedOrganisationType = service.getOrganisationType(userId, applicationId);
+        Long returnedOrganisationType = service.getOrganisationType(userId, applicationId);
 
         assertEquals(organisationType, returnedOrganisationType);
     }

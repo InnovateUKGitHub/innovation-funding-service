@@ -497,7 +497,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
 
         SectionResourceBuilder sectionResourceBuilder = SectionResourceBuilder.newSectionResource();
 
-        when(organisationService.getOrganisationType(any(), any())).thenReturn("University (HEI)");
+        when(organisationService.getOrganisationType(any(), any())).thenReturn(2L);
         when(overheadFileSaver.handleOverheadFileRequest(any())).thenReturn(new ValidationMessages());
         when(sectionService.getById(anyLong())).thenReturn(sectionResourceBuilder.with(id(1L)).with(name("Your funding")).withType(SectionType.FUNDING_FINANCES).build());
         when(sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.ORGANISATION_FINANCES)).thenReturn(sectionResourceBuilder.withType(SectionType.ORGANISATION_FINANCES).build(1));
@@ -517,7 +517,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
 
         SectionResourceBuilder sectionResourceBuilder = SectionResourceBuilder.newSectionResource();
 
-        when(organisationService.getOrganisationType(any(), any())).thenReturn("University (HEI)");
+        when(organisationService.getOrganisationType(any(), any())).thenReturn(2L);
         when(overheadFileSaver.handleOverheadFileRequest(any())).thenReturn(new ValidationMessages());
         when(sectionService.getById(anyLong())).thenReturn(sectionResourceBuilder.with(id(1L)).with(name("Your funding")).withType(SectionType.FUNDING_FINANCES).build());
         when(sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.PROJECT_COST_FINANCES)).thenReturn(sectionResourceBuilder.withType(SectionType.PROJECT_COST_FINANCES).build(1));

@@ -295,6 +295,32 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     }
 
     @Test
+    public void testCreateProjectFromApplicationAlreadyExists() {
+
+        ProjectResource existingProjectResource = newProjectResource().build();
+        Project existingProject = newProject().withApplication(application).build();
+
+        when(projectRepositoryMock.findOneByApplicationId(applicationId)).thenReturn(existingProject);
+        when(projectMapperMock.mapToResource(existingProject)).thenReturn(existingProjectResource);
+
+        ServiceResult<ProjectResource> project = service.createProjectFromApplication(applicationId);
+        assertTrue(project.isSuccess());
+        assertEquals(existingProjectResource, project.getSuccessObject());
+
+        verify(projectRepositoryMock).findOneByApplicationId(applicationId);
+        verify(projectMapperMock).mapToResource(existingProject);
+
+        verify(costCategoryTypeStrategyMock, never()).getOrCreateCostCategoryTypeForSpendProfile(any(Long.class), any(Long.class));
+        verify(financeChecksGeneratorMock, never()).createMvpFinanceChecksFigures(any(Project.class), any(Organisation.class), any(CostCategoryType.class));
+        verify(financeChecksGeneratorMock, never()).createFinanceChecksFigures(any(Project.class), any(Organisation.class));
+        verify(projectDetailsWorkflowHandlerMock, never()).projectCreated(any(Project.class), any(ProjectUser.class));
+        verify(financeCheckWorkflowHandlerMock, never()).projectCreated(any(PartnerOrganisation.class), any(ProjectUser.class));
+        verify(golWorkflowHandlerMock, never()).projectCreated(any(Project.class), any(ProjectUser.class));
+        verify(projectWorkflowHandlerMock, never()).projectCreated(any(Project.class), any(ProjectUser.class));
+
+    }
+
+    @Test
     public void testInvalidProjectManagerProvided() {
 
         ServiceResult<Void> result = service.setProjectManager(projectId, otherUserId);
@@ -1439,7 +1465,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
          * 2 Business, 1 Academic
          * **/
         OrganisationType businessOrganisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
-        OrganisationType academicOrganisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.ACADEMIC).build();
+        OrganisationType academicOrganisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.RESEARCH).build();
         List<Organisation> organisations = new ArrayList<>();
         Organisation leadOrganisation = organisationRepositoryMock.findOne(application.getLeadOrganisationId());
         leadOrganisation.setOrganisationType(businessOrganisationType);
@@ -1536,7 +1562,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withProjectDetailsStatus(ACTION_REQUIRED).
                 withMonitoringOfficerStatus(NOT_STARTED).
                 withBankDetailsStatus(PENDING).
-                withFinanceChecksStatus(NOT_STARTED).
+                withFinanceChecksStatus(PENDING).
                 withSpendProfileStatus(NOT_STARTED).
                 withOtherDocumentsStatus(ACTION_REQUIRED).
                 withGrantOfferStatus(NOT_REQUIRED).
@@ -1551,7 +1577,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withProjectDetailsStatus(ACTION_REQUIRED, ACTION_REQUIRED).
                 withMonitoringOfficerStatus(NOT_REQUIRED, NOT_REQUIRED).
                 withBankDetailsStatus(NOT_REQUIRED, NOT_STARTED).
-                withFinanceChecksStatus(PENDING, NOT_STARTED).
+                withFinanceChecksStatus(PENDING, ACTION_REQUIRED).
                 withSpendProfileStatus(NOT_STARTED, NOT_STARTED).
                 withOtherDocumentsStatus(NOT_REQUIRED, NOT_REQUIRED).
                 withGrantOfferStatus(NOT_REQUIRED, NOT_REQUIRED).
@@ -1575,7 +1601,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withProjectDetailsStatus(ACTION_REQUIRED).
                 withMonitoringOfficerStatus(NOT_REQUIRED).
                 withBankDetailsStatus(NOT_STARTED).
-                withFinanceChecksStatus(NOT_STARTED).
+                withFinanceChecksStatus(ACTION_REQUIRED).
                 withSpendProfileStatus(NOT_STARTED).
                 withOtherDocumentsStatus(NOT_REQUIRED).
                 withGrantOfferStatus(NOT_REQUIRED).
@@ -1613,7 +1639,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withProjectDetailsStatus(COMPLETE).
                 withMonitoringOfficerStatus(PENDING).
                 withBankDetailsStatus(PENDING).
-                withFinanceChecksStatus(NOT_STARTED).
+                withFinanceChecksStatus(PENDING).
                 withSpendProfileStatus(NOT_STARTED).
                 withOtherDocumentsStatus(ACTION_REQUIRED).
                 withGrantOfferStatus(NOT_REQUIRED).

@@ -4,7 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
-import org.innovateuk.ifs.project.controller.ProjectGrantOfferController;
+import org.innovateuk.ifs.project.projectdetails.controller.ProjectGrantOfferController;
 import org.innovateuk.ifs.project.transactional.ProjectGrantOfferService;
 import org.junit.Before;
 import org.junit.Test;
