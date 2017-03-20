@@ -52,7 +52,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
 
                 ResearchCategoryMapper researchCategoryMapper = new ResearchCategoryMapperImpl();
                 ResearchCategory category = researchCategoryRepository.findByName(researchCategory);
-                created.setResearchCategories(Collections.singleton(researchCategoryMapper.mapToResource(category)));
+                created.setResearchCategory(researchCategoryMapper.mapToResource(category));
                 created.setResubmission(resubmission);
                 created = applicationService.saveApplicationDetails(created.getId(), created)
                         .getSuccessObjectOrThrowException();
