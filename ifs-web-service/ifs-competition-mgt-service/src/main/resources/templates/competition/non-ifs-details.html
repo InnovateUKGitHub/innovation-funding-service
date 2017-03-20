@@ -90,8 +90,6 @@
                          th:attr="data-date-invalid-errormessage=#{validation.standard.date.format}">
                         <input type="hidden"
                                th:field="${form.openDate.milestoneType}" />
-                        <input type="hidden"
-                               th:field="${form.openDate.editable}" />
                         <div class="day">
                             <label class="form-label" for="openDate-day">
                                 <div>Day</div>
@@ -103,7 +101,6 @@
                                    required="required"
                                    min="1"
                                    max="12"
-                                   th:readonly="${!form.openDate.editable}"
                                    th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateday.required}"
                                    th:field="${form.openDate.day}" />
                         </div>
@@ -118,7 +115,6 @@
                                    min="1"
                                    max="31"
                                    id="openDate-month"
-                                   th:readonly="${!form.openDate.editable}"
                                    th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdatemonth.required}"
                                    th:field="${form.openDate.month}" />
                         </div>
@@ -131,7 +127,6 @@
                                    type="number"
                                    placeholder="YYYY"
                                    required="required"
-                                   th:readonly="${!form.openDate.editable}"
                                    th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateyear.required}"
                                    th:field="${form.openDate.year}" />
                         </div>
@@ -151,8 +146,7 @@
                          th:attr="data-date-invalid-errormessage=#{validation.standard.date.format}">
                         <input type="hidden"
                                th:field="${form.closeDate.milestoneType}" />
-                        <input type="hidden"
-                               th:field="${form.closeDate.editable}" />
+                    <div class="date-group" data-future-date="">
                         <div class="day">
                             <label class="form-label" for="closeDate-day">
                                 <div>Day</div>
@@ -164,7 +158,6 @@
                                    required="required"
                                    min="1"
                                    max="31"
-                                   th:readonly="${!form.closeDate.editable}"
                                    th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateday.required}"
                                    th:field="${form.closeDate.day}" />
                         </div>
@@ -179,7 +172,6 @@
                                    min="1"
                                    max="12"
                                    id="closeDate-month"
-                                   th:readonly="${!form.closeDate.editable}"
                                    th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdatemonth.required}"
                                    th:field="${form.closeDate.month}" />
                         </div>
@@ -191,7 +183,6 @@
                                    id="closeDate-year"
                                    type="number"
                                    placeholder="YYYY"
-                                   th:readonly="${!form.closeDate.editable}"
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateyear.required}"
                                    th:field="${form.closeDate.year}" />
@@ -204,7 +195,6 @@
                         <select th:class="${#fields.hasErrors('closeDate.time') ? 'form-control field-error' : 'form-control'}"
                                 id="closeDate-time"
                                 required="required"
-                                th:readonly="${!form.closeDate.editable}"
                                 th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateyear.required}"
                                 th:field="${form.closeDate.time}" >
                             <option th:each="time : ${T(org.innovateuk.ifs.competitionsetup.form.MilestoneTime).values()}"
@@ -226,8 +216,6 @@
                          th:attr="data-date-invalid-errormessage=#{validation.standard.date.format}">
                         <input type="hidden"
                                th:field="${form.applicantNotifiedDate.milestoneType}" />
-                        <input type="hidden"
-                               th:field="${form.applicantNotifiedDate.editable}" />
                         <div class="day">
                             <label class="form-label" for="applicantNotifiedDate-day">
                                 <div>Day</div>
@@ -239,7 +227,6 @@
                                    required="required"
                                    min="1"
                                    max="31"
-                                   th:readonly="${!form.applicantNotifiedDate.editable}"
                                    th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateday.required}"
                                    th:field="${form.applicantNotifiedDate.day}" />
                         </div>
@@ -253,7 +240,6 @@
                                    required="required"
                                    min="1"
                                    max="12"
-                                   th:readonly="${!form.applicantNotifiedDate.editable}"
                                    id="applicantNotifiedDate-month"
                                    th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdatemonth.required}"
                                    th:field="${form.applicantNotifiedDate.month}" />
@@ -266,7 +252,6 @@
                                    id="applicantNotifiedDate-year"
                                    type="number"
                                    placeholder="YYYY"
-                                   th:readonly="${!form.applicantNotifiedDate.editable}"
                                    required="required"
                                    th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateyear.required}"
                                    th:field="${form.applicantNotifiedDate.year}" />

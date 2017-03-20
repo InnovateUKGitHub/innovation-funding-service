@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.validator.constraints.Range;
 import org.innovateuk.ifs.commons.validation.constraints.ValidAggregatedDate;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 
 import java.time.DateTimeException;
@@ -29,7 +30,6 @@ public class MilestoneRowForm {
 
     private MilestoneType milestoneType;
     private String dayOfWeek;
-    private boolean editable;
     private LocalDateTime date;
 
     public MilestoneRowForm() {
@@ -43,12 +43,10 @@ public class MilestoneRowForm {
             this.setMonth(dateTime.getMonth().getValue());
             this.setYear(dateTime.getYear());
             this.setDate(dateTime);
-            this.editable = LocalDateTime.now().isBefore(dateTime);
             if (isTimeOption()) {
                 this.setTime(MilestoneTime.fromLocalDateTime(dateTime));
             }
         } else {
-            this.editable = true;
             if (isTimeOption()) {
                 this.setTime(MilestoneTime.TWELVE_PM);
             }
@@ -99,12 +97,9 @@ public class MilestoneRowForm {
         return milestoneType.name();
     }
 
-    public boolean isEditable() {
-        return editable;
-    }
-
-    public void setEditable(boolean editable) {
-        this.editable = editable;
+    public boolean editableForCompetition(CompetitionResource competitionResource) {
+        return competitionResource.isNonIfs() ||
+                !(competitionResource.isSetupAndLive() && date.isBefore(LocalDateTime.now()));
     }
 
     public boolean isTimeOption() {
