@@ -76,7 +76,7 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
     @Test
     public void findById_userIsLeadApplicant() throws Exception {
         Application application = applicationRepository.findOne(1L);
-        Organisation organisation = setupOrganisation("Hive IT Limited");
+        Organisation organisation = setupOrganisation("Quick Sustainability Limited");
         InviteOrganisation inviteOrganisation = setupInviteOrganisationWithOrganisation(application, organisation);
 
         setLoggedInUser(getLeadApplicantForApplication(application));
@@ -86,7 +86,7 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
     @Test
     public void findById_userIsCollaborator() throws Exception {
         Application application = applicationRepository.findOne(1L);
-        Organisation organisation = setupOrganisation("Hive IT Limited");
+        Organisation organisation = setupOrganisation("Quick Sustainability Limited");
         InviteOrganisation inviteOrganisation = setupInviteOrganisationWithOrganisation(application, organisation);
 
 
@@ -106,7 +106,7 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
     @Test
     public void findById_userIsCollaboratorForDifferentOrganisation() throws Exception {
         Application application = applicationRepository.findOne(1L);
-        Organisation organisation = setupOrganisation("Hive IT Limited");
+        Organisation organisation = setupOrganisation("Quick Sustainability Limited");
         InviteOrganisation inviteOrganisation = setupInviteOrganisationWithOrganisation(application, organisation);
 
         setLoggedInUser(setupCollaboratorForApplicationAndOrganisation(application, setupOrganisation("Other Company Limited")));
@@ -117,7 +117,7 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
     public void getByIdWithInvitesForApplication_userIsLeadApplicant() throws Exception {
         Application application1 = applicationRepository.findOne(1L);
         Application application2 = applicationRepository.findOne(2L);
-        Organisation organisation = setupOrganisation("Hive IT Limited");
+        Organisation organisation = setupOrganisation("Quick Sustainability Limited");
         InviteOrganisation inviteOrganisation = setupInviteOrganisationForMultipleApplications(application1, application2, organisation);
 
         setLoggedInUser(getLeadApplicantForApplication(application1));
@@ -129,7 +129,7 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
     public void getByIdWithInvitesForApplication_userIsCollaborator() throws Exception {
         Application application1 = applicationRepository.findOne(1L);
         Application application2 = applicationRepository.findOne(2L);
-        Organisation organisation = setupOrganisation("Hive IT Limited");
+        Organisation organisation = setupOrganisation("Quick Sustainability Limited");
         InviteOrganisation inviteOrganisation = setupInviteOrganisationForMultipleApplications(application1, application2, organisation);
 
         setLoggedInUser(setupCollaboratorForApplicationAndOrganisation(application1, organisation));
@@ -150,7 +150,7 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
     public void getByIdWithInvitesForApplication_userIsCollaboratorForDifferentOrganisation() throws Exception {
         Application application1 = applicationRepository.findOne(1L);
         Application application2 = applicationRepository.findOne(2L);
-        Organisation organisation = setupOrganisation("Hive IT Limited");
+        Organisation organisation = setupOrganisation("Quick Sustainability Limited");
         InviteOrganisation inviteOrganisation = setupInviteOrganisationForMultipleApplications(application1, application2, organisation);
 
         setLoggedInUser(setupCollaboratorForApplicationAndOrganisation(application1, setupOrganisation("Other Company Limited")));
@@ -161,7 +161,7 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
     public void getByOrganisationIdWithInvitesForApplication_userIsLeadApplicant() throws Exception {
         Application application1 = applicationRepository.findOne(1L);
         Application application2 = applicationRepository.findOne(2L);
-        Organisation organisation = setupOrganisation("Hive IT Limited");
+        Organisation organisation = setupOrganisation("Quick Sustainability Limited");
         InviteOrganisation inviteOrganisation = setupInviteOrganisationForMultipleApplications(application1, application2, organisation);
 
         setLoggedInUser(getLeadApplicantForApplication(application1));
@@ -172,7 +172,7 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
     public void getByOrganisationIdWithInvitesForApplication_userIsCollaborator() throws Exception {
         Application application1 = applicationRepository.findOne(1L);
         Application application2 = applicationRepository.findOne(2L);
-        Organisation organisation = setupOrganisation("Hive IT Limited");
+        Organisation organisation = setupOrganisation("Quick Sustainability Limited");
         InviteOrganisation inviteOrganisation = setupInviteOrganisationForMultipleApplications(application1, application2, organisation);
 
         setLoggedInUser(setupCollaboratorForApplicationAndOrganisation(application1, organisation));
@@ -183,7 +183,7 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
     public void getByOrganisationIdWithInvitesForApplication_userIsCollaboratorForDifferentOrganisation() throws Exception {
         Application application1 = applicationRepository.findOne(1L);
         Application application2 = applicationRepository.findOne(2L);
-        Organisation organisation = setupOrganisation("Hive IT Limited");
+        Organisation organisation = setupOrganisation("Quick Sustainability Limited");
         setupInviteOrganisationForMultipleApplications(application1, application2, organisation);
 
         setLoggedInUser(setupCollaboratorForApplicationAndOrganisation(application1, setupOrganisation("Other Company Limited")));
@@ -193,7 +193,7 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
     @Test
     public void put() throws Exception {
         Application application = applicationRepository.findOne(1L);
-        Organisation organisation = setupOrganisation("Hive IT Limited");
+        Organisation organisation = setupOrganisation("Quick Sustainability Limited");
 
         InviteOrganisation inviteOrganisation = setupInviteOrganisationWithOrganisation(application, organisation);
 
@@ -251,7 +251,7 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
     private InviteOrganisation setupInviteOrganisationWithOrganisation(Application application, Organisation organisation) {
         InviteOrganisation inviteOrganisation = inviteOrganisationRepository.save(newInviteOrganisation()
                 .with(id(null))
-                .withOrganisationName("Hive")
+                .withOrganisationName("Quick Sustainability")
                 .withOrganisation(organisation)
                 .build());
 
@@ -270,7 +270,7 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
     private InviteOrganisation setupInviteOrganisationUnconfirmed(Application application) {
         InviteOrganisation inviteOrganisation = inviteOrganisationRepository.save(newInviteOrganisation()
                 .with(id(null))
-                .withOrganisationName("Hive")
+                .withOrganisationName("Quick Sustainability")
                 .build());
 
         applicationInviteRepository.save(newApplicationInvite()
@@ -288,7 +288,7 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
     private InviteOrganisation setupInviteOrganisationForMultipleApplications(Application application1, Application application2, Organisation organisation) {
         InviteOrganisation inviteOrganisation = inviteOrganisationRepository.save(newInviteOrganisation()
                 .with(id(null))
-                .withOrganisationName("Hive")
+                .withOrganisationName("Quick Sustainability")
                 .withOrganisation(organisation)
                 .build());
 
