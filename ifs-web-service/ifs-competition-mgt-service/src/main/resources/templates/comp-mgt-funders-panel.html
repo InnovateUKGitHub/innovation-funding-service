@@ -26,10 +26,11 @@
     <form method="GET" th:object="${applicationSummaryQueryForm}">
         <div class="search-filters extra-margin">
             <fieldset>
+                <legend class="heading-medium">Filter applications</legend>
                 <div class="grid-row">
                     <div class="column-half">
                         <div class="form-group">
-                            <label class="form-label" for="stringFilter">Search by application number.</label>
+                            <label class="form-label" for="stringFilter">Search by application number</label>
                             <input type="text" class="form-control" id="stringFilter" name="stringFilter" th:field="*{stringFilter}"/>
                         </div>
                     </div>
@@ -46,15 +47,15 @@
                         </div>
                     </div>
                 </div>
-                <div class="grid-row">
-                    <div class="column-half">
-                        <a href="?">Clear all filters</a>
-                    </div>
-                    <div class="column-half">
-                        <button class="button">Filter</button>
-                    </div>
-                </div>
             </fieldset>
+            <div class="grid-row">
+                <div class="column-half">
+                    <a href="?" class="button button-clear">Clear all filters</a>
+                </div>
+                <div class="column-half alignright">
+                    <button class="button no-margin">Filter</button>
+                </div>
+            </div>
         </div>
     </form>
     <div th:if="${fundingNotDecidedForAllApplications}" class="event-alert">
@@ -115,7 +116,7 @@
         </div>
 
     </form>
-    <div th:include="fragments/elements :: general-pagination(pagination=${pagination})" th:remove="tag"/>
+    <th:block th:include="fragments/elements :: general-pagination(pagination=${pagination})" />
 
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
