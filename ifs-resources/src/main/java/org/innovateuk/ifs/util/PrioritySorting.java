@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.util;
 
+import com.sun.istack.internal.Nullable;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
@@ -14,7 +16,7 @@ import static java.util.stream.Collectors.toList;
  */
 public final class PrioritySorting<T> {
     private final List<T> sortedList;
-
+    private static final int BEFORE = -1, AFTER = 1;
     /**
      * Constructor
      * @param list - the list to be sorted by comparing the field of the elements
@@ -24,10 +26,13 @@ public final class PrioritySorting<T> {
      * @param <E> - the comparable type used to sort, returned by the field function.
      */
     public <E extends Comparable<? super E>> PrioritySorting(List<T> list, T priority, Function<T, E> field) {
-        sortedList = list.stream().sorted((a, b)
-                -> field.apply(a).equals(ofNullable(priority).map(field).orElse(null)) ? -1
-                    : field.apply(b).equals(ofNullable(priority).map(field).orElse(null)) ? 1
+        sortedList = list.stream()
+                .sorted((a, b) -> is(a, priority, field) ? BEFORE : is(b, priority, field) ? AFTER
                         : field.apply(a).compareTo(field.apply(b))).collect(toList());
+    }
+
+    private <E extends Comparable<? super E>> boolean is(T a, @Nullable T b, Function<T, E> field) {
+        return field.apply(a).equals(ofNullable(b).map(field).orElse(null));
     }
 
     public List<T> unwrap() {
