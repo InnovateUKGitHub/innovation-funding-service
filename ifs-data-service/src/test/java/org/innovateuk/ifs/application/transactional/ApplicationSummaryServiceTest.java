@@ -22,6 +22,7 @@ import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.innovateuk.ifs.PageableMatcher.srt;
 import static org.innovateuk.ifs.application.domain.FundingDecisionStatus.ON_HOLD;
+import static org.innovateuk.ifs.application.domain.FundingDecisionStatus.UNFUNDED;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.argThat;
@@ -363,12 +364,25 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 
         Page<Application> page = mock(Page.class);
 
-        ApplicationSummaryPageResource resource = mock(ApplicationSummaryPageResource.class);
+        ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
         when(applicationSummaryPageMapper.mapToResource(page)).thenReturn(resource);
 
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusIdInAndIdLike(eq(COMP_ID), eq(Arrays.asList(3L, 4L, 2L)), eq(""), argThat(new PageableMatcher(0, 20, srt("id", ASC))))).thenReturn(page);
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusIdInAndIdLike(
+                eq(COMP_ID),
+                eq(Arrays.asList(3L, 4L, 2L)),
+                eq(""),
+                eq(UNFUNDED),
+                argThat(new PageableMatcher(0, 20, srt("id", ASC)))))
+                .thenReturn(page);
 
-        ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(COMP_ID, "id", 0, 20, of(""));
+        ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService
+                .getSubmittedApplicationSummariesByCompetitionId(
+                        COMP_ID,
+                        "id",
+                        0,
+                        20,
+                        of(""),
+                        of(UNFUNDED));
 
         assertTrue(result.isSuccess());
         assertEquals(0, result.getSuccessObject().getNumber());
