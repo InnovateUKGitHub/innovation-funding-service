@@ -99,7 +99,7 @@ public class FinanceRowServiceImplTest extends BaseServiceUnitTest<FinanceRowSer
                 .withType(metaFieldType).build();
 
         when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
-        when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(organisationType.getName())).thenReturn(organisationFinanceDefaultHandlerMock);
+        when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(organisationType.getId())).thenReturn(organisationFinanceDefaultHandlerMock);
     }
 
     @Mock
@@ -154,13 +154,13 @@ public class FinanceRowServiceImplTest extends BaseServiceUnitTest<FinanceRowSer
 
     @Test
     public void testAddCost() {
-        Organisation organisation = newOrganisation().withOrganisationType(new OrganisationType("Business", null)).build();
+        Organisation organisation = newOrganisation().withOrganisationType(newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build()).build();
         final Competition openCompetition = newCompetition().withCompetitionStatus(CompetitionStatus.OPEN).build();
         Application application = newApplication().withCompetition(openCompetition).build();
 
         when(applicationRepositoryMock.findOne(123L)).thenReturn(application);
         when(organisationRepositoryMock.findOne(456L)).thenReturn(organisation);
-        when(organisationFinanceDelegateMock.getOrganisationFinanceHandler("Business")).thenReturn(organisationFinanceDefaultHandlerMock);
+        when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId())).thenReturn(organisationFinanceDefaultHandlerMock);
 
         ApplicationFinance newFinance = new ApplicationFinance(application, organisation);
 
@@ -210,7 +210,7 @@ public class FinanceRowServiceImplTest extends BaseServiceUnitTest<FinanceRowSer
         ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource().withOrganisation(organisationId).withGrantClaimPercentage(20).build();
         when(applicationFinanceMapperMock.mapToResource(applicationFinance)).thenReturn(applicationFinanceResource);
 
-        when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(organisation.getOrganisationType().getName())).thenReturn(organisationFinanceDefaultHandlerMock);
+        when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(organisation.getOrganisationType().getId())).thenReturn(organisationFinanceDefaultHandlerMock);
 
         Map<FinanceRowType, FinanceRowCostCategory> costs = new HashMap<>();
 

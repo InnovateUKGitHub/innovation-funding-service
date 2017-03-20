@@ -90,34 +90,34 @@ public class ProjectFinanceChecksController {
     private static final String FORM_ATTR = "form";
 
     @Autowired
-    ProjectService projectService;
+    private ProjectService projectService;
 
     @Autowired
-    ApplicationService applicationService;
+    private ApplicationService applicationService;
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Autowired
-    ProjectFinanceService projectFinanceService;
+    private ProjectFinanceService projectFinanceService;
 
     @Autowired
-    FinanceService applicationFinanceService;
+    private FinanceService applicationFinanceService;
 
     @Autowired
-    FinanceCheckService financeCheckService;
+    private FinanceCheckService financeCheckService;
 
     @Autowired
-    OrganisationService organisationService;
+    private OrganisationService organisationService;
 
     @Autowired
-    UserAuthenticationService userAuthenticationService;
+    private UserAuthenticationService userAuthenticationService;
 
     @Autowired
-    SectionService sectionService;
+    private SectionService sectionService;
 
     @Autowired
-    CompetitionService competitionService;
+    private CompetitionService competitionService;
 
     @Autowired
     private ApplicationModelPopulator applicationModelPopulator;
@@ -545,7 +545,7 @@ public class ProjectFinanceChecksController {
     }
 
     private String doViewEligibilityChanges(ProjectResource project, OrganisationResource organisation, Long userId, Model model) {
-        ProjectFinanceChangesViewModel projectFinanceChangesViewModel = ((DefaultProjectFinanceModelManager)financeHandler.getProjectFinanceModelManager(organisation.getOrganisationTypeName())).getProjectFinanceChangesViewModel(false, project, organisation, userId);
+        ProjectFinanceChangesViewModel projectFinanceChangesViewModel = ((DefaultProjectFinanceModelManager)financeHandler.getProjectFinanceModelManager(organisation.getOrganisationType())).getProjectFinanceChangesViewModel(false, project, organisation, userId);
         model.addAttribute("model", projectFinanceChangesViewModel);
         return "project/financecheck/eligibility-changes";
     }

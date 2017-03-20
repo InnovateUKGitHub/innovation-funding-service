@@ -284,7 +284,7 @@ public class ProjectSpendProfileController {
 
         OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
 
-        boolean isUsingJesFinances = financeUtil.isUsingJesFinances(organisationResource.getOrganisationTypeName());
+        boolean isUsingJesFinances = financeUtil.isUsingJesFinances(organisationResource.getOrganisationType());
         Map<Long, BigDecimal> categoryToActualTotal = spendProfileTableCalculator.calculateRowTotal(spendProfileTableResource.getMonthlyCostsPerCategoryMap());
         List<BigDecimal> totalForEachMonth = spendProfileTableCalculator.calculateMonthlyTotals(spendProfileTableResource.getMonthlyCostsPerCategoryMap(), spendProfileTableResource.getMonths().size());
 
