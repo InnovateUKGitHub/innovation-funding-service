@@ -34,15 +34,23 @@
                 This competition is now closed.
             </div>
             <th:block th:unless="${model.nonIfs}">
-                <p class="extra-margin">
+                <p class="extra-margin-top" th:with="loggedInUrl=@{/application/create-authenticated/{competitionId}(competitionId=${model.competitionId})},notLoggedInUrl=@{/application/create/check-eligibility/{competitionId}(competitionId=${model.competitionId})}">
                     <a class="button"
                        th:if="${model.showApplyButton}"
-                       th:href="@{/application/create/check-eligibility/{competitionId}(competitionId=${model.competitionId})}">
-                        Start or continue your application
+                       th:href="${model.userIsLoggedIn ? loggedInUrl : notLoggedInUrl}">
+                        Start new application
                     </a>
                     <button th:unless="${model.showApplyButton}" class="button" disabled="disabled">
-                        Start or continue your application
+                        Start new application
                     </button>
+                </p>
+                <p class="extra-margin" th:if="${model.showApplyButton}">
+                    <th:block th:unless="${model.userIsLoggedIn}">
+                        Or <a th:href="@{/}" >Sign in</a> to continue an existing application
+                    </th:block>
+                    <th:block th:if="${model.userIsLoggedIn}">
+                        Or go to your <a th:href="@{/}">dashboard</a> to continue an existing application
+                    </th:block>
                 </p>
             </th:block>
             <th:block th:if="${model.nonIfs}">

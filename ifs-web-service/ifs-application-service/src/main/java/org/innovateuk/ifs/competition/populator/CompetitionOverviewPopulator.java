@@ -20,7 +20,7 @@ import static java.util.Arrays.asList;
 public class CompetitionOverviewPopulator {
     private List<PublicContentSectionType> excludeSectionTypes = asList(PublicContentSectionType.SEARCH);
 
-    public CompetitionOverviewViewModel populateViewModel(PublicContentItemResource publicContentItemResource, AbstractPublicSectionContentViewModel sectionContentViewModel) {
+    public CompetitionOverviewViewModel populateViewModel(PublicContentItemResource publicContentItemResource, boolean userIsLoggedIn, AbstractPublicSectionContentViewModel sectionContentViewModel) {
         CompetitionOverviewViewModel viewModel = new CompetitionOverviewViewModel();
 
         viewModel.setCompetitionOpenDate(publicContentItemResource.getCompetitionOpenDate());
@@ -29,6 +29,7 @@ public class CompetitionOverviewPopulator {
         viewModel.setCompetitionTitle(publicContentItemResource.getCompetitionTitle());
         viewModel.setNonIfsUrl(publicContentItemResource.getNonIfsUrl());
         viewModel.setNonIfs(publicContentItemResource.getNonIfs());
+        viewModel.setUserIsLoggedIn(userIsLoggedIn);
 
         if(publicContentItemResource.getNonIfs()) {
             viewModel.setShowApplyButton(nonIfsCompetitionIsOpen(viewModel.getCompetitionOpenDate(), viewModel.getRegistrationCloseDate()));
