@@ -25,7 +25,7 @@ public class ApplicationResearchCategoryRestServiceMocksTest extends BaseRestSer
     public void testSaveApplicationInnovationAreaChoice() {
         Long researchCategoryd = 123L;
         Long applicationId = 321L;
-        String expectedUrl = applicationResearchCategoryRestUrl + "/ResearchCategory/" + 321;
+        String expectedUrl = applicationResearchCategoryRestUrl + "/researchCategory/" + 321;
 
         ApplicationResource applicationResource = newApplicationResource().build();
 
