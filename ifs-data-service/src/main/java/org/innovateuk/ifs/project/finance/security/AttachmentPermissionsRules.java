@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isProjectFinanceUser;
 
@@ -65,12 +64,13 @@ public class AttachmentPermissionsRules {
 
     @PermissionRule(value = "PF_ATTACHMENT_READ", description = "Finance Contact users can only fetch an Attachment they are related to.")
     public boolean financeContactUsersCanOnlyFetchAnAttachmentIfUploaderOrIfRelatedToItsQuery(AttachmentResource attachment, UserResource user) {
-        return financeContactUserIsAllowedToFetchAttachment(attachment, user);
+        return projectPartnerIsAllowedToFetchAttachment(attachment, user);
     }
 
     private boolean userCanAccessQueryLinkedToTheAttachment(UserResource user, AttachmentResource attachment) {
         return findQueryTheAttachmentIsLinkedTo(attachment)
-                .map(query -> projectFinanceQueryPermissionRules.projectFinanceUsersCanViewQueries(queryMapper.mapToResource(query), user))
+                .map(query -> projectFinanceQueryPermissionRules.projectFinanceUsersCanViewQueries(queryMapper.mapToResource(query), user) ||
+                        projectFinanceQueryPermissionRules.projectPartnersCanViewQueries(queryMapper.mapToResource(query), user))
                 .orElse(false);
     }
 
@@ -81,10 +81,10 @@ public class AttachmentPermissionsRules {
 
     @PermissionRule(value = "PF_ATTACHMENT_DOWNLOAD", description = "Finance Contact users can only download an Attachment they are related to.")
     public boolean financeContactUsersCanOnlyDownloadAnAttachmentIfRelatedToItsQuery(AttachmentResource attachment, UserResource user) {
-        return financeContactUserIsAllowedToFetchAttachment(attachment, user);
+        return projectPartnerIsAllowedToFetchAttachment(attachment, user);
     }
 
-    private boolean financeContactUserIsAllowedToFetchAttachment(AttachmentResource attachmentResource, UserResource user) {
+    private boolean projectPartnerIsAllowedToFetchAttachment(AttachmentResource attachmentResource, UserResource user) {
         return attachmentMapper.mapToDomain(attachmentResource).wasUploadedBy(user.getId())
                 || userCanAccessQueryLinkedToTheAttachment(user, attachmentResource);
     }
