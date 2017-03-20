@@ -15,6 +15,7 @@ ${database_port}    3306
 *** Test Cases ***
 Custom keyword
     ${OPEN_COMPETITION} =  get comp id from comp title  Connected digital additive manufacturing
+    Log to console       ${OPEN_COMPETITION}
     Set Global Variable  ${OPEN_COMPETITION}
     ${READY_TO_OPEN_COMPETITION} =  get comp id from comp title  Photonics for health
     Set Global Variable  ${READY_TO_OPEN_COMPETITION}
