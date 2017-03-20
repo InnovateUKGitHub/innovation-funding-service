@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation     INFUND-6390 As an Applicant I will be invited to add project costs, organisation and funding details via links within the 'Finances' section of my application
+Documentation     INFUND-6390 As an Applicant I will be invited to add project costs, organisation and funding details via links ƒin the 'Finances' section of my application
 ...
 ...               INFUND-6393 As an Applicant I will be invited to add Staff count and Turnover where the include projected growth table is set to 'No' within the Finances page of Competition setup
 ...
@@ -52,7 +52,10 @@ Comp admin completes ths competition setup
     Given the user should see the element    jQuery=h1:contains("Competition setup")
     Then the user marks the Application as done
     And the user fills in the CS Assessors
-    And the user fills in the Public content and publishes
+    When the user clicks the button/link  link=Public content
+    Then the user fills in the Public content and publishes
+    And the user clicks the button/link  link=Return to setup overview
+    And the user should see the element  css=img[title='The "Public content" section is done']
     When the user clicks the button/link    jQuery=a:contains("Save")
     And the user navigates to the page    ${CA_UpcomingComp}
     Then the user should see the element    jQuery=h2:contains("Ready to open") ~ ul a:contains("${compWithoutGrowth}")
@@ -83,11 +86,11 @@ Applicant fills in the Application Details
     Given the user should see the element    jQuery=h1:contains("Application overview")
     When the user clicks the button/link    link=Application details
     Then the user enters text to a text field    css=#application_details-title    ${applicationTitle}
-    And the user selects technical feasibility and no to resubmission and an innovation area
     And the user enters text to a text field    css=#application_details-startdate_day    ${day}
     And the user enters text to a text field    css=#application_details-startdate_month    ${month}
     And the user enters text to a text field    css=#application_details-startdate_year    ${nextyear}
     And the user enters text to a text field    css=#application_details-duration    24
+    And the user selects technical feasibility and no to resubmission and an innovation area
     When The user clicks the button/link    jQuery=button[name="mark_as_complete"]
     Then the user clicks the button/link    link=Application Overview
     And the user should see the element     jQuery=li:contains("Application details") > .task-status-complete
@@ -114,7 +117,10 @@ Once the project growth table is selected
     When the user decides about the growth table    yes    Yes
     Then the user marks the Application as done
     And the user fills in the CS Assessors
-    And the user fills in the Public content and publishes
+    When the user clicks the button/link  link=Public content
+    Then the user fills in the Public content and publishes
+    And the user clicks the button/link  link=Return to setup overview
+    And the user should see the element  css=img[title='The "Public content" section is done']
     When the user clicks the button/link    jQuery=a:contains("Save")
     And the user navigates to the page    ${CA_UpcomingComp}
     Then the user should see the element    jQuery=h2:contains("Ready to open") ~ ul a:contains("${compWITHGrowth}")
@@ -193,7 +199,7 @@ Funding subsection opens when Appl details and organisation info are provided
 Organisation server side validation when yes
     [Documentation]    INFUND-6393
     [Tags]
-    [Setup]    the user navigates to Your-finances page    ${compWITHGrowth}
+    [Setup]    the user navigates to the growth table finances
     Given the user clicks the button/link    link=Your organisation
     When the user clicks the button/link    jQuery=button:contains("Mark as complete")
     #Then the user should see the element    jQuery=.error-summary-list:contains("Enter your organisation size.")
@@ -241,7 +247,7 @@ Organisation client side validation when yes
 Mark Organisation as complete when yes
     [Documentation]    INFUND-6393
     [Tags]
-    [Setup]    the user navigates to Your-finances page    ${compWITHGrowth}
+    [Setup]    the user navigates to the growth table finances
     Given the user clicks the button/link    link=Your organisation
     And the user selects medium organisation size
     Then the user enters text to a text field    css=input[name$="month"]    12
@@ -263,7 +269,7 @@ The Lead Applicant is able to edit and re-submit when yes
 Applicant can view and edit project growth table
     [Documentation]    INFUND-6395
     [Tags]
-    Given the user navigates to Your-finances page    ${compWITHGrowth}
+    Given the user navigates to the growth table finances
     When the user clicks the button/link    link=Your organisation
     Then the user should view the project growth table
     And the user can edit the project growth table
@@ -331,15 +337,15 @@ the user should see his finances empty
     the user should see the element    jQuery=thead:contains("Total project costs") ~ *:contains("£0")
 
 the user selects technical feasibility and no to resubmission and an innovation area
-    # Often those labels need double click. Thus i made a separate keyword to looks more tidy
-    the user clicks the button/link    jQuery=button:contains(Change your innovation area)
-    the user clicks the button/link    jQuery=label[for="innovationAreaChoice-5"]
-    the user clicks the button/link    jQuery=label[for="innovationAreaChoice-5"]
+    the user clicks the button/link    jQuery=legend:contains("Research category")
+    the user clicks the button/link    jQuery=button:contains("Choose your research category")
+    the user clicks the button twice   jQuery=label[for^="researchCategoryChoice"]:contains("Feasibility studies")
     the user clicks the button/link    jQuery=button:contains(Save)
-    the user clicks the button/link    jQuery=label[for="financePosition-cat-33"]
-    the user clicks the button/link    jQuery=label[for="financePosition-cat-33"]
-    the user clicks the button/link    jQuery=label[for="application.resubmission-no"]
-    the user clicks the button/link    jQuery=label[for="application.resubmission-no"]
+    the user clicks the button/link    jQuery=button:contains("Change your innovation area")
+    the user clicks the button twice   jQuery=label[for="innovationAreaChoice-5"]
+    the user clicks the button/link    jQuery=button:contains(Save)
+    the user clicks the button twice   jQuery=label[for="application.resubmission-no"]
+
 
 the user decides about the growth table
     [Arguments]    ${edit}    ${read}
@@ -438,3 +444,8 @@ the lead applicant invites an existing user
     Input Text                         css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input  ${EMAIL_INVITED}
     the user clicks the button/link    jQuery=.button:contains("Save changes")
     the user logs out if they are logged in
+
+the user navigates to the growth table finances
+    the user navigates to the page  ${DASHBOARD_URL}
+    the user clicks the button/link    jQuery=a:contains('Untitled application'):last
+    the user clicks the button/link  link=Your finances

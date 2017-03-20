@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.assessment.controller.profile;
 
 import org.innovateuk.ifs.assessment.form.profile.AssessorProfileAgreementForm;
-import org.innovateuk.ifs.assessment.model.profile.AssessorProfileAgreementAnnexModelPopulator;
 import org.innovateuk.ifs.assessment.model.profile.AssessorProfileAgreementModelPopulator;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -36,16 +34,7 @@ public class AssessorProfileAgreementController {
     private AssessorProfileAgreementModelPopulator assessorProfileAgreementModelPopulator;
 
     @Autowired
-    private AssessorProfileAgreementAnnexModelPopulator assessorProfileAgreementAnnexModelPopulator;
-
-    @Autowired
     private UserService userService;
-
-    public enum AgreementAnnexParameter {
-        A,
-        B,
-        C
-    }
 
     private static final String FORM_ATTR_NAME = "form";
 
@@ -56,12 +45,6 @@ public class AssessorProfileAgreementController {
         ProfileAgreementResource profileAgreementResource = userService.getProfileAgreement(loggedInUser.getId());
         populateFormWithExistingValues(form, profileAgreementResource);
         return doViewAgreement(model, profileAgreementResource);
-    }
-
-    @RequestMapping(value = "/annex/{annex}", method = RequestMethod.GET)
-    public String getAnnex(Model model, @PathVariable("annex") AgreementAnnexParameter annex) {
-        model.addAttribute("model", assessorProfileAgreementAnnexModelPopulator.populateModel(annex));
-        return "profile/annex";
     }
 
     @RequestMapping(method = RequestMethod.POST)

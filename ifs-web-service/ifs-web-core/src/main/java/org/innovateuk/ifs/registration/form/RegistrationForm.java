@@ -1,10 +1,12 @@
 package org.innovateuk.ifs.registration.form;
 
-import org.innovateuk.ifs.commons.validation.ValidationConstants;
-import org.innovateuk.ifs.validator.constraints.FieldMatch;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.innovateuk.ifs.commons.validation.ValidationConstants;
+import org.innovateuk.ifs.user.resource.Disability;
+import org.innovateuk.ifs.user.resource.Gender;
+import org.innovateuk.ifs.validator.constraints.FieldMatch;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -40,9 +42,6 @@ public class RegistrationForm {
     })
     private String retypedPassword;
 
-    @NotEmpty(message = "{validation.standard.title.selectionrequired}")
-    @Size(max = 5, message = "{validation.standard.title.length.max}")
-    @Pattern(regexp = "^(Mr|Miss|Mrs|Ms|Dr)$", message = "{validation.standard.title.format}")
     private String title;
 
     @NotEmpty(message = "{validation.standard.firstname.required}")
@@ -62,13 +61,13 @@ public class RegistrationForm {
     private String lastName;
 
     @NotNull(message = "{validation.standard.gender.selectionrequired}")
-    private String gender;
+    private String gender = Gender.NOT_STATED.name();
 
     @NotNull(message = "{validation.standard.ethnicity.selectionrequired}")
-    private String ethnicity;
+    private String ethnicity = "7";
 
     @NotNull(message = "{validation.standard.disability.selectionrequired}")
-    private String disability;
+    private String disability = Disability.NOT_STATED.name();
 
     @NotEmpty(message = "{validation.standard.phonenumber.required}")
     @Size.List ({
@@ -114,10 +113,6 @@ public class RegistrationForm {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getFirstName() {
         return firstName;
     }
@@ -154,23 +149,11 @@ public class RegistrationForm {
         return gender;
     }
 
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
     public String getEthnicity() {
         return ethnicity;
     }
 
-    public void setEthnicity(String ethnicity) {
-        this.ethnicity = ethnicity;
-    }
-
     public String getDisability() {
         return disability;
-    }
-
-    public void setDisability(String disability) {
-        this.disability = disability;
     }
 }
