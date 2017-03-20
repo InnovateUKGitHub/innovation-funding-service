@@ -212,7 +212,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Override
     public ServiceResult<ProjectResource> createProjectFromApplication(Long applicationId) {
-        return createProjectFromApplicationId(applicationId);
+        return createSingletonProjectFromApplicationId(applicationId);
     }
 
     @Override
@@ -269,7 +269,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Override
     public ServiceResult<Void> createProjectsFromFundingDecisions(Map<Long, FundingDecision> applicationFundingDecisions) {
-        applicationFundingDecisions.keySet().stream().filter(d -> applicationFundingDecisions.get(d).equals(FundingDecision.FUNDED)).forEach(this::createProjectFromApplicationId);
+        applicationFundingDecisions.keySet().stream().filter(d -> applicationFundingDecisions.get(d).equals(FundingDecision.FUNDED)).forEach(this::createSingletonProjectFromApplicationId);
         return serviceSuccess();
     }
 
@@ -932,13 +932,15 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return pu.getOrganisation().getId().equals(leadPartnerOrganisation.getId());
     }
 
-    private ServiceResult<ProjectResource> createProjectFromApplicationId(final Long applicationId) {
+    private ServiceResult<ProjectResource> createSingletonProjectFromApplicationId(final Long applicationId) {
 
-        // never allow another project to be created for the same application
-        ServiceResult<ProjectResource> existingProjectResult = getByApplicationId(applicationId);
-        if (existingProjectResult != null && existingProjectResult.isSuccess()) {
-            return existingProjectResult;
-        }
+        return checkForExistingProjectWithApplicationId(applicationId).handleSuccessOrFailure(
+                failure -> createProjectFromApplicationId(applicationId),
+                success -> serviceSuccess(success)
+        );
+    }
+
+    private ServiceResult<ProjectResource> createProjectFromApplicationId(final Long applicationId) {
 
         return getApplication(applicationId).andOnSuccess(application -> {
 
@@ -978,6 +980,10 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                             andOnSuccess(() -> generateFinanceCheckEntitiesForNewProject(newProject)).
                             andOnSuccessReturn(() -> projectMapper.mapToResource(newProject)));
         });
+    }
+
+    private ServiceResult<ProjectResource> checkForExistingProjectWithApplicationId(Long applicationId) {
+        return getByApplicationId(applicationId);
     }
 
     private ServiceResult<Void> createProcessEntriesForNewProject(Project newProject) {
