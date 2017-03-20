@@ -166,7 +166,7 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
         when(organisationService.getOrganisationById(organisationId)).thenReturn(partnerOrganisation);
         when(projectService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
         when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
-        when(financeCheckServiceMock.loadQueries(any())).thenReturn(ServiceResult.serviceSuccess(Collections.emptyList()));
+        when(financeCheckServiceMock.getQueries(any())).thenReturn(ServiceResult.serviceSuccess(Collections.emptyList()));
 
         MvcResult result = mockMvc.perform(get("/project/123/partner-organisation/234/finance-checks")).
                 andExpect(view().name("project/finance-checks")).
@@ -202,7 +202,7 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
         when(organisationService.getOrganisationById(organisationId)).thenReturn(partnerOrganisation);
         when(projectService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
         when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
-        when(financeCheckServiceMock.loadQueries(projectFinanceResource.getId())).thenReturn(ServiceResult.serviceSuccess(Collections.singletonList(sampleQuery())));
+        when(financeCheckServiceMock.getQueries(projectFinanceResource.getId())).thenReturn(ServiceResult.serviceSuccess(Collections.singletonList(sampleQuery())));
 
         MvcResult result = mockMvc.perform(get("/project/123/partner-organisation/234/finance-checks")).
                 andExpect(view().name("project/finance-checks")).

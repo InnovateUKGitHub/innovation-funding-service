@@ -10,17 +10,27 @@ items:
     selector:
       deploymentconfig: idp
     strategy:
-      resources: {}
+      type: Rolling
+      rollingParams:
+        timeoutSeconds: 600
+        maxSurge: 2
+        maxUnavailable: 0
     template:
       metadata:
         labels:
           deploymentconfig: idp
       spec:
         containers:
-        - image: innovateuk/ifs-shib-idp:0.4.1
+        - image: innovateuk/ifs-shib-idp:0.4.6.1
           name: idp
           imagePullPolicy: IfNotPresent
           env:
+          - name: SSLCERT
+            value: "<<SSLCERT>>"
+          - name: SSLCACERT
+            value: "<<SSLCACERT>>"
+          - name: SSLKEY
+            value: "<<SSLKEY>>"
           - name: SPHOST
             value: <<SHIB-ADDRESS>>
           - name: IDPHOST
