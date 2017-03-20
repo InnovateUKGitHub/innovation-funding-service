@@ -14,9 +14,7 @@ allprojects {
 
 apply from: "openshift-support.gradle"
 
-if(project.hasProperty('profile') && profile == 'automated') {
-    ext.openshiftEnv = project.properties['openshiftEnv'] ?: "automated"
-}
+
 
 if(!project.hasProperty('osTestArgs')) {
     ext.osTestArgs = ""
