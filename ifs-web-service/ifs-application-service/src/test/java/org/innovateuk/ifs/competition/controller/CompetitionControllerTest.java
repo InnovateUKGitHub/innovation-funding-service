@@ -2,14 +2,14 @@ package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.populator.CompetitionOverviewPopulator;
-import org.innovateuk.ifs.competition.populator.publiccontent.section.SummaryViewModelPopulator;
+import org.innovateuk.ifs.competition.populator.publiccontent.section.*;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.viewmodel.CompetitionOverviewViewModel;
 import org.innovateuk.ifs.competition.viewmodel.publiccontent.AbstractPublicSectionContentViewModel;
-import org.innovateuk.ifs.competition.viewmodel.publiccontent.section.SummaryViewModel;
+import org.innovateuk.ifs.competition.viewmodel.publiccontent.section.*;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,8 +24,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemResourceBuilder.newPublicContentItemResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -44,14 +43,54 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
     private AbstractPublicSectionContentViewModel sectionContentViewModel;
 
     @Mock
+    private DatesViewModelPopulator datesViewModelPopulator;
+
+    @Mock
+    private EligibilityViewModelPopulator eligibilityViewModelPopulator;
+
+    @Mock
+    private HowToApplyViewModelPopulator howToApplyViewModelPopulator;
+
+    @Mock
+    private ScopeViewModelPopulator scopeViewModelPopulator;
+
+    @Mock
     private SummaryViewModelPopulator summaryViewModelPopulator;
+
+    @Mock
+    private SupportingInformationViewModelPopulator supportingInformationViewModelPopulator;
+
+
 
     @Before
     public void setup() {
+        when(sectionContentViewModel.getSectionType()).thenReturn(PublicContentSectionType.DATES);
+        when(datesViewModelPopulator.getType()).thenReturn(PublicContentSectionType.DATES);
+        when(datesViewModelPopulator.populate(any(PublicContentResource.class), anyBoolean())).thenReturn(new DatesViewModel());
+
+        when(sectionContentViewModel.getSectionType()).thenReturn(PublicContentSectionType.ELIGIBILITY);
+        when(eligibilityViewModelPopulator.getType()).thenReturn(PublicContentSectionType.ELIGIBILITY);
+        when(eligibilityViewModelPopulator.populate(any(PublicContentResource.class), anyBoolean())).thenReturn(new EligibilityViewModel());
+
+        when(sectionContentViewModel.getSectionType()).thenReturn(PublicContentSectionType.HOW_TO_APPLY);
+        when(howToApplyViewModelPopulator.getType()).thenReturn(PublicContentSectionType.HOW_TO_APPLY);
+        when(howToApplyViewModelPopulator.populate(any(PublicContentResource.class), anyBoolean())).thenReturn(new HowToApplyViewModel());
+
         when(sectionContentViewModel.getSectionType()).thenReturn(PublicContentSectionType.SUMMARY);
         when(summaryViewModelPopulator.getType()).thenReturn(PublicContentSectionType.SUMMARY);
         when(summaryViewModelPopulator.populate(any(PublicContentResource.class), anyBoolean())).thenReturn(new SummaryViewModel());
-        controller.setSectionPopulator(asList(summaryViewModelPopulator));
+
+        when(sectionContentViewModel.getSectionType()).thenReturn(PublicContentSectionType.SCOPE);
+        when(scopeViewModelPopulator.getType()).thenReturn(PublicContentSectionType.SCOPE);
+        when(scopeViewModelPopulator.populate(any(PublicContentResource.class), anyBoolean())).thenReturn(new ScopeViewModel());
+
+        when(sectionContentViewModel.getSectionType()).thenReturn(PublicContentSectionType.SUPPORTING_INFORMATION);
+        when(supportingInformationViewModelPopulator.getType()).thenReturn(PublicContentSectionType.SUPPORTING_INFORMATION);
+        when(supportingInformationViewModelPopulator.populate(any(PublicContentResource.class), anyBoolean())).thenReturn(new SupportingInformationViewModel());
+
+        controller.setSectionPopulator(asList(datesViewModelPopulator, eligibilityViewModelPopulator,
+                howToApplyViewModelPopulator, summaryViewModelPopulator,
+                scopeViewModelPopulator, supportingInformationViewModelPopulator));
     }
 
     @Test
@@ -75,7 +114,7 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
         viewModel.setCompetitionCloseDate(closeDate);
         viewModel.setCompetitionTitle("Title");
 
-        when(overviewPopulator.populateViewModel(any(PublicContentItemResource.class), anyBoolean(), any(AbstractPublicSectionContentViewModel.class))).thenReturn(viewModel);
+        when(overviewPopulator.populateViewModel(any(PublicContentItemResource.class), anyBoolean(), anyList())).thenReturn(viewModel);
 
         mockMvc.perform(get("/competition/{id}/overview", compId))
                 .andExpect(status().isOk())

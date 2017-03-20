@@ -67,7 +67,7 @@
 
 <!-- ===========================Front door - competition dates ==================================== -->
 <th:block th:fragment="dates(section, competitionId)">
-    <section id="competition-dates">
+    <section id="dates">
         <dl class="standard-definition-list column-definition-list">
             <th:block th:each="publicContentDate : ${section.sortedEvents}">
                 <dt class="extra-margin"><span class="heading-medium" th:text="${publicContentDate.dateTimeFormatted}"></span></dt>

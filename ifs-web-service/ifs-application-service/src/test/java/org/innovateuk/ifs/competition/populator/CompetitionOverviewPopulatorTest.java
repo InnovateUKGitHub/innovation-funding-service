@@ -3,7 +3,6 @@ package org.innovateuk.ifs.competition.populator;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.viewmodel.CompetitionOverviewViewModel;
 import org.innovateuk.ifs.competition.viewmodel.publiccontent.AbstractPublicSectionContentViewModel;
 import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestServiceImpl;
@@ -15,11 +14,11 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemResourceBuilder.newPublicContentItemResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CompetitionOverviewPopulatorTest {
@@ -39,11 +38,13 @@ public class CompetitionOverviewPopulatorTest {
     private final String nonIfsUrl = "www.google.co.uk";
 
     @Mock
-    private AbstractPublicSectionContentViewModel sectionContentViewModel;
+    private List<AbstractPublicSectionContentViewModel> sectionContentViewModel;
 
     @Before
     public void setup() {
-        when(sectionContentViewModel.getSectionType()).thenReturn(PublicContentSectionType.SUMMARY);
+
+
+        //when(sectionContentViewModel);
     }
 
     @Test
