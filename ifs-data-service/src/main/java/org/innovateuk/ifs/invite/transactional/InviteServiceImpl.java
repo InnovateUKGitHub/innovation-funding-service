@@ -331,12 +331,11 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
             removeProcessRolesOnApplication(processRoles);
 
             InviteOrganisation inviteOrganisation = applicationInvite.getInviteOrganisation();
-            List<ApplicationInvite> organisationInvites = inviteOrganisation.getInvites();
 
-            if (organisationInvites.size() < 2) {
+            if (inviteOrganisation.getInvites().size() < 2) {
                 inviteOrganisationRepository.delete(inviteOrganisation);
             } else {
-                organisationInvites.remove(applicationInvite);
+                inviteOrganisation.getInvites().remove(applicationInvite);
                 inviteOrganisationRepository.save(inviteOrganisation);
             }
 
