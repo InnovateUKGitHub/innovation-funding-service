@@ -160,6 +160,16 @@ public class ApplicationModelPopulator {
         }
     }
 
+    public void addResearchCategoryId(ApplicationResource application, Model model) {
+
+        model.addAttribute("rsCategoryId", application.getResearchCategories().stream().findFirst().map(cat -> cat.getId()).orElse(null));
+    }
+
+    public void addResearchCategoryName(ApplicationResource application, Model model) {
+
+        model.addAttribute("researchCategoryName", application.getResearchCategories().stream().findFirst().map(cat -> cat.getName()).orElse(""));
+    }
+
     public Optional<OrganisationResource> getUserOrganisation(Long userId, List<ProcessRoleResource> userApplicationRoles) {
 
         return userApplicationRoles.stream()
@@ -169,20 +179,17 @@ public class ApplicationModelPopulator {
     }
 
     public void addApplicationInputs(ApplicationResource application, Model model) {
-
-        model.addAttribute("applicationResearchCategory", application.getResearchCategory().getName());
-
-        model.addAttribute("applicationTitle", application.getName());
-        model.addAttribute("applicationDuration", String.valueOf(application.getDurationInMonths()));
+        model.addAttribute("application_title", application.getName());
+        model.addAttribute("application_duration", String.valueOf(application.getDurationInMonths()));
         if(application.getStartDate() == null){
-            model.addAttribute("applicationStartdateDay", "");
-            model.addAttribute("applicationStartdateMonth", "");
-            model.addAttribute("applicationStartdateYear", "");
+            model.addAttribute("application_startdate_day", "");
+            model.addAttribute("application_startdate_month", "");
+            model.addAttribute("application_startdate_year", "");
         }
         else{
-            model.addAttribute("applicationStartdateDay", String.valueOf(application.getStartDate().getDayOfMonth()));
-            model.addAttribute("applicationStartdateMonth", String.valueOf(application.getStartDate().getMonthValue()));
-            model.addAttribute("applicationStartdateYear", String.valueOf(application.getStartDate().getYear()));
+            model.addAttribute("application_startdate_day", String.valueOf(application.getStartDate().getDayOfMonth()));
+            model.addAttribute("application_startdate_month", String.valueOf(application.getStartDate().getMonthValue()));
+            model.addAttribute("application_startdate_year", String.valueOf(application.getStartDate().getYear()));
         }
     }
 
