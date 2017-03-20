@@ -27,7 +27,11 @@ public interface CompetitionInviteRestService {
 
     RestResult<AssessorCreatedInvitePageResource> getCreatedInvites(long competitionId, int page);
 
-    RestResult<List<AssessorInviteOverviewResource>> getInvitationOverview(long competitionId);
+    RestResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
+                                                                         int page,
+                                                                         Optional<Long> innovationArea,
+                                                                         Optional<ParticipantStatusResource> participantStatus,
+                                                                         Optional<Boolean> compliant);
 
     RestResult<CompetitionInviteStatisticsResource> getInviteStatistics(long competitionId);
 

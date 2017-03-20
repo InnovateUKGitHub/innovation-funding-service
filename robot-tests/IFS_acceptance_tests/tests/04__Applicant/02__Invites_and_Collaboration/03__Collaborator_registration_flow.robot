@@ -79,7 +79,7 @@ Catapult search (accept invitation flow)
     When the user clicks the button/link    jQuery=.button:contains("Continue")
     Then the user should see the text in the page    Digital Catapult
     And the user should see the text in the page    Operating Address
-    And the user clicks the button/link    jQuery=.button:contains("Confirm and continue")
+    And the user clicks the button/link    jQuery=.button:contains("Save and continue")
     When the user navigates to the page  ${server}/registration/register
     Then the user fills the create account form    Thierry    Henry
 

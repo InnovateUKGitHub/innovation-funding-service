@@ -23,12 +23,12 @@ import org.innovateuk.ifs.user.domain.*;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
-
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
+import java.util.stream.Collectors;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -65,7 +65,7 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
     }
 
     @Test
-    public void testGetCompetitionStatus(){
+    public void testGetCompetitionStatus() {
         Long competitionId = 123L;
         Competition competition = newCompetition().withId(competitionId).build();
 
@@ -195,10 +195,18 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
         assertTrue(result.isSuccess());
 
         CompetitionProjectsStatusResource competitionProjectsStatusResource = result.getSuccessObject();
+        assertTrue(projectsGetSortedByApplicationId(competitionProjectsStatusResource.getProjectStatusResources()));
         assertEquals(3, competitionProjectsStatusResource.getProjectStatusResources().size());
         assertEquals(new Integer(3), competitionProjectsStatusResource.getProjectStatusResources().get(0).getNumberOfPartners());
         assertEquals(new Integer(3), competitionProjectsStatusResource.getProjectStatusResources().get(1).getNumberOfPartners());
         assertEquals(new Integer(3), competitionProjectsStatusResource.getProjectStatusResources().get(2).getNumberOfPartners());
+    }
+
+    private boolean projectsGetSortedByApplicationId(List<ProjectStatusResource> after) {
+        return after.stream()
+                .sorted(Comparator.comparing(ProjectStatusResource::getApplicationNumber))
+                .collect(Collectors.toList())
+                .equals(after);
     }
 
     @Test
@@ -341,7 +349,6 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
         ServiceResult<ProjectStatusResource> resultFailure = service.getProjectStatusByProjectId(projectId);
         assertTrue(resultFailure.isFailure());
     }
-
 
 
     @Test
@@ -616,8 +623,8 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
 
 
     private Project createProjectStatusResource(Long projectId, ApprovalType spendProfileStatus,
-            ApprovalType otherDocsApproved, Boolean golReadyToApprove, Boolean golIsSent, Boolean golIsApproved,
-            LocalDateTime otherDocsSubmittedDate) {
+                                                ApprovalType otherDocsApproved, Boolean golReadyToApprove, Boolean golIsSent, Boolean golIsApproved,
+                                                LocalDateTime otherDocsSubmittedDate) {
 
         Application application = newApplication().build();
         Organisation organisation = newOrganisation().build();
@@ -650,7 +657,7 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
 
         when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(projectId)).thenReturn(serviceSuccess(spendProfileStatus));
         when(golWorkflowHandlerMock.isApproved(project)).thenReturn(golIsApproved);
-        if(!golIsApproved) {
+        if (!golIsApproved) {
             when(golWorkflowHandlerMock.isReadyToApprove(project)).thenReturn(golReadyToApprove);
             if (!golReadyToApprove)
                 when(golWorkflowHandlerMock.isSent(project)).thenReturn(golIsSent);
