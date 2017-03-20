@@ -205,7 +205,7 @@ Partner can invite others to his own organisation
     And The user enters text to a text field    jQuery=tr:nth-of-type(2) td:nth-of-type(1) input    Mark
     And The user enters text to a text field    jQuery=tr:nth-of-type(2) td:nth-of-type(2) input    mark21@innovateuk.com
     And the user clicks the button/link    jQuery=button:contains("Update organisation")
-    Then The user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(3):contains("Invite pending")
+    Then The user should see the element    jQuery=td:contains("mark21@innovateuk.com") + td:contains("Invite pending")
 
 Lead should see the accepted partner in the assign list
     [Documentation]    INFUND-1779
