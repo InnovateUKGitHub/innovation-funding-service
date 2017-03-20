@@ -46,9 +46,6 @@ Validations for invalid inputs
     And the user should see an error    The address cannot be blank.
     And the user should see an error    The postcode cannot be blank.
     And the user should see an error    The town cannot be blank.
-    And the user should see an error    Please select a disability.
-    And the user should see an error    Please select an ethnicity.
-    And the user should see an error    Please select a gender.
 
 Valid Profile Update
     [Documentation]    INFUND-1480
@@ -62,9 +59,6 @@ the assessor updates profile details
     The user enters text to a text field    id=firstName    Joy
     The user enters text to a text field    id=lastName    Archer
     the user moves focus to the element    id=firstName
-    the user selects the radio button    gender    gender2
-    the user selects the radio button    ethnicity    ethnicity1
-    the user selects the radio button    disability    disability3
     the user enters text to a text field    id=addressForm.addressLine1    7, Phoenix house
     the user enters text to a text field    id=addressForm.town    Reading
     the user enters text to a text field    id=addressForm.postcode    RG1 7UH
@@ -74,9 +68,6 @@ the assessor updates profile details
 the saved changes are visible
     the user should see the text in the page    Joy
     the user should see the text in the page    Archer
-    the user should see the text in the page    Male
-    the user should see the text in the page    White
-    the user should see the text in the page    Prefer not to say
     the user should see the text in the page    18549731414
 
 User opens the edit details form
