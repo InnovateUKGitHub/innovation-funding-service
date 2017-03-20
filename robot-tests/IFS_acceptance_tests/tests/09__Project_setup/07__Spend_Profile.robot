@@ -56,6 +56,9 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               INFUND-5549 As a Competitions team member I want to see the Innovation Lead  listed in the Spend profile approval page so that I can confirm who is required to approve the Spend Profiles
 ...
 ...               INFUND-6148 Negative numbers on spend profile table generation not disallowed by rounding logic
+...
+...               INFUND-7422 On rejection non-lead partners should still see a tick instead of an hourglass, until edit rights have been returned to them
+
 Suite Setup       all previous sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -84,7 +87,7 @@ Project Finance cancels the generation of the Spend Profile
     [Tags]
     When the user clicks the button/link    jQuery=.generate-spend-profile-main-button
     Then the user should see the text in the page    This will generate a flat spend profile for all project partners.
-    When the user clicks the button/link    jQuery=.button:contains("Cancel")
+    When the user clicks the button/link    jQuery=button:contains("Cancel")
 
 Project Finance generates the Spend Profile
     [Documentation]    INFUND-5194, INFUND-5987
@@ -93,7 +96,7 @@ Project Finance generates the Spend Profile
     And the user clicks the button/link     jQuery=#generate-spend-profile-modal-button
     Then the user should see the element    jQuery=.success-alert p:contains("The finance checks have been approved and profiles generated.")
     When the user navigates to the page     ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(4) td:nth-of-type(4).ok
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(4).ok
 
 
 Lead partner can view spend profile page
@@ -113,7 +116,7 @@ Lead partner can view spend profile page
     And the user should see the text in the page    ${Katz_Name} - Spend profile
     # And the user clicks the button/link    link=Spend profile overview    # TODO please enable this line and delete the following one when working on INFUND-8132
     And the user navigates to the page    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Katz_Id}/spend-profile
-    And the user should see the text in the page    This overview shows the spend profile status of each partner in your project.
+    And the user should see the text in the page    This overview shows the spend profile status of each organisation in your project.
     [Teardown]    the user goes back to the previous page
 
 Lead partner can see correct project start date and duration
@@ -127,19 +130,19 @@ Calculations in the spend profile table
     [Documentation]    INFUND-3764, INFUND-6148
     [Tags]    HappyPath
     Given the user should see the element    jQuery=div.spend-profile-table
-    Then element should contain    css=.spend-profile-table tbody tr:nth-child(1) td:nth-last-child(2)    £ 8,000     #Labour
-    Then element should contain    css=.spend-profile-table tbody tr:nth-child(2) td:nth-last-child(2)    £ 2,000     #Overheads
-    Then element should contain    css=.spend-profile-table tbody tr:nth-child(3) td:nth-last-child(2)    £ 10,000    #Materials
-    Then element should contain    css=.spend-profile-table tbody tr:nth-child(4) td:nth-last-child(2)    £ 100    #Capital usage
-    Then element should contain    css=.spend-profile-table tbody tr:nth-child(5) td:nth-last-child(2)    £ 10,000    #Subcontracting
-    Then element should contain    css=.spend-profile-table tbody tr:nth-child(6) td:nth-last-child(2)    £ 50    #Travel & subsistence
-    Then element should contain    css=.spend-profile-table tbody tr:nth-child(7) td:nth-last-child(2)    £ 10,000    #Other costs
+    Then element should contain    css=.spend-profile-table tbody tr:nth-child(1) td:nth-last-child(2)    £ 4,622     #Labour
+    Then element should contain    css=.spend-profile-table tbody tr:nth-child(2) td:nth-last-child(2)    £ 0     #Overheads
+    Then element should contain    css=.spend-profile-table tbody tr:nth-child(3) td:nth-last-child(2)    £ 150,300    #Materials
+    Then element should contain    css=.spend-profile-table tbody tr:nth-child(4) td:nth-last-child(2)    £ 828    #Capital usage
+    Then element should contain    css=.spend-profile-table tbody tr:nth-child(5) td:nth-last-child(2)    £ 135,000    #Subcontracting
+    Then element should contain    css=.spend-profile-table tbody tr:nth-child(6) td:nth-last-child(2)    £ 8,955    #Travel & subsistence
+    Then element should contain    css=.spend-profile-table tbody tr:nth-child(7) td:nth-last-child(2)    £ 1,650    #Other costs
     #${duration} is No of Months + 1, due to header
-    And the sum of tds equals the total    div.spend-profile-table    1    38    8000     # Labour
-    And the sum of tds equals the total    div.spend-profile-table    3    38    10000    # Materials
-    And the sum of tds equals the total    div.spend-profile-table    5    38    10000    # Subcontracting
-    And the sum of tds equals the total    div.spend-profile-table    6    38    50    # Travel & subsistence
-    And the sum of tds equals the total    div.spend-profile-table    7    38    10000    # Other costs
+    And the sum of tds equals the total    div.spend-profile-table    1    38    4622     # Labour
+    And the sum of tds equals the total    div.spend-profile-table    3    38    150300    # Materials
+    And the sum of tds equals the total    div.spend-profile-table    5    38    135000    # Subcontracting
+    And the sum of tds equals the total    div.spend-profile-table    6    38    8955    # Travel & subsistence
+    And the sum of tds equals the total    div.spend-profile-table    7    38    1650    # Other costs
 
 Lead Partner can see Spend profile summary
     [Documentation]    INFUND-3971, INFUND-6148
@@ -158,46 +161,46 @@ Lead partner can edit his spend profile with invalid values
     # TODO please delete the above two lines when INFUND-8138 is completed
     When the user clicks the button/link               jQuery=.button:contains("Edit spend profile")
     Then the user should not see the text in the element  css=#content > form   -
-    And the text box should be editable               css=#row-24-0  # Labour-June17
-    When the user enters text to a text field          css=#row-24-0    2899
-    And the user moves focus to the element            css=#row-24-2
+    And the text box should be editable               css=.spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(1) input  # Labour-June17
+    When the user enters text to a text field          css=.spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(1) input   520
+    And the user moves focus to the element            css=.spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(3) input
     Then the user should see the text in the page      Unable to submit spend profile.
     And the user should see the text in the page       Your total costs are higher than your eligible costs
-    Then the field has value                           css=#row-total-24    £ 10,669
-    And the user should see the element                jQuery=.cell-error #row-total-24
+    Then the field has value                           css=.spend-profile-table tbody .form-group-row:nth-child(1) input[id^='row-total-']    £ 5,000
+    And the user should see the element                jQuery=.form-group-row:nth-child(1) .cell-error input[id^='row-total-']
     And the user clicks the button/link                jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should see the text in the page      You cannot submit your spend profile. Your total costs are higher than the eligible project costs.
     And the user should see the element                jQuery=.error-summary-list li:contains("Labour")
     When the user clicks the button/link               jQuery=.button:contains("Edit spend profile")
-    Then the user enters text to a text field          css=#row-24-0    222
-    And the user should not see the element            jQuery=.cell-error #row-total-24
-    When the user enters text to a text field          css=#row-26-2    -55  # Materials-Aug17
-    And the user moves focus to the element            css=#row-26-1
+    Then the user enters text to a text field          css=.spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(1) input    142
+    And the user should not see the element            jQuery=.form-group-row:nth-child(1) .cell-error input[id^='row-total-']
+    When the user enters text to a text field          css=.spend-profile-table tbody .form-group-row:nth-child(2) td:nth-of-type(3) input    -55  # Materials-Aug17
+    And the user moves focus to the element            css=.spend-profile-table tbody .form-group-row:nth-child(2) td:nth-of-type(2) input
     Then the user should see the element               jQuery=.error-summary-list li:contains("This field should be 0 or higher")
-    When the user enters text to a text field          css=#row-24-2    35.25
-    And the user moves focus to the element            css=#row-25-2
+    When the user enters text to a text field          css=.spend-profile-table tbody .form-group-row:nth-child(2) td:nth-of-type(3) input    35.25
+    And the user moves focus to the element            css=.spend-profile-table tbody .form-group-row:nth-child(2) td:nth-of-type(3) input
     Then the user should see the text in the page      This field can only accept whole numbers
-    When the user enters text to a text field          css=#row-24-2    abcd
-    And the user moves focus to the element            css=#row-25-2
+    When the user enters text to a text field          css=.spend-profile-table tbody .form-group-row:nth-child(3) td:nth-of-type(3) input    abcd
+    And the user moves focus to the element            css=.spend-profile-table tbody .form-group-row:nth-child(3) td:nth-of-type(3) input
     Then the user should see the text in the page      Unable to submit spend profile
     When the user clicks the button/link               jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should not see the text in the page  internal server error
-    When the user enters text to a text field          css=#row-26-2    200
-    And the user moves focus to the element            css=#row-26-1
+    When the user enters text to a text field          css=.spend-profile-table tbody .form-group-row:nth-child(3) td:nth-of-type(3) input    200
+    And the user moves focus to the element            css=.spend-profile-table tbody .form-group-row:nth-child(3) td:nth-of-type(2) input
     And the user should not see the element            jQuery=.error-summary-list li:contains("This field should be 0 or higher")
-    When the user enters text to a text field          css=#row-26-2    278
-    And the user moves focus to the element            css=#row-26-1
+    When the user enters text to a text field          css=.spend-profile-table tbody .form-group-row:nth-child(3) td:nth-of-type(3) input    4175
+    And the user moves focus to the element            css=.spend-profile-table tbody .form-group-row:nth-child(3) td:nth-of-type(2) input
     Then the user should not see the element           jQuery=.error-summary-list li:contains("This field should be 0 or higher")
-    And the user should not see the element            jQuery=.cell-error #row-total-24
+    And the user should not see the element            jQuery=.form-group-row:nth-child(1) .cell-error input[id^='row-total-']
     Then the user clicks the button/link               jQuery=.button:contains("Save and return to spend profile overview")
 
 
 Lead partner can submit empty cells and this is handled gracefully
     [Documentation]    INFUND-6146
-    When the user enters text to a text field    css=#row-24-0    ${empty}
+    When the user enters text to a text field    css=.spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(1) input    ${empty}
     And the user clicks the button/link    jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should not see an error in the page
-    [Teardown]    the user enters text to a text field    css=#row-24-0    2899
+    [Teardown]    the user enters text to a text field    css=.spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(1) input    142
 
 Lead partner can edit his spend profile with valid values
     [Documentation]    INFUND-3765
@@ -205,14 +208,14 @@ Lead partner can edit his spend profile with valid values
     Given the user navigates to the page                ${external_spendprofile_summary}/review
     When the user clicks the button/link                jQuery=.button:contains("Edit spend profile")
     And the user should not see the element             css=table a[type="number"]    # checking here that the table is not read-only
-    Then the text box should be editable                css=#row-24-0  # Labour
-    When the user enters text to a text field           css=#row-24-0    200
-    And the user moves focus to the element             css=#row-24-1
-    Then the field has value                            css=#row-total-24    £ 7,970
+    Then the text box should be editable                css=.spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(1) input  # Labour
+    When the user enters text to a text field           css=.spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(1) input    140
+    And the user moves focus to the element             css=.spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(2) input
+    Then the field has value                            css=.spend-profile-table tbody .form-group-row:nth-child(1) input[id^='row-total-']    £ 4,620
     And the user should not see the text in the page    Unable to save spend profile
-    When the user enters text to a text field           css=#row-28-1    0  # Subcontracting
-    And the user moves focus to the element             css=#row-28-2
-    Then the field has value                            css=#row-total-28    £ 9,723
+    When the user enters text to a text field           css=.spend-profile-table tbody .form-group-row:nth-child(5) td:nth-of-type(2) input    0  # Subcontracting
+    And the user moves focus to the element             css=.spend-profile-table tbody .form-group-row:nth-child(5) td:nth-of-type(3) input
+    Then the field has value                            css=.spend-profile-table tbody .form-group-row:nth-child(5) input[id^='row-total-']    £ 131,250
     And the user should not see the text in the page    Unable to save spend profile
     Then the user clicks the button/link                jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should not see the text in the page   You cannot submit your spend profile. Your total costs are higher than the eligible project costs.
@@ -222,7 +225,7 @@ Lead Partners Spend profile summary gets updated when edited
     [Tags]    HappyPath
     Given the user navigates to the page           ${external_spendprofile_summary}/review
     Then the user should see the text in the page  Project costs for financial year
-    And the user sees the text in the element      jQuery=.grid-container table tr:nth-child(1) td:nth-child(2)    £ 10,957
+    And the user sees the text in the element      jQuery=.grid-container table tr:nth-child(1) td:nth-child(2)    £ 80,009
 
 Project Manager can see Spend Profile in Progress
     [Documentation]    done during refactoring, no ticket attached
@@ -276,7 +279,7 @@ Non-lead partner can view spend profile page
     And the user should see the text in the page    We have reviewed and confirmed your project costs.
     And the user should see the text in the page    ${Meembee_Name} - Spend profile
     And the user clicks the button/link    link=Project setup status
-    And the user should see the text in the page    You need to complete the following steps before this project can begin.
+    And the user should see the text in the page    You need to complete the following steps before you can start your project.
     [Teardown]    the user goes back to the previous page
 
 Non-lead partner can see correct project start date and duration
@@ -289,7 +292,7 @@ Non-lead partner can see correct project start date and duration
 Industrial partner can choose cancel on the dialogue
     [Documentation]    INFUND-6852
     When the user clicks the button/link    jQuery=a:contains("Submit to lead partner")
-    And the user clicks the button/link     jQuery=.button:contains("Cancel")
+    And the user clicks the button/link     jQuery=button:contains("Cancel")
     Then the user should see the element    jQuery=a:contains("Submit to lead partner")
 
 Non-lead partner marks Spend Profile as complete
@@ -319,7 +322,7 @@ Project Manager doesn't have the option to send spend profiles until all partner
     When the user clicks the button/link             link=Project setup status
     Then the user should see the element             jQuery=li.require-action:nth-child(6)
     When the user clicks the button/link        link=Spend profile
-    Then the user should not see the element    jQuery=.button:contains("Review and send total project")
+    Then the user should not see the element    jQuery=.button:contains("Review spend profiles")
     #The complete name of the button is anyways not selected. Please use the short version of it.
 
 Academic partner can view spend profile page
@@ -332,7 +335,7 @@ Academic partner can view spend profile page
     And the user should see the text in the page    We have reviewed and confirmed your project costs.
     And the user should see the text in the page    ${Zooveo_Name} - Spend profile
     And the user clicks the button/link    link=Project setup status
-    And the user should see the text in the page    You need to complete the following steps before this project can begin.
+    And the user should see the text in the page    You need to complete the following steps before you can start your project.
     [Teardown]    the user goes back to the previous page
 
 Academic partner can see correct project start date and duration
@@ -353,9 +356,9 @@ Academic partner spend profile server side validations
     [Documentation]    INFUND-5846
     [Tags]
     Given the user clicks the button/link            jQuery=.button:contains("Edit spend profile")
-    When the user enters text to a text field        css=#row-31-0    -1    # Directly incurredStaff
-    And the user enters text to a text field         css=#row-32-2    3306  # Travel and subsistence
-    And the user moves focus to the element          css=#row-33-5
+    When the user enters text to a text field        css=.spend-profile-table tbody .form-group-row:nth-child(5) td:nth-of-type(1) input    -1    # Directly incurredStaff
+    And the user enters text to a text field         css=.spend-profile-table tbody .form-group-row:nth-child(6) td:nth-of-type(3) input    3306  # Travel and subsistence
+    And the user moves focus to the element          css=.spend-profile-table tbody .form-group-row:nth-child(7) td:nth-of-type(6) input
     And the user clicks the button/link              jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should see the text in the page    Your total costs are higher than your eligible costs.
     And the user should see the text in the page     This field should be 0 or higher.
@@ -363,21 +366,21 @@ Academic partner spend profile server side validations
 Academic partner spend profile client side validations
     [Documentation]    INFUND-5846
     [Tags]
-    When the user enters text to a text field          css=#row-31-0    3  # Staff
-    And the user enters text to a text field           css=#row-32-0    1  # Travel
-    And the user enters text to a text field           css=#row-33-0    1  # Other - Directly incurred
-    And the user enters text to a text field           css=#row-35-0    2  # Estates
-    And the user enters text to a text field           css=#row-36-0    0  # Other - Directly allocated
-    And the user enters text to a text field           css=#row-39-0    0  # Other - Exceptions
+    When the user enters text to a text field          css=.spend-profile-table tbody .form-group-row:nth-child(1) td:nth-of-type(1) input    3  # Staff
+    And the user enters text to a text field           css=.spend-profile-table tbody .form-group-row:nth-child(2) td:nth-of-type(1) input    1  # Travel
+    And the user enters text to a text field           css=.spend-profile-table tbody .form-group-row:nth-child(3) td:nth-of-type(1) input    1  # Other - Directly incurred
+    And the user enters text to a text field           css=.spend-profile-table tbody .form-group-row:nth-child(5) td:nth-of-type(1) input    2  # Estates
+    And the user enters text to a text field           css=.spend-profile-table tbody .form-group-row:nth-child(6) td:nth-of-type(1) input    0  # Other - Directly allocated
+    And the user enters text to a text field           css=.spend-profile-table tbody .form-group-row:nth-child(9) td:nth-of-type(1) input    0  # Other - Exceptions
     And the user moves focus to the element            link=Project setup status
     Then the user should not see the text in the page  This field should be 0 or higher
-    When the user makes all values zeros               32    ${project_duration}  # Travel
-    Then the user makes all values zeros               33    ${project_duration}  # Other - Directly incurred
-    And the user makes all values zeros                35    ${project_duration}  # Estates
-    When the user enters text to a text field          css=#row-36-1    0  # Other - Directly allocated
-    And the user enters text to a text field           css=#row-36-2    0  # Other - Directly allocated
-    And the user enters text to a text field           css=#row-39-1    0  # Other - Exceptions
-    And the user enters text to a text field           css=#row-39-2    0  # Other - Exceptions
+    When the user makes all values zeros               2    ${project_duration}  # Travel
+    Then the user makes all values zeros               3    ${project_duration}  # Other - Directly incurred
+    And the user makes all values zeros                5    ${project_duration}  # Estates
+    When the user enters text to a text field          css=.spend-profile-table tbody .form-group-row:nth-child(6) td:nth-of-type(2) input   0  # Other - Directly allocated
+    And the user enters text to a text field           css=.spend-profile-table tbody .form-group-row:nth-child(6) td:nth-of-type(3) input    0  # Other - Directly allocated
+    And the user enters text to a text field           css=.spend-profile-table tbody .form-group-row:nth-child(9) td:nth-of-type(2) input    0  # Other - Exceptions
+    And the user enters text to a text field           css=.spend-profile-table tbody .form-group-row:nth-child(9) td:nth-of-type(3) input    0  # Other - Exceptions
     And the user should not see the text in the page   Your total costs are higher than your eligible costs
     #TODO Replace keyword -the user makes all values zeros- ticket: INFUND-6851
 
@@ -392,7 +395,7 @@ Academic partner edits spend profile and this updates on the table
 Academic partner can choose cancel on the dialogue
     [Documentation]    INFUND-6852
     When the user clicks the button/link    jQuery=a:contains("Submit to lead partner")
-    And the user clicks the button/link     jQuery=.button:contains("Cancel")
+    And the user clicks the button/link     jQuery=button:contains("Cancel")
     Then the user should see the element    jQuery=a:contains("Submit to lead partner")
 
 Academic partner marks Spend Profile as complete
@@ -433,7 +436,7 @@ Project Manager can view partners' spend profiles
     And the user should not see the element         jQuery=.button:contains("Mark as complete")
     And the user goes back to the previous page
     When the user should see all spend profiles as complete
-    Then the user should see the element            jQuery=a:contains("Review and send total project")
+    Then the user should see the element            jQuery=a:contains("Review spend profiles")
     # Note that the above button cannot be cought with its complete text, due to a break
 
 Partners are not able to see the spend profile summary page
@@ -449,14 +452,14 @@ Project Manager can view combined spend profile
     [Tags]    HappyPath
     [Setup]    log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
     Given the user navigates to the page     ${external_spendprofile_summary}
-    When the user clicks the button/link     jQuery=.button:contains("Review and send total project profile")
+    When the user clicks the button/link     jQuery=.button:contains("Review spend profiles")
     Then the user should see the text in the page    This is the proposed spend profile for your project.
     And the user should see the text in the page     Your submitted spend profile will be used as the base for your project spend over the following financial years.
 
 Project Manager can choose cancel on the dialogue
     [Documentation]    INFUND-3767
     When the user clicks the button/link    jQuery=.button:contains("Send project spend profile")
-    And the user clicks the button/link     jQuery=.button:contains("Cancel")
+    And the user clicks the button/link     jQuery=button:contains("Cancel")
     Then the user should see the element    jQuery=.button:contains("Send project spend profile")
 
 Project Manager can see the button Allow edits
@@ -501,9 +504,9 @@ Project Manager can send the project's spend profiles
     [Tags]    HappyPath
     [Setup]    log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
     Given the user navigates to the page     ${external_spendprofile_summary}
-    When the user clicks the button/link     jQuery=.button:contains("Review and send total project profile")
+    When the user clicks the button/link     jQuery=.button:contains("Review spend profiles")
     Then the user clicks the button/link     jQuery=.button:contains("Send project spend profile")
-    And the user should see the element      jQuery=.button:contains("Cancel")
+    And the user should see the element      jQuery=button:contains("Cancel")
     When the user clicks the button/link     jQuery=.modal-confirm-spend-profile-totals .button[value="Send"]
 
 PM's Spend profile Summary page gets updated after submit
@@ -541,7 +544,7 @@ Project Finance is able to see Spend Profile approval page
     [Tags]    HappyPath
     [Setup]    Log in as a different user    &{internal_finance_credentials}
     Given the user navigates to the page     ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
-    And the user clicks the button/link      jQuery=#table-project-status tbody tr:nth-child(4) td.status.action:nth-child(6) a
+    And the user clicks the button/link      jQuery=#table-project-status tbody tr:nth-child(3) td.status.action:nth-child(6) a
     Then the user should be redirected to the correct page    ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/spend-profile/approval
     And the user should see the element    jQuery=#content div.grid-row div.column-third.alignright.extra-margin h2:contains("Spend profile")
     And the user should not see the element    jQuery=h2:contains("The spend profile has been approved")
@@ -599,14 +602,14 @@ Status updates correctly for internal user's table
     [Tags]    Experian    HappyPath
     [Setup]    log in as a different user    &{Comp_admin1_credentials}
     When the user navigates to the page      ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
-    Then the user should see the element     jQuery=#table-project-status tr:nth-of-type(4) td:nth-of-type(1).status.ok         # Project details
-    And the user should see the element      jQuery=#table-project-status tr:nth-of-type(4) td:nth-of-type(2).status.ok         # MO
-    And the user should see the element      jQuery=#table-project-status tr:nth-of-type(4) td:nth-of-type(3).status.ok         # Bank details
-    And the user should see the element      jQuery=#table-project-status tr:nth-of-type(4) td:nth-of-type(4).status.ok         # Finance checks
-    And the user should see the element      jQuery=#table-project-status tr:nth-of-type(4) td:nth-of-type(5).status.action     # Spend Profile
-    And the user should see the element      jQuery=#table-project-status tr:nth-of-type(4) td:nth-of-type(6).status.ok         # Other Docs
-    And the user should see the element      jQuery=#table-project-status tr:nth-of-type(4) td:nth-of-type(7).status            # GOL
-    And the user should not see the element    jQuery=#table-project-status tr:nth-of-type(4) td:nth-of-type(7).status.waiting    # specifically checking regression issue INFUND-7119
+    Then the user should see the element     jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(1).status.ok         # Project details
+    And the user should see the element      jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(2).status.ok         # MO
+    And the user should see the element      jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(3).status.ok         # Bank details
+    And the user should see the element      jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(4).status.ok         # Finance checks
+    And the user should see the element      jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(5).status.action     # Spend Profile
+    And the user should see the element      jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(6).status.ok         # Other Docs
+    And the user should see the element      jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(7).status            # GOL
+    And the user should not see the element    jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(7).status.waiting    # specifically checking regression issue INFUND-7119
 
 Project Finance is able to Reject Spend Profile
     [Documentation]    INFUND-2638, INFUND-5617
@@ -625,7 +628,7 @@ Status updates to a cross for the internal user's table
     [Documentation]    INFUND-6977
     [Tags]
     When the user navigates to the page      ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(4) td:nth-of-type(5).status.rejected
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(5).status.rejected
 
 Lead partner can see that the spend profile has been rejected
     [Documentation]    INFUND-6977
@@ -638,12 +641,28 @@ Lead partner can see that the spend profile has been rejected
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
     [Teardown]    the user goes back to the previous page
 
+Non Lead partners should still see a tick instead of an hourglass when spend profile has been rejected
+    [Documentation]    INFUND-7422
+    [Tags]
+    Given log in as a different user        ${PS_SP_APPLICATION_PARTNER_EMAIL}    ${short_password}
+    When the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
+    Then the user should see the element    jQuery=li.complete:nth-of-type(6)
+    When the user clicks the button/link    link=status of my partners
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(5)
+    Given log in as a different user        ${PS_SP_APPLICATION_ACADEMIC_EMAIL}   ${short_password}
+    When the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
+    Then the user should see the element    jQuery=li.complete:nth-of-type(6)
+    When the user clicks the button/link    link=status of my partners
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(5)
+
 Lead partner no longer has the 'submitted' view of the spend profiles
-    [Documentation]    INFUND-6977
-    When the user clicks the button/link    link=Spend profile
+    [Documentation]    INFUND-6977, INFUND-7422
+    Given Log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
+    When the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
+    And the user clicks the button/link    link=Spend profile
     Then the user should not see the element    jQuery=.success-alert.extra-margin-bottom p:contains("All project spend profiles have been sent to Innovate UK.")
-    And the user should see the text in the page    This overview shows the spend profile status of each partner in your project.
-    And the user should see the element    jQuery=.button:contains("Review and send total project profile")
+    And the user should see the text in the page    This overview shows the spend profile status of each organisation in your project.
+    And the user should see the element    jQuery=.button:contains("Review spend profiles")
 
 Lead partner can return edit rights to other project partners
     [Documentation]    INFUND-6977
@@ -698,9 +717,9 @@ Lead partner can send the combined spend profile
     [Documentation]    INFUND-6977
     [Setup]    log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
     Given the user navigates to the page     ${external_spendprofile_summary}
-    When the user clicks the button/link     jQuery=.button:contains("Review and send total project profile")
+    When the user clicks the button/link     jQuery=.button:contains("Review spend profiles")
     Then the user clicks the button/link     jQuery=.button:contains("Send project spend profile")
-    And the user should see the element      jQuery=.button:contains("Cancel")
+    And the user should see the element      jQuery=button:contains("Cancel")
     When the user clicks the button/link     jQuery=.modal-confirm-spend-profile-totals .button[value="Send"]
 
 
@@ -726,8 +745,8 @@ Status updates correctly for internal user's table after approval
     [Documentation]    INFUND-5543
     [Tags]
     When the user navigates to the page     ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(4) td:nth-of-type(5).status.ok
-    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(4) td:nth-of-type(7).status.action   # GOL
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(5).status.ok
+    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(7).status.action   # GOL
 
 Project Finance still has a link to the spend profile after approval
     [Documentation]    INFUND-6046
@@ -764,10 +783,11 @@ the sum of tds equals the total
     \    ${sum} =    Evaluate    ${sum}+${cell}
     Should Be Equal As Integers    ${sum}    ${total}
 
+
 the user makes all values zeros
     [Arguments]    ${row}    ${project_duration}
-    : FOR    ${i}    IN RANGE    0    ${project_duration}
-    \    the user enters text to a text field  css=#row-${row}-${i}  0
+    : FOR    ${i}    IN RANGE    1    ${project_duration}
+    \    the user enters text to a text field  css=.spend-profile-table tbody .form-group-row:nth-child(${row}) td:nth-of-type(${i}) input  0
 
 the text box should be editable
     [Arguments]    ${element}
@@ -840,7 +860,7 @@ project manager submits other documents
     choose file                       name=collaborationAgreement    ${upload_folder}/testing.pdf
     choose file                       name=exploitationPlan    ${upload_folder}/testing.pdf
     the user reloads the page
-    the user clicks the button/link    jQuery=.button:contains("Submit partner documents")
+    the user clicks the button/link    jQuery=.button:contains("Submit documents")
     the user clicks the button/link    jQuery=.button:contains("Submit")
 
 project finance approves other documents
@@ -866,28 +886,18 @@ project finance approves Viability for
     the user clicks the button/link    jQuery=.modal-confirm-viability .button:contains("Confirm viability")
 
 project finance approves Eligibility
-    the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/finance-check/organisation/${Katz_Id}
-    the user fills in and approves project costs
-    the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/finance-check/organisation/${Meembee_Id}
-    the user fills in and approves project costs
-    the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/finance-check/organisation/${Zooveo_Id}
-    the user selects the checkbox      costs-reviewed
-    the user clicks the button/link    jQuery=.button:contains("Approve finances")
-    the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve eligible costs")
+    the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/finance-check/organisation/${Katz_Id}/eligibility
+    the user approves project costs
+    the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/finance-check/organisation/${Meembee_Id}/eligibility
+    the user approves project costs
+    the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/finance-check/organisation/${Zooveo_Id}/eligibility
+    the user approves project costs
 
-the user fills in and approves project costs
-    Input Text    name=costs[0].value    £ 8,000
-    Input Text    name=costs[1].value    £ 2,000
-    Input Text    name=costs[2].value    £ 10,000
-    Input Text    name=costs[3].value    £ 100
-    Input Text    name=costs[4].value    £ 10,000
-    Input Text    name=costs[5].value    £ 50
-    Input Text    name=costs[6].value    £ 10,000
-    the user moves focus to the element    css=[for="costs-reviewed"]
-    the user sees the text in the element    css=#content tfoot td    £ 40,150
-    the user selects the checkbox    costs-reviewed
+the user approves project costs
+    the user selects the checkbox    project-eligible
+    the user selects the option from the drop-down menu    Green    id=rag-rating
     the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
-    the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve eligible costs")
+    the user clicks the button/link    name=confirm-eligibility
 
 
 the user returns edit rights for the organisation

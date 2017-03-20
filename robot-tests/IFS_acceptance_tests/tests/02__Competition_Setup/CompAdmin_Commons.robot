@@ -73,12 +73,12 @@ the user fills in the CS Eligibility
     #Elements in this page need double clicking
 
 the user fills in the CS Milestones
-    [Arguments]  ${day}  ${month}  ${nextyear}
+    [Arguments]  ${todayday}  ${day}  ${month}  ${nextyear}
     the user clicks the button/link       link=Milestones
-    the user enters text to a text field  jQuery=th:contains("Briefing event") ~ td.day input    ${day}
+    the user enters text to a text field  jQuery=th:contains("Briefing event") ~ td.day input    ${todayday}
     the user enters text to a text field  jQuery=th:contains("Briefing event") ~ td.month input  ${month}
     the user enters text to a text field  jQuery=th:contains("Briefing event") ~ td.year input  ${nextyear}
-    the user enters text to a text field  jQuery=th:contains("Submission date") ~ td.day input  ${day}
+    the user enters text to a text field  jQuery=th:contains("Submission date") ~ td.day input  ${todayday}
     the user enters text to a text field  jQuery=th:contains("Submission date") ~ td.month input  ${month}
     the user enters text to a text field  jQuery=th:contains("Submission date") ~ td.year input  ${nextyear}
     the user enters text to a text field  jQuery=th:contains("Allocate assessors") ~ td.day input  ${day}
@@ -130,13 +130,11 @@ the user fills in the CS Assessors
     the user should see the element  jQuery=img[title$="is done"] + h3:contains("Assessors")
 
 the user fills in the Public content and publishes
-    # Navigate to the public content page
-    the user clicks the button/link  link=Public content
     # Fill in the Competition information and search
     the user clicks the button/link             link=Competition information and search
     the user enters text to a text field        id=short-description        Short public description
     the user enters text to a text field        id=funding-range            Up to £1million
-    the user enters text to a text field        id=eligibility-summary      Summary of eligiblity
+    the user enters text to a text field        css=[labelledby="eligibility-summary"]      Summary of eligiblity
     the user enters text to a text field        id=keywords  Search, Testing, Robot
     the user clicks the button/link             jQuery=button:contains("Save and return")
     the user should see the element             css=img[title='The "Competition information and search" section is marked as done']
@@ -177,8 +175,6 @@ the user fills in the Public content and publishes
     the user should see the element         css=img[title='The "Supporting information" section is marked as done']
     # Publish and return
     the user clicks the button/link         jQuery=button:contains("Publish public content")
-    the user clicks the button/link         link=Return to setup overview
-    the user should see the element         css=img[title='The "Public content" section is done']
 
 Change the open date of the Competition in the database to one day before
     [Arguments]  ${competition}
@@ -187,6 +183,6 @@ Change the open date of the Competition in the database to one day before
 
 the internal user navigates to public content
     [Arguments]  ${comp}
-    the user navigates to the page      ${CA_UpcomingComp}
+    the user navigates to the page     ${CA_UpcomingComp}
     the user clicks the button/link    link=${comp}
     the user clicks the button/link    link=Public content

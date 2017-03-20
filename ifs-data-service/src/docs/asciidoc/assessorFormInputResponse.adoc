@@ -22,7 +22,7 @@ include::{snippets}/assessorFormInputResponse/get-all-assessor-form-input-respon
 ==== Curl Example
 include::{snippets}/assessorFormInputResponse/get-all-assessor-form-input-responses-by-assessment-and-question/curl-request.adoc[]
 
-=== Update Assessor Form Input Response ===
+=== Update Assessor Form Input Response
 ==== Request
 include::{snippets}/assessorFormInputResponse/update-assessor-form-input-response/http-request.adoc[]
 include::{snippets}/assessorFormInputResponse/update-assessor-form-input-response/request-fields.adoc[]
@@ -43,3 +43,15 @@ include::{snippets}/assessorFormInputResponse/get-application-aggregate-scores/r
 
 ==== Curl Example
 include::{snippets}/assessorFormInputResponse/get-application-aggregate-scores/curl-request.adoc[]
+
+=== Get Assessment Aggregate information by Application and Question
+==== Request
+include::{snippets}/assessorFormInputResponse/get-assessment-aggregate-feedback/http-request.adoc[]
+include::{snippets}/assessorFormInputResponse/get-assessment-aggregate-feedback/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessorFormInputResponse/get-assessment-aggregate-feedback/http-response.adoc[]
+include::{snippets}/assessorFormInputResponse/get-assessment-aggregate-feedback/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/assessorFormInputResponse/get-assessment-aggregate-feedback/curl-request.adoc[]

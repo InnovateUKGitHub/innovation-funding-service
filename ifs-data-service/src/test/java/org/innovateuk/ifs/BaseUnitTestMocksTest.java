@@ -55,10 +55,12 @@ import org.innovateuk.ifs.form.transactional.FormInputService;
 import org.innovateuk.ifs.invite.mapper.*;
 import org.innovateuk.ifs.invite.repository.*;
 import org.innovateuk.ifs.invite.transactional.EthnicityService;
+import org.innovateuk.ifs.invite.transactional.InviteOrganisationService;
 import org.innovateuk.ifs.invite.transactional.InviteProjectService;
 import org.innovateuk.ifs.invite.transactional.RejectionReasonService;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.service.NotificationService;
+import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
@@ -105,6 +107,7 @@ import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.user.mapper.*;
 import org.innovateuk.ifs.user.repository.*;
 import org.innovateuk.ifs.user.transactional.*;
+import org.innovateuk.ifs.validator.util.ValidationUtil;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.junit.Before;
 import org.mockito.Mock;
@@ -275,6 +278,12 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected InviteOrganisationRepository inviteOrganisationRepositoryMock;
+
+    @Mock
+    protected InviteOrganisationMapper inviteOrganisationMapperMock;
+
+    @Mock
+    protected InviteOrganisationService inviteOrganisationServiceMock;
 
     @Mock
     protected ApplicationInviteRepository applicationInviteRepositoryMock;
@@ -547,13 +556,13 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected FinanceCheckRepository financeCheckRepositoryMock;
 
     @Mock
-    protected ContractService contractServiceMock;
+    protected AgreementService agreementServiceMock;
 
     @Mock
-    protected ContractRepository contractRepositoryMock;
+    protected AgreementRepository agreementRepositoryMock;
 
     @Mock
-    protected ContractMapper contractMapperMock;
+    protected AgreementMapper agreementMapperMock;
 
     @Mock
     protected FileTemplateRenderer rendererMock;
@@ -592,6 +601,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected NotificationSender notificationSender;
 
     @Mock
+    protected NotificationTemplateRenderer notificationTemplateRendererMock;
+
+    @Mock
     protected ActivityStateRepository activityStateRepositoryMock;
 
     @Mock
@@ -626,6 +638,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ApplicationAssessorPageMapper applicationAssessorPageMapperMock;
+
+    @Mock
+    protected ValidationUtil validationUtilMock;
 
     @Before
     public void setupMockInjection() {

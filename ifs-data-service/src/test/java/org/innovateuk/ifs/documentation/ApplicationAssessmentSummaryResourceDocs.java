@@ -14,6 +14,7 @@ public class ApplicationAssessmentSummaryResourceDocs {
     public static final FieldDescriptor[] applicationAssessmentSummaryFields = {
             fieldWithPath("id").description("Id of the application"),
             fieldWithPath("name").description("Name of the application"),
+            fieldWithPath("innovationArea").description("The application's innovation area"),
             fieldWithPath("competitionId").description("Id of the competition"),
             fieldWithPath("competitionName").description("Name of the competition"),
             fieldWithPath("leadOrganisation").description("The lead organisation"),

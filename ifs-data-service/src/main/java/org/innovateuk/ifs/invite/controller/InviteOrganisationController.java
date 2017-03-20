@@ -14,16 +14,28 @@ public class InviteOrganisationController {
     @Autowired
     private InviteOrganisationService service;
 
-    @RequestMapping("/{id}")
-    public RestResult<InviteOrganisationResource> findById(@PathVariable("id") final Long id) {
+    @GetMapping(value = "/{id}")
+    public RestResult<InviteOrganisationResource> findById(@PathVariable("id") Long id) {
         return service.findOne(id).toGetResponse();
     }
 
-    @RequestMapping(value= "/save", method = RequestMethod.PUT)
-    public RestResult<Void> put(@RequestBody final InviteOrganisationResource inviteOrganisationResource) {
-        if(service.findOne(inviteOrganisationResource.getId()).isSuccess()){
+    @GetMapping(value = "/{id}/application/{applicationId}")
+    public RestResult<InviteOrganisationResource> getByIdWithInvitesForApplication(@PathVariable("id") long id,
+                                                                                   @PathVariable("applicationId") long applicationId) {
+        return service.getByIdWithInvitesForApplication(id, applicationId).toGetResponse();
+    }
+
+    @GetMapping(value = "/organisation/{organisationId}/application/{applicationId}")
+    public RestResult<InviteOrganisationResource> getByOrganisationIdWithInvitesForApplication(@PathVariable("organisationId") long organisationId,
+                                                                                               @PathVariable("applicationId") long applicationId) {
+        return service.getByOrganisationIdWithInvitesForApplication(organisationId, applicationId).toGetResponse();
+    }
+
+    @PutMapping(value = "/save")
+    public RestResult<Void> put(@RequestBody  InviteOrganisationResource inviteOrganisationResource) {
+        if (service.findOne(inviteOrganisationResource.getId()).isSuccess()) {
             return service.save(inviteOrganisationResource).toPutResponse();
-        }else{
+        } else {
             return RestResult.restFailure(HttpStatus.NOT_ACCEPTABLE);
         }
     }

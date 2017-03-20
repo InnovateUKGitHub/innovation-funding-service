@@ -9,7 +9,7 @@
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main id="content" th:object="${form}">
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition dashboard',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" />
     <h1 class="heading-xlarge">
                 <span class="heading-secondary"><th:block th:text="${model.competitionId}"/>: <th:block
                     th:text="${model.competitionName}"/></span>
@@ -26,17 +26,59 @@
     </div>
 
     <div th:replace="competition/key-statistics :: key-statistics(keyStatistics=${model.keyStatistics})" />
+    <form method="GET" th:object="${manageFundingApplicationsQueryForm}">
+        <div class="search-filters extra-margin">
+            <fieldset>
+                <legend class="heading-medium">Filter applications</legend>
+                <div class="grid-row">
+                    <div class="column-third">
+                        <label class="form-label" for="stringFilter">Search by application number.</label>
+                        <input type="text" class="form-control" id="stringFilter" name="stringFilter" th:field="*{stringFilter}"/>
+                    </div>
+                    <div class="column-third">
+                        <label class="form-label" for="sendFilter">Sent</label>
+                        <select name="sendFilter" id="sendFilter" class="form-control" th:field="*{sendFilter}">
+                            <option value="">All</option>
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                    <div class="column-third">
+                        <label class="form-label" for="fundingFilter">Funding</label>
+                        <select name="fundingFilter" id="fundingFilter" class="form-control" th:field="*{fundingFilter}">
+                            <option value="">Show all</option>
+                            <option value="FUNDED">Successful</option>
+                            <option value="UNFUNDED">Unsuccessful</option>
+                            <option value="ON_HOLD">On hold</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="column-third alignright">
+                    <a href="?">Clear all filters</a>
+                    <button class="button">Filter</button>
+                </div>
 
+            </fieldset>
+        </div>
+    </form>
     <form method="post" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}">
-        <div class="grid-row sorting sorting-controls">
+        <div class="grid-row sorting">
             <div class="column-half">
-                <div class="form-group">
-                    <span class="form-hint alignleft"><span class="applications-selected">0</span> applications selected</span>
+                <div class="select-all">
+                    <fieldset>
+                        <legend class="visuallyhidden">Select applications</legend>
+                        <label class="block-label selection-button-checkbox" for="select-all-1">
+                            <input data-select-all="[id^=app-row-]" class="select-all" id="select-all-1" value="select-all" type="checkbox">
+                            Select all applications
+                        </label>
+                        <span class="form-hint"><span data-count-selected="[id^=app-row-]">3</span> applications selected</span>
+                    </fieldset>
                 </div>
             </div>
-
-            <div class="column-half alignright">
-                <button class="button button-notification extra-margin-top" type="submit">Write and send email</button>
+            <div class="column-half">
+                <fieldset class="mark-applications">
+                    <button class="button button-notification extra-margin-top" data-enable-button-when="one-checked" type="submit" name="write-an-send-email">Write and send email</button>
+                </fieldset>
             </div>
         </div>
 
@@ -57,9 +99,9 @@
                     <tbody>
                     <tr th:each="applicationSummary, stat : ${model.content}">
                         <td class="form-group-cell">
-                            <label class="block-label selection-button-checkbox" th:for="'application-id' + ${applicationSummary.id}">
-                                <input type="checkbox" class="app-row-select row-successful" th:field="*{ids[__${stat.index}__]}" th:value="${applicationSummary.id}" aria-labelledby="select-applications-label" th:id="'application-id' + ${applicationSummary.id}"/>
-                                <small class="visibility-hidden">Select application</small>
+                            <label class="block-label selection-button-checkbox" th:for="'app-row-' + ${applicationSummary.id}">
+                                <input data-switches-button-status="[name=write-an-send-email]" type="checkbox" class="app-row-select row-successful" th:field="*{ids[__${stat.index}__]}" th:value="${applicationSummary.id}" aria-labelledby="select-applications-label" th:id="'app-row-' + ${applicationSummary.id}"/>
+                                <span class="invisible">Select application</span>
                             </label>
                         </td>
                         <td th:text="${applicationSummary.id}">194731</td>
@@ -69,6 +111,7 @@
                             <td th:case="${T(org.innovateuk.ifs.application.resource.FundingDecision).FUNDED}">Successful</td>
                             <td th:case="${T(org.innovateuk.ifs.application.resource.FundingDecision).UNFUNDED}">Unsuccessful</td>
                             <td th:case="${T(org.innovateuk.ifs.application.resource.FundingDecision).UNDECIDED}">Undecided</td>
+                            <td th:case="${T(org.innovateuk.ifs.application.resource.FundingDecision).ON_HOLD}">On hold</td>
                             <td th:case="*">-</td>
                         </th:block>
                         <td th:text="${applicationSummary.manageFundingEmailDate} ? 'Sent' : '-'">-</td>
@@ -79,22 +122,27 @@
             </div>
         </div>
 
-        <div class="grid-row sorting sorting-controls no-border">
+        <div class="grid-row sorting">
             <div class="column-half">
-                <div class="form-group">
-                    <span class="form-hint alignleft"><span class="applications-selected">0</span> applications selected</span>
+                <div class="select-all">
+                    <fieldset>
+                        <legend class="visuallyhidden">Select applications</legend>
+                        <label class="block-label selection-button-checkbox" for="select-all-2">
+                            <input data-select-all="[id^=app-row-]" class="select-all" id="select-all-2" value="select-all" type="checkbox">
+                            Select all applications
+                        </label>
+                        <span class="form-hint"><span data-count-selected="[id^=app-row-]">3</span> applications selected</span>
+                    </fieldset>
                 </div>
             </div>
-
-            <div class="column-half alignright">
-                <input type="hidden" name="comp" value="panel" />
-                <button class="button button-notification extra-margin-top" type="submit">Write and send email</button>
+            <div class="column-half">
+                <fieldset class="mark-applications">
+                    <button class="button button-notification extra-margin-top" data-enable-button-when="one-checked" type="submit" name="write-an-send-email">Write and send email</button>
+                </fieldset>
             </div>
         </div>
-        <div th:include="fragments/elements :: general-pagination(pagination=${model.pagination})" th:remove="tag"/>
-
     </form>
-
+    <div th:include="fragments/elements :: general-pagination(pagination=${model.pagination})" th:remove="tag"/>
 
 
     <th:block th:insert="fragments/layout :: main-content-end" />

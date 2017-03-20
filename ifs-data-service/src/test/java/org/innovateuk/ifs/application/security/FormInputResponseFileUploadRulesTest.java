@@ -7,7 +7,6 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationStatus;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.user.builder.RoleResourceBuilder;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
@@ -20,19 +19,19 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
+import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
-import static java.util.Collections.emptyList;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 
 /**
  * Tests around the security rules defining who can upload files to a response to a Question in the Application Form
@@ -49,7 +48,7 @@ public class FormInputResponseFileUploadRulesTest extends BaseUnitTestMocksTest 
     //TODO: Implement tests for lead applicant and collaborator type users as well and not just applicant.
 
     @Test
-    public void testApplicantCanUploadFilesInResponsesForOwnApplication() {
+    public void applicantCanUploadFilesInResponsesForOwnApplication() {
 
         Application application = newApplication().build();
 
@@ -77,7 +76,7 @@ public class FormInputResponseFileUploadRulesTest extends BaseUnitTestMocksTest 
     }
 
     @Test
-    public void testApplicantCanUploadFilesInResponsesForOwnApplicationButNotAMemberOfApplication() {
+    public void applicantCanUploadFilesInResponsesForOwnApplicationButNotAMemberOfApplication() {
 
         UserResource user = newUserResource().build();
         FileEntryResource fileEntry = newFileEntryResource().build();
@@ -95,7 +94,7 @@ public class FormInputResponseFileUploadRulesTest extends BaseUnitTestMocksTest 
     }
 
     @Test
-    public void testApplicantCanUploadFilesInResponsesForOwnApplicationButLeadApplicantRoleNotFound() {
+    public void applicantCanUploadFilesInResponsesForOwnApplicationButLeadApplicantRoleNotFound() {
 
         UserResource user = newUserResource().build();
         FileEntryResource fileEntry = newFileEntryResource().build();
@@ -107,7 +106,7 @@ public class FormInputResponseFileUploadRulesTest extends BaseUnitTestMocksTest 
     }
 
     @Test
-    public void testInternalUserCanDownloadFilesInResponses() {
+    public void internalUserCanDownloadFilesInResponses() {
         UserResource compAdmin = newUserResource().withRolesGlobal(newRoleResource().withType(UserRoleType.COMP_ADMIN).build(1)).build();
         UserResource projectFinance = newUserResource().withRolesGlobal(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build(1)).build();
 
@@ -115,5 +114,44 @@ public class FormInputResponseFileUploadRulesTest extends BaseUnitTestMocksTest 
 
         assertTrue(fileUploadRules.internalUserCanDownloadFilesInResponses(fileEntry, compAdmin));
         assertTrue(fileUploadRules.internalUserCanDownloadFilesInResponses(fileEntry, projectFinance));
+    }
+
+    @Test
+    public void assessorCanDownloadFilesForApplicationTheyAreAssessing() {
+        UserResource assessor = newUserResource()
+                .withRolesGlobal(newRoleResource().withType(UserRoleType.ASSESSOR).build(1))
+                .build();
+        FileEntryResource fileEntry = newFileEntryResource().build();
+        Role assessorRole = newRole().build();
+        ProcessRole assessorProcessRole = newProcessRole().build();
+        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId);
+
+        when(roleRepositoryMock.findOneByName(ASSESSOR.getName())).thenReturn(assessorRole);
+        when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationId(assessor.getId(), assessorRole, applicationId))
+                .thenReturn(assessorProcessRole);
+
+        assertTrue(fileUploadRules.assessorCanDownloadFileForApplicationTheyAreAssessing(file, assessor));
+
+        verify(roleRepositoryMock).findOneByName(ASSESSOR.getName());
+        verify(processRoleRepositoryMock).findByUserIdAndRoleAndApplicationId(assessor.getId(), assessorRole, applicationId);
+    }
+
+    @Test
+    public void assessorCanNotDownloadFilesForApplicationTheyAreNotAssessing() {
+        UserResource assessor = newUserResource()
+                .withRolesGlobal(newRoleResource().withType(UserRoleType.ASSESSOR).build(1))
+                .build();
+        FileEntryResource fileEntry = newFileEntryResource().build();
+        Role assessorRole = newRole().build();
+        FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, processRoleId);
+
+        when(roleRepositoryMock.findOneByName(ASSESSOR.getName())).thenReturn(assessorRole);
+        when(processRoleRepositoryMock.findByUserIdAndRoleAndApplicationId(assessor.getId(), assessorRole, applicationId))
+                .thenReturn(null);
+
+        assertFalse(fileUploadRules.assessorCanDownloadFileForApplicationTheyAreAssessing(file, assessor));
+
+        verify(roleRepositoryMock).findOneByName(ASSESSOR.getName());
+        verify(processRoleRepositoryMock).findByUserIdAndRoleAndApplicationId(assessor.getId(), assessorRole, applicationId);
     }
 }

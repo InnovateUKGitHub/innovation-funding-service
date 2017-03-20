@@ -26,9 +26,20 @@
                         <li><strong>Submit applications deadline:</strong> <span th:text="|${#strings.toLowerCase(#temporals.format(model.submitDeadline, 'hh:mma'))} ${#temporals.format(model.submitDeadline, 'EEEE d MMMM yyyy')}|" th:remove="tag"/></li>
                     </ul>
                 </div>
+
+                <div class="column-one-third">
+                    <ul class="list list-bullet">
+                        <li><a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}">competition brief</a></li>
+                    </ul>
+                </div>
             </div>
 
             <div class="my-applications">
+
+                <p th:if="${ #lists.isEmpty(model.outstanding) && #lists.isEmpty(model.submitted) }" class="extra-margin">
+                    There are currently no assessments for you to review.
+                </p>
+
                 <div class="in-progress" th:unless="${#lists.isEmpty(model.outstanding)}">
 
                     <form method="post" th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}">

@@ -11,13 +11,9 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.domain.*;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
-import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.Role;
-import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
-import org.innovateuk.ifs.user.repository.ProfileRepository;
-import org.innovateuk.ifs.user.repository.RoleRepository;
-import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.domain.*;
+import org.innovateuk.ifs.user.repository.*;
+import org.innovateuk.ifs.user.resource.AffiliationType;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
@@ -29,11 +25,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
@@ -45,9 +43,14 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
+import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
+import static org.innovateuk.ifs.user.builder.ProfileBuilder.newProfile;
+import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElement;
 import static org.innovateuk.ifs.util.CollectionFunctions.zip;
 import static org.junit.Assert.*;
+import static org.springframework.data.domain.Sort.Direction.ASC;
 
 public class CompetitionParticipantRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<CompetitionParticipantRepository> {
 
@@ -84,6 +87,9 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
     @Autowired
     private ProfileRepository profileRepository;
+
+    @Autowired
+    private AgreementRepository agreementRepository;
 
     @Autowired
     @Override
@@ -488,5 +494,360 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         assertTrue((expected.getRejectionReason() == null && actual.getRejectionReason() == null) ||
                 (expected.getRejectionReason() != null && actual.getRejectionReason() != null &&
                         expected.getRejectionReason().getId().equals(actual.getRejectionReason().getId())));
+    }
+
+    @Test
+    public void getAssessorsByCompetitionAndStatus() throws Exception {
+        List<CompetitionInvite> newAssessorInvites = newCompetitionInviteWithoutId()
+                .withName("Jane Pritchard", "Charles Dance", "Claire Jenkins", "Anthony Hale")
+                .withEmail("jp@test.com", "cd@test.com", "cj@test.com", "ah@test2.com")
+                .withCompetition(competition)
+                .withInnovationArea(innovationArea)
+                .withStatus(SENT)
+                .build(4);
+
+        List<CompetitionParticipant> competitionParticipants = saveNewCompetitionParticipants(newAssessorInvites);
+
+        User user = newUser()
+                .withId()
+                .withUid("uid-1")
+                .withFirstName("Anthony")
+                .withLastName("Hale")
+                .withProfileId()
+                .build();
+
+        userRepository.save(user);
+
+        competitionParticipants.get(3).getInvite().open();
+        competitionParticipants.get(3).acceptAndAssignUser(user);
+
+        repository.save(competitionParticipants);
+        flushAndClearSession();
+
+        assertEquals(4, repository.count());
+
+        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
+
+        Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndStatus(
+                competition.getId(),
+                ACCEPTED,
+                pageable
+        );
+
+        assertEquals(1, pagedResult.getTotalPages());
+        assertEquals(1, pagedResult.getTotalElements());
+        assertEquals(20, pagedResult.getSize());
+        assertEquals(0, pagedResult.getNumber());
+
+        List<CompetitionParticipant> content = pagedResult.getContent();
+
+        assertEquals(1, content.size());
+        assertEquals("Anthony Hale", content.get(0).getInvite().getName());
+    }
+
+    @Test
+    public void getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant_allFilters() throws Exception {
+        loginCompAdmin();
+
+        Agreement agreement = agreementRepository.findOne(1L);
+        InnovationArea otherInnovationArea = innovationAreaRepository.findOne(5L);
+
+        List<Profile> profiles = newProfile()
+                .withId()
+                .withAgreement(agreement)
+                .withInnovationAreas(singletonList(otherInnovationArea), singletonList(innovationArea), singletonList(otherInnovationArea))
+                .withSkillsAreas("Skill area 1", "Skill area 2", "Skill area 3", "Skill area 4")
+                .build(4);
+
+        profileRepository.save(profiles);
+
+        List<User> users = newUser()
+                .withId()
+                .withUid("uid-1", "uid-2", "uid-3", "uid-4")
+                .withFirstName("Jane", "Charles", "Claire", "Anthony")
+                .withLastName("Pritchard", "Dance", "Jenkins", "Hale")
+                .withProfileId(
+                        profiles.get(0).getId(),
+                        profiles.get(1).getId(),
+                        profiles.get(2).getId(),
+                        profiles.get(3).getId()
+                )
+                .build(4);
+
+        userRepository.save(users);
+
+        users.get(0).setAffiliations(
+                newAffiliation()
+                        .withId()
+                        .withAffiliationType(AffiliationType.PROFESSIONAL)
+                        .withDescription("Affiliation Description 1")
+                        .withExists(TRUE)
+                        .withUser(users.get(0))
+                        .build(1)
+        );
+        users.get(1).setAffiliations(
+                newAffiliation()
+                        .withId()
+                        .withAffiliationType(AffiliationType.PROFESSIONAL)
+                        .withDescription("Affiliation Description 2")
+                        .withExists(TRUE)
+                        .withUser(users.get(1))
+                        .build(1)
+        );
+        users.get(3).setAffiliations(
+                newAffiliation()
+                        .withId()
+                        .withAffiliationType(AffiliationType.PROFESSIONAL)
+                        .withDescription("Affiliation Description 3")
+                        .withExists(TRUE)
+                        .withUser(users.get(3))
+                        .build(1)
+        );
+
+        userRepository.save(users);
+
+        List<CompetitionInvite> newAssessorInvites = newCompetitionInviteWithoutId()
+                .withName("Jane Pritchard", "Charles Dance", "Claire Jenkins", "Anthony Hale")
+                .withEmail("jp@test.com", "cd@test.com", "cj@test.com", "ah@test2.com")
+                .withCompetition(competition)
+                .withInnovationArea(otherInnovationArea, innovationArea, otherInnovationArea)
+                .withUser(users.get(0), users.get(1), users.get(2), users.get(3))
+                .withStatus(SENT)
+                .build(4);
+
+        List<CompetitionParticipant> competitionParticipants = saveNewCompetitionParticipants(newAssessorInvites);
+
+        competitionParticipants.get(1).getInvite().open();
+        competitionParticipants.get(1).acceptAndAssignUser(users.get(1));
+
+        repository.save(competitionParticipants);
+        flushAndClearSession();
+
+        assertEquals(4, repository.count());
+
+        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
+
+        Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
+                competition.getId(),
+                innovationArea.getId(),
+                ACCEPTED,
+                TRUE,
+                pageable
+        );
+
+        assertEquals(1, pagedResult.getTotalPages());
+        assertEquals(1, pagedResult.getTotalElements());
+        assertEquals(20, pagedResult.getSize());
+        assertEquals(0, pagedResult.getNumber());
+
+        List<CompetitionParticipant> content = pagedResult.getContent();
+
+        assertEquals(1, content.size());
+        assertEquals("Charles Dance", content.get(0).getInvite().getName());
+    }
+
+    @Test
+    public void getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant_innovationArea() throws Exception {
+        InnovationArea otherInnovationArea = innovationAreaRepository.findOne(5L);
+
+        List<CompetitionInvite> newAssessorInvites = newCompetitionInviteWithoutId()
+                .withName("Jane Pritchard", "Charles Dance", "Claire Jenkins", "Anthony Hale")
+                .withEmail("jp@test.com", "cd@test.com", "cj@test.com", "ah@test2.com")
+                .withCompetition(competition)
+                .withInnovationArea(otherInnovationArea, otherInnovationArea, innovationArea, otherInnovationArea)
+                .withStatus(SENT)
+                .build(4);
+
+        saveNewCompetitionParticipants(newAssessorInvites);
+        flushAndClearSession();
+
+        assertEquals(4, repository.count());
+
+        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
+
+        Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
+                competition.getId(),
+                innovationArea.getId(),
+                null,
+                null,
+                pageable
+        );
+
+        assertEquals(1, pagedResult.getTotalPages());
+        assertEquals(1, pagedResult.getTotalElements());
+        assertEquals(20, pagedResult.getSize());
+        assertEquals(0, pagedResult.getNumber());
+
+        List<CompetitionParticipant> content = pagedResult.getContent();
+
+        assertEquals(1, content.size());
+        assertEquals("Claire Jenkins", content.get(0).getInvite().getName());
+    }
+
+    @Test
+    public void getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant_participantStatus() throws Exception {
+        List<CompetitionInvite> newAssessorInvites = newCompetitionInviteWithoutId()
+                .withName("Jane Pritchard", "Charles Dance", "Claire Jenkins", "Anthony Hale")
+                .withEmail("jp@test.com", "cd@test.com", "cj@test.com", "ah@test2.com")
+                .withCompetition(competition)
+                .withInnovationArea(innovationArea)
+                .withStatus(SENT)
+                .build(4);
+
+        List<CompetitionParticipant> competitionParticipants = saveNewCompetitionParticipants(newAssessorInvites);
+
+        User user = newUser()
+                .withId()
+                .withUid("uid-1")
+                .withFirstName("Anthony")
+                .withLastName("Hale")
+                .withProfileId()
+                .build();
+
+        userRepository.save(user);
+
+        competitionParticipants.get(3).getInvite().open();
+        competitionParticipants.get(3).acceptAndAssignUser(user);
+
+        repository.save(competitionParticipants);
+        flushAndClearSession();
+
+        assertEquals(4, repository.count());
+
+        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
+
+        Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
+                competition.getId(),
+                null,
+                ACCEPTED,
+                null,
+                pageable
+        );
+
+        assertEquals(1, pagedResult.getTotalPages());
+        assertEquals(1, pagedResult.getTotalElements());
+        assertEquals(20, pagedResult.getSize());
+        assertEquals(0, pagedResult.getNumber());
+
+        List<CompetitionParticipant> content = pagedResult.getContent();
+
+        assertEquals(1, content.size());
+        assertEquals("Anthony Hale", content.get(0).getInvite().getName());
+    }
+
+    @Test
+    public void getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant_isCompliant() throws Exception {
+        loginCompAdmin();
+
+        Agreement agreement = agreementRepository.findOne(1L);
+
+        List<Profile> profiles = newProfile()
+                .withId()
+                .withAgreement(agreement)
+                .withInnovationAreas(singletonList(innovationArea))
+                .withSkillsAreas("Skill area 1", "Skill area 2", "Skill area 3", "Skill area 4")
+                .build(4);
+
+        profileRepository.save(profiles);
+
+        List<User> users = newUser()
+                .withId()
+                .withUid("uid-1", "uid-2", "uid-3", "uid-4")
+                .withFirstName("Jane", "Charles", "Claire", "Anthony")
+                .withLastName("Pritchard", "Dance", "Jenkins", "Hale")
+                .withProfileId(
+                        profiles.get(0).getId(),
+                        profiles.get(1).getId(),
+                        profiles.get(2).getId(),
+                        profiles.get(3).getId()
+                )
+                .build(4);
+
+        userRepository.save(users);
+
+        users.get(0).setAffiliations(
+                newAffiliation()
+                        .withId()
+                        .withAffiliationType(AffiliationType.PROFESSIONAL)
+                        .withDescription("Affiliation Description 1")
+                        .withExists(TRUE)
+                        .withUser(users.get(0))
+                        .build(1)
+        );
+
+        userRepository.save(users);
+
+        List<CompetitionInvite> newAssessorInvites = newCompetitionInviteWithoutId()
+                .withName("Jane Pritchard", "Charles Dance", "Claire Jenkins", "Anthony Hale")
+                .withEmail("jp@test.com", "cd@test.com", "cj@test.com", "ah@test2.com")
+                .withCompetition(competition)
+                .withInnovationArea(innovationArea)
+                .withUser(users.get(0), users.get(1), users.get(2), users.get(3))
+                .withStatus(SENT)
+                .build(4);
+
+        saveNewCompetitionParticipants(newAssessorInvites);
+        flushAndClearSession();
+
+        assertEquals(4, repository.count());
+
+        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
+
+        Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
+                competition.getId(),
+                null,
+                null,
+                TRUE,
+                pageable
+        );
+
+        assertEquals(1, pagedResult.getTotalPages());
+        assertEquals(1, pagedResult.getTotalElements());
+        assertEquals(20, pagedResult.getSize());
+        assertEquals(0, pagedResult.getNumber());
+
+        List<CompetitionParticipant> content = pagedResult.getContent();
+
+        assertEquals(1, content.size());
+        assertEquals("Jane Pritchard", content.get(0).getInvite().getName());
+    }
+
+    @Test
+    public void getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant_noFilters() throws Exception {
+        List<CompetitionInvite> newAssessorInvites = newCompetitionInviteWithoutId()
+                .withName("Jane Pritchard", "Charles Dance", "Claire Jenkins", "Anthony Hale")
+                .withEmail("jp@test.com", "cd@test.com", "cj@test.com", "ah@test2.com")
+                .withCompetition(competition)
+                .withInnovationArea(innovationArea)
+                .withStatus(SENT)
+                .build(4);
+
+        saveNewCompetitionParticipants(newAssessorInvites);
+        flushAndClearSession();
+
+        assertEquals(4, repository.count());
+
+        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
+
+        Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
+                competition.getId(),
+                null,
+                null,
+                null,
+                pageable
+        );
+
+        assertEquals(1, pagedResult.getTotalPages());
+        assertEquals(4, pagedResult.getTotalElements());
+        assertEquals(20, pagedResult.getSize());
+        assertEquals(0, pagedResult.getNumber());
+
+        List<CompetitionParticipant> content = pagedResult.getContent();
+
+        assertEquals(4, content.size());
+        assertEquals("Anthony Hale", content.get(0).getInvite().getName());
+        assertEquals("Charles Dance", content.get(1).getInvite().getName());
+        assertEquals("Claire Jenkins", content.get(2).getInvite().getName());
+        assertEquals("Jane Pritchard", content.get(3).getInvite().getName());
     }
 }

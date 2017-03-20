@@ -4,6 +4,7 @@ import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * This interface is used to generate Spring Data Repositories.
@@ -15,4 +16,5 @@ public interface ProjectFinanceRowRepository extends FinanceRowRepository<Projec
     ProjectFinanceRow findOneByTargetIdAndNameAndQuestionId(Long targetId, String name, Long questionId);
     List<ProjectFinanceRow> findByTargetIdAndNameAndQuestionId(Long targetId, String name, Long questionId);
     List<ProjectFinanceRow> findByTargetIdAndQuestionId(Long targetId, Long questionId);
+    Optional<ProjectFinanceRow> findOneByApplicationRowId(Long applicationRowId);
 }

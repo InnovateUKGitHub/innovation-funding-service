@@ -73,7 +73,7 @@ Collaborator should see the terms and conditions from the overview page
     Given the user clicks the button/link    link=Application Overview
     When The user clicks the button/link    link= view conditions of grant offer
     Then the user should see the text in the page    Terms and conditions of an Innovate UK grant award
-    And the user should see the text in the page    Entire Agreement
+    And the user should see the text in the page    Entire agreement
 
 Collaborator should see the review button instead of the review and submit
     [Documentation]    INFUND-2451
@@ -105,7 +105,7 @@ Last update message is correctly updating
     And the user clicks the button/link    link= Assign test
     And the user clicks the button/link    link= Public description
     When the collaborator edits the 'public description' question
-    Then the question should contain the correct status/name    css=#form-input-12 .textarea-footer    Last updated: Today by you
+    Then the question should contain the correct status/name    css=#form-input-12 .form-footer .form-footer__info    Last updated: Today by you
 
 Collaborators cannot assign a question
     [Documentation]    INFUND-839
@@ -203,7 +203,7 @@ Lead marks finances as complete
     [Documentation]    INFUND-3016
     ...
     ...    This test depends on the previous test suite to run first
-    [Tags]    Failing
+    [Tags]
     Given the user navigates to the page  ${DASHBOARD_URL}
     And the user clicks the button/link  link=Assign test
     And the applicant completes the application details      Application details
@@ -211,7 +211,7 @@ Lead marks finances as complete
     Then the user should see the element   link=Your project costs
     And the user should see the element    link=Your organisation
     And the user should see the element    jQuery=h3:contains("Your funding")
-    When the user fills in the project costs
+    When the user fills in the project costs     Assign test
     And the user navigates to Your-finances page  Assign test
     Then the user fills in the organisation information      Assign test
     And the user fills in the funding information  Assign test
@@ -221,7 +221,7 @@ Lead marks finances as complete
 Collaborator from another organisation should be able to mark Finances as complete
     [Documentation]  INFUND-3016
     ...              This test depends on the previous test suite to run first
-    [Tags]    Failing
+    [Tags]
     [Setup]  log in as a different user     ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     Given the user navigates to Your-finances page   Assign test
     Then the user should see all finance subsections incomplete
@@ -254,9 +254,11 @@ Lead applicant should be able to remove the registered partner
     [Setup]    log in as a different user    ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
     Given the user clicks the button/link    link= Assign test
     And the user clicks the button/link    link=view and add participants to your application
-    When the user clicks the button/link    jQuery=div:nth-child(6) a:contains("Remove")
-    And the user clicks the button/link    jQuery=button:contains("Remove")
+    And the user clicks the button/link    jQuery=.table-overflow:contains("Dennis") ~ p a
+    When the user clicks the button/link    jQuery=button:contains("Remove")
     Then the user should not see the element    link=Dennis Bergkamp
+    #And the user clicks the button/link    jQuery=a:contains("Update organisation")
+    And the user clicks the button/link    jQuery=button:contains("Update organisation")
     #The following steps check if the collaborator should not see the application in the dashboard page
     And log in as a different user  ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     And the user should not see the element    link= Assign test
@@ -275,13 +277,13 @@ the question should contain the correct status/name
     Element Should Contain    ${ELEMENT}    ${STATUS}
 
 the collaborator is able to edit the finances
-    the user fills in the project costs
+    the user fills in the project costs     Assign test
     the user navigates to Your-finances page    Assign test
     the user fills in the organisation information      Assign test
     the user fills in the funding information  Assign test
 
 the applicant changes the name of the application
-    Given the user clicks the button/link     link= ${OPEN_COMPETITION_NAME}
+    Given the user clicks the button/link     link= ${UNTITLED_APPLICATION_DASHBOARD_LINK}
     And the user clicks the button/link       link= Application details
     And the user enters text to a text field  id=application_details-title  Assign test
     And The user clicks the button/link       jQuery=button:contains("Save and return")
