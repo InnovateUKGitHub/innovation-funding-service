@@ -53,20 +53,20 @@ Details of the competition are visible
     And the user should see the text in the page    12:00am Saturday 28 January 2068
 
 Competition brief link can be seen
-    [Documentation]  INFUND-5494
+    [Documentation]    INFUND-5494
     [Tags]
     Then the user should see the element    link=competition brief
 
 User can view the competition brief
-     [Documentation]  INFUND-5494
-     [Tags]
-     When the user clicks the button/link   link=competition brief
-     Then the user should not see an error in the page
-     And the user should see the text in the page   ${IN_ASSESSMENT_COMPETITION_NAME}
-     And the user should see the text in the page   Competition opens
-     And the user should see the text in the page   Competition closes
-     And the user should see the element    jQuery=.button:contains("Start or continue your application")
-     [Teardown]    the user goes back to the previous page
+    [Documentation]    INFUND-5494
+    [Tags]
+    When the user clicks the button/link    link=competition brief
+    Then the user should not see an error in the page
+    And the user should see the text in the page    ${IN_ASSESSMENT_COMPETITION_NAME}
+    And the user should see the text in the page    Competition opens
+    And the user should see the text in the page    Competition closes
+    And the user should see the element    jQuery=.button:contains("Start new application")
+    [Teardown]    the user goes back to the previous page
 
 Applications should have correct status and order
     [Documentation]    INFUND-6040
@@ -118,7 +118,6 @@ Applications should not have a check-box when the status is Open
     Then The user should not see the element    css=.assessment-submit-checkbox
 
 Check the comp admin see the assessor has rejected the application
-    [Documentation]
     [Tags]
     [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
     Given the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}

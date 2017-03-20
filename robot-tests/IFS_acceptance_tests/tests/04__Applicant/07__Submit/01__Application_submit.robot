@@ -33,7 +33,7 @@ Submit button disabled when application is incomplete
 
 Applicant has read only view after submission
     [Documentation]    INFUND-7405, INFUND-8599
-    [Tags]
+    [Tags]    HappyPath
     When the user navigates to the page    ${DASHBOARD_URL}
     and the user clicks the button/link      link=${application_name}
     then the applicant completes the application details    Application details
