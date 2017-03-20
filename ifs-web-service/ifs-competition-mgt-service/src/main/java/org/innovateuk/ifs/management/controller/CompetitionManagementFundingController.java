@@ -3,10 +3,7 @@ package org.innovateuk.ifs.management.controller;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
-import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
-import org.innovateuk.ifs.application.service.ApplicationSummaryService;
-import org.innovateuk.ifs.application.service.AssessorFeedbackService;
-import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.competition.form.ApplicationSummaryQueryForm;
 import org.innovateuk.ifs.competition.form.FundingDecisionForm;
 import org.innovateuk.ifs.competition.service.ApplicationSummarySortFieldService;
@@ -41,7 +38,7 @@ public class CompetitionManagementFundingController {
     private ApplicationSummarySortFieldService applicationSummarySortFieldService;
 
     @Autowired
-    private ApplicationSummaryService applicationSummaryService;
+    private ApplicationSummaryRestService applicationSummaryRestService;
 
     @Autowired
     private AssessorFeedbackService assessorFeedbackService;
@@ -67,7 +64,9 @@ public class CompetitionManagementFundingController {
             return "redirect:/competition/" + competitionId + "/funding";
         }
 
-        CompetitionSummaryResource competitionSummary = applicationSummaryService.getCompetitionSummaryByCompetitionId(competitionId);
+        CompetitionSummaryResource competitionSummary = applicationSummaryRestService
+                .getCompetitionSummary(competitionId)
+                .getSuccessObjectOrThrowException();
 
         model.addAttribute("competitionSummary", competitionSummary);
         String originQuery = buildOriginQueryString(ApplicationOverviewOrigin.FUNDING_APPLICATIONS, queryParams);
@@ -89,11 +88,11 @@ public class CompetitionManagementFundingController {
                                            String originQuery,
                                            ApplicationSummaryQueryForm queryForm,
                                            BindingResult bindingResult) {
-        if(fundingDecisionForm.getFundingDecision() != null) {
+        if (fundingDecisionForm.getFundingDecision() != null) {
             validator.validate(fundingDecisionForm, bindingResult);
-            if(!bindingResult.hasErrors()) {
+            if (!bindingResult.hasErrors()) {
                 Optional<FundingDecision> fundingDecision = applicationFundingDecisionService.getFundingDecisionForString(fundingDecisionForm.getFundingDecision());
-                if(fundingDecision.isPresent()) {
+                if (fundingDecision.isPresent()) {
                     applicationFundingDecisionService.saveApplicationFundingDecisionData(competitionId, fundingDecision.get(), fundingDecisionForm.getApplicationIds());
                 }
             }
@@ -106,13 +105,14 @@ public class CompetitionManagementFundingController {
 
     private void populateSubmittedModel(Model model, CompetitionSummaryResource competitionSummary, ApplicationSummaryQueryForm queryForm, String originQuery) {
         String sort = applicationSummarySortFieldService.sortFieldForSubmittedApplications(queryForm.getSort());
-        ApplicationSummaryPageResource results = applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(
+        ApplicationSummaryPageResource results = applicationSummaryRestService.getSubmittedApplications(
                 competitionSummary.getCompetitionId(),
                 sort,
                 queryForm.getPage(),
                 PAGE_SIZE,
                 queryForm.getStringFilter(),
-                queryForm.getFundingFilter());
+                queryForm.getFundingFilter())
+                .getSuccessObjectOrThrowException();
 
         model.addAttribute("pagination", new PaginationViewModel(results, originQuery));
         model.addAttribute("results", results);
