@@ -136,8 +136,6 @@ Invite and accept the invitation
     And the user clicks the button/link    jQuery=.button:contains("Create")
     When the user selects the radio button    organisationType    2
     And the user clicks the button/link    jQuery=.button:contains("Continue")
-    When the user selects the radio button    organisationType    5
-    And the user clicks the button/link    jQuery=.button:contains("Continue")
     When the user enters text to a text field    id=organisationSearchName    Liv
     And the user clicks the button/link    jQuery=.button:contains("Search")
     When the user clicks the button/link    link= University of Liverpool
