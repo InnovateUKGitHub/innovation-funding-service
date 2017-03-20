@@ -65,12 +65,14 @@ the Application details are completed
 the applicant completes the application details
     [Arguments]   ${Application_details}
     the user clicks the button/link       link=${Application_details}
-    the user clicks the button/link       jQuery=button:contains(Change your innovation area)
+    the user clicks the button/link       jQuery=button:contains("research category")
+    the user clicks the button/link       jQuery=label[for^="researchCategoryChoice"]:contains("Experimental development")
+    the user clicks the button/link       jQuery=label[for^="researchCategoryChoice"]:contains("Experimental development")
+    the user clicks the button/link       jQuery=button:contains(Save)
+    the user clicks the button/link       jQuery=button:contains("Change your innovation area")
     the user clicks the button/link       jQuery=label[for="innovationAreaChoice-26"]
     the user clicks the button/link       jQuery=label[for="innovationAreaChoice-26"]
     the user clicks the button/link       jQuery=button:contains(Save)
-    the user clicks the button/link       jQuery=label[for^="financePosition"]:contains("Experimental development")
-    the user clicks the button/link       jQuery=label[for^="financePosition"]:contains("Experimental development")
     the user clicks the button/link       jQuery=label[for="application.resubmission-no"]
     the user clicks the button/link       jQuery=label[for="application.resubmission-no"]
     # those Radio buttons need to be clicked twice.

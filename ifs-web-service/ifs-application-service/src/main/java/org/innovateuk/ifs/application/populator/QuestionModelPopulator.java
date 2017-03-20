@@ -3,7 +3,6 @@ package org.innovateuk.ifs.application.populator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.UserApplicationRole;
-import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
@@ -78,9 +77,6 @@ public class QuestionModelPopulator extends BaseModelPopulator {
     @Autowired
     private CategoryService categoryService;
 
-    @Autowired
-    private FinanceService financeService;
-
     public QuestionViewModel populateModel(final Long questionId, final Long applicationId, final UserResource user, final Model model,
                                            final ApplicationForm form, final QuestionOrganisationDetailsViewModel organisationDetailsViewModel) {
         QuestionResource question = questionService.getById(questionId);
@@ -145,15 +141,9 @@ public class QuestionModelPopulator extends BaseModelPopulator {
                 questionApplicationViewModel.setLeadOrganisation(org)
         );
 
-        userOrganisation.ifPresent(org -> questionApplicationViewModel.setHasApplicationFinances(
-                financeService.getApplicationFinanceDetails(userId, application.getId(), org.getId()) != null));
-
         addApplicationFormDetailInputs(application, form);
         addSelectedInnovationAreaName(application, questionApplicationViewModel);
-
-        questionApplicationViewModel.setResearchCategories(categoryService.getResearchCategories());
-        questionApplicationViewModel.setResearchCategoryId(application.getResearchCategories().stream().findFirst().map(cat -> cat.getId()).orElse(null));
-
+        addSelectedResearchCategoryName(application, questionApplicationViewModel);
 
         return questionApplicationViewModel;
     }
@@ -167,6 +157,12 @@ public class QuestionModelPopulator extends BaseModelPopulator {
         }
         else {
             questionApplicationViewModel.setSelectedInnovationAreaName("None selected.");
+        }
+    }
+
+    private void addSelectedResearchCategoryName(ApplicationResource applicationResource, QuestionApplicationViewModel questionApplicationViewModel) {
+        if(applicationResource.getResearchCategory() != null && applicationResource.getResearchCategory().getName() != null) {
+            questionApplicationViewModel.setSelectedResearchCategoryName(applicationResource.getResearchCategory().getName());
         }
     }
 
