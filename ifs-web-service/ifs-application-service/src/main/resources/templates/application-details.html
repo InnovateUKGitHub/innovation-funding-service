@@ -31,8 +31,8 @@
             <dd>Innovate UK</dd>
             <dt>Application deadline:</dt>
             <dd>
-              <div th:remove="tag" th:text="${#strings.toLowerCase(#temporals.format(currentCompetition.endDate, 'hh:mma '))}" />
-              <div th:remove="tag" th:text="${#temporals.format(currentCompetition.endDate, 'EEEE d MMMM yyyy')}" />
+              <th:block th:text="${#strings.toLowerCase(#temporals.format(currentCompetition.endDate, 'hh:mma '))}" />
+              <th:block th:text="${#temporals.format(currentCompetition.endDate, 'EEEE d MMMM yyyy')}" />
             </dd>
           </dl>
           <h2 class="heading-medium no-margin-bottom">Application progress</h2>
