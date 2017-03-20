@@ -18,7 +18,7 @@
   	<th:block th:insert="fragments/elements :: competition-status-message (app=${currentApplication}, competition=${currentCompetition})" />
 
     <div class="page-title">
-        <th:block th:insert="fragments/elements :: application-title (applicationId=${currentApplication.id},applicationName=${currentApplication.applicationDisplayName})" />
+        <th:block th:insert="fragments/elements :: application-title (applicationId=${currentApplication.id},applicationName=${currentApplication.name})" />
         <h1 class="heading-xlarge">Application overview</h1>
     </div>
 
@@ -86,10 +86,8 @@
         </div>
     </form>
 
-    <div class="alignright-button">
-        <a th:href="@{/application/{id}/print(id=${currentApplication.getId()})}" rel="nofollow" target="_blank"><div class="icon icon-print"></div> Print your application</a>
-        <a class="button"  th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}" th:text="${ableToSubmitApplication ? 'Review and submit' : 'Review'}" />
-    </div>
+    <a class="button"  th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}" th:text="${ableToSubmitApplication ? 'Review and submit' : 'Review'}" />
+    <a th:href="@{/application/{id}/print(id=${currentApplication.getId()})}" rel="nofollow" target="_blank"><div class="icon icon-print"></div> Print your application</a>
 
 
     <th:block th:insert="fragments/layout :: main-content-end" />
