@@ -642,9 +642,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     @Mock
     protected ValidationUtil validationUtilMock;
 
-    @Mock
-    protected ApplicationResearchCategoryService applicationResearchCategoryService;
-
     @Before
     public void setupMockInjection() {
         // Process mock annotations
