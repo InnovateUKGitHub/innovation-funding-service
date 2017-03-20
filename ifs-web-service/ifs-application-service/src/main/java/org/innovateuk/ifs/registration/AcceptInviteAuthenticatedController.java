@@ -68,7 +68,7 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
                         }
                 )
         ).andOnFailure(clearDownInviteFlowCookiesFn(response));
-        return view.getStatusCode().is4xxClientError() ? URL_HASH_INVALID_TEMPLATE : view.getSuccessObject();
+        return view.getSuccessObject();
     }
 
     @RequestMapping(value = "/accept-invite-authenticated/confirm-invited-organisation/confirm", method = RequestMethod.GET)
@@ -89,7 +89,7 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
                     return "redirect:/application/" + invite.getApplication();
                 })
         ).andOnFailure(clearDownInviteFlowCookiesFn(response));
-        return view.getStatusCode().is4xxClientError() ? URL_HASH_INVALID_TEMPLATE : view.getSuccessObject();
+        return view.getSuccessObject();
     }
 
     private OrganisationResource getInviteOrganisationOrElseUserOrganisation(UserResource loggedInUser, InviteOrganisationResource inviteOrganisation) {

@@ -89,6 +89,6 @@ public class AcceptInviteController extends AbstractAcceptInviteController {
                         }
                 )
         ).andOnFailure(clearDownInviteFlowCookiesFn(response));
-        return view.getStatusCode().is4xxClientError() ? URL_HASH_INVALID_TEMPLATE : view.getSuccessObject();
+        return view.getSuccessObject();
     }
 }

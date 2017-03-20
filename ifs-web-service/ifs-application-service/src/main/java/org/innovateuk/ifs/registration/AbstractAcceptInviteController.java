@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.util.Optional;
 
 import static org.innovateuk.ifs.registration.OrganisationCreationController.ORGANISATION_FORM;

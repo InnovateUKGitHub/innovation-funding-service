@@ -1,16 +1,11 @@
 package org.innovateuk.ifs.application;
 
 import org.innovateuk.ifs.BaseUnitTest;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
-import org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder;
-import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
-import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.registration.AbstractAcceptInviteController;
 import org.innovateuk.ifs.registration.AcceptInviteController;
 import org.innovateuk.ifs.registration.model.AcceptRejectApplicationInviteModelPopulator;
 import org.innovateuk.ifs.registration.service.RegistrationService;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,15 +19,12 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.Validator;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.innovateuk.ifs.BaseControllerMockMVCTest.setupMockMvc;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -79,7 +71,6 @@ public class AcceptInviteControllerTest extends BaseUnitTest {
                 .andExpect(cookie().exists(AbstractAcceptInviteController.INVITE_HASH))
                 .andExpect(view().name("registration/accept-invite-new-user"))
                 .andReturn();
-
         assertEquals(INVITE_HASH, getDecryptedCookieValue(result.getResponse().getCookies(), AbstractAcceptInviteController.INVITE_HASH));
     }
 
