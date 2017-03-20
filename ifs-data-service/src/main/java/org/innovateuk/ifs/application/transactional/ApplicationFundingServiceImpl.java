@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.transactional;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationStatus;
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
@@ -61,7 +60,7 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<Void> saveFundingDecisionData(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
         return getCompetition(competitionId).andOnSuccess(competition -> {
-            List<Application> applicationsForCompetition = findSubmittedApplicationsForCompetition(competitionId);
+            List<Application> applicationsForCompetition = findAllApplicationsForCompetition(competitionId);
 
             return saveFundingDecisionData(applicationsForCompetition, applicationFundingDecisions);
         });
@@ -108,7 +107,11 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
     }
 
     private List<Application> findSubmittedApplicationsForCompetition(Long competitionId) {
-        return applicationRepository.findByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.SUBMITTED.getId());
+        return applicationRepository.findByCompetitionIdAndApplicationStatusId(competitionId, SUBMITTED.getId());
+    }
+
+    private List<Application> findAllApplicationsForCompetition(Long competitionId) {
+        return applicationRepository.findByCompetitionId(competitionId);
     }
 
     private ServiceResult<Void> saveFundingDecisionData(List<Application> applicationsForCompetition, Map<Long, FundingDecision> applicationDecisions) {
@@ -117,11 +120,29 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
             if (applicationForDecision.isPresent()) {
                 Application application = applicationForDecision.get();
                 FundingDecisionStatus fundingDecision = fundingDecisionMapper.mapToDomain(decisionValue);
+                resetNotificationSentDateIfNecessary(application, fundingDecision);
                 application.setFundingDecision(fundingDecision);
             }
         });
 
         return serviceSuccess();
+    }
+
+    private void resetNotificationSentDateIfNecessary(Application application, FundingDecisionStatus newFundingDecision) {
+        if (fundingDecisionHasChanged(application, newFundingDecision)) {
+            resetNotificationEmailSentDate(application);
+        }
+    }
+
+    private boolean fundingDecisionHasChanged(Application application, FundingDecisionStatus newFundingDecision) {
+
+        Optional<FundingDecisionStatus> oldFundingDecision = Optional.ofNullable(application.getFundingDecision());
+        return oldFundingDecision.map(decision -> !decision.equals(newFundingDecision))
+                .orElse(false);
+    }
+
+    private void resetNotificationEmailSentDate(Application application) {
+        applicationService.setApplicationFundingEmailDateTime(application.getId(), null);
     }
 
     private Notification createFundingDecisionNotification(NotificationResource notificationResource, List<Pair<Long, NotificationTarget>> notificationTargetsByApplicationId, Notifications notificationType) {
