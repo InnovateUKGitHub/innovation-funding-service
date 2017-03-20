@@ -12,19 +12,6 @@ ${database_port}    3306
 @{database}       pymysql    ${database_name}    ${database_user}    ${database_password}    ${database_host}    ${database_port}
 
 
-*** Keywords ***
-get comp id from comp title
-    [Arguments]  ${title}
-    Connect to Database     @{database}
-    ${result} =  query  SELECT `id` FROM `${database_name}`.`competition` WHERE `name`='${title}';
-    Log  ${result}
-    # the result of this query looks like ((13,),) so you need get the value array[0][0]
-    ${result} =  get from list  ${result}  0
-    ${competitionId} =  get from list  ${result}  0
-    Log  ${competitionId}
-    [Return]  ${competitionId}
-
-
 *** Test Cases ***
 Custom keyword
     ${OPEN_COMPETITION}   get comp id from comp title  Connected digital additive manufacturing
@@ -36,5 +23,17 @@ Custom keyword
     ${IN_ASSESSMENT_COMPETITION}   get comp id from comp title  Sustainable living models for the future
      Set global variable     ${IN_ASSESSMENT_COMPETITION}
 
+
+*** Keywords ***
+get comp id from comp title
+    [Arguments]  ${title}
+    Connect to Database     @{database}
+    ${result} =  query  SELECT `id` FROM `${database_name}`.`competition` WHERE `name`='${title}';
+    Log  ${result}
+    # the result of this query looks like ((13,),) so you need get the value array[0][0]
+    ${result} =  get from list  ${result}  0
+    ${competitionId} =  get from list  ${result}  0
+    Log  ${competitionId}
+    [Return]  ${competitionId}
 
 
