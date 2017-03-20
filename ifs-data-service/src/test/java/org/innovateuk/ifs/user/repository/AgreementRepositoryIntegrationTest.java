@@ -26,9 +26,6 @@ public class AgreementRepositoryIntegrationTest extends BaseRepositoryIntegratio
         List<Agreement> agreements = newAgreement()
                 .withId(null, null)
                 .withText("foo", "bar")
-                .withAnnexA("annexA1", "annexA2")
-                .withAnnexB("annexB1", "annexB2")
-                .withAnnexC("annexC1", "annexC2")
                 .withCurrent(true, false)
                 .build(2);
         repository.save(agreements);
@@ -37,9 +34,6 @@ public class AgreementRepositoryIntegrationTest extends BaseRepositoryIntegratio
         Agreement agreement = repository.findByCurrentTrue();
 
         assertEquals(expectedAgreement.getText(), agreement.getText());
-        assertEquals(expectedAgreement.getAnnexA(), agreement.getAnnexA());
-        assertEquals(expectedAgreement.getAnnexB(), agreement.getAnnexB());
-        assertEquals(expectedAgreement.getAnnexC(), agreement.getAnnexC());
         assertTrue(agreement.isCurrent());
 
         assertEquals(getPaulPlum().getId(), agreement.getCreatedBy().getId());

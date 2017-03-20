@@ -80,7 +80,7 @@ Lead organisation client-side validations
     [Documentation]    INFUND-901
     ...
     ...    INFUND-7974
-    [Tags]
+    [Tags]    HappyPath
     When The user enters text to a text field    jQuery=tr:nth-of-type(2) td:nth-of-type(1) input    Florian
     And The user enters text to a text field    jQuery=tr:nth-of-type(2) td:nth-of-type(2) input    florian21@florian.com
     Then the user cannot see a validation error in the page
@@ -112,7 +112,7 @@ Partner organisation Server-side validations
     [Documentation]    INFUND-896
     ...
     ...    INFUND-7979
-    [Tags]
+    [Tags]    HappyPath
     Given the user clicks the button/link    jQuery=a:contains('Add partner organisation')
     When The user enters text to a text field    name=organisationName    ${EMPTY}
     And The user enters text to a text field    name=applicants[0].name    ${EMPTY}
@@ -125,6 +125,7 @@ Partner organisation Server-side validations
 
 Partner organisation Client-side validations
     [Documentation]    INFUND-7979
+    [Tags]    HappyPath
     When The user enters text to a text field    name=organisationName    Fannie May
     And The user enters text to a text field    name=applicants[0].name    Adrian Booth
     And The user enters text to a text field    name=applicants[0].email    ${test_mailbox_one}+inviteorg${unique_email_number}@gmail.com
@@ -148,7 +149,7 @@ Pending users visible in the assign list but not clickable
     [Documentation]    INFUND-928
     ...
     ...    INFUND-1962
-    [Tags]    HappyPath
+    [Tags]
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
     And the user clicks the button/link    link=Project summary
@@ -172,7 +173,7 @@ Business organisation (partner accepts invitation)
     And the user clicks the button/link    link=NOMENSA LTD
     And the user selects the checkbox    address-same
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
-    And the user clicks the button/link    jQuery=.button:contains("Confirm and continue")
+    And the user clicks the button/link    jQuery=.button:contains("Save and continue")
     And the user fills the create account form    Adrian    Booth
     And the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com    Please verify your email address    If you did not request an account with us
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
@@ -217,7 +218,7 @@ Lead should see the accepted partner in the assign list
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
     And the user clicks the button/link    link=Project summary
-    When the user clicks the button/link    css=.assign-button
+    When the user clicks the button/link    css=.assign-button > button
     Then the user should see the element    jQuery=button:contains("Adrian Booth")
 
 Lead applicant invites a non registered user in the same organisation

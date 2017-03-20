@@ -13,17 +13,11 @@ public class AgreementDocs {
     public static final FieldDescriptor[] agreementResourceFields = {
             fieldWithPath("id").description("Id of the agreement"),
             fieldWithPath("current").description("Flag to signify if this is the current agreement"),
-            fieldWithPath("text").description("Text of the agreement"),
-            fieldWithPath("annexA").description("Text of annex A"),
-            fieldWithPath("annexB").description("Text of annex B"),
-            fieldWithPath("annexC").description("Text of annex C")
+            fieldWithPath("text").description("Text of the agreement")
     };
 
     public static final AgreementResourceBuilder agreementResourceBuilder = newAgreementResource()
             .with(id(1L))
             .withCurrent(TRUE)
-            .withText("Agreement text...")
-            .withAnnexA("Annex A text...")
-            .withAnnexB("Annex B text...")
-            .withAnnexC("Annex C text...");
+            .withText("Agreement text...");
 }

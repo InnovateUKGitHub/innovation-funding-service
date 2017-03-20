@@ -1,14 +1,16 @@
 package org.innovateuk.ifs.application.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Assert;
-import org.junit.Test;
-
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.util.Optional;
+
+import static org.innovateuk.ifs.application.resource.FundingDecision.FUNDED;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitTest<ApplicationSummaryRestServiceImpl> {
 
@@ -188,9 +190,9 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
     @Test
     public void testgetWithFundingDecisionApplications() {
         ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
-        setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123/with-funding-decision?page=6&size=20&sort=id", ApplicationSummaryPageResource.class, responseBody);
+        setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123/with-funding-decision?filter=filter&sendFilter=false&fundingFilter=FUNDED&page=6&size=20&sort=id", ApplicationSummaryPageResource.class, responseBody);
 
-        RestResult<ApplicationSummaryPageResource> result = service.getWithFundingDecisionApplications(Long.valueOf(123L), "id", 6, 20, null);
+        RestResult<ApplicationSummaryPageResource> result = service.getWithFundingDecisionApplications(Long.valueOf(123L), "id", 6, 20, "filter", Optional.of(false), Optional.of(FUNDED));
 
         assertTrue(result.isSuccess());
         Assert.assertEquals(responseBody, result.getSuccessObject());

@@ -60,7 +60,6 @@ Invite a user with the same organisation under the same organisation
 
 *** Keywords ***
 the user enters profile details
-    The user should see the element    id=title
     The user enters text to a text field    id=firstName    Dennis
     The user enters text to a text field    id=lastName    Bergkamp
     focus    css=[name="create-account"]
@@ -76,7 +75,7 @@ Existing user creates a new application and invites a user from the same organis
     the user navigates to the page    ${COMPETITION_DETAILS_URL}
     the user clicks the button/link    jQuery=.button:contains("Apply now")
     the user clicks the button/link    jQuery=.button:contains("Apply now")
-    the user clicks the button/link    jQuery=Label:contains("Yes I want to create a new application")
+    the user clicks the button/link    jQuery=Label:contains("I want to create a new application")
     the user clicks the button/link    jQuery=.button:contains("Continue")
     the user clicks the button/link    jQuery=a:contains("Update INNOVATE LTD")
     The user clicks the button/link    jQuery=button:contains("Add new applicant")
