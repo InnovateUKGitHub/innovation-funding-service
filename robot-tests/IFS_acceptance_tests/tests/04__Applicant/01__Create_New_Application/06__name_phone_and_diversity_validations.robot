@@ -11,22 +11,6 @@ Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
-Diversity Server-side Validations
-    [Documentation]    INFUND-6387
-    When the user submits their information
-    Then the user should see an error    Please select a gender.
-    And the user should see an error    Please select an ethnicity.
-    And the user should see an error    Please select a disability.
-
-Diversity client-side validations
-    [Documentation]    INFUND-6387
-    When the user selects the radio button    gender    gender2
-    And the user selects the radio button    ethnicity    ethnicity2
-    And the user selects the radio button    disability    disability2
-    Then the user should not see the text in the page    Please select a gender.
-    And the user should not see the text in the page    Please select an ethnicity.
-    And the user should not see the text in the page    Please select a disability.
-
 First name left blank
     [Documentation]    -INFUND-885
     [Tags]
@@ -52,9 +36,6 @@ Last name left blank
     And the user enters text to a text field    id=email    ${valid_email}
     And the user enters text to a text field    id=password    ${correct_password}
     And the user enters text to a text field    id=retypedPassword    ${correct_password}
-    And the user selects the radio button    gender    gender2
-    And the user selects the radio button    ethnicity    ethnicity2
-    And the user selects the radio button    disability    disability2
     And the user submits their information
     Then the user should see an error    Please enter a last name.
 
@@ -68,9 +49,6 @@ Phone number left blank
     And the user enters text to a text field    id=email    ${valid_email}
     And the user enters text to a text field    id=password    ${correct_password}
     And the user enters text to a text field    id=retypedPassword    ${correct_password}
-    And the user selects the radio button    gender    gender2
-    And the user selects the radio button    ethnicity    ethnicity2
-    And the user selects the radio button    disability    disability2
     And the user submits their information
     Then the user should see an error    Please enter a phone number.
 
@@ -84,9 +62,6 @@ Phone number validation
     And the user enters text to a text field    id=email    ${valid_email}
     And the user enters text to a text field    id=password    ${correct_password}
     And the user enters text to a text field    id=retypedPassword    ${correct_password}
-    And the user selects the radio button    gender    gender2
-    And the user selects the radio button    ethnicity    ethnicity2
-    And the user selects the radio button    disability    disability2
     And the user submits their information
     Then the user should see an error    Please enter a valid phone number.
 
@@ -100,8 +75,5 @@ Phone number too short
     And the user enters text to a text field    id=email    ${valid_email}
     And the user enters text to a text field    id=password    ${correct_password}
     And the user enters text to a text field    id=retypedPassword    ${correct_password}
-    And the user selects the radio button    gender    gender2
-    And the user selects the radio button    ethnicity    ethnicity2
-    And the user selects the radio button    disability    disability2
     And the user submits their information
     Then the user should see an error    Input for your phone number has a minimum length of 8 characters.
