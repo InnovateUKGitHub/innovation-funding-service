@@ -16,7 +16,7 @@ import java.util.List;
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
 public interface ApplicationStatisticsRepository extends PagingAndSortingRepository<ApplicationStatistics, Long> {
-    List<ApplicationStatistics> findByCompetitionAndApplicationStatusIdIn(Long competitionId, Collection<Long> applicationStatusIds);
+    List<ApplicationStatistics> findByCompetitionAndApplicationStatusIdIn(long competitionId, Collection<Long> applicationStatusIds);
 
     @Query("SELECT a FROM ApplicationStatistics a WHERE a.competition = :compId " +
             "AND (a.applicationStatus.id IN :status) " +
