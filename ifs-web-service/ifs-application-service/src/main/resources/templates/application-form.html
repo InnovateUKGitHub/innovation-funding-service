@@ -78,7 +78,7 @@
                                               th:with="organisationFinance=(${model.finance.organisationFinance}), organisationGrantClaimPercentage=(${model.finance.organisationGrantClaimPercentage}),
                                                        organisationGrantClaimPercentageId=(${model.finance.organisationGrantClaimPercentageId}), organisationFinanceTotal=(${model.finance.organisationFinanceTotal}),
                                                        organisationFinanceSize=(${model.finance.organisationFinanceSize}), organisationSizes=(${model.finance.organisationSizes}),
-                                                       maximumGrantClaimPercentage=(${model.finance.maximumGrantClaimPercentage})">
+                                                       maximumGrantClaimPercentage=(${model.finance.maximumGrantClaimPercentage}), financeQuestions=(${model.finance.financeQuestions})">
                                         <div th:replace="'finance/'+${model.finance.financeView} :: ${formInput.type.nameLower}" />
                                     </th:block>
 
