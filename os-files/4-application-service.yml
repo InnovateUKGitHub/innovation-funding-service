@@ -11,7 +11,11 @@ items:
     selector:
       deploymentconfig: application-svc
     strategy:
-      resources: {}
+      type: Rolling
+      rollingParams:
+        timeoutSeconds: 600
+        maxSurge: 2
+        maxUnavailable: 0
     template:
       metadata:
         creationTimestamp: null

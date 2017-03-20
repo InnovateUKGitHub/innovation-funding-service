@@ -1,14 +1,9 @@
 package org.innovateuk.ifs.assessment.controller.profile;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.assessment.controller.profile.AssessorProfileAgreementController.AgreementAnnexParameter;
 import org.innovateuk.ifs.assessment.form.profile.AssessorProfileAgreementForm;
-import org.innovateuk.ifs.assessment.model.profile.AssessorProfileAgreementAnnexModelPopulator;
 import org.innovateuk.ifs.assessment.model.profile.AssessorProfileAgreementModelPopulator;
-import org.innovateuk.ifs.assessment.viewmodel.profile.AssessorProfileAgreementAnnexViewModel;
 import org.innovateuk.ifs.assessment.viewmodel.profile.AssessorProfileAgreementViewModel;
-import org.innovateuk.ifs.user.resource.AgreementResource;
 import org.innovateuk.ifs.user.resource.ProfileAgreementResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
@@ -18,16 +13,13 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
-import static org.innovateuk.ifs.assessment.controller.profile.AssessorProfileAgreementController.AgreementAnnexParameter.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.AgreementResourceBuilder.newAgreementResource;
 import static org.innovateuk.ifs.user.builder.ProfileAgreementResourceBuilder.newProfileAgreementResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.util.CollectionFunctions.asListOfPairs;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -41,10 +33,6 @@ public class AssessorProfileAgreementControllerTest extends BaseControllerMockMV
     @Spy
     @InjectMocks
     private AssessorProfileAgreementModelPopulator assessorProfileAgreementModelPopulator;
-
-    @Spy
-    @InjectMocks
-    private AssessorProfileAgreementAnnexModelPopulator assessorProfileAgreementAnnexModelPopulator;
 
     @Override
     protected AssessorProfileAgreementController supplyControllerUnderTest() {
@@ -85,36 +73,6 @@ public class AssessorProfileAgreementControllerTest extends BaseControllerMockMV
                 .andExpect(view().name("profile/agreement"));
 
         verify(userService, only()).getProfileAgreement(user.getId());
-    }
-
-    @Test
-    public void getAnnex() throws Exception {
-        UserResource user = newUserResource().build();
-        setLoggedInUser(user);
-
-        String expectedAnnexA = "Annex A...";
-        String expectedAnnexB = "Annex B...";
-        String expectedAnnexC = "Annex C...";
-
-        AgreementResource agreementResource = newAgreementResource()
-                .withAnnexA(expectedAnnexA)
-                .withAnnexB(expectedAnnexB)
-                .withAnnexC(expectedAnnexC)
-                .build();
-
-        when(agreementService.getCurrentAgreement()).thenReturn(agreementResource);
-
-        // Check that each of the possible params returns the correct annex text
-        List<Pair<AgreementAnnexParameter, String>> params = asListOfPairs(A, expectedAnnexA, B, expectedAnnexB, C, expectedAnnexC);
-        params.stream().forEach(paramAndExpected -> {
-            try {
-                assertProfileAgreementAnnexView(paramAndExpected.getLeft(), paramAndExpected.getRight());
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        });
-
-        verify(agreementService, times(params.size())).getCurrentAgreement();
     }
 
     @Test
@@ -181,14 +139,5 @@ public class AssessorProfileAgreementControllerTest extends BaseControllerMockMV
         assertEquals("Please agree to the terms and conditions.", bindingResult.getFieldError("agreesToTerms").getDefaultMessage());
 
         verify(userService, only()).getProfileAgreement(user.getId());
-    }
-
-    private void assertProfileAgreementAnnexView(AgreementAnnexParameter annexParameter, String expectedText) throws Exception {
-        AssessorProfileAgreementAnnexViewModel expectedViewModel = new AssessorProfileAgreementAnnexViewModel(annexParameter, expectedText);
-        mockMvc.perform(get("/profile/agreement/annex/{annex}", annexParameter))
-                .andExpect(status().isOk())
-                .andExpect(model().hasNoErrors())
-                .andExpect(model().attribute("model", expectedViewModel))
-                .andExpect(view().name("profile/annex"));
     }
 }

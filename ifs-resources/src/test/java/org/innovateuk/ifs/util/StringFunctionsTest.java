@@ -64,7 +64,7 @@ public class StringFunctionsTest {
 
     @Test
     public void plainTextToHtml() throws Exception {
-        assertEquals("This text is split<br>over several<br>lines.<br/><br/>It contains characters &lt; &gt; &amp; &quot; which need escaping.",
+        assertEquals("This text is split<br/>over several<br/>lines.<br/><br/>It contains characters &lt; &gt; &amp; &quot; which need escaping.",
                 StringFunctions.plainTextToHtml("This text is split\nover several\nlines.\n\nIt contains characters < > & \" which need escaping."));
     }
 
