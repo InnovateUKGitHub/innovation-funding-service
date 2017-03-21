@@ -128,4 +128,12 @@ public class ApplicationSummaryResource {
     public void setInnovationArea(String innovationArea) {
         this.innovationArea = innovationArea;
     }
+
+    public boolean applicationFundingDecisionIsChangeable() {
+        if(this.manageFundingEmailDate != null && fundingDecision.equals(FundingDecision.FUNDED)) {
+            return false;
+        }
+
+        return true;
+    }
 }

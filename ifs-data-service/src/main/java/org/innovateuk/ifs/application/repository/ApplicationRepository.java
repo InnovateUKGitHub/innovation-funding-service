@@ -1,17 +1,16 @@
 package org.innovateuk.ifs.application.repository;
 
-import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.List;
-
 import org.innovateuk.ifs.application.domain.Application;
-
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
+
+import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * This interface is used to generate Spring Data Repositories.
@@ -68,7 +67,7 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 
 	Page<Application> findByCompetitionIdAndApplicationStatusIdNotIn(Long competitionId, Collection<Long> applicationStatusIds, Pageable pageable);
 
-	List<Application> findByCompetitionIdAndApplicationStatusId(Long competitionId, Long applicationStatusId);
+	List<Application> findByCompetitionIdAndApplicationStatusId(Long competitionId, List<Long> applicationStatusIds);
 
 	Page<Application> findByCompetitionIdAndApplicationStatusId(Long competitionId, Long applicationStatusId, Pageable pageable);
 

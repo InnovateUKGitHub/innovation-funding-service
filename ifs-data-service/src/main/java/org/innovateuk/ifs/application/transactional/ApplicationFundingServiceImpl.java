@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.application.constant.ApplicationStatusConstants.*;
 import static org.innovateuk.ifs.application.resource.FundingDecision.FUNDED;
@@ -61,9 +62,9 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<Void> saveFundingDecisionData(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
         return getCompetition(competitionId).andOnSuccess(competition -> {
-            List<Application> applicationsForCompetition = findSubmittedApplicationsForCompetition(competitionId);
+            List<Application> allowedApplicationForCompetition = findAllowedApplicationsForCompetition(competitionId);
 
-            return saveFundingDecisionData(applicationsForCompetition, applicationFundingDecisions);
+            return saveFundingDecisionData(allowedApplicationForCompetition, applicationFundingDecisions);
         });
     }
 
@@ -107,8 +108,33 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
         return (List) applicationRepository.findAll(applicationIds);
     }
 
-    private List<Application> findSubmittedApplicationsForCompetition(Long competitionId) {
-        return applicationRepository.findByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.SUBMITTED.getId());
+    private List<Application> findAllowedApplicationsForCompetition(Long competitionId) {
+        List<Application> applicationsInCompetition = applicationRepository.findByCompetitionId(competitionId);
+
+        List<Application> allowedApplications = applicationsInCompetition.stream()
+                .filter(application -> applicationHasBeenSubmitted(application))
+                .filter(application -> !applicationDecisionIsSuccessfulAndNotified(application))
+                .collect(Collectors.toList());
+
+        return allowedApplications;
+    }
+
+    private boolean applicationHasBeenSubmitted(Application application) {
+        List<Long> submittedApplicationStatusIds = new ArrayList<>();
+        submittedApplicationStatusIds.add(ApplicationStatusConstants.SUBMITTED.getId());
+        submittedApplicationStatusIds.add(ApplicationStatusConstants.REJECTED.getId());
+        submittedApplicationStatusIds.add(ApplicationStatusConstants.APPROVED.getId());
+
+        boolean hasBeenSubmitted = submittedApplicationStatusIds.contains(application.getApplicationStatus().getId());;
+
+        return hasBeenSubmitted;
+    }
+
+    private boolean applicationDecisionIsSuccessfulAndNotified(Application application) {
+        boolean isSuccessful = application.getFundingDecision() != null && application.getFundingDecision().equals(FundingDecision.FUNDED);
+        boolean isNotified = application.getManageFundingEmailDate() != null;
+
+        return isSuccessful && isNotified;
     }
 
     private ServiceResult<Void> saveFundingDecisionData(List<Application> applicationsForCompetition, Map<Long, FundingDecision> applicationDecisions) {
