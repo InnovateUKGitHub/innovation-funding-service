@@ -16,6 +16,7 @@ import org.innovateuk.ifs.invite.service.InviteService;
 import org.innovateuk.ifs.invite.service.InviteServiceImpl;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.registration.service.RegistrationService;
+import org.innovateuk.ifs.registration.viewmodel.ConfirmOrganisationInviteOrganisation;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.CookieUtil;
@@ -79,10 +80,9 @@ public class AcceptInviteAuthenticatedController extends BaseController{
                 }
                 OrganisationResource organisation = getUserOrInviteOrganisation(loggedInUser, inviteOrganisation);
 
-                model.addAttribute("invite", inviteResource);
-                model.addAttribute("organisation", organisation);
-                model.addAttribute("organisationAddress", getOrganisationAddress(organisation));
-                model.addAttribute("acceptInviteUrl", "/accept-invite-authenticated/confirm-invited-organisation/confirm");
+                model.addAttribute("model",
+                        new ConfirmOrganisationInviteOrganisation(inviteResource, organisation, getOrganisationAddress(organisation),
+                        "/accept-invite-authenticated/confirm-invited-organisation/confirm"));
                 return "registration/confirm-registered-organisation";
             } else {
                 cookieUtil.removeCookie(response, InviteServiceImpl.INVITE_HASH);
