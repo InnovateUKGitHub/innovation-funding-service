@@ -51,9 +51,7 @@ public class ProjectFinanceQueriesServiceSecurityTest extends BaseServiceSecurit
         setLoggedInUser(null);
 
         assertAccessDenied(() -> classUnderTest.findOne(1L), () -> {
-            verify(queryRules).projectFinanceUsersCanViewQueries(isA(QueryResource.class), isNull(UserResource.class));
-            verify(queryRules).projectPartnersCanViewQueries(isA(QueryResource.class), isNull(UserResource.class));
-
+            verify(queryRules).onlyProjectFinanceUsersOrFinanceContactCanViewTheirQueries(isA(QueryResource.class), isNull(UserResource.class));
             verifyNoMoreInteractions(queryRules);
         });
     }
@@ -65,9 +63,7 @@ public class ProjectFinanceQueriesServiceSecurityTest extends BaseServiceSecurit
         ServiceResult<List<QueryResource>> results = classUnderTest.findAll(22L);
         assertEquals(0, results.getSuccessObject().size());
 
-        verify(queryRules, times(2)).projectFinanceUsersCanViewQueries(isA(QueryResource.class), isNull(UserResource.class));
-        verify(queryRules, times(2)).projectPartnersCanViewQueries(isA(QueryResource.class), isNull(UserResource.class));
-
+        verify(queryRules, times(2)).onlyProjectFinanceUsersOrFinanceContactCanViewTheirQueries(isA(QueryResource.class), isNull(UserResource.class));
         verifyNoMoreInteractions(queryRules);
     }
 
@@ -79,12 +75,11 @@ public class ProjectFinanceQueriesServiceSecurityTest extends BaseServiceSecurit
 
 
         assertAccessDenied(() -> classUnderTest.addPost(isA(PostResource.class), 3L), () -> {
-            verify(queryRules).projectFinanceUsersCanAddPostToTheirQueries(isA(QueryResource.class), isNull(UserResource.class));
-            verify(queryRules).projectPartnersCanAddPostToTheirQueries(isA(QueryResource.class), isNull(UserResource.class));
-
+            verify(queryRules).onlyProjectFinanceUsersOrFinanceContactAddPostToTheirQueries(isA(QueryResource.class), isNull(UserResource.class));
             verifyNoMoreInteractions(queryRules);
         });
     }
+
 
     public static class TestProjectFinanceQueriesService implements ProjectFinanceQueriesService {
 

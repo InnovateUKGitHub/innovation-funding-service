@@ -30,7 +30,7 @@ public interface OrganisationService {
 
     OrganisationResource addAddress(OrganisationResource organisation, AddressResource address, OrganisationAddressType type);
 
-    Long getOrganisationType(Long userId, Long applicationId);
+    String getOrganisationType(Long userId, Long applicationId);
 
     Optional<OrganisationResource> getOrganisationForUser(Long userId, List<ProcessRoleResource> userApplicationRoles);
 }

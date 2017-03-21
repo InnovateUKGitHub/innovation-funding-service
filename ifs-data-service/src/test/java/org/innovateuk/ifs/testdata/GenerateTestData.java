@@ -61,6 +61,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.project.util.FinanceUtil.UNIVERSITY_HEI;
 import static org.innovateuk.ifs.testdata.CsvUtils.*;
 import static org.innovateuk.ifs.testdata.builders.AssessmentDataBuilder.newAssessmentData;
 import static org.innovateuk.ifs.testdata.builders.AssessorDataBuilder.newAssessorData;
@@ -80,7 +81,7 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_TECHNOLOGIST;
 import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -598,7 +599,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                             finances.applicationName.equals(line.title) &&
                             finances.organisationName.equals(organisationName));
 
-            if (organisationType.equals(OrganisationTypeEnum.RESEARCH)) {
+            if (organisationType.equals(OrganisationTypeEnum.ACADEMIC)) {
 
                 if (organisationFinances.isPresent()) {
                     return generateAcademicFinancesFromSuppliedData(user, organisationName, organisationFinances.get(), line.markFinancesComplete);
@@ -1011,8 +1012,8 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     private OrganisationTypeEnum lookupOrganisationType(String organisationType) {
         switch (organisationType) {
-            case "Research":
-                return OrganisationTypeEnum.RESEARCH;
+            case UNIVERSITY_HEI:
+                return OrganisationTypeEnum.ACADEMIC;
             default:
                 return OrganisationTypeEnum.valueOf(organisationType.toUpperCase().replace(" ", "_"));
         }

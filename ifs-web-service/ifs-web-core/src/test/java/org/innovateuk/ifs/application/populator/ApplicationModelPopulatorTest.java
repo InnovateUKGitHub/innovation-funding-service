@@ -149,7 +149,7 @@ public class ApplicationModelPopulatorTest {
         ApplicationForm form = new ApplicationForm();
         SectionResource financeSection = SectionResourceBuilder.newSectionResource().build();
         List<QuestionResource> costsQuestions = QuestionResourceBuilder.newQuestionResource().build(2);
-        Long organisationType = 1L;
+        String organisationType = "organisationType";
         FinanceModelManager financeModelManager = mock(FinanceModelManager.class);
 
         when(sectionService.getFinanceSection(competitionId)).thenReturn(financeSection);

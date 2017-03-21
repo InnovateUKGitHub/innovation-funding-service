@@ -144,6 +144,13 @@ public class OrganisationCreationController {
         model.addAttribute("searchLabel",getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchLabel",  request.getLocale()));
         model.addAttribute("searchHint", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchHint",  request.getLocale()));
 
+        if(OrganisationTypeEnum.BUSINESS.equals(organisationForm.getOrganisationTypeEnum()) ||
+                OrganisationTypeEnum.ACADEMIC.equals(organisationForm.getOrganisationTypeEnum())
+                ){
+            model.addAttribute("searchEnabled", true);
+        }else{
+            model.addAttribute("searchEnabled", false);
+        }
         return TEMPLATE_PATH + "/" + FIND_ORGANISATION;
     }
 
@@ -266,8 +273,7 @@ public class OrganisationCreationController {
                                           HttpServletRequest request, HttpServletResponse response) {
         addOrganisationType(organisationForm, request);
         organisationForm.setOrganisationSearching(false);
-        boolean currentManualEntryValue = organisationForm.isManualEntry();
-        organisationForm.setManualEntry(!currentManualEntryValue);
+        organisationForm.setManualEntry(true);
         cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
         return "redirect:/organisation/create/" + FIND_ORGANISATION;
     }

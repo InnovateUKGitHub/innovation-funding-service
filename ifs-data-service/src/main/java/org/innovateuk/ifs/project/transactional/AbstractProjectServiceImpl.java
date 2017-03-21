@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.project.transactional;
 
+import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
+import org.innovateuk.ifs.project.bankdetails.repository.BankDetailsRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.transactional.FinanceRowService;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
-import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
-import org.innovateuk.ifs.project.bankdetails.repository.BankDetailsRepository;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
@@ -22,6 +22,7 @@ import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.resource.ApprovalType;
+import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Organisation;
@@ -31,19 +32,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
+import static java.util.Arrays.asList;
 
-/**
- * Abstract service for handling project service functionality.
- */
 public class AbstractProjectServiceImpl extends BaseTransactionalService {
 
     @Autowired
@@ -152,17 +151,17 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
 
         PartnerOrganisation partnerOrg = partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(project.getId(), organisation.getId());
 
-            if (financeChecksAndBankDetailsComplete(bankDetailsStatus, partnerOrg)) {
+        if (asList(COMPLETE, NOT_REQUIRED).contains(bankDetailsStatus)) {
+            if (financeCheckWorkflowHandler.isApproved(partnerOrg)) {
                 return COMPLETE;
             }
             if (isAwaitingResponse) {
                 return ACTION_REQUIRED;
             }
             return PENDING;
-    }
-
-    private boolean financeChecksAndBankDetailsComplete(ProjectActivityStates bankDetailsStatus, PartnerOrganisation partnerOrg) {
-        return financeCheckWorkflowHandler.isApproved(partnerOrg) && asList(COMPLETE, NOT_REQUIRED).contains(bankDetailsStatus);
+        } else {
+            return NOT_STARTED;
+        }
     }
 
     protected ProjectActivityStates createLeadSpendProfileStatus(final Project project, final ProjectActivityStates spendProfileStatus, final Optional<SpendProfile> spendProfile) {

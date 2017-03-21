@@ -53,17 +53,16 @@ public class ProjectSetupSectionStatus {
                                                     final boolean allApproved,
                                                     final SectionAccess access) {
 
-        if(access.equals(SectionAccess.NOT_ACCESSIBLE)) {
+        if(financeCheckState == null || financeCheckState.equals(NOT_STARTED)) {
             return EMPTY;
-        } else {
-            if (financeCheckState.equals(COMPLETE) && allApproved) {
-                return TICK;
-            }
-            if (financeCheckState.equals(ACTION_REQUIRED)) {
-                return FLAG;
-            }
-            return HOURGLASS;
         }
+        if (financeCheckState.equals(COMPLETE) && allApproved) {
+            return TICK;
+        }
+        if (access.equals(SectionAccess.ACCESSIBLE) && financeCheckState.equals(ACTION_REQUIRED)) {
+            return FLAG;
+        }
+        return HOURGLASS;
     }
 
     public SectionStatus spendProfileSectionStatus(final ProjectActivityStates spendProfileState) {

@@ -26,7 +26,6 @@ import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.threads.resource.QueryResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -114,20 +113,17 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
         application = applications.get(0);
         project.setApplication(application.getId());
 
-        industrialOrganisation = newOrganisationResource()
-                .withId(2L)
-                .withName("Industrial Org")
-                .withCompanyHouseNumber("123456789")
-                .withOrganisationTypeName(OrganisationTypeEnum.BUSINESS.name())
-                .withOrganisationType(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId())
-                .build();
+        industrialOrganisation = newOrganisationResource().
+                withId(2L).
+                withName("Industrial Org").
+                withCompanyHouseNumber("123456789").
+                withOrganisationTypeName("Business").
+                build();
 
-        academicOrganisation = newOrganisationResource()
-                .withId(1L)
-                .withName("Academic Org")
-                .withOrganisationTypeName(OrganisationTypeEnum.RESEARCH.name())
-                .withOrganisationType(OrganisationTypeEnum.RESEARCH.getOrganisationTypeId())
-                .build();
+        academicOrganisation = newOrganisationResource().
+                withId(1L).
+                withName("Academic Org").
+                build();
 
         // save actions should always succeed.
         when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), eq(""), anyBoolean())).thenReturn(new ValidationMessages(fieldError("value", "", "Please enter some text 123")));
@@ -142,8 +138,8 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
         when(organisationService.getOrganisationById(industrialOrganisation.getId())).thenReturn(industrialOrganisation);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
         when(financeCheckServiceMock.getFinanceCheckEligibilityDetails(project.getId(), industrialOrganisation.getId())).thenReturn(eligibilityOverview);
-        when(financeHandler.getProjectFinanceModelManager(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId())).thenReturn(defaultProjectFinanceModelManager);
-        when(financeHandler.getProjectFinanceFormHandler(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId())).thenReturn(projectFinanceFormHandler);
+        when(financeHandler.getProjectFinanceModelManager("Business")).thenReturn(defaultProjectFinanceModelManager);
+        when(financeHandler.getProjectFinanceFormHandler("Business")).thenReturn(projectFinanceFormHandler);
 
         FinanceViewModel financeViewModel = new FinanceViewModel();
         financeViewModel.setOrganisationGrantClaimPercentage(74);
@@ -170,7 +166,7 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
         when(organisationService.getOrganisationById(organisationId)).thenReturn(partnerOrganisation);
         when(projectService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
         when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
-        when(financeCheckServiceMock.getQueries(any())).thenReturn(ServiceResult.serviceSuccess(Collections.emptyList()));
+        when(financeCheckServiceMock.loadQueries(any())).thenReturn(ServiceResult.serviceSuccess(Collections.emptyList()));
 
         MvcResult result = mockMvc.perform(get("/project/123/partner-organisation/234/finance-checks")).
                 andExpect(view().name("project/finance-checks")).
@@ -206,7 +202,7 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
         when(organisationService.getOrganisationById(organisationId)).thenReturn(partnerOrganisation);
         when(projectService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
         when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
-        when(financeCheckServiceMock.getQueries(projectFinanceResource.getId())).thenReturn(ServiceResult.serviceSuccess(Collections.singletonList(sampleQuery())));
+        when(financeCheckServiceMock.loadQueries(projectFinanceResource.getId())).thenReturn(ServiceResult.serviceSuccess(Collections.singletonList(sampleQuery())));
 
         MvcResult result = mockMvc.perform(get("/project/123/partner-organisation/234/finance-checks")).
                 andExpect(view().name("project/finance-checks")).

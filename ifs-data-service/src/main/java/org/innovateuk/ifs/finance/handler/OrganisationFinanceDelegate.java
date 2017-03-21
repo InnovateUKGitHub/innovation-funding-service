@@ -16,7 +16,7 @@ public class OrganisationFinanceDelegate {
     @Autowired
     private FinanceUtil financeUtil;
 
-    public OrganisationFinanceHandler getOrganisationFinanceHandler(Long organisationType) {
+    public OrganisationFinanceHandler getOrganisationFinanceHandler(String organisationType) {
         if (financeUtil.isUsingJesFinances(organisationType)) {
             return organisationJESFinance;
         } else {
