@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project;
 
+import org.innovateuk.ifs.project.sections.security.ProjectSetupSectionsPermissionRules;
 import org.innovateuk.ifs.security.BaseControllerSecurityTest;
 import org.junit.Before;
 
