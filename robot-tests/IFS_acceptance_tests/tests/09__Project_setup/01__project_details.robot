@@ -310,6 +310,8 @@ Invited project manager registration flow
     And the guest user inserts user email & password    ${test_mailbox_one}+invitedprojectmanager@gmail.com  ${correct_password}
     And the guest user clicks the log-in button
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_TITLE}
+    Then the user should not see the element    jQuery=.my-applications .in-progress
+    Then the user should not see the text in the page  Application in progress    # Nuno
 
 Invited project manager shows on the project manager selection screen
     [Documentation]    INFUND-3554
