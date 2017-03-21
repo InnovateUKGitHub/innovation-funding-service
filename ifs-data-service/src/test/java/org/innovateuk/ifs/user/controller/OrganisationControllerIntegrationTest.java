@@ -64,8 +64,7 @@ public class OrganisationControllerIntegrationTest extends BaseControllerIntegra
         loginPeteTom();
         org = controller.findById(6L).getSuccessObject();
         organisationType = organisationTypeRepository.findOne(org.getOrganisationType());
-        assertEquals("University (HEI)", organisationType.getName());
-        assertEquals("Research", organisationType.getParentOrganisationType().getName());
+        assertEquals("Research", organisationType.getName());
     }
 
     @Rollback
