@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.validator.util;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.domain.Section;
@@ -16,8 +18,6 @@ import org.innovateuk.ifs.validator.ApplicationMarkAsCompleteValidator;
 import org.innovateuk.ifs.validator.MinRowCountValidator;
 import org.innovateuk.ifs.validator.NotEmptyValidator;
 import org.innovateuk.ifs.validator.transactional.ValidatorService;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -30,12 +30,12 @@ import javax.validation.groups.Default;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyMap;
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.reject;
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.rejectValue;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyMap;
 
 @Component
 public class ValidationUtil {
@@ -43,7 +43,6 @@ public class ValidationUtil {
     private ValidatorService validatorService;
     private MinRowCountValidator minRowCountValidator;
     private SpendProfileCostValidator spendProfileCostValidator;
-
 
     @Autowired
     @Lazy
@@ -128,7 +127,7 @@ public class ValidationUtil {
         return binder.getBindingResult();
     }
 
-    public BindingResult validationApplicationDetails(Application application){
+    public BindingResult validationApplicationDetails(Application application) {
         DataBinder binder = new DataBinder(application);
         binder.addValidators(new ApplicationMarkAsCompleteValidator());
         binder.validate();
@@ -242,7 +241,7 @@ public class ValidationUtil {
     }
 
     private boolean nonEmpty(ValidationMessages validationMessages) {
-    	return validationMessages != null && validationMessages.hasErrors();
+        return validationMessages != null && validationMessages.hasErrors();
     }
 
     public ValidationMessages validateCostItem(FinanceRowItem costItem) {
@@ -257,7 +256,7 @@ public class ValidationUtil {
         return buildValidationMessages(costItem, bindingResult);
     }
 
-    private ValidationMessages buildValidationMessages(FinanceRowItem costItem, BeanPropertyBindingResult bindingResult){
+    private ValidationMessages buildValidationMessages(FinanceRowItem costItem, BeanPropertyBindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("validated, with messages: ");
