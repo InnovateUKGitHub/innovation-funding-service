@@ -37,7 +37,7 @@ public interface InviteService {
     ServiceResult<InviteOrganisationResource> getInviteOrganisationByHash(String hash);
 
     @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<Set<InviteOrganisationResource>> getInvitesByApplication(Long applicationId);
+    ServiceResult<List<InviteOrganisationResource>> getInvitesByApplication(Long applicationId);
 
     @PreFilter(filterTarget = "inviteResources", value = "hasPermission(filterObject, 'SAVE')")
     ServiceResult<InviteResultsResource> saveInvites(@P("inviteResources") List<ApplicationInviteResource> inviteResources);

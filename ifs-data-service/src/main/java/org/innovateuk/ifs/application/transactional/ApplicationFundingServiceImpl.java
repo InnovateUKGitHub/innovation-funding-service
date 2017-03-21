@@ -143,11 +143,29 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
             if (applicationForDecision.isPresent()) {
                 Application application = applicationForDecision.get();
                 FundingDecisionStatus fundingDecision = fundingDecisionMapper.mapToDomain(decisionValue);
+                resetNotificationSentDateIfNecessary(application, fundingDecision);
                 application.setFundingDecision(fundingDecision);
             }
         });
 
         return serviceSuccess();
+    }
+
+    private void resetNotificationSentDateIfNecessary(Application application, FundingDecisionStatus newFundingDecision) {
+        if (fundingDecisionHasChanged(application, newFundingDecision)) {
+            resetNotificationEmailSentDate(application);
+        }
+    }
+
+    private boolean fundingDecisionHasChanged(Application application, FundingDecisionStatus newFundingDecision) {
+
+        Optional<FundingDecisionStatus> oldFundingDecision = Optional.ofNullable(application.getFundingDecision());
+        return oldFundingDecision.map(decision -> !decision.equals(newFundingDecision))
+                .orElse(false);
+    }
+
+    private void resetNotificationEmailSentDate(Application application) {
+        applicationService.setApplicationFundingEmailDateTime(application.getId(), null);
     }
 
     private Notification createFundingDecisionNotification(NotificationResource notificationResource, List<Pair<Long, NotificationTarget>> notificationTargetsByApplicationId, Notifications notificationType) {
