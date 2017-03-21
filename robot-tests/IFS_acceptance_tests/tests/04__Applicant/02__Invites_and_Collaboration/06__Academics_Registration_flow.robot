@@ -63,4 +63,4 @@ Accept invitation as academic
 *** Keywords ***
 If the user goes to the previous page he should redirect to the login page
     And the user goes back to the previous page
-    Then the user should see the text in the page    New to this service?
+    Then the user should see the text in the page    Sign in
