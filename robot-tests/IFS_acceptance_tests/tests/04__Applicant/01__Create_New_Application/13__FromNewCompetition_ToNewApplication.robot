@@ -278,7 +278,7 @@ Applicant can view and edit project growth table
 
 Invite a non-exisintg collaborator in Appplication with Growth table
     [Documentation]     INFUND-8426
-    [Tags]
+    [Tags]      Pending
     Given The user clicks the button/link      jQuery=a:contains("Application Overview")
     and the user clicks the button/link       jQuery=a:contains("view and add participants to your application")
     When the user clicks the button/link       jQuery=a:contains("Add partner organisation")
@@ -289,19 +289,12 @@ Invite a non-exisintg collaborator in Appplication with Growth table
     then the user clicks the button/link        jQuery=button:contains("Add organisation and invite applicants")
     and the user should not see an error in the page
     and the user logs out if they are logged in
-
-Newly invited collaborator can create account and sign in
-    [Documentation]     INFUND-8426
-    [Tags]
-    when the user reads his email and clicks the link     liam@innovate.com  Invitation to collaborate in ${compWITHGrowth}  participate in their application
-    then the user should see the element      jQuery=h1:contains("New to this service?")
-    When the user clicks the button/link       jQuery=a:contains("Create")
-    then the user should see the element      jquery=h2:contains("Your organisation")
-    and the user completes the new account creation
+    and newly invited collaborator can create account and sign in
 
 Newly created collaborator can view and edit project Growth table
     [Documentation]     INFUND-8426
     [Tags]
+    [Setup]    Invite a non-existing collaborator in Appplication with Growth table
     When the user navigates to the growth table finances
     and the user clicks the button/link     link=Your organisation
     and the user selects medium organisation size
@@ -486,18 +479,40 @@ the user navigates to the growth table finances
     the user clicks the button/link    jQuery=a:contains('Untitled application'):last
     the user clicks the button/link  link=Your finances
 
+Invite a non-existing collaborator in Appplication with Growth table
+    the user clicks the button/link      jQuery=a:contains("Application Overview")
+    the user clicks the button/link       jQuery=a:contains("view and add participants to your application")
+    the user clicks the button/link       jQuery=a:contains("Add partner organisation")
+    the user should see the element       jQuery=h1:contains(Add organisation)
+    the user enters text to a text field      id=organisationName    innovate
+    the user enters text to a text field       id=applicants0.name    liam
+    the user enters text to a text field       id=applicants0.email    liam@innovate.com
+    the user clicks the button/link        jQuery=button:contains("Add organisation and invite applicants")
+    the user should not see an error in the page
+    the user logs out if they are logged in
+    newly invited collaborator can create account and sign in
+
+Newly invited collaborator can create account and sign in
+    the user reads his email and clicks the link     liam@innovate.com  Invitation to collaborate in ${compWITHGrowth}  participate in their application
+    the user should see the element      jQuery=h1:contains("New to this service?")
+    the user clicks the button/link       jQuery=a:contains("Create")
+    the user should see the element      jquery=h1:contains("Choose your organisation type")
+    the user completes the new account creation
+
 the user completes the new account creation
-    the user selects the radio button    organisationType  radio-3
+    #TODO change the radio button option to radio-4 once INFUND-8896 is fixed
+    the user selects the radio button    organisationType  radio-1
     the user clicks the button/link     jQuery=button:contains("Continue")
     the user should see the element     jQuery=span:contains("Create your account")
-    the user enters text to a text field     id=org-name    iops
-    the user enters text to a text field     id=addressForm.postcodeInput    SN5 7DR
-    the user clicks the button/link      jQuery=button:contains("Continue")
-    the user clicks the button/link      jQuery=button:contains("Use selected address")
-    the user clicks the button/link      jQuery=button:contains("Continue")
-    the user should see the text in the page       Confirm your organisation
-    the user clicks the button/link      jQuery=a:contains("Save and continue")
-    the user should not see an error in the page
+    the user enters text to a text field     id=organisationSearchName   innovate
+    the user clicks the button/link        jQuery=button:contains("Search")
+    wait for autosave
+    the user clicks the button/link        jQuery=a:contains("INNOVATE LTD")
+    the user selects the checkbox     address-same
+    wait for autosave
+    the user clicks the button/link     jQuery=button:contains("Save organisation and continue")
+    then the user should not see an error in the page
+    the user clicks the button/link     jQuery=a:contains("Save and continue")
     the user should be redirected to the correct page    ${SERVER}/registration/register
     the user enters text to a text field     jQuery=input[id="firstName"]   liam
     the user enters text to a text field     JQuery=input[id="lastName"]   smithson
