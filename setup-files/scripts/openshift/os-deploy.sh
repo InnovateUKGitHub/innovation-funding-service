@@ -30,7 +30,6 @@ else
 fi
 
 SVC_ACCOUNT_TOKEN=${bamboo_openshift_svc_account_token}
-LDAP_PASSWORD=${bamboo_ldap_password}
 
 SVC_ACCOUNT_CLAUSE="--namespace=${PROJECT} --token=${SVC_ACCOUNT_TOKEN} --server=https://console.prod.ifs-test-clusters.com:443 --insecure-skip-tls-verify=true"
 
@@ -73,9 +72,22 @@ function tailorAppInstance() {
     if [[ ${TARGET} == "production" || ${TARGET} == "demo" || ${TARGET} == "uat" ]]
     then
         sed -i.bak "s/claimName: file-upload-claim/claimName: ${TARGET}-file-upload-claim/g" os-files-tmp/*.yml
-        if [ -z "$LDAP_PASSWORD" ]; then echo "Set LDAP_PASSWORD environment variable"; exit -1; fi
-        sed -i.bak "s/<<LDAP-PASSWORD>>/${LDAP_PASSWORD}/g" os-files-tmp/shib/named-envs/*.yml
 
+        if [[ ${TARGET} == "demo" ]]
+        then
+            if [ -z "${bamboo_DEMO_ldap_password}" ]; then echo "Set bamboo_${TARGET}_ldap_password environment variable"; exit -1; fi
+            sed -i.bak "s/<<LDAP-PASSWORD>>/${bamboo_demo_ldap_password}/g" os-files-tmp/shib/named-envs/*.yml
+        fi
+        if [[ ${TARGET} == "uat" ]]
+        then
+            if [ -z "${bamboo_uat_ldap_password}" ]; then echo "Set bamboo_${TARGET}_ldap_password environment variable"; exit -1; fi
+            sed -i.bak "s/<<LDAP-PASSWORD>>/${bamboo_uat_ldap_password}/g" os-files-tmp/shib/named-envs/*.yml
+        fi
+        if [[ ${TARGET} == "production" ]]
+        then
+            if [ -z "${bamboo_production_ldap_password}" ]; then echo "Set bamboo_${TARGET}_ldap_password environment variable"; exit -1; fi
+            sed -i.bak "s/<<LDAP-PASSWORD>>/${bamboo_production_ldap_password}/g" os-files-tmp/shib/named-envs/*.yml
+        fi
     fi
 
     if [[ ${TARGET} == "production" || ${TARGET} == "uat" ]]
