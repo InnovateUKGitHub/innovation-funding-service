@@ -249,7 +249,8 @@ The question is disabled on the summary page for other collaborators
 
 Lead applicant should be able to remove the registered partner
     [Documentation]    INFUND-4806
-    [Tags]
+    [Tags]  Pending
+    # TODO INFUND-8878
     [Setup]    log in as a different user    ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
     Given the user clicks the button/link    link= Assign test
     And the user clicks the button/link    link=view and add participants to your application
