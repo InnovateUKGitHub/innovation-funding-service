@@ -3,10 +3,7 @@ package org.innovateuk.ifs.competition.controller;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.competition.populator.CompetitionOverviewPopulator;
-import org.innovateuk.ifs.competition.populator.publiccontent.AbstractPublicContentSectionViewModelPopulator;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
-import org.innovateuk.ifs.competition.viewmodel.publiccontent.AbstractPublicSectionContentViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -20,11 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
-import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 
 /**
@@ -37,8 +30,6 @@ import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.get
 public class CompetitionController {
     public static final String TEMPLATE_PATH = "competition/";
 
-    private List<PublicContentSectionType> excludeSectionTypes = asList(PublicContentSectionType.SEARCH);
-
     @Autowired
     private UserAuthenticationService userAuthenticationService;
 
@@ -47,13 +38,6 @@ public class CompetitionController {
 
     @Autowired
     private CompetitionOverviewPopulator overviewPopulator;
-
-    private Map<PublicContentSectionType, AbstractPublicContentSectionViewModelPopulator> sectionModelPopulators;
-
-    @Autowired
-    public void setSectionPopulator(Collection<AbstractPublicContentSectionViewModelPopulator> populators) {
-        sectionModelPopulators = populators.stream().collect(Collectors.toMap(p -> p.getType(), Function.identity()));
-    }
 
     @GetMapping(value = "/{competitionId}/overview")
     public String competitionOverview(Model model,
@@ -64,25 +48,8 @@ public class CompetitionController {
 
         model.addAttribute("model", overviewPopulator.populateViewModel(
                 publicContentItem,
-                userIsLoggedIn(request),
-                triggerAllSectionPopulators(publicContentItem, PublicContentSectionType.SUMMARY)));
+                userIsLoggedIn(request)));
         return TEMPLATE_PATH + "overview";
-    }
-
-
-
-    private List<AbstractPublicSectionContentViewModel> triggerAllSectionPopulators(PublicContentItemResource publicContentItem, PublicContentSectionType currentSectionType) {
-        List<AbstractPublicSectionContentViewModel> contentViewModels = new ArrayList<>();
-
-        Arrays.stream(PublicContentSectionType.values()).forEach(sectionType -> {
-            if (!excludeSectionTypes.contains(sectionType)) {
-                AbstractPublicSectionContentViewModel sectionContentViewModel = getPopulator(sectionType).populate(
-                        publicContentItem.getPublicContentResource(), publicContentItem.getNonIfs(), sectionType, currentSectionType);
-                contentViewModels.add(sectionContentViewModel);
-            }
-        });
-
-        return contentViewModels;
     }
 
     @GetMapping(value = "/{competitionId}/download/{contentGroupId}")
@@ -126,13 +93,6 @@ public class CompetitionController {
         } else {
             return false;
         }
-    }
-
-    private AbstractPublicContentSectionViewModelPopulator getPopulator(PublicContentSectionType sectionType) {
-        if(PublicContentSectionType.SEARCH.equals(sectionType)) {
-            return null;
-        }
-        return sectionModelPopulators.getOrDefault(sectionType, null);
     }
 }
 
