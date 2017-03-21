@@ -158,10 +158,10 @@ Organisation client side validation when no
     Given the user selects medium organisation size
     When the user enters text to a text field    jQuery=label:contains("Turnover") + input    -33
     And the user moves focus to the element    jQuery=label:contains("Full time employees") + input
-    Then the user should see the element    jQuery=span:contains("Turnover") ~ .error-message:contains("This field should be 0 or higher.")
+    Then the user should see a field and summary error      This field should be 0 or higher.
     And the user enters text to a text field    jQuery=label:contains("Full time employees") + input    ${empty}
     When the user moves focus to the element    jQuery=button:contains("Mark as complete")
-    And the user should see the element    jQuery=span:contains("Full time employees") ~ .error-message:contains("This field cannot be left blank.")
+    Then the user should see a field and summary error      This field cannot be left blank.
     When the user enters text to a text field    jQuery=label:contains("Turnover") + input    150
     And the user enters text to a text field    jQuery=label:contains("employees") + input    0
     And the user moves focus to the element    jQuery=button:contains("Mark as complete")
@@ -217,29 +217,27 @@ Organisation client side validation when yes
     [Tags]
     When the user enters text to a text field    css=input[name$="month"]    42
     And the user enters text to a text field    css=input[name$="year"]    ${nextyear}
-    Then the user should see the element    jQuery=.error-message:contains("Please enter a valid date.")
+    Then the user should see a field and summary error      Please enter a valid date.
     When the user enters text to a text field    css=input[name$="month"]    12
-    Then the user should see the element    jQuery=.error-message:contains("Please enter a past date.")
-    And the user should not see the element    jQuery=.error-message:contains("Please enter a valid date.")
     When the user enters text to a text field    css=input[name$="year"]    2016
+    Then the user should see a field and summary error      Please enter a past date.
     And the user enters value to field    Annual turnover    ${EMPTY}
     And the user moves focus to the element    jQuery=button:contains("Mark as complete")
-    Then the user should not see the element    jQuery=.error-message:contains("Please enter a past date.")
-    And the user should see an error message in the field    Annual turnover    This field cannot be left blank.
+    Then the user should see a field and summary error      Please enter a valid date.
+    Then the user should see a field and summary error      This field cannot be left blank.
     When the user enters value to field    Annual turnover    8.5
     And the user moves focus to the element    jQuery=td:contains("Annual profit") + td input
-    Then the user should see an error message in the field    Annual turnover    This field can only accept whole numbers.
-    # TODO such error messages should also trigger Error summary INFUND-8056
+    Then the user should see a field and summary error      This field can only accept whole numbers.
     And the user enters value to field    Annual profit    -5
     When the user enters value to field    Annual export    ${empty}
-    Then the user should see an error message in the field    Annual export    This field cannot be left blank.
+    Then the user should see a field and summary error      This field cannot be left blank.
     When the user enters value to field    Research and development spend    6666666666666666666666666666666666666666666
     And the user moves focus to the element    jQuery=label:contains("employees") + input
     Then the user should see an error message in the field    Research and development spend    This field should be 2147483647 or lower.
     # TODO This error message will be different after INFUND-8080
     And the user enters value to field    Research and development spend    2147483647
     When the user enters text to a text field    jQuery=label:contains("employees") + input    22.4
-    Then the user should see an error message in the field    employees    This field can only accept whole numbers.
+    Then the user should see a field and summary error      This field can only accept whole numbers.
     And the user should not see the element    jQuery=span:contains("Research and development spend") + *:contains("This field should be 2147483647 or lower.")
     When the user enters text to a text field    jQuery=label:contains("employees") + input    1
     Then the user should not see the element    jQuery=span:contains("employees") + .error-message
