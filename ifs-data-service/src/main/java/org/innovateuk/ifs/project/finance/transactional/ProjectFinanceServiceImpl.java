@@ -370,10 +370,17 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         return financeRowService.financeChecksTotals(projectId);
     }
 
-    private ServiceResult<Void> validateSpendProfileCanBeGenerated(Project project) {
+/*    private ServiceResult<Void> validateSpendProfileCanBeGeneratedOLD(Project project) {
         return validateFinanceChecksApprovedForSpendProfileGenerate(project).andOnSuccess(() ->
                 validateViabilityApprovedOrNotApplicableForSpendProfileGenerate(project).andOnSuccess(() ->
                 validateEligibilityApprovedOrNotApplicableForSpendProfileGenerate(project)));
+    }*/
+
+    private ServiceResult<Void> validateSpendProfileCanBeGenerated(Project project) {
+        return validateFinanceChecksApprovedForSpendProfileGenerate(project)
+                .andOnSuccess(() -> validateViabilityApprovedOrNotApplicableForSpendProfileGenerate(project))
+                .andOnSuccess(() -> validateEligibilityApprovedOrNotApplicableForSpendProfileGenerate(project))
+                .andOnSuccess(() -> validateIfSpendProfileIsAlreadyGenerated(project));
     }
 
     private ServiceResult<Void> validateFinanceChecksApprovedForSpendProfileGenerate(Project project) {
@@ -392,7 +399,8 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     private ServiceResult<Void> validateViabilityApprovedOrNotApplicableForSpendProfileGenerate(Project project) {
 
-        List<PartnerOrganisation> partnerOrganisations = partnerOrganisationRepository.findByProjectId(project.getId());
+        //List<PartnerOrganisation> partnerOrganisations = partnerOrganisationRepository.findByProjectId(project.getId());
+        List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
 
         Optional<PartnerOrganisation> existingReviewablePartnerOrganisation = simpleFindFirst(partnerOrganisations, partnerOrganisation ->
                 ViabilityState.REVIEW == viabilityWorkflowHandler.getState(partnerOrganisation));
@@ -401,6 +409,20 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             return serviceSuccess();
         } else {
             return serviceFailure(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_VIABILITY_APPROVED);
+        }
+    }
+
+    private ServiceResult<Void> validateIfSpendProfileIsAlreadyGenerated(Project project) {
+
+        List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
+
+        Optional<PartnerOrganisation> existingPartnerOrganisationWithSpendProfile = simpleFindFirst(partnerOrganisations, partnerOrganisation ->
+                spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(), partnerOrganisation.getOrganisation().getId()).isPresent());
+
+        if (!existingPartnerOrganisationWithSpendProfile.isPresent()) {
+            return serviceSuccess();
+        } else {
+            return serviceFailure(SPEND_PROFILE_HAS_ALREADY_BEEN_GENERATED);
         }
     }
 
@@ -467,7 +489,8 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     private ServiceResult<Void> validateEligibilityApprovedOrNotApplicableForSpendProfileGenerate(Project project) {
 
-        List<PartnerOrganisation> partnerOrganisations = partnerOrganisationRepository.findByProjectId(project.getId());
+        //List<PartnerOrganisation> partnerOrganisations = partnerOrganisationRepository.findByProjectId(project.getId());
+        List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
 
         Optional<PartnerOrganisation> existingReviewablePartnerOrganisation = simpleFindFirst(partnerOrganisations, partnerOrganisation ->
                         EligibilityState.REVIEW == eligibilityWorkflowHandler.getState(partnerOrganisation));
@@ -475,7 +498,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         if (!existingReviewablePartnerOrganisation.isPresent()) {
             return serviceSuccess();
         } else {
-            return serviceFailure(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_VIABILITY_APPROVED);
+            return serviceFailure(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_ELIGIBILITY_APPROVED);
         }
     }
 
