@@ -9,6 +9,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.finance.domain.builder.ProjectFinanceBuilder.newProjectFinance;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
+import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
@@ -21,6 +22,7 @@ public class ProjectFinanceThreadsTestData {
         organisation.addUser(newUser().withId(user.getId()).build());
         ProjectUser projectUser = newProjectUser().withUser(newUser().withId(user.getId()).build())
                 .withRole(PROJECT_FINANCE_CONTACT)
+                .withRole(PROJECT_PARTNER)
                 .withOrganisation(organisation)
                 .build();
         Project project = newProject().withProjectUsers(singletonList(projectUser)).build();
