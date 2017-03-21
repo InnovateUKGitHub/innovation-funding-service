@@ -133,10 +133,8 @@ Invite and accept the invitation
     And the user closes the browser
     And the guest user opens the browser
     When the user reads his email and clicks the link    ${recipient}    ${subject}    ${pattern}
-    And the user clicks the button/link    jQuery=.button:contains("Create")
+    And the user clicks the button/link    jQuery=.button:contains("Yes, accept invitation")
     When the user selects the radio button    organisationType    2
-    And the user clicks the button/link    jQuery=.button:contains("Continue")
-    When the user selects the radio button    organisationType    5
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     When the user enters text to a text field    id=organisationSearchName    Liv
     And the user clicks the button/link    jQuery=.button:contains("Search")

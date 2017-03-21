@@ -25,6 +25,7 @@ import org.innovateuk.ifs.project.financecheck.eligibility.form.FinanceChecksEli
 import org.innovateuk.ifs.project.financecheck.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -111,18 +112,20 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
         application = applications.get(0);
         project.setApplication(application.getId());
 
-        industrialOrganisation = newOrganisationResource().
-                withId(2L).
-                withName("Industrial Org").
-                withCompanyHouseNumber("123456789").
-                withOrganisationTypeName("Business").
-                build();
+        industrialOrganisation = newOrganisationResource()
+                .withId(2L)
+                .withName("Industrial Org")
+                .withCompanyHouseNumber("123456789")
+                .withOrganisationTypeName(OrganisationTypeEnum.BUSINESS.name())
+                .withOrganisationType(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId())
+                .build();
 
-        academicOrganisation = newOrganisationResource().
-                withId(1L).
-                withName("Academic Org").
-                withOrganisationTypeName("Academic").
-                build();
+        academicOrganisation = newOrganisationResource()
+                .withId(1L)
+                .withName("Academic Org")
+                .withOrganisationTypeName(OrganisationTypeEnum.RESEARCH.name())
+                .withOrganisationType(OrganisationTypeEnum.RESEARCH.getOrganisationTypeId())
+                .build();
 
         // save actions should always succeed.
         when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), eq(""), anyBoolean())).thenReturn(new ValidationMessages(fieldError("value", "", "Please enter some text 123")));
@@ -138,11 +141,11 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
         when(organisationService.getOrganisationById(academicOrganisation.getId())).thenReturn(academicOrganisation);
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
         when(financeCheckServiceMock.getFinanceCheckEligibilityDetails(project.getId(), industrialOrganisation.getId())).thenReturn(eligibilityOverview);
-        when(financeHandler.getProjectFinanceModelManager("Business")).thenReturn(defaultProjectFinanceModelManager);
-        when(financeHandler.getProjectFinanceFormHandler("Business")).thenReturn(projectFinanceFormHandler);
+        when(financeHandler.getProjectFinanceModelManager(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId())).thenReturn(defaultProjectFinanceModelManager);
+        when(financeHandler.getProjectFinanceFormHandler(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId())).thenReturn(projectFinanceFormHandler);
 
-        when(financeUtilMock.isUsingJesFinances("Business")).thenReturn(Boolean.FALSE);
-        when(financeUtilMock.isUsingJesFinances("Academic")).thenReturn(Boolean.TRUE);
+        when(financeUtilMock.isUsingJesFinances(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId())).thenReturn(Boolean.FALSE);
+        when(financeUtilMock.isUsingJesFinances(OrganisationTypeEnum.RESEARCH.getOrganisationTypeId())).thenReturn(Boolean.TRUE);
 
         ApplicationFinanceResource appFinanceResource = newApplicationFinanceResource().withFinanceFileEntry(123L).build();
         when(financeService.getApplicationFinanceByApplicationIdAndOrganisationId(application.getId(), 2L)).thenReturn(appFinanceResource);
@@ -201,8 +204,8 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
         setUpViewEligibilityMocking(eligibility);
 
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(academicOrganisation);
-        when(financeHandler.getProjectFinanceModelManager("Academic")).thenReturn(defaultProjectFinanceModelManager);
-        when(financeHandler.getProjectFinanceFormHandler("Academic")).thenReturn(projectFinanceFormHandler);
+        when(financeHandler.getProjectFinanceModelManager(OrganisationTypeEnum.RESEARCH.getOrganisationTypeId())).thenReturn(defaultProjectFinanceModelManager);
+        when(financeHandler.getProjectFinanceFormHandler(OrganisationTypeEnum.RESEARCH.getOrganisationTypeId())).thenReturn(projectFinanceFormHandler);
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility",
                 project.getId(), academicOrganisation.getId())).
@@ -222,8 +225,8 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
         setUpViewEligibilityMocking(eligibility);
 
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(academicOrganisation);
-        when(financeHandler.getProjectFinanceModelManager("Academic")).thenReturn(defaultProjectFinanceModelManager);
-        when(financeHandler.getProjectFinanceFormHandler("Academic")).thenReturn(projectFinanceFormHandler);
+        when(financeHandler.getProjectFinanceModelManager(OrganisationTypeEnum.RESEARCH.getOrganisationTypeId())).thenReturn(defaultProjectFinanceModelManager);
+        when(financeHandler.getProjectFinanceFormHandler(OrganisationTypeEnum.RESEARCH.getOrganisationTypeId())).thenReturn(projectFinanceFormHandler);
 
         ApplicationFinanceResource appFinanceResource = newApplicationFinanceResource().build();
         when(financeService.getApplicationFinanceByApplicationIdAndOrganisationId(application.getId(), 1L)).thenReturn(appFinanceResource);
@@ -269,7 +272,7 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
         assertTrue(form.isConfirmEligibilityChecked());
         assertEquals(eligibility.getEligibilityRagStatus(), form.getEligibilityRagStatus());
 
-        assertFalse(viewModel.isReadOnly());
+        assertFalse(viewModel.isExternalView());
         assertEquals(expectedIsUsingJesFinances, viewModel.isUsingJesFinances());
         if (null != viewModel.getJesFileDetails()) {
             assertEquals(expectedJesFilename, viewModel.getJesFileDetails().getFilename());
