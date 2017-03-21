@@ -13,13 +13,13 @@ import java.util.Optional;
 
 public interface ApplicationSummaryRestService {
 
-    RestResult<ApplicationSummaryPageResource> getAllApplications(long competitionId, String sortField, Integer pageNumber, Integer pageSize, String filter);
+    RestResult<ApplicationSummaryPageResource> getAllApplications(long competitionId, String sortField, int pageNumber, int pageSize, String filter);
 
-    RestResult<ApplicationSummaryPageResource> getSubmittedApplications(long competitionId, String sortField, Integer pageNumber, Integer pageSize, String filter);
+    RestResult<ApplicationSummaryPageResource> getSubmittedApplications(long competitionId, String sortField, int pageNumber, int pageSize, String filter, Optional<FundingDecision> fundingFilter);
 
-    RestResult<ApplicationSummaryPageResource> getNonSubmittedApplications(long competitionId, String sortField, Integer pageNumber, Integer pageSize, String filter);
+    RestResult<ApplicationSummaryPageResource> getNonSubmittedApplications(long competitionId, String sortField, int pageNumber, int pageSize, String filter);
 
-    RestResult<ApplicationSummaryPageResource> getFeedbackRequiredApplications(long competitionId, String sortField, Integer pageNumber, Integer pageSize, String filter);
+    RestResult<ApplicationSummaryPageResource> getFeedbackRequiredApplications(long competitionId, String sortField, int pageNumber, int pageSize, String filter);
     
     RestResult<CompetitionSummaryResource> getCompetitionSummary(long competitionId);
 
@@ -27,8 +27,8 @@ public interface ApplicationSummaryRestService {
 
     RestResult<ApplicationSummaryPageResource> getWithFundingDecisionApplications(Long competitionId,
                                                                                   String sortField,
-                                                                                  Integer pageNumber,
-                                                                                  Integer pageSize,
+                                                                                  int pageNumber,
+                                                                                  int pageSize,
                                                                                   String filter,
                                                                                   Optional<Boolean> sendFilter,
                                                                                   Optional<FundingDecision> fundingFilter);
