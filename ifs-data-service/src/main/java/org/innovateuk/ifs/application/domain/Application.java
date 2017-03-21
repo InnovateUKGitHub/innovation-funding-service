@@ -22,10 +22,8 @@ import javax.validation.constraints.Min;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Application defines database relations and a model to use client side and server side.
@@ -78,8 +76,8 @@ public class Application implements ProcessActivity {
     @OneToMany(mappedBy = "application", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
     private List<FormInputResponse> formInputResponses = new ArrayList<>();
 
-    @OneToOne(mappedBy = "application", cascade = CascadeType.ALL, orphanRemoval = true)
-    private ApplicationResearchCategoryLink researchCategory;
+    @OneToMany(mappedBy = "application", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ApplicationResearchCategoryLink> researchCategories = new HashSet<>();
 
     @OneToOne(mappedBy = "application", cascade = CascadeType.ALL, orphanRemoval = true)
     private ApplicationInnovationAreaLink innovationArea;
@@ -319,21 +317,13 @@ public class Application implements ProcessActivity {
         this.stateAidAgreed = stateAidAgreed;
     }
 
-    public ResearchCategory getResearchCategory() {
-        if(researchCategory!=null) {
-            return researchCategory.getCategory();
-        }
-
-        return null;
+    public Set<ResearchCategory> getResearchCategories() {
+        return researchCategories.stream().map(ApplicationResearchCategoryLink::getCategory).collect(Collectors.toSet());
     }
 
-    public void setResearchCategory(ResearchCategory newResearchCategory) {
-        if (newResearchCategory == null) {
-            researchCategory = null;
-        }
-        else {
-            researchCategory = new ApplicationResearchCategoryLink(this, newResearchCategory);
-        }
+    public void addResearchCategory(ResearchCategory researchCategory) {
+        researchCategories.clear();
+        researchCategories.add(new ApplicationResearchCategoryLink(this, researchCategory));
     }
 
     public InnovationArea getInnovationArea() {

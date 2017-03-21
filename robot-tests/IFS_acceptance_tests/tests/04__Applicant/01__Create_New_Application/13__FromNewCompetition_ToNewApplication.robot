@@ -86,11 +86,11 @@ Applicant fills in the Application Details
     Given the user should see the element    jQuery=h1:contains("Application overview")
     When the user clicks the button/link    link=Application details
     Then the user enters text to a text field    css=#application_details-title    ${applicationTitle}
+    And the user selects technical feasibility and no to resubmission and an innovation area
     And the user enters text to a text field    css=#application_details-startdate_day    ${day}
     And the user enters text to a text field    css=#application_details-startdate_month    ${month}
     And the user enters text to a text field    css=#application_details-startdate_year    ${nextyear}
     And the user enters text to a text field    css=#application_details-duration    24
-    And the user selects technical feasibility and no to resubmission and an innovation area
     When The user clicks the button/link    jQuery=button[name="mark_as_complete"]
     Then the user clicks the button/link    link=Application Overview
     And the user should see the element     jQuery=li:contains("Application details") > .task-status-complete
@@ -337,15 +337,15 @@ the user should see his finances empty
     the user should see the element    jQuery=thead:contains("Total project costs") ~ *:contains("£0")
 
 the user selects technical feasibility and no to resubmission and an innovation area
-    the user clicks the button/link    jQuery=legend:contains("Research category")
-    the user clicks the button/link    jQuery=button:contains("Choose your research category")
-    the user clicks the button twice   jQuery=label[for^="researchCategoryChoice"]:contains("Feasibility studies")
+    # Often those labels need double click. Thus i made a separate keyword to looks more tidy
+    the user clicks the button/link    jQuery=button:contains(Change your innovation area)
+    the user clicks the button/link    jQuery=label[for="innovationAreaChoice-5"]
+    the user clicks the button/link    jQuery=label[for="innovationAreaChoice-5"]
     the user clicks the button/link    jQuery=button:contains(Save)
-    the user clicks the button/link    jQuery=button:contains("Change your innovation area")
-    the user clicks the button twice   jQuery=label[for="innovationAreaChoice-5"]
-    the user clicks the button/link    jQuery=button:contains(Save)
-    the user clicks the button twice   jQuery=label[for="application.resubmission-no"]
-
+    the user clicks the button/link    jQuery=label[for="financePosition-cat-33"]
+    the user clicks the button/link    jQuery=label[for="financePosition-cat-33"]
+    the user clicks the button/link    jQuery=label[for="application.resubmission-no"]
+    the user clicks the button/link    jQuery=label[for="application.resubmission-no"]
 
 the user decides about the growth table
     [Arguments]    ${edit}    ${read}
