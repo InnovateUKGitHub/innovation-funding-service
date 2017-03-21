@@ -291,6 +291,8 @@ Invite a non-exisintg collaborator in Appplication with Growth table
     and the user logs out if they are logged in
 
 Newly invited collaborator can create account and sign in
+    [Documentation]     INFUND-8426
+    [Tags]
     when the user reads his email and clicks the link     liam@innovate.com  Invitation to collaborate in ${compWITHGrowth}  participate in their application
     then the user should see the element      jQuery=h1:contains("New to this service?")
     When the user clicks the button/link       jQuery=a:contains("Create")
@@ -298,6 +300,8 @@ Newly invited collaborator can create account and sign in
     and the user completes the new account creation
 
 Newly created collaborator can view and edit project Growth table
+    [Documentation]     INFUND-8426
+    [Tags]
     When the user navigates to the growth table finances
     and the user clicks the button/link     link=Your organisation
     and the user selects medium organisation size
