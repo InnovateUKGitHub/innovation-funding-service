@@ -216,14 +216,12 @@ Organisation client side validation when yes
     [Documentation]    INFUND-6395
     [Tags]
     When the user enters text to a text field    css=input[name$="month"]    42
-    And the user enters text to a text field    css=input[name$="year"]    ${nextyear}
     Then the user should see a field and summary error      Please enter a valid date.
     When the user enters text to a text field    css=input[name$="month"]    12
-    When the user enters text to a text field    css=input[name$="year"]    2016
+    And the user enters text to a text field    css=input[name$="year"]    ${nextyear}
     Then the user should see a field and summary error      Please enter a past date.
+    When the user enters text to a text field    css=input[name$="year"]    2016
     And the user enters value to field    Annual turnover    ${EMPTY}
-    And the user moves focus to the element    jQuery=button:contains("Mark as complete")
-    Then the user should see a field and summary error      Please enter a valid date.
     Then the user should see a field and summary error      This field cannot be left blank.
     When the user enters value to field    Annual turnover    8.5
     And the user moves focus to the element    jQuery=td:contains("Annual profit") + td input
