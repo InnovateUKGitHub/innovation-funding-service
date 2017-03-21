@@ -485,8 +485,8 @@ Newly invited collaborator can create account and sign in
     the user completes the new account creation
 
 the user completes the new account creation
-    #TODO change the radio button option to radio-4 once INFUND-8896 is fixed
     the user selects the radio button    organisationType  radio-1
+     #TODO change the radio button option to radio-4 once INFUND-8896 is fixed
     the user clicks the button/link     jQuery=button:contains("Continue")
     the user should see the element     jQuery=span:contains("Create your account")
     the user enters text to a text field     id=organisationSearchName   innovate
