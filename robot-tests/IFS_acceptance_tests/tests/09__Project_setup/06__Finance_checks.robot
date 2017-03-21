@@ -289,14 +289,13 @@ Queries show in reverse chronological order
     When the user should see the element    jQuery=h2:nth-of-type(4):contains("this is a title")    #
     And the user should see the element    jQuery=h2:nth-of-type(3):contains("another query title")
 
-Non finance contact cannot view query
+Non finance contact can view query
     [Documentation]    INFUND-4843
     [Tags]
     Given log in as a different user    steve.smith@empire.com    ${short_password}
     When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
-    Then the user should not see the element    link=Finance checks
-    #  TODO The below line can be uncommented once 8787 is done
-    # And the user should not see the element    flag status for finance checks
+    Then the user should see the element    link=Finance checks
+    And the user should see the element    jQuery=ul li.require-action:nth-child(5)
 
 Finance checks section status updated for finance contact
     [Documentation]    INFUND-4843
@@ -304,8 +303,7 @@ Finance checks section status updated for finance contact
     Given log in as a different user    ${test_mailbox_one}+fundsuccess@gmail.com    ${short_password}
     When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     Then the user should see the element    link=Finance checks
-    #  TODO The below line can be uncommented once 8787 is done
-    # And the user should see the element    flag status for finance checks
+     And the user should see the element    jQuery=ul li.require-action:nth-child(5)
 
 
 Finance contact can view query
@@ -441,8 +439,7 @@ Finance checks section status changes to hourglass
     [Documentation]    INFUND-4843
     [Tags]
     When the user clicks the button/link    link=Project setup status
-    #  TODO The below line can be uncommented once 8787 is done
-    # Then the user should see the element    flag status for finance checks
+    Then the user should see the element    jQuery=ul li.waiting:nth-child(5)
 
 Queries raised column updates to 'view'
     [Documentation]    INFUND-4843
@@ -1175,13 +1172,13 @@ Finance contact can access the external view of the finance checks page
     And the user should not see an error in the page
 
 
-Non finance contact can't view finance checks page
+Non finance contact can view finance checks page
     [Documentation]    INFUND-7573
     [Tags]
     [Setup]    Log in as a different user    steve.smith@empire.com    Passw0rd
     When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
-    Then the user should not see the element    link=Finance checks
-    And the user navigates to the page and gets a custom error message    ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/partner-organisation/${EMPIRE_LTD_ID}/finance-checks    ${403_error_message}
+    Then the user should see the element    link=Finance checks
+    And the user navigates to the page    ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/partner-organisation/${EMPIRE_LTD_ID}/finance-checks
 
 
 *** Keywords ***

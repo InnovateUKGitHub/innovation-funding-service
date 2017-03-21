@@ -81,7 +81,7 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
          * 2 Business, 1 Academic
          ***/
         OrganisationType businessOrganisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
-        OrganisationType academicOrganisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.ACADEMIC).build();
+        OrganisationType academicOrganisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.RESEARCH).build();
         List<Organisation> organisations = newOrganisation().withOrganisationType(businessOrganisationType).build(2);
         organisations.add(newOrganisation().withOrganisationType(academicOrganisationType).build());
 
