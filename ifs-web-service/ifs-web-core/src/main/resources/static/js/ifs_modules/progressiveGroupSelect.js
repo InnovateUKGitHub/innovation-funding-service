@@ -75,6 +75,12 @@ IFS.core.progressiveGroupSelect = (function () {
 
       // update the state of the <select> fields
       if (selectedOption === '') {
+        // remove all options except the first
+        jQuery('option', el).slice(1).remove()
+
+        // reset to first option
+        jQuery('option:first', el).attr('selected', 'selected')
+
         jQuery(el).prop('disabled', true)
       } else {
         // remove all options except the first
