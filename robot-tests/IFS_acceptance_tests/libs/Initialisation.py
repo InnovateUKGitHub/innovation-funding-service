@@ -46,7 +46,7 @@ cursor.execute("""SELECT `id`,`name` FROM application""")
 application_ids = {}
 for app in cursor.fetchall():
     application_ids[app[1]] = int(app[0])
-    print(application_ids)
+    # print(application_ids)
 
 # disconnect from server
 db.close()
