@@ -1,9 +1,5 @@
 *** Settings ***
-Resource          ../GLOBAL_LIBRARIES.robot
-Resource          ../variables/GLOBAL_VARIABLES.robot
-Resource          ../variables/User_credentials.robot
-Resource          Login_actions.robot
-Resource          User_actions.robot
+Resource  ../defaultResources.robot
 
 *** Variables ***
 @{database}       pymysql    ${database_name}    ${database_user}    ${database_password}    ${database_host}    ${database_port}
