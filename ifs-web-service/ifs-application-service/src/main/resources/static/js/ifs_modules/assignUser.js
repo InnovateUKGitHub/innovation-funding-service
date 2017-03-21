@@ -37,7 +37,7 @@ IFS.application.progressiveSelect = (function () {
       var html = '<ul class="bullet list-bullet">'
       children.each(function () {
         var inst = jQuery(this)
-        var content = inst.text()
+        var content = inst.html()
         var value = inst.attr('value')
 
         if (inst.is('[disabled]')) {
