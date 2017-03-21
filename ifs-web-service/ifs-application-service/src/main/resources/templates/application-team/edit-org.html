@@ -39,7 +39,7 @@
                         <tr>
                             <th class="width-30-percent" scope="col">Applicant</th>
                             <th class="width-40-percent" scope="col">Email</th>
-                            <th class="width-15-percent" scope="col">Status</th>
+                            <th class="width-15-percent" scope="col"><span class="visually-hidden">Additional details</span></th>
                             <th class="width-15-percent alignright" scope="col"><span class="visually-hidden">Actions</span></th>
                         </tr>
                     </thead>
@@ -47,7 +47,7 @@
                         <tr th:each="applicant, applicantStat : ${model.applicants}" th:unless="${#sets.contains(form.markedForRemoval, applicant.applicationInviteId)}">
                             <td th:text="${applicant.name}">Steve Smith</td>
                             <td th:text="${applicant.email}">steve.smith@empire.com</td>
-                            <td th:text="${applicant.lead} ? 'Lead' : (${applicant.pending} ? 'Pending' : '')">Lead</td>
+                            <td th:text="${applicant.lead} ? 'Lead' : (${applicant.pending} ? 'Invite pending' : '')">Lead</td>
                             <td class="alignright">
                                 <button th:if="${applicant.removable}" class="buttonlink" th:value="${applicant.applicationInviteId}" name="markForRemoval" type="submit">Remove</button>
                             </td>
@@ -74,7 +74,7 @@
                             <td th:class="${#fields.hasErrors('applicants[__${applicantStat.index}__].email') ? 'form-group error':'form-group'}">
                                 <label th:for="'applicants'+${applicantStat.index}+'.email'">
                                     <span class="visually-hidden">Applicant email</span>
-                                    <th:block th:if="${#fields.hasErrors('applicants[__${applicantStat.index}__].name')}">
+                                    <th:block th:if="${#fields.hasErrors('applicants[__${applicantStat.index}__].email')}">
                                         <span th:each="err : ${#fields.errors('applicants[__${applicantStat.index}__].email')}"
                                               th:text="${err}"
                                               class="error-message"
@@ -87,7 +87,8 @@
                                        th:errorclass="field-error"
                                        required="required"
                                        th:attr="data-required-errormessage=#{validation.invite.email.required},
-                                                data-email-errormessage=#{validation.standard.email.format}" />
+                                                data-email-errormessage=#{validation.standard.email.format},
+                                                data-email-duplication-errormessage=#{email.already.in.invite}" />
                             </td>
                             <td></td>
                             <td class="alignright">

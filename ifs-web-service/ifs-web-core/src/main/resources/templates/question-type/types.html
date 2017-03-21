@@ -32,18 +32,38 @@
 
     <div th:fragment="textarea"  class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.getId()}__]')} ? error : ''">
 
-      <label class="form-label form-label-bold" th:for="'form-textarea-'+${formInput.getId()}" th:id="'form-label-'+${formInput.getId()}">
-        <th:block th:if="${readonly}">
-            <span th:if="${question.getName()}" th:text="${question.name}" />
+        <th:block th:if="${!userIsLeadApplicant}">
+            <div class="assign-container assign-container--alert" th:classappend="(${currentUser.getId() == questionAssignee?.assigneeUserId} ? 'assign-alert')">
+                <th:block th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
+                          th:include="question-type/form-elements :: current-assignee"/>
+            </div>
         </th:block>
-        <th:block th:unless="${readonly}">
-          <span th:if="${question.getName()}" th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.name}" />
-          <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.getDescription()})" />
-        </th:block>
-        <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" />
-      </label>
-      <th:block th:unless="${readonly}" th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
-      <th:block th:insert="question-type/form-elements :: form-textarea-wrapped" />
+
+        <th:block th:insert="question-type/form-elements :: assign-buttons-dialog" th:unless="${readonly} or ${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} or ${!userIsLeadApplicant}"/>
+
+        <div th:unless="${readonly}" class="textarea-header">
+
+            <th:block th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}">
+                <div class="success-alert assignee extra-margin-bottom">
+                    <p>This question is marked as complete</p>
+                </div>
+            </th:block>
+
+        </div>
+
+        <label class="form-label form-label-bold" th:for="'form-textarea-'+${formInput.getId()}" th:id="'form-label-'+${formInput.getId()}">
+            <th:block th:if="${readonly}">
+                <span class="heading-medium" th:if="${question.getName()}" th:text="${question.name}" />
+            </th:block>
+            <th:block th:unless="${readonly}">
+              <span class="heading-medium" th:if="${question.getName()}" th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.name}" />
+              <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.getDescription()})" />
+            </th:block>
+            <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" />
+        </label>
+
+        <th:block th:unless="${readonly}" th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
+        <th:block th:insert="question-type/form-elements :: form-textarea-wrapped" th:with="hideAlerts=${true}" />
     </div>
 
     <!-- ===========================Form: Date input =========================== -->
@@ -82,7 +102,7 @@
                 <a th:if="${isCompManagementDownload}" th:href="@{${compManagementDownloadURL}}" class="uploaded-file" th:text="${filename}">The-uploaded-file-example.pdf</a>
                 <a th:unless="${isCompManagementDownload}" th:href="@{${downloadURL}}" class="uploaded-file" th:text="${filename}">The-uploaded-file-example.pdf</a>
             </div>
-            <div th:unless="${readonly}" class="alignright" th:if="${(not question.isMarkAsCompletedEnabled() or (question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id) and (questionAssignee?.assigneeUserId == currentUser?.getId() or (questionAssignee?.getAssignee() == null))))}">
+            <div th:unless="${readonly}" class="alignleft" th:if="${(not question.isMarkAsCompletedEnabled() or (question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id) and (questionAssignee?.assigneeUserId == currentUser?.getId() or (questionAssignee?.getAssignee() == null))))}">
                 <button class="button-secondary no-margin-right" type="submit" th:name="${removeName}">Remove</button>
             </div>
         </div>
@@ -157,7 +177,6 @@
                     <div class="message-alert extra-margin-bottom" th:if="${hasApplicationFinances}">
                         <h2 class="heading-small no-margin">Research category determines funding</h2>
                         <p>The research category is used to calculate the funding for all collaborators in the application.</p>
-                        <p>Changing this selection will reset the funding level for all collaborators that have completed their funding section.</p>
                     </div>
                     <fieldset>
                         <legend>
@@ -276,7 +295,7 @@
                         </th:block>
                     </th:block>
                     <dt>Innovation area</dt>
-                    <dd th:text="${currentApplication.innovationArea.sectorName}"></dd>
+                    <dd th:text="${currentApplication.innovationArea.name} ?: 'Not Listed'"></dd>
                     <th:block th:unless="${currentApplication.resubmission == null}">
                         <dt>Is this application a resubmission of a previous application?</dt>
                         <dd th:text="${currentApplication.resubmission ? 'Yes' : 'No'}"></dd>

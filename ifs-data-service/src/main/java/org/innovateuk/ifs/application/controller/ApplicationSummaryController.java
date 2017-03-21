@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.controller;
 
+import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.transactional.ApplicationSummaryService;
@@ -46,8 +47,9 @@ public class ApplicationSummaryController {
             @RequestParam(value = "sort", required = false) String sortBy,
             @RequestParam(value = "page", defaultValue = "0") int pageIndex,
             @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
-            @RequestParam(value = "filter", required = false) Optional<String> filter) {
-        return applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(competitionId, sortBy, pageIndex, pageSize, filter).toGetResponse();
+            @RequestParam(value = "filter", required = false) Optional<String> filter,
+            @RequestParam(value = "fundingFilter", required = false) Optional<FundingDecisionStatus> fundingFilter) {
+        return applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(competitionId, sortBy, pageIndex, pageSize, filter, fundingFilter).toGetResponse();
     }
 
     @GetMapping("/findByCompetition/{competitionId}/not-submitted")
@@ -55,8 +57,7 @@ public class ApplicationSummaryController {
             @PathVariable("competitionId") long competitionId,
             @RequestParam(value = "sort", required = false) String sortBy,
             @RequestParam(value = "page", defaultValue = "0") int pageIndex,
-            @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize
-    ) {
+            @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize) {
         return applicationSummaryService.getNotSubmittedApplicationSummariesByCompetitionId(competitionId, sortBy, pageIndex, pageSize).toGetResponse();
     }
 
@@ -65,8 +66,7 @@ public class ApplicationSummaryController {
             @PathVariable("competitionId") long competitionId,
             @RequestParam(value = "sort", required = false) String sortBy,
             @RequestParam(value = "page", defaultValue = "0") int pageIndex,
-            @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize
-    ) {
+            @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize) {
         return applicationSummaryService.getFeedbackRequiredApplicationSummariesByCompetitionId(competitionId, sortBy, pageIndex, pageSize).toGetResponse();
     }
 
@@ -76,9 +76,10 @@ public class ApplicationSummaryController {
             @RequestParam(value = "sort", required = false) String sortBy,
             @RequestParam(value = "page", defaultValue = "0") int pageIndex,
             @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
-            @RequestParam(value = "filter", required = false) Optional<String> filter
-    ) {
-        return applicationSummaryService.getWithFundingDecisionApplicationSummariesByCompetitionId(competitionId, sortBy, pageIndex, pageSize).toGetResponse();
+            @RequestParam(value = "filter", required = false) Optional<String> filter,
+            @RequestParam(value = "sendFilter", required = false) Optional<Boolean> sendFilter,
+            @RequestParam(value = "fundingFilter", required = false) Optional<FundingDecisionStatus> fundingFilter) {
+        return applicationSummaryService.getWithFundingDecisionApplicationSummariesByCompetitionId(competitionId, sortBy, pageIndex, pageSize, filter,sendFilter, fundingFilter).toGetResponse();
     }
 
 }

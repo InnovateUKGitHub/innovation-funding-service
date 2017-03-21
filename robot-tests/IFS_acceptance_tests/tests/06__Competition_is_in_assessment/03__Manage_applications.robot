@@ -24,7 +24,7 @@ View the list of the applications
     [Documentation]    INFUND-7042
     [Tags]
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    When The user clicks the button/link    jQuery=a:contains("Assessor management - assignments")
+    When The user clicks the button/link    jQuery=a:contains("Assessor management: Assignments")
     Then the application list is correct before changes
 
 Filtering of the applications
@@ -50,6 +50,7 @@ View application progress page
     Given the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
     Then The user should see the text in the page    16: Rainfall
     And the user should see the text in the page    Everyday Im Juggling Ltd (Lead)
+    And the user should see the element             jQuery=h3:contains("Innovation area") ~ span:contains("Digital Manufacturing")
     And the user should see the text in the page    No assessors have been assigned to this application.
     And the user should see the text in the page    No assessors have rejected this application.
     And the user should see the text in the page    No assessors were previously assigned to this application.
@@ -59,6 +60,7 @@ Review the application
     [Tags]
     When the user clicks the button/link    link=Review application
     Then the user should see the text in the page    Application overview
+    And the user should see the element    jQuery=dt:contains("Innovation area") + dd:contains("Digital Manufacturing")
     [Teardown]    The user goes back to the previous page
 
 View the available assessors
@@ -108,7 +110,7 @@ Remove and notify an assessor (Notified)
     [Tags]
     [Setup]    Log in as a different user    &{Comp_admin1_credentials}
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    And the user clicks the button/link    jQuery=a:contains("Assessor management - assignments")
+    And the user clicks the button/link    jQuery=a:contains("Assessor management: Assignments")
     And the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
     When the user clicks the button/link    jQuery=tr:nth-child(1) a:contains("Remove")
     And the user clicks the button/link    jQuery=.buttonlink:contains(Cancel)

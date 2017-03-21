@@ -15,7 +15,7 @@
             <th:block th:insert="fragments/elements :: competition-closing-warning (competition=${model.application.currentCompetition})" />
 
           	<div class="page-title">
-                <th:block th:insert="fragments/elements :: application-title (applicationId=${model.application.currentApplication.id},applicationName=${model.application.currentApplication.applicationDisplayName})" />
+                <th:block th:insert="fragments/elements :: application-title (applicationId=${model.application.currentApplication.id},applicationName=${model.application.currentApplication.name})" />
                 <h1 class="heading-xlarge" th:text="${model.title}" />
             </div>
 
@@ -78,7 +78,7 @@
                                               th:with="organisationFinance=(${model.finance.organisationFinance}), organisationGrantClaimPercentage=(${model.finance.organisationGrantClaimPercentage}),
                                                        organisationGrantClaimPercentageId=(${model.finance.organisationGrantClaimPercentageId}), organisationFinanceTotal=(${model.finance.organisationFinanceTotal}),
                                                        organisationFinanceSize=(${model.finance.organisationFinanceSize}), organisationSizes=(${model.finance.organisationSizes}),
-                                                       maximumGrantClaimPercentage=(${model.finance.maximumGrantClaimPercentage})">
+                                                       maximumGrantClaimPercentage=(${model.finance.maximumGrantClaimPercentage}), financeQuestions=(${model.finance.financeQuestions})">
                                         <div th:replace="'finance/'+${model.finance.financeView} :: ${formInput.type.nameLower}" />
                                     </th:block>
 
@@ -119,7 +119,7 @@
                         <a th:href="${backURL}" class="button-secondary" name="submit-section" th:text="${'Return to ' + #strings.toLowerCase(backTitle)}">Return to application overview</a>
                     </th:block>
                     <th:block th:unless="${model.application.allReadOnly}">
-                        <button th:unless="${model.isSection}" type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to application overview</button>
+                        <button th:unless="${model.isSection}" type="submit" class="button app-submit-btn" name="submit-section">Save and return to application overview</button>
                     </th:block>
                 </th:block>
 
