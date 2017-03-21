@@ -32,13 +32,13 @@ public class Project implements ProcessActivity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="applicationId", referencedColumnName = "id")
     private Application application;
 
     private LocalDate targetStartDate;
 
-    @OneToOne (cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name="address", referencedColumnName="id")
     private Address address;
 
@@ -67,15 +67,15 @@ public class Project implements ProcessActivity {
     @JoinColumn(name="exploitationPlanFileEntryId", referencedColumnName="id")
     private FileEntry exploitationPlan;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="signedGrantOfferFileEntryId", referencedColumnName = "id")
     private FileEntry signedGrantOfferLetter;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="grantOfferLetterFileEntryId", referencedColumnName = "id")
     private FileEntry grantOfferLetter;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="additionalContractFileEntryId", referencedColumnName = "id")
     private FileEntry additionalContractFile;
 

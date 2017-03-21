@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.user.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -53,7 +52,7 @@ public class ProcessRole {
     public User getUser() {
         return user;
     }
-    @JsonIgnore
+
     public Long getApplicationId() {
         return applicationId;
     }

@@ -1,9 +1,11 @@
 package org.innovateuk.ifs.application.transactional;
 
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.domain.Section;
-import org.innovateuk.ifs.application.mapper.QuestionMapper;
 import org.innovateuk.ifs.application.mapper.SectionMapper;
 import org.innovateuk.ifs.application.repository.SectionRepository;
 import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
@@ -18,27 +20,21 @@ import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.form.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.validator.util.ValidationUtil;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
+import static org.apache.commons.lang3.tuple.Pair.of;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.aggregate;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
-import static java.util.stream.Collectors.toList;
-import static org.apache.commons.lang3.tuple.Pair.of;
 
 /**
  * Transactional and secured service focused around the processing of Applications
@@ -57,9 +53,6 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
     private SectionMapper sectionMapper;
 
     @Autowired
-    private QuestionMapper questionMapper;
-
-    @Autowired
     private QuestionService questionService;
 
     @Autowired
@@ -76,65 +69,60 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
     }
 
     private Map<Long, Set<Long>> completedSections(Application application) {
+
         List<Section> sections = application.getCompetition().getSections();
-        List<Organisation> organisations = application.getProcessRoles().stream()
-                .filter(p ->
-                                p.getRole().getName().equals(UserRoleType.LEADAPPLICANT.getName()) ||
-                                        p.getRole().getName().equals(UserRoleType.APPLICANT.getName()) ||
-                                        p.getRole().getName().equals(UserRoleType.COLLABORATOR.getName())
-                )
-                .map(processRole -> {
-                    return organisationRepository.findOne(processRole.getOrganisationId());
-                }).collect(toList());
+        List<ProcessRole> applicantTypeProcessRoles = simpleFilter(application.getProcessRoles(), ProcessRole::isLeadApplicantOrCollaborator);
+        List<Long> organisations = simpleMap(applicantTypeProcessRoles, ProcessRole::getOrganisationId);
+
         Map<Long, Set<Long>> organisationMap = new HashMap<>();
-        for (Organisation organisation : organisations) {
+
+        for (Long organisationId : organisations) {
             Set<Long> completedSections = new LinkedHashSet<>();
             for (Section section : sections) {
-                if (this.isSectionComplete(section, application.getId(), organisation.getId()).getSuccessObject()) {
+                if (this.isSectionComplete(section, application.getId(), organisationId).getSuccessObject()) {
                     completedSections.add(section.getId());
                 }
             }
-            organisationMap.put(organisation.getId(), completedSections);
+            organisationMap.put(organisationId, completedSections);
         }
         return organisationMap;
     }
 
     @Override
     public ServiceResult<Set<Long>> getCompletedSections(final long applicationId, final long organisationId) {
-        return find(application(applicationId), () -> getIncompleteSections(applicationId)).
-                andOnSuccess((application, incomplete) -> {
-                    final List<ServiceResult<Pair<Long, Boolean>>> unaggregatedSectionsAndStatus = new ArrayList<>();
-                    for (final Section section : application.getCompetition().getSections()) {
-                        unaggregatedSectionsAndStatus.add(isSectionComplete(section, applicationId, organisationId).andOnSuccessReturn(isComplete -> of(section.getId(), isComplete)));
-                    }
+        return find(application(applicationId)).
+                andOnSuccess(application -> {
+
+                    List<Section> sections = application.getCompetition().getSections();
+
+                    final List<ServiceResult<Pair<Long, Boolean>>> unaggregatedSectionsAndStatus = simpleMap(sections, section ->
+                        isSectionComplete(section, applicationId, organisationId).andOnSuccessReturn(isComplete -> of(section.getId(), isComplete)));
+
                     final ServiceResult<List<Pair<Long, Boolean>>> aggregatedSectionsAndStatus = aggregate(unaggregatedSectionsAndStatus);
                     final ServiceResult<List<Pair<Long, Boolean>>> aggregatedCompleteSectionsAndStatus = aggregatedSectionsAndStatus.andOnSuccessReturn(sectionsWithStatus -> simpleFilter(sectionsWithStatus, Pair::getValue));
-                    final ServiceResult<Set<Long>> aggregatedCompleteSections = aggregatedCompleteSectionsAndStatus.andOnSuccessReturn(sectionsWithStatus -> new HashSet(simpleMap(sectionsWithStatus, Pair::getKey)));
-                    return aggregatedCompleteSections;
+                    return aggregatedCompleteSectionsAndStatus.andOnSuccessReturn(sectionsWithStatus -> new HashSet<>(simpleMap(sectionsWithStatus, Pair::getKey)));
                 });
     }
 
     @Override
     public ServiceResult<Set<Long>> getQuestionsForSectionAndSubsections(final Long sectionId) {
-        Section section = sectionRepository.findOne(sectionId);
-        Set<Long> questions = collectAllQuestionFrom(section);
-        return serviceSuccess(questions);
+        return find(section(sectionId)).andOnSuccessReturn(section ->
+                new HashSet<>(simpleMap(section.fetchAllQuestionsAndChildQuestions(), Question::getId)));
     }
 
     @Override
     public ServiceResult<List<ValidationMessages>> markSectionAsComplete(final Long sectionId,
                                                                          final Long applicationId,
                                                                          final Long markedAsCompleteById) {
-        LOG.debug(String.format("markSectionAsComplete %s / %s / %s ", sectionId, applicationId, markedAsCompleteById));
+
         return find(section(sectionId), application(applicationId)).andOnSuccess((section, application) -> {
+
             List<ValidationMessages> sectionIsValid = validationUtil.isSectionValid(markedAsCompleteById, section, application);
 
             if (sectionIsValid.isEmpty()) {
-                LOG.debug("======= SECTION IS VALID =======");
                 markSectionAsComplete(section, application, markedAsCompleteById);
-            } else {
-                LOG.debug("======= SECTION IS INVALID =======   " + sectionIsValid.size());
             }
+
             return serviceSuccess(sectionIsValid);
         });
     }
@@ -148,12 +136,11 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
     }
 
     private void markSectionAsComplete(Section section, Application application, Long markedAsCompleteById) {
-        Set<Long> questions = collectAllQuestionFrom(section);
-        questions.forEach(q -> {
+        getQuestionsForSectionAndSubsections(section.getId()).andOnSuccessReturnVoid(questions -> questions.forEach(q -> {
             questionService.markAsComplete(new QuestionApplicationCompositeId(q, application.getId()), markedAsCompleteById);
             // Assign back to lead applicant.
             questionService.assign(new QuestionApplicationCompositeId(q, application.getId()), application.getLeadApplicantProcessRole().getId(), markedAsCompleteById);
-        });
+        }));
     }
 
 
@@ -161,30 +148,11 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
     public ServiceResult<Void> markSectionAsInComplete(final Long sectionId,
                                                        final Long applicationId,
                                                        final Long markedAsInCompleteById) {
-        Section section = sectionRepository.findOne(sectionId);
-        Set<Long> questions = collectAllQuestionFrom(section);
 
-        questions.forEach(q ->
+        return getQuestionsForSectionAndSubsections(sectionId).andOnSuccessReturnVoid(questions -> questions.forEach(q ->
             questionService.markAsInComplete(new QuestionApplicationCompositeId(q, applicationId), markedAsInCompleteById)
-        );
-
-        return serviceSuccess();
+        ));
     }
-
-    private Set<Long> collectAllQuestionFrom(final Section section) {
-        final Set<Long> questions = new HashSet<>();
-
-        questions.addAll(section.getQuestions().stream().map(questionMapper::questionToId).collect(Collectors.toSet()));
-
-        if (section.getChildSections() != null) {
-            for (Section childSection : section.getChildSections()) {
-                questions.addAll(collectAllQuestionFrom(childSection));
-            }
-        }
-
-        return questions;
-    }
-
 
     @Override
     public ServiceResult<List<Long>> getIncompleteSections(final Long applicationId) {
@@ -198,7 +166,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
         for (Section section : sections) {
             boolean sectionIncomplete = false;
 
-            List<Question> questions = section.fetchAllChildQuestions();
+            List<Question> questions = section.fetchAllQuestionsAndChildQuestions();
             for (Question question : questions) {
                 List<FormInput> formInputs = simpleFilter(question.getFormInputs(), input -> input.getActive() && FormInputScope.APPLICATION.equals(input.getScope()));
                 if (formInputs.stream().anyMatch(input -> input.getWordCount() != null && input.getWordCount() > 0)) {
@@ -233,7 +201,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
     }
 
     private ServiceResult<Boolean> isSectionComplete(Section section, Long applicationId, Long organisationId) {
-        return isMainSectionComplete(section, applicationId, organisationId, true).andOnSuccess(
+        return isMainSectionComplete(section, applicationId, organisationId).andOnSuccess(
                 mainSectionComplete -> {
                     // If there are child sections are they complete?
                     if (mainSectionComplete && section.hasChildSections()) {
@@ -251,16 +219,9 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
                 });
     }
 
-    private ServiceResult<Boolean> isMainSectionComplete(Section section, Long applicationId, Long organisationId, boolean ignoreOtherOrganisations) {
+    private ServiceResult<Boolean> isMainSectionComplete(Section section, Long applicationId, Long organisationId) {
+
         for (Question question : section.getQuestions()) {
-            if (!ignoreOtherOrganisations && question.getName() != null && "FINANCE_SUMMARY_INDICATOR_STRING".equals(question.getName()) && section.getParentSection() != null) {
-                final ServiceResult<Boolean> childSectionsAreCompleteForAllOrganisations = childSectionsAreCompleteForAllOrganisations(section.getParentSection(), applicationId, section);
-                if (childSectionsAreCompleteForAllOrganisations.isFailure()) {
-                    return childSectionsAreCompleteForAllOrganisations;
-                } else if (!childSectionsAreCompleteForAllOrganisations.getSuccessObject()) {
-                    return serviceSuccess(false);
-                }
-            }
 
             if (question.isMarkAsCompletedEnabled()) {
                 final ServiceResult<Boolean> markedAsComplete = questionService.isMarkedAsComplete(question, applicationId, organisationId);
@@ -295,7 +256,7 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
         List<ApplicationFinance> applicationFinanceList = application.getApplicationFinances();
         for (Section section : sections) {
             for (ApplicationFinance applicationFinance : applicationFinanceList) {
-                if (!this.isMainSectionComplete(section, application.getId(), applicationFinance.getOrganisation().getId(), true).getSuccessObject()) {
+                if (!this.isMainSectionComplete(section, application.getId(), applicationFinance.getOrganisation().getId()).getSuccessObject()) {
                     allSectionsWithSubsectionsAreComplete = false;
                     break;
                 }

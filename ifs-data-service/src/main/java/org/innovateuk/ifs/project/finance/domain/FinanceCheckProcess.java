@@ -8,6 +8,7 @@ import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.Process;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
@@ -17,11 +18,11 @@ import javax.persistence.ManyToOne;
 @Entity
 public class FinanceCheckProcess extends Process<ProjectUser, PartnerOrganisation, FinanceCheckState> {
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="participant_id", referencedColumnName = "id")
     private ProjectUser participant;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="target_id", referencedColumnName = "id")
     private PartnerOrganisation target;
 

@@ -93,10 +93,6 @@ public class Question {
         return description;
     }
 
-    public List<QuestionStatus> getQuestionStatuses() {
-        return questionStatuses;
-    }
-
     @JsonIgnore
     public Competition getCompetition() {
         return competition;
