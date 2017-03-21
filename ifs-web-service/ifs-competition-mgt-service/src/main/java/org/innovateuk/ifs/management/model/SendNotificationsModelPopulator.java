@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class SendNotificationsModelPopulator {
 
     @Autowired
-    ApplicationSummaryRestService applicationSummaryRestService;
+    private ApplicationSummaryRestService applicationSummaryRestService;
 
     @Autowired
     private CompetitionService competitionService;
