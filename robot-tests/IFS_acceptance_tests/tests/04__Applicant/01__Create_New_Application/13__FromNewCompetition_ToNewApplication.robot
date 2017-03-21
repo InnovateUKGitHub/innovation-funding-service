@@ -276,21 +276,6 @@ Applicant can view and edit project growth table
     And the user populates the project growth table
     and the user clicks the button/link     jQuery=button:contains("Mark as complete")
 
-Invite a non-exisintg collaborator in Appplication with Growth table
-    [Documentation]     INFUND-8426
-    [Tags]      Pending
-    Given The user clicks the button/link      jQuery=a:contains("Application Overview")
-    and the user clicks the button/link       jQuery=a:contains("view and add participants to your application")
-    When the user clicks the button/link       jQuery=a:contains("Add partner organisation")
-    then the user should see the element       jQuery=h1:contains(Add organisation)
-    When The user enters text to a text field      id=organisationName    innovate
-    and the user enters text to a text field       id=applicants0.name    liam
-    and the user enters text to a text field       id=applicants0.email    liam@innovate.com
-    then the user clicks the button/link        jQuery=button:contains("Add organisation and invite applicants")
-    and the user should not see an error in the page
-    and the user logs out if they are logged in
-    and newly invited collaborator can create account and sign in
-
 Newly created collaborator can view and edit project Growth table
     [Documentation]     INFUND-8426
     [Tags]
