@@ -28,8 +28,8 @@ public class ApplicationSummaryServiceImpl implements ApplicationSummaryService 
 
 	@Override
 	public ApplicationSummaryPageResource getSubmittedApplicationSummariesByCompetitionId(
-			Long competitionId, String sortField, Integer pageNumber, Integer pageSize, String filter) {
-		return applicationSummaryRestService.getSubmittedApplications(competitionId, sortField, pageNumber, pageSize, filter).getSuccessObjectOrThrowException();
+			Long competitionId, String sortField, Integer pageNumber, Integer pageSize, String filter, Optional<FundingDecision> fundingFilter) {
+		return applicationSummaryRestService.getSubmittedApplications(competitionId, sortField, pageNumber, pageSize, filter, fundingFilter).getSuccessObjectOrThrowException();
 	}
 
 	@Override
