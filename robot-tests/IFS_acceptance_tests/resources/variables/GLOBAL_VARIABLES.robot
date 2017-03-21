@@ -1,5 +1,5 @@
 *** Settings ***
-Variables    competition_variables.py
+Variables  ../../libs/Initialisation.py
 
 *** Variables ***
 ${docker}         0
