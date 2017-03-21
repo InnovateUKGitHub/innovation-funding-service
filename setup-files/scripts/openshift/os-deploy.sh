@@ -80,7 +80,6 @@ function tailorAppInstance() {
 
     if [[ ${TARGET} == "production" || ${TARGET} == "uat" ]]
     then
-        sed -i.bak "s/replicas: 1/replicas: 2/g" os-files-tmp/3*.yml
         sed -i.bak "s/replicas: 1/replicas: 2/g" os-files-tmp/4*.yml
         sed -i.bak "s/replicas: 1/replicas: 2/g" os-files-tmp/shib/*.yml
         sed -i.bak "s/replicas: 1/replicas: 2/g" os-files-tmp/shib/named-envs/*.yml
@@ -181,11 +180,16 @@ function createProject() {
     done
 }
 
+function scaleDataService() {
+    oc export dc data-service | "s/replicas: 1/replicas: 2/g" | oc apply -f -
+}
+
+
 # Entry point
 cleanUp
 cloneConfig
 tailorAppInstance
-if [[ ${TARGET} != "production" ]]
+if [[ ${TARGET} != "production" && ${TARGET} != "demo" && ${TARGET} != "uat" ]]
 then
     createProject
 fi
@@ -202,4 +206,11 @@ if [[ ${TARGET} == "local" || ${TARGET} == "remote" ]]
 then
     shibInit
 fi
+
+if [[ ${TARGET} == "production" || ${TARGET} == "uat" ]]
+then
+    # We only scale up data-service once data-service started up and performed the Flyway migrations on one thread
+    scaleDataService
+fi
+
 cleanUp
