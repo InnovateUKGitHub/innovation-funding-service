@@ -6,10 +6,9 @@ PROJECT=$1
 TARGET=$2
 VERSION=$3
 
-if [[ ${TARGET} == "production" ]]
-then
-    PROJECT="production"
-fi
+if [[ ${TARGET} == "production" ]]; then PROJECT="production"; fi
+if [[ ${TARGET} == "demo" ]]; then PROJECT="demo"; fi
+if [[ ${TARGET} == "uat" ]]; then PROJECT="uat"; fi
 
 REGISTRY=docker-registry-default.apps.prod.ifs-test-clusters.com
 INTERNAL_REGISTRY=172.30.80.28:5000
@@ -17,12 +16,7 @@ INTERNAL_REGISTRY=172.30.80.28:5000
 SVC_ACCOUNT_TOKEN=${bamboo_openshift_svc_account_token}
 SVC_ACCOUNT_CLAUSE="--namespace=${PROJECT} --token=${SVC_ACCOUNT_TOKEN} --server=https://console.prod.ifs-test-clusters.com:443 --insecure-skip-tls-verify=true"
 
-if [ -z "$SVC_ACCOUNT_TOKEN" ]
-then
-    REGISTRY_TOKEN=$(oc whoami -t)
-else
-    REGISTRY_TOKEN=${SVC_ACCOUNT_TOKEN}
-fi
+if [ -z "$SVC_ACCOUNT_TOKEN" ]; then REGISTRY_TOKEN=$(oc whoami -t); else REGISTRY_TOKEN=${SVC_ACCOUNT_TOKEN}; fi
 
 function uploadToRegistry() {
     docker tag innovateuk/data-service:${VERSION} \
