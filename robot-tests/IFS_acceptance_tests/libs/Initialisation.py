@@ -23,7 +23,6 @@ except KeyError:
         'port': 3306,
     }
 
-
 # Open database connection
 db = MySQLdb.connect(**config)
 
@@ -37,7 +36,6 @@ cursor.execute("""SELECT `id`,`name` FROM competition""")
 competition_ids = {}
 for comp in cursor.fetchall():
     competition_ids[comp[1]] = int(comp[0])
-    #print(competition_ids)
 
 # execute SQL query using execute() method, to fetch the Applications
 cursor.execute("""SELECT `id`,`name` FROM application""")
@@ -46,7 +44,6 @@ cursor.execute("""SELECT `id`,`name` FROM application""")
 application_ids = {}
 for app in cursor.fetchall():
     application_ids[app[1]] = int(app[0])
-    # print(application_ids)
 
 # disconnect from server
 db.close()
