@@ -58,6 +58,14 @@ Assessor agreement
     And The user goes back to the previous page
     [Teardown]    The user navigates to the page    ${Server}/assessment/profile/agreement
 
+Find out more about our travel and subsistence rates
+    [Documentation]    INFUND-8806
+    [Tags]
+    Given the user should see the text in the page    Find out more about our travel and subsistence rates
+    When the user clicks the button/link    link=travel and subsistence rates
+    Then the user should be redirected to the correct page    ${Server}/assessment/profile/travel
+    And The user goes back to the previous page
+
 Client-side validations and Submit
     [Documentation]    INFUND-1481
     ...

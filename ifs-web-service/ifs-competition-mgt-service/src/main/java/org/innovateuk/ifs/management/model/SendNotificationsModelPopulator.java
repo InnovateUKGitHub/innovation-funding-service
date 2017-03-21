@@ -3,6 +3,7 @@ package org.innovateuk.ifs.management.model;
 
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
+import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 public class SendNotificationsModelPopulator {
 
     @Autowired
-    private ApplicationSummaryService applicationSummaryService;
+    private ApplicationSummaryRestService applicationSummaryRestService;
 
     @Autowired
     private CompetitionService competitionService;
@@ -28,7 +29,10 @@ public class SendNotificationsModelPopulator {
 
     public SendNotificationsViewModel populate(long competitionId, List<Long> applicationIds){
 
-        ApplicationSummaryPageResource pagedApplications = applicationSummaryService.findByCompetitionId(competitionId, null, null, null, null);
+
+        ApplicationSummaryPageResource pagedApplications = applicationSummaryRestService
+                .getAllApplications(competitionId, null, 0, Integer.MAX_VALUE, null)
+                .getSuccessObjectOrThrowException();
 
         List<ApplicationSummaryResource> filteredApplications = pagedApplications.getContent().stream()
                 .filter(application -> applicationIds.contains(application.getId()) )

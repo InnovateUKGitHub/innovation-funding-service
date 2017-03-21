@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.competition.viewmodel;
 
 import org.innovateuk.ifs.competition.viewmodel.publiccontent.AbstractPublicSectionContentViewModel;
-import org.innovateuk.ifs.competition.viewmodel.publiccontent.SectionViewModel;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,8 +18,7 @@ public class CompetitionOverviewViewModel {
     private String nonIfsUrl;
     private Boolean nonIfs;
     private Boolean showApplyButton;
-    private List<SectionViewModel> allContentSections;
-    private AbstractPublicSectionContentViewModel currentSection;
+    private List<AbstractPublicSectionContentViewModel> allSections;
     private boolean userIsLoggedIn = false;
 
     public String getCompetitionTitle() {
@@ -71,20 +69,12 @@ public class CompetitionOverviewViewModel {
         this.shortDescription = shortDescription;
     }
 
-    public List<SectionViewModel> getAllContentSections() {
-        return allContentSections;
+    public List<AbstractPublicSectionContentViewModel> getAllSections() {
+        return allSections;
     }
 
-    public void setAllContentSections(List<SectionViewModel> allContentSections) {
-        this.allContentSections = allContentSections;
-    }
-
-    public void setCurrentSection(AbstractPublicSectionContentViewModel currentSection) {
-        this.currentSection = currentSection;
-    }
-
-    public AbstractPublicSectionContentViewModel getCurrentSection() {
-        return currentSection;
+    public void setAllSections(List<AbstractPublicSectionContentViewModel> allSections) {
+        this.allSections = allSections;
     }
 
     public String getNonIfsUrl() {
