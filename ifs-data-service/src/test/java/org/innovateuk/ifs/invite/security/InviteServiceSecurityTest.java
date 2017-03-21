@@ -14,7 +14,6 @@ import org.springframework.security.access.method.P;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder.newInvite;
@@ -90,7 +89,7 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
     @Test
     public void testGetInvitesByApplication() {
         long applicationId = 1L;
-        final ServiceResult<Set<InviteOrganisationResource>> results = classUnderTest.getInvitesByApplication(applicationId);
+        final ServiceResult<List<InviteOrganisationResource>> results = classUnderTest.getInvitesByApplication(applicationId);
         verify(inviteOrganisationPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).consortiumCanViewAnInviteOrganisation(any(InviteOrganisationResource.class), any(UserResource.class));
         assertTrue(results.getSuccessObject().isEmpty());
     }
@@ -139,8 +138,8 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
         }
 
         @Override
-        public ServiceResult<Set<InviteOrganisationResource>> getInvitesByApplication(Long applicationId) {
-            return serviceSuccess(newInviteOrganisationResource().buildSet(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
+        public ServiceResult<List<InviteOrganisationResource>> getInvitesByApplication(Long applicationId) {
+            return serviceSuccess(newInviteOrganisationResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
         }
 
         @Override

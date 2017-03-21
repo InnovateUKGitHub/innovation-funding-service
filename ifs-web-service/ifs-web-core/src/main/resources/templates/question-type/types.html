@@ -295,7 +295,7 @@
                         </th:block>
                     </th:block>
                     <dt>Innovation area</dt>
-                    <dd th:text="${currentApplication.innovationArea.sectorName}"></dd>
+                    <dd th:text="${currentApplication.innovationArea.name} ?: 'Not listed'"></dd>
                     <th:block th:unless="${currentApplication.resubmission == null}">
                         <dt>Is this application a resubmission of a previous application?</dt>
                         <dd th:text="${currentApplication.resubmission ? 'Yes' : 'No'}"></dd>

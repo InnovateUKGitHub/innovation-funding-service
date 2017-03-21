@@ -4,8 +4,10 @@ import org.innovateuk.ifs.application.builder.ApplicationSummaryResourceBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryService;
 import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.management.viewmodel.CompetitionInFlightStatsViewModel;
@@ -26,6 +28,7 @@ import static org.hamcrest.Matchers.is;
 import static org.innovateuk.ifs.application.resource.FundingDecision.FUNDED;
 import static org.innovateuk.ifs.application.resource.FundingDecision.ON_HOLD;
 import static org.innovateuk.ifs.application.resource.FundingDecision.UNFUNDED;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
@@ -46,7 +49,7 @@ public class SendNotificationsModelPopulatorTest {
     private CompetitionInFlightStatsModelPopulator competitionInFlightStatsModelPopulatorMock;
 
     @Mock
-    private ApplicationSummaryService applicationSummaryServiceMock;
+    private ApplicationSummaryRestService applicationSummaryRestServiceMock;
 
     @Before
     public void setUp() throws Exception {
@@ -69,7 +72,7 @@ public class SendNotificationsModelPopulatorTest {
         ApplicationSummaryPageResource applicationResults = new ApplicationSummaryPageResource();
         applicationResults.setContent(Arrays.asList(application1, application2, application3));
 
-        when(applicationSummaryServiceMock.findByCompetitionId(COMPETITION_ID, null, null, null, null)).thenReturn(applicationResults);
+        when(applicationSummaryRestServiceMock.getAllApplications(COMPETITION_ID, null, 0, Integer.MAX_VALUE, null)).thenReturn(restSuccess(applicationResults));
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
         when(competitionInFlightStatsModelPopulatorMock.populateStatsViewModel(competition)).thenReturn(keyStatistics);
 
