@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation     INFUND-2601 As a competition administrator I want a view of all applications at the 'Funders Panel' stage
-Suite Setup       Log in as user    email=lee.bowman@innovateuk.test    password=Passw0rd
+Suite Setup       guest user log-in  &{internal_finance_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
@@ -10,68 +10,45 @@ ${funders_panel_competition_url}    ${server}/management/competition/${FUNDERS_P
 
 *** Test Cases ***
 Funding decision buttons should be disabled
-    [Documentation]    INFUND-7376
-    [Tags]    HappyPath
+    [Documentation]    INFUND-2601
+    [Tags]
     When the user navigates to the page    ${funders_panel_competition_url}
     Then the user should see the text in the page    Mark application as
-    And the options to mark funding decisions should be disabled
+    And the user should see the options to make funding decisions disabled
 
 An application is selected and the buttons become enabled
-    [Documentation]    INFUND-7376
-    [Tags]    HappyPath
-    When the user selects the checkbox    app-row-1
-    Then the options to mark funding decisions should be enabled
-
-An application is unselected and the buttons become disabled
-    [Documentation]    INFUND-7376
+    [Documentation]    INFUND-7377
     [Tags]
-    When the user unselects the checkbox    app-row-1
-    Then the options to mark funding decisions should be disabled
+    When the user selects the checkbox    app-row-2
+    Then the user should see the options to make funding decisions enabled
+    When the user unselects the checkbox    app-row-2
+    Then the user should see the options to make funding decisions disabled
 
-User should be able to mark funding decisions when an application has been chosen
-    [Documentation]    INFUND-7376
-    [Tags]    HappyPath
-    When the user marks the funding decision of application    app-row-1    Successful
-    Then the user should see the element    jQuery=td:contains("Successful")
-    And checkbox should not be selected    app-row-1
-    And the options to mark funding decisions should be disabled
-
-User should be able to mark and application as unsuccessful
-    [Documentation]    INFUND-7376
-    [Tags]    HappyPath
-    When the user marks the funding decision of application    app-row-2    Unsuccessful
-    Then the user should see the element    jQuery=td:contains("Unsuccessful")
+User should be able to make a funding decision
+    [Documentation]  INFUND-7377
+    [Tags]  HappyPath
+    Given the user navigates to the page  ${funders_panel_competition_url}
+    When the user sets the funding decision of application    app-row-1    On hold
+    Then the user should see the element  jQuery=tr:first-of-type():contains("On hold")
 
 User should be able to change a funding decision after one has been chosen
-    [Documentation]    INFUND-7376
+    [Documentation]    INFUND-7377
     [Tags]
-    When the user marks the funding decision of application    app-row-2    On hold
-    Then the user should see the element    jQuery=td:contains("On hold")
-    When the user marks the funding decision of application    app-row-2    Unsuccessful
-    Then the user should see the element    jQuery=td:contains("Unsuccessful")
+    When the user sets the funding decision of application    app-row-1    Unsuccessful
+    Then the user should see the element    jQuery=tr:first-of-type():contains("Unsuccessful")
 
 *** Keywords ***
-the options to mark funding decisions should be disabled
-    the option to mark funding decision is disabled for button    Successful
-    the option to mark funding decision is disabled for button    Unsuccessful
-    the option to mark funding decision is disabled for button    On hold
+the user should see the options to make funding decisions disabled
+    the user should see the element  jQuery=button:contains("Successful")[disabled]
+    the user should see the element  jQuery=button:contains("Unsuccessful")[disabled]
+    the user should see the element  jQuery=button:contains("On hold")[disabled]
 
-the options to mark funding decisions should be enabled
-    the option to mark funding decision is enabled for button    Successful
-    the option to mark funding decision is enabled for button    Unsuccessful
-    the option to mark funding decision is enabled for button    On hold
+the user should see the options to make funding decisions enabled
+    the user should not see the element  jQuery=button:contains("Successful")[disabled]
+    the user should not see the element  jQuery=button:contains("Unsuccessful")[disabled]
+    the user should not see the element  jQuery=button:contains("On hold")[disabled]
 
-the option to mark funding decision is disabled for button
-    [Arguments]    ${decision_button}
-    the element should be disabled    jQuery=.button:contains("${decision_button}")
-
-the option to mark funding decision is enabled for button
-    [Arguments]    ${decision_button}
-    The user should see the element    jQuery=.button:contains("${decision_button}")
-    And Element Should Be Enabled      jQuery=.button:contains("${decision_button}")
-
-the user marks the funding decision of application
+the user sets the funding decision of application
     [Arguments]    ${checkbox}    ${decision_button}
-    When the user moves focus to the element    jQuery=label[for="${checkbox}"]
-    And the user selects the checkbox    ${checkbox}
-    And the user clicks the button/link    jQuery=button:contains("${decision_button}")
+    the user selects the checkbox    ${checkbox}
+    the user clicks the button/link    jQuery=button:contains("${decision_button}")
