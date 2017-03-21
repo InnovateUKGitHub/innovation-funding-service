@@ -6,8 +6,8 @@ You have been allocated some applications to assess within this competition. Ple
 
 ${competitionUrl}
 
-- your response is required by ${acceptsDeadline}.
-- the assessment deadline is ${assessmentDeadline}.
+- your response is required by ${acceptsDeadline}
+- the assessment deadline is ${assessmentDeadline}
 
 If you have any questions around the assessments, please contact the Competitions Team.
 

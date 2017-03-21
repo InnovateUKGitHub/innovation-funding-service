@@ -8,7 +8,6 @@ import org.innovateuk.ifs.commons.error.exception.RegistrationTokenExpiredExcept
 import org.innovateuk.ifs.exception.ErrorControllerAdvice;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.invite.service.EthnicityRestService;
-import org.innovateuk.ifs.invite.service.InviteServiceImpl;
 import org.innovateuk.ifs.user.builder.EthnicityResourceBuilder;
 import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.Gender;
@@ -95,8 +94,8 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
         when(userService.createUserForOrganisation(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong())).thenReturn(serviceSuccess(new UserResource()));
         when(ethnicityRestService.findAllActive()).thenReturn(restSuccess(asList(EthnicityResourceBuilder.newEthnicityResource().withId(1L).withDescription("Nerdy People").withName("IFS programmer").withPriority(1).build())));
 
-        inviteHashCookie = new Cookie(InviteServiceImpl.INVITE_HASH, encryptor.encrypt(INVITE_HASH));
-        usedInviteHashCookie = new Cookie(InviteServiceImpl.INVITE_HASH, encryptor.encrypt(ACCEPTED_INVITE_HASH));
+        inviteHashCookie = new Cookie(AbstractAcceptInviteController.INVITE_HASH, encryptor.encrypt(INVITE_HASH));
+        usedInviteHashCookie = new Cookie(AbstractAcceptInviteController.INVITE_HASH, encryptor.encrypt(ACCEPTED_INVITE_HASH));
         organisationCookie = new Cookie("organisationId", encryptor.encrypt("1"));
     }
 

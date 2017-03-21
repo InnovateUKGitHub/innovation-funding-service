@@ -29,7 +29,6 @@ import org.springframework.util.Assert;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.innovateuk.ifs.commons.security.SecuritySetter.swapOutForUser;
 import static org.junit.Assert.*;
@@ -113,7 +112,7 @@ public class ApplicationInviteControllerIntegrationTest extends BaseControllerIn
 
         int inviteSize = controller.getInvitesByApplication(APPLICATION_ID).getSuccessObject().iterator().next().getInviteResources().size();
 
-        RestResult<Set<InviteOrganisationResource>> invitesResult = this.controller.getInvitesByApplication(APPLICATION_ID);
+        RestResult<List<InviteOrganisationResource>> invitesResult = this.controller.getInvitesByApplication(APPLICATION_ID);
         Assert.isTrue(invitesResult.isSuccess());
 
         // Create and save the new invite.
@@ -154,7 +153,7 @@ public class ApplicationInviteControllerIntegrationTest extends BaseControllerIn
         String testEmail = "jessica.doe@ludlow.co.uk";
         String testName = "Jessica Istesting";
 
-        RestResult<Set<InviteOrganisationResource>> invitesResult = this.controller.getInvitesByApplication(APPLICATION_ID);
+        RestResult<List<InviteOrganisationResource>> invitesResult = this.controller.getInvitesByApplication(APPLICATION_ID);
         Assert.isTrue(invitesResult.isSuccess());
 
         // Create and save the new invite.
@@ -168,7 +167,7 @@ public class ApplicationInviteControllerIntegrationTest extends BaseControllerIn
         // Needed because test is running in one transaction
         flushAndClearSession();
 
-        Set<InviteOrganisationResource> invitesBeforeRemove = controller.getInvitesByApplication(APPLICATION_ID).getSuccessObject();
+        List<InviteOrganisationResource> invitesBeforeRemove = controller.getInvitesByApplication(APPLICATION_ID).getSuccessObject();
         List<ApplicationInviteResource> invites = invitesBeforeRemove.iterator().next().getInviteResources();
 
         Optional<ApplicationInviteResource> inviteToRemove = invites
@@ -181,13 +180,13 @@ public class ApplicationInviteControllerIntegrationTest extends BaseControllerIn
         // Needed because test is running in one transaction
         flushAndClearSession();
 
-        Set<InviteOrganisationResource> invitesAfterRemove = controller.getInvitesByApplication(APPLICATION_ID).getSuccessObject();
+        List<InviteOrganisationResource> invitesAfterRemove = controller.getInvitesByApplication(APPLICATION_ID).getSuccessObject();
         assertTrue(!invitesAfterRemove.isEmpty());
         assertEquals(invites.size() - 1, invitesAfterRemove.iterator().next().getInviteResources().size());
     }
 
-    private List<ApplicationInviteResource> createInviteResource(RestResult<Set<InviteOrganisationResource>> invitesResult, String userName, String userMail, long applicationId) {
-        Set<InviteOrganisationResource> invitesExisting = invitesResult.getSuccessObject();
+    private List<ApplicationInviteResource> createInviteResource(RestResult<List<InviteOrganisationResource>> invitesResult, String userName, String userMail, long applicationId) {
+        List<InviteOrganisationResource> invitesExisting = invitesResult.getSuccessObject();
         InviteOrganisationResource inviteOrganisation = invitesExisting.iterator().next();
 
         ApplicationInviteResource inviteResource = new ApplicationInviteResource(userName, userMail, applicationId);
@@ -215,8 +214,8 @@ public class ApplicationInviteControllerIntegrationTest extends BaseControllerIn
     }
 
 
-    private ApplicationInviteResource getMatchingInviteResource(RestResult<Set<InviteOrganisationResource>> invitesResult, String userEmail) {
-        Set<InviteOrganisationResource> invitesOrganisations = invitesResult.getSuccessObject();
+    private ApplicationInviteResource getMatchingInviteResource(RestResult<List<InviteOrganisationResource>> invitesResult, String userEmail) {
+        List<InviteOrganisationResource> invitesOrganisations = invitesResult.getSuccessObject();
         List<ApplicationInviteResource> inviteResources = invitesOrganisations.iterator().next().getInviteResources();
         ApplicationInviteResource inviteResourceMatiching = null;
 

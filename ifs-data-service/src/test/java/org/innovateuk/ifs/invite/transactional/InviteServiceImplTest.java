@@ -61,7 +61,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 
-public class InviteServiceTest extends BaseUnitTestMocksTest {
+public class InviteServiceImplTest extends BaseUnitTestMocksTest {
     private final Log log = LogFactory.getLog(getClass());
 
     @Mock
@@ -91,7 +91,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
 
 
     @Test
-    public void testValidatorEmpty() {
+    public void validatorEmpty() {
         Application application = newApplication().withName("AppName").build();
         Role role1 = new Role(1L, "leadapplicant");
         User leadApplicant = newUser().withEmailAddress("Email@email.com").withFirstName("Nico").build();
@@ -108,7 +108,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void testValidatorEmail() {
+    public void validatorEmail() {
         Application application = newApplication().withName("AppName").build();
         Role role1 = new Role(1L, "leadapplicant");
         User leadApplicant = newUser().withEmailAddress("Email@email.com").withFirstName("Nico").build();
@@ -127,7 +127,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void testInviteCollaborators() throws Exception {
+    public void inviteCollaborators() throws Exception {
         Competition competition = newCompetition().build();
         Application application = newApplication().withCompetition(competition).withName("AppName").build();
         Role role1 = new Role(1L, "leadapplicant");
@@ -154,7 +154,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void testInviteCollaboratorsInvalid() throws Exception {
+    public void inviteCollaboratorsInvalid() throws Exception {
         Application application = newApplication().withName("AppName").build();
         Role role1 = new Role(1L, "leadapplicant");
         User leadApplicant = newUser().withEmailAddress("Email@email.com").withFirstName("Nico").build();
@@ -172,7 +172,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void testCreateApplicationInvites() {
+    public void createApplicationInvites() {
 
         List<ApplicationInviteResource> inviteResources = newInviteResource()
                 .withApplication(1L)
@@ -215,7 +215,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void testCreateApplicationInvitesWithInvalidInvitesNoApplicationId() {
+    public void createApplicationInvitesWithInvalidInvitesNoApplicationId() {
 
         List<ApplicationInviteResource> inviteResources = newInviteResource()
                 .withName("testname")
@@ -226,7 +226,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void testCreateApplicationInvitesWithInvalidInvitesNoEmailAddress() {
+    public void createApplicationInvitesWithInvalidInvitesNoEmailAddress() {
 
         List<ApplicationInviteResource> inviteResources = newInviteResource()
                 .withId(1L)
@@ -237,7 +237,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void testCreateApplicationInvitesWithInvalidInvitesNoName() {
+    public void createApplicationInvitesWithInvalidInvitesNoName() {
 
         List<ApplicationInviteResource> inviteResources = newInviteResource()
                 .withId(1L)
@@ -248,7 +248,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void testCreateApplicationInvitesWithInvalidOrganisationInviteNoOrganisationName() {
+    public void createApplicationInvitesWithInvalidOrganisationInviteNoOrganisationName() {
 
         List<ApplicationInviteResource> inviteResources = newInviteResource()
                 .withApplication(1L)
@@ -274,7 +274,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
 
     @Ignore
     @Test
-    public void testGetInviteOrganisationByHash() {
+    public void getInviteOrganisationByHash() {
 
         Competition competition = newCompetition().build();
         Role leadApplicantRole = newRole().withType(LEADAPPLICANT).build();
@@ -305,7 +305,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void testGetInviteOrganisationByHashButInviteOrganisationNotFound() {
+    public void getInviteOrganisationByHashButInviteOrganisationNotFound() {
 
         when(applicationInviteRepositoryMock.getByHash("an organisation hash")).thenReturn(null);
 
@@ -315,10 +315,20 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void testRemoveApplicationInvite() {
+    public void removeApplicationInvite() {
         User user = newUser().build();
         Application application = newApplication().build();
-        ApplicationInvite applicationInvite = newApplicationInvite().withId(24521L).withUser(user).withApplication(application).build();
+        ApplicationInvite applicationInvite = newApplicationInvite()
+                .withId(24521L)
+                .withUser(user)
+                .withApplication(application)
+                .withInviteOrganisation(
+                        newInviteOrganisation()
+                                .withInvites(newInvite().build(2))
+                                .build()
+                )
+                .build();
+
         List<ProcessRole> processRoles = newProcessRole().build(3);
         ProcessRole manyMembersOfOrg = processRoles.get(0);
         manyMembersOfOrg.setOrganisationId(1L);
@@ -332,13 +342,17 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
         QuestionStatus multipleStatusQuestionManyMember = new QuestionStatus(newQuestion().withMultipleStatuses(true).build(), null, manyMembersOfOrg, true);
 
         when(applicationInviteMapper.mapIdToDomain(applicationInvite.getId())).thenReturn(applicationInvite);
-        when(processRoleRepositoryMock.findByUserAndApplicationId(any(User.class), any(Long.class))).thenReturn(processRoles);
-        when(questionStatusRepositoryMock.findByApplicationIdAndMarkedAsCompleteById(any(Long.class), eq(manyMembersOfOrg.getId()))).thenReturn(newArrayList(multipleStatusQuestionManyMember));
-        when(questionStatusRepositoryMock.findByApplicationIdAndMarkedAsCompleteById(any(Long.class), eq(onlyMemberOfOrg.getId()))).thenReturn(newArrayList(singleStatusQuestion, multipleStatusQuestionLastMember));
-        when(questionStatusRepositoryMock.findByApplicationIdAndMarkedAsCompleteById(any(Long.class), eq(withoutQuestionStatus.getId()))).thenReturn(newArrayList());
-        when(processRoleRepositoryMock.findByApplicationIdAndOrganisationId(any(Long.class), eq(manyMembersOfOrg.getOrganisationId()))).thenReturn(newArrayList(manyMembersOfOrg, otherMemberOfOrg));
-        when(processRoleRepositoryMock.findByApplicationIdAndOrganisationId(any(Long.class), eq(onlyMemberOfOrg.getOrganisationId()))).thenReturn(newArrayList(onlyMemberOfOrg));
-
+        when(processRoleRepositoryMock.findByUserAndApplicationId(user, application.getId())).thenReturn(processRoles);
+        when(questionStatusRepositoryMock.findByApplicationIdAndMarkedAsCompleteById(application.getId(), manyMembersOfOrg.getId()))
+                .thenReturn(newArrayList(multipleStatusQuestionManyMember));
+        when(questionStatusRepositoryMock.findByApplicationIdAndMarkedAsCompleteById(application.getId(), onlyMemberOfOrg.getId()))
+                .thenReturn(newArrayList(singleStatusQuestion, multipleStatusQuestionLastMember));
+        when(questionStatusRepositoryMock.findByApplicationIdAndMarkedAsCompleteById(application.getId(), withoutQuestionStatus.getId()))
+                .thenReturn(newArrayList());
+        when(processRoleRepositoryMock.findByApplicationIdAndOrganisationId(application.getId(), manyMembersOfOrg.getOrganisationId()))
+                .thenReturn(newArrayList(manyMembersOfOrg, otherMemberOfOrg));
+        when(processRoleRepositoryMock.findByApplicationIdAndOrganisationId(application.getId(), onlyMemberOfOrg.getOrganisationId()))
+                .thenReturn(newArrayList(onlyMemberOfOrg));
 
         ServiceResult<Void> applicationInviteResult = inviteService.removeApplicationInvite(applicationInvite.getId());
         assertTrue(applicationInviteResult.isSuccess());
@@ -346,17 +360,50 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
         //Single status should be completed by lead
         assertThat(singleStatusQuestion.getMarkedAsCompleteBy(), equalTo(applicationInvite.getTarget().getLeadApplicantProcessRole()));
 
-        //Verify last question status was deleted.
+        verify(applicationInviteMapper).mapIdToDomain(applicationInvite.getId());
+        verify(processRoleRepositoryMock).findByUserAndApplicationId(user, application.getId());
+        verify(questionStatusRepositoryMock).findByApplicationIdAndMarkedAsCompleteById(application.getId(), manyMembersOfOrg.getId());
+        verify(questionStatusRepositoryMock).findByApplicationIdAndMarkedAsCompleteById(application.getId(), onlyMemberOfOrg.getId());
+        verify(questionStatusRepositoryMock).findByApplicationIdAndMarkedAsCompleteById(application.getId(), withoutQuestionStatus.getId());
+        verify(processRoleRepositoryMock).findByApplicationIdAndOrganisationId(application.getId(), manyMembersOfOrg.getOrganisationId());
+        verify(processRoleRepositoryMock).findByApplicationIdAndOrganisationId(application.getId(), onlyMemberOfOrg.getOrganisationId());
         verify(questionStatusRepositoryMock).delete(multipleStatusQuestionLastMember);
+        verify(inviteOrganisationRepositoryMock).save(applicationInvite.getInviteOrganisation());
 
         //Verify many member question status is completed by other member.
         assertThat(multipleStatusQuestionManyMember.getMarkedAsCompleteBy(), equalTo(otherMemberOfOrg));
-
 
         ServiceResult<Void> applicationInviteResultFailure = inviteService.removeApplicationInvite(11L);
         assertTrue(applicationInviteResultFailure.isFailure());
     }
 
+    @Test
+    public void removeApplicationInvite_deletesInviteOrganisationOnLastInvite() throws Exception {
+        User user = newUser().build();
+        Application application = newApplication().build();
+        ApplicationInvite applicationInvite = newApplicationInvite()
+                .withId(24521L)
+                .withUser(user)
+                .withApplication(application)
+                .withInviteOrganisation(newInviteOrganisation().build())
+                .build();
+
+        List<ProcessRole> processRoles = newProcessRole()
+                .withOrganisationId(1L)
+                .build(1);
+
+        when(applicationInviteMapper.mapIdToDomain(applicationInvite.getId())).thenReturn(applicationInvite);
+        when(processRoleRepositoryMock.findByUserAndApplicationId(user, application.getId())).thenReturn(processRoles);
+        ServiceResult<Void> applicationInviteResult = inviteService.removeApplicationInvite(applicationInvite.getId());
+
+        verify(applicationInviteMapper).mapIdToDomain(applicationInvite.getId());
+        verify(processRoleRepositoryMock).findByUserAndApplicationId(user, application.getId());
+        verify(processRoleRepositoryMock).delete(processRoles);
+        verify(inviteOrganisationRepositoryMock).delete(applicationInvite.getInviteOrganisation());
+        verifyNoMoreInteractions(applicationInviteMapper, processRoleRepositoryMock, inviteOrganisationRepositoryMock);
+
+        assertTrue(applicationInviteResult.isSuccess());
+    }
 
     private void assertInvalidInvites(List<ApplicationInviteResource> inviteResources) {
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource()
