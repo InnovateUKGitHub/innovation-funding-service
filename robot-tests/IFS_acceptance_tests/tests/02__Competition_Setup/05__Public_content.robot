@@ -12,6 +12,9 @@ Documentation     INFUND-6914 Create 'Public content' menu page for "Front Door"
 ...               INFUND-7487 Create Competition > Eligibility tab for external "Front Door" view of competition eligibility
 ...
 ...               INFUND-7488 Create 'Competition' > 'Scope' tab for external "Front Door" view of competition scope
+...
+...               INFUND-7490 Create Competition > How to apply tab for external "Front Door" view of competition eligibility
+
 Suite Setup       Custom suite setup
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin
@@ -19,7 +22,7 @@ Resource          ../../resources/defaultResources.robot
 Resource          CompAdmin_Commons.robot
 
 *** Variables ***
-${public_content_competition_name}    Public content competition
+${public_content_competition_name}    Public content competition0006
 
 *** Test Cases ***
 User can view the public content
@@ -158,7 +161,6 @@ Eligibility: User enters valid values and saves
     And the user should see the element                     link=Eligibility
     And the user should see the element                     css=img[title='The "Eligibility" section is marked as done']
 
-
 Eligibility: Contains the correct values when viewed, Edit sections
     [Documentation]    INFUND-6916, INFUND-7487
     [Tags]  HappyPath
@@ -208,13 +210,60 @@ Dates: Add, remove dates and submit
     And the user can add and remove multiple event groups
     And the user should see the element  css=img[title='The "Dates" section is marked as done']
 
-How to apply: Add, remove sections and submit
-    [Documentation]    INFUND-6920 INFUND-7602
+How to apply: server side validation and autosave
+    [Documentation]    INFUND-7490
+    [Tags]
+    When the user clicks the button/link            link=How to apply
+    #And the user should see the text in the page    Text entered into this section will appear within the How to apply tab.
+    And the user clicks the button/link             jQuery=button:contains("Save and return")
+    Then the user should see a summary error        Please enter content.
+    And the user should see a summary error         Please enter a heading.
+    When the user enters valid data in the eligibility details
+    And the user should see the element             jQuery=.buttonlink:contains("+ add new section")
+
+How to apply: User enters valid values and saves
+    [Documentation]    INFUND-7490
     [Tags]  HappyPath
-    When the user clicks the button/link                         link=How to apply
-    Then the user can add and remove multiple content groups
-    When the user clicks the button/link                        jQuery=button:contains("Save and return")
-    And the user should see the element  css=img[title='The "How to apply" section is marked as done']
+    Given the internal user navigates to public content     ${public_content_competition_name}
+    When the user clicks the button/link                    link=How to apply
+    And the user enters valid data in the eligibility details
+    Then the user enters text to a text field               jQuery=.contentGroup:first-of-type input[id^="heading"]   The application process
+    And the user enters text to a text field                jQuery=.contentGroup:first-of-type .editor   External, independent experts assess the quality your application. We will then select the projects that we fund, to build a portfolio of projects as described in the competition guidance for applicants. Please read this carefully before you apply.
+    And the user uploads the file                           jQuery=.contentGroup:first-of-type input[id^="file"]     ${valid_pdf}
+    Then the user clicks the button/link                    jQuery=button:contains("+ add new section")
+    And The user enters text to a text field                jQuery=.contentGroup:nth-of-type(2) input[id^="heading"]   Application questions
+    And The user enters text to a text field                jQuery=.contentGroup:nth-of-type(2) .editor    Application questions are available for reference and to assist with preparation. If you need more information, contact the competition helpline on 0700 123 98765 or email us at support@innovateTest.worth.com
+    And the user uploads the file                           jQuery=.contentGroup:nth-of-type(2) input[id^="file"]    ${valid_pdf}
+    When the user clicks the button/link                    jQuery=button:contains("Save and return")
+    Then the user should be redirected to the correct page  ${public_content_overview}
+    And the user should see the element                     link=How to apply
+    And the user should see the element                     css=img[title='The "How to apply" section is marked as done']
+
+#How to apply: Add, remove sections and submit
+How to apply: Contains the correct values when viewed, Edit sections
+    [Documentation]    INFUND-6920 INFUND-7602, INFUND-7490
+    [Tags]  HappyPath
+    When the user clicks the button/link                link=How to apply
+    Then the user should see the element                jQuery=h2:contains("The application process")
+    And the user should see the element                 jQuery=a:contains("${valid_pdf}")
+    And the user should see the element                 jQuery=.button:contains("Return to public content")
+    When the user clicks the button/link                jQuery=.button-secondary:contains("Edit")
+    And the user enters text to a text field            jQuery=#contentGroup-row-0 > .form-group.textarea-wrapped > .editor   External independent experts assess the quality your application. We will then select the projects that we fund, to build a portfolio of projects as described in the competition guidance. Government departments & Some departments, like the Ministry of Defence, cover the whole UK. Others don’t – the Department for Work and Pensions doesn't cover Northern Ireland. This is because some aspects of government are devolved to Scotland, Wales and Northern Ireland. Other public bodiesThese have varying degrees of independence but are directly accountable to ministers. There are 4 types of non-departmental public bodies (NDPBs).Executive NDPBs do work for the government in specific areas
+
+    And the user moves focus to the element    css=#contentGroup-row-1 >div.form-group.textarea-wrapped >div.editor
+    Then the user clicks the button/link                jQuery=button:contains("+ add new section")
+    And The user enters large text to a text field      jQuery=.editor:nth-of-type(1)  Application questions are available for reference and to assist with preparation. If you need more information, contact the competition helpline on 0700 123 98765 or email us at support@innovateTest.worth.uk  Supplier questions - what they’re for and when suppliers can ask them.Also When you publish your requirements, suppliers will be given a date by which they must ask any questions they have. This should give you enough time to answer them. Anyone can make a request for information.
+    And The user enters text to a text field            jQuery=.contentGroup:nth-of-type(3) input[id^="heading"]    Application Rules -- Competition Procedures
+    And the user enters text to a text field            jQuery=.contentGroup:nth-of-type(3) .editor   Sets out the rules for Competition framework provision funded by the CodeTechnology: ADReedoor8793£$%^^&&*^%%!@. This document forms part of the ADReedoor8793£$%^^&&*^%%!@ - Funding Rules 2016 to 2017. This document sets out the additional funding rules for Competition frameworks. You must read it together with other relevant funding rule documents. These include: Follow the Instructions.
+    And the user clicks the button/link                 jQuery=.contentGroup:first-of-type button:contains("remove")
+    And the user clicks the button/link                 jQuery=.contentGroup:nth-of-type(2) button:contains("remove")
+    Then the user uploads the file                      jQuery=.contentGroup:nth-of-type(3) input[id^="file"]    ${valid_pdf}
+    And the user uploads the file                       jQuery=.contentGroup:first-of-type input[id^="file"]     ${valid_pdf}
+    And the user uploads the file                       jQuery=.contentGroup:nth-of-type(2) input[id^="file"]    ${valid_pdf}
+    Then the user clicks the button/link                jQuery=.contentGroup:nth-of-type(3) button:contains("remove")
+    And the user uploads the file                       jQuery=.contentGroup:nth-of-type(3) input[id^="file"]    ${valid_pdf}
+    When the user clicks the button/link                jQuery=button:contains("Save and return")
+    And the user should see the element                 css=img[title='The "How to apply" section is marked as done']
 
 Supporting information: Add, remove sections and submit
     [Documentation]    INFUND-6921 INFUND-7602
@@ -259,7 +308,7 @@ Guest user can filter competitions by Keywords
 Guest user can see the updated Summary information
     [Documentation]  INFUND-7486
     [Tags]
-    Given the user clicks the button/link  link=Public content competition
+    Given the user clicks the button/link  link=Public content competition0006
     And the user clicks the button/link    link=Summary
     Then the user should see the element   jQuery=.column-third:contains("Description") ~ .column-two-thirds:contains("This is a Summary description")
     And the user should see the element    jQuery=.column-third:contains("Funding type") ~ .column-two-thirds:contains("Grant")
@@ -271,10 +320,18 @@ Guest user can see the updated Summary information
 Guest user can see the updated Eligibility information
     [Documentation]  INFUND-7487
     [Tags]
-    Given the user clicks the button/link    link=Eligibility
+    Given the user clicks the button/link   link=Eligibility
     Then the user should see the element    jQuery=.column-third:contains("Nationality Eligibility Heading") ~ .column-two-thirds:contains("changing government policies")
     Then the user should see the element    jQuery=.column-third:contains("Minimum Eligibility Threshold") ~ .column-two-thirds:contains("new changes we are introducing")
     Then the user should see the element    jQuery=.column-third:contains("Draft Care and Support - Eligibility Criteria") ~ .column-two-thirds:contains("basic personal care activities")
+
+Guest user can see the updated How-to-apply information
+    [Documentation]  INFUND-7490
+    [Tags]
+    Given the user clicks the button/link       link=How to apply
+        Then the user should see the element    jQuery=.column-third:contains("The application process") ~ .column-two-thirds:contains("independent experts assess the quality your application")
+        Then the user should see the element    jQuery=.column-third:contains("Application questions") ~ .column-two-thirds:contains("contact the competition helpline on 0700 123 98765")
+        Then the user should see the element    jQuery=.column-third:contains("Application Rules -- Competition Procedures") ~ .column-two-thirds:contains("additional funding rules for Competition frameworks")
 
 Guest user downloads Eligibility files
     [Documentation]  INFUND-7487
