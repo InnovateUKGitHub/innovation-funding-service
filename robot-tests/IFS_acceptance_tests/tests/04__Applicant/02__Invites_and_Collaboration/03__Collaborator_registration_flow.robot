@@ -14,7 +14,7 @@ ${SELECT_ORGANISATION}    ${SERVER}/organisation/create/type/new-account-organis
 Lead applicant details should show in the invite page
     [Documentation]    INFUND-1005
     Given the user navigates to the page    ${INVITE_LINK}
-    When the user clicks the button/link    jQuery=.button:contains("Create")
+    When the user clicks the button/link    jQuery=.button:contains("Yes, accept invitation")
     Then the user should see the text in the page    Lead organisation: Empire Ltd
     And the user should see the text in the page    Lead applicant: Steve Smith
     And the user should see the element    link=${OPEN_COMPETITION_LINK}
@@ -94,8 +94,8 @@ Catapult search (empty, invalid & valid inputs)
     [Documentation]    INFUND-1230
     [Tags]    HappyPath
     Given the user navigates to the page    ${INVITE_LINK}
-    When the user clicks the button/link    jQuery=.button:contains("Create")
-    And the user selects the radio button    organisationType    2
+    When the user clicks the button/link    jQuery=.button:contains("Yes, accept invitation")
+    And the user selects the radio button    organisationType    3
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     Then the user should see the text in the page    Please select your type of research organisation
     And the user selects the radio button    organisationType    7
