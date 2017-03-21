@@ -26,14 +26,14 @@ public class FinanceChecksEligibilityViewModel {
     private String approverLastName;
     private LocalDate approvalDate;
 
-    private boolean readOnly;
+    private boolean externalView;
     private boolean isUsingJesFinances;
     private FileDetailsViewModel jesFileDetails;
 
     public FinanceChecksEligibilityViewModel(FinanceCheckEligibilityResource eligibilityOverview, String organisationName, String projectName,
                                              Long applicationId, boolean leadPartnerOrganisation, Long projectId, Long organisationId,
                                              boolean eligibilityApproved, EligibilityRagStatus eligibilityRagStatus, String approverFirstName,
-                                             String approverLastName, LocalDate approvalDate, boolean readOnly, boolean isUsingJesFinances, FileDetailsViewModel jesFileDetailsViewModel) {
+                                             String approverLastName, LocalDate approvalDate, boolean externalView, boolean isUsingJesFinances, FileDetailsViewModel jesFileDetailsViewModel) {
         this.eligibilityOverview = eligibilityOverview;
         this.organisationName = organisationName;
         this.projectName = projectName;
@@ -48,7 +48,7 @@ public class FinanceChecksEligibilityViewModel {
         this.approverLastName = approverLastName;
         this.approvalDate = approvalDate;
 
-        this.readOnly = readOnly;
+        this.externalView = externalView;
         this.isUsingJesFinances = isUsingJesFinances;
         this.jesFileDetails = jesFileDetailsViewModel;
     }
@@ -170,12 +170,12 @@ public class FinanceChecksEligibilityViewModel {
         this.organisationId = organisationId;
     }
 
-    public boolean isReadOnly() {
-        return readOnly;
+    public boolean isExternalView() {
+        return externalView;
     }
 
-    public void setReadOnly(boolean readOnly) {
-        this.readOnly = readOnly;
+    public void setExternalView(boolean externalView) {
+        this.externalView = externalView;
     }
 
     public boolean isUsingJesFinances() {
