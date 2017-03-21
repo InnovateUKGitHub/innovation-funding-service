@@ -32,7 +32,7 @@
                 <!--/* TODO INFUND-8899 ifs:utext is stripping relative links in the text. Switching to using th:utext. */-->
                 <div th:utext="${model.text}" />
 
-                <p class="form-hint">You can access this assessor agreement at any time from your profile.. <a href="/assessment/documents/New simple assessor agreement.pdf">Download assessor agreement</a>.</p>
+                <p class="form-hint">You can access this assessor agreement at any time from your profile. <a href="/assessment/documents/New simple assessor agreement.pdf">Download assessor agreement</a>.</p>
 
                 <form class="extra-margin" th:action="@{/profile/agreement}" th:object="${form}" method="post" th:unless="${model.currentAgreement}">
                     <div class="form-group" th:classappend="${#fields.hasErrors('agreesToTerms')}? error">
