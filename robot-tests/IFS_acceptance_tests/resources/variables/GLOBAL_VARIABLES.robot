@@ -31,8 +31,8 @@ ${OPEN_COMPETITION}  ${competition_ids['${OPEN_COMPETITION_NAME}']}
 ${OPEN_COMPETITION_NAME_2}    Home and industrial efficiency programme
 ${OPEN_COMPETITION_APPLICATION_1}    9
 ${OPEN_COMPETITION_APPLICATION_1_NUMBER}    9
-${OPEN_COMPETITION_APPLICATION_2}    12
-${OPEN_COMPETITION_APPLICATION_3}    11
+${OPEN_COMPETITION_APPLICATION_2}  ${competition_ids['Machine learning for transport infrastructure']}
+${OPEN_COMPETITION_APPLICATION_3}  ${competition_ids['Home and industrial efficiency programme']}
 ${OPEN_COMPETITION_APPLICATION_3_TITLE}    Mobile Phone Data for Logistics Analytics
 ${OPEN_COMPETITION_APPLICATION_4}    10
 ${OPEN_COMPETITION_APPLICATION_5}    8
@@ -107,7 +107,7 @@ ${COMP_ADMINISTRATOR_DASHBOARD}    ${SERVER}/management/dashboard
 ${UNTITLED_APPLICATION_DASHBOARD_LINK}    Untitled application (start here)
 ${UNTITLED_APPLICATION_NAME}    Untitled application
 ${OPEN_COMPETITION_LINK}    ${OPEN_COMPETITION_NAME}
-${OPEN_COMPETITION_LINK_2}    ${OPEN_COMPETITION_NAME_2}
+
 ${unsuccessful_login_message}    Your sign in was unsuccessful because of the following issue(s)
 ${application_name}    Submit test application
 ${Competition_E2E}    A new innovative solution
