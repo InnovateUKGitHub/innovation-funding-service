@@ -13,7 +13,7 @@ public class AcceptRejectApplicationInviteModelPopulatorTest {
 
     @Test
     public void testPopulateModel() {
-        String inviteOrganisationConfirmed = "Invite Organisation Confirmed";
+        String inviteOrganisationNameConfirmed = "Invite Organisation Confirmed";
         String leadApplicantName = "Lead Applicant";
         String leadApplicantEmail = "lead@applicant.co.uk";
         String leadOrganisationName = "Lead Organisation Name";
@@ -26,8 +26,8 @@ public class AcceptRejectApplicationInviteModelPopulatorTest {
                 withLeadOrganisation(leadOrganisationName).
                 withCompetitionId(competitonId).
                 withCompetitionName(competitionName).
-                withInviteOrganisationNameConfirmed(inviteOrganisationConfirmed).
-                withInviteOrganisationName(inviteOrganisationConfirmed).
+                withInviteOrganisationNameConfirmed(inviteOrganisationNameConfirmed).
+                withInviteOrganisationName(inviteOrganisationNameConfirmed).
                 build();
         InviteOrganisationResource inviteOrganisation = newInviteOrganisationResource().
                 withOrganisation(inviteOrganisationId).
@@ -37,7 +37,7 @@ public class AcceptRejectApplicationInviteModelPopulatorTest {
 
         assertEquals(competitonId, model.getCompetitionId());
         assertEquals(competitionName, model.getCompetitionName());
-        assertEquals(inviteOrganisationConfirmed, model.getInviteOrganisationName());
+        assertEquals(inviteOrganisationNameConfirmed, model.getInviteOrganisationName());
         assertEquals(leadApplicantEmail, model.getLeadApplicantEmail());
         assertEquals(leadOrganisationName, model.getLeadOrganisationName());
         assertEquals(leadApplicantName, model.getLeadApplicantName());
