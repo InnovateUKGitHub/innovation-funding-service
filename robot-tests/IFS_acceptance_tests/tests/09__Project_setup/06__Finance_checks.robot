@@ -64,6 +64,9 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...               INFUND-7753 Partner receives an email alerting them to a further response to an earlier query
 ...
 ...               INFUND-7756 Project finance can post an update to an existing note
+...
+...               INFUND-7577 Finance Checks - Overheads displayed in the expanded Overheads section of the partner’s project finances and Project Finance user can Edit, Save, Change selection from 0% to 20% to Calculate overhead, contains spreadsheet when uploaded
+
 Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -87,7 +90,6 @@ Project Finance user can see the finance check summary page
     And the table row has expected values
     And the user should see the element    link=Projects in setup
 
-
 Status of the Eligibility column (workaround for private beta competition)
     [Documentation]    INFUND-5190
     [Tags]
@@ -97,7 +99,6 @@ Status of the Eligibility column (workaround for private beta competition)
     And The user should see the text in the page    Notes
     When the user should see the element    link=Review
     Then the user should see that the element is disabled    jQuery=.generate-spend-profile-main-button
-
 
 Queries section is linked from eligibility and this selects eligibility on the query dropdown
     [Documentation]    INFUND-4840
@@ -109,7 +110,6 @@ Queries section is linked from eligibility and this selects eligibility on the q
     Then the user should see the dropdown option selected    Eligibility    section
     [Teardown]    the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
 
-
 Queries section is linked from viability and this selects viability on the query dropdown
     [Documentation]    INFUND-4840
     [Tags]
@@ -119,7 +119,6 @@ Queries section is linked from viability and this selects viability on the query
     When the user clicks the button/link    jQuery=.button:contains("Post a new query")
     Then the user should see the dropdown option selected    Viability    section
     [Teardown]    the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-
 
 Queries section is linked to from the main finance check summary page
     [Documentation]    INFUND-4840
@@ -141,7 +140,6 @@ Viability and eligibility sections both available
     Then the user should see the option in the drop-down menu    Viability    section
     And the user should see the option in the drop-down menu    Eligibility    section
 
-
 Large pdf uploads not allowed
     [Documentation]    INFUND-4840
     [Tags]
@@ -154,7 +152,6 @@ Non pdf uploads not allowed
     [Tags]
     When the user uploads the file      name=attachment    ${text_file}
     Then the user should see the text in the page    ${wrong_filetype_validation_error}
-
 
 Project finance user can upload a pdf file
     [Documentation]    INFUND-4840
@@ -185,13 +182,11 @@ Project finance user can view the file
     And the user goes back to the previous page ignoring form submission
     [Teardown]    the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
 
-
 Project finance user can upload more than one file
     [Documentation]    INFUND-4840
     [Tags]
     When the user uploads the file      name=attachment    ${valid_pdf}
     Then the user should see the element    jQuery=a:contains("testing.pdf"):nth-of-type(2)
-
 
 Project finance user can still view both files
     [Documentation]    INFUND-4840
@@ -220,7 +215,6 @@ Post new query client side validations
     When the user enters text to a text field    css=.editor    this is some query text
     Then the user should not see the element    jQuery=label[for="query] span:nth-child(2) span:contains(This field cannot be left blank.)
 
-
 Word count validations
     [Documentation]    INFUND-4840
     [Tags]
@@ -237,7 +231,6 @@ New query can be cancelled
     And the user should not see the element    id=queryTitle
     And the user should not see the element    css=.editor
 
-
 Query can be re-entered
     [Documentation]    INFUND-4840
     [Tags]
@@ -247,13 +240,11 @@ Query can be re-entered
     And the user uploads the file    name=attachment    ${valid_pdf}
     And the user uploads the file    name=attachment    ${valid_pdf}
 
-
 New query can be posted
     [Documentation]    INFUND-4840
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Post Query")
     Then the user should see the text in the page    Lee Bowman - Innovate UK (Finance team)
-
 
 Query sections are no longer editable
     [Documentation]    INFUND-4840
@@ -266,12 +257,10 @@ Queries raised column updates to 'awaiting response'
     When the user clicks the button/link    link=Finance checks
     Then the user should see the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(6) a:contains("Awaiting response")
 
-
 Finance contact receives an email when new query is posted
     [Documentation]    INFUND-4841
     [Tags]    Email
     Then the user reads his email    ${test_mailbox_one}+fundsuccess@gmail.com    Query regarding your finances    We have raised a query around your project finances.
-
 
 Project finance user can add another query
     [Documentation]    INFUND-4840
@@ -294,8 +283,9 @@ Non finance contact can view query
     [Tags]
     Given log in as a different user    steve.smith@empire.com    ${short_password}
     When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
-    Then the user should see the element    link=Finance checks
-    And the user should see the element    jQuery=ul li.require-action:nth-child(5)
+    Then the user should not see the element    link=Finance checks
+    #  TODO The below line can be uncommented once 8787 is done
+    # And the user should not see the element    flag status for finance checks
 
 Finance checks section status updated for finance contact
     [Documentation]    INFUND-4843
@@ -303,8 +293,8 @@ Finance checks section status updated for finance contact
     Given log in as a different user    ${test_mailbox_one}+fundsuccess@gmail.com    ${short_password}
     When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     Then the user should see the element    link=Finance checks
-     And the user should see the element    jQuery=ul li.require-action:nth-child(5)
-
+    #  TODO The below line can be uncommented once 8787 is done
+    # And the user should see the element    flag status for finance checks
 
 Finance contact can view query
     [Documentation]    INFUND-4843
@@ -312,7 +302,6 @@ Finance contact can view query
     When the user clicks the button/link    link=Finance checks
     Then the user should see the text in the page    this is a title
     And the user should see the text in the page    this is some query text
-
 
 Finance contact can view the project finance user's uploads
     [Documentation]    INFUND-4843
@@ -322,15 +311,13 @@ Finance contact can view the project finance user's uploads
     And the user goes back to the previous page
     When the user clicks the button/link    jQuery=a:contains("${valid_pdf}"):nth-of-type(2)
     Then the user should not see an error in the page
-    And the user goes back to the previous page
-
+    And the user goes back to the previous page ignoring form submission
 
 Queries show in reverse chronological order for finance contact
     [Documentation]    INFUND-4843
     [Tags]
     When the user should see the element    jQuery=#content h2:nth-of-type(3):contains("this is a title")
-    Then the user should see the element    jQuery=#content h2:nth-of-type(2):contains("another query title")
-
+    And the user should see the element    jQuery=#content h2:nth-of-type(2):contains("another query title")
 
 Large pdf uploads not allowed for query response
     [Documentation]    INFUND-4843
@@ -346,7 +333,6 @@ Non pdf uploads not allowed for query response
     [Tags]  Pending
     When the user uploads the file      name=attachment    ${text_file}
     Then the user should see the text in the page    ${wrong_filetype_validation_error}
-
 
 Finance contact can upload a pdf file
     [Documentation]    INFUND-4843
@@ -392,13 +378,11 @@ Finance contact can still view both files
     Then the user should not see an error in the page
     And the user goes back to the previous page ignoring form submission
 
-
 Response to query server side validations
     [Documentation]    INFUND-4843
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Post response")
     Then the user should see the text in the page    This field cannot be left blank.
-
 
 Response to query client side validations
     [Documentation]    INFUND-4843
@@ -439,7 +423,8 @@ Finance checks section status changes to hourglass
     [Documentation]    INFUND-4843
     [Tags]
     When the user clicks the button/link    link=Project setup status
-    Then the user should see the element    jQuery=ul li.waiting:nth-child(5)
+    #  TODO The below line can be uncommented once 8787 is done
+    # Then the user should see the element    flag status for finance checks
 
 Queries raised column updates to 'view'
     [Documentation]    INFUND-4843
@@ -575,7 +560,6 @@ Finance contact can still view both files in notes
     And the user goes back to the previous page ignoring form submission
     And the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
 
-
 Create new note server side validations
     [Documentation]    INFUND-4845
     [Tags]
@@ -590,7 +574,6 @@ Create new note client side validations
     Then the user should not see the element    jQuery=label[for="noteTitle"] span:nth-child(2) span:contains(This field cannot be left blank.)
     When the user enters text to a text field    css=.editor    this is some note text
     Then the user should not see the element    jQuery=label[for="note"] span:nth-child(2) span:contains(This field cannot be left blank.)
-
 
 Word count validations for notes
     [Documentation]    INFUND-4845
@@ -607,7 +590,6 @@ New note can be cancelled
     Then the user should not see the text in the page    ${valid_pdf}
     And the user should not see the element    id=noteTitle
     And the user should not see the element    css=.editor
-
 
 Note can be re-entered
     [Documentation]    INFUND-4845
@@ -630,7 +612,6 @@ Note sections are no longer editable
     When the user should not see the element    css=.editor
     And the user should not see the element    id=noteTitle
 
-
 Project finance user can comment on the note
     [Documentation]    INFUND-7756
     [Tags]
@@ -651,7 +632,6 @@ Non pdf uploads not allowed for note comments
     [Tags]
     When the user uploads the file      name=attachment    ${text_file}
     Then the user should see the text in the page    ${wrong_filetype_validation_error}
-
 
 Finance contact can upload a pdf file to note comments
     [Documentation]    INFUND-7756
@@ -699,13 +679,11 @@ Finance contact can still view both files in note comments
     And the user goes back to the previous page ignoring form submission
     And the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
 
-
 Note comments server side validations
     [Documentation]    INFUND-7756
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Save comment")
     Then the user should see the element    jQuery=label[for="comment"] span:nth-child(2) span:contains(This field cannot be left blank.)
-
 
 Note comments client side validations
     [Documentation]    INFUND-7756
@@ -734,17 +712,147 @@ Note comment section now becomes read-only
     [Tags]
     When the user should not see the element    css=.editor
 
-Project Finance user can view academic Jes form
-    [Documentation]     INFUND-5220
+Project Finance user can view three Radio Button Options when expanded Lead-Partner's "Overhead costs" section
+    [Documentation]     INFUND-7577
     [Tags]    HappyPath
     Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+    When the user clicks the button/link    css=a.eligibility-0
+    Then the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Overhead costs")
+    And the user should see the three Radio Button Options
+
+Project Finance user can Edit and Save Lead-Partner's 20%-of-labour-costs option
+    [Documentation]     INFUND-7577
+    [Tags]    HappyPath
+    When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
+    Then the user clicks the button/link    jQuery=label[data-target="overhead-default-percentage"]
+    And the user should see the element     jQuery=section:nth-of-type(2) button span:contains("£ 924")
+    And the user should see the element     jQuery=p:contains("There is no need to provide any further supporting documentation or calculations. Actual costs can be claimed up to a maximum of this calculated figure.")
+    And the user should see the element     jQuery=section:nth-of-type(2) input[id^="section-total"][id$="default"]
+    Then the user should see the element    jQuery=section:nth-of-type(2) button:contains("Save")
+    When the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Save")
+    Then the user should see the element    jQuery=section:nth-of-type(2) button span:contains("20%")
+    And the user should see the element     jQuery=section:nth-of-type(2) button span:contains("£ 924")
+    And the user should see the element     jQuery=section:nth-of-type(2) a:contains("Edit")
+    Then the user should see the element    jQuery=label[for="total-cost"]
+    And the user should see the element     jQuery=input[id^="total-cost"][value="£ 302,279"]
+
+Project Finance user can Edit and Save Lead-Partner's No-overhead-costs option
+    [Documentation]     INFUND-7577
+    [Tags]    HappyPath
+    When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
+    Then the user clicks the button/link    jQuery=label[data-target="overhead-none"]
+    And the user should see the element     jQuery=h3:contains("No overhead costs")
+    And the user should see the element     jQuery=p:contains("You are not currently applying for overhead costs")
+    And the user should see the element     jQuery=section:nth-of-type(2) button:contains("Save")
+    When the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Save")
+    Then the user should see the element    jQuery=section:nth-of-type(2) button span:contains("0%")
+    And the user should see the element     jQuery=section:nth-of-type(2) button:contains("£ 0")
+
+Project Finance user can Edit, enters invalid values and saves in Lead-Partner's Calculate-overheads option
+    [Documentation]     INFUND-7577
+    [Tags]    HappyPath
+    When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
+    Then the user clicks the button/link    jQuery=label[data-target="overhead-total"]
+    And the user should see the element     jQuery=h3:contains("Uploaded spreadsheet")
+    And the user should see the element     jQuery=section:nth-of-type(2) label:nth-child(1):contains("Enter the total cost of overheads as calculated in the spreadsheet £")
+    When the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Save")
+    Then the user should see the element    jQuery=section:nth-of-type(2) button span:contains("0%")
+    And the user should see the element     jQuery=section:nth-of-type(2) button span:contains("£ 0")
+    When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
+    Then the user enters text to a text field     jQuery=section:nth-of-type(2) input[id^="cost-overheads"][id$="calculate"]  ${empty}
+    And the user clicks the button/link     jQuery=section:nth-of-type(2) button:contains("Save")
+    And the user should see the element     jQuery=section:nth-of-type(2) label:nth-child(1):contains("Enter the total cost of overheads as calculated in the spreadsheet £")
+    Then the user clicks the button/link    jQuery=.button-secondary:contains("Return to finance checks")
+
+Project Finance user can provide overhead value for Lead-Partner manually instead of calculations from spreadsheet.
+    [Documentation]     INFUND-7577
+    [Tags]    HappyPath
+    When the user clicks the button/link    css=a.eligibility-0
+    Then the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
+    And the user enters text to a text field     jQuery=section:nth-of-type(2) input[id^="cost-overheads"][id$="calculate"]  1954
+    Then the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Save")
+    And the user should see the element    	jQuery=section:nth-of-type(2) button span:contains("£ 1,954")
+    And the user should see the element     jQuery=section:nth-of-type(2) button span:contains("42%")
+    When the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Overhead costs")
+    Then the user should see the element    jQuery=label[for="total-cost"]
+    And the user should see the element     jQuery=input[id^="total-cost"][value="£ 303,309"]
+    Then the user clicks the button/link    jQuery=.button-secondary:contains("Return to finance checks")
+
+Project Finance user can view three Radio Button Options when expanded Partner's "Overhead costs" section
+    [Documentation]     INFUND-7577
+    [Tags]    HappyPath
+    When the user clicks the button/link    css=a.eligibility-1
+    Then the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Overhead costs")
+    And the user should see the three Radio Button Options
+
+Project Finance user can Edit and Save Partner's 20%-of-labour-costs option
+    [Documentation]     INFUND-7577
+    [Tags]    HappyPath
+    When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
+    Then the user clicks the button/link    jQuery=label[data-target="overhead-default-percentage"]
+    And the user should see the element     jQuery=section:nth-of-type(2) button span:contains("£ 616")
+    And the user should see the element     jQuery=p:contains("There is no need to provide any further supporting documentation or calculations. Actual costs can be claimed up to a maximum of this calculated figure.")
+    And the user should see the element     jQuery=section:nth-of-type(2) input[id^="section-total"][id$="default"]
+    Then the user should see the element    jQuery=section:nth-of-type(2) button:contains("Save")
+    When the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Save")
+    Then the user should see the element    jQuery=section:nth-of-type(2) button span:contains("20%")
+    And the user should see the element     jQuery=section:nth-of-type(2) button span:contains("£ 616")
+    And the user should see the element     jQuery=section:nth-of-type(2) a:contains("Edit")
+    Then the user should see the element    jQuery=label[for="total-cost"]
+    And the user should see the element     jQuery=input[id^="total-cost"][value="£ 201,520"]
+    #the above value should be £201,519
+
+Project Finance user can Edit and Save Partner's No-overhead-costs option
+    [Documentation]     INFUND-7577
+    [Tags]    HappyPath
+    When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
+    Then the user clicks the button/link    jQuery=label[data-target="overhead-none"]
+    And the user should see the element     jQuery=h3:contains("No overhead costs")
+    And the user should see the element     jQuery=p:contains("You are not currently applying for overhead costs")
+    And the user should see the element     jQuery=section:nth-of-type(2) button:contains("Save")
+    When the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Save")
+    Then the user should see the element    jQuery=section:nth-of-type(2) button span:contains("0%")
+    And the user should see the element     jQuery=section:nth-of-type(2) button:contains("£ 0")
+
+Project Finance user can Edit, enters invalid values and saves in Partner's Calculate-overheads option
+    [Documentation]     INFUND-7577
+    [Tags]    HappyPath
+    When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
+    Then the user clicks the button/link    jQuery=label[data-target="overhead-total"]
+    And the user should see the element     jQuery=h3:contains("Uploaded spreadsheet")
+    And the user should see the element     jQuery=section:nth-of-type(2) label:nth-child(1):contains("Enter the total cost of overheads as calculated in the spreadsheet £")
+    When the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Save")
+    Then the user should see the element    jQuery=section:nth-of-type(2) button span:contains("0%")
+    And the user should see the element     jQuery=section:nth-of-type(2) button span:contains("£ 0")
+    When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
+    Then the user enters text to a text field     jQuery=section:nth-of-type(2) input[id^="cost-overheads"][id$="calculate"]  ${empty}
+    And the user clicks the button/link     jQuery=section:nth-of-type(2) button:contains("Save")
+    And the user should see the element     jQuery=section:nth-of-type(2) label:nth-child(1):contains("Enter the total cost of overheads as calculated in the spreadsheet £")
+    Then the user clicks the button/link    jQuery=.button-secondary:contains("Return to finance checks")
+
+Project Finance user can provide overhead value for Partner manually instead of calculations from spreadsheet.
+    [Documentation]     INFUND-7577
+    [Tags]    HappyPath
+    When the user clicks the button/link    css=a.eligibility-1
+    Then the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
+    And the user enters text to a text field     jQuery=section:nth-of-type(2) input[id^="cost-overheads"][id$="calculate"]  1078
+    Then the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Save")
+    And the user should see the element     jQuery=section:nth-of-type(2) button span:contains("£ 1,078")
+    And the user should see the element     jQuery=section:nth-of-type(2) button span:contains("35%")
+    When the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Overhead costs")
+    Then the user should see the element    jQuery=label[for="total-cost"]
+    And the user should see the element     jQuery=input[id^="total-cost"][value="£ 201,981"]
+    Then the user clicks the button/link    jQuery=.button-secondary:contains("Return to finance checks")
+
+Project Finance user can view academic Jes form
+    [Documentation]     INFUND-5220,    INFUND-7577
+    [Tags]    HappyPath
     # note that we are viewing the file above rather than the same project as the other tests in this suite due to INFUND-6724
     When the user clicks the button/link    css=a.eligibility-2
     Then the user should see the text in the page    Download Je-S form
     When the user clicks the button/link    link=jes-form80.pdf
     Then the user should not see an error in the page
     [Teardown]    the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-
 
 Viability checks are populated in the table
     [Documentation]    INFUND-4822, INFUND-7095
@@ -763,15 +871,14 @@ Project finance user can see the viability check page for the lead partner
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
     And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_COMPANY_NUMBER}
 
-
 Project finance user can see the lead partner's information
-    [Documentation]    INFUND-4825
+    [Documentation]    INFUND-4825, INFUND-7577
     [Tags]
     # Note the below figures aren't calculated, but simply brought forward from user-entered input during the application phase
-    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(1)    £301,355
+    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(1)    £303,309
     When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(2)    30%
-    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(3)    £210,948
-    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(4)    £86,704
+    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(3)    £212,316
+    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(4)    £87,291
     When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(5)    £3,702
 
 Checking the approve viability checkbox enables RAG selection but not confirm viability button
@@ -780,7 +887,6 @@ Checking the approve viability checkbox enables RAG selection but not confirm vi
     When the user selects the checkbox    project-viable
     Then the user should see the element    id=rag-rating
     And the user should see the element    jQuery=.button.disabled:contains("Confirm viability")
-
 
 RAG choices update on the finance checks page
     [Documentation]    INFUND-4822, INFUND-4856
@@ -810,7 +916,6 @@ Clicking cancel on the viability modal
     And the user should see the checkbox    confirmViabilityChecked
     And the user should see the element    jQuery=.button-secondary:contains("Save and return to finance checks")
 
-
 Confirming viability should show credit report info on a readonly page
     [Documentation]    INFUND-4829, INFUND-4830
     [Tags]
@@ -821,7 +926,6 @@ Confirming viability should show credit report info on a readonly page
     And the user should not see the checkbox    confirmViabilityChecked
     And the user should see the text in the page    A credit report has been used together with the viability information shown here. This information is kept in accordance with Innovate UK audit requirements.
     And the user should see that the checkbox is disabled    creditReportConfirmed
-
 
 Confirming viability should update on the finance checks page
     [Documentation]    INFUND-4831, INFUND-4822
@@ -890,7 +994,6 @@ Confirming viability should update on the finance checks page for partner
     When the user clicks the button/link    link=Finance checks
     Then the user should see the element    jQuery=table.table-progress tr:nth-child(2) td:nth-child(2) a:contains("Approved")
 
-
 Eligibility checks are populated in the table
     [Documentation]    INFUND-4823
     [Tags]
@@ -908,16 +1011,15 @@ Project finance user can see the Eligibility check page for the lead partner
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
 
 Project finance user can see the lead partner's information about eligibility
-    [Documentation]    INFUND-4832
+    [Documentation]    INFUND-4832, INFUND-7577
     [Tags]
     # Note the below figures aren't calculated, but simply brought forward from user-entered input during the application phase
     When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(1)    3 months
-    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(2)    £ 301,355
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(2)    £ 303,309
     When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(3)    30%
-    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(4)    £ 90,406
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(4)    £ 90,993
     When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(5)    £ 3,702
-    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(6)    £ 207,246
-
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(6)    £ 208,614
 
 Finance checks eligibility validations
     [Documentation]    INFUND-4833
@@ -979,7 +1081,6 @@ Checking the approve eligibility checkbox enables RAG selection but not Approve 
     Then the user should see the element    id=rag-rating
     And the user should see the element    jQuery=.button.disabled:contains("Approve eligible costs")
 
-
 RAG choices update on the finance checks page for eligibility
     [Documentation]    INFUND-4839, INFUND-4823
     [Tags]
@@ -1024,7 +1125,6 @@ Project finance user can see updated finance overview after lead changes to elig
     And the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(4)    £ 116,565
     And the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(6)    29%
 
-
 Project finance user can see the Eligibility check page for the partner
     [Documentation]    INFUND-4823
     [Tags]
@@ -1033,15 +1133,15 @@ Project finance user can see the Eligibility check page for the partner
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
 
 Project finance user can see the partner's information about eligibility
-    [Documentation]    INFUND-4832
+    [Documentation]    INFUND-4832, INFUND-7577
     [Tags]
     # Note the below figures aren't calculated, but simply brought forward from user-entered input during the application phase
     When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(1)    3 months
-    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(2)    £ 200,903
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(2)    £ 201,981
     When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(3)    30%
-    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(4)    £ 60,271
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(4)    £ 60,594
     When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(5)    £ 2,468
-    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(6)    £ 138,164
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(6)    £ 138,919
 
 
 Project finance user can amend all sections of eligibility for partner
@@ -1162,7 +1262,6 @@ Other internal users do not have access to Finance checks
     # This is added to HappyPath because CompAdmin should NOT have access to FC page
     Then the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check    You do not have the necessary permissions for your request
 
-
 Finance contact can access the external view of the finance checks page
     [Documentation]    INFUND-7573
     [Tags]    HappyPath
@@ -1171,14 +1270,13 @@ Finance contact can access the external view of the finance checks page
     When the user clicks the button/link    link=Finance checks
     And the user should not see an error in the page
 
-
-Non finance contact can view finance checks page
+Non finance contact can't view finance checks page
     [Documentation]    INFUND-7573
     [Tags]
     [Setup]    Log in as a different user    steve.smith@empire.com    Passw0rd
     When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
-    Then the user should see the element    link=Finance checks
-    And the user navigates to the page    ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/partner-organisation/${EMPIRE_LTD_ID}/finance-checks
+    Then the user should not see the element    link=Finance checks
+    And the user navigates to the page and gets a custom error message    ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/partner-organisation/${EMPIRE_LTD_ID}/finance-checks    ${403_error_message}
 
 
 *** Keywords ***
@@ -1346,7 +1444,6 @@ the rag rating updates on the finance check page for partner for eligibility
    And the user clicks the button/link    jQuery=table.table-progress tr:nth-child(2) td:nth-child(4) a:contains("Review")
    And the user should see the element    jQuery=.button:contains("Approve eligible costs"):not(.disabled)    # Checking here both that the button exists and that it isn't disabled
 
-
 verify total costs of project
     [Arguments]    ${total_costs}
     the user should see the text in the element      jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(2)     ${total_costs}
@@ -1384,12 +1481,16 @@ the user adds subcontracting data into row
     the user enters text to a text field        css=section:nth-of-type(5) #subcontracting div:nth-child(${row_number}) div:nth-of-type(3) textarea   Develop
     the user enters text to a text field        css=section:nth-of-type(5) #subcontracting div:nth-child(${row_number}) div:nth-of-type(4) input   ${cost}
 
-
 the user adds travel data into row
     [Arguments]  ${row_number}  ${description}  ${number_of_times}  ${cost}
     the user enters text to a text field        css=#travel-costs-table tbody tr:nth-of-type(${row_number}) td:nth-of-type(1) input    ${description}
     the user enters text to a text field        css=#travel-costs-table tbody tr:nth-of-type(${row_number}) td:nth-of-type(2) input    ${number_of_times}
     the user enters text to a text field        css=#travel-costs-table tbody tr:nth-of-type(${row_number}) td:nth-of-type(3) input    ${cost}
+
+the user should see the three Radio Button Options
+    the user should see the element     jQuery=label[data-target="overhead-none"]
+    the user should see the element     jQuery=label[data-target="overhead-default-percentage"]
+    the user should see the element     jQuery=label[data-target="overhead-total"]
 
 Project finance user amends labour details in eligibility for partner
     When the user clicks the button/link            jQuery=section:nth-of-type(1) button:contains("Labour")
@@ -1409,7 +1510,6 @@ Project finance user amends labour details in eligibility for partner
     Then verify total costs of project              £ 257,600
     And the user should see the element             jQuery=section:nth-of-type(1) a:contains("Edit")
     And the user should not see the element         jQuery=section:nth-of-type(1) button[name=save-eligibility]
-
 
 Project finance user amends materials details in eligibility for partner
     When the user clicks the button/link            jQuery=section:nth-of-type(3) button:contains("Materials")
@@ -1442,7 +1542,6 @@ Project finance user amends capital usage details in eligibility for partner
     Then verify total costs of project             £ 168,948
     And the user should see the element           jQuery=section:nth-of-type(4) a:contains("Edit")
     And the user should not see the element       jQuery=section:nth-of-type(4) button[name=save-eligibility]
-
 
 Project finance user amends subcontracting usage details in eligibility for partner
     When the user clicks the button/link            jQuery=section:nth-of-type(5) button:contains("Subcontracting costs")
@@ -1515,7 +1614,6 @@ Project finance user amends labour details in eligibility for lead
     And the user should see the element             jQuery=section:nth-of-type(1) a:contains("Edit")
     And the user should not see the element         jQuery=section:nth-of-type(1) button[name=save-eligibility]
 
-
 Project finance user amends materials details in eligibility for lead
     When the user clicks the button/link            jQuery=section:nth-of-type(3) button:contains("Materials")
     Then verify percentage and total                3  42%  150300
@@ -1548,7 +1646,6 @@ Project finance user amends capital usage details in eligibility for lead
     Then verify total costs of project             £ 268,683
     And the user should see the element           jQuery=section:nth-of-type(4) a:contains("Edit")
     And the user should not see the element       jQuery=section:nth-of-type(4) button[name=save-eligibility]
-
 
 Project finance user amends subcontracting usage details in eligibility for lead
     When the user clicks the button/link            jQuery=section:nth-of-type(5) button:contains("Subcontracting costs")
@@ -1600,7 +1697,6 @@ Project finance user amends other costs details in eligibility for lead
     Then verify total costs of project            £ 204,913
     And the user should see the element           jQuery=section:nth-of-type(7) a:contains("Edit")
     And the user should not see the element       jQuery=section:nth-of-type(7) button[name=save-eligibility]
-
 
 the user goes back to the previous page ignoring form submission
     the user goes back to the previous page
