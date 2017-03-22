@@ -1,0 +1,48 @@
+--Update finance check for project that will be used in setup with growth table values
+SELECT @comp_id := id FROM competition WHERE name = 'Internet of Things';
+SELECT @app_id := id FROM application WHERE competition = @comp_id AND name = 'Sensing & Control network using the lighting infrastructure';
+SELECT @project_id := id FROM project WHERE application_id = @app_id;
+SELECT @finance_section_id := id FROM section WHERE competition_id = @comp_id AND parent_section_id IS NULL AND name ='Finances';
+SELECT @your_finance_section_id := id FROM section WHERE competition_id = @comp_id AND parent_section_id = @finance_section_id AND name ='Your finances';
+SELECT @your_organisation_section_id := id FROM section WHERE competition_id = @comp_id AND parent_section_id = @your_finance_section_id AND name ='Your organisation';
+SELECT @question_id := id FROM question WHERE section_id = @your_organisation_section_id;
+SELECT * FROM form_input WHERE competition_id = @comp_id AND question_id=@question_id AND form_input_type_id IN (24,25,26,27,28);
+SELECT @turnover_id := id FROM form_input WHERE competition_id = @comp_id AND question_id=@question_id AND form_input_type_id =24;
+SELECT @headcount_id := id FROM form_input WHERE competition_id = @comp_id AND question_id=@question_id AND form_input_type_id =25;
+SELECT @user_id := id FROM user WHERE email = 'steve.smith@empire.com';
+SELECT @user_id_4 := id FROM user WHERE email = 'jessica.doe@ludlow.co.uk';
+SELECT @financial_turnover_id := id FROM form_input WHERE competition_id = @comp_id AND question_id=@question_id AND form_input_type_id =26;
+SELECT @financial_overview_id1 := id FROM form_input WHERE competition_id = @comp_id AND question_id=@question_id AND form_input_type_id =27 AND description='Annual turnover';
+SELECT @financial_overview_id2 := id FROM form_input WHERE competition_id = @comp_id AND question_id=@question_id AND form_input_type_id =27 AND description='Annual profits';
+SELECT @financial_overview_id3 := id FROM form_input WHERE competition_id = @comp_id AND question_id=@question_id AND form_input_type_id =27 AND description='Annual export';
+SELECT @financial_overview_id4 := id FROM form_input WHERE competition_id = @comp_id AND question_id=@question_id AND form_input_type_id =27 AND description='Research and development spend';
+SELECT @financial_headcount_id := id FROM form_input WHERE competition_id = @comp_id AND question_id=@question_id AND form_input_type_id =28;
+UPDATE form_input SET active = 1 WHERE id = @financial_overview_id1;
+UPDATE form_input SET active = 1 WHERE id = @financial_overview_id2;
+UPDATE form_input SET active = 1 WHERE id = @financial_overview_id3;
+UPDATE form_input SET active = 1 WHERE id = @financial_overview_id4;
+UPDATE form_input SET active = 1 WHERE id = @financial_turnover_id;
+UPDATE form_input SET active = 1 WHERE id = @financial_headcount_id;
+UPDATE form_input SET active = 0 WHERE id = @turnover_id;
+UPDATE form_input SET active = 0 WHERE id = @headcount_id;
+INSERT INTO form_input_response (update_date, value, form_input_id, updated_by_id, application_id) VALUES(NOW(), '4560000', @financial_turnover_id, @user_id, @app_id);
+INSERT INTO form_input_response (update_date, value, form_input_id, updated_by_id, application_id) VALUES(NOW(), '1230', @financial_headcount_id, @user_id, @app_id);
+INSERT INTO form_input_response (update_date, value, form_input_id, updated_by_id, application_id) VALUES(NOW(), '1230000', @financial_turnover_id, @user_id_4, @app_id);
+INSERT INTO form_input_response (update_date, value, form_input_id, updated_by_id, application_id) VALUES(NOW(), '4560', @financial_headcount_id, @user_id_4, @app_id);
+
+--Update project in setup to use the non growth table values
+SELECT @comp_id_2 := id FROM competition WHERE name = 'Rolling stock future developments';
+SELECT @app_id_2 := id FROM application WHERE competition = @comp_id_2 AND name = 'High-speed rail and its effects on air quality';
+SELECT @project_id_2 := id FROM project WHERE application_id = @app_id_2;
+SELECT @finance_section_id_2 := id FROM section WHERE competition_id = @comp_id_2 AND parent_section_id IS NULL AND name ='Finances';
+SELECT @your_finance_section_id_2 := id FROM section WHERE competition_id = @comp_id_2 AND parent_section_id = @finance_section_id_2 AND name ='Your finances';
+SELECT @your_organisation_section_id_2 := id FROM section WHERE competition_id = @comp_id_2 AND parent_section_id = @your_finance_section_id_2 AND name ='Your organisation';
+SELECT @question_id_2 := id FROM question WHERE section_id = @your_organisation_section_id_2;
+SELECT @user_id_2 := id FROM user WHERE email = 'ralph.young@ooba.example.com';
+SELECT @user_id_3 := id FROM user WHERE email = 'tina.taylor@wordpedia.example.com';
+SELECT @turnover_id_2 := id FROM form_input WHERE competition_id = @comp_id_2 AND question_id=@question_id_2 AND form_input_type_id =24;
+SELECT @headcount_id_2 := id FROM form_input WHERE competition_id = @comp_id_2 AND question_id=@question_id_2 AND form_input_type_id =25;
+INSERT INTO form_input_response (update_date, value, form_input_id, updated_by_id, application_id) VALUES(NOW(), '123000', @turnover_id_2, @user_id_2, @app_id_2);
+INSERT INTO form_input_response (update_date, value, form_input_id, updated_by_id, application_id) VALUES(NOW(), '456', @headcount_id_2, @user_id_2, @app_id_2);
+INSERT INTO form_input_response (update_date, value, form_input_id, updated_by_id, application_id) VALUES(NOW(), '456000', @turnover_id_2, @user_id_3, @app_id_2);
+INSERT INTO form_input_response (update_date, value, form_input_id, updated_by_id, application_id) VALUES(NOW(), '123', @headcount_id_2, @user_id_3, @app_id_2);

@@ -347,15 +347,15 @@ the user should see his finances empty
     the user should see the element    jQuery=thead:contains("Total project costs") ~ *:contains("£0")
 
 the user selects technical feasibility and no to resubmission and an innovation area
-    # Often those labels need double click. Thus i made a separate keyword to looks more tidy
-    the user clicks the button/link    jQuery=button:contains(Change your innovation area)
-    the user clicks the button/link    jQuery=label[for="innovationAreaChoice-5"]
-    the user clicks the button/link    jQuery=label[for="innovationAreaChoice-5"]
+    the user clicks the button/link    jQuery=legend:contains("Research category")
+    the user clicks the button/link    jQuery=button:contains("Choose your research category")
+    the user clicks the button twice   jQuery=label[for^="researchCategoryChoice"]:contains("Feasibility studies")
     the user clicks the button/link    jQuery=button:contains(Save)
-    the user clicks the button/link    jQuery=label[for="financePosition-cat-33"]
-    the user clicks the button/link    jQuery=label[for="financePosition-cat-33"]
-    the user clicks the button/link    jQuery=label[for="application.resubmission-no"]
-    the user clicks the button/link    jQuery=label[for="application.resubmission-no"]
+    the user clicks the button/link    jQuery=button:contains("Change your innovation area")
+    the user clicks the button twice   jQuery=label[for="innovationAreaChoice-5"]
+    the user clicks the button/link    jQuery=button:contains(Save)
+    the user clicks the button twice   jQuery=label[for="application.resubmission-no"]
+
 
 the user decides about the growth table
     [Arguments]    ${edit}    ${read}
@@ -476,8 +476,6 @@ Invite a non-existing collaborator in Appplication with Growth table
 Newly invited collaborator can create account and sign in
     the user reads his email and clicks the link     liam@innovate.com  Invitation to collaborate in ${compWITHGrowth}  participate in their application
     the user clicks the button/link      jQuery=a:contains("Yes, accept invitation")
-    # the user should see the element      jQuery=h1:contains("New to this service?")
-    # the user clicks the button/link       jQuery=a:contains("Create")
     the user should see the element      jquery=h1:contains("Choose your organisation type")
     the user completes the new account creation
 
@@ -504,7 +502,7 @@ the user completes the new account creation
     the user selects the checkbox      termsAndConditions
     the user clicks the button/link     jQuery=button:contains("Create account")
     the user should see the text in the page    Please verify your email address
-    the user reads his email and clicks the link      liam@innovate.com   Please verify your email address    If you did not request an account with us
+    the user reads his email and clicks the link      liam@innovate.com   Please verify your email address    Once verified you can sign into your account.
     the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     the user clicks the button/link     link=Sign in
     then the user should see the text in the page      Sign in
