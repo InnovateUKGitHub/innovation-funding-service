@@ -36,12 +36,14 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
         Map<String, Object> templateArguments = asMap(
                 "applicationName", "My Application",
                 "competitionName", "Competition 123",
+                "competitionUrl", "123",
                 "inviteUrl", "http://acceptinvite.com",
                 "inviteOrganisationName", "Nomensa",
                 "leadOrganisation", "Empire Ltd",
                 "leadApplicant", "Steve Smith",
                 "leadApplicantTitle","Mr",
-                "leadApplicantEmail", "steve@empire.com"
+                "leadApplicantEmail", "steve@empire.com",
+                "sentByName", "steve@empire.com"
         );
 
         assertRenderedEmailTemplateContainsExpectedLines("invite_collaborator_text_plain.txt", templateArguments);
