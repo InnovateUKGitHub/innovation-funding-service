@@ -14,7 +14,7 @@ Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
-Travel and Subsisdence
+Travel and subsistence rates
     [Documentation]    INFUND-7061
     [Tags]
     Given The user should see the element    link=travel and subsistence rates
@@ -50,7 +50,7 @@ Back button takes you to the previous page
     Then the user should be redirected to the correct page    ${assessor_dashboard_url}
     [Teardown]    the user clicks the button/link    jQuery=a:contains("your assessor agreement")
 
-Terms and Conditions
+Assessor agreement
     [Documentation]    INFUND-1481
     [Tags]
     When the user clicks the button/link    link=Download assessor agreement
@@ -58,17 +58,13 @@ Terms and Conditions
     And The user goes back to the previous page
     [Teardown]    The user navigates to the page    ${Server}/assessment/profile/agreement
 
-Review Annexes
-    [Documentation]    INFUND-5645
-    When the user clicks the button/link    link=Annex A
-    Then the user should see the text in the page    Technology programme: Assessor services
-    And the user clicks the button/link    link=Back to your assessor agreement
-    And the user clicks the button/link    link=Annex B
-    And the user should see the text in the page    Travel and subsistence rates for non-civil service contracted personnel
-    And the user clicks the button/link    link=Back to your assessor agreement
-    And the user clicks the button/link    link=Annex C
-    And the user should see the text in the page    Information management
-    And the user clicks the button/link    link=Back to your assessor agreement
+Find out more about our travel and subsistence rates
+    [Documentation]    INFUND-8806
+    [Tags]
+    Given the user should see the text in the page    Find out more about our travel and subsistence rates
+    When the user clicks the button/link    link=travel and subsistence rates
+    Then the user should be redirected to the correct page    ${Server}/assessment/profile/travel
+    And The user goes back to the previous page
 
 Client-side validations and Submit
     [Documentation]    INFUND-1481

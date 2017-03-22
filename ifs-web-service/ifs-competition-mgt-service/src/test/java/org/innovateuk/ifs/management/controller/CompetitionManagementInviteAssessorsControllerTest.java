@@ -16,7 +16,6 @@ import org.innovateuk.ifs.management.model.InviteAssessorsInviteModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsOverviewModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.*;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -135,9 +134,9 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         AvailableAssessorPageResource availableAssessorPageResource = newAvailableAssessorPageResource()
                 .withContent(setUpAvailableAssessorResources())
                 .build();
-        List<InnovationAreaResource> expectedInnovationAreaOptions = newInnovationAreaResource().build(4);
+        List<InnovationSectorResource> expectedInnovationSectorOptions = newInnovationSectorResource().build(4);
 
-        when(categoryRestServiceMock.getInnovationAreas()).thenReturn(restSuccess(expectedInnovationAreaOptions));
+        when(categoryRestServiceMock.getInnovationSectors()).thenReturn(restSuccess(expectedInnovationSectorOptions));
         when(competitionInviteRestService.getAvailableAssessors(competition.getId(), page, innovationArea)).thenReturn(restSuccess(availableAssessorPageResource));
 
         MvcResult result = mockMvc.perform(get("/competition/{competitionId}/assessors/find", competition.getId())
@@ -153,11 +152,11 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
         assertCompetitionDetails(competition, result);
         assertAvailableAssessors(availableAssessorPageResource.getContent(), result);
-        assertFindFilterOptionsAreCorrect(expectedInnovationAreaOptions, result);
+        assertFindFilterOptionsAreCorrect(expectedInnovationSectorOptions, result);
 
         InOrder inOrder = inOrder(competitionService, competitionInviteRestService, categoryRestServiceMock);
         inOrder.verify(competitionService).getById(competition.getId());
-        inOrder.verify(categoryRestServiceMock).getInnovationAreas();
+        inOrder.verify(categoryRestServiceMock).getInnovationSectors();
         inOrder.verify(competitionInviteRestService).getAvailableAssessors(competition.getId(), page, innovationArea);
         inOrder.verifyNoMoreInteractions();
     }
@@ -171,9 +170,9 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         AvailableAssessorPageResource availableAssessorPageResource = newAvailableAssessorPageResource()
                 .withContent(emptyList())
                 .build();
-        List<InnovationAreaResource> expectedInnovationAreaOptions = newInnovationAreaResource().build(4);
+        List<InnovationSectorResource> expectedInnovationSectorOptions = newInnovationSectorResource().build(4);
 
-        when(categoryRestServiceMock.getInnovationAreas()).thenReturn(restSuccess(expectedInnovationAreaOptions));
+        when(categoryRestServiceMock.getInnovationSectors()).thenReturn(restSuccess(expectedInnovationSectorOptions));
         when(competitionInviteRestService.getAvailableAssessors(competition.getId(), page, innovationArea)).thenReturn(restSuccess(availableAssessorPageResource));
 
         MvcResult result = mockMvc.perform(get("/competition/{competitionId}/assessors/find", competition.getId()))
@@ -188,11 +187,11 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
         assertCompetitionDetails(competition, result);
         assertAvailableAssessors(availableAssessorPageResource.getContent(), result);
-        assertFindFilterOptionsAreCorrect(expectedInnovationAreaOptions, result);
+        assertFindFilterOptionsAreCorrect(expectedInnovationSectorOptions, result);
 
         InOrder inOrder = inOrder(competitionService, competitionInviteRestService, categoryRestServiceMock);
         inOrder.verify(competitionService).getById(competition.getId());
-        inOrder.verify(categoryRestServiceMock).getInnovationAreas();
+        inOrder.verify(categoryRestServiceMock).getInnovationSectors();
         inOrder.verify(competitionInviteRestService).getAvailableAssessors(competition.getId(), page, innovationArea);
         inOrder.verifyNoMoreInteractions();
     }
@@ -579,7 +578,6 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         verify(competitionInviteRestService, only()).inviteNewUsers(expectedInviteListResource, competition.getId());
     }
 
-    @Ignore
     @Test
     public void inviteNewUsersFromInviteView_noInnovationArea() throws Exception {
         int page = 0;
@@ -602,7 +600,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         InviteNewAssessorsForm returnedForm = (InviteNewAssessorsForm) result.getModelAndView().getModel().get("form");
         BindingResult bindingResult = returnedForm.getBindingResult();
 
-        assertEquals("Please select an innovation area.", bindingResult.getFieldError("selectedInnovationArea").getDefaultMessage());
+        assertEquals("Please enter an innovation sector and area.", bindingResult.getFieldError("selectedInnovationArea").getDefaultMessage());
 
         InOrder inOrder = inOrder(competitionInviteRestService, categoryServiceMock);
         inOrder.verify(competitionInviteRestService).getCreatedInvites(competition.getId(), page);
@@ -765,10 +763,10 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         });
     }
 
-    private void assertFindFilterOptionsAreCorrect(List<InnovationAreaResource> expectedInnovationAreaOptions, MvcResult result) {
+    private void assertFindFilterOptionsAreCorrect(List<InnovationSectorResource> expectedInnovationSectorOptions, MvcResult result) {
         InviteAssessorsFindViewModel viewModel = (InviteAssessorsFindViewModel) result.getModelAndView().getModel().get("model");
 
-        assertEquals(expectedInnovationAreaOptions, viewModel.getInnovationAreaOptions());
+        assertEquals(expectedInnovationSectorOptions, viewModel.getInnovationSectorOptions());
     }
 
     private void assertInviteOverviews(List<AssessorInviteOverviewResource> expectedInviteOverviews, MvcResult result) {

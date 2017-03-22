@@ -87,7 +87,7 @@ Project Finance cancels the generation of the Spend Profile
     [Tags]
     When the user clicks the button/link    jQuery=.generate-spend-profile-main-button
     Then the user should see the text in the page    This will generate a flat spend profile for all project partners.
-    When the user clicks the button/link    jQuery=.button:contains("Cancel")
+    When the user clicks the button/link    jQuery=button:contains("Cancel")
 
 Project Finance generates the Spend Profile
     [Documentation]    INFUND-5194, INFUND-5987
@@ -292,7 +292,7 @@ Non-lead partner can see correct project start date and duration
 Industrial partner can choose cancel on the dialogue
     [Documentation]    INFUND-6852
     When the user clicks the button/link    jQuery=a:contains("Submit to lead partner")
-    And the user clicks the button/link     jQuery=.button:contains("Cancel")
+    And the user clicks the button/link     jQuery=button:contains("Cancel")
     Then the user should see the element    jQuery=a:contains("Submit to lead partner")
 
 Non-lead partner marks Spend Profile as complete
@@ -395,7 +395,7 @@ Academic partner edits spend profile and this updates on the table
 Academic partner can choose cancel on the dialogue
     [Documentation]    INFUND-6852
     When the user clicks the button/link    jQuery=a:contains("Submit to lead partner")
-    And the user clicks the button/link     jQuery=.button:contains("Cancel")
+    And the user clicks the button/link     jQuery=button:contains("Cancel")
     Then the user should see the element    jQuery=a:contains("Submit to lead partner")
 
 Academic partner marks Spend Profile as complete
@@ -459,7 +459,7 @@ Project Manager can view combined spend profile
 Project Manager can choose cancel on the dialogue
     [Documentation]    INFUND-3767
     When the user clicks the button/link    jQuery=.button:contains("Send project spend profile")
-    And the user clicks the button/link     jQuery=.button:contains("Cancel")
+    And the user clicks the button/link     jQuery=button:contains("Cancel")
     Then the user should see the element    jQuery=.button:contains("Send project spend profile")
 
 Project Manager can see the button Allow edits
@@ -506,7 +506,7 @@ Project Manager can send the project's spend profiles
     Given the user navigates to the page     ${external_spendprofile_summary}
     When the user clicks the button/link     jQuery=.button:contains("Review spend profiles")
     Then the user clicks the button/link     jQuery=.button:contains("Send project spend profile")
-    And the user should see the element      jQuery=.button:contains("Cancel")
+    And the user should see the element      jQuery=button:contains("Cancel")
     When the user clicks the button/link     jQuery=.modal-confirm-spend-profile-totals .button[value="Send"]
 
 PM's Spend profile Summary page gets updated after submit
@@ -719,7 +719,7 @@ Lead partner can send the combined spend profile
     Given the user navigates to the page     ${external_spendprofile_summary}
     When the user clicks the button/link     jQuery=.button:contains("Review spend profiles")
     Then the user clicks the button/link     jQuery=.button:contains("Send project spend profile")
-    And the user should see the element      jQuery=.button:contains("Cancel")
+    And the user should see the element      jQuery=button:contains("Cancel")
     When the user clicks the button/link     jQuery=.modal-confirm-spend-profile-totals .button[value="Send"]
 
 

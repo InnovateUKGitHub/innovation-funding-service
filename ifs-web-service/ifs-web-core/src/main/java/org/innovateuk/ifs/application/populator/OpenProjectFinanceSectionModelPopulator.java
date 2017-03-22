@@ -75,7 +75,7 @@ public class OpenProjectFinanceSectionModelPopulator extends BaseOpenFinanceSect
         addQuestionsDetails(openFinanceSectionViewModel, application, form);
         addApplicationAndSections(openFinanceSectionViewModel, sectionApplicationViewModel, application, competition, user.getId(), section, form, allSections, Optional.of(organisationResource));
 
-        String organisationType = organisationResource.getOrganisationTypeName();
+        Long organisationType = organisationResource.getOrganisationType();
         addOrganisationAndUserProjectFinanceDetails(openFinanceSectionViewModel, application.getCompetition(), projectResource.getId(), costsQuestions, user, form, organisationType, organisationId);
 
         addFundingSection(openFinanceSectionViewModel, application.getCompetition());
@@ -94,7 +94,7 @@ public class OpenProjectFinanceSectionModelPopulator extends BaseOpenFinanceSect
     }
 
     private void addOrganisationAndUserProjectFinanceDetails(OpenFinanceSectionViewModel openFinanceSectionViewModel, Long competitionId, Long projectId, List<QuestionResource> costsQuestions, UserResource user,
-                                                             ApplicationForm form, String organisationType, Long organisationId) {
+                                                             ApplicationForm form, Long organisationType, Long organisationId) {
         openFinanceSectionViewModel.setFinanceOverviewViewModel(projectFinanceOverviewModelManager.getFinanceDetailsViewModel(competitionId, projectId));
         openFinanceSectionViewModel.setFinanceViewModel(financeHandler.getProjectFinanceModelManager(organisationType).getFinanceViewModel(projectId, costsQuestions, user.getId(), form, organisationId));
     }

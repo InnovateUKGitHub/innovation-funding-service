@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.monitoringofficer;
 
 import org.innovateuk.ifs.monitoringofficer.controller.ProjectMonitoringOfficerController;
 import org.innovateuk.ifs.project.BaseProjectSetupControllerSecurityTest;
-import org.innovateuk.ifs.project.ProjectSetupSectionsPermissionRules;
+import org.innovateuk.ifs.project.sections.security.ProjectSetupSectionsPermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 

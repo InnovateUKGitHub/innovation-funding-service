@@ -18,7 +18,7 @@ import org.innovateuk.ifs.finance.resource.cost.Materials;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.user.domain.Organisation;
-import org.innovateuk.ifs.user.domain.OrganisationType;
+import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -39,6 +39,7 @@ import static org.innovateuk.ifs.finance.domain.builder.OrganisationSizeBuilder.
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.user.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
@@ -79,7 +80,7 @@ public class ProjectFinanceRowServiceImplTest extends BaseServiceUnitTest<Projec
 
         competition = newCompetition().withCompetitionStatus(CompetitionStatus.CLOSED).build();
 
-        organisation = newOrganisation().withId(organisationId).withOrganisationType(new OrganisationType("Business", null)).build();
+        organisation = newOrganisation().withId(organisationId).withOrganisationType(newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build()).build();
 
         application = newApplication().withCompetition(competition).build();
 
@@ -108,7 +109,7 @@ public class ProjectFinanceRowServiceImplTest extends BaseServiceUnitTest<Projec
 
         when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation);
 
-        when(organisationFinanceDelegateMock.getOrganisationFinanceHandler("Business")).thenReturn(organisationFinanceDefaultHandlerMock);
+        when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId())).thenReturn(organisationFinanceDefaultHandlerMock);
 
         when(projectFinanceRowRepositoryMock.findOne(costItemId)).thenReturn(materialCost);
 

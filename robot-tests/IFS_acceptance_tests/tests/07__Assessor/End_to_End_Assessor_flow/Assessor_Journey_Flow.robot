@@ -85,7 +85,7 @@ Assessor accepts the invite for the Application
     When The user enters text to a text field    id=username    ${test_mailbox_one}+AJE2E@gmail.com
     And The user enters text to a text field    id=password    Passw0rd123
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
-    When The user clicks the button/link    Link=Rainfall
+    When The user clicks the button/link    Link=Park living
     And The user clicks the button/link    jQuery=button:contains("Accept")
     Then the user should be redirected to the correct page    ${Assessor_application_dashboard}
 
@@ -128,9 +128,6 @@ click the link assessor
 The user fills and submits the registration form
     When The user enters text to a text field    id=firstName    Tom
     And The user enters text to a text field    id=lastName    Fister
-    And the user selects the radio button    gender    gender2
-    And the user selects the radio button    ethnicity    ethnicity2
-    And the user selects the radio button    disability    disability2
     And the user enters text to a text field    id=phoneNumber    1234567891011
     And The user enters text to a text field    id=addressForm.postcodeInput    BS14NT
     And the user clicks the button/link    id=postcode-lookup

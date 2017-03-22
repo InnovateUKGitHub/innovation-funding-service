@@ -105,7 +105,7 @@ Last update message is correctly updating
     And the user clicks the button/link    link= Assign test
     And the user clicks the button/link    link= Public description
     When the collaborator edits the 'public description' question
-    Then the question should contain the correct status/name    css=#form-input-12 .textarea-footer    Last updated: Today by you
+    Then the question should contain the correct status/name    css=#form-input-12 .form-footer .form-footer__info    Last updated: Today by you
 
 Collaborators cannot assign a question
     [Documentation]    INFUND-839
@@ -250,7 +250,8 @@ The question is disabled on the summary page for other collaborators
 
 Lead applicant should be able to remove the registered partner
     [Documentation]    INFUND-4806
-    [Tags]
+    [Tags]  Pending
+    # TODO INFUND-8878
     [Setup]    log in as a different user    ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
     Given the user clicks the button/link    link= Assign test
     And the user clicks the button/link    link=view and add participants to your application
