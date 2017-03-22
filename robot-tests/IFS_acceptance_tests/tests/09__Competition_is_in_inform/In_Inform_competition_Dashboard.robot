@@ -34,14 +34,14 @@ Milestones for the In inform competition
     [Documentation]    INFUND-7561
     [Tags]
     Then the user should see the element    jQuery=.button:contains("Manage funding notifications")
-    And The user should see the element    jQuery=button:contains("Release feedback")
+    And the user should see that the element is disabled    jQuery=button:contains("Release feedback")
     And the user should see the element    css=li:nth-child(13).done    #Verify that 12. Notifications
     And the user should see the element    css=li:nth-child(14).not-done    #Verify that 13. Release feedback is not done
 
 Release feedback
     [Documentation]    INFUND-8050
-    [Tags]    Email    HappyPath    Pending
-    #TODO Pending funding decisions to be ready
+    [Tags]    Email    HappyPath
+    Given the user send out the mange funding notification
     When The user clicks the button/link    jQuery=button:contains("Release feedback")
     Then The user should not see the text in the page    Inform
     When The user clicks the button/link    jQuery=a:contains(Live)
@@ -66,19 +66,25 @@ Successful applicant see successful alert
 
 View feedback from each assessor
     [Documentation]    INFUND-8172
-    [Tags]    Email    HappyPath  Pending
-    # TODO Pending due to INFUND-8757
+    [Tags]    Email    HappyPath
     Then the user should see the element    jQuery=h3:contains("Assessor 1") ~ p:contains("I have no problem recommending this application")
     And the user should see the element    jQuery=h3:contains("Assessor 2") ~ p:contains("Very good, but could have been better in areas")
     And the user should see the element    jQuery=h3:contains("Assessor 3") ~ p:contains("I enjoyed reading this application, well done")
 
 Overall scores and application details are correct
     [Documentation]    INFUND-8169 INFUND-7861
-    [Tags]    Email    HappyPath  Pending
-    # TODO Pending due to INFUND-8757
+    [Tags]    Email    HappyPath
     Then the overall scores are correct
     And the application question scores are correct
     And the application details are correct
+
+User can see feedback to individual questions
+    [Documentation]
+    [Tags]
+    Given the user clicks the button/link    jQuery=a:contains("6. Innovation")
+    Then the user should see the element     jQuery=h3:contains("Your answer") ~ p:contains("fifth")
+    And the user should see the element      jQuery=h4:contains("Assessor 1") ~ p:contains("This is the innovation feedback")
+    [Teardown]    the user clicks the button/link    jQuery=.link-back:contains("Feedback overview")
 
 The finance details are shown
     [Documentation]    INFUND-8168
@@ -86,6 +92,12 @@ The finance details are shown
     When the user clicks the button/link    jQuery=.collapsible button
     Then the user should see the element    jQuery=.collapsible div[aria-hidden="false"]
     And the user should not see the element    jQuery=.collapsible div[aria-hidden="true"]
+
+Selecting the dashboard link takes user back to the dashboard
+   [Documentation]
+   [Tags]
+   Given the user clicks the button/link    jQuery=.link-back:contains("Dashboard")
+   Then the user should see the element     jQuery=h1:contains("Your dashboard")
 
 *** Keywords ***
 the overall scores are correct
@@ -119,3 +131,12 @@ the application details are correct
     the user should see the element    jQuery=p:contains("Project start date: ")
     the user should see the element    jQuery=p:contains("Duration")
     the user should see the element    jQuery=h3:contains("Total project cost")
+
+the user send out the mange funding notification
+    the user clicks the button/link    jQuery=button:contains("Manage funding notifications")
+    the user selects the checkbox      select-all-2
+    the user clicks the button/link    jQuery=button:contains("Write and send email")
+    the user enters text to a text field    id=subject    Assessor feedback
+    the user enters text to a text field    jQuery=.editor    This is awesome
+    the user clicks the button/link      jQuery=button:contains("Send email to all applicants")
+    the user clicks the button/link      jQuery=.link-back:contains("Competition")
