@@ -77,57 +77,6 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         GenerateSpendProfileData generateSpendProfileData = new GenerateSpendProfileData().build();
 
-        /*UserResource loggedInUser = newUserResource().build();
-        setLoggedInUser(loggedInUser);
-
-        Organisation organisation1 = newOrganisation().build();
-        Organisation organisation2 = newOrganisation().build();
-
-        PartnerOrganisation partnerOrganisationX1 = newPartnerOrganisation().withOrganisation(organisation1).build();
-        PartnerOrganisation partnerOrganisationX2 = newPartnerOrganisation().withOrganisation(organisation2).build();
-
-        Project project = newProject().
-                withId(projectId).
-                withDuration(3L).
-                withPartnerOrganisations(asList(partnerOrganisationX1, partnerOrganisationX2)).
-                build();
-
-        // First cost category type and everything that goes with it.
-        CostCategory type1Cat1 = newCostCategory().withName(LABOUR.getName()).build();
-        CostCategory type1Cat2 = newCostCategory().withName(MATERIALS.getName()).build();
-
-        CostCategoryType costCategoryType1 =
-                newCostCategoryType()
-                        .withName("Type 1")
-                        .withCostCategoryGroup(
-                                newCostCategoryGroup()
-                                        .withDescription("Group 1")
-                                        .withCostCategories(asList(type1Cat1, type1Cat2))
-                                        .build())
-                        .build();
-
-        // Second cost category type and everything that goes with it.
-        CostCategory type2Cat1 = newCostCategory().withName(ACADEMIC.getName()).build();
-
-        CostCategoryType costCategoryType2 = newCostCategoryType()
-                .withName("Type 2")
-                .withCostCategoryGroup(
-                        newCostCategoryGroup()
-                                .withDescription("Group 2")
-                                .withCostCategories(asList(type2Cat1))
-                                .build())
-                .build();
-
-        // set basic repository lookup expectations
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
-        when(organisationRepositoryMock.findOne(organisation1.getId())).thenReturn(organisation1);
-        when(organisationRepositoryMock.findOne(organisation2.getId())).thenReturn(organisation2);
-        when(costCategoryRepositoryMock.findOne(type1Cat1.getId())).thenReturn(type1Cat1);
-        when(costCategoryRepositoryMock.findOne(type1Cat2.getId())).thenReturn(type1Cat2);
-        when(costCategoryRepositoryMock.findOne(type2Cat1.getId())).thenReturn(type2Cat1);
-        when(costCategoryTypeRepositoryMock.findOne(costCategoryType1.getId())).thenReturn(costCategoryType1);
-        when(costCategoryTypeRepositoryMock.findOne(costCategoryType2.getId())).thenReturn(costCategoryType2);*/
-
         Project project = generateSpendProfileData.getProject();
         Organisation organisation1 = generateSpendProfileData.getOrganisation1();
         Organisation organisation2 = generateSpendProfileData.getOrganisation2();
@@ -139,36 +88,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         CostCategory type1Cat2 = generateSpendProfileData.type1Cat2;
         CostCategory type2Cat1 = generateSpendProfileData.type2Cat1;
 
-/*        when(financeCheckProcessRepository.findOneByTargetId(project.getPartnerOrganisations().get(0).getId())).thenReturn(
-                new FinanceCheckProcess((User) null, null, new ActivityState(null, State.ACCEPTED)));
-        when(financeCheckProcessRepository.findOneByTargetId(project.getPartnerOrganisations().get(1).getId())).thenReturn(
-                new FinanceCheckProcess((User) null, null, new ActivityState(null, State.ACCEPTED)));
-
-        // setup expectations for getting project users to infer the partner organisations
-        List<ProjectUserResource> projectUsers =
-                newProjectUserResource().withOrganisation(organisation1.getId(), organisation2.getId()).build(2);
-        when(projectServiceMock.getProjectUsers(projectId)).thenReturn(serviceSuccess(projectUsers));
-
-        // setup expectations for finding finance figures per Cost Category from which to generate the spend profile
-        when(spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(project.getId(), organisation1.getId())).thenReturn(serviceSuccess(
-                new SpendProfileCostCategorySummaries(
-                        asList(
-                                new SpendProfileCostCategorySummary(type1Cat1, new BigDecimal("100.00"), project.getDurationInMonths()),
-                                new SpendProfileCostCategorySummary(type1Cat2, new BigDecimal("200.00"), project.getDurationInMonths())),
-                        costCategoryType1)));
-
-        when(spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(project.getId(), organisation2.getId())).thenReturn(serviceSuccess(
-                new SpendProfileCostCategorySummaries(
-                        singletonList(new SpendProfileCostCategorySummary(type2Cat1, new BigDecimal("301.00"), project.getDurationInMonths())),
-                        costCategoryType2)));*/
-
         setupGenerateSpendProfilesExpectations(generateSpendProfileData, project, organisation1, organisation2);
-
-/*        PartnerOrganisation partnerOrganisation1 = newPartnerOrganisation().build();
-        PartnerOrganisation partnerOrganisation2 = newPartnerOrganisation().build();*/
-
-/*        when(partnerOrganisationRepositoryMock.findByProjectId(project.getId())).thenReturn(
-                asList(partnerOrganisation1, partnerOrganisation2));*/
 
         when(viabilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(ViabilityState.APPROVED);
         when(viabilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(ViabilityState.APPROVED);
@@ -194,9 +114,6 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
                 new Cost("66").withCategory(type1Cat2).withTimePeriod(1, MONTH, 1, MONTH),
                 new Cost("66").withCategory(type1Cat2).withTimePeriod(2, MONTH, 1, MONTH));
 
-/*        User generatedBy = newUser().build();
-        when(userRepositoryMock.findOne(loggedInUser.getId())).thenReturn(generatedBy);*/
-
         Calendar generatedDate = Calendar.getInstance();
 
         SpendProfile expectedOrganisation1Profile = new SpendProfile(organisation1, project, costCategoryType1,
@@ -221,7 +138,6 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         verify(spendProfileRepositoryMock).save(spendProfileExpectations(expectedOrganisation1Profile));
         verify(spendProfileRepositoryMock).save(spendProfileExpectations(expectedOrganisation2Profile));
-        //verifyNoMoreInteractions(spendProfileRepositoryMock);
     }
 
     @Test
@@ -282,16 +198,8 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         setupGenerateSpendProfilesExpectations(generateSpendProfileData, project, organisation1, organisation2);
 
-        /*PartnerOrganisation partnerOrganisation1 = newPartnerOrganisation().build();
-        PartnerOrganisation partnerOrganisation2 = newPartnerOrganisation().build();*/
-
-/*        when(partnerOrganisationRepositoryMock.findByProjectId(project.getId())).thenReturn(
-                asList(partnerOrganisation1, partnerOrganisation2));*/
-
         when(viabilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(ViabilityState.APPROVED);
         when(viabilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(ViabilityState.REVIEW);
-        //when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(EligibilityState.APPROVED);
-        //when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(EligibilityState.APPROVED);
 
         ServiceResult<Void> generateResult = service.generateSpendProfile(projectId);
         assertTrue(generateResult.isFailure());
@@ -313,12 +221,6 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         PartnerOrganisation partnerOrganisation2 = project.getPartnerOrganisations().get(1);
 
         setupGenerateSpendProfilesExpectations(generateSpendProfileData, project, organisation1, organisation2);
-
-/*        PartnerOrganisation partnerOrganisation1 = newPartnerOrganisation().build();
-        PartnerOrganisation partnerOrganisation2 = newPartnerOrganisation().build();*/
-
-/*        when(partnerOrganisationRepositoryMock.findByProjectId(project.getId())).thenReturn(
-                asList(partnerOrganisation1, partnerOrganisation2));*/
 
         when(viabilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(ViabilityState.APPROVED);
         when(viabilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(ViabilityState.APPROVED);
@@ -345,12 +247,6 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         PartnerOrganisation partnerOrganisation2 = project.getPartnerOrganisations().get(1);
 
         setupGenerateSpendProfilesExpectations(generateSpendProfileData, project, organisation1, organisation2);
-
-/*        PartnerOrganisation partnerOrganisation1 = newPartnerOrganisation().build();
-        PartnerOrganisation partnerOrganisation2 = newPartnerOrganisation().build();*/
-
-/*        when(partnerOrganisationRepositoryMock.findByProjectId(project.getId())).thenReturn(
-                asList(partnerOrganisation1, partnerOrganisation2));*/
 
         when(viabilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(ViabilityState.APPROVED);
         when(viabilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(ViabilityState.APPROVED);
@@ -383,12 +279,6 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         setupGenerateSpendProfilesExpectations(generateSpendProfileData, project, organisation1, organisation2);
 
-/*        PartnerOrganisation partnerOrganisation1 = newPartnerOrganisation().build();
-        PartnerOrganisation partnerOrganisation2 = newPartnerOrganisation().build();*/
-
-/*        when(partnerOrganisationRepositoryMock.findByProjectId(project.getId())).thenReturn(
-                asList(partnerOrganisation1, partnerOrganisation2));*/
-
         when(viabilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(ViabilityState.APPROVED);
         when(viabilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(ViabilityState.NOT_APPLICABLE);
         when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(EligibilityState.APPROVED);
@@ -403,7 +293,6 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         assertTrue(generateResult.isSuccess());
 
         verify(spendProfileRepositoryMock, times(2)).save(isA(SpendProfile.class));
-        //verifyNoMoreInteractions(spendProfileRepositoryMock);
     }
 
     private void setupGenerateSpendProfilesExpectations(GenerateSpendProfileData generateSpendProfileData, Project project, Organisation organisation1, Organisation organisation2) {
