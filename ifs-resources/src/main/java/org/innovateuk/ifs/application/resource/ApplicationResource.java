@@ -63,12 +63,7 @@ public class ApplicationResource {
     private Boolean resubmission;
     private String previousApplicationNumber;
     private String previousApplicationTitle;
-
-    private Set<ResearchCategoryResource> researchCategories;
-
-    @NotNull(message="{validation.application.research.category.required}")
-    private Long researchCategoryId;
-
+    private ResearchCategoryResource researchCategory;
     private InnovationAreaResource innovationArea;
     private boolean noInnovationAreaApplicable;
 
@@ -269,21 +264,12 @@ public class ApplicationResource {
         this.stateAidAgreed = stateAidAgreed;
     }
 
-    public Set<ResearchCategoryResource> getResearchCategories() {
-        return researchCategories;
+    public ResearchCategoryResource getResearchCategory() {
+        return researchCategory;
     }
 
-    public void setResearchCategories(Set<ResearchCategoryResource> researchCategories) {
-        this.researchCategories = researchCategories;
-    }
-
-    @JsonIgnore
-    public Long getResearchCategoryId() {
-        return researchCategoryId;
-    }
-
-    public void setResearchCategoryId(Long researchCategoryId) {
-        this.researchCategoryId = researchCategoryId;
+    public void setResearchCategory(ResearchCategoryResource researchCategory) {
+        this.researchCategory = researchCategory;
     }
 
     public InnovationAreaResource getInnovationArea() {

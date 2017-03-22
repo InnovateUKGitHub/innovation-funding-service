@@ -85,8 +85,8 @@ public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource,
         return withArray((completion, application) -> setField("completion", completion, application), bigDecimals);
     }
 
-    public ApplicationResourceBuilder withResearchCategories(Set<ResearchCategoryResource> categories) {
-        return with(applicationResource -> applicationResource.setResearchCategories(categories));
+    public ApplicationResourceBuilder withResearchCategory(ResearchCategoryResource category) {
+        return with(applicationResource -> applicationResource.setResearchCategory(category));
     }
 
     public ApplicationResourceBuilder withInnovationArea(InnovationAreaResource innovationArea) {
