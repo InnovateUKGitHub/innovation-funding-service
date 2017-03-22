@@ -161,7 +161,7 @@ Business organisation (partner accepts invitation)
     [Tags]    HappyPath    Email    SmokeTest
     [Setup]    The guest user opens the browser
     When the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    participate in their application
-    And the user clicks the button/link    jQuery=.button:contains("Create")
+    And the user clicks the button/link    jQuery=.button:contains("Yes, accept invitation")
     And the user selects the radio button    organisationType    1
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user enters text to a text field    id=organisationSearchName    Nomensa
@@ -171,7 +171,7 @@ Business organisation (partner accepts invitation)
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save and continue")
     And the user fills the create account form    Adrian    Booth
-    And the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com    Please verify your email address    If you did not request an account with us
+    And the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com    Please verify your email address    Once verified you can sign into your account
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
 
 Partner should be able to log-in and see the new company name
@@ -244,13 +244,13 @@ Registered partner should not create new org but should follow the create accoun
     [Setup]    The guest user opens the browser
     When the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    participate in their application
     And the user should see the text in the page    Join an application
-    And the user clicks the button/link    jQuery=.button:contains("Create")
+    And the user clicks the button/link    jQuery=.button:contains("Yes, accept invitation")
     And the user should see the text in the page    Your organisation
     And the user should see the text in the page    Business organisation
     And the user should see the element    link=email the lead applicant
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user fills the create account form    Roger    Axe
-    And the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Please verify your email address    If you did not request an account with us
+    And the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Please verify your email address    Once verified you can sign into your account
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
 
 *** Keywords ***
