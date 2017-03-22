@@ -7,7 +7,7 @@ import org.innovateuk.ifs.user.resource.OrganisationResource;
 /**
  * View model for invited organisation confirmation
  */
-public class ConfirmOrganisationInviteOrganisation {
+public class ConfirmOrganisationInviteOrganisationViewModel {
     private String partOfOrganisation;
     private String organisationType;
     private String registrationName;
@@ -16,7 +16,7 @@ public class ConfirmOrganisationInviteOrganisation {
     private AddressResource organisationAddress;
     private String registerUrl;
 
-    public ConfirmOrganisationInviteOrganisation(ApplicationInviteResource inviteResource, OrganisationResource organisation, AddressResource organisationAddress, String registerUrl) {
+    public ConfirmOrganisationInviteOrganisationViewModel(ApplicationInviteResource inviteResource, OrganisationResource organisation, AddressResource organisationAddress, String registerUrl) {
         this.partOfOrganisation = inviteResource.getInviteOrganisationNameConfirmedSafe();
         this.organisationType = organisation.getOrganisationTypeName();
         this.registrationName = organisation.getName();

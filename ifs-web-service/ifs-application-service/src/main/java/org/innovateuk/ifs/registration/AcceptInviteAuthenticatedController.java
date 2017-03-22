@@ -7,7 +7,7 @@ import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.registration.model.InviteAndUserOrganisationDifferentModelPopulator;
 import org.innovateuk.ifs.registration.service.RegistrationService;
-import org.innovateuk.ifs.registration.viewmodel.ConfirmOrganisationInviteOrganisation;
+import org.innovateuk.ifs.registration.viewmodel.ConfirmOrganisationInviteOrganisationViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static org.innovateuk.ifs.exception.CommonErrorControllerAdvice.URL_HASH_INVALID_TEMPLATE;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 
 
@@ -62,7 +61,7 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
                             // Success
                             OrganisationResource organisation = getInviteOrganisationOrElseUserOrganisation(loggedInUser, inviteOrganisation);
                             model.addAttribute("model",
-                                    new ConfirmOrganisationInviteOrganisation(invite, organisation, getOrganisationAddress(organisation),
+                                    new ConfirmOrganisationInviteOrganisationViewModel(invite, organisation, getOrganisationAddress(organisation),
                                             "/accept-invite-authenticated/confirm-invited-organisation/confirm"));
                             return "registration/confirm-registered-organisation";
                         }
