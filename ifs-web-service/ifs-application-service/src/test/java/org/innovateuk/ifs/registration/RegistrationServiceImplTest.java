@@ -2,25 +2,27 @@ package org.innovateuk.ifs.registration;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.service.OrganisationService;
-import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
+import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.registration.service.RegistrationService;
 import org.innovateuk.ifs.registration.service.RegistrationServiceImpl;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.util.Map;
+import java.util.Optional;
 
+import static java.util.Optional.of;
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static org.innovateuk.ifs.invite.builder.InviteResourceBuilder.newInviteResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static java.util.Arrays.asList;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.when;
 
 
 /**
@@ -29,14 +31,15 @@ import static org.mockito.Mockito.*;
 public class RegistrationServiceImplTest extends BaseServiceUnitTest<RegistrationService> {
 
     @Mock
+    private UserService userService;
+
+    @Mock
     private OrganisationService organisationService;
 
     @Override
     @Before
     public void setUp() {
         super.setUp();
-
-
     }
 
     @Override
@@ -44,24 +47,10 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         return new RegistrationServiceImpl();
     }
 
-    @Test
-    public void acceptInviteDifferentLogin() throws Exception {
-        UserResource userOne = new UserResource();
-        userOne.setEmail("email@testOne.com");
-
-        ApplicationInviteResource inviteResource = newInviteResource().withEmail("email@testTwo.com").build();
-        InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().build();
-        Map<String, String> result = service.getInvalidInviteMessages(userOne, inviteResource, inviteOrganisationResource);
-        assertEquals(1, result.size());
-        assertTrue(result.containsKey("failureMessageKey"));
-        assertTrue(result.containsValue("registration.LOGGED_IN_WITH_OTHER_ACCOUNT"));
-    }
 
     @Test
     public void acceptInviteDifferentOrganisation() throws Exception {
         OrganisationResource expected = newOrganisationResource().withName("Name One").build();
-        when(organisationService.getOrganisationByIdForAnonymousUserFlow(anyLong())).thenReturn(expected);
-        when(organisationService.getOrganisationForUser(anyLong())).thenReturn(expected);
 
         UserResource userOne = new UserResource();
         userOne.setEmail("email@testOne.com");
@@ -69,42 +58,43 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         ApplicationInviteResource inviteResource = newInviteResource().withEmail("email@testOne.com").build();
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withOrganisation(2L).build();
         inviteOrganisationResource.setOrganisationNameConfirmed("Name Two");
-        Map<String, String> result = service.getInvalidInviteMessages(userOne, inviteResource, inviteOrganisationResource);
-        assertEquals(1, result.size());
-        assertTrue(result.containsKey("failureMessageKey"));
-        assertTrue(result.containsValue("registration.MULTIPLE_ORGANISATIONS"));
 
+        when(organisationService.getOrganisationForUser(anyLong())).thenReturn(expected);
+        when(userService.findUserByEmail(userOne.getEmail())).thenReturn(of(userOne));
+
+        assertTrue(service.isInviteForDifferentOrganisationThanUsersAndDifferentName(inviteResource, inviteOrganisationResource));
     }
 
     @Test
     public void acceptInviteDifferentOrganisationSameName() throws Exception {
         OrganisationResource expected = newOrganisationResource().withName("Name Two").build();
-        when(organisationService.getOrganisationByIdForAnonymousUserFlow(anyLong())).thenReturn(expected);
-        when(organisationService.getOrganisationForUser(anyLong())).thenReturn(expected);
-
         UserResource userOne = new UserResource();
         userOne.setEmail("email@testOne.com");
 
         ApplicationInviteResource inviteResource = newInviteResource().withEmail("email@testOne.com").build();
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withOrganisation(2L).build();
         inviteOrganisationResource.setOrganisationNameConfirmed("Name Two");
-        Map<String, String> result = service.getInvalidInviteMessages(userOne, inviteResource, inviteOrganisationResource);
-        assertEquals(1, result.size());
-        assertTrue(result.containsKey("failureMessageKey"));
-        assertTrue(result.containsValue("registration.JOINING_SAME_ORGANISATIONS"));
+
+        when(organisationService.getOrganisationForUser(anyLong())).thenReturn(expected);
+        when(userService.findUserByEmail(userOne.getEmail())).thenReturn(of(userOne));
+
+        assertTrue(service.isInviteForDifferentOrganisationThanUsersButSameName(inviteResource, inviteOrganisationResource));
     }
 
     @Test
     public void validAcceptInvite() throws Exception {
         OrganisationResource expected = newOrganisationResource().build();
-        when(organisationService.getOrganisationByIdForAnonymousUserFlow(anyLong())).thenReturn(expected);
 
         UserResource userOne = new UserResource();
         userOne.setEmail("email@testOne.com");
 
         ApplicationInviteResource inviteResource = newInviteResource().withEmail("email@testOne.com").build();
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().build();
-        Map<String, String> result = service.getInvalidInviteMessages(userOne, inviteResource, inviteOrganisationResource);
-        assertEquals(0, result.size());
+
+        when(organisationService.getOrganisationForUser(anyLong())).thenReturn(expected);
+        when(userService.findUserByEmail(userOne.getEmail())).thenReturn(of(userOne));
+
+        assertFalse(service.isInviteForDifferentOrganisationThanUsersButSameName(inviteResource, inviteOrganisationResource));
+        assertFalse(service.isInviteForDifferentOrganisationThanUsersAndDifferentName(inviteResource, inviteOrganisationResource));
     }
 }

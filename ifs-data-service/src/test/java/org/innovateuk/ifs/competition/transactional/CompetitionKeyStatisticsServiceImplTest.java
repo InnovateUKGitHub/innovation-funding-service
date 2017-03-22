@@ -131,9 +131,8 @@ public class CompetitionKeyStatisticsServiceImplTest extends BaseServiceUnitTest
         when(assessmentRepositoryMock.countByParticipantUserIdAndActivityStateStateNotIn(3L, of(REJECTED, WITHDRAWN))).thenReturn(0L);
 
         when(competitionRepositoryMock.findById(competitionId)).thenReturn(competition);
-        when(applicationStatisticsRepositoryMock.findByCompetition(competitionId)).thenReturn(applicationStatistics);
         when(competitionParticipantRepositoryMock.getByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, ParticipantStatus.ACCEPTED)).thenReturn(competitionParticipants);
-        when(applicationStatisticsRepositoryMock.findByCompetition(competitionId)).thenReturn(applicationStatistics);
+        when(applicationStatisticsRepositoryMock.findByCompetitionAndApplicationStatusIdIn(competitionId, SUBMITTED_STATUS_IDS)).thenReturn(applicationStatistics);
         when(competitionInviteRepositoryMock.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT))).thenReturn(keyStatisticsResource.getAssessorsInvited());
         when(competitionParticipantRepositoryMock.countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, ParticipantStatus.ACCEPTED)).thenReturn(keyStatisticsResource.getAssessorsAccepted());
 
@@ -169,7 +168,7 @@ public class CompetitionKeyStatisticsServiceImplTest extends BaseServiceUnitTest
                 .withAssessments(assessments, assessmentList)
                 .build(2);
 
-        when(applicationStatisticsRepositoryMock.findByCompetition(competitionId)).thenReturn(applicationStatistics);
+        when(applicationStatisticsRepositoryMock.findByCompetitionAndApplicationStatusIdIn(competitionId, SUBMITTED_STATUS_IDS)).thenReturn(applicationStatistics);
         when(assessmentRepositoryMock.countByActivityStateStateAndTargetCompetitionId(PENDING, competitionId)).thenReturn(keyStatisticsResource.getAssignmentsWaiting());
         when(assessmentRepositoryMock.countByActivityStateStateAndTargetCompetitionId(ACCEPTED, competitionId)).thenReturn(keyStatisticsResource.getAssignmentsAccepted());
         when(assessmentRepositoryMock.countByActivityStateStateInAndTargetCompetitionId(of(OPEN, DECIDE_IF_READY_TO_SUBMIT, READY_TO_SUBMIT), competitionId)).thenReturn(keyStatisticsResource.getAssessmentsStarted());

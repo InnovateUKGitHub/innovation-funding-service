@@ -13,7 +13,10 @@ public class OrganisationType {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
     private String name;
+
+    private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private OrganisationType parentOrganisationType;
@@ -21,8 +24,9 @@ public class OrganisationType {
     @OneToMany(mappedBy="organisationType")
     private List<GrantClaimMaximum> grantClaimMaximums;
 
-    public OrganisationType(String name, OrganisationType parentOrganisationType) {
+    public OrganisationType(String name, String description, OrganisationType parentOrganisationType) {
         this.name = name;
+        this.description = description;
         this.parentOrganisationType = parentOrganisationType;
     }
 
@@ -44,6 +48,14 @@ public class OrganisationType {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public OrganisationType getParentOrganisationType() {
@@ -73,6 +85,7 @@ public class OrganisationType {
         return new EqualsBuilder()
                 .append(id, that.id)
                 .append(name, that.name)
+                .append(description, that.description)
                 .append(parentOrganisationType, that.parentOrganisationType)
                 .append(grantClaimMaximums, that.grantClaimMaximums)
                 .isEquals();
@@ -83,6 +96,7 @@ public class OrganisationType {
         return new HashCodeBuilder(17, 37)
                 .append(id)
                 .append(name)
+                .append(description)
                 .append(parentOrganisationType)
                 .append(grantClaimMaximums)
                 .toHashCode();

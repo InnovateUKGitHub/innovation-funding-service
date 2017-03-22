@@ -99,12 +99,8 @@ Lead Adds/Removes partner organisation
     And The user enters text to a text field    name=applicants[0].email    ewan+10@hiveit.co.uk
     And The user clicks the button/link    jQuery=button:contains("Add organisation and invite applicants")
     And the user clicks the button/link    jQuery=a:contains("Update Fannie May")
-    When The user clicks the button/link    jQuery=button:contains('Remove')
-    And the user clicks the button/link    jQuery=.button:contains("Cancel")
-    Then the user should see the text in the page    Fannie May
-    And the user clicks the button/link    jQuery=a:contains("Update Fannie May")
-    And The user clicks the button/link    jQuery=button:contains('Remove')
-    And the user clicks the button/link    jQuery=button:contains("Update organisation")
+    Then The user clicks the button/link    jQuery=button:contains('Delete organisation')
+    And The user clicks the button/link     jQuery=.modal-delete-organisation button:contains('Delete organisation')
     Then The user should not see the text in the page    Fannie May
     And the user should see the text in the page    Application team
 
@@ -165,7 +161,7 @@ Business organisation (partner accepts invitation)
     [Tags]    HappyPath    Email    SmokeTest
     [Setup]    The guest user opens the browser
     When the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    participate in their application
-    And the user clicks the button/link    jQuery=.button:contains("Create")
+    And the user clicks the button/link    jQuery=.button:contains("Yes, accept invitation")
     And the user selects the radio button    organisationType    1
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user enters text to a text field    id=organisationSearchName    Nomensa
@@ -175,7 +171,7 @@ Business organisation (partner accepts invitation)
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save and continue")
     And the user fills the create account form    Adrian    Booth
-    And the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com    Please verify your email address    If you did not request an account with us
+    And the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com    Please verify your email address    Once verified you can sign into your account
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
 
 Partner should be able to log-in and see the new company name
@@ -248,13 +244,12 @@ Registered partner should not create new org but should follow the create accoun
     [Setup]    The guest user opens the browser
     When the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    participate in their application
     And the user should see the text in the page    Join an application
-    And the user clicks the button/link    jQuery=.button:contains("Create")
-    And the user should see the text in the page    Your organisation
-    And the user should see the text in the page    Business organisation
+    And the user clicks the button/link    jQuery=.button:contains("Yes, accept invitation")
+    And the user should see the text in the page    Confirm your organisation
     And the user should see the element    link=email the lead applicant
-    And the user clicks the button/link    jQuery=.button:contains("Continue")
+    And the user clicks the button/link    jQuery=.button:contains("Confirm and continue")
     And the user fills the create account form    Roger    Axe
-    And the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Please verify your email address    If you did not request an account with us
+    And the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Please verify your email address    Once verified you can sign into your account
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
 
 *** Keywords ***
