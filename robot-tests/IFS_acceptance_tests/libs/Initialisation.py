@@ -5,12 +5,12 @@ import os
 config = ''
 
 try:
-    os.environ['bamboo.ifs_mysql_user_name']
+    os.environ['bamboo_IFS_MYSQL_USER_NAME']
     config = {
-        'user': os.environ['bamboo.ifs_mysql_user_name'],
-        'passwd': os.environ['bamboo.ifs_mysql_password'],
-        'host': os.environ['bamboo.ifs_mysql_hostname'],
-        'db': os.environ['bamboo.ifs_mysql_db_name'],
+        'user': os.environ['bamboo_IFS_MYSQL_USER_NAME'],
+        'passwd': os.environ['bamboo_IFS_MYSQL_PASSWORD'],
+        'host': os.environ['bamboo_IFS_MYSQL_HOSTNAME'],
+        'db': os.environ['bamboo_IFS_MYSQL_DB_NAME'],
         'port': 3306,
     }
 except KeyError:
