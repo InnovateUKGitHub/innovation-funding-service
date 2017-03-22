@@ -143,7 +143,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     public ServiceResult<Void> generateSpendProfile(Long projectId) {
 
         return getProject(projectId).andOnSuccess(project ->
-               validateSpendProfileCanBeGenerated(project).andOnSuccess(() ->
+               canSpendProfileCanBeGenerated(project).andOnSuccess(() ->
                projectService.getProjectUsers(projectId).andOnSuccess(projectUsers -> {
                    List<Long> organisationIds = removeDuplicates(simpleMap(projectUsers, ProjectUserResource::getOrganisation));
                    return generateSpendProfileForPartnerOrganisations(project, organisationIds);
@@ -151,16 +151,16 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         );
     }
 
-    private ServiceResult<Void> validateSpendProfileCanBeGenerated(Project project) {
-        return validateFinanceChecksApprovedForSpendProfileGenerate(project)
-                .andOnSuccess(() -> validateViabilityApprovedOrNotApplicableForSpendProfileGenerate(project))
-                .andOnSuccess(() -> validateEligibilityApprovedOrNotApplicableForSpendProfileGenerate(project))
-                .andOnSuccess(() -> validateIfSpendProfileIsAlreadyGenerated(project));
+    private ServiceResult<Void> canSpendProfileCanBeGenerated(Project project) {
+        return areFinanceChecksApproved(project)
+                .andOnSuccess(() -> isViabilityApprovedOrNotApplicable(project))
+                .andOnSuccess(() -> isEligibilityApprovedOrNotApplicable(project))
+                .andOnSuccess(() -> isSpendProfileAlreadyGenerated(project));
     }
 
-    private ServiceResult<Void> validateFinanceChecksApprovedForSpendProfileGenerate(Project project) {
-        List<FinanceCheckProcess> financeCheckProcesses = simpleMap(project.getPartnerOrganisations(), po ->
-                financeCheckProcessRepository.findOneByTargetId(po.getId()));
+    private ServiceResult<Void> areFinanceChecksApproved(Project project) {
+        List<FinanceCheckProcess> financeCheckProcesses = simpleMap(project.getPartnerOrganisations(),
+                po -> financeCheckProcessRepository.findOneByTargetId(po.getId()));
 
         Optional<FinanceCheckProcess> existingNonApprovedFinanceCheck = simpleFindFirst(financeCheckProcesses, process ->
                 !FinanceCheckState.APPROVED.equals(process.getActivityState()));
@@ -172,7 +172,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         }
     }
 
-    private ServiceResult<Void> validateViabilityApprovedOrNotApplicableForSpendProfileGenerate(Project project) {
+    private ServiceResult<Void> isViabilityApprovedOrNotApplicable(Project project) {
 
         List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
 
@@ -186,7 +186,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         }
     }
 
-    private ServiceResult<Void> validateEligibilityApprovedOrNotApplicableForSpendProfileGenerate(Project project) {
+    private ServiceResult<Void> isEligibilityApprovedOrNotApplicable(Project project) {
 
         List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
 
@@ -200,14 +200,14 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         }
     }
 
-    private ServiceResult<Void> validateIfSpendProfileIsAlreadyGenerated(Project project) {
+    private ServiceResult<Void> isSpendProfileAlreadyGenerated(Project project) {
 
         List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
 
-        Optional<PartnerOrganisation> existingPartnerOrganisationWithSpendProfile = simpleFindFirst(partnerOrganisations, partnerOrganisation ->
+        Optional<PartnerOrganisation> partnerOrganisationWithSpendProfile = simpleFindFirst(partnerOrganisations, partnerOrganisation ->
                 spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(), partnerOrganisation.getOrganisation().getId()).isPresent());
 
-        if (!existingPartnerOrganisationWithSpendProfile.isPresent()) {
+        if (!partnerOrganisationWithSpendProfile.isPresent()) {
             return serviceSuccess();
         } else {
             return serviceFailure(SPEND_PROFILE_HAS_ALREADY_BEEN_GENERATED);
@@ -276,10 +276,13 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     @Override
     /**
      * This method was written to recreate Spend Profile for one of the partner organisations on Production.
+     *
      * This method assumes that all the necessary stuff is in the database before the Spend Profile can be generated.
+     * This does not perform any validations to check that the Finance Checks are complete, Viability is approved,
+     * Eligibility is approved or if the Spend Profile is already generated.
+     *
      */
     public ServiceResult<Void> generateSpendProfileForPartnerOrganisation(Long projectId, Long organisationId, Long userId) {
-
         User user = userRepository.findOne(userId);
 
         return spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(projectId, organisationId).
