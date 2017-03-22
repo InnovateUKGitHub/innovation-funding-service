@@ -58,6 +58,8 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               INFUND-6148 Negative numbers on spend profile table generation not disallowed by rounding logic
 ...
 ...               INFUND-7422 On rejection non-lead partners should still see a tick instead of an hourglass, until edit rights have been returned to them
+...
+...               INFUND-7685 Broken link on spend profile page
 
 Suite Setup       all previous sections of the project are completed
 Suite Teardown    the user closes the browser
@@ -100,7 +102,7 @@ Project Finance generates the Spend Profile
 
 
 Lead partner can view spend profile page
-    [Documentation]    INFUND-3970, INFUND-6138, INFUND-5899
+    [Documentation]    INFUND-3970, INFUND-6138, INFUND-5899, INFUND-7685
     [Tags]    HappyPath
     [Setup]    Log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
     Given the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
@@ -110,6 +112,7 @@ Lead partner can view spend profile page
     When the user clicks the button/link             link=Project setup status
     Then the user should see the element      jQuery=li.require-action:nth-child(6)
     When the user clicks the button/link     link=Spend profile
+    And the user should not see the element    link=Total project profile spend
     And the user clicks the button/link      link=${Katz_Name}
     Then the user should not see an error in the page
     And the user should see the text in the page    We have reviewed and confirmed your project costs.
