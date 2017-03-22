@@ -27,8 +27,10 @@
             </ul>
 
             <form method="POST" th:action="@{/project/{projectId}/details/finance-contact(projectId=${model.projectId})}" th:object="${form}" novalidate="novalidate">
-                <fieldset>
-                    <div class="form-group extra-margin" id="finance-contact-section" th:classappend="${#fields.hasErrors('*') ? 'error' : ''}">
+                <input type="hidden" th:field="*{organisation}" />
+
+                <div class="form-group extra-margin" id="finance-contact-section" th:classappend="${#fields.hasErrors('*') ? 'error' : ''}">
+                    <fieldset>
                         <legend>
                             <span class="heading-medium">Finance contact</span>
                             <th:block th:if="${#fields.hasErrors('*')}">
@@ -39,7 +41,6 @@
                         <p class="form-hint">Please select the person responsible for finances in your organisation</p>
 
                         <th:block th:each="user : ${model.organisationUsers}">
-                            <input type="hidden" th:field="*{organisation}" />
                             <label data-set-section-valid="#finance-contact-section" data-clear-inputs="#name-finance-contact,#email-finance-contact" th:for="${#ids.next('financeContact')}" class="block-label selection-button-radio">
                                 <input type="radio" th:field="*{financeContact}" th:value="${user.id}" th:attr="data-required-errormessage=#{validation.financecontactform.financecontact.required}" required="required" />
                                 <th:block th:text="${user.name}" />
@@ -47,7 +48,6 @@
                         </th:block>
 
                         <th:block th:each="user : ${model.invitedUsers}">
-                            <input type="hidden" th:field="*{organisation}" />
                             <label data-set-section-valid="#finance-contact-section" data-clear-inputs="#name-finance-contact,#email-finance-contact" th:for="${#ids.next('financeContact')}" class="block-label selection-button-radio">
                                 <input type="radio" th:unless="${user == null or user.status != 'EXISTING'}" th:field="*{financeContact}" th:value="${user.id}" th:attr="data-required-errormessage=#{validation.financecontactform.financecontact.required}" required="required" />
                                 <th:block th:text="${user.name}" />
@@ -85,8 +85,8 @@
                                 </tbody>
                             </table>
                         </div>
-                    </div>
-                </fieldset>
+                    </fieldset>
+                </div>
 
                 <p>If you add a new team member this section will show as pending until they have accepted. Once the team member has accepted and created their account, they will automatically be registered as your finance contact.</p>
 

@@ -542,7 +542,7 @@ Academic Partner nominates Finance contact
     And the user should see the text in the page   Partner
     And the user clicks the button/link            link=EGGS
     And the user selects the radio button          financeContact    financeContact1
-    And the user clicks the button/link            jQuery=.button:contains("Save" finance contact)
+    And the user clicks the button/link            jQuery=.button:contains("Save finance contact")
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the matching status checkbox is updated differently    project-details-finance    2    Yes
     And the user should see the element     link=EGGS
