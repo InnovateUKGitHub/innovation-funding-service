@@ -8,7 +8,7 @@
                 <div th:class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ organisationGrantClaimPercentageId +'-grantClaimPercentage]}') or #fields.hasErrors('${form.formInput[cost-'+ organisationGrantClaimPercentageId +']}')}? 'error'">
                     <label class="form-label form-label-bold" for="cost-financegrantclaim">
                         <div th:text="'Enter your funding level (maximum ' + ${maximumGrantClaimPercentage} + '%).'" />
-                        <span class="form-hint" th:text="'Based on the project research area and your organisation size your maximum funding level is ' + ${maximumGrantClaimPercentage} + '%.'" />
+                        <span class="form-hint" th:text="'The maximum funding level is ' + ${maximumGrantClaimPercentage} + '%. This is based on your organisation size and the project research category.' " />
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+organisationGrantClaimPercentageId+'-grantClaimPercentage'})" />
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+organisationGrantClaimPercentageId})" />
                     </label>
