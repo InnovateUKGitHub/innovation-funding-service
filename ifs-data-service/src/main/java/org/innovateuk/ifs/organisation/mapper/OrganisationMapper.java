@@ -24,11 +24,11 @@ public abstract class OrganisationMapper extends BaseMapper<Organisation, Organi
 
     @Mappings({
             @Mapping(source = "organisationType.name", target = "organisationTypeName"),
+            @Mapping(source = "organisationType.description", target = "organisationTypeDescription"),
             @Mapping(target = "applicationFinances", ignore = true)
     })
     @Override
     public abstract OrganisationResource mapToResource(Organisation domain);
-
 
     public Long mapOrganisationToId(Organisation object) {
         if (object == null) {

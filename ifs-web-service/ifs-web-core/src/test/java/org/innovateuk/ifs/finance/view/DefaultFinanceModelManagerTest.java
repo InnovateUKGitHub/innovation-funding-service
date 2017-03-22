@@ -105,7 +105,7 @@ public class DefaultFinanceModelManagerTest {
 		
 		manager.addOrganisationFinanceDetails(model, applicationId, costsQuestions, userId, form, organisationId);
 		
-		assertEquals(8, model.asMap().size());
+		assertEquals(9, model.asMap().size());
 		verify(financeFormHandler, never()).addCostWithoutPersisting(applicationId, userId, costsQuestions.get(0).getId());
 	}
 	
@@ -122,7 +122,7 @@ public class DefaultFinanceModelManagerTest {
 		
 		manager.addOrganisationFinanceDetails(model, applicationId, costsQuestions, userId, form, organisationId);
 		
-		assertEquals(8, model.asMap().size());
+		assertEquals(9, model.asMap().size());
 		verify(financeFormHandler, never()).addCostWithoutPersisting(applicationId, userId, costsQuestions.get(0).getId());
 	}
 	
@@ -139,7 +139,7 @@ public class DefaultFinanceModelManagerTest {
 		
 		manager.addOrganisationFinanceDetails(model, applicationId, costsQuestions, userId, form, organisationId);
 
-		assertEquals(8, model.asMap().size());
+		assertEquals(9, model.asMap().size());
 		verify(financeFormHandler).addCostWithoutPersisting(applicationId, userId, costsQuestions.get(0).getId());
 	}
 
@@ -154,13 +154,14 @@ public class DefaultFinanceModelManagerTest {
 		applicationFinance.setFinanceOrganisationDetails(financeOrganisationDetails);
 		when(financeService.getApplicationFinanceDetails(userId, applicationId)).thenReturn(applicationFinance);
 		
-		String organisationType = "orgtype";
+		Long organisationType = 1L;
+		String organisationTypeName = "Business";
 
-		OrganisationTypeResource organisationTypeResource = newOrganisationTypeResource().withName(organisationType).build();
+		OrganisationTypeResource organisationTypeResource = newOrganisationTypeResource().withName(organisationTypeName).build();
 
 		when(organisationTypeService.getForOrganisationId(organisationId)).thenReturn(restSuccess(organisationTypeResource));
 
-		when(organisationService.getOrganisationType(userId, applicationId)).thenReturn(organisationTypeResource.getName());
+		when(organisationService.getOrganisationType(userId, applicationId)).thenReturn(organisationType);
 		
 		when(financeHandler.getFinanceFormHandler(organisationType)).thenReturn(financeFormHandler);
 		
@@ -169,7 +170,7 @@ public class DefaultFinanceModelManagerTest {
 		FinanceRowItem costItem = new LabourCost();
 		when(financeFormHandler.addCostWithoutPersisting(applicationId, userId, costsQuestions.get(0).getId())).thenReturn(costItem);
 
-		OrganisationResource organisation = newOrganisationResource().withId(organisationId).withOrganisationType(organisationTypeResource.getId()).withOrganisationTypeName(organisationType).withOrganisationType().build();
+		OrganisationResource organisation = newOrganisationResource().withId(organisationId).withOrganisationType(organisationTypeResource.getId()).withOrganisationTypeName(organisationTypeName).withOrganisationType().build();
 		when(organisationService.getOrganisationById(organisationId)).thenReturn(organisation);
 	}
 }
