@@ -475,8 +475,9 @@ Invite a non-existing collaborator in Appplication with Growth table
 
 Newly invited collaborator can create account and sign in
     the user reads his email and clicks the link     liam@innovate.com  Invitation to collaborate in ${compWITHGrowth}  participate in their application
-    the user should see the element      jQuery=h1:contains("New to this service?")
-    the user clicks the button/link       jQuery=a:contains("Create")
+    the user clicks the button/link      jQuery=a:contains("Yes, accept invitation")
+    # the user should see the element      jQuery=h1:contains("New to this service?")
+    # the user clicks the button/link       jQuery=a:contains("Create")
     the user should see the element      jquery=h1:contains("Choose your organisation type")
     the user completes the new account creation
 
