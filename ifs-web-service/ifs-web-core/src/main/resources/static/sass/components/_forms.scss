@@ -27,6 +27,17 @@ div.readonly,
   border-color: $border-colour;
 }
 
+input[readonly],
+input[disabled]{
+  border: none;
+  background: none;
+
+  &:focus{
+      outline: none;
+      outline-offset: 0;
+  }
+}
+
 .form-group{
   .form-finances-subcontracting-cost{
     text-align: right;
