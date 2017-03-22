@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.validator.util;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.domain.Section;
@@ -18,6 +16,8 @@ import org.innovateuk.ifs.validator.ApplicationMarkAsCompleteValidator;
 import org.innovateuk.ifs.validator.MinRowCountValidator;
 import org.innovateuk.ifs.validator.NotEmptyValidator;
 import org.innovateuk.ifs.validator.transactional.ValidatorService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -30,12 +30,12 @@ import javax.validation.groups.Default;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyMap;
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.reject;
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.rejectValue;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyMap;
 
 @Component
 public class ValidationUtil {
