@@ -84,7 +84,7 @@ public class AssessmentAssignmentController extends BaseController {
 
     private String doViewRejectAssignmentConfirm(Model model, Long assessmentId) {
         model.addAttribute("model", rejectAssessmentModelPopulator.populateModel(assessmentId));
-        return "assessment/assessment-reject-confirm";
+        return "assessment/reject-invitation-confirm";
     }
 
     private String redirectToAssessorCompetitionDashboard(Long competitionId) {
