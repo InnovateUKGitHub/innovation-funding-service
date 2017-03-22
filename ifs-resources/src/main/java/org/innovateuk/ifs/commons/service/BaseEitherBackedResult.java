@@ -128,6 +128,14 @@ public abstract class BaseEitherBackedResult<T, FailureType extends ErrorHolder>
         }
     }
 
+
+    public <R> FailingOrSucceedingResult<R, FailureType> andOnFailure(Runnable failureHandler) {
+        return (BaseEitherBackedResult<R, FailureType>)andOnFailure(() -> {
+            failureHandler.run();
+            return this;
+        });
+    }
+
     public void ifSuccessful(Consumer<? super T> successHandler) {
         if (isSuccess()) {
             successHandler.accept(getSuccessObject());

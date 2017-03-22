@@ -47,7 +47,9 @@ public class ProjectFinanceAttachmentServiceSecurityTest extends BaseServiceSecu
         assertAccessDenied(
                 () -> classUnderTest.upload("application.pdf", "3234", "filename.pdf", 77L, null),
                 () -> {
-                    verify(attachmentPermissionsRules).onlyProjectFinanceAndFinanceContactCanUploadAttachments(isA(ProjectResource.class), isA(UserResource.class));
+                    verify(attachmentPermissionsRules).projectFinanceCanUploadAttachments(isA(ProjectResource.class), isA(UserResource.class));
+                    verify(attachmentPermissionsRules).projectPartnersCanUploadAttachments(isA(ProjectResource.class), isA(UserResource.class));
+
                     verifyNoMoreInteractions(attachmentPermissionsRules);
                 });
     }

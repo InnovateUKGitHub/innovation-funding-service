@@ -122,8 +122,8 @@ Check the comp admin see the assessor has rejected the application
     [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
     Given the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the user clicks the button/link    jQuery=a:contains("Assessor management: Assignments")
-    And the user should see the element    jQuery=tr:nth-child(4) td:nth-child(2):contains("Park living")
-    And the user clicks the button/link    jQuery=tr:nth-child(4) a:contains(View progress)
+    And the user should see the element    jQuery=tr:nth-child(1) td:nth-child(2):contains("Park living")
+    And the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
     And the user should see the text in the page    Rejected (1)
     And the user should see the element    jQuery=.assessors-rejected td:nth-child(6):contains("Not my area of expertise")
     And the user should see the element    jQuery=.assessors-rejected td:nth-child(6):contains("Unable to assess the application as i'm on holiday.")
