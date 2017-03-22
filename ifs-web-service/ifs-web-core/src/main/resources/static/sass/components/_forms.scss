@@ -398,6 +398,11 @@ Used to show information and CTAs under wrapped textarea used in application que
 
 */
 
+.agree-to-terms-container{
+  @extend %contain-floats;
+  padding-left: 1em;
+}
+
 .form-footer{
   @include core-16;
   @extend %contain-floats;
