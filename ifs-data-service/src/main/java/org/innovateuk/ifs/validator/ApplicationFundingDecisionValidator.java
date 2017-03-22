@@ -1,13 +1,10 @@
 package org.innovateuk.ifs.validator;
 
 
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
+import org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
 public class ApplicationFundingDecisionValidator {
@@ -25,12 +22,7 @@ public class ApplicationFundingDecisionValidator {
     }
 
     private boolean hasBeenSubmitted(Application application) {
-        List<Long> submittedApplicationStatusIds = new ArrayList<>();
-        submittedApplicationStatusIds.add(ApplicationStatusConstants.SUBMITTED.getId());
-        submittedApplicationStatusIds.add(ApplicationStatusConstants.REJECTED.getId());
-        submittedApplicationStatusIds.add(ApplicationStatusConstants.APPROVED.getId());
-
-        boolean hasBeenSubmitted = submittedApplicationStatusIds.contains(application.getApplicationStatus().getId());;
+        boolean hasBeenSubmitted = ApplicationSummaryServiceImpl.SUBMITTED_STATUS_IDS.contains(application.getApplicationStatus().getId());;
 
         return hasBeenSubmitted;
     }
