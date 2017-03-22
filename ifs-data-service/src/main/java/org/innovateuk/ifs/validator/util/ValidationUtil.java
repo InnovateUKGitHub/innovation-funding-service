@@ -44,6 +44,7 @@ public class ValidationUtil {
     private MinRowCountValidator minRowCountValidator;
     private SpendProfileCostValidator spendProfileCostValidator;
 
+
     @Autowired
     @Lazy
     private ValidationUtil(ValidatorService validatorService,
@@ -127,7 +128,7 @@ public class ValidationUtil {
         return binder.getBindingResult();
     }
 
-    public BindingResult validationApplicationDetails(Application application) {
+    public BindingResult validationApplicationDetails(Application application){
         DataBinder binder = new DataBinder(application);
         binder.addValidators(new ApplicationMarkAsCompleteValidator());
         binder.validate();
@@ -241,7 +242,7 @@ public class ValidationUtil {
     }
 
     private boolean nonEmpty(ValidationMessages validationMessages) {
-        return validationMessages != null && validationMessages.hasErrors();
+    	return validationMessages != null && validationMessages.hasErrors();
     }
 
     public ValidationMessages validateCostItem(FinanceRowItem costItem) {
@@ -256,7 +257,7 @@ public class ValidationUtil {
         return buildValidationMessages(costItem, bindingResult);
     }
 
-    private ValidationMessages buildValidationMessages(FinanceRowItem costItem, BeanPropertyBindingResult bindingResult) {
+    private ValidationMessages buildValidationMessages(FinanceRowItem costItem, BeanPropertyBindingResult bindingResult){
         if (bindingResult.hasErrors()) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("validated, with messages: ");

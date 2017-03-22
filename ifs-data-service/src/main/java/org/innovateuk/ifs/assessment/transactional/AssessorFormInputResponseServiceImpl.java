@@ -92,7 +92,6 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
         return serviceSuccess();
     }
 
-
     @Override
     public ServiceResult<ApplicationAssessmentAggregateResource> getApplicationAggregateScores(long applicationId) {
         List<AssessorFormInputResponse> responses = assessorFormInputResponseRepository.findByAssessmentTargetId(applicationId);
