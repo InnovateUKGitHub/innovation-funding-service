@@ -149,13 +149,14 @@ public class CompetitionManagementApplicationController extends BaseController {
             form.setAdminMode(true);
 
             List<FormInputResponseResource> responses = formInputResponseService.getByApplication(applicationId);
+            List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
 
             // so the mode is viewonly
             application.enableViewMode();
 
             CompetitionResource competition = competitionService.getById(application.getCompetition());
-            applicationModelPopulator.addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
-            organisationDetailsModelPopulator.populateModel(model, application.getId());
+            applicationModelPopulator.addApplicationAndSections(application, competition, user, Optional.empty(), Optional.empty(), model, form, userApplicationRoles);
+            organisationDetailsModelPopulator.populateModel(model, application.getId(), userApplicationRoles);
 
             // Having to pass getImpersonateOrganisationId here because look at the horrible code inside addOrganisationAndUserFinanceDetails with impersonation org id :(
             applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form, form.getImpersonateOrganisationId());

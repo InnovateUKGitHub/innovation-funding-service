@@ -9,7 +9,6 @@ import org.innovateuk.ifs.application.populator.*;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.service.*;
-import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentFeedbackResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -19,13 +18,13 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.controller.viewmodel.OptionalFileDetailsViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
-import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputService;
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.profiling.ProfileExecution;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +44,7 @@ import java.util.Optional;
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.collectValidationMessages;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PROJECT_SETUP;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 /**
@@ -154,31 +154,35 @@ public class ApplicationController {
         ApplicationResource application = applicationService.getById(applicationId);
         SectionResource section = sectionService.getById(sectionId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
-        ProcessRoleResource userApplicationRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccessObjectOrThrowException();
+        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
+        ProcessRoleResource userApplicationRole = simpleFindFirst(userApplicationRoles, role -> role.getUser().equals(user.getId())).get();
 
-        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form);
+        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user, Optional.ofNullable(section), Optional.empty(), model, form, userApplicationRoles);
         applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form, userApplicationRole.getOrganisationId());
-        model.addAttribute("ableToSubmitApplication", ableToSubmitApplication(user, application));
+        model.addAttribute("ableToSubmitApplication", ableToSubmitApplication(userApplicationRole, application));
         return "application-details";
     }
 
-    private boolean ableToSubmitApplication(UserResource user, ApplicationResource application) {
-        return applicationModelPopulator.userIsLeadApplicant(application, user.getId()) && application.isSubmitable();
+    private boolean ableToSubmitApplication(ProcessRoleResource userApplicationRole, ApplicationResource application) {
+        return userIsLeadApplicant(userApplicationRole) && application.isSubmitable();
+    }
+
+    private boolean userIsLeadApplicant(ProcessRoleResource userApplicationRole) {
+        return userApplicationRole.getRoleName().equals(UserRoleType.LEADAPPLICANT.getName());
     }
 
     @ProfileExecution
     @RequestMapping(value = "/{applicationId}/summary", method = RequestMethod.GET)
     public String applicationSummary(@ModelAttribute("form") ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
                                      HttpServletRequest request) {
-        List<FormInputResponseResource> responses = formInputResponseService.getByApplication(applicationId);
-        model.addAttribute("incompletedSections", sectionService.getInCompleted(applicationId));
-        model.addAttribute("responses", formInputResponseService.mapFormInputResponsesToFormInput(responses));
 
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
+        ProcessRoleResource userApplicationRole = simpleFindFirst(userApplicationRoles, role -> role.getUser().equals(user.getId())).get();
+
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
-        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), model, form);
-        ProcessRoleResource userApplicationRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccessObjectOrThrowException();
+        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user, model, form, userApplicationRoles);
 
         applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form, userApplicationRole.getOrganisationId());
         applicationModelPopulator.addResearchCategoryId(application, model);
@@ -252,7 +256,8 @@ public class ApplicationController {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
-        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), model, form);
+        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
+        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user, model, form, userApplicationRoles);
         return "application-confirm-submit";
     }
 
@@ -261,16 +266,18 @@ public class ApplicationController {
                                     HttpServletRequest request, HttpServletResponse response){
     	UserResource user = userAuthenticationService.getAuthenticatedUser(request);
     	ApplicationResource application = applicationService.getById(applicationId);
-    	
-    	if(!ableToSubmitApplication(user, application)){
+        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
+        ProcessRoleResource userApplicationRole = simpleFindFirst(userApplicationRoles, role -> role.getUser().equals(user.getId())).get();
+
+        if(!ableToSubmitApplication(userApplicationRole, application)){
     		cookieFlashMessageFilter.setFlashMessage(response, "cannotSubmit");
     		return "redirect:/application/" + applicationId + "/confirm-submit";
     	}
        
         applicationService.updateStatus(applicationId, ApplicationStatusConstants.SUBMITTED.getId());
-        application = applicationService.getById(applicationId);
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
-        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), model, form);
+        ApplicationResource submittedApplication = applicationService.getById(applicationId);
+        CompetitionResource competition = competitionService.getById(submittedApplication.getCompetition());
+        addApplicationAndSectionsInternalWithOrgDetails(submittedApplication, competition, user, model, form, userApplicationRoles);
         return "application-submitted";
     }
 
@@ -281,7 +288,8 @@ public class ApplicationController {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
-        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), model, form);
+        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
+        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user, model, form, userApplicationRoles);
         return "application-track";
     }
     @ProfileExecution
@@ -380,12 +388,17 @@ public class ApplicationController {
         cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
     }
 
-    private void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application, final CompetitionResource competition, final Long userId, final Model model, final ApplicationForm form) {
-        addApplicationAndSectionsInternalWithOrgDetails(application, competition, userId, Optional.empty(), Optional.empty(), model, form);
+    private void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application, final CompetitionResource competition,
+                                                                 final UserResource user, final Model model, final ApplicationForm form,
+                                                                 List<ProcessRoleResource> userApplicationRoles) {
+        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user, Optional.empty(), Optional.empty(), model, form, userApplicationRoles);
     }
 
-    private void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application, final CompetitionResource competition, final Long userId, Optional<SectionResource> section, Optional<Long> currentQuestionId, final Model model, final ApplicationForm form) {
-        organisationDetailsModelPopulator.populateModel(model, application.getId());
-        applicationModelPopulator.addApplicationAndSections(application, competition, userId, section, currentQuestionId, model, form);
+    private void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application, final CompetitionResource competition,
+                                                                 final UserResource user, Optional<SectionResource> section, Optional<Long> currentQuestionId,
+                                                                 final Model model, final ApplicationForm form, List<ProcessRoleResource> userApplicationRoles) {
+
+        organisationDetailsModelPopulator.populateModel(model, application.getId(), userApplicationRoles);
+        applicationModelPopulator.addApplicationAndSections(application, competition, user, section, currentQuestionId, model, form, userApplicationRoles);
     }
 }

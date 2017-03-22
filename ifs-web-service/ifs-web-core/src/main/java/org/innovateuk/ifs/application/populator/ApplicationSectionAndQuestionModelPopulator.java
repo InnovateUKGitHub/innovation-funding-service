@@ -18,6 +18,7 @@ import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -58,9 +59,11 @@ public class ApplicationSectionAndQuestionModelPopulator {
     @Autowired
     private CategoryService categoryService;
 
-    public void addMappedSectionsDetails(Model model, ApplicationResource application, CompetitionResource competition,
+    public void addMappedSectionsDetails(Model model, CompetitionResource competition,
                                          Optional<SectionResource> currentSection,
-                                         Optional<OrganisationResource> userOrganisation) {
+                                         Optional<OrganisationResource> userOrganisation,
+                                         Map<Long, Set<Long>> completedSectionsByOrganisation) {
+
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(competition.getId());
         List<SectionResource> parentSections = sectionService.filterParentSections(allSections);
 
@@ -68,7 +71,10 @@ public class ApplicationSectionAndQuestionModelPopulator {
                 parentSections.stream().collect(Collectors.toMap(SectionResource::getId,
                         Function.identity()));
 
-        userOrganisation.ifPresent(org -> model.addAttribute("completedSections", sectionService.getCompleted(application.getId(), org.getId())));
+        userOrganisation.ifPresent(org -> {
+            Set<Long> completedSectionsForThisOrganisation = completedSectionsByOrganisation.get(userOrganisation);
+            model.addAttribute("completedSections", completedSectionsForThisOrganisation);
+        });
 
         List<QuestionResource> questions = questionService.findByCompetition(competition.getId());
 
@@ -94,7 +100,7 @@ public class ApplicationSectionAndQuestionModelPopulator {
         model.addAttribute("currentSection", currentSection.orElse(null));
         if (currentSection.isPresent()) {
             List<QuestionResource> questions = getQuestionsBySection(currentSection.get().getQuestions(), questionService.findByCompetition(currentSection.get().getCompetition()));
-            questions.sort((QuestionResource q1, QuestionResource q2) -> q1.getPriority().compareTo(q2.getPriority()));
+            questions.sort(Comparator.comparing(QuestionResource::getPriority));
             Map<Long, List<QuestionResource>> sectionQuestions = new HashMap<>();
             sectionQuestions.put(currentSection.get().getId(), questions);
             Map<Long, List<FormInputResource>> questionFormInputs = sectionQuestions.values().stream().flatMap(a -> a.stream()).collect(Collectors.toMap(q -> q.getId(), k -> formInputService.findApplicationInputsByQuestion(k.getId())));
@@ -122,7 +128,7 @@ public class ApplicationSectionAndQuestionModelPopulator {
     }
 
     public void addAssignableDetails(Model model, ApplicationResource application, OrganisationResource userOrganisation,
-                                     Long userId, Optional<SectionResource> currentSection, Optional<Long> currentQuestionId) {
+                                     UserResource user, Optional<SectionResource> currentSection, Optional<Long> currentQuestionId) {
 
         if (isApplicationInViewMode(model, application, userOrganisation)) {
             return;
@@ -133,7 +139,7 @@ public class ApplicationSectionAndQuestionModelPopulator {
             QuestionStatusResource questionAssignee = questionAssignees.get(currentQuestionId.get());
             model.addAttribute("questionAssignee", questionAssignee);
         }
-        List<QuestionStatusResource> notifications = questionService.getNotificationsForUser(questionAssignees.values(), userId);
+        List<QuestionStatusResource> notifications = questionService.getNotificationsForUser(questionAssignees.values(), user.getId());
         questionService.removeNotifications(notifications);
         List<ApplicationInviteResource> pendingAssignableUsers = pendingInvitations(application);
 
@@ -143,11 +149,11 @@ public class ApplicationSectionAndQuestionModelPopulator {
         model.addAttribute("notifications", notifications);
     }
 
-    public void addCompletedDetails(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
+    public void addCompletedDetails(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation, Map<Long, Set<Long>> completedSectionsByOrganisation) {
+
         Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
         model.addAttribute("markedAsComplete", markedAsComplete);
 
-        Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
         Set<Long> sectionsMarkedAsComplete = completedSectionsByOrganisation.get(userOrganisation.map(OrganisationResource::getId).orElse(-1L));
         if(null != sectionsMarkedAsComplete) {
             completedSectionsByOrganisation.forEach((key, values) -> sectionsMarkedAsComplete.retainAll(values));

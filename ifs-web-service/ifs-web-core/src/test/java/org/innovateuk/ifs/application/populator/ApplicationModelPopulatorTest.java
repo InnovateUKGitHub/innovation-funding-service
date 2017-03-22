@@ -106,7 +106,7 @@ public class ApplicationModelPopulatorTest {
         when(processRoleService.findProcessRolesByApplicationId(application.getId())).thenReturn(userApplicationRoles);
 
 
-        applicationModelPopulator.addApplicationAndSections(application, competition, userId, section, currentQuestionId, model, form);
+        applicationModelPopulator.addApplicationAndSections(application, competition, userId, section, currentQuestionId, model, form, userApplicationRoles);
 
         //Verify added attributes
         verify(model).addAttribute("currentApplication", application);

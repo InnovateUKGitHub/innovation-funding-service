@@ -100,7 +100,7 @@ public class ApplicationPrintPopulatorTest {
         //verify populators called
         verify(organisationDetailsModelPopulator).populateModel(model, application.getId(), userApplicationRoles);
         verify(applicationSectionAndQuestionModelPopulator).addQuestionsDetails(model, application, null);
-        verify(applicationModelPopulator).addUserDetails(model, application, user.getId());
+        verify(applicationModelPopulator).addUserDetails(model, application, user.getId(), userApplicationRoles);
         verify(applicationModelPopulator).addApplicationInputs(application, model);
         verify(applicationSectionAndQuestionModelPopulator).addMappedSectionsDetails(model, application, competition, Optional.empty(), userOrganisation);
         verify(applicationFinanceOverviewModelManager).addFinanceDetails(model, competition.getId(), applicationId, userOrganisation.map(OrganisationResource::getId));

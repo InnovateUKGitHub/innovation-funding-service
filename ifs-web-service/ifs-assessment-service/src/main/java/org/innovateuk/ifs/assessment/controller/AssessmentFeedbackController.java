@@ -3,6 +3,7 @@ package org.innovateuk.ifs.assessment.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.service.QuestionService;
@@ -20,9 +21,9 @@ import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputService;
 import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
-import org.apache.commons.lang3.tuple.Pair;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,12 +34,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import static java.lang.String.format;
+import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
 import static org.innovateuk.ifs.util.MapFunctions.toListOfPairs;
-import static java.lang.String.format;
-import static java.util.stream.Collectors.toMap;
 
 @Controller
 @RequestMapping("/{assessmentId}")
@@ -69,7 +70,7 @@ public class AssessmentFeedbackController {
     private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
 
     @Autowired
-    private MessageSource messageSource;
+    private ProcessRoleService processRoleService;
 
     @RequestMapping(value = "/question/{questionId}", method = RequestMethod.GET)
     public String getQuestion(Model model,
@@ -162,7 +163,9 @@ public class AssessmentFeedbackController {
         AssessmentNavigationViewModel navigationViewModel = assessmentFeedbackNavigationModelPopulator.populateModel(assessmentId, question.getId());
         model.addAttribute("model", viewModel);
         model.addAttribute("navigation", navigationViewModel);
-        organisationDetailsModelPopulator.populateModel(model, viewModel.getApplicationId());
+
+        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(viewModel.getApplicationId());
+        organisationDetailsModelPopulator.populateModel(model, viewModel.getApplicationId(), userApplicationRoles);
 
         return "assessment/application-details";
     }
