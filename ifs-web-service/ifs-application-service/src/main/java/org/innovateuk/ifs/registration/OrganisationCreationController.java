@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.registration;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.address.resource.AddressResource;
@@ -14,6 +15,7 @@ import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
+import org.innovateuk.ifs.registration.viewmodel.OrganisationAddressViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
@@ -34,7 +36,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -296,7 +297,7 @@ public class OrganisationCreationController {
 
         cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
         model.addAttribute(ORGANISATION_FORM, organisationForm);
-
+        model.addAttribute("model", new OrganisationAddressViewModel(organisationForm.getOrganisationType()));
 
         if (OrganisationTypeEnum.BUSINESS.getOrganisationTypeId().equals(organisationForm.getOrganisationType().getId())) {
             return TEMPLATE_PATH + "/" + CONFIRM_SELECTED_ORGANISATION;
@@ -335,6 +336,8 @@ public class OrganisationCreationController {
 
         cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
         model.addAttribute(ORGANISATION_FORM, organisationForm);
+        model.addAttribute("model", new OrganisationAddressViewModel(organisationForm.getOrganisationType()));
+
         if (OrganisationTypeEnum.BUSINESS.getOrganisationTypeId().equals(organisationForm.getOrganisationType().getId())) {
             return TEMPLATE_PATH + "/" + CONFIRM_SELECTED_ORGANISATION;
         } else {
@@ -358,6 +361,7 @@ public class OrganisationCreationController {
 
         cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
         model.addAttribute(ORGANISATION_FORM, organisationForm);
+        model.addAttribute("model", new OrganisationAddressViewModel(organisationForm.getOrganisationType()));
 
         if (OrganisationTypeEnum.BUSINESS.getOrganisationTypeId().equals(organisationForm.getOrganisationType().getId())) {
             return TEMPLATE_PATH + "/" + CONFIRM_SELECTED_ORGANISATION;
