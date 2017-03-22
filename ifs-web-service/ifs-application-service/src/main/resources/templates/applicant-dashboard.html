@@ -49,7 +49,10 @@
 
             <section class="in-progress" th:unless="${applicationsInProcess.isEmpty()}">
                 <div class="progress-list">
-                  <h2 class="heading-medium">Application in progress</h2>
+                  <h2 class="heading-medium">
+                      <th:block th:if="${#lists.size(applicationsInProcess) == 1}">Application in progress</th:block>
+                      <th:block th:unless="${#lists.size(applicationsInProcess) == 1}">Applications in progress</th:block>
+                  </h2>
                     <ul>
                         <li class="status-2-col" th:each="app : ${applicationsInProcess}" th:classappend="${applicationsAssigned?.contains(app.id) ? 'assigned-to-me' : '' }">
                             <th:block th:unless="${applicationStatuses.get(app.getId()).getName() == 'submitted'}">
