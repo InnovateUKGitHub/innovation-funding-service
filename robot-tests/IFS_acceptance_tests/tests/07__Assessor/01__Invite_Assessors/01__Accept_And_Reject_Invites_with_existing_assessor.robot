@@ -73,8 +73,9 @@ User can view the competition brief
     And the user should see the text in the page    Competition opens
     And the user should see the text in the page    Competition closes
     And the user should see the element    jQuery=.button:contains("Start new application")
-    The user closes the competition brief
-    And the user clicks the button/link    jQuery=.extra-margin a:contains("dashboard")
+    And The user closes the competition brief
+    [Teardown]
+    And the user clicks the button/link    link=Assessor dashboard
 
 Calculation of the Upcoming competitions and Invitations to assess should be correct
     [Documentation]    INFUND-7107
@@ -253,7 +254,8 @@ Close the competition in assessment
     The user clicks the button/link    jQuery=.button:contains("Close assessment")
 
 The user should get a competition brief window
-    Select Window   url=https://ifs.local-dev/competition/11/overview
+    Select Window   title=Competition Overview - Innovation Funding Service
 
 The user closes the competition brief
+    Close Window
     Select Window

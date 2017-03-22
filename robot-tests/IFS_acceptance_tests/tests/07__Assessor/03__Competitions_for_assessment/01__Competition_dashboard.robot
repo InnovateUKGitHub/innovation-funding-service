@@ -150,7 +150,7 @@ The order of the applications should be correct according to the status
     element should contain    css=.progress-list li:nth-child(6) .msg-progress    Accepted
 
 The user should get a competition brief window
-    Select Window   url=https://ifs.local-dev/competition/4/overview
+    Select Window   title=Competition Overview - Innovation Funding Service
 
 The user closes the competition brief
     Close Window
