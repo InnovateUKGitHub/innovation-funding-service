@@ -193,7 +193,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
         ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
         Map<String, UserResource> usersMap = setupUserResources();
-        InviteOrganisationResource inviteOrganisationResource = setupOrganisationInviteWithAnUnconfirmedOrganisation(applicationResource.getId(), usersMap);
+        InviteOrganisationResource inviteOrganisationResource = setupOrganisationInviteWithAnUnconfirmedOrganisation(usersMap);
         UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
 
         Long applicationInviteId1 = inviteOrganisationResource.getInviteResources().get(0).getId();
@@ -221,7 +221,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
 
         InOrder inOrder = inOrder(applicationService, inviteOrganisationRestService, userService, inviteRestService);
         inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
-        inOrder.verify(inviteOrganisationRestService).getByIdWithInvitesForApplication(inviteOrganisationResource.getId(), applicationResource.getId());
+        inOrder.verify(inviteOrganisationRestService).getById(inviteOrganisationResource.getId());
         inOrder.verify(applicationService).getById(applicationResource.getId());
         inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
         inOrder.verify(userService).findById(leadApplicant.getId());
@@ -274,7 +274,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
         ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
         Map<String, UserResource> usersMap = setupUserResources();
-        InviteOrganisationResource inviteOrganisationResource = setupOrganisationInviteWithAnUnconfirmedOrganisation(applicationResource.getId(), usersMap);
+        InviteOrganisationResource inviteOrganisationResource = setupOrganisationInviteWithAnUnconfirmedOrganisation(usersMap);
         UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
 
         ApplicationTeamUpdateForm expectedForm = new ApplicationTeamUpdateForm();
@@ -528,7 +528,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
         ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
         Map<String, UserResource> usersMap = setupUserResources();
-        InviteOrganisationResource inviteOrganisationResource = setupOrganisationInviteWithAnUnconfirmedOrganisation(applicationResource.getId(), usersMap);
+        InviteOrganisationResource inviteOrganisationResource = setupOrganisationInviteWithAnUnconfirmedOrganisation(usersMap);
         UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
 
         List<ApplicantInviteForm> applicants = singletonList(
@@ -556,7 +556,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
 
         InOrder inOrder = inOrder(applicationService, inviteOrganisationRestService, userService, inviteRestService);
         inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
-        inOrder.verify(inviteOrganisationRestService).getByIdWithInvitesForApplication(inviteOrganisationResource.getId(), applicationResource.getId());
+        inOrder.verify(inviteOrganisationRestService).getById(inviteOrganisationResource.getId());
         inOrder.verify(applicationService).getById(applicationResource.getId());
         inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
         inOrder.verify(userService).findById(leadApplicant.getId());
@@ -610,7 +610,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
         ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
         Map<String, UserResource> usersMap = setupUserResources();
-        InviteOrganisationResource inviteOrganisationResource = setupOrganisationInviteWithAnUnconfirmedOrganisation(applicationResource.getId(), usersMap);
+        InviteOrganisationResource inviteOrganisationResource = setupOrganisationInviteWithAnUnconfirmedOrganisation(usersMap);
         UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
 
         List<ApplicantInviteForm> applicants = singletonList(
@@ -636,7 +636,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
 
         InOrder inOrder = inOrder(applicationService, inviteOrganisationRestService, userService, inviteRestService);
         inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
-        inOrder.verify(inviteOrganisationRestService).getByIdWithInvitesForApplication(inviteOrganisationResource.getId(), applicationResource.getId());
+        inOrder.verify(inviteOrganisationRestService).getById(inviteOrganisationResource.getId());
         inOrder.verify(applicationService).getById(applicationResource.getId());
         inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
         inOrder.verify(userService).findById(leadApplicant.getId());
@@ -689,7 +689,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
         ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
         Map<String, UserResource> usersMap = setupUserResources();
-        InviteOrganisationResource inviteOrganisationResource = setupOrganisationInviteWithAnUnconfirmedOrganisation(applicationResource.getId(), usersMap);
+        InviteOrganisationResource inviteOrganisationResource = setupOrganisationInviteWithAnUnconfirmedOrganisation(usersMap);
         UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
         Long applicationInviteId = inviteOrganisationResource.getInviteResources().get(0).getId();
 
@@ -717,7 +717,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
 
         InOrder inOrder = inOrder(applicationService, inviteOrganisationRestService, userService, inviteRestService);
         inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
-        inOrder.verify(inviteOrganisationRestService).getByIdWithInvitesForApplication(inviteOrganisationResource.getId(), applicationResource.getId());
+        inOrder.verify(inviteOrganisationRestService).getById(inviteOrganisationResource.getId());
         inOrder.verify(applicationService).getById(applicationResource.getId());
         inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
         inOrder.verify(userService).findById(leadApplicant.getId());
@@ -785,7 +785,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
                         .build(1))
                 .build();
 
-        when(inviteOrganisationRestService.getByIdWithInvitesForApplication(inviteOrganisationResource.getId(), applicationId))
+        when(inviteOrganisationRestService.getById(inviteOrganisationResource.getId()))
                 .thenReturn(restSuccess(inviteOrganisationResource));
         when(inviteOrganisationRestService.getByOrganisationIdWithInvitesForApplication(organisation.getId(), applicationId))
                 .thenReturn(restSuccess(inviteOrganisationResource));
@@ -811,15 +811,14 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
                         .build(2))
                 .build();
 
-        when(inviteOrganisationRestService.getByIdWithInvitesForApplication(inviteOrganisationResource.getId(), applicationId))
+        when(inviteOrganisationRestService.getById(inviteOrganisationResource.getId()))
                 .thenReturn(restSuccess(inviteOrganisationResource));
         when(inviteOrganisationRestService.getByOrganisationIdWithInvitesForApplication(organisation.getId(), applicationId))
                 .thenReturn(restSuccess(inviteOrganisationResource));
         return inviteOrganisationResource;
     }
 
-    private InviteOrganisationResource setupOrganisationInviteWithAnUnconfirmedOrganisation(long applicationId,
-                                                                                            Map<String, UserResource> usersMap) {
+    private InviteOrganisationResource setupOrganisationInviteWithAnUnconfirmedOrganisation(Map<String, UserResource> usersMap) {
         UserResource user = usersMap.get("jessica.doe@ludlow.com");
 
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource()
@@ -833,8 +832,9 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
                         .build(2))
                 .build();
 
-        when(inviteOrganisationRestService.getByIdWithInvitesForApplication(inviteOrganisationResource.getId(), applicationId))
+        when(inviteOrganisationRestService.getById(inviteOrganisationResource.getId()))
                 .thenReturn(restSuccess(inviteOrganisationResource));
+
         return inviteOrganisationResource;
     }
 }

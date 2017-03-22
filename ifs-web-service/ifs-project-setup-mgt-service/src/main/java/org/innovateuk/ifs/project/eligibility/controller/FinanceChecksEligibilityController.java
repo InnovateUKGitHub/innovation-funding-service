@@ -149,7 +149,7 @@ public class FinanceChecksEligibilityController {
         OrganisationResource organisationResource = organisationService.getOrganisationById(organisation.getId());
 
         FileDetailsViewModel jesFileDetailsViewModel = null;
-        boolean isUsingJesFinances = financeUtil.isUsingJesFinances(organisationResource.getOrganisationTypeName());
+        boolean isUsingJesFinances = financeUtil.isUsingJesFinances(organisationResource.getOrganisationType());
         if (!isUsingJesFinances) {
             populateProjectFinanceDetails(competition, application, project, organisation.getId(), allSections, user, form, bindingResult, model);
         } else {
@@ -187,7 +187,7 @@ public class FinanceChecksEligibilityController {
                              @PathVariable(QUESTION_ID) final Long questionId,
                              HttpServletRequest request) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        String organisationType = organisationService.getOrganisationById(organisationId).getOrganisationTypeName();
+        Long organisationType = organisationService.getOrganisationById(organisationId).getOrganisationType();
 
         FinanceRowItem costItem = addCost(organisationType, organisationId, projectId, questionId);
         FinanceRowType costType = costItem.getCostType();
@@ -219,7 +219,7 @@ public class FinanceChecksEligibilityController {
         ProjectResource projectResource = projectService.getById(projectId);
         ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
         OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
-        String organisationType = organisationResource.getOrganisationTypeName();
+        Long organisationType = organisationResource.getOrganisationType();
 
         ValidationMessages saveApplicationErrors = saveProjectFinanceSection(applicationResource.getCompetition(), projectId, organisationType, organisationResource.getId(), request);
 
@@ -238,7 +238,7 @@ public class FinanceChecksEligibilityController {
 
     private ValidationMessages saveProjectFinanceSection(Long competitionId,
                                                          Long projectId,
-                                                         String organisationType,
+                                                         Long organisationType,
                                                          Long organisationId,
                                                          HttpServletRequest request) {
         ValidationMessages errors = new ValidationMessages();
@@ -266,7 +266,7 @@ public class FinanceChecksEligibilityController {
         return "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/eligibility";
     }
 
-    private FinanceRowItem addCost(String orgType, Long organisationId, Long projectId, Long questionId) {
+    private FinanceRowItem addCost(Long orgType, Long organisationId, Long projectId, Long questionId) {
         return financeHandler.getProjectFinanceFormHandler(orgType).addCostWithoutPersisting(projectId, organisationId, questionId);
     }
 
@@ -377,7 +377,7 @@ public class FinanceChecksEligibilityController {
 
     private String doViewEligibilityChanges(ProjectResource project, OrganisationResource organisation, Long userId, Model model) {
         ProjectFinanceChangesViewModel projectFinanceChangesViewModel = ((DefaultProjectFinanceModelManager)financeHandler
-                .getProjectFinanceModelManager(organisation.getOrganisationTypeName()))
+                .getProjectFinanceModelManager(organisation.getOrganisationType()))
                     .getProjectFinanceChangesViewModel(true, project, organisation, userId);
         model.addAttribute("model", projectFinanceChangesViewModel);
         return "project/financecheck/eligibility-changes";

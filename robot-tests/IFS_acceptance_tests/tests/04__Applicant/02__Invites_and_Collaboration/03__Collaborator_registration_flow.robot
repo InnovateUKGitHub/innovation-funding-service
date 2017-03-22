@@ -14,10 +14,7 @@ ${SELECT_ORGANISATION}    ${SERVER}/organisation/create/type/new-account-organis
 Lead applicant details should show in the invite page
     [Documentation]    INFUND-1005
     Given the user navigates to the page    ${INVITE_LINK}
-    When the user clicks the button/link    jQuery=.button:contains("Create")
-    Then the user should see the text in the page    Lead organisation: Empire Ltd
-    And the user should see the text in the page    Lead applicant: Steve Smith
-    And the user should see the element    link=${OPEN_COMPETITION_LINK}
+    When the user clicks the button/link    jQuery=.button:contains("Yes, accept invitation")
     And the user should see the text in the page    Worth Internet Systems
 
 User cannot continue if an organisation type is not selected
@@ -26,11 +23,8 @@ User cannot continue if an organisation type is not selected
     Given browser validations have been disabled
     When the user clicks the button/link    jQuery=.button:contains("Continue")
     Then the user should see the text in the page    Please select an organisation type.
-    Given the user selects the radio button    organisationType    2
+    Given the user selects the radio button    organisationType    3
     And the user clicks the button/link    jQuery=.button:contains("Continue")
-    Given browser validations have been disabled
-    And the user clicks the button/link    jQuery=.button:contains("Continue")
-    Then the user should see the text in the page    Please select an organisation type.
 
 User is able to select only one type
     [Documentation]    INFUND-1005
@@ -44,66 +38,34 @@ The type of organisation navigates to the correct page
     [Tags]
     When the user selects the radio button    organisationType    1
     And the user clicks the button/link    jQuery=.button:contains("Continue")
-    Then the user should see the text in the page    Find your organisation on Companies House
+    Then the user should see the text in the page    Enter your organisation name or registration number.
     When the user goes back to the previous page
     Given the user selects the radio button    organisationType    2
     And the user clicks the button/link    jQuery=.button:contains("Continue")
-    Then the user should see the text in the page    Please select your type of research organisation
+    Then the user should see the text in the page    This is the organisation that you work for, this will search all organisations available on Je-S.
     When the user goes back to the previous page
     Given the user selects the radio button    organisationType    3
     And the user clicks the button/link    jQuery=.button:contains("Continue")
-    Then the user should see the text in the page    Public Sector
-    And the user should see the text in the page    Create your account
+    Then the user should see the text in the page    Research and technology organisations (RTO's)
+    And the user should see the text in the page    Enter your organisation name or registration number.
     When the user goes back to the previous page
     Given the user selects the radio button    organisationType    4
     And the user clicks the button/link    jQuery=.button:contains("Continue")
-    Then the user should see the text in the page    Charity
-    And the user should see the text in the page    Create your account
+    Then the user should see the text in the page    Public sector organisation or charity
+    And the user should see the text in the page    Enter your organisation name or registration number.
     And the user goes back to the previous page
-
-The type of the sub organisation navigates to the correct page
-    [Documentation]    INFUND-1166
-    Given the user selects the radio button    organisationType    2
-    And the user clicks the button/link    jQuery=.button:contains("Continue")
-    When the user selects the radio button    organisationType    5
-    And the user clicks the button/link    jQuery=.button:contains("Continue")
-    Then the user should see the text in the page    Find your academic organisation
-    When the user goes back to the previous page
-    When the user selects the radio button    organisationType    6
-    And the user clicks the button/link    jQuery=.button:contains("Continue")
-    Then the user should see the text in the page    Non profit distributing Research & Technology Organisation (RTO)
-    When the user should see the text in the page    Postcode
-    When the user goes back to the previous page
-    When the user selects the radio button    organisationType    7
-    And the user clicks the button/link    jQuery=.button:contains("Continue")
-    Then the user should see the text in the page    Catapult
-    When the user should see the text in the page    Postcode
-    When the user goes back to the previous page
-    When the user selects the radio button    organisationType    8
-    And the user clicks the button/link    jQuery=.button:contains("Continue")
-    Then the user should see the text in the page    Public sector research establishment
-    When the user should see the text in the page    Postcode
-    When the user goes back to the previous page
-    When the user selects the radio button    organisationType    9
-    And the user clicks the button/link    jQuery=.button:contains("Continue")
-    Then the user should see the text in the page    Research council institute
-    When the user should see the text in the page    Postcode
-    When the user goes back to the previous page
 
 Catapult search (empty, invalid & valid inputs)
     [Documentation]    INFUND-1230
     [Tags]    HappyPath
     Given the user navigates to the page    ${INVITE_LINK}
-    When the user clicks the button/link    jQuery=.button:contains("Create")
-    And the user selects the radio button    organisationType    2
+    When the user clicks the button/link    jQuery=.button:contains("Yes, accept invitation")
+    And the user selects the radio button    organisationType    3
     And the user clicks the button/link    jQuery=.button:contains("Continue")
-    Then the user should see the text in the page    Please select your type of research organisation
-    And the user selects the radio button    organisationType    7
-    When the user clicks the button/link    jQuery=.button:contains("Continue")
-    And the user should see the text in the page    Catapult
-    When the user clicks the button/link    jQuery=.button:contains("Continue")
-    Then the user should see the text in the page    An organisation name is required
-    When the user enters text to a text field    name=organisationName    Digital Catapult
+    When the user clicks the button/link    jQuery=.button:contains("Search")
+    Then the user should see the text in the page    Please enter an organisation name to search.
+    When the user clicks the button/link    jQuery=.buttonlink:contains("Enter details manually")
+    And the user enters text to a text field    name=organisationName    Digital Catapult
     When the user clicks the button/link    jQuery=.button:contains("Find UK address")
     And the user should see the text in the page    Please enter a UK postcode
     When the user enters text to a text field    name=addressForm.postcodeInput    BS14NT
@@ -124,7 +86,7 @@ Catapult search (accept invitation flow)
 Catapult search (accept invitation flow with email step)
     [Documentation]    INFUND-1230
     [Tags]    Email    HappyPath
-    Given the user reads his email from the default mailbox and clicks the link  ${test_mailbox_one}+invite1@gmail.com  Please verify your email address  If you did not request an account with us
+    Given the user reads his email from the default mailbox and clicks the link  ${test_mailbox_one}+invite1@gmail.com  Please verify your email address    Once verified you can sign into your account
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
     And guest user log-in                   ${test_mailbox_one}+invite1@gmail.com  ${correct_password}
