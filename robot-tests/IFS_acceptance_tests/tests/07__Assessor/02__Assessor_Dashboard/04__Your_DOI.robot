@@ -17,7 +17,7 @@ Back to the dashboard link
     ...
     ...    INFUND-7060
     Given The user should see the element    jQuery=.message-alert.extra-margin-bottom a:contains("your declaration of interest")    #this checks the alert message on the top of the page
-    When the user clicks the button/link    jQuery=h2:contains("Your assessor agreement") + ul a:contains("your declaration of interest")
+    When the user clicks the button/link    jQuery=h2:contains("Your assessor details") + ul a:contains("your declaration of interest")
     And The user should see the text in the element    css=p:nth-child(4)    Not answered
     And The user should see the text in the element    css=p:nth-child(14)    Not answered
     And the user clicks the button/link    jQuery=a:contains("Assessor dashboard")
