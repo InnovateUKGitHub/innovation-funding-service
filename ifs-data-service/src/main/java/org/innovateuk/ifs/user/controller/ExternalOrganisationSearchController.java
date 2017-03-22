@@ -42,7 +42,7 @@ public class ExternalOrganisationSearchController {
         switch (organisationType){
             case BUSINESS:
                 return companyHouseService.searchOrganisations(organisationSearchText).toGetResponse();
-            case ACADEMIC:
+            case RESEARCH:
                 return organisationService.searchAcademic(organisationSearchText, SEARCH_ITEMS_MAX).toGetResponse();
             default:
 
@@ -58,7 +58,7 @@ public class ExternalOrganisationSearchController {
         switch (organisationType){
             case BUSINESS:
                 return companyHouseService.getOrganisationById(organisationSearchId).toGetResponse();
-            case ACADEMIC:
+            case RESEARCH:
                 return organisationService.getSearchOrganisation(Long.valueOf(organisationSearchId)).toGetResponse();
             default:
 

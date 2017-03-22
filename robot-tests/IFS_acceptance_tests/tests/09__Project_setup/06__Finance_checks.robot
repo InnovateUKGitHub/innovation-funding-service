@@ -278,7 +278,7 @@ Queries show in reverse chronological order
     When the user should see the element    jQuery=h2:nth-of-type(4):contains("this is a title")    #
     And the user should see the element    jQuery=h2:nth-of-type(3):contains("another query title")
 
-Non finance contact cannot view query
+Non finance contact can view query
     [Documentation]    INFUND-4843
     [Tags]
     Given log in as a different user    steve.smith@empire.com    ${short_password}

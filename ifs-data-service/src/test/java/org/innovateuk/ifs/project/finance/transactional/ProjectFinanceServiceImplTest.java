@@ -1572,7 +1572,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
             when(userRepositoryMock.findOne(loggedInUser.getId())).thenReturn(user);
 
             organisation1 = newOrganisation().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
-            organisation2 = newOrganisation().withOrganisationType(OrganisationTypeEnum.CATAPULT).build();
+            organisation2 = newOrganisation().withOrganisationType(OrganisationTypeEnum.RTO).build();
 
             // First cost category type and everything that goes with it.
             type1Cat1 = newCostCategory().withName(LABOUR.getName()).build();
