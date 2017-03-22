@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-PROJECT=$1
+PROJECT=$(oc project -q)
 shift 1
 ROBOT_COMMAND=$@
 HOST=prod.ifs-test-clusters.com
@@ -9,7 +9,7 @@ ROUTE_DOMAIN=apps.${HOST}
 REGISTRY=docker-registry-default.apps.prod.ifs-test-clusters.com
 INTERNAL_REGISTRY=172.30.80.28:5000
 
-echo "Deploying tests to the $PROJECT Openshift environment"
+echo "Deploying tests to the current oc project ($PROJECT)"
 
 function tailorToAppInstance() {
     rm -rf os-files-tmp
