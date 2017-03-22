@@ -47,7 +47,7 @@ Milestones for the In inform competition
 Release feedback
     [Documentation]    INFUND-8050
     [Tags]    Email    HappyPath
-    Given the user send out the mange funding notification
+    Given the user send out the manage funding notification
     When The user clicks the button/link    jQuery=button:contains("Release feedback")
     Then The user should not see the text in the page    Inform
     When The user clicks the button/link    jQuery=a:contains(Live)
@@ -138,7 +138,7 @@ the application details are correct
     the user should see the element    jQuery=p:contains("Duration")
     the user should see the element    jQuery=h3:contains("Total project cost")
 
-the user send out the mange funding notification
+the user send out the manage funding notification
     the user clicks the button/link    jQuery=button:contains("Manage funding notifications")
     the user selects the checkbox      select-all-2
     the user clicks the button/link    jQuery=button:contains("Write and send email")
