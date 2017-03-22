@@ -151,7 +151,6 @@ Status is displayed in the collapsible header area.
     float: right;
     font-weight: 300;
     font-size: 16px;
-    margin: 0;
     color: $grey-1;
     padding-left: 20px;
     padding-right: 0;
@@ -168,6 +167,7 @@ Status is displayed in the collapsible header area.
   }
 
     .section-complete {
+        margin-left: 11px;
         @extend %icon-tick;
     }
 
