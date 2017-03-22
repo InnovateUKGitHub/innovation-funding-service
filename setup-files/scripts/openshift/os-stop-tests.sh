@@ -1,9 +1,9 @@
 #!/bin/bash
 set -e
 
-PROJECT=$1
+PROJECT=$(oc project -q)
 
-echo "Stopping tests on the $PROJECT Openshift environment"
+echo "Stopping tests on the current oc project ($PROJECT)"
 
 function stopTests() {
     oc delete dc selenium-grid
