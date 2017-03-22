@@ -100,16 +100,16 @@ Summary:Questions should show the scores
     Then The user should see the text in the page    Total: 100/100
     And The user should see the text in the page    ${DEFAULT_ACADEMIC_GRANT_RATE_WITH_PERCENTAGE}
     And the table should show the correct scores
-    And the collapsible button should contain    jQuery=button:contains(1. Business opportunity)    Score: 10/10
-    And the collapsible button should contain    jQuery=button:contains(2. Potential market)    Score: 10/10
-    And the collapsible button should contain    jQuery=button:contains(3. Project exploitation)    Score: 10/10
-    And the collapsible button should contain    jQuery=button:contains(4. Economic benefit)    Score: 10/10
-    And the collapsible button should contain    jQuery=button:contains(5. Technical approach)    Score: 10/10
-    And the collapsible button should contain    jQuery=button:contains(6. Innovation)    Score: 10/10
-    And the collapsible button should contain    jQuery=button:contains(7. Risks)    Score: 10/10
-    And the collapsible button should contain    jQuery=button:contains(8. Project team)    Score: 10/10
-    And the collapsible button should contain    jQuery=button:contains(9. Funding)    Score: 10/10
-    And the collapsible button should contain    jQuery=button:contains(10. Adding value)    Score: 10/10
+    And the collapsible button should contain    jQuery=button:contains(1. Business opportunity)    Score 10/10
+    And the collapsible button should contain    jQuery=button:contains(2. Potential market)    Score 10/10
+    And the collapsible button should contain    jQuery=button:contains(3. Project exploitation)    Score 10/10
+    And the collapsible button should contain    jQuery=button:contains(4. Economic benefit)    Score 10/10
+    And the collapsible button should contain    jQuery=button:contains(5. Technical approach)    Score 10/10
+    And the collapsible button should contain    jQuery=button:contains(6. Innovation)    Score 10/10
+    And the collapsible button should contain    jQuery=button:contains(7. Risks)    Score 10/10
+    And the collapsible button should contain    jQuery=button:contains(8. Project team)    Score 10/10
+    And the collapsible button should contain    jQuery=button:contains(9. Funding)    Score 10/10
+    And the collapsible button should contain    jQuery=button:contains(10. Adding value)    Score 10/10
 
 Summary:Overall scores section
     [Documentation]    INFUND-4648

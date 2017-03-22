@@ -94,8 +94,8 @@ Scope: Status in the overview is updated
     And the user clicks the button/link    jQuery=label:contains(Yes)
     And The user enters text to a text field    css=.editor    Testing feedback field when "Yes" is selected.
     And the user clicks the button/link    jquery=button:contains("Save and return to assessment overview")
-    And the user should see the text in the page    In scope? Yes
-    And the user should see the element    css=.column-third > img    #green flag
+    And the user should see the text in the page    In scope
+    And the user should see the element    css=.task-status-complete
 
 Scope: Autosave
     [Documentation]    INFUND-1483
