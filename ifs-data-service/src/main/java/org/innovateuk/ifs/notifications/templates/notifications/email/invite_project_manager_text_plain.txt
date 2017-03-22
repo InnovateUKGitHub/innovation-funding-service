@@ -12,5 +12,5 @@ ${inviteUrl}
 
 Yours sincerely
 
-<@layout.senderPlainText />
+<@layout.innovateSenderPlainText />
 </@layout.defaultPlainText>

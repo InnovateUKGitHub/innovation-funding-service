@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationStatus;
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.category.domain.InnovationArea;
+import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -103,5 +104,9 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
 
     public ApplicationBuilder withNoInnovationAreaApplicable(Boolean... noInnovationAreaApplicable) {
         return withArray((noApplicable, application) -> application.setNoInnovationAreaApplicable(noApplicable), noInnovationAreaApplicable);
+    }
+
+    public ApplicationBuilder withResearchCategory(ResearchCategory... researchCategories) {
+        return withArray((researchCategory, application) -> application.setResearchCategory(researchCategory), researchCategories);
     }
 }

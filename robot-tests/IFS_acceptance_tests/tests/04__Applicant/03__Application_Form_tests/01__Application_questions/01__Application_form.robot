@@ -32,9 +32,14 @@ Application details: Previous submission
 
 Application details: Research category
     [Documentation]    INFUND-6823
+    Given The user clicks the button/link   jQuery=button:contains("Choose your research category")
     Then the user should see the element    jQuery=label:contains("Industrial research")
     And the user should see the element    jQuery=label:contains("Feasibility studies")
     And the user should see the element    jQuery=label:contains("Experimental development")
+    and the user clicks the button/link     jQuery=button:contains(Save)
+    Then the user should see an error       This field cannot be left blank
+    and the user clicks the button twice   jQuery=label[for^="researchCategoryChoice"]:contains("Feasibility studies")
+    and the user clicks the button/link     jQuery=button:contains(Save)
     And the finance summary page should show a warning
 
 Autosave in the form questions
