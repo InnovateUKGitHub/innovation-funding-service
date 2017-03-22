@@ -80,8 +80,8 @@ ${TECHNICAL_APPROACH_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATIO
 ${YOUR_FINANCES_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1}/form/section/157
 ${FINANCES_OVERVIEW_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1}/form/section/168
 ${ACCOUNT_CREATION_FORM_URL}    ${SERVER}/registration/register?organisationId=1
-${ELIGIBILITY_INFO_URL}    ${SERVER}/competition/1/info/eligibility
-${SPEED_BUMP_URL}    ${SERVER}/application/create-authenticated/1
+${ELIGIBILITY_INFO_URL}    ${SERVER}/competition/${OPEN_COMPETITION}/info/eligibility
+${SPEED_BUMP_URL}    ${SERVER}/application/create-authenticated/${OPEN_COMPETITION}
 ${EDIT_PROFILE_URL}    ${SERVER}/profile/edit
 ${APPLICATION_TEAM_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1}/team
 ${COMP_MANAGEMENT_APPLICATIONS_LIST}    ${SERVER}/management/competition/${OPEN_COMPETITION}/applications

@@ -174,7 +174,7 @@ the applicant edits the Subcontracting costs section
 the user should see the correct finances change
     Wait Until Element Contains Without Screenshots    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(1)    £${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS_PLUS_2000}
     Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(1)    £${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS_PLUS_2000}
-    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(6)    £${DEFAULT_SUBCONTRACTING_COSTS_WITH_COMMAS_PLUS_2000}
+    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(6)    £${DEFAULT_SUBCONTRACTING_COSTS_WITH_COMMAS_PLUS_https://ifs.local-dev/competition/1/info/eligibility00}
 
 the application list is sorted by
     [Arguments]    ${sorting_factor}
