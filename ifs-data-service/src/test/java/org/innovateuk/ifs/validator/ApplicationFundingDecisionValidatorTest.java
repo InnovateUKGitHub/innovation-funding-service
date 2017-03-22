@@ -50,7 +50,7 @@ public class ApplicationFundingDecisionValidatorTest {
 
         boolean result = validator.isValid(application);
 
-        assertFalse(result);
+        assertTrue(result);
     }
 
     @Test
