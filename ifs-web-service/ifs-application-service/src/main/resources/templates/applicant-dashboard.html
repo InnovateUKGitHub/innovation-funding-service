@@ -47,7 +47,7 @@
                 </div>
             </section>
 
-            <section class="in-progress">
+            <section class="in-progress" th:unless="${applicationsInProcess.isEmpty()}">
                 <div class="progress-list">
                   <h2 class="heading-medium">Application in progress</h2>
                     <ul>
