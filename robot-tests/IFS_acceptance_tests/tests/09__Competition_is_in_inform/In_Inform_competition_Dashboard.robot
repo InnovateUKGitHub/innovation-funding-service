@@ -12,6 +12,12 @@ Documentation     INFUND-7365 Inflight competition dashboards: Inform dashboard
 ...               INFUND-8169 Assessors scores viewed on Feedback Overview by applicant
 ...
 ...               INFUND-8172 Assessor's Overall feedback displayed on Feedback Overview
+...
+...               INFUND-7950 Updates to 'Inform' - Competition dashboard
+...
+...               INFUND-8005 Feedback per question for applicant
+...
+...               INFUND-8876 No back navigation on applicant feedback view
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
@@ -31,7 +37,7 @@ Competition Dashboard
     And the user should not see the element    link=View and update competition setup
 
 Milestones for the In inform competition
-    [Documentation]    INFUND-7561
+    [Documentation]    INFUND-7561    INFUND-7950
     [Tags]
     Then the user should see the element    jQuery=.button:contains("Manage funding notifications")
     And the user should see that the element is disabled    jQuery=button:contains("Release feedback")
@@ -79,7 +85,7 @@ Overall scores and application details are correct
     And the application details are correct
 
 User can see feedback to individual questions
-    [Documentation]
+    [Documentation]    INFUND-8005
     [Tags]
     Given the user clicks the button/link    jQuery=a:contains("6. Innovation")
     Then the user should see the element     jQuery=h3:contains("Your answer") ~ p:contains("fifth")
@@ -94,7 +100,7 @@ The finance details are shown
     And the user should not see the element    jQuery=.collapsible div[aria-hidden="true"]
 
 Selecting the dashboard link takes user back to the dashboard
-   [Documentation]
+   [Documentation]    INFUND-8876
    [Tags]
    Given the user clicks the button/link    jQuery=.link-back:contains("Dashboard")
    Then the user should see the element     jQuery=h1:contains("Your dashboard")
