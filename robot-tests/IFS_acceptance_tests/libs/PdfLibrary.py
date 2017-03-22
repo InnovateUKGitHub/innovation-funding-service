@@ -24,8 +24,9 @@ def convert_pdf_to_text(fname, pages=None):
     text = output.getvalue()
     output.close()
     unicode_text = unicode(text, "utf-8")
-    tidy_text = _tidy_up_text(unicode_text)
+    tidy_text = "".join(unicode_text.split())
     return tidy_text
+
 
 
 def pdf_should_contain(filename, user_text):
@@ -35,7 +36,3 @@ def pdf_should_contain(filename, user_text):
         return True  # could return anything though, really
     else:
         raise AssertionError("Text not found " + user_text)
-
-
-def _tidy_up_text(text):
-    return " ".join(text.split())
