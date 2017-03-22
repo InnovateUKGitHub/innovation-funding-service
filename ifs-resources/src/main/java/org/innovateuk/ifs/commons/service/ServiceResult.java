@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ErrorTemplate;
+import org.innovateuk.ifs.commons.rest.RestFailure;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.util.Either;
 
@@ -52,6 +53,11 @@ public class ServiceResult<T> extends BaseEitherBackedResult<T, ServiceFailure> 
 
     @Override
     public <R> ServiceResult<R> andOnFailure(Supplier<FailingOrSucceedingResult<R, ServiceFailure>> failureHandler) {
+        return (ServiceResult<R>) super.andOnFailure(failureHandler);
+    }
+
+    @Override
+    public <R> ServiceResult<R> andOnFailure(Consumer<ServiceFailure> failureHandler) {
         return (ServiceResult<R>) super.andOnFailure(failureHandler);
     }
 

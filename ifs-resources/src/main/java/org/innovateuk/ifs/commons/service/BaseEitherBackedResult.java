@@ -9,10 +9,7 @@ import org.innovateuk.ifs.util.Either;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.BinaryOperator;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
+import java.util.function.*;
 
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
@@ -114,24 +111,37 @@ public abstract class BaseEitherBackedResult<T, FailureType extends ErrorHolder>
         return flatMap(successHandler);
     }
 
-    @Override
-    public <R> FailingOrSucceedingResult<R, FailureType> andOnFailure(Supplier<FailingOrSucceedingResult<R, FailureType>>  failureHandler) {
+    
+    public <R> FailingOrSucceedingResult<R, FailureType> andOnFailure(Function<FailureType, FailingOrSucceedingResult<R, FailureType>> failureHandler) {
         if (isRight()) {
             return (BaseEitherBackedResult<R, FailureType>) this;
         }
 
         try {
-            return failureHandler.get();
+            return failureHandler.apply(this.getFailure());
         } catch (Exception e) {
             LOG.warn("Exception caught while processing failure function - throwing as a runtime exception", e);
             throw new RuntimeException(e);
         }
     }
 
+    @Override
+    public <R> FailingOrSucceedingResult<R, FailureType> andOnFailure(Supplier<FailingOrSucceedingResult<R, FailureType>> failureHandler) {
+        return andOnFailure(failure -> {
+            return failureHandler.get();
+        });
+    }
 
     public <R> FailingOrSucceedingResult<R, FailureType> andOnFailure(Runnable failureHandler) {
-        return (BaseEitherBackedResult<R, FailureType>)andOnFailure(() -> {
+        return (BaseEitherBackedResult<R, FailureType>)andOnFailure(failure -> {
             failureHandler.run();
+            return this;
+        });
+    }
+
+    public <R> FailingOrSucceedingResult<R, FailureType> andOnFailure(Consumer<FailureType> failureHandler) {
+        return (BaseEitherBackedResult<R, FailureType>)andOnFailure(failure -> {
+            failureHandler.accept(failure);
             return this;
         });
     }
