@@ -15,4 +15,4 @@ Resource          keywords/01__Edit_Form_Actions.robot
 Resource          keywords/02__Validation_error_keywords.robot
 Resource          keywords/03__Navigation_keywords.robot
 Resource          keywords/04__Upload_Download_keywords.robot
-Resource          ../tests/09__Project_setup/PS_Variables.robot
+Resource          ../tests/10__Project_setup/PS_Variables.robot
