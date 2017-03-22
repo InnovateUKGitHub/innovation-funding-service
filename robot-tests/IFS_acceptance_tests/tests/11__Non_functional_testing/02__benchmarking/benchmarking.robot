@@ -259,7 +259,7 @@ the guest logs in as lead applicant
     time until element is visible    link=My dashboard    Logging in
 
 the applicant views the overview page for the first application
-    click link    A novel solution to an old problem
+    click link    Climate science the history of Greenland's ice
     time until page contains    Application overview    Loading the overview page
 
 the applicant saves and returns to the overview

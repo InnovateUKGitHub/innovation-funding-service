@@ -123,8 +123,8 @@ the user fills in Labour
 
 the user fills in Overhead costs
     [Arguments]     ${Application_name}
-    Run Keyword If  '${Application_name}'=='A new innovative solution'    the user chooses Calculate overheads option
-    Run Keyword If  '${Application_name}'!= 'A new innovative solution'     the user chooses 20% overheads option
+    Run Keyword If  '${Application_name}'=='Evolution of the global phosphorus cycle'    the user chooses Calculate overheads option
+    Run Keyword If  '${Application_name}'!= 'Evolution of the global phosphorus cycle'     the user chooses 20% overheads option
 
 the user chooses Calculate overheads option
     When the user clicks the button/link    jQuery=button:contains("Overhead costs")

@@ -19,8 +19,8 @@ Resource          ../../FinanceSection_Commons.robot
 
 *** Variables ***
 ${OVERVIEW_PAGE_PROVIDING_SUSTAINABLE_CHILDCARE_APPLICATION}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_2}
-${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SECTION}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_2}/form/section/7  #Your finances page
-${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SUMMARY}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_2}/form/section/8
+${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SECTION}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_2}/form/section/157  #Your finances page
+${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SUMMARY}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_2}/form/section/168
 
 *** Test Cases ***
 Calculations for Lead applicant
@@ -49,10 +49,10 @@ Contribution to project and funding sought should not be negative number
     [Tags]    Pending
     # TODO Pending due to INFUND-8706
     [Setup]  log in as a different user    &{lead_applicant_credentials}
-    When the user navigates to Your-finances page       Providing sustainable childcare
+    When the user navigates to Your-finances page       Planetary science Pluto's telltale heart
     And the user fills in the project costs
-    And the user fills in the organisation information       Providing sustainable childcare
-    And the user checks your funding section for the project      Providing sustainable childcare
+    And the user fills in the organisation information       Planetary science Pluto's telltale heart
+    And the user checks your funding section for the project      Planetary science Pluto's telltale heart
     Then the contribution to project and funding sought should be 0 and not a negative number
 
 Your Finance includes Finance summary table for lead applicant
