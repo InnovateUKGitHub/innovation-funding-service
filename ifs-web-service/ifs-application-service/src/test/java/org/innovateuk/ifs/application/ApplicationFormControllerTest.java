@@ -548,7 +548,6 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                 post("/application/{applicationId}/form/question/{questionId}", application.getId(), questionId)
                         .param("mark_as_complete", questionId.toString())
                         .param("application.name", "")
-                        .param("application.researchCategoryId", "")
                         .param("application.resubmission", "")
                         .param("application.startDate", "")
                         .param("application.startDate.year", "")
@@ -559,7 +558,6 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         BindingResult bindingResult = (BindingResult)result.getModelAndView().getModel().get("org.springframework.validation.BindingResult.form");
 
         assertEquals("NotBlank", bindingResult.getFieldError("application.name").getCode());
-        assertEquals("NotNull", bindingResult.getFieldError("application.researchCategoryId").getCode());
         assertEquals("NotNull", bindingResult.getFieldError("application.durationInMonths").getCode());
         assertEquals("FutureLocalDate", bindingResult.getFieldError("application.startDate").getCode());
         assertEquals("NotNull", bindingResult.getFieldError("application.resubmission").getCode());
@@ -780,24 +778,6 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
 
         String jsonExpectedContent = "{\"success\":\"true\"}";
         assertEquals(jsonExpectedContent, content);
-    }
-
-    @Test
-    public void testSaveFormElementApplicationResearchCategory() throws Exception {
-        String value = "1";
-        String fieldName = "application.researchCategoryId";
-
-        mockMvc.perform(
-                post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
-                        .param("formInputId", "")
-                        .param("fieldName", fieldName)
-                        .param("value", value)
-        ).andExpect(status().isOk())
-                .andExpect(content().json("{\"success\":\"true\"}"));
-
-        InOrder inOrder = Mockito.inOrder(fundingLevelResetHandler, applicationService);
-        inOrder.verify(fundingLevelResetHandler, calls(1)).resetFundingLevelAndMarkAsIncompleteForAllCollaborators(anyLong(), anyLong());
-        inOrder.verify(applicationService, calls(1)).save(any(ApplicationResource.class));
     }
 
     @Test
