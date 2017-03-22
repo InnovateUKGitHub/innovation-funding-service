@@ -15,9 +15,6 @@ Lead applicant details should show in the invite page
     [Documentation]    INFUND-1005
     Given the user navigates to the page    ${INVITE_LINK}
     When the user clicks the button/link    jQuery=.button:contains("Yes, accept invitation")
-    Then the user should see the text in the page    Lead organisation: Empire Ltd
-    And the user should see the text in the page    Lead applicant: Steve Smith
-    And the user should see the element    link=${OPEN_COMPETITION_LINK}
     And the user should see the text in the page    Worth Internet Systems
 
 User cannot continue if an organisation type is not selected
