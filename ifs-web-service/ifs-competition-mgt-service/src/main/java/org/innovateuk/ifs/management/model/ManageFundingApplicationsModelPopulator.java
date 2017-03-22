@@ -29,7 +29,7 @@ public class ManageFundingApplicationsModelPopulator {
     @Autowired
     private CompetitionService competitionService;
 
-    public ManageFundingApplicationViewModel populate(ManageFundingApplicationsQueryForm queryForm, long competitionId, String queryString){
+    public ManageFundingApplicationViewModel populate(ManageFundingApplicationsQueryForm queryForm, long competitionId, String queryString) {
         ApplicationSummaryPageResource results = applicationSummaryService.getWithFundingDecisionApplications(competitionId,
                 queryForm.getSortField(), queryForm.getPage(),
                 DEFAULT_PAGE_SIZE, queryForm.getStringFilter(),
