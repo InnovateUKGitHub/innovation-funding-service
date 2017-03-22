@@ -387,7 +387,7 @@ Non lead partner nominates finance contact
     And the user should see the text in the page    Partner
     And the user clicks the button/link    link=Ludlow
     And the user selects the radio button    financeContact    financeContact1
-    And the user clicks the button/link    jQuery=.button:contains("Save")
+    And the user clicks the button/link    jQuery=.button:contains("Save finance contact")
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the matching status checkbox is updated differently    project-details-finance    2    Yes
     And the user should see the element    link=Ludlow
@@ -444,14 +444,14 @@ Inviting finance contact client side validations
     [Documentation]    INFUND-3483
     [Tags]
     When the user enters text to a text field    id=name-finance-contact    John Smith
-    And the user moves focus to the element    jQuery=.button:contains("Save")
+    And the user moves focus to the element    jQuery=.button:contains("Save finance contact")
     Then the user should not see the text in the page    Please enter a valid name.
     When the user enters text to a text field    id=email-finance-contact    test
-    And the user moves focus to the element    jQuery=.button:contains("Save")
+    And the user moves focus to the element    jQuery=.button:contains("Save finance contact")
     Then the user should not see the text in the page    Please enter a valid name.
     And the user should see the text in the page    Please enter a valid email address
     When the user enters text to a text field    id=email-finance-contact    test@example.com
-    And the user moves focus to the element    jQuery=.button:contains("Save")
+    And the user moves focus to the element    jQuery=.button:contains("Save finance contact")
     Then the user should not see the text in the page    Please enter an email address.
     And the user should not see the text in the page    Please enter a valid name.
     And the user should not see an error in the page
@@ -504,7 +504,7 @@ Lead partner selects a finance contact
     And the user should not see duplicated select options
     And the user should not see the text in the page    Pending
     And the user selects the radio button    financeContact    financeContact2
-    And the user clicks the button/link    jQuery=.button:contains("Save")
+    And the user clicks the button/link    jQuery=.button:contains("Save finance contact")
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the matching status checkbox is updated differently   project-details-finance    1    Yes
     And the user should see the text in the page    Elmo Chenault
@@ -542,7 +542,7 @@ Academic Partner nominates Finance contact
     And the user should see the text in the page   Partner
     And the user clicks the button/link            link=EGGS
     And the user selects the radio button          financeContact    financeContact1
-    And the user clicks the button/link            jQuery=.button:contains("Save")
+    And the user clicks the button/link            jQuery=.button:contains("Save finance contact")
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the matching status checkbox is updated differently    project-details-finance    2    Yes
     And the user should see the element     link=EGGS
@@ -702,7 +702,7 @@ Mark as complete button should be enabled
     Then Wait Until Element Is Enabled Without Screenshots    jQuery=.button:contains("Mark as complete")
 
 the user should not see duplicated select options
-    ${NO_OPTIONs}=    Get Matching Xpath Count    //div/div/label
+    ${NO_OPTIONs}=    Get Matching Xpath Count    //div/fieldset/label
     Should Be Equal As Integers    ${NO_OPTIONs}    5    # note that an extra option shows here due to the invited project manager appearing in the list for lead partner organisation members
 
 the user creates the account

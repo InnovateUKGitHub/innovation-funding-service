@@ -2,7 +2,6 @@ package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.application.UserApplicationRole;
-import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
@@ -10,9 +9,7 @@ import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
 import org.innovateuk.ifs.application.viewmodel.QuestionOrganisationDetailsViewModel;
 import org.innovateuk.ifs.application.viewmodel.QuestionViewModel;
-import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputService;
@@ -31,18 +28,16 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.ui.Model;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
-import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.mockito.Matchers.any;
@@ -94,14 +89,10 @@ public class QuestionModelPopulatorTest extends BaseUnitTestMocksTest {
     @Mock
     private CategoryService categoryService;
 
-    @Mock
-    private FinanceService financeService;
-
     private Long questionId;
     private Long applicationId;
     private Long competitionId;
     private Long organisationId;
-    private Long researchCategoryId;
 
     private CompetitionResource competition;
     private ApplicationResource application;
@@ -112,8 +103,6 @@ public class QuestionModelPopulatorTest extends BaseUnitTestMocksTest {
     private QuestionResource question;
     private List<FormInputResource> formInputs;
     private List<ProcessRoleResource> userApplicationRoles;
-    private List<ResearchCategoryResource> researchCategories;
-    private ApplicationFinanceResource applicationFinanceResource;
 
     @Before
     public void setUp() {
@@ -123,10 +112,8 @@ public class QuestionModelPopulatorTest extends BaseUnitTestMocksTest {
         applicationId = 23L;
         competitionId = 56L;
         organisationId = 3L;
-        researchCategoryId = 1L;
         question = newQuestionResource().withId(questionId).build();
-        researchCategories = newResearchCategoryResource().build(1);
-        application = newApplicationResource().withId(applicationId).withCompetition(competitionId).withResearchCategories(researchCategories.stream().collect(Collectors.toSet())).build();
+        application = newApplicationResource().withId(applicationId).withCompetition(competitionId).build();
         competition = newCompetitionResource().withId(competitionId).build();
         organisation = newOrganisationResource().withId(organisationId).build();
         user = newUserResource().build();
@@ -160,7 +147,6 @@ public class QuestionModelPopulatorTest extends BaseUnitTestMocksTest {
         assertEquals(organisation, viewModel.getApplication().getLeadOrganisation());
         assertEquals(user, viewModel.getLeadApplicant());
         assertEquals(Boolean.TRUE, viewModel.getUserIsLeadApplicant());
-        assertEquals(researchCategories, viewModel.getApplication().getResearchCategories());
     }
 
     private void setupSuccess(){
@@ -175,7 +161,5 @@ public class QuestionModelPopulatorTest extends BaseUnitTestMocksTest {
         when(userService.isLeadApplicant(user.getId(), application)).thenReturn(Boolean.TRUE);
         when(userService.getLeadApplicantProcessRoleOrNull(application)).thenReturn(newProcessRoleResource().withUser(user).build());
         when(userService.findById(user.getId())).thenReturn(user);
-        when(categoryService.getResearchCategories()).thenReturn(researchCategories);
-        when(financeService.getApplicationFinanceDetails(user.getId(), applicationId, organisationId)).thenReturn(applicationFinanceResource);
     }
 }
