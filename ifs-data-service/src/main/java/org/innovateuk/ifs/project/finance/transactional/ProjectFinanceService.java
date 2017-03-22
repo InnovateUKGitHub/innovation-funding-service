@@ -56,9 +56,7 @@ public interface ProjectFinanceService {
     @PreAuthorize("hasPermission(#projectId, 'COMPLETE_SPEND_PROFILE_REVIEW')")
     ServiceResult<Void> completeSpendProfilesReview(Long projectId);
 
-    @PreAuthorize("hasAuthority('project_finance')")
-    @SecuredBySpring(value = "READ", securedType = ProjectFinanceResource.class,
-            description = "Project Finance users can view financial overviews of Organisations on Projects")
+    @PreAuthorize("hasPermission(#projectId, 'READ_OVERVIEW')")
     ServiceResult<List<ProjectFinanceResource>> getProjectFinances(Long projectId);
 
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'VIEW_VIABILITY')")

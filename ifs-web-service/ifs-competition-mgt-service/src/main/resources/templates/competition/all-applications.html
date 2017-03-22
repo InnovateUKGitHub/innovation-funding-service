@@ -111,7 +111,7 @@
                             </td>
                             <td th:text="${row.projectTitle}">Machine learning in robots</td>
                             <td th:text="${row.lead}">PWC</td>
-                            <td th:text="${row.innovationArea}">HVM</td>
+                            <td th:text="${row.innovationArea} ?: 'Not listed'">HVM</td>
                             <td th:text="${row.status}">Submitted</td>
                             <td class="alignright" th:text="${row.percentageComplete}">100</td>
                         </tr>

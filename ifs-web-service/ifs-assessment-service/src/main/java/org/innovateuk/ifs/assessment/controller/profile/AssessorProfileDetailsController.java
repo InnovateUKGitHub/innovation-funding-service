@@ -97,9 +97,6 @@ public class AssessorProfileDetailsController {
             UserProfileResource profileDetails = userService.getUserProfile(loggedInUser.getId());
             form.setFirstName(profileDetails.getFirstName());
             form.setLastName(profileDetails.getLastName());
-            form.setGender(profileDetails.getGender());
-            form.setEthnicity(profileDetails.getEthnicity());
-            form.setDisability(profileDetails.getDisability());
             form.setPhoneNumber(profileDetails.getPhoneNumber());
             form.setAddressForm(profileDetails.getAddress());
         }

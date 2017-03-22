@@ -63,7 +63,7 @@ Invalid email format
     And the user should see an error    Please enter a valid email address.
 
 Email left blank
-    [Documentation]    -INFUND-885
+    [Documentation]    INFUND-885
     [Tags]
     Given the user navigates to the page    ${ACCOUNT_CREATION_FORM_URL}
     When the user enters text to a text field    id=firstName    John
@@ -94,7 +94,7 @@ User can not login with the invalid email
     Then the user cannot login with the invalid email    ${invalid_email_no_at}
 
 Valid account creation
-    [Documentation]    -INFUND-885
+    [Documentation]    INFUND-885
     [Tags]    HappyPath
     Given the user follows the flow to register their organisation
     When the user enters text to a text field    id=firstName    John
@@ -103,9 +103,6 @@ Valid account creation
     And the user enters text to a text field    id=email    ${valid_email}
     And the user enters text to a text field    id=password    ${correct_password}
     And the user enters text to a text field    id=retypedPassword    ${correct_password}
-    And the user selects the radio button    gender    gender2
-    And the user selects the radio button    ethnicity    ethnicity2
-    And the user selects the radio button    disability    disability2
     And the user submits their information
 
 Email duplication check

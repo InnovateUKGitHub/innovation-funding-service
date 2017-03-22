@@ -33,40 +33,26 @@ public class FinanceCheckSummaryResource {
     public FinanceCheckSummaryResource() {
     }
 
-    public FinanceCheckSummaryResource(Long projectId,
-                                       String projectName,
-                                       Long competitionId,
-                                       String competitionName,
-                                       LocalDate projectStartDate,
-                                       int durationInMonths,
-                                       BigDecimal totalProjectCost,
-                                       BigDecimal grantAppliedFor,
-                                       BigDecimal otherPublicSectorFunding,
-                                       BigDecimal totalPercentageGrant,
-                                       boolean spendProfilesGenerated,
-                                       List<FinanceCheckPartnerStatusResource> partnerStatusResources,
-                                       boolean financeChecksAllApproved,
-                                       String spendProfileGeneratedBy,
-                                       LocalDate spendProfileGeneratedDate,
-                                       BigDecimal researchParticipationPercentage,
-                                       BigDecimal competitionMaximumResearchPercentage) {
-        this.projectId = projectId;
-        this.projectName = projectName;
+    public FinanceCheckSummaryResource(FinanceCheckOverviewResource overviewResource, Long competitionId, String competitionName, boolean spendProfilesGenerated,
+                                       List<FinanceCheckPartnerStatusResource> partnerStatusResources, boolean financeChecksAllApproved, String spendProfileGeneratedBy,
+                                       LocalDate spendProfileGeneratedDate) {
+        this.projectId = overviewResource.getProjectId();
+        this.projectName = overviewResource.getProjectName();
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.partnerStatusResources = partnerStatusResources;
-        this.projectStartDate = projectStartDate;
-        this.durationInMonths = durationInMonths;
-        this.totalProjectCost = totalProjectCost;
-        this.grantAppliedFor = grantAppliedFor;
-        this.otherPublicSectorFunding = otherPublicSectorFunding;
-        this.totalPercentageGrant = totalPercentageGrant;
+        this.projectStartDate = overviewResource.getProjectStartDate();
+        this.durationInMonths = overviewResource.getDurationInMonths();
+        this.totalProjectCost = overviewResource.getTotalProjectCost();
+        this.grantAppliedFor = overviewResource.getGrantAppliedFor();
+        this.otherPublicSectorFunding = overviewResource.getOtherPublicSectorFunding();
+        this.totalPercentageGrant = overviewResource.getTotalPercentageGrant();
         this.spendProfilesGenerated = spendProfilesGenerated;
         this.financeChecksAllApproved = financeChecksAllApproved;
         this.spendProfileGeneratedBy = spendProfileGeneratedBy;
         this.spendProfileGeneratedDate = spendProfileGeneratedDate;
-        this.researchParticipationPercentage = researchParticipationPercentage;
-        this.competitionMaximumResearchPercentage = competitionMaximumResearchPercentage;
+        this.researchParticipationPercentage = overviewResource.getResearchParticipationPercentage();
+        this.competitionMaximumResearchPercentage = overviewResource.getCompetitionMaximumResearchPercentage();
     }
 
     public Long getProjectId() {
@@ -166,17 +152,25 @@ public class FinanceCheckSummaryResource {
     }
 
     public boolean isFinanceChecksAllApproved() {
-        return financeChecksAllApproved;
+        return financeChecksAllApproved && isViabilityAllApprovedOrNotRequired() && isEligibilityAllApprovedOrNotRequired();
     }
 
-    @JsonIgnore
-    public boolean isViabilityAllApprovedOrNotRequired() {
+    private boolean isViabilityAllApprovedOrNotRequired() {
 
         List<Viability> relevantStatuses = asList(
                 Viability.APPROVED,
                 Viability.NOT_APPLICABLE);
 
         return partnerStatusResources.stream().allMatch(org -> relevantStatuses.contains(org.getViability()));
+    }
+
+    private boolean isEligibilityAllApprovedOrNotRequired() {
+
+        List<Eligibility> relevantStatuses = asList(
+                Eligibility.APPROVED,
+                Eligibility.NOT_APPLICABLE);
+
+        return partnerStatusResources.stream().allMatch(org -> relevantStatuses.contains(org.getEligibility()));
     }
 
     public void setFinanceChecksAllApproved(boolean financeChecksAllApproved) {

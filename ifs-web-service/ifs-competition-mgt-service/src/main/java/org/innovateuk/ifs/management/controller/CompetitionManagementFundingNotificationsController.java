@@ -28,7 +28,7 @@ import static java.util.stream.Collectors.toList;
 
 @Controller
 @RequestMapping("/competition/{competitionId}")
-@PreAuthorize("hasAuthority('comp_admin')")
+@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public class CompetitionManagementFundingNotificationsController {
 
 
@@ -49,11 +49,9 @@ public class CompetitionManagementFundingNotificationsController {
     public String sendNotifications(Model model,
                                @PathVariable("competitionId") Long competitionId,
                                @RequestParam("application_ids") List<Long> applicationIds) {
+
         NotificationEmailsForm form = new NotificationEmailsForm();
-        form.setApplicationIds(applicationIds);
-
-        return getFundingDecisionPage(model, form, competitionId);
-
+        return getFundingDecisionPage(model, form, competitionId, applicationIds);
     }
 
     @PostMapping(value = "/funding/send")
@@ -63,17 +61,17 @@ public class CompetitionManagementFundingNotificationsController {
                                     BindingResult bindingResult,
                                     ValidationHandler validationHandler) {
 
-        NotificationResource notificationResource = new NotificationResource(form.getSubject(), form.getMessage(), form.getApplicationIds());
+        NotificationResource notificationResource = new NotificationResource(form.getSubject(), form.getMessage(), form.getFundingDecisions());
 
-        Supplier<String> failureView = () -> getFundingDecisionPage(model, form, competitionId);
+        Supplier<String> failureView = () -> getFundingDecisionPage(model, form, competitionId, form.getApplicationIds());
         Supplier<String> successView = () -> successfulEmailRedirect(competitionId);
 
         return validationHandler.performActionOrBindErrorsToField("", failureView, successView,
                 () -> applicationFundingService.sendFundingNotifications(notificationResource));
     }
 
-    private String getFundingDecisionPage(Model model, NotificationEmailsForm form, Long competitionId) {
-        model.addAttribute("model", sendNotificationsModelPopulator.populate(competitionId, form.getApplicationIds()));
+    private String getFundingDecisionPage(Model model, NotificationEmailsForm form, Long competitionId, List<Long> applicationIds) {
+        model.addAttribute("model", sendNotificationsModelPopulator.populate(competitionId, applicationIds));
         model.addAttribute("form", form);
         return FUNDING_DECISION_NOTIFICATION_VIEW;
     }

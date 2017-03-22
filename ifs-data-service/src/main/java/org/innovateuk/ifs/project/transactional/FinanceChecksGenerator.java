@@ -3,7 +3,6 @@ package org.innovateuk.ifs.project.transactional;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.*;
-import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.repository.*;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
@@ -12,6 +11,7 @@ import org.innovateuk.ifs.project.finance.domain.*;
 import org.innovateuk.ifs.project.finance.repository.FinanceCheckRepository;
 import org.innovateuk.ifs.project.finance.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
+import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +52,7 @@ public class FinanceChecksGenerator {
     private ApplicationFinanceRowRepository financeRowRepository;
 
     @Autowired
-    private OrganisationFinanceDelegate organisationFinanceDelegate;
+    private FinanceUtil financeUtil;
 
     @Autowired
     private ViabilityWorkflowHandler viabilityWorkflowHandler;
@@ -78,7 +78,7 @@ public class FinanceChecksGenerator {
 
         ProjectFinance projectFinance = new ProjectFinance(organisation, applicationFinanceForOrganisation.getOrganisationSize(), newProject);
 
-        if (organisationFinanceDelegate.isUsingJesFinances(organisation.getOrganisationType().getName())) {
+        if (financeUtil.isUsingJesFinances(organisation.getOrganisationType().getId())) {
 
             PartnerOrganisation partnerOrganisation = partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(newProject.getId(), organisation.getId());
             viabilityWorkflowHandler.organisationIsAcademic(partnerOrganisation, null);

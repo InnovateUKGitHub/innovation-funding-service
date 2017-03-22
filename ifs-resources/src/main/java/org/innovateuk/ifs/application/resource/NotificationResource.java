@@ -3,6 +3,9 @@ package org.innovateuk.ifs.application.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Map;
 import java.util.List;
 
 /**
@@ -12,12 +15,12 @@ import java.util.List;
 public class NotificationResource {
     private String subject;
     private String messageBody;
-    private List<Long> applicationIds;
+    private Map<Long, FundingDecision> fundingDecisions;
 
-    public NotificationResource(String subject, String messageBody, List<Long> applicationIds) {
+    public NotificationResource(String subject, String messageBody, Map<Long, FundingDecision> fundingDecisions) {
         this.subject = subject;
         this.messageBody = messageBody;
-        this.applicationIds = applicationIds;
+        this.fundingDecisions = fundingDecisions;
     }
 
     public NotificationResource()
@@ -41,12 +44,16 @@ public class NotificationResource {
         this.messageBody = messageBody;
     }
 
-    public List<Long> getApplicationIds() {
-        return applicationIds;
+    public List<Long> calculateApplicationIds() {
+        return getFundingDecisions() != null ? new ArrayList<>(getFundingDecisions().keySet()) : Collections.EMPTY_LIST;
+    }
+    
+    public Map<Long, FundingDecision> getFundingDecisions() {
+        return fundingDecisions;
     }
 
-    public void setApplicationIds(List<Long> applicationIds) {
-        this.applicationIds = applicationIds;
+    public void setFundingDecisions(Map<Long, FundingDecision> fundingDecisions) {
+        this.fundingDecisions = fundingDecisions;
     }
 
     @Override
@@ -60,7 +67,7 @@ public class NotificationResource {
         return new EqualsBuilder()
                 .append(subject, that.subject)
                 .append(messageBody, that.messageBody)
-                .append(applicationIds, that.applicationIds)
+                .append(fundingDecisions, that.fundingDecisions)
                 .isEquals();
     }
 
@@ -69,7 +76,7 @@ public class NotificationResource {
         return new HashCodeBuilder(17, 37)
                 .append(subject)
                 .append(messageBody)
-                .append(applicationIds)
+                .append(fundingDecisions)
                 .toHashCode();
     }
 

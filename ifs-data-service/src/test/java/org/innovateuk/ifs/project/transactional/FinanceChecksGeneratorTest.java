@@ -13,7 +13,6 @@ import org.innovateuk.ifs.project.finance.domain.CostGroup;
 import org.innovateuk.ifs.project.finance.domain.FinanceCheck;
 import org.innovateuk.ifs.project.finance.transactional.CostCategoryTypeStrategy;
 import org.innovateuk.ifs.user.domain.Organisation;
-import org.innovateuk.ifs.user.resource.OrganisationSize;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,6 +22,7 @@ import org.mockito.Mockito;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.QuestionBuilder.newQuestion;
@@ -31,6 +31,7 @@ import static org.innovateuk.ifs.finance.builder.ApplicationFinanceRowBuilder.ne
 import static org.innovateuk.ifs.finance.builder.FinanceRowMetaFieldBuilder.newFinanceRowMetaField;
 import static org.innovateuk.ifs.finance.builder.FinanceRowMetaValueBuilder.newFinanceRowMetaValue;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceRowBuilder.newProjectFinanceRow;
+import static org.innovateuk.ifs.finance.domain.builder.OrganisationSizeBuilder.newOrganisationSize;
 import static org.innovateuk.ifs.project.builder.CostBuilder.newCost;
 import static org.innovateuk.ifs.project.builder.CostCategoryBuilder.newCostCategory;
 import static org.innovateuk.ifs.project.builder.CostCategoryGroupBuilder.newCostCategoryGroup;
@@ -41,11 +42,8 @@ import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckBuilder.newFinanceCheck;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.util.CollectionFunctions.zip;
-import static java.util.Collections.singletonList;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceChecksGenerator> {
 
@@ -62,7 +60,6 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
     public void setUp() {
 
         organisation = newOrganisation().
-                withOrganisationSize(OrganisationSize.MEDIUM).
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
 
@@ -132,7 +129,7 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
     @Test
     public void testCreateFinanceChecksFiguresWhenOrganisationIsUsingJesFinances() {
 
-        when(organisationFinanceDelegateMock.isUsingJesFinances(organisation.getOrganisationType().getName())).thenReturn(true);
+        when(financeUtilMock.isUsingJesFinances(organisation.getOrganisationType().getId())).thenReturn(true);
         PartnerOrganisation partnerOrganisation = PartnerOrganisationBuilder.newPartnerOrganisation().build();
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(newProject.getId(), organisation.getId())).thenReturn(partnerOrganisation);
         when(viabilityWorkflowHandlerMock.organisationIsAcademic(partnerOrganisation, null)).thenReturn(true);
@@ -153,9 +150,9 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
     }
 
     private List<ProjectFinanceRow> setUpCreateFinanceChecksFiguresMocking() {
-
-        ApplicationFinance applicationFinance = newApplicationFinance().withOrganisationSize(organisation.getOrganisationSize()).build();
-        ProjectFinance newProjectFinance = new ProjectFinance(organisation, organisation.getOrganisationSize(), newProject);
+        OrganisationSize organisationSize = newOrganisationSize().build();
+        ApplicationFinance applicationFinance = newApplicationFinance().withOrganisationSize(organisationSize).build();
+        ProjectFinance newProjectFinance = new ProjectFinance(organisation, organisationSize, newProject);
         newProjectFinance.setId(999L);
         List<Question> financeQuestions = newQuestion().build(2);
 

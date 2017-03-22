@@ -32,51 +32,67 @@ public class ApplicationInviteResourceBuilder extends BaseBuilder<ApplicationInv
     }
 
     public ApplicationInviteResourceBuilder withId(Long... ids) {
-        return withArray((id, applicationInviteResource) -> setField("id", id, applicationInviteResource), ids);
+        return withArraySetFieldByReflection("id", ids);
     }
 
     public ApplicationInviteResourceBuilder withLeadApplicant(String... leadApplicants) {
-        return withArray((leadApplicant, applicationInviteResource) -> setField("leadApplicant", leadApplicant, applicationInviteResource), leadApplicants);
+        return withArraySetFieldByReflection("leadApplicant", leadApplicants);
     }
 
     public ApplicationInviteResourceBuilder withLeadApplicantEmail(String... leadApplicantEmails) {
-        return withArray((leadApplicantEmail, applicationInviteResource) -> setField("leadApplicantEmail", leadApplicantEmail, applicationInviteResource), leadApplicantEmails);
+        return withArraySetFieldByReflection("leadApplicantEmail", leadApplicantEmails);
     }
 
-    public ApplicationInviteResourceBuilder withLeadOrganisation(String... leadOrganisation) {
-        return withArraySetFieldByReflection("leadOrganisation", leadOrganisation);
+    public ApplicationInviteResourceBuilder withLeadOrganisation(String... leadOrganisations) {
+        return withArraySetFieldByReflection("leadOrganisation", leadOrganisations);
     }
 
     public ApplicationInviteResourceBuilder withEmail(String... emails) {
-        return withArray((email, applicationInviteResource) -> setField("email", email, applicationInviteResource), emails);
+        return withArraySetFieldByReflection("email", emails);
     }
 
     public ApplicationInviteResourceBuilder withName(String... names) {
-        return withArray((name, applicationInviteResource) -> setField("name", name, applicationInviteResource), names);
+        return withArraySetFieldByReflection("name", names);
     }
 
     public ApplicationInviteResourceBuilder withNameConfirmed(String... namesConfirmed) {
-        return withArray((nameConfirmed, applicationInviteResource) -> setField("nameConfirmed", nameConfirmed, applicationInviteResource), namesConfirmed);
+        return withArraySetFieldByReflection("nameConfirmed", namesConfirmed);
     }
 
     public ApplicationInviteResourceBuilder withApplication(Long... applications) {
-        return withArray((reason, applicationInviteResource) -> setField("application", reason, applicationInviteResource), applications);
+        return withArraySetFieldByReflection("application", applications);
     }
 
     public ApplicationInviteResourceBuilder withUsers(Long... users) {
-        return withArray((user, applicationInviteResource) -> setField("user", user, applicationInviteResource), users);
+        return withArraySetFieldByReflection("user", users);
     }
 
     public ApplicationInviteResourceBuilder withCompetitionId(Long... competitionIds) {
-        return withArray((competitionId, applicationInviteResource) -> setField("competitionId", competitionId, applicationInviteResource), competitionIds);
+        return withArraySetFieldByReflection("competitionId", competitionIds);
+    }
+
+    public ApplicationInviteResourceBuilder withCompetitionName(String... competitionNames) {
+        return withArraySetFieldByReflection("competitionName", competitionNames);
     }
 
     public ApplicationInviteResourceBuilder withStatus(InviteStatus... statuses) {
-        return withArray((status, applicationInviteResource) -> setField("status", status, applicationInviteResource), statuses);
+        return withArraySetFieldByReflection("status", statuses);
     }
 
     public ApplicationInviteResourceBuilder withHash(String... hashes) {
-        return withArray((hash, applicationInviteResource) -> setField("hash", hash, applicationInviteResource), hashes);
+        return withArraySetFieldByReflection("hash", hashes);
+    }
+
+    public ApplicationInviteResourceBuilder withInviteOrganisation(Long... inviteOrganisations) {
+        return withArraySetFieldByReflection("inviteOrganisation", inviteOrganisations);
+    }
+
+    public ApplicationInviteResourceBuilder withInviteOrganisationNameConfirmed(String... inviteOrganisationNameConfirmeds) {
+        return withArraySetFieldByReflection("inviteOrganisationNameConfirmed", inviteOrganisationNameConfirmeds);
+    }
+
+    public ApplicationInviteResourceBuilder withInviteOrganisationName(String... inviteOrganisationNames) {
+        return withArraySetFieldByReflection("inviteOrganisationName", inviteOrganisationNames);
     }
 
     @Override

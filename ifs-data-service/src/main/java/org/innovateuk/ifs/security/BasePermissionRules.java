@@ -18,12 +18,11 @@ import org.innovateuk.ifs.user.resource.UserResource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.checkProcessRole;
-import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
-import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
+import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 
 /**
  * Base class to contain useful shorthand methods for the Permission rule subclasses
@@ -97,5 +96,9 @@ public abstract class BasePermissionRules {
     protected boolean isProjectManager(long projectId, long userId) {
         List<ProjectUser> projectManagerUsers = projectUserRepository.findByProjectIdAndUserIdAndRole(projectId, userId, PROJECT_MANAGER);
         return projectManagerUsers != null && !projectManagerUsers.isEmpty();
+    }
+
+    protected boolean isFinanceContact(long projectId, long userId) {
+        return !projectUserRepository.findByProjectIdAndUserIdAndRole(projectId, userId, PROJECT_FINANCE_CONTACT).isEmpty();
     }
 }

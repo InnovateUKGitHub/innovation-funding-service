@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend Profile'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend profile'" />
 </head>
 <body th:with="context='project'" class="project spend-profile">
 <th:block th:insert="fragments/layout :: body-start" />
@@ -59,7 +59,7 @@
         <th:block
             th:if="${model.markedAsComplete and model.submitted and !model.approved and model.userPartOfThisOrganisation}">
             <div class="success-alert extra-margin-bottom">
-                <p>Your spend profile is now with us awaiting acceptance.</p>
+                <p>Your spend profile has been completed.</p>
             </div>
         </th:block>
         <th:block th:if="${model.approved and model.userPartOfThisOrganisation}">
@@ -78,13 +78,13 @@
         </dl>
 
         <h2 class="heading-medium"><th:block th:text="${model.organisationName}"/> - Spend profile</h2>
-        <p>Your project costs have been profiled equally across the time periods. Please edit to show your planned expenditure across the life of your project. Please note that costs cannot be moved across cost categories.</p>
+        <p>We have reviewed and approved your project costs. Each organisation should now edit their spend profile costs to reflect your proposed project costs.</p>
     </div>
 
     <th:block th:with="readonly=${form == null ? true : false}">
         <form method="post" autocomplete="off"
               th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit(projectId=${model.projectId},organisationId=${model.organisationId})}">
-            <div class="spend-profile-table" th:classappend="${model.research ? 'academic':''}">
+            <div class="spend-profile-table" th:classappend="${model.usingJesFinances ? 'academic':''}">
                 <div class="flex-table-before"></div>
                 <div class="flex-table-wrap">
                     <table>
@@ -97,8 +97,8 @@
                         </colgroup>
                         <thead>
                         <tr>
-                            <th scope="row" th:if="${model.research}" id="month" colspan="2">Je-S category</th>
-                            <th scope="row" th:unless="${model.research}" id="month">Month</th>
+                            <th scope="row" th:if="${model.usingJesFinances}" id="month" colspan="2">Je-S category</th>
+                            <th scope="row" th:unless="${model.usingJesFinances}" id="month">Month</th>
                             <th:block th:each="month,stats : ${model.table.getMonths()}">
                                 <th scope="col" th:text="${#temporals.format(month.localDate, 'MMM yyyy')}"
                                     th:id="${'month'+stats.index}"/>
@@ -109,7 +109,7 @@
                         </thead>
                         <tbody>
                         <!--/* non-academic */-->
-                        <th:block th:unless="${model.research}">
+                        <th:block th:unless="${model.usingJesFinances}">
                             <!--/* readonly */-->
                             <th:block th:if="${readonly}">
                                 <tr th:each="row : ${model.table.getMonthlyCostsPerCategoryMap()}"
@@ -175,7 +175,7 @@
                             </th:block>
                         </th:block>
                         <!--/* academic */-->
-                        <th:block th:if="${model.research}">
+                        <th:block th:if="${model.usingJesFinances}">
                             <th:block th:each="section : ${model.table.getCostCategoryGroupMap()}">
                                 <th:block th:each="rowList,iteration : ${section.value}">
                                     <!--/* readonly */-->
@@ -243,7 +243,7 @@
                         </tbody>
                         <tfoot>
                         <tr class="form-group-row">
-                            <th scope="row" th:attr="colspan=${model.research ? 2 : 1}">Total</th>
+                            <th scope="row" th:attr="colspan=${model.usingJesFinances ? 2 : 1}">Total</th>
                             <th:block th:each="monthTotal,status : ${model.totalForEachMonth}">
                                 <td th:text="${'&pound; '+#numbers.formatInteger(monthTotal,1,'COMMA')}"
                                     th:attr="data-calculation-fields=${'input[class*='+#strings.toLowerCase(#temporals.format(model.table.months[status.index].localDate,'MMM-yyyy'))+']'}"
@@ -310,7 +310,7 @@
                 <a class="button button-secondary extra-margin"
                    th:href="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit(projectId=${model.projectId},organisationId=${model.organisationId})}">Edit spend profile</a>
 
-                <p class="extra-margin">Before you submit to the lead partner, make sure you are satisfied with your spend profile. It should match the eligible project costs. The lead partner will send all costs to Innovate UK.</p>
+                <p class="extra-margin">Once you are satisfied with your spend profile please submit to the lead partner.</p>
                 <th:block th:unless="${#lists.size(model.table.validationMessages.errors) > 0}">
                 <a th:href="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/confirm(projectId=${model.projectId},organisationId=${model.organisationId})}"
                    class="button extra-margin" data-js-modal="modal-confirm-spend-profile-submit">Submit to lead partner</a>
@@ -325,7 +325,7 @@
                    th:href="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit(projectId=${model.projectId},organisationId=${model.organisationId})}">Edit spend profile</a>
 
                 <th:block th:if="${!model.markedAsComplete}">
-                    <p class="extra-margin">You can still edit this spend profile but you cannot submit until the section is marked as complete.</p>
+                    <p class="extra-margin">You need to mark this section as complete. You can then send completed spend profiles to Innovate UK.</p>
                     <form method="post"
                           th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete(projectId=${model.projectId},organisationId=${model.organisationId})}">
                         <button class="button" name="mark-as-complete" th:disabled="${#lists.size(model.table.validationMessages.errors) > 0}">Mark as complete</button>

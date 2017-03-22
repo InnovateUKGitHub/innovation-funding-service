@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.security;
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
+import org.innovateuk.ifs.project.finance.resource.FinanceCheckOverviewResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
 import org.innovateuk.ifs.project.finance.transactional.FinanceCheckService;
@@ -23,6 +24,7 @@ import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStat
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.UserRoleType.FINANCE_CONTACT;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.verify;
@@ -44,16 +46,6 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
     }
 
     @Test
-    public void testSaveFinanceCheck() {
-        assertRolesCanPerform(() -> classUnderTest.save(null), PROJECT_FINANCE);
-    }
-
-    @Test
-    public void testApproveFinanceCheck() {
-        assertRolesCanPerform(() -> classUnderTest.approve(1L, 2L), PROJECT_FINANCE);
-    }
-
-    @Test
     public void testGetFinanceCheckApprovalStatus(){
         assertRolesCanPerform(() -> classUnderTest.getFinanceCheckApprovalStatus(1L, 2L), PROJECT_FINANCE);
     }
@@ -61,6 +53,17 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
     @Test
     public void testGetFinanceCheckSummary(){
         assertRolesCanPerform(() -> classUnderTest.getFinanceCheckSummary(1L), PROJECT_FINANCE);
+    }
+
+    @Test
+    public void testGetFinanceCheckOverview() {
+        assertAccessDenied(
+                () -> classUnderTest.getFinanceCheckOverview(1L),
+                () -> {
+                    verify(projectFinancePermissionRules).partnersCanSeeTheProjectFinanceOverviewsForTheirProject(isA(Long.class), isA(UserResource.class));
+                    verify(projectFinancePermissionRules).internalUsersCanSeeTheProjectFinanceOverviewsForAllProjects(isA(Long.class), isA(UserResource.class));
+                }
+        );
     }
 
     @Test
@@ -105,20 +108,15 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
         }
 
         @Override
-        public ServiceResult<Void> save(FinanceCheckResource toUpdate) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> approve(Long projectId, Long organisationId) {
-            return null;
-        }
-
-        @Override
         public ServiceResult<FinanceCheckProcessResource> getFinanceCheckApprovalStatus(Long projectId, Long organisationId) { return null; }
 
         @Override
         public ServiceResult<FinanceCheckSummaryResource> getFinanceCheckSummary(Long projectId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<FinanceCheckOverviewResource> getFinanceCheckOverview(Long projectId) {
             return null;
         }
 

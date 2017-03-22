@@ -1,25 +1,29 @@
 package org.innovateuk.ifs.project.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.project.domain.Project;
+import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 
-import java.util.Collections;
+import java.util.List;
 
+import static java.util.Collections.emptyList;
 import static junit.framework.TestCase.assertFalse;
-import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
-import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
+import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -180,6 +184,51 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
 
         assertFalse(rules.leadPartnerCanViewAnySpendProfileData(projectOrganisationCompositeId, user));
     }
+
+    @Test
+    public void testInternalUserCanViewFinanceChecks() {
+        Long projectId = 1L;
+        allInternalUsers.forEach(user -> {
+                assertTrue(rules.internalUsersCanSeeTheProjectFinanceOverviewsForAllProjects(projectId, user));
+        });
+    }
+
+    @Test
+    public void testProjectUsersCanViewFinanceChecks() throws Exception {
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setupUserAsPartner(project, user);
+
+        assertTrue(rules.partnersCanSeeTheProjectFinanceOverviewsForTheirProject(project.getId(), user));
+    }
+
+    @Test
+    public void testProjectFinanceContactCanViewFinanceChecks() throws Exception {
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setupFinanceContactExpectations(project, user, true);
+        List<RoleResource> financeContact = newRoleResource().withType(UserRoleType.FINANCE_CONTACT).build(1);
+        financeContact.add(newRoleResource().withType(UserRoleType.PARTNER).build());
+        user.setRoles(financeContact);
+
+        assertTrue(rules.partnersCanSeeTheProjectFinanceOverviewsForTheirProject(project.getId(), user));
+    }
+
+
+    protected void setupFinanceContactExpectations(ProjectResource project, UserResource user, boolean userIsPartner) {
+        Role partnerRole = newRole().build();
+        List<ProjectUser> partnerProjectUser = newProjectUser().build(1);
+
+        when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
+        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_PARTNER)).thenReturn(userIsPartner ? partnerProjectUser : emptyList());
+
+        when(roleRepositoryMock.findOneByName(PROJECT_FINANCE_CONTACT.getName())).thenReturn(partnerRole);
+        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_FINANCE_CONTACT)).thenReturn(userIsPartner ? partnerProjectUser : emptyList());
+
+    }
+
 
     @Override
     protected ProjectFinancePermissionRules supplyPermissionRulesUnderTest() {
