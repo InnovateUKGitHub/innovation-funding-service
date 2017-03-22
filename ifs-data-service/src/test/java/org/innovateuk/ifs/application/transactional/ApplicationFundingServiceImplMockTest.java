@@ -20,6 +20,7 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.util.MapFunctions;
+import org.innovateuk.ifs.validator.ApplicationFundingDecisionValidator;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -61,6 +62,9 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
 
     @Mock
     private FundingDecisionMapper fundingDecisionMapper;
+
+    @Mock
+    private ApplicationFundingDecisionValidator applicationFundingDecisionValidator;
     
     private ApplicationStatus approvedStatus;
     private ApplicationStatus rejectedStatus;
@@ -230,6 +234,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     	Application application1 = newApplication().withId(1L).withCompetition(competition).withFundingDecision(FundingDecisionStatus.FUNDED).withApplicationStatus(openStatus).build();
      	Application application2 = newApplication().withId(2L).withCompetition(competition).withFundingDecision(FundingDecisionStatus.UNFUNDED).withApplicationStatus(openStatus).build();
     	when(applicationRepositoryMock.findByCompetitionId(competition.getId())).thenReturn(asList(application1, application2));
+        when(applicationFundingDecisionValidator.isValid(any())).thenReturn(true);
 
     	Map<Long, FundingDecision> decision = asMap(1L, UNDECIDED);
     	
@@ -251,6 +256,8 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
         Long competitionId = competition.getId();
         Application application1 = newApplication().withId(applicationId).withCompetition(competition).withFundingDecision(FundingDecisionStatus.FUNDED).withApplicationStatus(openStatus).build();
         when(applicationRepositoryMock.findByCompetitionId(competitionId)).thenReturn(asList(application1));
+        when(applicationFundingDecisionValidator.isValid(any())).thenReturn(true);
+
 
         Map<Long, FundingDecision> applicationDecisions = asMap(applicationId, UNDECIDED);
 
@@ -267,6 +274,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
         Long competitionId = competition.getId();
         Application application1 = newApplication().withId(applicationId).withCompetition(competition).withFundingDecision(FundingDecisionStatus.FUNDED).withApplicationStatus(openStatus).build();
         when(applicationRepositoryMock.findByCompetitionId(competitionId)).thenReturn(asList(application1));
+        when(applicationFundingDecisionValidator.isValid(any())).thenReturn(true);
 
         Map<Long, FundingDecision> applicationDecisions = asMap(applicationId, FUNDED);
 
