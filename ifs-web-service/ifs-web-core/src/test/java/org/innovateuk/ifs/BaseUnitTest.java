@@ -558,15 +558,15 @@ public class BaseUnitTest {
 
         List<ApplicationResource> applicationResources = asList(
                 newApplicationResource().with(id(1L)).with(name("Rovel Additive Manufacturing Process")).withStartDate(LocalDate.now().plusMonths(3))
-                        .withApplicationStatus(ApplicationStatusConstants.CREATED).withResearchCategories(newResearchCategoryResource().buildSet(1)).build(),
+                        .withApplicationStatus(ApplicationStatusConstants.CREATED).withResearchCategory(newResearchCategoryResource().build()).build(),
                 newApplicationResource().with(id(2L)).with(name("Providing sustainable childcare")).withStartDate(LocalDate.now().plusMonths(4))
-                        .withApplicationStatus(ApplicationStatusConstants.SUBMITTED).withResearchCategories(newResearchCategoryResource().buildSet(1)).build(),
+                        .withApplicationStatus(ApplicationStatusConstants.SUBMITTED).withResearchCategory(newResearchCategoryResource().build()).build(),
                 newApplicationResource().with(id(3L)).with(name("Mobile Phone Data for Logistics Analytics")).withStartDate(LocalDate.now().plusMonths(5))
-                        .withApplicationStatus(ApplicationStatusConstants.APPROVED).withResearchCategories(newResearchCategoryResource().buildSet(1)).build(),
+                        .withApplicationStatus(ApplicationStatusConstants.APPROVED).withResearchCategory(newResearchCategoryResource().build()).build(),
                 newApplicationResource().with(id(4L)).with(name("Using natural gas to heat homes")).withStartDate(LocalDate.now().plusMonths(6))
-                        .withApplicationStatus(ApplicationStatusConstants.REJECTED).withResearchCategories(newResearchCategoryResource().buildSet(1)).build(),
+                        .withApplicationStatus(ApplicationStatusConstants.REJECTED).withResearchCategory(newResearchCategoryResource().build()).build(),
                 newApplicationResource().with(id(5L)).with(name("Rovel Additive Manufacturing Process Ltd")).withStartDate(LocalDate.now().plusMonths(3))
-                        .withApplicationStatus(ApplicationStatusConstants.CREATED).withResearchCategories(newResearchCategoryResource().buildSet(1)).build()
+                        .withApplicationStatus(ApplicationStatusConstants.CREATED).withResearchCategory(newResearchCategoryResource().build()).build()
         );
 
         Map<Long, ApplicationResource> idsToApplicationResources = applicationResources.stream().collect(toMap(a -> a.getId(), a -> a));

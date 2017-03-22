@@ -11,12 +11,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrganisationTest {
-    Organisation organisation;
+    private Organisation organisation;
 
-    Long id;
-    String name;
-    List<ProcessRole> processRoles;
-    OrganisationType organisationType;
+    private Long id;
+
+    private String name;
+
+    private List<ProcessRole> processRoles;
+
+    private OrganisationType organisationType;
 
     @Before
     public void setUp() throws Exception {
@@ -24,7 +27,7 @@ public class OrganisationTest {
         name = "test organisation";
         processRoles = new ArrayList<>();
         organisation = new Organisation(id, name);
-        organisationType = new OrganisationType("Business", null);
+        organisationType = new OrganisationType("Business", "Description of the current organisationtype", null);
         organisation.setOrganisationType(organisationType);
     }
 

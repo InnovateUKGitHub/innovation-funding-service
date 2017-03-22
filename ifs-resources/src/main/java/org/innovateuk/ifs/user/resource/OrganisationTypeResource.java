@@ -3,6 +3,7 @@ package org.innovateuk.ifs.user.resource;
 public class OrganisationTypeResource {
     private Long id;
     private String name;
+    private String description;
     private Long parentOrganisationType;
 
     public OrganisationTypeResource(Long id, String name, Long parentOrganisationType) {
@@ -21,6 +22,14 @@ public class OrganisationTypeResource {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getName() {

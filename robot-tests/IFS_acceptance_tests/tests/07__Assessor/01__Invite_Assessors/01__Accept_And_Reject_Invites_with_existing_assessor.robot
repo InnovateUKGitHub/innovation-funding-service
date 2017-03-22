@@ -72,9 +72,7 @@ User can view the competition brief
     And the user should see the text in the page    Competition opens
     And the user should see the text in the page    Competition closes
     And the user should see the element    jQuery=.button:contains("Start new application")
-    Then the user goes back to the previous page
-    And the user clicks the button/link    link=Assessor dashboard
-    [Teardown]
+    And the user clicks the button/link    jQuery=.extra-margin a:contains("dashboard")
 
 Calculation of the Upcoming competitions and Invitations to assess should be correct
     [Documentation]    INFUND-7107
