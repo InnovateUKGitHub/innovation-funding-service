@@ -311,13 +311,13 @@ Finance contact can view the project finance user's uploads
     And the user goes back to the previous page
     When the user clicks the button/link    jQuery=a:contains("${valid_pdf}"):nth-of-type(2)
     Then the user should not see an error in the page
-    And the user goes back to the previous page
+    And the user goes back to the previous page ignoring form submission
 
 Queries show in reverse chronological order for finance contact
     [Documentation]    INFUND-4843
     [Tags]
     When the user should see the element    jQuery=#content h2:nth-of-type(3):contains("this is a title")
-    Then the user should see the element    jQuery=#content h2:nth-of-type(2):contains("another query title")
+    And the user should see the element    jQuery=#content h2:nth-of-type(2):contains("another query title")
 
 Large pdf uploads not allowed for query response
     [Documentation]    INFUND-4843
