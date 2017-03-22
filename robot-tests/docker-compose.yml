@@ -14,7 +14,7 @@ services:
         aliases:
           - hub
   chrome:
-    image: selenium/node-chrome-debug:3.0.1-dysprosium
+    image: davidrums/node-chrome-debug-proxy:3.0.1-dysprosium
     environment:
       - NODE_MAX_SESSION=20
       - NODE_MAX_INSTANCES=20
@@ -24,16 +24,28 @@ services:
       - DBUS_SESSION_BUS_ADDRESS=/dev/null
       - no_proxy=localhost
       - HUB_ENV_no_proxy=localhost
+      - PROXY_SERVER=zap:9000
     volumes:
       - /dev/shm:/dev/shm
     ports:
       - '5900'
     links:
       - "hub:hub"
-    external_links:
-      - innovationfundingservice_shib_1:ifs-local-dev
+      - "zap:zap"
+      - "zap:ifs.local-dev"
     depends_on:
       - hub
+    networks:
+      - selenium-network
+      - innovationfundingservice_ifs
+
+  zap:
+    image: owasp/zap2docker-stable
+    ports:
+      - '9000:9000'
+    command: zap.sh -daemon -config api.disablekey=true -port 9000 -host 0.0.0.0
+    external_links:
+      - innovationfundingservice_shib_1:ifs.local-dev
     networks:
       - selenium-network
       - innovationfundingservice_ifs

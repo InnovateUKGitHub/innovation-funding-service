@@ -241,6 +241,10 @@ function clearOldReports() {
   mkdir target
 }
 
+function getZAPReport() {
+    wget -qO - ifs.local-dev:9000/OTHER/core/other/htmlreport/ > target/${targetDir}/ZAPReport.html
+}
+
 # ====================================
 # The actual start point of our script
 # ====================================
@@ -395,6 +399,8 @@ else
     runTests
 fi
 
+getZAPReport
+
 if [[ ${stopGrid} -eq 1 ]]
 then
     stopSeleniumGrid
@@ -403,8 +409,10 @@ fi
 if [[ $(which google-chrome) ]]
 then
     google-chrome target/${targetDir}/log.html &
+    google-chrome target/${targetDir}/ZAPReport.html
 else
     wd=$(pwd)
-    logs="target/${targetDir}/log.html"
-    open "file://${wd}/${logs}"
+    logs="target/${targetDir}"
+    open "file://${wd}/${logs}/log.html"
+    open "file://${wd}/${logs}/ZAPReport.html"
 fi
