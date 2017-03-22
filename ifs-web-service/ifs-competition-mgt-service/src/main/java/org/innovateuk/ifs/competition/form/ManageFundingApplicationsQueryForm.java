@@ -1,21 +1,43 @@
 package org.innovateuk.ifs.competition.form;
 
+import org.innovateuk.ifs.application.resource.FundingDecision;
+
+import java.util.Optional;
+
 public class ManageFundingApplicationsQueryForm {
 
     private int page = 0;
-    private String filter = "";
+    private String stringFilter = "";
+    private Optional<Boolean> sendFilter = Optional.empty();
+    private Optional<FundingDecision> fundingFilter = Optional.empty();
     private String sortField = "id";
 
-    public String getFilter() {
-        return filter;
+    public String getStringFilter() {
+        return stringFilter;
     }
 
-    public void setFilter(String filter) {
-        this.filter = filter;
+    public void setStringFilter(String stringFilter) {
+        this.stringFilter = stringFilter;
     }
 
     public String getSortField() {
         return sortField;
+    }
+
+    public Optional<Boolean> getSendFilter() {
+        return sendFilter;
+    }
+
+    public void setSendFilter(Optional<Boolean> sendFilter) {
+        this.sendFilter = sendFilter;
+    }
+
+    public Optional<FundingDecision> getFundingFilter() {
+        return fundingFilter;
+    }
+
+    public void setFundingFilter(Optional<FundingDecision> fundingFilter) {
+        this.fundingFilter = fundingFilter;
     }
 
     public void setSortField(String sortField) {

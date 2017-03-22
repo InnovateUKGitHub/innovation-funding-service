@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -15,11 +16,13 @@ import java.util.List;
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
 public interface ApplicationStatisticsRepository extends PagingAndSortingRepository<ApplicationStatistics, Long> {
-    List<ApplicationStatistics> findByCompetition(Long competitionId);
+    List<ApplicationStatistics> findByCompetitionAndApplicationStatusIdIn(long competitionId, Collection<Long> applicationStatusIds);
 
     @Query("SELECT a FROM ApplicationStatistics a WHERE a.competition = :compId " +
+            "AND (a.applicationStatus.id IN :status) " +
             "AND (str(a.id) LIKE CONCAT('%', :filter, '%'))")
-    Page<ApplicationStatistics> findByCompetition(@Param("compId") long competitionId,
-                                                  @Param("filter") String filter,
-                                                  Pageable pageable);
+    Page<ApplicationStatistics> findByCompetitionAndApplicationStatusIdIn(@Param("compId") long competitionId,
+                                                                          @Param("status") Collection<Long> applicationStatusIds,
+                                                                          @Param("filter") String filter,
+                                                                          Pageable pageable);
 }

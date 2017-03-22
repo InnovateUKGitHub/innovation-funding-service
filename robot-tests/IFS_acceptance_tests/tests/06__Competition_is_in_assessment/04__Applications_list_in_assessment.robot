@@ -26,7 +26,7 @@ Applications Dashboard
     [Documentation]    INFUND-7367
     [Tags]    HappyPath
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    When The user clicks the button/link    jQuery=a:contains("Applications - All, submitted")
+    When The user clicks the button/link    jQuery=a:contains("Applications: All, submitted")
     Then The user should see the element    jQuery=a:contains(All applications)
     And The user should see the element    link=Submitted applications
 
@@ -113,7 +113,7 @@ Page list pagination on submitted applications
 
 Next/Previous pagination on all applications
     [Documentation]    INFUND-8010
-    [Tags]
+    [Tags]    HappyPath
     [Setup]    the user clicks the button/link    link=All applications
     When the user clicks the button/link    jQuery=.pagination-label:contains(Next)
     Then the user should see the element    jQuery=.pagination-part-title:contains(1 to 20)
@@ -124,7 +124,7 @@ Next/Previous pagination on all applications
 
 Page list pagination on all applications
     [Documentation]    INFUND-8010
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    jQuery=a:contains(41 to 46)
     Then the user should see the element    jQuery=.pagination-label:contains(Previous)
     And the user should not see the element    jQuery=.pagination-label:contains(Next)

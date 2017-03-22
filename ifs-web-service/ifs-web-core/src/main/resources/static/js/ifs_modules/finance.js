@@ -19,6 +19,14 @@ IFS.core.finance = (function () {
       // jQuery('body').trigger('recalculateAllFinances');
     },
     bindCalculationActionToFields: function () {
+      // this is not binding as it is doing a one off calculation on pageload
+      var pageLoadFinances = jQuery('[data-calculation-fields][data-calculation-on-pageload]')
+      pageLoadFinances.each(function () {
+        var element = jQuery(this)
+        var fields = element.attr('data-calculation-fields')
+        IFS.core.finance.doMath(element, fields.split(','))
+      })
+
       // we watch for changes in inputs as a calculation always starts with an input
       jQuery('body').on('change', 'input', function () {
         // if the calculation field is not binded we bind this field to the selector that is defined in the field

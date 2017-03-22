@@ -53,7 +53,7 @@ Mark application details as incomplete
     Given the user navigates to the page  ${DASHBOARD_URL}
     And the user clicks the button/link   link=Robot test application
     the user clicks the button/link       link=Application details
-    the user clicks the button/link       jQuery=button:contains("Edit")
+    the user clicks the button/link       jQuery=button:contains("Return and edit")
     the user clicks the button/link       jQuery=button:contains("Save and return to application overview")
     the user should see the element       jQuery=li:contains("Application details") > .action-required
 
@@ -65,12 +65,14 @@ the Application details are completed
 the applicant completes the application details
     [Arguments]   ${Application_details}
     the user clicks the button/link       link=${Application_details}
-    the user clicks the button/link       jQuery=button:contains(Change your innovation area)
+    the user clicks the button/link       jQuery=button:contains("research category")
+    the user clicks the button/link       jQuery=label[for^="researchCategoryChoice"]:contains("Experimental development")
+    the user clicks the button/link       jQuery=label[for^="researchCategoryChoice"]:contains("Experimental development")
+    the user clicks the button/link       jQuery=button:contains(Save)
+    the user clicks the button/link       jQuery=button:contains("Change your innovation area")
     the user clicks the button/link       jQuery=label[for="innovationAreaChoice-26"]
     the user clicks the button/link       jQuery=label[for="innovationAreaChoice-26"]
     the user clicks the button/link       jQuery=button:contains(Save)
-    the user clicks the button/link       jQuery=label[for^="financePosition"]:contains("Experimental development")
-    the user clicks the button/link       jQuery=label[for^="financePosition"]:contains("Experimental development")
     the user clicks the button/link       jQuery=label[for="application.resubmission-no"]
     the user clicks the button/link       jQuery=label[for="application.resubmission-no"]
     # those Radio buttons need to be clicked twice.

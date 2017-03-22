@@ -19,6 +19,8 @@ Documentation     INFUND-3013 As a partner I want to be able to download mandato
 ...               INFUND-7342 As a lead partner I want to be able to submit a document in the "Other Documents" section of Project Setup if an earlier document has been rejected so that I can provide an alternative document for review and approval
 ...
 ...               INFUND-7345 As an internal user I want to be able to view resubmitted documents in the "Other Documents" section of Project Setup so that they can be reviewed again for approval
+...
+...               INFUND-5490 document upload non-user
 Suite Setup       Log in as user    jessica.doe@ludlow.co.uk    Passw0rd
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -29,30 +31,33 @@ Resource          PS_Variables.robot
 
 *** Test Cases ***
 Non-lead partner cannot upload either document
-    [Documentation]    INFUND-3011, INFUND-2621, INFUND-5258, INFUND-5806
+    [Documentation]    INFUND-3011, INFUND-2621, INFUND-5258, INFUND-5806, INFUND-5490
     [Tags]
     Given the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element    jQuery=.progress-list ul > li.waiting:nth-of-type(7)
-    And The user should see the text in the page    The Project Manager will need to upload the following
+    And The user should see the text in the page    Your Project Manager will need to upload the following
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
+    And the user should see the text in the page   Only the Project Manager can upload and submit additional documents
 
 Lead partner cannot upload either document
-    [Documentation]    INFUND-3011
+    [Documentation]    INFUND-3011, INFUND-5490
     [Tags]
     [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}    Passw0rd
     Given the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element    jQuery=.progress-list ul > li.waiting:nth-of-type(7)
-    And The user should see the text in the page    The Project Manager will need to upload the following
+    And The user should see the text in the page    Your Project Manager will need to upload the following
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
+    And the user should see the text in the page   Only the Project Manager can upload and submit additional documents
 
 PM cannot submit when both documents are not uploaded
-    [Documentation]    INFUND-3012
+    [Documentation]    INFUND-3012, INFUND-5490
     [Tags]
     Given log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    Passw0rd
     When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
+    And the user should see the text in the page   Only the Project Manager can upload and submit additional documents
     #Then the user should see the 2 Upload buttons
     And the user should see the element    jQuery=label[for="collaborationAgreement"]
     And the user should see the element    jQuery=label[for="exploitationPlan"]
@@ -223,7 +228,7 @@ Mandatory document submission
     And the user clicks the button/link    link=Other documents
     And the user reloads the page
     When the user clicks the button/link    jQuery=.button:contains("Submit documents")
-    And the user clicks the button/link    jQuery=.button:contains("Cancel")
+    And the user clicks the button/link    jQuery=button:contains("Cancel")
     Then the user should see the element    name=removeExploitationPlanClicked    # testing here that the section has not become read-only
     When the user clicks the button/link    jQuery=.button:contains("Submit documents")
     And the user clicks the button/link    jQuery=.button:contains("Submit")
@@ -355,7 +360,7 @@ After rejection, lead partner cannot upload either document
     [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}    Passw0rd
     Given the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element    jQuery=.progress-list ul > li.waiting:nth-of-type(7)
-    And The user should see the text in the page    The Project Manager will need to upload the following
+    And The user should see the text in the page    Your Project Manager will need to upload the following
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
 
@@ -424,7 +429,7 @@ After rejection, non-lead partner cannot upload either document
     [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}    Passw0rd
     Given the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element    jQuery=.progress-list ul > li.waiting:nth-of-type(7)
-    And The user should see the text in the page    The Project Manager will need to upload the following
+    And The user should see the text in the page    Your Project Manager will need to upload the following
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
 
@@ -485,7 +490,7 @@ After rejection, mandatory document submission
     And the user clicks the button/link    link=Other documents
     And the user reloads the page
     When the user clicks the button/link    jQuery=.button:contains("Submit documents")
-    And the user clicks the button/link    jQuery=.button:contains("Cancel")
+    And the user clicks the button/link    jQuery=button:contains("Cancel")
     Then the user should see the element    name=removeExploitationPlanClicked    # testing here that the section has not become read-only
     When the user clicks the button/link    jQuery=.button:contains("Submit documents")
     And the user clicks the button/link    jQuery=.button:contains("Submit")

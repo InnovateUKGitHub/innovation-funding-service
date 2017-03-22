@@ -4,10 +4,9 @@
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Competition Overview'" />
 </head>
 <body th:with="context='applicant'" class="competition-overview">
-
-    <th:block th:insert="fragments/layout :: body-start" />
     <th:block th:insert="fragments/layout :: global-header" />
 
+    <th:block th:insert="fragments/layout :: body-start" />
     <main id="content">
         <th:block th:insert="fragments/layout :: main-content-start" />
         <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to all competitions',linkClass='link-back',linkUrl='/competition/search'" />
@@ -34,15 +33,23 @@
                 This competition is now closed.
             </div>
             <th:block th:unless="${model.nonIfs}">
-                <p class="extra-margin">
+                <p class="extra-margin-top" th:with="loggedInUrl=@{/application/create-authenticated/{competitionId}(competitionId=${model.competitionId})},notLoggedInUrl=@{/application/create/check-eligibility/{competitionId}(competitionId=${model.competitionId})}">
                     <a class="button"
                        th:if="${model.showApplyButton}"
-                       th:href="@{/application/create/check-eligibility/{competitionId}(competitionId=${model.competitionId})}">
-                        Start or continue your application
+                       th:href="${model.userIsLoggedIn ? loggedInUrl : notLoggedInUrl}">
+                        Start new application
                     </a>
                     <button th:unless="${model.showApplyButton}" class="button" disabled="disabled">
-                        Start or continue your application
+                        Start new application
                     </button>
+                </p>
+                <p class="extra-margin" th:if="${model.showApplyButton}">
+                    <th:block th:unless="${model.userIsLoggedIn}">
+                        Or <a th:href="@{/}" >Sign in</a> to continue an existing application
+                    </th:block>
+                    <th:block th:if="${model.userIsLoggedIn}">
+                        Or go to your <a th:href="@{/}">dashboard</a> to continue an existing application
+                    </th:block>
                 </p>
             </th:block>
             <th:block th:if="${model.nonIfs}">
@@ -57,19 +64,17 @@
             </th:block>
         </div>
 
-        <ul class="inline-nav hide-mobile">
-            <th:block th:each="sectionType : ${model.allContentSections}">
-                <li th:class="${(sectionType.active ? 'selected' : 'not-selected' )}">
-                    <h2>
-                        <a th:href="@{/competition/{competitionId}/overview/{type}(competitionId=${model.competitionId}, type=${sectionType.path})}">
-                            <strong th:text="${sectionType.text}"></strong>
-                        </a>
-                    </h2>
-                </li>
+        <div id="competition-overview-tabs" class="tabs">
+            <ul>
+                <th:block th:each="sectionType : ${model.allSections}">
+                    <li>
+                        <a th:href="${'#' + sectionType.path}" th:text="${sectionType.text}"></a>
+                    </li>
+                </th:block>
+            </ul>
+            <th:block th:each="section : ${model.allSections}">
+                <th:block th:insert="competition/section/fragments :: ${section.path} (section=${section}, competitionId=${model.competitionId})"/>
             </th:block>
-        </ul>
-        <div>
-            <th:block th:insert="competition/section/fragments :: ${model.currentSection.sectionPath} (section=${model.currentSection}, competitionId=${model.competitionId})"/>
         </div>
 
         <div th:insert="fragments/layout :: main-content-end" th:remove="tag" />

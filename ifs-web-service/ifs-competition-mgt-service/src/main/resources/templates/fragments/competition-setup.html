@@ -66,10 +66,10 @@
 
         <form th:action="'#'" method="post" novalidate="novalidate">
             <th:block th:insert="fragments/competition-setup :: comp-setup-remove-assigned-assessor-content" />
-
-            <div class="alignright-button">
-                <button type="button" class="js-close buttonlink large">Cancel</button>
-                <button class="button large" type="submit">Remove assessor</button>
+            <hr />
+            <div>
+                <button class="button" type="submit">Remove assessor</button>
+                <button type="button" class="js-close buttonlink">Cancel</button>
             </div>
         </form>
 

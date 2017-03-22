@@ -38,18 +38,6 @@ public class AgreementResourceBuilder extends BaseBuilder<AgreementResource, Agr
         return withArray((text, agreement) -> setField("text", text, agreement), texts);
     }
 
-    public AgreementResourceBuilder withAnnexA(String... annexAs) {
-        return withArray((annexA, agreement) -> setField("annexA", annexA, agreement), annexAs);
-    }
-
-    public AgreementResourceBuilder withAnnexB(String... annexBs) {
-        return withArray((annexB, agreement) -> setField("annexB", annexB, agreement), annexBs);
-    }
-
-    public AgreementResourceBuilder withAnnexC(String... annexCs) {
-        return withArray((annexC, agreement) -> setField("annexC", annexC, agreement), annexCs);
-    }
-
     @Override
     protected AgreementResource createInitial() {
         return createDefault(AgreementResource.class);

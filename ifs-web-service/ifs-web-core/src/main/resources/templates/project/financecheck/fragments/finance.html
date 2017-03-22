@@ -39,7 +39,7 @@
                 <tfoot>
                     <tr>
                         <th colspan="4" scope="row">Total labour costs</th>
-                        <td th:id="${'section-total-'+subSection.id}" class="numeric" th:text="'£ ' + ${costCategory.getTotal() != null ? #numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT') : 0}" />
+                        <td th:id="${'section-total-'+subSection.id}" class="numeric labour-total" th:attr="data-calculation-rawvalue=${costCategory?.getTotal() != null ? costCategory?.getTotal() : 0}" th:text="'£ ' + ${costCategory.getTotal() != null ? #numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT') : 0}" />
                     </tr>
                 </tfoot>
             </table>
@@ -93,7 +93,7 @@
                 </div>
                     <div class="form-group alignright inline">
                         <label th:for="${'section-total-'+subSection.id}">Total labour costs</label>
-                        <input class="form-control form-control-1-4 alignright"
+                        <input class="form-control form-control-1-4 alignright labour-total"
                                data-calculation-fields="[id*=labourTotalCost]"
                                data-calculation-operations="+"
                                th:attr="data-calculation-rawvalue=${costCategory.getTotal()}"
@@ -218,7 +218,7 @@
                 <th:block th:switch="${overheadRate.name()}">
                     <th:block th:case="'NONE'">
                         No overhead costs
-                        <div aria-hidden="true">£ 0</div>
+                        <div data-current-overhead-total="" th:attr="data-calculation-rawvalue=0" th:id="${'section-total-'+subSection.id}" aria-hidden="true">£ 0</div>
                     </th:block>
                     <th:block th:case="'DEFAULT_PERCENTAGE'">
                         <table>
@@ -233,7 +233,7 @@
                             <tfoot>
                             <tr>
                                 <th scope="row">Total overhead costs</th>
-                                <td class="alignright" th:text="'£ ' + ${#numbers.formatInteger(costCategory?.getTotal(),0, 'COMMA')}">£0</td>
+                                <td data-current-overhead-total="" th:attr="data-calculation-rawvalue=${costCategory?.getTotal()}" class="alignright" th:id="${'section-total-'+subSection.id}" th:text="'£ ' + ${#numbers.formatInteger(costCategory?.getTotal(),0, 'COMMA')}">£0</td>
                             </tr>
                             </tfoot>
                         </table>
@@ -251,7 +251,7 @@
                             <tfoot>
                             <tr>
                                 <th scope="col">Total administration support cost</th>
-                                <td class="alignright" th:text="'£ ' + ${#numbers.formatInteger(costCategory?.getTotal(),0, 'COMMA')}">£0</td>
+                                <td class="alignright" data-current-overhead-total="" th:attr="data-calculation-rawvalue=${costCategory?.getTotal()}" th:id="${'section-total-'+subSection.id}" th:text="'£ ' + ${#numbers.formatInteger(costCategory?.getTotal(),0, 'COMMA')}">£0</td>
                             </tr>
                             </tfoot>
                         </table>
@@ -263,7 +263,12 @@
                                 <th scope="col">Calulated overheads</th>
                                 <th scope="col"><span class="visuallyhidden">Total calculated overheads</span></th>
                             </tr>
-                            <tr>
+                            <tr th:if="${#strings.isEmpty(overheadCosts?.calculationFile?.get()?.name)}">
+                                <td class="form-group">
+                                    No overhead calculation spreadsheet uploaded
+                                </td>
+                            </tr>
+                            <tr th:unless="${#strings.isEmpty(overheadCosts?.calculationFile?.get()?.name)}">
                                 <td class="form-group download">
                                     <h3 class="heading-small no-margin">Download the overhead calculation spreadsheet</h3>
                                     <a th:href="@{${'/application/download/overheadfile/'+overheadCosts?.id}}" th:text="${overheadCosts?.calculationFile?.get()?.name}">Overhead calculation spreadsheet.pdf</a>
@@ -273,7 +278,7 @@
                             <tfoot>
                             <tr>
                                 <th scope="row">Total cost of overheads as calculated in the spreadsheet</th>
-                                <td class="alignright" th:text="'£ ' + ${#numbers.formatInteger(costCategory?.getTotal(),0, 'COMMA')}">£0</td>
+                                <td class="alignright" data-current-overhead-total="" th:attr="data-calculation-rawvalue=${costCategory?.getTotal()}" th:id="${'section-total-'+subSection.id}"  th:text="'£ ' + ${#numbers.formatInteger(costCategory?.getTotal(),0, 'COMMA')}">£0</td>
                             </tr>
                             </tfoot>
                         </table>
@@ -346,7 +351,7 @@
                                class="form-control form-control-1-4 alignright"
                                readonly="readonly"
                                th:id="${'section-total-'+subSection.id+'-default'}"
-                               th:attr="data-calculation-fields='#section-total-114,0.2',data-calculation-rawvalue=${overheadCosts?.getTotal()}"
+                               th:attr="data-calculation-fields='[class~=labour-total], 0.2',data-calculation-rawvalue=${overheadCosts?.getTotal()}"
                                data-calculation-operations="*"
                                th:value="${overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).DEFAULT_PERCENTAGE)} ? '£ ' + ${#numbers.formatDecimal(costCategory?.getTotal(),0, 'COMMA', 0, 'POINT')} : '£ 0'" />
                     </div>
@@ -402,7 +407,7 @@
                         <label th:for="${'section-total-'+subSection.id+'-calculate-formatted'}">
                             <span>Enter the total cost of overheads as calculated in the spreadsheet £</span>
                         </label>
-                        <input type="text"
+                        <input type="number"
                                th:readonly="${viewmode=='readonly'}"
                                th:name="${'overheads-total-' + question.id + '-'+overheadCosts?.id}"
                                class="form-control form-control-1-4 alignright"
@@ -447,13 +452,13 @@
                         <td th:text="${cost.getItem()}"></td>
                         <td class="numeric" th:text="${cost.getQuantity()}"></td>
                         <td class="numeric" th:text="${cost.cost != null ? #numbers.formatDecimal(cost.cost,0,'COMMA',0,'POINT') : '0'}"></td>
-                        <td class="numeric" th:id="${'section-total-'+subSection.id}" th:text="'£ ' + ${#numbers.formatDecimal(cost.total,0,'COMMA',0,'POINT')}"></td>
+                        <td class="numeric" th:text="'£ ' + ${#numbers.formatDecimal(cost.total,0,'COMMA',0,'POINT')}"></td>
                     </tr>
                 </tbody>
                 <tfoot>
                     <tr>
                         <th scope="row" colspan="3">Total materials costs</th>
-                        <td th:text="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" class="numeric"></td>
+                        <td th:text="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" th:id="${'section-total-'+subSection.id}" class="numeric"></td>
                     </tr>
                 </tfoot>
             </table>
