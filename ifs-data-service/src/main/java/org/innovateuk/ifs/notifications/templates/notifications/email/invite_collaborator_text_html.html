@@ -1,8 +1,8 @@
 <#import "layout/default.html" as layout>
 <@layout.default>
   <p style="margin: 0 0 1em 0;">Dear ${notificationTarget.name},</p>
-  <p style="margin: 0 0 1em 0;">You are invited by ${sentByName} to participate in an application for grant funding from Innovate UK. You will be joining as part of the organisation ${inviteOrganisationName}. The application is for the competition <a href="${competitionUrl}" style="font-size: 19px; font-weight: normal; color: #ffffff; text-decoration: none; display: inline-block; font-family: arial, sans-serif;">${competitionName}</a>.
-  <p style="margin: 0 0 1em 0;">${leadApplicant} (<a href="mailto:${leadApplicantEmail}" style="font-size: 19px; font-weight: normal; color: #ffffff; text-decoration: none; display: inline-block; font-family: arial, sans-serif;">${leadApplicantEmail}</a>) is the lead applicant. If you have any queries, please contact them directly.</p>
+  <p style="margin: 0 0 1em 0;">You are invited by ${sentByName} to participate in an application for grant funding from Innovate UK. You will be joining as part of the organisation ${inviteOrganisationName}. The application is for the competition <a href="${competitionUrl}">${competitionName}</a>.
+  <p style="margin: 0 0 1em 0;">${leadApplicant} (<a href="mailto:${leadApplicantEmail}">${leadApplicantEmail}</a>) is the lead applicant. If you have any queries, please contact them directly.</p>
   <p style="margin: 0 0 1em 0;"><strong>Next steps</strong></p>
   <ol>
     <li>Review the invitation.</li>
@@ -22,7 +22,7 @@
           </td>
       </tr>
   </table>
-  <p style="margin: 0 0 1em 0;">Or copy and paste this URL into your browser: <a href="${inviteUrl}" style="font-size: 19px; font-weight: normal; color: #ffffff; text-decoration: none; display: inline-block; font-family: arial, sans-serif;">${inviteUrl}</a></p>
+  <p style="margin: 0 0 1em 0;">Or copy and paste this URL into your browser: <a href="${inviteUrl}">${inviteUrl}</a></p>
   <p style="margin: 0 0 1em 0;">Yours sincerely,</p>
   <@layout.senderHTML />
 </@layout.default>
