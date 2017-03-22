@@ -22,6 +22,7 @@ except KeyError:
         'db': 'ifs',
         'port': 3306,
     }
+print config
 
 _open_competition_application_name =  'A novel solution to an old problem'
 _open_competition_application_2_name = 'Providing sustainable childcare'
