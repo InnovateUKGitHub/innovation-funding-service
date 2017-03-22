@@ -216,7 +216,7 @@ How to apply: server side validation and autosave
     When the user clicks the button/link            link=How to apply
     Then the user should see the element            jQuery=h1:contains("How to apply")
     #TODO: Once INFUND-8901 is fixed, the below line to be tested
-    #And the user should see the text in the page    Text entered into this section will appear within the eligibility tab.
+    #And the user should see the text in the page    Text entered into this section will appear within the how to apply tab.
     When the user clicks the button/link            jQuery=button:contains("Save and return")
     Then the user should see a summary error        Please enter content.
     And the user should see a summary error         Please enter a heading.
