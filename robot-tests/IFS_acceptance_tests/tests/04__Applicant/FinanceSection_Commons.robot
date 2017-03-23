@@ -242,7 +242,10 @@ the user should see all finance subsections incomplete
 Remove previous rows
     [Arguments]  ${element}
     :FOR    ${i}    IN RANGE  10
-    \  ${status}  run keyword and return status without screenshots  the user should not see the element  ${element}
-    \  Exit For Loop If  ${status}=='PASS'
-    \  run keyword if  ${status}=='FAIL'  the user clicks the button/link  ${element}
+    # The sleep of 200 ms is actually for speed, originally the test used "should not see the element" however that made it wait for 10 seconds on every loop. 
+    \  sleep    200ms
+    \  ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    the user should see the element    ${element}
+    \  Log    ${status}
+    \  Exit For Loop If  '${status}'=='FAIL'
+    \  run keyword if  '${status}'=='PASS'  the user clicks the button/link  ${element}
     \  ${i} =  Set Variable  ${i + 1}
