@@ -80,13 +80,8 @@ public class ApplicationPrintPopulator {
         applicationModelPopulator.addUserDetails(model, user, userApplicationRoles);
         applicationModelPopulator.addApplicationInputs(application, model);
         applicationSectionAndQuestionModelPopulator.addMappedSectionsDetails(model, competition, Optional.empty(), userOrganisation, completedSectionsByOrganisation);
-        applicationModelPopulator.addResearchCategoryName(application, model);
         applicationFinanceOverviewModelManager.addFinanceDetails(model, competition.getId(), applicationId, userOrganisation.map(OrganisationResource::getId));
 
         return "application/print";
-    }
-
-    private Long getUserOrganisationId(Optional<OrganisationResource> userOrganisation) {
-        return userOrganisation.isPresent() ?  userOrganisation.get().getId() : null;
     }
 }
