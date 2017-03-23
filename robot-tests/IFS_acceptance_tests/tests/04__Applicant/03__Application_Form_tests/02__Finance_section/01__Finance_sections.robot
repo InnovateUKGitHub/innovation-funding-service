@@ -18,6 +18,9 @@ Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../FinanceSection_Commons.robot
 
+*** Variables ***
+${applicationName}  Planetary science Pluto's telltale heart
+
 *** Test Cases ***
 Finance sub-sections
     [Documentation]    INFUND-192
@@ -89,7 +92,7 @@ Non-academic partner finance section
     [Documentation]    INFUND-7522
     [Tags]    HappyPath
     [Setup]  Log in as a different user     &{collaborator1_credentials}
-    Given the user navigates to Your-finances page     Planetary science Pluto's telltale heart
+    Given the user navigates to Your-finances page  ${applicationName}
     Then The user should see the element      JQuery=span.summary:contains("Not requesting funding")
     and the user should see the element     link=Your project costs
     and the user should see the element     link=Your organisation
@@ -99,7 +102,7 @@ Academic partner finance section
     [Documentation]    INFUND-7522
     [Tags]    HappyPath
     [Setup]  Log in as a different user       &{collaborator2_credentials}
-    Given the user navigates to Your-finances page     Planetary science Pluto's telltale heart
+    Given the user navigates to Your-finances page  ${applicationName}
     Then The user should not see the element      link=Not requesting funding
     and the user should see the element       link=Your project costs
     and the user should not see the element     link=Your organisation
@@ -109,7 +112,7 @@ Academic partner finance section
 Academic partner can upload file for field J-es PDF
     [Documentation]    INFUND-7522
     [Tags]    HappyPath
-    Given the user navigates to Your-finances page     Planetary science Pluto's telltale heart
+    Given the user navigates to Your-finances page  ${applicationName}
     and the user clicks the button/link         link=Your funding
     # Note the Jes form is already uploaded
     Then the user should see the element     css=a.uploaded-file
@@ -130,7 +133,7 @@ File upload mandatory for Academic partner to mark section as complete
     [Tags]    HappyPath    Pending
     #TODO pending due to INFUND-8469
     # This will also check the auto-save as we hvaen't marked finances as complete yet
-    Given the user navigates to Your-finances page      Planetary science Pluto's telltale heart
+    Given the user navigates to Your-finances page  ${applicationName}
     and the user clicks the button/link      link=Your funding
     and the user clicks the button/link      jQuery=button:contains("Edit your funding")
     and the user clicks the button/link       jQuery=button:contains("Remove")
