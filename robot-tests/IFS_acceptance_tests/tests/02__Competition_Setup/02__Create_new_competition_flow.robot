@@ -78,7 +78,7 @@ User can create a new competition
 New competition shows in Preparation section
     [Documentation]    INFUND-2980
     Given The user clicks the button/link    link=All competitions
-    And The user clicks the button/link    id=section-3
+    And The user clicks the button/link    id=section-2
     Then the competition should show in the correct section    css=section:nth-of-type(1) li:nth-child(2)    No competition title defined    #this keyword checks if the new application shows in the second line of the "In preparation" competitions
 
 Initial details - User enters valid values and marks as done
@@ -177,7 +177,7 @@ New application shows in Preparation section with the new name
     [Documentation]    INFUND-2980
     Given the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
     And The user clicks the button/link    link=All competitions
-    And The user clicks the button/link    id=section-3
+    And The user clicks the button/link    id=section-2
     Then the competition should show in the correct section    css=section:nth-of-type(1) > ul    Test competition    #This keyword checks if the new competition shows in the "In preparation" test
 
 Funding information: calculations
@@ -483,7 +483,7 @@ User should be able to Save the Competition as Open
     # TODO Pending due to INFUND-7643
     When the user clicks the button/link    jQuery=.button:contains("Save")
     And the user clicks the button/link    link=All competitions
-    And the user clicks the button/link    id=section-3
+    And the user clicks the button/link    id=section-2
     Then the competition should show in the correct section    css=section:nth-of-type(2) ul    Test competition
     # The above line checks that the section 'Ready to Open' there is a competition named Test competition
 
