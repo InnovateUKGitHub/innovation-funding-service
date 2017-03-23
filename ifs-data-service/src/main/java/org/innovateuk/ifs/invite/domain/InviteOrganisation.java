@@ -67,6 +67,9 @@ public class InviteOrganisation {
     }
 
     public void setInvites(List<ApplicationInvite> invites) {
+        if (invites == null) {
+            throw new NullPointerException("invites cannot be null");
+        }
         this.invites = invites;
     }
 }

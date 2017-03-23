@@ -15,7 +15,7 @@ public class InviteOrganisationController {
     private InviteOrganisationService service;
 
     @GetMapping(value = "/{id}")
-    public RestResult<InviteOrganisationResource> getById(@PathVariable("id") Long id) {
+    public RestResult<InviteOrganisationResource> getById(@PathVariable("id") long id) {
         return service.getById(id).toGetResponse();
     }
 
