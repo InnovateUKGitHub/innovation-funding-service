@@ -35,10 +35,10 @@ Lead applicant can assign a question
     #This test depends on the previous test suite to run first
     Given the applicant changes the name of the application
     And the user clicks the button/link    link= Public description
-    When the applicant assigns the question to the collaborator    css=#form-input-12 .editor    test1233    Dennis Bergkamp
+    When the applicant assigns the question to the collaborator    css=#form-input-1040 .editor    test1233    Dennis Bergkamp
     Then the user should see the notification    Question assigned successfully
-    And the user should see the element    css=#form-input-12 .readonly
-    And the question should contain the correct status/name    css=#form-input-12 .assignee span+span    Dennis Bergkamp
+    And the user should see the element    css=#form-input-1040 .readonly
+    And the question should contain the correct status/name    css=#form-input-1040 .assignee span+span    Dennis Bergkamp
 
 Lead applicant can assign question multiple times
     [Documentation]    INFUND-3288
@@ -46,10 +46,10 @@ Lead applicant can assign question multiple times
     ...    This test depends on the previous test suite to run first
     [Tags]    Email
     When the user assigns the question to the collaborator    Stuart ANDERSON
-    And the question should contain the correct status/name    css=#form-input-12 .assignee span+span    you
-    And the applicant assigns the question to the collaborator    css=#form-input-12 .editor    test1233    Dennis Bergkamp
-    Then the user should see the element    css=#form-input-12 .readonly
-    And the question should contain the correct status/name    css=#form-input-12 .assignee span+span    Dennis Bergkamp
+    And the question should contain the correct status/name    css=#form-input-1040 .assignee span+span    you
+    And the applicant assigns the question to the collaborator    css=#form-input-1040 .editor    test1233    Dennis Bergkamp
+    Then the user should see the element    css=#form-input-1040 .readonly
+    And the question should contain the correct status/name    css=#form-input-1040 .assignee span+span    Dennis Bergkamp
 
 The question is enabled for the assignee
     [Documentation]    INFUND-275
@@ -62,8 +62,8 @@ The question is enabled for the assignee
     Then the user should see the browser notification    Stuart ANDERSON has assigned a question to you
     And the user should see the element  jQuery=li:contains("Public description") > .action-required
     And the user clicks the button/link    link= Public description
-    And the user should see the element    css=#form-input-12 .editor
-    And the user should not see the element    css=#form-input-12 .readonly
+    And the user should see the element    css=#form-input-1040 .editor
+    And the user should not see the element    css=#form-input-1040 .readonly
 
 Collaborator should see the terms and conditions from the overview page
     [Documentation]    INFUND-2417
@@ -105,7 +105,7 @@ Last update message is correctly updating
     And the user clicks the button/link    link= Assign test
     And the user clicks the button/link    link= Public description
     When the collaborator edits the 'public description' question
-    Then the question should contain the correct status/name    css=#form-input-12 .form-footer .form-footer__info    Last updated: Today by you
+    Then the question should contain the correct status/name    css=#form-input-1040 .form-footer .form-footer__info    Last updated: Today by you
 
 Collaborators cannot assign a question
     [Documentation]    INFUND-839
@@ -131,7 +131,7 @@ Collaborator cannot edit after marking ready for review
     ...
     ...    This test depends on the previous test suite to run first
     [Tags]    Email    HappyPath
-    Then the user should see the element    css=#form-input-12 .readonly
+    Then the user should see the element    css=#form-input-1040 .readonly
     [Teardown]
 
 Collaborators should not be able to edit application details
@@ -155,10 +155,10 @@ The question should be reassigned to the lead applicant
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link= Assign test
     Then the user should see the browser notification    Dennis Bergkamp has assigned a question to you
-    And the question should contain the correct status/name    jQuery=#section-1 li:nth-child(3) .assign-container    you
+    And the question should contain the correct status/name    jQuery=#section-184 li:nth-child(3) .assign-container    you
     And the user clicks the button/link    link= Public description
-    And the user should see the element    css=#form-input-12 .editor
-    And the user should not see the element    css=#form-input-12 .readonly
+    And the user should see the element    css=#form-input-1040 .editor
+    And the user should not see the element    css=#form-input-1040 .readonly
 
 Appendices are assigned along with the question
     [Documentation]    INFUND-409
@@ -169,7 +169,7 @@ Appendices are assigned along with the question
     And the user clicks the button/link    link= Assign test
     And the user clicks the button/link    link=6. Innovation
     And the user should see the text in the page    Upload
-    When the applicant assigns the question to the collaborator    css=#form-input-6 .editor    test1233    Dennis Bergkamp
+    When the applicant assigns the question to the collaborator    css=#form-input-1065 .editor    test1233    Dennis Bergkamp
     Then log in as a different user          ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link= Assign test
@@ -235,7 +235,7 @@ The question is disabled for other collaborators
     Given Steve smith assigns a question to the collaborator
     Given log in as a different user       &{collaborator2_credentials}
     When the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
-    Then The user should see the element    css=#form-input-12 .readonly
+    Then The user should see the element    css=#form-input-1040 .readonly
 
 The question is disabled on the summary page for other collaborators
     [Documentation]    INFUND-2302
@@ -244,7 +244,7 @@ The question is disabled on the summary page for other collaborators
     [Tags]
     Given the user navigates to the page    ${SUMMARY_URL}
     When the user clicks the button/link    jQuery=button:contains("Public description")
-    Then the user should see the element    css=#form-input-12 .readonly
+    Then the user should see the element    css=#form-input-1040 .readonly
     And the user should not see the element    jQuery=button:contains("Assign to lead for review")
 
 Lead applicant should be able to remove the partner organisation
@@ -263,9 +263,9 @@ Lead applicant should be able to remove the partner organisation
 
 *** Keywords ***
 the collaborator edits the 'public description' question
-    Clear Element Text    css=#form-input-12 .editor
-    Focus    css=#form-input-12 .editor
-    The user enters text to a text field    css=#form-input-12 .editor    collaborator's text
+    Clear Element Text    css=#form-input-1040 .editor
+    Focus    css=#form-input-1040 .editor
+    The user enters text to a text field    css=#form-input-1040 .editor    collaborator's text
     Focus    link=Sign out
     wait for autosave
     the user reloads the page
@@ -288,7 +288,7 @@ the applicant changes the name of the application
 
 Steve smith assigns a question to the collaborator
     the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
-    When the applicant assigns the question to the collaborator  css=#form-input-12 .editor  test1233  Jessica Doe
+    When the applicant assigns the question to the collaborator  css=#form-input-1040 .editor  test1233  Jessica Doe
 
 the user fills out the research category
     # Often those labels need double click. Thus i made a separate keyword to looks more tidy
