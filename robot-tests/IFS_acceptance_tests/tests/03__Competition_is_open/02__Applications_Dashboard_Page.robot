@@ -70,7 +70,9 @@ Filter on application number
     And the user should see the text in the page    A novel solution to an old problem
 
 All Applications page: Key Statistics
-    [Documentation]    INFUND-2259, INFUND-7369
+    [Documentation]    INFUND-2259
+    ...
+    ...    INFUND-7369
     [Tags]
     Then the totals in the Key statistics should be correct
 
@@ -277,7 +279,7 @@ The calculation of the open applications should be correct
     ${open_count}=    Get matching xpath count    //*[text()="open"]
     Run keyword if    ${open_count} != 0    open application calculations are correct
 
-The totals in the Key statistics should be correct
+Then the totals in the Key statistics should be correct
     #Calculation of the total number of Applications
     ${TOTAL_APPLICATIONS}=    Get matching xpath count    //table/tbody/tr
     ${TOTAL_COUNT}=    Get text    css=li:nth-child(1) > div > span
