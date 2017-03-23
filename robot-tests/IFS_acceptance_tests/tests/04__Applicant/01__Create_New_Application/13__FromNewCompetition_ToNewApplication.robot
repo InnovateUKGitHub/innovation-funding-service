@@ -273,9 +273,9 @@ Applicant can view and edit project growth table
     and the user clicks the button/link     jQuery=button:contains("Mark as complete")
 
 Newly created collaborator can view and edit project Growth table
-    [Documentation]     INFUND-8426
+    [Documentation]  INFUND-8426
     [Tags]
-    [Setup]    Invite a non-existing collaborator in Appplication with Growth table
+    [Setup]  Invite a non-existing collaborator in Appplication with Growth table
     When the user navigates to the growth table finances
     and the user clicks the button/link     link=Your organisation
     and the user selects medium organisation size
