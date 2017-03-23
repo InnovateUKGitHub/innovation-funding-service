@@ -48,6 +48,10 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
         List<FormInputResponse> response = formInputResponseRepository.findByApplicationIdAndFormInputId(applicationId, formInputId);
         if (!response.isEmpty()) {
             results.addAll(response.stream().map(formInputResponse -> validationUtil.validateResponse(formInputResponse, false)).collect(Collectors.toList()));
+        } else {
+            FormInputResponse emptyResponse = new FormInputResponse();
+            emptyResponse.setFormInput(formInputRepository.findOne(formInputId));
+            results.add(validationUtil.validateResponse(emptyResponse, false));
         }
 
         FormInput formInput = formInputRepository.findOne(formInputId);

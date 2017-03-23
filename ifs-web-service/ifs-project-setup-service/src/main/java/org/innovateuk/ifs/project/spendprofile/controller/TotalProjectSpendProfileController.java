@@ -12,6 +12,7 @@ import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
 import org.innovateuk.ifs.project.spendprofile.viewmodel.TotalProjectSpendProfileTableViewModel;
 import org.innovateuk.ifs.project.spendprofile.viewmodel.TotalSpendProfileViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -24,10 +25,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapValue;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -57,17 +56,17 @@ public class TotalProjectSpendProfileController {
         return SPEND_PROFILE_TOTALS_TEMPLATE;
     }
 
-    @RequestMapping(value="confirmation", method = GET)
+    @RequestMapping(value = "confirmation", method = GET)
     public String confirmation(@PathVariable("projectId") final Long projectId) {
         return BASE_DIR + "/spend-profile-total-confirmation";
     }
 
     @RequestMapping(method = POST)
     public String sendForReview(@PathVariable("projectId") final Long projectId,
-                                  @ModelAttribute(FORM_ATTR_NAME) TotalSpendProfileForm form,
-                                  @SuppressWarnings("unused") BindingResult bindingResult,
-                                  ValidationHandler validationHandler,
-                                  Model model) {
+                                @ModelAttribute(FORM_ATTR_NAME) TotalSpendProfileForm form,
+                                @SuppressWarnings("unused") BindingResult bindingResult,
+                                ValidationHandler validationHandler,
+                                Model model) {
         return validationHandler.performActionOrBindErrorsToField("",
                 () -> {
                     model.addAttribute("model", buildTotalViewModel(projectId));
@@ -75,40 +74,40 @@ public class TotalProjectSpendProfileController {
                     return SPEND_PROFILE_TOTALS_TEMPLATE;
                 },
                 () -> "redirect:/project/" + projectId,
-                () ->  projectFinanceService.completeSpendProfilesReview(projectId));
+                () -> projectFinanceService.completeSpendProfilesReview(projectId));
 
     }
 
     private TotalSpendProfileViewModel buildTotalViewModel(final Long projectId) {
         ProjectResource projectResource = projectService.getById(projectId);
         TotalProjectSpendProfileTableViewModel tableView = buildTableViewModel(projectId);
-        SpendProfileSummaryModel summary  = spendProfileTableCalculator.createSpendProfileSummary(projectResource, tableView.getMonthlyCostsPerOrganisationMap(), tableView.getMonths());
+        SpendProfileSummaryModel summary = spendProfileTableCalculator.createSpendProfileSummary(projectResource, tableView.getMonthlyCostsPerOrganisationMap(), tableView.getMonths());
         return new TotalSpendProfileViewModel(projectResource, tableView, summary);
     }
 
     private TotalProjectSpendProfileTableViewModel buildTableViewModel(final Long projectId) {
-        List<OrganisationResource> organisations = projectService.getPartnerOrganisationsForProject(projectId);
-        Map<Long, SpendProfileTableResource> organisationSpendProfiles = organisations.stream().collect(Collectors.toMap(OrganisationResource::getId, organisation -> {
-            return projectFinanceService.getSpendProfileTable(projectId, organisation.getId());
-        }));
+        final OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
+        List<OrganisationResource> organisations = new PrioritySorting<>(projectService.getPartnerOrganisationsForProject(projectId),
+                leadOrganisation, OrganisationResource::getName).unwrap();
 
-        Map<Long, List<BigDecimal>> monthlyCostsPerOrganisationMap = simpleMapValue(organisationSpendProfiles, tableResource -> {
-            return spendProfileTableCalculator.calculateMonthlyTotals(tableResource.getMonthlyCostsPerCategoryMap(), tableResource.getMonths().size());
-        });
+        Map<Long, SpendProfileTableResource> organisationSpendProfiles = simpleToLinkedMap(organisations, OrganisationResource::getId,
+                organisation -> projectFinanceService.getSpendProfileTable(projectId, organisation.getId()));
 
-        Map<Long, BigDecimal> eligibleCostPerOrganisationMap = simpleMapValue(organisationSpendProfiles, tableResource -> {
-            return spendProfileTableCalculator.calculateTotalOfAllEligibleTotals(tableResource.getEligibleCostPerCategoryMap());
-        });
+        Map<Long, List<BigDecimal>> monthlyCostsPerOrganisationMap = simpleLinkedMapValue(organisationSpendProfiles, spendTableResource ->
+                spendProfileTableCalculator.calculateMonthlyTotals(spendTableResource.getMonthlyCostsPerCategoryMap(), spendTableResource.getMonths().size()));
+
+        Map<Long, BigDecimal> eligibleCostPerOrganisationMap = simpleLinkedMapValue(organisationSpendProfiles, tableResource ->
+                spendProfileTableCalculator.calculateTotalOfAllEligibleTotals(tableResource.getEligibleCostPerCategoryMap()));
 
         List<LocalDateResource> months = organisationSpendProfiles.values().iterator().next().getMonths();
-
         Map<Long, BigDecimal> organisationToActualTotal = spendProfileTableCalculator.calculateRowTotal(monthlyCostsPerOrganisationMap);
         List<BigDecimal> totalForEachMonth = spendProfileTableCalculator.calculateMonthlyTotals(monthlyCostsPerOrganisationMap, months.size());
         BigDecimal totalOfAllActualTotals = spendProfileTableCalculator.calculateTotalOfAllActualTotals(monthlyCostsPerOrganisationMap);
         BigDecimal totalOfAllEligibleTotals = spendProfileTableCalculator.calculateTotalOfAllEligibleTotals(eligibleCostPerOrganisationMap);
 
-        return new TotalProjectSpendProfileTableViewModel(months, monthlyCostsPerOrganisationMap, eligibleCostPerOrganisationMap, organisationToActualTotal, totalForEachMonth,
-                totalOfAllActualTotals, totalOfAllEligibleTotals, simpleToMap(organisations, OrganisationResource::getId, OrganisationResource::getName));
+        return new TotalProjectSpendProfileTableViewModel(months, monthlyCostsPerOrganisationMap, eligibleCostPerOrganisationMap,
+                organisationToActualTotal, totalForEachMonth, totalOfAllActualTotals, totalOfAllEligibleTotals,
+                simpleToMap(organisations, OrganisationResource::getId, OrganisationResource::getName), leadOrganisation);
 
     }
 }

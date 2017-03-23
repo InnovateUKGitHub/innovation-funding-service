@@ -89,15 +89,14 @@ Funding level can be re-entered, and this saves correctly
 
 Adding more funding rows
     [Documentation]    INFUND-6895, INFUND-8044
-    [Tags]  Pending
+    [Tags]
     # TODO INFUND-8706
     When remove previous rows  jQuery=tr:first-of-type button:contains("Remove")
     Then the user adds more rows in other funding
 
 Mark other funding as complete
     [Documentation]  INFUND-6895
-    [Tags]  HappyPath  Failing
-    # TODO Failing due to potential bug, need to re-run and raise
+    [Tags]  HappyPath
     Given the user selects the checkbox   termsAgreed
     When the user clicks the button/link  jQuery=.button:contains("Mark as complete")
     Then the user should not see an error in the page
@@ -105,13 +104,13 @@ Mark other funding as complete
 
 Read only view of the other funding
     [Documentation]    INFUND-6895, INFUND-8044
-    [Tags]  Pending
+    [Tags]
     # TODO INFUND-8706
     Given the user clicks the button/link  link=Your funding
     Then the user should see the element   jQuery=dt:contains("Funding level") + dd:contains("43")
     And the user clicks the button/link    jQuery=th:contains("uncle") ~ td:contains("£ 15,000")
     And the user clicks the button/link    jQuery=th:contains("grandma") ~ td:contains("£ 200,000")
-    And the user should see the element    link=Edit your funding
+    And the user should see the element    jQuery=button:contains("Edit your funding")
 
 *** Keywords ***
 Custom Suite Setup
@@ -123,24 +122,23 @@ the user adds more rows in other funding
     the user enters text to a text field  css=[name*=other_funding-fundingSource]  Lottery funding
     the user enters text to a text field  css=[name*=other_funding-securedDate]  12-${nextyear}
     the user enters text to a text field  css=[name*=other_funding-fundingAmount]  20000
+    the user moves focus to the element   jQuery=.button:contains("Mark as complete")
     wait for autosave
-    sleep  5s
+    the user clicks the button/link       jQuery=button:contains("Add another source of funding")
+    Wait Until Element Is Not Visible     jQuery=tr:last-of-type button:contains("Remove")
     the user enters text to a text field  css=tr:last-of-type input[name*=fundingSource]  wealthy uncle
-    capture large screenshot
     the user enters text to a text field  css=tr:last-of-type input[name*=securedDate]  02-${nextyear}
     the user enters text to a text field  css=tr:last-of-type input[name*=fundingAmount]  15000
     the user moves focus to the element   jQuery=.button:contains("Mark as complete")
     wait for autosave
-    capture large screenshot
     the user clicks the button/link       jQuery=button:contains("Add another source of funding")
-    wait for autosave
-    capture large screenshot
+    Wait Until Element Is Not Visible     jQuery=tr:last-of-type button:contains("Remove")
     the user enters text to a text field  css=tr:last-of-type input[name*=fundingSource]  wealthy grandma
     the user enters text to a text field  css=tr:last-of-type input[name*=securedDate]  11-${nextyear}
     the user enters text to a text field  css=tr:last-of-type input[name*=fundingAmount]  200000
     the user moves focus to the element   jQuery=.button:contains("Mark as complete")
     wait for autosave
-    the user should see the element       jQuery=label:contains("Total other funding") + input:contains("£ 235,000")
+    Textfield Value Should Be             jQuery=label:contains("Total other funding") + input    £ 235,000
 
 the user changes the research category
     [Documentation]    INFUND-8260
