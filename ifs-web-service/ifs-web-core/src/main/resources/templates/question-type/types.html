@@ -39,7 +39,7 @@
             </div>
         </th:block>
 
-        <th:block th:insert="question-type/form-elements :: assign-buttons-dialog" th:unless="${readonly} or ${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} or ${!userIsLeadApplicant}"/>
+        <th:block th:insert="question-type/form-elements :: assign-buttons-dialog" th:unless="${readonly} or ${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} or ${!userIsLeadApplicant}" th:with="fullButtonText=${TRUE}"/>
 
         <div th:unless="${readonly}" class="textarea-header">
 

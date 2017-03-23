@@ -205,6 +205,7 @@ tr.form-group-row.error {
 
 .question{
 
+  @extend %contain-floats;
   margin-bottom: 30px;
 
   .heading-medium{
@@ -404,7 +405,6 @@ Used to show information and CTAs under wrapped textarea used in application que
 }
 
 .form-footer{
-  @include core-16;
   @extend %contain-floats;
   color: $secondary-text-colour;
   background: $grey-4;
@@ -417,6 +417,7 @@ Used to show information and CTAs under wrapped textarea used in application que
   }
 
   &__info{
+    @include core-16;
     min-height: 1em;
     float: right;
   }

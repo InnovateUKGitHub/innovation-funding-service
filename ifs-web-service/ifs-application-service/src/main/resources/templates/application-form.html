@@ -17,7 +17,6 @@
           	<div class="page-title">
                 <th:block th:insert="fragments/elements :: application-title (applicationId=${model.application.currentApplication.id},applicationName=${model.application.currentApplication.name})" />
                 <h1 class="heading-xlarge" th:text="|${model.title} THIS IS A TEST|" />
-                THIS IS A TEST
             </div>
 
             <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" data-autosave="application" enctype="multipart/form-data"
