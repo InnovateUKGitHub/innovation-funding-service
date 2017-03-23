@@ -210,7 +210,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS);
         LocalDateTime submissionDeadline = submissionDateMilestone.getDate();
 
-        long daysPassedSinceSubmissionEnded;
+        final long daysPassedSinceSubmissionEnded;
         if (LocalTime.now().isAfter(submissionDeadline.toLocalTime())) {
             daysPassedSinceSubmissionEnded = submissionDeadline.until(now, ChronoUnit.DAYS) + 1;
         } else {
