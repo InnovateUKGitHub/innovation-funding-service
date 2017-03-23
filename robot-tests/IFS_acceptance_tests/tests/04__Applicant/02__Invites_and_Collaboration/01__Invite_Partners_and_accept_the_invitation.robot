@@ -169,7 +169,7 @@ Business organisation (partner accepts invitation)
     And the user clicks the button/link    link=NOMENSA LTD
     And the user selects the checkbox    address-same
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
-    And the user clicks the button/link    jQuery=.button:contains("Save and continue")
+    And the user clicks the button/link    jQuery=.button:contains("Confirm")
     And the user fills the create account form    Adrian    Booth
     And the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com    Please verify your email address    Once verified you can sign into your account
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
@@ -254,7 +254,7 @@ Registered partner should not create new org but should follow the create accoun
 
 *** Keywords ***
 The lead applicant should have the correct status
-    the user should see the element    jQuery=h2:contains("Empire Ltd, Lead organisation")
+    the user should see the element    jQuery=h2:contains("Empire Ltd"):contains("(Lead)")
     the user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(1):contains("Steve Smith")
     the user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(2):contains("steve.smith@empire.com")
     the user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(3):contains("Lead")
