@@ -49,8 +49,7 @@ All Applications page: calculation in the table header
 
 The applications can be sorted by application number
     [Documentation]    INFUND-8010
-    [Tags]    HappyPath    Failing
-    # TODO Failing due to INFUND-8582
+    [Tags]    HappyPath    Failing    INFUND-8582
     When the application list is sorted by    Application no.
     Then the applications should be sorted by column    1
 
