@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.innovateuk.ifs.user.resource.OrganisationResource;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -22,11 +23,12 @@ public class TotalProjectSpendProfileTableViewModel {
     private BigDecimal totalOfAllActualTotals;
     private BigDecimal totalOfAllEligibleTotals;
     private Map<Long, String> organisationNameMap;
+    private OrganisationResource leadOrganisation;
 
     public TotalProjectSpendProfileTableViewModel(List<LocalDateResource> months, Map<Long, List<BigDecimal>> monthlyCostsPerOrganisationMap,
                                                   Map<Long, BigDecimal> eligibleCostPerOrganisationMap, Map<Long, BigDecimal> organisationToActualTotal,
                                                   List<BigDecimal> totalForEachMonth, BigDecimal totalOfAllActualTotals, BigDecimal totalOfAllEligibleTotals,
-                                                  Map<Long, String> organisationNameMap) {
+                                                  Map<Long, String> organisationNameMap, OrganisationResource leadOrganisation) {
         this.months = months;
         this.monthlyCostsPerOrganisationMap = monthlyCostsPerOrganisationMap;
         this.eligibleCostPerOrganisationMap = eligibleCostPerOrganisationMap;
@@ -35,7 +37,10 @@ public class TotalProjectSpendProfileTableViewModel {
         this.totalOfAllActualTotals = totalOfAllActualTotals;
         this.totalOfAllEligibleTotals = totalOfAllEligibleTotals;
         this.organisationNameMap = organisationNameMap;
+        this.leadOrganisation = leadOrganisation;
     }
+
+
 
     public List<LocalDateResource> getMonths() {
         return months;
@@ -72,6 +77,9 @@ public class TotalProjectSpendProfileTableViewModel {
     public Map<Long, String> getOrganisationNameMap() {
         return organisationNameMap;
     }
+
+    public OrganisationResource getLeadOrganisation() { return leadOrganisation; }
+
 
     @Override
     public boolean equals(Object o) {
