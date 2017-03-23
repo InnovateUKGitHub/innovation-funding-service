@@ -484,7 +484,7 @@ User should be able to Save the Competition as Open
     When the user clicks the button/link    jQuery=.button:contains("Save")
     And the user clicks the button/link    link=All competitions
     And the user clicks the button/link    id=section-2
-    Then the competition should show in the correct section    css=section:nth-of-type(2) ul    Test competition
+    Then the competition should show in the correct section  css=section:nth-of-type(2) ul    Test competition
     # The above line checks that the section 'Ready to Open' there is a competition named Test competition
 
 Assessor: Contain the correct options
