@@ -231,7 +231,7 @@
                         <!--/* if  readonly we show the edit form button */-->
                         <th:block th:if="${readonly}" th:include="question-type/form-elements :: form-edit-question-button" />
                     </th:block>
-                    
+
                 </th:block>
 
                 <th:block th:insert="question-type/form-elements :: ready-for-review" th:if="${!userIsLeadApplicant}" th:with="displayBlock=${true}" />
@@ -443,8 +443,10 @@
 
 <!-- ===========================Form: readonly file download link =========================== -->
 <th:block th:fragment="readonly-file-download (filename, filesizeKbytes, fileDescription, downloadURL)" class="form-group download extra-margin">
-    <h3 class="heading-small no-margin" th:text="${fileDescription}">View the file:</h3>
-    <a href="#" th:href="${downloadURL}" th:text="${filename + ' (' + filesizeKbytes + ' KB)'}">10294856feedback.pdf (161.96 KB)</a>
+    <div class="form-group download">
+        <h3 class="heading-small no-margin" th:text="${fileDescription}">View the file:</h3>
+        <a href="#" th:href="${downloadURL}" th:text="${filename + ' (' + filesizeKbytes + ' KB)'}">10294856feedback.pdf (161.96 KB)</a>
+    </div>
 </th:block>
 
 </html>

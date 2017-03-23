@@ -453,7 +453,7 @@ Project Manager can view combined spend profile
     [Setup]    log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
     Given the user navigates to the page     ${external_spendprofile_summary}
     When the user clicks the button/link     jQuery=.button:contains("Review spend profiles")
-    Then the user should see the text in the page    This is the proposed spend profile for your project.
+    Then the user should see the text in the page    This is the spend profile for your project.
     And the user should see the text in the page     Your submitted spend profile will be used as the base for your project spend over the following financial years.
 
 Project Manager can choose cancel on the dialogue
