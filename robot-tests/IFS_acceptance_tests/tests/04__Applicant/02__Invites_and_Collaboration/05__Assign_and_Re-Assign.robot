@@ -247,17 +247,16 @@ The question is disabled on the summary page for other collaborators
     Then the user should see the element    css=#form-input-12 .readonly
     And the user should not see the element    jQuery=button:contains("Assign to lead for review")
 
-Lead applicant should be able to remove the registered partner
-    [Documentation]    INFUND-4806
+Lead applicant should be able to remove the partner organisation
+    [Documentation]    INFUND-8590
     [Tags]
     [Setup]    log in as a different user    ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
     Given the user clicks the button/link    link= Assign test
     And the user clicks the button/link    link=view and add participants to your application
     And the user clicks the button/link    jQuery=.table-overflow:contains("Dennis") ~ p a
-    When the user clicks the button/link    jQuery=button:contains("Remove")
+    When the user clicks the button/link    jQuery=button:contains("Delete organisation"):first
+    And the user clicks the button/link    jQuery=.modal-delete-organisation button:contains("Delete organisation")
     Then the user should not see the element    link=Dennis Bergkamp
-    #And the user clicks the button/link    jQuery=a:contains("Update organisation")
-    And the user clicks the button/link    jQuery=button:contains("Update organisation")
     #The following steps check if the collaborator should not see the application in the dashboard page
     And log in as a different user  ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     And the user should not see the element    link= Assign test
