@@ -32,7 +32,7 @@
     <form th:action="@{/organisation/create/selected-organisation/{organisationId}/{postcode}/{selectedPostcode}(organisationId=${organisationForm.searchOrganisationId}, postcode=${organisationForm.addressForm.postcodeInput}, selectedPostcode=${organisationForm.addressForm.selectedPostcodeIndex})}" th:object="${organisationForm}" method="POST">
         <input type="hidden" th:field="*{searchOrganisationId}" />
         <h2 class="heading-medium no-margin-bottom">Operating address</h2>
-        <p>This is the address your organisation works from</p>
+        <p>This is the address that your organisation works from</p>
         <th:block th:insert="fragments/addresses :: company-address-details" th:with="form=${organisationForm}" />
 
         <button type="submit" name="save-organisation-details" class="button button-large extra-margin">Save organisation and continue</button>
