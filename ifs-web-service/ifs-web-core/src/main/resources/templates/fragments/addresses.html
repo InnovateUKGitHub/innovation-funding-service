@@ -114,10 +114,10 @@
             <h3 class="heading-small">Registered name</h3>
             <p th:text="${organisationForm.organisationName}"></p>
 
-            <span th:if="${T(org.innovateuk.ifs.user.resource.OrganisationTypeEnum).BUSINESS.organisationTypeId == organisationForm.organisationType.id}">
-                <h3 th:if="${selectedOrganisation?.organisationSearchId}" class="heading-small">Registration number</h3>
+            <th:block th:if="${selectedOrganisation?.organisationSearchId}">
+                <h3 class="heading-small">Registration number</h3>
                 <p th:text="${selectedOrganisation?.organisationSearchId}"></p>
-            </span>
+            </th:block>
 
             <div th:if="${selectedOrganisation?.organisationAddress != null}">
                 <h3 class="heading-small">Registered Address</h3>
