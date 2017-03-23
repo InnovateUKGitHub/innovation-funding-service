@@ -96,6 +96,7 @@ Adding more funding rows
 Mark other funding as complete
     [Documentation]  INFUND-6895
     [Tags]  HappyPath
+    # TODO Failing due to potential bug, need to re-run and raise
     Given the user selects the checkbox   termsAgreed
     When the user clicks the button/link  jQuery=.button:contains("Mark as complete")
     Then the user should not see an error in the page
