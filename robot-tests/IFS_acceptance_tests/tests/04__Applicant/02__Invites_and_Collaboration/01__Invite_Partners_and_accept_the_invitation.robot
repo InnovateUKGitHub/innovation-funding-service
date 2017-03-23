@@ -160,7 +160,7 @@ Business organisation (partner accepts invitation)
     ...    INFUND-2336
     [Tags]    HappyPath    Email    SmokeTest
     [Setup]    The guest user opens the browser
-    When the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    participate in their application
+    When the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation    3
     And the user clicks the button/link    jQuery=.button:contains("Yes, accept invitation")
     And the user selects the radio button    organisationType    1
     And the user clicks the button/link    jQuery=.button:contains("Continue")
@@ -242,7 +242,7 @@ Registered partner should not create new org but should follow the create accoun
     [Documentation]    INFUND-1463
     [Tags]    Email
     [Setup]    The guest user opens the browser
-    When the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    participate in their application
+    When the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation    3
     And the user should see the text in the page    Join an application
     And the user clicks the button/link    jQuery=.button:contains("Yes, accept invitation")
     And the user should see the text in the page    Confirm your organisation

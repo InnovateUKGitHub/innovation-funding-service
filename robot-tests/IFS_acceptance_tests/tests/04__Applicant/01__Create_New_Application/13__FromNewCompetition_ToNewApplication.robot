@@ -291,7 +291,7 @@ Invite Collaborator in Application with Growth table
     # TODO INFUND-8561
     [Setup]  the user navigates to the page             ${dashboard_url}
     Given the lead applicant invites an existing user   ${compWITHGrowth}  ${collaborator1_credentials["email"]}
-    When the user reads his email and clicks the link   ${collaborator1_credentials["email"]}  Invitation to collaborate in ${compWITHGrowth}  participate in their application
+    When the user reads his email and clicks the link   ${collaborator1_credentials["email"]}  Invitation to collaborate in ${compWITHGrowth}  You will be joining as part of the organisation    3
     Then the user should see the element                jQuery=h1:contains("We have found an account with the invited email address")
     And the user clicks the button/link                 link=Sign into the Innovation Funding Service.
     When guest user log-in                              &{collaborator1_credentials}
@@ -474,7 +474,7 @@ Invite a non-existing collaborator in Appplication with Growth table
     newly invited collaborator can create account and sign in
 
 Newly invited collaborator can create account and sign in
-    the user reads his email and clicks the link     liam@innovate.com  Invitation to collaborate in ${compWITHGrowth}  participate in their application
+    the user reads his email and clicks the link     liam@innovate.com  Invitation to collaborate in ${compWITHGrowth}  You will be joining as part of the organisation    3
     the user clicks the button/link      jQuery=a:contains("Yes, accept invitation")
     # the user should see the element      jQuery=h1:contains("New to this service?")
     # the user clicks the button/link       jQuery=a:contains("Create")
