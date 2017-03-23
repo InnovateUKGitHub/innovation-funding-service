@@ -134,7 +134,7 @@ Special Project Finance role
     And the user clicks the button/link    jQuery=.button:contains("Create account")
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And the user clicks the Not on company house link
-    And the user clicks the button/link    jQuery=.button:contains("Save and continue")
+    And the user clicks the button/link    jQuery=.button:contains("Confirm")
     And the user enters the details and clicks the create account    ${test_mailbox_one}+project.finance1@gmail.com
     And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
 
