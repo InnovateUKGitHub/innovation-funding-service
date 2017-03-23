@@ -68,7 +68,7 @@ public class CompetitionKeyStatisticsServiceImpl extends BaseTransactionalServic
     public ServiceResult<CompetitionClosedKeyStatisticsResource> getClosedKeyStatisticsByCompetition(long competitionId) {
         CompetitionClosedKeyStatisticsResource competitionKeyStatisticsResource = new CompetitionClosedKeyStatisticsResource();
         competitionKeyStatisticsResource.setApplicationsPerAssessor(competitionRepository.findById(competitionId).getAssessorCount());
-        competitionKeyStatisticsResource.setApplicationsRequiringAssessors(applicationStatisticsRepository.findByCompetition(competitionId)
+        competitionKeyStatisticsResource.setApplicationsRequiringAssessors(applicationStatisticsRepository.findByCompetitionAndApplicationStatusIdIn(competitionId, SUBMITTED_STATUS_IDS)
                 .stream()
                 .filter(as -> as.getAssessors() < competitionKeyStatisticsResource.getApplicationsPerAssessor())
                 .mapToInt(e -> 1)
@@ -78,7 +78,7 @@ public class CompetitionKeyStatisticsServiceImpl extends BaseTransactionalServic
                 .filter(cp -> assessmentRepository.countByParticipantUserIdAndActivityStateStateNotIn(cp.getId(), of(REJECTED, WITHDRAWN)) == 0)
                 .mapToInt(e -> 1)
                 .sum());
-        competitionKeyStatisticsResource.setAssignmentCount(applicationStatisticsRepository.findByCompetition(competitionId).stream().mapToInt(ApplicationStatistics::getAssessors).sum());
+        competitionKeyStatisticsResource.setAssignmentCount(applicationStatisticsRepository.findByCompetitionAndApplicationStatusIdIn(competitionId, SUBMITTED_STATUS_IDS).stream().mapToInt(ApplicationStatistics::getAssessors).sum());
         competitionKeyStatisticsResource.setAssessorsInvited(competitionInviteRepository.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT)));
         competitionKeyStatisticsResource.setAssessorsAccepted(competitionParticipantRepository.countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, ParticipantStatus.ACCEPTED));
 
@@ -88,7 +88,7 @@ public class CompetitionKeyStatisticsServiceImpl extends BaseTransactionalServic
     @Override
     public ServiceResult<CompetitionInAssessmentKeyStatisticsResource> getInAssessmentKeyStatisticsByCompetition(long competitionId) {
         CompetitionInAssessmentKeyStatisticsResource competitionKeyStatisticsResource = new CompetitionInAssessmentKeyStatisticsResource();
-        competitionKeyStatisticsResource.setAssignmentCount(applicationStatisticsRepository.findByCompetition(competitionId).stream().mapToInt(ApplicationStatistics::getAssessors).sum());
+        competitionKeyStatisticsResource.setAssignmentCount(applicationStatisticsRepository.findByCompetitionAndApplicationStatusIdIn(competitionId, SUBMITTED_STATUS_IDS).stream().mapToInt(ApplicationStatistics::getAssessors).sum());
         competitionKeyStatisticsResource.setAssignmentsWaiting(assessmentRepository.countByActivityStateStateAndTargetCompetitionId(PENDING, competitionId));
         competitionKeyStatisticsResource.setAssignmentsAccepted(assessmentRepository.countByActivityStateStateAndTargetCompetitionId(ACCEPTED, competitionId));
         competitionKeyStatisticsResource.setAssessmentsStarted(assessmentRepository.countByActivityStateStateInAndTargetCompetitionId(of(OPEN, DECIDE_IF_READY_TO_SUBMIT, READY_TO_SUBMIT), competitionId));
