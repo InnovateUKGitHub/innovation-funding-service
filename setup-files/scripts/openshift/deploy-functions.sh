@@ -95,3 +95,7 @@ function cleanUp() {
     rm -rf os-files-tmp
     rm -rf shibboleth
 }
+
+function scaleDataService() {
+    oc export dc data-service | "s/replicas: 1/replicas: 2/g" | oc apply -f -
+}

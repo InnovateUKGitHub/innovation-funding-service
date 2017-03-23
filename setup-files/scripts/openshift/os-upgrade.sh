@@ -70,3 +70,9 @@ tailorAppInstance
 
 useContainerRegistry
 upgradeServices
+
+if [[ ${TARGET} == "production" || ${TARGET} == "uat" ]]
+then
+    # We only scale up data-service once data-service started up and performed the Flyway migrations on one thread
+    scaleDataService
+fi

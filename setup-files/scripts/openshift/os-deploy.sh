@@ -72,10 +72,6 @@ function createProject() {
     done
 }
 
-function scaleDataService() {
-    oc export dc data-service | "s/replicas: 1/replicas: 2/g" | oc apply -f -
-}
-
 . $(dirname $0)/deploy-functions.sh
 
 # Entry point
