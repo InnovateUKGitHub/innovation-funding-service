@@ -8,13 +8,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface InviteOrganisationService {
 
-    @PostAuthorize("hasPermission(returnObject, 'READ')")
-    ServiceResult<InviteOrganisationResource> findOne(Long id);
+    @PostAuthorize("hasPermission(returnObject, 'READ_FOR_UPDATE')")
+    ServiceResult<InviteOrganisationResource> getById(long id);
 
-    @PostAuthorize("hasPermission(returnObject, 'READ')")
-    ServiceResult<InviteOrganisationResource> getByIdWithInvitesForApplication(long id, long applicationId);
-
-    @PostAuthorize("hasPermission(returnObject, 'READ')")
+    @PostAuthorize("hasPermission(returnObject, 'READ_FOR_UPDATE')")
     ServiceResult<InviteOrganisationResource> getByOrganisationIdWithInvitesForApplication(long organisationId, long applicationId);
 
     @PreAuthorize(value = "hasPermission(#inviteOrganisationResource, 'SAVE')")

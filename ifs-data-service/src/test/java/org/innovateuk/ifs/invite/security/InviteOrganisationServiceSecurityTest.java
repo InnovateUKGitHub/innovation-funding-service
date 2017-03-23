@@ -13,7 +13,6 @@ import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilde
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.verify;
 
-
 /**
  * Testing how the secured methods in {@link InviteOrganisationService} interact with Spring Security
  */
@@ -28,21 +27,11 @@ public class InviteOrganisationServiceSecurityTest extends BaseServiceSecurityTe
         inviteOrganisationPermissionRules = getMockPermissionRulesBean(InviteOrganisationPermissionRules.class);
     }
 
-
     @Test
-    public void findOne() {
-        final long inviteId = 1L;
+    public void getById() {
         assertAccessDenied(
-                () -> classUnderTest.findOne(inviteId),
+                () -> classUnderTest.getById(1L),
                 () -> verify(inviteOrganisationPermissionRules).consortiumCanViewAnInviteOrganisation(isA(InviteOrganisationResource.class), isA(UserResource.class)));
-    }
-
-    @Test
-    public void getByIdWithInvitesForApplication() {
-        assertAccessDenied(
-                () -> classUnderTest.getByIdWithInvitesForApplication(1L, 2L),
-                () -> verify(inviteOrganisationPermissionRules).consortiumCanViewAnInviteOrganisation(isA(InviteOrganisationResource.class), isA(UserResource.class)));
-
     }
 
     @Test
@@ -68,12 +57,7 @@ public class InviteOrganisationServiceSecurityTest extends BaseServiceSecurityTe
     public static class TestInviteOrganisationService implements InviteOrganisationService {
 
         @Override
-        public ServiceResult<InviteOrganisationResource> findOne(Long id) {
-            return serviceSuccess(newInviteOrganisationResource().build());
-        }
-
-        @Override
-        public ServiceResult<InviteOrganisationResource> getByIdWithInvitesForApplication(long inviteOrganisationId, long applicationId) {
+        public ServiceResult<InviteOrganisationResource> getById(long id) {
             return serviceSuccess(newInviteOrganisationResource().build());
         }
 

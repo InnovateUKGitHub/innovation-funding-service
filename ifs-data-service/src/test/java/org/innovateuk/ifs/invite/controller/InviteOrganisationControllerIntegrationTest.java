@@ -6,7 +6,6 @@ import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.mapper.InviteOrganisationMapper;
-import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
 import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.user.domain.Organisation;
@@ -44,9 +43,6 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
     private ApplicationRepository applicationRepository;
 
     @Autowired
-    private ApplicationInviteRepository applicationInviteRepository;
-
-    @Autowired
     private InviteOrganisationRepository inviteOrganisationRepository;
 
     @Autowired
@@ -74,120 +70,73 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
     }
 
     @Test
-    public void findById_userIsLeadApplicant() throws Exception {
+    public void getById_userIsLeadApplicant() throws Exception {
         Application application = applicationRepository.findOne(1L);
         Organisation organisation = setupOrganisation("Quick Sustainability Limited");
-        InviteOrganisation inviteOrganisation = setupInviteOrganisationWithOrganisation(application, organisation);
+        InviteOrganisation inviteOrganisation = setupInviteOrganisation(application, organisation);
 
         setLoggedInUser(getLeadApplicantForApplication(application));
-        assertInviteOrganisationIsFound(inviteOrganisation, organisation, () -> controller.findById(inviteOrganisation.getId()));
+        assertInviteOrganisationIsFound(inviteOrganisation, organisation, () -> controller.getById(inviteOrganisation.getId()));
     }
 
     @Test
-    public void findById_userIsCollaborator() throws Exception {
+    public void getById_userIsCollaborator() throws Exception {
         Application application = applicationRepository.findOne(1L);
         Organisation organisation = setupOrganisation("Quick Sustainability Limited");
-        InviteOrganisation inviteOrganisation = setupInviteOrganisationWithOrganisation(application, organisation);
+        InviteOrganisation inviteOrganisation = setupInviteOrganisation(application, organisation);
 
 
         setLoggedInUser(setupCollaboratorForApplicationAndOrganisation(application, organisation));
-        assertInviteOrganisationIsFound(inviteOrganisation, organisation, () -> controller.findById(inviteOrganisation.getId()));
+        assertInviteOrganisationIsFound(inviteOrganisation, organisation, () -> controller.getById(inviteOrganisation.getId()));
     }
 
     @Test
-    public void findById_userIsCollaboratorAndOrganisationUnconfirmed() throws Exception {
+    public void getById_userIsCollaboratorAndOrganisationUnconfirmed() throws Exception {
         Application application = applicationRepository.findOne(1L);
         InviteOrganisation inviteOrganisation = setupInviteOrganisationUnconfirmed(application);
 
         setLoggedInUser(setupCollaboratorForApplicationAndOrganisation(application, setupOrganisation("Other Company Limited")));
-        assertAccessDeniedForInviteOrganisation(() -> controller.findById(inviteOrganisation.getId()));
+        assertAccessDeniedForInviteOrganisation(() -> controller.getById(inviteOrganisation.getId()));
     }
 
     @Test
-    public void findById_userIsCollaboratorForDifferentOrganisation() throws Exception {
+    public void getById_userIsCollaboratorForDifferentOrganisation() throws Exception {
         Application application = applicationRepository.findOne(1L);
         Organisation organisation = setupOrganisation("Quick Sustainability Limited");
-        InviteOrganisation inviteOrganisation = setupInviteOrganisationWithOrganisation(application, organisation);
+        InviteOrganisation inviteOrganisation = setupInviteOrganisation(application, organisation);
 
         setLoggedInUser(setupCollaboratorForApplicationAndOrganisation(application, setupOrganisation("Other Company Limited")));
-        assertAccessDeniedForInviteOrganisation(() -> controller.findById(inviteOrganisation.getId()));
-    }
-
-    @Test
-    public void getByIdWithInvitesForApplication_userIsLeadApplicant() throws Exception {
-        Application application1 = applicationRepository.findOne(1L);
-        Application application2 = applicationRepository.findOne(2L);
-        Organisation organisation = setupOrganisation("Quick Sustainability Limited");
-        InviteOrganisation inviteOrganisation = setupInviteOrganisationForMultipleApplications(application1, application2, organisation);
-
-        setLoggedInUser(getLeadApplicantForApplication(application1));
-        assertInviteOrganisationIsFound(inviteOrganisation, organisation,
-                () -> controller.getByIdWithInvitesForApplication(inviteOrganisation.getId(), application1.getId()));
-    }
-
-    @Test
-    public void getByIdWithInvitesForApplication_userIsCollaborator() throws Exception {
-        Application application1 = applicationRepository.findOne(1L);
-        Application application2 = applicationRepository.findOne(2L);
-        Organisation organisation = setupOrganisation("Quick Sustainability Limited");
-        InviteOrganisation inviteOrganisation = setupInviteOrganisationForMultipleApplications(application1, application2, organisation);
-
-        setLoggedInUser(setupCollaboratorForApplicationAndOrganisation(application1, organisation));
-        assertInviteOrganisationIsFound(inviteOrganisation, organisation,
-                () -> controller.getByIdWithInvitesForApplication(inviteOrganisation.getId(), application1.getId()));
-    }
-
-    @Test
-    public void getByIdWithInvitesForApplication_userIsCollaboratorAndOrganisationUnconfirmed() throws Exception {
-        Application application = applicationRepository.findOne(1L);
-        InviteOrganisation inviteOrganisation = setupInviteOrganisationUnconfirmed(application);
-
-        setLoggedInUser(setupCollaboratorForApplicationAndOrganisation(application, setupOrganisation("Other Company Limited")));
-        assertAccessDeniedForInviteOrganisation(() -> controller.getByIdWithInvitesForApplication(inviteOrganisation.getId(), application.getId()));
-    }
-
-    @Test
-    public void getByIdWithInvitesForApplication_userIsCollaboratorForDifferentOrganisation() throws Exception {
-        Application application1 = applicationRepository.findOne(1L);
-        Application application2 = applicationRepository.findOne(2L);
-        Organisation organisation = setupOrganisation("Quick Sustainability Limited");
-        InviteOrganisation inviteOrganisation = setupInviteOrganisationForMultipleApplications(application1, application2, organisation);
-
-        setLoggedInUser(setupCollaboratorForApplicationAndOrganisation(application1, setupOrganisation("Other Company Limited")));
-        assertAccessDeniedForInviteOrganisation(() -> controller.getByIdWithInvitesForApplication(inviteOrganisation.getId(), application1.getId()));
+        assertAccessDeniedForInviteOrganisation(() -> controller.getById(inviteOrganisation.getId()));
     }
 
     @Test
     public void getByOrganisationIdWithInvitesForApplication_userIsLeadApplicant() throws Exception {
-        Application application1 = applicationRepository.findOne(1L);
-        Application application2 = applicationRepository.findOne(2L);
+        Application application = applicationRepository.findOne(1L);
         Organisation organisation = setupOrganisation("Quick Sustainability Limited");
-        InviteOrganisation inviteOrganisation = setupInviteOrganisationForMultipleApplications(application1, application2, organisation);
+        InviteOrganisation inviteOrganisation = setupInviteOrganisation(application, organisation);
 
-        setLoggedInUser(getLeadApplicantForApplication(application1));
-        assertInviteOrganisationIsFound(inviteOrganisation, organisation, () -> controller.getByOrganisationIdWithInvitesForApplication(organisation.getId(), application1.getId()));
+        setLoggedInUser(getLeadApplicantForApplication(application));
+        assertInviteOrganisationIsFound(inviteOrganisation, organisation, () -> controller.getByOrganisationIdWithInvitesForApplication(organisation.getId(), application.getId()));
     }
 
     @Test
     public void getByOrganisationIdWithInvitesForApplication_userIsCollaborator() throws Exception {
-        Application application1 = applicationRepository.findOne(1L);
-        Application application2 = applicationRepository.findOne(2L);
+        Application application = applicationRepository.findOne(1L);
         Organisation organisation = setupOrganisation("Quick Sustainability Limited");
-        InviteOrganisation inviteOrganisation = setupInviteOrganisationForMultipleApplications(application1, application2, organisation);
+        InviteOrganisation inviteOrganisation = setupInviteOrganisation(application, organisation);
 
-        setLoggedInUser(setupCollaboratorForApplicationAndOrganisation(application1, organisation));
-        assertInviteOrganisationIsFound(inviteOrganisation, organisation, () -> controller.getByOrganisationIdWithInvitesForApplication(organisation.getId(), application1.getId()));
+        setLoggedInUser(setupCollaboratorForApplicationAndOrganisation(application, organisation));
+        assertInviteOrganisationIsFound(inviteOrganisation, organisation, () -> controller.getByOrganisationIdWithInvitesForApplication(organisation.getId(), application.getId()));
     }
 
     @Test
     public void getByOrganisationIdWithInvitesForApplication_userIsCollaboratorForDifferentOrganisation() throws Exception {
-        Application application1 = applicationRepository.findOne(1L);
-        Application application2 = applicationRepository.findOne(2L);
+        Application application = applicationRepository.findOne(1L);
         Organisation organisation = setupOrganisation("Quick Sustainability Limited");
-        setupInviteOrganisationForMultipleApplications(application1, application2, organisation);
+        setupInviteOrganisation(application, organisation);
 
-        setLoggedInUser(setupCollaboratorForApplicationAndOrganisation(application1, setupOrganisation("Other Company Limited")));
-        assertAccessDeniedForInviteOrganisation(() -> controller.getByOrganisationIdWithInvitesForApplication(organisation.getId(), application1.getId()));
+        setLoggedInUser(setupCollaboratorForApplicationAndOrganisation(application, setupOrganisation("Other Company Limited")));
+        assertAccessDeniedForInviteOrganisation(() -> controller.getByOrganisationIdWithInvitesForApplication(organisation.getId(), application.getId()));
     }
 
     @Test
@@ -195,13 +144,13 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
         Application application = applicationRepository.findOne(1L);
         Organisation organisation = setupOrganisation("Quick Sustainability Limited");
 
-        InviteOrganisation inviteOrganisation = setupInviteOrganisationWithOrganisation(application, organisation);
+        InviteOrganisation inviteOrganisation = setupInviteOrganisation(application, organisation);
 
         setLoggedInUser(getLeadApplicantForApplication(application));
         InviteOrganisationResource inviteOrganisationResource = inviteOrganisationMapper.mapToResource(inviteOrganisation);
 
         assertTrue(controller.put(inviteOrganisationResource).isSuccess());
-        InviteOrganisationResource found = controller.findById(inviteOrganisation.getId()).getSuccessObjectOrThrowException();
+        InviteOrganisationResource found = controller.getById(inviteOrganisation.getId()).getSuccessObjectOrThrowException();
         assertEquals(inviteOrganisationResource, found);
     }
 
@@ -248,20 +197,21 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
         return user;
     }
 
-    private InviteOrganisation setupInviteOrganisationWithOrganisation(Application application, Organisation organisation) {
+    private InviteOrganisation setupInviteOrganisation(Application application, Organisation organisation) {
         InviteOrganisation inviteOrganisation = inviteOrganisationRepository.save(newInviteOrganisation()
                 .with(id(null))
                 .withOrganisationName("Quick Sustainability")
                 .withOrganisation(organisation)
                 .build());
 
-        applicationInviteRepository.save(newApplicationInvite()
+        // The postProcess method of the following ApplicationInviteBuilder adds the invite to the InviteOrganisation
+        newApplicationInvite()
                 .with(id(null))
                 .withApplication(application)
                 .withName("Example User1")
                 .withEmail("example+user1@example.com")
                 .withInviteOrganisation(inviteOrganisation)
-                .build());
+                .build();
 
         flushAndClearSession();
         return inviteOrganisationRepository.findOne(inviteOrganisation.getId());
@@ -273,35 +223,17 @@ public class InviteOrganisationControllerIntegrationTest extends BaseControllerI
                 .withOrganisationName("Quick Sustainability")
                 .build());
 
-        applicationInviteRepository.save(newApplicationInvite()
+        // The postProcess method of the following ApplicationInviteBuilder adds the invite to the InviteOrganisation
+        newApplicationInvite()
                 .with(id(null))
                 .withApplication(application)
                 .withName("Example User1")
                 .withEmail("example+user1@example.com")
                 .withInviteOrganisation(inviteOrganisation)
-                .build());
+                .build();
 
         flushAndClearSession();
-        return inviteOrganisationRepository.findOne(inviteOrganisation.getId());
-    }
-
-    private InviteOrganisation setupInviteOrganisationForMultipleApplications(Application application1, Application application2, Organisation organisation) {
-        InviteOrganisation inviteOrganisation = inviteOrganisationRepository.save(newInviteOrganisation()
-                .with(id(null))
-                .withOrganisationName("Quick Sustainability")
-                .withOrganisation(organisation)
-                .build());
-
-        applicationInviteRepository.save(newApplicationInvite()
-                .with(id(null))
-                .withApplication(application1, application2)
-                .withName("Example User1", "Example User2")
-                .withEmail("example+user1@example.com", "example+user2@example.com")
-                .withInviteOrganisation(inviteOrganisation)
-                .build(2));
-
-        flushAndClearSession();
-        return inviteOrganisationRepository.findOne(inviteOrganisation.getId());
+        return inviteOrganisation;
     }
 
     private void setLoggedInUser(User user) {

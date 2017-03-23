@@ -33,13 +33,18 @@ public class InviteOrganisationPermissionRules {
         return isLeadApplicantForAllApplications(inviteOrganisation, user);
     }
 
-    @PermissionRule(value = "READ", description = "a consortium member can view the invites of their own organisation or if lead applicant")
+    @PermissionRule(value = "READ", description = "a consortium member and the lead applicant can view the invites of all organisations")
+    public boolean consortiumCanViewAnyInviteOrganisation(InviteOrganisationResource inviteOrganisation, UserResource user) {
+        return isApplicationCollaboratorOrIsLeadApplicant(inviteOrganisation, user);
+    }
+
+    @PermissionRule(value = "READ_FOR_UPDATE", description = "a consortium member can view the invites of their own organisation or if lead applicant")
     public boolean consortiumCanViewAnInviteOrganisation(InviteOrganisationResource inviteOrganisation, UserResource user) {
         if (inviteOrganisation.getOrganisation() == null) {
-            // Organisation is not confirmed yet so only the lead can view it to perform an update
+            // Organisation is not confirmed yet so only the lead can view it. There are no other users that are collaborators for this organisation
             return isLeadApplicantForAllApplications(inviteOrganisation, user);
         }
-        return isAConsortiumMemberOrIsLeadApplicantForAllApplications(inviteOrganisation, user);
+        return isApplicationCollaboratorForOrganisationOrIsLeadApplicant(inviteOrganisation, user);
     }
 
     @PermissionRule(value = "SAVE", description = "lead applicant can save an organisation invite for the application")
@@ -55,21 +60,33 @@ public class InviteOrganisationPermissionRules {
         return invites.stream().allMatch(applicationInviteResource -> isLeadApplicant(applicationInviteResource, user));
     }
 
-    private boolean isAConsortiumMemberOrIsLeadApplicantForAllApplications(InviteOrganisationResource inviteOrganisation, UserResource user) {
-        List<ApplicationInviteResource> invites = inviteOrganisation.getInviteResources();
+    private boolean isApplicationCollaboratorOrIsLeadApplicant(InviteOrganisationResource inviteOrganisationResource, UserResource userResource) {
+        List<ApplicationInviteResource> invites = inviteOrganisationResource.getInviteResources();
         if (invites == null || invites.isEmpty()) {
             return false; // Unable to check the application so default to false;
         }
-        return invites.stream().allMatch(applicationInviteResource -> isAConsortiumMemberOrIsLeadApplicant(
-                inviteOrganisation, applicationInviteResource, user));
+        return invites.stream().allMatch(applicationInviteResource ->
+                isLeadApplicant(applicationInviteResource, userResource) ||
+                        isApplicationCollaborator(applicationInviteResource, userResource)
+        );
     }
 
-    private boolean isAConsortiumMemberOrIsLeadApplicant(InviteOrganisationResource inviteOrganisationResource, ApplicationInviteResource applicationInviteResource, UserResource userResource) {
-        return isLeadApplicant(applicationInviteResource, userResource) || isAConsortiumMember(
-                inviteOrganisationResource, applicationInviteResource, userResource);
+    private boolean isApplicationCollaboratorForOrganisationOrIsLeadApplicant(InviteOrganisationResource inviteOrganisationResource, UserResource userResource) {
+        List<ApplicationInviteResource> invites = inviteOrganisationResource.getInviteResources();
+        if (invites == null || invites.isEmpty()) {
+            return false; // Unable to check the application so default to false;
+        }
+        return invites.stream().allMatch(applicationInviteResource ->
+                isLeadApplicant(applicationInviteResource, userResource) ||
+                        isApplicationCollaboratorForOrganisation(inviteOrganisationResource, applicationInviteResource, userResource)
+        );
     }
 
-    private boolean isAConsortiumMember(InviteOrganisationResource inviteOrganisationResource, ApplicationInviteResource applicationInviteResource, UserResource userResource) {
+    private boolean isApplicationCollaborator(ApplicationInviteResource applicationInviteResource, UserResource userResource) {
+        return checkProcessRole(userResource, applicationInviteResource.getApplication(), COLLABORATOR, processRoleRepository);
+    }
+
+    private boolean isApplicationCollaboratorForOrganisation(InviteOrganisationResource inviteOrganisationResource, ApplicationInviteResource applicationInviteResource, UserResource userResource) {
         return checkProcessRole(userResource, applicationInviteResource.getApplication(), inviteOrganisationResource.getOrganisation(), COLLABORATOR, roleRepository, processRoleRepository);
     }
 

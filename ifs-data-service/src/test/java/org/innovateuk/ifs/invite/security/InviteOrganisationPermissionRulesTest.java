@@ -50,6 +50,8 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
 
         when(processRoleRepositoryMock.findByUserIdAndApplicationId(leadApplicant.getId(), applicationResource.getId()))
                 .thenReturn(newProcessRole().withRole(getRole(LEADAPPLICANT)).build());
+        when(processRoleRepositoryMock.findByUserIdAndApplicationId(collaborator.getId(), applicationResource.getId()))
+                .thenReturn(newProcessRole().withRole(getRole(COLLABORATOR)).build());
         when(processRoleRepositoryMock.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(collaborator.getId(),
                 collaboratorRole.getId(), applicationResource.getId(), organisationResource.getId())).thenReturn(newProcessRole().withRole(getRole(COLLABORATOR)).build());
     }
@@ -62,6 +64,16 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
         assertTrue(rules.leadApplicantCanInviteAnOrganisationToTheApplication(inviteOrganisationResource, leadApplicant));
         assertFalse(rules.leadApplicantCanInviteAnOrganisationToTheApplication(inviteOrganisationResource, collaborator));
         assertFalse(rules.leadApplicantCanInviteAnOrganisationToTheApplication(inviteOrganisationResource, otherApplicant));
+    }
+
+    @Test
+    public void testConsortiumCanViewAnyInviteOrganisation() throws Exception {
+        List<ApplicationInviteResource> inviteResource = InviteResourceBuilder.newInviteResource().withApplication(applicationResource.getId()).build(5);
+        InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withInviteResources(inviteResource).build();
+
+        assertTrue(rules.consortiumCanViewAnyInviteOrganisation(inviteOrganisationResource, leadApplicant));
+        assertTrue(rules.consortiumCanViewAnyInviteOrganisation(inviteOrganisationResource, collaborator));
+        assertFalse(rules.consortiumCanViewAnyInviteOrganisation(inviteOrganisationResource, otherApplicant));
     }
 
     @Test

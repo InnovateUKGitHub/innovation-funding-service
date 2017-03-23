@@ -12,7 +12,6 @@ import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 public class ApplicationInviteBuilder extends BaseBuilder<ApplicationInvite, ApplicationInviteBuilder> {
 
@@ -66,7 +65,7 @@ public class ApplicationInviteBuilder extends BaseBuilder<ApplicationInvite, App
 
         // add back-refs to InviteOrganisations
         InviteOrganisation inviteOrganisation = invite.getInviteOrganisation();
-        if (inviteOrganisation != null && !simpleMap(inviteOrganisation.getInvites(), ApplicationInvite::getId).contains(invite.getId())) {
+        if (inviteOrganisation != null) {
             inviteOrganisation.getInvites().add(invite);
         }
     }
