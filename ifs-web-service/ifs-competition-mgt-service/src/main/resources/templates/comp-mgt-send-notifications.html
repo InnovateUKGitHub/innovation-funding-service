@@ -74,13 +74,7 @@
                     <td th:text="${#numbers.formatInteger(applicationSummary.id,8)}">Application number</td>
                     <td th:text="${applicationSummary.name}">Project title</td>
                     <td th:text="${applicationSummary.lead}">Lead</td>
-                    <th:block th:switch="${applicationSummary.fundingDecision}">
-                        <td th:case="${T(org.innovateuk.ifs.application.resource.FundingDecision).FUNDED}">Successful</td>
-                        <td th:case="${T(org.innovateuk.ifs.application.resource.FundingDecision).UNFUNDED}">Unsuccessful</td>
-                        <td th:case="${T(org.innovateuk.ifs.application.resource.FundingDecision).UNDECIDED}">Undecided</td>
-                        <td th:case="${T(org.innovateuk.ifs.application.resource.FundingDecision).ON_HOLD}">On hold</td>
-                        <td th:case="*">-</td>
-                    </th:block>
+                    <td th:text="${applicationSummary.fundingDecision?.name}">-</td>
                 </tr>
                 </tbody>
             </table>
