@@ -66,7 +66,8 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...               INFUND-7756 Project finance can post an update to an existing note
 ...
 ...               INFUND-7577 Finance Checks - Overheads displayed in the expanded Overheads section of the partner’s project finances and Project Finance user can Edit, Save, Change selection from 0% to 20% to Calculate overhead, contains spreadsheet when uploaded
-
+...
+...               INFUND-7578 Organisation details - Headcount and Turnover
 Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -867,9 +868,12 @@ Viability checks are populated in the table
 Project finance user can see the viability check page for the lead partner
     [Documentation]    INFUND-4831, INFUND-4830, INFUND-4825
     [Tags]
-    when the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")    # clicking the review button for the lead partner
+    When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")    # clicking the review button for the lead partner
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
     And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_COMPANY_NUMBER}
+    And the user should see the text in the element  css=.standard-definition-list dd:nth-of-type(3)  -  #turnover
+    And the user should see the text in the page    css=.standard-definition-list dd:nth-of-type(4)  -   #headcount
+
 
 Project finance user can see the lead partner's information
     [Documentation]    INFUND-4825, INFUND-7577
@@ -934,11 +938,13 @@ Confirming viability should update on the finance checks page
     Then the user should see the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Approved")
 
 Project finance user can see the viability checks for the industrial partner
-    [Documentation]    INFUND-4831, INFUND-4830
+    [Documentation]    INFUND-4831, INFUND-4830, INFUND-7578
     [Tags]
     When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(3) td:nth-child(2) a:contains("Review")
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
     And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_NUMBER}
+    And the user should see the text in the element  css=.standard-definition-list dd:nth-of-type(3)  ${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_TURNOVER}
+    And the user should see the text in the page    css=.standard-definition-list dd:nth-of-type(4)  ${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_HEADCOUNT}
 
 Checking the approve viability checkbox enables RAG selection but not confirm viability button for partner
     [Documentation]    INFUND-4831, INFUND-4856, INFUND-4830
