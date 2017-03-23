@@ -245,10 +245,9 @@ Registered partner should not create new org but should follow the create accoun
     When the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    participate in their application
     And the user should see the text in the page    Join an application
     And the user clicks the button/link    jQuery=.button:contains("Yes, accept invitation")
-    And the user should see the text in the page    Your organisation
-    And the user should see the text in the page    Business organisation
+    And the user should see the text in the page    Confirm your organisation
     And the user should see the element    link=email the lead applicant
-    And the user clicks the button/link    jQuery=.button:contains("Continue")
+    And the user clicks the button/link    jQuery=.button:contains("Confirm and continue")
     And the user fills the create account form    Roger    Axe
     And the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Please verify your email address    Once verified you can sign into your account
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
