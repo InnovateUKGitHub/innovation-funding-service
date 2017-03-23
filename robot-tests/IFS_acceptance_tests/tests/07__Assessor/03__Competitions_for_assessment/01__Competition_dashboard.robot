@@ -55,18 +55,19 @@ Details of the competition are visible
 Competition brief link can be seen
     [Documentation]    INFUND-5494
     [Tags]
-    Then the user should see the element    link=competition brief
+    Then the user should see the element    link=View competition brief (opens in a new window)
 
 User can view the competition brief
     [Documentation]    INFUND-5494
     [Tags]
-    When the user clicks the button/link    link=competition brief
-    Then the user should not see an error in the page
+    When the user clicks the button/link    link=View competition brief (opens in a new window)
+    Then the user should get a competition brief window
+    And the user should not see an error in the page
     And the user should see the text in the page    ${IN_ASSESSMENT_COMPETITION_NAME}
     And the user should see the text in the page    Competition opens
     And the user should see the text in the page    Competition closes
     And the user should see the element    jQuery=.button:contains("Start new application")
-    [Teardown]    the user goes back to the previous page
+    [Teardown]    the user closes the competition brief
 
 Applications should have correct status and order
     [Documentation]    INFUND-6040
@@ -147,3 +148,10 @@ The order of the applications should be correct according to the status
     element should contain    css=.progress-list li:nth-child(4) .msg-progress    Accepted
     element should contain    css=.progress-list li:nth-child(5) .msg-progress    Accepted
     element should contain    css=.progress-list li:nth-child(6) .msg-progress    Accepted
+
+The user should get a competition brief window
+    Select Window   title=Competition Overview - Innovation Funding Service
+
+The user closes the competition brief
+    Close Window
+    Select Window

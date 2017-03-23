@@ -97,17 +97,11 @@
     <main id="content">
       #parse("login-error.vm")
 
-            <h1 class="heading-large">Sign into Innovation Funding Service</h1>
-            <p>Enter the email address and password you used to create your Innovation Funding Service account.</p>
-
+            <h1 class="heading-large">Innovation Funding Service</h1>
+            <h2 class="heading-medium">Sign in</h2>
             <form action="$flowExecutionUrl" method="post">
 
             #set ($serviceName = $rpUIContext.serviceName)
-            #if ($serviceName && !$rpContext.getRelyingPartyId().contains($serviceName))
-              <legend class="visuallyhidden">
-                Sign in
-              </legend>
-            #end
 
             #if ($passwordEnabled)
               <div class="form-group">
@@ -229,7 +223,7 @@
                 var emailField = jQuery("[type='email']").first();
                 var passwordField = jQuery("[type='password']").first();
                 var button = jQuery("button[type='submit']").first();
-                var valid = IFS.formValidation.checkEmail(emailField, false) && IFS.formValidation.checkRequired(passwordField, false);
+                var valid = IFS.core.formValidation.checkEmail(emailField, false) && IFS.core.formValidation.checkRequired(passwordField, false);
                 if (valid) {
                     button.get(0).childNodes[0].nodeValue='#springMessageText("idp.login.pleasewait", "Signing in, please wait...")';
                 }
