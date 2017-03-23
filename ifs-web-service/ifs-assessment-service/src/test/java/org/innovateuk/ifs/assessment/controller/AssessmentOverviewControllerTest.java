@@ -13,6 +13,7 @@ import org.innovateuk.ifs.assessment.model.AssessmentOverviewModelPopulator;
 import org.innovateuk.ifs.assessment.model.RejectAssessmentModelPopulator;
 import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
+import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.service.AssessmentService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseService;
@@ -53,6 +54,7 @@ import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newS
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
 import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.CONFLICT_OF_INTEREST;
+import static org.innovateuk.ifs.assessment.resource.AssessmentStates.ACCEPTED;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ASSESSMENT_REJECTION_FAILED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -377,6 +379,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .with(id(assessmentId))
                 .withApplication(applicationId)
                 .withApplicationName("application name")
+                .withActivityState(ACCEPTED)
                 .build();
 
         when(assessmentService.getRejectableById(assessmentId)).thenReturn(assessment);
@@ -388,7 +391,8 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
 
         RejectAssessmentViewModel expectedViewModel = new RejectAssessmentViewModel(assessmentId,
                 applicationId,
-                "application name"
+                "application name",
+                ACCEPTED
         );
 
         MvcResult result = mockMvc.perform(post("/{assessmentId}/reject", assessmentId)
@@ -427,6 +431,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .with(id(assessmentId))
                 .withApplication(applicationId)
                 .withApplicationName("application name")
+                .withActivityState(ACCEPTED)
                 .build();
 
         when(assessmentService.getRejectableById(assessmentId)).thenReturn(assessment);
@@ -439,7 +444,8 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
 
         RejectAssessmentViewModel expectedViewModel = new RejectAssessmentViewModel(assessmentId,
                 applicationId,
-                "application name"
+                "application name",
+                ACCEPTED
         );
 
         MvcResult result = mockMvc.perform(post("/{assessmentId}/reject", assessmentId)
@@ -479,6 +485,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .with(id(assessmentId))
                 .withApplication(applicationId)
                 .withApplicationName("application name")
+                .withActivityState(ACCEPTED)
                 .build();
 
         when(assessmentService.getRejectableById(assessmentId)).thenReturn(assessment);
@@ -491,7 +498,8 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
 
         RejectAssessmentViewModel expectedViewModel = new RejectAssessmentViewModel(assessmentId,
                 applicationId,
-                "application name"
+                "application name",
+                ACCEPTED
         );
 
         MvcResult result = mockMvc.perform(post("/{assessmentId}/reject", assessmentId)
@@ -531,6 +539,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .with(id(assessmentId))
                 .withApplication(applicationId)
                 .withApplicationName("application name")
+                .withActivityState(ACCEPTED)
                 .build();
 
         when(assessmentService.getRejectableById(assessmentId)).thenReturn(assessment);
@@ -544,7 +553,8 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
 
         RejectAssessmentViewModel expectedViewModel = new RejectAssessmentViewModel(assessmentId,
                 applicationId,
-                "application name"
+                "application name",
+                ACCEPTED
         );
 
         MvcResult result = mockMvc.perform(post("/{assessmentId}/reject", assessmentId)
@@ -582,6 +592,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .with(id(assessmentId))
                 .withApplication(applicationId)
                 .withApplicationName("application name")
+                .withActivityState(ACCEPTED)
                 .build();
 
         when(assessmentService.getRejectableById(assessmentId)).thenReturn(assessment);
@@ -590,7 +601,8 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
 
         RejectAssessmentViewModel expectedViewModel = new RejectAssessmentViewModel(assessmentId,
                 applicationId,
-                "application name"
+                "application name",
+                ACCEPTED
         );
 
         mockMvc.perform(get("/{assessmentId}/reject/confirm", assessmentId))

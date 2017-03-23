@@ -59,12 +59,13 @@ If funding is complete. application details has a warning message
     And the user clicks the button/link    link=Robot test application
     When the user clicks the button/link    link=Application details
     And the user clicks the button/link    jQuery=button:contains(Return and edit)
-    Then the user should see the text in the page    Research category determines funding
+    And the user clicks the button/link    jQuery=button:contains("Change your research category")
+    Then the user should see the text in the page    Changing the research category will reset the funding level for all business participants
 
 Changing application details sets funding level to incomplete
     [Documentation]    INFUND-6895
     [Tags]    HappyPath
-    When the user selects the radio button    application.researchCategoryId    34
+    When the user changes the research category
     And the user clicks the button/link    name=mark_as_complete
     And applicant navigates to the finances of the robot application
     Then the user should see the element    css=.task-list li:nth-of-type(3) .action-required
@@ -140,3 +141,10 @@ the user adds more rows in other funding
     the user moves focus to the element   jQuery=.button:contains("Mark as complete")
     wait for autosave
     the user should see the element       jQuery=label:contains("Total other funding") + input:contains("£ 235,000")
+
+the user changes the research category
+    [Documentation]    INFUND-8260
+    # Often those labels need double click. Thus i made a separate keyword to looks more tidy
+    the user clicks the button/link    jQuery=label[for="researchCategoryChoice-34"]
+    the user clicks the button/link    jQuery=label[for="researchCategoryChoice-34"]
+    the user clicks the button/link    jQuery=button:contains(Save)
