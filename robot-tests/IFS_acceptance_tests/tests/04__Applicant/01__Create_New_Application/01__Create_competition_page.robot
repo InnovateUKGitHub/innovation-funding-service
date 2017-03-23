@@ -7,6 +7,9 @@ Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 
+*** Variables ***
+${COMPETITION_DETAILS_IN_ASSESSMENT}    ${SERVER}/competition/${READY_TO_OPEN_COMPETITION}/details
+
 *** Test Cases ***
 Competition brief link
     [Documentation]    INFUND-2448
@@ -25,7 +28,7 @@ Non logged in users see the Apply now button
 Apply button disable when competion is in assessment
     [Documentation]    INFUND-2312
     [Tags]    HappyPath
-    When the user navigates to the page    ${COMPETITION_DETAILS_URL}
+    When the user navigates to the page    ${COMPETITION_DETAILS_IN_ASSESSMENT}
     Then the element should be disabled    jQuery=.column-third .button:contains('Apply now')
     And the user should see the text in the page    This competition has now closed
 
