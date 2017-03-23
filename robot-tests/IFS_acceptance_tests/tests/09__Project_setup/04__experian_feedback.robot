@@ -116,7 +116,7 @@ Project Finance cancels bank details changes
     And the user moves focus to the element       id=street
     Then the user sees the text in the text field    id=street  ${Ntag_Street}
     When the user clicks the button/link    jQuery=.column-half.alignright .button:contains("Update bank account details")
-    And the user clicks the button/link     jQuery=.alignright-button button:contains("Cancel")
+    And the user clicks the button/link     jQuery=.buttonlink:contains("Cancel")
     Then the text box should be editable    id=company-name
     When the user clicks the button/link    link=Review bank details
     Then the user should see the text in the page    These details are now undergoing an internal review.
@@ -140,7 +140,7 @@ Project Finance approves the bank details
     Given the user navigates to the page          ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Ntag_Id}/review-bank-details
     And the user should see the text in the page  ${Ntag_Name} - Account details
     When the user clicks the button/link    jQuery=.button:contains("Approve bank account details")
-    And the user clicks the button/link     jQuery=.alignright-button button:contains("Cancel")
+    And the user clicks the button/link     jQuery=.buttonlink:contains("Cancel")
     Then the user should see the element    jQuery=.button:contains("Approve bank account details")    #Checking here that the option is still available
     When the user clicks the button/link    jQuery=.button:contains("Approve bank account details")
     And the user clicks the button/link    jQuery=.button:contains("Approve account")

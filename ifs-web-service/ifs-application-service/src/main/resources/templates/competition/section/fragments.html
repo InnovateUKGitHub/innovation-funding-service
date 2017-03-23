@@ -21,7 +21,7 @@
 
 <!-- ===========================Front door - competition summary  ============================= -->
 <th:block th:fragment="summary(section, competitionId)">
-    <section>
+    <section id="summary">
         <div class="grid-row">
             <div class="column-third">
                 <h3 class="heading-medium no-margin">Description</h3>
@@ -52,7 +52,7 @@
 
 <!-- ===========================Front door - competition eligibility  ============================ -->
 <th:block th:fragment="eligibility(section, competitionId)">
-    <section>
+    <section id="eligibility">
         <th:block th:include="competition/section/fragments :: content-group(section=${section}, competitionId=${competitionId})"/>
     </section>
 </th:block>
@@ -60,14 +60,14 @@
 
 <!-- ===========================Front door - competition scope  =================================== -->
 <th:block th:fragment="scope(section, competitionId)">
-    <section>
+    <section id="scope">
         <th:block th:include="competition/section/fragments :: content-group(section=${section}, competitionId=${competitionId})"/>
     </section>
 </th:block>
 
 <!-- ===========================Front door - competition dates ==================================== -->
 <th:block th:fragment="dates(section, competitionId)">
-    <section>
+    <section id="dates">
         <dl class="standard-definition-list column-definition-list">
             <th:block th:each="publicContentDate : ${section.sortedEvents}">
                 <dt class="extra-margin"><span class="heading-medium" th:text="${publicContentDate.dateTimeFormatted}"></span></dt>
@@ -84,14 +84,14 @@
 
 <!-- ===========================Front door - competition how to apply  ============================ -->
 <th:block th:fragment="how-to-apply(section, competitionId)">
-    <section>
+    <section id="how-to-apply">
         <th:block th:include="competition/section/fragments :: content-group(section=${section}, competitionId=${competitionId})"/>
     </section>
 </th:block>
 
 <!-- ===========================Front door - competition supporting information  ================== -->
 <th:block th:fragment="supporting-information(section, competitionId)">
-    <section>
+    <section id="supporting-information">
         <th:block th:include="competition/section/fragments :: content-group(section=${section}, competitionId=${competitionId})"/>
     </section>
 </th:block>

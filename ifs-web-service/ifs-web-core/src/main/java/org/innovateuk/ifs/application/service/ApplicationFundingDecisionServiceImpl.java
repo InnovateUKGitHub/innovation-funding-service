@@ -79,7 +79,7 @@ public class ApplicationFundingDecisionServiceImpl implements ApplicationFunding
 	}
 
 	private List<Long> submittedApplicationIdsForCompetition(Long competitionId) {
-		return applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(competitionId, null, 0, Integer.MAX_VALUE, null).getContent()
+		return applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(competitionId, null, 0, Integer.MAX_VALUE, null, Optional.empty()).getContent()
 				.stream().map(summaryResource -> summaryResource.getId()).collect(Collectors.toList());
 	}
 

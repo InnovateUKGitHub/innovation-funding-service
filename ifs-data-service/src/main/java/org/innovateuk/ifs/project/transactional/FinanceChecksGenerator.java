@@ -78,7 +78,7 @@ public class FinanceChecksGenerator {
 
         ProjectFinance projectFinance = new ProjectFinance(organisation, applicationFinanceForOrganisation.getOrganisationSize(), newProject);
 
-        if (financeUtil.isUsingJesFinances(organisation.getOrganisationType().getName())) {
+        if (financeUtil.isUsingJesFinances(organisation.getOrganisationType().getId())) {
 
             PartnerOrganisation partnerOrganisation = partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(newProject.getId(), organisation.getId());
             viabilityWorkflowHandler.organisationIsAcademic(partnerOrganisation, null);

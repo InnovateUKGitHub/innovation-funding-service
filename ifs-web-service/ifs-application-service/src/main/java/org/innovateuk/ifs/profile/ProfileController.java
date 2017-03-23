@@ -79,11 +79,7 @@ public class ProfileController {
         form.setEmail(user.getEmail());
         form.setFirstName(user.getFirstName());
         form.setLastName(user.getLastName());
-        form.setTitle(user.getTitle() != null ? user.getTitle().name() : null);
         form.setPhoneNumber(user.getPhoneNumber());
-        form.setEthnicity(user.getEthnicity() != null ? user.getEthnicity().toString() : null);
-        form.setGender(user.getGender() != null ? user.getGender().name() : null);
-        form.setDisability(user.getDisability() != null ? user.getDisability().name() : null);
 
         if(organisation == null) {
         	LOG.warn("No organisation retrieved for user" + user.getId());

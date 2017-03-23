@@ -6,6 +6,8 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.CascadeType.ALL;
+
 /*
 * The InviteOrganisation entity serves the purpose of grouping Invites by organisation name entered in the application.
 * When an actual organisation exists the InviteOrganisation can link the associated Invites to that organisation.
@@ -23,7 +25,7 @@ public class InviteOrganisation {
     @JoinColumn(name = "organisationId", referencedColumnName = "id")
     private Organisation organisation;
 
-    @OneToMany(mappedBy = "inviteOrganisation")
+    @OneToMany(mappedBy = "inviteOrganisation", cascade = ALL, orphanRemoval = true)
     private List<ApplicationInvite> invites;
 
     public InviteOrganisation() {

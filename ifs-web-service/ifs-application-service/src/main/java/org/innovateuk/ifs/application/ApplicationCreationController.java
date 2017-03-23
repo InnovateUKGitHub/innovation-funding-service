@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import static java.lang.String.format;
-import static org.innovateuk.ifs.invite.service.InviteServiceImpl.INVITE_HASH;
+import static org.innovateuk.ifs.registration.AbstractAcceptInviteController.INVITE_HASH;
 
 /**
  * This controller will handle all requests that are related to the create of a application.

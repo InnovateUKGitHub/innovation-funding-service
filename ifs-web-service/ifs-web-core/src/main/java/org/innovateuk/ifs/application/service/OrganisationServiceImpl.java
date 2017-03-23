@@ -70,13 +70,13 @@ public class OrganisationServiceImpl implements OrganisationService {
     }
 
     @Override
-    public String getOrganisationType(Long userId, Long applicationId) {
+    public Long getOrganisationType(Long userId, Long applicationId) {
         final ProcessRoleResource processRoleResource = processRoleService.findProcessRole(userId, applicationId);
         if (processRoleResource != null && processRoleResource.getOrganisationId() != null) {
             final OrganisationResource organisationResource = organisationRestService.getOrganisationById(processRoleResource.getOrganisationId()).getSuccessObjectOrThrowException();
-            return organisationResource.getOrganisationTypeName();
+            return organisationResource.getOrganisationType();
         }
-        return "";
+        return null;
     }
 
     @Override

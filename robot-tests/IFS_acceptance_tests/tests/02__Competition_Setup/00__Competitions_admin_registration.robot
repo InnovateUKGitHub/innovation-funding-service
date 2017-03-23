@@ -36,10 +36,10 @@ User creates new account verifies email and login
     the user clicks the button/link    LINK=INNOVATE LTD
     the user selects the checkbox    address-same
     the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
-    the user clicks the button/link    jQuery=.button:contains("Confirm and continue")
+    the user clicks the button/link    jQuery=.button:contains("Confirm")
     the user enters the details and clicks the create account    ${CREATE_ACCOUNT_EMAIL}
     the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
-    the user reads his email from the default mailbox and clicks the link    ${CREATE_ACCOUNT_EMAIL}    Please verify your email address    If you did not request an account with us
+    the user reads his email from the default mailbox and clicks the link    ${CREATE_ACCOUNT_EMAIL}    Please verify your email address    Once verified you can sign into your account
     the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     the user clicks the button/link    jQuery=.button:contains("Sign in")
     the guest user inserts user email & password    ${CREATE_ACCOUNT_EMAIL}    Passw0rd123
@@ -53,8 +53,5 @@ the user enters the details and clicks the create account
     Input Text    id=email    ${CREATE_ACCOUNT_EMAIL}
     Input Password    id=password    Passw0rd123
     Input Password    id=retypedPassword    Passw0rd123
-    And the user selects the radio button    gender    gender2
-    And the user selects the radio button    ethnicity    ethnicity2
-    And the user selects the radio button    disability    disability2
     And the user selects the checkbox    termsAndConditions
     Submit Form

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.financecheck.controller;
 
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.util.PrioritySorting;
 import org.innovateuk.ifs.project.PartnerOrganisationService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.mapWithIndex;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
  * This controller is for allowing internal users to view the finance checks overview for a project.
@@ -51,15 +53,18 @@ public class FinanceOverviewController {
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
     public String view(@PathVariable("projectId") Long projectId,
                        Model model) {
-        FinanceCheckOverviewViewModel financeCheckOverviewViewModel = buildFinanceCheckOverviewViewModel(projectId);
-        model.addAttribute("model", financeCheckOverviewViewModel);
+        model.addAttribute("model", buildFinanceCheckOverviewViewModel(projectId));
         return "project/financecheck/overview";
     }
 
     private FinanceCheckOverviewViewModel buildFinanceCheckOverviewViewModel(final Long projectId) {
         List<PartnerOrganisationResource> partnerOrgs = partnerOrganisationService.getPartnerOrganisations(projectId).getSuccessObject();
-        return new FinanceCheckOverviewViewModel(getProjectFinanceOverviewViewModel(projectId), getProjectFinanceSummaries(projectId, partnerOrgs),
-                getProjectFinanceCostBreakdown(projectId, partnerOrgs));
+        final PartnerOrganisationResource lead = simpleFindFirst(partnerOrgs, PartnerOrganisationResource::isLeadOrganisation).orElse(null);
+        final List<PartnerOrganisationResource> sortedOrganisations
+                = new PrioritySorting<>(partnerOrgs, lead, PartnerOrganisationResource::getOrganisationName).unwrap();
+
+        return new FinanceCheckOverviewViewModel(getProjectFinanceOverviewViewModel(projectId), getProjectFinanceSummaries(projectId, sortedOrganisations),
+                getProjectFinanceCostBreakdown(projectId, sortedOrganisations));
     }
 
     private ProjectFinanceOverviewViewModel getProjectFinanceOverviewViewModel(Long projectId) {

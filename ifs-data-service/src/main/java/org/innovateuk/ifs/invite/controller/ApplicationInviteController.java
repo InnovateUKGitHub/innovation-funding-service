@@ -44,7 +44,7 @@ public class ApplicationInviteController {
     }
 
     @RequestMapping("/getInvitesByApplicationId/{applicationId}")
-    public RestResult<Set<InviteOrganisationResource>> getInvitesByApplication(@PathVariable("applicationId") Long applicationId) {
+    public RestResult<List<InviteOrganisationResource>> getInvitesByApplication(@PathVariable("applicationId") Long applicationId) {
         return inviteService.getInvitesByApplication(applicationId).toGetResponse();
     }
 

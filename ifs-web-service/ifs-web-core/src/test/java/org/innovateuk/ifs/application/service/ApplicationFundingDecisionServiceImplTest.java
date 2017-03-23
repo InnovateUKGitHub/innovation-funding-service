@@ -48,7 +48,7 @@ public class ApplicationFundingDecisionServiceImplTest extends BaseServiceUnitTe
 		applicationSummaryPageResource.setContent(applicationSummaryResources);
 
 		when(applicationFundingDecisionRestService.saveApplicationFundingDecisionData(any(), any())).thenReturn(restSuccess());
-		when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(any(), any(), any(), any(),any())).thenReturn(applicationSummaryPageResource);
+		when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(any(), any(), any(), any(),any(), any())).thenReturn(applicationSummaryPageResource);
 
 		service.saveApplicationFundingDecisionData(1L, FundingDecision.ON_HOLD, applicationIds);
 
@@ -57,7 +57,7 @@ public class ApplicationFundingDecisionServiceImplTest extends BaseServiceUnitTe
 		expectedDecisionMap.put(9L, FundingDecision.ON_HOLD);
 
 		verify(applicationFundingDecisionRestService).saveApplicationFundingDecisionData(1L, expectedDecisionMap);
-		verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(any(),any(),any(),any(),any());
+		verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(any(),any(),any(),any(),any(),any());
 	}
 
 	@Test
@@ -89,14 +89,14 @@ public class ApplicationFundingDecisionServiceImplTest extends BaseServiceUnitTe
 		applicationSummaryPageResource.setContent(applicationSummaryResources);
 
 		when(applicationFundingDecisionRestService.saveApplicationFundingDecisionData(any(), any())).thenReturn(restSuccess());
-		when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(any(), any(), any(), any(),any())).thenReturn(applicationSummaryPageResource);
+		when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(any(), any(), any(), any(),any(), any())).thenReturn(applicationSummaryPageResource);
 
 		service.saveApplicationFundingDecisionData(1L, FundingDecision.ON_HOLD, applicationIds);
 
 		Map<Long, FundingDecision> expectedDecisionMap = new HashMap<>();
 
 		verify(applicationFundingDecisionRestService).saveApplicationFundingDecisionData(1L, expectedDecisionMap);
-		verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(any(),any(),any(),any(),any());
+		verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(any(),any(),any(),any(),any(), any());
 	}
 
 	@Test
@@ -110,7 +110,7 @@ public class ApplicationFundingDecisionServiceImplTest extends BaseServiceUnitTe
 		applicationSummaryPageResource.setContent(applicationSummaryResources);
 
 		when(applicationFundingDecisionRestService.saveApplicationFundingDecisionData(any(), any())).thenReturn(restSuccess());
-		when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(any(), any(), any(), any(),any())).thenReturn(applicationSummaryPageResource);
+		when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(any(), any(), any(), any(),any(), any())).thenReturn(applicationSummaryPageResource);
 
 		service.saveApplicationFundingDecisionData(1L, FundingDecision.ON_HOLD, applicationIds);
 
@@ -119,7 +119,7 @@ public class ApplicationFundingDecisionServiceImplTest extends BaseServiceUnitTe
 		expectedDecisionMap.put(9L, FundingDecision.ON_HOLD);
 
 		verify(applicationFundingDecisionRestService).saveApplicationFundingDecisionData(1L, expectedDecisionMap);
-		verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(any(),any(),any(),any(),any());
+		verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(any(),any(),any(),any(),any(), any());
 	}
 
 	@Test

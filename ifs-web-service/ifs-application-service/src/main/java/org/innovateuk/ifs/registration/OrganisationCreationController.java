@@ -49,8 +49,8 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.OPERATING;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGISTERED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
-import static org.innovateuk.ifs.invite.service.InviteServiceImpl.INVITE_HASH;
-import static org.innovateuk.ifs.invite.service.InviteServiceImpl.ORGANISATION_TYPE;
+import static org.innovateuk.ifs.registration.AbstractAcceptInviteController.INVITE_HASH;
+import static org.innovateuk.ifs.registration.AbstractAcceptInviteController.ORGANISATION_TYPE;
 
 
 /**
@@ -144,13 +144,6 @@ public class OrganisationCreationController {
         model.addAttribute("searchLabel",getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchLabel",  request.getLocale()));
         model.addAttribute("searchHint", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchHint",  request.getLocale()));
 
-        if(OrganisationTypeEnum.BUSINESS.equals(organisationForm.getOrganisationTypeEnum()) ||
-                OrganisationTypeEnum.ACADEMIC.equals(organisationForm.getOrganisationTypeEnum())
-                ){
-            model.addAttribute("searchEnabled", true);
-        }else{
-            model.addAttribute("searchEnabled", false);
-        }
         return TEMPLATE_PATH + "/" + FIND_ORGANISATION;
     }
 
@@ -159,7 +152,7 @@ public class OrganisationCreationController {
         try{
             searchLabel = messageSource.getMessage(String.format("registration.%s.%s", orgTypeEnum.toString(), textKey), null, locale);
         }catch(NoSuchMessageException e){
-            LOG.error(e);
+            LOG.debug(e);
             searchLabel = messageSource.getMessage(String.format("registration.DEFAULT.%s", textKey), null, locale);
         }
         return searchLabel;
@@ -273,7 +266,8 @@ public class OrganisationCreationController {
                                           HttpServletRequest request, HttpServletResponse response) {
         addOrganisationType(organisationForm, request);
         organisationForm.setOrganisationSearching(false);
-        organisationForm.setManualEntry(true);
+        boolean currentManualEntryValue = organisationForm.isManualEntry();
+        organisationForm.setManualEntry(!currentManualEntryValue);
         cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
         return "redirect:/organisation/create/" + FIND_ORGANISATION;
     }

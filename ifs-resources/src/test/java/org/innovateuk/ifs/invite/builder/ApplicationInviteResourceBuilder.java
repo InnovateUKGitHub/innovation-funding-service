@@ -71,6 +71,10 @@ public class ApplicationInviteResourceBuilder extends BaseBuilder<ApplicationInv
         return withArraySetFieldByReflection("competitionId", competitionIds);
     }
 
+    public ApplicationInviteResourceBuilder withCompetitionName(String... competitionNames) {
+        return withArraySetFieldByReflection("competitionName", competitionNames);
+    }
+
     public ApplicationInviteResourceBuilder withStatus(InviteStatus... statuses) {
         return withArraySetFieldByReflection("status", statuses);
     }
@@ -81,6 +85,14 @@ public class ApplicationInviteResourceBuilder extends BaseBuilder<ApplicationInv
 
     public ApplicationInviteResourceBuilder withInviteOrganisation(Long... inviteOrganisations) {
         return withArraySetFieldByReflection("inviteOrganisation", inviteOrganisations);
+    }
+
+    public ApplicationInviteResourceBuilder withInviteOrganisationNameConfirmed(String... inviteOrganisationNameConfirmeds) {
+        return withArraySetFieldByReflection("inviteOrganisationNameConfirmed", inviteOrganisationNameConfirmeds);
+    }
+
+    public ApplicationInviteResourceBuilder withInviteOrganisationName(String... inviteOrganisationNames) {
+        return withArraySetFieldByReflection("inviteOrganisationName", inviteOrganisationNames);
     }
 
     @Override

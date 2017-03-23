@@ -79,7 +79,7 @@ The collapsible element will show a normal header when there is no javascript, w
 	> h3 + [aria-hidden="false"] {
 		display: block;
 		@extend %contain-floats;
-		padding:0 0 15px;
+		padding:0 0 3em;
 	}
 	.status {
 		float:right;
@@ -102,13 +102,21 @@ The collapsible element will show a normal header when there is no javascript, w
 	}
 	.collapsible-content {
 		@extend %contain-floats;
-		padding-bottom: 3em;
+		padding:10px;
 	}
 
 	.section-score {
 		float: right;
 		font-weight: normal;
-		margin-right: 30px;
+		margin-right: 190px;
+		width: 144px;
+		text-align: left;
+		font-size: 16px;
+		@include media-down(mobile){
+			margin-right: 0;
+			width: auto;
+			float: none;
+		}
 	}
 }
 

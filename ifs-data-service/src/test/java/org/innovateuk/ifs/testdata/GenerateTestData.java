@@ -61,7 +61,6 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.project.util.FinanceUtil.UNIVERSITY_HEI;
 import static org.innovateuk.ifs.testdata.CsvUtils.*;
 import static org.innovateuk.ifs.testdata.builders.AssessmentDataBuilder.newAssessmentData;
 import static org.innovateuk.ifs.testdata.builders.AssessorDataBuilder.newAssessorData;
@@ -599,7 +598,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                             finances.applicationName.equals(line.title) &&
                             finances.organisationName.equals(organisationName));
 
-            if (organisationType.equals(OrganisationTypeEnum.ACADEMIC)) {
+            if (organisationType.equals(OrganisationTypeEnum.RESEARCH)) {
 
                 if (organisationFinances.isPresent()) {
                     return generateAcademicFinancesFromSuppliedData(user, organisationName, organisationFinances.get(), line.markFinancesComplete);
@@ -1012,8 +1011,8 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     private OrganisationTypeEnum lookupOrganisationType(String organisationType) {
         switch (organisationType) {
-            case UNIVERSITY_HEI:
-                return OrganisationTypeEnum.ACADEMIC;
+            case "Research":
+                return OrganisationTypeEnum.RESEARCH;
             default:
                 return OrganisationTypeEnum.valueOf(organisationType.toUpperCase().replace(" ", "_"));
         }

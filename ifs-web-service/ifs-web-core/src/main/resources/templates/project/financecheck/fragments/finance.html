@@ -39,7 +39,7 @@
                 <tfoot>
                     <tr>
                         <th colspan="4" scope="row">Total labour costs</th>
-                        <td th:id="${'section-total-'+subSection.id}" class="numeric" th:text="'£ ' + ${costCategory.getTotal() != null ? #numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT') : 0}" />
+                        <td th:id="${'section-total-'+subSection.id}" class="numeric labour-total" th:attr="data-calculation-rawvalue=${costCategory?.getTotal() != null ? costCategory?.getTotal() : 0}" th:text="'£ ' + ${costCategory.getTotal() != null ? #numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT') : 0}" />
                     </tr>
                 </tfoot>
             </table>
@@ -218,7 +218,7 @@
                 <th:block th:switch="${overheadRate.name()}">
                     <th:block th:case="'NONE'">
                         No overhead costs
-                        <div th:id="${'section-total-'+subSection.id}" aria-hidden="true">£ 0</div>
+                        <div data-current-overhead-total="" th:attr="data-calculation-rawvalue=0" th:id="${'section-total-'+subSection.id}" aria-hidden="true">£ 0</div>
                     </th:block>
                     <th:block th:case="'DEFAULT_PERCENTAGE'">
                         <table>
@@ -233,7 +233,7 @@
                             <tfoot>
                             <tr>
                                 <th scope="row">Total overhead costs</th>
-                                <td class="alignright" th:id="${'section-total-'+subSection.id}" th:text="'£ ' + ${#numbers.formatInteger(costCategory?.getTotal(),0, 'COMMA')}">£0</td>
+                                <td data-current-overhead-total="" th:attr="data-calculation-rawvalue=${costCategory?.getTotal()}" class="alignright" th:id="${'section-total-'+subSection.id}" th:text="'£ ' + ${#numbers.formatInteger(costCategory?.getTotal(),0, 'COMMA')}">£0</td>
                             </tr>
                             </tfoot>
                         </table>
@@ -251,7 +251,7 @@
                             <tfoot>
                             <tr>
                                 <th scope="col">Total administration support cost</th>
-                                <td class="alignright" th:id="${'section-total-'+subSection.id}" th:text="'£ ' + ${#numbers.formatInteger(costCategory?.getTotal(),0, 'COMMA')}">£0</td>
+                                <td class="alignright" data-current-overhead-total="" th:attr="data-calculation-rawvalue=${costCategory?.getTotal()}" th:id="${'section-total-'+subSection.id}" th:text="'£ ' + ${#numbers.formatInteger(costCategory?.getTotal(),0, 'COMMA')}">£0</td>
                             </tr>
                             </tfoot>
                         </table>
@@ -278,7 +278,7 @@
                             <tfoot>
                             <tr>
                                 <th scope="row">Total cost of overheads as calculated in the spreadsheet</th>
-                                <td class="alignright" th:id="${'section-total-'+subSection.id}" th:text="'£ ' + ${#numbers.formatInteger(costCategory?.getTotal(),0, 'COMMA')}">£0</td>
+                                <td class="alignright" data-current-overhead-total="" th:attr="data-calculation-rawvalue=${costCategory?.getTotal()}" th:id="${'section-total-'+subSection.id}"  th:text="'£ ' + ${#numbers.formatInteger(costCategory?.getTotal(),0, 'COMMA')}">£0</td>
                             </tr>
                             </tfoot>
                         </table>
@@ -1436,10 +1436,10 @@
                 </tfoot>
                 <tbody>
                     <th:block th:each="summary : ${summaries.financeCheckSummariesResources}" th:with="partner=${summaries.getPartnerFromSummary(summary.organisationId)}">
-                        <tr >
+                        <tr>
                             <th scope="col">
-                                <strong th:text="${partner.organisationName}">Organisation Name<br /></strong>
-                                <small th:text="${partner.isLeadOrganisation()} ? 'Lead Partner' : 'Partner'" ></small>
+                                <strong th:text="${partner.getOrganisationName()}">Organisation Name<br /></strong>
+                                <small th:if="${partner.isLeadOrganisation()}">Lead</small>
                             </th>
                             <td class="numeric"><strong>&pound; <th:block th:text="${#numbers.formatInteger(summary.totalCost,1,'COMMA')}" /></strong></td>
                             <td th:text="${#numbers.formatInteger(summary.percentageGrant,1,'NONE')+'%'}" class="numeric" />
@@ -1491,11 +1491,12 @@
                         </tr>
                     </tfoot>
                     <tbody>
-                    <th:block th:each="finance : ${breakdowns.finances}" th:with="partner=${breakdowns.getPartnerFromBreakdown(finance.organisation)}">
+                    <!--<th:block th:each="finance : ${breakdowns.finances}" th:with="partner=${breakdowns.getPartnerFromBreakdown(finance.organisation)}">-->
+                    <th:block th:each="partner : ${breakdowns.getOrganisationResources()}" th:with="finance=${breakdowns.getPartnerFinances(partner.organisation)}">
                         <tr>
                             <th scope="col">
                                 <strong th:text="${partner.getOrganisationName()}">Organisation Name<br /></strong>
-                                <small th:text="${partner.isLeadOrganisation()} ? 'Lead Partner' : 'Partner'" ></small>
+                                <small th:if="${partner.isLeadOrganisation()}">Lead</small>
                             </th>
                             <td class="numeric"><strong>&pound; <th:block th:text="${#numbers.formatInteger(finance.getTotal(),1,'COMMA')}" /></strong></td>
                             <th:block th:each="rowType : ${finance.financeOrganisationDetails.keySet()}" th:with="row=${finance.financeOrganisationDetails.get(rowType)}">

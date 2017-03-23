@@ -8,7 +8,7 @@ import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.project.builder.SpendProfileResourceBuilder;
-import org.innovateuk.ifs.project.controller.ProjectFinanceController;
+import org.innovateuk.ifs.project.projectdetails.controller.ProjectFinanceController;
 import org.innovateuk.ifs.project.finance.domain.SpendProfile;
 import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.resource.*;

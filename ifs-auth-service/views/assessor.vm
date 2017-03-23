@@ -1,6 +1,5 @@
-
-            <ul class="list-bullet extra-margin">
-              #if ($passwordEnabled)
-                <li class="list-help-item"><a href="$resourcesDomain/login/reset-password">#springMessageText("idp.login.forgotPassword", "Forgot your password?")</a></li>
-              #end
-            </ul>
+        <h2 class="heading-small">My email and/or password isn't working</h2>
+        <p>If you applied previously using the old service, you will need to create a new account.</p>
+        #if ($passwordEnabled)
+          <p><a href="$resourcesDomain/login/reset-password">Forgotten your password?</a></p>
+        #end

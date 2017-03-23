@@ -61,6 +61,7 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -212,7 +213,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Override
     public ServiceResult<ProjectResource> createProjectFromApplication(Long applicationId) {
-        return createProjectFromApplicationId(applicationId);
+        return createSingletonProjectFromApplicationId(applicationId);
     }
 
     @Override
@@ -269,7 +270,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Override
     public ServiceResult<Void> createProjectsFromFundingDecisions(Map<Long, FundingDecision> applicationFundingDecisions) {
-        applicationFundingDecisions.keySet().stream().filter(d -> applicationFundingDecisions.get(d).equals(FundingDecision.FUNDED)).forEach(this::createProjectFromApplicationId);
+        applicationFundingDecisions.keySet().stream().filter(d -> applicationFundingDecisions.get(d).equals(FundingDecision.FUNDED)).forEach(this::createSingletonProjectFromApplicationId);
         return serviceSuccess();
     }
 
@@ -728,14 +729,17 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                 userId -> simpleFindFirst(project.getProjectUsers(),
                         pu -> pu.getUser().getId().equals(userId) && pu.getRole().isPartner()));
 
-        List<Organisation> allPartnerOrganisations = project.getOrganisations();
         List<Organisation> partnerOrganisationsToInclude =
-                simpleFilter(allPartnerOrganisations, partner ->
+                simpleFilter(project.getOrganisations(), partner ->
                         partner.getId().equals(leadOrganisation.getId()) ||
-                                (partnerUserForFilterUser.map(pu -> partner.getId().equals(pu.getOrganisation().getId())).orElse(true)));
+                                (partnerUserForFilterUser.map(pu -> partner.getId().equals(pu.getOrganisation().getId()))
+                                        .orElse(true)));
+
+        List<Organisation> sortedOrganisationsToInclude
+                = new PrioritySorting<>(partnerOrganisationsToInclude, leadOrganisation, Organisation::getName).unwrap();
 
         List<ProjectPartnerStatusResource> projectPartnerStatusResources =
-                simpleMap(partnerOrganisationsToInclude, partner -> getProjectPartnerStatus(project, partner));
+                simpleMap(sortedOrganisationsToInclude, partner -> getProjectPartnerStatus(project, partner));
 
         ProjectTeamStatusResource projectTeamStatusResource = new ProjectTeamStatusResource();
         projectTeamStatusResource.setPartnerStatuses(projectPartnerStatusResources);
@@ -932,6 +936,14 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return pu.getOrganisation().getId().equals(leadPartnerOrganisation.getId());
     }
 
+    private ServiceResult<ProjectResource> createSingletonProjectFromApplicationId(final Long applicationId) {
+
+        return checkForExistingProjectWithApplicationId(applicationId).handleSuccessOrFailure(
+                failure -> createProjectFromApplicationId(applicationId),
+                success -> serviceSuccess(success)
+        );
+    }
+
     private ServiceResult<ProjectResource> createProjectFromApplicationId(final Long applicationId) {
 
         return getApplication(applicationId).andOnSuccess(application -> {
@@ -972,6 +984,10 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                             andOnSuccess(() -> generateFinanceCheckEntitiesForNewProject(newProject)).
                             andOnSuccessReturn(() -> projectMapper.mapToResource(newProject)));
         });
+    }
+
+    private ServiceResult<ProjectResource> checkForExistingProjectWithApplicationId(Long applicationId) {
+        return getByApplicationId(applicationId);
     }
 
     private ServiceResult<Void> createProcessEntriesForNewProject(Project newProject) {
