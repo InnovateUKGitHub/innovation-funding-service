@@ -778,10 +778,10 @@ Project Finance user can provide overhead value for Lead-Partner manually instea
     And the user should see the element     jQuery=input[id^="total-cost"][value="£ 303,309"]
     Then the user clicks the button/link    jQuery=.button-secondary:contains("Return to finance checks")
 
-Project Finance user can view three Radio Button Options when expanded Partner's "Overhead costs" section
+Project Finance user can view three Radio Button Options when expanded Partner's "Overhead costs" section  #here
     [Documentation]     INFUND-7577
     [Tags]    HappyPath
-    When the user clicks the button/link    css=a.eligibility-1
+    When the user clicks the button/link    css=a.eligibility-2
     Then the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Overhead costs")
     And the user should see the three Radio Button Options
 
@@ -833,7 +833,7 @@ Project Finance user can Edit, enters invalid values and saves in Partner's Calc
 Project Finance user can provide overhead value for Partner manually instead of calculations from spreadsheet.
     [Documentation]     INFUND-7577
     [Tags]    HappyPath
-    When the user clicks the button/link    css=a.eligibility-1
+    When the user clicks the button/link    css=a.eligibility-2
     Then the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     And the user enters text to a text field     jQuery=section:nth-of-type(2) input[id^="cost-overheads"][id$="calculate"]  1078
     Then the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Save")
