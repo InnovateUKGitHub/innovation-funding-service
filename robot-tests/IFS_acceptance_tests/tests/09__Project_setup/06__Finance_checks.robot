@@ -872,7 +872,7 @@ Project finance user can see the viability check page for the lead partner
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
     And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_COMPANY_NUMBER}
     And the user should see the text in the element  css=.standard-definition-list dd:nth-of-type(3)  -  #turnover
-    And the user should see the text in the page    css=.standard-definition-list dd:nth-of-type(4)  -   #headcount
+    And the user should see the text in the element    css=.standard-definition-list dd:nth-of-type(4)  -   #headcount
 
 
 Project finance user can see the lead partner's information
@@ -944,7 +944,7 @@ Project finance user can see the viability checks for the industrial partner
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
     And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_NUMBER}
     And the user should see the text in the element  css=.standard-definition-list dd:nth-of-type(3)  ${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_TURNOVER}
-    And the user should see the text in the page    css=.standard-definition-list dd:nth-of-type(4)  ${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_HEADCOUNT}
+    And the user should see the text in the element    css=.standard-definition-list dd:nth-of-type(4)  ${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_HEADCOUNT}
 
 Checking the approve viability checkbox enables RAG selection but not confirm viability button for partner
     [Documentation]    INFUND-4831, INFUND-4856, INFUND-4830
