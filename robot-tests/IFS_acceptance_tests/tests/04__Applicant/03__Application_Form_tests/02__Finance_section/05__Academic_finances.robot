@@ -118,7 +118,7 @@ Mark all as complete
     When the user enters text to a text field    id=tsb-ref    123123
     Then textfield value should be    id=tsb-ref    123123
     When the user clicks the button/link    jQuery=.button:contains("Mark all as complete")
-    Then the user redirects to the page    Please provide Innovate UK with information about your project.    Application overview
+    Then the user redirects to the page    Please provide information about your project.    Application overview
     and the user navigates to the finance overview of the academic
     And the user should see the element    css=.finance-summary tr:nth-of-type(2) img[src*="/images/field/tick-icon"]
 
@@ -190,7 +190,7 @@ Lead applicant marks the finances as complete
     The user enters text to a text field    id=cost-financegrantclaim    20
     The user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No)
     When the user marks the finances as complete
-    Then the user redirects to the page    Please provide Innovate UK with information about your project.    Application overview
+    Then the user redirects to the page    Please provide information about your project.    Application overview
     the user closes the browser
 
 Lead applicant marks the finances as incomplete

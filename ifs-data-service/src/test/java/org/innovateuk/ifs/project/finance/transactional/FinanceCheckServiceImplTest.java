@@ -9,6 +9,7 @@ import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.util.PrioritySorting;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.finance.domain.CostCategory;
@@ -23,6 +24,7 @@ import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserResource;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.resource.State;
 import org.innovateuk.threads.resource.FinanceChecksSectionType;
@@ -204,7 +206,6 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
     @Test
     public void testGetFinanceCheckSummary(){
-
         Long projectId = 123L;
         Long applicationId = 456L;
 
@@ -216,9 +217,10 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
                 withOrganisationType(OrganisationTypeEnum.BUSINESS, OrganisationTypeEnum.RESEARCH, OrganisationTypeEnum.BUSINESS).
                 buildArray(3, Organisation.class);
 
-        List<PartnerOrganisation> partnerOrganisations = newPartnerOrganisation().
-                withProject(project).
-                withOrganisation(organisations).
+        List<PartnerOrganisation> partnerOrganisations = newPartnerOrganisation()
+                .withProject(project)
+                .withLeadOrganisation(false, true, false)
+                .withOrganisation(organisations).
                 build(3);
 
         User projectFinanceUser = newUser().withFirstName("Project").withLastName("Finance").build();
@@ -274,20 +276,29 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         List<FinanceCheckPartnerStatusResource> partnerStatuses = summary.getPartnerStatusResources();
         assertEquals(3, partnerStatuses.size());
 
-        FinanceCheckPartnerStatusResource organisation1Results = partnerStatuses.get(0);
-        assertEquals(Viability.APPROVED, organisation1Results.getViability());
-        assertEquals(viability1.getViabilityRagStatus(), organisation1Results.getViabilityRagStatus());
-        assertTrue(organisation1Results.isAwaitingResponse());
+        assertTrue(organisationsOrderedWithLeadOnTopAndPartnersAlphabetically(partnerOrganisations,
+                simpleMap(summary.getPartnerStatusResources(), FinanceCheckPartnerStatusResource::getName)));
 
-        FinanceCheckPartnerStatusResource organisation2Results = partnerStatuses.get(1);
+        FinanceCheckPartnerStatusResource organisation2Results = partnerStatuses.get(0);
         assertEquals(Viability.NOT_APPLICABLE, organisation2Results.getViability());
         assertEquals(ViabilityRagStatus.UNSET, organisation2Results.getViabilityRagStatus());
         assertFalse(organisation2Results.isAwaitingResponse());
+
+        FinanceCheckPartnerStatusResource organisation1Results = partnerStatuses.get(1);
+        assertEquals(Viability.APPROVED, organisation1Results.getViability());
+        assertEquals(viability1.getViabilityRagStatus(), organisation1Results.getViabilityRagStatus());
+        assertTrue(organisation1Results.isAwaitingResponse());
 
         FinanceCheckPartnerStatusResource organisation3Results = partnerStatuses.get(2);
         assertEquals(Viability.REVIEW, organisation3Results.getViability());
         assertEquals(viability3.getViabilityRagStatus(), organisation3Results.getViabilityRagStatus());
         assertFalse(organisation3Results.isAwaitingResponse());
+    }
+
+    private <T> boolean organisationsOrderedWithLeadOnTopAndPartnersAlphabetically(List<PartnerOrganisation> beforeOrdered, List<String> organisationsNames) {
+        PartnerOrganisation leadPartner = simpleFindFirst(beforeOrdered, PartnerOrganisation::isLeadOrganisation).get();
+        List<PartnerOrganisation> orderedPartnerOrganisations = new PrioritySorting<>(beforeOrdered, leadPartner, po -> po.getOrganisation().getName()).unwrap();
+        return organisationsNames.equals(simpleMap(orderedPartnerOrganisations, po -> po.getOrganisation().getName()));
     }
 
     @Test
