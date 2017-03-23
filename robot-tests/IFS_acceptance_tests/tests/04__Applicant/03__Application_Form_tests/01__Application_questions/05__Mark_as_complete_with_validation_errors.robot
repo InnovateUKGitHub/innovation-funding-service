@@ -15,8 +15,8 @@ Mark as complete is impossible for empty questions
     And the user clicks the button/link    link=Robot test application
     And the user clicks the button/link    link=Public description
     When the "Project Summary" question is empty
-    And The user clicks the button/link    css=#form-input-12 .buttonlink[name="mark_as_complete"]
-    Then the user should see the element    css=#form-input-12 .error-message
+    And The user clicks the button/link    css=#form-input-1040 .buttonlink[name="mark_as_complete"]
+    Then the user should see the element    css=#form-input-1040 .error-message
     And the user should see the element    css=.error-summary li
 
 Error should not be visible when the text area is not empty
@@ -29,20 +29,20 @@ Error should not be visible when the text area is not empty
 
 *** Keywords ***
 the "Project Summary" question is empty
-    the user enters text to a text field    css=#form-input-12 .editor    ${empty}
-    mouse out    css=#form-input-12 .editor
+    the user enters text to a text field    css=#form-input-1040 .editor    ${empty}
+    mouse out    css=#form-input-1040 .editor
     wait for autosave
     the user moves focus to the element    link=Contact us
     the user reloads the page
 
 the applicant inserts some text again in the "Project Summary" question
-    The user enters text to a text field    css=#form-input-12 .editor    test if the applicant can mark the question as complete
-    mouse out    css=#form-input-12 .editor
+    The user enters text to a text field    css=#form-input-1040 .editor    test if the applicant can mark the question as complete
+    mouse out    css=#form-input-1040 .editor
     wait for autosave
 
 applicant should be able to mark the question as complete
     the user clicks the button/link    jQuery=button:contains("Mark as complete")
-    the user should not see the element    css=#form-input-12 .error-message
+    the user should not see the element    css=#form-input-1040 .error-message
     the user should not see the element    css=.error-summary li
 
 the applicant can click edit to make the section editable again
