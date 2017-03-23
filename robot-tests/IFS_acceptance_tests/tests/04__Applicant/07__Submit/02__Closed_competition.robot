@@ -35,7 +35,7 @@ Submit button should be disabled
 
 Applicant shouldn't see the Mark as complete-Edit-Save buttons
     [Documentation]    INFUND-3740
-    [Tags]    Failing
+    [Tags]
     Given the user navigates to the page    ${SERVER}/application/${IN_ASSESSMENT_APPLICATION_1}/summary
     When The user clicks the button/link    jQuery=button:contains(Project summary)
     Then The user should not see the element    jQuery=.button:contains(Mark as complete)
