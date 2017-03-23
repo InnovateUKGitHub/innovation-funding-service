@@ -2,7 +2,6 @@ package org.innovateuk.ifs.application.repository;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
-import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -71,10 +70,6 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 																		   @Param("funding") FundingDecisionStatus funding);
 
 	Page<Application> findByCompetitionIdAndApplicationStatusIdNotIn(Long competitionId, Collection<Long> applicationStatusIds, Pageable pageable);
-
-	List<Application> findByCompetitionIdAndApplicationStatusId(Long competitionId, List<Long> applicationStatusIds);
-
-	Page<Application> findByCompetitionIdAndApplicationStatusId(Long competitionId, Long applicationStatusId, Pageable pageable);
 
 	List<Application> findByCompetitionIdAndApplicationStatusIdIn(Long competitionId, Collection<Long> applicationStatusIds);
 

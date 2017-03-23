@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.transactional;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationStatus;
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
@@ -17,6 +16,7 @@ import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.util.EntityLookupCallbacks;
+import org.innovateuk.ifs.validator.ApplicationFundingDecisionValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -49,6 +49,9 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
 
     @Autowired
     private ApplicationService applicationService;
+
+    @Autowired
+    private ApplicationFundingDecisionValidator applicationFundingDecisionValidator;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -112,29 +115,10 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
         List<Application> applicationsInCompetition = applicationRepository.findByCompetitionId(competitionId);
 
         List<Application> allowedApplications = applicationsInCompetition.stream()
-                .filter(application -> applicationHasBeenSubmitted(application))
-                .filter(application -> !applicationDecisionIsSuccessfulAndNotified(application))
+                .filter(application -> applicationFundingDecisionValidator.isValid(application))
                 .collect(Collectors.toList());
 
         return allowedApplications;
-    }
-
-    private boolean applicationHasBeenSubmitted(Application application) {
-        List<Long> submittedApplicationStatusIds = new ArrayList<>();
-        submittedApplicationStatusIds.add(ApplicationStatusConstants.SUBMITTED.getId());
-        submittedApplicationStatusIds.add(ApplicationStatusConstants.REJECTED.getId());
-        submittedApplicationStatusIds.add(ApplicationStatusConstants.APPROVED.getId());
-
-        boolean hasBeenSubmitted = submittedApplicationStatusIds.contains(application.getApplicationStatus().getId());;
-
-        return hasBeenSubmitted;
-    }
-
-    private boolean applicationDecisionIsSuccessfulAndNotified(Application application) {
-        boolean isSuccessful = application.getFundingDecision() != null && application.getFundingDecision().equals(FundingDecision.FUNDED);
-        boolean isNotified = application.getManageFundingEmailDate() != null;
-
-        return isSuccessful && isNotified;
     }
 
     private ServiceResult<Void> saveFundingDecisionData(List<Application> applicationsForCompetition, Map<Long, FundingDecision> applicationDecisions) {
