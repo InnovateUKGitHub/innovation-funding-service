@@ -15,7 +15,7 @@ Documentation     INFUND-4821: As a project finance team member I want to have a
 ...               INFUND-5899 As an internal user I want to be able to use the breadcrumb navigation consistently throughout Project Setup so I can return to the previous page as appropriate
 Suite Setup
 Suite Teardown    the user closes the browser
-Force Tags        Project Setup
+Force Tags        CompAdmin Project Setup
 Resource          ../../resources/defaultResources.robot
 Resource          PS_Variables.robot
 
