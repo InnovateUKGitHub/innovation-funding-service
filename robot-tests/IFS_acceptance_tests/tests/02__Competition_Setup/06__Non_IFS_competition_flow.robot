@@ -61,7 +61,7 @@ Internal user can see the Non-IFS comp and its brief information
     [Documentation]  INFUND-7963 INFUND-7964
     [Tags]
     Given the user navigates to the Non IFS competitions tab
-    Then the user should see the element  jQuery=div:contains("Test non-IFS competition") ~ *:contains("Manufacturing Readiness")
+    Then the user should see the element  jQuery=div:contains("Test non-IFS competition") ~ *:contains("Assembly / disassembly / joining")
     And the user should see the element   jQuery=div:contains("Test non-IFS competition") ~ *:contains("Last published")
     [Teardown]  the user can log out
 
@@ -83,7 +83,7 @@ the user fills out the competition title and url
 
 the user fills out the non-IFS details
     And the user selects the option from the drop-down menu  Materials and manufacturing  id=innovationSector
-    And the user selects the option from the drop-down menu  Manufacturing Readiness  id=innovationArea
+    And the user selects the option from the drop-down menu  Assembly / disassembly / joining  id=innovationArea
     When the user enters text to a text field   id=openDate-day    1
     And the user enters text to a text field   id=openDate-month    1
     And the user enters text to a text field   id=openDate-year    2020

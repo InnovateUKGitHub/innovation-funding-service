@@ -52,7 +52,7 @@ The User can Add and Remove Assessors
     And The user should see the text in the page    Will Smith
     And The user should see the element    jQuery=td:contains("Will Smith") ~ td .yes
     And the user should see the element    jQuery=td:contains("Will Smith") ~ td:nth-child(3):contains("Precision Medicine")
-    And the user should see the element    jQuery=td:contains("Will Smith") ~ td:nth-child(3):contains("Advanced Materials")
+    And the user should see the element    jQuery=td:contains("Will Smith") ~ td:nth-child(3):contains("Nanotechnology / nanomaterials")
     And the user should see the element    jQuery=td:contains("Will Smith") ~ td:nth-child(3):contains("Energy systems")
     And the calculations of the Assessors on invite list should be correct
     When The user clicks the button/link    link=Invite
@@ -167,7 +167,7 @@ Assessor overview information
     And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:contains("Academic")
     And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:contains("Yes")
     And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:contains("Invite declined as not available")
-    And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:contains("Manufacturing Readiness")
+    And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:contains("Assembly / disassembly / joining")
 
 *** Keywords ***
 The key statistics are calculated
