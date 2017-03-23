@@ -7,6 +7,7 @@ import org.innovateuk.ifs.assessment.model.AssessmentAssignmentModelPopulator;
 import org.innovateuk.ifs.assessment.model.RejectAssessmentModelPopulator;
 import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
+import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.assessment.service.AssessmentService;
 import org.innovateuk.ifs.assessment.viewmodel.AssessmentAssignmentViewModel;
 import org.innovateuk.ifs.assessment.viewmodel.RejectAssessmentViewModel;
@@ -34,6 +35,7 @@ import static java.util.Collections.nCopies;
 import static java.util.Comparator.comparingLong;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.CONFLICT_OF_INTEREST;
+import static org.innovateuk.ifs.assessment.resource.AssessmentStates.PENDING;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ASSESSMENT_REJECTION_FAILED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -191,6 +193,7 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
                 .with(id(assessmentId))
                 .withApplication(applicationId)
                 .withApplicationName("application name")
+                .withActivityState(PENDING)
                 .build();
 
         when(assessmentService.getRejectableById(assessmentId)).thenReturn(assessment);
@@ -204,7 +207,8 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
 
         RejectAssessmentViewModel expectedViewModel = new RejectAssessmentViewModel(assessmentId,
                 applicationId,
-                "application name"
+                "application name",
+                PENDING
         );
 
         MvcResult result = mockMvc.perform(post("/{assessmentId}/assignment/reject", assessmentId)
@@ -216,7 +220,7 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors("form"))
-                .andExpect(view().name("assessment/assessment-reject-confirm"))
+                .andExpect(view().name("assessment/reject-invitation-confirm"))
                 .andReturn();
 
         AssessmentAssignmentForm form = (AssessmentAssignmentForm) result.getModelAndView().getModel().get("form");
@@ -243,6 +247,7 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
                 .with(id(assessmentId))
                 .withApplication(applicationId)
                 .withApplicationName("application name")
+                .withActivityState(PENDING)
                 .build();
 
         when(assessmentService.getRejectableById(assessmentId)).thenReturn(assessment);
@@ -254,7 +259,8 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
 
         RejectAssessmentViewModel expectedViewModel = new RejectAssessmentViewModel(assessmentId,
                 applicationId,
-                "application name"
+                "application name",
+                PENDING
         );
 
         MvcResult result = mockMvc.perform(post("/{assessmentId}/assignment/reject", assessmentId)
@@ -266,7 +272,7 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors("form", "rejectReason"))
-                .andExpect(view().name("assessment/assessment-reject-confirm"))
+                .andExpect(view().name("assessment/reject-invitation-confirm"))
                 .andReturn();
 
         AssessmentAssignmentForm form = (AssessmentAssignmentForm) result.getModelAndView().getModel().get("form");
@@ -293,6 +299,7 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
                 .with(id(assessmentId))
                 .withApplication(applicationId)
                 .withApplicationName("application name")
+                .withActivityState(PENDING)
                 .build();
 
         when(assessmentService.getRejectableById(assessmentId)).thenReturn(assessment);
@@ -305,7 +312,8 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
 
         RejectAssessmentViewModel expectedViewModel = new RejectAssessmentViewModel(assessmentId,
                 applicationId,
-                "application name"
+                "application name",
+                PENDING
         );
 
         MvcResult result = mockMvc.perform(post("/{assessmentId}/assignment/reject", assessmentId)
@@ -317,7 +325,7 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors("form", "rejectComment"))
-                .andExpect(view().name("assessment/assessment-reject-confirm"))
+                .andExpect(view().name("assessment/reject-invitation-confirm"))
                 .andReturn();
 
         AssessmentAssignmentForm form = (AssessmentAssignmentForm) result.getModelAndView().getModel().get("form");
@@ -345,6 +353,7 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
                 .with(id(assessmentId))
                 .withApplication(applicationId)
                 .withApplicationName("application name")
+                .withActivityState(PENDING)
                 .build();
 
         when(assessmentService.getRejectableById(assessmentId)).thenReturn(assessment);
@@ -357,7 +366,8 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
 
         RejectAssessmentViewModel expectedViewModel = new RejectAssessmentViewModel(assessmentId,
                 applicationId,
-                "application name"
+                "application name",
+                PENDING
         );
 
         MvcResult result = mockMvc.perform(post("/{assessmentId}/assignment/reject", assessmentId)
@@ -369,7 +379,7 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors("form", "rejectComment"))
-                .andExpect(view().name("assessment/assessment-reject-confirm"))
+                .andExpect(view().name("assessment/reject-invitation-confirm"))
                 .andReturn();
 
         AssessmentAssignmentForm form = (AssessmentAssignmentForm) result.getModelAndView().getModel().get("form");
@@ -396,20 +406,22 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
                 .withId(assessmentId)
                 .withApplication(applicationId)
                 .withApplicationName("application name")
+                .withActivityState(PENDING)
                 .build());
 
         AssessmentAssignmentForm expectedForm = new AssessmentAssignmentForm();
 
         RejectAssessmentViewModel expectedViewModel = new RejectAssessmentViewModel(assessmentId,
                 applicationId,
-                "application name"
+                "application name",
+                PENDING
         );
 
         mockMvc.perform(get("/{assessmentId}/assignment/reject/confirm", assessmentId))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(model().attribute("model", expectedViewModel))
-                .andExpect(view().name("assessment/assessment-reject-confirm"));
+                .andExpect(view().name("assessment/reject-invitation-confirm"));
 
         InOrder inOrder = inOrder(assessmentService);
         inOrder.verify(assessmentService).getRejectableById(assessmentId);
