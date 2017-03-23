@@ -9,6 +9,7 @@ import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -24,7 +25,7 @@ public class OrganisationController {
     private OrganisationService organisationService;
 
     @RequestMapping("/findByApplicationId/{applicationId}")
-    public RestResult<Set<OrganisationResource>> findByApplicationId(@PathVariable("applicationId") final Long applicationId) {
+    public RestResult<List<OrganisationResource>> findByApplicationId(@PathVariable("applicationId") final Long applicationId) {
         return organisationService.findByApplicationId(applicationId).toGetResponse();
     }
 
