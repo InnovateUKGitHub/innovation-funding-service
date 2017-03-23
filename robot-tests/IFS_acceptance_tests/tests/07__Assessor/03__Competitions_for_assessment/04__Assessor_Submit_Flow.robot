@@ -32,6 +32,7 @@ Summary:All the sections are present
     [Documentation]    INFUND-4648
     [Tags]    HappyPath
     When The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
+    and the user should see that the element is disabled    id=submit-assessment-button
     and The user clicks the button/link    link=Intelligent Building
     and The user clicks the button/link    jQuery=.button:contains("Review and complete your assessment")
     Then The user should see the element    jQuery=h2:contains("Overall scores")
