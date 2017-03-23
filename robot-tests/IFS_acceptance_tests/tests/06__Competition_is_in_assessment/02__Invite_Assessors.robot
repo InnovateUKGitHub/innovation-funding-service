@@ -26,6 +26,8 @@ Documentation     INFUND-6604 As a member of the competitions team I can view th
 ...               INFUND-6388 As a member of the competitions team I can see the key statistics on the Invite Assessors dashboard so that I can easily see how invitations are progressing
 ...
 ...               INFUND-6403 Filter and Pagination on 'Find' tab of Invite dashboard
+...
+...               INFUND-6453 Filter and pagination on 'Overview' tab of Invite assessors dashboard
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin    Assessor
@@ -38,8 +40,18 @@ Check the initial key statistics
     Given the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the user clicks the button/link    jQuery=a:contains("Invite assessors to assess the competition")
     And the user clicks the button/link    link=Overview
-    #TODO check as part of INFUND-6453 testing
-    #And the key statistics are calculated
+
+Filtering in the Invite Overview page
+    [Documentation]    INFUND-6453
+    [Tags]
+    Given the user selects the option from the drop-down menu    Manufacturing Readiness    id=filterInnovationArea
+    And the user selects the option from the drop-down menu    Invite declined    id=filterStatus
+    And the user selects the option from the drop-down menu    Yes    id=filterContract
+    When the user clicks the button/link    jQuery=button:contains(Filter)
+    Then the user should see the element    jQuery=td:contains("Josephine")
+    And the user should not see the element    jQuery=td:contains("No")
+    And the user clicks the button/link    jQuery=a:contains("Clear filters")
+    And the user should not see the element    jQuery=td:contains("Josephine")
 
 The User can Add and Remove Assessors
     [Documentation]    INFUND-6602 INFUND-6604 INFUND-6392 INFUND-6412 INFUND-6388
@@ -157,12 +169,12 @@ Assessor overview information
     ...    INFUND-6449
     [Tags]
     Given The user clicks the button/link    link=Overview
-    And the user clicks the button/link      jQuery=.pagination-label:contains("Next")
+    And the user clicks the button/link    jQuery=.pagination-label:contains("Next")
     Then the user should see the element    jQuery=td:contains("Paul Plum") ~ td:contains("Invite accepted")
-    And the user clicks the button/link      jQuery=.pagination-label:contains("Next")
+    And the user clicks the button/link    jQuery=.pagination-label:contains("Next")
     And the user should see the element    jQuery=td:contains("Will Smith") ~ td:nth-of-type(5):contains("Awaiting response")
     And the user should see the element    jQuery=td:contains("Will Smith") ~ td:nth-of-type(6):contains("Invite sent:")
-    And the user clicks the button/link      jQuery=.pagination-label:contains("Previous")
+    And the user clicks the button/link    jQuery=.pagination-label:contains("Previous")
     And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:nth-of-type(5):contains("Invite declined")
     And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:contains("Academic")
     And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:contains("Yes")
