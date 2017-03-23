@@ -511,23 +511,3 @@ the user completes the new account creation
     the user enters text to a text field      jQuery=input[id="username"]   liam@innovate.com
     the user enters text to a text field      jQuery=input[id="password"]  Research123
     the user clicks the button/link         jQuery=button:contains("Sign in")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-k
-
-
-
