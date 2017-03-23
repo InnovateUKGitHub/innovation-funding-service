@@ -5,7 +5,7 @@ import subprocess
 import os
 import fnmatch
 import re
-
+import getpass
 
 def shell(command):
   process = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
@@ -21,7 +21,7 @@ def issue_is_done(issue, username, password):
 
 def main():
   username = str(raw_input("Please enter your Jira username: "))
-  password = str(raw_input("Please enter your Jira password: "))
+  password = getpass.getpass()
 
   file_issue_tuples = []
   missing_tickets = []
