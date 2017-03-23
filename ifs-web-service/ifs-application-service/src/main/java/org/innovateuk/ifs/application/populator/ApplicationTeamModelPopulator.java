@@ -63,7 +63,7 @@ public class ApplicationTeamModelPopulator {
 
         List<InviteOrganisationResource> inviteOrganisationResources = getOrganisationInvites(applicationId, leadOrganisation.getId());
         final Optional<InviteOrganisationResource> leadOrganisationInvite
-                = simpleFindFirst(inviteOrganisationResources, ior -> ior.getOrganisation().equals(leadOrganisation.getId()));
+                = simpleFindFirst(inviteOrganisationResources, ior -> ior.getOrganisation() != null && ior.getOrganisation().equals(leadOrganisation.getId()));
 
         final List<InviteOrganisationResource> sortedInvites = new PrioritySorting<>(inviteOrganisationResources,
                 leadOrganisationInvite.orElse(null), InviteOrganisationResource::getOrganisationName).unwrap();

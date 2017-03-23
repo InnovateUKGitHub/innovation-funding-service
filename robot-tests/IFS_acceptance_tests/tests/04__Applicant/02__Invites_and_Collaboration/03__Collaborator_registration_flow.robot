@@ -6,9 +6,9 @@ Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
-${INVITE_LINK}    ${SERVER}/accept-invite/78aa4567-0b70-41da-8310-a0940644d0bf
+${INVITE_LINK}    ${SERVER}/accept-invite/78aa4567-0b70-41da-8310-a0940644d0ba
 ${SELECT_ORGANISATION}    ${SERVER}/organisation/create/type/new-account-organisation-type
-# This file uses the Application: A novel solution to an old problem  (Lead applcant: Steve.Smith)
+# This file uses the Application: Climate science the history of Greenland's ice  (Lead applcant: Steve.Smith)
 
 *** Test Cases ***
 Lead applicant details should show in the invite page
@@ -95,7 +95,7 @@ Catapult search (accept invitation flow with email step)
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
     And guest user log-in                   ${test_mailbox_one}+invite1@gmail.com  ${correct_password}
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=A novel solution to an old problem
+    And the user clicks the button/link    link=Climate science the history of Greenland's ice
     And the user clicks the button/link    link=Your finances
     And the user should see the element    jQuery=h1:contains("Your finances")
 

@@ -23,17 +23,17 @@ ${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS_PLUS_2000}    102,452
 ${DEFAULT_SUBCONTRACTING_COSTS_WITH_COMMAS_PLUS_2000}    47,000
 ${EMPIRE_LTD_ID}    22
 ${EMPIRE_LTD_NAME}    Empire Ltd
-${OPEN_COMPETITION}    1
-${OPEN_COMPETITION_NAME}    Connected digital additive manufacturing
+${OPEN_COMPETITION}    15
+${OPEN_COMPETITION_NAME}    Predicting market trends programme
 ${OPEN_COMPETITION_NAME_2}    Home and industrial efficiency programme
-${OPEN_COMPETITION_APPLICATION_1}    9
-${OPEN_COMPETITION_APPLICATION_1_NUMBER}    9
-${OPEN_COMPETITION_APPLICATION_2}    12
-${OPEN_COMPETITION_APPLICATION_3}    11
-${OPEN_COMPETITION_APPLICATION_3_TITLE}    Mobile Phone Data for Logistics Analytics
-${OPEN_COMPETITION_APPLICATION_4}    10
-${OPEN_COMPETITION_APPLICATION_5}    8
-${OPEN_COMPETITION_APPLICATION_5_NUMBER}    8
+${OPEN_COMPETITION_APPLICATION_1}    100
+${OPEN_COMPETITION_APPLICATION_1_NUMBER}    100
+${OPEN_COMPETITION_APPLICATION_2}    103
+${OPEN_COMPETITION_APPLICATION_3}    102
+${OPEN_COMPETITION_APPLICATION_3_TITLE}    Hydrology the dynamics of Earth's surface water
+${OPEN_COMPETITION_APPLICATION_4}    101
+${OPEN_COMPETITION_APPLICATION_5}    99
+${OPEN_COMPETITION_APPLICATION_5_NUMBER}    99
 ${READY_TO_OPEN_COMPETITION}    6
 ${READY_TO_OPEN_COMPETITION_NAME}    Photonics for health
 ${COMP_SETUP_COMPETITION}    9
@@ -76,13 +76,13 @@ ${SUMMARY_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1}/summar
 ${APPLICATION_OVERVIEW_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1}
 ${assessor_dashboard_url}    ${SERVER}/assessment/assessor/dashboard
 ${COMPETITION_DETAILS_URL}    ${SERVER}/competition/${OPEN_COMPETITION}/details/
-${PUBLIC_DESCRIPTION_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1}/form/question/12
-${TECHNICAL_APPROACH_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1}/form/question/5
-${YOUR_FINANCES_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1}/form/section/7
-${FINANCES_OVERVIEW_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1}/form/section/8
+${PUBLIC_DESCRIPTION_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1}/form/question/430
+${TECHNICAL_APPROACH_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1}/form/question/436
+${YOUR_FINANCES_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1}/form/section/187
+${FINANCES_OVERVIEW_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1}/form/section/198
 ${ACCOUNT_CREATION_FORM_URL}    ${SERVER}/registration/register?organisationId=1
-${ELIGIBILITY_INFO_URL}    ${SERVER}/competition/1/info/eligibility
-${SPEED_BUMP_URL}    ${SERVER}/application/create-authenticated/1
+${ELIGIBILITY_INFO_URL}    ${SERVER}/competition/${OPEN_COMPETITION}/info/eligibility
+${SPEED_BUMP_URL}    ${SERVER}/application/create-authenticated/${OPEN_COMPETITION}
 ${EDIT_PROFILE_URL}    ${SERVER}/profile/edit
 ${APPLICATION_TEAM_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1}/team
 ${COMP_MANAGEMENT_APPLICATIONS_LIST}    ${SERVER}/management/competition/${OPEN_COMPETITION}/applications
@@ -107,7 +107,7 @@ ${OPEN_COMPETITION_LINK}    ${OPEN_COMPETITION_NAME}
 ${OPEN_COMPETITION_LINK_2}    ${OPEN_COMPETITION_NAME_2}
 ${unsuccessful_login_message}    Your sign in was unsuccessful because of the following issue(s)
 ${application_name}    Submit test application
-${Competition_E2E}    A new innovative solution
+${Competition_E2E}    Evolution of the global phosphorus cycle
 ${test_title}     test title
 ${SMALL_ORGANISATION_SIZE}     1
 ${MEDIUM_ORGANISATION_SIZE}    2
