@@ -105,6 +105,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     private FormInputResponse unlinkedFormInputFileEntry;
 
     private Long applicationId = 123L;
+    private Long organisationId = 456L;
 
     @Before
     public void setUp() throws Exception {
@@ -135,7 +136,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         Competition competition = newCompetition().build();
         User user = newUser().build();
-        Organisation organisation = newOrganisation().with(name("testOrganisation")).build();
+        Organisation organisation = newOrganisation().with(name("testOrganisation")).withId(organisationId).build();
         Role leadApplicantRole = newRole().withType(LEADAPPLICANT).build();
         ProcessRole processRole = newProcessRole().withUser(user).withRole(leadApplicantRole).withOrganisationId(organisation.getId()).build();
         ApplicationStatus applicationStatus = newApplicationStatus().withName(CREATED).build();
@@ -699,8 +700,9 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         app.setCompetition(comp);
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(app);
 
-        FormInputResponse headcount = newFormInputResponse().withValue("1").build();
-        FormInputResponse turnover = newFormInputResponse().withValue("2").build();
+        ProcessRole updatedBy = newProcessRole().withApplication(app).withOrganisationId(organisationId).build();
+        FormInputResponse headcount = newFormInputResponse().withValue("1").withUpdatedBy(updatedBy).build();
+        FormInputResponse turnover = newFormInputResponse().withValue("2").withUpdatedBy(updatedBy).build();
 
         FormInput staffCountFormInput = newFormInput().withType(STAFF_COUNT).withActive(!isIncludeGrowthTable).withId(staffCountFormInputId).withResponses(!isIncludeGrowthTable ? asList(headcount) : emptyList()).build();
         FormInput staffTurnoverFormInput = newFormInput().withType(STAFF_TURNOVER).withActive(!isIncludeGrowthTable).withId(turnoverFormInputId).withResponses(!isIncludeGrowthTable ? asList(turnover) : emptyList()).build();
@@ -722,7 +724,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     public void test_GetTurnoverNonFinancial() {
         setupFinancialAndNonFinancialTestData(false, false, false);
 
-        ServiceResult<Long> result = service.getTurnoverByApplicationId(applicationId);
+        ServiceResult<Long> result = service.getTurnoverByOrganisationId(applicationId, organisationId);
 
         assertTrue(result.isSuccess());
         assertEquals(2L, result.getSuccessObject().longValue());
@@ -732,7 +734,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     public void test_GetHeadcountNonFinancial() {
         setupFinancialAndNonFinancialTestData(false, false, false);
 
-        ServiceResult<Long> result = service.getHeadCountByApplicationId(applicationId);
+        ServiceResult<Long> result = service.getHeadCountByOrganisationId(applicationId, organisationId);
 
         assertTrue(result.isSuccess());
         assertEquals(1L, result.getSuccessObject().longValue());
@@ -741,7 +743,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     @Test
     public void test_GetTurnoverFinancial() {
         setupFinancialAndNonFinancialTestData(true, false, false);
-        ServiceResult<Long> result = service.getTurnoverByApplicationId(applicationId);
+        ServiceResult<Long> result = service.getTurnoverByOrganisationId(applicationId, organisationId);
 
         assertTrue(result.isSuccess());
         assertEquals(2L, result.getSuccessObject().longValue());
@@ -751,7 +753,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     public void test_GetHeadcountFinancial() {
         setupFinancialAndNonFinancialTestData(true, false, false);
 
-        ServiceResult<Long> result = service.getHeadCountByApplicationId(applicationId);
+        ServiceResult<Long> result = service.getHeadCountByOrganisationId(applicationId, organisationId);
 
         assertTrue(result.isSuccess());
         assertEquals(1L, result.getSuccessObject().longValue());
@@ -761,7 +763,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     public void test_GetHeadcountFinancialNoHeadcountResponse() {
         setupFinancialAndNonFinancialTestData(true, true, false);
 
-        ServiceResult<Long> result = service.getHeadCountByApplicationId(applicationId);
+        ServiceResult<Long> result = service.getHeadCountByOrganisationId(applicationId, organisationId);
 
         assertTrue(result.isFailure());
     }
@@ -770,7 +772,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     public void test_GetHeadcountFinancialNoHeadcountInput() {
         setupFinancialAndNonFinancialTestData(true, false, true);
 
-        ServiceResult<Long> result = service.getHeadCountByApplicationId(applicationId);
+        ServiceResult<Long> result = service.getHeadCountByOrganisationId(applicationId, organisationId);
 
         assertTrue(result.isFailure());
     }
@@ -778,7 +780,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     @Test
     public void test_GetTurnoverFinancialNoTurnoverResponse() {
         setupFinancialAndNonFinancialTestData(true, true, false);
-        ServiceResult<Long> result = service.getTurnoverByApplicationId(applicationId);
+        ServiceResult<Long> result = service.getTurnoverByOrganisationId(applicationId, organisationId);
 
         assertTrue(result.isFailure());
     }
@@ -786,7 +788,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     @Test
     public void test_GetTurnoverFinancialNoTurnoverInput() {
         setupFinancialAndNonFinancialTestData(true, false, true);
-        ServiceResult<Long> result = service.getTurnoverByApplicationId(applicationId);
+        ServiceResult<Long> result = service.getTurnoverByOrganisationId(applicationId, organisationId);
 
         assertTrue(result.isFailure());
     }

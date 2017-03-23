@@ -94,13 +94,13 @@ public class ApplicationController {
         return applicationResult.toPostCreateResponse();
     }
 
-    @RequestMapping("/turnover/{applicationId}")
-    public RestResult<Long> getTurnoverByApplicationId(@PathVariable("applicationId") final Long applicationId) {
-        return applicationService.getTurnoverByApplicationId(applicationId).toGetResponse();
+    @GetMapping("/turnover/{applicationId}/{organisationId}")
+    public RestResult<Long> getTurnoverByOrganisationId(@PathVariable("applicationId") final Long applicationId, @PathVariable("organisationId") final Long organisationId) {
+        return applicationService.getTurnoverByOrganisationId(applicationId, organisationId).toGetResponse();
     }
 
-    @RequestMapping("/headcount/{applicationId}")
-    public RestResult<Long> getHeadCountByApplicationId(@PathVariable("applicationId") final Long applicationId) {
-        return applicationService.getHeadCountByApplicationId(applicationId).toGetResponse();
+    @GetMapping("/headcount/{applicationId}/{organisationId}")
+    public RestResult<Long> getHeadCountByOrganisationId(@PathVariable("applicationId") final Long applicationId, @PathVariable("organisationId") final Long organisationId) {
+        return applicationService.getHeadCountByOrganisationId(applicationId, organisationId).toGetResponse();
     }
 }

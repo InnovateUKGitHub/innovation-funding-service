@@ -97,10 +97,10 @@ public interface ApplicationService {
     ServiceResult<BigDecimal> getProgressPercentageBigDecimalByApplicationId(Long applicationId);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
-    ServiceResult<Long> getTurnoverByApplicationId(Long applicationId);
+    ServiceResult<Long> getTurnoverByOrganisationId(Long applicationId, Long organisationId);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
-    ServiceResult<Long> getHeadCountByApplicationId(Long applicationId);
+    ServiceResult<Long> getHeadCountByOrganisationId(Long applicationId, Long organisationId);
 
     @SecuredBySpring(value = "NOTIFY_APPLICANTS_OF_FEEDBACK",
             description = "Comp admins and project finance users can notify applicants that their feedback is released")

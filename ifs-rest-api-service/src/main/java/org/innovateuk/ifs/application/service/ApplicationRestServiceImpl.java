@@ -92,12 +92,12 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     }
 
     @Override
-    public RestResult<Long> getTurnover(Long applicationId) {
-        return getWithRestResult(applicationRestURL + "/turnover/" + applicationId, Long.TYPE);
+    public RestResult<Long> getTurnover(Long applicationId, Long organisationId) {
+        return getWithRestResult(applicationRestURL + "/turnover/" + applicationId + "/" + organisationId, Long.TYPE);
     }
 
     @Override
-    public RestResult<Long> getHeadCount(Long applicationId) {
-        return getWithRestResult(applicationRestURL + "/headcount/" + applicationId, Long.TYPE);
+    public RestResult<Long> getHeadCount(Long applicationId,  Long organisationId) {
+        return getWithRestResult(applicationRestURL + "/headcount/" + applicationId + "/" + organisationId, Long.TYPE);
     }
 }

@@ -155,12 +155,12 @@ public class FinanceChecksViabilityController {
         String companyRegistrationNumber = organisation.getCompanyHouseNumber();
 
         Long headCount = null;
-        RestResult<Long> headCountResult = applicationService.getHeadCount(projectService.getById(projectId).getApplication());
+        RestResult<Long> headCountResult = applicationService.getHeadCount(projectService.getById(projectId).getApplication(), organisationId);
         if (headCountResult.isSuccess()) {
             headCount = headCountResult.getSuccessObject();
         }
         Long turnover = null;
-        RestResult<Long> turnOverResult = applicationService.getTurnover(projectService.getById(projectId).getApplication());
+        RestResult<Long> turnOverResult = applicationService.getTurnover(projectService.getById(projectId).getApplication(), organisationId);
         if (turnOverResult.isSuccess()) {
             turnover = turnOverResult.getSuccessObject();
         }

@@ -481,32 +481,32 @@ public class ApplicationServiceImpl extends CompetitionSetupTransactionalService
     }
 
     @Override
-    public ServiceResult<Long> getTurnoverByApplicationId(Long applicationId) {
-        return getByApplicationId(applicationId, FINANCIAL_YEAR_END, STAFF_TURNOVER);
+    public ServiceResult<Long> getTurnoverByOrganisationId(Long applicationId, Long organisationId) {
+        return getByApplicationId(applicationId, organisationId, FINANCIAL_YEAR_END, STAFF_TURNOVER);
     }
 
     @Override
-    public ServiceResult<Long> getHeadCountByApplicationId(Long applicationId) {
-        return getByApplicationId(applicationId, FINANCIAL_STAFF_COUNT, STAFF_COUNT);
+    public ServiceResult<Long> getHeadCountByOrganisationId(Long applicationId, Long organisationId) {
+        return getByApplicationId(applicationId, organisationId, FINANCIAL_STAFF_COUNT, STAFF_COUNT);
     }
 
-    private ServiceResult<Long> getByApplicationId(Long applicationId, FormInputType financeType, FormInputType nonFinanceType) {
+    private ServiceResult<Long> getByApplicationId(Long applicationId, Long organisationId, FormInputType financeType, FormInputType nonFinanceType) {
         Application app = applicationRepository.findOne(applicationId);
         return isIncludeGrowthTable(app.getCompetition().getId()).
                 andOnSuccess((isIncludeGrowthTable) -> {
                     if (isIncludeGrowthTable) {
-                        return getOnlyForApplication(applicationId, financeType).andOnSuccessReturn(result -> Long.parseLong(result.getValue()));
+                        return getOnlyForApplication(app, organisationId, financeType).andOnSuccessReturn(result -> Long.parseLong(result.getValue()));
                     } else {
-                        return getOnlyForApplication(applicationId, nonFinanceType).andOnSuccessReturn(result -> Long.parseLong(result.getValue()));
+                        return getOnlyForApplication(app, organisationId, nonFinanceType).andOnSuccessReturn(result -> Long.parseLong(result.getValue()));
                     }
                 });
     }
 
-    private ServiceResult<FormInputResponse> getOnlyForApplication(Long applicationId, FormInputType formInputType) {
-        Application app = applicationRepository.findOne(applicationId);
+    private ServiceResult<FormInputResponse> getOnlyForApplication(Application app, Long organisationId, FormInputType formInputType) {
         return getOnlyElementOrFail(formInputRepository.findByCompetitionIdAndTypeIn(app.getCompetition().getId(), asList(formInputType))).andOnSuccess((formInput) -> {
-            List<FormInputResponse> all = formInputResponseRepository.findByApplicationIdAndFormInputId(applicationId, formInput.getId());
-            return getOnlyElementOrFail(all);
+            List<FormInputResponse> inputResponse = formInputResponseRepository.findByApplicationIdAndFormInputId(app.getId(), formInput.getId())
+                    .stream().filter(response -> organisationId.equals(response.getUpdatedBy().getOrganisationId())).collect(toList());
+            return getOnlyElementOrFail(inputResponse);
         });
     }
 
