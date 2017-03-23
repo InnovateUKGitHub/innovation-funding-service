@@ -40,14 +40,13 @@ Milestones for the In inform competition
     [Documentation]    INFUND-7561    INFUND-7950
     [Tags]
     Then the user should see the element    jQuery=.button:contains("Manage funding notifications")
-    And the user should see that the element is disabled    jQuery=button:contains("Release feedback")
+    And the user should see the element    jQuery=button:contains("Release feedback")
     And the user should see the element    css=li:nth-child(13).done    #Verify that 12. Notifications
     And the user should see the element    css=li:nth-child(14).not-done    #Verify that 13. Release feedback is not done
 
 Release feedback
     [Documentation]    INFUND-8050
     [Tags]    Email    HappyPath
-    Given the user send out the manage funding notification
     When The user clicks the button/link    jQuery=button:contains("Release feedback")
     Then The user should not see the text in the page    Inform
     When The user clicks the button/link    jQuery=a:contains(Live)
@@ -137,12 +136,3 @@ the application details are correct
     the user should see the element    jQuery=p:contains("Project start date: ")
     the user should see the element    jQuery=p:contains("Duration")
     the user should see the element    jQuery=h3:contains("Total project cost")
-
-the user send out the manage funding notification
-    the user clicks the button/link    jQuery=button:contains("Manage funding notifications")
-    the user selects the checkbox      select-all-2
-    the user clicks the button/link    jQuery=button:contains("Write and send email")
-    the user enters text to a text field    id=subject    Assessor feedback
-    the user enters text to a text field    jQuery=.editor    This is awesome
-    the user clicks the button/link      jQuery=button:contains("Send email to all applicants")
-    the user clicks the button/link      jQuery=.link-back:contains("Competition")
