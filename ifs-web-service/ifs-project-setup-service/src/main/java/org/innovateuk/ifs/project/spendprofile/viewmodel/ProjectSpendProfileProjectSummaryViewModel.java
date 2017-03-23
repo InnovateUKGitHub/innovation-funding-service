@@ -18,17 +18,22 @@ public class ProjectSpendProfileProjectSummaryViewModel {
     private Map<String, Boolean> partnerSpendProfileProgress;
     private Map<String, Boolean> editablePartners;
     private List<OrganisationResource> partnerOrganisations;
+    private OrganisationResource leadOrganisation;
     private boolean submitted;
     private boolean approved;
 
-    public ProjectSpendProfileProjectSummaryViewModel(Long projectId, Long applicationId, String projectName, Map<String, Boolean> partnerSpendProfileProgress,
-                                                      List<OrganisationResource> partnerOrganisations, boolean submitted, Map<String, Boolean> editablePartners,
+    public ProjectSpendProfileProjectSummaryViewModel(Long projectId, Long applicationId, String projectName,
+                                                      Map<String, Boolean> partnerSpendProfileProgress,
+                                                      List<OrganisationResource> partnerOrganisations,
+                                                      OrganisationResource leadOrganisation, boolean submitted,
+                                                      Map<String, Boolean> editablePartners,
                                                       boolean approved) {
         this.projectId = projectId;
         this.applicationId = applicationId;
         this.projectName = projectName;
         this.partnerSpendProfileProgress = partnerSpendProfileProgress;
         this.partnerOrganisations = partnerOrganisations;
+        this.leadOrganisation = leadOrganisation;
         this.submitted = submitted;
         this.editablePartners = editablePartners;
         this.approved = approved;
@@ -68,6 +73,10 @@ public class ProjectSpendProfileProjectSummaryViewModel {
 
     public void setPartnerOrganisations(List<OrganisationResource> partnerOrganisations) {
         this.partnerOrganisations = partnerOrganisations;
+    }
+
+    public OrganisationResource getLeadOrganisation() {
+        return leadOrganisation;
     }
 
     public Boolean isMarkAsComplete() {
