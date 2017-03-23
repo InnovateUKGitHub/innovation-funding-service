@@ -462,7 +462,7 @@ the user navigates to the growth table finances
 
 Invite a non-existing collaborator in Appplication with Growth table
     the user clicks the button/link      jQuery=a:contains("Application Overview")
-    the user clicks the button/link       jQuery=a:contains("view and add participants to your application")
+    the user clicks the button/link       jQuery=a:contains("view team members and add collaborators")
     the user clicks the button/link       jQuery=a:contains("Add partner organisation")
     the user should see the element       jQuery=h1:contains(Add organisation)
     the user enters text to a text field      id=organisationName    innovate

@@ -123,8 +123,8 @@ Invite and accept the invitation
     [Arguments]    ${recipient}    ${subject}    ${pattern}
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
-    And the user should see the text in the page    view and add participants to your application
-    When the user clicks the button/link    link=view and add participants to your application
+    And the user should see the text in the page    view team members and add collaborators
+    When the user clicks the button/link    link=view team members and add collaborators
     And the user clicks the button/link    jQuery=a:contains("Add partner organisation")
     And the user enters text to a text field    name=organisationName    Academic Test
     And the user enters text to a text field    name=applicants[0].name     Arsene Wenger
