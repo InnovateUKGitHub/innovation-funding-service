@@ -570,7 +570,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         Organisation o1 = organisation(BUSINESS, "OrgLeader&");
         Organisation o2 = organisation(BUSINESS, "Org2\"");
         Organisation o3 = organisation(BUSINESS, "Org3<");
-
+        
         Role leadAppRole = newRole(UserRoleType.LEADAPPLICANT)
                 .build();
         User u = newUser()

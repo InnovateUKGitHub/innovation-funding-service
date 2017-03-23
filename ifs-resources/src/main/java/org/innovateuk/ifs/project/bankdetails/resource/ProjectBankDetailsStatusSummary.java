@@ -16,15 +16,19 @@ public class ProjectBankDetailsStatusSummary {
     private Long applicationId;
     private List<BankDetailsStatusResource> bankDetailsStatusResources;
 
+    private String leadOrganisation;
+
     public ProjectBankDetailsStatusSummary() {
     }
 
-    public ProjectBankDetailsStatusSummary(Long competitionId, String competitionName, Long projectId, Long applicationId, List<BankDetailsStatusResource> bankDetailsStatusResources) {
+    public ProjectBankDetailsStatusSummary(Long competitionId, String competitionName, Long projectId, Long applicationId,
+                                           List<BankDetailsStatusResource> bankDetailsStatusResources, String leadOrganisation) {
         this.competitionId = competitionId;
         this.projectId = projectId;
         this.applicationId = applicationId;
         this.competitionName = competitionName;
         this.bankDetailsStatusResources = bankDetailsStatusResources;
+        this.leadOrganisation = leadOrganisation;
     }
 
     public Long getCompetitionId() {
@@ -65,6 +69,14 @@ public class ProjectBankDetailsStatusSummary {
 
     public void setApplicationId(Long applicationId) {
         this.applicationId = applicationId;
+    }
+
+    public String getLeadOrganisation() {
+        return leadOrganisation;
+    }
+
+    public void setLeadOrganisation(String leadOrganisation) {
+        this.leadOrganisation = leadOrganisation;
     }
 
     @Override

@@ -33,6 +33,7 @@
                 <label class="block-label selection-button-radio" th:each="type : ${model.types}" th:for="'radio-'+ ${type.id}">
                     <input th:id="'radio-'+ ${type.id}" type="radio" th:field="*{organisationType}" required="required" th:value="${type.id}"/>
                     <span th:text="${type.name}"></span>
+                    <span class="form-hint" th:text="${type.description}"></span>
                 </label>
             </div>
         </fieldset>
