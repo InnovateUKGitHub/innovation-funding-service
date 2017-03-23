@@ -778,10 +778,10 @@ Project Finance user can provide overhead value for Lead-Partner manually instea
     And the user should see the element     jQuery=input[id^="total-cost"][value="£ 303,309"]
     Then the user clicks the button/link    jQuery=.button-secondary:contains("Return to finance checks")
 
-Project Finance user can view three Radio Button Options when expanded Partner's "Overhead costs" section
+Project Finance user can view three Radio Button Options when expanded Partner's "Overhead costs" section  #here
     [Documentation]     INFUND-7577
     [Tags]    HappyPath
-    When the user clicks the button/link    css=a.eligibility-1
+    When the user clicks the button/link    css=a.eligibility-2
     Then the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Overhead costs")
     And the user should see the three Radio Button Options
 
@@ -833,7 +833,7 @@ Project Finance user can Edit, enters invalid values and saves in Partner's Calc
 Project Finance user can provide overhead value for Partner manually instead of calculations from spreadsheet.
     [Documentation]     INFUND-7577
     [Tags]    HappyPath
-    When the user clicks the button/link    css=a.eligibility-1
+    When the user clicks the button/link    css=a.eligibility-2
     Then the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     And the user enters text to a text field     jQuery=section:nth-of-type(2) input[id^="cost-overheads"][id$="calculate"]  1078
     Then the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Save")
@@ -848,7 +848,7 @@ Project Finance user can view academic Jes form
     [Documentation]     INFUND-5220,    INFUND-7577
     [Tags]    HappyPath
     # note that we are viewing the file above rather than the same project as the other tests in this suite due to INFUND-6724
-    When the user clicks the button/link    css=a.eligibility-2
+    When the user clicks the button/link    css=a.eligibility-1
     Then the user should see the text in the page    Download Je-S form
     When the user clicks the button/link    link=jes-form80.pdf
     Then the user should not see an error in the page
@@ -859,10 +859,10 @@ Viability checks are populated in the table
     [Tags]
     And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(2)    Review
     And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(3)    Not set
-    And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(2) td:nth-child(2)    Review
-    And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(2) td:nth-child(3)    Not set
-    And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(3) td:nth-child(2)    N/A
-    And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(3) td:nth-child(3)    N/A
+    And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(2) td:nth-child(2)    N/A
+    And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(2) td:nth-child(3)    N/A
+    And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(3) td:nth-child(2)    Review
+    And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(3) td:nth-child(3)    Not set
 
 Project finance user can see the viability check page for the lead partner
     [Documentation]    INFUND-4831, INFUND-4830, INFUND-4825
@@ -936,7 +936,7 @@ Confirming viability should update on the finance checks page
 Project finance user can see the viability checks for the industrial partner
     [Documentation]    INFUND-4831, INFUND-4830
     [Tags]
-    When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(2) td:nth-child(2) a:contains("Review")
+    When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(3) td:nth-child(2) a:contains("Review")
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
     And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_NUMBER}
 
@@ -962,7 +962,7 @@ Credit report information saves when leaving the page for partner
     [Tags]
     When the user selects the checkbox    creditReportConfirmed
     And the user clicks the button/link    jQuery=.button-secondary:contains("Save and return to finance checks")
-    And the user clicks the button/link    jQuery=table.table-progress tr:nth-child(2) td:nth-child(2) a:contains("Review")
+    And the user clicks the button/link    jQuery=table.table-progress tr:nth-child(3) td:nth-child(2) a:contains("Review")
     Then checkbox should be selected    creditReportConfirmed
 
 Clicking cancel on the viability modal for partner
@@ -992,7 +992,7 @@ Confirming viability should update on the finance checks page for partner
     [Documentation]    INFUND-4831, INFUND-4822
     [Tags]
     When the user clicks the button/link    link=Finance checks
-    Then the user should see the element    jQuery=table.table-progress tr:nth-child(2) td:nth-child(2) a:contains("Approved")
+    Then the user should see the element    jQuery=table.table-progress tr:nth-child(3) td:nth-child(2) a:contains("Approved")
 
 Eligibility checks are populated in the table
     [Documentation]    INFUND-4823
@@ -1129,7 +1129,7 @@ Project finance user can see the Eligibility check page for the partner
     [Documentation]    INFUND-4823
     [Tags]
     Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(2) td:nth-child(4) a:contains("Review")
+    When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(3) td:nth-child(4) a:contains("Review")
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
 
 Project finance user can see the partner's information about eligibility
@@ -1158,7 +1158,7 @@ Project finance user can see the eligibility checks for the industrial partner
     [Documentation]    INFUND-4823
     [Tags]
     When the user clicks the button/link   link=Finance checks
-    And the user clicks the button/link    jQuery=table.table-progress tr:nth-child(2) td:nth-child(4) a:contains("Review")
+    And the user clicks the button/link    jQuery=table.table-progress tr:nth-child(3) td:nth-child(4) a:contains("Review")
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
 
 Checking the approve eligibility checkbox enables RAG selection but not confirm viability button for partner
@@ -1202,7 +1202,7 @@ Confirming eligibility should update on the finance checks page
     [Documentation]    INFUND-4823, INFUND-7076
     [Tags]
     When the user clicks the button/link    link=Finance checks
-    Then the user should see the element    jQuery=table.table-progress tr:nth-child(2) td:nth-child(4) a:contains("Approved")
+    Then the user should see the element    jQuery=table.table-progress tr:nth-child(3) td:nth-child(4) a:contains("Approved")
     And The user should see the element    jQuery=.generate-spend-profile-main-button
     And the user should see the element    xpath=//*[@class='button generate-spend-profile-main-button' and @disabled='disabled']
 
@@ -1218,7 +1218,7 @@ Project finance can approve academic eligibility
     [Documentation]    INFUND-4428
     [Tags]      HappyPath
     ${today} =  get today
-    When the user clicks the button/link     jQuery=table.table-progress tr:nth-child(3) td:nth-child(4) a:contains("Review")
+    When the user clicks the button/link     jQuery=table.table-progress tr:nth-child(2) td:nth-child(4) a:contains("Review")
     Then the user should see the text in the page   Je-S Form overview
     When the user selects the checkbox    project-eligible
     When the user selects the option from the drop-down menu    Green    id=rag-rating
@@ -1424,8 +1424,8 @@ the rag rating updates on the finance check page for partner for viability
    [Arguments]    ${rag_rating}
    When the user selects the option from the drop-down menu    ${rag_rating}    id=rag-rating
    And the user clicks the button/link    jQuery=.button-secondary:contains("Save and return to finance checks")
-   Then the user should see the text in the element    jQuery=table.table-progress tr:nth-child(2) td:nth-child(3)    ${rag_rating}
-   And the user clicks the button/link    jQuery=table.table-progress tr:nth-child(2) td:nth-child(2) a:contains("Review")
+   Then the user should see the text in the element    jQuery=table.table-progress tr:nth-child(3) td:nth-child(3)    ${rag_rating}
+   And the user clicks the button/link    jQuery=table.table-progress tr:nth-child(3) td:nth-child(2) a:contains("Review")
    And the user should see the element    jQuery=.button:contains("Confirm viability"):not(.disabled)    # Checking here both that the button exists and that it isn't disabled
 
 the rag rating updates on the finance check page for lead for eligibility
@@ -1440,8 +1440,8 @@ the rag rating updates on the finance check page for partner for eligibility
    [Arguments]    ${rag_rating}
    When the user selects the option from the drop-down menu    ${rag_rating}    id=rag-rating
    And the user clicks the button/link    jQuery=.button-secondary:contains("Return to finance checks")
-   Then the user should see the text in the element    jQuery=table.table-progress tr:nth-child(2) td:nth-child(5)    ${rag_rating}
-   And the user clicks the button/link    jQuery=table.table-progress tr:nth-child(2) td:nth-child(4) a:contains("Review")
+   Then the user should see the text in the element    jQuery=table.table-progress tr:nth-child(3) td:nth-child(5)    ${rag_rating}
+   And the user clicks the button/link    jQuery=table.table-progress tr:nth-child(3) td:nth-child(4) a:contains("Review")
    And the user should see the element    jQuery=.button:contains("Approve eligible costs"):not(.disabled)    # Checking here both that the button exists and that it isn't disabled
 
 verify total costs of project
