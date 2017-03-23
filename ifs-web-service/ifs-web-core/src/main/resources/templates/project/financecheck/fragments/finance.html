@@ -39,7 +39,7 @@
                 <tfoot>
                     <tr>
                         <th colspan="4" scope="row">Total labour costs</th>
-                        <td th:id="${'section-total-'+subSection.id}" class="numeric" th:text="'£ ' + ${costCategory.getTotal() != null ? #numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT') : 0}" />
+                        <td th:id="${'section-total-'+subSection.id}" class="numeric labour-total" th:attr="data-calculation-rawvalue=${costCategory?.getTotal() != null ? costCategory?.getTotal() : 0}" th:text="'£ ' + ${costCategory.getTotal() != null ? #numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT') : 0}" />
                     </tr>
                 </tfoot>
             </table>
@@ -218,7 +218,7 @@
                 <th:block th:switch="${overheadRate.name()}">
                     <th:block th:case="'NONE'">
                         No overhead costs
-                        <div th:id="${'section-total-'+subSection.id}" aria-hidden="true">£ 0</div>
+                        <div data-current-overhead-total="" th:attr="data-calculation-rawvalue=0" th:id="${'section-total-'+subSection.id}" aria-hidden="true">£ 0</div>
                     </th:block>
                     <th:block th:case="'DEFAULT_PERCENTAGE'">
                         <table>
@@ -233,7 +233,7 @@
                             <tfoot>
                             <tr>
                                 <th scope="row">Total overhead costs</th>
-                                <td class="alignright" th:id="${'section-total-'+subSection.id}" th:text="'£ ' + ${#numbers.formatInteger(costCategory?.getTotal(),0, 'COMMA')}">£0</td>
+                                <td data-current-overhead-total="" th:attr="data-calculation-rawvalue=${costCategory?.getTotal()}" class="alignright" th:id="${'section-total-'+subSection.id}" th:text="'£ ' + ${#numbers.formatInteger(costCategory?.getTotal(),0, 'COMMA')}">£0</td>
                             </tr>
                             </tfoot>
                         </table>
@@ -251,7 +251,7 @@
                             <tfoot>
                             <tr>
                                 <th scope="col">Total administration support cost</th>
-                                <td class="alignright" th:id="${'section-total-'+subSection.id}" th:text="'£ ' + ${#numbers.formatInteger(costCategory?.getTotal(),0, 'COMMA')}">£0</td>
+                                <td class="alignright" data-current-overhead-total="" th:attr="data-calculation-rawvalue=${costCategory?.getTotal()}" th:id="${'section-total-'+subSection.id}" th:text="'£ ' + ${#numbers.formatInteger(costCategory?.getTotal(),0, 'COMMA')}">£0</td>
                             </tr>
                             </tfoot>
                         </table>
@@ -278,7 +278,7 @@
                             <tfoot>
                             <tr>
                                 <th scope="row">Total cost of overheads as calculated in the spreadsheet</th>
-                                <td class="alignright" th:id="${'section-total-'+subSection.id}" th:text="'£ ' + ${#numbers.formatInteger(costCategory?.getTotal(),0, 'COMMA')}">£0</td>
+                                <td class="alignright" data-current-overhead-total="" th:attr="data-calculation-rawvalue=${costCategory?.getTotal()}" th:id="${'section-total-'+subSection.id}"  th:text="'£ ' + ${#numbers.formatInteger(costCategory?.getTotal(),0, 'COMMA')}">£0</td>
                             </tr>
                             </tfoot>
                         </table>
