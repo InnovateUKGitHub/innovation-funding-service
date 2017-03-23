@@ -871,9 +871,8 @@ Project finance user can see the viability check page for the lead partner
     When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")    # clicking the review button for the lead partner
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
     And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_COMPANY_NUMBER}
-    And the user should see the text in the element  css=.standard-definition-list dd:nth-of-type(3)  -  #turnover
-    And the user should see the text in the element    css=.standard-definition-list dd:nth-of-type(4)  -   #headcount
-
+    And the user should see the text in the element  css=.standard-definition-list dd:nth-of-type(3)  ${PROJECT_SETUP_APPLICATION_1_LEAD_COMPANY_TURNOVER}   #turnover
+    And the user should see the text in the element    css=.standard-definition-list dd:nth-of-type(4)  ${PROJECT_SETUP_APPLICATION_1_LEAD_COMPANY_HEADCOUNT}    #headcount
 
 Project finance user can see the lead partner's information
     [Documentation]    INFUND-4825, INFUND-7577
