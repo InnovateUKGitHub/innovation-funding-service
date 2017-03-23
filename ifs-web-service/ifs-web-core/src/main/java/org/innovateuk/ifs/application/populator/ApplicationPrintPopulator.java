@@ -85,4 +85,8 @@ public class ApplicationPrintPopulator {
 
         return "application/print";
     }
+
+    private Long getUserOrganisationId(Optional<OrganisationResource> userOrganisation) {
+        return userOrganisation.isPresent() ?  userOrganisation.get().getId() : null;
+    }
 }

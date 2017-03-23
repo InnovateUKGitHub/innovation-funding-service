@@ -3,6 +3,7 @@ package org.innovateuk.ifs.registration;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.service.InviteRestService;
+import org.innovateuk.ifs.registration.viewmodel.ConfirmOrganisationInviteOrganisationViewModel;
 import org.innovateuk.ifs.registration.model.AcceptRejectApplicationInviteModelPopulator;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -81,10 +82,9 @@ public class AcceptInviteController extends AbstractAcceptInviteController {
                             }
                             OrganisationResource organisation = organisationService.getOrganisationByIdForAnonymousUserFlow(inviteOrganisation.getOrganisation());
                             cookieUtil.saveToCookie(response, RegistrationController.ORGANISATION_ID_PARAMETER_NAME, String.valueOf(inviteOrganisation.getOrganisation()));
-                            model.addAttribute("invite", invite);
-                            model.addAttribute("organisation", organisation);
-                            model.addAttribute("organisationAddress", getOrganisationAddress(organisation));
-                            model.addAttribute("registerUrl", RegistrationController.BASE_URL);
+                            model.addAttribute("model",
+                                    new ConfirmOrganisationInviteOrganisationViewModel(invite, organisation,
+                                            getOrganisationAddress(organisation), RegistrationController.BASE_URL));
                             return "registration/confirm-invited-organisation";
                         }
                 )

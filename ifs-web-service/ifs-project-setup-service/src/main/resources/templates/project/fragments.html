@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
-<div th:fragment="consortium-partner-status-row(partner)">
-    <th scope="row" th:text="${partner.name}" />
+<div th:fragment="consortium-partner-status-row(partner, isLead)">
+    <th scope="row">
+        <th:block th:text="${partner.name}"/>
+        <th:block th:if="${isLead}"> (Lead)</th:block>
+    </th>
+
     <th:block th:insert="project/fragments :: consortium-partner-status-indicator(${partner.projectDetailsStatus})" />
     <th:block th:insert="project/fragments :: consortium-partner-status-indicator(${partner.monitoringOfficerStatus})" />
     <th:block th:insert="project/fragments :: consortium-partner-status-indicator(${partner.bankDetailsStatus})" />
