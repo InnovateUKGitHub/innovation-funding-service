@@ -10,7 +10,7 @@ Resource          ../../../../resources/defaultResources.robot
 # But if you are running pybot manually you will need to add -v UPLOAD_FOLDER:/home/foo/bar/robot-tests/upload_files
 
 *** Variables ***
-${download_link}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1}/form/question/369/forminput/920/download
+${download_link}    ${SERVER}/application/99/form/question/439/forminput/1074/download
 ${virus_scanning_warning}    This file is awaiting virus scanning
 
 *** Test Cases ***
@@ -37,7 +37,7 @@ Large pdf uploads not allowed
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=5. Technical approach
-    When the user uploads the file     name=formInput[14]    ${too_large_pdf}
+    When the user uploads the file     name=formInput[1062]    ${too_large_pdf}
     Then the user should get an error page    ${too_large_pdf_validation_error}
 
 Non pdf uploads not allowed
@@ -47,7 +47,7 @@ Non pdf uploads not allowed
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=5. Technical approach
-    When the user uploads the file      name=formInput[14]    ${text_file}
+    When the user uploads the file      name=formInput[1062]    ${text_file}
     Then the user should get an error page    ${wrong_filetype_validation_error}
 
 
@@ -58,7 +58,7 @@ Lead applicant can upload a pdf file
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=5. Technical approach
-    Then the user uploads the file      name=formInput[14]    ${valid_pdf}
+    Then the user uploads the file      name=formInput[1062]    ${valid_pdf}
     And the user should see the text in the page    ${valid_pdf}
 
 Lead applicant can view a file
@@ -138,7 +138,7 @@ Collaborators can upload a file when the question is assigned
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=6. Innovation
     When the user should see the text in the page    Upload
-    Then the user uploads the file     name=formInput[17]     ${valid_pdf}
+    Then the user uploads the file     name=formInput[1066]     ${valid_pdf}
     And the user can re-assign the question back to the lead applicant
 
 Quarantined files are not returned to the user and the user is informed
@@ -162,11 +162,11 @@ the collaborator logs in
 
 the user uploads the file to the 'technical approach' question
     [Arguments]    ${file_name}
-    Choose File    name=formInput[14]    ${UPLOAD_FOLDER}/${file_name}
+    Choose File    name=formInput[1062]    ${UPLOAD_FOLDER}/${file_name}
 
 the user uploads the file to the 'Innovation' question
     [Arguments]    ${file_name}
-    Choose File    name=formInput[17]    ${UPLOAD_FOLDER}/${file_name}
+    Choose File    name=formInput[1066]    ${UPLOAD_FOLDER}/${file_name}
 
 the user can re-assign the question back to the lead applicant
     the user reloads the page

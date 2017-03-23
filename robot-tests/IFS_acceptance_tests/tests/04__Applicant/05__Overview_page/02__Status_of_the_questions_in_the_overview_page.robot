@@ -31,8 +31,8 @@ Re-assign is possible from the overview page
 
 *** Keywords ***
 the Applicant edits the Project summary
-    Clear Element Text    css=#form-input-885 .editor
-    The user enters text to a text field    css=#form-input-885 .editor    Check last updated date@#$
+    Clear Element Text    css=#form-input-1039 .editor
+    The user enters text to a text field    css=#form-input-1039 .editor    Check last updated date@#$
     Focus    css=.app-submit-btn
     wait for autosave
 
@@ -50,7 +50,7 @@ the applicant assigns the Project Summary question from the overview page
 
 the applicant assigns the Project Summary
     [Arguments]    ${assignee_name}
-    the user clicks the button/link    css=#form-input-885 .assign-button button
+    the user clicks the button/link    css=#form-input-1039 .assign-button button
     the user clicks the button/link    jQuery=button:contains("${assignee_name}")
 
 a blue flag should be visible for the Project Summary in overview page

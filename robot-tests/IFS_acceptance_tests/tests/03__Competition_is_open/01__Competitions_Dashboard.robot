@@ -17,7 +17,7 @@ Competition dashboard Open competition
     [Documentation]    INFUND-7562
     [Tags]
     When The user clicks the button/link    link=${OPEN_COMPETITION_NAME}
-    Then the user should see the element    jQuery=span:contains("11: Home and industrial efficiency programme")
+    Then the user should see the element    jQuery=span:contains("15: Predicting market trends programme")
     And the user should see the element    jQuery=h1:contains("Open")
     And the user should see the element    jQuery=dt:contains("Competition type") ~ dd:contains("Programme")
     And the user should see the element    jQuery=dt:contains("Innovation sector") ~ dd:contains("Materials and manufacturing")
@@ -98,7 +98,7 @@ the counts of the open competition should be correct
     ${SUBMITTED_COUNT}=    Get text    css=.extra-margin .column-third:nth-child(3) .heading-large
     Should Be Equal As Integers    ${SUBMITTED_COUNT}    ${Applications submitted}
     ${APPLICATIONS_PER_ASSESSOR}=    Get text    css=ul:nth-child(3) > li:nth-child(3) > div > span
-    Should Be Equal As Integers    ${APPLICATIONS_PER_ASSESSOR}    1
+    Should Be Equal As Integers    ${APPLICATIONS_PER_ASSESSOR}    3
 
 Get the expected values for the Ready to open counts
     The user clicks the button/link    jQuery=a:contains(Invite assessors)

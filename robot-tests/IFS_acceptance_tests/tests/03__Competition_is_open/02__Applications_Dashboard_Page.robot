@@ -62,7 +62,7 @@ The applications can be sorted by lead applicant
 Filter on application number
     [Documentation]    INFUND-8010
     [Tags]    HappyPath
-    Given the user enters text to a text field    id=filterSearch    101
+    Given the user enters text to a text field    id=filterSearch    105
     When the user clicks the button/link    jQuery=button:contains("Filter")
     Then the user should see the text in the page    Safeguarding pollinators and their values to human well-being
     And the user should not see the text in the page    Climate science the history of Greenland's ice
@@ -118,7 +118,7 @@ Comp admin should be able to view but not edit the finances for every partner
 *** Keywords ***
 the user uploads the file to the 'technical approach' question
     [Arguments]    ${file_name}
-    Choose File    name=formInput[908]    ${UPLOAD_FOLDER}/${file_name}
+    Choose File    name=formInput[1062]    ${UPLOAD_FOLDER}/${file_name}
 
 the user can see the option to upload a file on the page
     [Arguments]    ${url}
@@ -162,7 +162,7 @@ the finance Project cost breakdown calculations should be correct
 
 the applicant edits the Subcontracting costs section
     the user clicks the button/link    link=Your project costs
-    the user clicks the button/link    jQuery=#form-input-931 button:contains("Subcontracting costs")
+    the user clicks the button/link    jQuery=#form-input-1085 button:contains("Subcontracting costs")
     the user should see the text in the page    Subcontractor name
     The user enters text to a text field    css=#collapsible-4 .form-row:nth-child(2) input[id$=subcontractingCost]    2000
     The user enters text to a text field    css=.form-row:nth-child(1) [name^="subcontracting-name"]    Jackson Ltd
@@ -174,7 +174,7 @@ the applicant edits the Subcontracting costs section
 the user should see the correct finances change
     Wait Until Element Contains Without Screenshots    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(1)    £${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS_PLUS_2000}
     Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(1)    £${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS_PLUS_2000}
-    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(6)    £${DEFAULT_SUBCONTRACTING_COSTS_WITH_COMMAS_PLUS_https://ifs.local-dev/competition/1/info/eligibility00}
+    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(6)    £${DEFAULT_SUBCONTRACTING_COSTS_WITH_COMMAS_PLUS_2000}
 
 the application list is sorted by
     [Arguments]    ${sorting_factor}
@@ -281,15 +281,15 @@ The calculation of the open applications should be correct
 
 Then the totals in the Key statistics should be correct
     #Calculation of the total number of Applications
+    ${TOTAL_APPLICATIONS}=    Get matching xpath count    //table/tbody/tr
     ${TOTAL_COUNT}=    Get text    css=li:nth-child(1) > div > span
-    Should Be Equal As Integers    22   ${TOTAL_COUNT}
+    Should Be Equal As Integers    ${TOTAL_APPLICATIONS}    ${TOTAL_COUNT}
     #Calculation of the Started Applications
+    ${STARTED_APPLICATIONS}=    Get matching xpath count    //*[text()="Started"]
     ${STARTED_COUNT}=    Get text    css=li:nth-child(2) > div > span
-    Should Be Equal As Integers    20    ${STARTED_COUNT}
-    #Calculation of the beyond 50%
-    ${50_PERCENT_COUNT}=    Get text    css=li:nth-child(3) > div > span
-    Should Be Equal As Integers   1   ${50_PERCENT_COUNT}
+    Should Be Equal As Integers    ${STARTED_APPLICATIONS}    ${STARTED_COUNT}
     #Calculation of the Submitted Applications
+    ${SUBMITTED_APPLICATIONS}=    Get matching xpath count    //*[text()="Submitted"]
     ${SUBMITTED_COUNT}=    Get text    css=li:nth-child(4) > div > span
-    Should Be Equal As Integers   1   ${SUBMITTED_COUNT}
+    Should Be Equal As Integers    ${SUBMITTED_APPLICATIONS}    ${SUBMITTED_COUNT}
     #TODO ADD Check for the beyond 50% counts when we will have test data

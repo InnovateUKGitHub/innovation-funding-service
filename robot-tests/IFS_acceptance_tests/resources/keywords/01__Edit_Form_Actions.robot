@@ -259,14 +259,14 @@ the user should see the dropdown option selected
     Page Should Contain    BETA
 
 the user edits the project summary question
-    focus    css=#form-input-885 .editor
-    Clear Element Text    css=#form-input-885 .editor
-    Input Text    css=#form-input-885 .editor    I am a robot
+    focus    css=#form-input-1039 .editor
+    Clear Element Text    css=#form-input-1039 .editor
+    Input Text    css=#form-input-1039 .editor    I am a robot
     wait for autosave
 
 the applicant adds some content and marks this section as complete
-    Focus    css=#form-input-903 .editor
-    Input Text    css=#form-input-903 .editor    This is some random text
+    Focus    css=#form-input-1057 .editor
+    Input Text    css=#form-input-1057 .editor    This is some random text
     the user clicks the button/link    name=mark_as_complete
     the user should see the element    name=mark_as_incomplete
 

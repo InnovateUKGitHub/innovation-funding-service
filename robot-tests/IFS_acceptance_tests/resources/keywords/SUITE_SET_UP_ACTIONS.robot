@@ -49,19 +49,19 @@ the user marks every section but one as complete
     the user navigates to the page    ${server}
     the user clicks the button/link    link=${application_name}
     the user clicks the button/link    link=Project summary
-    the user marks the section as complete    885
-    the user marks the section as complete    886
-    the user marks the section as complete    887
-    the user marks the section as complete    891
-    the user marks the section as complete    895
-    the user marks the section as complete    899
-    the user marks the section as complete    903
-    the user marks the section as complete    907
-    the user marks the section as complete    911
-    the user marks the section as complete    915
-    the user marks the section as complete    919
-    the user marks the section as complete    923
-    the user marks the section as complete    927
+    the user marks the section as complete    11
+    the user marks the section as complete    12
+    the user marks the section as complete    13
+    the user marks the section as complete    1
+    the user marks the section as complete    2
+    the user marks the section as complete    3
+    the user marks the section as complete    4
+    the user marks the section as complete    5
+    the user marks the section as complete    6
+    the user marks the section as complete    7
+    the user marks the section as complete    8
+    the user marks the section as complete    15
+    the user marks the section as complete    16
 
 the user marks the section as complete
     [Arguments]    ${form-id}

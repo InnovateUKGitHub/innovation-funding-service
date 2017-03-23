@@ -12,7 +12,7 @@ Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
-${APPLICATION_DETAILS_APPLICATION8}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_5}/form/question/358
+${APPLICATION_DETAILS_APPLICATION8}    ${SERVER}/application/99/form/question/428
 
 *** Test Cases ***
 Non registered users CH route
