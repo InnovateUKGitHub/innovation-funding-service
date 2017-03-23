@@ -19,7 +19,7 @@ RUN pip install robotframework && \
 	pip install -U selenium && \
 	pip install simplejson requests && \
 	pip install robotframework-databaselibrary && \
-	pip install pymysql
+	pip install pymysql && \
 	pip install MySQL-python
 
 WORKDIR robot-tests
