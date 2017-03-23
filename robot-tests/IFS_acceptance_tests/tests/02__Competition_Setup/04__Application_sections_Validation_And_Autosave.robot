@@ -6,6 +6,7 @@ Suite Setup       Run Keywords    Guest user log-in    &{Comp_admin1_credentials
 ...               AND    User creates a new competition for Application tests
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
+Resource          CompAdmin_Commons.robot
 
 *** Test Cases ***
 Business opportunity Server-side validations setup questions

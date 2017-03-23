@@ -24,6 +24,7 @@ Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
+Resource          CompAdmin_Commons.robot
 
 *** Test Cases ***
 Initial details: server-side validations

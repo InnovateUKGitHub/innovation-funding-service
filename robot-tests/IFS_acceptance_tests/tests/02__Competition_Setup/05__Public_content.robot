@@ -17,7 +17,7 @@ Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
 Resource          CompAdmin_Commons.robot
-
+Resource          CompAdmin_Commons.robot
 *** Variables ***
 ${public_content_competition_name}    Public content competition
 
