@@ -28,7 +28,7 @@ import static java.util.stream.Collectors.toList;
 
 @Controller
 @RequestMapping("/competition/{competitionId}")
-@PreAuthorize("hasAuthority('comp_admin')")
+@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public class CompetitionManagementFundingNotificationsController {
 
 

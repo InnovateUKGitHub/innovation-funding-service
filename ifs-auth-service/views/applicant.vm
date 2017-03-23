@@ -1,9 +1,8 @@
 
-            <h1 class="heading-large">New to this service?</h1>
-            <p>If you haven't used this service before you must create an account, even if you already have an existing account with Innovate UK.</p>
-            <p>Currently this can be done by <a href="$resourcesDomain/competition/1/details">entering our 'Connected digital additive manufacturing' competition.</a></p>
-            <ul class="list-bullet extra-margin">
-              #if ($passwordEnabled)
-                <li class="list-help-item"><a href="$resourcesDomain/login/reset-password">#springMessageText("idp.login.forgotPassword", "forgot your password?")</a></li>
-              #end
-            </ul>
+            <h2 class="heading-small">My username and/or password isn't working</h2>
+            <p>The Innovation Funding Service (IFS) will not accept your sign in details for the previous Innovate UK process.</p>
+            #if ($passwordEnabled)
+              <p><a href="$resourcesDomain/login/reset-password">Forgotten your password</a></p>
+            #end
+            <h2 class="heading-small">I don't have an Innovation Funding Service account</h2>
+            <p>Please create a new IFS account by visiting our <a href="$resourcesDomain/competition/search">competitions listings page</a>.</p>

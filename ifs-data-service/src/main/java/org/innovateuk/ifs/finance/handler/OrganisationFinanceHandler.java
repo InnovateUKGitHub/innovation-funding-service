@@ -5,6 +5,7 @@ import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
+import org.innovateuk.ifs.finance.resource.category.ChangedFinanceRowPair;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -29,6 +30,7 @@ public interface OrganisationFinanceHandler {
 
     List<ApplicationFinanceRow> costItemsToCost(List<FinanceRowItem> costItems);
 
-    Map<FinanceRowType,FinanceRowCostCategory> getProjectOrganisationFinances(Long projectFinanceId);
+    Map<FinanceRowType, FinanceRowCostCategory> getProjectOrganisationFinances(Long projectFinanceId);
+    Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> getProjectOrganisationFinanceChanges(Long projectFinanceId);
     Map<FinanceRowType, FinanceRowCostCategory> getProjectOrganisationFinanceTotals(Long projectFinanceId, Competition competition);
 }

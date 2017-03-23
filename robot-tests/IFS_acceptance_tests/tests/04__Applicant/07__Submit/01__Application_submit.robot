@@ -33,7 +33,7 @@ Submit button disabled when application is incomplete
 
 Applicant has read only view after submission
     [Documentation]    INFUND-7405, INFUND-8599
-    [Tags]
+    [Tags]    HappyPath
     When the user navigates to the page    ${DASHBOARD_URL}
     and the user clicks the button/link      link=${application_name}
     then the applicant completes the application details    Application details
@@ -139,4 +139,4 @@ the applicant marks the first section as complete
 the applicant clicks the submit and then clicks the "close button" in the modal
     Wait Until Element Is Enabled Without Screenshots    jQuery=.button:contains("Submit application")
     the user clicks the button/link    jQuery=.button:contains("Submit application")
-    the user clicks the button/link    jQuery=button:contains("X")
+    the user clicks the button/link    jQuery=button:contains("Close")

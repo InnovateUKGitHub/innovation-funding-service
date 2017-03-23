@@ -32,9 +32,14 @@ Application details: Previous submission
 
 Application details: Research category
     [Documentation]    INFUND-6823
+    Given The user clicks the button/link   jQuery=button:contains("Choose your research category")
     Then the user should see the element    jQuery=label:contains("Industrial research")
     And the user should see the element    jQuery=label:contains("Feasibility studies")
     And the user should see the element    jQuery=label:contains("Experimental development")
+    and the user clicks the button/link     jQuery=button:contains(Save)
+    Then the user should see an error       This field cannot be left blank
+    and the user clicks the button twice   jQuery=label[for^="researchCategoryChoice"]:contains("Feasibility studies")
+    and the user clicks the button/link     jQuery=button:contains(Save)
     And the finance summary page should show a warning
 
 Autosave in the form questions
@@ -76,7 +81,7 @@ Mark a question as incomplete
     ...    INFUND-202
     [Tags]    HappyPath
     Given the user clicks the button/link    link=Project summary
-    When the user clicks the button/link    css=#form-input-11 div.textarea-footer > button[name="mark_as_incomplete"]
+    When the user clicks the button/link    css=#form-input-11 div.form-footer .form-footer__actions > button[name="mark_as_incomplete"]
     Then the text box should be editable
     And the button state should change to 'Mark as complete'
     And the question should not be marked as complete on the application overview page
@@ -160,7 +165,7 @@ the Applicant edits the Project description question (300 words)
     wait for autosave
 
 the text box should turn to green
-    the user should see the element    css=#form-input-11 div.marked-as-complete img.marked-as-complete
+    the user should see the element    css=#form-input-11 div.success-alert
     Element Should Be Disabled    css=#form-input-11 textarea
 
 the button state should change to 'Edit'
@@ -175,7 +180,7 @@ the Applicant edits Project summary and marks it as complete
     Press Key    css=#form-input-11 .editor    \\8
     focus    css=#form-input-11 .editor
     The user enters text to a text field    css=#form-input-11 .editor    Hi, I’m a robot @#$@#$@#$
-    the user clicks the button/link    css=#form-input-11 div.textarea-footer button[name="mark_as_complete"]
+    the user clicks the button/link    css=#form-input-11 .form-footer .form-footer__actions button[name="mark_as_complete"]
 
 the question should be marked as complete on the application overview page
     The user clicks the button/link    link=Application Overview

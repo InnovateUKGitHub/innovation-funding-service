@@ -36,7 +36,7 @@
                 <h2 class="heading-medium" th:text="|Competition details: ${model.competitionName}|">Competition details: My Competition</h2>
                 <p th:text="${model.competitionDescription}">Competition description</p>
 
-                <p><a href="#" rel="external">See competition brief</a></p>
+                <p><a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}" rel="external">See competition brief</a></p>
 
                 <p>If you have any queries, please contact the competitions team <a href="mailto:competitions@innovateuk.gov.uk">competitions@innovateuk.gov.uk</a>.</p>
             </section>

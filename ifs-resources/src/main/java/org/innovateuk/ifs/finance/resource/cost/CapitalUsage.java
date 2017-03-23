@@ -48,7 +48,7 @@ public class CapitalUsage implements FinanceRowItem {
     }
 
     public CapitalUsage(Long id, Integer deprecation, String description, String existing,
-                        BigDecimal npv, BigDecimal residualValue, Integer utilisation ) {
+                        BigDecimal npv, BigDecimal residualValue, Integer utilisation) {
         this();
         this.id = id;
         this.deprecation = deprecation;
@@ -68,30 +68,54 @@ public class CapitalUsage implements FinanceRowItem {
         return deprecation;
     }
 
+    public void setDeprecation(Integer deprecation) {
+        this.deprecation = deprecation;
+    }
+
     public String getDescription() {
         return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getExisting() {
         return existing;
     }
 
+    public void setExisting(String existing) {
+        this.existing = existing;
+    }
+
     public BigDecimal getNpv() {
         return npv;
+    }
+
+    public void setNpv(BigDecimal npv) {
+        this.npv = npv;
     }
 
     public BigDecimal getResidualValue() {
         return residualValue;
     }
 
+    public void setResidualValue(BigDecimal residualValue) {
+        this.residualValue = residualValue;
+    }
+
     public Integer getUtilisation() {
         return utilisation;
+    }
+
+    public void setUtilisation(Integer utilisation) {
+        this.utilisation = utilisation;
     }
 
     @Override
     public BigDecimal getTotal() {
         // ( npv - residualValue ) * utilisation-percentage
-        if(npv == null || residualValue == null || utilisation == null) {
+        if (npv == null || residualValue == null || utilisation == null) {
             return BigDecimal.ZERO;
         }
 
@@ -118,29 +142,5 @@ public class CapitalUsage implements FinanceRowItem {
     @Override
     public FinanceRowType getCostType() {
         return FinanceRowType.CAPITAL_USAGE;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setNpv(BigDecimal npv) {
-        this.npv = npv;
-    }
-
-    public void setResidualValue(BigDecimal residualValue) {
-        this.residualValue = residualValue;
-    }
-
-    public void setUtilisation(Integer utilisation) {
-        this.utilisation = utilisation;
-    }
-
-    public void setDeprecation(Integer deprecation) {
-        this.deprecation = deprecation;
-    }
-
-    public void setExisting(String existing) {
-        this.existing = existing;
     }
 }

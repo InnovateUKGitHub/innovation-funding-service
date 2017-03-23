@@ -24,7 +24,7 @@ Application Dashboard
     [Documentation]    INFUND-7369
     [Tags]    HappyPath
     Given the user clicks the button/link    link=${OPEN_COMPETITION_NAME}
-    When the user clicks the button/link    jQuery=a:contains("Applications - All, submitted")
+    When the user clicks the button/link    jQuery=a:contains("Applications: All, submitted")
     Then The user should see the element    jQuery=a:contains("Submitted applications")
     And The user should see the element    link=All applications
 
@@ -49,7 +49,8 @@ All Applications page: calculation in the table header
 
 The applications can be sorted by application number
     [Documentation]    INFUND-8010
-    [Tags]    HappyPath    Failing    INFUND-8582
+    [Tags]    HappyPath    Failing
+    # TODO Failing due to INFUND-8582
     When the application list is sorted by    Application no.
     Then the applications should be sorted by column    1
 

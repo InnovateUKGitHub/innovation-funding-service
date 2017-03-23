@@ -74,7 +74,15 @@
     <section id="section1">
       <h2 class="heading-medium">Title for Tab 1</h2>
       <div>
-        <p>Content for Tab 1</p>
+        <div class="deadline" style="text-align: center; margin-top: 10px;">
+          <div class="pie-container">
+            <div class="pie small" aria-hidden="true"><svg viewBox="0 0 32 32"><title><span>400</span>%</title><circle r="16" cx="16" cy="16" stroke-dasharray="100 100"></circle></svg></div>
+            <div class="pie-overlay">
+              <div>400</div>
+            </div>
+          </div>
+          <small>Days</small>
+        </div>
       </div>
     </section>
     <section id="section2">
@@ -710,32 +718,26 @@
   </div>
 
   <div class="test-modal" role="dialog" aria-hidden="true" style="margin-top: -174px;">
-    <a href="#" class="js-close close" aria-label="Close Popup">Close</a>
+    <button class="js-close close" type="button" aria-label="Close Popup">Close</button>
+    <h2 class="heading-medium no-margin">Submit project details</h2>
+    <p>Are you sure you wish to submit your project details to Innovate UK?</p>
+    <hr />
     <div>
-      <div class="modal-content">
-        <h2 class="heading-medium no-margin">Submit project details</h2>
-        <p>Are you sure you wish to submit your project details to Innovate UK?</p>
-      </div>
-      <hr />
-      <div>
-        <a class="button js-close" href="#">Submit</a>
-        <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
-      </div>
+      <a class="button js-close" href="#">Submit</a>
+      <button aria-label="Close Popup" type="button" class="buttonlink js-close">Cancel</button>
     </div>
   </div>
 
   <div class="test-warning-modal warning-modal" role="dialog" aria-hidden="true" style="margin-top: -174px;">
-    <a href="#" class="js-close close" aria-label="Close Popup">Close</a>
-    <div>
+    <button class="js-close close" type="button" aria-label="Close Popup">Close</button>
     <div class="modal-content">
       <h2 class="heading-medium no-margin">Changing research category will reset the funding level of this application</h2>
       <p>All partner organisations that have supplied their funding information will have to review and mark the section as complete again.</p>
     </div>
-      <hr />
-      <div>
-        <a class="button js-close" href="#">Submit</a>
-        <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
-      </div>
+    <hr />
+    <div>
+      <a class="button js-close" href="#">Submit</a>
+      <button aria-label="Close Popup" class="buttonlink js-close">Cancel</button>
     </div>
   </div>
   <div class="modal-overlay"></div>

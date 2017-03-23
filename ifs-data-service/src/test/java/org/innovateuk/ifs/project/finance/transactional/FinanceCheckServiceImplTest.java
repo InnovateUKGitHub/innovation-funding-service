@@ -183,7 +183,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Long projectId = 1L;
         Long organisationId = 2L;
 
-        Organisation organisation = newOrganisation().withId(organisationId).withOrganisationType(OrganisationTypeEnum.ACADEMIC).build();
+        Organisation organisation = newOrganisation().withId(organisationId).withOrganisationType(OrganisationTypeEnum.RESEARCH).build();
         PartnerOrganisation partnerOrganisation = newPartnerOrganisation().withOrganisation(organisation).build();
 
         FinanceCheckResource financeCheckResource = newFinanceCheckResource().
@@ -213,7 +213,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).build();
 
         Organisation[] organisations = newOrganisation().
-                withOrganisationType(OrganisationTypeEnum.BUSINESS, OrganisationTypeEnum.ACADEMIC, OrganisationTypeEnum.BUSINESS).
+                withOrganisationType(OrganisationTypeEnum.BUSINESS, OrganisationTypeEnum.RESEARCH, OrganisationTypeEnum.BUSINESS).
                 buildArray(3, Organisation.class);
 
         List<PartnerOrganisation> partnerOrganisations = newPartnerOrganisation().
@@ -266,7 +266,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(projectFinanceQueriesService.findAll(234L)).thenReturn(serviceSuccess(Arrays.asList(queryResource1)));
         when(projectFinanceQueriesService.findAll(345L)).thenReturn(serviceSuccess(new ArrayList<>()));
         when(projectFinanceQueriesService.findAll(456L)).thenReturn(serviceSuccess(Arrays.asList(queryResource2)));
-        when(financeRowServiceMock.getResearchParticipationPercentage(applicationId)).thenReturn(serviceSuccess(Double.valueOf(3.0)));
+        when(financeRowServiceMock.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(Double.valueOf(3.0)));
         ServiceResult<FinanceCheckSummaryResource> result = service.getFinanceCheckSummary(projectId);
         assertTrue(result.isSuccess());
 
@@ -568,7 +568,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
 
         Organisation[] organisations = newOrganisation().
-                withOrganisationType(OrganisationTypeEnum.BUSINESS, OrganisationTypeEnum.ACADEMIC, OrganisationTypeEnum.BUSINESS).
+                withOrganisationType(OrganisationTypeEnum.BUSINESS, OrganisationTypeEnum.RESEARCH, OrganisationTypeEnum.BUSINESS).
                 buildArray(3, Organisation.class);
 
         List<PartnerOrganisation> partnerOrganisations = newPartnerOrganisation().
@@ -611,7 +611,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(projectFinanceRowServiceMock.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
-        when(financeRowServiceMock.getResearchParticipationPercentage(applicationId)).thenReturn(serviceSuccess(Double.valueOf(3.0)));
+        when(financeRowServiceMock.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(Double.valueOf(3.0)));
 
         ServiceResult<FinanceCheckOverviewResource> result = service.getFinanceCheckOverview(projectId);
         assertTrue(result.isSuccess());
@@ -637,7 +637,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
 
         Organisation[] organisations = newOrganisation().
-                withOrganisationType(OrganisationTypeEnum.BUSINESS, OrganisationTypeEnum.ACADEMIC, OrganisationTypeEnum.BUSINESS).
+                withOrganisationType(OrganisationTypeEnum.BUSINESS, OrganisationTypeEnum.RESEARCH, OrganisationTypeEnum.BUSINESS).
                 buildArray(3, Organisation.class);
 
         List<PartnerOrganisation> partnerOrganisations = newPartnerOrganisation().
@@ -680,7 +680,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(projectFinanceRowServiceMock.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
-        when(financeRowServiceMock.getResearchParticipationPercentage(applicationId)).thenReturn(serviceFailure(GENERAL_FORBIDDEN));
+        when(financeRowServiceMock.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceFailure(GENERAL_FORBIDDEN));
 
         ServiceResult<FinanceCheckOverviewResource> result = service.getFinanceCheckOverview(projectId);
         assertTrue(result.isSuccess());
@@ -706,7 +706,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
 
         Organisation[] organisations = newOrganisation().
-                withOrganisationType(OrganisationTypeEnum.BUSINESS, OrganisationTypeEnum.ACADEMIC, OrganisationTypeEnum.BUSINESS).
+                withOrganisationType(OrganisationTypeEnum.BUSINESS, OrganisationTypeEnum.RESEARCH, OrganisationTypeEnum.BUSINESS).
                 buildArray(3, Organisation.class);
 
         List<PartnerOrganisation> partnerOrganisations = newPartnerOrganisation().
@@ -749,7 +749,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(projectFinanceRowServiceMock.financeChecksTotals(projectId)).thenReturn(serviceSuccess(projectFinanceResource));
-        when(financeRowServiceMock.getResearchParticipationPercentage(applicationId)).thenReturn(serviceSuccess(null));
+        when(financeRowServiceMock.getResearchParticipationPercentageFromProject(projectId)).thenReturn(serviceSuccess(null));
 
         ServiceResult<FinanceCheckOverviewResource> result = service.getFinanceCheckOverview(projectId);
         assertTrue(result.isSuccess());

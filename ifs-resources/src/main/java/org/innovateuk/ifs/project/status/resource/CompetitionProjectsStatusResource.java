@@ -4,12 +4,18 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Optional.ofNullable;
+import static java.util.function.Function.identity;
+
+/**
+ * Resource that holds the status of a Competition's Projects.
+ */
 public class CompetitionProjectsStatusResource {
     private Long competitionNumber;
     private String competitionName;
-
     private List<ProjectStatusResource> projectStatusResources;
 
     public CompetitionProjectsStatusResource(Long competitionNumber, String competitionName, List<ProjectStatusResource> projectStatusResources) {
@@ -39,7 +45,7 @@ public class CompetitionProjectsStatusResource {
     }
 
     public List<ProjectStatusResource> getProjectStatusResources() {
-        return projectStatusResources;
+        return ofNullable(projectStatusResources).map(identity()).orElse(new ArrayList<>());
     }
 
     public void setProjectStatusResources(List<ProjectStatusResource> projectStatusResources) {

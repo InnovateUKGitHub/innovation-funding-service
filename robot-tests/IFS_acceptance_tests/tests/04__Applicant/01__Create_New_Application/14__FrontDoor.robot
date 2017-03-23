@@ -50,7 +50,8 @@ Guest user can see the public information of a competition
     And the user should see the element      jQuery=strong:contains("Competition opens") + span:contains("Friday 15 Apr 2016")
     And the user should see the element      jQuery=li:contains("Competition closes")
     And the user should see the element      jQuery=li:contains("Friday 9 September 2067")
-    And the user should see the element      jQuery=.button:contains("Start or continue your application")
+    And the user should see the text in the page      Or Sign in to continue an existing application
+    And the user should see the element      jQuery=.button:contains("Start new application")
 
 Guest user can see the public Summary of the competition
     [Documentation]  INFUND-6923
@@ -105,7 +106,7 @@ Guest user can apply to a competition
     [Tags]  HappyPath
     [Setup]  the user navigates to the page  ${frontDoor}
     Given the user clicks the button/link    link=Home and industrial efficiency programme
-    When the user clicks the button/link     link=Start or continue your application
+    When the user clicks the button/link     link=Start new application
     Then the user should see the element     jQuery=.button:contains("Sign in")
     And the user should see the element      jQuery=.button:contains("Create")
 

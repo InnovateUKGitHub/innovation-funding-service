@@ -32,7 +32,7 @@ Edit link navigates to the application form
     [Documentation]    INFUND-193
     [Tags]    HappyPath
     Given the user clicks the button/link    jQuery=button:contains("Project summary")
-    When the user clicks the button/link    jQuery=#form-input-11 button:contains("Edit")
+    When the user clicks the button/link    jQuery=#form-input-11 button:contains("Return and edit")
     Then the user redirects to the page    Please provide a short summary of your project    Project summary
     And The user enters text to a text field    css=#form-input-11 .editor    Test text 123
     [Teardown]    The user clicks the button/link    jQuery=Button:contains(Save and return to application overview)
@@ -45,7 +45,7 @@ Mark as complete possible for questions with text
     When the user clicks the button/link    jQuery=#form-input-11 button:contains("Mark as complete")
     Then the Project summary question should be marked as complete
     And The user should not see the element    jQuery=#form-input-11 button:contains("Mark as complete")
-    [Teardown]  the user clicks the button/link    jQuery=#form-input-11 button:contains("Edit")
+    [Teardown]  the user clicks the button/link    jQuery=#form-input-11 button:contains("Return and edit")
 
 Mark as complete not possible for empty questions
     [Documentation]    INFUND-3954

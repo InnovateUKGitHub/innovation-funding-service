@@ -24,6 +24,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Service for handling finance checks functionality
+ */
 @Service
 public class FinanceCheckServiceImpl implements FinanceCheckService {
 
@@ -53,16 +56,6 @@ public class FinanceCheckServiceImpl implements FinanceCheckService {
     @Override
     public ServiceResult<FinanceCheckOverviewResource> getFinanceCheckOverview(Long projectId) {
         return financeCheckRestService.getFinanceCheckOverview(projectId).toServiceResult();
-    }
-
-    @Override
-    public ServiceResult<Void> approveFinanceCheck(Long projectId, Long organisationId) {
-        return financeCheckRestService.approveFinanceCheck(projectId, organisationId).toServiceResult();
-    }
-
-    @Override
-    public FinanceCheckProcessResource getFinanceCheckApprovalStatus(Long projectId, Long organisationId) {
-        return financeCheckRestService.getFinanceCheckApprovalStatus(projectId, organisationId).getSuccessObjectOrThrowException();
     }
 
     @Override
@@ -102,7 +95,7 @@ public class FinanceCheckServiceImpl implements FinanceCheckService {
     }
 
     @Override
-    public ServiceResult<List<QueryResource>> loadQueries(Long projectFinanceId) {
+    public ServiceResult<List<QueryResource>> getQueries(Long projectFinanceId) {
         return queryService.findAll(projectFinanceId).toServiceResult();
     }
 

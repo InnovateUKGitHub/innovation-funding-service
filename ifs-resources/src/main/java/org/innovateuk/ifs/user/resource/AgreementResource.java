@@ -13,10 +13,6 @@ public class AgreementResource {
     private boolean current;
     private String text;
 
-    private String annexA;
-    private String annexB;
-    private String annexC;
-
     public AgreementResource() {
     }
 
@@ -44,30 +40,6 @@ public class AgreementResource {
         this.text = text;
     }
 
-    public String getAnnexA() {
-        return annexA;
-    }
-
-    public void setAnnexA(String annexA) {
-        this.annexA = annexA;
-    }
-
-    public String getAnnexB() {
-        return annexB;
-    }
-
-    public void setAnnexB(String annexB) {
-        this.annexB = annexB;
-    }
-
-    public String getAnnexC() {
-        return annexC;
-    }
-
-    public void setAnnexC(String annexC) {
-        this.annexC = annexC;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -84,9 +56,6 @@ public class AgreementResource {
                 .append(current, that.current)
                 .append(id, that.id)
                 .append(text, that.text)
-                .append(annexA, that.annexA)
-                .append(annexB, that.annexB)
-                .append(annexC, that.annexC)
                 .isEquals();
     }
 
@@ -96,9 +65,6 @@ public class AgreementResource {
                 .append(id)
                 .append(current)
                 .append(text)
-                .append(annexA)
-                .append(annexB)
-                .append(annexC)
                 .toHashCode();
     }
 }

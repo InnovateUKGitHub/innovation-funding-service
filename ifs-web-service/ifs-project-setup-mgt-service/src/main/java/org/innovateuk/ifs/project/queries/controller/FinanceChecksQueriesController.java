@@ -317,7 +317,7 @@ public class FinanceChecksQueriesController {
         List<ThreadViewModel> queryModel = new LinkedList<>();
 
         ProjectFinanceResource projectFinance = projectFinanceService.getProjectFinance(projectId, organisationId);
-        ServiceResult<List<QueryResource>> queries = financeCheckService.loadQueries(projectFinance.getId());
+        ServiceResult<List<QueryResource>> queries = financeCheckService.getQueries(projectFinance.getId());
         if (queries.isSuccess()) {
             // order queries by most recent post
             List<QueryResource> sortedQueries = queries.getSuccessObject().stream().

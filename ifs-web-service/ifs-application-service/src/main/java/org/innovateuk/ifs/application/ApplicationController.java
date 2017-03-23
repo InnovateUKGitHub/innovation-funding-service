@@ -9,7 +9,6 @@ import org.innovateuk.ifs.application.populator.*;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.service.*;
-import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentFeedbackResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -181,7 +180,6 @@ public class ApplicationController {
         ProcessRoleResource userApplicationRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccessObjectOrThrowException();
 
         applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form, userApplicationRole.getOrganisationId());
-        applicationModelPopulator.addResearchCategoryId(application, model);
 
         model.addAttribute("applicationReadyForSubmit", applicationService.isApplicationReadyForSubmit(application.getId()));
 
@@ -207,8 +205,13 @@ public class ApplicationController {
     @RequestMapping(value = "/{applicationId}/question/{questionId}/feedback")
     public String applicationAssessorQuestionFeedback(Model model, @PathVariable("applicationId") long applicationId,
                                               @PathVariable("questionId") long questionId) {
-        model.addAttribute("model", assessorQuestionFeedbackPopulator.populate(applicationId, questionId));
+        ApplicationResource applicationResource = applicationService.getById(applicationId);
+        if (!applicationResource.getCompetitionStatus().isFeedbackReleased()) {
+            return "redirect:/application/" + applicationId + "/summary";
+        }
+        model.addAttribute("model", assessorQuestionFeedbackPopulator.populate(applicationResource, questionId));
         return "application-assessor-feedback";
+
     }
 
     @ProfileExecution

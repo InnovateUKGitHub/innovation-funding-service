@@ -1,48 +1,48 @@
 === Find all FormInputResponse by application
 ==== Request
-include::{snippets}/FormInputResponse/find-by-application-id-and-question-id/http-request.adoc[]
-include::{snippets}/FormInputResponse/find-by-application-id-and-question-id/path-parameters.adoc[]
+include::{snippets}/forminputresponse/find-by-application-id-and-question-id/http-request.adoc[]
+include::{snippets}/forminputresponse/find-by-application-id-and-question-id/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/FormInputResponse/find-by-application-id-and-question-id/http-response.adoc[]
-include::{snippets}/FormInputResponse/find-by-application-id-and-question-id/response-fields.adoc[]
+include::{snippets}/forminputresponse/find-by-application-id-and-question-id/http-response.adoc[]
+include::{snippets}/forminputresponse/find-by-application-id-and-question-id/response-fields.adoc[]
 
 ==== Curl Example
-include::{snippets}/FormInputResponse/find-by-application-id-and-question-id/curl-request.adoc[]
+include::{snippets}/forminputresponse/find-by-application-id-and-question-id/curl-request.adoc[]
 
 === Find FormInputResponse by application and question name
 ==== Request
-include::{snippets}/FormInputResponse/find-by-application-id-and-question-name/http-request.adoc[]
-include::{snippets}/FormInputResponse/find-by-application-id-and-question-name/path-parameters.adoc[]
+include::{snippets}/forminputresponse/find-by-application-id-and-question-name/http-request.adoc[]
+include::{snippets}/forminputresponse/find-by-application-id-and-question-name/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/FormInputResponse/find-by-application-id-and-question-name/http-response.adoc[]
-include::{snippets}/FormInputResponse/find-by-application-id-and-question-name/response-fields.adoc[]
+include::{snippets}/forminputresponse/find-by-application-id-and-question-name/http-response.adoc[]
+include::{snippets}/forminputresponse/find-by-application-id-and-question-name/response-fields.adoc[]
 
 ==== Curl Example
-include::{snippets}/FormInputResponse/find-by-application-id-and-question-name/curl-request.adoc[]
+include::{snippets}/forminputresponse/find-by-application-id-and-question-name/curl-request.adoc[]
 
 === Find all FormInputResponse by application and form input
 ==== Request
-include::{snippets}/FormInputResponse/find-by-form-input-id-and-application/http-request.adoc[]
-include::{snippets}/FormInputResponse/find-by-form-input-id-and-application/path-parameters.adoc[]
+include::{snippets}/forminputresponse/find-by-form-input-id-and-application/http-request.adoc[]
+include::{snippets}/forminputresponse/find-by-form-input-id-and-application/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/FormInputResponse/find-by-form-input-id-and-application/http-response.adoc[]
-include::{snippets}/FormInputResponse/find-by-form-input-id-and-application/response-fields.adoc[]
+include::{snippets}/forminputresponse/find-by-form-input-id-and-application/http-response.adoc[]
+include::{snippets}/forminputresponse/find-by-form-input-id-and-application/response-fields.adoc[]
 
 ==== Curl Example
-include::{snippets}/FormInputResponse/find-by-form-input-id-and-application/curl-request.adoc[]
+include::{snippets}/forminputresponse/find-by-form-input-id-and-application/curl-request.adoc[]
 
 === Find all FormInputResponse by application
 ==== Request
-include::{snippets}/FormInputResponse/find-responses-by-application/http-request.adoc[]
-include::{snippets}/FormInputResponse/find-responses-by-application/path-parameters.adoc[]
+include::{snippets}/forminputresponse/find-responses-by-application/http-request.adoc[]
+include::{snippets}/forminputresponse/find-responses-by-application/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/FormInputResponse/find-responses-by-application/http-response.adoc[]
-include::{snippets}/FormInputResponse/find-responses-by-application/response-fields.adoc[]
+include::{snippets}/forminputresponse/find-responses-by-application/http-response.adoc[]
+include::{snippets}/forminputresponse/find-responses-by-application/response-fields.adoc[]
 
 ==== Curl Example
-include::{snippets}/FormInputResponse/find-responses-by-application/curl-request.adoc[]
+include::{snippets}/forminputresponse/find-responses-by-application/curl-request.adoc[]
 

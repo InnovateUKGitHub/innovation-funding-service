@@ -10,6 +10,7 @@ import javax.persistence.*;
 
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
+import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 
 /**
  * Entity object similar to ApplicationFinance for storing values in finance_row tables which can be edited by
@@ -65,6 +66,10 @@ public class ProjectFinance extends Finance {
 
     public void setEligibilityStatus(EligibilityRagStatus eligibilityStatus) {
         this.eligibilityStatus = eligibilityStatus;
+    }
+
+    public boolean isPartner(Long userId) {
+        return ofNullable(project.getProjectUsersWithRole(PROJECT_PARTNER).stream().anyMatch(pu -> pu.isUser(userId) && pu.getOrganisation().equals(getOrganisation()))).orElse(false);
     }
 
     public boolean isFinanceContact(Long userId) {

@@ -2,28 +2,30 @@ package org.innovateuk.ifs.assessment.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.resource.*;
 import org.junit.Test;
 
 import java.util.List;
 import java.util.Optional;
 
+import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
-import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInvitePageResourceBuilder.newAssessorCreatedInvitePageResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
+import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewPageResourceBuilder.newAssessorInviteOverviewPageResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
+import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteToSendResourceBuilder.newAssessorInviteToSendResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorPageResourceBuilder.newAvailableAssessorPageResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
 import static org.innovateuk.ifs.invite.builder.CompetitionInviteStatisticsResourceBuilder.newCompetitionInviteStatisticsResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteListResourceBuilder.newNewUserStagedInviteListResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
+import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.ACCEPTED;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -94,7 +96,7 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
 
     @Test
     public void checkExistingUser() {
-        setupGetWithRestResultAnonymousExpectations(format("%s/%s/%s", restUrl, "checkExistingUser", "hash"), Boolean.class, Boolean.TRUE);
+        setupGetWithRestResultAnonymousExpectations(format("%s/%s/%s", restUrl, "checkExistingUser", "hash"), Boolean.class, TRUE);
         assertTrue(service.checkExistingUser("hash").getSuccessObject());
     }
 
@@ -159,11 +161,37 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
     @Test
     public void getInvitationOverview() throws Exception {
         long competitionId = 1L;
-        List<AssessorInviteOverviewResource> expected = newAssessorInviteOverviewResource().build(2);
+        int page = 5;
+        Optional<Long> innovationArea = of(10L);
+        Optional<ParticipantStatusResource> participantStatus = of(ACCEPTED);
+        Optional<Boolean> compliant = of(TRUE);
 
-        setupGetWithRestResultExpectations(format("%s/%s/%s", restUrl, "getInvitationOverview", competitionId), assessorInviteOverviewResourceListType(), expected);
+        AssessorInviteOverviewPageResource expected = newAssessorInviteOverviewPageResource().build();
 
-        List<AssessorInviteOverviewResource> actual = service.getInvitationOverview(competitionId).getSuccessObject();
+        String expectedUrl = format("%s/%s/%s?page=5&innovationArea=10&status=ACCEPTED&compliant=true", restUrl, "getInvitationOverview", competitionId);
+
+        setupGetWithRestResultExpectations(expectedUrl, AssessorInviteOverviewPageResource.class, expected);
+
+        AssessorInviteOverviewPageResource actual = service.getInvitationOverview(competitionId, page, innovationArea, participantStatus, compliant)
+                .getSuccessObject();
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getInvitationOverview_noExtraParams() throws Exception {
+        long competitionId = 1L;
+        int page = 5;
+
+        AssessorInviteOverviewPageResource expected = newAssessorInviteOverviewPageResource().build();
+
+        String expectedUrl = format("%s/%s/%s?page=5", restUrl, "getInvitationOverview", competitionId);
+
+        setupGetWithRestResultExpectations(expectedUrl, AssessorInviteOverviewPageResource.class, expected);
+
+        AssessorInviteOverviewPageResource actual = service.getInvitationOverview(competitionId, page, empty(), empty(), empty())
+                .getSuccessObject();
+
         assertEquals(expected, actual);
     }
 
@@ -222,11 +250,13 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
     @Test
     public void sendInvite() {
         long inviteId = 5L;
-        AssessorInviteToSendResource expected = newAssessorInviteToSendResource().build();
-        EmailContent email = newEmailContentResource().build();
-        setupPostWithRestResultExpectations(format("%s/%s/%s", restUrl, "sendInvite", inviteId), AssessorInviteToSendResource.class, email, expected, OK);
+        AssessorInviteSendResource assessorInviteSendResource = newAssessorInviteSendResource()
+                .withSubject("subject")
+                .withContent("content")
+                .build();
 
-        AssessorInviteToSendResource actual = service.sendInvite(inviteId, email).getSuccessObject();
-        assertEquals(expected, actual);
+        setupPostWithRestResultExpectations(format("%s/%s/%s", restUrl, "sendInvite", inviteId), assessorInviteSendResource, OK);
+
+        assertTrue(service.sendInvite(inviteId, assessorInviteSendResource).isSuccess());
     }
 }

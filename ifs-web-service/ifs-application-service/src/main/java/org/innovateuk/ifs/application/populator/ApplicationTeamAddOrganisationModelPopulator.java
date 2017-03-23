@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class ApplicationTeamAddOrganisationModelPopulator {
 
     public ApplicationTeamAddOrganisationViewModel populateModel(ApplicationResource applicationResource) {
-        return new ApplicationTeamAddOrganisationViewModel(applicationResource.getId(), applicationResource.getApplicationDisplayName());
+        return new ApplicationTeamAddOrganisationViewModel(applicationResource.getId(), applicationResource.getName());
     }
 
 }

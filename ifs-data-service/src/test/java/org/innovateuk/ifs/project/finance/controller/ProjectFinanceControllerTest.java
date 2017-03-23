@@ -5,7 +5,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.builder.SpendProfileResourceBuilder;
-import org.innovateuk.ifs.project.controller.ProjectFinanceController;
+import org.innovateuk.ifs.project.projectdetails.controller.ProjectFinanceController;
 import org.innovateuk.ifs.project.finance.resource.Eligibility;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.EligibilityResource;

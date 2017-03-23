@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: file-upload-claim
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+     requests:
+       storage: 100M
+  selector:
+    matchLabels:
+      dev: "dev"

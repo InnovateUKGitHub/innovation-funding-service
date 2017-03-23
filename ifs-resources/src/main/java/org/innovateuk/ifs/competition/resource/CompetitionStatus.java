@@ -10,7 +10,7 @@ public enum CompetitionStatus {
     CLOSED("Closed", true, false),
     IN_ASSESSMENT("In assessment", true, false),
     FUNDERS_PANEL("Panel", true, false),
-    ASSESSOR_FEEDBACK("Inform", true, true),
+    ASSESSOR_FEEDBACK("Inform", true, false),
     PROJECT_SETUP("Project setup",false, true);
 
     private String displayName;

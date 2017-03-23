@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
@@ -29,7 +30,7 @@ public class SubmittedApplicationsModelPopulator {
                 .getSuccessObjectOrThrowException();
 
         ApplicationSummaryPageResource summaryPageResource = applicationSummaryRestService
-                .getSubmittedApplications(competitionId, sorting, page, 20, filter)
+                .getSubmittedApplications(competitionId, sorting, page, 20, filter, Optional.empty())
                 .getSuccessObjectOrThrowException();
 
         return new SubmittedApplicationsViewModel(

@@ -1,10 +1,7 @@
 package org.innovateuk.ifs.documentation;
 
 import org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder;
-import org.innovateuk.ifs.invite.builder.AssessorInviteToSendResourceBuilder;
-import org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder;
-import org.innovateuk.ifs.invite.builder.NewUserStagedInviteListResourceBuilder;
-import org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder;
+import org.innovateuk.ifs.invite.builder.*;
 import org.innovateuk.ifs.invite.resource.CompetitionRejectionResource;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
@@ -12,7 +9,7 @@ import java.math.BigDecimal;
 
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
-import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
+import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteToSendResourceBuilder.newAssessorInviteToSendResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteListResourceBuilder.newNewUserStagedInviteListResource;
@@ -41,11 +38,16 @@ public class CompetitionInviteDocs {
             fieldWithPath("rejectComment").description("Optional comments about why the invite was rejected"),
     };
 
-    public static final FieldDescriptor[] assessorToSendFields = {
+    public static final FieldDescriptor[] assessorInviteToSendResourceFields = {
             fieldWithPath("recipient").description("Name of the recipient of the invite"),
             fieldWithPath("competitionId").description("The id of the competition"),
             fieldWithPath("competitionName").description("The name of the competition"),
-            fieldWithPath("emailContent").description("Content of the invite email")
+            fieldWithPath("content").description("Template for the invite email which the user can edit")
+    };
+
+    public static final FieldDescriptor[] assessorInviteSendResourceFields = {
+            fieldWithPath("subject").description("The subject of the invite email"),
+            fieldWithPath("content").description("The content body of the invite email")
     };
 
     public static final FieldDescriptor[] existingUserStagedInviteResourceFields = {
@@ -79,14 +81,14 @@ public class CompetitionInviteDocs {
                     .build(),
                     "own company");
 
+    public static final AssessorInviteSendResourceBuilder assessorInviteSendResourceBuilder = newAssessorInviteSendResource()
+            .withSubject("Subject to send")
+            .withContent("E-mail body to send");
+
     public static final AssessorInviteToSendResourceBuilder assessorInviteToSendResourceBuilder = newAssessorInviteToSendResource()
             .withCompetitionId(1L)
             .withCompetitionName("Connected digital additive manufacturing")
-            .withEmailContent(newEmailContentResource()
-                .withSubject("subject")
-                .withPlainText("plain text")
-                .withHtmlText("<html>html text</htm>")
-                .build())
+            .withContent("E-mail body content which is editable")
             .withRecipient("Paul Plum");
 
     public static final ExistingUserStagedInviteResourceBuilder existingUserStagedInviteResourceBuilder = newExistingUserStagedInviteResource()

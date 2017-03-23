@@ -77,10 +77,10 @@ Non-logged in user can log in and continue with an existing application
 *** Keywords ***
 The user can see this new application on their dashboard
     the user navigates to the page    ${DASHBOARD_URL}
-    the user should see the text in the page    ${OPEN_COMPETITION_LINK}
+    the user should see the text in the page    ${UNTITLED_APPLICATION_NAME}
 
 The project start date is blank
-    the user clicks the button/link    link=${OPEN_COMPETITION_LINK}
+    the user clicks the button/link    link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user clicks the button/link    link=Application details
     the user should see the element    xpath=//*[@id="application_details-startdate_day" and @placeholder="DD"]
     the user should see the element    xpath=//*[@id="application_details-startdate_month" and @placeholder="MM"]
@@ -91,4 +91,4 @@ The user can save the page with the blank date
     # note that the below validation is being used rather than a specific application number so that the test is
     # not broken by other tests that run before it and may change this application's number
     the user should see the text in the page    Application overview
-    the user should see the text in the page    ${OPEN_COMPETITION_LINK}
+    the user should see the text in the page    ${UNTITLED_APPLICATION_NAME}

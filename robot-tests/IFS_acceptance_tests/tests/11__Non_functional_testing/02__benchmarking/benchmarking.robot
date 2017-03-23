@@ -24,7 +24,7 @@ Go through the assessor journey
 *** Keywords ***
 the guest logs in as an assessor
     the guest user opens the browser
-    time until page contains    New to this service?    Loading the login page
+    time until page contains    Sign in    Loading the login page
     Log in as user    &{assessor_credentials}
     time until element is visible    link=My dashboard    Logging in as assessor
 

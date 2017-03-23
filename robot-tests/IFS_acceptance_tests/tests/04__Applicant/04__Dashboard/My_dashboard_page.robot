@@ -20,7 +20,8 @@ Number of days remaining until submission should be correct
     [Documentation]    INFUND-37
     ...
     ...    INFUND-5485
-    [Tags]
+    [Tags]    Pending
+    #TO DO pending due to INFUND-8925
     Then the user should see the number of days remaining
     And the days remaining should be correct (Applicant's dashboard)    2066-09-09
 

@@ -108,7 +108,7 @@ public class OrganisationDetailsViewModelPopulatorTest extends BaseUnitTestMocks
         userApplicationRoles.forEach(
                 processRoleResource -> setupOrganisationServicesSuccess(processRoleResource.getOrganisationId(), newOrganisationResource()
                         .withId(processRoleResource.getOrganisationId())
-                        .withOrganisationType(OrganisationTypeEnum.ACADEMIC.getOrganisationTypeId())
+                        .withOrganisationType(OrganisationTypeEnum.RESEARCH.getOrganisationTypeId())
                         .build()));
 
         List<InviteOrganisationResource> pendingInvites = newInviteOrganisationResource()
