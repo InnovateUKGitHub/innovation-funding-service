@@ -31,10 +31,10 @@ Initial details: server-side validations
     ...
     ...    IFUND-3888
     [Tags]    HappyPath
-    Given the user clicks the button/link    id=section-2  #Upcoming
+    Given the user navigates to the page   ${CA_UpcomingComp}
     And the user clicks the button/link    jQuery=.button:contains("Create competition")
     And The user clicks the button/link    link=Initial details
-    When the user clicks the button/link    jQuery=.button:contains("Done")
+    When the user clicks the button/link   jQuery=.button:contains("Done")
     Then the user should see an error    Please enter a title.
     And the user should see an error    Please select a competition type.
     And the user should see an error    Please select an innovation sector.

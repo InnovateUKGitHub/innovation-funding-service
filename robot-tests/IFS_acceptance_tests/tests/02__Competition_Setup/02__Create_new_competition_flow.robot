@@ -64,7 +64,7 @@ ${landingPage}    ${server}/management/competition/setup/${READY_TO_OPEN_COMPETI
 User can create a new competition
     [Documentation]    INFUND-2945, INFUND-2982, INFUND-2983, INFUND-2986, INFUND-3888, INFUND-3002, INFUND-2980, INFUND-4725
     [Tags]    HappyPath
-    Given the user clicks the button/link      id=section-3  #Nuno inDoubt
+    Given the user navigates to the page       ${CA_UpcomingComp}
     When the user clicks the button/link       jQuery=.button:contains("Create competition")
     And The user should not see the element    jQuery('.button:contains("Save")
     And The user should not see the element    link=Funding information
@@ -77,8 +77,8 @@ User can create a new competition
 
 New competition shows in Preparation section
     [Documentation]    INFUND-2980
-    Given The user clicks the button/link    link=All competitions
-    And The user clicks the button/link    id=section-2
+    Given The user clicks the button/link  link=All competitions
+    And the user navigates to the page     ${CA_UpcomingComp}
     Then the competition should show in the correct section    css=section:nth-of-type(1) li:nth-child(2)    No competition title defined    #this keyword checks if the new application shows in the second line of the "In preparation" competitions
 
 Initial details - User enters valid values and marks as done
@@ -176,8 +176,8 @@ Internal user can navigate to Public Content without having any issues
 New application shows in Preparation section with the new name
     [Documentation]    INFUND-2980
     Given the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
-    And The user clicks the button/link    link=All competitions
-    And The user clicks the button/link    id=section-2
+    And The user clicks the button/link   link=All competitions
+    And the user navigates to the page    ${CA_UpcomingComp}
     Then the competition should show in the correct section    css=section:nth-of-type(1) > ul    Test competition    #This keyword checks if the new competition shows in the "In preparation" test
 
 Funding information: calculations
@@ -481,9 +481,9 @@ User should be able to Save the Competition as Open
     [Documentation]    INFUND-4468, INFUND-3002
     [Tags]  Pending
     # TODO Pending due to INFUND-7643
-    When the user clicks the button/link    jQuery=.button:contains("Save")
+    When the user clicks the button/link   jQuery=.button:contains("Save")
     And the user clicks the button/link    link=All competitions
-    And the user clicks the button/link    id=section-2
+    And the user navigates to the page     ${CA_UpcomingComp}
     Then the competition should show in the correct section  css=section:nth-of-type(2) ul    Test competition
     # The above line checks that the section 'Ready to Open' there is a competition named Test competition
 
