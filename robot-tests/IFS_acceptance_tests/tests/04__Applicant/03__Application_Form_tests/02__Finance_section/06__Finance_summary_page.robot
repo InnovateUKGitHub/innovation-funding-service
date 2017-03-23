@@ -91,7 +91,7 @@ Green check should show when the finances are complete
     #TODO   investigate intermmitent failure
     When the user navigates to Your-finances page    Robot test application
     And the user marks the finances as complete     Robot test application
-    Then the user redirects to the page    Please provide Innovate UK with information about your project.    Application overview
+    Then the user redirects to the page    Please provide information about your project.    Application overview
     And the user clicks the button/link    link=Finances overview
     Then Green check should be visible
     [Teardown]    The user closes the browser
