@@ -38,11 +38,8 @@ public class ProjectTeamStatusController {
     }
 
     private void setLeadPartnerProjectDetailsTeamStatus(ProjectTeamStatusResource teamStatus) {
-
         boolean allFinanceContactSubmitted = teamStatus.getPartnerStatuses().stream().allMatch(projectPartnerStatusResource -> COMPLETE.equals(projectPartnerStatusResource.getFinanceContactStatus()));
-
         ProjectPartnerStatusResource leadProjectPartnerStatusResource = teamStatus.getLeadPartnerStatus();
-
         if (!(COMPLETE.equals(leadProjectPartnerStatusResource.getProjectDetailsStatus()) && allFinanceContactSubmitted)) {
             leadProjectPartnerStatusResource.setProjectDetailsStatus(ACTION_REQUIRED);
         }
