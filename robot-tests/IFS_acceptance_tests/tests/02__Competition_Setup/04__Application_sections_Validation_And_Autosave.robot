@@ -152,7 +152,7 @@ The user should see the correct inputs in assesment questions
     Should Be Equal    ${input_value}    This is a justification
 
 User creates a new competition for Application tests
-    Given the user clicks the button/link    id=section-2
+    Given the user clicks the button/link    id=section-2  #Upcoming
     When the user clicks the button/link    jQuery=.button:contains("Create competition")
     And the user clicks the button/link    link=Initial details
     And the user enters text to a text field    id=title    Test competition

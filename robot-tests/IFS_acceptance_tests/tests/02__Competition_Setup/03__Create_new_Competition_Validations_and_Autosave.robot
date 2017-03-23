@@ -31,7 +31,7 @@ Initial details: server-side validations
     ...
     ...    IFUND-3888
     [Tags]    HappyPath
-    Given the user clicks the button/link    id=section-2 #Upcoming
+    Given the user clicks the button/link    id=section-2  #Upcoming
     And the user clicks the button/link    jQuery=.button:contains("Create competition")
     And The user clicks the button/link    link=Initial details
     When the user clicks the button/link    jQuery=.button:contains("Done")
