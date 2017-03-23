@@ -41,7 +41,10 @@ public class ProjectFinanceController {
 
     /**
      * This method was written to recreate Spend Profile for one of the partner organisations on Production.
+     *
      * This method assumes that all the necessary stuff is in the database before the Spend Profile can be generated.
+     * This does not perform any validations to check that the Finance Checks are complete, Viability is approved,
+     * Eligibility is approved or if the Spend Profile is already generated.
      */
     @RequestMapping(value = "/{projectId}/partner-organisation/{organisationId}/user/{userId}/spend-profile/generate", method = POST)
     public RestResult<Void> generateSpendProfileForPartnerOrganisation(@PathVariable("projectId") final Long projectId,
