@@ -44,7 +44,7 @@ Check the initial key statistics
 Filtering in the Invite Overview page
     [Documentation]    INFUND-6453
     [Tags]
-    Given the user selects the option from the drop-down menu    Manufacturing Readiness    id=filterInnovationArea
+    Given the user selects the option from the drop-down menu    Assembly / disassembly / joining    id=filterInnovationArea
     And the user selects the option from the drop-down menu    Invite declined    id=filterStatus
     And the user selects the option from the drop-down menu    Yes    id=filterContract
     When the user clicks the button/link    jQuery=button:contains(Filter)
