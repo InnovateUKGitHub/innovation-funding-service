@@ -49,19 +49,19 @@ the user marks every section but one as complete
     the user navigates to the page    ${server}
     the user clicks the button/link    link=${application_name}
     the user clicks the button/link    link=Project summary
-    the user marks the section as complete    11
-    the user marks the section as complete    12
-    the user marks the section as complete    13
-    the user marks the section as complete    1
-    the user marks the section as complete    2
-    the user marks the section as complete    3
-    the user marks the section as complete    4
-    the user marks the section as complete    5
-    the user marks the section as complete    6
-    the user marks the section as complete    7
-    the user marks the section as complete    8
-    the user marks the section as complete    15
-    the user marks the section as complete    16
+    the user marks the section as complete    1039
+    the user marks the section as complete    1040
+    the user marks the section as complete    1041
+    the user marks the section as complete    1045
+    the user marks the section as complete    1049
+    the user marks the section as complete    1053
+    the user marks the section as complete    1057
+    the user marks the section as complete    1061
+    the user marks the section as complete    1065
+    the user marks the section as complete    1069
+    the user marks the section as complete    1073
+    the user marks the section as complete    1077
+    the user marks the section as complete    1081
 
 the user marks the section as complete
     [Arguments]    ${form-id}
@@ -123,8 +123,8 @@ Invite and accept the invitation
     [Arguments]    ${recipient}    ${subject}    ${pattern}
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
-    And the user should see the text in the page    view and add participants to your application
-    When the user clicks the button/link    link=view and add participants to your application
+    And the user should see the text in the page    view team members and add collaborators
+    When the user clicks the button/link    link=view team members and add collaborators
     And the user clicks the button/link    jQuery=a:contains("Add partner organisation")
     And the user enters text to a text field    name=organisationName    Academic Test
     And the user enters text to a text field    name=applicants[0].name     Arsene Wenger

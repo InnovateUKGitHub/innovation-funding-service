@@ -48,12 +48,14 @@
 		}
 	}
 	section {
-		h2 {
+		> h2,
+		> h3 {
+			display: none;
 			@include media-down(mobile){
+				display: block;
 				margin-top: 0.5em;
 			}
 		}
-		// TODO this is just a copy of collapsible sass, we need to be extanding it rather than copying it
 		@include media-down(mobile) {
 			> h2,
 			> h3 {

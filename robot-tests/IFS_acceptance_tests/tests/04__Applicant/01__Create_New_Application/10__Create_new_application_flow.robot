@@ -12,7 +12,7 @@ Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
-${APPLICATION_DETAILS_APPLICATION8}    ${SERVER}/application/8/form/question/9
+${APPLICATION_DETAILS_APPLICATION8}    ${SERVER}/application/99/form/question/428
 
 *** Test Cases ***
 Non registered users CH route
@@ -118,7 +118,7 @@ Verify the name of the new application
     And the user edits the competition title
     Then the user should see the text in the page    ${test_title}
     And the progress indicator should show 0
-    And the user clicks the button/link    link=view and add participants to your application
+    And the user clicks the button/link    link=view team members and add collaborators
     And the user should see the text in the page    Application team
     And the user should see the text in the page    View and manage your participants
     And the new application should be visible in the dashboard page
