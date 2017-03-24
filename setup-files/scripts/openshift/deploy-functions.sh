@@ -27,7 +27,7 @@ function tailorAppInstance() {
 
         if [[ ${TARGET} == "demo" ]]
         then
-            if [ -z "${bamboo_DEMO_ldap_password}" ]; then echo "Set bamboo_${TARGET}_ldap_password environment variable"; exit -1; fi
+            if [ -z "${bamboo_demo_ldap_password}" ]; then echo "Set bamboo_${TARGET}_ldap_password environment variable"; exit -1; fi
             sed -i.bak "s/<<LDAP-PASSWORD>>/${bamboo_demo_ldap_password}/g" os-files-tmp/shib/named-envs/*.yml
         fi
         if [[ ${TARGET} == "uat" ]]
