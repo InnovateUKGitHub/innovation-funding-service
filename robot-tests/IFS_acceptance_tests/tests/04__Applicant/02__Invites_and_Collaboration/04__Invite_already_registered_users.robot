@@ -34,12 +34,12 @@ The user should see the correct content in the confirm page
     [Tags]    HappyPath
     Then the user should see the text in the page    INNOVATE LTD
     And the user should see the text in the page    BH2 5QY
-    And the user should see the element    link=email the application lead
+    And the user should see the element    link=email the lead applicant
 
 The continue button should redirect to the overview page
     [Documentation]    INFUND-1458
     [Tags]    HappyPath
-    When the user clicks the button/link    jQuery=.button:contains("Continue to application")
+    When the user clicks the button/link    jQuery=.button:contains("Confirm and accept invitation")
     Then the user should see the text in the page    Application overview
 
 The user edits the name this should be changed in the View team page
@@ -53,8 +53,6 @@ The user edits the name this should be changed in the View team page
     [Teardown]    TestTeardown User closes the browser
 
 Invite a user with the same organisation under the same organisation
-    [Tags]  Pending
-    # TODO INFUND-8883
     [Documentation]    INFUND-3759
     [Setup]    Guest user log-in    ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     When Existing user creates a new application and invites a user from the same organisation
