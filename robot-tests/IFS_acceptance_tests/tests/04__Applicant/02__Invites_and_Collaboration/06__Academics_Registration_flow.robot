@@ -8,8 +8,7 @@ Resource          ../../../resources/defaultResources.robot
 *** Test Cases ***
 Academic organisations search
     [Documentation]    INFUND-1231
-    [Tags]    HappyPath    Email    SmokeTest   Pending
-    # TODO INFUND-8878
+    [Tags]    HappyPath    Email    SmokeTest
     [Setup]    Delete the emails from both test mailboxes
     Given we create a new user    ${test_mailbox_one}+invitedacademics${unique_email_number}@gmail.com
     Given the lead applicant invites a registered user    ${test_mailbox_one}+academicinvite${unique_email_number}@gmail.com    ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com
@@ -29,8 +28,7 @@ Academic organisations search
 
 Accept invitation as academic
     [Documentation]    INFUND-1166, INFUND-917, INFUND-2450, INFUND-2256
-    [Tags]    HappyPath    Email    SmokeTest   Pending
-    # TODO INFUND-8878
+    [Tags]    HappyPath    Email    SmokeTest
     [Setup]    Delete the emails from both test mailboxes
     When the user enters text to a text field    id=organisationSearchName    Liv
     And the user clicks the button/link    jQuery=.button:contains("Search")
