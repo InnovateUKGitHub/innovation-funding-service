@@ -59,6 +59,18 @@ function upgradeServices {
     oc rollout status dc/shib --request-timeout='5m' ${SVC_ACCOUNT_CLAUSE}
 }
 
+function forceReload {
+    oc deploy dc/data-service --latest
+    sleep 90
+
+    oc deploy dc/application-svc --latest
+    oc deploy dc/assessment-svc --latest
+    oc deploy dc/competition-mgt-svc --latest
+    oc deploy dc/project-setup-mgt-svc --latest
+    oc deploy dc/project-setup-svc --latest
+    oc deploy dc/idp --latest
+    oc deploy dc/shib --latest
+}
 
 . $(dirname $0)/deploy-functions.sh
 
@@ -69,6 +81,11 @@ tailorAppInstance
 
 useContainerRegistry
 upgradeServices
+
+if [ ${bamboo_openshift_force_reload} == "true" ]
+then
+    forceReload
+fi
 
 if [[ ${TARGET} == "production" || ${TARGET} == "uat" ]]
 then
