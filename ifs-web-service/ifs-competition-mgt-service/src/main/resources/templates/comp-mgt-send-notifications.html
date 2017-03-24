@@ -34,23 +34,23 @@
         <h2 class="heading-medium">Key statistics</h2>
 
         <ul class="grid-row">
-            <li th:if="${model.keyStatistics.statTwo != null}" class="column-third">
+            <li th:if="${model.successfulRecipientsCount != null}" class="column-third">
                 <div class="highlight-panel highlight-panel-padded">
-                    <span class="heading-large" th:text="${model.keyStatistics.statTwo}">2</span><br/>
+                    <span class="heading-large" th:text="${model.successfulRecipientsCount}">2</span><br/>
                     <small>successful</small>
                 </div>
             </li>
 
-            <li th:if="${model.keyStatistics.statThree != null}" class="column-third">
+            <li th:if="${model.unsuccessfulRecipientsCount != null}" class="column-third">
                 <div class="highlight-panel highlight-panel-padded">
-                    <span class="heading-large" th:text="${model.keyStatistics.statThree}">3</span><br/>
+                    <span class="heading-large" th:text="${model.unsuccessfulRecipientsCount}">3</span><br/>
                     <small>unsuccessful</small>
                 </div>
             </li>
 
-            <li th:if="${model.keyStatistics.statFour != null}" class="column-third">
+            <li th:if="${model.onHoldRecipientsCount != null}" class="column-third">
                 <div class="highlight-panel highlight-panel-padded">
-                    <span class="heading-large" th:text="${model.keyStatistics.statFour}">4</span><br/>
+                    <span class="heading-large" th:text="${model.onHoldRecipientsCount}">4</span><br/>
                     <small>on hold</small>
                 </div>
             </li>
