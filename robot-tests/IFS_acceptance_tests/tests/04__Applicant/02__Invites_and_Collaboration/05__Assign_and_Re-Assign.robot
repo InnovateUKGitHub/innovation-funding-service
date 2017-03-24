@@ -182,7 +182,7 @@ Collaborator can see that Research area is not selected
     [Documentation]  INFUND-6823
     [Tags]
     Given the user navigates to Your-finances page    Assign test
-    Then The user should see the element     jQuery=p:contains("You must select a research category in application details")
+    Then The user should see the element     jQuery=p:contains("The lead applicant must select a research category in application details")
 
 Lead selects Research category
     [Documentation]  INFUND-6823
