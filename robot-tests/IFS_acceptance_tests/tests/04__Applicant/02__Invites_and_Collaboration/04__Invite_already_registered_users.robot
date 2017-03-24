@@ -53,8 +53,6 @@ The user edits the name this should be changed in the View team page
     [Teardown]    TestTeardown User closes the browser
 
 Invite a user with the same organisation under the same organisation
-    [Tags]  Pending
-    # TODO INFUND-8883
     [Documentation]    INFUND-3759
     [Setup]    Guest user log-in    ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     When Existing user creates a new application and invites a user from the same organisation
