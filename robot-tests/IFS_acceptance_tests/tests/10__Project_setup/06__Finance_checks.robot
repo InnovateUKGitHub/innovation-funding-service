@@ -1300,7 +1300,6 @@ the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project se
     the user moves focus to the element     jQuery=label[for="app-row-2"]
     the user selects the checkbox       app-row-2
     the user clicks the button/link     jQuery=button:contains("Successful")
-    #the user clicks the button/link     xpath=//*[@id="content"]/form[1]/div[1]/div[2]/fieldset/button[1]
     the user should see the element    jQuery=td:contains("Successful")
     the user clicks the button/link     jQuery=a:contains("Competition")
     the user clicks the button/link     jQuery=button:contains("Manage funding notifications")
