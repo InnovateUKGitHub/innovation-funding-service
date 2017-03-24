@@ -22,7 +22,7 @@ import javax.validation.constraints.Size;
 public class AssessorRegistrationForm extends BaseBindingResultTarget {
 
     @NotEmpty(message = "{validation.standard.firstname.required}")
-    @Pattern(regexp = "[\\p{L} -]*", message = "{validation.standard.firstname.required}")
+    @Pattern(regexp = "[\\p{L} -']*", message = "{validation.standard.firstname.required}")
     @Size.List ({
             @Size(min=2, message="{validation.standard.firstname.length.min}"),
             @Size(max=70, message="{validation.standard.firstname.length.max}"),
@@ -30,7 +30,7 @@ public class AssessorRegistrationForm extends BaseBindingResultTarget {
     private String firstName;
 
     @NotEmpty(message = "{validation.standard.lastname.required}")
-    @Pattern(regexp = "[\\p{L} -]*", message = "{validation.standard.lastname.required}")
+    @Pattern(regexp = "[\\p{L} -']*", message = "{validation.standard.lastname.required}")
     @Size.List ({
             @Size(min=2, message="{validation.standard.lastname.length.min}"),
             @Size(max=70, message="{validation.standard.lastname.length.max}"),
@@ -52,13 +52,13 @@ public class AssessorRegistrationForm extends BaseBindingResultTarget {
     private String retypedPassword;
 
     @NotNull(message = "{validation.standard.gender.selectionrequired}")
-    private Gender gender;
+    private Gender gender = Gender.NOT_STATED;
 
     @NotNull(message = "{validation.standard.ethnicity.selectionrequired}")
     private EthnicityResource ethnicity;
 
     @NotNull(message = "{validation.standard.disability.selectionrequired}")
-    private Disability disability;
+    private Disability disability = Disability.NOT_STATED;
 
     @Valid
     private AddressForm addressForm = new AddressForm();
@@ -70,6 +70,11 @@ public class AssessorRegistrationForm extends BaseBindingResultTarget {
     })
     @Pattern(regexp = "([0-9\\ +-])+",  message= "{validation.standard.phonenumber.format}")
     private String phoneNumber;
+
+    public AssessorRegistrationForm() {
+        this.ethnicity = new EthnicityResource();
+        ethnicity.setId(7L);
+    }
 
     public String getFirstName() {
         return firstName;

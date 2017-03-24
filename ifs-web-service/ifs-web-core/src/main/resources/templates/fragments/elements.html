@@ -180,15 +180,20 @@
 
 <!--  ========================== Element: Agree to application terms =============== -->
 <th:block th:fragment="application-agree-to-terms">
- 	<div th:class="${#fields.hasErrors('termsAgreed')}? 'form-block error':'form-block'">
-        <th:block th:if="${#fields.hasErrors('termsAgreed')}">
-            <span class="error-message"  th:each="err : ${#fields.errors('termsAgreed')}" th:text="${err}" />
-        </th:block>
-		<label class="block-label selection-button-checkbox" for="agree-terms-page">
-        	<input id="agree-terms-page" th:field="${form.termsAgreed}" type="checkbox" value="yes" data-switches-button-status="#mark-all-as-complete" />
-            As a member of this consortium I agree to the funding <a target="_blank" th:href="@{/application/terms-and-conditions}">terms and conditions</a> set out by Innovate UK.
-		</label>
-	</div>
+    <div class="form-group" th:classappend="${#fields.hasErrors('termsAgreed')} ? 'error'">
+        <fieldset>
+            <legend>
+                <span class="visuallyhidden">Terms and conditions</span>
+                <th:block th:if="${#fields.hasErrors('termsAgreed')}">
+                    <span class="error-message"  th:each="err : ${#fields.errors('termsAgreed')}" th:text="${err}" />
+                </th:block>
+            </legend>
+            <label class="block-label selection-button-checkbox" for="agree-terms-page">
+                <input id="agree-terms-page" th:field="${form.termsAgreed}" type="checkbox" value="yes" data-switches-button-status="#mark-all-as-complete" />
+                As a member of this consortium I agree to the funding <a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.application.currentCompetition.id})}">terms and conditions</a> set out by Innovate UK.
+            </label>
+        </fieldset>
+    </div>
 </th:block>
 
 <!--  ========================== Element: Agree to application terms =============== -->

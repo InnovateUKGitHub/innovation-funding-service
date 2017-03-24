@@ -29,15 +29,10 @@
 
                 <p>Please read through all of the terms of service before agreeing.</p>
 
-                <div ifs:utext="${model.text}" />
+                <!--/* TODO INFUND-8899 ifs:utext is stripping relative links in the text. Switching to using th:utext. */-->
+                <div th:utext="${model.text}" />
 
-                <ul class="list list-bullet extra-margin">
-                    <li th:each="annex : ${T(org.innovateuk.ifs.assessment.controller.profile.AssessorProfileAgreementController.AgreementAnnexParameter).values()}">
-                        <a th:href="@{/profile/agreement/annex/{annex}(annex=${annex})}" th:text="|Annex ${annex}|">Annex A</a>
-                    </li>
-                </ul>
-
-                <p class="form-hint">You can access these assessor agreement at any time from your profile. <a href="/assessment/documents/New simple assessor agreement.pdf">Download assessor agreement</a>.</p>
+                <p class="form-hint">You can access this assessor agreement at any time from your profile. <a href="/assessment/documents/New simple assessor agreement.pdf">Download assessor agreement</a>.</p>
 
                 <form class="extra-margin" th:action="@{/profile/agreement}" th:object="${form}" method="post" th:unless="${model.currentAgreement}">
                     <div class="form-group" th:classappend="${#fields.hasErrors('agreesToTerms')}? error">

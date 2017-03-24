@@ -99,12 +99,8 @@ Lead Adds/Removes partner organisation
     And The user enters text to a text field    name=applicants[0].email    ewan+10@hiveit.co.uk
     And The user clicks the button/link    jQuery=button:contains("Add organisation and invite applicants")
     And the user clicks the button/link    jQuery=a:contains("Update Fannie May")
-    When The user clicks the button/link    jQuery=button:contains('Remove')
-    And the user clicks the button/link    jQuery=.button:contains("Cancel")
-    Then the user should see the text in the page    Fannie May
-    And the user clicks the button/link    jQuery=a:contains("Update Fannie May")
-    And The user clicks the button/link    jQuery=button:contains('Remove')
-    And the user clicks the button/link    jQuery=button:contains("Update organisation")
+    Then The user clicks the button/link    jQuery=button:contains('Delete organisation')
+    And The user clicks the button/link     jQuery=.modal-delete-organisation button:contains('Delete organisation')
     Then The user should not see the text in the page    Fannie May
     And the user should see the text in the page    Application team
 
@@ -165,7 +161,7 @@ Business organisation (partner accepts invitation)
     [Tags]    HappyPath    Email    SmokeTest
     [Setup]    The guest user opens the browser
     When the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    participate in their application
-    And the user clicks the button/link    jQuery=.button:contains("Create")
+    And the user clicks the button/link    jQuery=.button:contains("Yes, accept invitation")
     And the user selects the radio button    organisationType    1
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user enters text to a text field    id=organisationSearchName    Nomensa
@@ -173,9 +169,9 @@ Business organisation (partner accepts invitation)
     And the user clicks the button/link    link=NOMENSA LTD
     And the user selects the checkbox    address-same
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
-    And the user clicks the button/link    jQuery=.button:contains("Confirm and continue")
+    And the user clicks the button/link    jQuery=.button:contains("Confirm")
     And the user fills the create account form    Adrian    Booth
-    And the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com    Please verify your email address    If you did not request an account with us
+    And the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com    Please verify your email address    Once verified you can sign into your account
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
 
 Partner should be able to log-in and see the new company name
@@ -209,7 +205,7 @@ Partner can invite others to his own organisation
     And The user enters text to a text field    jQuery=tr:nth-of-type(2) td:nth-of-type(1) input    Mark
     And The user enters text to a text field    jQuery=tr:nth-of-type(2) td:nth-of-type(2) input    mark21@innovateuk.com
     And the user clicks the button/link    jQuery=button:contains("Update organisation")
-    Then The user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(3):contains("Invite pending")
+    Then The user should see the element    jQuery=td:contains("mark21@innovateuk.com") + td:contains("Invite pending")
 
 Lead should see the accepted partner in the assign list
     [Documentation]    INFUND-1779
@@ -218,7 +214,7 @@ Lead should see the accepted partner in the assign list
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
     And the user clicks the button/link    link=Project summary
-    When the user clicks the button/link    css=.assign-button
+    When the user clicks the button/link    css=.assign-button > button
     Then the user should see the element    jQuery=button:contains("Adrian Booth")
 
 Lead applicant invites a non registered user in the same organisation
@@ -248,18 +244,17 @@ Registered partner should not create new org but should follow the create accoun
     [Setup]    The guest user opens the browser
     When the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    participate in their application
     And the user should see the text in the page    Join an application
-    And the user clicks the button/link    jQuery=.button:contains("Create")
-    And the user should see the text in the page    Your organisation
-    And the user should see the text in the page    Business organisation
+    And the user clicks the button/link    jQuery=.button:contains("Yes, accept invitation")
+    And the user should see the text in the page    Confirm your organisation
     And the user should see the element    link=email the lead applicant
-    And the user clicks the button/link    jQuery=.button:contains("Continue")
+    And the user clicks the button/link    jQuery=.button:contains("Confirm and continue")
     And the user fills the create account form    Roger    Axe
-    And the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Please verify your email address    If you did not request an account with us
+    And the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Please verify your email address    Once verified you can sign into your account
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
 
 *** Keywords ***
 The lead applicant should have the correct status
-    the user should see the element    jQuery=h2:contains("Empire Ltd, Lead organisation")
+    the user should see the element    jQuery=h2:contains("Empire Ltd"):contains("(Lead)")
     the user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(1):contains("Steve Smith")
     the user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(2):contains("steve.smith@empire.com")
     the user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(3):contains("Lead")

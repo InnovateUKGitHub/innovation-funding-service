@@ -52,6 +52,11 @@ public class ApplicationMarkAsCompleteValidator implements Validator {
             rejectValue(errors, "innovationArea", "validation.application.innovationarea.category.required");
         }
 
+        if (application.getResearchCategory() == null) {
+            LOG.debug("MarkAsComplete application details validation message for research category is null");
+            rejectValue(errors, "researchCategory", "validation.application.research.category.required");
+        }
+
         if (application.getResubmission() != null) {
             if (application.getResubmission()) {
                 if (StringUtils.isEmpty(application.getPreviousApplicationNumber())) {

@@ -16,6 +16,8 @@ Documentation     INFUND-1188 As an assessor I want to be able to review my asse
 ...               INFUND-3725 As an Assessor I want to see the scores that I have given for applications I have completed assessing so that I can compare all the applications I am assessing.
 ...
 ...               INFUND-4797 Handle scenario where invitation to assess an application has been removed from this user before they have responded
+...
+...               INFUND-5494 An assessor CAN follow a link to the competition brief from the competition dashboard
 Suite Setup       Log in as user    email=felix.wilson@gmail.com    password=Passw0rd
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
@@ -25,7 +27,7 @@ Resource          ../../../resources/defaultResources.robot
 User cannot accept/reject an invite to an application that has been withdrawn
     [Documentation]    INFUND-4797
     [Tags]
-    When the user navigates to the page    ${server}/assessment/128/assignment
+    When the user navigates to the page    ${server}/assessment/134/assignment
     Then the user should see the text in the page    Invitation withdrawn
     [Teardown]    the user clicks the button/link    jQuery=#proposition-links a:contains(My dashboard)
 
@@ -49,6 +51,23 @@ Details of the competition are visible
     And the user should see the text in the page    Submit applications deadline
     And the user should see the text in the page    12:00am Thursday 12 January 2068
     And the user should see the text in the page    12:00am Saturday 28 January 2068
+
+Competition brief link can be seen
+    [Documentation]    INFUND-5494
+    [Tags]
+    Then the user should see the element    link=View competition brief (opens in a new window)
+
+User can view the competition brief
+    [Documentation]    INFUND-5494
+    [Tags]
+    When the user clicks the button/link    link=View competition brief (opens in a new window)
+    Then the user should get a competition brief window
+    And the user should not see an error in the page
+    And the user should see the text in the page    ${IN_ASSESSMENT_COMPETITION_NAME}
+    And the user should see the text in the page    Competition opens
+    And the user should see the text in the page    Competition closes
+    And the user should see the element    jQuery=.button:contains("Start new application")
+    [Teardown]    the user closes the competition brief
 
 Applications should have correct status and order
     [Documentation]    INFUND-6040
@@ -100,13 +119,12 @@ Applications should not have a check-box when the status is Open
     Then The user should not see the element    css=.assessment-submit-checkbox
 
 Check the comp admin see the assessor has rejected the application
-    [Documentation]
     [Tags]
     [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
     Given the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the user clicks the button/link    jQuery=a:contains("Assessor management: Assignments")
-    And the user should see the element    jQuery=tr:nth-child(4) td:nth-child(2):contains("Park living")
-    And the user clicks the button/link    jQuery=tr:nth-child(4) a:contains(View progress)
+    And the user should see the element    jQuery=tr:nth-child(1) td:nth-child(2):contains("Park living")
+    And the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
     And the user should see the text in the page    Rejected (1)
     And the user should see the element    jQuery=.assessors-rejected td:nth-child(6):contains("Not my area of expertise")
     And the user should see the element    jQuery=.assessors-rejected td:nth-child(6):contains("Unable to assess the application as i'm on holiday.")
@@ -130,3 +148,10 @@ The order of the applications should be correct according to the status
     element should contain    css=.progress-list li:nth-child(4) .msg-progress    Accepted
     element should contain    css=.progress-list li:nth-child(5) .msg-progress    Accepted
     element should contain    css=.progress-list li:nth-child(6) .msg-progress    Accepted
+
+The user should get a competition brief window
+    Select Window   title=Competition Overview - Innovation Funding Service
+
+The user closes the competition brief
+    Close Window
+    Select Window

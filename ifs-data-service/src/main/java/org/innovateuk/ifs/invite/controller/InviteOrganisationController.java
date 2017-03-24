@@ -15,7 +15,7 @@ public class InviteOrganisationController {
     private InviteOrganisationService service;
 
     @GetMapping(value = "/{id}")
-    public RestResult<InviteOrganisationResource> findById(@PathVariable("id") final Long id) {
+    public RestResult<InviteOrganisationResource> findById(@PathVariable("id") Long id) {
         return service.findOne(id).toGetResponse();
     }
 
@@ -32,7 +32,7 @@ public class InviteOrganisationController {
     }
 
     @PutMapping(value = "/save")
-    public RestResult<Void> put(@RequestBody final InviteOrganisationResource inviteOrganisationResource) {
+    public RestResult<Void> put(@RequestBody  InviteOrganisationResource inviteOrganisationResource) {
         if (service.findOne(inviteOrganisationResource.getId()).isSuccess()) {
             return service.save(inviteOrganisationResource).toPutResponse();
         } else {

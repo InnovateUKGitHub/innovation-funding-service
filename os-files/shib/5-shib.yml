@@ -10,17 +10,27 @@ items:
     selector:
       deploymentconfig: shib
     strategy:
-      resources: {}
+      type: Rolling
+      rollingParams:
+        timeoutSeconds: 600
+        maxSurge: 2
+        maxUnavailable: 0
     template:
       metadata:
         labels:
           deploymentconfig: shib
       spec:
         containers:
-        - image: innovateuk/ifs-shib-sp:0.4.0
+        - image: innovateuk/ifs-shib-sp:0.4.0.1
           name: shib
           imagePullPolicy: IfNotPresent
           env:
+          - name: SSLCERT
+            value: "<<SSLCERT>>"
+          - name: SSLCACERT
+            value: "<<SSLCACERT>>"
+          - name: SSLKEY
+            value: "<<SSLKEY>>"
           - name: SPHOST
             value: <<SHIB-ADDRESS>>
           - name: IDPHOST

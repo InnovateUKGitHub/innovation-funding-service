@@ -47,7 +47,7 @@ public class StringFunctions {
     public static String plainTextToHtml(String content) {
         String escaped = StringEscapeUtils.escapeHtml4(content);
         if (escaped != null) {
-            return escaped.replaceAll("\\R", "<br>");
+            return escaped.replaceAll("\\R", "<br/>");
         }
         return escaped;
     }

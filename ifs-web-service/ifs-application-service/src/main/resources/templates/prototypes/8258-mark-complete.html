@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
+    <link href="https://ifs.local-dev/css/screen.css" media="screen,print" rel="stylesheet" type="text/css">
+    <link href="https://ifs.local-dev/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="app-form" cz-shortcut-listen="true">
+
+    <script>
+        (function(H) {
+            H.className = H.className.replace(/\bno-js\b/, 'js-enabled')
+        })(document.documentElement)
+    </script>
+    <div id="skiplink-container">
+        <div>
+            <a href="#content" class="skiplink">Skip to main content</a>
+        </div>
+    </div>
+    <div id="global-cookie-message">
+        <p>GOV.UK uses cookies to make the site simpler. <a href="/info/cookies">Find out more about cookies</a></p>
+    </div>
+    <header role="banner" id="global-header" class="with-proposition">
+
+        <div class="header-wrapper">
+            <div class="header-global">
+
+                <div class="header-logo">
+                    <a href="https://www.gov.uk/" title="Go to the GOV.UK homepage" id="logo" class="content">
+                        <img src="/images/gov.uk_logotype_crown_invert_trans.png" alt="" width="36" height="32"> GOV.UK
+                    </a>
+                </div>
+
+            </div>
+            <div class="header-proposition">
+                <div class="content">
+                    <a href="#proposition-links" class="js-header-toggle menu">Menu</a>
+
+                    <nav id="proposition-menu">
+                        <div>
+                            <a href="/" id="proposition-name">Innovation Funding Service</a>
+                            <ul id="proposition-links">
+                                <li>
+                                    <a href="/applicant/dashboard">My dashboard</a>
+                                </li>
+                                <li>
+                                    <a href="https://ifs.local-dev/Logout">Sign out</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="grid-container phase-banner">
+        <p>
+            <strong class="phase-tag">BETA</strong>
+            <span>This is a new service – your <a href="mailto:IFSfeedback@innovateuk.gov.uk">feedback</a> will help us to improve it.</span>
+        </p>
+    </div>
+
+    <main id="content">
+        <div class="sub-header">
+            <nav>
+                <a class="link-back" href="/application/8">Application Overview</a>
+            </nav>
+        </div>
+
+        <div class="page-title">
+
+            <p class="subtitle">8: A new innovative solution</p>
+
+            <h1 class="heading-xlarge">Business opportunity TESTER12345543</h1>
+        </div>
+
+        <form action="/application/8/form/question/1" method="post" data-autosave="application" enctype="multipart/form-data" novalidate="novalidate" data-save-status="done"><input type="hidden" name="_csrf" value="2f5c215ddcd837d377914c829f4810efd03a65c863ec5511859dce5ec71f491c9c0ab299ec1e4aefa478cdf1308bae4f3bc73904dd86439bc12596e71e82f91ea7ebef43b1343c4cd6eb7f844aae052847ed563ac4cc11253922c7bec1e2fd131f451fe8d405f33f1f1cb4865cf19398a962461c8b8e00fb2ab0d73258715ecd">
+
+            <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
+
+            <div class="question" id="form-input-1">
+
+
+                <div class="form-group">
+
+                    <label class="form-label form-label-bold" for="form-textarea-1" id="form-label-1">
+
+
+                    <span>1. What is the business opportunity that your project addresses?</span>
+
+
+                </label>
+
+                    <details role="group">
+                        <summary role="button" aria-controls="details-content-0" aria-expanded="false">
+                            <span class="summary">What should I include in the business opportunity section?</span>
+                        </summary>
+                        <div class="panel" id="details-content-0" aria-hidden="true">
+                            <p>You should describe:</p>
+                            <ul class="list-bullet">
+                                <li>the business opportunity you have identified and how you plan to take advantage of it</li>
+                                <li>the customer needs you have identified and how your project will meet them</li>
+                                <li>the challenges you expect to face and how you will overcome them</li>
+                            </ul>
+                        </div>
+                    </details>
+
+                    <div class="assign-container">
+                        <div class="assign-button"><button aria-expanded="false" aria-controls="dropdown-0" type="button">
+
+    <span class="action-required">
+      <strong>Assigned to you</strong>
+
+    </span>
+
+                    </button></div>
+                        <div id="dropdown-0" aria-hidden="true">
+                            <div class="assign-team">
+
+                                <ul class="bullet list-bullet">
+                                    <li><button value="1_30" name="assign_question" class="buttonlink">Jessica Doe</button></li>
+                                    <li><button value="1_31" name="assign_question" class="buttonlink">Pete Tom</button></li>
+                                    <li>Steve Smith</li>
+                                </ul>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="textarea-header">
+
+
+
+
+                        <!-- <img th:if="${!(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) and ((currentUser.getId() == questionAssignee?.assigneeUserId) or ((questionAssignee?.assignee == null) and (leadApplicant?.getId() == currentUser.getId())))}"
+                         src="/images/field/field-assigned.png"
+                         th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-assigned.png')}"
+                         alt=""
+                         class="assigned-to-me" /> -->
+                    </div>
+
+                    <div class="textarea-wrapped assigned-to-me  word-count">
+
+                        <div data-editor="md" class="editor" spellcheck="true" aria-multiline="true" tabindex="0" labelledby="form-textarea-1" role="textbox" contenteditable="true">
+                            <p>Within the Industry one issue has caused progress in the field to be stifled. Up until now any advancement has been made by working around this anomaly.</p>
+                            <p>We propose to tackle the situation head on and develop a tool that will circumvent the problem entirely allowing development to advance.</p>
+                        </div><textarea id="form-textarea-1" name="formInput[1]" data-editor="md" required="required" data-required-errormessage="Please enter some text." data-max_words="400" data-maxwordslength="400" data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 400."
+                            aria-hidden="true">Within the Industry one issue has caused progress in the field to be stifled.  Up until now any advancement has been made by working around this anomaly.
+We propose to tackle the situation head on and develop a tool that will circumvent the problem entirely allowing development to advance.
+
+</textarea>
+                        <div class="textarea-footer" style="border: 1px solid blue;">
+                            <p>
+                                <small>
+                                    Last updated:
+                                    Today
+                                    by you
+                                </small>
+                                <span class="count-label">
+            <span class="count-down positive" aria-live="polite">Words remaining: 351 </span>
+
+        </span>
+                            </p>
+
+                            <button type="submit" name="mark_as_complete" value="1" class="buttonlink">Mark as complete
+                            </button>
+
+
+                        </div>
+                        <div class="assignee assigned-to-me">
+                            <span>You have reassigned this question to</span>
+
+                            <span>you</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <input type="hidden" id="application_id" value="8">
+            <input type="hidden" id="competition_id" value="1">
+
+            <button type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to application overview</button>
+            <ul class="pagination">
+                <li class="prev">
+                    <a href="/application/8/form/question/13" rel="prev" title="Navigate to previous part">
+                        <span class="pagination-label">Previous</span>
+                        <span class="pagination-part-title">Scope</span>
+                    </a>
+                </li>
+                <li class="next">
+                    <a href="/application/8/form/question/2" rel="next" title="Navigate to next part">
+                        <span class="pagination-label">Next</span>
+                        <span class="pagination-part-title">Potential market</span>
+                    </a>
+                </li>
+            </ul>
+        </form>
+        <input type="hidden" id="cacheTest" value="">
+
+
+        <p class="user-feedback"><span>Need help with this service?</span> <a href="/info/contact">Contact us</a></p>
+
+    </main>
+
+
+
+    <footer class="group js-footer" id="footer" role="contentinfo">
+
+        <div class="footer-wrapper">
+
+            <div class="footer-meta">
+                <div class="footer-meta-inner">
+
+                    <div class="open-government-licence">
+                        <p class="logo"><a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence</a></p>
+                        <p>All content is available under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence v3.0</a>, except where otherwise stated</p>
+                    </div>
+                </div>
+
+                <div class="copyright">
+                    <a href="http://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/copyright-and-re-use/crown-copyright/">© Crown copyright</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/js/dest/vendor.min.js" type="text/javascript"></script>
+    <script src="/js/dest/ifs.min.js" type="text/javascript"></script>
+
+    <script src="/js/dest/application.min.js" type="text/javascript"></script>
+
+
+</body>
+
+</html>

@@ -63,7 +63,7 @@ public class ByProjectFinanceCostCategorySummaryStrategy implements SpendProfile
     private ServiceResult<SpendProfileCostCategorySummaries> createCostCategorySummariesWithCostCategoryType(
             Long projectId, Long organisationId, ProjectResource project, OrganisationResource organisation, ProjectFinanceResource finances) {
 
-        boolean useAcademicFinances = financeUtil.isUsingJesFinances(organisation.getOrganisationTypeName());
+        boolean useAcademicFinances = financeUtil.isUsingJesFinances(organisation.getOrganisationType());
 
         return costCategoryTypeStrategy.getOrCreateCostCategoryTypeForSpendProfile(projectId, organisationId).andOnSuccessReturn(
                 costCategoryType ->

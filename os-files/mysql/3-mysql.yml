@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    creationTimestamp: null
+    name: mysql
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: mysql
+    strategy:
+      resources: {}
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          deploymentconfig: mysql
+      spec:
+        containers:
+        - env:
+          - name: MYSQL_DATABASE
+            value: ifs
+          - name: MYSQL_ROOT_PASSWORD
+            value: password
+          image: mysql:5.5.49
+          name: mysql
+          args: ["--character-set-server=utf8", "--collation-server=utf8_bin"]
+          imagePullPolicy: IfNotPresent
+          ports:
+          - containerPort: 3306
+          volumeMounts:
+          - name: mysql-tmp-storage
+            mountPath: /var/lib/mysql
+          resources:
+            limits:
+              memory: 1500M
+        volumes:
+          - emptyDir: {}
+            name: mysql-tmp-storage
+    test: false
+    triggers:
+    - type: ConfigChange
+  status: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    name: ifs-database
+  spec:
+    ports:
+    - name: 3306-tcp
+      port: 3306
+      targetPort: 3306
+    selector:
+      deploymentconfig: mysql
+  status:
+    loadBalancer: {}

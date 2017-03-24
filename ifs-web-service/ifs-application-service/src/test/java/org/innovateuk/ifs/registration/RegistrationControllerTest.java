@@ -8,7 +8,6 @@ import org.innovateuk.ifs.commons.error.exception.RegistrationTokenExpiredExcept
 import org.innovateuk.ifs.exception.ErrorControllerAdvice;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.invite.service.EthnicityRestService;
-import org.innovateuk.ifs.invite.service.InviteServiceImpl;
 import org.innovateuk.ifs.user.builder.EthnicityResourceBuilder;
 import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.Gender;
@@ -95,8 +94,8 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
         when(userService.createUserForOrganisation(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong())).thenReturn(serviceSuccess(new UserResource()));
         when(ethnicityRestService.findAllActive()).thenReturn(restSuccess(asList(EthnicityResourceBuilder.newEthnicityResource().withId(1L).withDescription("Nerdy People").withName("IFS programmer").withPriority(1).build())));
 
-        inviteHashCookie = new Cookie(InviteServiceImpl.INVITE_HASH, encryptor.encrypt(INVITE_HASH));
-        usedInviteHashCookie = new Cookie(InviteServiceImpl.INVITE_HASH, encryptor.encrypt(ACCEPTED_INVITE_HASH));
+        inviteHashCookie = new Cookie(AbstractAcceptInviteController.INVITE_HASH, encryptor.encrypt(INVITE_HASH));
+        usedInviteHashCookie = new Cookie(AbstractAcceptInviteController.INVITE_HASH, encryptor.encrypt(ACCEPTED_INVITE_HASH));
         organisationCookie = new Cookie("organisationId", encryptor.encrypt("1"));
     }
 
@@ -264,7 +263,6 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "password"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "email"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "retypedPassword"))
-                .andExpect(model().attributeHasFieldErrors("registrationForm", "title"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "firstName"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "lastName"))
                 .andExpect(model().attributeHasFieldErrors("registrationForm", "phoneNumber"))
@@ -401,17 +399,17 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
 
 
         when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
-        when(userService.createLeadApplicantForOrganisationWithCompetitionId(userResource.getFirstName(),
-                userResource.getLastName(),
-                userResource.getPassword(),
-                userResource.getEmail(),
-                userResource.getTitle() != null ? userResource.getTitle().toString() : null,
-                userResource.getPhoneNumber(),
-                userResource.getGender() != null ? userResource.getGender().toString() : null,
-                userResource.getEthnicity(),
-                userResource.getDisability() != null ? userResource.getDisability().toString() : null,
-                1L,
-                null)).thenReturn(serviceSuccess(userResource));
+        when(userService.createLeadApplicantForOrganisationWithCompetitionId(eq(userResource.getFirstName()),
+                eq(userResource.getLastName()),
+                eq(userResource.getPassword()),
+                eq(userResource.getEmail()),
+                anyString(),
+                eq(userResource.getPhoneNumber()),
+                anyString(),
+                anyLong(),
+                anyString(),
+                eq(1L),
+                eq(null))).thenReturn(serviceSuccess(userResource));
         when(userService.findUserByEmailForAnonymousUserFlow("test@test.test")).thenReturn(Optional.empty());
 
         mockMvc.perform(post("/registration/register")
@@ -452,17 +450,17 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .build();
 
         when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
-        when(userService.createLeadApplicantForOrganisationWithCompetitionId(userResource.getFirstName(),
-                userResource.getLastName(),
-                userResource.getPassword(),
-                userResource.getEmail(),
-                userResource.getTitle() != null ? userResource.getTitle().toString() : null,
-                userResource.getPhoneNumber(),
-                userResource.getGender() != null ? userResource.getGender().toString() : null,
-                userResource.getEthnicity(),
-                userResource.getDisability() != null ? userResource.getDisability().toString() : null,
-                1L,
-                null)).thenReturn(serviceSuccess(userResource));
+        when(userService.createLeadApplicantForOrganisationWithCompetitionId(eq(userResource.getFirstName()),
+                eq(userResource.getLastName()),
+                eq(userResource.getPassword()),
+                eq(userResource.getEmail()),
+                anyString(),
+                eq(userResource.getPhoneNumber()),
+                anyString(),
+                anyLong(),
+                anyString(),
+                eq(1L),
+                eq(null))).thenReturn(serviceSuccess(userResource));
         when(userService.findUserByEmailForAnonymousUserFlow(eq("invited@email.com"))).thenReturn(Optional.empty());
         when(inviteRestService.acceptInvite(eq(INVITE_HASH), anyLong())).thenReturn(restSuccess());
 

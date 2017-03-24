@@ -5,7 +5,10 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectio
 public abstract class AbstractPublicSectionContentViewModel {
 
     private PublicContentSectionType sectionType;
-    private boolean published = false;
+    private Boolean published = false;
+    private String path;
+    private String text;
+    private Boolean isActive;
 
     public PublicContentSectionType getSectionType() {
         return sectionType;
@@ -15,15 +18,35 @@ public abstract class AbstractPublicSectionContentViewModel {
         this.sectionType = sectionType;
     }
 
-    public boolean isPublished() {
+    public Boolean isPublished() {
         return published;
     }
 
-    public void setPublished(boolean published) {
+    public void setPublished(Boolean published) {
         this.published = published;
     }
 
-    public String getSectionPath() {
-        return sectionType.getPath();
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public Boolean getActive() {
+        return isActive;
+    }
+
+    public void setActive(Boolean active) {
+        isActive = active;
     }
 }
