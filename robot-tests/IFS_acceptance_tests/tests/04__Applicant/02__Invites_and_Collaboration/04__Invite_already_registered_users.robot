@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     INFUND-1458 As a existing user with an invitation to collaborate on an application and I am already registered with IFS I want to be able to use my existing credentials and confirm my details so that I don't have to follow the registration process again.
 ...
-...               INFUND-2716: Error in where the name of an invited partner doesn't update in 'view and add participants to your application'
+...               INFUND-2716: Error in where the name of an invited partner doesn't update in 'view team members and add collaborators'
 ...
 ...               INFUND-3759: Existing Applicant should be able to accept invitations for other applications in the same organisation
 Suite Setup       The guest user opens the browser
@@ -34,16 +34,16 @@ The user should see the correct content in the confirm page
     [Tags]    HappyPath
     Then the user should see the text in the page    INNOVATE LTD
     And the user should see the text in the page    BH2 5QY
-    And the user should see the element    link=email the application lead
+    And the user should see the element    link=email the lead applicant
 
 The continue button should redirect to the overview page
     [Documentation]    INFUND-1458
     [Tags]    HappyPath
-    When the user clicks the button/link    jQuery=.button:contains("Continue to application")
+    When the user clicks the button/link    jQuery=.button:contains("Confirm and accept invitation")
     Then the user should see the text in the page    Application overview
 
 The user edits the name this should be changed in the View team page
-    [Documentation]    INFUND-2716: Error in where the name of an invited partner doesn't update in 'view and add participants to your application'.
+    [Documentation]    INFUND-2716: Error in where the name of an invited partner doesn't update in 'view team members and add collaborators'.
     [Tags]    HappyPath
     Given the user navigates to the page    ${DASHBOARD_URL}
     When the user clicks the button/link    link=view and edit your profile details
@@ -53,8 +53,6 @@ The user edits the name this should be changed in the View team page
     [Teardown]    TestTeardown User closes the browser
 
 Invite a user with the same organisation under the same organisation
-    [Tags]  Pending
-    # TODO INFUND-8883
     [Documentation]    INFUND-3759
     [Setup]    Guest user log-in    ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     When Existing user creates a new application and invites a user from the same organisation
@@ -70,7 +68,7 @@ the user enters profile details
 the user should see the change in the view team members page
     The user clicks the button/link    link=My dashboard
     The user clicks the button/link    css=#content section:nth-of-type(1) li:nth-child(2) h3 a
-    The user clicks the button/link    link=view and add participants to your application
+    The user clicks the button/link    link=view team members and add collaborators
     The user should see the element    jQuery=.table-overflow:eq(1) td:nth-child(1):contains("Dennis Bergkamp")
 
 Existing user creates a new application and invites a user from the same organisation

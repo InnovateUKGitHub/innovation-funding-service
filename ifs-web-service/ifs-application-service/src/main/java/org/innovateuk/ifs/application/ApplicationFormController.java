@@ -10,7 +10,6 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.finance.service.FinanceRowService;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
-import org.innovateuk.ifs.application.finance.view.FundingLevelResetHandler;
 import org.innovateuk.ifs.application.finance.viewmodel.AcademicFinanceViewModel;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.*;
@@ -20,7 +19,6 @@ import org.innovateuk.ifs.application.viewmodel.OpenFinanceSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.OpenSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.QuestionOrganisationDetailsViewModel;
 import org.innovateuk.ifs.application.viewmodel.QuestionViewModel;
-import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
@@ -193,9 +191,6 @@ public class ApplicationFormController {
 
     @Autowired
     private OverheadFileSaver overheadFileSaver;
-
-    @Autowired
-    private FundingLevelResetHandler fundingLevelResetHandler;
 
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
@@ -1013,10 +1008,6 @@ public class ApplicationFormController {
 
         if (fieldName.startsWith("application.")) {
 
-            if (fieldName.equals("application.researchCategoryId")) {
-                fundingLevelResetHandler.resetFundingLevelAndMarkAsIncompleteForAllCollaborators(competitionId, applicationId);
-            }
-
             // this does not need id
         	List<String> errors = this.saveApplicationDetails(applicationId, fieldName, value);
         	return new StoreFieldResult(errors);
@@ -1099,12 +1090,6 @@ public class ApplicationFormController {
             applicationService.save(application);
         } else if (fieldName.equals("application.previousApplicationTitle")) {
             application.setPreviousApplicationTitle(value);
-            applicationService.save(application);
-        } else if (fieldName.equals("application.researchCategoryId")) {
-            Long catId = Long.parseLong(value);
-            Set<ResearchCategoryResource> cats =
-                    categoryService.getResearchCategories().stream().filter(cat -> cat.getId().equals(catId)).collect(Collectors.toSet());
-            application.setResearchCategories(cats);
             applicationService.save(application);
         }
         return errors;

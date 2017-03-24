@@ -19,12 +19,17 @@ public class ProjectMonitoringOfficerViewModel {
     private LocalDate targetProjectStartDate;
     private String projectManagerName;
     private List<String> partnerOrganisationNames;
+    private String leadOrganisationName;
     private CompetitionSummaryResource competitionSummary;
     private boolean existingMonitoringOfficer;
     private boolean editMode;
     private List<String> primaryAddressLines;
 
-    public ProjectMonitoringOfficerViewModel(Long projectId, String projectTitle, String area, AddressResource primaryAddress, LocalDate targetProjectStartDate, String projectManagerName, List<String> partnerOrganisationNames, CompetitionSummaryResource competitionSummary, boolean existingMonitoringOfficer, boolean editMode) {
+    public ProjectMonitoringOfficerViewModel(Long projectId, String projectTitle, String area, AddressResource primaryAddress,
+                                             LocalDate targetProjectStartDate, String projectManagerName,
+                                             List<String> partnerOrganisationNames, String leadOrganisationName,
+                                             CompetitionSummaryResource competitionSummary, boolean existingMonitoringOfficer,
+                                             boolean editMode) {
         this.projectId = projectId;
         this.projectTitle = projectTitle;
         this.area = area;
@@ -32,6 +37,7 @@ public class ProjectMonitoringOfficerViewModel {
         this.targetProjectStartDate = targetProjectStartDate;
         this.projectManagerName = projectManagerName;
         this.partnerOrganisationNames = partnerOrganisationNames;
+        this.leadOrganisationName = leadOrganisationName;
         this.competitionSummary = competitionSummary;
         this.existingMonitoringOfficer = existingMonitoringOfficer;
         this.editMode = editMode;
@@ -63,6 +69,14 @@ public class ProjectMonitoringOfficerViewModel {
 
     public CompetitionSummaryResource getCompetitionSummary() {
         return competitionSummary;
+    }
+
+    public String getLeadOrganisationName() {
+        return leadOrganisationName;
+    }
+
+    public void setLeadOrganisationName(String leadOrganisationName) {
+        this.leadOrganisationName = leadOrganisationName;
     }
 
     public List<String> getPrimaryAddressLines() {

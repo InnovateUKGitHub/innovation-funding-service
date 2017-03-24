@@ -52,6 +52,10 @@ the user assigns the question to the collaborator
     The user clicks the button/link    jQuery=button:contains("${NAME}")
     Reload Page
 
+the user clicks the button twice
+    [Arguments]    ${element}
+    the user clicks the button/link  ${element}
+    the user clicks the button/link  ${element}
 
 The element should be disabled
     [Arguments]    ${ELEMENT}
