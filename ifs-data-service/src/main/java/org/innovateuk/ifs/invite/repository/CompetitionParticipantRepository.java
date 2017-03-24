@@ -51,15 +51,25 @@ public interface CompetitionParticipantRepository extends PagingAndSortingReposi
             "       AND innovationAreas.category.id = :innovationAreaId " +
             "   ) " +
             "   OR competitionParticipant.invite.innovationArea.id = :innovationAreaId) " +
-            "AND (:isCompliant IS NULL OR (:isCompliant = true AND (" +
-            "   EXISTS(" +
-            "       SELECT affiliation.id " +
-            "       FROM Affiliation affiliation " +
-            "       WHERE affiliation.user.id = competitionParticipant.user.id " +
-            "   ) " +
-            "   AND profile.skillsAreas IS NOT NULL " +
-            "   AND profile.agreement IS NOT NULL " +
-            ")))")
+            "AND (:isCompliant IS NULL " +
+            "   OR (:isCompliant = true AND (" +
+            "       EXISTS(" +
+            "           SELECT affiliation.id " +
+            "           FROM Affiliation affiliation " +
+            "           WHERE affiliation.user.id = competitionParticipant.user.id " +
+            "       ) " +
+            "       AND profile.skillsAreas IS NOT NULL " +
+            "       AND profile.agreement IS NOT NULL) " +
+            "   OR (:isCompliant = false AND (" +
+            "       NOT EXISTS(" +
+            "           SELECT affiliation.id " +
+            "           FROM Affiliation affiliation " +
+            "           WHERE affiliation.user.id = competitionParticipant.user.id " +
+            "       ) " +
+            "       OR profile.skillsAreas IS NULL " +
+            "       OR profile.agreement IS NULL)" +
+            "   )" +
+            "))")
     Page<CompetitionParticipant> getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(@Param("competitionId") long competitionId,
                                                                                                  @Param("innovationAreaId") Long innovationAreaId,
                                                                                                  @Param("status") ParticipantStatus status,
