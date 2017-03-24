@@ -11,7 +11,6 @@ Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
 Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
-Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 
 *** Test Cases ***
 Competition dashboard Open competition

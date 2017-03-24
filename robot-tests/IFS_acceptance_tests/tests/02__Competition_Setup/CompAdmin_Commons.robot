@@ -1,6 +1,5 @@
 *** Settings ***
 Resource    ../../resources/defaultResources.robot
-Resource          CompAdmin_Commons.robot
 
 *** Variables ***
 #CA = Competition Administration
