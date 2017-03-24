@@ -14,7 +14,6 @@ import org.springframework.security.access.method.P;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder.newInvite;
@@ -84,6 +83,7 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
                 () -> {
                     verify(invitePermissionRules).collaboratorCanReadInviteForTheirApplicationForTheirOrganisation(any(ApplicationInvite.class), any(UserResource.class));
                     verify(invitePermissionRules).leadApplicantReadInviteToTheApplication(any(ApplicationInvite.class), any(UserResource.class));
+                    verify(invitePermissionRules).systemRegistrarCanReadInviteToTheApplication(any(ApplicationInvite.class), any(UserResource.class));
                 });
     }
 

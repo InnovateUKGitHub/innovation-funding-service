@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.invite.security;
 
+import org.innovateuk.ifs.commons.security.PermissionRule;
+import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
-import org.innovateuk.ifs.commons.security.PermissionRule;
-import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.security.SecurityRuleUtil.checkProcessRole;
+import static org.innovateuk.ifs.security.SecurityRuleUtil.isSystemRegistrationUser;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
 
 /**
@@ -58,6 +59,11 @@ public class ApplicationInvitePermissionRules {
     @PermissionRule(value = "READ", description = "lead applicant can view an invite to the application")
     public boolean leadApplicantReadInviteToTheApplication(final ApplicationInvite invite, final UserResource user) {
         return isLeadForInvite(invite, user);
+    }
+
+    @PermissionRule(value = "READ", description = "System Registration user can view an invite to the application")
+    public boolean systemRegistrarCanReadInviteToTheApplication(final ApplicationInvite invite, final UserResource user) {
+        return isSystemRegistrationUser(user);
     }
 
     @PermissionRule(value = "DELETE", description = "lead applicant can delete an invite from the application and applicant can not delete his own invite from the application")
