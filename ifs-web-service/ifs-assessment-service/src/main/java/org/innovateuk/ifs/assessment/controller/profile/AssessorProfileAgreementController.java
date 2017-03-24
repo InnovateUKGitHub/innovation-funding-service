@@ -8,9 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Controller to manage the Assessor Profile Agreement view.
@@ -26,14 +24,14 @@ public class AssessorProfileAgreementController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public String getAgreement(Model model,
                                @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         ProfileAgreementResource profileAgreementResource = userService.getProfileAgreement(loggedInUser.getId());
         return doViewAgreement(model, profileAgreementResource);
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping
     public String submitAgreement(Model model,
                                   @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         userService.updateProfileAgreement(loggedInUser.getId()).getSuccessObjectOrThrowException();
