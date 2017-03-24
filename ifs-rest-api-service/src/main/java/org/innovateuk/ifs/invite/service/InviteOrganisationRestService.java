@@ -9,8 +9,6 @@ public interface InviteOrganisationRestService {
 
     RestResult<InviteOrganisationResource> getByIdForAnonymousUserFlow(long id);
 
-    RestResult<InviteOrganisationResource> getByIdWithInvitesForApplication(long id, long applicationId);
-
     RestResult<InviteOrganisationResource> getByOrganisationIdWithInvitesForApplication(long organisationId, long applicationId);
 
     RestResult<Void> put(InviteOrganisationResource inviteOrganisation);
