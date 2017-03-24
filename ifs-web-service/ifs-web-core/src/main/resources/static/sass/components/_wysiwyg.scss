@@ -81,7 +81,7 @@ button.ui-state-active .fa-link {
         padding: 0;
         margin: 0;
     }
-    div {
+    > div {
       @extend p;
     }
 }
