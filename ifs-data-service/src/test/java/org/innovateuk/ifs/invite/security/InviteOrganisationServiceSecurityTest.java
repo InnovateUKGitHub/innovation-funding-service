@@ -48,6 +48,7 @@ public class InviteOrganisationServiceSecurityTest extends BaseServiceSecurityTe
                 () -> {
                     verify(inviteOrganisationPermissionRules).collaboratorCanViewOrganisationInviteToTheApplication(isA(InviteOrganisationResource.class), isA(UserResource.class));
                     verify(inviteOrganisationPermissionRules).leadApplicantCanViewOrganisationInviteToTheApplication(isA(InviteOrganisationResource.class), isA(UserResource.class));
+                    verify(inviteOrganisationPermissionRules).systemRegistrarCanViewOrganisationInviteToTheApplication(isA(InviteOrganisationResource.class), isA(UserResource.class));
                 });
     }
 

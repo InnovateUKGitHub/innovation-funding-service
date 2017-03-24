@@ -2,6 +2,7 @@ package org.innovateuk.ifs.invite.security;
 
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
+import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.security.SecurityRuleUtil;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
+import static org.innovateuk.ifs.security.SecurityRuleUtil.isSystemRegistrationUser;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 
@@ -38,6 +40,11 @@ public class InviteOrganisationPermissionRules {
     @PermissionRule(value = "READ", description = "a collaborator can view an organisation invite to the application")
     public boolean collaboratorCanViewOrganisationInviteToTheApplication(final InviteOrganisationResource inviteOrganisation, final UserResource user) {
         return hasRoleForAllApplicationsInOrganisationInvite(COLLABORATOR, inviteOrganisation, user);
+    }
+
+    @PermissionRule(value = "READ", description = "System Registration user can view an organisation invite to the application")
+    public boolean systemRegistrarCanViewOrganisationInviteToTheApplication(final InviteOrganisationResource inviteOrganisation, final UserResource user) {
+        return isSystemRegistrationUser(user);
     }
 
     @PermissionRule(value = "SAVE", description = "lead applicant can save an organisation invite for the application")

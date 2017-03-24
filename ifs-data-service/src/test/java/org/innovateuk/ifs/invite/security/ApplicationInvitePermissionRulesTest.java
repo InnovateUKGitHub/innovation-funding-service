@@ -30,16 +30,14 @@ public class ApplicationInvitePermissionRulesTest extends BasePermissionRulesTes
 
     private UserResource leadApplicant;
     private UserResource collaborator;
-    private UserResource systemRegistrar;
-
     private ApplicationInvite invite;
     private ApplicationInviteResource inviteResource;
     private ApplicationInviteResource inviteResourceLead;
 
     private UserResource otherLeadApplicant;
     private UserResource otherCollaborator;
-
     private ApplicationInvite otherInvite;
+
 
     @Override
     protected ApplicationInvitePermissionRules supplyPermissionRulesUnderTest() {
@@ -51,7 +49,6 @@ public class ApplicationInvitePermissionRulesTest extends BasePermissionRulesTes
 
         leadApplicant = newUserResource().build();
         collaborator = newUserResource().build();
-        systemRegistrar = newUserResource().build();
         {
             final Competition competition = newCompetition().build();
             final Organisation organisation = OrganisationBuilder.newOrganisation().build();
@@ -67,6 +64,7 @@ public class ApplicationInvitePermissionRulesTest extends BasePermissionRulesTes
             when(processRoleRepositoryMock.findByUserIdAndApplicationId(leadApplicant.getId(), application.getId())).thenReturn(newProcessRole().withRole(getRole(LEADAPPLICANT)).build());
             when(processRoleRepositoryMock.findByUserIdAndApplicationId(collaborator.getId(), application.getId())).thenReturn(newProcessRole().withRole(getRole(COLLABORATOR)).build());
             when(processRoleRepositoryMock.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(collaborator.getId(), getRole(COLLABORATOR).getId(), application.getId(), organisation.getId())).thenReturn(newProcessRole().withRole(getRole(COLLABORATOR)).build());
+
         }
         otherLeadApplicant = newUserResource().build();
         otherCollaborator = newUserResource().build();
@@ -79,6 +77,8 @@ public class ApplicationInvitePermissionRulesTest extends BasePermissionRulesTes
             when(processRoleRepositoryMock.findByUserIdAndApplicationId(otherCollaborator.getId(), otherApplication.getId())).thenReturn(newProcessRole().withRole(getRole(COLLABORATOR)).build());
             when(processRoleRepositoryMock.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(otherCollaborator.getId(), getRole(COLLABORATOR).getId(), otherApplication.getId(), otherOrganisation.getId())).thenReturn(newProcessRole().withRole(getRole(COLLABORATOR)).build());
         }
+
+
     }
 
     @Test
@@ -121,17 +121,6 @@ public class ApplicationInvitePermissionRulesTest extends BasePermissionRulesTes
         assertTrue(rules.leadApplicantReadInviteToTheApplication(invite, leadApplicant));
         assertFalse(rules.leadApplicantReadInviteToTheApplication(invite, collaborator));
         assertFalse(rules.leadApplicantReadInviteToTheApplication(invite, otherLeadApplicant));
-    }
-
-    @Test
-    public void testSystemRegistrarReadInviteToTheApplication() {
-        allGlobalRoleUsers.forEach(user -> {
-            if (user.equals(systemRegistrationUser())) {
-                assertTrue(rules.systemRegistrarCanReadInviteToTheApplication(invite, user));
-            } else {
-                assertFalse(rules.systemRegistrarCanReadInviteToTheApplication(invite, user));
-            }
-        });
     }
 
     @Test
