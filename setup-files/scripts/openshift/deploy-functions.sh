@@ -97,5 +97,5 @@ function cleanUp() {
 }
 
 function scaleDataService() {
-    oc export dc data-service | "s/replicas: 1/replicas: 2/g" | oc apply -f -
+    oc export dc data-service ${SVC_ACCOUNT_CLAUSE} | "s/replicas: 1/replicas: 2/g" | oc apply ${SVC_ACCOUNT_CLAUSE} -f -
 }
