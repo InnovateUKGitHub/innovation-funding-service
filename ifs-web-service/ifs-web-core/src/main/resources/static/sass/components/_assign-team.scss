@@ -32,9 +32,14 @@ The assign container is normally a `<select>`, which gets progressivly transform
   &.assign-alert{
     display: block;
     margin-bottom: 1em;
+
+    .assign-button{
+      margin-left: 1em;
+    }
   }
 
   .assign-team {
+    @include core-16;
     @include border-radius(2px);
     border: 1px solid $grey-3;
     padding:10px 15px;
@@ -44,6 +49,10 @@ The assign container is normally a `<select>`, which gets progressivly transform
     width:200px;
     color:$secondary-text-colour;
     margin-top:10px;
+  }
+
+  .assign-button{
+    display: inline;
   }
 
   .assign-button button {

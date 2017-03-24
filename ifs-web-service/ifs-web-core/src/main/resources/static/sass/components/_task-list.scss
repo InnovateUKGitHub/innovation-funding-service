@@ -63,8 +63,14 @@
                 width: 100%;
                 background: none;
                 padding-left: 0;
-                color: $link-colour;
             }
+
+            button{
+                .secondary-notification{
+                    color: $link-colour;
+                }
+            }
+
             @include media-down(mobile) {
                 display: block;
                 width: 100%;

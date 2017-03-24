@@ -33,10 +33,11 @@
     <div th:fragment="textarea"  class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.getId()}__]')} ? error : ''">
 
         <th:block th:if="${!userIsLeadApplicant}">
-            <div class="assign-container assign-container--alert" th:classappend="(${currentUser.getId() == questionAssignee?.assigneeUserId} ? 'assign-alert')">
-                <th:block th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
-                          th:include="question-type/form-elements :: current-assignee"/>
-            </div>
+            <th:block th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}">
+                <div class="assign-container" th:classappend="(${currentUser.getId() == questionAssignee?.assigneeUserId} ? 'assign-alert' : 'assigned-alert')">
+                    <th:block th:include="question-type/form-elements :: current-assignee"/>
+                </div>
+            </th:block>
         </th:block>
 
         <th:block th:insert="question-type/form-elements :: assign-buttons-dialog" th:unless="${readonly} or ${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} or ${!userIsLeadApplicant}" th:with="fullButtonText=${TRUE}"/>
