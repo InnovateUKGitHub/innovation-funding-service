@@ -21,11 +21,10 @@ ROUTE_DOMAIN=apps.$HOST
 REGISTRY=docker-registry-default.apps.prod.ifs-test-clusters.com
 INTERNAL_REGISTRY=172.30.80.28:5000
 
-SVC_ACCOUNT_TOKEN=${bamboo_openshift_svc_account_token}
+if [ -z "$bamboo_openshift_svc_account_token" ]; then  SVC_ACCOUNT_TOKEN=$(oc whoami -t); else SVC_ACCOUNT_TOKEN=${bamboo_openshift_svc_account_token}; fi
+
 SVC_ACCOUNT_CLAUSE="--namespace=${PROJECT} --token=${SVC_ACCOUNT_TOKEN} --server=https://console.prod.ifs-test-clusters.com:443 --insecure-skip-tls-verify=true"
-
-if [ -z "$SVC_ACCOUNT_TOKEN" ]; then REGISTRY_TOKEN=$(oc whoami -t); else REGISTRY_TOKEN=${SVC_ACCOUNT_TOKEN}; fi
-
+REGISTRY_TOKEN=${SVC_ACCOUNT_TOKEN};
 
 function upgradeServices {
     # data-service
