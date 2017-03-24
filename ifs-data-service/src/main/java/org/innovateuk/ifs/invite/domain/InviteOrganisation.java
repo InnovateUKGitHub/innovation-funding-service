@@ -26,7 +26,7 @@ public class InviteOrganisation {
     private Organisation organisation;
 
     @OneToMany(mappedBy = "inviteOrganisation", cascade = ALL, orphanRemoval = true)
-    private List<ApplicationInvite> invites;
+    private List<ApplicationInvite> invites = new ArrayList<>();
 
     public InviteOrganisation() {
     	// no-arg constructor
@@ -63,10 +63,13 @@ public class InviteOrganisation {
     }
 
     public List<ApplicationInvite> getInvites() {
-        return (invites == null) ? new ArrayList<>() : invites;
+        return invites;
     }
 
     public void setInvites(List<ApplicationInvite> invites) {
+        if (invites == null) {
+            throw new NullPointerException("invites cannot be null");
+        }
         this.invites = invites;
     }
 }
