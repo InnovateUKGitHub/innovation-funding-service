@@ -406,9 +406,9 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
                 .cookie(organisationTypeBusiness)
                 .cookie(organisationForm)
         )
-                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
-                .andExpect(MockMvcResultMatchers.view().name("registration/organisation/confirm-selected-organisation"))
-                .andExpect(MockMvcResultMatchers.model().attributeHasNoErrors("organisationForm"));
+        .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
+        .andExpect(MockMvcResultMatchers.view().name("registration/organisation/confirm-selected-organisation"))
+        .andExpect(MockMvcResultMatchers.model().attributeHasNoErrors("organisationForm"));
 
 
     }
@@ -419,9 +419,10 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
                 .cookie(organisationTypeBusiness)
                 .cookie(organisationFormWithPostcodeInput)
         )
-                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
-                .andExpect(MockMvcResultMatchers.view().name("registration/organisation/confirm-selected-organisation"))
-                .andExpect(MockMvcResultMatchers.model().attributeHasNoErrors("organisationForm"));
+        .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
+        .andExpect(MockMvcResultMatchers.view().name("registration/organisation/confirm-selected-organisation"))
+        .andExpect(MockMvcResultMatchers.model().attributeHasNoErrors("organisationForm"))
+        .andExpect(MockMvcResultMatchers.model().attributeExists("model"));
     }
 
     @Test
@@ -435,9 +436,10 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
                 .cookie(organisationTypeBusiness)
                 .cookie(organisationFormWithSelectedPostcode)
         )
-                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
-                .andExpect(MockMvcResultMatchers.view().name("registration/organisation/confirm-selected-organisation"))
-                .andExpect(MockMvcResultMatchers.model().attributeHasNoErrors("organisationForm"));
+        .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
+        .andExpect(MockMvcResultMatchers.view().name("registration/organisation/confirm-selected-organisation"))
+        .andExpect(MockMvcResultMatchers.model().attributeHasNoErrors("organisationForm"))
+        .andExpect(MockMvcResultMatchers.model().attributeExists("model"));
     }
 
     @Test
