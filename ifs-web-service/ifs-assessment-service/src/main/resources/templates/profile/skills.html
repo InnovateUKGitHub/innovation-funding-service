@@ -22,12 +22,12 @@
             <h2 class="heading-medium no-margin-bottom">Innovation areas</h2>
 
             <ul class="list list-bullet" th:unless="${#maps.isEmpty(model.innovationAreas)}">
-                <th:block th:each="innovationSectorEntry : ${model.innovationAreas}"
-                    th:with="innovationSector=${innovationSectorEntry.key},innovationAreas=${innovationSectorEntry.value}">
-                    <li th:each="innovationArea: ${innovationAreas}" th:text="${innovationArea}">
-                        information and communications technology (ICT)
-                    </li>
-                </th:block>
+              <th:block th:each="innovationSectorEntry : ${model.innovationAreas}"
+                        th:with="innovationSector=${innovationSectorEntry.key},innovationAreas=${innovationSectorEntry.value}">
+                <li th:each="innovationArea: ${innovationAreas}" th:text="${innovationArea}">
+                  information and communications technology (ICT)
+                </li>
+              </th:block>
             </ul>
 
             <h2 class="heading-medium">Skill areas</h2>
@@ -40,9 +40,7 @@
 
             <div class="grid-row extra-margin-top">
                 <div class="column-half">
-                    <a th:href="@{/assessor/dashboard}" class="button">Return
-
- assessor dashboard</a>
+                    <a th:href="@{/assessor/dashboard}" class="button">Return to assessor dashboard</a>
                 </div>
                 <div class="column-half alignright">
                     <a th:href="@{/profile/skills/edit}" class="button-secondary">Edit</a>
