@@ -22,7 +22,7 @@ Search for applications
     And The user clicks the button/link    link=Clear all filters
     then the user should not see the element    jQuery=tr:nth-child(1) td:nth-child(1):contains("96")
 
-Filtering the Assessors in th Allocate Applications page
+Filtering the Assessors in the Allocate Applications page
     [Documentation]    INFUND-7042
     ...
     ...    INFUND-7729
