@@ -37,9 +37,7 @@
         <nav>
             <a th:if="${linkTitle != null and linkUrl != null}" th:class="${linkClass} ?: ''" th:href="${linkUrl}" th:text="${linkTitle}" />
         </nav>
-        <div class="deadline" th:if="${daysPercentage != null and daysLeft != null}">Days left to submit&nbsp;&nbsp;
-            <th:block th:insert="fragments/elements :: pie-small" th:with="daysPercentage=${daysPercentage},daysLeft=${daysLeft}" />
-        </div>
+        <div class="deadline" th:if="${daysPercentage != null and daysLeft != null}">Days left to submit <span th:text="${daysLeft}"></span></div>
     </div>
 </div>
 
@@ -82,7 +80,7 @@
         <div th:unless="${question.isComplete()}" class="section-status section-incomplete">Incomplete</div>
 
         <div class="section-score" th:if="${question.scoreFormInputExists}">
-            Score:
+            Score
             <span th:text="|${question.scoreGiven}/${question.scorePossible}|" th:if="${question.scoreGiven}" th:remove="tag" />
             <span th:unless="${question.scoreGiven}" th:remove="tag">N/A</span>
         </div>
@@ -124,6 +122,7 @@
 <!-- ======== Assessor - reject competition form for modal and non-js page ======= -->
 <div th:fragment="assessor-reject-competition-form (inviteHash)">
     <form action="#" th:action="@{/invite/competition/{inviteHash}/reject(inviteHash=${inviteHash})}" method="post" th:object="${form}" novalidate="novalidate">
+        <h2 class="heading-medium no-margin">Reject invitation</h2>
         <div class="error-summary" th:if="${#fields.hasErrors('global')}">
             <h2 class="heading-medium error-summary-heading">We were unable to reject the competition:</h2>
             <ul class="error-summary-list">
@@ -166,8 +165,11 @@
                 <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, rejectComment)})" />
             </div>
         </div>
-        <button class="button large button-warning" name="submit-app-details">Reject</button>
-        <button class="js-close button buttonlink large" type="button">Cancel</button>
+        <hr />
+        <div>
+            <button class="button" name="submit-app-details">Reject</button>
+            <button class="js-close buttonlink" type="button">Cancel</button>
+        </div>
     </form>
 </div>
 
@@ -185,6 +187,7 @@
 <!-- ======== Assessment - reject assessment form for modal and non-js page ======= -->
 <div th:fragment="assessment-reject-application-form (assessmentId)">
     <form action="#" th:action="@{/{assessmentId}/reject(assessmentId=${assessmentId})}" method="post" th:object="${form}" novalidate="novalidate">
+        <h2 class="heading-medium no-margin">Reject assessment</h2>
         <div class="error-summary" th:if="${#fields.hasErrors('global')}">
             <h2 class="heading-medium error-summary-heading">We were unable to reject the assessment:</h2>
             <ul class="error-summary-list">
@@ -231,9 +234,10 @@
                 <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, rejectComment)})" />
             </div>
         </div>
+        <hr />
         <div>
-            <button class="button large button-warning" name="submit-app-details">Reject</button>
-            <button class="js-close button buttonlink large" type="button">Cancel</button>
+            <button class="button" name="submit-app-details">Reject</button>
+            <button class="js-close buttonlink" type="button">Cancel</button>
         </div>
     </form>
 </div>
@@ -246,9 +250,10 @@
 
         <h2 class="heading-medium no-margin">You are about to submit your assessments.</h2>
         <p>You will not be able to edit after you submit. Are you sure you want to continue?</p>
+        <hr />
         <div>
-            <button class="button large" type="submit">Yes I want to submit the assessments</button>
-            <button class="js-close button buttonlink large" type="button">Cancel</button>
+            <button class="button" type="submit">Yes I want to submit the assessments</button>
+            <button class="js-close buttonlink" type="button">Cancel</button>
         </div>
     </div>
 </div>

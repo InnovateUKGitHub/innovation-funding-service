@@ -66,6 +66,10 @@ table {
     vertical-align: top;
   }
 
+  .cell-nowrap {
+    white-space: nowrap;
+  }
+
   .width-30-percent {
     box-sizing: border-box;
     padding-right: 1em;
@@ -111,6 +115,10 @@ table {
   }
 }
 
+.hint {
+  color: $grey-1;
+}
+
 /* SG
 # IFS/warning button
 
@@ -132,4 +140,8 @@ table {
   display: block;
   text-align: center;
   width: 100%;
+}
+
+hr {
+  clear: both;
 }

@@ -265,6 +265,10 @@ select[disabled]{
   padding: 0.5em 0;
   margin: 0;
 
+  .update-details{
+    margin-right: 1em;
+  }
+
   @include media-down(mobile) {
     .alignright{
       text-align: left;

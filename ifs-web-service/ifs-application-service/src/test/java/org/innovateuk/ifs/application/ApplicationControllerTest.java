@@ -302,7 +302,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         QuestionResource previousQuestion = newQuestionResource().withId(1L).withShortName("previous").build();
         QuestionResource questionResource = newQuestionResource().withId(questionId).build();
         QuestionResource nextQuestion = newQuestionResource().withId(3L).withShortName("next").build();
-        ApplicationResource applicationResource = newApplicationResource().build();
+        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withCompetitionStatus(PROJECT_SETUP).build();
         List<FormInputResponseResource> responseResources = newFormInputResponseResource().build(2);
         AssessmentFeedbackAggregateResource aggregateResource = newAssessmentFeedbackAggregateResource().build();
         NavigationViewModel expectedNavigation = new NavigationViewModel();
@@ -325,6 +325,20 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(status().isOk())
                 .andExpect(view().name("application-assessor-feedback"))
                 .andExpect(model().attribute("model", expectedModel));
+    }
+
+    @Test
+    public void applicationAssessorQuestionFeedback_invalidState() throws Exception {
+        long applicationId = 1L;
+        long questionId = 2L;
+
+        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withCompetitionStatus(ASSESSOR_FEEDBACK).build();
+
+        when(applicationService.getById(applicationId)).thenReturn(applicationResource);
+
+        mockMvc.perform(get("/application/{applicationId}/question/{questionId}/feedback", applicationId, questionId))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/application/" + applicationId + "/summary"));
     }
 
     @Test
@@ -369,8 +383,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(0)))
                 .andExpect(model().attribute("pendingOrganisationNames", Matchers.hasSize(0)))
                 .andExpect(model().attribute("feedback", expectedFeedback.getFeedback()))
-                .andExpect(model().attribute("scores", aggregateResource))
-                .andExpect(model().attribute("rsCategoryId", app.getResearchCategories().stream().findFirst().get().getId()));
+                .andExpect(model().attribute("scores", aggregateResource));
     }
 
     @Test

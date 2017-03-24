@@ -104,7 +104,7 @@ Application details server side
     And the user should see an error    Please enter a future date.
     And the user should see an error    This field cannot be left blank.
     And the user should see an error    Please enter the previous application number.
-    And the user should see an error    Please select a research category.
+    #And the user should see an error    Please select a research category.
     And the user should see an error    Please enter the previous application title.
     And the user should see an error    Please enter the full title of the project.
     And the user should see the element    css=.error-summary-list
@@ -118,7 +118,7 @@ Empty text area
     When the applicant clears the text area of the "Project Summary"
     When the user clicks the button/link    jQuery=Button:contains("Mark as complete")
     Then the user should see an error    Please enter some text.
-    When The user enters text to a text field    css=#form-input-11 .editor    Test 123
+    When The user enters text to a text field    css=#form-input-1039 .editor    Test 123
     Then the applicant should not see the validation error any more
 
 *** Keywords ***
@@ -145,8 +145,8 @@ the applicant inserts an invalid date
     The user enters text to a text field    id=application_details-startdate_month    11
 
 the applicant clears the text area of the "Project Summary"
-    Clear Element Text    css=#form-input-11 .editor
-    Press Key    css=#form-input-11 .editor    \\8
+    Clear Element Text    css=#form-input-1039 .editor
+    Press Key    css=#form-input-1039 .editor    \\8
     Focus    css=.app-submit-btn
     wait for autosave
 

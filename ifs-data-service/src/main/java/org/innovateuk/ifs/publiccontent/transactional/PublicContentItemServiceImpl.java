@@ -11,7 +11,6 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemPa
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.MilestoneRepository;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.publiccontent.domain.Keyword;
 import org.innovateuk.ifs.publiccontent.domain.PublicContent;
 import org.innovateuk.ifs.publiccontent.mapper.PublicContentMapper;
@@ -171,7 +170,6 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
         publicContentItemResource.setCompetitionOpenDate(competition.getStartDate());
         publicContentItemResource.setCompetitionCloseDate(competition.getEndDate());
         publicContentItemResource.setCompetitionTitle(competition.getName());
-        publicContentItemResource.setCompetitionIsOpen(CompetitionStatus.OPEN.equals(competition.getCompetitionStatus()));
         publicContentItemResource.setNonIfs(competition.isNonIfs());
         publicContentItemResource.setNonIfsUrl(competition.getNonIfsUrl());
 

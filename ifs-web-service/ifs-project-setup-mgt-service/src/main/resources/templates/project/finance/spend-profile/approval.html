@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend profile Summary'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend profile summary'" />
 </head>
-<body th:with="context='comp-management'" class="competition-management finance-checks-overview">
+<body class="finance-checks-overview">
 <th:block th:insert="fragments/modals :: modal-overlay" />
 <th:block th:insert="fragments/modals :: modal-accept-profile" />
 <th:block th:insert="fragments/modals :: modal-reject-profile" />
@@ -71,11 +71,10 @@
         <div th:if="${model.notApprovedOrRejected}" th:remove="tag">
             <h2 class="heading-medium">Approved by Innovate UK</h2>
             <div class="form-group">
-                <label class="block-label selection-button-checkbox" for="approvedByLeadTechnologist">
-                    <input id="approvedByLeadTechnologist" value="yes" type="checkbox"
-                           data-disable-button-until-checked="#accept-profile"/>
-                    The spend profile has been approved by Innovate UK.
-                </label>
+            <label class="block-label selection-button-checkbox" for="approvedByLeadTechnologist" >
+                <input id="approvedByLeadTechnologist" value="yes" type="checkbox" data-switches-button-status="#accept-profile"/>
+                The spend profile has been approved by Innovate UK.
+            </label>
             </div>
             <button data-js-modal="modal-accept-profile" id="accept-profile" class="button large">
                 Approved

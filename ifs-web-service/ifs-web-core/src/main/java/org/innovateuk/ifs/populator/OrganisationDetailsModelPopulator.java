@@ -68,7 +68,7 @@ public class OrganisationDetailsModelPopulator {
         final ArrayList<OrganisationResource> organisationList = new ArrayList<>(organisations);
 
         return organisationList.stream()
-                .filter(o -> OrganisationTypeEnum.ACADEMIC.getOrganisationTypeId().equals(o.getOrganisationType()))
+                .filter(o -> OrganisationTypeEnum.RESEARCH.getOrganisationTypeId().equals(o.getOrganisationType()))
                 .collect(Collectors.toCollection(supplier));
     }
 

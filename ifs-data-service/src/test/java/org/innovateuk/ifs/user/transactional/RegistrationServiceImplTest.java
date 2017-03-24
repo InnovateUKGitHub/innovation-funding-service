@@ -28,6 +28,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static java.time.LocalDateTime.now;
 import static java.util.Collections.singletonList;
@@ -83,7 +84,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
     @Test
     public void createUser() throws Exception {
-        List<Role> roles = newRole().build(1);
+        Set<Role> roles = newRole().buildSet(1);
         EthnicityResource ethnicityResource = newEthnicityResource().with(id(1L)).build();
         Ethnicity ethnicity = newEthnicity().withId(1L).build();
         AddressResource addressResource = newAddressResource().withAddressLine1("Electric Works").withTown("Sheffield").withPostcode("S1 2BJ").build();
@@ -215,7 +216,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
             assertEquals(Disability.YES, user.getDisability());
             assertEquals(Long.valueOf(2), user.getEthnicity().getId());
             assertEquals(1, user.getRoles().size());
-            assertEquals(applicantRole, user.getRoles().get(0));
+            assertTrue(user.getRoles().contains(applicantRole));
             List<Organisation> orgs = organisationRepositoryMock.findByUsersId(user.getId());
             assertEquals(1, orgs.size());
             assertEquals(selectedOrganisation, orgs.get(0));
@@ -241,9 +242,9 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
         when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate)).thenReturn(serviceSuccess());
 
-        ServiceResult<UserResource> result = service.createOrganisationUser(123L, userToCreate);
-        assertTrue(result.isSuccess());
-        assertEquals(userToCreate, result.getSuccessObject());
+        UserResource result = service.createOrganisationUser(123L, userToCreate).getSuccessObjectOrThrowException();
+
+        assertEquals(userToCreate, result);
     }
 
     @Test
@@ -373,7 +374,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
             assertEquals(Mr, user.getTitle());
             assertEquals("new-uid", user.getUid());
             assertEquals(1, user.getRoles().size());
-            assertEquals(compAdminRole, user.getRoles().get(0));
+            assertTrue(user.getRoles().contains(compAdminRole));
             List<Organisation> orgs = organisationRepositoryMock.findByUsersId(user.getId());
             assertEquals(1, orgs.size());
             assertEquals(selectedOrganisation, orgs.get(0));
@@ -466,7 +467,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
             assertEquals(Mr, user.getTitle());
             assertEquals("new-uid", user.getUid());
             assertEquals(1, user.getRoles().size());
-            assertEquals(projectFinanceRole, user.getRoles().get(0));
+            assertTrue(user.getRoles().contains(projectFinanceRole));
             List<Organisation> orgs = organisationRepositoryMock.findByUsersId(user.getId());
             assertEquals(1, orgs.size());
             assertEquals(selectedOrganisation, orgs.get(0));

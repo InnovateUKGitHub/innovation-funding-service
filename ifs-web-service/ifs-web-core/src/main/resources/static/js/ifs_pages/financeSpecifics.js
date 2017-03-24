@@ -21,7 +21,9 @@ IFS.core.financeSpecifics = (function () {
       IFS.core.financeSpecifics.setOverheadSectionElementValue()
 
       var el = jQuery(s.adminSupportCostsSelect + ':checked')
-      IFS.core.financeSpecifics.makeRightOverheadTotalActive(el)
+      if (el.length) {
+        IFS.core.financeSpecifics.makeRightOverheadTotalActive(el)
+      }
 
       jQuery(document).on('change', s.adminSupportCostsSelect, function () {
         IFS.core.financeSpecifics.makeRightOverheadTotalActive(this)
@@ -50,11 +52,6 @@ IFS.core.financeSpecifics = (function () {
         }
       }
     },
-    // addPercentageOfLabourCosts: function () {
-    //   var header = jQuery(s.adminSupportCostsSelect).closest('section.collapsible').find('button')
-    //   var html = '<span></span>')
-    //   <span data-calculation-format="percentage" data-mirror="#section-percentage-115" data-calculation-fields="100, #total-cost, [data-current-overhead-total]" data-calculation-binded="" data-calculation-rawvalue="6.465493257743544">6%</span>
-    // },
     setOverheadSectionElementValue: function () {
       var totalElements = jQuery(s.adminSupportCostsSelect).closest('section.collapsible').find('[data-mirror]')
       totalElements.each(function () {

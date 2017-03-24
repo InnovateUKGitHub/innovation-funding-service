@@ -1,21 +1,15 @@
 package org.innovateuk.ifs.invite.mapper;
 
-import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
-import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
-import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
-import org.innovateuk.ifs.user.domain.Organisation;
-import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
-import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 @Mapper(
     componentModel = "spring",
@@ -44,6 +38,14 @@ public abstract class ApplicationInviteMapper extends BaseMapper<ApplicationInvi
     })
     @Override
     public abstract ApplicationInviteResource mapToResource(ApplicationInvite domain);
+
+    public abstract List<ApplicationInviteResource> mapToResource(List<ApplicationInvite> domain);
+
+    @Mappings({
+            @Mapping(source="application", target="target")
+    })
+    @Override
+    public abstract ApplicationInvite mapToDomain(ApplicationInviteResource resource);
 
     public Long mapInviteToId(ApplicationInvite object) {
         if (object == null) {

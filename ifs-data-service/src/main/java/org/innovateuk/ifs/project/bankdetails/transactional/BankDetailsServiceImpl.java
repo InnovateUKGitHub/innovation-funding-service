@@ -13,6 +13,7 @@ import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.mapper.OrganisationAddressMapper;
 import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
+import org.innovateuk.ifs.util.PrioritySorting;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
 import org.innovateuk.ifs.project.bankdetails.domain.VerificationCondition;
 import org.innovateuk.ifs.project.bankdetails.mapper.BankDetailsMapper;
@@ -36,7 +37,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -56,7 +56,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
-public class BankDetailsServiceImpl implements BankDetailsService{
+public class BankDetailsServiceImpl implements BankDetailsService {
 
     private final int EXPERIAN_INVALID_ACC_NO_ERROR_ID = 4;
     private final int EXPERIAN_MODULUS_CHECK_FAILURE_ID = 7;
@@ -131,17 +131,19 @@ public class BankDetailsServiceImpl implements BankDetailsService{
         Project project = projectRepository.findOne(projectId);
         ProcessRole leadProcessRole = project.getApplication().getLeadApplicantProcessRole();
         Organisation leadOrganisation = organisationRepository.findOne(leadProcessRole.getOrganisationId());
-        List<BankDetailsStatusResource> bankDetailsStatusResources = new ArrayList<>();
-        bankDetailsStatusResources.add(getBankDetailsStatusForOrg(project, leadOrganisation));
-        List<Organisation> organisations = simpleFilter(projectUsersHelper.getPartnerOrganisations(projectId), org -> !org.getId().equals(leadOrganisation.getId()));
-        bankDetailsStatusResources.addAll(simpleMap(organisations,org -> getBankDetailsStatusForOrg(project, org)));
-        ProjectBankDetailsStatusSummary projectBankDetailsStatusSummary = new ProjectBankDetailsStatusSummary(project.getApplication().getCompetition().getId(), project.getApplication().getCompetition().getName(), project.getId(), project.getApplication().getId(), bankDetailsStatusResources);
+        List<Organisation> sortedOrganisations = new PrioritySorting<>(projectUsersHelper.getPartnerOrganisations(projectId), leadOrganisation, Organisation::getName).unwrap();
+        final List<BankDetailsStatusResource> bankDetailsStatusResources = simpleMap(sortedOrganisations, org -> getBankDetailsStatusForOrg(project, org));
+
+        ProjectBankDetailsStatusSummary projectBankDetailsStatusSummary
+                = new ProjectBankDetailsStatusSummary(project.getApplication().getCompetition().getId(),
+                project.getApplication().getCompetition().getName(), project.getId(), project.getApplication().getId(),
+                bankDetailsStatusResources, leadOrganisation.getName());
         return serviceSuccess(projectBankDetailsStatusSummary);
     }
 
-    private BankDetailsStatusResource getBankDetailsStatusForOrg(Project project, Organisation org){
+    private BankDetailsStatusResource getBankDetailsStatusForOrg(Project project, Organisation org) {
 
-        if(!isOrganisationSeekingFunding(project.getId(), project.getApplication().getId(), org.getId())){
+        if (!isOrganisationSeekingFunding(project.getId(), project.getApplication().getId(), org.getId())) {
             return new BankDetailsStatusResource(org.getId(), org.getName(), NOT_REQUIRED);
         }
 
@@ -157,24 +159,24 @@ public class BankDetailsServiceImpl implements BankDetailsService{
                 andOnSuccessReturn(bankDetails -> bankDetailsMapper.mapToResource(bankDetails));
     }
 
-    private boolean isOrganisationSeekingFunding(Long projectId, Long applicationId, Long organisationId){
+    private boolean isOrganisationSeekingFunding(Long projectId, Long applicationId, Long organisationId) {
         Optional<Boolean> result = financeRowService.organisationSeeksFunding(projectId, applicationId, organisationId).getOptionalSuccessObject();
         return result.map(Boolean::booleanValue).orElse(false);
     }
 
-    private Address toExperianAddressFormat(AddressResource addressResource){
+    private Address toExperianAddressFormat(AddressResource addressResource) {
         return new Address(null, addressResource.getAddressLine1(), addressResource.getAddressLine2(), addressResource.getAddressLine3(), addressResource.getTown(), addressResource.getPostcode());
     }
 
-    private ServiceResult<Void> bankDetailsDontExist(final Long projectId, final Long organisationId){
+    private ServiceResult<Void> bankDetailsDontExist(final Long projectId, final Long organisationId) {
         BankDetails bankDetails = bankDetailsRepository.findByProjectIdAndOrganisationId(projectId, organisationId);
-        if(bankDetails != null){
+        if (bankDetails != null) {
             return serviceFailure(new Error(BANK_DETAILS_CAN_ONLY_BE_SUBMITTED_ONCE));
         }
         return serviceSuccess();
     }
 
-    private ServiceResult<AccountDetails> saveSubmittedBankDetails(AccountDetails accountDetails, BankDetailsResource bankDetailsResource){
+    private ServiceResult<AccountDetails> saveSubmittedBankDetails(AccountDetails accountDetails, BankDetailsResource bankDetailsResource) {
         BankDetails bankDetails = bankDetailsMapper.mapToDomain(bankDetailsResource);
         OrganisationAddressResource organisationAddressResource = bankDetailsResource.getOrganisationAddress();
         AddressResource addressResource = organisationAddressResource.getAddress();
@@ -194,13 +196,13 @@ public class BankDetailsServiceImpl implements BankDetailsService{
         return serviceSuccess(accountDetails);
     }
 
-    private void updateAddressForExistingBankDetails(OrganisationAddressResource organisationAddressResource, AddressResource addressResource, BankDetailsResource bankDetailsResource, BankDetails bankDetails){
-        if(organisationAddressResource.getAddressType().getId().equals(BANK_DETAILS.getOrdinal())) {
+    private void updateAddressForExistingBankDetails(OrganisationAddressResource organisationAddressResource, AddressResource addressResource, BankDetailsResource bankDetailsResource, BankDetails bankDetails) {
+        if (organisationAddressResource.getAddressType().getId().equals(BANK_DETAILS.getOrdinal())) {
             AddressType addressType = addressTypeRepository.findOne(BANK_DETAILS.getOrdinal());
             List<OrganisationAddress> bankOrganisationAddresses = organisationAddressRepository.findByOrganisationIdAndAddressType(bankDetailsResource.getOrganisation(), addressType);
 
             OrganisationAddress newOrganisationAddress;
-            if(bankOrganisationAddresses != null && bankOrganisationAddresses.size() > 0) {
+            if (bankOrganisationAddresses != null && bankOrganisationAddresses.size() > 0) {
                 newOrganisationAddress = bankOrganisationAddresses.get(0);
                 long oldAddressId = newOrganisationAddress.getAddress().getId();
                 newOrganisationAddress.setAddress(addressMapper.mapToDomain(addressResource));
@@ -214,8 +216,8 @@ public class BankDetailsServiceImpl implements BankDetailsService{
 
     private ServiceResult<AccountDetails> updateExistingBankDetails(AccountDetails accountDetails, BankDetailsResource bankDetailsResource) {
         BankDetails existingBankDetails = bankDetailsRepository.findByProjectIdAndOrganisationId(bankDetailsResource.getProject(), bankDetailsResource.getOrganisation());
-        if(existingBankDetails != null){
-            if(existingBankDetails.isManualApproval()){
+        if (existingBankDetails != null) {
+            if (existingBankDetails.isManualApproval()) {
                 return serviceFailure(CommonFailureKeys.BANK_DETAILS_HAVE_ALREADY_BEEN_APPROVED_AND_CANNOT_BE_UPDATED);
             }
             bankDetailsResource.setId(existingBankDetails.getId());
@@ -225,14 +227,14 @@ public class BankDetailsServiceImpl implements BankDetailsService{
         return saveSubmittedBankDetails(accountDetails, bankDetailsResource);
     }
 
-    private ServiceResult<AccountDetails> validateBankDetails(BankDetailsResource bankDetailsResource){
+    private ServiceResult<AccountDetails> validateBankDetails(BankDetailsResource bankDetailsResource) {
         AccountDetails accountDetails = silBankDetailsMapper.toAccountDetails(bankDetailsResource);
         SILBankDetails silBankDetails = silBankDetailsMapper.toSILBankDetails(bankDetailsResource);
         return silExperianEndpoint.validate(silBankDetails).
                 handleSuccessOrFailure(
                         failure -> serviceFailure(failure.getErrors()),
                         validationResult -> {
-                            if(validationResult.isCheckPassed()) {
+                            if (validationResult.isCheckPassed()) {
                                 return serviceSuccess(accountDetails);
                             } else {
                                 return serviceFailure(convertExperianValidationMsgToUserMsg(validationResult.getConditions()));
@@ -241,20 +243,20 @@ public class BankDetailsServiceImpl implements BankDetailsService{
                 );
     }
 
-    private ServiceResult<Void> verifyBankDetails(final AccountDetails accountDetails, BankDetails bankDetails){
+    private ServiceResult<Void> verifyBankDetails(final AccountDetails accountDetails, BankDetails bankDetails) {
         silExperianEndpoint.verify(accountDetails).andOnSuccess(
                 verificationResult -> {
-                    if(verificationResult.getAddressScore() != null)
+                    if (verificationResult.getAddressScore() != null)
                         bankDetails.setAddressScore(parseShort(verificationResult.getAddressScore()));
-                    if(verificationResult.getCompanyNameScore() != null)
+                    if (verificationResult.getCompanyNameScore() != null)
                         bankDetails.setCompanyNameScore(parseShort(verificationResult.getCompanyNameScore()));
-                    if(verificationResult.getRegNumberScore() != null) {
+                    if (verificationResult.getRegNumberScore() != null) {
                         bankDetails.setRegistrationNumberMatched(verificationResult.getRegNumberScore().equals("Match"));
                     }
 
                     List<Condition> conditions = verificationResult.getConditions();
 
-                    if(conditions != null && conditions.size() > 0){
+                    if (conditions != null && conditions.size() > 0) {
                         bankDetails.setVerificationConditions(conditions.stream().map(silCondition -> {
                             VerificationCondition verificationCondition = new VerificationCondition();
                             verificationCondition.setCode(silCondition.getCode());
@@ -275,7 +277,7 @@ public class BankDetailsServiceImpl implements BankDetailsService{
         return serviceSuccess();
     }
 
-    private List<Error> convertExperianValidationMsgToUserMsg(List<Condition> conditons){
+    private List<Error> convertExperianValidationMsgToUserMsg(List<Condition> conditons) {
         return conditons.stream().filter(condition -> condition.getSeverity().equals("error")).
                 map(condition -> {
                     if (condition.getCode().equals(EXPERIAN_INVALID_ACC_NO_ERROR_ID)) {

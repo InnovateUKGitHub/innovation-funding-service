@@ -55,7 +55,7 @@ public class ApplicationFinanceOverviewModelManager implements FinanceOverviewMo
         OrganisationApplicationFinanceOverviewImpl organisationFinanceOverview = new OrganisationApplicationFinanceOverviewImpl(financeService, fileEntryRestService, applicationId);
         if (organisationId.isPresent()) {
             String organisationType = organisationService.getOrganisationById(organisationId.get()).getOrganisationTypeName();
-            model.addAttribute("maySeeAcademicBreakdown", "University (HEI)".equals(organisationType));
+            model.addAttribute("maySeeAcademicBreakdown", "Research".equals(organisationType));
         } else {
             //If no organisation id is present then this is an internal user and they can view the breakdown.
             model.addAttribute("maySeeAcademicBreakdown", true);

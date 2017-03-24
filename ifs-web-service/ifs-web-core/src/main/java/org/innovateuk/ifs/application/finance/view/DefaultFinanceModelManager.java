@@ -17,6 +17,7 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputService;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
+import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
@@ -75,6 +76,7 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
             model.addAttribute("organisationSizes", organisationSizeService.getOrganisationSizes());
             model.addAttribute("maximumGrantClaimPercentage", applicationFinanceResource.getMaximumFundingLevel());
             model.addAttribute("financeView", "finance");
+            model.addAttribute("financeQuestions", CollectionFunctions.simpleToMap(costsQuestions, this::costTypeForQuestion));
             addGrantClaim(model, form, applicationFinanceResource);
         }
     }
@@ -104,6 +106,7 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
             financeViewModel.setOrganisationSizes(organisationSizeService.getOrganisationSizes());
             financeViewModel.setMaximumGrantClaimPercentage(applicationFinanceResource.getMaximumFundingLevel());
             financeViewModel.setFinanceView("finance");
+            financeViewModel.setFinanceQuestions(CollectionFunctions.simpleToMap(costsQuestions, this::costTypeForQuestion));
             addGrantClaim(financeViewModel, applicationFinanceResource);
         }
 
@@ -125,7 +128,7 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
             applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, applicationId);
         }
 
-        String organisationType = organisationService.getOrganisationType(userId, applicationId);
+        Long organisationType = organisationService.getOrganisationType(userId, applicationId);
         
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());

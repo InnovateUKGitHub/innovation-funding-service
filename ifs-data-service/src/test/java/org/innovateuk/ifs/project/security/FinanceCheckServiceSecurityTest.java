@@ -60,7 +60,7 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
         assertAccessDenied(
                 () -> classUnderTest.getFinanceCheckOverview(1L),
                 () -> {
-                    verify(projectFinancePermissionRules).financeContactsCanSeeTheProjectFinanceOverviewsForTheirProject(isA(Long.class), isA(UserResource.class));
+                    verify(projectFinancePermissionRules).partnersCanSeeTheProjectFinanceOverviewsForTheirProject(isA(Long.class), isA(UserResource.class));
                     verify(projectFinancePermissionRules).internalUsersCanSeeTheProjectFinanceOverviewsForAllProjects(isA(Long.class), isA(UserResource.class));
                 }
         );

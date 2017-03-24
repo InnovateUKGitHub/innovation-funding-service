@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.application.transactional;
 
-import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.mapper.ApplicationSummaryMapper;
 import org.innovateuk.ifs.application.mapper.ApplicationSummaryPageMapper;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
@@ -22,9 +22,9 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
-import static java.util.Arrays.asList;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
@@ -47,13 +47,14 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
     private static final Map<String, Sort> SORT_FIELD_TO_DB_SORT_FIELDS = new HashMap<String, Sort>() {{
         put("name", new Sort(ASC, new String[]{"name", "id"}));
         put("duration", new Sort(ASC, new String[]{"durationInMonths", "id"}));
-        put("percentageComplete", new Sort(DESC, "completion").and(new Sort(ASC,"id")));
+        put("percentageComplete", new Sort(DESC, "completion").and(new Sort(ASC, "id")));
     }};
 
     // TODO These comparators are used to sort application after loading them in memory.
     // TODO The code currently is retrieving to many of them and this sorting should be done in the database query.
     // TODO Ideally they should all be replaced
-    private static final Map<String, Comparator<ApplicationSummaryResource>> SUMMARY_COMPARATORS = new HashMap<String, Comparator<ApplicationSummaryResource>>() {{
+    private static final Map<String, Comparator<ApplicationSummaryResource>> SUMMARY_COMPARATORS =
+            new HashMap<String, Comparator<ApplicationSummaryResource>>() {{
         put("lead", new ApplicationSummaryResourceLeadComparator());
         put("leadApplicant", new ApplicationSummaryResourceLeadApplicantComparator());
         put("numberOfPartners", new ApplicationSummaryResourceNumberOfPartnersComparator());
@@ -71,20 +72,28 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 
 
     @Override
-    public ServiceResult<ApplicationSummaryPageResource> getApplicationSummariesByCompetitionId(Long competitionId, String sortBy, int pageIndex, int pageSize, Optional<String> filter) {
+    public ServiceResult<ApplicationSummaryPageResource> getApplicationSummariesByCompetitionId(
+            Long competitionId, String sortBy, int pageIndex, int pageSize, Optional<String> filter) {
         String filterStr = filter.map(String::trim).orElse("");
         return applicationSummaries(sortBy, pageIndex, pageSize,
-                pageable -> applicationRepository.findByCompetitionIdAndIdLike(competitionId, filterStr,pageable),
+                pageable -> applicationRepository.findByCompetitionIdAndIdLike(competitionId, filterStr, pageable),
                 () -> applicationRepository.findByCompetitionIdAndIdLike(competitionId, filterStr));
     }
 
     @Override
     public ServiceResult<ApplicationSummaryPageResource> getSubmittedApplicationSummariesByCompetitionId(
-            Long competitionId, String sortBy, int pageIndex, int pageSize, Optional<String> filter) {
+            Long competitionId,
+            String sortBy,
+            int pageIndex,
+            int pageSize,
+            Optional<String> filter,
+            Optional<FundingDecisionStatus> fundingFilter) {
         String filterStr = filter.map(String::trim).orElse("");
         return applicationSummaries(sortBy, pageIndex, pageSize,
-                pageable -> applicationRepository.findByCompetitionIdAndApplicationStatusIdInAndIdLike(competitionId, SUBMITTED_STATUS_IDS, filterStr, pageable),
-                () -> applicationRepository.findByCompetitionIdAndApplicationStatusIdInAndIdLike(competitionId, SUBMITTED_STATUS_IDS, filterStr));
+                pageable -> applicationRepository.findByCompetitionIdAndApplicationStatusIdInAndIdLike(
+                        competitionId, SUBMITTED_STATUS_IDS, filterStr, fundingFilter.orElse(null), pageable),
+                () -> applicationRepository.findByCompetitionIdAndApplicationStatusIdInAndIdLike(
+                        competitionId, SUBMITTED_STATUS_IDS, filterStr, fundingFilter.orElse(null)));
     }
 
     @Override
@@ -92,28 +101,53 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
             Long competitionId, String sortBy, int pageIndex, int pageSize) {
 
         return applicationSummaries(sortBy, pageIndex, pageSize,
-                pageable -> applicationRepository.findByCompetitionIdAndApplicationStatusIdNotIn(competitionId, SUBMITTED_STATUS_IDS, pageable),
-                () -> applicationRepository.findByCompetitionIdAndApplicationStatusIdNotIn(competitionId, SUBMITTED_STATUS_IDS));
+                pageable -> applicationRepository.findByCompetitionIdAndApplicationStatusIdNotIn(
+                        competitionId, SUBMITTED_STATUS_IDS, pageable),
+                () -> applicationRepository.findByCompetitionIdAndApplicationStatusIdNotIn(
+                        competitionId, SUBMITTED_STATUS_IDS));
     }
 
     @Override
     public ServiceResult<ApplicationSummaryPageResource> getFeedbackRequiredApplicationSummariesByCompetitionId(
             Long competitionId, String sortBy, int pageIndex, int pageSize) {
         return applicationSummaries(sortBy, pageIndex, pageSize,
-                pageable -> applicationRepository.findByCompetitionIdAndApplicationStatusIdInAndAssessorFeedbackFileEntryIsNull(competitionId, FUNDING_DECISIONS_MADE_STATUS_IDS, pageable),
-                () -> applicationRepository.findByCompetitionIdAndApplicationStatusIdInAndAssessorFeedbackFileEntryIsNull(competitionId, FUNDING_DECISIONS_MADE_STATUS_IDS));
+                pageable -> applicationRepository.findByCompetitionIdAndApplicationStatusIdInAndAssessorFeedbackFileEntryIsNull(
+                        competitionId, FUNDING_DECISIONS_MADE_STATUS_IDS, pageable),
+                () -> applicationRepository.findByCompetitionIdAndApplicationStatusIdInAndAssessorFeedbackFileEntryIsNull(
+                        competitionId, FUNDING_DECISIONS_MADE_STATUS_IDS));
 
     }
 
     @Override
-    public ServiceResult<ApplicationSummaryPageResource> getWithFundingDecisionApplicationSummariesByCompetitionId(long competitionId, String sortBy, int pageIndex, int pageSize) {
+    public ServiceResult<ApplicationSummaryPageResource> getWithFundingDecisionApplicationSummariesByCompetitionId(
+            long competitionId,
+            String sortBy,
+            int pageIndex,
+            int pageSize,
+            Optional<String> filter, Optional<Boolean> sendFilter,
+            Optional<FundingDecisionStatus> fundingFilter) {
+        String filterStr = filter.map(String::trim).orElse("");
         return applicationSummaries(sortBy, pageIndex, pageSize,
-                pageable -> applicationRepository.findByCompetitionIdAndFundingDecisionIsNotNull(competitionId, pageable),
-                () -> applicationRepository.findByCompetitionIdAndFundingDecisionIsNotNull(competitionId));
+                pageable -> applicationRepository.findByCompetitionIdAndFundingDecisionIsNotNull(
+                        competitionId,
+                        filterStr,
+                        sendFilter.orElse(null),
+                        fundingFilter.orElse(null),
+                        pageable),
+                () -> applicationRepository.findByCompetitionIdAndFundingDecisionIsNotNull(
+                        competitionId,
+                        filterStr,
+                        sendFilter.orElse(null),
+                        fundingFilter.orElse(null)));
     }
 
 
-    private ServiceResult<ApplicationSummaryPageResource> applicationSummaries(String sortBy, int pageIndex, int pageSize, Function<Pageable, Page<Application>> paginatedApplicationsSupplier, Supplier<List<Application>> nonPaginatedApplicationsSupplier) {
+    private ServiceResult<ApplicationSummaryPageResource> applicationSummaries(
+            String sortBy,
+            int pageIndex,
+            int pageSize,
+            Function<Pageable, Page<Application>> paginatedApplicationsSupplier,
+            Supplier<List<Application>> nonPaginatedApplicationsSupplier) {
         Sort sortField = getApplicationSummarySortField(sortBy);
         Pageable pageable = new PageRequest(pageIndex, pageSize, sortField);
 
@@ -130,11 +164,12 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
         result.setNumber(pageable.getPageNumber());
         result.setSize(pageable.getPageSize());
         result.setTotalElements(resultsList.size());
-        result.setTotalPages( (resultsList.size() + pageable.getPageSize() -1)  / pageable.getPageSize());
+        result.setTotalPages((resultsList.size() + pageable.getPageSize() - 1) / pageable.getPageSize());
         return find(result, notFoundError(ApplicationSummaryPageResource.class));
     }
 
-    private List<ApplicationSummaryResource> sortAndRestrictSummaryResults(List<Application> resultsList, Pageable pageable, String sortBy) {
+    private List<ApplicationSummaryResource> sortAndRestrictSummaryResults(
+            List<Application> resultsList, Pageable pageable, String sortBy) {
         return resultsList.stream()
                 .map(applicationSummaryMapper::mapToResource)
                 .sorted((i1, i2) -> {
