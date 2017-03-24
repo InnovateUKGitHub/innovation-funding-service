@@ -273,9 +273,9 @@ Applicant can view and edit project growth table
     and the user clicks the button/link     jQuery=button:contains("Mark as complete")
 
 Newly created collaborator can view and edit project Growth table
-    [Documentation]     INFUND-8426
+    [Documentation]  INFUND-8426
     [Tags]
-    [Setup]    Invite a non-existing collaborator in Appplication with Growth table
+    [Setup]  Invite a non-existing collaborator in Appplication with Growth table
     When the user navigates to the growth table finances
     and the user clicks the button/link     link=Your organisation
     and the user selects medium organisation size
@@ -476,8 +476,6 @@ Invite a non-existing collaborator in Appplication with Growth table
 Newly invited collaborator can create account and sign in
     the user reads his email and clicks the link     liam@innovate.com  Invitation to collaborate in ${compWITHGrowth}  participate in their application
     the user clicks the button/link      jQuery=a:contains("Yes, accept invitation")
-    # the user should see the element      jQuery=h1:contains("New to this service?")
-    # the user clicks the button/link       jQuery=a:contains("Create")
     the user should see the element      jquery=h1:contains("Choose your organisation type")
     the user completes the new account creation
 
@@ -504,7 +502,7 @@ the user completes the new account creation
     the user selects the checkbox      termsAndConditions
     the user clicks the button/link     jQuery=button:contains("Create account")
     the user should see the text in the page    Please verify your email address
-    the user reads his email and clicks the link      liam@innovate.com   Please verify your email address    If you did not request an account with us
+    the user reads his email and clicks the link      liam@innovate.com   Please verify your email address    Once verified you can sign into your account.
     the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     the user clicks the button/link     link=Sign in
     then the user should see the text in the page      Sign in

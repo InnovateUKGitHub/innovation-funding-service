@@ -12,6 +12,12 @@ Documentation     INFUND-7365 Inflight competition dashboards: Inform dashboard
 ...               INFUND-8169 Assessors scores viewed on Feedback Overview by applicant
 ...
 ...               INFUND-8172 Assessor's Overall feedback displayed on Feedback Overview
+...
+...               INFUND-7950 Updates to 'Inform' - Competition dashboard
+...
+...               INFUND-8005 Feedback per question for applicant
+...
+...               INFUND-8876 No back navigation on applicant feedback view
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
@@ -31,17 +37,16 @@ Competition Dashboard
     And the user should not see the element    link=View and update competition setup
 
 Milestones for the In inform competition
-    [Documentation]    INFUND-7561
+    [Documentation]    INFUND-7561    INFUND-7950
     [Tags]
     Then the user should see the element    jQuery=.button:contains("Manage funding notifications")
-    And The user should see the element    jQuery=button:contains("Release feedback")
+    And the user should see the element    jQuery=button:contains("Release feedback")
     And the user should see the element    css=li:nth-child(13).done    #Verify that 12. Notifications
     And the user should see the element    css=li:nth-child(14).not-done    #Verify that 13. Release feedback is not done
 
 Release feedback
     [Documentation]    INFUND-8050
-    [Tags]    Email    HappyPath    Pending
-    #TODO Pending funding decisions to be ready
+    [Tags]    Email    HappyPath
     When The user clicks the button/link    jQuery=button:contains("Release feedback")
     Then The user should not see the text in the page    Inform
     When The user clicks the button/link    jQuery=a:contains(Live)
@@ -66,19 +71,25 @@ Successful applicant see successful alert
 
 View feedback from each assessor
     [Documentation]    INFUND-8172
-    [Tags]    Email    HappyPath  Pending
-    # TODO Pending due to INFUND-8757
+    [Tags]    Email    HappyPath
     Then the user should see the element    jQuery=h3:contains("Assessor 1") ~ p:contains("I have no problem recommending this application")
     And the user should see the element    jQuery=h3:contains("Assessor 2") ~ p:contains("Very good, but could have been better in areas")
     And the user should see the element    jQuery=h3:contains("Assessor 3") ~ p:contains("I enjoyed reading this application, well done")
 
 Overall scores and application details are correct
     [Documentation]    INFUND-8169 INFUND-7861
-    [Tags]    Email    HappyPath  Pending
-    # TODO Pending due to INFUND-8757
+    [Tags]    Email    HappyPath
     Then the overall scores are correct
     And the application question scores are correct
     And the application details are correct
+
+User can see feedback to individual questions
+    [Documentation]    INFUND-8005
+    [Tags]
+    Given the user clicks the button/link    jQuery=a:contains("6. Innovation")
+    Then the user should see the element     jQuery=h3:contains("Your answer") ~ p:contains("fifth")
+    And the user should see the element      jQuery=h4:contains("Assessor 1") ~ p:contains("This is the innovation feedback")
+    [Teardown]    the user clicks the button/link    jQuery=.link-back:contains("Feedback overview")
 
 The finance details are shown
     [Documentation]    INFUND-8168
@@ -86,6 +97,12 @@ The finance details are shown
     When the user clicks the button/link    jQuery=.collapsible button
     Then the user should see the element    jQuery=.collapsible div[aria-hidden="false"]
     And the user should not see the element    jQuery=.collapsible div[aria-hidden="true"]
+
+Selecting the dashboard link takes user back to the dashboard
+   [Documentation]    INFUND-8876
+   [Tags]
+   Given the user clicks the button/link    jQuery=.link-back:contains("Dashboard")
+   Then the user should see the element     jQuery=h1:contains("Your dashboard")
 
 *** Keywords ***
 the overall scores are correct
