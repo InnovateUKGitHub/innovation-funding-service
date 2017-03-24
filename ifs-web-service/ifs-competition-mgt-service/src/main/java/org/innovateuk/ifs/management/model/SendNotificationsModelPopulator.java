@@ -47,7 +47,7 @@ public class SendNotificationsModelPopulator {
 
     long getApplicationCountByFundingDecision(List<ApplicationSummaryResource> filteredApplications, FundingDecision fundingDecision) {
         return filteredApplications.stream()
-                .filter(application -> application.getFundingDecision().equals(fundingDecision))
+                .filter(application -> application.getFundingDecision() == fundingDecision)
                 .collect(Collectors.toList())
                 .size();
     }
