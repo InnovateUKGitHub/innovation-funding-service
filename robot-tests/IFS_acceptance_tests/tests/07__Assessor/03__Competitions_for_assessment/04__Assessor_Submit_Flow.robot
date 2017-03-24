@@ -109,50 +109,50 @@ Summary:Questions should show the scores
     And the collapsible button should contain    jQuery=button:contains(9. Funding)    Score 10/10
     And the collapsible button should contain    jQuery=button:contains(10. Adding value)    Score 10/10
 
-Summary:Assessor can return to each question
-    [Documentation]    INFUND-4648
-    The user should see the element    jQuery=#collapsible-0 a:contains("Return to this question in the application")
-    The user should see the element    jQuery=#collapsible-1 a:contains("Return to this question in the application")
-    The user should see the element    jQuery=#collapsible-2 a:contains("Return to this question in the application")
-    The user should see the element    jQuery=#collapsible-3 a:contains("Return to this question in the application")
-    The user should see the element    jQuery=#collapsible-4 a:contains("Return to this question in the application")
-    The user should see the element    jQuery=#collapsible-5 a:contains("Return to this question in the application")
-    The user should see the element    jQuery=#collapsible-6 a:contains("Return to this question in the application")
-    The user should see the element    jQuery=#collapsible-7 a:contains("Return to this question in the application")
-    The user should see the element    jQuery=#collapsible-8 a:contains("Return to this question in the application")
-    The user should see the element    jQuery=#collapsible-9 a:contains("Return to this question in the application")
-    The user should see the element    jQuery=#collapsible-10 a:contains("Return to this question in the application")
-    the user clicks the button/link    jQuery=#collapsible-1 a:contains("Return to this question in the application")
-    Then The user should see the text in the page    What is the business opportunity that your project addresses?
-    The user goes back to the previous page
-    the user clicks the button/link    jQuery=#collapsible-10 a:contains("Return to this question in the application")
-    Then The user should see the text in the page    How does financial support from Innovate UK and its funding partners add value?
-    The user goes back to the previous page
-
 Summary:Feedback should show in each section
     [Documentation]    INFUND-550
-    When The user clicks the button/link    jQuery=button:contains(1. Business opportunity)
-    Then The user should see the text in the page    Testing Business opportunity feedback text
-    When The user clicks the button/link    jQuery=button:contains(2. Potential market)
-    Then The user should see the text in the page    Testing Potential market feedback text
-    When The user clicks the button/link    jQuery=button:contains(3. Project exploitation)
-    Then The user should see the text in the page    Testing Project exploitation feedback text
-    When The user clicks the button/link    jQuery=button:contains(4. Economic benefit)
-    Then The user should see the text in the page    Testing Economic benefit feedback text
-    When The user clicks the button/link    jQuery=button:contains(5. Technical approach)
-    Then The user should see the text in the page    Testing Technical approach feedback text
-    When The user clicks the button/link    jQuery=button:contains(6. Innovation)
-    Then The user should see the text in the page    Testing Innovation feedback text
-    When The user clicks the button/link    jQuery=button:contains(7. Risks)
-    Then The user should see the text in the page    Testing Risks feedback text
-    When The user clicks the button/link    jQuery=button:contains(8. Project team)
-    Then The user should see the text in the page    Testing Project team feedback text
-    When The user clicks the button/link    jQuery=button:contains(9. Funding)
-    Then The user should see the text in the page    Testing Funding feedback text
-    When The user clicks the button/link    jQuery=button:contains(10. Adding value)
-    Then The user should see the text in the page    Testing Adding value feedback text
-    When The user clicks the button/link    jQuery=button:contains(Scope)
-    Then The user should see the text in the page    Testing scope feedback text
+    When the user clicks the button/link    jQuery=button:contains(1. Business opportunity)
+    Then the user should see the text in the page    Testing Business opportunity feedback text
+    When the user clicks the button/link    jQuery=button:contains(2. Potential market)
+    Then the user should see the text in the page    Testing Potential market feedback text
+    When the user clicks the button/link    jQuery=button:contains(3. Project exploitation)
+    Then the user should see the text in the page    Testing Project exploitation feedback text
+    When the user clicks the button/link    jQuery=button:contains(4. Economic benefit)
+    Then the user should see the text in the page    Testing Economic benefit feedback text
+    When the user clicks the button/link    jQuery=button:contains(5. Technical approach)
+    Then the user should see the text in the page    Testing Technical approach feedback text
+    When the user clicks the button/link    jQuery=button:contains(6. Innovation)
+    Then the user should see the text in the page    Testing Innovation feedback text
+    When the user clicks the button/link    jQuery=button:contains(7. Risks)
+    Then the user should see the text in the page    Testing Risks feedback text
+    When the user clicks the button/link    jQuery=button:contains(8. Project team)
+    Then the user should see the text in the page    Testing Project team feedback text
+    When the user clicks the button/link    jQuery=button:contains(9. Funding)
+    Then the user should see the text in the page    Testing Funding feedback text
+    When the user clicks the button/link    jQuery=button:contains(10. Adding value)
+    Then the user should see the text in the page    Testing Adding value feedback text
+    When the user clicks the button/link    jQuery=button:contains(Scope)
+    Then the user should see the text in the page    Testing scope feedback text
+
+Summary:Assessor can return to each question
+    [Documentation]    INFUND-4648
+    And the user should see the element    jQuery=#collapsible-0 a:contains(Return to this question in the application)
+    And the user should see the element    jQuery=#collapsible-1 a:contains(Return to this question in the application)
+    And the user should see the element    jQuery=#collapsible-2 a:contains(Return to this question in the application)
+    And the user should see the element    jQuery=#collapsible-3 a:contains(Return to this question in the application)
+    And the user should see the element    jQuery=#collapsible-4 a:contains(Return to this question in the application)
+    And the user should see the element    jQuery=#collapsible-5 a:contains(Return to this question in the application)
+    And the user should see the element    jQuery=#collapsible-6 a:contains(Return to this question in the application)
+    And the user should see the element    jQuery=#collapsible-7 a:contains(Return to this question in the application)
+    And the user should see the element    jQuery=#collapsible-8 a:contains(Return to this question in the application)
+    And the user should see the element    jQuery=#collapsible-9 a:contains(Return to this question in the application)
+    And the user should see the element    jQuery=#collapsible-10 a:contains(Return to this question in the application)
+    When the user clicks the button/link    jQuery=#collapsible-1 a:contains(Return to this question in the application)
+    Then the user should see the text in the page    What is the business opportunity that your project addresses?
+    And the user goes back to the previous page
+    When the user clicks the button/link    jQuery=#collapsible-10 a:contains(Return to this question in the application)
+    Then the user should see the text in the page    How does financial support from Innovate UK and its funding partners add value?
+    And the user goes back to the previous page
 
 Summary:Assessor should be able to re-edit before submit
     [Documentation]    INFUND-3400
