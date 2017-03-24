@@ -8,8 +8,7 @@ Resource          ../../../resources/defaultResources.robot
 *** Test Cases ***
 Invite the same partner under the lead organisation
     [Documentation]    INFUND-3262
-    [Tags]  Pending
-    # TODO INFUND-8878
+    [Tags]
     When Create a new application    Partner one    partner@test.com    TEST ONE
     And Create a new application    Partner two    partner@test.com    TEST TWO
     Then the new application should show the correct partners

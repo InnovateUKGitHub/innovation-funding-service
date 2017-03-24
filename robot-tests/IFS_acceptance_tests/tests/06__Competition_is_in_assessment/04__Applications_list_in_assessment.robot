@@ -43,7 +43,7 @@ Submitted applications
     And the user should see the text in the page    Total project cost (£)
     And the user should see the text in the page    Duration (months)
     And the user should see the text in the page    Filter applications
-    And the user should see the element    jQuery=td:contains("Intelligent Building") ~ td:nth-child(4):contains("Early Stage Manufacturing")
+    And the user should see the element    jQuery=td:contains("Intelligent Building") ~ td:nth-child(4):contains("Forming technologies")
     And the user should see the element    jQuery=.pagination-part-title:contains(21 to 40)
 
 Submitted applications Key Statistics

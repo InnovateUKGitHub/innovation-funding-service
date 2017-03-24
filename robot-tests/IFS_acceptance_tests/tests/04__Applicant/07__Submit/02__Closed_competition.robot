@@ -29,7 +29,7 @@ Submit button should be disabled
     [Documentation]    INFUND-2742, INFUND-2312, INFUND-3175
     [Tags]
     When the user navigates to the page    ${SERVER}/application/${IN_ASSESSMENT_APPLICATION_1}/summary
-    Then the user should see the text in the page    This competition has already closed, you are no longer able to submit your application
+    Then the user should see the text in the page    Registration is now closed, you are no longer able to submit your application.
     And the user should not see the element    jQuery=.button:contains("Submit application")
     And the user should not see the element    jQuery=.button:contains("Review and submit")
 
