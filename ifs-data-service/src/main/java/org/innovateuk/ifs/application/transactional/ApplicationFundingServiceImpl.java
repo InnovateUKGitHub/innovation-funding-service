@@ -16,12 +16,14 @@ import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.util.EntityLookupCallbacks;
+import org.innovateuk.ifs.validator.ApplicationFundingDecisionValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.application.constant.ApplicationStatusConstants.*;
 import static org.innovateuk.ifs.application.resource.FundingDecision.FUNDED;
@@ -48,6 +50,9 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
     @Autowired
     private ApplicationService applicationService;
 
+    @Autowired
+    private ApplicationFundingDecisionValidator applicationFundingDecisionValidator;
+
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
@@ -60,9 +65,9 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<Void> saveFundingDecisionData(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
         return getCompetition(competitionId).andOnSuccess(competition -> {
-            List<Application> applicationsForCompetition = findAllApplicationsForCompetition(competitionId);
+            List<Application> allowedApplicationForCompetition = findAllowedApplicationsForCompetition(competitionId);
 
-            return saveFundingDecisionData(applicationsForCompetition, applicationFundingDecisions);
+            return saveFundingDecisionData(allowedApplicationForCompetition, applicationFundingDecisions);
         });
     }
 
@@ -106,12 +111,14 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
         return (List) applicationRepository.findAll(applicationIds);
     }
 
-    private List<Application> findSubmittedApplicationsForCompetition(Long competitionId) {
-        return applicationRepository.findByCompetitionIdAndApplicationStatusId(competitionId, SUBMITTED.getId());
-    }
+    private List<Application> findAllowedApplicationsForCompetition(Long competitionId) {
+        List<Application> applicationsInCompetition = applicationRepository.findByCompetitionId(competitionId);
 
-    private List<Application> findAllApplicationsForCompetition(Long competitionId) {
-        return applicationRepository.findByCompetitionId(competitionId);
+        List<Application> allowedApplications = applicationsInCompetition.stream()
+                .filter(application -> applicationFundingDecisionValidator.isValid(application))
+                .collect(Collectors.toList());
+
+        return allowedApplications;
     }
 
     private ServiceResult<Void> saveFundingDecisionData(List<Application> applicationsForCompetition, Map<Long, FundingDecision> applicationDecisions) {

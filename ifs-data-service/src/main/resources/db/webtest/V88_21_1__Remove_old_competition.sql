@@ -7,6 +7,7 @@ delete from guidance_row where id in (select gr.id from (select g.id from guidan
 delete from form_input where id in (select fit.id from (select fi.id from form_input fi join question q on q.id = fi.question_id where q.competition_id in (1,2,3)) as fit);
 
 delete from question where competition_id in (1,2,3);
+delete from public_content where competition_id in (1);
 
 SET foreign_key_checks = 0;
 delete from section where competition_id in (1,2,3);

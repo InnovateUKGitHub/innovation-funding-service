@@ -389,12 +389,12 @@ Non lead partner nominates finance contact
     And the user selects the radio button    financeContact    financeContact1
     And the user clicks the button/link    jQuery=.button:contains("Save finance contact")
     Then the user should be redirected to the correct page    ${project_in_setup_page}
-    And the matching status checkbox is updated differently    project-details-finance    2    Yes
+    And the matching status checkbox is updated differently    project-details-finance    3    Yes
     And the user should see the element    link=Ludlow
     When the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element   jQuery=li.complete:nth-of-type(2)
     When the user clicks the button/link    link=status of my partners
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(1)
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(1)
 
     # Please note that the following Test Cases regarding story INFUND-7090, have to remain in Project Details suite
     # and not in Bank Details. Because for this scenario there are testing data for project 4.
@@ -408,15 +408,15 @@ Non lead partner not eligible for funding
     When the user navigates to the page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}
     And the user clicks the button/link    link=status of my partners
     Then the user navigates to the page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/team-status
-    And the user should see the element    jQuery=#table-project-status tr:nth-child(2) td.status.na:nth-child(4)
+    And the user should see the element    jQuery=#table-project-status tr:nth-child(3) td.status.na:nth-child(4)
 
 Other partners can see who needs to provide Bank Details
     [Documentation]    INFUND-7090
     [Tags]
     [Setup]    log in as a different user   &{lead_applicant_credentials}
     Given the user navigates to the page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/team-status
-    Then the user should see the element    jQuery=#table-project-status tr:nth-child(2) td.status.na:nth-child(4)
-    And the user should see the element     jQuery=#table-project-status tr:nth-child(3) td:nth-child(4):contains("-")
+    Then the user should see the element    jQuery=#table-project-status tr:nth-child(3) td.status.na:nth-child(4)
+    And the user should see the element     jQuery=#table-project-status tr:nth-child(2) td:nth-child(4):contains("-")
 
 Option to invite a finance contact
     [Documentation]    INFUND-3579
@@ -534,7 +534,7 @@ Academic Partner nominates Finance contact
     [Setup]    Log in as a different user   &{collaborator2_credentials}
     Then the user navigates to the page     ${project_in_setup_page}
     When the user clicks the button/link    link=status of my partners
-    Then the user should not see the element    jQuery=#table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(1)
+    Then the user should not see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(1)
     When the user clicks the button/link    link=Project setup status
     Then the user should not see the element    jQuery=li.require-action:nth-child(4)
     When the user clicks the button/link    link=Project details
@@ -550,7 +550,7 @@ Academic Partner nominates Finance contact
     Then the user should see the element    jQuery=li.complete:nth-of-type(2)
     And the user should see the element    jQuery=li.require-action:nth-child(4)
     When the user clicks the button/link    link=status of my partners
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(1)
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(1)
 
 Project details submission flow
     [Documentation]    INFUND-3381, INFUND-2621, INFUND-5827
@@ -722,8 +722,8 @@ the user can see all project details completed
 
 the user can see all finance contacts completed
     the user should see the element  jQuery=#project-details-finance tr:nth-child(1) td:nth-child(2):contains("Elmo Chenault")
-    the user should see the element  jQuery=#project-details-finance tr:nth-child(2) td:nth-child(2):contains("Jessica Doe")
-    the user should see the element  jQuery=#project-details-finance tr:nth-child(3) td:nth-child(2):contains("Pete Tom")
+    the user should see the element  jQuery=#project-details-finance tr:nth-child(2) td:nth-child(2):contains("Pete Tom")
+    the user should see the element  jQuery=#project-details-finance tr:nth-child(3) td:nth-child(2):contains("Jessica Doe")
 
 Custom suite setup
     delete the emails from both test mailboxes

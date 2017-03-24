@@ -1,8 +1,7 @@
 package org.innovateuk.ifs.assessment.model;
 
-import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.application.resource.QuestionResource;
-import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
@@ -14,21 +13,18 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputService;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
 
-import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_APPLICATION_IN_SCOPE;
-import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_SCORE;
-import static org.innovateuk.ifs.form.resource.FormInputType.TEXTAREA;
-import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static java.lang.String.format;
 import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.groupingBy;
+import static org.innovateuk.ifs.form.resource.FormInputType.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
  * Build the model for the Assessment Application Summary view.
@@ -50,9 +46,7 @@ public class AssessmentSummaryModelPopulator {
 
     public AssessmentSummaryViewModel populateModel(AssessmentResource assessment) {
         CompetitionResource competition = getCompetition(assessment.getCompetition());
-
         List<AssessmentSummaryQuestionViewModel> questions = getQuestions(assessment.getId(), assessment.getCompetition());
-        List<AssessmentSummaryQuestionViewModel> questionsForScoreOverview = getQuestionsForScoreOverview(questions);
 
         int totalScoreGiven = getTotalScoreGiven(questions);
         int totalScorePossible = getTotalScorePossible(questions);
@@ -60,7 +54,7 @@ public class AssessmentSummaryModelPopulator {
 
         return new AssessmentSummaryViewModel(assessment.getId(), assessment.getApplication(),
                 assessment.getApplicationName(), competition.getAssessmentDaysLeft(),
-                competition.getAssessmentDaysLeftPercentage(), questionsForScoreOverview, questions, totalScoreGiven, totalScorePossible, totalScorePercentage);
+                competition.getAssessmentDaysLeftPercentage(), questions, totalScoreGiven, totalScorePossible, totalScorePercentage);
     }
 
     private CompetitionResource getCompetition(Long competitionId) {
@@ -85,10 +79,6 @@ public class AssessmentSummaryModelPopulator {
             boolean complete = isComplete(formInputsForQuestion, responsesForQuestion);
             return new AssessmentSummaryQuestionViewModel(question.getId(), displayLabel, displayLabelShort, scoreFormInputExists, scoreGiven, scorePossible, feedback, applicationInScope, complete);
         });
-    }
-
-    private List<AssessmentSummaryQuestionViewModel> getQuestionsForScoreOverview(List<AssessmentSummaryQuestionViewModel> questions) {
-        return simpleFilter(questions, AssessmentSummaryQuestionViewModel::isScoreFormInputExists);
     }
 
     private Map<Long, List<AssessorFormInputResponseResource>> getAssessorResponses(Long assessmentId) {

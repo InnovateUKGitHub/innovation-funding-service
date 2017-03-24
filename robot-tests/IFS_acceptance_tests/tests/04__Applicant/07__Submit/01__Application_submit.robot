@@ -62,7 +62,7 @@ Submit flow (complete application)
     ...    INFUND-4010
     [Tags]    HappyPath    Email    SmokeTest
     [Setup]    Delete the emails from both test mailboxes
-    Given log in as a different user    ${submit_test_email}    Passw0rd123
+    Given log in as a different user    ${submit_test_email}  ${correct_password}
     And the user navigates to the page    ${SERVER}
     And the user clicks the button/link    link=${application_name}
     When the user clicks the button/link    link=Review and submit
@@ -72,7 +72,7 @@ Submit flow (complete application)
     And the applicant clicks Yes in the submit modal
     Then the user should be redirected to the correct page    submit
     And the user should see the text in the page    Application submitted
-    And the user should see the text in the page    you will be notified of our decision by December
+    And the user should see the text in the page    you will be notified of our decision by
 
 The applicant should get a confirmation email
     [Documentation]    INFUND-1887
