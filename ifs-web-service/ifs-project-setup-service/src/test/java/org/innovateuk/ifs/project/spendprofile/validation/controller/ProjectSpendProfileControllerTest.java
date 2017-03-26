@@ -639,12 +639,14 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         partnersSpendProfileProgress.put(partner, false);
 
         Map<String, Boolean> editablePartners = new HashMap<>();
+        final OrganisationResource leadOrganisation = partnerOrganisations.get(0);
         editablePartners.put(partner, editable);
 
         return new ProjectSpendProfileProjectSummaryViewModel(projectResource.getId(),
                 projectResource.getApplication(), projectResource.getName(),
                 partnersSpendProfileProgress,
                 partnerOrganisations,
+                leadOrganisation,
                 projectResource.getSpendProfileSubmittedDate() != null,
                 editablePartners,
                 false);

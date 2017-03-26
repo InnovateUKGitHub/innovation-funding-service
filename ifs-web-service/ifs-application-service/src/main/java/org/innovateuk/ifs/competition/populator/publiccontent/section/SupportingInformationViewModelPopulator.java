@@ -3,7 +3,7 @@ package org.innovateuk.ifs.competition.populator.publiccontent.section;
 
 import org.innovateuk.ifs.competition.populator.publiccontent.AbstractPublicContentGroupViewModelPopulator;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
-import org.innovateuk.ifs.competition.viewmodel.publiccontent.section.ScopeViewModel;
+import org.innovateuk.ifs.competition.viewmodel.publiccontent.section.SupportingInformationViewModel;
 import org.springframework.stereotype.Service;
 
 /**
@@ -11,11 +11,11 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
-public class SupportingInformationViewModelPopulator extends AbstractPublicContentGroupViewModelPopulator<ScopeViewModel> {
+public class SupportingInformationViewModelPopulator extends AbstractPublicContentGroupViewModelPopulator<SupportingInformationViewModel> {
 
     @Override
-    protected ScopeViewModel createInitial() {
-        return new ScopeViewModel();
+    protected SupportingInformationViewModel createInitial() {
+        return new SupportingInformationViewModel();
     }
 
     @Override

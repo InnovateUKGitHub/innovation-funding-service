@@ -414,7 +414,12 @@
         <p>This will remove all collaborators, and they will no longer be able to access this application. It will also delete the organisations financial details, and any assigned questions will be returned to you as the lead applicant.</p>
         <hr />
         <div>
-            <button class="button" name="remove_person" value="remove_person" type="submit">Delete organisation</button>
+            <button class="button large"
+                    name="deleteLastApplicant"
+                    type="submit"
+                    th:value="${model.applicants.get(0).applicationInviteId}">
+                Delete organisation
+            </button>
             <button type="button" class="js-close buttonlink">Cancel</button>
         </div>
     </div>

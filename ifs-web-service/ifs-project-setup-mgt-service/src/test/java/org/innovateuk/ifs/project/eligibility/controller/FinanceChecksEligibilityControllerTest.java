@@ -272,7 +272,7 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
         assertTrue(form.isConfirmEligibilityChecked());
         assertEquals(eligibility.getEligibilityRagStatus(), form.getEligibilityRagStatus());
 
-        assertFalse(viewModel.isReadOnly());
+        assertFalse(viewModel.isExternalView());
         assertEquals(expectedIsUsingJesFinances, viewModel.isUsingJesFinances());
         if (null != viewModel.getJesFileDetails()) {
             assertEquals(expectedJesFilename, viewModel.getJesFileDetails().getFilename());

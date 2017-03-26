@@ -11,6 +11,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.monitoringofficer.form.ProjectMonitoringOfficerForm;
 import org.innovateuk.ifs.monitoringofficer.viewmodel.ProjectMonitoringOfficerViewModel;
+import org.innovateuk.ifs.util.PrioritySorting;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -144,7 +145,6 @@ public class ProjectMonitoringOfficerController {
     }
 
     private String doViewMonitoringOfficer(Model model, Long projectId, ProjectMonitoringOfficerForm form, boolean currentlyEditing, boolean existingMonitoringOfficer) {
-
         boolean editMode = currentlyEditing || !existingMonitoringOfficer;
 
         ProjectMonitoringOfficerViewModel viewModel = populateMonitoringOfficerViewModel(projectId, editMode, existingMonitoringOfficer);
@@ -160,12 +160,16 @@ public class ProjectMonitoringOfficerController {
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         CompetitionSummaryResource competitionSummary = applicationSummaryService.getCompetitionSummaryByCompetitionId(application.getCompetition());
         String projectManagerName = getProjectManagerName(projectResource);
-        List<String> partnerOrganisationNames = getPartnerOrganisationNames(projectId);
+
+        final OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
+        final List<String> partnerOrganisationNames = simpleMap(new PrioritySorting<>(projectService.getPartnerOrganisationsForProject(projectId),
+                        leadOrganisation, OrganisationResource::getName).unwrap(), OrganisationResource::getName);
+
         String innovationAreas = competition.getInnovationAreaNames().stream().collect(joining(", "));
 
         return new ProjectMonitoringOfficerViewModel(projectId, projectResource.getName(),
                 innovationAreas, projectResource.getAddress(), projectResource.getTargetStartDate(), projectManagerName,
-                partnerOrganisationNames, competitionSummary, existingMonitoringOfficer, editMode);
+                partnerOrganisationNames, leadOrganisation.getName(), competitionSummary, existingMonitoringOfficer, editMode);
     }
 
     /**
@@ -179,10 +183,5 @@ public class ProjectMonitoringOfficerController {
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(project.getId());
         Optional<ProjectUserResource> projectManager = simpleFindFirst(projectUsers, pu -> PROJECT_MANAGER.getName().equals(pu.getRoleName()));
         return projectManager.map(ProjectUserResource::getUserName).orElse("");
-    }
-
-    private List<String> getPartnerOrganisationNames(Long projectId) {
-        List<OrganisationResource> partnerOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
-        return simpleMap(partnerOrganisations, OrganisationResource::getName);
     }
 }
