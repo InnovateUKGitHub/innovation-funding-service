@@ -5,6 +5,8 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.invite.builder.InviteResourceBuilder;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
+import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +15,7 @@ import java.util.List;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
+import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
@@ -24,6 +27,7 @@ import static org.mockito.Mockito.when;
 public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTest<InviteOrganisationPermissionRules> {
 
     private ApplicationResource applicationResource;
+    private OrganisationResource organisationResource;
     private UserResource leadApplicant;
     private UserResource collaborator;
     private UserResource otherApplicant;
@@ -36,19 +40,26 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
     @Before
     public void setUp() throws Exception {
         applicationResource = newApplicationResource().build();
+        organisationResource = newOrganisationResource().build();
 
         leadApplicant = newUserResource().build();
         collaborator = newUserResource().build();
         otherApplicant = newUserResource().build();
 
-        when(processRoleRepositoryMock.findByUserIdAndApplicationId(leadApplicant.getId(), applicationResource.getId())).thenReturn(newProcessRole().withRole(getRole(LEADAPPLICANT)).build());
-        when(processRoleRepositoryMock.findByUserIdAndApplicationId(collaborator.getId(), applicationResource.getId())).thenReturn(newProcessRole().withRole(getRole(COLLABORATOR)).build());
+        Role collaboratorRole = getRole(COLLABORATOR);
+
+        when(processRoleRepositoryMock.findByUserIdAndApplicationId(leadApplicant.getId(), applicationResource.getId()))
+                .thenReturn(newProcessRole().withRole(getRole(LEADAPPLICANT)).build());
+        when(processRoleRepositoryMock.findByUserIdAndApplicationId(collaborator.getId(), applicationResource.getId()))
+                .thenReturn(newProcessRole().withRole(getRole(COLLABORATOR)).build());
+        when(processRoleRepositoryMock.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(collaborator.getId(),
+                collaboratorRole.getId(), applicationResource.getId(), organisationResource.getId())).thenReturn(newProcessRole().withRole(getRole(COLLABORATOR)).build());
     }
 
     @Test
     public void testLeadApplicantCanInviteAnOrganisationToTheApplication() throws Exception {
-        final List<ApplicationInviteResource> inviteResource = InviteResourceBuilder.newInviteResource().withApplication(applicationResource.getId()).build(5);
-        final InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withInviteResources(inviteResource).build();
+        List<ApplicationInviteResource> inviteResource = InviteResourceBuilder.newInviteResource().withApplication(applicationResource.getId()).build(5);
+        InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withInviteResources(inviteResource).build();
 
         assertTrue(rules.leadApplicantCanInviteAnOrganisationToTheApplication(inviteOrganisationResource, leadApplicant));
         assertFalse(rules.leadApplicantCanInviteAnOrganisationToTheApplication(inviteOrganisationResource, collaborator));
@@ -56,29 +67,41 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
     }
 
     @Test
-    public void testLeadApplicantCanViewOrganisationInviteToTheApplication() throws Exception {
-        final List<ApplicationInviteResource> inviteResource = InviteResourceBuilder.newInviteResource().withApplication(applicationResource.getId()).build(5);
-        final InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withInviteResources(inviteResource).build();
+    public void testConsortiumCanViewAnyInviteOrganisation() throws Exception {
+        List<ApplicationInviteResource> inviteResource = InviteResourceBuilder.newInviteResource().withApplication(applicationResource.getId()).build(5);
+        InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withInviteResources(inviteResource).build();
 
-        assertTrue(rules.leadApplicantCanViewOrganisationInviteToTheApplication(inviteOrganisationResource, leadApplicant));
-        assertFalse(rules.leadApplicantCanViewOrganisationInviteToTheApplication(inviteOrganisationResource, collaborator));
-        assertFalse(rules.leadApplicantCanViewOrganisationInviteToTheApplication(inviteOrganisationResource, otherApplicant));
+        assertTrue(rules.consortiumCanViewAnyInviteOrganisation(inviteOrganisationResource, leadApplicant));
+        assertTrue(rules.consortiumCanViewAnyInviteOrganisation(inviteOrganisationResource, collaborator));
+        assertFalse(rules.consortiumCanViewAnyInviteOrganisation(inviteOrganisationResource, otherApplicant));
     }
 
     @Test
-    public void testCollaboratorCanViewOrganisationInviteToTheApplication() throws Exception {
-        final List<ApplicationInviteResource> inviteResource = InviteResourceBuilder.newInviteResource().withApplication(applicationResource.getId()).build(5);
-        final InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withInviteResources(inviteResource).build();
+    public void testConsortiumCanViewAnInviteOrganisationToTheApplication() throws Exception {
+        List<ApplicationInviteResource> inviteResource = InviteResourceBuilder.newInviteResource().withApplication(applicationResource.getId()).build(5);
+        InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withInviteResources(inviteResource).build();
 
-        assertTrue(rules.collaboratorCanViewOrganisationInviteToTheApplication(inviteOrganisationResource, collaborator));
-        assertFalse(rules.collaboratorCanViewOrganisationInviteToTheApplication(inviteOrganisationResource, leadApplicant));
-        assertFalse(rules.collaboratorCanViewOrganisationInviteToTheApplication(inviteOrganisationResource, otherApplicant));
+        assertTrue(rules.consortiumCanViewAnInviteOrganisation(inviteOrganisationResource, leadApplicant));
+        assertFalse(rules.consortiumCanViewAnInviteOrganisation(inviteOrganisationResource, collaborator));
+        assertFalse(rules.consortiumCanViewAnInviteOrganisation(inviteOrganisationResource, otherApplicant));
+    }
+
+    @Test
+    public void testConsortiumCanViewAnInviteOrganisationToTheApplicationForAConfirmedOrganisation() throws Exception {
+        List<ApplicationInviteResource> inviteResource = InviteResourceBuilder.newInviteResource().withApplication(applicationResource.getId()).build(5);
+        InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource()
+                .withOrganisation(organisationResource.getId())
+                .withInviteResources(inviteResource).build();
+
+        assertTrue(rules.consortiumCanViewAnInviteOrganisation(inviteOrganisationResource, leadApplicant));
+        assertTrue(rules.consortiumCanViewAnInviteOrganisation(inviteOrganisationResource, collaborator));
+        assertFalse(rules.consortiumCanViewAnInviteOrganisation(inviteOrganisationResource, otherApplicant));
     }
 
     @Test
     public void testLeadApplicantCanSaveInviteAnOrganisationToTheApplication() throws Exception {
-        final List<ApplicationInviteResource> inviteResource = InviteResourceBuilder.newInviteResource().withApplication(applicationResource.getId()).build(5);
-        final InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withInviteResources(inviteResource).build();
+        List<ApplicationInviteResource> inviteResource = InviteResourceBuilder.newInviteResource().withApplication(applicationResource.getId()).build(5);
+        InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withInviteResources(inviteResource).build();
 
         assertTrue(rules.leadApplicantCanSaveInviteAnOrganisationToTheApplication(inviteOrganisationResource, leadApplicant));
         assertFalse(rules.leadApplicantCanSaveInviteAnOrganisationToTheApplication(inviteOrganisationResource, collaborator));

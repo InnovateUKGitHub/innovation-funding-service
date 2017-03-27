@@ -235,7 +235,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     public ServiceResult<List<InviteOrganisationResource>> getInvitesByApplication(Long applicationId) {
         return serviceSuccess(
                 simpleMap(
-                        inviteOrganisationRepository.findByInvitesApplicationId(applicationId),
+                        inviteOrganisationRepository.findDistinctByInvitesApplicationId(applicationId),
                         inviteOrganisationMapper::mapToResource
                 )
         );
@@ -404,15 +404,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         if (newInviteOrganisation == null && inviteResource.getInviteOrganisation() != null) {
             newInviteOrganisation = inviteOrganisationRepository.findOne(inviteResource.getInviteOrganisation());
         }
-        ApplicationInvite invite = new ApplicationInvite(inviteResource.getName(), inviteResource.getEmail(), application, newInviteOrganisation, null, InviteStatus.CREATED);
-        if (newInviteOrganisation.getOrganisation() != null) {
-            List<InviteOrganisation> existingOrgInvite = inviteOrganisationRepository.findByOrganisationId(newInviteOrganisation.getOrganisation().getId());
-            if (!existingOrgInvite.isEmpty()) {
-                invite.setInviteOrganisation(existingOrgInvite.get(0));
-            }
-        }
-
-        return invite;
+        return new ApplicationInvite(inviteResource.getName(), inviteResource.getEmail(), application, newInviteOrganisation, null, InviteStatus.CREATED);
     }
 
     private boolean inviteOrganisationResourceIsValid(InviteOrganisationResource inviteOrganisationResource) {
