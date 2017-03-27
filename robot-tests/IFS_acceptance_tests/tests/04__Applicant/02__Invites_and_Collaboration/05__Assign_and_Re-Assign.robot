@@ -253,7 +253,7 @@ Lead applicant should be able to remove the partner organisation
     [Setup]    log in as a different user    ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
     # TODO Pending due to INFUND-8590
     Given the user clicks the button/link    link= Assign test
-    And the user clicks the button/link    link=view and add participants to your application
+    And the user clicks the button/link    link=view team members and add collaborators
     And the user clicks the button/link    jQuery=.table-overflow:contains("Dennis") ~ p a
     When the user clicks the button/link    jQuery=button:contains("Delete organisation"):first
     And the user clicks the button/link    jQuery=.modal-delete-organisation button:contains("Delete organisation")

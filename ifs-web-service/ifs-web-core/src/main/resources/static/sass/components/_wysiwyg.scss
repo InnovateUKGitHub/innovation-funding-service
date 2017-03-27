@@ -68,6 +68,9 @@ button.ui-state-active .fa-link {
         font-style:italic;
         font-weight:inherit;
     }
+    ol, ul {
+        @extend .list;
+    }
     ol {
         @extend .list-number;
     }
@@ -77,6 +80,9 @@ button.ui-state-active .fa-link {
     li p {
         padding: 0;
         margin: 0;
+    }
+    > div {
+      @extend p;
     }
 }
 .textarea-wrapped [contenteditable="true"] {
