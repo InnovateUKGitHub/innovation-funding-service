@@ -23,20 +23,17 @@ public class InviteOrganisationControllerDocumentation extends BaseControllerMoc
     }
 
     @Test
-    public void getByIdWithInvitesForApplication() throws Exception {
+    public void getById() throws Exception {
         InviteOrganisationResource inviteOrganisationResource = inviteOrganisationResourceBuilder.build();
-        long applicationId = 1L;
 
-        when(inviteOrganisationServiceMock.getByIdWithInvitesForApplication(inviteOrganisationResource.getId(), applicationId))
+        when(inviteOrganisationServiceMock.getById(inviteOrganisationResource.getId()))
                 .thenReturn(serviceSuccess(inviteOrganisationResource));
 
-        mockMvc.perform(get("/inviteorganisation/{id}/application/{applicationId}",
-                inviteOrganisationResource.getId(), applicationId))
+        mockMvc.perform(get("/inviteorganisation/{id}", inviteOrganisationResource.getId()))
                 .andExpect(status().isOk())
                 .andDo(document("invite-organisation/{method-name}",
                         pathParameters(
-                                parameterWithName("id").description("Id of the invite organisation that is being requested"),
-                                parameterWithName("applicationId").description("Id of the application that invites are being requested for")
+                                parameterWithName("id").description("Id of the invite organisation that is being requested")
                         ),
                         responseFields(inviteOrganisationFields)
                 ));

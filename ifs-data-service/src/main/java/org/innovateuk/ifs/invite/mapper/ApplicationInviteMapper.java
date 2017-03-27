@@ -41,6 +41,12 @@ public abstract class ApplicationInviteMapper extends BaseMapper<ApplicationInvi
 
     public abstract List<ApplicationInviteResource> mapToResource(List<ApplicationInvite> domain);
 
+    @Mappings({
+            @Mapping(source="application", target="target")
+    })
+    @Override
+    public abstract ApplicationInvite mapToDomain(ApplicationInviteResource resource);
+
     public Long mapInviteToId(ApplicationInvite object) {
         if (object == null) {
             return null;
