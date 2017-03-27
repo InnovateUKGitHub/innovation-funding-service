@@ -1,5 +1,5 @@
 update question
-set description='Please tell us if you have applied for or received any other public sector funding for this project. Any other funding received will be deducted from the total value of funding you are claiming for this project.'
+set description='Please tell us if you have applied for, or received any other public sector funding for this project. Any other funding received will be deducted from the total value of funding you are claiming for this project.'
 where name='Other funding';
 
 update form_input f
