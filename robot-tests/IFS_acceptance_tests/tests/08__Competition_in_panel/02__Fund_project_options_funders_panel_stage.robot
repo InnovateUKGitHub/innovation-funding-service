@@ -43,16 +43,7 @@ Filter on application number
     [Documentation]    INFUND-8065
     [Tags]
     Given the user enters text to a text field     id=stringFilter    ${FUNDERS_PANEL_APPLICATION_1_NUMBER}
-    When the user clicks the button/link    jQuery=button:contains("Filter")
-    Then the user should see the element    jQuery=td:nth-child(3):contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
-    And the user should not see the element    jQuery=td:nth-child(3):contains("${FUNDERS_PANEL_APPLICATION_2_TITLE}")
-    And the user clicks the button/link    jQuery=.button:contains("Clear all filters")
-    And the user should see the element    jQuery=td:nth-child(3):contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
-
-Filter on Funding decision
-    [Documentation]    INFUND-8065
-    [Tags]
-    Given the user selects the option from the drop-down menu    Unsuccessful    id=fundingFilter
+    And the user selects the option from the drop-down menu    Unsuccessful    id=fundingFilter
     When the user clicks the button/link    jQuery=button:contains("Filter")
     Then the user should see the element    jQuery=td:nth-child(3):contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
     And the user should not see the element    jQuery=td:nth-child(3):contains("${FUNDERS_PANEL_APPLICATION_2_TITLE}")
