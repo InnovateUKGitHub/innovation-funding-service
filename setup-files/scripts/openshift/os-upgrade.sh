@@ -82,7 +82,7 @@ tailorAppInstance
 useContainerRegistry
 upgradeServices
 
-if [ ${bamboo_openshift_force_reload} == "true" ]
+if [[ ${bamboo_openshift_force_reload} == "true" ]]
 then
     forceReload
 fi
