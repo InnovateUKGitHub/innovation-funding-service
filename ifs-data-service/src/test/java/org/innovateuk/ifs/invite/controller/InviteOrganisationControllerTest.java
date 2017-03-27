@@ -20,20 +20,17 @@ public class InviteOrganisationControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
-    public void getByIdWithInvitesForApplication() throws Exception {
-        long applicationId = 1L;
-
+    public void getById() throws Exception {
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().build();
 
-        when(inviteOrganisationServiceMock.getByIdWithInvitesForApplication(inviteOrganisationResource.getId(), applicationId))
+        when(inviteOrganisationServiceMock.getById(inviteOrganisationResource.getId()))
                 .thenReturn(serviceSuccess(inviteOrganisationResource));
 
-        mockMvc.perform(get("/inviteorganisation/{id}/application/{applicationId}",
-                inviteOrganisationResource.getId(), applicationId))
+        mockMvc.perform(get("/inviteorganisation/{id}", inviteOrganisationResource.getId()))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(inviteOrganisationResource)));
 
-        verify(inviteOrganisationServiceMock, only()).getByIdWithInvitesForApplication(inviteOrganisationResource.getId(), applicationId);
+        verify(inviteOrganisationServiceMock, only()).getById(inviteOrganisationResource.getId());
     }
 
     @Test

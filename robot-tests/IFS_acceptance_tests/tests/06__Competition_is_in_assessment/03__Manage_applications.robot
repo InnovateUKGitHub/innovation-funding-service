@@ -50,7 +50,7 @@ View application progress page
     Given the user clicks the button/link    jQuery=tr:nth-child(9) a:contains(View progress)
     Then The user should see the text in the page    29: Living with Augmented Reality
     And the user should see the text in the page    Tripplezap (Lead)
-    And the user should see the element             jQuery=h3:contains("Innovation area") ~ span:contains("Advanced Materials")
+    And the user should see the element             jQuery=h3:contains("Innovation area") ~ span:contains("Nanotechnology / nanomaterials")
     And the user should see the text in the page    No assessors have been assigned to this application.
     And the user should see the text in the page    No assessors have rejected this application.
     And the user should see the text in the page    No assessors were previously assigned to this application.
@@ -60,7 +60,7 @@ Review the application
     [Tags]
     When the user clicks the button/link    link=Review application
     Then the user should see the text in the page    Application overview
-    And the user should see the element    jQuery=dt:contains("Innovation area") + dd:contains("Advanced Materials")
+    And the user should see the element    jQuery=dt:contains("Innovation area") + dd:contains("Nanotechnology / nanomaterials")
     [Teardown]    The user goes back to the previous page
 
 View the available assessors

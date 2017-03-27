@@ -23,11 +23,6 @@ public class InviteOrganisationRestServiceImpl extends BaseRestService implement
     }
 
     @Override
-    public RestResult<InviteOrganisationResource> getByIdWithInvitesForApplication(long id, long applicationId) {
-        return getWithRestResult(format("%s/%s/application/%s", restUrl, id, applicationId), InviteOrganisationResource.class);
-    }
-
-    @Override
     public RestResult<InviteOrganisationResource> getByOrganisationIdWithInvitesForApplication(long organisationId, long applicationId) {
         return getWithRestResult(format("%s/organisation/%s/application/%s", restUrl, organisationId, applicationId), InviteOrganisationResource.class);
     }

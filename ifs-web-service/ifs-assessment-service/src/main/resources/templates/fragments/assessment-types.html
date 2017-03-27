@@ -32,7 +32,7 @@
             <summary>
                 <span class="summary" th:text="${field.guidanceTitle}" />
             </summary>
-            <div class="panel">
+            <div class="panel wysiwyg-styles">
                 <p th:if="${field.guidanceAnswer}" th:text="${field.guidanceAnswer}" />
                 <table th:unless="${#lists.isEmpty(field.guidanceRows)}">
                     <tr th:each="guidance : ${field.guidanceRows}">
