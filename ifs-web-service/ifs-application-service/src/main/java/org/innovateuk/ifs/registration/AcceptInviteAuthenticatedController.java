@@ -43,7 +43,7 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
     private InviteAndUserOrganisationDifferentModelPopulator inviteAndUserOrganisationDifferentModelPopulator;
 
     private static final String INVITE_FOR_DIFFERENT_ORGANISATION_THAN_USERS_VIEW = "registration/invite-for-different-organisation-than-users";
-    private static final String INVITE_FOR_DIFFERENT_ORGANISATION_THAN_USERS_BUT_SAME_NAME_VIEW = "registration/invite-for-different-organisation-than-users";
+    private static final String INVITE_FOR_DIFFERENT_ORGANISATION_THAN_USERS_BUT_SAME_NAME_VIEW = "registration/invite-for-different-organisation-than-users-but-same-name";
 
 
     @RequestMapping(value = "/accept-invite-authenticated/confirm-invited-organisation", method = RequestMethod.GET)

@@ -12,7 +12,7 @@ Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
-${APPLICATION_DETAILS_APPLICATION8}    ${SERVER}/application/8/form/question/9
+${APPLICATION_DETAILS_APPLICATION8}    ${SERVER}/application/99/form/question/428
 
 *** Test Cases ***
 Non registered users CH route
@@ -34,7 +34,7 @@ Non registered users CH route
     And the user clicks the button/link    LINK=INNOVATE LTD
     And the user selects the checkbox    address-same
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
-    And the user clicks the button/link    jQuery=.button:contains("Save and continue")
+    And the user clicks the button/link    jQuery=.button:contains("Confirm")
     And the user enters the details and clicks the create account    ${test_mailbox_one}+${unique_email_number}@gmail.com
     And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
 
@@ -71,7 +71,7 @@ The email address does not stay in the cookie
     And the user clicks the button/link    link=INNOVATE LTD
     And the user selects the checkbox    address-same
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
-    And the user clicks the button/link    jQuery=.button:contains("Save and continue")
+    And the user clicks the button/link    jQuery=.button:contains("Confirm")
     Then the user should not see the text in the page    ${test_mailbox_one}+1@gmail.com
 
 Non registered users non CH route
@@ -87,7 +87,7 @@ Non registered users non CH route
     And the user clicks the button/link    jQuery=.button:contains("Create account")
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And the user clicks the Not on company house link
-    And the user clicks the button/link    jQuery=.button:contains("Save and continue")
+    And the user clicks the button/link    jQuery=.button:contains("Confirm")
     And the user enters the details and clicks the create account    ${test_mailbox_one}+2@gmail.com
     And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
 
@@ -118,7 +118,7 @@ Verify the name of the new application
     And the user edits the competition title
     Then the user should see the text in the page    ${test_title}
     And the progress indicator should show 0
-    And the user clicks the button/link    link=view and add participants to your application
+    And the user clicks the button/link    link=view team members and add collaborators
     And the user should see the text in the page    Application team
     And the user should see the text in the page    View and manage your participants
     And the new application should be visible in the dashboard page
@@ -134,7 +134,7 @@ Special Project Finance role
     And the user clicks the button/link    jQuery=.button:contains("Create account")
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And the user clicks the Not on company house link
-    And the user clicks the button/link    jQuery=.button:contains("Save and continue")
+    And the user clicks the button/link    jQuery=.button:contains("Confirm")
     And the user enters the details and clicks the create account    ${test_mailbox_one}+project.finance1@gmail.com
     And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
 

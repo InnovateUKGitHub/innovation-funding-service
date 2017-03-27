@@ -24,13 +24,13 @@ Labour
     [Setup]    Applicant navigates to the finances of the Robot application
     Given the user clicks the button/link    link=Your project costs
     When the Applicant fills in the Labour costs for two rows
-    Then Totals should be correct    css=#section-total-9    £ 104,348    css=[data-mirror="#section-total-9"]    £ 104,348
+    Then Totals should be correct    css=#section-total-189    £ 104,348    css=[data-mirror="#section-total-189"]    £ 104,348
     And the user clicks the button/link    name=remove_cost
     And The row should be removed    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input
     And the user reloads the page
-    Then Totals should be correct    css=#section-total-9    £ 52,174    css=[data-mirror="#section-total-9"]    £ 52,174
+    Then Totals should be correct    css=#section-total-189    £ 52,174    css=[data-mirror="#section-total-189"]    £ 52,174
     And the applicant edits the working days field
-    Then Totals should be correct    css=#section-total-9    £ 48,000    css=[data-mirror="#section-total-9"]    £ 48,000
+    Then Totals should be correct    css=#section-total-189    £ 48,000    css=[data-mirror="#section-total-189"]    £ 48,000
     [Teardown]    the user clicks the button/link    jQuery=button:contains("Labour")
 
 Overhead costs
@@ -43,27 +43,27 @@ Overhead costs
     # Check for 20% Labour costs option
     When the user clicks the button/link    jQuery=button:contains("Overhead costs")
     then the user chooses 20% overheads option
-    and admin costs total should be correct    id=section-total-10-default    £ 9,600
+    and admin costs total should be correct    id=section-total-190-default    £ 9,600
     [Teardown]    the user clicks the button/link    jQuery=button:contains("Overhead costs")
 
 Materials
     [Documentation]    INFUND-192, INFUND-736, INFUND-6390
     [Tags]
     When the Applicant fills the Materials fields
-    Then Totals should be correct    css=#section-total-11    £ 2,000    css=[data-mirror="#section-total-11"]    £ 2,000
+    Then Totals should be correct    css=#section-total-191    £ 2,000    css=[data-mirror="#section-total-191"]    £ 2,000
     And the user clicks the button/link    css=#material-costs-table tbody tr:nth-child(1) button
     And the user reloads the page
-    Then Totals should be correct    css=#section-total-11    £ 1,000    css=[data-mirror="#section-total-11"]    £ 1,000
+    Then Totals should be correct    css=#section-total-191    £ 1,000    css=[data-mirror="#section-total-191"]    £ 1,000
     [Teardown]    the user clicks the button/link    jQuery=button:contains("Materials")
 
 Capital usage
     [Documentation]    INFUND-736, INFUND-6390
     [Tags]
     When the applicant fills the 'capital usage' field
-    Then Totals should be correct    css=#section-total-12    £ 200    css=[data-mirror="#section-total-12"]    £ 200
+    Then Totals should be correct    css=#section-total-192    £ 200    css=[data-mirror="#section-total-192"]    £ 200
     And the user clicks the button/link    css=#capital_usage [data-repeatable-row]:nth-child(1) button
     And the user reloads the page
-    Then Totals should be correct    css=#section-total-12    £ 100    css=[data-mirror="#section-total-12"]    £ 100
+    Then Totals should be correct    css=#section-total-192    £ 100    css=[data-mirror="#section-total-192"]    £ 100
     And the user clicks the button/link    css=#capital_usage [data-repeatable-row]:nth-child(1) button
     [Teardown]    the user clicks the button/link    jQuery=button:contains("Capital usage")
 
@@ -71,7 +71,7 @@ Capital usage - negative total
     [Documentation]    INFUND-4879, INFUND-6390
     [Tags]
     When the applicant fills the 'capital usage' field to a negative value
-    Then Totals should be correct    css=#section-total-12    £ 0    css=[data-mirror="#section-total-12"]    £ 0
+    Then Totals should be correct    css=#section-total-192    £ 0    css=[data-mirror="#section-total-192"]    £ 0
     And the user clicks the button/link    css=#capital_usage [data-repeatable-row]:nth-child(1) button
     [Teardown]    the user clicks the button/link    jQuery=button:contains("Capital usage")
 
@@ -86,19 +86,19 @@ Travel and subsistence
     [Documentation]    INFUND-736, INFUND-6390
     [Tags]
     When the Applicant fills the Travel fields
-    Then Totals should be correct    css=#section-total-14    £ 2,000    css=[data-mirror="#section-total-14"]    £ 2,000
+    Then Totals should be correct    css=#section-total-194    £ 2,000    css=[data-mirror="#section-total-194"]    £ 2,000
     And the user clicks the button/link    css=#travel-costs-table [data-repeatable-row]:nth-child(1) button
     And the user reloads the page
-    Then Totals should be correct    css=#section-total-14    £ 1,000    css=[data-mirror="#section-total-14"]    £ 1,000
+    Then Totals should be correct    css=#section-total-194    £ 1,000    css=[data-mirror="#section-total-194"]    £ 1,000
     [Teardown]    the user clicks the button/link    jQuery=button:contains("Travel and subsistence")
 
 Other costs
     [Documentation]    INFUND-736, INFUND-6390
     [Tags]
     When the applicant adds one row for the other costs
-    Then Totals should be correct    id=section-total-15    £ 200    css=[data-mirror="#section-total-15"]    £ 200
+    Then Totals should be correct    id=section-total-195    £ 200    css=[data-mirror="#section-total-195"]    £ 200
     Then the user reloads the page
-    Then Totals should be correct    id=section-total-15    £ 200    css=[data-mirror="#section-total-15"]    £ 200
+    Then Totals should be correct    id=section-total-195    £ 200    css=[data-mirror="#section-total-195"]    £ 200
     [Teardown]    the user clicks the button/link    jQuery=button:contains("Other costs")
 
 *** Keywords ***
