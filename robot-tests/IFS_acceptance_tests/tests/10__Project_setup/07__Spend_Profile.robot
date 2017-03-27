@@ -439,8 +439,7 @@ Project Manager can view partners' spend profiles
     And the user should not see the element         jQuery=.button:contains("Mark as complete")
     And the user goes back to the previous page
     When the user should see all spend profiles as complete
-    Then the user should see the element            jQuery=a:contains("Review spend profiles")
-    # Note that the above button cannot be cought with its complete text, due to a break
+    Then the user should see the element            jQuery=.button:contains("Review and send total project spend profile")
 
 Partners are not able to see the spend profile summary page
     [Documentation]    INFUND-3766
@@ -575,7 +574,7 @@ Comp Admin is able to see Spend Profile approval page
     And the user should see the text in the page  Innovation Lead
     And the user should see the text in the page  Peter Freeman
     When the user clicks the button/link    jQuery=#content .button.button.button-warning.large:contains("Reject")
-    Then the user should see the text in the page    Before taking this action please contact the project manager
+    Then the user should see the text in the page    You should contact the Project Manager to explain why the spend profile is being returned.
     When the user clicks the button/link    jQuery=.modal-reject-profile button:contains("Cancel")
     Then the user should not see an error in the page
     When the user selects the checkbox    approvedByLeadTechnologist
@@ -621,7 +620,7 @@ Project Finance is able to Reject Spend Profile
     Given the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/spend-profile/approval
     And the user should see the element      jQuery=#content .button.button.button-warning.large:contains("Reject")
     When the user clicks the button/link     jQuery=#content .button.button.button-warning.large:contains("Reject")
-    Then the user should see the text in the page    Before taking this action please contact the project manager
+    Then the user should see the text in the page    You should contact the Project Manager to explain why the spend profile is being returned.
     When the user clicks the button/link    jQuery=.modal-reject-profile button:contains("Cancel")
     Then the user should not see an error in the page
     When the user clicks the button/link    jQuery=#content .button.button.button-warning.large:contains("Reject")
