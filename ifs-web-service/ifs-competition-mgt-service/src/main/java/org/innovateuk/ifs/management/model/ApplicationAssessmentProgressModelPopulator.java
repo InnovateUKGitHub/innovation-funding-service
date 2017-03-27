@@ -36,15 +36,6 @@ public class ApplicationAssessmentProgressModelPopulator {
     @Autowired
     private CategoryService categoryService;
 
-    private static Map<AvailableAssessorsSortFieldType, Comparator<ApplicationAvailableAssessorsRowViewModel>> sortMap =
-            Collections.unmodifiableMap(Stream.of(
-                    new AbstractMap.SimpleEntry<>(TITLE, comparing(ApplicationAvailableAssessorsRowViewModel::getName)),
-                    new AbstractMap.SimpleEntry<>(SKILLS, comparing(ApplicationAvailableAssessorsRowViewModel::getSkillAreas)),
-                    new AbstractMap.SimpleEntry<>(TOTAL_APPLICATIONS, comparing(ApplicationAvailableAssessorsRowViewModel::getTotalApplicationsCount)),
-                    new AbstractMap.SimpleEntry<>(ASSIGNED_APPLICATIONS, comparing(ApplicationAvailableAssessorsRowViewModel::getAssignedCount)),
-                    new AbstractMap.SimpleEntry<>(SUBMITTED_APPLICATIONS, comparing(ApplicationAvailableAssessorsRowViewModel::getSubmittedApplications)))
-                    .collect(Collectors.toMap((e) -> e.getKey(), (e) -> e.getValue())));
-
     public ApplicationAssessmentProgressViewModel populateModel(Long applicationId, Long filterInnovationArea, int page, String assessorOrigin) {
         ApplicationAssessmentSummaryResource applicationAssessmentSummary = applicationAssessmentSummaryRestService
                 .getApplicationAssessmentSummary(applicationId).getSuccessObjectOrThrowException();
@@ -54,6 +45,7 @@ public class ApplicationAssessmentProgressModelPopulator {
 
         return new ApplicationAssessmentProgressViewModel(applicationAssessmentSummary.getId(),
                 applicationAssessmentSummary.getName(),
+                applicationAssessmentSummary.getInnovationArea(),
                 applicationAssessmentSummary.getCompetitionId(),
                 applicationAssessmentSummary.getCompetitionName(),
                 IN_ASSESSMENT == applicationAssessmentSummary.getCompetitionStatus(),

@@ -22,4 +22,6 @@ public interface AssessorFormInputResponseRepository extends CrudRepository<Asse
     AssessorFormInputResponse findByAssessmentIdAndFormInputId(Long assessmentId, Long formInputId);
 
     List<AssessorFormInputResponse> findByAssessmentTargetId(Long applicationId);
+
+    List<AssessorFormInputResponse> findByAssessmentTargetIdAndFormInputQuestionId(long applicationId, long questionId);
 }

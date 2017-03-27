@@ -10,7 +10,7 @@
 <main id="content" th:with="baseUrl=@{${model.baseUrl}(projectId=${model.projectId},organisationId=${model.organisationId})}">
     <th:block th:insert="fragments/layout :: main-content-start" />
 
-    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${model.projectId})}"  th:remove="tag"></div>
+    <div th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${model.projectId})}" th:remove="tag"></div>
 
 
     <div class="page-title">
@@ -24,21 +24,23 @@
         </div>
     </th:block>
     <th:block th:unless="${model.isApproved()}">
-        <p>Innovate UK are reviewing your finances and may contact you with any queries. This stage can take some time. You can review your finance details using the link below.</p>
+        <p>Innovate UK are reviewing your finances and may contact you with any queries. You can review your application finance details using the link below.</p>
     </th:block>
 
     <ul>
         <li>
-            <a th:href="@{/project/{projectId}/partner-organisation/{organisationId}/finance-checks/eligibility(projectId=${model.projectId},organisationId=${model.organisationId})}" class="heading-medium">View finances</a>
+            <a th:href="@{/project/{projectId}/partner-organisation/{organisationId}/finance-checks/eligibility(projectId=${model.projectId},organisationId=${model.organisationId})}"
+               class="heading-medium">View finances</a>
         </li>
         <li>
-            <a href="#" class="heading-medium">Project finance overview</a>
+            <a th:href="@{/project/{projectId}/partner-organisation/{organisationId}/finance-checks/overview(projectId=${model.projectId},organisationId=${model.organisationId})}"
+               class="heading-medium">Project finance overview</a>
         </li>
     </ul>
 
     <h2 class="heading-medium">Queries</h2>
 
-    <p>Any queries we raise will appear here, with the most recent queries first. You can upload files to support your answers if necessary. It is your responsibility to make sure your answers are as accurate as possible.</p>
+    <p>Any queries we raise will appear here, with the most recent queries first. You can upload files to support your answers if necessary.</p>
 
     <div class="error-summary" th:if="${nonFormErrors != null} and ${not #lists.isEmpty(nonFormErrors)}">
         <h2 class="heading-medium error-summary-heading">There was a problem saving your response.</h2>
@@ -123,7 +125,7 @@
                                        data-required-errormessage=#{validation.field.must.not.be.blank}"
                                       th:classappend="${#fields.hasErrors('response') ? 'form-control field-error' : 'form-control'}"></textarea>
                             <div class="textarea-footer" th:with="response=*{response}">
-                                <div th:include="question-type/form-elements :: form-word-count (maxWords=${model.maxQueryWords}, currentWordsLeft=${#ifsUtil.wordsRemaining(model.maxQueryWords, content)})" th:remove="tag" />
+                                <div th:insert="question-type/form-elements :: form-word-count (maxWords=${model.maxQueryWords}, currentWordsLeft=${#ifsUtil.wordsRemaining(model.maxQueryWords, content)})" th:remove="tag" />
                             </div>
                         </div>
                     </div>
@@ -139,7 +141,7 @@
                 </th:block>
                 <fieldset>
                     <div class="upload-section unstyled-view">
-                        <legend class="heading-small no-margin">Upload supporting documentation</legend>
+                        <legend class="heading-small no-margin">Upload supporting documentation in pdf format</legend>
                         <th:block th:if="${#fields.hasErrors('attachment')}">
                             <span>
                                 <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />

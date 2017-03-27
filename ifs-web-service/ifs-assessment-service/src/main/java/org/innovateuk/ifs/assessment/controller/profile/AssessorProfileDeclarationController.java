@@ -5,7 +5,6 @@ import org.innovateuk.ifs.assessment.form.profile.AssessorProfileDeclarationForm
 import org.innovateuk.ifs.assessment.form.profile.AssessorProfileFamilyAffiliationForm;
 import org.innovateuk.ifs.assessment.form.profile.populator.AssessorProfileDeclarationFormPopulator;
 import org.innovateuk.ifs.assessment.model.profile.AssessorProfileDeclarationModelPopulator;
-import org.innovateuk.ifs.assessment.model.profile.AssessorProfileEditDeclarationModelPopulator;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
@@ -53,9 +52,6 @@ public class AssessorProfileDeclarationController {
     private AssessorProfileDeclarationFormPopulator assessorProfileDeclarationFormPopulator;
 
     @Autowired
-    private AssessorProfileEditDeclarationModelPopulator assessorProfileEditDeclarationModelPopulator;
-
-    @Autowired
     @Qualifier("mvcValidator")
     private Validator validator;
 
@@ -69,24 +65,22 @@ public class AssessorProfileDeclarationController {
     }
 
     @RequestMapping(path = "/edit", method = RequestMethod.GET)
-    public String getEditDeclaration(Model model,
-                                     @ModelAttribute("loggedInUser") UserResource loggedInUser,
+    public String getEditDeclaration(@ModelAttribute("loggedInUser") UserResource loggedInUser,
                                      @ModelAttribute(FORM_ATTR_NAME) AssessorProfileDeclarationForm form,
                                      BindingResult bindingResult) {
         if (!bindingResult.hasErrors()) {
             assessorProfileDeclarationFormPopulator.populateForm(form, loggedInUser);
         }
-        return doEditDeclaration(model);
+        return doEditDeclaration();
     }
 
     @RequestMapping(path = "/edit", method = RequestMethod.POST)
-    public String submitDeclaration(Model model,
-                                    @ModelAttribute("loggedInUser") UserResource loggedInUser,
+    public String submitDeclaration(@ModelAttribute("loggedInUser") UserResource loggedInUser,
                                     @Valid @ModelAttribute(FORM_ATTR_NAME) AssessorProfileDeclarationForm form,
                                     BindingResult bindingResult,
                                     ValidationHandler validationHandler) {
 
-        Supplier<String> failureView = () -> getEditDeclaration(model, loggedInUser, form, bindingResult);
+        Supplier<String> failureView = () -> getEditDeclaration(loggedInUser, form, bindingResult);
 
         validateLists(form, bindingResult);
 
@@ -98,37 +92,32 @@ public class AssessorProfileDeclarationController {
     }
 
     @RequestMapping(path = "/edit", params = {"addAppointment"}, method = RequestMethod.POST)
-    public String addAppointment(Model model,
-                                 @ModelAttribute(FORM_ATTR_NAME) AssessorProfileDeclarationForm form) {
+    public String addAppointment(@ModelAttribute(FORM_ATTR_NAME) AssessorProfileDeclarationForm form) {
         form.getAppointments().add(new AssessorProfileAppointmentForm());
-        return doEditDeclaration(model);
+        return doEditDeclaration();
     }
 
     @RequestMapping(path = "/edit", params = {"removeAppointment"}, method = RequestMethod.POST)
-    public String removeAppointment(Model model,
-                                    @ModelAttribute(FORM_ATTR_NAME) AssessorProfileDeclarationForm form,
+    public String removeAppointment(@ModelAttribute(FORM_ATTR_NAME) AssessorProfileDeclarationForm form,
                                     @RequestParam(name = "removeAppointment") Integer position) {
         form.getAppointments().remove(position.intValue());
-        return doEditDeclaration(model);
+        return doEditDeclaration();
     }
 
     @RequestMapping(path = "/edit", params = {"addFamilyMemberAffiliation"}, method = RequestMethod.POST)
-    public String addFamilyMemberAffiliation(Model model,
-                                             @ModelAttribute(FORM_ATTR_NAME) AssessorProfileDeclarationForm form) {
+    public String addFamilyMemberAffiliation(@ModelAttribute(FORM_ATTR_NAME) AssessorProfileDeclarationForm form) {
         form.getFamilyAffiliations().add(new AssessorProfileFamilyAffiliationForm());
-        return doEditDeclaration(model);
+        return doEditDeclaration();
     }
 
     @RequestMapping(path = "/edit", params = {"removeFamilyMemberAffiliation"}, method = RequestMethod.POST)
-    public String removeFamilyMemberAffiliation(Model model,
-                                                @ModelAttribute(FORM_ATTR_NAME) AssessorProfileDeclarationForm form,
+    public String removeFamilyMemberAffiliation(@ModelAttribute(FORM_ATTR_NAME) AssessorProfileDeclarationForm form,
                                                 @RequestParam(name = "removeFamilyMemberAffiliation") Integer position) {
         form.getFamilyAffiliations().remove(position.intValue());
-        return doEditDeclaration(model);
+        return doEditDeclaration();
     }
 
-    private String doEditDeclaration(Model model) {
-        model.addAttribute("model", assessorProfileEditDeclarationModelPopulator.populateModel());
+    private String doEditDeclaration() {
         return "profile/declaration-of-interest-edit";
     }
 

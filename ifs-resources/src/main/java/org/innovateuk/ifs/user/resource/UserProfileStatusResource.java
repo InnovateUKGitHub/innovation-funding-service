@@ -11,17 +11,17 @@ public class UserProfileStatusResource {
     private Long user; // added in so we can do a security check when fetching profile status
     private boolean skillsComplete;
     private boolean affiliationsComplete;
-    private boolean contractComplete;
+    private boolean agreementComplete;
 
     UserProfileStatusResource() {
         // default constructor
     }
 
-    public UserProfileStatusResource(Long user, boolean skillsComplete, boolean affiliationsComplete, boolean contractComplete) {
+    public UserProfileStatusResource(Long user, boolean skillsComplete, boolean affiliationsComplete, boolean agreementComplete) {
         this.user = user;
         this.skillsComplete = skillsComplete;
         this.affiliationsComplete = affiliationsComplete;
-        this.contractComplete = contractComplete;
+        this.agreementComplete = agreementComplete;
     }
 
     public Long getUser() {
@@ -36,8 +36,8 @@ public class UserProfileStatusResource {
         return affiliationsComplete;
     }
 
-    public boolean isContractComplete() {
-        return contractComplete;
+    public boolean isAgreementComplete() {
+        return agreementComplete;
     }
 
     public void setUser(Long user) {
@@ -52,15 +52,19 @@ public class UserProfileStatusResource {
         this.affiliationsComplete = affiliationsComplete;
     }
 
-    public void setContractComplete(boolean contractComplete) {
-        this.contractComplete = contractComplete;
+    public void setAgreementComplete(boolean agreementComplete) {
+        this.agreementComplete = agreementComplete;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
+        if (this == o) {
+            return true;
+        }
 
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         UserProfileStatusResource that = (UserProfileStatusResource) o;
 
@@ -68,7 +72,7 @@ public class UserProfileStatusResource {
                 .append(user, that.user)
                 .append(skillsComplete, that.skillsComplete)
                 .append(affiliationsComplete, that.affiliationsComplete)
-                .append(contractComplete, that.contractComplete)
+                .append(agreementComplete, that.agreementComplete)
                 .isEquals();
     }
 
@@ -78,7 +82,7 @@ public class UserProfileStatusResource {
                 .append(user)
                 .append(skillsComplete)
                 .append(affiliationsComplete)
-                .append(contractComplete)
+                .append(agreementComplete)
                 .toHashCode();
     }
 }

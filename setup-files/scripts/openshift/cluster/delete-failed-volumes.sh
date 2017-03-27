@@ -16,6 +16,6 @@ echo ${FAILED_VOLUMES} | xargs \
 
 while read -r volume; do
     DISK_NUM=$(echo $volume | awk -F- '{print $NF}')
-    ssh -t -t centos@${GLUSTER_2} sudo -u root rm -rf /data/brick1/gv${DISK_NUM}/*
+    ssh -t -t centos@${GLUSTER_2} sudo -u root rm -rf /data/brick2/gv${DISK_NUM}/*
     ./add-volume.sh $DISK_NUM
 done <<< "$FAILED_VOLUMES"

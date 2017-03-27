@@ -56,7 +56,7 @@
                 <dd th:text="${model.innovationArea}">Agriculture and food</dd>
             </dl>
 
-            <p class="extra-margin extra-margin-bottom">Choose a tab to find, invite and assign assessors to one or more applications.</p>
+            <p class="extra-margin extra-margin-bottom">Choose a tab to find, invite and see an overview of assessors.</p>
 
             <ul class="inline-nav">
                 <li class="selected">
@@ -72,23 +72,25 @@
 
             <div class="grid-row">
                 <div class="column-three-quarters">
-                    <h2 class="heading-small no-margin-top">Find people on the system that you would like to invite to be an assessor.</h2>
-                    <p>Find people to add to your assessor invite list for this competition. Alternatively, you can use the dropdown filters to narrow your results.</p>
+                    <h2 class="heading-small no-margin-top">Find registered assessors and add them to your invite list for this competition.</h2>
                 </div>
             </div>
 
             <form method="GET" th:object="${filterForm}">
-                <div class="search-filters">
+                <div class="search-filters extra-margin">
                     <div class="grid-row">
                         <div class="column-two-thirds">
                             <label class="form-label" for="filterInnovationArea">Innovation area</label>
                             <select name="innovationArea"
-                                    id="filterInnovationArea" class="form-control"
+                                    id="filterInnovationArea" class="form-control extra-margin-bottom"
                                     th:field="*{innovationArea}">
                                 <option value="">Any</option>
-                                <option th:each="innovationArea : ${model.innovationAreaOptions}"
-                                        th:value="${innovationArea.id}"
-                                        th:text="${innovationArea.name}"></option>
+                                <optgroup th:each="innovationSector : ${model.innovationSectorOptions}" th:label="${innovationSector.name}">
+                                    <option th:each="innovationArea : ${innovationSector.children}"
+                                            th:value="${innovationArea.id}"
+                                            th:text="${innovationArea.name}">
+                                    </option>
+                                </optgroup>
                             </select>
                             <a href="?page=0">Clear all filters</a>
                         </div>

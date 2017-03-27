@@ -4,18 +4,16 @@ import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.finance.resource.cost.Materials;
 import org.innovateuk.ifs.user.domain.Organisation;
-import org.innovateuk.ifs.user.resource.OrganisationSize;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.clearUniqueIds;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.clearUniqueIds;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
-import static org.junit.Assert.assertEquals;
 
 public class ApplicationFinanceResourceTest extends BaseUnitTestMocksTest {
 
@@ -23,7 +21,7 @@ public class ApplicationFinanceResourceTest extends BaseUnitTestMocksTest {
     private Long organisation;
     private Long application;
     private Long fileEntry;
-    private OrganisationSize organisationSize;
+    private Long organisationSize;
     private ApplicationFinanceResource applicationFinanceResource;
 
     @Before
@@ -33,7 +31,7 @@ public class ApplicationFinanceResourceTest extends BaseUnitTestMocksTest {
         organisation = 1L;
         application = 1L;
         fileEntry = 1L;
-        organisationSize = OrganisationSize.MEDIUM;
+        organisationSize = 1L;
         applicationFinanceResource = new ApplicationFinanceResource(id, organisation, application, organisationSize);
         applicationFinanceResource.setFinanceFileEntry(fileEntry);
     }

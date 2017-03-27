@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.header.writers.StaticHeadersWriter;
 
 /**
  * Every request is stateless and is checked if the user has access to requested resource.
@@ -36,10 +37,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
             .csrf().disable()
             .addFilterBefore(statelessAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-            .addFilterAfter(csrfStatelessFilter, StatelessAuthenticationFilter.class)
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-            .anonymous().and()
-            .exceptionHandling().and()
-            .headers().cacheControl().disable();
+                .addFilterAfter(csrfStatelessFilter, StatelessAuthenticationFilter.class)
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+                .anonymous().and()
+                .exceptionHandling().and()
+            .headers()
+                .addHeaderWriter(new StaticHeadersWriter("server","server"))
+                .cacheControl().disable();
     }
 }

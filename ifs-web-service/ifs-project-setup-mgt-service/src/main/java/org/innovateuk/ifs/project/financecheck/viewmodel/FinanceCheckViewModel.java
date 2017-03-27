@@ -17,14 +17,14 @@ public class FinanceCheckViewModel {
     private boolean isLeadPartner;
     private String financeContactName;
     private String financeContactEmail;
-    private boolean isResearch;
+    private boolean isUsingJesFinances;
     private boolean financeChecksApproved;
     private String approverName;
     private LocalDate approvalDate;
     private FileDetailsViewModel jesFileDetails;
 
     public FinanceCheckViewModel(Long competitionId, String competitionName, String organisationName, boolean isLeadPartner,
-                                 Long projectId, Long organisationId, String financeContactName, String financeContactEmail, boolean isResearch,
+                                 Long projectId, Long organisationId, String financeContactName, String financeContactEmail, boolean isUsingJesFinances,
                                  boolean financeChecksApproved, String approverName, LocalDate approvalDate, FileDetailsViewModel jesFileDetails) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
@@ -34,7 +34,7 @@ public class FinanceCheckViewModel {
         this.organisationId = organisationId;
         this.financeContactName = financeContactName;
         this.financeContactEmail = financeContactEmail;
-        this.isResearch = isResearch;
+        this.isUsingJesFinances = isUsingJesFinances;
         this.financeChecksApproved = financeChecksApproved;
         this.approverName = approverName;
         this.approvalDate = approvalDate;
@@ -42,10 +42,10 @@ public class FinanceCheckViewModel {
     }
 
     public FinanceCheckViewModel(Long competitionId, String competitionName, String organisationName, boolean isLeadPartner,
-                                 Long projectId, Long organisationId, boolean isResearch,
+                                 Long projectId, Long organisationId, boolean isUsingJesFinances,
                                  boolean financeChecksApproved, String approverName, LocalDate approvalDate, FileDetailsViewModel jesFileDetails) {
         this(competitionId, competitionName, organisationName, isLeadPartner,
-                projectId, organisationId, null, null, isResearch,
+                projectId, organisationId, null, null, isUsingJesFinances,
                 financeChecksApproved, approverName, approvalDate, jesFileDetails);
     }
 
@@ -57,8 +57,8 @@ public class FinanceCheckViewModel {
         return financeContactEmail;
     }
 
-    public boolean isResearch() {
-        return isResearch;
+    public boolean isUsingJesFinances() {
+        return isUsingJesFinances;
     }
 
     public boolean isFinanceChecksApproved() {
@@ -127,7 +127,7 @@ public class FinanceCheckViewModel {
 
         return new EqualsBuilder()
                 .append(isLeadPartner, that.isLeadPartner)
-                .append(isResearch, that.isResearch)
+                .append(isUsingJesFinances, that.isUsingJesFinances)
                 .append(financeChecksApproved, that.financeChecksApproved)
                 .append(competitionId, that.competitionId)
                 .append(competitionName, that.competitionName)
@@ -153,7 +153,7 @@ public class FinanceCheckViewModel {
                 .append(isLeadPartner)
                 .append(financeContactName)
                 .append(financeContactEmail)
-                .append(isResearch)
+                .append(isUsingJesFinances)
                 .append(financeChecksApproved)
                 .append(approverName)
                 .append(approvalDate)
@@ -171,7 +171,7 @@ public class FinanceCheckViewModel {
                 .append("isLeadPartner", isLeadPartner)
                 .append("financeContactName", financeContactName)
                 .append("financeContactEmail", financeContactEmail)
-                .append("isResearch", isResearch)
+                .append("isUsingJesFinances", isUsingJesFinances)
                 .append("financeChecksApproved", financeChecksApproved)
                 .append("approverName", approverName)
                 .append("approvalDate", approvalDate)

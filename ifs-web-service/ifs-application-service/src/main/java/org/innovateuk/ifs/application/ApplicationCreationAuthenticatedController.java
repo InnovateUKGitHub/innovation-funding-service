@@ -20,6 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.String.format;
+
 /**
  * This controller is used when a existing user want to create a new application.
  * Shibboleth makes sure the current visitor of this page is authenticated.
@@ -79,7 +81,7 @@ public class ApplicationCreationAuthenticatedController {
         ApplicationResource application = applicationService.createApplication(competitionId, user.getId(), "");
 
         if (application != null) {
-            return String.format("redirect:/application/%s/contributors/invite?newApplication", String.valueOf(application.getId()));
+            return format("redirect:/application/%s/team", application.getId());
         } else {
             // Application not created, throw exception
             List<Object> args = new ArrayList<>();

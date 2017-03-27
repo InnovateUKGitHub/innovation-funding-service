@@ -2,7 +2,6 @@ package org.innovateuk.ifs.application.viewmodel;
 
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -22,7 +21,7 @@ public class OpenSectionViewModel extends BaseSectionViewModel {
     private Boolean allQuestionsCompleted;
     private Long eachCollaboratorFinanceSectionId;
 
-    private BigDecimal completedQuestionsPercentage;
+    private Integer completedQuestionsPercentage;
 
     public OpenSectionViewModel() {
         subFinanceSection = Boolean.FALSE;
@@ -92,11 +91,11 @@ public class OpenSectionViewModel extends BaseSectionViewModel {
         this.eachCollaboratorFinanceSectionId = eachCollaboratorFinanceSectionId;
     }
 
-    public BigDecimal getCompletedQuestionsPercentage() {
+    public Integer getCompletedQuestionsPercentage() {
         return completedQuestionsPercentage;
     }
 
-    public void setCompletedQuestionsPercentage(BigDecimal completedQuestionsPercentage) {
+    public void setCompletedQuestionsPercentage(Integer completedQuestionsPercentage) {
         this.completedQuestionsPercentage = completedQuestionsPercentage;
     }
 }

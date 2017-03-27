@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.finance.handler.item;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.transactional.QuestionService;
@@ -23,13 +24,18 @@ import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import java.math.BigDecimal;
 import java.util.*;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceBuilder.newApplicationFinance;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.AdditionalAnswers.returnsFirstArg;
+import static org.mockito.Matchers.anyList;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.when;
 
@@ -60,14 +66,15 @@ public class OrganisationFinanceHandlerTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
+        when(financeRowRepositoryMock.save(anyList())).then(returnsFirstArg());
 
         competition = newCompetition().build();
         application = newApplication().withCompetition(competition).build();
         applicationFinance = newApplicationFinance().withApplication(application).build();
-        costTypeQuestion = new HashMap<FinanceRowType, Question>();
+        costTypeQuestion = new HashMap<>();
 
         for (FinanceRowType costType : FinanceRowType.values()) {
-            if (FinanceRowType.ACADEMIC != costType) {
+            if (ACADEMIC != costType) {
                 setUpCostTypeQuestions(competition, costType);
             }
         }
@@ -122,24 +129,26 @@ public class OrganisationFinanceHandlerTest {
         costs.add((ApplicationFinanceRow)materialCost);
 
         when(financeRowRepositoryMock.findByTargetId(applicationFinance.getId())).thenReturn(costs);
-        when(financeRowMetaFieldRepository.findAll()).thenReturn(new ArrayList<FinanceRowMetaField>());
+        when(financeRowMetaFieldRepository.findAll()).thenReturn(new ArrayList<>());
     }
 
     private void setUpCostTypeQuestions(Competition competition, FinanceRowType costType) {
         FormInput formInput = newFormInput()
                 .withType(costType.getFormInputType())
                 .build();
-        Question question = newQuestion().withFormInputs(Arrays.asList(formInput)).build();
+        Question question = newQuestion().withFormInputs(asList(formInput)).build();
 
         costTypeQuestion.put(costType, question);
-        when(questionService.getQuestionByCompetitionIdAndFormInputType(eq(competition.getId()), eq(costType.getFormInputType()))).thenReturn(serviceSuccess(question));
+        when(questionService.getQuestionByCompetitionIdAndFormInputType(eq(competition.getId()), eq(costType.getFormInputType())))
+                .thenReturn(serviceSuccess(question));
     }
 
     @Test
     public void testGetOrganisationFinancesMaterials() throws Exception {
         Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = handler.getOrganisationFinances(applicationFinance.getId());
 
-        assertEquals("Testing equality for; " + FinanceRowType.MATERIALS.getType(), new BigDecimal(500), organisationFinances.get(FinanceRowType.MATERIALS).getTotal());
+        assertEquals("Testing equality for: " + FinanceRowType.MATERIALS.getType(),
+                new BigDecimal(500), organisationFinances.get(FinanceRowType.MATERIALS).getTotal());
     }
 
     @Test
@@ -166,12 +175,20 @@ public class OrganisationFinanceHandlerTest {
         labourCategory.getWorkingDaysPerYearCostItem().setLabourDays(25);
         labourCategory.calculateTotal();
         assertEquals(0, new BigDecimal(600000).compareTo(labourCategory.getTotal()));
-        assertEquals("Testing equality for; "+ FinanceRowType.LABOUR.getType(), new BigDecimal(600000).setScale(5), organisationFinances.get(FinanceRowType.LABOUR).getTotal().setScale(5));
+        assertEquals("Testing equality for; "+ FinanceRowType.LABOUR.getType(), new BigDecimal(600000).setScale(5),
+                organisationFinances.get(FinanceRowType.LABOUR).getTotal().setScale(5));
     }
 
     @Test
     public void testGetOrganisationFinanceTotals() throws Exception {
+        Map<FinanceRowType, FinanceRowCostCategory> expected = handler.getOrganisationFinances(applicationFinance.getId());
+        expected.values().forEach(costCategory -> costCategory.setCosts(new ArrayList<>()));
+        Map<FinanceRowType, FinanceRowCostCategory> obtained = handler.getOrganisationFinanceTotals(applicationFinance.getId(), competition);
 
+        assertEquals(obtained.size(), expected.size());
+        assertTrue(obtained.keySet().stream().allMatch(key -> expected.containsKey(key)));
+        assertTrue(obtained.keySet().stream().allMatch(key -> obtained.get(key).getCosts().isEmpty()
+                            && expected.get(key).getCosts().equals(obtained.get(key).getCosts())));
     }
 
     @Test
@@ -193,12 +210,34 @@ public class OrganisationFinanceHandlerTest {
     }
 
     @Test
-    public void testCostToCostItem() throws Exception {
-
+    public void testGetHandlerMatches() throws Exception {
+        asList( Pair.of(MATERIALS, MaterialsHandler.class),
+                Pair.of(LABOUR, LabourCostHandler.class),
+                Pair.of(TRAVEL, TravelCostHandler.class),
+                Pair.of(CAPITAL_USAGE, CapitalUsageHandler.class),
+                Pair.of(SUBCONTRACTING_COSTS, SubContractingCostHandler.class),
+                Pair.of(OVERHEADS, OverheadsHandler.class),
+                Pair.of(OTHER_COSTS, OtherCostHandler.class),
+                Pair.of(OTHER_FUNDING, OtherFundingHandler.class)
+        ).forEach(pair -> {
+            final FinanceRowType costType = pair.getKey();
+            final Class<?> clazz = pair.getValue();
+            assertEquals("Correct handler for " + costType, clazz, handler.getCostHandler(costType).getClass());
+        });
     }
 
     @Test
-    public void testCostItemsToCost() throws Exception {
-
+    public void testCostToCostItem() throws Exception {
+        final FinanceRowItem costItem = handler.costToCostItem((ApplicationFinanceRow) materialCost);
+        assertEquals(costItem.getTotal(), materialCost.getCost().multiply(new BigDecimal(materialCost.getQuantity())));
+        assertEquals(costItem.getName(), materialCost.getName());
+        assertEquals(costItem.getId(), materialCost.getId());
     }
+
+    @Test
+    public void testGetProjectOrganisationFinanceChanges() throws Exception {
+    //TODO
+    }
+
+
 }

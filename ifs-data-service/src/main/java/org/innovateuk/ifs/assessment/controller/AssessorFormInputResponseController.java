@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.assessment.controller;
 
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
+import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.transactional.AssessorFormInputResponseService;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -39,4 +40,11 @@ public class AssessorFormInputResponseController {
     public RestResult<ApplicationAssessmentAggregateResource> getApplicationAggregateScores(@PathVariable("applicationId") long applicationId) {
         return assessorFormInputResponseService.getApplicationAggregateScores(applicationId).toGetResponse();
     }
+
+    @RequestMapping(value = "/application/{applicationId}/question/{questionId}/feedback", method = RequestMethod.GET)
+    public RestResult<AssessmentFeedbackAggregateResource> getAssessmentAggregateFeedback(@PathVariable("applicationId") long applicationId,
+                                                                                          @PathVariable("questionId") long questionId) {
+        return assessorFormInputResponseService.getAssessmentAggregateFeedback(applicationId, questionId).toGetResponse();
+    }
+
 }

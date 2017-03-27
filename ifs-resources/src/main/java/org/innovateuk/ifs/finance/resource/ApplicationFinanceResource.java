@@ -1,15 +1,12 @@
 package org.innovateuk.ifs.finance.resource;
 
-import org.innovateuk.ifs.user.resource.OrganisationSize;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
 /**
  * Application finance resource holds the organisation's finance resources for an application
  */
 public class ApplicationFinanceResource extends BaseFinanceResource {
 
     private Long financeFileEntry;
+    private Integer maximumFundingLevel;
 
     public ApplicationFinanceResource(ApplicationFinanceResource applicationFinance) {
 
@@ -28,12 +25,12 @@ public class ApplicationFinanceResource extends BaseFinanceResource {
         this.financeFileEntry = financeFileEntry;
     }
 
-    public ApplicationFinanceResource(Long id, Long organisation, Long application, OrganisationSize organisationSize, Long financeFileEntry) {
+    public ApplicationFinanceResource(Long id, Long organisation, Long application, Long organisationSize, Long financeFileEntry) {
         super(id, organisation, application, organisationSize);
         this.financeFileEntry = financeFileEntry;
     }
 
-    public ApplicationFinanceResource(Long id, Long organisation, Long application, OrganisationSize organisationSize) {
+    public ApplicationFinanceResource(Long id, Long organisation, Long application, Long organisationSize) {
         super(id, organisation, application, organisationSize);
     }
 
@@ -53,33 +50,11 @@ public class ApplicationFinanceResource extends BaseFinanceResource {
         super.setTarget(target);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ApplicationFinanceResource that = (ApplicationFinanceResource) o;
-
-        return new EqualsBuilder()
-                .append(id, that.id)
-                .append(organisation, that.organisation)
-                .append(target, that.target)
-                .append(financeFileEntry, that.financeFileEntry)
-                .append(organisationSize, that.organisationSize)
-                .append(financeOrganisationDetails, that.financeOrganisationDetails)
-                .isEquals();
+    public Integer getMaximumFundingLevel() {
+        return maximumFundingLevel;
     }
 
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(id)
-                .append(organisation)
-                .append(target)
-                .append(financeFileEntry)
-                .append(organisationSize)
-                .append(financeOrganisationDetails)
-                .toHashCode();
+    public void setMaximumFundingLevel(Integer maximumFundingLevel) {
+        this.maximumFundingLevel = maximumFundingLevel;
     }
 }

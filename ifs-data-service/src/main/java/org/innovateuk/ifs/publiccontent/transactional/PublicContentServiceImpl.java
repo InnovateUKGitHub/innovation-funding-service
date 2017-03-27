@@ -1,10 +1,13 @@
 package org.innovateuk.ifs.publiccontent.transactional;
 
+import org.innovateuk.ifs.application.transactional.SectionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.ContentEventResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentStatus;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
+import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
 import org.innovateuk.ifs.competition.transactional.MilestoneService;
 import org.innovateuk.ifs.publiccontent.domain.ContentSection;
 import org.innovateuk.ifs.publiccontent.domain.Keyword;
@@ -27,6 +30,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -49,6 +53,8 @@ public class PublicContentServiceImpl extends BaseTransactionalService implement
     private ContentEventService contentEventService;
     @Autowired
     private MilestoneService milestoneService;
+    @Autowired
+    private CompetitionSetupService competitionSetupService;
 
     @Override
     public ServiceResult<PublicContentResource> findByCompetitionId(Long id) {
@@ -88,8 +94,8 @@ public class PublicContentServiceImpl extends BaseTransactionalService implement
     @Override
     public ServiceResult<Void> publishByCompetitionId(Long competitionId) {
         return find(publicContentRepository.findByCompetitionId(competitionId), notFoundError(PublicContent.class, competitionId))
-                .andOnSuccess(this::publish);
-
+                .andOnSuccess(this::publish)
+                .andOnSuccess(() -> competitionSetupService.markSectionComplete(competitionId, CONTENT));
     }
 
     private ServiceResult<Void> publish(PublicContent publicContent) {

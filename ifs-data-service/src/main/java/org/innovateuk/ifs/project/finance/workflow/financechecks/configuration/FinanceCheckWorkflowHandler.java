@@ -49,16 +49,8 @@ public class FinanceCheckWorkflowHandler extends BaseWorkflowEventHandler<Financ
         return fireEvent(projectCreatedEvent(partnerOrganisation, originalLeadApplicantProjectUser), FinanceCheckState.PENDING);
     }
 
-    public boolean financeCheckFiguresEdited(PartnerOrganisation partnerOrganisation, User internalUser) {
-        return fireEvent(financeCheckFiguresEditedEvent(partnerOrganisation, internalUser, FINANCE_CHECK_FIGURES_EDITED), partnerOrganisation);
-    }
-
-    public boolean approveFinanceCheckFigures(PartnerOrganisation partnerOrganisation, User financeTeamUser) {
+    public boolean approveFinanceCheck(PartnerOrganisation partnerOrganisation, User financeTeamUser) {
         return fireEvent(approveFinanceCheckMessage(financeTeamUser, partnerOrganisation), partnerOrganisation);
-    }
-
-    public boolean isApprovalAllowed(PartnerOrganisation partnerOrganisation) {
-        return testEvent(approveFinanceCheckMessage(null, partnerOrganisation), partnerOrganisation);
     }
 
     @Override
@@ -106,14 +98,6 @@ public class FinanceCheckWorkflowHandler extends BaseWorkflowEventHandler<Financ
                 .withPayload(PROJECT_CREATED)
                 .setHeader("target", partnerOrganisation)
                 .setHeader("participant", originalLeadApplicantProjectUser);
-    }
-
-    private MessageBuilder<FinanceCheckOutcomes> financeCheckFiguresEditedEvent(PartnerOrganisation partnerOrganisation, User financeTeamMember,
-                                                                                FinanceCheckOutcomes event) {
-        return MessageBuilder
-                .withPayload(event)
-                .setHeader("target", partnerOrganisation)
-                .setHeader("internalParticipant", financeTeamMember);
     }
 
     private MessageBuilder<FinanceCheckOutcomes> approveFinanceCheckMessage(User financeTeamMember, PartnerOrganisation partnerOrganisation) {

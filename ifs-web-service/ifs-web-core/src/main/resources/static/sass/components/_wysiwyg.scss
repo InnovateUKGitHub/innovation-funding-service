@@ -68,6 +68,9 @@ button.ui-state-active .fa-link {
         font-style:italic;
         font-weight:inherit;
     }
+    ol, ul {
+        @extend .list;
+    }
     ol {
         @extend .list-number;
     }
@@ -78,9 +81,12 @@ button.ui-state-active .fa-link {
         padding: 0;
         margin: 0;
     }
+    > div {
+      @extend p;
+    }
 }
 .textarea-wrapped [contenteditable="true"] {
-	padding-top:60px;
+	padding-top: 50px;
 }
 
 .hallotoolbar {

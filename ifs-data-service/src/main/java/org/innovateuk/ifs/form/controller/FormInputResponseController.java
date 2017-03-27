@@ -6,6 +6,7 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.form.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.form.resource.FormInputResponseCommand;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
@@ -50,6 +51,12 @@ public class FormInputResponseController {
     public RestResult<FormInputResponseResource> findByApplicationIdAndQuestionName(@PathVariable long applicationId,
                                                                                  @PathVariable String questionName) {
         return formInputService.findResponseByApplicationIdAndQuestionName(applicationId, questionName).toGetResponse();
+    }
+
+    @RequestMapping("/findByApplicationIdAndQuestionId/{applicationId}/{questionId}")
+    public RestResult<List<FormInputResponseResource>> findByApplicationIdAndQuestionId(@PathVariable long applicationId,
+                                                                                  @PathVariable long questionId) {
+        return formInputService.findResponseByApplicationIdAndQuestionId(applicationId, questionId).toGetResponse();
     }
 
     @RequestMapping(value = "/saveQuestionResponse", method = RequestMethod.POST)

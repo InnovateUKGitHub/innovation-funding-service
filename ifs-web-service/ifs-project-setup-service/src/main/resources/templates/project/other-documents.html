@@ -11,12 +11,12 @@
 
 <main id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <div th:include="fragments/layout :: header-sub"
+    <div th:insert="fragments/layout :: header-sub"
          th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}"
          th:remove="tag"/>
 
     <div class="page-title">
-        <th:block th:insert="fragments/elements :: project-title (projectId=${model.applicationId}, projectName=${model.projectName})"               />
+        <th:block th:insert="fragments/elements :: project-title (projectId=${model.applicationId}, projectName=${model.projectName})" />
         <h1 class="heading-xlarge">Other documents</h1>
     </div>
 
@@ -37,7 +37,7 @@
     </div>
 
     <th:block th:if="${model.isShowGuidanceInformation()}">
-        <p>The Project Manager must supply additional documents to support your grant application.</p>
+        <p>Only the Project Manager can upload and submit additional documents to support your grant application.</p>
         <p>These documents are:</p>
         <ul class="list list-bullet">
             <li>the collaboration agreement</li>
@@ -179,11 +179,11 @@
 
     <th:block th:if="${model.isShowSubmitDocumentsButton()}">
         <a th:href="@{/project/{id}/partner/documents/confirm(id=${model.getProjectId()})}" class="button extra-margin"
-       data-js-modal="modal-partner-documents">Submit partner documents</a>
+       data-js-modal="modal-partner-documents">Submit documents</a>
     </th:block>
 
      <th:block th:if="${model.isShowDisabledSubmitDocumentsButton()}">
-        <button disabled="disabled" class="button extra-margin">Submit partner documents</button>
+        <button disabled="disabled" class="button extra-margin">Submit documents</button>
      </th:block>
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>

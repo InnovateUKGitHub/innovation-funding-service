@@ -352,4 +352,5 @@ public class ProjectServiceImpl implements ProjectService {
     public final Boolean isProjectManager(Long userId, Long projectId) {
         return getProjectManager(projectId).map(maybePM -> maybePM.isUser(userId)).orElse(false);
     }
+
 }

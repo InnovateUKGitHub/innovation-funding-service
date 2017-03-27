@@ -4,7 +4,6 @@ import org.hibernate.validator.internal.util.CollectionHelper;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.MilestoneService;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
-import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
@@ -15,7 +14,6 @@ import org.innovateuk.ifs.nonifs.form.NonIfsDetailsForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,16 +44,10 @@ public class NonIfsDetailsFormSaver {
 
         Map<String, MilestoneRowForm> mappedMilestones = createMilestoneMap(form);
         mapFormFields(form, competitionResource);
-
-        List<Error> errors = competitionSetupMilestoneService.validateMilestoneDates(mappedMilestones);
-        if (!errors.isEmpty()) {
-            return serviceFailure(errors);
-        } else {
-            return competitionService.update(competitionResource).andOnSuccess(() -> {
-                List<MilestoneResource> milestones = getPublicMilestones(competitionResource);
-                return competitionSetupMilestoneService.updateMilestonesForCompetition(milestones, mappedMilestones, competitionResource.getId());
-            });
-        }
+        return competitionService.update(competitionResource).andOnSuccess(() -> {
+            List<MilestoneResource> milestones = getPublicMilestones(competitionResource);
+            return competitionSetupMilestoneService.updateMilestonesForCompetition(milestones, mappedMilestones, competitionResource.getId());
+        });
     }
 
     private List<MilestoneResource> getPublicMilestones(CompetitionResource competitionResource) {
@@ -80,19 +72,9 @@ public class NonIfsDetailsFormSaver {
 
     private Map<String, MilestoneRowForm> createMilestoneMap(NonIfsDetailsForm form) {
         Map<String, MilestoneRowForm> milestones = new HashMap<>();
-        putDateIfFuture(milestones, MilestoneType.OPEN_DATE, form.getOpenDate());
-        putDateIfFuture(milestones, MilestoneType.SUBMISSION_DATE, form.getCloseDate());
-        putDateIfFuture(milestones, MilestoneType.RELEASE_FEEDBACK, form.getApplicantNotifiedDate());
+        milestones.put(MilestoneType.OPEN_DATE.name(), form.getOpenDate());
+        milestones.put(MilestoneType.SUBMISSION_DATE.name(), form.getCloseDate());
+        milestones.put(MilestoneType.RELEASE_FEEDBACK.name(), form.getApplicantNotifiedDate());
         return milestones;
-    }
-
-    private void putDateIfFuture(Map<String, MilestoneRowForm> milestones, MilestoneType type, MilestoneRowForm row) {
-        if(!dateIsInPast(row)) {
-            milestones.put(type.name(), row);
-        }
-    }
-
-    private boolean dateIsInPast(MilestoneRowForm row) {
-        return row.getMilestoneAsDateTime() != null && row.getMilestoneAsDateTime().isBefore(LocalDateTime.now());
     }
 }

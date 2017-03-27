@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Question feedback'" />
+</head>
+<body class="assessment-overview">
+
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+
+<main id="content">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+
+    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Feedback overview',linkClass='link-back',linkUrl=@{/application/{applicationId}/summary(applicationId=${model.application.id})}"  th:remove="tag"></div>
+
+    <div class="page-title">
+        <th:block th:insert="fragments/elements :: application-title (applicationId=${model.application.id},applicationName=${model.application.name})"/>
+        <h1 class="heading-xlarge no-margin" th:text="${model.question.shortName}"/>
+    </div>
+
+    <h2 class="heading-medium no-margin" th:text="|${model.question.questionNumber}. ${model.question.name}|">7. What are the risks (technical, commercial and environmental) to your project's success? What is your risk management strategy?</h2>
+
+    <h3 class="heading-medium">Your answer:</h3>
+    <th:block th:each="item : ${model.responses}">
+        <th:block th:unless="${item.fileEntry}">
+            <p th:text="${item.value}" />
+        </th:block>
+        <th:block th:if="${item.fileEntry}">
+            <h3 class="heading-small no-margin">View appendix:</h3>
+            <a th:href="@{/application/{appId}/form/question/{questionId}/forminput/{inputId}/download(appId=${model.application.id},questionId=${item.question},inputId=${item.formInput})}"
+               th:text="|${item.filename} (${item.humanReadableFileSize})|">Project-plan.pdf (161.96 KB)</a>
+        </th:block>
+    </th:block>
+
+    <h2 class="heading-large" th:text="'Average score: '+${model.aggregateResource.avgScore}+ '/ ' + ${model.question.assessorMaximumScore}">Average score: 7/10</h2>
+    <h3 class="heading-medium no-margin">Your assessors' feedback</h3>
+    <ul class="boxed-list">
+        <li th:each="item, iterStat : ${model.aggregateResource.feedback}">
+            <h4 class="heading-small" th:text="|Assessor ${iterStat.count}|">Assessor 1</h4>
+            <p th:text="${item}">Feedback text</p>
+        </li>
+    </ul>
+
+    <ul class="pagination">
+        <li class="prev" th:if="${model.navigation.previousUrl}">
+            <a rel="prev" title="Navigate to previous part" th:href="@{${model.navigation.previousUrl}}">
+                <span class="pagination-label">Previous</span>
+                <span class="pagination-part-title" th:text="${model.navigation.previousText}">6. Innovation</span>
+            </a>
+        </li>
+        <li class="next" th:if="${model.navigation.nextUrl}">
+            <a rel="next" title="Navigate to next part" th:href="@{${model.navigation.nextUrl}}">
+                <span class="pagination-label">Next</span>
+                <span class="pagination-part-title" th:text="${model.navigation.nextText}">8. Project team</span>
+            </a>
+        </li>
+    </ul>
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+</body>
+</html>

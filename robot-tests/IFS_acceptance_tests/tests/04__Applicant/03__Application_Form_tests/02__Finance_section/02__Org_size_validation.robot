@@ -25,7 +25,7 @@ Small org can be selected
     [Tags]    HappyPath
     Given applicant navigates to the finances of the robot application
     And the user clicks the button/link    link=Your organisation
-    And the user marks their organisation as    SMALL
+    And the user marks their organisation as    ${SMALL_ORGANISATION_SIZE}
 
 
 Funding section is now available
@@ -38,14 +38,14 @@ Funding section is now available
 Small org can't have more than 70% funding level
     [Documentation]    INFUND-1110
     [Tags]
-    When the user enters text to a text field    id=cost-financegrantclaim    80
-    Then the user should see the element  jQuery=span.error-message:contains("This field should be 70% or lower.")
+    When the user enters text to a text field    id=cost-financegrantclaim    46
+    Then the user should see the element  jQuery=span.error-message:contains("This field should be 45% or lower.")
 
 
 Funding section can be completed with under 70%
     [Documentation]    INFUND-1110
     [Tags]    HappyPath
-    When the user completes the funding section with funding level    69
+    When the user completes the funding section with funding level    45
     Then the user should not see the element    jQuery=.error-message
 
 
@@ -61,31 +61,31 @@ Medium org can be selected
     [Documentation]    INFUND-1110, INFUND-6394
     [Tags]    HappyPath
     When the user clicks the button/link   jQuery=button:contains("Edit your organisation")
-    And the user marks their organisation as    MEDIUM
+    And the user marks their organisation as    ${MEDIUM_ORGANISATION_SIZE}
 
 Funding section shows as incomplete
     [Documentation]    INFUND-6394
     [Tags]
-    When the user should see the element    css=.list-overview .section:nth-of-type(3) .assigned
+    When the user should see the element    css=.task-list li:nth-of-type(3) .action-required
 
 Funding section has been reset
     [Documentation]    INFUND-6894
     [Tags]    HappyPath
     When the user clicks the button/link    link=Your funding
-    Then the funding section has been reset including funding level    69
+    Then the funding section has been reset including funding level    45
 
 
 Medium org can't have more than 60% level
     [Documentation]    INFUND-1110
     [Tags]
-    When the user enters text to a text field    css=#cost-financegrantclaim    63
-    Then the user should see the element  jQuery=span.error-message:contains("This field should be 60% or lower.")
+    When the user enters text to a text field    css=#cost-financegrantclaim    36
+    Then the user should see the element  jQuery=span.error-message:contains("This field should be 35% or lower.")
 
 
 Funding section can be completed with under 60%
     [Documentation]    INFUND-1110
     [Tags]    HappyPath
-    When the user completes the funding section with funding level    57
+    When the user completes the funding section with funding level    35
     Then the user should not see the element    jQuery=.error-message
 
 
@@ -101,33 +101,33 @@ Large organisation can be selected
     [Documentation]    INFUND-1110, INFUND_6394
     [Tags]    HappyPath
     When the user clicks the button/link   jQuery=button:contains("Edit your organisation")
-    And the user marks their organisation as    LARGE
+    And the user marks their organisation as    ${LARGE_ORGANISATION_SIZE}
 
 Funding section shows as incomplete again
     [Documentation]    INFUND-6394
     [Tags]
-    When the user should see the element    css=.list-overview .section:nth-of-type(3) .assigned
+    When the user should see the element    css=.task-list li:nth-of-type(3) .action-required
 
 
 Funding section has been reset again
     [Documentation]    INFUND-6894
     [Tags]    HappyPath
     When the user clicks the button/link    link=Your funding
-    Then the funding section has been reset including funding level    57
+    Then the funding section has been reset including funding level    35
 
 
 
 Large org can't have more than 50% level
     [Documentation]    INFUND-1110
     [Tags]
-    When the user enters text to a text field    css=#cost-financegrantclaim    56
-    Then the user should see the element  jQuery=span.error-message:contains("This field should be 50% or lower.")
+    When the user enters text to a text field    css=#cost-financegrantclaim    27
+    Then the user should see the element  jQuery=span.error-message:contains("This field should be 25% or lower.")
 
 
 Funding section can be completed with under 50%
     [Documentation]    INFUND-1110
     [Tags]    HappyPath
-    When the user completes the funding section with funding level    45
+    When the user completes the funding section with funding level    25
     Then the user should not see the element    jQuery=.error-message
     And the user marks the 'your funding' section as incomplete again
 
@@ -138,6 +138,8 @@ Funding section can be completed with under 50%
 The user marks their organisation as
     [Arguments]    ${org_size}
     the user selects the radio button    financePosition-organisationSize  ${org_size}
+    the user enters text to a text field    jQuery=label:contains("Turnover") + input    150
+    the user enters text to a text field    jQuery=label:contains("employees") + input    0
     the user clicks the button/link    jQuery=.button:contains("Mark as complete")
     the user should not see the element  jQuery=.error-message
     the user should see the text in the page    Please complete your project finances.

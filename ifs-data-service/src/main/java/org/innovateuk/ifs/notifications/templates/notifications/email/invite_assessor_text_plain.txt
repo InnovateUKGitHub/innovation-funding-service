@@ -1,20 +1,5 @@
-Dear ${name}
-
-We are inviting you to assess applications for the competition '${competitionName}'.
-
-We recognise your expertise and would greatly appreciate your comments on the scientific / business merit of the applications.
-
-<#if innovationArea??>
-The innovation area you have been assigned is: ${innovationArea.name}
-
-</#if>
-Assessment period: ${acceptsDate} - ${deadlineDate}
-
-Please visit our new online Innovation funding service to respond to this request: ${inviteUrl}
-
-Yours sincerely,
-
-Competitions Team
-Innovate UK
-Tel: 0300 321 4357
-Email: competitions@innovateuk.gov.uk
+<#import "layout/default.html" as layout>
+<@layout.defaultPlainText>
+${bodyPlain}
+<@layout.senderPlainText />
+</@layout.defaultPlainText>

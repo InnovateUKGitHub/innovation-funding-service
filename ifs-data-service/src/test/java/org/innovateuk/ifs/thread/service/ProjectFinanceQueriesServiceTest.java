@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.thread.service;
 
-import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
@@ -15,7 +15,6 @@ import org.innovateuk.ifs.threads.domain.Query;
 import org.innovateuk.ifs.user.builder.RoleBuilder;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.OrganisationSize;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.threads.resource.PostResource;
@@ -29,25 +28,23 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.finance.domain.builder.ProjectFinanceBuilder.newProjectFinance;
+import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.project.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
-import static org.innovateuk.ifs.finance.domain.builder.ProjectFinanceBuilder.newProjectFinance;
 import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -116,7 +113,6 @@ public class ProjectFinanceQueriesServiceTest extends BaseUnitTestMocksTest {
                 withLastName("B").
                 build();
         Organisation o = newOrganisation().
-                withOrganisationSize(OrganisationSize.MEDIUM).
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
         User u2 = newUser().
@@ -125,7 +121,6 @@ public class ProjectFinanceQueriesServiceTest extends BaseUnitTestMocksTest {
                 withLastName("Y").
                 build();
         Organisation o2 = newOrganisation().
-                withOrganisationSize(OrganisationSize.MEDIUM).
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
         List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT, PROJECT_PARTNER).withUser(u, u2).withOrganisation(o, o2).build(1);
@@ -167,7 +162,6 @@ public class ProjectFinanceQueriesServiceTest extends BaseUnitTestMocksTest {
                 withLastName("B").
                 build();
         Organisation o = newOrganisation().
-                withOrganisationSize(OrganisationSize.MEDIUM).
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
         User u2 = newUser().
@@ -176,7 +170,6 @@ public class ProjectFinanceQueriesServiceTest extends BaseUnitTestMocksTest {
                 withLastName("Y").
                 build();
         Organisation o2 = newOrganisation().
-                withOrganisationSize(OrganisationSize.MEDIUM).
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
         List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER, PROJECT_PARTNER).withUser(u, u2).withOrganisation(o, o2).build(1);
@@ -210,7 +203,6 @@ public class ProjectFinanceQueriesServiceTest extends BaseUnitTestMocksTest {
                 withLastName("B").
                 build();
         Organisation o = newOrganisation().
-                withOrganisationSize(OrganisationSize.MEDIUM).
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
         User u2 = newUser().
@@ -219,7 +211,6 @@ public class ProjectFinanceQueriesServiceTest extends BaseUnitTestMocksTest {
                 withLastName("Y").
                 build();
         Organisation o2 = newOrganisation().
-                withOrganisationSize(OrganisationSize.MEDIUM).
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
         List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT, PROJECT_PARTNER).withUser(u, u2).withOrganisation(o, o2).build(1);
@@ -264,7 +255,7 @@ public class ProjectFinanceQueriesServiceTest extends BaseUnitTestMocksTest {
     public void test_addPost() throws Exception {
         Long queryId = 1L;
 
-        User user = newUser().withId(33L).withRoles(asList(RoleBuilder.newRole(UserRoleType.PROJECT_FINANCE).build())).build();
+        User user = newUser().withId(33L).withRoles(singleton(RoleBuilder.newRole(UserRoleType.PROJECT_FINANCE).build())).build();
         PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build())).build(), null, null, null);
         Post mappedPost = new Post(null, user, null, null, null);
         Query targetedQuery = new Query(queryId, 22L, null, null, null, null, null);
@@ -282,7 +273,6 @@ public class ProjectFinanceQueriesServiceTest extends BaseUnitTestMocksTest {
                 withLastName("B").
                 build();
         Organisation o = newOrganisation().
-                withOrganisationSize(OrganisationSize.MEDIUM).
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
         User u2 = newUser().
@@ -291,7 +281,6 @@ public class ProjectFinanceQueriesServiceTest extends BaseUnitTestMocksTest {
                 withLastName("Y").
                 build();
         Organisation o2 = newOrganisation().
-                withOrganisationSize(OrganisationSize.MEDIUM).
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
         List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT, PROJECT_PARTNER).withUser(u, u2).withOrganisation(o, o2).build(1);
@@ -319,7 +308,7 @@ public class ProjectFinanceQueriesServiceTest extends BaseUnitTestMocksTest {
     @Test
     public void test_addPostNotFinanceTeam() throws Exception {
         Long queryId = 1L;
-        User user = newUser().withId(33L).withRoles(asList(RoleBuilder.newRole(UserRoleType.COMP_ADMIN).build())).build();
+        User user = newUser().withId(33L).withRoles(singleton(RoleBuilder.newRole(UserRoleType.COMP_ADMIN).build())).build();
         PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.COMP_ADMIN).build())).build(), null, null, null);
         Post mappedPost = new Post(null, user, null, null, null);
         Query targetedQuery = new Query(queryId, 22L, null, null, null, null, null);
@@ -358,7 +347,7 @@ public class ProjectFinanceQueriesServiceTest extends BaseUnitTestMocksTest {
     @Test
     public void test_addPostNoFinanceContact() throws Exception {
         Long queryId = 1L;
-        User user = newUser().withId(33L).withRoles(asList(RoleBuilder.newRole(UserRoleType.PROJECT_FINANCE).build())).build();
+        User user = newUser().withId(33L).withRoles(singleton(RoleBuilder.newRole(UserRoleType.PROJECT_FINANCE).build())).build();
         PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build())).build(), null, null, null);
         Post mappedPost = new Post(null, user, null, null, null);
         Query targetedQuery = new Query(queryId, 22L, null, null, null, null, null);
@@ -376,7 +365,6 @@ public class ProjectFinanceQueriesServiceTest extends BaseUnitTestMocksTest {
                 withLastName("B").
                 build();
         Organisation o = newOrganisation().
-                withOrganisationSize(OrganisationSize.MEDIUM).
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
         User u2 = newUser().
@@ -385,7 +373,6 @@ public class ProjectFinanceQueriesServiceTest extends BaseUnitTestMocksTest {
                 withLastName("Y").
                 build();
         Organisation o2 = newOrganisation().
-                withOrganisationSize(OrganisationSize.MEDIUM).
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
         List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER, PROJECT_PARTNER).withUser(u, u2).withOrganisation(o, o2).build(1);
@@ -402,7 +389,7 @@ public class ProjectFinanceQueriesServiceTest extends BaseUnitTestMocksTest {
     @Test
     public void test_addPostNotificationNotSent() throws Exception {
         Long queryId = 1L;
-        User user = newUser().withId(33L).withRoles(asList(RoleBuilder.newRole(UserRoleType.PROJECT_FINANCE).build())).build();
+        User user = newUser().withId(33L).withRoles(singleton(RoleBuilder.newRole(UserRoleType.PROJECT_FINANCE).build())).build();
         PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build())).build(), null, null, null);
         Post mappedPost = new Post(null, user, null, null, null);
         Query targetedQuery = new Query(queryId, 22L, null, null, null, null, null);
@@ -420,7 +407,6 @@ public class ProjectFinanceQueriesServiceTest extends BaseUnitTestMocksTest {
                 withLastName("B").
                 build();
         Organisation o = newOrganisation().
-                withOrganisationSize(OrganisationSize.MEDIUM).
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
         User u2 = newUser().
@@ -429,7 +415,6 @@ public class ProjectFinanceQueriesServiceTest extends BaseUnitTestMocksTest {
                 withLastName("Y").
                 build();
         Organisation o2 = newOrganisation().
-                withOrganisationSize(OrganisationSize.MEDIUM).
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
         List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT, PROJECT_PARTNER).withUser(u, u2).withOrganisation(o, o2).build(1);

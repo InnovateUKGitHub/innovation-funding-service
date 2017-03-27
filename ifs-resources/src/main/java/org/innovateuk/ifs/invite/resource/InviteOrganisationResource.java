@@ -14,8 +14,7 @@ public class InviteOrganisationResource {
     private String organisationName;
     private String organisationNameConfirmed;
     private Long organisation;
-
-    List<ApplicationInviteResource> inviteResources;
+    private List<ApplicationInviteResource> inviteResources;
 
     public InviteOrganisationResource() {
     	// no-arg constructor

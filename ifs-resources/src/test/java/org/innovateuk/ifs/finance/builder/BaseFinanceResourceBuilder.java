@@ -6,7 +6,6 @@ import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.category.GrantClaimCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
-import org.innovateuk.ifs.user.resource.OrganisationSize;
 
 import java.util.List;
 import java.util.Map;
@@ -26,7 +25,7 @@ public abstract class BaseFinanceResourceBuilder<FinanceResourceType extends Bas
         return withArray((organisationId, applicationFinanceResource) -> setField("organisation", organisationId, applicationFinanceResource), organisationIds);
     }
 
-    public S withOrganisationSize(OrganisationSize... value) {
+    public S withOrganisationSize(Long... value) {
         return withArray((v, finance) -> finance.setOrganisationSize(v), value);
     }
 

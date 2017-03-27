@@ -24,6 +24,7 @@ Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
+Resource          CompAdmin_Commons.robot
 
 *** Test Cases ***
 Initial details: server-side validations
@@ -31,10 +32,10 @@ Initial details: server-side validations
     ...
     ...    IFUND-3888
     [Tags]    HappyPath
-    Given the user clicks the button/link    id=section-3
+    Given the user navigates to the page   ${CA_UpcomingComp}
     And the user clicks the button/link    jQuery=.button:contains("Create competition")
     And The user clicks the button/link    link=Initial details
-    When the user clicks the button/link    jQuery=.button:contains("Done")
+    When the user clicks the button/link   jQuery=.button:contains("Done")
     Then the user should see an error    Please enter a title.
     And the user should see an error    Please select a competition type.
     And the user should see an error    Please select an innovation sector.
@@ -390,19 +391,19 @@ the users waits until the page is autosaved
     Wait For Autosave
 
 the user should see the correct inputs in the Milestones form
-    Element Should Contain    css=tr:nth-of-type(1) td:nth-of-type(1)    Thu
-    Element Should Contain    css=tr:nth-of-type(2) td:nth-of-type(1)    Fri
-    Element Should Contain    css=tr:nth-of-type(3) td:nth-of-type(1)    Sat
-    Element Should Contain    css=tr:nth-of-type(4) td:nth-of-type(1)    Sun
-    Element Should Contain    css=tr:nth-of-type(5) td:nth-of-type(1)    Mon
-    Element Should Contain    css=tr:nth-of-type(6) td:nth-of-type(1)    Tue
-    Element Should Contain    css=tr:nth-of-type(7) td:nth-of-type(1)    Wed
-    Element Should Contain    css=tr:nth-of-type(8) td:nth-of-type(1)    Thu
-    Element Should Contain    css=tr:nth-of-type(9) td:nth-of-type(1)    Fri
-    Element Should Contain    css=tr:nth-of-type(10) td:nth-of-type(1)    Sat
-    Element Should Contain    css=tr:nth-of-type(11) td:nth-of-type(1)    Sun
-    Element Should Contain    css=tr:nth-of-type(12) td:nth-of-type(1)    Mon
-    Element Should Contain    css=tr:nth-of-type(13) td:nth-of-type(1)    Tue
+    Element Should Contain    css=tr:nth-of-type(1) td:nth-of-type(2)    Thu
+    Element Should Contain    css=tr:nth-of-type(2) td:nth-of-type(2)    Fri
+    Element Should Contain    css=tr:nth-of-type(3) td:nth-of-type(2)    Sat
+    Element Should Contain    css=tr:nth-of-type(4) td:nth-of-type(2)    Sun
+    Element Should Contain    css=tr:nth-of-type(5) td:nth-of-type(2)    Mon
+    Element Should Contain    css=tr:nth-of-type(6) td:nth-of-type(2)    Tue
+    Element Should Contain    css=tr:nth-of-type(7) td:nth-of-type(2)    Wed
+    Element Should Contain    css=tr:nth-of-type(8) td:nth-of-type(2)    Thu
+    Element Should Contain    css=tr:nth-of-type(9) td:nth-of-type(2)    Fri
+    Element Should Contain    css=tr:nth-of-type(10) td:nth-of-type(2)    Sat
+    Element Should Contain    css=tr:nth-of-type(11) td:nth-of-type(2)    Sun
+    Element Should Contain    css=tr:nth-of-type(12) td:nth-of-type(2)    Mon
+    Element Should Contain    css=tr:nth-of-type(13) td:nth-of-type(2)    Tue
 
 the user should see the correct inputs in the Applications questions form
     ${input_value} =    Get Value    id=question.title

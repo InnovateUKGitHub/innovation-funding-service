@@ -61,7 +61,8 @@ public class AssessmentFeedbackModelPopulator {
         boolean appendixFormInputExists = hasFormInputWithType(applicationFormInputs, FILEUPLOAD);
         boolean scoreFormInputExists = hasFormInputWithType(assessmentFormInputs, ASSESSOR_SCORE);
         boolean scopeFormInputExists = hasFormInputWithType(assessmentFormInputs, ASSESSOR_APPLICATION_IN_SCOPE);
-        List<ResearchCategoryResource> researchCategories = scopeFormInputExists ? categoryService.getResearchCategories() : null;
+        boolean researchCategoryFormInputExists = hasFormInputWithType(assessmentFormInputs, ASSESSOR_RESEARCH_CATEGORY);
+        List<ResearchCategoryResource> researchCategories = researchCategoryFormInputExists ? categoryService.getResearchCategories() : null;
 
         FileDetailsViewModel appendixDetails = null;
         if (appendixFormInputExists) {
@@ -69,7 +70,9 @@ public class AssessmentFeedbackModelPopulator {
             FormInputResponseResource applicantAppendixResponse = applicantResponses.get(appendixFormInput.getId());
             boolean applicantAppendixResponseExists = applicantAppendixResponse != null;
             if (applicantAppendixResponseExists) {
-                appendixDetails = new FileDetailsViewModel(applicantAppendixResponse.getFilename(), applicantAppendixResponse.getFilesizeBytes());
+                appendixDetails = new FileDetailsViewModel(appendixFormInput.getId(),
+                        applicantAppendixResponse.getFilename(),
+                        applicantAppendixResponse.getFilesizeBytes());
             }
         }
 

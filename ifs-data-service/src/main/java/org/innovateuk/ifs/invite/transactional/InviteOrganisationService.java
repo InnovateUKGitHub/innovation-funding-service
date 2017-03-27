@@ -4,17 +4,16 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface InviteOrganisationService {
 
-    @PostAuthorize("hasPermission(returnObject, 'READ')")
-    ServiceResult<InviteOrganisationResource> findOne(Long id);
+    @PostAuthorize("hasPermission(returnObject, 'READ_FOR_UPDATE')")
+    ServiceResult<InviteOrganisationResource> getById(long id);
 
-    @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<Iterable<InviteOrganisationResource>> findAll();
+    @PostAuthorize("hasPermission(returnObject, 'READ_FOR_UPDATE')")
+    ServiceResult<InviteOrganisationResource> getByOrganisationIdWithInvitesForApplication(long organisationId, long applicationId);
 
     @PreAuthorize(value = "hasPermission(#inviteOrganisationResource, 'SAVE')")
-    ServiceResult<InviteOrganisationResource> save(@P("inviteOrganisationResource")InviteOrganisationResource inviteOrganisationResource);
+    ServiceResult<InviteOrganisationResource> save(@P("inviteOrganisationResource") InviteOrganisationResource inviteOrganisationResource);
 }

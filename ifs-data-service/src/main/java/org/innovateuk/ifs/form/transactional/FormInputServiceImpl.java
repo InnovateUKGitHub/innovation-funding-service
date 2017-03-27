@@ -20,6 +20,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -82,6 +83,11 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
     public ServiceResult<FormInputResponseResource> findResponseByApplicationIdAndQuestionName(long applicationId, String questionName) {
         return find(formInputResponseRepository.findOneByApplicationIdAndFormInputQuestionName(applicationId, questionName),
                 notFoundError(FormInputResponse.class, applicationId, questionName)).andOnSuccessReturn(formInputResponseMapper::mapToResource);
+    }
+
+    @Override
+    public ServiceResult<List<FormInputResponseResource>> findResponseByApplicationIdAndQuestionId(long applicationId, long questionId) {
+        return serviceSuccess(formInputResponsesToResources(formInputResponseRepository.findByApplicationIdAndFormInputQuestionId(applicationId, questionId)));
     }
 
     @Override

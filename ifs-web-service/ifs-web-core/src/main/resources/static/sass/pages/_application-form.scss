@@ -122,7 +122,8 @@ table img.table-tick {
   margin-bottom: 30px;
 }
 
-.eligibility-form h3 [data-mirror] {
-  width:120px;
+.eligibility-form h3 .finance-total {
+  min-width:120px;
   text-align:right;
+  float:right;
 }

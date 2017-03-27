@@ -50,11 +50,11 @@
 
     <!-- ===========================Form: financial summary/breakdown table =========================== -->
     <th:block th:fragment="financial_summary_table" th:if="${financeTotalPerType}">
-        <div class="form-group project-cost-breakdown">
+        <div class="project-cost-breakdown">
             <div style="overflow: auto;">
                 <th:block th:unless="${applicationOrganisations != null}">
                     <div class="warning-alert">
-                        This competition has already closed, you are no longer able to submit your application.
+                        Registration is now closed, you are no longer able to submit your application.
                     </div>
                 </th:block>
                 <table>
@@ -235,7 +235,7 @@
             <th:block th:each="applicationOrganisation : ${applicationOrganisations}">
                 <a th:if="${applicationOrganisation.id == userOrganisation.id}"
                    th:unless="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}"
-                   th:href="@{/application/{id}/form/section/7/(id=${currentApplication.getId()})}" >Return to the finances section to complete your finances</a>
+                   th:href="@{/application/{id}/form/{sectionType}(id=${currentApplication.getId()},sectionType=${T(org.innovateuk.ifs.application.resource.SectionType).FINANCE})}" >Return to the finances section to complete your finances</a>
             </th:block>
 
             <p>This application cannot be submitted unless finances have been marked as complete by all partners.</p>

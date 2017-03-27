@@ -2,23 +2,17 @@ package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.populator.CompetitionOverviewPopulator;
-import org.innovateuk.ifs.competition.populator.publiccontent.section.SummaryViewModelPopulator;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.viewmodel.CompetitionOverviewViewModel;
-import org.innovateuk.ifs.competition.viewmodel.publiccontent.AbstractPublicSectionContentViewModel;
-import org.innovateuk.ifs.competition.viewmodel.publiccontent.section.SummaryViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 
-import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemResourceBuilder.newPublicContentItemResource;
@@ -39,20 +33,6 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
 
     @Mock
     private CompetitionOverviewPopulator overviewPopulator;
-
-    @Mock
-    private AbstractPublicSectionContentViewModel sectionContentViewModel;
-
-    @Mock
-    private SummaryViewModelPopulator summaryViewModelPopulator;
-
-    @Before
-    public void setup() {
-        when(sectionContentViewModel.getSectionType()).thenReturn(PublicContentSectionType.SUMMARY);
-        when(summaryViewModelPopulator.getType()).thenReturn(PublicContentSectionType.SUMMARY);
-        when(summaryViewModelPopulator.populate(any(PublicContentResource.class), anyBoolean())).thenReturn(new SummaryViewModel());
-        controller.setSectionPopulator(asList(summaryViewModelPopulator));
-    }
 
     @Test
     public void testCompetitionOverview() throws Exception {
@@ -75,14 +55,13 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
         viewModel.setCompetitionCloseDate(closeDate);
         viewModel.setCompetitionTitle("Title");
 
-        when(overviewPopulator.populateViewModel(any(PublicContentItemResource.class), any(AbstractPublicSectionContentViewModel.class))).thenReturn(viewModel);
+        when(overviewPopulator.populateViewModel(any(PublicContentItemResource.class), anyBoolean())).thenReturn(viewModel);
 
         mockMvc.perform(get("/competition/{id}/overview", compId))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", viewModel))
                 .andExpect(view().name("competition/overview"));
     }
-
 
     @Test
     public void testCompetitionDetailsCompetitionId() throws Exception {
@@ -100,7 +79,6 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
                 .andExpect(model().attribute("userIsLoggedIn", true))
                 .andExpect(view().name("competition/details"));
     }
-
 
     @Test
     public void testCompetitionDetailsWithInvalidAuthentication() throws Exception {

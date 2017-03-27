@@ -17,17 +17,17 @@ Competition dashboard Open competition
     [Documentation]    INFUND-7562
     [Tags]
     When The user clicks the button/link    link=${OPEN_COMPETITION_NAME}
-    Then the user should see the element    jQuery=span:contains("1: Connected digital additive manufacturing")
+    Then the user should see the element    jQuery=span:contains("15: Predicting market trends programme")
     And the user should see the element    jQuery=h1:contains("Open")
     And the user should see the element    jQuery=dt:contains("Competition type") ~ dd:contains("Programme")
     And the user should see the element    jQuery=dt:contains("Innovation sector") ~ dd:contains("Materials and manufacturing")
     And the user should see the element    jQuery=dt:contains("Innovation area") ~ dd:contains("Satellite Applications")
     And the user should see the element    link=View and update competition setup
     And the user should see the element    jQuery=a:contains("Invite assessors to assess the competition")
-    And the user should see the element    jQuery=a:contains("Applications - All, submitted")
+    And the user should see the element    jQuery=a:contains("Applications: All, submitted")
     #The following checks test if the correct buttons are disabled
     And the user should see the element    jQuery=.disabled[aria-disabled="true"]:contains("Input and review funding decision")
-    And the user should see the element    jQuery=a:contains("Assessor management - assignment to applications")[aria-disabled="true"]
+    And the user should see the element    jQuery=a:contains("Assessor management: Assignments")[aria-disabled="true"]
 
 Milestones for the Open Competitions
     [Documentation]    INFUND-7561
@@ -54,8 +54,8 @@ Competition dashboard ready to Open competition
     And the user should see the element    jQuery=a:contains("Invite assessors to assess the competition")
     #The following checks test if the correct buttons are disabled
     And the user should see the element    jQuery=.disabled[aria-disabled="true"]:contains("Input and review funding decision")
-    And the user should see the element    jQuery=a:contains("Assessor management - assignment to applications")[aria-disabled="true"]
-    And the user should see the element    jQuery=a:contains("Applications - All, submitted")[aria-disabled="true"]
+    And the user should see the element    jQuery=a:contains("Assessor management: Assignments")[aria-disabled="true"]
+    And the user should see the element    jQuery=a:contains("Applications: All, submitted")[aria-disabled="true"]
 
 Milestones for the ready to Open Competitions
     [Documentation]    INFUND-7561

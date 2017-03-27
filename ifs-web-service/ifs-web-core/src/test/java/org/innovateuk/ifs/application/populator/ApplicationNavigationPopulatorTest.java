@@ -2,12 +2,15 @@ package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.application.builder.QuestionResourceBuilder;
 import org.innovateuk.ifs.application.builder.SectionResourceBuilder;
+import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.resource.SectionType;
+import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -15,12 +18,12 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.ui.Model;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -37,6 +40,9 @@ public class ApplicationNavigationPopulatorTest {
 
     @Mock
     private SectionService sectionService;
+
+    @Mock
+    private ApplicationService applicationService;
 
     @Test
     public void testAddNavigation() {
@@ -67,26 +73,46 @@ public class ApplicationNavigationPopulatorTest {
     public void testAddAppropriateBackURLToModelWithoutSection(){
         Long applicationId = 1L;
         Model model = mock(Model.class);
-        HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getHeader("referer")).thenReturn("/application/1");
-        target.addAppropriateBackURLToModel(applicationId, request, model, null);
+
+        setupApplicationOpen(applicationId);
+
+        target.addAppropriateBackURLToModel(applicationId, model, null);
         verify(model).addAttribute(eq("backURL"), contains("/application/1"));
         verify(model).addAttribute(eq("backTitle"), contains("Application Overview"));
+    }
 
-        when(request.getHeader("referer")).thenReturn("/application/1/summary");
-        target.addAppropriateBackURLToModel(applicationId, request, model, null);
+    @Test
+    public void testAddAppropriateBackURLToModelWithoutSectionClosedApplication(){
+        Long applicationId = 1L;
+        Model model = mock(Model.class);
+
+        setupApplicationClosed(applicationId);
+
+        target.addAppropriateBackURLToModel(applicationId, model, null);
         verify(model).addAttribute(eq("backURL"), contains("/application/1/summary"));
         verify(model).addAttribute(eq("backTitle"), contains("Application Summary"));
+    }
 
+    @Test
+    public void testAddAppropriateBackURLToModelWithoutSectionClosedCompetition(){
+        Long applicationId = 1L;
+        Model model = mock(Model.class);
+
+        setupApplicationCompetitionClosed(applicationId);
+        target.addAppropriateBackURLToModel(applicationId, model, null);
+        verify(model).addAttribute(eq("backURL"), contains("/application/1/summary"));
+        verify(model).addAttribute(eq("backTitle"), contains("Application Summary"));
     }
 
     @Test
     public void testAddAppropriateBackURLToModelWithFinanceSubSection(){
         Long applicationId = 1L;
         Model model = mock(Model.class);
-        HttpServletRequest request = mock(HttpServletRequest.class);
+
+        setupApplicationOpen(applicationId);
+
         SectionResource section = newSectionResource().withType(SectionType.FUNDING_FINANCES).build();
-        target.addAppropriateBackURLToModel(applicationId, request, model, section);
+        target.addAppropriateBackURLToModel(applicationId, model, section);
 
         verify(model).addAttribute(eq("backURL"), contains("/application/1/form/FINANCE"));
         verify(model).addAttribute(eq("backTitle"), contains("Your finances"));
@@ -96,10 +122,10 @@ public class ApplicationNavigationPopulatorTest {
     public void testAddAppropriateBackURLToModelWithGeneralSection(){
         Long applicationId = 1L;
         Model model = mock(Model.class);
-        HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getHeader("referer")).thenReturn("/application/1");
         SectionResource section = newSectionResource().withType(SectionType.GENERAL).build();
-        target.addAppropriateBackURLToModel(applicationId, request, model, section);
+        setupApplicationOpen(applicationId);
+
+        target.addAppropriateBackURLToModel(applicationId, model, section);
 
         verify(model).addAttribute(eq("backURL"), contains("/application/1"));
         verify(model).addAttribute(eq("backTitle"), contains("Application Overview"));
@@ -171,5 +197,26 @@ public class ApplicationNavigationPopulatorTest {
         assertEquals("Question 3", result.getPreviousText());
         assertTrue(result.getNextUrl().contains("/question/4"));
         assertEquals("Question 4", result.getNextText());
+    }
+
+    private void setupApplicationOpen(Long applicationId) {
+        when(applicationService.getById(applicationId)).thenReturn(newApplicationResource()
+                .withApplicationStatus(ApplicationStatusConstants.OPEN)
+                .withCompetitionStatus(CompetitionStatus.OPEN)
+                .build());
+    }
+
+    private void setupApplicationClosed(Long applicationId) {
+        when(applicationService.getById(applicationId)).thenReturn(newApplicationResource()
+                .withApplicationStatus(ApplicationStatusConstants.SUBMITTED)
+                .withCompetitionStatus(CompetitionStatus.OPEN)
+                .build());
+    }
+
+    private void setupApplicationCompetitionClosed(Long applicationId) {
+        when(applicationService.getById(applicationId)).thenReturn(newApplicationResource()
+                .withApplicationStatus(ApplicationStatusConstants.OPEN)
+                .withCompetitionStatus(CompetitionStatus.IN_ASSESSMENT)
+                .build());
     }
 }

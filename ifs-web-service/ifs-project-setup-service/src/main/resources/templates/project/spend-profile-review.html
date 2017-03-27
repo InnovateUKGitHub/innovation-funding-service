@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend Profile'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend profile'" />
 </head>
 <body th:class="${(param.view != null and param.view[0] == 'full' ? 'app-overview full-width' : 'app-overview ')}">
 
@@ -11,12 +11,12 @@
 
 <main id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${model.projectId})}"  th:remove="tag"></div>
+    <div th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${model.projectId})}" th:remove="tag"></div>
 
 
     <div class="page-title">
-            <th:block th:insert="fragments/elements :: project-title (projectId=${model.applicationId}, projectName=${model.projectName})"               />
-        <h1 class="heading-xlarge">Spend Profile</h1>
+            <th:block th:insert="fragments/elements :: project-title (projectId=${model.applicationId}, projectName=${model.projectName})"/>
+        <h1 class="heading-xlarge">Spend profile</h1>
     </div>
 
     <div th:if="${model.submitted and !model.approved}" th:remove="tag">
@@ -31,7 +31,7 @@
         </div>
     </div>
 
-    <p>This overview shows the spend profile status of each partner in your project.</p>
+    <p>This overview shows the spend profile status of each organisation in your project.</p>
 
     <div th:if="${model.submitted}" th:remove="tag">
         <h2 class="heading-medium">Spend profile</h2>
@@ -59,16 +59,16 @@
                 th:each="partnerProgress : ${model.partnerSpendProfileProgress}">
 
                 <td>
-                    <div th:each="partner : ${model.partnerOrganisations}"
-                         th:if="${partner.name.equals(partnerProgress.key) }">
-
+                    <div th:each="partner : ${model.partnerOrganisations}" th:if="${partner.name.equals(partnerProgress.key) }">
                         <div th:if="${partnerProgress.value or model.editablePartners.get(partnerProgress.key)}" th:remove="tag">
                             <a th:href="@{/project/{id}/partner-organisation/{organisationId}/spend-profile/review(id=${model.projectId}, organisationId=${partner.id})}"
                                th:text="${partnerProgress.key}"/>
+                            <th:block th:if="${partner.name.equals(model.leadOrganisation.name)}"> (Lead)</th:block>
                         </div>
 
                         <div th:unless="${partnerProgress.value or model.editablePartners.get(partnerProgress.key)}" th:remove="tag">
                             <span th:text="${partnerProgress.key}"></span>
+                            <th:block th:if="${partner.name.equals(model.leadOrganisation.name)}"> (Lead)</th:block>
                         </div>
                     </div>
                 </td>
@@ -90,8 +90,7 @@
 
     <div th:if="${model.markAsComplete and !model.submitted}" th:remove="tag">
 
-        <p class="extra-margin">Please review each partner's spend profile once they are marked as complete. You must
-            make sure they fit the timelines of your project plan.</p>
+        <p class="extra-margin">Please review each partner's spend profile once they are marked as complete.</p>
 
         <a th:href="@{/project/{id}/spend-profile/total(id=${model.projectId})}" class="button">Review and send total project spend profile</a>
 

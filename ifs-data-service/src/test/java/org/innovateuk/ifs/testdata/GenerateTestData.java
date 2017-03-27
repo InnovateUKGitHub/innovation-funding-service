@@ -2,8 +2,6 @@ package org.innovateuk.ifs.testdata;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.flywaydb.core.Flyway;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
@@ -12,6 +10,7 @@ import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.email.resource.EmailAddress;
 import org.innovateuk.ifs.email.service.EmailService;
+import org.innovateuk.ifs.finance.repository.OrganisationSizeRepository;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.notifications.service.senders.email.EmailNotificationSender;
@@ -27,13 +26,18 @@ import org.innovateuk.ifs.testdata.builders.data.BaseUserData;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.Advised;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +61,6 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate.UNIVERSITY_HEI;
 import static org.innovateuk.ifs.testdata.CsvUtils.*;
 import static org.innovateuk.ifs.testdata.builders.AssessmentDataBuilder.newAssessmentData;
 import static org.innovateuk.ifs.testdata.builders.AssessorDataBuilder.newAssessorData;
@@ -77,7 +80,7 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_TECHNOLOGIST;
 import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -90,7 +93,7 @@ import static org.mockito.Mockito.when;
 @Ignore
 public class GenerateTestData extends BaseIntegrationTest {
 
-    private static final Log LOG = LogFactory.getLog(GenerateTestData.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GenerateTestData.class);
 
     @Value("${flyway.url}")
     private String databaseUrl;
@@ -127,6 +130,9 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     @Autowired
     private BankDetailsService bankDetailsService;
+
+    @Autowired
+    private OrganisationSizeRepository organisationSizeRepository;
 
     private CompetitionDataBuilder competitionDataBuilder;
     private CompetitionFunderDataBuilder competitionFunderDataBuilder;
@@ -289,7 +295,6 @@ public class GenerateTestData extends BaseIntegrationTest {
         createAssessors();
         createNonRegisteredAssessorInvites();
         createAssessments();
-        createAssessorResponses();
         createProjects();
 
 //        CSVWriter writer = new CSVWriter(new FileWriter(new File("/tmp/applications.csv")));
@@ -348,17 +353,12 @@ public class GenerateTestData extends BaseIntegrationTest {
             return currentBuilder;
         };
 
-        UnaryOperator<ProjectDataBuilder> approveFinanceChecksIfNecessary =
-                builder -> !line.organisationsWithApprovedFinanceChecks.isEmpty() ?
-                        builder.withApprovedFinanceChecks(line.organisationsWithApprovedFinanceChecks) : builder;
-
         assignProjectManagerIfNecessary.
                 andThen(setProjectAddressIfNecessary).
                 andThen(submitProjectDetailsIfNecessary).
                 andThen(setMonitoringOfficerIfNecessary).
                 andThen(selectFinanceContactsIfNecessary).
                 andThen(submitBankDetailsIfNecessary).
-                andThen(approveFinanceChecksIfNecessary).
                 apply(baseBuilder).
                 build();
 
@@ -379,16 +379,24 @@ public class GenerateTestData extends BaseIntegrationTest {
     }
 
     private void createAssessments() {
+        LOG.info("Creating assessments...");
+
         assessmentLines.forEach(this::createAssessment);
+        assessorResponseLines.forEach(this::createAssessorResponse);
+        assessmentLines.forEach(this::submitAssessment);
     }
 
     private void createAssessment(AssessmentLine line) {
-        assessmentDataBuilder.withAssessmentData(line.assessorEmail, line.applicationName, line.rejectReason, line
-                .rejectComment, line.state).build();
-    }
-
-    private void createAssessorResponses() {
-        assessorResponseLines.forEach(this::createAssessorResponse);
+        assessmentDataBuilder.withAssessmentData(
+                line.assessorEmail,
+                line.applicationName,
+                line.rejectReason,
+                line.rejectComment,
+                line.state,
+                line.feedback,
+                line.recommendComment
+        )
+                .build();
     }
 
     private void createAssessorResponse(AssessorResponseLine line) {
@@ -402,6 +410,15 @@ public class GenerateTestData extends BaseIntegrationTest {
             .build();
     }
 
+    private void submitAssessment(AssessmentLine line) {
+        assessmentDataBuilder.withSubmission(
+                line.applicationName,
+                line.assessorEmail,
+                line.state
+        )
+                .build();
+    }
+
     private void createCompetitionFunders() {
         competitionFunderLines.forEach(this::createCompetitionFunder);
     }
@@ -413,7 +430,6 @@ public class GenerateTestData extends BaseIntegrationTest {
     private void createPublicContentDates() {
         publicContentDateLines.forEach(this::createPublicContentDate);
     }
-
 
     private void createCompetitionFunder(CompetitionFunderLine line) {
         competitionFunderDataBuilder.withCompetitionFunderData(line.competitionName, line.funder, line.funder_budget, line.co_funder)
@@ -447,8 +463,9 @@ public class GenerateTestData extends BaseIntegrationTest {
     }
 
     private void createCompetitions() {
-
         competitionLines.forEach(line -> {
+            LOG.info("Creating competition '{}'", line.name);
+
             if ("Connected digital additive manufacturing".equals(line.name)) {
                 createCompetitionWithApplications(line, Optional.of(1L));
             } else {
@@ -581,7 +598,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                             finances.applicationName.equals(line.title) &&
                             finances.organisationName.equals(organisationName));
 
-            if (organisationType.equals(OrganisationTypeEnum.ACADEMIC)) {
+            if (organisationType.equals(OrganisationTypeEnum.RESEARCH)) {
 
                 if (organisationFinances.isPresent()) {
                     return generateAcademicFinancesFromSuppliedData(user, organisationName, organisationFinances.get(), line.markFinancesComplete);
@@ -634,7 +651,7 @@ public class GenerateTestData extends BaseIntegrationTest {
             case "Grant claim":
                 return builder.withGrantClaim(Integer.valueOf(financeRow.metadata.get(0)));
             case "Organisation size":
-                return builder.withOrganisationSize(OrganisationSize.valueOf(financeRow.metadata.get(0).toUpperCase()));
+                return builder.withOrganisationSize(Long.valueOf(financeRow.metadata.get(0)));
             case "Labour":
                 return builder.withLabourEntry(financeRow.metadata.get(0), Integer.valueOf(financeRow.metadata.get(1)), Integer.valueOf(financeRow.metadata.get(2)));
             case "Overheads":
@@ -685,7 +702,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                                         withSubcontractingCost("Developers", "UK", "To develop stuff", bd("45000")).
                                         withTravelAndSubsistence("To visit colleagues", 15, bd("199")).
                                         withOtherCosts("Some more costs", bd("550")).
-                                        withOrganisationSize(OrganisationSize.MEDIUM))
+                                        withOrganisationSize(1L))
                         .markAsComplete(markAsComplete);
     }
 
@@ -928,8 +945,8 @@ public class GenerateTestData extends BaseIntegrationTest {
                 line.familyFinancialInterests
         );
 
-        if (line.contractSigned) {
-            baseBuilder = baseBuilder.addContractSigned();
+        if (line.agreementSigned) {
+            baseBuilder = baseBuilder.addAgreementSigned();
         }
 
         if (!line.rejectionReason.isEmpty()) {
@@ -994,8 +1011,8 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     private OrganisationTypeEnum lookupOrganisationType(String organisationType) {
         switch (organisationType) {
-            case UNIVERSITY_HEI:
-                return OrganisationTypeEnum.ACADEMIC;
+            case "Research":
+                return OrganisationTypeEnum.RESEARCH;
             default:
                 return OrganisationTypeEnum.valueOf(organisationType.toUpperCase().replace(" ", "_"));
         }

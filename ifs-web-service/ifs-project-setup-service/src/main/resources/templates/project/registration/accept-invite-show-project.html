@@ -10,7 +10,7 @@
 
 <main id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <div th:include="fragments/layout :: header-sub"
+    <div th:insert="fragments/layout :: header-sub"
          th:with="linkTitle='Back',linkClass='link-back',linkUrl='javascript:history.back()',currentApplication=${currentApplication}"
          th:remove="tag"/>
     <h1 class="heading-large">Join a project</h1>

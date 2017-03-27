@@ -86,7 +86,7 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
         when(projectServiceMock.getProjectById(project.getId())).thenReturn(serviceSuccess(project));
         when(organisationServiceMock.findById(organisation.getId())).thenReturn(serviceSuccess(organisation));
         when(projectFinanceRowServiceMock.financeChecksDetails(project.getId(), organisation.getId())).thenReturn(serviceSuccess(projectFinance));
-        when(organisationFinanceDelegateMock.isUsingJesFinances(organisation.getOrganisationTypeName())).thenReturn(false);
+        when(financeUtilMock.isUsingJesFinances(organisation.getOrganisationType())).thenReturn(false);
         when(costCategoryTypeStrategyMock.getOrCreateCostCategoryTypeForSpendProfile(project.getId(), organisation.getId())).thenReturn(serviceSuccess(costCategoryType));
 
         ServiceResult<SpendProfileCostCategorySummaries> result = service.getCostCategorySummaries(project.getId(), organisation.getId());
@@ -103,8 +103,8 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
                 s -> s.getCategory().equals(costCategories.get(1))).get();
 
 
-        assertEquals(new BigDecimal("6448.00000"), summary1.getTotal());
-        assertEquals(new BigDecimal("652.00000"), summary1.getFirstMonthSpend());
+        assertEquals(new BigDecimal("6448"), summary1.getTotal());
+        assertEquals(new BigDecimal("652"), summary1.getFirstMonthSpend());
         assertEquals(new BigDecimal("644"), summary1.getOtherMonthsSpend());
 
         assertEquals(new BigDecimal("229"), summary2.getTotal());
@@ -163,7 +163,7 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
         when(projectServiceMock.getProjectById(project.getId())).thenReturn(serviceSuccess(project));
         when(organisationServiceMock.findById(organisation.getId())).thenReturn(serviceSuccess(organisation));
         when(projectFinanceRowServiceMock.financeChecksDetails(project.getId(), organisation.getId())).thenReturn(serviceSuccess(projectFinance));
-        when(organisationFinanceDelegateMock.isUsingJesFinances(organisation.getOrganisationTypeName())).thenReturn(true);
+        when(financeUtilMock.isUsingJesFinances(organisation.getOrganisationType())).thenReturn(true);
         when(costCategoryTypeStrategyMock.getOrCreateCostCategoryTypeForSpendProfile(project.getId(), organisation.getId())).thenReturn(serviceSuccess(costCategoryType));
 
         ServiceResult<SpendProfileCostCategorySummaries> result = service.getCostCategorySummaries(project.getId(), organisation.getId());
@@ -185,12 +185,12 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
         SpendProfileCostCategorySummary summary4 = simpleFindFirst(summaries.getCosts(),
                 s -> s.getCategory().equals(costCategories.get(3))).get();
 
-        assertEquals(new BigDecimal("6448.00000"), summary1.getTotal());
-        assertEquals(new BigDecimal("652.00000"), summary1.getFirstMonthSpend());
+        assertEquals(new BigDecimal("6448"), summary1.getTotal());
+        assertEquals(new BigDecimal("652"), summary1.getFirstMonthSpend());
         assertEquals(new BigDecimal("644"), summary1.getOtherMonthsSpend());
 
-        assertEquals(new BigDecimal("288.00000"), summary2.getTotal());
-        assertEquals(new BigDecimal("36.00000"), summary2.getFirstMonthSpend());
+        assertEquals(new BigDecimal("288"), summary2.getTotal());
+        assertEquals(new BigDecimal("36"), summary2.getFirstMonthSpend());
         assertEquals(new BigDecimal("28"), summary2.getOtherMonthsSpend());
 
         assertEquals(new BigDecimal("33"), summary3.getTotal());

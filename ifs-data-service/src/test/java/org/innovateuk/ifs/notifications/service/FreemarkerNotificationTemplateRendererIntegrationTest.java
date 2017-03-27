@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.notifications.service;
 
-import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.notifications.resource.UserNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -16,10 +16,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
-import static java.io.File.separator;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilterNot;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
+import static java.io.File.separator;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -78,18 +78,16 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
     }
 
     @Test
-    public void testApplicationAssessorFeedbackAvailableEmail() throws URISyntaxException, IOException {
+    public void testFundingApplicationEmail() throws URISyntaxException, IOException {
 
         Map<String, Object> templateArguments = asMap(
-                "name", "User 2",
-                "applicationName", "My Application",
-                "competitionName", "Competition 123",
-                "dashboardUrl", "https://ifs-local-dev/dashboard"
+                "subject", "Subject of message",
+                "message", "Body of message."
         );
 
-        assertRenderedEmailTemplateContainsExpectedLines("application_funded_assessor_feedback_published_subject.txt", templateArguments);
-        assertRenderedEmailTemplateContainsExpectedLines("application_funded_assessor_feedback_published_text_plain.txt", templateArguments);
-        assertRenderedEmailTemplateContainsExpectedLines("application_funded_assessor_feedback_published_text_html.html", templateArguments);
+        assertRenderedEmailTemplateContainsExpectedLines("application_funding_subject.txt", templateArguments);
+        assertRenderedEmailTemplateContainsExpectedLines("application_funding_text_plain.txt", templateArguments);
+        assertRenderedEmailTemplateContainsExpectedLines("application_funding_text_html.html", templateArguments);
     }
 
     @Test

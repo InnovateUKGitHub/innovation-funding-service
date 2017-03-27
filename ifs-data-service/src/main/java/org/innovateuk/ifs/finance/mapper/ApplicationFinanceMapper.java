@@ -16,7 +16,8 @@ import org.mapstruct.Mappings;
     uses = {
             OrganisationMapper.class,
             ApplicationMapper.class,
-            FileEntryMapper.class
+            FileEntryMapper.class,
+            OrganisationSizeMapper.class
     }
 )
 public abstract class ApplicationFinanceMapper extends BaseMapper<ApplicationFinance, ApplicationFinanceResource, Long> {
@@ -25,9 +26,11 @@ public abstract class ApplicationFinanceMapper extends BaseMapper<ApplicationFin
         @Mapping(target = "financeOrganisationDetails", ignore = true ),
         @Mapping(source = "application", target = "target")
     })
-    
     @Override
     public abstract ApplicationFinanceResource mapToResource(ApplicationFinance domain);
+
+    @Override
+    public abstract ApplicationFinance mapToDomain(ApplicationFinanceResource resource);
 
 
     public Long mapApplicationFinanceToId(ApplicationFinance object) {

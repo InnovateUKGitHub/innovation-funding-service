@@ -20,15 +20,73 @@
             <p>We will assign a Monitoring Officer who will visit your project at this address.</p>
 
             <form th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" >
+                <div th:class="${#fields.hasErrors('*{addressType}')}? 'form-group error':'form-group'">
+                    <fieldset>
+                        <legend>
+                            <span class="heading-medium">Project address</span>
+                            <span th:if="${#fields.hasErrors('*{addressType}')}" th:remove="tag">
+                                <span class="error-message" th:each="err : ${#fields.errors('addressType')}" th:text="${err}" />
+                            </span>
+                        </legend>
+                        <p class="form-hint">Please select the address where the majority of work will be carried out.</p>
 
-            <fieldset>
-                <legend><span class="heading-medium">Project address</span></legend>
-                <p class="form-hint">Please select the address where the majority of work will be carried out.</p>
+                        <th:block th:if="${model.registeredAddress}">
+                            <label class="block-label selection-button-radio" for="address-use-org" data-target="registeredAddress">
+                                <input id="address-use-org" type="radio" name="project-address-group" required="required" th:attr="data-required-errormessage=#{validation.projectdetailsaddressviewmodelform.organisationaddresstype.required}" value="REGISTERED" th:field="*{addressType}"/>
+                                Use organisation address (<strong th:text="${model.registeredAddress.postcode}">BS1 4NT</strong>)
+                            </label>
 
-                <th:block th:insert="project/fragments :: select-address" th:with="form=${form}" />
-            </fieldset>
+                            <div id="registeredAddress" class="panel" th:if="${model.registeredAddress}">
+                                <p>
+                                  <span th:each="addressLine : ${model.registeredAddress.getNonEmptyLines()}" th:remove="tag">
+                                      <span th:text="${addressLine}" th:remove="tag">An address line</span><br />
+                                  </span>
+                                </p>
+                            </div>
+                        </th:block>
 
-            <button class="button extra-margin">Save</button>
+                        <th:block th:if="${model.operatingAddress}">
+                            <label class="block-label selection-button-radio" for="address-use-operating" data-target="operatingAddress">
+                                <input id="address-use-operating" type="radio" name="project-address-group" required="required" th:attr="data-required-errormessage=#{validation.projectdetailsaddressviewmodelform.organisationaddresstype.required}" value="OPERATING" th:field="*{addressType}"/>
+                                Use operating address (<strong th:text="${model.operatingAddress?.postcode}">SN1 2UE</strong>)
+                            </label>
+
+                            <div id="operatingAddress" class="panel" th:if="${model.operatingAddress}">
+                                <p>
+                                  <span th:each="addressLine : ${model.operatingAddress.getNonEmptyLines()}" th:remove="tag">
+                                      <span th:text="${addressLine}" th:remove="tag">An address line</span><br />
+                                  </span>
+                                </p>
+                            </div>
+                        </th:block>
+
+                        <th:block th:if="${model.projectAddress}">
+                            <label class="block-label selection-button-radio" for="address-use-project" data-target="projectAddress">
+                                <input id="address-use-project" type="radio" name="project-address-group" required="required" th:attr="data-required-errormessage=#{validation.projectdetailsaddressviewmodelform.organisationaddresstype.required}" value="PROJECT" th:field="*{addressType}"/>
+                                Use project address (<strong th:text="${model.projectAddress?.postcode}">SN1 2EE</strong>)
+                            </label>
+
+                            <div id="projectAddress" class="panel" th:if="${model.projectAddress}">
+                                <p>
+                                  <span th:each="addressLine : ${model.projectAddress.getNonEmptyLines()}" th:remove="tag">
+                                      <span th:text="${addressLine}" th:remove="tag">An address line</span><br />
+                                  </span>
+                                </p>
+                            </div>
+                        </th:block>
+
+                        <label class="block-label selection-button-radio" for="address-add-project" data-target="custom-postcode">
+                            <input id="address-add-project" type="radio" name="project-address-group" required="required" th:attr="data-required-errormessage=#{validation.projectdetailsaddressviewmodelform.organisationaddresstype.required}" value="ADD_NEW" th:field="*{addressType}"/>
+                            Enter an alternative project address
+                        </label>
+
+                        <div id="custom-postcode" class="panel">
+                            <th:block th:insert="fragments/addresses :: company-address-details" th:with="form=${form}" />
+                        </div>
+                    </fieldset>
+                </div>
+
+                <button class="button extra-margin">Save project address</button>
             </form>
 
             <th:block th:insert="fragments/layout :: main-content-end" />

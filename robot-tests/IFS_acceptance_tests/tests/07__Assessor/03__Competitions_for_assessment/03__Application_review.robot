@@ -94,8 +94,8 @@ Scope: Status in the overview is updated
     And the user clicks the button/link    jQuery=label:contains(Yes)
     And The user enters text to a text field    css=.editor    Testing feedback field when "Yes" is selected.
     And the user clicks the button/link    jquery=button:contains("Save and return to assessment overview")
-    And the user should see the text in the page    In scope? Yes
-    And the user should see the element    css=.column-third > img    #green flag
+    And the user should see the text in the page    In scope
+    And the user should see the element    css=.task-status-complete
 
 Scope: Autosave
     [Documentation]    INFUND-1483
@@ -103,7 +103,7 @@ Scope: Autosave
     ...    INFUND-3780
     [Tags]    HappyPath
     When the user clicks the button/link    link=Scope
-    And the user should see the text in the page    Technical feasibility
+    And the user should see the text in the page    Feasibility studies
     And the user should see the text in the page    Testing feedback field when "Yes" is selected.
 
 Scope: Word count
@@ -218,14 +218,14 @@ the finance summary total should be correct
     Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(6)    £70,316
 
 the project cost breakdown total should be correct
-    Element Should Contain    css=.form-group.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(2)    £100,452
-    Element Should Contain    css=.form-group.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(3)    £1,541
-    Element Should Contain    css=.form-group.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(4)    £0
-    Element Should Contain    css=.form-group.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(5)    £50,100
-    Element Should Contain    css=.form-group.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(6)    £276
-    Element Should Contain    css=.form-group.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(7)    £45,000
-    Element Should Contain    css=.form-group.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(8)    £2,985
-    Element Should Contain    css=.form-group.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(9)    £550
+    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(2)    £100,452
+    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(3)    £1,541
+    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(4)    £0
+    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(5)    £50,100
+    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(6)    £276
+    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(7)    £45,000
+    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(8)    £2,985
+    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(9)    £550
 
 The status of the appllications should be correct
     [Arguments]    ${APPLICATION}    ${STATUS}

@@ -37,6 +37,10 @@ public class ApplicationAssessmentSummaryResourceBuilder extends BaseBuilder<App
         return withArraySetFieldByReflection("name", value);
     }
 
+    public ApplicationAssessmentSummaryResourceBuilder withInnovationArea(String... value) {
+        return withArraySetFieldByReflection("innovationArea", value);
+    }
+
     public ApplicationAssessmentSummaryResourceBuilder withCompetitionId(Long... value) {
         return withArraySetFieldByReflection("competitionId", value);
     }

@@ -9,8 +9,8 @@ import java.util.List;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.AffiliationDocs.affiliationResourceBuilder;
 import static org.innovateuk.ifs.documentation.AffiliationDocs.affiliationResourceFields;
-import static org.innovateuk.ifs.documentation.ProfileContractDocs.profileContractResourceBuilder;
-import static org.innovateuk.ifs.documentation.ProfileContractDocs.profileContractResourceFields;
+import static org.innovateuk.ifs.documentation.ProfileAgreementDocs.profileAgreementResourceBuilder;
+import static org.innovateuk.ifs.documentation.ProfileAgreementDocs.profileAgreementResourceFields;
 import static org.innovateuk.ifs.documentation.ProfileSkillsDocs.*;
 import static org.innovateuk.ifs.documentation.UserDocs.userResourceFields;
 import static org.innovateuk.ifs.documentation.UserProfileResourceDocs.userProfileResourceBuilder;
@@ -114,33 +114,33 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
     }
 
     @Test
-    public void getProfileContract() throws Exception {
+    public void getProfileAgreement() throws Exception {
         Long userId = 1L;
-        ProfileContractResource profileContract = profileContractResourceBuilder.build();
+        ProfileAgreementResource profileAgreementResource = profileAgreementResourceBuilder.build();
 
-        when(userProfileServiceMock.getProfileContract(userId)).thenReturn(serviceSuccess(profileContract));
+        when(userProfileServiceMock.getProfileAgreement(userId)).thenReturn(serviceSuccess(profileAgreementResource));
 
-        mockMvc.perform(get("/user/id/{id}/getProfileContract", userId))
+        mockMvc.perform(get("/user/id/{id}/getProfileAgreement", userId))
                 .andExpect(status().isOk())
                 .andDo(document("user/{method-name}",
                         pathParameters(
-                                parameterWithName("id").description("Identifier of the user associated with the profile contract being requested")
+                                parameterWithName("id").description("Identifier of the user associated with the profile agreement being requested")
                         ),
-                        responseFields(profileContractResourceFields)
+                        responseFields(profileAgreementResourceFields)
                 ));
     }
 
     @Test
-    public void updateProfileContract() throws Exception {
+    public void updateProfileAgreement() throws Exception {
         Long userId = 1L;
 
-        when(userProfileServiceMock.updateProfileContract(userId)).thenReturn(serviceSuccess());
+        when(userProfileServiceMock.updateProfileAgreement(userId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/user/id/{id}/updateProfileContract", userId))
+        mockMvc.perform(put("/user/id/{id}/updateProfileAgreement", userId))
                 .andExpect(status().isOk())
                 .andDo(document("user/{method-name}",
                         pathParameters(
-                                parameterWithName("id").description("Identifier of the user to update the profile contract for")
+                                parameterWithName("id").description("Identifier of the user to update the profile agreement for")
                         )
                 ));
     }

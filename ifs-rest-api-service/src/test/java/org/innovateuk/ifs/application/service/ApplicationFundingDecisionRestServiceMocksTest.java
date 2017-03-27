@@ -1,18 +1,17 @@
 package org.innovateuk.ifs.application.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import java.util.Map;
-
+import org.innovateuk.ifs.BaseRestServiceUnitTest;
+import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.NotificationResource;
+import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.util.MapFunctions;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 
-import org.innovateuk.ifs.BaseRestServiceUnitTest;
-import org.innovateuk.ifs.application.resource.FundingDecision;
-import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.util.MapFunctions;
+import java.util.Map;
+
+import static org.junit.Assert.assertNotNull;
 
 public class ApplicationFundingDecisionRestServiceMocksTest extends BaseRestServiceUnitTest<ApplicationFundingDecisionRestServiceImpl> {
 
@@ -23,20 +22,6 @@ public class ApplicationFundingDecisionRestServiceMocksTest extends BaseRestServ
     	ApplicationFundingDecisionRestServiceImpl applicationFundingDecisionRestService = new ApplicationFundingDecisionRestServiceImpl();
     	applicationFundingDecisionRestService.setApplicationFundingDecisionRestURL(applicationFundingDecisionRestURL);
     	return applicationFundingDecisionRestService;
-    }
-
-    @Test
-    public void testMakeFundingDecision() {
-
-    	Long competitionId = 123L;
-    	Map<Long, FundingDecision> applicationIdToFundingDecision = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED, 3L, FundingDecision.FUNDED);
-    	
-        String expectedUrl = applicationFundingDecisionRestURL + "/" + 123 + "/submit";
-        setupPostWithRestResultExpectations(expectedUrl, applicationIdToFundingDecision, HttpStatus.OK);
-
-        RestResult<Void> result = service.makeApplicationFundingDecision(competitionId, applicationIdToFundingDecision);
-        assertNotNull(result);
-        Assert.assertEquals(HttpStatus.OK, result.getStatusCode());
     }
     
     @Test
@@ -49,6 +34,20 @@ public class ApplicationFundingDecisionRestServiceMocksTest extends BaseRestServ
         setupPostWithRestResultExpectations(expectedUrl, applicationIdToFundingDecision, HttpStatus.OK);
 
         RestResult<Void> result = service.saveApplicationFundingDecisionData(competitionId, applicationIdToFundingDecision);
+        assertNotNull(result);
+        Assert.assertEquals(HttpStatus.OK, result.getStatusCode());
+    }
+
+    @Test
+    public void testSendFundingDecision() {
+        Map<Long, FundingDecision> decisions = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED, 3L, FundingDecision.ON_HOLD);
+
+        NotificationResource notification = new NotificationResource("Subject", "Body.", decisions);
+
+        String expectedUrl = applicationFundingDecisionRestURL + "/sendNotifications";
+        setupPostWithRestResultExpectations(expectedUrl, notification, HttpStatus.OK);
+
+        RestResult<Void> result = service.sendApplicationFundingDecisions(notification);
         assertNotNull(result);
         Assert.assertEquals(HttpStatus.OK, result.getStatusCode());
     }

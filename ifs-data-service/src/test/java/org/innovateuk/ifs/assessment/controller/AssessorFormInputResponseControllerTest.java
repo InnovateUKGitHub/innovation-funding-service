@@ -2,6 +2,7 @@ package org.innovateuk.ifs.assessment.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
+import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
@@ -11,6 +12,7 @@ import org.junit.Test;
 import java.util.Collections;
 import java.util.List;
 
+import static org.innovateuk.ifs.assessment.builder.AssessmentFeedbackAggregateResourceBuilder.newAssessmentFeedbackAggregateResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -139,5 +141,20 @@ public class AssessorFormInputResponseControllerTest extends BaseControllerMockM
                 .andExpect(content().string(toJson(expected)));
 
         verify(assessorFormInputResponseServiceMock, only()).getApplicationAggregateScores(applicationId);
+    }
+
+    @Test
+    public void getAssessmentAggregateFeedback() throws Exception {
+        long applicationId = 1L;
+        long questionId = 2L;
+        AssessmentFeedbackAggregateResource expected = newAssessmentFeedbackAggregateResource().build();
+
+        when(assessorFormInputResponseServiceMock.getAssessmentAggregateFeedback(applicationId, questionId)).thenReturn(serviceSuccess(expected));
+
+        mockMvc.perform(get("/assessorFormInputResponse/application/{applicationId}/question/{questionId}/feedback", applicationId, questionId))
+                .andExpect(status().isOk())
+                .andExpect(content().string(toJson(expected)));
+
+        verify(assessorFormInputResponseServiceMock, only()).getAssessmentAggregateFeedback(applicationId, questionId);
     }
 }

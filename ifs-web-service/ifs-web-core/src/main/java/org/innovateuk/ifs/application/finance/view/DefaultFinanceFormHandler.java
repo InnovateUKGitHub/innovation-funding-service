@@ -16,7 +16,6 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.user.resource.OrganisationSize;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.util.Either;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -150,8 +149,9 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
         String fieldNameReplaced = fieldName.replace("financePosition-", "");
         switch (fieldNameReplaced) {
             case "organisationSize":
-                OrganisationSize newValue = OrganisationSize.valueOf(value);
-                handleOrganisationSizeChange(applicationFinance, competitionId, userId, applicationFinance.getOrganisationSize(), newValue);
+                Long newValue = Long.valueOf(value);
+                Long oldValue = applicationFinance.getOrganisationSize();
+                handleOrganisationSizeChange(applicationFinance, competitionId, userId, oldValue, newValue);
                 applicationFinance.setOrganisationSize(newValue);
                 break;
             default:
@@ -159,7 +159,7 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
         }
     }
 
-    private void handleOrganisationSizeChange(ApplicationFinanceResource applicationFinance, Long competitionId, Long userId, OrganisationSize oldValue, OrganisationSize newValue) {
+    private void handleOrganisationSizeChange(ApplicationFinanceResource applicationFinance, Long competitionId, Long userId, Long oldValue, Long newValue) {
         if(null != oldValue && !oldValue.equals(newValue)) {
             fundingLevelResetHandler.resetFundingAndMarkAsIncomplete(applicationFinance, competitionId, userId);
         }

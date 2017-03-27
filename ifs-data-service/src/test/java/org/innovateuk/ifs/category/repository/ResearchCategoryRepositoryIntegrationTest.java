@@ -2,6 +2,7 @@ package org.innovateuk.ifs.category.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
+import org.innovateuk.ifs.finance.repository.GrantClaimMaximumRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,12 @@ public class ResearchCategoryRepositoryIntegrationTest
         this.repository = repository;
     }
 
+    @Autowired
+    private GrantClaimMaximumRepository grantClaimMaximumRepository;
+
     @Before
     public void setup() {
+        grantClaimMaximumRepository.deleteAll();
         repository.deleteAll();
     }
 

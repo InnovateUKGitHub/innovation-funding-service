@@ -1,0 +1,11 @@
+== Retrieve current agreement
+=== Success case
+=== Request
+include::{snippets}/agreement/find-current/http-request.adoc[]
+
+=== Response
+include::{snippets}/agreement/find-current/http-response.adoc[]
+include::{snippets}/agreement/find-current/response-fields.adoc[]
+
+=== Curl Example
+include::{snippets}/agreement/find-current/curl-request.adoc[]

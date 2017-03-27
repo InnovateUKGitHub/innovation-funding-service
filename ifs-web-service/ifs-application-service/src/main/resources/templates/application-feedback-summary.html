@@ -11,12 +11,13 @@
         <main id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
 
-            <th:block th:if="${currentApplication.isOpen() and currentCompetition.isOpen()}" th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication},linkTitle='Application Overview',linkClass='link-back',linkUrl=@{/application/{id}(id=${currentApplication.id})}"/>
+            <th:block th:include="fragments/layout :: header-sub"
+                      th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}"/>
 
             <th:block th:insert="fragments/elements :: competition-closing-warning (competition=${currentCompetition})" />
 
             <div class="page-title">
-                <th:block th:insert="fragments/elements :: application-title (applicationId=${currentApplication.id},applicationName=${currentApplication.applicationDisplayName})" />
+                <th:block th:insert="fragments/elements :: application-title (applicationId=${currentApplication.id},applicationName=${currentApplication.name})" />
                 <h1 class="heading-xlarge no-margin">Feedback overview</h1>
             </div>
 
@@ -102,7 +103,8 @@
                         <div class="grid-row">
                             <div class="column-two-thirds">
                                 <h3 class="heading-small">
-                                    <a th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.shortName}">1. Business opportunity</a>
+                                    <a th:href="@{/application/{apId}/question/{qId}/feedback(apId=${currentApplication.id},qId=${question.id})}"
+                                        th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.shortName}">1. Business opportunity</a>
                                 </h3>
                             </div>
                             <div>
@@ -134,8 +136,7 @@
 
                         <div th:if="${academicOrganisations != null and academicOrganisations.size() > 0}">
                             <h2 class="heading-medium">Academic partner breakdown</h2>
-                            <p>Academic partners submit their project costs through the Je-S system. For a full breakdown of their project costs, please see the
-                                below documents.</p>
+                            <p>Academic partners submit their project costs through the Je-S system. For a full breakdown of their project costs, please see the documents below.</p>
                             <th:block th:insert="finance/finance-summary :: academic_partner_breakdown" />
                         </div>
                     </div>
@@ -251,14 +252,15 @@
                 </div>
             </div>*/-->
 
-            <!--/* TODO INFUND-8172
-            <h2 class="heading-medium">Assessor feedback</h2>
-            <ul class="boxed-list">
-                <li>
-                    <h3 class="heading-small">Assessor 1</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
-                </li>
-            </ul>*/-->
+            <div th:if="!${#lists.isEmpty(feedback)}">
+                <h2 class="heading-medium">Assessor feedback</h2>
+                <ul class="boxed-list">
+                    <li th:each="item, iterStat : ${feedback}">
+                        <h3 class="heading-small" th:text="|Assessor ${iterStat.count}|">Assessor 1</h3>
+                        <p th:text="${item}">Feedback text</p>
+                    </li>
+                </ul>
+            </div>
 
             <th:block th:insert="fragments/layout :: main-content-end" />
         </main>

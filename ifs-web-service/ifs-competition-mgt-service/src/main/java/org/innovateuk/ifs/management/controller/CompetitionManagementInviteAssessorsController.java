@@ -6,14 +6,12 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
-import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
-import org.innovateuk.ifs.invite.resource.NewUserStagedInviteListResource;
-import org.innovateuk.ifs.invite.resource.NewUserStagedInviteResource;
+import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
 import org.innovateuk.ifs.management.form.FindAssessorsFilterForm;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsForm;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsRowForm;
+import org.innovateuk.ifs.management.form.OverviewAssessorsFilterForm;
 import org.innovateuk.ifs.management.model.InviteAssessorsFindModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsInviteModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsOverviewModelPopulator;
@@ -73,7 +71,14 @@ public class CompetitionManagementInviteAssessorsController {
                        @PathVariable("competitionId") long competitionId,
                        @RequestParam(defaultValue = "0") int page,
                        @RequestParam MultiValueMap<String, String> queryParams) {
-        return doViewFind(model, competitionId, page, filterForm.getInnovationArea(), queryParams);
+        CompetitionResource competition = competitionService.getById(competitionId);
+
+        String originQuery = buildOriginQueryString(AssessorProfileOrigin.ASSESSOR_FIND, queryParams);
+
+        model.addAttribute("model", inviteAssessorsFindModelPopulator.populateModel(competition, page, filterForm.getInnovationArea(), originQuery));
+        model.addAttribute("originQuery", originQuery);
+
+        return "assessors/find";
     }
 
     @RequestMapping(value = "/find", params = {"add"}, method = RequestMethod.POST)
@@ -118,7 +123,14 @@ public class CompetitionManagementInviteAssessorsController {
             form.getInvites().add(new InviteNewAssessorsRowForm());
         }
 
-        return doViewInvite(model, competitionId, page, queryParams);
+        CompetitionResource competition = competitionService.getById(competitionId);
+
+        String originQuery = buildOriginQueryString(AssessorProfileOrigin.ASSESSOR_INVITE, queryParams);
+
+        model.addAttribute("model", inviteAssessorsInviteModelPopulator.populateModel(competition, page, originQuery));
+        model.addAttribute("originQuery", originQuery);
+
+        return "assessors/invite";
     }
 
     @RequestMapping(value = "/invite", params = {"remove"}, method = RequestMethod.POST)
@@ -191,11 +203,23 @@ public class CompetitionManagementInviteAssessorsController {
 
     @RequestMapping(value = "/overview", method = RequestMethod.GET)
     public String overview(Model model,
+                           @Valid @ModelAttribute(FILTER_FORM_ATTR_NAME) OverviewAssessorsFilterForm filterForm,
                            @PathVariable("competitionId") long competitionId,
+                           @RequestParam(defaultValue = "0") int page,
                            @RequestParam MultiValueMap<String, String> queryParams) {
         CompetitionResource competition = competitionService.getById(competitionId);
-        model.addAttribute("model", inviteAssessorsOverviewModelPopulator.populateModel(competition));
-        model.addAttribute("originQuery", buildOriginQueryString(AssessorProfileOrigin.ASSESSOR_OVERVIEW, queryParams));
+
+        String originQuery = buildOriginQueryString(AssessorProfileOrigin.ASSESSOR_OVERVIEW, queryParams);
+
+        model.addAttribute("model", inviteAssessorsOverviewModelPopulator.populateModel(
+                competition,
+                page,
+                filterForm.getInnovationArea(),
+                filterForm.getStatus(),
+                filterForm.getCompliant(),
+                originQuery
+        ));
+        model.addAttribute("originQuery", originQuery);
 
         return "assessors/overview";
     }
@@ -206,32 +230,6 @@ public class CompetitionManagementInviteAssessorsController {
 
     private ServiceResult<Void> deleteInvite(String email, long competitionId) {
         return competitionInviteRestService.deleteInvite(email, competitionId).toServiceResult();
-    }
-
-    private String doViewFind(Model model,
-                              long competitionId,
-                              int page,
-                              Optional<Long> innovationArea,
-                              MultiValueMap<String, String> queryParams) {
-        CompetitionResource competition = competitionService.getById(competitionId);
-
-        String originQuery = buildOriginQueryString(AssessorProfileOrigin.ASSESSOR_FIND, queryParams);
-
-        model.addAttribute("model", inviteAssessorsFindModelPopulator.populateModel(competition, page, innovationArea, originQuery));
-        model.addAttribute("originQuery", originQuery);
-
-        return "assessors/find";
-    }
-
-    private String doViewInvite(Model model, long competitionId, int page, MultiValueMap<String, String> queryParams) {
-        CompetitionResource competition = competitionService.getById(competitionId);
-
-        String originQuery = buildOriginQueryString(AssessorProfileOrigin.ASSESSOR_INVITE, queryParams);
-
-        model.addAttribute("model", inviteAssessorsInviteModelPopulator.populateModel(competition, page, originQuery));
-        model.addAttribute("originQuery", originQuery);
-
-        return "assessors/invite";
     }
 
     private NewUserStagedInviteListResource newInviteFormToResource(InviteNewAssessorsForm form, long competitionId) {

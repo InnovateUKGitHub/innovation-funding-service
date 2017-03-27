@@ -4,19 +4,21 @@ import com.google.common.collect.ImmutableMap;
 import org.hamcrest.Matchers;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
-import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
-import org.innovateuk.ifs.application.populator.ApplicationOverviewModelPopulator;
-import org.innovateuk.ifs.application.populator.ApplicationPrintPopulator;
-import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
+import org.innovateuk.ifs.application.populator.*;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
+import org.innovateuk.ifs.application.viewmodel.AssessQuestionFeedbackViewModel;
+import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
+import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResource;
+import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentFeedbackResource;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
+import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
@@ -44,11 +46,17 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.google.common.collect.Sets.newHashSet;
+import static java.util.Optional.ofNullable;
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.application.service.Futures.settable;
+import static org.innovateuk.ifs.assessment.builder.AssessmentFeedbackAggregateResourceBuilder.newAssessmentFeedbackAggregateResource;
+import static org.innovateuk.ifs.assessment.builder.ApplicationAssessmentFeedbackResourceBuilder.newApplicationAssessmentFeedbackResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
+import static org.innovateuk.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Matchers.any;
@@ -82,6 +90,14 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
 
     @Spy
     @InjectMocks
+    private AssessorQuestionFeedbackPopulator assessorQuestionFeedbackPopulator;
+
+    @Spy
+    @InjectMocks
+    private FeedbackNavigationPopulator feedbackNavigationPopulator;
+
+    @Spy
+    @InjectMocks
     private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
 
     @Override
@@ -99,7 +115,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         this.loginDefaultUser();
         this.setupFinances();
         this.setupInvites();
-        when(organisationService.getOrganisationForUser(anyLong(), anyList())).thenReturn(Optional.ofNullable(organisations.get(0)));
+        when(organisationService.getOrganisationForUser(anyLong(), anyList())).thenReturn(ofNullable(organisations.get(0)));
     }
 
     @Test
@@ -278,6 +294,52 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(model().attribute("pendingOrganisationNames", Matchers.hasSize(0)));
     }
 
+    @Test
+    public void applicationAssessorQuestionFeedback() throws Exception {
+        long applicationId = 1L;
+        long questionId = 2L;
+
+        QuestionResource previousQuestion = newQuestionResource().withId(1L).withShortName("previous").build();
+        QuestionResource questionResource = newQuestionResource().withId(questionId).build();
+        QuestionResource nextQuestion = newQuestionResource().withId(3L).withShortName("next").build();
+        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withCompetitionStatus(PROJECT_SETUP).build();
+        List<FormInputResponseResource> responseResources = newFormInputResponseResource().build(2);
+        AssessmentFeedbackAggregateResource aggregateResource = newAssessmentFeedbackAggregateResource().build();
+        NavigationViewModel expectedNavigation = new NavigationViewModel();
+        expectedNavigation.setNextText("next");
+        expectedNavigation.setNextUrl("/application/1/question/3/feedback");
+        expectedNavigation.setPreviousText("previous");
+        expectedNavigation.setPreviousUrl("/application/1/question/1/feedback");
+        AssessQuestionFeedbackViewModel expectedModel =
+                new AssessQuestionFeedbackViewModel(applicationResource,questionResource, responseResources, aggregateResource, expectedNavigation);
+
+        when(questionService.getPreviousQuestion(questionId)).thenReturn(Optional.ofNullable(previousQuestion));
+        when(questionService.getById(questionId)).thenReturn(questionResource);
+        when(questionService.getNextQuestion(questionId)).thenReturn(Optional.ofNullable(nextQuestion));
+        when(applicationService.getById(applicationId)).thenReturn(applicationResource);
+        when(formInputResponseService.getByApplicationIdAndQuestionId(applicationId, questionId)).thenReturn(responseResources);
+        when(assessorFormInputResponseRestService.getAssessmentAggregateFeedback(applicationId, questionId))
+                .thenReturn(restSuccess(aggregateResource));
+
+        mockMvc.perform(get("/application/{applicationId}/question/{questionId}/feedback", applicationId, questionId))
+                .andExpect(status().isOk())
+                .andExpect(view().name("application-assessor-feedback"))
+                .andExpect(model().attribute("model", expectedModel));
+    }
+
+    @Test
+    public void applicationAssessorQuestionFeedback_invalidState() throws Exception {
+        long applicationId = 1L;
+        long questionId = 2L;
+
+        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withCompetitionStatus(ASSESSOR_FEEDBACK).build();
+
+        when(applicationService.getById(applicationId)).thenReturn(applicationResource);
+
+        mockMvc.perform(get("/application/{applicationId}/question/{questionId}/feedback", applicationId, questionId))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/application/" + applicationId + "/summary"));
+    }
 
     @Test
     public void testApplicationSummaryWithProjectSetupStatus() throws Exception {
@@ -302,6 +364,12 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(assessorFormInputResponseRestService.getApplicationAssessmentAggregate(app.getId()))
                 .thenReturn(restSuccess(aggregateResource));
 
+        ApplicationAssessmentFeedbackResource expectedFeedback = newApplicationAssessmentFeedbackResource()
+                .withFeedback(asList("Feedback 1", "Feedback 2"))
+                .build();
+
+        when(assessmentRestService.getApplicationFeedback(app.getId())).thenReturn(restSuccess(expectedFeedback));
+
         mockMvc.perform(get("/application/" + app.getId() + "/summary"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("application-feedback-summary"))
@@ -314,8 +382,8 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(model().attribute("responses", formInputsToFormInputResponses))
                 .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(0)))
                 .andExpect(model().attribute("pendingOrganisationNames", Matchers.hasSize(0)))
-                .andExpect(model().attribute("scores", aggregateResource))
-                .andExpect(model().attribute("rsCategoryId", app.getResearchCategories().stream().findFirst().get().getId()));
+                .andExpect(model().attribute("feedback", expectedFeedback.getFeedback()))
+                .andExpect(model().attribute("scores", aggregateResource));
     }
 
     @Test

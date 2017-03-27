@@ -77,6 +77,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
         ApplicationAssessmentProgressViewModel expectedModel = new ApplicationAssessmentProgressViewModel(
                 applicationId,
                 "Progressive Machines",
+                "Digital Manufacturing",
                 competitionId,
                 "Connected digital additive manufacturing",
                 true,
@@ -277,6 +278,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
         return newApplicationAssessmentSummaryResource()
                 .withId(applicationId)
                 .withName("Progressive Machines")
+                .withInnovationArea("Digital Manufacturing")
                 .withCompetitionId(competitionId)
                 .withCompetitionName("Connected digital additive manufacturing")
                 .withLeadOrganisation("Liquid Dynamics")

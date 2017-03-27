@@ -51,6 +51,11 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
         this.successfulStatusCode = successfulStatusCode;
     }
 
+    @Override
+    public <R> RestResult<R> andOnFailure(Runnable failureHandler) {
+        return (RestResult<R>) super.andOnFailure(failureHandler);
+    }
+
 
     @Override
     public <R> RestResult<R> andOnSuccess(Supplier<? extends FailingOrSucceedingResult<R, RestFailure>> successHandler) {
@@ -187,6 +192,10 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
 
         if (restFailure.has(ASSESSMENT_WITHDRAWN)) {
             throw new AssessmentWithdrawnException(error.getErrorKey(), error.getArguments());
+        }
+
+        if (restFailure.has(COMPETITION_CANNOT_RELEASE_FEEDBACK)) {
+            throw new CompetitionFeedbackCantSendException(error.getErrorKey(), error.getArguments());
         }
 
         throw new RuntimeException();

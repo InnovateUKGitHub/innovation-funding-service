@@ -34,7 +34,6 @@ IFS.core.loadOrder = {
       IFS.core.modal.init()
       IFS.core.upload.init()
       IFS.core.autoSubmitForm.init()
-      IFS.core.pieChart.init()
       IFS.core.unsavedChanges.init()
       IFS.core.mirrorElements.init()
       IFS.core.debug.init()
@@ -54,10 +53,12 @@ IFS.core.loadOrder = {
       IFS.core.tabs.destroy()
     }
   },
-  //  this should be in a seperate project setup management area loader, however that nidyke doesn't contain any custom js therefore we load this here.
-  'eligibility-form': {
+  'finance': {
     init: function () {
       IFS.core.repeatableFinanceRows.init()
+    },
+    finalize: function () {
+      IFS.core.financeSpecifics.init()
     }
   }
 }

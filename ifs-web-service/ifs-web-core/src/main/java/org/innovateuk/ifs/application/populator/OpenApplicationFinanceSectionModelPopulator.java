@@ -83,7 +83,7 @@ public class OpenApplicationFinanceSectionModelPopulator extends BaseOpenFinance
                                                       ApplicationForm form, Long organisationId) {
 
         financeSectionViewModel.setFinanceOverviewViewModel(applicationFinanceOverviewModelManager.getFinanceDetailsViewModel(competitionId, applicationId));
-        String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
+        Long organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
         financeSectionViewModel.setFinanceViewModel(financeHandler.getFinanceModelManager(organisationType).getFinanceViewModel(applicationId, costsQuestions, user.getId(), form, organisationId));
     }
 }

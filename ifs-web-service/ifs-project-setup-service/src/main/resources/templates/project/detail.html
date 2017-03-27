@@ -13,7 +13,7 @@
 
 <main id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${model.project.getId()})}"  th:remove="tag"></div>
+    <div th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${model.project.getId()})}" th:remove="tag"></div>
 
     <div class="page-title">
         <th:block th:insert="fragments/elements :: project-title (projectId=${model.app.id}, projectName=${model.project.name})" />
@@ -26,7 +26,7 @@
   	</div>
 
 <h2 class="heading-medium">Project details</h2>
-<p>You are providing these details as the lead applicant on behalf of the overall project.</p>
+<p>You are providing these details as the lead on behalf of the overall project.</p>
 
     <table id="project-details">
         <thead>
@@ -82,13 +82,13 @@
     </table>
 
     <a th:if="${model.submitProjectDetailsAllowed}" th:href="@{/project/{id}/confirm-project-details(id=${model.project.getId()})}" class="button extra-margin" data-js-modal="modal-project-details">Mark as complete</a>
-    <div class="extra-margin"  th:if="${model.anySectionIncomplete}">
+    <div class="extra-margin" th:if="${model.anySectionIncomplete}">
         <p>You are not able to submit until all sections above are marked as complete.</p>
         <button disabled="disabled" class="button">Mark as complete</button>
     </div>
 
     <h2 class="heading-medium">Finance contacts</h2>
-    <p>Each partner must provide a finance contact. We will contact them with any queries around partner finances.</p>
+    <p>Each partner must provide a finance contact. We will contact them with any finance queries.</p>
 
     <table id="project-details-finance">
         <thead>
@@ -100,11 +100,18 @@
         </thead>
         <tbody>
             <tr th:each="organisation: ${model.partnerOrganisations}">
-
                 <td>
-                    <a th:if="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly()}" th:href="@{/project/{id}/details/finance-contact?organisation={orgId}(id=${model.project.getId()},orgId=${organisation.id})}" th:text="${organisation.name}">organisation name</a>
-                    <th:block th:if="${model.isUserPartnerInOrganisation(organisation.id) and model.isReadOnly()}" th:text="${organisation.name}">organisation name</th:block>
-                    <th:block th:unless="${model.isUserPartnerInOrganisation(organisation.id)}" th:text="${organisation.name}">organisation name</th:block>
+                    <th:block th:if="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly()}">
+                        <a th:href="@{/project/{id}/details/finance-contact?organisation={orgId}(id=${model.project.getId()},orgId=${organisation.id})}" th:text="${organisation.name}">organisation name</a>
+                        <th:block th:if="${organisation.name.equals(model.leadOrganisation.name)}"> (Lead)</th:block></th:block>
+                    <th:block th:if="${model.isUserPartnerInOrganisation(organisation.id) and model.isReadOnly()}">
+                        <th:block th:text="${organisation.name}">organisation name</th:block>
+                        <th:block th:if="${organisation.name.equals(model.leadOrganisation.name)}"> (Lead)</th:block>
+                    </th:block>
+                    <th:block th:unless="${model.isUserPartnerInOrganisation(organisation.id)}">
+                        <th:block th:text="${organisation.name}">organisation name</th:block>
+                        <th:block th:if="${organisation.name.equals(model.leadOrganisation.name)}"> (Lead)</th:block>
+                    </th:block>
                 </td>
                 <td>
                   <th:block th:unless="${model.getFinanceContactForPartnerOrganisation(organisation.id) == null}">

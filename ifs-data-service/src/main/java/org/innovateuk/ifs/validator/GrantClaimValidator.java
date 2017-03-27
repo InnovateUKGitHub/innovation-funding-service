@@ -1,12 +1,10 @@
 package org.innovateuk.ifs.validator;
 
+import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
-import org.innovateuk.ifs.user.domain.OrganisationType;
-import org.innovateuk.ifs.user.resource.OrganisationSize;
-import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -36,34 +34,20 @@ public class GrantClaimValidator implements Validator {
             rejectValue(errors, "grantClaimPercentage", "org.hibernate.validator.constraints.NotBlank.message");
             return;
         }
-        //Organisation size isn't required if the claim percentage is 0.
-        if (response.getGrantClaimPercentage() == 0) {
+
+        FinanceRow cost = financeRowRepository.findOne(response.getId());
+        ApplicationFinance applicationFinance = ((ApplicationFinanceRow)cost).getTarget();
+        Integer max = applicationFinance.getMaximumFundingLevel();
+        if (max == null) {
+            rejectValue(errors, "grantClaimPercentage", "validation.grantClaimPercentage.maximum.not.defined");
             return;
         }
 
-        FinanceRow cost = financeRowRepository.findOne(response.getId());
-        OrganisationType organisationType = ((ApplicationFinanceRow)cost).getTarget().getOrganisation().getOrganisationType();
-        int max;
-
-        if(isAcademicOrBusiness(organisationType)) {
-            OrganisationSize size = ((ApplicationFinanceRow)cost).getTarget().getOrganisationSize();
-            if (size == null) {
-                rejectValue(errors, "grantClaimPercentage", "validation.finance.select.organisation.size");
-                return;
-            }
-            max = size.getMaxGrantClaimPercentage();
-        } else {
-            max = 100;
-        }
-
-        if(response.getGrantClaimPercentage() > max){
+        if (response.getGrantClaimPercentage() > max) {
             rejectValue(errors, "grantClaimPercentage", "validation.field.percentage.max.value.or.lower", max);
-        } else if(response.getGrantClaimPercentage().intValue() < 0){
+        } else if(response.getGrantClaimPercentage() < 0) {
             rejectValue(errors, "grantClaimPercentage", "validation.field.percentage.max.value.or.higher", 0);
         }
     }
-    
-    private boolean isAcademicOrBusiness(OrganisationType type) {
-    	return OrganisationTypeEnum.ACADEMIC.getOrganisationTypeId().equals(type.getId()) || OrganisationTypeEnum.BUSINESS.getOrganisationTypeId().equals(type.getId());
-    }
+
 }

@@ -118,37 +118,6 @@ public class ProjectDataBuilder extends BaseDataBuilder<ProjectData, ProjectData
         });
     }
 
-    public ProjectDataBuilder withApprovedFinanceChecks(List<String> organisationNames) {
-        return with(data -> doAs(anyProjectFinanceUser(), () ->
-            organisationNames.forEach(org -> {
-
-                Organisation organisation = retrieveOrganisationByName(org);
-
-                List<ApplicationFinanceResource> financeTotals = financeRowService.financeTotals(data.getApplication().getId()).getSuccessObjectOrThrowException();
-                ApplicationFinanceResource finances = simpleFindFirst(financeTotals, t -> t.getOrganisation().equals(organisation.getId())).get();
-
-                BigDecimal eligibleCosts = finances.getTotal();
-                BigDecimal halfCosts = eligibleCosts.divide(BigDecimal.valueOf(2), 0, BigDecimal.ROUND_DOWN);
-                BigDecimal quarterCosts = eligibleCosts.divide(BigDecimal.valueOf(4), 0, BigDecimal.ROUND_DOWN);
-                BigDecimal remaining = eligibleCosts.subtract(halfCosts).subtract(quarterCosts);
-
-                ProjectOrganisationCompositeId financeCheckKey = new ProjectOrganisationCompositeId(data.getProject().getId(), organisation.getId());
-                FinanceCheckResource financeCheckFigures = financeCheckService.getByProjectAndOrganisation(financeCheckKey).getSuccessObjectOrThrowException();
-                List<CostResource> costsPerCategory = financeCheckFigures.getCostGroup().getCosts();
-
-                costsPerCategory.get(0).setValue(halfCosts);
-                costsPerCategory.get(1).setValue(quarterCosts);
-
-                BigDecimal remainingCostPerCategory = remaining.divide(BigDecimal.valueOf(costsPerCategory.size() - 2), 0, BigDecimal.ROUND_DOWN);
-
-                IntStream.range(2, costsPerCategory.size()).forEach(i -> costsPerCategory.get(i).setValue(remainingCostPerCategory));
-
-                financeCheckService.save(financeCheckFigures).getSuccessObjectOrThrowException();
-                financeCheckService.approve(data.getProject().getId(), organisation.getId()).getSuccessObjectOrThrowException();
-            })
-        ));
-    }
-
     private UserResource anyProjectFinanceUser() {
         List<User> projectFinanceUsers = userRepository.findByRolesName(UserRoleType.PROJECT_FINANCE.getName());
         return retrieveUserById(projectFinanceUsers.get(0).getId());

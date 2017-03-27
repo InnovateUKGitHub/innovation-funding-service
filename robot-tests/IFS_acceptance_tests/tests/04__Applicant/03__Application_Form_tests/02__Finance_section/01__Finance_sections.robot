@@ -18,6 +18,9 @@ Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../FinanceSection_Commons.robot
 
+*** Variables ***
+${applicationName}  Planetary science Pluto's telltale heart
+
 *** Test Cases ***
 Finance sub-sections
     [Documentation]    INFUND-192
@@ -40,16 +43,16 @@ Not requesting funding button
     And the user clicks the button/link                 jQuery=button:contains("Not requesting funding")
     Then the user should see the funding guidance
     And the user should see the element                 jQuery=button:contains("Requesting funding")
-    And the user should see the element                 jQuery=li:nth-of-type(2) span:contains("Not required")
-    And the user should see the element                 jQuery=li:nth-of-type(3) span:contains("Not required")
+    And the user should see the element                 jQuery=li:nth-of-type(2) span:contains("No action required")
+    And the user should see the element                 jQuery=li:nth-of-type(3) span:contains("No action required")
 
 Requesting funding button
     [Documentation]    INFUND-7093
     [Tags]
     When the user clicks the button/link                jQuery=button:contains("Requesting funding")
-    Then the user should see the element                 jQuery=li:nth-of-type(2) img.assigned
-    And the user should not see the element             jQuery=li:nth-of-type(3) span:contains("Not required")
-    And the user should not see the element             jQuery=li:nth-of-type(3) img.complete
+    Then the user should see the element                jQuery=li:nth-of-type(2) > .action-required
+    And the user should not see the element             jQuery=li:nth-of-type(3) span:contains("No action required")
+    And the user should not see the element             jQuery=li:nth-of-type(3) > .task-status-complete
     And the user should not see the funding guidance
 
 Organisation name visible in the Finance section
@@ -64,7 +67,7 @@ Guidance in the your project costs
     [Tags]
     [Setup]  Applicant navigates to the finances of the Robot application
     Given the user clicks the button/link   link=Your project costs
-    When the user clicks the button/link    jQuery=#form-input-20 button:contains("Labour")
+    When the user clicks the button/link    jQuery=#form-input-1085 button:contains("Labour")
     And the user clicks the button/link     css=#collapsible-0 summary
     Then the user should see the element    css=#details-content-0 p
     And the user should see the element     jQuery=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input[value=""]
@@ -89,7 +92,7 @@ Non-academic partner finance section
     [Documentation]    INFUND-7522
     [Tags]    HappyPath
     [Setup]  Log in as a different user     &{collaborator1_credentials}
-    Given the user navigates to Your-finances page     Providing sustainable childcare
+    Given the user navigates to Your-finances page  ${applicationName}
     Then The user should see the element      JQuery=span.summary:contains("Not requesting funding")
     and the user should see the element     link=Your project costs
     and the user should see the element     link=Your organisation
@@ -99,7 +102,7 @@ Academic partner finance section
     [Documentation]    INFUND-7522
     [Tags]    HappyPath
     [Setup]  Log in as a different user       &{collaborator2_credentials}
-    Given the user navigates to Your-finances page     Providing sustainable childcare
+    Given the user navigates to Your-finances page  ${applicationName}
     Then The user should not see the element      link=Not requesting funding
     and the user should see the element       link=Your project costs
     and the user should not see the element     link=Your organisation
@@ -109,7 +112,7 @@ Academic partner finance section
 Academic partner can upload file for field J-es PDF
     [Documentation]    INFUND-7522
     [Tags]    HappyPath
-    Given the user navigates to Your-finances page     Providing sustainable childcare
+    Given the user navigates to Your-finances page  ${applicationName}
     and the user clicks the button/link         link=Your funding
     # Note the Jes form is already uploaded
     Then the user should see the element     css=a.uploaded-file
@@ -130,12 +133,25 @@ File upload mandatory for Academic partner to mark section as complete
     [Tags]    HappyPath    Pending
     #TODO pending due to INFUND-8469
     # This will also check the auto-save as we hvaen't marked finances as complete yet
-    Given the user navigates to Your-finances page      Providing sustainable childcare
-    and the user clicks the button/link          link=Your funding
+    Given the user navigates to Your-finances page  ${applicationName}
+    and the user clicks the button/link      link=Your funding
+    and the user clicks the button/link      jQuery=button:contains("Edit your funding")
     and the user clicks the button/link       jQuery=button:contains("Remove")
     When the user selects the checkbox      jQuery=label[for="agree-terms-page"]
     and the user clicks the button/link     jQuery=button:contains("Mark as complete")
     then the user should see a field error     css=a.uploaded-file
+
+Applicant chooses Calculate overheads option
+    [Documentation]     INFUND-6788, INFUND-8191, INFUND-7405
+    [Tags]      Pending
+    [Setup]  log in as a different user    &{lead_applicant_credentials}
+    #TODO Pending due to INFUND-8706
+    # This test also checks read only view of the overheads once section is marked as complete
+    When the user navigates to Your-finances page     ${Competition_E2E}
+    then the user fills in the project costs       ${Competition_E2E}
+    When the user clicks the button/link    link=Your project costs
+    and the user clicks the button/link    jQuery=button:contains("Overhead costs")
+    then the user should not see the element      css=input
 
 *** Keywords ***
 Custom Suite Setup

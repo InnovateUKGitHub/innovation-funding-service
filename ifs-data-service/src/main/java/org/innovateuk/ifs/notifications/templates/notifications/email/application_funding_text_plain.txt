@@ -1,0 +1,10 @@
+<#import "layout/default.html" as layout>
+<@layout.defaultPlainText>
+Dear ${notificationTarget.name},
+
+${message}
+
+Yours sincerely,
+
+<@layout.senderPlainText />
+</@layout.defaultPlainText>

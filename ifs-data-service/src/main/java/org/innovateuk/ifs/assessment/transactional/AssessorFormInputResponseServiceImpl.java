@@ -5,6 +5,7 @@ import org.innovateuk.ifs.assessment.domain.AssessorFormInputResponse;
 import org.innovateuk.ifs.assessment.mapper.AssessorFormInputResponseMapper;
 import org.innovateuk.ifs.assessment.repository.AssessorFormInputResponseRepository;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
+import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
@@ -24,6 +25,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static java.time.LocalDateTime.now;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -99,6 +101,20 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
             }
         }
         return serviceSuccess(new ApplicationAssessmentAggregateResource(totalScope, totalInScope,avgScores,averagePercentage));
+    }
+
+    @Override
+    public ServiceResult<AssessmentFeedbackAggregateResource> getAssessmentAggregateFeedback(long applicationId, long questionId) {
+        List<AssessorFormInputResponse> responses = assessorFormInputResponseRepository.findByAssessmentTargetIdAndFormInputQuestionId(applicationId, questionId);
+        BigDecimal avgScore = responses.stream()
+                .filter(input -> input.getFormInput().getType() == FormInputType.ASSESSOR_SCORE)
+                .map(AssessorFormInputResponse::getValue)
+                .collect(new AssessorScoreAverageCollector());
+        List<String> feedback = responses.stream()
+                .filter(input -> input.getFormInput().getType() == FormInputType.TEXTAREA)
+                .map(AssessorFormInputResponse::getValue)
+                .collect(toList());
+        return serviceSuccess(new AssessmentFeedbackAggregateResource(avgScore, feedback));
     }
 
     private ServiceResult<Void> performUpdateFormInputResponse(AssessorFormInputResponseResource response) {

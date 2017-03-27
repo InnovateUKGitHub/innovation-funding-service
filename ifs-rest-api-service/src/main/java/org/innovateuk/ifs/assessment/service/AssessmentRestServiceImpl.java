@@ -60,6 +60,12 @@ public class AssessmentRestServiceImpl extends BaseRestService implements Assess
     }
 
     @Override
+    public RestResult<ApplicationAssessmentFeedbackResource> getApplicationFeedback(long applicationId) {
+        return getWithRestResult(format("%s/application/%s/feedback", assessmentRestURL, applicationId), ApplicationAssessmentFeedbackResource.class);
+    }
+
+
+    @Override
     public RestResult<Void> rejectInvitation(long id, AssessmentRejectOutcomeResource assessmentRejectOutcomeResource) {
         return putWithRestResult(format("%s/%s/rejectInvitation", assessmentRestURL, id), assessmentRejectOutcomeResource, Void.class);
     }

@@ -52,9 +52,6 @@ Create assessor account: server-side validations
     When the user clicks the button/link    jQuery=button:contains("Continue")
     Then the user should see an error    Please enter a first name.
     And the user should see an error    Please enter a last name.
-    And the user should see an error    Please select a gender.
-    And the user should see an error    Please select an ethnicity.
-    And the user should see an error    Please select a disability.
     And the user should see an error    Please enter a phone number.
     And the user should see an error    Please enter your password.
     And the user should see an error    Please re-type your password.
@@ -71,12 +68,6 @@ Create assessor account: client-side validations
     Then the user should not see the validation error in the create assessor form    Please enter a first name.
     When The user enters text to a text field    id=lastName    Fister
     Then the user should not see the validation error in the create assessor form    Please enter a last name.
-    When the user selects the radio button    gender    gender2
-    Then the user should not see the validation error in the create assessor form    Please select a gender.
-    When the user selects the radio button    ethnicity    ethnicity2
-    Then the user should not see the validation error in the create assessor form    Please select an ethnicity.
-    When the user selects the radio button    disability    disability2
-    Then the user should not see the validation error in the create assessor form    Please select a disability.
     When the user enters text to a text field    id=phoneNumber    123123123123
     Then the user should not see the validation error in the create assessor form    Please enter a phone number.
     And the user should not see the validation error in the create assessor form    Please enter a valid phone number.
@@ -112,6 +103,7 @@ Create assessor account: Accepted competitions should be displayed in dashboard
     Then the user should see the element    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And The user should see the text in the page    ${IN_ASSESSMENT_COMPETITION_NAME}
+    And the user should see the text in the page    There are currently no assessments for you to review.
 
 Innovation area on assessor profile for invited user
     [Documentation]    INFUND-7960

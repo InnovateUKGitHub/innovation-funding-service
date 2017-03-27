@@ -7,12 +7,17 @@ import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.security.BasePermissionRules;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isCompAdmin;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isInternal;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isProjectFinanceUser;
 
+/**
+ * Defines the permissions for interaction with project finances.
+ */
 @PermissionRules
 public class ProjectFinancePermissionRules extends BasePermissionRules {
 
@@ -171,4 +176,15 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
     public boolean internalUsersCanSeeTheProjectFinancesForTheirOrganisation(final FinanceCheckEligibilityResource financeCheckEligibilityResource, final UserResource user) {
         return isInternal(user);
     }
+
+    @PermissionRule(value="READ_OVERVIEW", description = "Internal users can see the project finance overview")
+    public boolean internalUsersCanSeeTheProjectFinanceOverviewsForAllProjects(final Long projectId, final UserResource user) {
+        return isInternal(user);
+    }
+
+    @PermissionRule(value="READ_OVERVIEW", description = "Project partners can see their project finance overview")
+    public boolean partnersCanSeeTheProjectFinanceOverviewsForTheirProject(final Long projectId, final UserResource user) {
+        return isPartner(projectId, user.getId());
+    }
+
 }

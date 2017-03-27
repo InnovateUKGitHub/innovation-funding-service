@@ -3,14 +3,10 @@ package org.innovateuk.ifs.registration.service;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
-import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Service to handle default actions on the registration/invite process
@@ -21,25 +17,34 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Autowired
     private OrganisationService organisationService;
 
+    @Autowired
+    private UserService userService;
+
     @Override
-    public Map<String, String> getInvalidInviteMessages(UserResource loggedInUser, ApplicationInviteResource inviteResource, InviteOrganisationResource inviteOrganisation) {
-        Map<String, String> modelAttributes = new HashMap<>();
-
-        if (!inviteResource.getEmail().equalsIgnoreCase(loggedInUser.getEmail())) {
-            modelAttributes.put("failureMessageKey", "registration.LOGGED_IN_WITH_OTHER_ACCOUNT");
-
-        } else if (inviteOrganisation.getOrganisation() != null) {
-            OrganisationResource userOrganisation = organisationService.getOrganisationForUser(loggedInUser.getId());
-            if (!inviteOrganisation.getOrganisation().equals(userOrganisation.getId())) {
-                OrganisationResource userOrganisationResource = organisationService.getOrganisationByIdForAnonymousUserFlow(userOrganisation.getId());
-
-                if (inviteOrganisation.getOrganisationNameConfirmed().equals(userOrganisationResource.getName())) {
-                    modelAttributes.put("failureMessageKey", "registration.JOINING_SAME_ORGANISATIONS");
-                } else {
-                    modelAttributes.put("failureMessageKey", "registration.MULTIPLE_ORGANISATIONS");
+    public boolean isInviteForDifferentOrganisationThanUsersAndDifferentName(ApplicationInviteResource invite, InviteOrganisationResource inviteOrganisation){
+        return userService.findUserByEmail(invite.getEmail()).map(user -> {
+            OrganisationResource userOrganisation = organisationService.getOrganisationForUser(user.getId()); // Will exist as the user does
+            Long inviteOrganisationId = inviteOrganisation.getOrganisation(); // Can be null for new orgs
+            if (inviteOrganisationId != null && !userOrganisation.getId().equals(inviteOrganisation.getOrganisation())){
+                if (!userOrganisation.getName().equalsIgnoreCase(inviteOrganisation.getOrganisationNameConfirmed())){
+                    return true;
                 }
             }
-        }
-        return modelAttributes;
+            return false;
+        }).orElse(false);
+    }
+
+    @Override
+    public boolean isInviteForDifferentOrganisationThanUsersButSameName(ApplicationInviteResource invite, InviteOrganisationResource inviteOrganisation){
+        return userService.findUserByEmail(invite.getEmail()).map(user -> {
+            OrganisationResource userOrganisation = organisationService.getOrganisationForUser(user.getId()); // Will exist as the user does
+            Long inviteOrganisationId = inviteOrganisation.getOrganisation(); // Can be null for new orgs
+            if (inviteOrganisationId != null && !userOrganisation.getId().equals(inviteOrganisation.getOrganisation())){
+                if (userOrganisation.getName().equalsIgnoreCase(inviteOrganisation.getOrganisationNameConfirmed())){
+                    return true;
+                }
+            }
+            return false;
+        }).orElse(false);
     }
 }

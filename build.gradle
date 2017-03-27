@@ -1,19 +1,20 @@
 allprojects {
     group 'innovateuk'
-    version '1.0-SNAPSHOT'
+    version project.version
 
     apply plugin: 'idea'
     apply plugin: 'java'
     apply plugin: 'docker'
+    apply plugin: 'com.github.ben-manes.versions'
+
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 }
 
+apply from: "openshift-support.gradle"
 
-if(project.hasProperty('profile') && profile == 'automated') {
-    ext.openshiftEnv = project.properties['openshiftEnv'] ?: "automated"
-}
+
 
 if(!project.hasProperty('osTestArgs')) {
     ext.osTestArgs = ""
@@ -27,6 +28,7 @@ subprojects {
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'jacoco'
     apply plugin: 'org.owasp.dependencycheck'
+
     findMainClass.enabled = false
 
     jacocoTestReport {
@@ -35,6 +37,15 @@ subprojects {
                 fileTree(dir: it,
                         exclude: ['**/*Mapper**'])
             })
+        }
+
+        task prepareDockerFile (type: Copy) {
+            outputs.upToDateWhen { false }
+            from 'src/main/docker/'
+            into 'src/main/docker/'
+            include 'Dockerfile-template'
+            rename 'Dockerfile-template', 'Dockerfile'
+            filter(ReplaceTokens, tokens: [version : project.properties['version']])
         }
     }
 
@@ -88,7 +99,7 @@ buildscript {
     ext['thymeleaf.version'] = '3.0.3.RELEASE'
 
     ext {
-        springBootVersion = '1.5.1.RELEASE'
+        springBootVersion = '1.5.2.RELEASE'
         thymeleafVersion = ext['thymeleaf.version']
     }
 
@@ -98,9 +109,11 @@ buildscript {
         maven { url "http://dl.bintray.com/robfletcher/gradle-plugins" }
         maven { url "http://repo.spring.io/milestone" }
         maven { url "https://plugins.gradle.org/m2/" }
+
     }
 
     dependencies {
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.14.0'
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
         classpath "io.spring.gradle:dependency-management-plugin:0.6.1.RELEASE"
         classpath 'com.bluepapa32:gradle-watch-plugin:0.1.5'
@@ -108,16 +121,55 @@ buildscript {
         classpath 'org.flywaydb:flyway-core:4.0'
         classpath 'org.sonarqube.gradle:gradle-sonarqube-plugin:1.1'
         classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
-        classpath 'org.owasp:dependency-check-gradle:1.4.0'
-        classpath "com.avast.gradle:docker-compose-gradle-plugin:0.3.13"
+        classpath 'org.owasp:dependency-check-gradle:1.4.5'
+        classpath "com.avast.gradle:docker-compose-gradle-plugin:0.3.21"
         classpath "se.transmode.gradle:gradle-docker:1.2"
+        classpath 'net.researchgate:gradle-release:2.4.0'
+	    classpath "gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.13.1"
     }
 
+}
+
+dependencyUpdates.resolutionStrategy = {
+    componentSelection { rules ->
+        rules.all { ComponentSelection selection ->
+            // filters out any version numbers ending in rejected. e.g 1.0.0-rc.
+            boolean rejected = ['alpha', 'beta', 'rc', 'cr', 'm', 'pr1', 'Beta'].any { qualifier ->
+                selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*/
+            }
+            if (rejected) {
+                selection.reject('Release candidate')
+            }
+        }
+    }
 }
 
 
 apply plugin: "org.sonarqube"
 apply plugin: 'docker-compose'
+apply plugin: 'net.researchgate.release'
+apply plugin: "com.github.hierynomus.license"
+
+release {
+    preTagCommitMessage = '[Gradle Release Plugin] - Performing release: '
+    newVersionCommitMessage = '[Gradle Release Plugin] - Preparing new release version: '
+    //Note: When testing releases (i.e. not performing real releases) this tagTemplate should be changed to something different
+    // for example tagTemplate = 'TEST RELEASE ${version} ' this will ensure that we don't pollute our tags with fake releases.
+    tagTemplate = '${version}'
+
+    scmAdapters = [
+            net.researchgate.release.GitAdapter,
+    ]
+
+    git {
+        requireBranch = 'master'
+        pushToRemote = 'origin'
+        pushToBranchPrefix = ''
+        commitVersionFileOnly = false
+    }
+}
+
+
 
 sonarqube {
     properties {
@@ -138,42 +190,24 @@ dockerCompose {
 
 }
 
-
-task robotTestsFilter (type: Copy) {
-    from 'robot-tests/IFS_acceptance_tests/resources/variables/'
-    into 'robot-tests/IFS_acceptance_tests/resources/variables/'
-    include 'EMAIL_VARIABLES_TEMPLATE.robot'
-    rename 'EMAIL_VARIABLES_TEMPLATE.robot', 'EMAIL_VARIABLES_SENSITIVE.robot'
-    filter(ReplaceTokens, tokens: [test_mailbox_one_password : project.properties['ifs.robot.mailbox.one.password'], test_mailbox_two_password : project.properties['ifs.robot.mailbox.two.password']])
+task prepareComposeFile (type: Copy) {
+    outputs.upToDateWhen { false }
+    from '.'
+    into '.'
+    include 'docker-compose-template.yml'
+    rename 'docker-compose-template.yml', 'docker-compose.yml'
+    filter(ReplaceTokens, tokens: [version : project.properties['version']])
 }
 
-
-task osDeployRemote(type:Exec) {
-    executable = 'setup-files/scripts/openshift/os-deploy.sh'
-    args = [openshiftEnv, "remote"]
+task dockerTidy(type:Exec) {
+    executable = 'setup-files/scripts/docker/docker_tidy_up.sh'
+    print project.version
+    args = [project.version]
 }
 
-task osDeployLocal(type:Exec) {
-    executable = 'setup-files/scripts/openshift/os-deploy.sh'
-    args = [openshiftEnv, "local"]
-}
-
-task osTestRemote(type:Exec) {
-    dependsOn robotTestsFilter
-    executable = 'setup-files/scripts/openshift/os-test-remote.sh'
-    args = [openshiftEnv, osTestArgs]
-}
+composeUp.dependsOn prepareComposeFile
 
 import org.apache.tools.ant.filters.*
-task osStopTests(type:Exec) {
-    executable = 'setup-files/scripts/openshift/os-stop-tests.sh'
-    args = [openshiftEnv]
-}
-
-task osTestResults(type:Exec) {
-    executable = 'setup-files/scripts/openshift/os-test-results.sh'
-    args = [openshiftEnv]
-}
 
 task happyRobotTests(type:Exec) {
     workingDir 'robot-tests'
@@ -181,5 +215,5 @@ task happyRobotTests(type:Exec) {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.9'
+    gradleVersion = '3.0'
 }

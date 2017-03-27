@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.project.viability.viewmodel;
 
 import org.apache.commons.lang3.StringUtils;
-import org.innovateuk.ifs.user.resource.OrganisationSize;
 
 import java.time.LocalDate;
 
@@ -21,21 +20,22 @@ public class FinanceChecksViabilityViewModel {
     private Long turnover;
     private Long headCount;
 
-    private OrganisationSize organisationSize;
-
     private Long projectId;
     private Long organisationId;
     private boolean viabilityConfirmed;
     private boolean approved;
     private String approverName;
     private LocalDate approvalDate;
+    private String organisationSizeDescription;
+
 
     public FinanceChecksViabilityViewModel(String organisationName, boolean leadPartnerOrganisation, Integer totalCosts,
                                            Integer percentageGrant, Integer fundingSought, Integer otherPublicSectorFunding,
                                            Integer contributionToProject, String companyRegistrationNumber,
-                                           Long turnover, Long headCount, OrganisationSize organisationSize,
+                                           Long turnover, Long headCount,
                                            Long projectId, boolean viabilityConfirmed,
-                                           boolean approved, String approverName, LocalDate approvalDate, Long organisationId) {
+                                           boolean approved, String approverName, LocalDate approvalDate, Long organisationId,
+                                           String organisationSizeDescription) {
 
         this.organisationName = organisationName;
         this.leadPartnerOrganisation = leadPartnerOrganisation;
@@ -47,13 +47,13 @@ public class FinanceChecksViabilityViewModel {
         this.companyRegistrationNumber = companyRegistrationNumber;
         this.turnover = turnover;
         this.headCount = headCount;
-        this.organisationSize = organisationSize;
         this.projectId = projectId;
         this.viabilityConfirmed = viabilityConfirmed;
         this.approved = approved;
         this.approverName = approverName;
         this.approvalDate = approvalDate;
         this.organisationId = organisationId;
+        this.organisationSizeDescription = organisationSizeDescription;
     }
 
     public String getOrganisationName() {
@@ -74,10 +74,6 @@ public class FinanceChecksViabilityViewModel {
 
     public Long getHeadCount() {
         return headCount;
-    }
-
-    public OrganisationSize getOrganisationSize() {
-        return organisationSize;
     }
 
     public Long getProjectId() {
@@ -133,5 +129,10 @@ public class FinanceChecksViabilityViewModel {
 
     private boolean isApproved() {
         return approved;
+    }
+
+
+    public String getOrganisationSizeDescription() {
+        return organisationSizeDescription;
     }
 }

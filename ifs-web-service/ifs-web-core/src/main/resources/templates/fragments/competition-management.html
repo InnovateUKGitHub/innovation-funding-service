@@ -179,64 +179,61 @@
    </table>
 
    <th:block th:if="${competition.competitionStatus.name() == 'IN_ASSESSMENT' or competition.competitionStatus.name() == 'FUNDERS_PANEL' or competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK'}">
-	    <table th:if="${activeTab == 'submitted'}">
-	       <thead>
-	         <tr>
-	           <th scope="col">Application number</th>
-	           <th scope="col">Project title</th>
-	           <th scope="col">Lead</th>
-	           <th scope="col">No. of partners</th>
-	           <th scope="col">Grant requested (£)</th>
-	           <th scope="col">Total project cost (£)</th>
-	           <th scope="col">Duration (months)</th>
-	           <th scope="col" id="fund-project-label" th:if="${competition.competitionStatus.name() == 'FUNDERS_PANEL'}">Fund project?</th>
-	           <th scope="col" id="fund-project-label" th:if="${competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK'}">Funded</th>
-             <th scope="col" th:if="${competition.competitionStatus.name() == 'FUNDERS_PANEL'}"><span class="visuallyhidden">Save status</span></th>
-	         </tr>
-	       </thead>
-	       <tbody>
-	         <tr th:each="result : ${results.content}"  th:class="${competition.competitionStatus.name() == 'FUNDERS_PANEL' ? 'form-group' : ''}">
-	           <td><a th:href="${'/management/competition/' + competition.competitionId + '/application/' + result.id} + ${originQuery}"  th:text="${result.id}"/></td>
-	           <td th:text="${result.name}"></td>
-	           <td th:text="${result.lead}"></td>
-	           <td th:text="${result.numberOfPartners}"></td>
-	           <td th:text="${result.grantRequested}"></td>
-	           <td th:text="${result.totalProjectCost}"></td>
-	           <td th:text="${result.duration}"></td>
-	           <td scope="col" th:if="${competition.competitionStatus.name() == 'FUNDERS_PANEL'}">
-	          	 <select class="funding-decision form-control" aria-labelledby="fund-project-label" th:id="${'fund' + result.id}" th:name="${result.id}" th:attr="data-competition=${competition.competitionId}">
-           			<option th:selected="${result.fundingDecision == null || result.fundingDecision.name() == 'UNDECIDED'}" value="-">-</option>
-           			<option th:selected="${result.fundingDecision?.name() == 'FUNDED'}" value="Y">Yes</option>
-           			<option th:selected="${result.fundingDecision?.name() == 'UNFUNDED'}" value="N">No</option>
-           		  </select>
-	           </td>
-	           <td scope="col" th:if="${competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK'}" >
-	           		<th:block th:if="${result.isFunded()}">Yes</th:block>
-	           		<th:block th:unless="${result.isFunded()}">No</th:block>
-	           </td>
-             <td th:if="${competition.competitionStatus.name() == 'FUNDERS_PANEL'}" class="autosave-info"></td>
-	         </tr>
-	       </tbody>
-	     </table>
+        <table th:if="${activeTab == 'submitted'}">
+           <thead>
+             <tr>
+               <th scope="col" id="fund-project-label">Select applications</th>
+               <th scope="col">Application number</th>
+               <th scope="col">Project title</th>
+               <th scope="col">Lead</th>
+               <th scope="col">Number of partners</th>
+               <th scope="col">Grant requested (£)</th>
+               <th scope="col">Total project cost (£)</th>
+               <th scope="col">Duration (months)</th>
+               <th scope="col" id="fund-project-label">Funding decision</th>
+             </tr>
+           </thead>
+           <tbody>
+             <tr th:each="result, index : ${results.content}" th:class="${competition.competitionStatus.name() == 'FUNDERS_PANEL' ? 'form-group' : ''}">
+               <td>
+                   <label th:if="${result.applicationFundingDecisionIsChangeable()}" class="block-label selection-button-checkbox" th:for="${'app-row-'+index.count}">
+                       <input  data-switches-button-status="[name=fundingDecision]" type="checkbox" name="applicationIds" th:id="${'app-row-'+index.count}" th:value="${result.id}" aria-labelledby="select-applications-label">
+                       <span class="invisible">Select application</span>
+                   </label>
+                   <th:block th:unless="${result.applicationFundingDecisionIsChangeable()}">
+                       -
+                   </th:block>
+               </td>
+               <td><a th:href="${'/management/competition/' + competition.competitionId + '/application/' + result.id} + ${originQuery}"  th:text="${result.id}"/></td>
+               <td th:text="${result.name}"></td>
+               <td th:text="${result.lead}"></td>
+               <td th:text="${result.numberOfPartners}"></td>
+               <td th:text="${result.grantRequested}"></td>
+               <td th:text="${result.totalProjectCost}"></td>
+               <td th:text="${result.duration}"></td>
+                 <td scope="col" th:text="${result.fundingDecision?.name}"/>
+             </tr>
+           </tbody>
+         </table>
 
-	     <table th:if="${activeTab == 'notSubmitted'}">
-	       <thead>
-	         <tr>
-	           <th scope="col">Application number</th>
-	           <th scope="col">Project title</th>
-	           <th scope="col">Lead</th>
-	           <th scope="col">Percentage complete</th>
-	         </tr>
-	       </thead>
-	       <tbody>
-	         <tr th:each="result : ${results.content}">
-	           <td><a th:href="${'/management/competition/' + competition.competitionId + '/application/' + result.id}"  th:text="${result.id}"/></td>
-	           <td th:text="${result.name}"></td>
-	           <td th:text="${result.lead}"></td>
-	           <td th:text="${result.completedPercentage}"></td>
-	         </tr>
-	       </tbody>
-	     </table>
+         <table th:if="${activeTab == 'notSubmitted'}">
+           <thead>
+             <tr>
+               <th scope="col">Application number</th>
+               <th scope="col">Project title</th>
+               <th scope="col">Lead</th>
+               <th scope="col">Percentage complete</th>
+             </tr>
+           </thead>
+           <tbody>
+             <tr th:each="result : ${results.content}">
+                 <td><a th:href="${'/management/competition/' + competition.competitionId + '/application/' + result.id}"  th:text="${result.id}"/></td>
+               <td th:text="${result.name}"></td>
+               <td th:text="${result.lead}"></td>
+               <td th:text="${result.completedPercentage}"></td>
+             </tr>
+           </tbody>
+         </table>
      </th:block>
 
 </th:block>
@@ -259,7 +256,7 @@
         <option value="id" th:selected="${(activeSortField == 'id')}">Application no.</option>
         <option value="name" th:selected="${(activeSortField == 'name')}">Project title</option>
         <option value="lead" th:selected="${(activeSortField == 'lead')}">Lead</option>
-        <option value="numberOfPartners" th:selected="${(activeSortField == 'numberOfPartners')}">No. of partners</option>
+        <option value="numberOfPartners" th:selected="${(activeSortField == 'numberOfPartners')}">Number of partners</option>
         <option value="grantRequested" th:selected="${(activeSortField == 'grantRequested')}">Grant requested</option>
         <option value="totalProjectCost" th:selected="${(activeSortField == 'totalProjectCost')}">Total project cost</option>
         <option value="duration" th:selected="${(activeSortField == 'duration')}">Duration</option>

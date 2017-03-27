@@ -41,6 +41,7 @@ import org.mockito.Mock;
 
 import java.io.File;
 import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -1190,5 +1191,39 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         assertEquals(INTERNAL_SERVER_ERROR, result.getErrors().get(1).getStatusCode());
         assertEquals("error", result.getErrors().get(2).getErrorKey());
         assertEquals(INTERNAL_SERVER_ERROR, result.getErrors().get(2).getStatusCode());
+    }
+
+    @Test
+    public void setApplicationFundingEmailDateTime() throws Exception {
+
+        Long applicationId = 1L;
+        LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
+        ApplicationResource newApplication = newApplicationResource().build();
+
+        Supplier<Application> applicationExpectations = () -> argThat(lambdaMatches(created -> {
+            assertEquals(tomorrow, created.getManageFundingEmailDate());
+            return true;
+        }));
+        when(applicationMapperMock.mapToResource(applicationExpectations.get())).thenReturn(newApplication);
+
+        ServiceResult<ApplicationResource> result = service.setApplicationFundingEmailDateTime(applicationId, tomorrow);
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void setApplicationFundingEmailDateTime_Failure() throws Exception {
+
+        Long applicationId = 1L;
+        LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
+        ApplicationResource newApplication = newApplicationResource().build();
+
+        Supplier<Application> applicationExpectations = () -> argThat(lambdaMatches(created -> {
+            assertEquals(tomorrow, created.getManageFundingEmailDate());
+            return true;
+        }));
+        when(applicationMapperMock.mapToResource(applicationExpectations.get())).thenReturn(newApplication);
+
+        ServiceResult<ApplicationResource> result = service.setApplicationFundingEmailDateTime(applicationId, tomorrow);
+        assertTrue(result.isSuccess());
     }
 }

@@ -23,7 +23,7 @@ import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBu
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
-import static org.innovateuk.ifs.user.builder.ProfileContractResourceBuilder.newProfileContractResource;
+import static org.innovateuk.ifs.user.builder.ProfileAgreementResourceBuilder.newProfileAgreementResource;
 import static org.innovateuk.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -195,8 +195,8 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
 
         // user common to both applications
         when(processRoleRepositoryMock.findByUserId(application1Lead3AndApplication2Collaborator2.getId())).
-                thenReturn(asList(application1ConsortiumRoles.get(2),application2ConsortiumRoles.get(2)));
-        
+                thenReturn(asList(application1ConsortiumRoles.get(2), application2ConsortiumRoles.get(2)));
+
         // assert that all members of the application 1 consortium can see all other consortium members
         application1ConsortiumResources.forEach(user -> {
             application1ConsortiumResources.forEach(otherUser -> {
@@ -429,22 +429,22 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void testUsersCanViewTheirOwnProfileContract() {
+    public void testUsersCanViewTheirOwnProfileAgreement() {
         UserResource user = newUserResource().build();
-        ProfileContractResource profileContract = newProfileContractResource()
+        ProfileAgreementResource profileAgreementResource = newProfileAgreementResource()
                 .withUser(user.getId())
                 .build();
-        assertTrue(rules.usersCanViewTheirOwnProfileContract(profileContract, user));
+        assertTrue(rules.usersCanViewTheirOwnProfileAgreement(profileAgreementResource, user));
     }
 
     @Test
-    public void testUsersCanViewTheirOwnProfileContractButAttemptingToViewAnotherUsersProfileContract() {
+    public void testUsersCanViewTheirOwnProfileAgreementButAttemptingToViewAnotherUsersProfileAgreement() {
         UserResource user = newUserResource().build();
         UserResource anotherUser = newUserResource().build();
-        ProfileContractResource profileContract = newProfileContractResource()
+        ProfileAgreementResource profileAgreementResource = newProfileAgreementResource()
                 .withUser(user.getId())
                 .build();
-        assertFalse(rules.usersCanViewTheirOwnProfileContract(profileContract, anotherUser));
+        assertFalse(rules.usersCanViewTheirOwnProfileAgreement(profileAgreementResource, anotherUser));
     }
 
     @Test

@@ -7,6 +7,8 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.assessment.builder.ApplicationAssessmentFeedbackResourceBuilder.newApplicationAssessmentFeedbackResource;
 import static org.innovateuk.ifs.assessment.documentation.AssessmentFundingDecisionOutcomeDocs.assessmentFundingDecisionOutcomeResourceBuilder;
 import static org.innovateuk.ifs.assessment.documentation.AssessmentFundingDecisionOutcomeDocs.assessmentFundingDecisionOutcomeResourceFields;
 import static org.innovateuk.ifs.assessment.documentation.AssessmentRejectOutcomeDocs.assessmentRejectOutcomeResourceBuilder;
@@ -138,6 +140,28 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
                                 parameterWithName("id").description("Id of the assessment for which to recommend")
                         ),
                         requestFields(assessmentFundingDecisionOutcomeResourceFields)
+                ));
+    }
+
+    @Test
+    public void getApplicationFeedback() throws Exception {
+        long applicationId = 1L;
+
+        ApplicationAssessmentFeedbackResource expectedResource = newApplicationAssessmentFeedbackResource()
+                .withFeedback(asList("Feedback 1", "Feedback 2"))
+                .build();
+
+        when(assessmentServiceMock.getApplicationFeedback(applicationId)).thenReturn(serviceSuccess(expectedResource));
+
+        mockMvc.perform(get("/assessment/application/{id}/feedback", applicationId))
+                .andExpect(status().isOk())
+                .andDo(document("assessment/{method-name}",
+                        pathParameters(
+                                parameterWithName("id").description("Id of the application to retrieve assessment feedback for")
+                        ),
+                        responseFields(
+                                fieldWithPath("feedback[]").description("List of assessor feedback items for the application")
+                        )
                 ));
     }
 
