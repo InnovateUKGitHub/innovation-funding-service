@@ -38,6 +38,7 @@ ${OPEN_COMPETITION_APPLICATION_2_NAME}    Providing sustainable childcare
 ${OPEN_COMPETITION_APPLICATION_2}         ${application_ids['${OPEN_COMPETITION_APPLICATION_2_NAME}']}
 ${OPEN_COMPETITION_APPLICATION_3_TITLE}   Hydrology the dynamics of Earth\'s surface water
 ${OPEN_COMPETITION_APPLICATION_3}         ${application_ids["${OPEN_COMPETITION_APPLICATION_3_TITLE}"]}
+# Using double quotes above, cause there's an apostrophe in the title
 ${OPEN_COMPETITION_APPLICATION_4_NAME}    Shared infrastructures for economical production lines
 ${OPEN_COMPETITION_APPLICATION_4}         ${application_ids['${OPEN_COMPETITION_APPLICATION_4_NAME}']}
 ${OPEN_COMPETITION_APPLICATION_5_NAME}    A new innovative solution
