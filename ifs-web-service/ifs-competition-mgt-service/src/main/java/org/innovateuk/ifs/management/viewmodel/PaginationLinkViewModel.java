@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.management.viewmodel;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
 
 public class PaginationLinkViewModel {
@@ -17,5 +19,27 @@ public class PaginationLinkViewModel {
 
     public String getTitle() {
         return title;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PaginationLinkViewModel that = (PaginationLinkViewModel) o;
+
+        return new EqualsBuilder()
+                .append(path, that.path)
+                .append(title, that.title)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(path)
+                .append(title)
+                .toHashCode();
     }
 }

@@ -12,6 +12,10 @@ Documentation     INFUND-1987
 ...               INFUND-7371 Competition management: View list of submitted applications
 ...
 ...               INFUND-7696 Competition management: View in progress/completed applications
+...
+...               INFUND-8012 Filter, sorting and pagination on 'Submitted applications' dashboard
+...
+...               INFUND-8010 Filter, sorting and pagination on 'All applications' dashboard
 Suite Setup       Log in as user    &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
@@ -22,7 +26,7 @@ Applications Dashboard
     [Documentation]    INFUND-7367
     [Tags]    HappyPath
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    When The user clicks the button/link    jQuery=a:contains("Applications - All, submitted")
+    When The user clicks the button/link    jQuery=a:contains("Applications: All, submitted")
     Then The user should see the element    jQuery=a:contains(All applications)
     And The user should see the element    link=Submitted applications
 
@@ -38,6 +42,9 @@ Submitted applications
     And the user should see the text in the page    Grant requested (£)
     And the user should see the text in the page    Total project cost (£)
     And the user should see the text in the page    Duration (months)
+    And the user should see the text in the page    Filter applications
+    And the user should see the element    jQuery=td:contains("Intelligent Building") ~ td:nth-child(4):contains("Forming technologies")
+    And the user should see the element    jQuery=.pagination-part-title:contains(21 to 40)
 
 Submitted applications Key Statistics
     [Documentation]    INFUND-7371
@@ -54,25 +61,16 @@ Submitted applications View completed applications
     Then the user should see the text in the page    Submitted applications
 
 Sort by Lead
-    [Documentation]    INFUND-2307
-    [Tags]    HappyPath    Pending
-    #TODO \ Pending sprint 22 stories
+    [Documentation]    INFUND-8012
+    [Tags]    HappyPath
     When the application list is sorted by    Lead
     Then the applications should be sorted by column    3
 
-Sort by Grant requested
-    [Documentation]    INFUND-2411
-    [Tags]    Pending
-    #TODO \ Pending sprint 22 stories
-    When the application list is sorted by    Grant requested
-    Then the applications should be sorted by column    5
-
-Sort by Total project cost
-    [Documentation]    INFUND-2411
-    [Tags]    Pending
-    #TODO \ Pending sprint 22 stories
-    When the application list is sorted by    Total project cost
-    Then the applications should be sorted by column    6
+Sort by Application number
+    [Documentation]    INFUND-8012
+    [Tags]
+    When the application list is sorted by    Application no.
+    Then the applications should be sorted by column    1
 
 Finances are showing in the list
     [Documentation]    INFUND-7371
@@ -85,43 +83,51 @@ Only applications from this competition should be visible
     [Documentation]    INFUND-2311
     Then the user should not see the element    link=${OPEN_COMPETITION_APPLICATION_5_NUMBER}
 
-Columns for not submitted applications
-    [Documentation]    INFUND-2307
-    [Tags]    Failing
-    #TODO Failing due to INFUND-7848
-    When the user clicks the button/link    link=Applications not submitted
-    Then the user should see the text in the page    Application no
-    And the user should see the text in the page    Project title
-    And the user should see the text in the page    Lead
-    And the user should see the text in the page    Percentage complete
+Filter by application number
+    [Documentation]    INFUND-8012
+    [Tags]    HappyPath
+    Given the user enters text to a text field    id=filterSearch    45
+    When the user clicks the button/link    jQuery=button:contains(Filter)
+    Then the user should see the text in the page    Living with Social Media
+    And the user should not see the element    jQuery=.pagination-label:contains(Next)
+    And the user clicks the button/link    jQuery=a:contains(Clear all filters)
+    Then the user should see the element    jQuery=.pagination-label:contains(Next)
 
-Summary of the not submitted applications
-    [Documentation]    INFUND-2307
-    [Tags]    Failing
-    #TODO Failing due to INFUND-7848
-    Then the calculations should be correct    css=.info-area p:nth-child(3) span
-    And both calculations in the page should show the same    css=.info-area p:nth-child(3) span
+Next/Previous pagination on submitted applications
+    [Documentation]    INFUND-8012
+    [Tags]
+    When the user clicks the button/link    jQuery=.pagination-label:contains(Next)
+    Then the user should see the element    jQuery=.pagination-part-title:contains(1 to 20)
+    And the user should see the element    jQuery=.pagination-part-title:contains(41 to 41)
+    And the user clicks the button/link    jQuery=.pagination-label:contains(Previous)
+    And the user should not see the element    jQuery=.pagination-label:contains(Previous)
+    And the user should not see the element    jQuery=.pagination-part-title:contains(41 to 41)
 
-Sorted by percentage
-    [Documentation]    INFUND-2307
-    [Tags]    Failing
-    #TODO Failing due to INFUND-7848
-    When the application list is sorted by    Project title
-    Then the applications should be sorted by column    2
+Page list pagination on submitted applications
+    [Documentation]    INFUND-8012
+    [Tags]    HappyPath
+    When the user clicks the button/link    jQuery=a:contains(41 to 41)
+    Then the user should see the element    jQuery=.pagination-label:contains(Previous)
+    And the user should not see the element    jQuery=.pagination-label:contains(Next)
+    [Teardown]    the user clicks the button/link    link=Applications
 
-Non submitted applications from this competition should be visible
-    [Documentation]    INFUND-2311
-    [Tags]    Failing
-    #TODO Failing due to INFUND-7848
-    Then the user should not see the element    link=${IN_ASSESSMENT_APPLICATION_3_NUMBER}
+Next/Previous pagination on all applications
+    [Documentation]    INFUND-8010
+    [Tags]    HappyPath
+    [Setup]    the user clicks the button/link    link=All applications
+    When the user clicks the button/link    jQuery=.pagination-label:contains(Next)
+    Then the user should see the element    jQuery=.pagination-part-title:contains(1 to 20)
+    And the user should see the element    jQuery=.pagination-part-title:contains(41 to 46)
+    And the user clicks the button/link    jQuery=.pagination-label:contains(Previous)
+    And the user should not see the element    jQuery=.pagination-label:contains(Previous)
+    And the user should not see the element    jQuery=.pagination-part-title:contains(41 to 46)
 
-Excel export
-    [Documentation]    INFUND-1987, INFUND-4039
-    [Tags]    HappyPath    Download    Pending
-    #TODO \ Pending sprint 22 stories
-    When the admin downloads the excel
-    And user opens the excel and checks the content
-    [Teardown]    Remove the file from the operating system    submitted_applications.xlsx
+Page list pagination on all applications
+    [Documentation]    INFUND-8010
+    [Tags]
+    When the user clicks the button/link    jQuery=a:contains(41 to 46)
+    Then the user should see the element    jQuery=.pagination-label:contains(Previous)
+    And the user should not see the element    jQuery=.pagination-label:contains(Next)
 
 *** Keywords ***
 The application list is sorted by

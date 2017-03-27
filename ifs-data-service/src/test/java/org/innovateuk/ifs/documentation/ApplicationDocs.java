@@ -2,6 +2,7 @@ package org.innovateuk.ifs.documentation;
 
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.springframework.restdocs.payload.FieldDescriptor;
@@ -32,7 +33,9 @@ public class ApplicationDocs {
             fieldWithPath("resubmission").description("indicator that this application is a resubmission"),
             fieldWithPath("previousApplicationNumber").description("the application number of the previous submission"),
             fieldWithPath("previousApplicationTitle").description("the application title of the previous submission"),
-            fieldWithPath("researchCategories").description("list research categories")
+            fieldWithPath("researchCategory").description("Research category"),
+            fieldWithPath("innovationArea").description("applicable Innovation Area"),
+            fieldWithPath("noInnovationAreaApplicable").description("Flag indicating no Innovation Area is applicable")
     };
 
     public static final ApplicationResourceBuilder applicationResourceBuilder = newApplicationResource()
@@ -47,5 +50,7 @@ public class ApplicationDocs {
             .withCompetitionStatus(CompetitionStatus.PROJECT_SETUP)
             .withAssessorFeedbackFileEntry(123L)
             .withCompletion(new BigDecimal(30L))
-            .withResearchCategories(asSet(new ResearchCategoryResource()));
+            .withResearchCategory(new ResearchCategoryResource())
+            .withInnovationArea(new InnovationAreaResource())
+            .withNoInnovationAreaApplicable(false);
 }

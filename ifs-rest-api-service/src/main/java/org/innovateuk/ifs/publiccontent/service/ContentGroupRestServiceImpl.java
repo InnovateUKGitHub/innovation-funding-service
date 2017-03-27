@@ -34,4 +34,15 @@ public class ContentGroupRestServiceImpl extends BaseRestService implements Cont
     public RestResult<FileEntryResource> getFileDetails(Long contentGroupId) {
         return getWithRestResult(CONTENT_GROUP_REST_URL + "get-file-details/" + contentGroupId, FileEntryResource.class);
     }
+
+    @Override
+    public RestResult<ByteArrayResource> getFileAnonymous(Long contentGroupId) {
+        return getWithRestResultAnonymous(CONTENT_GROUP_REST_URL + "get-file-contents/" + contentGroupId, ByteArrayResource.class);
+    }
+
+    @Override
+    public RestResult<FileEntryResource> getFileDetailsAnonymous(Long contentGroupId) {
+        return getWithRestResultAnonymous(CONTENT_GROUP_REST_URL + "get-file-details/" + contentGroupId, FileEntryResource.class);
+    }
+
 }

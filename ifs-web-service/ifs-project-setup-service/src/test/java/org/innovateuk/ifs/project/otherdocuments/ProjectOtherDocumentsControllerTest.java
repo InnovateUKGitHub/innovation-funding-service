@@ -8,7 +8,6 @@ import org.innovateuk.ifs.project.otherdocuments.form.ProjectOtherDocumentsForm;
 import org.innovateuk.ifs.project.otherdocuments.viewmodel.ProjectOtherDocumentsViewModel;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.junit.Test;
 import org.springframework.core.io.ByteArrayResource;
@@ -24,9 +23,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -53,7 +50,6 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
         when(projectService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(partnerOrganisations);
-        when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);
         when(projectService.isOtherDocumentSubmitAllowed(projectId)).thenReturn(false);
 
         MvcResult result = mockMvc.perform(get("/project/123/partner/documents")).
@@ -74,10 +70,9 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
                 model.getPartnerOrganisationNames());
 
         // test flags that help to drive the page
-        assertFalse(model.isReadOnly());
-        assertTrue(model.isEditable());
-        assertTrue(model.isLeadPartner());
-        assertTrue(model.isShowLeadPartnerGuidanceInformation());
+        assertTrue(model.isReadOnly());
+        assertFalse(model.isEditable());
+        assertTrue(model.isShowGuidanceInformation());
         assertFalse(model.isShowApprovedMessage());
         assertFalse(model.isShowDocumentsBeingReviewedMessage());
         assertFalse(model.isShowRejectionMessages());
@@ -106,7 +101,6 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
         when(projectService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(partnerOrganisations);
-        when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);
         when(projectService.isOtherDocumentSubmitAllowed(projectId)).thenReturn(false);
 
         MvcResult result = mockMvc.perform(get("/project/123/partner/documents/readonly")).
@@ -130,8 +124,7 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
         // test flags that help to drive the page
         assertTrue(model.isReadOnly());
         assertFalse(model.isEditable());
-        assertTrue(model.isLeadPartner());
-        assertFalse(model.isShowLeadPartnerGuidanceInformation());
+        assertFalse(model.isShowGuidanceInformation());
         assertTrue(model.isShowApprovedMessage());
         assertFalse(model.isShowDocumentsBeingReviewedMessage());
         assertFalse(model.isShowRejectionMessages());
@@ -155,7 +148,6 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
         when(projectService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(partnerOrganisations);
-        when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(false);
         when(projectService.isOtherDocumentSubmitAllowed(projectId)).thenReturn(false);
 
         MvcResult result = mockMvc.perform(get("/project/123/partner/documents")).
@@ -178,8 +170,7 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
         // test flags that help to drive the page
         assertTrue(model.isReadOnly());
         assertFalse(model.isEditable());
-        assertFalse(model.isLeadPartner());
-        assertFalse(model.isShowLeadPartnerGuidanceInformation());
+        assertTrue(model.isShowGuidanceInformation());
         assertFalse(model.isShowApprovedMessage());
         assertFalse(model.isShowDocumentsBeingReviewedMessage());
         assertFalse(model.isShowRejectionMessages());
@@ -207,7 +198,6 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
         when(projectService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.of(existingCollaborationAgreement));
         when(projectService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.of(existingExplotationPlan));
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(partnerOrganisations);
-        when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);
         when(projectService.isOtherDocumentSubmitAllowed(projectId)).thenReturn(false);
 
         MvcResult result = mockMvc.perform(get("/project/123/partner/documents")).
@@ -231,10 +221,9 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
                 model.getPartnerOrganisationNames());
 
         // test flags that help to drive the page
-        assertFalse(model.isReadOnly());
-        assertTrue(model.isEditable());
-        assertTrue(model.isLeadPartner());
-        assertTrue(model.isShowLeadPartnerGuidanceInformation());
+        assertTrue(model.isReadOnly());
+        assertFalse(model.isEditable());
+        assertTrue(model.isShowGuidanceInformation());
         assertFalse(model.isShowApprovedMessage());
         assertFalse(model.isShowDocumentsBeingReviewedMessage());
         assertFalse(model.isShowRejectionMessages());
@@ -261,7 +250,6 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
         when(projectService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(partnerOrganisations);
-        when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);
         when(projectService.isOtherDocumentSubmitAllowed(projectId)).thenReturn(false);
 
         MvcResult result = mockMvc.perform(get("/project/123/partner/documents")).
@@ -284,8 +272,7 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
         // test flags that help to drive the page
         assertTrue(model.isReadOnly());
         assertFalse(model.isEditable());
-        assertTrue(model.isLeadPartner());
-        assertFalse(model.isShowLeadPartnerGuidanceInformation());
+        assertFalse(model.isShowGuidanceInformation());
         assertFalse(model.isShowApprovedMessage());
         assertTrue(model.isShowDocumentsBeingReviewedMessage());
         assertFalse(model.isShowRejectionMessages());
@@ -374,7 +361,6 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
         when(projectService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(emptyList());
-        when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);
         when(projectService.isOtherDocumentSubmitAllowed(projectId)).thenReturn(false);
 
         MvcResult result = mockMvc.perform(
@@ -486,7 +472,6 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
         when(projectService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(emptyList());
-        when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);
         when(projectService.isOtherDocumentSubmitAllowed(projectId)).thenReturn(true);
 
         MvcResult result = mockMvc.perform(
@@ -504,8 +489,7 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
         // test flags that help to drive the page
         assertFalse(model.isReadOnly());
         assertTrue(model.isEditable());
-        assertTrue(model.isLeadPartner());
-        assertTrue(model.isShowLeadPartnerGuidanceInformation());
+        assertTrue(model.isShowGuidanceInformation());
         assertFalse(model.isShowApprovedMessage());
         assertFalse(model.isShowDocumentsBeingReviewedMessage());
         assertFalse(model.isShowRejectionMessages());
@@ -527,7 +511,7 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
     }
 
     @Test
-    public void testViewConfirmDocuemntsPage() throws Exception {
+    public void testViewConfirmDocumentsPage() throws Exception {
 
         long projectId = 123L;
 
@@ -537,7 +521,6 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
         when(projectService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(emptyList());
-        when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);
         when(projectService.isOtherDocumentSubmitAllowed(projectId)).thenReturn(true);
 
         mockMvc.perform(get("/project/{id}/partner/documents/confirm", projectId)).

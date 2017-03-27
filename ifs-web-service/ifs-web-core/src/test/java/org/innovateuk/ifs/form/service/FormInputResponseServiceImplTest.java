@@ -82,4 +82,20 @@ public class FormInputResponseServiceImplTest extends BaseUnitTestMocksTest {
 
         verify(restServiceMock, only()).getByApplicationIdAndQuestionName(applicationId, questionName);
     }
+
+    @Test
+    public void getByApplicationIdAndQuestionId() {
+        long applicationId = 1L;
+        long questionId = 2L;
+
+        List<FormInputResponseResource> expected = newFormInputResponseResource().build(2);
+
+        when(restServiceMock.getByApplicationIdAndQuestionId(applicationId, questionId)).thenReturn(
+                restSuccess(expected));
+
+        List<FormInputResponseResource> actual = service.getByApplicationIdAndQuestionId(applicationId, questionId);
+        assertEquals(expected, actual);
+
+        verify(restServiceMock, only()).getByApplicationIdAndQuestionId(applicationId, questionId);
+    }
 }

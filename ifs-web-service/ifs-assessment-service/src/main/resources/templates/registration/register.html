@@ -65,64 +65,8 @@
                                     data-required-errormessage=#{validation.standard.lastname.required}" />
                 </div>
 
-                <div class="form-group" th:classappend="${#fields.hasErrors('gender')}? error">
-                    <fieldset>
-                        <legend>
-                            <span class="heading-small">Gender</span>
-                            <span th:if="${#fields.hasErrors('gender')}" th:remove="tag">
-                              <span class="error-message" th:each="err : ${#fields.errors('gender')}" th:text="${err}"/>
-                            </span>
-                        </legend>
-                        <label class="block-label selection-button-radio" th:each="gen : ${T(org.innovateuk.ifs.user.resource.Gender).values()}">
-                            <input th:field="*{gender}"
-                                   th:value="${gen}"
-                                   type="radio"
-                                   required="required"
-                                   th:attr="data-required-errormessage=#{validation.standard.gender.selectionrequired}" />
-                            <span th:text="${gen.displayName}" th:remove="tag"/>
-                        </label>
-                    </fieldset>
-                </div>
 
-                <div class="form-group" th:classappend="${#fields.hasErrors('ethnicity')}? error">
-                    <fieldset>
-                        <legend>
-                            <span class="heading-small">Your ethnic group</span>
-                            <span th:if="${#fields.hasErrors('ethnicity')}" th:remove="tag">
-                              <span class="error-message" th:each="err : ${#fields.errors('ethnicity')}" th:text="${err}"/>
-                            </span>
-                        </legend>
-                        <label class="block-label selection-button-radio" th:each="eth : ${ethnicityOptions}">
-                            <input th:field="*{ethnicity}"
-                                   th:value="${eth.id}"
-                                   type="radio"
-                                   required="required"
-                                   th:attr="data-required-errormessage=#{validation.standard.ethnicity.selectionrequired}" />
-                            <span th:text="${eth.description}" th:remove="tag"/>
-                        </label>
-                    </fieldset>
-                </div>
-
-                <div class="form-group" th:classappend="${#fields.hasErrors('disability')}? error">
-                    <fieldset>
-                        <legend>
-                            <span class="heading-small">Do you consider yourself disabled?</span>
-                            <span th:if="${#fields.hasErrors('disability')}" th:remove="tag">
-                                <span class="error-message" th:each="err : ${#fields.errors('disability')}" th:text="${err}" />
-                            </span>
-                        </legend>
-                        <label class="block-label selection-button-radio" th:each="dis : ${T(org.innovateuk.ifs.user.resource.Disability).values()}">
-                            <input th:field="*{disability}"
-                                   th:value="${dis}"
-                                   type="radio"
-                                   required="required"
-                                   th:attr="data-required-errormessage=#{validation.standard.disability.selectionrequired}" />
-                            <span th:text="${dis.displayName}" th:remove="tag" />
-                        </label>
-                    </fieldset>
-                </div>
-
-                <th:block th:insert="fragments/addresses :: company-address-details" th:with="form=${form}, legend='Address search', formHint='Please provide your postal address for our records. As you will be invoicing us for assessments, we need this for your remittance advice'"/>
+                <th:block th:insert="fragments/addresses :: company-address-details" th:with="form=${form}, legend='Address search', formHint='Please provide your postal address for our records. As you will be invoicing us for assessments, we need this for your remittance advice.'"/>
 
                 <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('phoneNumber')}? error">
                     <label class="form-label" th:for="phoneNumber">
@@ -151,53 +95,8 @@
                         <strong th:text="${model.email}"></strong>
                     </p>
                 </div>
-                <div class="form-group" th:classappend="${#fields.hasErrors('password')}? error">
-                    <label class="form-label" th:for="password">
-                        <span class="form-label-bold">Create password</span>
-                        <span th:if="${#fields.hasErrors('password')}" th:remove="tag">
-                              <span class="error-message"  th:each="err : ${#fields.errors('password')}" th:text="${err}" />
-                        </span>
-                    </label>
-                    <div class="form-hint" id="password-hint">
-                        <p>Your password is case-sensitive and needs to:</p>
-                        <ul class="list list-bullet">
-                            <li>be between 10 and 30 characters long</li>
-                            <li>contain at least 1 capital letter</li>
-                            <li>contain at least 1 number</li>
-                        </ul>
-                        <p class="no-margin-bottom">Your password can include spaces to make a phrase.</p>
-                    </div>
-                    <input aria-describedby="password-hint"
-                           class="form-control"
-                           th:errorclass="field-error"
-                           type="password"
-                           th:field="*{password}"
-                           required="required"
-                           minlength="10"
-                           maxlength="30"
-                           th:attr="data-required-errormessage=#{validation.standard.password.required},
-                                    data-minlength-errormessage=#{validation.standard.password.length.min(null,null,10)},
-                                    data-maxlength-errormessage=#{validation.standard.password.length.max}" />
-                </div>
 
-                <div class="form-group" th:classappend="${#fields.hasErrors('retypedPassword')}? error">
-                    <label class="form-label" th:for="retypedPassword">
-                        <span class="form-label-bold">Re-type password</span>
-                        <span th:if="${#fields.hasErrors('retypedPassword')}" th:remove="tag">
-                              <span class="error-message"  th:each="err : ${#fields.errors('retypedPassword')}" th:text="${err}" />
-                        </span>
-                    </label>
-                    <input class="form-control"
-                           th:errorclass="field-error"
-                           type="password"
-                           th:field="*{retypedPassword}"
-                           required="required"
-                           minlength="10"
-                           maxlength="30"
-                           th:attr="data-required-errormessage=#{validation.standard.retypedpassword.required},
-                                    data-minlength-errormessage=#{validation.standard.password.length.min(null,null,10)},
-                                    data-maxlength-errormessage=#{validation.standard.password.length.max}" />
-                </div>
+                <th:block th:insert="fragments/password :: registration"/>
 
                 <button class="button button-large extra-margin" name="create-account" type="submit">Continue</button>
             </form>

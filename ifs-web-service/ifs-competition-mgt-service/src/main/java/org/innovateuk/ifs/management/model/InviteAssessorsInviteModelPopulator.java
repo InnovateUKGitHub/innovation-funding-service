@@ -4,15 +4,17 @@ import org.innovateuk.ifs.application.service.CategoryService;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.invite.resource.AssessorCreatedInvitePageResource;
 import org.innovateuk.ifs.invite.resource.AssessorCreatedInviteResource;
 import org.innovateuk.ifs.management.viewmodel.InviteAssessorsInviteViewModel;
 import org.innovateuk.ifs.management.viewmodel.InvitedAssessorRowViewModel;
+import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * Build the model for the Invite assessors 'Invite' view.
@@ -26,19 +28,19 @@ public class InviteAssessorsInviteModelPopulator extends InviteAssessorsModelPop
     @Autowired
     private CategoryService categoryService;
 
-    @Override
-    public InviteAssessorsInviteViewModel populateModel(CompetitionResource competition) {
+    public InviteAssessorsInviteViewModel populateModel(CompetitionResource competition, int page, String originQuery) {
         InviteAssessorsInviteViewModel model = super.populateModel(competition);
-        model.setAssessors(getAssessors(competition));
-        model.setInnovationSectorOptions(getInnovationSectors());
-        return model;
-    }
 
-    private List<InvitedAssessorRowViewModel> getAssessors(CompetitionResource competition) {
-        return competitionInviteRestService.getCreatedInvites(competition.getId()).getSuccessObject()
-                .stream()
-                .map(this::getRowViewModel)
-                .collect(toList());
+        AssessorCreatedInvitePageResource pageResource = competitionInviteRestService.getCreatedInvites(competition.getId(), page)
+                .getSuccessObjectOrThrowException();
+
+        List<InvitedAssessorRowViewModel> assessors = simpleMap(pageResource.getContent(), this::getRowViewModel);
+
+        model.setAssessors(assessors);
+        model.setPagination(new PaginationViewModel(pageResource, originQuery));
+        model.setInnovationSectorOptions(getInnovationSectors());
+
+        return model;
     }
 
     private List<InnovationSectorResource> getInnovationSectors() {

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.application.domain.Section;
+import org.innovateuk.ifs.category.domain.InnovationSector;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.domain.Milestone;
@@ -106,6 +107,9 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
     public CompetitionBuilder withAssessorCount(Integer... assessorCounts) {
         return withArraySetFieldByReflection("assessorCount", assessorCounts);
     }
+    public CompetitionBuilder withInnovationSector(InnovationSector... innovationSectors) {
+        return withArray((innovationSector, competition) -> competition.setInnovationSector(innovationSector), innovationSectors);
+    }
 
     public CompetitionBuilder withNonIfs(Boolean... nonIfs) {
         return withArraySetFieldByReflection("nonIfs", nonIfs);
@@ -188,5 +192,7 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
     public CompetitionBuilder withId(Long... ids) {
         return withArray((id, object) -> setField("id", id, object), ids);
     }
+
+    public CompetitionBuilder withMaxResearchRatio(Integer... ratios) { return withArray((ratio, competition) -> competition.setMaxResearchRatio(ratio), ratios); }
 
 }

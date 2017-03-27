@@ -17,5 +17,8 @@ public enum SectionStatus {
         status = value;
     }
 
-    public String getSectionStatus() { return this.status; }
+    public String getSectionStatus() {
+        return this.status;
+    }
+
 }

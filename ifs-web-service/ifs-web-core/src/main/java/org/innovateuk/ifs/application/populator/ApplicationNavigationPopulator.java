@@ -1,17 +1,19 @@
 package org.innovateuk.ifs.application.populator;
 
 import com.google.common.collect.Iterables;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.resource.SectionType;
+import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +30,9 @@ public class ApplicationNavigationPopulator {
 
     @Autowired
     private SectionService sectionService;
+
+    @Autowired
+    private ApplicationService applicationService;
 
     public NavigationViewModel addNavigation(SectionResource section, Long applicationId) {
 
@@ -124,21 +129,21 @@ public class ApplicationNavigationPopulator {
      * This method creates a URL looking at referer in request.  Because 'back' will be different depending on
      * whether the user arrived at this page via PS pages and summary vs App pages input form/overview. (INFUND-6892)
      */
-    public void addAppropriateBackURLToModel(Long appId, HttpServletRequest request, Model model, SectionResource section){
+    public void addAppropriateBackURLToModel(Long applicationId, Model model, SectionResource section){
         if (section != null && SectionType.FINANCE.equals(section.getType().getParent().orElse(null))) {
             model.addAttribute("backTitle", "Your finances");
-            model.addAttribute("backURL", "/application/" + appId + "/form/" + SectionType.FINANCE.name());
+            model.addAttribute("backURL", "/application/" + applicationId + "/form/" + SectionType.FINANCE.name());
         } else {
-            String backURL;
-            String referer = request.getHeader(REFERER);
+            ApplicationResource application = applicationService.getById(applicationId);
+            String backURL = "/application/" + applicationId;
 
-            if(referer != null && referer.contains("/application/" + appId + "/summary")){
+            if(!application.isOpen() || !application.getCompetitionStatus().equals(CompetitionStatus.OPEN)){
                 model.addAttribute("backTitle", "Application Summary");
-                backURL = referer;
+                backURL += "/summary";
             } else {
                 model.addAttribute("backTitle", "Application Overview");
-                backURL = "/application/" + appId;
             }
+
             model.addAttribute("backURL", backURL);
         }
     }

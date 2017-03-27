@@ -3,16 +3,15 @@ package org.innovateuk.ifs.user.builder;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.OrganisationType;
-import org.innovateuk.ifs.user.resource.OrganisationSize;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.idBasedNames;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static org.innovateuk.ifs.user.builder.OrganisationTypeBuilder.newOrganisationType;
-import static java.util.Collections.emptyList;
 
 /**
  * Builder for Organisation entities.
@@ -53,10 +52,6 @@ public class OrganisationBuilder extends BaseBuilder<Organisation, OrganisationB
 
     public OrganisationBuilder withOrganisationType(OrganisationType... organisationTypes) {
         return withArraySetFieldByReflection("organisationType", organisationTypes);
-    }
-
-    public OrganisationBuilder withOrganisationSize(OrganisationSize... organisationSize) {
-        return withArraySetFieldByReflection("organisationSize", organisationSize);
     }
 
     public OrganisationBuilder withOrganisationType(OrganisationTypeEnum... type) {

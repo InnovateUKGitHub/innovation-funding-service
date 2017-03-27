@@ -62,6 +62,27 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
     }
 
     @Test
+    public void testGenerateSpendProfileForPartnerOrganisation() {
+
+        asList(UserRoleType.values()).forEach(role -> {
+            RoleResource roleResource = newRoleResource().withType(role).build();
+            UserResource userWithRole = newUserResource().withRolesGlobal(singletonList(roleResource)).build();
+            setLoggedInUser(userWithRole);
+
+            if (PROJECT_FINANCE.equals(role) || COMP_ADMIN.equals(role)) {
+                classUnderTest.generateSpendProfileForPartnerOrganisation(1L, 2L, 7L);
+            } else {
+                try {
+                    classUnderTest.generateSpendProfileForPartnerOrganisation(1L, 2L, 7L);
+                    fail("Should have thrown an AccessDeniedException for any non-Finance Team members");
+                } catch (AccessDeniedException e) {
+                    // expected behaviour
+                }
+            }
+        });
+    }
+
+    @Test
     public void testGetSpendProfileTable() {
 
         Long projectId = 1L;
@@ -275,6 +296,11 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
 
         @Override
         public ServiceResult<Void> generateSpendProfile(Long projectId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> generateSpendProfileForPartnerOrganisation(Long projectId, Long organisationId, Long userId) {
             return null;
         }
 

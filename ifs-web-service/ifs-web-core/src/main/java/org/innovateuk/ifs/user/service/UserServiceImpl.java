@@ -148,13 +148,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ProfileContractResource getProfileContract(Long userId) {
-        return userRestService.getProfileContract(userId).getSuccessObjectOrThrowException();
+    public ProfileAgreementResource getProfileAgreement(Long userId) {
+        return userRestService.getProfileAgreement(userId).getSuccessObjectOrThrowException();
     }
 
     @Override
-    public ServiceResult<Void> updateProfileContract(Long userId) {
-        return userRestService.updateProfileContract(userId).toServiceResult();
+    public ServiceResult<Void> updateProfileAgreement(Long userId) {
+        return userRestService.updateProfileAgreement(userId).toServiceResult();
     }
 
     @Override

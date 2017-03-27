@@ -255,7 +255,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         addApplicationDetails(viewModel, sectionApplicationViewModel, application, competition, userId, section, form, userApplicationRoles, allSections);
         addSectionDetails(viewModel, section, formInputService.findApplicationInputsByCompetition(competition.getId()));
 
-        viewModel.setCompletedQuestionsPercentage(application.getCompletion());
+        viewModel.setCompletedQuestionsPercentage(application.getCompletion() == null ? 0 : application.getCompletion().intValue());
     }
 
     //TODO - INFUND-7482 - remove usages of Model model
@@ -268,12 +268,12 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         boolean hasFinanceSection = !financeSections.isEmpty();
 
         if(hasFinanceSection) {
-        	
+            Long organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
             List<QuestionResource> costsQuestions = questionService.getQuestionsBySectionIdAndType(financeSections.get(0).getId(), QuestionType.COST);
 
-            applicationFinanceOverviewModelManager.addFinanceDetails(model, competitionId, applicationId);
+            applicationFinanceOverviewModelManager.addFinanceDetails(model, competitionId, applicationId, Optional.of(organisationId));
             if(!form.isAdminMode()){
-                String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
+
                 if(competitionResource.isOpen()) {
                     openSectionViewModel.setFinanceViewModel(financeHandler.getFinanceModelManager(organisationType).getFinanceViewModel(applicationId, costsQuestions, user.getId(), form, organisationId));
                 }
@@ -300,7 +300,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         ArrayList<OrganisationResource> organisationList = new ArrayList<>(organisations);
 
         return organisationList.stream()
-            .filter(o -> OrganisationTypeEnum.ACADEMIC.getOrganisationTypeId().equals(o.getOrganisationType()))
+            .filter(o -> OrganisationTypeEnum.RESEARCH.getOrganisationTypeId().equals(o.getOrganisationType()))
             .collect(Collectors.toCollection(supplier));
     }
 

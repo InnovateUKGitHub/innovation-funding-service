@@ -34,9 +34,9 @@ public class ApplicationAssessmentSummaryControllerDocumentation extends BaseCon
         Long applicationId = 1L;
         List<ApplicationAssessorResource> applicationAssessorResources = applicationAssessorResourceBuilder.build(2);
 
-        when(applicationAssessmentSummaryServiceMock.getAssessors(applicationId)).thenReturn(serviceSuccess(applicationAssessorResources));
+        when(applicationAssessmentSummaryServiceMock.getAssignedAssessors(applicationId)).thenReturn(serviceSuccess(applicationAssessorResources));
 
-        mockMvc.perform(get("/applicationAssessmentSummary/{id}/assessors", applicationId))
+        mockMvc.perform(get("/applicationAssessmentSummary/{id}/assignedAssessors", applicationId))
                 .andExpect(status().isOk())
                 .andDo(document("applicationassessmentsummary/{method-name}",
                         pathParameters(
@@ -46,7 +46,7 @@ public class ApplicationAssessmentSummaryControllerDocumentation extends BaseCon
                                 .andWithPrefix("[].", applicationAssessorFields)
                 ));
 
-        verify(applicationAssessmentSummaryServiceMock, only()).getAssessors(applicationId);
+        verify(applicationAssessmentSummaryServiceMock, only()).getAssignedAssessors(applicationId);
     }
 
     @Test

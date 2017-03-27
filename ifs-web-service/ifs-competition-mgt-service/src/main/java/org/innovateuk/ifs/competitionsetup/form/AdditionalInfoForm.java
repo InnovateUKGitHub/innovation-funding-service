@@ -13,16 +13,13 @@ import java.util.List;
 public class AdditionalInfoForm extends CompetitionSetupForm {
 
     @Size(max = 255, message = "{validation.additionalinfoform.activitycode.size}")
-    @NotEmpty(message = "{validation.additionalinfoform.activitycode.required}")
     private String activityCode;
 
-    @NotEmpty(message = "{validation.additionalinfoform.pafnumber.required}")
     private String pafNumber;
 
     @NotEmpty(message = "{validation.additionalinfoform.competitioncode.required}")
     private String competitionCode;
 
-    @NotEmpty(message = "{validation.additionalinfoform.budgetcode.required}")
     private String budgetCode;
 
     @Valid

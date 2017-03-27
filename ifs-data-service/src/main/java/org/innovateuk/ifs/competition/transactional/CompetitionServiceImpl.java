@@ -3,15 +3,13 @@ package org.innovateuk.ifs.competition.transactional;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.category.domain.Category;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSearchResult;
-import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
+import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
@@ -27,6 +25,7 @@ import java.util.stream.Collectors;
 
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_RELEASE_FEEDBACK;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -49,6 +48,9 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
 
     @Autowired
     private PublicContentService publicContentService;
+
+    @Autowired
+    private CompetitionKeyStatisticsService competitionKeyStatisticsService;
 
     @Override
     public ServiceResult<CompetitionResource> getCompetitionById(Long id) {
@@ -145,8 +147,15 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<Void> releaseFeedback(long competitionId) {
-        Competition competition = competitionRepository.findById(competitionId);
-        competition.releaseFeedback(LocalDateTime.now());
-        return serviceSuccess();
+        CompetitionFundedKeyStatisticsResource keyStatisticsResource =
+                competitionKeyStatisticsService.getFundedKeyStatisticsByCompetition(competitionId)
+                        .getSuccessObjectOrThrowException();
+        if (keyStatisticsResource.isCanReleaseFeedback()) {
+            Competition competition = competitionRepository.findById(competitionId);
+            competition.releaseFeedback(LocalDateTime.now());
+            return serviceSuccess();
+        } else {
+            return serviceFailure(new Error(COMPETITION_CANNOT_RELEASE_FEEDBACK));
+        }
     }
 }

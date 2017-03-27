@@ -49,7 +49,7 @@ public class BaseUserServiceImpl extends UserTransactionalService implements Bas
 
     @Override
     public ServiceResult<List<UserResource>> findByProcessRole(UserRoleType roleType) {
-        return serviceSuccess(usersToResources(userRepository.findByRoles_Name(roleType.getName())));
+        return serviceSuccess(usersToResources(userRepository.findByRolesName(roleType.getName())));
     }
 
     private List<UserResource> usersToResources(List<User> filtered) {

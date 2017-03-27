@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.grantofferletter.viewmodel;
 
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
-import org.innovateuk.ifs.project.viewmodel.BasicProjectDetailsViewModel;
+import org.innovateuk.ifs.project.projectdetails.viewmodel.BasicProjectDetailsViewModel;
 
 import java.time.LocalDateTime;
 

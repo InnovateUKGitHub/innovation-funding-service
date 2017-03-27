@@ -7,15 +7,17 @@ IFS.core.collapsible = (function () {
 
   return {
     settings: {
-      collapsibleEl: '.collapsible > h2, .collapsible > h3'
+      collapsibleEl: '.collapsible',
+      collapsibleTabs: '.tabs section'
     },
-    init: function () {
+    init: function (type) {
       s = this.settings
-        // if this has to be more dynamicly updated in the future we can add a custom event
-      jQuery(s.collapsibleEl).each(function () {
+      s.collapsible = type === 'tabs' ? s.collapsibleTabs : s.collapsibleEl
+      // if this has to be more dynamicly updated in the future we can add a custom event
+      jQuery(s.collapsible + ' > h2, ' + s.collapsible + ' > h3').each(function () {
         IFS.core.collapsible.initCollapsibleHTML(this)
       })
-      jQuery('body').on('click', '.collapsible > h2 >  [aria-controls], .collapsible > h3 >  [aria-controls]', function () {
+      jQuery('body').on('click', s.collapsible + ' > h2 > [aria-controls], ' + s.collapsible + ' > h3 > [aria-controls]', function () {
         IFS.core.collapsible.toggleCollapsible(this)
       })
     },
@@ -25,7 +27,8 @@ IFS.core.collapsible = (function () {
       var loadstate = IFS.core.collapsible.getLoadstateFromCookie(id)
         // wrap the content and make it focusable
       inst.nextUntil('h2,h3').wrapAll('<div id="' + id + '" aria-hidden="' + !loadstate + '">')
-        // Add the button inside the <h2> so both the heading and button semanics are read
+
+        // Add the button inside the <h2> so both the heading and button semantics are read
       inst.wrapInner('<button aria-expanded="' + loadstate + '" aria-controls="' + id + '" type="button">')
       index++
     },
@@ -76,6 +79,19 @@ IFS.core.collapsible = (function () {
         }
       }
       Cookies.set('collapsibleStates', json, { expires: 0.05 }) // defined in days, 0.05 = little bit more than one hour
+    },
+    destroy: function (type) {
+      s.collapsible = type === 'tabs' ? s.collapsibleTabs : s.collapsibleEl
+      jQuery('body').off('click', s.collapsible + ' > h2 > [aria-controls], ' + s.collapsible + ' > h3 > [aria-controls]')
+      jQuery(s.collapsible + ' > h2, ' + s.collapsible + ' > h3').each(function () {
+        IFS.core.collapsible.destroyHTHL(this)
+      })
+    },
+    destroyHTHL: function (el) {
+      var inst = jQuery(el)
+      inst.next().children(':first').unwrap()
+      inst.find('button').contents().unwrap()
+      // inst.removeAttr('role aria-expanded aria-controls')
     }
   }
 })()

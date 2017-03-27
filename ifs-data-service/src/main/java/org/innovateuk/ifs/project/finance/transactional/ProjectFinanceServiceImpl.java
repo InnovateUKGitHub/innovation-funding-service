@@ -22,6 +22,7 @@ import org.innovateuk.ifs.project.finance.repository.FinanceCheckProcessReposito
 import org.innovateuk.ifs.project.finance.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.finance.workflow.financechecks.configuration.EligibilityWorkflowHandler;
+import org.innovateuk.ifs.project.finance.workflow.financechecks.configuration.FinanceCheckWorkflowHandler;
 import org.innovateuk.ifs.project.finance.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
@@ -126,6 +127,9 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     private ProjectGrantOfferService projectGrantOfferService;
 
     @Autowired
+    private FinanceCheckWorkflowHandler financeCheckWorkflowHandler;
+
+    @Autowired
     private OrganisationFinanceDelegate organisationFinanceDelegate;
 
     static {
@@ -135,17 +139,155 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         RESEARCH_CAT_GROUP_ORDER.add(AcademicCostCategoryGenerator.INDIRECT_COSTS_STAFF.getLabel());
     }
 
-
     @Override
     public ServiceResult<Void> generateSpendProfile(Long projectId) {
 
         return getProject(projectId).andOnSuccess(project ->
-               validateSpendProfileCanBeGenerated(project).andOnSuccess(() ->
+               canSpendProfileCanBeGenerated(project).andOnSuccess(() ->
                projectService.getProjectUsers(projectId).andOnSuccess(projectUsers -> {
                    List<Long> organisationIds = removeDuplicates(simpleMap(projectUsers, ProjectUserResource::getOrganisation));
                    return generateSpendProfileForPartnerOrganisations(project, organisationIds);
                }))
         );
+    }
+
+    private ServiceResult<Void> canSpendProfileCanBeGenerated(Project project) {
+        return areFinanceChecksApproved(project)
+                .andOnSuccess(() -> isViabilityApprovedOrNotApplicable(project))
+                .andOnSuccess(() -> isEligibilityApprovedOrNotApplicable(project))
+                .andOnSuccess(() -> isSpendProfileAlreadyGenerated(project));
+    }
+
+    private ServiceResult<Void> areFinanceChecksApproved(Project project) {
+        List<FinanceCheckProcess> financeCheckProcesses = simpleMap(project.getPartnerOrganisations(),
+                po -> financeCheckProcessRepository.findOneByTargetId(po.getId()));
+
+        Optional<FinanceCheckProcess> existingNonApprovedFinanceCheck = simpleFindFirst(financeCheckProcesses, process ->
+                !FinanceCheckState.APPROVED.equals(process.getActivityState()));
+
+        if (!existingNonApprovedFinanceCheck.isPresent()) {
+            return serviceSuccess();
+        } else {
+            return serviceFailure(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_FINANCE_CHECKS_APPROVED_OR_NOT_APPLICABLE);
+        }
+    }
+
+    private ServiceResult<Void> isViabilityApprovedOrNotApplicable(Project project) {
+
+        List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
+
+        Optional<PartnerOrganisation> existingReviewablePartnerOrganisation = simpleFindFirst(partnerOrganisations, partnerOrganisation ->
+                ViabilityState.REVIEW == viabilityWorkflowHandler.getState(partnerOrganisation));
+
+        if (!existingReviewablePartnerOrganisation.isPresent()) {
+            return serviceSuccess();
+        } else {
+            return serviceFailure(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_VIABILITY_APPROVED);
+        }
+    }
+
+    private ServiceResult<Void> isEligibilityApprovedOrNotApplicable(Project project) {
+
+        List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
+
+        Optional<PartnerOrganisation> existingReviewablePartnerOrganisation = simpleFindFirst(partnerOrganisations, partnerOrganisation ->
+                EligibilityState.REVIEW == eligibilityWorkflowHandler.getState(partnerOrganisation));
+
+        if (!existingReviewablePartnerOrganisation.isPresent()) {
+            return serviceSuccess();
+        } else {
+            return serviceFailure(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_ELIGIBILITY_APPROVED);
+        }
+    }
+
+    private ServiceResult<Void> isSpendProfileAlreadyGenerated(Project project) {
+
+        List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
+
+        Optional<PartnerOrganisation> partnerOrganisationWithSpendProfile = simpleFindFirst(partnerOrganisations, partnerOrganisation ->
+                spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(), partnerOrganisation.getOrganisation().getId()).isPresent());
+
+        if (!partnerOrganisationWithSpendProfile.isPresent()) {
+            return serviceSuccess();
+        } else {
+            return serviceFailure(SPEND_PROFILE_HAS_ALREADY_BEEN_GENERATED);
+        }
+    }
+
+    private ServiceResult<Void> generateSpendProfileForPartnerOrganisations(Project project, List<Long> organisationIds) {
+
+        Calendar now = Calendar.getInstance();
+
+        List<ServiceResult<Void>> generationResults = simpleMap(organisationIds, organisationId ->
+                getCurrentlyLoggedInUser().andOnSuccess(user ->
+                        spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(project.getId(), organisationId).
+                                andOnSuccess(spendProfileCostCategorySummaries ->
+                                        generateSpendProfileForOrganisation(project.getId(), organisationId, spendProfileCostCategorySummaries, user, now))));
+
+        return processAnyFailuresOrSucceed(generationResults);
+    }
+
+    private ServiceResult<Void> generateSpendProfileForOrganisation(
+            Long projectId,
+            Long organisationId,
+            SpendProfileCostCategorySummaries spendProfileCostCategorySummaries,
+            User generatedBy,
+            Calendar generatedDate) {
+
+        return find(project(projectId), organisation(organisationId)).andOnSuccess(
+                (project, organisation) -> generateSpendProfileForOrganisation(spendProfileCostCategorySummaries , project, organisation, generatedBy, generatedDate));
+    }
+
+    private ServiceResult<Void> generateSpendProfileForOrganisation(SpendProfileCostCategorySummaries spendProfileCostCategorySummaries, Project project, Organisation organisation, User generatedBy, Calendar generatedDate) {
+        List<Cost> eligibleCosts = generateEligibleCosts(spendProfileCostCategorySummaries);
+        List<Cost> spendProfileCosts = generateSpendProfileFigures(spendProfileCostCategorySummaries, project);
+        CostCategoryType costCategoryType = costCategoryTypeRepository.findOne(spendProfileCostCategorySummaries.getCostCategoryType().getId());
+        SpendProfile spendProfile = new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileCosts, generatedBy, generatedDate, false, ApprovalType.UNSET);
+        spendProfileRepository.save(spendProfile);
+        return serviceSuccess();
+    }
+
+    private List<Cost> generateEligibleCosts(SpendProfileCostCategorySummaries spendProfileCostCategorySummaries) {
+        return simpleMap(spendProfileCostCategorySummaries.getCosts(), cost -> {
+            CostCategory cc = costCategoryRepository.findOne(cost.getCategory().getId());
+            return new Cost(cost.getTotal().setScale(0, ROUND_HALF_UP)).withCategory(cc);
+        });
+    }
+
+    private List<Cost> generateSpendProfileFigures(SpendProfileCostCategorySummaries summaryPerCategory, Project project) {
+
+        List<List<Cost>> spendProfileCostsPerCategory = simpleMap(summaryPerCategory.getCosts(), summary -> {
+            CostCategory cc = costCategoryRepository.findOne(summary.getCategory().getId());
+
+            return IntStream.range(0, project.getDurationInMonths().intValue()).mapToObj(i -> {
+
+                BigDecimal costValueForThisMonth = i == 0 ? summary.getFirstMonthSpend() : summary.getOtherMonthsSpend();
+
+                return new Cost(costValueForThisMonth).
+                        withCategory(cc).
+                        withTimePeriod(i, MONTH, 1, MONTH);
+
+            }).collect(toList());
+        });
+
+        return flattenLists(spendProfileCostsPerCategory);
+    }
+
+    @Override
+    /**
+     * This method was written to recreate Spend Profile for one of the partner organisations on Production.
+     *
+     * This method assumes that all the necessary stuff is in the database before the Spend Profile can be generated.
+     * This does not perform any validations to check that the Finance Checks are complete, Viability is approved,
+     * Eligibility is approved or if the Spend Profile is already generated.
+     *
+     */
+    public ServiceResult<Void> generateSpendProfileForPartnerOrganisation(Long projectId, Long organisationId, Long userId) {
+        User user = userRepository.findOne(userId);
+
+        return spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(projectId, organisationId).
+                andOnSuccess(spendProfileCostCategorySummaries ->
+                        generateSpendProfileForOrganisation(projectId, organisationId, spendProfileCostCategorySummaries, user, Calendar.getInstance()));
     }
 
     @Override
@@ -366,40 +508,6 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         return financeRowService.financeChecksTotals(projectId);
     }
 
-    private ServiceResult<Void> validateSpendProfileCanBeGenerated(Project project) {
-        return validateFinanceChecksApprovedForSpendProfileGenerate(project).andOnSuccess(() ->
-                validateViabilityApprovedOrNotApplicableForSpendProfileGenerate(project));
-    }
-
-    private ServiceResult<Void> validateFinanceChecksApprovedForSpendProfileGenerate(Project project) {
-        List<FinanceCheckProcess> financeCheckProcesses = simpleMap(project.getPartnerOrganisations(), po ->
-                financeCheckProcessRepository.findOneByTargetId(po.getId()));
-
-        Optional<FinanceCheckProcess> existingNonApprovedFinanceCheck = simpleFindFirst(financeCheckProcesses, process ->
-                !FinanceCheckState.APPROVED.equals(process.getActivityState()));
-
-        if (!existingNonApprovedFinanceCheck.isPresent()) {
-            return serviceSuccess();
-        } else {
-            return serviceFailure(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_FINANCE_CHECKS_APPROVED_OR_NOT_APPLICABLE);
-        }
-    }
-
-    private ServiceResult<Void> validateViabilityApprovedOrNotApplicableForSpendProfileGenerate(Project project) {
-
-        List<PartnerOrganisation> partnerOrganisations = partnerOrganisationRepository.findByProjectId(project.getId());
-
-        Optional<PartnerOrganisation> existingReviewablePartnerOrganisation = simpleFindFirst(partnerOrganisations, partnerOrganisation ->
-                        getViabilityProcess(partnerOrganisation)
-                .andOnSuccessReturn(viabilityProcess -> ViabilityState.REVIEW == viabilityProcess.getActivityState()).getSuccessObjectOrThrowException());
-
-        if (!existingReviewablePartnerOrganisation.isPresent()) {
-            return serviceSuccess();
-        } else {
-            return serviceFailure(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_VIABILITY_APPROVED);
-        }
-    }
-
     @Override
     public ServiceResult<ViabilityResource> getViability(ProjectOrganisationCompositeId projectOrganisationCompositeId){
 
@@ -527,14 +635,15 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         Long projectId = projectOrganisationCompositeId.getProjectId();
         Long organisationId = projectOrganisationCompositeId.getOrganisationId();
 
-        return getPartnerOrganisation(projectId, organisationId)
+        return getCurrentlyLoggedInUser().andOnSuccess(currentUser ->
+                getPartnerOrganisation(projectId, organisationId)
                 .andOnSuccess(partnerOrganisation -> getViabilityProcess(partnerOrganisation)
                         .andOnSuccess(viabilityProcess -> validateViability(viabilityProcess.getActivityState(), viability, viabilityRagStatus))
                         .andOnSuccess(() -> getProjectFinance(projectId, organisationId))
-                        .andOnSuccess(projectFinance -> triggerViabilityWorkflowEvent(partnerOrganisation, viability)
+                        .andOnSuccess(projectFinance -> triggerViabilityWorkflowEvent(currentUser, partnerOrganisation, viability)
                                 .andOnSuccess(() -> saveViability(projectFinance, viabilityRagStatus))
                         )
-                );
+                ));
     }
 
     private ServiceResult<Void> validateViability(ViabilityState currentViabilityState, Viability viability, ViabilityRagStatus viabilityRagStatus) {
@@ -550,16 +659,13 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         return serviceSuccess();
     }
 
-    private ServiceResult<Void> triggerViabilityWorkflowEvent(PartnerOrganisation partnerOrganisation, Viability viability) {
+    private ServiceResult<Void> triggerViabilityWorkflowEvent(User currentUser, PartnerOrganisation partnerOrganisation, Viability viability) {
 
         if (Viability.APPROVED == viability) {
-
-            return getCurrentlyLoggedInUser().andOnSuccessReturnVoid(currentUser ->
-                    viabilityWorkflowHandler.viabilityApproved(partnerOrganisation, currentUser));
-        } else {
-            return serviceSuccess();
+            viabilityWorkflowHandler.viabilityApproved(partnerOrganisation, currentUser);
         }
 
+        return serviceSuccess();
     }
 
     private ServiceResult<Void> saveViability(ProjectFinance projectFinance, ViabilityRagStatus viabilityRagStatus) {
@@ -577,14 +683,15 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         Long projectId = projectOrganisationCompositeId.getProjectId();
         Long organisationId = projectOrganisationCompositeId.getOrganisationId();
 
-        return getPartnerOrganisation(projectId, organisationId)
+        return getCurrentlyLoggedInUser().andOnSuccess(currentUser -> getPartnerOrganisation(projectId, organisationId)
                 .andOnSuccess(partnerOrganisation -> getEligibilityProcess(partnerOrganisation)
                         .andOnSuccess(eligibilityProcess -> validateEligibility(eligibilityProcess.getActivityState(), eligibility, eligibilityRagStatus))
                         .andOnSuccess(() -> getProjectFinance(projectId, organisationId))
-                        .andOnSuccess(projectFinance -> triggerEligibilityWorkflowEvent(partnerOrganisation, eligibility)
+                        .andOnSuccess(projectFinance -> triggerEligibilityWorkflowEvent(currentUser, partnerOrganisation, eligibility)
                                 .andOnSuccess(() -> saveEligibility(projectFinance, eligibilityRagStatus))
-                        )
-                );
+                )
+                        //saving eligibility is now linked with saving the finance check as approved
+                        .andOnSuccess(() -> approveFinanceCheck(currentUser, partnerOrganisation, eligibility))));
     }
 
     private ServiceResult<Void> validateEligibility(EligibilityState currentEligibilityState, Eligibility eligibility, EligibilityRagStatus eligibilityRagStatus) {
@@ -600,16 +707,12 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         return serviceSuccess();
     }
 
-    private ServiceResult<Void> triggerEligibilityWorkflowEvent(PartnerOrganisation partnerOrganisation, Eligibility eligibility) {
+    private ServiceResult<Void> triggerEligibilityWorkflowEvent(User currentUser, PartnerOrganisation partnerOrganisation, Eligibility eligibility) {
 
         if (Eligibility.APPROVED == eligibility) {
-
-            return getCurrentlyLoggedInUser().andOnSuccessReturnVoid(currentUser ->
-                    eligibilityWorkflowHandler.eligibilityApproved(partnerOrganisation, currentUser));
-        } else {
-            return serviceSuccess();
+            eligibilityWorkflowHandler.eligibilityApproved(partnerOrganisation, currentUser);
         }
-
+        return serviceSuccess();
     }
 
     private ServiceResult<Void> saveEligibility(ProjectFinance projectFinance, EligibilityRagStatus eligibilityRagStatus) {
@@ -618,6 +721,13 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
         projectFinanceRepository.save(projectFinance);
 
+        return serviceSuccess();
+    }
+
+    private ServiceResult<Void> approveFinanceCheck(User currentUser, PartnerOrganisation partnerOrg, Eligibility eligibility) {
+        if(eligibility.equals(Eligibility.APPROVED)) {
+            return financeCheckWorkflowHandler.approveFinanceCheck(partnerOrg, currentUser) ? serviceSuccess() : serviceFailure(FINANCE_CHECKS_CANNOT_PROGRESS_WORKFLOW);
+        }
         return serviceSuccess();
     }
 
@@ -733,65 +843,6 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     private ServiceResult<SpendProfile> getSpendProfileEntity(Long projectId, Long organisationId) {
         return find(spendProfileRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId), notFoundError(SpendProfile.class, projectId, organisationId));
-    }
-
-    private ServiceResult<Void> generateSpendProfileForPartnerOrganisations(Project project, List<Long> organisationIds) {
-
-        Calendar now = Calendar.getInstance();
-
-        List<ServiceResult<Void>> generationResults = simpleMap(organisationIds, organisationId ->
-                getCurrentlyLoggedInUser().andOnSuccess(user ->
-                spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(project.getId(), organisationId).
-                andOnSuccess(spendProfileCostCategorySummaries ->
-                generateSpendProfileForOrganisation(project.getId(), organisationId, spendProfileCostCategorySummaries, user, now))));
-
-        return processAnyFailuresOrSucceed(generationResults);
-    }
-
-    private ServiceResult<Void> generateSpendProfileForOrganisation(
-            Long projectId,
-            Long organisationId,
-            SpendProfileCostCategorySummaries spendProfileCostCategorySummaries,
-            User generatedBy,
-            Calendar generatedDate) {
-
-        return find(project(projectId), organisation(organisationId)).andOnSuccess(
-                (project, organisation) -> generateSpendProfileForOrganisation(spendProfileCostCategorySummaries , project, organisation, generatedBy, generatedDate));
-    }
-
-    private ServiceResult<Void> generateSpendProfileForOrganisation(SpendProfileCostCategorySummaries spendProfileCostCategorySummaries, Project project, Organisation organisation, User generatedBy, Calendar generatedDate) {
-        List<Cost> eligibleCosts = generateEligibleCosts(spendProfileCostCategorySummaries);
-        List<Cost> spendProfileCosts = generateSpendProfileFigures(spendProfileCostCategorySummaries, project);
-        CostCategoryType costCategoryType = costCategoryTypeRepository.findOne(spendProfileCostCategorySummaries.getCostCategoryType().getId());
-        SpendProfile spendProfile = new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileCosts, generatedBy, generatedDate, false, ApprovalType.UNSET);
-        spendProfileRepository.save(spendProfile);
-        return serviceSuccess();
-    }
-
-    private List<Cost> generateSpendProfileFigures(SpendProfileCostCategorySummaries summaryPerCategory, Project project) {
-
-        List<List<Cost>> spendProfileCostsPerCategory = simpleMap(summaryPerCategory.getCosts(), summary -> {
-            CostCategory cc = costCategoryRepository.findOne(summary.getCategory().getId());
-
-            return IntStream.range(0, project.getDurationInMonths().intValue()).mapToObj(i -> {
-
-                BigDecimal costValueForThisMonth = i == 0 ? summary.getFirstMonthSpend() : summary.getOtherMonthsSpend();
-
-                return new Cost(costValueForThisMonth).
-                           withCategory(cc).
-                           withTimePeriod(i, MONTH, 1, MONTH);
-
-            }).collect(toList());
-        });
-
-        return flattenLists(spendProfileCostsPerCategory);
-    }
-
-    private List<Cost> generateEligibleCosts(SpendProfileCostCategorySummaries spendProfileCostCategorySummaries) {
-        return simpleMap(spendProfileCostCategorySummaries.getCosts(), cost -> {
-            CostCategory cc = costCategoryRepository.findOne(cost.getCategory().getId());
-            return new Cost(cost.getTotal().setScale(0, ROUND_HALF_UP)).withCategory(cc);
-        });
     }
 
     private List<SpendProfile> getSpendProfileByProjectId(Long projectId) {

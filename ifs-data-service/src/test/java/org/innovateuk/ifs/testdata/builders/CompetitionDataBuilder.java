@@ -3,10 +3,12 @@ package org.innovateuk.ifs.testdata.builders;
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.NotificationResource;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -14,6 +16,7 @@ import org.innovateuk.ifs.user.resource.UserRoleType;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -23,9 +26,7 @@ import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.emptySet;
-import static java.util.Collections.singleton;
+import static java.util.Collections.*;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
@@ -185,7 +186,10 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 return Pair.of(application.getId(), decision);
             });
 
-            applicationFundingService.makeFundingDecision(data.getCompetition().getId(), pairsToMap(applicationIdAndDecisions)).
+            applicationFundingService.saveFundingDecisionData(data.getCompetition().getId(), pairsToMap(applicationIdAndDecisions)).
+                    getSuccessObjectOrThrowException();
+            NotificationResource notificationResource = new NotificationResource("Subject", "Body", pairsToMap(applicationIdAndDecisions));
+            applicationFundingService.notifyLeadApplicantsOfFundingDecisions(notificationResource).
                     getSuccessObjectOrThrowException();
 
             doAs(anyProjectFinanceUser(),
@@ -195,7 +199,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     }
 
     private UserResource anyProjectFinanceUser() {
-        List<User> projectFinanceUsers = userRepository.findByRoles_Name(UserRoleType.PROJECT_FINANCE.getName());
+        List<User> projectFinanceUsers = userRepository.findByRolesName(UserRoleType.PROJECT_FINANCE.getName());
         return retrieveUserById(projectFinanceUsers.get(0).getId());
     }
 
@@ -205,7 +209,13 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
         LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS);
         LocalDateTime submissionDeadline = submissionDateMilestone.getDate();
-        long daysPassedSinceSubmissionEnded = submissionDeadline.until(now, ChronoUnit.DAYS);
+
+        final long daysPassedSinceSubmissionEnded;
+        if (LocalTime.now().isAfter(submissionDeadline.toLocalTime())) {
+            daysPassedSinceSubmissionEnded = submissionDeadline.until(now, ChronoUnit.DAYS) + 1;
+        } else {
+            daysPassedSinceSubmissionEnded = submissionDeadline.until(now, ChronoUnit.DAYS);
+        }
 
         milestones.forEach(m -> {
             if (m.getDate() != null) {

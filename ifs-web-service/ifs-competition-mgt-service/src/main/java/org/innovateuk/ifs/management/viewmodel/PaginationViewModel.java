@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.management.viewmodel;
 
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.commons.resource.PageResource;
 
 import java.util.List;
@@ -55,5 +57,37 @@ public class PaginationViewModel {
 
     public long getTotalCount() {
         return totalCount;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PaginationViewModel that = (PaginationViewModel) o;
+
+        return new EqualsBuilder()
+                .append(hasPrevious, that.hasPrevious)
+                .append(hasNext, that.hasNext)
+                .append(totalPages, that.totalPages)
+                .append(currentPage, that.currentPage)
+                .append(pageSize, that.pageSize)
+                .append(totalCount, that.totalCount)
+                .append(pageNames, that.pageNames)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(hasPrevious)
+                .append(hasNext)
+                .append(totalPages)
+                .append(currentPage)
+                .append(pageSize)
+                .append(totalCount)
+                .append(pageNames)
+                .toHashCode();
     }
 }

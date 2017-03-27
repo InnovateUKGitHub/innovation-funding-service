@@ -29,7 +29,22 @@ public class FinanceCheckDocs {
             fieldWithPath("financeChecksAllApproved").description("Flag to signify if all finance checks have been approved"),
             fieldWithPath("spendProfileGeneratedBy").description("Name of internal IFS user who generated spend profile"),
             fieldWithPath("spendProfileGeneratedDate").description("Date when internal user generated spend profile from finance checks"),
-            fieldWithPath("partnerStatusResources").description("List of statuses for all partners")
+            fieldWithPath("partnerStatusResources").description("List of statuses for all partners"),
+            fieldWithPath("researchParticipationPercentage").description("Research participation percentage for the project"),
+            fieldWithPath("competitionMaximumResearchPercentage").description("Maximum research participation percentage for the competition")
+    };
+
+    public static final FieldDescriptor[] financeCheckOverviewResourceFields = {
+            fieldWithPath("projectId").description("Id or project that the status is from"),
+            fieldWithPath("projectName").description("Name of project that the status is from"),
+            fieldWithPath("projectStartDate").description("Expected start date of project"),
+            fieldWithPath("durationInMonths").description("Total expected project duration in months"),
+            fieldWithPath("totalProjectCost").description("Total cost of project (a sum of costs of all partners)"),
+            fieldWithPath("grantAppliedFor").description("Total grant applied for, excluding any other sources of funding"),
+            fieldWithPath("otherPublicSectorFunding").description("Other public sector funding available for the project"),
+            fieldWithPath("totalPercentageGrant").description("Total percentage of grant through IFS"),
+            fieldWithPath("researchParticipationPercentage").description("Research participation percentage for the project"),
+            fieldWithPath("competitionMaximumResearchPercentage").description("Maximum research participation percentage for the competition")
     };
 
     public static final FieldDescriptor[] financeCheckEligibilityResourceFields = {

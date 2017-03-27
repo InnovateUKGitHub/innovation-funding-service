@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    creationTimestamp: null
+    name: admin
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: admin
+    strategy:
+      resources: {}
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          deploymentconfig: admin
+      spec:
+        containers:
+        - image: enmobile/docker-spring-boot-admin
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8123
+          name: admin
+          imagePullPolicy: IfNotPresent
+          ports:
+          - containerPort: 8123
+          resources:
+            limits:
+              memory: 1300M
+    test: false
+    triggers:
+    - type: ConfigChange
+  status: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    name: admin
+  spec:
+    ports:
+    - name: 8123-tcp
+      port: 8123
+      targetPort: 8123
+    selector:
+      deploymentconfig: admin
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Route
+  metadata:
+    name: admin
+  spec:
+    host: <<ADMIN-ADDRESS>>
+    port:
+      targetPort: 8123-tcp
+    to:
+      kind: Service
+      name: admin

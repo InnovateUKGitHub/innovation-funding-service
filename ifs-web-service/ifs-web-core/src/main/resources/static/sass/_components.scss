@@ -38,6 +38,7 @@ $is-ie: false !default;
 @import 'components/list-overview';
 @import 'components/progress-list';
 @import 'components/progress-list-v2';
+@import 'components/task-list';
 @import 'components/highlight-panel';
 @import 'components/pie-charts';
 @import 'components/progress-indicator';
@@ -51,6 +52,7 @@ $is-ie: false !default;
 @import 'components/search-filters';
 @import 'components/timeline-status';
 @import 'components/link-list';
+@import "components/tabs";
 
 /*
 ##11. Modals

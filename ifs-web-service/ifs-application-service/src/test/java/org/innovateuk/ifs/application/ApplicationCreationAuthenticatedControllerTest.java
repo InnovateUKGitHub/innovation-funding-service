@@ -83,7 +83,7 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseUnitTest
 
         mockMvc.perform(get("/application/create-authenticated/1"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/application/99/contributors/invite?newApplication"));
+                .andExpect(redirectedUrl("/application/99/team"));
 
         // application needs to be linked to current user
         verify(userAuthenticationService, atLeastOnce()).getAuthenticatedUser(any());
@@ -109,7 +109,7 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseUnitTest
 
         mockMvc.perform(post("/application/create-authenticated/1").param(ApplicationCreationAuthenticatedController.FORM_RADIO_NAME, ApplicationCreationAuthenticatedController.RADIO_TRUE))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/application/99/contributors/invite?newApplication"));
+                .andExpect(redirectedUrl("/application/99/team"));
 
         // application needs to be linked to current user
         verify(userAuthenticationService, atLeastOnce()).getAuthenticatedUser(any());

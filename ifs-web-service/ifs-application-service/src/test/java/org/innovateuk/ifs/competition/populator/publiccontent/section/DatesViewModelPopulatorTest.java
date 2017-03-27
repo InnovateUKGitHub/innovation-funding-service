@@ -71,7 +71,7 @@ public class DatesViewModelPopulatorTest {
                         .build(3));
         publicContentResource.setContentEvents(Collections.emptyList());
 
-        populator.populateSection(viewModel, publicContentResource, publicContentSectionResource);
+        populator.populateSection(viewModel, publicContentResource, publicContentSectionResource, Boolean.FALSE);
 
         assertEquals(3, viewModel.getPublicContentDates().size());
     }
@@ -82,7 +82,7 @@ public class DatesViewModelPopulatorTest {
                 .thenReturn(Collections.emptyList());
         publicContentResource.setContentEvents(Collections.emptyList());
 
-        populator.populateSection(viewModel, publicContentResource, publicContentSectionResource);
+        populator.populateSection(viewModel, publicContentResource, publicContentSectionResource, Boolean.FALSE);
 
         assertEquals(0, viewModel.getPublicContentDates().size());
     }
@@ -93,7 +93,7 @@ public class DatesViewModelPopulatorTest {
                 .thenReturn(Collections.emptyList());
         publicContentResource.setContentEvents(Collections.emptyList());
 
-        populator.populateSection(viewModel, publicContentResource, publicContentSectionResource);
+        populator.populateSection(viewModel, publicContentResource, publicContentSectionResource, Boolean.FALSE);
 
         assertEquals(0, viewModel.getPublicContentDates().size());
     }
@@ -106,7 +106,7 @@ public class DatesViewModelPopulatorTest {
                         .build(3));
         publicContentResource.setContentEvents(newContentEventResource().build(2));
 
-        populator.populateSection(viewModel, publicContentResource, publicContentSectionResource);
+        populator.populateSection(viewModel, publicContentResource, publicContentSectionResource, Boolean.FALSE);
 
         assertEquals(5, viewModel.getPublicContentDates().size());
     }

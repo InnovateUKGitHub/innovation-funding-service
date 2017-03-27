@@ -1,12 +1,8 @@
 package org.innovateuk.ifs.invite.builder;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.resource.AssessorInviteToSendResource;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -44,8 +40,8 @@ public class AssessorInviteToSendResourceBuilder extends BaseBuilder<AssessorInv
         return withArraySetFieldByReflection("competitionName", value);
     }
 
-    public AssessorInviteToSendResourceBuilder withEmailContent(EmailContent... value) {
-        return withArraySetFieldByReflection("emailContent", value);
+    public AssessorInviteToSendResourceBuilder withContent(String... value) {
+        return withArraySetFieldByReflection("content", value);
     }
 
 }

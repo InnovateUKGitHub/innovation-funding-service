@@ -8,9 +8,9 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
+import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
 import org.innovateuk.ifs.competitionsetup.form.MilestonesForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
-import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -22,9 +22,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.MilestoneResourceBuilder.newMilestoneResource;
@@ -138,17 +136,47 @@ public class MilestonesSectionSaverTest {
 
     @Test
     public void testAutoSaveCompetitionSetupSection() {
-        List<Error> errors = new ArrayList<>();
         String fieldName =  "milestoneEntries[BRIEFING_EVENT].milestoneType";
         when(milestoneService.getMilestoneByTypeAndCompetitionId(MilestoneType.BRIEFING_EVENT, 1L)).thenReturn(getBriefingEventMilestone());
         MilestonesForm form = new MilestonesForm();
 
-        CompetitionResource competition = newCompetitionResource().build();
+        CompetitionResource competition = newCompetitionResource().withId(1L).build();
         competition.setMilestones(Arrays.asList(10L));
+        when(competitionSetupMilestoneService.isMilestoneDateValid(20, 10, 2020)).thenReturn(Boolean.TRUE);
 
-        service.autoSaveSectionField(competition, form, fieldName, "20-10-2020", Optional.empty());
+        ServiceResult<Void> result = service.autoSaveSectionField(competition, form, fieldName, "20-10-2020", Optional.empty());
 
-        assertTrue(errors.isEmpty());
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testAutoSaveTimeCompetitionSetupSection() {
+        String fieldName =  "milestoneEntries[BRIEFING_EVENT].time";
+        when(milestoneService.getMilestoneByTypeAndCompetitionId(MilestoneType.BRIEFING_EVENT, 2L)).thenReturn(getBriefingEventMilestone());
+        MilestonesForm form = new MilestonesForm();
+
+        CompetitionResource competition = newCompetitionResource().withId(2L).build();
+        competition.setMilestones(Arrays.asList(10L));
+        when(competitionSetupMilestoneService.isMilestoneDateValid(1, 12, LocalDateTime.now().plusYears(1).getYear())).thenReturn(Boolean.TRUE);
+
+        ServiceResult<Void> result = service.autoSaveSectionField(competition, form, fieldName, "THREE_PM", Optional.empty());
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testAutoSaveTimeWithEmptyDateCompetitionSetupSection() {
+        String fieldName =  "milestoneEntries[BRIEFING_EVENT].time";
+        when(milestoneService.getMilestoneByTypeAndCompetitionId(MilestoneType.BRIEFING_EVENT, 2L)).thenReturn(newMilestoneResource().withDate(null).build());
+        MilestonesForm form = new MilestonesForm();
+
+        CompetitionResource competition = newCompetitionResource().withId(2L).build();
+        competition.setMilestones(Arrays.asList(10L));
+        when(competitionSetupMilestoneService.isMilestoneDateValid(null, null, null)).thenReturn(Boolean.FALSE);
+
+        ServiceResult<Void> result = service.autoSaveSectionField(competition, form, fieldName, "THREE_PM", Optional.empty());
+
+        assertTrue(result.isFailure());
     }
 
     @Test
@@ -158,6 +186,7 @@ public class MilestonesSectionSaverTest {
         MilestonesForm form = new MilestonesForm();
         CompetitionResource competition = newCompetitionResource().withId(1L).build();
         competition.setMilestones(Arrays.asList(10L));
+        when(competitionSetupMilestoneService.isMilestoneDateValid(20, 10, 2015)).thenReturn(Boolean.FALSE);
 
         ServiceResult<Void> result = service.autoSaveSectionField(competition, form, fieldName, "20-10-2015", null);
 
@@ -169,7 +198,7 @@ public class MilestonesSectionSaverTest {
         return newMilestoneResource()
                 .withId(1L)
                 .withName(MilestoneType.OPEN_DATE)
-                .withDate(LocalDateTime.of(2020, 12, 1, 0, 0))
+                .withDate(LocalDateTime.of(LocalDateTime.now().plusYears(1).getYear(), 12, 1, 0, 0))
                 .withCompetitionId(1L).build();
     }
 

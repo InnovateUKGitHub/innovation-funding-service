@@ -13,10 +13,7 @@ import org.innovateuk.ifs.finance.handler.OrganisationFinanceHandler;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.mapper.ProjectFinanceMapper;
 import org.innovateuk.ifs.finance.mapper.ProjectFinanceRowMapper;
-import org.innovateuk.ifs.finance.repository.FinanceRowMetaFieldRepository;
-import org.innovateuk.ifs.finance.repository.FinanceRowMetaValueRepository;
-import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
-import org.innovateuk.ifs.finance.repository.ProjectFinanceRowRepository;
+import org.innovateuk.ifs.finance.repository.*;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResourceId;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
@@ -67,6 +64,9 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
     @Autowired
     OrganisationFinanceDefaultHandler organisationFinanceDefaultHandler;
 
+    @Autowired
+    private OrganisationSizeRepository organisationSizeRepository;
+
     @Override
     public ServiceResult<List<? extends FinanceRow>> getCosts(Long projectFinanceId, String costTypeName, Long questionId) {
         throw new NotImplementedException("This method enforced by interface is not required for Project finance");
@@ -86,7 +86,7 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
     public ServiceResult<FinanceRowItem> getCostItem(Long costItemId) {
         ProjectFinanceRow cost = projectFinanceRowRepository.findOne(costItemId);
         ProjectFinance projectFinance = cost.getTarget();
-        OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(projectFinance.getOrganisation().getOrganisationType().getName());
+        OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(projectFinance.getOrganisation().getOrganisationType().getId());
 
         return serviceSuccess(organisationFinanceHandler.costToCostItem(cost));
     }
@@ -94,7 +94,7 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
     @Override
     public ServiceResult<FinanceRowItem> addCost(Long projectFinanceId, Long questionId, FinanceRowItem newCostItem) {
         return find(question(questionId), projectFinance(projectFinanceId)).andOnSuccess((question, projectFinance) -> {
-                    OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(projectFinance.getOrganisation().getOrganisationType().getName());
+                    OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(projectFinance.getOrganisation().getOrganisationType().getId());
                     if (newCostItem != null) {
                         FinanceRow newCost = addCostItem(projectFinance, question, newCostItem);
                         return serviceSuccess(organisationFinanceHandler.costToCostItem((ProjectFinanceRow) newCost));
@@ -112,7 +112,7 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
 
         return find(projectFinanceRowRepository.findOne(id), notFoundError(ProjectFinanceRow.class)).
                 andOnSuccess(projectFinanceRow -> doUpdate(id, newCostItem).andOnSuccessReturn(cost -> {
-                    OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(((ProjectFinanceRow)cost).getTarget().getOrganisation().getOrganisationType().getName());
+                    OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(((ProjectFinanceRow)cost).getTarget().getOrganisation().getOrganisationType().getId());
                     return organisationFinanceHandler.costToCostItem((ProjectFinanceRow)cost);
                 })
         );
@@ -122,7 +122,7 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
     public ServiceResult<FinanceRowItem> addCostWithoutPersisting(final Long projectFinanceId, final Long questionId) {
         return find(question(questionId), projectFinance(projectFinanceId)).andOnSuccess((question, projectFinance) ->
                 getProject(projectFinance.getProject().getId()).andOnSuccess(project -> {
-                    OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(projectFinance.getOrganisation().getOrganisationType().getName());
+                    OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(projectFinance.getOrganisation().getOrganisationType().getId());
                     ProjectFinanceRow cost = new ProjectFinanceRow(projectFinance, question);
                     return serviceSuccess(organisationFinanceHandler.costToCostItem(cost));
                 })
@@ -143,7 +143,9 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
     public ServiceResult<ProjectFinanceResource> updateCost(Long projectFinanceId, ProjectFinanceResource projectFinance) {
         return getProject(projectFinance.getProject()).andOnSuccess(project ->
                 find(projectFinance(projectFinanceId)).andOnSuccess(dbFinance -> {
-                    dbFinance.setOrganisationSize(projectFinance.getOrganisationSize());
+                    if (projectFinance.getOrganisationSize() != null) {
+                        dbFinance.setOrganisationSize(organisationSizeRepository.findOne(projectFinance.getOrganisationSize()));
+                    }
                     dbFinance = projectFinanceRepository.save(dbFinance);
                     return serviceSuccess(projectFinanceMapper.mapToResource(dbFinance));
                 })
@@ -179,7 +181,7 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
     }
 
     private FinanceRow addCostItem(ProjectFinance projectFinance, Question question, FinanceRowItem newCostItem) {
-        OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(projectFinance.getOrganisation().getOrganisationType().getName());
+        OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(projectFinance.getOrganisation().getOrganisationType().getId());
 
         ProjectFinanceRow cost = organisationFinanceHandler.costItemToProjectCost(newCostItem);
         cost.setQuestion(question);
@@ -242,7 +244,7 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
     private ServiceResult<FinanceRow> doUpdate(Long id, FinanceRowItem newCostItem) {
         return find(cost(id)).andOnSuccessReturn(existingCost -> {
             ProjectFinance projectFinance = existingCost.getTarget();
-            OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(projectFinance.getOrganisation().getOrganisationType().getName());
+            OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(projectFinance.getOrganisation().getOrganisationType().getId());
             ProjectFinanceRow newCost = organisationFinanceHandler.costItemToProjectCost(newCostItem);
             ProjectFinanceRow updatedCost = mapCost(existingCost, newCost);
 

@@ -135,12 +135,12 @@ public class CompetitionServiceImpl implements CompetitionService {
 
     @Override
     public ByteArrayResource downloadPublicContentAttachment(Long contentGroupId) {
-        return contentGroupRestService.getFile(contentGroupId).getSuccessObjectOrThrowException();
+        return contentGroupRestService.getFileAnonymous(contentGroupId).getSuccessObjectOrThrowException();
     }
 
     @Override
     public FileEntryResource getPublicContentFileDetails(Long contentGroupId) {
-        return contentGroupRestService.getFileDetails(contentGroupId).getSuccessObjectOrThrowException();
+        return contentGroupRestService.getFileDetailsAnonymous(contentGroupId).getSuccessObjectOrThrowException();
     }
 
     @Override

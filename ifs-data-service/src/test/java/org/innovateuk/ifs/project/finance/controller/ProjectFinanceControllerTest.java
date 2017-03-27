@@ -5,7 +5,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.builder.SpendProfileResourceBuilder;
-import org.innovateuk.ifs.project.controller.ProjectFinanceController;
+import org.innovateuk.ifs.project.projectdetails.controller.ProjectFinanceController;
 import org.innovateuk.ifs.project.finance.resource.Eligibility;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
@@ -53,6 +53,17 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
                 andExpect(status().isCreated());
 
         verify(projectFinanceServiceMock).generateSpendProfile(123L);
+    }
+
+    @Test
+    public void testGenerateSpendProfileForPartnerOrganisation() throws Exception {
+
+        when(projectFinanceServiceMock.generateSpendProfileForPartnerOrganisation(1L, 2L, 7L)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/1/partner-organisation/2/user/7/spend-profile/generate")).
+                andExpect(status().isCreated());
+
+        verify(projectFinanceServiceMock).generateSpendProfileForPartnerOrganisation(1L, 2L, 7L);
     }
 
     @Test

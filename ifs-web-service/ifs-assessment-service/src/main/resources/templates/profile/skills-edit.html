@@ -16,12 +16,12 @@
                 <h1 class="heading-xlarge">Edit your skills</h1>
             </div>
 
-            <p>These innovation areas have been chosen as your current areas of expertise. They will influence the types
+            <h2 class="heading-medium no-margin-bottom">Innovation areas</h2>
+
+            <p class="form-hint">These innovation areas have been chosen as your current areas of expertise. They will influence the types
                 of competition you will be invited to assess. If you would like to amend them or add new ones please
                 contact a member of the Competitions team <a href="mailto:support@innovateuk.gov.uk">support@innovateuk.gov.uk</a>.
             </p>
-
-            <h2 class="heading-medium no-margin-bottom">Innovation areas</h2>
 
             <ul class="list list-bullet" th:unless="${#maps.isEmpty(model.innovationAreas)}">
                 <li th:each="innovationSectorEntry : ${model.innovationAreas}"
@@ -93,7 +93,7 @@
                     </fieldset>
                 </div>
 
-                <button class="button button-large" type="submit">Save and return to assessor dashboard</button>
+                <button class="button button-large" type="submit">Save and return to your skills</button>
                 <a class="button button-clear" th:href="@{/profile/skills}">Cancel</a>
             </form>
 

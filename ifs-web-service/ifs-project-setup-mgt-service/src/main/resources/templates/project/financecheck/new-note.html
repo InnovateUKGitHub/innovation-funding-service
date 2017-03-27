@@ -10,7 +10,7 @@
 
         <main id="content" th:with="baseUrl=@{${model.baseUrl}(projectId=${model.projectId},organisationId=${model.organisationId})}">
             <th:block th:insert="fragments/layout :: main-content-start"/>
-            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})},currentCompetition=null"  />
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})},currentCompetition=null" />
 
             <div class="page-title">
                 <th:block th:insert="fragments/elements :: project-title (projectId=${model.projectId}, projectName=${model.projectName})"/>
@@ -44,8 +44,8 @@
                                required="required"
                                th:field="*{noteTitle}"
                                th:attr="maxlength=${model.maxTitleCharacters},
-                                        data-required-errormessage=#{validation.notesandqueries.note.title.required},
-                                        data-maxlength-errormessage=#{validation.notesandqueries.note.title.length.max(null,${model.maxTitleCharacters})}" />
+                                        data-required-errormessage=#{validation.field.must.not.be.blank},
+                                        data-maxlength-errormessage=#{validation.field.too.many.characters(null,${model.maxTitleCharacters})}" />
                     </div>
                     <div th:class="${#fields.hasErrors('note')}? 'form-group error':'form-group'">
                         <label for="note" class="form-label-bold">
@@ -65,9 +65,9 @@
                                       th:attr="maxlength=${model.maxNoteCharacters},
                               data-max_words=${model.maxNoteWords},
                               data-maxwordslength=${model.maxNoteWords},
-                              data-maxwordslength-errormessage=#{validation.notesandqueries.note.word.length.max(${model.maxNoteWords})},
-                              data-maxlength-errormessage=#{validation.notesandqueries.note.character.length.max(null,${model.maxNoteCharacters})},
-                              data-required-errormessage=#{validation.notesandqueries.note.required}"
+                              data-maxwordslength-errormessage=#{validation.field.max.word.count(null,${model.maxNoteWords})},
+                              data-maxlength-errormessage=#{validation.field.too.many.characters(null,${model.maxNoteCharacters})},
+                              data-required-errormessage=#{validation.field.must.not.be.blank}"
                                       th:classappend="${#fields.hasErrors('note') ? 'form-control field-error' : 'form-control'}"></textarea>
                             <div class="textarea-footer" th:with="note =*{note}">
                                 <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=${model.maxNoteWords}, currentWordsLeft=${#ifsUtil.wordsRemaining(model.maxNoteWords, content)})"/>
@@ -87,7 +87,7 @@
 
                     <fieldset>
                         <div class="upload-section unstyled-view">
-                            <legend class="heading-small no-margin">Upload supporting documentation</legend>
+                            <legend class="heading-small no-margin">Upload supporting documentation in pdf format</legend>
                             <th:block th:if="${#fields.hasErrors('attachment')}">
                                 <span>
                                     <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
@@ -109,10 +109,10 @@
                 </div>
             </form>
 
-            <th:block th:include="fragments/layout :: main-content-end" />
+            <th:block th:insert="fragments/layout :: main-content-end" />
         </main>
 
-        <th:block th:include="fragments/layout :: footer" />
-        <th:block th:include="fragments/layout :: body-end" />
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
     </body>
 </html>

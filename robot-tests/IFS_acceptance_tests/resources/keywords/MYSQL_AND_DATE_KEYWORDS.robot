@@ -44,7 +44,7 @@ the days remaining should be correct (Top of the page)
     ${MILESTONE_DATE}=    Convert Date    ${END_DATE}    result_format=%Y-%m-%d    exclude_millis=true
     ${NO_OF_DAYS_LEFT}=    Subtract Date From Date    ${MILESTONE_DATE}    ${STARTING_DATE}    verbose    exclude_millis=true
     ${NO_OF_DAYS_LEFT}=    Remove String    ${NO_OF_DAYS_LEFT}    days
-    ${SCREEN_NO_OF_DAYS_LEFT}=    Get Text    css=.sub-header .pie-overlay .day
+    ${SCREEN_NO_OF_DAYS_LEFT}=    Get Text    css=.sub-header .deadline span
     Should Be Equal As Numbers    ${NO_OF_DAYS_LEFT}    ${SCREEN_NO_OF_DAYS_LEFT}
 
 the days remaining should be correct (Applicant's dashboard)
@@ -53,7 +53,7 @@ the days remaining should be correct (Applicant's dashboard)
     ${MILESTONE_DATE}=    Convert Date    ${END_DATE}    result_format=%Y-%m-%d    exclude_millis=true
     ${NO_OF_DAYS_LEFT}=    Subtract Date From Date    ${MILESTONE_DATE}    ${CURRENT_DATE}    verbose    exclude_millis=true
     ${NO_OF_DAYS_LEFT}=    Remove String    ${NO_OF_DAYS_LEFT}    days
-    ${SCREEN_NO_OF_DAYS_LEFT}=    Get Text    css=.in-progress li:nth-child(1) .days-remaining
+    ${SCREEN_NO_OF_DAYS_LEFT}=    Get Text    css=.in-progress li:nth-child(2) .days-remaining
     Should Be Equal As Numbers    ${NO_OF_DAYS_LEFT}    ${SCREEN_NO_OF_DAYS_LEFT}
 
 get yesterday
@@ -63,6 +63,10 @@ get yesterday
 
 get today
     ${today} =    Get Current Date    result_format=%-d %B %Y    exclude_millis=true
+    [Return]    ${today}
+
+get today day
+    ${today} =    Get Current Date    result_format=%d    exclude_millis=true
     [Return]    ${today}
 
 get tomorrow full

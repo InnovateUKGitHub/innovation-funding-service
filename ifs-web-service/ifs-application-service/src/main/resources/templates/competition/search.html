@@ -52,10 +52,10 @@
                        <h2 class="heading-medium no-margin-top extra-margin-bottom">
                            <a th:text="${publicContentItem.competitionTitle}" th:href="@{/competition/{competitionId}/overview(competitionId=${publicContentItem.publicContentResource?.competitionId})}">Competition title</a>
                        </h2>
-                       <p ifs:utext="${publicContentItem.publicContentResource?.shortDescription}">Description of the competition</p>
+                       <p class="wysiwyg-styles" ifs:utext="${publicContentItem.publicContentResource?.shortDescription}">Description of the competition</p>
                        <dl class="standard-definition-list">
                             <dt>Eligibility:</dt>
-                            <dd ifs:utext="${publicContentItem.publicContentResource?.eligibilitySummary}"></dd>
+                            <dd class="wysiwyg-styles" ifs:utext="${publicContentItem.publicContentResource?.eligibilitySummary}"></dd>
                             <dt>Opens:</dt>
                             <dd th:text="${#temporals.format(publicContentItem.competitionOpenDate, 'dd MMMM yyyy')}" />
                             <dt>Closes:</dt>
@@ -81,9 +81,9 @@
             </div>
         </div>
 
-        <th:block th:include="fragments/layout :: main-content-end" />
+        <th:block th:insert="fragments/layout :: main-content-end" />
     </main>
-    <th:block th:include="fragments/layout :: footer" />
-    <th:block th:include="fragments/layout :: body-end" />
+    <th:block th:insert="fragments/layout :: footer" />
+    <th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>

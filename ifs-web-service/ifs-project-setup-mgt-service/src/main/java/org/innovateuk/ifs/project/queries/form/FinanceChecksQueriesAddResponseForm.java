@@ -8,9 +8,9 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.constraints.Size;
 
 public class FinanceChecksQueriesAddResponseForm extends BaseBindingResultTarget {
-    @NotBlank(message = "{validation.notesandqueries.response.required}")
-    @Size(max = FinanceChecksQueriesFormConstraints.MAX_QUERY_CHARACTERS, message = "{validation.notesandqueries.response.character.length.max}")
-    @WordCount(max = FinanceChecksQueriesFormConstraints.MAX_QUERY_WORDS, message = "{validation.notesandqueries.response.word.length.max}")
+    @NotBlank(message = "{validation.field.must.not.be.blank}")
+    @Size(max = FinanceChecksQueriesFormConstraints.MAX_QUERY_CHARACTERS, message = "{validation.field.too.many.characters}")
+    @WordCount(max = FinanceChecksQueriesFormConstraints.MAX_QUERY_WORDS, message = "{validation.field.max.word.count}")
     private String response;
 
     private MultipartFile attachment;

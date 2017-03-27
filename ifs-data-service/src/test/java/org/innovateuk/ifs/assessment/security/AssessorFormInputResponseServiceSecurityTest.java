@@ -1,10 +1,12 @@
 package org.innovateuk.ifs.assessment.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.security.ApplicationLookupStrategy;
 import org.innovateuk.ifs.application.security.ApplicationPermissionRules;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
+import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.transactional.AssessorFormInputResponseService;
@@ -92,6 +94,17 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
         );
     }
 
+    @Test
+    public void getAssessmentAggregateFeedback() {
+        long applicationId = 1L;
+        long questionId = 2L;
+        when (applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(newApplicationResource().build());
+        assertAccessDenied(
+                () -> classUnderTest.getAssessmentAggregateFeedback(applicationId, questionId),
+                () -> verify(applicationPermissionRules).usersConnectedToTheApplicationCanView(isA(ApplicationResource.class), isA(UserResource.class))
+        );
+    }
+
     public static class TestAssessorFormInputResponseService implements AssessorFormInputResponseService {
         @Override
         public ServiceResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponses(Long assessmentId) {
@@ -110,6 +123,11 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
 
         @Override
         public ServiceResult<ApplicationAssessmentAggregateResource> getApplicationAggregateScores(long applicationId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<AssessmentFeedbackAggregateResource> getAssessmentAggregateFeedback(long applicationId, long questionId) {
             return null;
         }
     }

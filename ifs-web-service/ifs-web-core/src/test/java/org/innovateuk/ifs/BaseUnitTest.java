@@ -13,11 +13,12 @@ import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.*;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.service.*;
+import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.assessment.service.AssessorRestService;
-import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.bankdetails.BankDetailsService;
+import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -25,7 +26,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
 import org.innovateuk.ifs.competition.service.CompetitionsRestService;
-import org.innovateuk.ifs.contract.service.ContractService;
+import org.innovateuk.ifs.agreement.service.AgreementService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.category.GrantClaimCategory;
@@ -53,6 +54,7 @@ import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.status.ProjectStatusService;
+import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.service.*;
 import org.innovateuk.ifs.util.CookieUtil;
@@ -81,16 +83,17 @@ import java.util.stream.Collectors;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
-import static java.util.Collections.*;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.ApplicationStatusResourceBuilder.newApplicationStatusResource;
 import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
-import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
+import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -104,7 +107,6 @@ import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResourc
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.mockito.Matchers.*;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.when;
 
@@ -143,7 +145,7 @@ public class BaseUnitTest {
     @Mock
     public CompetitionsRestService competitionRestService;
     @Mock
-    public ContractService contractService;
+    public AgreementService agreementService;
     @Mock
     public ProcessRoleService processRoleService;
     @Mock
@@ -209,6 +211,8 @@ public class BaseUnitTest {
     @Mock
     public FinanceCheckService financeCheckServiceMock;
     @Mock
+    public FinanceUtil financeUtilMock;
+    @Mock
     public ProjectStatusService projectStatusServiceMock;
     @Mock
     public PartnerOrganisationService partnerOrganisationServiceMock;
@@ -230,6 +234,10 @@ public class BaseUnitTest {
     public CompetitionKeyStatisticsRestService competitionKeyStatisticsRestServiceMock;
     @Mock
     public AssessorFormInputResponseRestService assessorFormInputResponseRestService;
+    @Mock
+    public ApplicationInnovationAreaRestService applicationInnovationAreaRestService;
+    @Mock
+    public CategoryRestService categoryRestServiceMock;
 
     @Spy
     @InjectMocks
@@ -248,6 +256,7 @@ public class BaseUnitTest {
     public Map<Long, FormInputResponseResource> formInputsToFormInputResponses;
     public List<CompetitionResource> competitionResources;
     public CompetitionResource competitionResource;
+    private Long competitionId = 1l;
     public List<UserResource> users;
     public List<OrganisationResource> organisations;
     TreeSet<OrganisationResource> organisationSet;
@@ -277,7 +286,7 @@ public class BaseUnitTest {
     private Random randomGenerator;
     public OrganisationTypeResource businessOrganisationTypeResource;
     public OrganisationTypeResource researchOrganisationTypeResource;
-    public OrganisationTypeResource academicOrganisationTypeResource;
+    public OrganisationTypeResource rtoOrganisationTypeResource;
     public OrganisationTypeResource businessOrganisationType;
     public OrganisationTypeResource researchOrganisationType;
     public OrganisationTypeResource academicOrganisationType;
@@ -362,31 +371,25 @@ public class BaseUnitTest {
 
         businessOrganisationTypeResource = newOrganisationTypeResource().with(id(1L)).with(name("Business")).build();
         researchOrganisationTypeResource = newOrganisationTypeResource().with(id(2L)).with(name("Research")).build();
-        academicOrganisationTypeResource = newOrganisationTypeResource().with(id(3L)).with(name("Academic")).build();
+        rtoOrganisationTypeResource = newOrganisationTypeResource().with(id(3L)).with(name("Research and technology organisations (RTO's)")).build();
 
         // TODO DW - INFUND-1604 - remove when process roles are converted to DTOs
         businessOrganisationType = newOrganisationTypeResource().with(id(1L)).with(name("Business")).build();
         researchOrganisationType = newOrganisationTypeResource().with(id(2L)).with(name("Research")).build();
-        academicOrganisationType = newOrganisationTypeResource().with(id(3L)).with(name("Academic")).build();
+        academicOrganisationType = newOrganisationTypeResource().with(id(3L)).with(name("Research and technology organisations (RTO's)")).build();
 
         ArrayList<OrganisationTypeResource> organisationTypes = new ArrayList<>();
         organisationTypes.add(businessOrganisationTypeResource);
         organisationTypes.add(researchOrganisationTypeResource);
-        organisationTypes.add(academicOrganisationTypeResource);
+        organisationTypes.add(rtoOrganisationTypeResource);
 
-        organisationTypes.add(new OrganisationTypeResource(3L, "Public Sector", null));
-        organisationTypes.add(new OrganisationTypeResource(4L, "Charity", null));
-        organisationTypes.add(new OrganisationTypeResource(5L, "University (HEI)", 2L));
-        organisationTypes.add(new OrganisationTypeResource(6L, "Research & technology organisation (RTO)", 2L));
-        organisationTypes.add(new OrganisationTypeResource(7L, "Catapult", 2L));
-        organisationTypes.add(new OrganisationTypeResource(8L, "Public sector research establishment", 2L));
-        organisationTypes.add(new OrganisationTypeResource(9L, "Research council institute", 2L));
+        organisationTypes.add(new OrganisationTypeResource(4L, "Public sector organisation or charity", null));
 
         when(organisationTypeRestService.getAll()).thenReturn(restSuccess(organisationTypes));
         when(organisationTypeRestService.findOne(anyLong())).thenReturn(restSuccess(new OrganisationTypeResource(99L, "Unknown organisation type", null)));
         when(organisationTypeRestService.findOne(1L)).thenReturn(restSuccess(businessOrganisationTypeResource));
         when(organisationTypeRestService.findOne(2L)).thenReturn(restSuccess(researchOrganisationTypeResource));
-        when(organisationTypeRestService.findOne(3L)).thenReturn(restSuccess(academicOrganisationTypeResource));
+        when(organisationTypeRestService.findOne(3L)).thenReturn(restSuccess(rtoOrganisationTypeResource));
     }
 
     public void loginDefaultUser(){
@@ -400,7 +403,7 @@ public class BaseUnitTest {
     }
 
     public void setupCompetition() {
-        competitionResource = newCompetitionResource().with(id(1L)).with(name("Competition x")).with(description("Description afds")).
+        competitionResource = newCompetitionResource().with(id(competitionId)).with(name("Competition x")).with(description("Description afds")).
                 withStartDate(LocalDateTime.now().minusDays(2)).withEndDate(LocalDateTime.now().plusDays(5)).withCompetitionStatus(CompetitionStatus.OPEN)
                 .build();
 
@@ -555,15 +558,15 @@ public class BaseUnitTest {
 
         List<ApplicationResource> applicationResources = asList(
                 newApplicationResource().with(id(1L)).with(name("Rovel Additive Manufacturing Process")).withStartDate(LocalDate.now().plusMonths(3))
-                        .withApplicationStatus(ApplicationStatusConstants.CREATED).withResearchCategories(newResearchCategoryResource().buildSet(1)).build(),
+                        .withApplicationStatus(ApplicationStatusConstants.CREATED).withResearchCategory(newResearchCategoryResource().build()).build(),
                 newApplicationResource().with(id(2L)).with(name("Providing sustainable childcare")).withStartDate(LocalDate.now().plusMonths(4))
-                        .withApplicationStatus(ApplicationStatusConstants.SUBMITTED).withResearchCategories(newResearchCategoryResource().buildSet(1)).build(),
+                        .withApplicationStatus(ApplicationStatusConstants.SUBMITTED).withResearchCategory(newResearchCategoryResource().build()).build(),
                 newApplicationResource().with(id(3L)).with(name("Mobile Phone Data for Logistics Analytics")).withStartDate(LocalDate.now().plusMonths(5))
-                        .withApplicationStatus(ApplicationStatusConstants.APPROVED).withResearchCategories(newResearchCategoryResource().buildSet(1)).build(),
+                        .withApplicationStatus(ApplicationStatusConstants.APPROVED).withResearchCategory(newResearchCategoryResource().build()).build(),
                 newApplicationResource().with(id(4L)).with(name("Using natural gas to heat homes")).withStartDate(LocalDate.now().plusMonths(6))
-                        .withApplicationStatus(ApplicationStatusConstants.REJECTED).withResearchCategories(newResearchCategoryResource().buildSet(1)).build(),
+                        .withApplicationStatus(ApplicationStatusConstants.REJECTED).withResearchCategory(newResearchCategoryResource().build()).build(),
                 newApplicationResource().with(id(5L)).with(name("Rovel Additive Manufacturing Process Ltd")).withStartDate(LocalDate.now().plusMonths(3))
-                        .withApplicationStatus(ApplicationStatusConstants.CREATED).withResearchCategories(newResearchCategoryResource().buildSet(1)).build()
+                        .withApplicationStatus(ApplicationStatusConstants.CREATED).withResearchCategory(newResearchCategoryResource().build()).build()
         );
 
         Map<Long, ApplicationResource> idsToApplicationResources = applicationResources.stream().collect(toMap(a -> a.getId(), a -> a));
@@ -574,7 +577,7 @@ public class BaseUnitTest {
 
         OrganisationResource organisation1 = newOrganisationResource().withId(1L).withOrganisationType(businessOrganisationTypeResource.getId()).withName("Empire Ltd").build();
         OrganisationResource organisation2 = newOrganisationResource().withId(2L).withOrganisationType(researchOrganisationTypeResource.getId()).withName("Ludlow").build();
-        OrganisationResource organisation3 = newOrganisationResource().withId(3L).withOrganisationType(academicOrganisationTypeResource.getId()).withName("Ludlow Ltd").build();
+        OrganisationResource organisation3 = newOrganisationResource().withId(3L).withOrganisationType(rtoOrganisationTypeResource.getId()).withName("Ludlow Ltd").build();
 
         organisations = asList(organisation1, organisation2, organisation3);
         Comparator<OrganisationResource> compareById = Comparator.comparingLong(OrganisationResource::getId);
@@ -658,7 +661,7 @@ public class BaseUnitTest {
 
         when(organisationService.getOrganisationById(organisationSet.first().getId())).thenReturn(organisationSet.first());
         when(organisationService.getOrganisationByIdForAnonymousUserFlow(organisationSet.first().getId())).thenReturn(organisationSet.first());
-        when(organisationService.getOrganisationType(loggedInUser.getId(), applications.get(0).getId())).thenReturn("Business");
+        when(organisationService.getOrganisationType(loggedInUser.getId(), applications.get(0).getId())).thenReturn(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId());
         when(organisationService.getOrganisationForUser(loggedInUser.getId(), application1ProcessRoles)).thenReturn(Optional.of(organisationSet.first()));
         when(userService.isLeadApplicant(loggedInUser.getId(), applications.get(0))).thenReturn(true);
         when(userService.getLeadApplicantProcessRoleOrNull(applications.get(0))).thenReturn(processRole1);
@@ -698,7 +701,7 @@ public class BaseUnitTest {
 
     public void setupFinances() {
         ApplicationResource application = applications.get(0);
-        applicationFinanceResource = new ApplicationFinanceResource(1L, application.getId(), organisations.get(0).getId(), OrganisationSize.LARGE);
+        applicationFinanceResource = new ApplicationFinanceResource(1L, application.getId(), organisations.get(0).getId(), 1L);
         Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = new HashMap<>();
         FinanceRowCostCategory costCategory = new GrantClaimCategory();
         costCategory.addCost(new GrantClaim(1L, 50));
@@ -707,8 +710,8 @@ public class BaseUnitTest {
         when(financeService.getApplicationFinanceDetails(loggedInUser.getId(), application.getId())).thenReturn(applicationFinanceResource);
         when(financeService.getApplicationFinance(loggedInUser.getId(), application.getId())).thenReturn(applicationFinanceResource);
         when(applicationFinanceRestService.getResearchParticipationPercentage(anyLong())).thenReturn(restSuccess(0.0));
-        when(financeHandler.getFinanceFormHandler("Business")).thenReturn(defaultFinanceFormHandler);
-        when(financeHandler.getFinanceModelManager("Business")).thenReturn(defaultFinanceModelManager);
+        when(financeHandler.getFinanceFormHandler(1L)).thenReturn(defaultFinanceFormHandler);
+        when(financeHandler.getFinanceModelManager(1L)).thenReturn(defaultFinanceModelManager);
     }
 
     public void setupInvites() {
@@ -723,14 +726,15 @@ public class BaseUnitTest {
         String email = "invited@email.com";
         invite.setEmail(email);
         invite.setInviteOrganisation(inviteOrganisation.getId());
+        invite.setCompetitionId(competitionId);
         inviteOrganisation.setInviteResources(Arrays.asList(invite));
 
         when(inviteRestService.getInviteByHash(eq(INVITE_HASH))).thenReturn(restSuccess(invite));
-        when(inviteOrganisationRestService.findOne(eq(invite.getInviteOrganisation()))).thenReturn(restSuccess(inviteOrganisation));
+        when(inviteOrganisationRestService.getByIdForAnonymousUserFlow(eq(invite.getInviteOrganisation()))).thenReturn(restSuccess(inviteOrganisation));
         when(inviteOrganisationRestService.put(any())).thenReturn(restSuccess());
         when(inviteRestService.checkExistingUser(eq(INVITE_HASH))).thenReturn(restSuccess(false));
         when(inviteRestService.checkExistingUser(eq(INVALID_INVITE_HASH))).thenReturn(restFailure(notFoundError(UserResource.class, email)));
-        when(inviteRestService.getInviteByHash(eq(INVALID_INVITE_HASH))).thenReturn(restFailure(emptyList()));
+        when(inviteRestService.getInviteByHash(eq(INVALID_INVITE_HASH))).thenReturn(restFailure(notFoundError(ApplicationResource.class, INVALID_INVITE_HASH)));
         when(inviteRestService.getInviteOrganisationByHash(INVITE_HASH)).thenReturn(restSuccess(new InviteOrganisationResource()));
 
         acceptedInvite = new ApplicationInviteResource();

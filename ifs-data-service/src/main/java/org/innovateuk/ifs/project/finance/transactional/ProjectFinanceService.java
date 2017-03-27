@@ -24,6 +24,10 @@ public interface ProjectFinanceService {
     ServiceResult<Void> generateSpendProfile(Long projectId);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @SecuredBySpring(value = "GENERATE_SPEND_PROFILE", description = "A member of the internal Finance Team can generate a Spend Profile for a given Project and Organisation" )
+    ServiceResult<Void> generateSpendProfileForPartnerOrganisation(Long projectId, Long organisationId, Long userId);
+
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "GENERATE_SPEND_PROFILE", securedType = ProjectResource.class, description = "A member of the internal Finance Team can approve or reject a Spend Profile for any Project" )
     ServiceResult<Void> approveOrRejectSpendProfile(Long projectId, ApprovalType approvalType);
 
@@ -52,9 +56,7 @@ public interface ProjectFinanceService {
     @PreAuthorize("hasPermission(#projectId, 'COMPLETE_SPEND_PROFILE_REVIEW')")
     ServiceResult<Void> completeSpendProfilesReview(Long projectId);
 
-    @PreAuthorize("hasAuthority('project_finance')")
-    @SecuredBySpring(value = "READ", securedType = ProjectFinanceResource.class,
-            description = "Project Finance users can view financial overviews of Organisations on Projects")
+    @PreAuthorize("hasPermission(#projectId, 'READ_OVERVIEW')")
     ServiceResult<List<ProjectFinanceResource>> getProjectFinances(Long projectId);
 
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'VIEW_VIABILITY')")

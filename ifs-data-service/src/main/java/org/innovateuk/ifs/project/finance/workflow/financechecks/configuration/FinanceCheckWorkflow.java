@@ -2,9 +2,7 @@ package org.innovateuk.ifs.project.finance.workflow.financechecks.configuration;
 
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckOutcomes;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckState;
-import org.innovateuk.ifs.project.finance.workflow.financechecks.guards.AllFinanceCheckFiguresEnteredGuard;
 import org.innovateuk.ifs.workflow.WorkflowStateMachineListener;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.config.EnableStateMachine;
 import org.springframework.statemachine.config.StateMachineConfigurerAdapter;
@@ -15,9 +13,9 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
 import java.util.EnumSet;
 
 import static org.innovateuk.ifs.project.finance.resource.FinanceCheckOutcomes.APPROVE;
-import static org.innovateuk.ifs.project.finance.resource.FinanceCheckOutcomes.FINANCE_CHECK_FIGURES_EDITED;
 import static org.innovateuk.ifs.project.finance.resource.FinanceCheckOutcomes.PROJECT_CREATED;
-import static org.innovateuk.ifs.project.finance.resource.FinanceCheckState.*;
+import static org.innovateuk.ifs.project.finance.resource.FinanceCheckState.APPROVED;
+import static org.innovateuk.ifs.project.finance.resource.FinanceCheckState.PENDING;
 
 /**
  * Describes the workflow for the Finance Check section for Project Setup, for each Partner Organisation.
@@ -25,9 +23,6 @@ import static org.innovateuk.ifs.project.finance.resource.FinanceCheckState.*;
 @Configuration
 @EnableStateMachine(name = "financeCheckStateMachine")
 public class FinanceCheckWorkflow extends StateMachineConfigurerAdapter<FinanceCheckState, FinanceCheckOutcomes> {
-
-    @Autowired
-    private AllFinanceCheckFiguresEnteredGuard allFinanceCheckFiguresEnteredGuard;
 
     @Override
     public void configure(StateMachineConfigurationConfigurer<FinanceCheckState, FinanceCheckOutcomes> config) throws Exception {
@@ -39,8 +34,7 @@ public class FinanceCheckWorkflow extends StateMachineConfigurerAdapter<FinanceC
     public void configure(StateMachineStateConfigurer<FinanceCheckState, FinanceCheckOutcomes> states) throws Exception {
         states.withStates()
                 .initial(PENDING)
-                .states(EnumSet.of(PENDING, READY_TO_APPROVE, APPROVED))
-                .choice(DECIDE_IF_READY_TO_APPROVE)
+                .states(EnumSet.of(PENDING, APPROVED))
                 .end(APPROVED);
     }
 
@@ -54,23 +48,7 @@ public class FinanceCheckWorkflow extends StateMachineConfigurerAdapter<FinanceC
                 .and()
             .withExternal()
                 .source(PENDING)
-                .event(FINANCE_CHECK_FIGURES_EDITED)
-                .target(DECIDE_IF_READY_TO_APPROVE)
-                .and()
-            .withExternal()
-                .source(READY_TO_APPROVE)
-                .event(FINANCE_CHECK_FIGURES_EDITED)
-                .target(DECIDE_IF_READY_TO_APPROVE)
-                .and()
-            .withChoice()
-                .source(DECIDE_IF_READY_TO_APPROVE)
-                .first(READY_TO_APPROVE, allFinanceCheckFiguresEnteredGuard)
-                .last(PENDING)
-                .and()
-            .withExternal()
-                .source(READY_TO_APPROVE)
                 .event(APPROVE)
-                .target(APPROVED)
-                .guard(allFinanceCheckFiguresEnteredGuard);
+                .target(APPROVED);
     }
 }

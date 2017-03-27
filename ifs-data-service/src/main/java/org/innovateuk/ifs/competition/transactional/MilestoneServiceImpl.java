@@ -34,7 +34,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 public class MilestoneServiceImpl extends BaseTransactionalService implements MilestoneService {
 
     private static final Log LOG = LogFactory.getLog(MilestoneServiceImpl.class);
-
+    private static final List<MilestoneType> PUBLIC_MILESTONES = asList(MilestoneType.OPEN_DATE, MilestoneType.RELEASE_FEEDBACK, MilestoneType.SUBMISSION_DATE);
     @Autowired
     private MilestoneRepository milestoneRepository;
     
@@ -48,8 +48,15 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     public ServiceResult<List<MilestoneResource>> getAllPublicMilestonesByCompetitionId(Long id) {
         return serviceSuccess ((List<MilestoneResource>)
                 milestoneMapper.mapToResource(milestoneRepository
-                        .findByCompetitionIdAndTypeIn(id,
-                                asList(MilestoneType.OPEN_DATE, MilestoneType.RELEASE_FEEDBACK, MilestoneType.SUBMISSION_DATE))));
+                        .findByCompetitionIdAndTypeIn(id, PUBLIC_MILESTONES)));
+    }
+
+    @Override
+    public ServiceResult<Boolean> allPublicDatesComplete(Long competitionId) {
+        List<Milestone> milestones = milestoneRepository
+                .findByCompetitionIdAndTypeIn(competitionId, PUBLIC_MILESTONES);
+
+        return serviceSuccess(milestones.size() == PUBLIC_MILESTONES.size() && milestones.stream().noneMatch(milestone -> milestone.getDate() == null));
     }
 
     @Override
@@ -95,32 +102,85 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     private ValidationMessages validate(List<MilestoneResource> milestones) {
         ValidationMessages vm = new ValidationMessages();
 
-        milestones.sort(comparing(MilestoneResource::getType));
+        vm.addAll(validateCompetitionIdConsistency(milestones));
+        vm.addAll(validateDates(milestones));
+        vm.addAll(validateDateOrder(milestones));
+
+        return vm;
+    }
+
+    private ValidationMessages validateDates(List<MilestoneResource> milestones) {
+        ValidationMessages vm = new ValidationMessages();
+        Competition competition = competitionRepository.findById(milestones.get(0).getCompetitionId());
+
+        vm.addAll(validateDateNotNull(milestones));
+
+        if(!competition.isNonIfs()) {
+            vm.addAll(validateDateInFuture(milestones));
+        }
+
+        return vm;
+    }
+
+    private ValidationMessages validateDateInFuture(List<MilestoneResource> milestones) {
+        ValidationMessages vm = new ValidationMessages();
 
         milestones.forEach(m -> {
-        	if(m.getDate() == null) {
-        		Error error = new Error("error.milestone.nulldate", HttpStatus.BAD_REQUEST);
-        		vm.addError(error);
-        	} else if(m.getDate().isBefore(LocalDateTime.now())) {
-        		Error error = new Error("error.milestone.pastdate", HttpStatus.BAD_REQUEST);
-        		vm.addError(error);
-        	}
+            if(m.getDate() != null && m.getDate().isBefore(LocalDateTime.now())) {
+                Error error = new Error("error.milestone.pastdate", HttpStatus.BAD_REQUEST);
+                vm.addError(error);
+            }
         });
 
+        return vm;
+    }
+
+    private ValidationMessages validateDateNotNull(List<MilestoneResource> milestones) {
+        ValidationMessages vm = new ValidationMessages();
+
+        milestones.forEach(m -> {
+            if(m.getDate() == null) {
+                Error error = new Error("error.milestone.nulldate", HttpStatus.BAD_REQUEST);
+                vm.addError(error);
+            }
+        });
+
+        return vm;
+    }
+
+    private ValidationMessages validateDateOrder(List<MilestoneResource> milestones) {
+        ValidationMessages vm = new ValidationMessages();
+
+        milestones.sort(comparing(MilestoneResource::getType));
         // preset milestones must be in the correct order
         List<MilestoneResource> presetMilestones = simpleFilter(milestones, milestoneResource -> milestoneResource.getType().isPresetDate());
 
         for (int i = 1; i < presetMilestones.size(); i++) {
-        	MilestoneResource previous = presetMilestones.get(i - 1);
-        	MilestoneResource current = presetMilestones.get(i);
-        	
-        	if(current.getDate() != null && previous.getDate() != null) {
-        		if(previous.getDate().isAfter(current.getDate())) {
-        			Error error = new Error("error.milestone.nonsequential", HttpStatus.BAD_REQUEST);
-            		vm.addError(error);
-        		}
-        	}
+            MilestoneResource previous = presetMilestones.get(i - 1);
+            MilestoneResource current = presetMilestones.get(i);
+
+            if(current.getDate() != null && previous.getDate() != null) {
+                if(previous.getDate().isAfter(current.getDate())) {
+                    Error error = new Error("error.milestone.nonsequential", HttpStatus.BAD_REQUEST);
+                    vm.addError(error);
+                }
+            }
         }
+
+        return vm;
+    }
+
+    private ValidationMessages validateCompetitionIdConsistency(List<MilestoneResource> milestones) {
+        ValidationMessages vm = new ValidationMessages();
+        Long firstMilestoneCompetitionId = milestones.get(0).getCompetitionId();
+
+        boolean allCompetitionIdsMatch = milestones.stream().allMatch(milestone -> milestone.getCompetitionId().equals(firstMilestoneCompetitionId));
+
+        if(!allCompetitionIdsMatch) {
+            Error error = new Error("error.title.status.400", HttpStatus.BAD_REQUEST);
+            vm.addError(error);
+        }
+
         return vm;
     }
 }

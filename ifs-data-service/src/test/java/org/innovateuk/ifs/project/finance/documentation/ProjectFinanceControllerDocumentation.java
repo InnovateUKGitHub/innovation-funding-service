@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.project.finance.documentation;
 
 import au.com.bytecode.opencsv.CSVWriter;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
@@ -9,17 +8,11 @@ import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.project.builder.SpendProfileResourceBuilder;
-import org.innovateuk.ifs.project.controller.ProjectFinanceController;
+import org.innovateuk.ifs.project.projectdetails.controller.ProjectFinanceController;
 import org.innovateuk.ifs.project.finance.domain.SpendProfile;
-import org.innovateuk.ifs.project.finance.resource.Eligibility;
-import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
-import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
-import org.innovateuk.ifs.project.finance.resource.Viability;
-import org.innovateuk.ifs.project.finance.resource.ViabilityRagStatus;
-import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
+import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.OrganisationSize;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
@@ -64,7 +57,6 @@ import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -515,13 +507,11 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
 
         OrganisationResource industrialOrganisation = newOrganisationResource().
                 withName("Industrial Org").
-                withOrganisationSize(OrganisationSize.MEDIUM).
                 withCompanyHouseNumber("123456789").
                 build();
 
         OrganisationResource academicOrganisation = newOrganisationResource().
                 withName("Academic Org").
-                withOrganisationSize(OrganisationSize.LARGE).
                 withCompanyHouseNumber("987654321").
                 build();
 
@@ -586,7 +576,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
                 withProject(project.getId()).
                 withOrganisation(academicOrganisation.getId(), industrialOrganisation.getId()).
                 withFinanceOrganisationDetails(academicOrganisationFinances, industrialOrganisationFinances).
-                withOrganisationSize(OrganisationSize.MEDIUM).
+                withOrganisationSize(1L).
                 build(2);
 
         when(projectFinanceServiceMock.getProjectFinances(projectId)).thenReturn(serviceSuccess(expectedFinances));

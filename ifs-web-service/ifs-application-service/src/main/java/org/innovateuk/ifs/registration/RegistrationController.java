@@ -43,7 +43,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.login.HomeController.getRedirectUrlForUser;
-import static org.innovateuk.ifs.invite.service.InviteServiceImpl.INVITE_HASH;
+import static org.innovateuk.ifs.registration.AbstractAcceptInviteController.INVITE_HASH;
 
 @Controller
 @RequestMapping("/registration")

@@ -1,80 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
+<div th:fragment="consortium-partner-status-row(partner, isLead)">
+    <th scope="row">
+        <th:block th:text="${partner.name}"/>
+        <th:block th:if="${isLead}"> (Lead)</th:block>
+    </th>
 
-<!-- ===========================Project setup select address=========================== -->
-
-<div th:fragment="select-address">
-    <fieldset>
-      <div class="form-group" th:classappend="${#fields.hasErrors('*{addressType}') ? 'error' : ''}">
-        <legend>
-            <span class="visuallyhidden">Operating address</span>
-            <span th:if="${#fields.hasErrors('*{addressType}')}"  th:remove="tag">
-                <span class="error-message"  th:each="err : ${#fields.errors('addressType')}" th:text="${err}" />
-            </span>
-        </legend>
-
-        <div class="form-block" th:if="${model.registeredAddress}">
-            <label class="block-label selection-button-radio" for="address-use-org" data-target="registeredAddress">
-                <input id="address-use-org" type="radio" name="project-address-group" required="required" th:attr="data-required-errormessage=#{validation.projectdetailsaddressviewmodelform.organisationaddresstype.required}" value="REGISTERED" th:field="*{addressType}"/>
-                Use organisation address (<strong th:text="${model.registeredAddress.postcode}">BS1 4NT</strong>)
-            </label>
-        </div>
-
-        <div class="form-block" th:if="${model.operatingAddress}">
-            <label class="block-label selection-button-radio" for="address-use-operating" data-target="operatingAddress">
-                <input id="address-use-operating" type="radio" name="project-address-group" required="required" th:attr="data-required-errormessage=#{validation.projectdetailsaddressviewmodelform.organisationaddresstype.required}" value="OPERATING" th:field="*{addressType}"/>
-                Use operating address (<strong th:text="${model.operatingAddress?.postcode}">SN1 2UE</strong>)
-            </label>
-        </div>
-
-        <div class="form-block" th:if="${model.projectAddress}">
-            <label class="block-label selection-button-radio" for="address-use-project" data-target="projectAddress">
-                <input id="address-use-project" type="radio" name="project-address-group" required="required" th:attr="data-required-errormessage=#{validation.projectdetailsaddressviewmodelform.organisationaddresstype.required}" value="PROJECT" th:field="*{addressType}"/>
-                Use project address (<strong th:text="${model.projectAddress?.postcode}">SN1 2EE</strong>)
-            </label>
-        </div>
-
-        <div class="form-block">
-            <label class="block-label selection-button-radio" for="address-add-project" data-target="custom-postcode">
-                <input id="address-add-project" type="radio" name="project-address-group" required="required" th:attr="data-required-errormessage=#{validation.projectdetailsaddressviewmodelform.organisationaddresstype.required}" value="ADD_NEW" th:field="*{addressType}"/>
-                Enter an alternative project address
-            </label>
-        </div>
-      </div>
-    </fieldset>
-
-    <div id="registeredAddress" class="boxed extra-margin" th:if="${model.registeredAddress}">
-        <p>
-          <span th:each="addressLine : ${model.registeredAddress.getNonEmptyLines()}" th:remove="tag">
-              <span th:text="${addressLine}" th:remove="tag">An address line</span><br />
-          </span>
-        </p>
-    </div>
-    <div id="operatingAddress" class="boxed extra-margin" th:if="${model.operatingAddress}">
-        <h3 class="heading-medium no-margin-top" th:text="${(address != null and address == 'bankDetails' ? 'Confirm organisation address' : 'Confirm project location')}">LOCATION TITLE</h3>
-        <p>
-          <span th:each="addressLine : ${model.operatingAddress.getNonEmptyLines()}" th:remove="tag">
-              <span th:text="${addressLine}" th:remove="tag">An address line</span><br />
-          </span>
-        </p>
-    </div>
-    <div id="projectAddress" class="boxed extra-margin" th:if="${model.projectAddress}">
-        <h3 class="heading-medium no-margin-top">Confirm project location</h3>
-        <p>
-          <span th:each="addressLine : ${model.projectAddress.getNonEmptyLines()}" th:remove="tag">
-              <span th:text="${addressLine}" th:remove="tag">An address line</span><br />
-          </span>
-        </p>
-    </div>
-
-    <div id="custom-postcode">
-        <th:block th:insert="fragments/addresses :: company-address-details"  th:with="form=${form}" />
-    </div>
-</div>
-
-<div th:fragment="consortium-partner-status-row(partner)">
-    <th scope="row" th:text="${partner.name}" />
     <th:block th:insert="project/fragments :: consortium-partner-status-indicator(${partner.projectDetailsStatus})" />
     <th:block th:insert="project/fragments :: consortium-partner-status-indicator(${partner.monitoringOfficerStatus})" />
     <th:block th:insert="project/fragments :: consortium-partner-status-indicator(${partner.bankDetailsStatus})" />
@@ -90,8 +22,22 @@
         <td th:case="'ACTION_REQUIRED'" class="status action"><span class="visuallyhidden">Requires action</span></td>
         <td th:case="'NOT_STARTED'" class="status">- <span class="visuallyhidden">Stage is not yet available</span></td>
         <td th:case="'NOT_REQUIRED'" class="status na"><span class="visuallyhidden">Not required for this partner</span></td>
-        <td th:case="'PENDING'" class="status waiting"><span class="visuallyhidden">Awaiting review from Innovate UK</span></td>
+        <td th:case="'PENDING'" class="status waiting"><span class="visuallyhidden">Awaiting review</span></td>
         <td th:case="*"></td><!--/* just in case there is a different status we put out an empty td to not break the table */-->
     </th:block>
 </div>
+
+<th:block th:fragment="project-setup-status-indicator(status)">
+    <div class="status">
+        <div class="status-msg msg-progress">
+            <th:block th:switch="${status}">
+                <span th:case="complete" class="status-complete">Completed</span>
+                <span th:case="require-action" class="status-action-required">To be completed</span>
+                <span th:case="waiting" class="status-waiting">Awaiting review</span>
+                <span th:case="rejected" class="status-reject">Unsuccessful</span>
+                <span th:case="awaiting-assignment">Awaiting assignment</span>
+            </th:block>
+        </div>
+    </div>
+</th:block>
 </html>

@@ -4,7 +4,6 @@ package org.innovateuk.ifs.category.service;
 import org.innovateuk.ifs.category.resource.*;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
-import org.innovateuk.ifs.competition.service.CompetitionsRestServiceImpl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
@@ -17,7 +16,7 @@ import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
 public class CategoryRestServiceImpl extends BaseRestService implements CategoryRestService {
 
     @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(CompetitionsRestServiceImpl.class);
+    private static final Log LOG = LogFactory.getLog(CategoryRestServiceImpl.class);
     private String categoryRestURL = "/category";
 
     @Override

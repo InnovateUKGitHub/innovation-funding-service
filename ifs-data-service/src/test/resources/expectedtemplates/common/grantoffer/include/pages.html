@@ -3,9 +3,7 @@
 <#macro page1>
     <div class="textcenter">
         <!-- todo; figure out how we can make this a local url, relative paths don't work so would maybe sending the current environemnt url would work? -->
-        <img width="200"
-             src="https://assets.publishing.service.gov.uk/government/uploads/system/uploads/organisation/logo/1078/innovate-uk-logo.png"
-             alt="Innovate UK"/>
+        <img width="200" src="https://assets.publishing.service.gov.uk/government/uploads/system/uploads/organisation/logo/1078/innovate-uk-logo.png" alt="Innovate UK" />
 
     </div>
     <p>
@@ -20,155 +18,43 @@
     <p class="bold">
         Application number: ${ApplicationNumber}<br/>
 
-        <#assign sendDate = .now >
-        Date: ${sendDate?string["d MMMM yyyy"]}
+        <#assign sendDate = .now>
+            Date: ${sendDate?string["d MMMM yyyy"]}
     </p>
     <p class="bold">
         Dear ${LeadContact},
     </p>
 
-    <h1>Award confirmation letter</h1>
+    <h1>Grant Offer Letter</h1>
     <p class="bold">
-        ${CompetitionName}<br/>
+        Competition: ${CompetitionName}<br/>
         Project Title: ${ProjectTitle}
     </p>
+    <p>We are pleased to confirm your grant, subject to our terms and conditions.</p>
+    <p>Your individual grant allocations are detailed in the Annexes. These allocations are final and not subject to further negotiation or amendment.</p>
+    <p>Any additional terms or conditions of this award are included with this grant offer letter. </p>
+
+    <h2>Acceptance: Start and End Dates</h2>
     <p>
-        I am pleased to inform you that subject to our standard Terms and Conditions,
-        as published on our Innovation Funding Service platform,
-        the Technology Strategy Board (operating as “Innovate UK”) hereby confirms its award of Grant funding towards
-        the Project,
-        as permitted under section 5 of the Science and Technology Act 1965.
+        You must now notify Innovate UK of the project’s start and end dates by completing, signing and returning the Annex to
+        grants@innovateuk.gov.uk.
     </p>
     <p>
-        The confirmed total Grant amount, and individual allocations per Partner (if applicable), are detailed in the
-        section ‘Eligible costs and grant allocations’.
-        These allocations reflect the outcome of financial reviews, undertaken by Innovate UK, of Project information
-        submitted by the project team members as part of their application for funding, such reviews having been
-        completed in consultation with the project team members.
-        The Grant profile included is therefore final, and is not subject to further negotiation. Any Special Conditions
-        of Award, which supplement or override our standard Terms and Conditions, are included with this Letter in the
-        annex.
+        Your award will be withdrawn if you do not confirm your start date within 31 calendar days of this letter. Any costs incurred prior to that start date will be ineligible for grant.
     </p>
-    <h2>Start and End Dates</h2>
-    <p>
-        In accordance with those submissions made as part of your application for funding,
-        we confirm that the Project shall commence on the <em>${ProjectStartDate}</em> and is expected to complete after
-        ${ProjectLength},
-        subject to those provisions for suspension and/or withdrawal of funding outlined in our published Terms and
-        Conditions.
-        Furthermore, you may only start work on the Project once you have completed the <em>Additional Acceptance
-        Conditions</em> listed here under;
-        failure to do so may result in the Project being unable to start or,
-        in the event of project team members having commenced Project works before the Award has been confirmed,
-        any costs incurred during that period becoming ineligible for Grant.
-    </p>
-    <p>
-        Please note that your approved Project Start and End Dates may only be amended by seeking formal consent from
-        Innovate UK for such a change through your nominated Monitoring Officer.
-    </p>
-    <h2>Additional Acceptance Conditions</h2>
-    <p>You must now:<br/>
-    <ul>
-        <li>accept this offer on behalf of all consortium partners (if any);</li>
-        <li>accept this offer of Grant by signing and uploading the Acceptance of Award using the digital service.</li>
-    </ul>
-    </p>
-    <p>
-        We wish you every success with your Project
-    </p>
-    <p>
-        Yours sincerely
-    </p>
-    <p>
+    <p>Your approved project start and end dates can only be changed by submitting a request through your Monitoring Officer.</p>
+    <p>We wish you every success with your Project</p>
+    <p>Yours sincerely</p>
+    <p><br/>
         Peter Hollinswaite<br/>
-        Head of Post-Award<br/>
-        On behalf of Innovate UK
-    </p>
-    <p class="textcenter"><br/>
-        Innovate UK is the trading name of the Technology Strategy Board <br/>
-        Innovate UK, North Star House, North Star Avenue, Swindon SN2 1UE <br/>
-        Tel:+44 (0)1793 442 700 <br/>
-        Email: support@innovateuk.org <br/>
-        www.innovateuk.gov.uk <br/>
+        Head of Post-Award
     </p>
 </#macro>
+
 <!-- ====================== Page 2 of the Grant offer letter  ======================  -->
-
 <#macro page2>
-    <h1>Eligible cost and grant allocations</h1>
-    <p class="bold">
-        Application number: ${ApplicationNumber}<br/>
-        Date: ${sendDate?string["d MMMM yyyy"]}<br/>
-        ${CompetitionName}<br/>
-        Project Title: ${ProjectTitle}
-    </p>
-    <table>
-        <thead>
-        <tr>
-            <th colspan="2" scope="col" class="no-border"></th>
-            <#list TableData.yearEligibleCostTotal?keys as year>
-                <th colspan="2">${year} to ${(year?number+1)?c}</th>
-            </#list>
-            <th colspan="2" scope="col">Total</th>
-        </tr>
-        <tr>
-            <th scope="col">Organisation</th>
-            <th scope="col">% Grant</th>
-            <#list TableData.yearEligibleCostTotal?keys as year>
-                <th scope="col">Eligible Cost (&#163;)</th>
-                <th scope="col">Grant available (&#163;)</th>
-            </#list>
-            <!--  for the totals -->
-            <th scope="col">Eligible Cost (&#163;)</th>
-            <th scope="col">Grant available (&#163;)</th>
-        </tr>
-        </thead>
-        <tbody>
-        <#list SortedOrganisations as org>
-            <tr>
-                <td>${org}</td>
-                <td>${TableData.organisationAndGrantPercentageMap[org]}</td>
-                <#assign costLength = TableData.organisationEligibleCostTotal[org]?size-1>
-                <#list 0..costLength as i>
-                    <td class="textright">${TableData.organisationEligibleCostTotal[org][i]?round}</td>
-                    <td class="textright">${TableData.organisationGrantAllocationTotal[org][i]?round}</td>
-                </#list>
-                <td class="textright">${TableData.getEligibleCostGrandTotalPerOrganisation()[org]?round}</td>
-                <td class="textright">${TableData.getGrantAllocationGrandTotalPerOrganisation()[org]?round}</td>
-            </tr>
-        </#list>
-        </tbody>
-        <tfoot>
-        <tr>
-            <td>Total (per annum)</td>
-            <td></td>
-            <#list 0..costLength as i>
-                <#assign YearlyEligible = 0>
-                <#assign YearlyGrant = 0>
-
-                <#list SortedOrganisations as org>
-                    <#assign YearlyEligible += TableData.organisationEligibleCostTotal[org][i]>
-                        <#assign YearlyGrant += TableData.organisationGrantAllocationTotal[org][i]>
-                </#list>
-                <td class="textright">${YearlyEligible?round}</td>
-                <td class="textright">${YearlyGrant?round}</td>
-            </#list>
-
-            <#assign grandTotalEligible = 0>
-            <#assign grandTotalGrant = 0>
-            <#list SortedOrganisations as org>
-                <#assign grandTotalEligible += TableData.getEligibleCostGrandTotalPerOrganisation()[org]>
-                <#assign grandTotalGrant += TableData.getGrantAllocationGrandTotalPerOrganisation()[org]>
-            </#list>
-            <td class="textright">${grandTotalEligible?round}</td>
-            <td class="textright">${grandTotalGrant?round}</td>
-        </tr>
-        </tfoot>
-    </table>
-</#macro>
-<!-- ====================== Page 3 of the Grant offer letter  ======================  -->
-<#macro page3>
-    <h1>Acceptance of award</h1>
+    <h1>ANNEX</h1>
+    <h2 class="bold">ACCEPTANCE OF AWARD</h2>
     <p class="bold">
         Application number: ${ApplicationNumber}<br/>
         Date: ${sendDate?string["d MMMM yyyy"]}<br/>
@@ -176,23 +62,21 @@
         Project Title: ${ProjectTitle}
     </p>
     <p>
-        I accept the offer on behalf of the project, set out in the grant offer letter and in the schedules attached. I
-        make the following declarations:
+        I accept the offer on behalf of the project, set out in the grant offer letter and in the schedules attached. I make the following declarations:
     </p>
     <ol>
         <li>For the purposes of the offer:
             <ol>
                 <li>Project Start Date ${ProjectStartDate}</li>
-                <li>Project Length ${ProjectLength} months</li>
+                <li>Project Length  ${ProjectLength} months</li>
             </ol>
         </li>
     </ol>
     <p>
-        For ease of administration, the Project Start Date should always lie on the start of a calendar month, and the
-        Project End Date at the end of the last calendar month as defined by the Project Length.
+        For ease of administration, the project start date should always lie on the start of a calendar month, and the project end date at the end of the last calendar month as defined by the project length.
     </p>
     <p class="signature">Signed: ………………………………………………………….</p>
     <p>Director for and on behalf of ${LeadOrgName}</p>
-    <p class="signature">* insert name:.……………………………………......................... </p>
+    <p class="signature">* Print name:.……………………………………......................... </p>
     <p>Date: …………………………………………………………….</p>
 </#macro>

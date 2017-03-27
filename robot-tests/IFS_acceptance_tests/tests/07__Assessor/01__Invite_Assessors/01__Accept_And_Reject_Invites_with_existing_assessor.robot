@@ -26,6 +26,8 @@ Documentation     INFUND-228: As an Assessor I can see competitions that I have 
 ...               INFUND-6455 As an assessor with an account, I can see invitations to assess competitions on my dashboard...
 ...
 ...               INFUND-6450 As a member of the competitions team, I can see the status of each assessor invite s0...
+...
+...               INFUND-5494 An assessor CAN follow a link to the competition brief from the competition dashboard
 Suite Setup       log in as user    &{existing_assessor1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
@@ -37,7 +39,7 @@ ${Invitation_for_upcoming_comp_assessor1}    ${server}/assessment/invite/competi
 ${Invitation_nonexisting_assessor2}    ${server}/assessment/invite/competition/396d0782-01d9-48d0-97ce-ff729eb555b0 #invitation for assessor:${test_mailbox_one}+david.peters@gmail.com
 ${ASSESSOR_DASHBOARD}    ${server}/assessment/assessor/dashboard
 ${Correct_date}    12 January to 29 January
-${Correct_date_start}   12 January
+${Correct_date_start}    12 January
 ${Correct_date_end}    29 January
 
 *** Test Cases ***
@@ -54,6 +56,26 @@ Assessor dashboard contains the correct competitions
     And The user should see the text in the page    Upcoming competitions to assess
     And The user should see the text in the page    ${UPCOMING_COMPETITION_TO_ASSESS_NAME}
     And The user should see the text in the page    Invitations to assess
+
+Competition brief link can be seen
+    [Documentation]    INFUND-5494
+    [Tags]
+    When the user clicks the button/link    link=${UPCOMING_COMPETITION_TO_ASSESS_NAME}
+    Then the user should see the element    link=See competition brief (opens in a new window)
+
+User can view the competition brief
+    [Documentation]    INFUND-5494
+    [Tags]
+    When the user clicks the button/link    link=See competition brief (opens in a new window)
+    Then The user should get a competition brief window
+    And the user should not see an error in the page
+    And the user should see the text in the page    ${UPCOMING_COMPETITION_TO_ASSESS_NAME}
+    And the user should see the text in the page    Competition opens
+    And the user should see the text in the page    Competition closes
+    And the user should see the element    jQuery=.button:contains("Start new application")
+    And The user closes the competition brief
+    [Teardown]
+    And the user clicks the button/link    link=Assessor dashboard
 
 Calculation of the Upcoming competitions and Invitations to assess should be correct
     [Documentation]    INFUND-7107
@@ -141,7 +163,6 @@ Upcoming competition should be visible
     Then The user should see the text in the page    Upcoming competitions to assess
 
 The assessment period starts the comp moves to the comp for assessment
-    [Documentation]
     [Tags]    MySQL    HappyPath
     [Setup]    Connect to Database    @{database}
     Given the assessment start period changes in the db in the past
@@ -172,7 +193,7 @@ Registered user should not allowed to accept other assessor invite
     Then The user should see permissions error message
 
 The user should not be able to accept or reject the same applications
-    [Documentation]    NFUND-5165
+    [Documentation]    INFUND-5165
     [Tags]
     Then the assessor shouldn't be able to accept the rejected competition
     And the assessor shouldn't be able to reject the rejected competition
@@ -231,3 +252,10 @@ Close the competition in assessment
     Log in as a different user    &{Comp_admin1_credentials}
     The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     The user clicks the button/link    jQuery=.button:contains("Close assessment")
+
+The user should get a competition brief window
+    Select Window   title=Competition Overview - Innovation Funding Service
+
+The user closes the competition brief
+    Close Window
+    Select Window

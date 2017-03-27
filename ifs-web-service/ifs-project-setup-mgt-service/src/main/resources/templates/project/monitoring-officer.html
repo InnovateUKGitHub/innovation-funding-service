@@ -12,7 +12,7 @@
 <main id="content">
 	<th:block th:insert="fragments/layout :: main-content-start" />
 
-	<div th:include="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{id}/status (id=${model.competitionSummary.competitionId})}"  th:remove="tag"></div>
+	<div th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{id}/status (id=${model.competitionSummary.competitionId})}" th:remove="tag"></div>
 
 	<div class="grid-row">
 		<div class="column-two-thirds">
@@ -61,7 +61,7 @@
 													<span class="error-message" th:each="err : ${#fields.errors('lastName')}" th:text="${err}" />
 											</th:block>
 							  </label>
-							  <input type="text"  th:errorclass="field-error" required="required" th:attr="data-required-errormessage=#{validation.standard.lastname.required}" class="form-control width-full" th:readonly="${readonly}" th:field="*{lastName}" />
+							  <input type="text" th:errorclass="field-error" required="required" th:attr="data-required-errormessage=#{validation.standard.lastname.required}" class="form-control width-full" th:readonly="${readonly}" th:field="*{lastName}" />
 						  </div>
 
 						  <div class="form-group" th:classappend="${#fields.hasErrors('emailAddress') ? 'error' : ''}">
@@ -128,7 +128,7 @@
 		<th:block th:if="${model.targetProjectStartDate}">
 			<h3 class="heading-medium no-margin">Target project start date</h3>
 			<p class="form-hint">Planned start date for the project.</p>
-			<p th:if="${model.targetProjectStartDate}"><th:block th:include="fragments/elements :: ordinal-day (date=${model.targetProjectStartDate})" /> <th:block th:text="${#temporals.format(model.targetProjectStartDate, 'MMM yyyy')}" /></p>
+			<p th:if="${model.targetProjectStartDate}"><th:block th:insert="fragments/elements :: ordinal-day (date=${model.targetProjectStartDate})" /> <th:block th:text="${#temporals.format(model.targetProjectStartDate, 'MMM yyyy')}" /></p>
 		</th:block>
 
 		<th:block th:if="${model.projectManagerName}">
@@ -140,7 +140,10 @@
 		<th:block th:if="${model.partnerOrganisationNames}">
 			<h3 class="heading-medium no-margin">Project partners</h3>
 			<ul class="list list-bullet">
-				<li th:each="organisationName : ${model.partnerOrganisationNames}" th:text="${organisationName}">Company A (Lead)</li>
+				<li th:each="organisationName : ${model.partnerOrganisationNames}">
+                    <th:block th:text="${organisationName}">organisation name</th:block>
+                    <th:block th:if="${organisationName.equals(model.leadOrganisationName)}"> (Lead)</th:block>
+                </li>
 			</ul>
 		</th:block>
 

@@ -3,19 +3,16 @@ package org.innovateuk.ifs.user.builder;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.category.domain.InnovationArea;
-import org.innovateuk.ifs.user.resource.BusinessType;
-import org.innovateuk.ifs.user.domain.Contract;
+import org.innovateuk.ifs.user.domain.Agreement;
 import org.innovateuk.ifs.user.domain.Profile;
-import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.BusinessType;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.createDefault;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
 
 /**
  * Builder for {@link Profile}s.
@@ -30,13 +27,17 @@ public class ProfileBuilder extends BaseBuilder<Profile, ProfileBuilder> {
         return new ProfileBuilder(emptyList()).with(uniqueIds());
     }
 
+    public static ProfileBuilder newProfileWithoutId() {
+        return new ProfileBuilder(emptyList());
+    }
+
     @Override
     protected ProfileBuilder createNewBuilderWithActions(List<BiConsumer<Integer, Profile>> actions) {
         return new ProfileBuilder(actions);
     }
 
     public ProfileBuilder withId(Long... ids) {
-        return withArray((id, profile) -> setField("id", id, profile) , ids);
+        return withArray((id, profile) -> setField("id", id, profile), ids);
     }
 
     public ProfileBuilder withAddress(Address... addresses) {
@@ -61,12 +62,12 @@ public class ProfileBuilder extends BaseBuilder<Profile, ProfileBuilder> {
         return withArray((businessType, profile) -> setField("businessType", businessType, profile), businessTypes);
     }
 
-    public ProfileBuilder withContract(Contract... contracts) {
-        return withArray((contract, profile) -> setField("contract", contract, profile), contracts);
+    public ProfileBuilder withAgreement(Agreement... agreements) {
+        return withArray((agreement, profile) -> setField("agreement", agreement, profile), agreements);
     }
 
-    public ProfileBuilder withContractSignedDate(LocalDateTime... contractSignedDates) {
-        return withArray((contractSignedDate, profile) -> setField("contractSignedDate", contractSignedDate, profile), contractSignedDates);
+    public ProfileBuilder withAgreementSignedDate(LocalDateTime... agreementSignedDates) {
+        return withArray((agreementSignedDate, profile) -> setField("agreementSignedDate", agreementSignedDate, profile), agreementSignedDates);
     }
 
     @Override

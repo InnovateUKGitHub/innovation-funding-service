@@ -31,12 +31,12 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
-import static org.innovateuk.ifs.user.builder.ContractBuilder.newContract;
-import static org.innovateuk.ifs.user.builder.ContractResourceBuilder.newContractResource;
+import static org.innovateuk.ifs.user.builder.AgreementBuilder.newAgreement;
+import static org.innovateuk.ifs.user.builder.AgreementResourceBuilder.newAgreementResource;
 import static org.innovateuk.ifs.user.builder.EthnicityBuilder.newEthnicity;
 import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
+import static org.innovateuk.ifs.user.builder.ProfileAgreementResourceBuilder.newProfileAgreementResource;
 import static org.innovateuk.ifs.user.builder.ProfileBuilder.newProfile;
-import static org.innovateuk.ifs.user.builder.ProfileContractResourceBuilder.newProfileContractResource;
 import static org.innovateuk.ifs.user.builder.ProfileSkillsEditResourceBuilder.newProfileSkillsEditResource;
 import static org.innovateuk.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -72,7 +72,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
         User existingUser = newUser().build();
         Profile profile = newProfile()
                 .withAddress(newAddress().build())
-                .withContract(newContract().build())
+                .withAgreement(newAgreement().build())
                 .withBusinessType(ACADEMIC)
                 .withSkillsAreas("Skills")
                 .withInnovationAreas(innovationAreas)
@@ -151,7 +151,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
 
         Profile existingProfile = newProfile()
                 .withAddress(newAddress().build())
-                .withContract(newContract().build())
+                .withAgreement(newAgreement().build())
                 .withBusinessType(ACADEMIC)
                 .withSkillsAreas("Skills")
                 .build();
@@ -168,7 +168,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
                 .withAddress(existingProfile.getAddress())
                 .withBusinessType(BUSINESS)
                 .withSkillsAreas("Updated")
-                .withContract(existingProfile.getContract())
+                .withAgreement(existingProfile.getAgreement())
                 .build();
         when(profileRepositoryMock.save(updatedProfile)).thenReturn(updatedProfile);
 
@@ -325,161 +325,161 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
     }
 
     @Test
-    public void getProfileContract() throws Exception {
-        Contract currentContract = newContract()
+    public void getProfileAgreement() throws Exception {
+        Agreement currentAgreement = newAgreement()
                 .build();
 
-        ContractResource currentContractResource = newContractResource().build();
+        AgreementResource currentAgreementResource = newAgreementResource().build();
 
-        LocalDateTime contractSignedDate = LocalDateTime.now();
+        LocalDateTime agreementSignedDate = LocalDateTime.now();
 
         Profile profile = newProfile()
-                .withContract(currentContract)
-                .withContractSignedDate(contractSignedDate)
+                .withAgreement(currentAgreement)
+                .withAgreementSignedDate(agreementSignedDate)
                 .build();
         User existingUser = newUser()
                 .withProfileId(profile.getId())
                 .build();
 
-        when(contractRepositoryMock.findByCurrentTrue()).thenReturn(currentContract);
-        when(contractMapperMock.mapToResource(currentContract)).thenReturn(currentContractResource);
+        when(agreementRepositoryMock.findByCurrentTrue()).thenReturn(currentAgreement);
+        when(agreementMapperMock.mapToResource(currentAgreement)).thenReturn(currentAgreementResource);
         when(profileRepositoryMock.findOne(profile.getId())).thenReturn(profile);
         when(userRepositoryMock.findOne(existingUser.getId())).thenReturn(existingUser);
 
-        ProfileContractResource expected = newProfileContractResource()
+        ProfileAgreementResource expected = newProfileAgreementResource()
                 .withUser(existingUser.getId())
-                .withContract(currentContractResource)
+                .withAgreement(currentAgreementResource)
                 .withCurrentAgreement(true)
-                .withContractSignedDate(contractSignedDate)
+                .withAgreementSignedDate(agreementSignedDate)
                 .build();
 
-        ProfileContractResource response = service.getProfileContract(existingUser.getId()).getSuccessObject();
+        ProfileAgreementResource response = service.getProfileAgreement(existingUser.getId()).getSuccessObject();
         assertEquals(expected, response);
 
-        InOrder inOrder = inOrder(contractRepositoryMock, userRepositoryMock, contractMapperMock);
+        InOrder inOrder = inOrder(agreementRepositoryMock, userRepositoryMock, agreementMapperMock);
         inOrder.verify(userRepositoryMock).findOne(existingUser.getId());
-        inOrder.verify(contractRepositoryMock).findByCurrentTrue();
-        inOrder.verify(contractMapperMock).mapToResource(currentContract);
+        inOrder.verify(agreementRepositoryMock).findByCurrentTrue();
+        inOrder.verify(agreementMapperMock).mapToResource(currentAgreement);
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
-    public void getProfileContract_userDoesNotExist() throws Exception {
+    public void getProfileAgreement_userDoesNotExist() throws Exception {
         long userIdNotExists = 1L;
 
-        ServiceResult<ProfileContractResource> response = service.getProfileContract(userIdNotExists);
+        ServiceResult<ProfileAgreementResource> response = service.getProfileAgreement(userIdNotExists);
         assertTrue(response.getFailure().is(notFoundError(User.class, userIdNotExists)));
 
         verify(userRepositoryMock, only()).findOne(userIdNotExists);
-        verifyZeroInteractions(contractRepositoryMock);
-        verifyZeroInteractions(contractMapperMock);
+        verifyZeroInteractions(agreementRepositoryMock);
+        verifyZeroInteractions(agreementMapperMock);
     }
 
     @Test
-    public void getProfileContract_noAgreement() throws Exception {
-        Contract currentContract = newContract()
+    public void getProfileAgreement_noAgreement() throws Exception {
+        Agreement currentAgreement = newAgreement()
                 .build();
 
-        ContractResource currentContractResource = newContractResource().build();
+        AgreementResource currentAgreementResource = newAgreementResource().build();
 
-        // Profile has no contract or signed date
+        // Profile has no agreement or signed date
         User existingUser = newUser()
                 .withProfileId(1L)
                 .build();
 
-        when(contractRepositoryMock.findByCurrentTrue()).thenReturn(currentContract);
-        when(contractMapperMock.mapToResource(currentContract)).thenReturn(currentContractResource);
+        when(agreementRepositoryMock.findByCurrentTrue()).thenReturn(currentAgreement);
+        when(agreementMapperMock.mapToResource(currentAgreement)).thenReturn(currentAgreementResource);
         when(userRepositoryMock.findOne(existingUser.getId())).thenReturn(existingUser);
 
-        ProfileContractResource expected = newProfileContractResource()
+        ProfileAgreementResource expected = newProfileAgreementResource()
                 .withUser(existingUser.getId())
-                .withContract(currentContractResource)
+                .withAgreement(currentAgreementResource)
                 .withCurrentAgreement(false)
-                .withContractSignedDate((LocalDateTime) null)
+                .withAgreementSignedDate((LocalDateTime) null)
                 .build();
 
-        ProfileContractResource response = service.getProfileContract(existingUser.getId()).getSuccessObject();
+        ProfileAgreementResource response = service.getProfileAgreement(existingUser.getId()).getSuccessObject();
         assertEquals(expected, response);
 
-        InOrder inOrder = inOrder(contractRepositoryMock, userRepositoryMock, contractMapperMock);
+        InOrder inOrder = inOrder(agreementRepositoryMock, userRepositoryMock, agreementMapperMock);
         inOrder.verify(userRepositoryMock).findOne(existingUser.getId());
-        inOrder.verify(contractRepositoryMock).findByCurrentTrue();
-        inOrder.verify(contractMapperMock).mapToResource(currentContract);
+        inOrder.verify(agreementRepositoryMock).findByCurrentTrue();
+        inOrder.verify(agreementMapperMock).mapToResource(currentAgreement);
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
-    public void getProfileContract_noCurrentAgreement() throws Exception {
-        Contract currentContract = newContract()
+    public void getProfileAgreement_noCurrentAgreement() throws Exception {
+        Agreement currentAgreement = newAgreement()
                 .build();
 
-        ContractResource currentContractResource = newContractResource().build();
+        AgreementResource currentAgreementResource = newAgreementResource().build();
 
-        // Profile has a contract and a signed date, but not the current one
+        // Profile has an agreement and a signed date, but not the current one
         User existingUser = newUser()
                 .withProfileId(10L)
                 .build();
 
-        when(contractRepositoryMock.findByCurrentTrue()).thenReturn(currentContract);
-        when(contractMapperMock.mapToResource(currentContract)).thenReturn(currentContractResource);
+        when(agreementRepositoryMock.findByCurrentTrue()).thenReturn(currentAgreement);
+        when(agreementMapperMock.mapToResource(currentAgreement)).thenReturn(currentAgreementResource);
         when(userRepositoryMock.findOne(existingUser.getId())).thenReturn(existingUser);
 
-        ProfileContractResource expected = newProfileContractResource()
+        ProfileAgreementResource expected = newProfileAgreementResource()
                 .withUser(existingUser.getId())
-                .withContract(currentContractResource)
+                .withAgreement(currentAgreementResource)
                 .withCurrentAgreement(false)
-                .withContractSignedDate((LocalDateTime) null)
+                .withAgreementSignedDate((LocalDateTime) null)
                 .build();
 
-        ProfileContractResource response = service.getProfileContract(existingUser.getId()).getSuccessObject();
+        ProfileAgreementResource response = service.getProfileAgreement(existingUser.getId()).getSuccessObject();
         assertEquals(expected, response);
 
-        InOrder inOrder = inOrder(contractRepositoryMock, userRepositoryMock, contractMapperMock);
+        InOrder inOrder = inOrder(agreementRepositoryMock, userRepositoryMock, agreementMapperMock);
         inOrder.verify(userRepositoryMock).findOne(existingUser.getId());
-        inOrder.verify(contractRepositoryMock).findByCurrentTrue();
-        inOrder.verify(contractMapperMock).mapToResource(currentContract);
+        inOrder.verify(agreementRepositoryMock).findByCurrentTrue();
+        inOrder.verify(agreementMapperMock).mapToResource(currentAgreement);
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
-    public void getProfileContract_userDoesNotHaveProfileYet() throws Exception {
-        Contract currentContract = newContract()
+    public void getProfileAgreement_userDoesNotHaveProfileYet() throws Exception {
+        Agreement currentAgreement = newAgreement()
                 .build();
 
-        ContractResource currentContractResource = newContractResource().build();
+        AgreementResource currentAgreementResource = newAgreementResource().build();
 
         User existingUser = newUser()
                 .build();
 
-        when(contractRepositoryMock.findByCurrentTrue()).thenReturn(currentContract);
-        when(contractMapperMock.mapToResource(currentContract)).thenReturn(currentContractResource);
+        when(agreementRepositoryMock.findByCurrentTrue()).thenReturn(currentAgreement);
+        when(agreementMapperMock.mapToResource(currentAgreement)).thenReturn(currentAgreementResource);
         when(userRepositoryMock.findOne(existingUser.getId())).thenReturn(existingUser);
 
-        ProfileContractResource expected = newProfileContractResource()
+        ProfileAgreementResource expected = newProfileAgreementResource()
                 .withUser(existingUser.getId())
-                .withContract(currentContractResource)
+                .withAgreement(currentAgreementResource)
                 .withCurrentAgreement(false)
-                .withContractSignedDate((LocalDateTime) null)
+                .withAgreementSignedDate((LocalDateTime) null)
                 .build();
 
-        ProfileContractResource response = service.getProfileContract(existingUser.getId()).getSuccessObject();
+        ProfileAgreementResource response = service.getProfileAgreement(existingUser.getId()).getSuccessObject();
         assertEquals(expected, response);
 
-        InOrder inOrder = inOrder(contractRepositoryMock, userRepositoryMock, contractMapperMock);
+        InOrder inOrder = inOrder(agreementRepositoryMock, userRepositoryMock, agreementMapperMock);
         inOrder.verify(userRepositoryMock).findOne(existingUser.getId());
-        inOrder.verify(contractRepositoryMock).findByCurrentTrue();
-        inOrder.verify(contractMapperMock).mapToResource(currentContract);
+        inOrder.verify(agreementRepositoryMock).findByCurrentTrue();
+        inOrder.verify(agreementMapperMock).mapToResource(currentAgreement);
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
-    public void updateProfileContract() throws Exception {
-        LocalDateTime expectedContractSignedDate = LocalDateTime.of(2016, 10, 11, 12, 13, 14);
-        setClockToTime(expectedContractSignedDate);
+    public void updateProfileAgreement() throws Exception {
+        LocalDateTime expectedAgreementSignedDate = LocalDateTime.of(2016, 10, 11, 12, 13, 14);
+        setClockToTime(expectedAgreementSignedDate);
 
         Profile profile = newProfile()
-                .withContract(newContract().build())
-                .withContractSignedDate((LocalDateTime) null)
+                .withAgreement(newAgreement().build())
+                .withAgreementSignedDate((LocalDateTime) null)
                 .build();
         User existingUser = newUser()
                 .withProfileId(profile.getId())
@@ -487,47 +487,47 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
         when(userRepositoryMock.findOne(existingUser.getId())).thenReturn(existingUser);
         when(profileRepositoryMock.findOne(profile.getId())).thenReturn(profile);
 
-        Contract currentContract = newContract()
+        Agreement currentAgreement = newAgreement()
                 .build();
 
-        when(contractRepositoryMock.findByCurrentTrue()).thenReturn(currentContract);
+        when(agreementRepositoryMock.findByCurrentTrue()).thenReturn(currentAgreement);
 
         when(userRepositoryMock.save(createUserExpectations(existingUser.getId(), newProfile()
                 .withId(existingUser.getProfileId())
-                .withContract(currentContract)
-                .withContractSignedDate(expectedContractSignedDate)
+                .withAgreement(currentAgreement)
+                .withAgreementSignedDate(expectedAgreementSignedDate)
                 .build()))).thenReturn(newUser().build());
 
-        ServiceResult<Void> result = service.updateProfileContract(existingUser.getId());
+        ServiceResult<Void> result = service.updateProfileAgreement(existingUser.getId());
         assertTrue(result.isSuccess());
 
-        InOrder inOrder = inOrder(userRepositoryMock, contractRepositoryMock, profileRepositoryMock);
+        InOrder inOrder = inOrder(userRepositoryMock, agreementRepositoryMock, profileRepositoryMock);
         inOrder.verify(userRepositoryMock).findOne(existingUser.getId());
-        inOrder.verify(contractRepositoryMock).findByCurrentTrue();
+        inOrder.verify(agreementRepositoryMock).findByCurrentTrue();
         inOrder.verify(profileRepositoryMock, times(2)).findOne(profile.getId());
         inOrder.verify(profileRepositoryMock).save(profile);
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
-    public void updateProfileContract_userDoesNotExist() throws Exception {
+    public void updateProfileAgreement_userDoesNotExist() throws Exception {
         long userIdNotExists = 1L;
 
-        ServiceResult<Void> result = service.updateProfileContract(userIdNotExists);
+        ServiceResult<Void> result = service.updateProfileAgreement(userIdNotExists);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(notFoundError(User.class, userIdNotExists)));
 
         verify(userRepositoryMock, only()).findOne(userIdNotExists);
-        verifyZeroInteractions(contractRepositoryMock);
-        verifyZeroInteractions(contractMapperMock);
+        verifyZeroInteractions(agreementRepositoryMock);
+        verifyZeroInteractions(agreementMapperMock);
     }
 
     @Test
-    public void updateProfileContract_noAgreement() throws Exception {
-        LocalDateTime expectedContractSignedDate = LocalDateTime.of(2016, 10, 11, 12, 13, 14);
-        setClockToTime(expectedContractSignedDate);
+    public void updateProfileAgreement_noAgreement() throws Exception {
+        LocalDateTime expectedAgreementSignedDate = LocalDateTime.of(2016, 10, 11, 12, 13, 14);
+        setClockToTime(expectedAgreementSignedDate);
 
-        // Profile has no contract or signed date
+        // Profile has no agreement or signed date
         Profile initialProfile = newProfile()
                 .build();
         User existingUser = newUser()
@@ -535,108 +535,108 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
                 .build();
         when(userRepositoryMock.findOne(existingUser.getId())).thenReturn(existingUser);
 
-        Contract currentContract = newContract()
+        Agreement currentAgreement = newAgreement()
                 .build();
-        when(contractRepositoryMock.findByCurrentTrue()).thenReturn(currentContract);
+        when(agreementRepositoryMock.findByCurrentTrue()).thenReturn(currentAgreement);
 
         Profile updatedProfile = newProfile()
                 .with(id(existingUser.getProfileId()))
-                .withContract(currentContract)
-                .withContractSignedDate(expectedContractSignedDate)
+                .withAgreement(currentAgreement)
+                .withAgreementSignedDate(expectedAgreementSignedDate)
                 .build();
         when(profileRepositoryMock.save(updatedProfile)).thenReturn(updatedProfile);
         when(profileRepositoryMock.findOne(initialProfile.getId()))
                 .thenReturn(initialProfile, initialProfile, updatedProfile);
 
-        ServiceResult<Void> result = service.updateProfileContract(existingUser.getId());
+        ServiceResult<Void> result = service.updateProfileAgreement(existingUser.getId());
         assertTrue(result.isSuccess());
 
-        InOrder inOrder = inOrder(userRepositoryMock, contractRepositoryMock, profileRepositoryMock);
+        InOrder inOrder = inOrder(userRepositoryMock, agreementRepositoryMock, profileRepositoryMock);
         inOrder.verify(userRepositoryMock).findOne(existingUser.getId());
-        inOrder.verify(contractRepositoryMock).findByCurrentTrue();
+        inOrder.verify(agreementRepositoryMock).findByCurrentTrue();
         inOrder.verify(profileRepositoryMock, times(2)).findOne(updatedProfile.getId());
         inOrder.verify(profileRepositoryMock).save(updatedProfile);
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
-    public void updateProfileContract_noCurrentAgreement() throws Exception {
-        LocalDateTime expectedContractSignedDate = LocalDateTime.of(2016, 10, 11, 12, 13, 14);
-        setClockToTime(expectedContractSignedDate);
+    public void updateProfileAgreement_noCurrentAgreement() throws Exception {
+        LocalDateTime expectedAgreementSignedDate = LocalDateTime.of(2016, 10, 11, 12, 13, 14);
+        setClockToTime(expectedAgreementSignedDate);
 
-        // Profile has a contract and a signed date, but not the current one
+        // Profile has a agreement and a signed date, but not the current one
         Profile initialProfile = newProfile()
-                .withContract(newContract().withId(1L).build())
-                .withContractSignedDate(LocalDateTime.now())
+                .withAgreement(newAgreement().withId(1L).build())
+                .withAgreementSignedDate(LocalDateTime.now())
                 .build();
         User existingUser = newUser()
                 .withProfileId(initialProfile.getId())
                 .build();
         when(userRepositoryMock.findOne(existingUser.getId())).thenReturn(existingUser);
 
-        Contract currentContract = newContract()
+        Agreement currentAgreement = newAgreement()
                 .withId(2L)
                 .build();
-        when(contractRepositoryMock.findByCurrentTrue()).thenReturn(currentContract);
+        when(agreementRepositoryMock.findByCurrentTrue()).thenReturn(currentAgreement);
 
         Profile updatedProfile = newProfile()
                 .with(id(existingUser.getProfileId()))
-                .withContract(currentContract)
-                .withContractSignedDate(expectedContractSignedDate)
+                .withAgreement(currentAgreement)
+                .withAgreementSignedDate(expectedAgreementSignedDate)
                 .build();
         when(profileRepositoryMock.save(updatedProfile)).thenReturn(updatedProfile);
         when(profileRepositoryMock.findOne(initialProfile.getId()))
                 .thenReturn(initialProfile, initialProfile, updatedProfile);
 
-        ServiceResult<Void> result = service.updateProfileContract(existingUser.getId());
+        ServiceResult<Void> result = service.updateProfileAgreement(existingUser.getId());
         assertTrue(result.isSuccess());
 
-        InOrder inOrder = inOrder(userRepositoryMock, contractRepositoryMock, profileRepositoryMock);
+        InOrder inOrder = inOrder(userRepositoryMock, agreementRepositoryMock, profileRepositoryMock);
         inOrder.verify(userRepositoryMock).findOne(existingUser.getId());
-        inOrder.verify(contractRepositoryMock).findByCurrentTrue();
+        inOrder.verify(agreementRepositoryMock).findByCurrentTrue();
         inOrder.verify(profileRepositoryMock, times(2)).findOne(updatedProfile.getId());
         inOrder.verify(profileRepositoryMock).save(updatedProfile);
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
-    public void updateProfileContract_agreementAlreadySigned() throws Exception {
-        Contract currentContract = newContract()
+    public void updateProfileAgreement_agreementAlreadySigned() throws Exception {
+        Agreement currentAgreement = newAgreement()
                 .build();
         Profile profile = newProfile()
-                .withContract(currentContract)
-                .withContractSignedDate(LocalDateTime.now())
+                .withAgreement(currentAgreement)
+                .withAgreementSignedDate(LocalDateTime.now())
                 .build();
         User existingUser = newUser()
                 .withProfileId(profile.getId())
                 .build();
-        when(contractRepositoryMock.findByCurrentTrue()).thenReturn(currentContract);
+        when(agreementRepositoryMock.findByCurrentTrue()).thenReturn(currentAgreement);
         when(profileRepositoryMock.findOne(existingUser.getProfileId())).thenReturn(profile);
         when(userRepositoryMock.findOne(existingUser.getId())).thenReturn(existingUser);
 
-        ServiceResult<Void> result = service.updateProfileContract(existingUser.getId());
+        ServiceResult<Void> result = service.updateProfileAgreement(existingUser.getId());
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(badRequestError("validation.assessorprofilecontractform.terms.alreadysigned")));
+        assertTrue(result.getFailure().is(badRequestError("validation.assessorprofileagreementform.terms.alreadysigned")));
 
-        InOrder inOrder = inOrder(userRepositoryMock, contractRepositoryMock, userRepositoryMock);
+        InOrder inOrder = inOrder(userRepositoryMock, agreementRepositoryMock, userRepositoryMock);
         inOrder.verify(userRepositoryMock).findOne(existingUser.getId());
-        inOrder.verify(contractRepositoryMock).findByCurrentTrue();
+        inOrder.verify(agreementRepositoryMock).findByCurrentTrue();
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
-    public void updateProfileContract_userDoesNotHaveProfileYet() throws Exception {
-        LocalDateTime expectedContractSignedDate = LocalDateTime.of(2016, 10, 11, 12, 13, 14);
-        setClockToTime(expectedContractSignedDate);
+    public void updateProfileAgreement_userDoesNotHaveProfileYet() throws Exception {
+        LocalDateTime expectedAgreementSignedDate = LocalDateTime.of(2016, 10, 11, 12, 13, 14);
+        setClockToTime(expectedAgreementSignedDate);
 
         User existingUser = newUser()
                 .withId(1L)
                 .build();
         when(userRepositoryMock.findOne(existingUser.getId())).thenReturn(existingUser);
 
-        Contract currentContract = newContract()
+        Agreement currentAgreement = newAgreement()
                 .build();
-        when(contractRepositoryMock.findByCurrentTrue()).thenReturn(currentContract);
+        when(agreementRepositoryMock.findByCurrentTrue()).thenReturn(currentAgreement);
 
         Profile newProfile = newProfile()
                 .with(id(null))
@@ -645,22 +645,22 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
         Profile savedProfile = newProfile()
                 .withId(profileId)
                 .build();
-        Profile profileWithContract = newProfile()
+        Profile profileWithAgreement = newProfile()
                 .withId(profileId)
-                .withContract(currentContract)
-                .withContractSignedDate(expectedContractSignedDate)
+                .withAgreement(currentAgreement)
+                .withAgreementSignedDate(expectedAgreementSignedDate)
                 .build();
         when(profileRepositoryMock.save(newProfile)).thenReturn(savedProfile);
-        when(profileRepositoryMock.findOne(profileId)).thenReturn(savedProfile, profileWithContract);
+        when(profileRepositoryMock.findOne(profileId)).thenReturn(savedProfile, profileWithAgreement);
 
-        ServiceResult<Void> result = service.updateProfileContract(existingUser.getId());
+        ServiceResult<Void> result = service.updateProfileAgreement(existingUser.getId());
         assertTrue(result.isSuccess());
 
-        InOrder inOrder = inOrder(userRepositoryMock, contractRepositoryMock, profileRepositoryMock);
+        InOrder inOrder = inOrder(userRepositoryMock, agreementRepositoryMock, profileRepositoryMock);
         inOrder.verify(userRepositoryMock).findOne(existingUser.getId());
-        inOrder.verify(contractRepositoryMock).findByCurrentTrue();
+        inOrder.verify(agreementRepositoryMock).findByCurrentTrue();
         inOrder.verify(profileRepositoryMock).findOne(profileId);
-        inOrder.verify(profileRepositoryMock).save(profileWithContract);
+        inOrder.verify(profileRepositoryMock).save(profileWithAgreement);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -682,7 +682,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
     public void getUserProfileStatus_complete() throws Exception {
         Profile profile = newProfile()
                 .withSkillsAreas("skills")
-                .withContractSignedDate(LocalDateTime.now())
+                .withAgreementSignedDate(LocalDateTime.now())
                 .build();
         User user = newUser()
                 .withAffiliations(asList(newAffiliation().build()))
@@ -701,7 +701,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
                         .withUser(user.getId())
                         .withSkillsComplete(true)
                         .withAffliliationsComplete(true)
-                        .withContractComplete(true)
+                        .withAgreementComplete(true)
                         .build(),
                 result.getSuccessObject()
         );
@@ -730,7 +730,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
                         .withUser(user.getId())
                         .withSkillsComplete(true)
                         .withAffliliationsComplete(false)
-                        .withContractComplete(false)
+                        .withAgreementComplete(false)
                         .build(),
                 result.getSuccessObject()
         );
@@ -755,7 +755,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
                         .withUser(user.getId())
                         .withSkillsComplete(false)
                         .withAffliliationsComplete(true)
-                        .withContractComplete(false)
+                        .withAgreementComplete(false)
                         .build(),
                 result.getSuccessObject()
         );
@@ -764,9 +764,9 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
     }
 
     @Test
-    public void getUserProfileStatus_contractComplete() throws Exception {
+    public void getUserProfileStatus_agreementComplete() throws Exception {
         Profile profile = newProfile()
-                .withContractSignedDate(LocalDateTime.now())
+                .withAgreementSignedDate(LocalDateTime.now())
                 .build();
         User user = newUser()
                 .withProfileId(profile.getId())
@@ -784,7 +784,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
                         .withUser(user.getId())
                         .withSkillsComplete(false)
                         .withAffliliationsComplete(false)
-                        .withContractComplete(true)
+                        .withAgreementComplete(true)
                         .build(),
                 result.getSuccessObject()
         );
@@ -796,7 +796,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
     public void getUserProfile() {
         Profile existingProfile = newProfile()
                 .withAddress(newAddress().withId(1L).build())
-                .withContract(newContract().build())
+                .withAgreement(newAgreement().build())
                 .withBusinessType(ACADEMIC)
                 .withSkillsAreas("Skills")
                 .build();

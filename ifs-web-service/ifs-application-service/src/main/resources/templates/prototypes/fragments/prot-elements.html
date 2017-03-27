@@ -56,7 +56,7 @@
 <!-- =========================== Tabs =========================== -->
 
 <th:block th:fragment="prot-tabs">
-  <div class="tab-interface">
+  <div id="uniqueTabId" class="tabs">
     <ul>
       <li>
         <a href="#section1">Tab 1</a>
@@ -74,7 +74,15 @@
     <section id="section1">
       <h2 class="heading-medium">Title for Tab 1</h2>
       <div>
-        <p>Content for Tab 1</p>
+        <div class="deadline" style="text-align: center; margin-top: 10px;">
+          <div class="pie-container">
+            <div class="pie small" aria-hidden="true"><svg viewBox="0 0 32 32"><title><span>400</span>%</title><circle r="16" cx="16" cy="16" stroke-dasharray="100 100"></circle></svg></div>
+            <div class="pie-overlay">
+              <div>400</div>
+            </div>
+          </div>
+          <small>Days</small>
+        </div>
       </div>
     </section>
     <section id="section2">
@@ -150,9 +158,9 @@
     <h3 class="heading-small">Task list</h3>
     <ul class="task-list">
         <li><div class="task"><h4 class="heading-small"><a href="#">Task 1</a></h4></div></li>
-        <li><div class="task"><h4 class="heading-small"><a href="#">Task 2</a></h4></div><div class="task-status-complete"><span>Completed</span></div></li>
-        <li><div class="task"><h4 class="heading-small"><a href="#">Task 3</a></h4></div><span class="action-required"><strong>Assigned to you</strong></span><div class="task-status-complete"><span>Completed</span></div></li>
-        <li><div class="task"><h4 class="heading-small"><a href="#">Task 4</a></h4></div><span class="secondary-notification">Assigned to Jessica Doe</span><div class="task-status-complete"><span>Completed</span></div></li>
+        <li><div class="task"><h4 class="heading-small"><a href="#">Task 2</a></h4></div><div class="task-status-complete"><span>Complete</span></div></li>
+        <li><div class="task"><h4 class="heading-small"><a href="#">Task 3</a></h4></div><span class="action-required"><strong>Assigned to you</strong></span><div class="task-status-complete"><span>Complete</span></div></li>
+        <li><div class="task"><h4 class="heading-small"><a href="#">Task 4</a></h4></div><span class="secondary-notification">Assigned to Jessica Doe</span><div class="task-status-complete"><span>Complete</span></div></li>
         <li><div class="task"><h4 class="heading-small">Task 5</h4></div></li>
         <li><div class="task"><h4 class="heading-small">Task 6</h4></div><span class="notification">Jessica Doe</span></li>
         <li class="read-only"><div class="task"><h4 class="heading-small">Task 7</h4></div><span class="notification">-</span></li>
@@ -187,7 +195,7 @@
       <div class="extra-margin-top">Success</div>
     </div>
     <div class="column-three-quarters">
-      <div class="message-panel message-success">
+      <div class="success-alert">
         <p>You have succeeded or completed something</p>
       </div>
     </div>
@@ -197,7 +205,7 @@
       <div class="extra-margin-top">Fail - internal only</div>
     </div>
     <div class="column-three-quarters">
-      <div class="message-panel message-fail">
+      <div class="fail-alert">
         <p>You have failed or been rejected</p>
       </div>
     </div>
@@ -207,7 +215,7 @@
       <div class="extra-margin-top">Alert</div>
     </div>
     <div class="column-three-quarters">
-      <div class="message-panel message-alert">
+      <div class="warning-alert">
         <p>You must know this - or there is a problem</p>
       </div>
     </div>
@@ -217,7 +225,7 @@
       <div class="extra-margin-top">Info</div>
     </div>
     <div class="column-three-quarters">
-      <div class="message-panel message-info">
+      <div class="message-alert">
         <p>You might want to know or complete this</p>
       </div>
     </div>
@@ -227,7 +235,7 @@
       <div class="extra-margin-top">Assign</div>
     </div>
     <div class="column-three-quarters">
-      <div class="message-panel message-assign">
+      <div class="assign-alert">
         <p>This is assigned or reassigned to you <a href="#" class="extra-margin-left">Assigned to you</a></p>
       </div>
     </div>
@@ -237,7 +245,7 @@
       <div class="extra-margin-top">Assigned</div>
     </div>
     <div class="column-three-quarters">
-      <div class="message-panel message-assigned">
+      <div class="assigned-alert">
         <p>This is assigned to [someone else] <a href="#" class="extra-margin-left">Assigned to</a></p>
       </div>
     </div>
@@ -247,20 +255,20 @@
       <div class="extra-margin-top">Declare</div>
     </div>
     <div class="column-three-quarters">
-      <div class="message-panel message-declare">
+      <div class="declare-alert">
         <p>You must declare that you are ok with this</p>
       </div>
     </div>
   </div>
   <h2 class="heading-medium">Examples</h2>
-  <div class="message-panel message-info">
+  <div class="message-alert">
     <h2 class="heading-small">Research category determines funding</h2>
     <p>The research category is used to calculate the funding for all collaborators in the application. Changing this selection will reset the funding level for all collaborators that have their funding section.</p>
   </div>
-  <div class="message-panel message-declare">
+  <div class="declare-alert">
     <p>You will not be able to make change to your application or resubmit after this point.</p>
   </div>
-  <div class="message-panel message-info">
+  <div class="message-alert">
     <h2 class="heading-small">Complete your profile</h2>
     <p>You must complete your profile to continue.</p>
     <ul class="list-bullet">
@@ -268,10 +276,10 @@
       <li><a href="#">declaration of interest</a></li>
     </ul>
   </div>
-  <div class="message-panel message-alert">
+  <div class="warning-alert">
     <h2 class="heading-small">Deadline reminder: Wednesday 20 April 2016</h2>
     <p>Please accept or reject your assessment invites.</p>
-    <p>You will have 5 days after the deadline, to complete your assessments.</p>
+    <p>You will have 5 days after the deadline to complete your assessments.</p>
   </div>
 </th:block>
 
@@ -710,32 +718,26 @@
   </div>
 
   <div class="test-modal" role="dialog" aria-hidden="true" style="margin-top: -174px;">
-    <a href="#" class="js-close close" aria-label="Close Popup">Close</a>
+    <button class="js-close close" type="button" aria-label="Close Popup">Close</button>
+    <h2 class="heading-medium no-margin">Submit project details</h2>
+    <p>Are you sure you wish to submit your project details to Innovate UK?</p>
+    <hr />
     <div>
-      <div class="modal-content">
-        <h2 class="heading-medium no-margin">Submit project details</h2>
-        <p>Are you sure you wish to submit your project details to Innovate UK?</p>
-      </div>
-      <hr />
-      <div>
-        <a class="button js-close" href="#">Submit</a>
-        <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
-      </div>
+      <a class="button js-close" href="#">Submit</a>
+      <button aria-label="Close Popup" type="button" class="buttonlink js-close">Cancel</button>
     </div>
   </div>
 
   <div class="test-warning-modal warning-modal" role="dialog" aria-hidden="true" style="margin-top: -174px;">
-    <a href="#" class="js-close close" aria-label="Close Popup">Close</a>
-    <div>
+    <button class="js-close close" type="button" aria-label="Close Popup">Close</button>
     <div class="modal-content">
       <h2 class="heading-medium no-margin">Changing research category will reset the funding level of this application</h2>
       <p>All partner organisations that have supplied their funding information will have to review and mark the section as complete again.</p>
     </div>
-      <hr />
-      <div>
-        <a class="button js-close" href="#">Submit</a>
-        <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
-      </div>
+    <hr />
+    <div>
+      <a class="button js-close" href="#">Submit</a>
+      <button aria-label="Close Popup" class="buttonlink js-close">Cancel</button>
     </div>
   </div>
   <div class="modal-overlay"></div>

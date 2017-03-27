@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Finance checks overview'" />
+</head>
+<body th:with="context='project-management'" class="finance-checks-overview">
+
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<main id="content">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.overview.projectId})}" />
+
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            <div class="page-title">
+                <th:block th:insert="fragments/competition-management :: competition-id-and-name(${#numbers.formatInteger(model.overview.projectId,8)}, ${model.overview.projectName})" />
+                <h1 class="heading-xlarge">Finance overview</h1>
+            </div>
+        </div>
+        <div class="column-third alignright extra-margin">
+            <h2 class="bold-small blue-block">Finance checks</h2>
+        </div>
+    </div>
+
+    <hr />
+
+    <th:block th:insert="project/financecheck/fragments/finance :: project-finance-overview(overview=${model.overview})" />
+
+    <h3 class="heading-medium">Finance summaries</h3>
+    <th:block th:insert="project/financecheck/fragments/finance :: project-finance-summaries(summaries=${model.summaries})"/>
+
+    <th:block th:insert="project/financecheck/fragments/finance :: research_participation(researchParticipationPercentage=${model.overview.researchParticipationPercentage},maxResearchPercentage=${model.overview.competitionMaximumResearchPercentage})"/>
+
+    <h3 class="heading-medium">Project cost breakdown</h3>
+    <th:block th:insert="project/financecheck/fragments/finance :: project-finance-cost-breakdown(breakdowns=${model.breakdown})">
+
+
+
+</main>
+</body>
+</html>

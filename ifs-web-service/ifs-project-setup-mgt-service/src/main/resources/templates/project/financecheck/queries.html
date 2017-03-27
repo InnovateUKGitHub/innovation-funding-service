@@ -11,7 +11,7 @@
 
 <main id="content" th:with="baseUrl=@{${model.baseUrl}(projectId=${model.projectId},organisationId=${model.organisationId})}">
     <th:block th:insert="fragments/layout :: main-content-start"/>
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})},currentCompetition=null"  />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})},currentCompetition=null" />
 
     <div class="page-title">
         <th:block th:insert="fragments/elements :: project-title (projectId=${model.projectId}, projectName=${model.projectName})"/>
@@ -118,9 +118,9 @@
                               th:attr="maxlength=${model.maxQueryCharacters},
                                        data-max_words=${model.maxQueryWords},
                                        data-maxwordslength=${model.maxQueryWords},
-                                       data-maxwordslength-errormessage=#{validation.notesandqueries.query.word.length.max(${model.maxQueryWords})},
-                                       data-maxlength-errormessage=#{validation.notesandqueries.query.character.length.max(null, ${model.maxQueryCharacters})},
-                                       data-required-errormessage=#{validation.notesandqueries.response.required}"
+                                       data-maxwordslength-errormessage=#{validation.field.max.word.count(null,${model.maxQueryWords})},
+                                       data-maxlength-errormessage=#{validation.field.too.many.characters(null, ${model.maxQueryCharacters})},
+                                       data-required-errormessage=#{validation.field.must.not.be.blank}"
                               th:classappend="${#fields.hasErrors('response') ? 'form-control field-error' : 'form-control'}"></textarea>
                             <div class="textarea-footer" th:with="response=*{response}">
                                 <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=${model.maxQueryWords}, currentWordsLeft=${#ifsUtil.wordsRemaining(model.maxQueryWords, content)})"/>
@@ -139,7 +139,7 @@
                 </th:block>
                 <fieldset>
                     <div class="upload-section unstyled-view">
-                        <legend class="heading-small no-margin">Upload supporting documentation</legend>
+                        <legend class="heading-small no-margin">Upload supporting documentation in pdf format</legend>
                         <th:block th:if="${#fields.hasErrors('attachment')}">
                             <span>
                                 <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
@@ -164,9 +164,9 @@
         </th:block>
     </th:block>
 
-    <th:block th:include="fragments/layout :: main-content-end" />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
-<th:block th:include="fragments/layout :: footer" />
-<th:block th:include="fragments/layout :: body-end" />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>

@@ -15,7 +15,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryId;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
-import org.innovateuk.ifs.category.mapper.ResearchCategoryMapper;
+import org.innovateuk.ifs.commons.competitionsetup.CompetitionSetupTransactionalService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -29,12 +29,11 @@ import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
-import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.repository.FormInputResponseRepository;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
-import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
@@ -52,17 +51,21 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_OPEN;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_UNABLE_TO_DELETE_FILE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
+import static org.innovateuk.ifs.form.resource.FormInputType.*;
+
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
+import static org.innovateuk.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.innovateuk.ifs.util.MathFunctions.percentage;
 
@@ -70,7 +73,7 @@ import static org.innovateuk.ifs.util.MathFunctions.percentage;
  * Transactional and secured service focused around the processing of Applications
  */
 @Service
-public class ApplicationServiceImpl extends BaseTransactionalService implements ApplicationService {
+public class ApplicationServiceImpl extends CompetitionSetupTransactionalService implements ApplicationService {
     enum Notifications {
         APPLICATION_SUBMITTED,
         APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED
@@ -90,8 +93,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Autowired
     private FormInputResponseRepository formInputResponseRepository;
     @Autowired
-    private FormInputRepository formInputRepository;
-    @Autowired
     private QuestionService questionService;
     @Autowired
     private ApplicationFinanceHandler applicationFinanceHandler;
@@ -103,8 +104,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     private SystemNotificationSource systemNotificationSource;
     @Autowired
     private ApplicationMapper applicationMapper;
-    @Autowired
-    private ResearchCategoryMapper researchCategoryMapper;
     @Autowired
     private NotificationSender notificationSender;
 
@@ -349,8 +348,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             existingApplication.setResubmission(application.getResubmission());
             existingApplication.setPreviousApplicationNumber(application.getPreviousApplicationNumber());
             existingApplication.setPreviousApplicationTitle(application.getPreviousApplicationTitle());
-            application.getResearchCategories().forEach(researchCategoryResource ->
-                    existingApplication.addResearchCategory(researchCategoryMapper.mapToDomain(researchCategoryResource)));
 
             Application savedApplication = applicationRepository.save(existingApplication);
             return applicationMapper.mapToResource(savedApplication);
@@ -362,6 +359,15 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         return getOpenApplication(id).andOnSuccessReturn(existingApplication -> {
             existingApplication.setSubmittedDate(date);
             Application savedApplication = applicationRepository.save(existingApplication);
+            return applicationMapper.mapToResource(savedApplication);
+        });
+    }
+
+    @Override
+    public ServiceResult<ApplicationResource> setApplicationFundingEmailDateTime(final Long applicationId, final LocalDateTime fundingEmailDateTime) {
+        return getApplication(applicationId).andOnSuccessReturn(application -> {
+            application.setManageFundingEmailDate(fundingEmailDateTime);
+            Application savedApplication = applicationRepository.save(application);
             return applicationMapper.mapToResource(savedApplication);
         });
     }
@@ -475,6 +481,35 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
+    public ServiceResult<Long> getTurnoverByApplicationId(Long applicationId) {
+        return getByApplicationId(applicationId, FINANCIAL_YEAR_END, STAFF_TURNOVER);
+    }
+
+    @Override
+    public ServiceResult<Long> getHeadCountByApplicationId(Long applicationId) {
+        return getByApplicationId(applicationId, FINANCIAL_STAFF_COUNT, STAFF_COUNT);
+    }
+
+    private ServiceResult<Long> getByApplicationId(Long applicationId, FormInputType financeType, FormInputType nonFinanceType) {
+        Application app = applicationRepository.findOne(applicationId);
+        return isIncludeGrowthTable(app.getCompetition().getId()).
+                andOnSuccess((isIncludeGrowthTable) -> {
+                    if (isIncludeGrowthTable) {
+                        return getOnlyForApplication(applicationId, financeType).andOnSuccessReturn(result -> Long.parseLong(result.getValue()));
+                    } else {
+                        return getOnlyForApplication(applicationId, nonFinanceType).andOnSuccessReturn(result -> Long.parseLong(result.getValue()));
+                    }
+                });
+    }
+
+    private ServiceResult<FormInputResponse> getOnlyForApplication(Long applicationId, FormInputType formInputType) {
+        Application app = applicationRepository.findOne(applicationId);
+        return getOnlyElementOrFail(formInputRepository.findByCompetitionIdAndTypeIn(app.getCompetition().getId(), asList(formInputType))).andOnSuccess((formInput) -> {
+            List<FormInputResponse> all = formInputResponseRepository.findByApplicationIdAndFormInputId(applicationId, formInput.getId());
+            return getOnlyElementOrFail(all);
+        });
+    }
+
     public ServiceResult<Void> notifyApplicantsByCompetition(Long competitionId) {
         List<ProcessRole> applicants = applicationRepository.findByCompetitionId(competitionId)
                 .stream()
@@ -542,8 +577,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         Long totalSingleStatusQuestions = questions.stream().filter(q -> !q.hasMultipleStatuses()).count();
 
         Long totalQuestions = totalMultipleStatusQuestions + totalSingleStatusQuestions;
-        LOG.info("Total questions" + totalQuestions);
-        LOG.info("Total completed questions" + countCompleted);
 
         return percentage(countCompleted, totalQuestions);
     }
@@ -559,4 +592,5 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         }
         return true;
     }
+
 }

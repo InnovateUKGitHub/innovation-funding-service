@@ -36,7 +36,7 @@
                 </div>
                 <div class="column-quarter">
                     <h3 class="heading-small">Innovation area</h3>
-                    <!-- TODO Innovation area will be added to Application by INFUND-7208 -->
+                    <span th:text="${model.applicationInnovationArea} ? ${model.applicationInnovationArea} : 'Not listed'"></span>
                 </div>
             </div>
             <div class="extra-margin">
@@ -90,8 +90,8 @@
                                    th:href="${removeActionNonJs}"
                                    th:attr="data-modal-form-action=${removeAction}"
                                    th:with="
-                                   removeAction=@{/competition/{competitionId}/application/{applicationId}/assessors/withdraw/{assessmentId}(competitionId=${model.competitionId},applicationId=${model.applicationId},assessmentId=${assessor.assessmentId},sortField=${form.sortField})},
-                                   removeActionNonJs=@{/competition/{competitionId}/application/{applicationId}/assessors/withdraw/{assessmentId}/confirm(competitionId=${model.competitionId},applicationId=${model.applicationId},assessmentId=${assessor.assessmentId},sortField=${form.sortField})}"
+                                   removeAction=@{/competition/{cId}/application/{apId}/assessors/withdraw/{asId}(cId=${model.competitionId},apId=${model.applicationId},asId=${assessor.assessmentId},filterInnovationArea=${model.filterInnovationArea})},
+                                   removeActionNonJs=@{/competition/{cId}/application/{apId}/assessors/withdraw/{asId}/confirm(cId=${model.competitionId},apId=${model.applicationId},asId=${assessor.assessmentId},filterInnovationArea=${model.filterInnovationArea})}"
                                    th:unless="${assessor.submitted}">Remove</a>
                             </td>
                         </tr>
@@ -164,7 +164,6 @@
             </th:block>
             <h2 class="heading-medium">Available assessors</h2>
 
-            <!--/* TODO INFUND-7055
             <div class="search-filters extra-margin">
                 <form action="#" method="GET">
                     <fieldset>
@@ -172,54 +171,24 @@
                             <div class="column-half">
                                 <div class="form-group">
                                     <label class="form-label" for="filterInnovationArea">Innovation area</label>
-                                    <select class="form-control" id="filterInnovationArea" name="filterInnovationArea">
-                                        <option selected="selected">---</option>
-                                        <option value="Advanced Materials">Advanced Materials</option>
-                                        <option value="Assisted Living Technologies">Assisted Living Technologies</option>
-                                        <option value="Biosciences">Biosciences</option>
-                                        <option value="Built environment">Built environment</option>
-                                        <option value="Creative industries">Creative industries</option>
-                                        <option value="Detection &#38; identification of infectious agents">Detection &#38; identification of infectious agents</option>
-                                        <option value="Digital sciences">Digital sciences</option>
-                                        <option value="Electronics, sensors &#38; photonics">Electronics, sensors &#38; photonics</option>
-                                        <option value="Emerging technologies">Emerging technologies</option>
-                                        <option value="Food supply">Food supply</option>
-                                        <option value="Healthcare">Healthcare</option>
-                                        <option value="High value manufacturing">High value manufacturing</option>
-                                        <option value="High value services">High value services</option>
-                                        <option value="Information &#38; communications technology (ICT)">Information &#38; communications technology (ICT)</option>
-                                        <option value="Intelligent transport systems">Intelligent transport systems</option>
-                                        <option value="Low carbon vehicles">Low carbon vehicles</option>
-                                        <option value="Materials">Materials</option>
-                                        <option value="Nanotechnology">Nanotechnology</option>
-                                        <option value="Regenerative medicine">Regenerative medicine</option>
-                                        <option value="Resource efficiency">Resource efficiency</option>
-                                        <option value="Satellite comms &#38; navigation">Satellite comms &#38; navigation</option>
-                                        <option value="Space">Space</option>
-                                        <option value="Stratified medicine">Stratified medicine</option>
-                                        <option value="Sustainable agrifood">Sustainable agrifood</option>
-                                        <option value="Transport">Transport</option>
-                                        <option value="Urban living">Urban living</option>
+                                    <select th:field="${model.filterInnovationArea}"
+                                            class="form-control"
+                                            aria-labelledby="innovation-area"
+                                            id="filterInnovationArea">
+                                        <option th:selected="${model.filterInnovationArea} == null" value="">--</option>
+                                        <optgroup th:each="innovationSector : ${model.innovationSectors}" th:label="${innovationSector.name}">
+                                            <option th:each="innovationArea : ${innovationSector.children}"
+                                                    th:value="${innovationArea.id}"
+                                                    th:text="${innovationArea.name}"
+                                                    th:selected="${model.filterInnovationArea} == ${innovationArea.id}">
+                                            </option>
+                                        </optgroup>
                                     </select>
                                 </div>
-                            <div class="form-group">
-                                <label class="form-label" for="filterType">Type</label>
-                                <select class="form-control" id="filterType" name="filterType">
-                                    <option selected="selected">---</option>
-                                    <option value="Industry">Industry</option>
-                                    <option value="Academic">Academic</option>
-                                    <option value="International">International</option>
-                                </select>
-                            </div>
-
                             </div>
                             <div class="column-half">
-                                <div class="form-group">
-                                    <label class="form-label" for="filterSearch">Skill areas</label>
-                                    <input type="text" class="form-control" id="filterSearch" name="filterSearch" />
-                                </div>
                                 <div class="column-half extra-margin">
-                                    <a href="#">Clear all filters</a>
+                                    <a href="?">Clear all filters</a>
                                 </div>
                                 <div class="column-half">
                                     <div class="alignright">
@@ -231,13 +200,12 @@
                     </fieldset>
                 </form>
             </div>
-            */-->
 
             <div class="grid-row sorting">
                 <div class="column-two-thirds">
-                    <p><span class="heading-xlarge no-margin" th:text="${#lists.size(model.available)}">20</span> <span class="heading-small">Assessors</span></p>
+                    <p><span class="heading-xlarge no-margin" th:text="${model.pagination.totalCount}">20</span> <span class="heading-small">Assessors</span></p>
                 </div>
-
+<!--/*
                 <div class="column-third alignright">
                     <div class="form-group">
                         <form method="get" th:object="${form}">
@@ -253,6 +221,7 @@
                         </form>
                     </div>
                 </div>
+                */-->
             </div>
 
             <div class="table-overflow">
@@ -277,7 +246,7 @@
                             <td class="aligncentre" th:text="${assessor.submittedApplications}">1</td>
                             <td class="alignright">
                                 <form method="post"
-                                      th:action="@{/competition/{cid}/application/{appId}/assessors/assign/{assId}(cid=${model.competitionId}, appId=${model.applicationId}, assId=${assessor.id}, sortField=${form.sortField})}">
+                                      th:action="@{/competition/{cid}/application/{appId}/assessors/assign/{assId}(cid=${model.competitionId}, appId=${model.applicationId}, assId=${assessor.id}, filterInnovationArea=${model.filterInnovationArea})}">
                                     <button type="submit" class="button-secondary no-margin">Assign</button>
                                 </form>
                             </td>
@@ -289,29 +258,7 @@
                 </table>
             </div>
 
-            <!--/* TODO ??
-            <ul class="pagination">
-                <li class="prev">
-                    <a href="#" rel="prev" title="Navigate to previous part">
-                        <span class="pagination-label">Previous</span>
-                    </a>
-                </li>
-                <li class="next">
-                    <a href="#" rel="next" title="Navigate to next part">
-                        <span class="pagination-label">Next</span>
-                    </a>
-                </li>
-            </ul>
-
-            <div class="aligncentre">
-                <a href="#" class="extra-margin-right">0 to 20</a>
-                <a href="#" class="extra-margin-right">21 to 40</a>
-                <a href="#" class="extra-margin-right">41 to 60</a>
-                <a href="#" class="extra-margin-right">61 to 80</a>
-                <a href="#" class="extra-margin-right">81 to 100</a>
-            </div>
-            */-->
-
+            <div th:include="fragments/elements :: general-pagination(pagination=${model.pagination})" th:remove="tag"/>
             <th:block th:insert="fragments/layout :: main-content-end" />
         </main>
 

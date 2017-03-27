@@ -11,40 +11,39 @@
         <main id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
 
-            <th:block th:if="${currentApplication.isOpen() and currentCompetition.isOpen()}" th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication},linkTitle='Application Overview',linkClass='link-back',linkUrl=@{/application/{id}(id=${currentApplication.id})}"/>
+            <th:block th:include="fragments/layout :: header-sub"
+                      th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}"/>
 
             <th:block th:insert="fragments/elements :: competition-closing-warning (competition=${currentCompetition})" />
 
             <div class="page-title">
-                <th:block th:insert="fragments/elements :: application-title (applicationId=${currentApplication.id},applicationName=${currentApplication.applicationDisplayName})" />
+                <th:block th:insert="fragments/elements :: application-title (applicationId=${currentApplication.id},applicationName=${currentApplication.name})" />
                 <h1 class="heading-xlarge no-margin">Feedback overview</h1>
             </div>
 
             <th:block th:insert="fragments/elements :: competition-status-message (app=${currentApplication}, competition=${currentCompetition})" />
 
-            <!--/* TODO INFUND-8169
             <h2 class="heading-medium">Overall scores</h2>
             <div class="table-overflow">
-                <table>
+                <table th:each="section : ${sections.values()}" th:if="${!section.name.equals('Project details') && !section.name.equals('Finances')}">
                     <thead>
                         <tr>
                             <th class="width-150" scope="row">Question</th>
-                            <th th:each="question : ${model.questionsForScoreOverview}" scope="col">
-                                <a th:href="@{/{id}/question/{quid}(id=${model.assessmentId}, quid=${question.questionId})}" th:text="${question.displayLabelShort}">Q1</a>
+                            <th th:each="question : ${sectionQuestions.get(section.id)}" scope="col">
+                                <a th:text="|Q${question.questionNumber}|">Q1</a>
                             </th>
                         </tr>
-                    </head>
+                    </thead>
                     <tbody>
                         <tr>
                             <th class="width-150" scope="row">Score</th>
-                            <td th:each="question : ${model.questionsForScoreOverview}">
-                                <span th:text="${question.scoreGiven}" th:remove="tag" />
+                            <td th:each="question : ${sectionQuestions.get(section.id)}">
+                                <span th:text="${scores.scores.get(question.id)}" th:remove="tag" />
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            */-->
 
             <h2 class="heading-medium no-margin-bottom">Application details</h2>
             <p class="form-hint">Assessors do not provide scores on these sections of the application.</p>
@@ -75,54 +74,75 @@
                 </div>
             </div>
 
-            <th:block th:each="section : ${sections.values()}" th:if="${section.name.equals('Project details')}">
-                <ul class="list-overview extra-margin">
-                    <th:block th:each="question : ${sectionQuestions.get(section.id)}" th:unless="${question.shortName.equals('Application details')}">
-                        <li class="section-status">
-                            <div class="grid-row">
-                                <div class="column-two-thirds">
-                                    <h3 th:text="${question.shortName}" class="heading-small">Project summary</h3>
+            <section th:each="section : ${sections.values()}" th:unless="${section.name.equals('Finances')}">
+                <th:block th:if="${section.name.equals('Project details')}">
+                    <ul class="list-overview extra-margin">
+                        <th:block th:each="question : ${sectionQuestions.get(section.id)}" th:unless="${question.shortName.equals('Application details')}">
+                            <li class="section-status">
+                                <div class="grid-row">
+                                    <div class="column-two-thirds">
+                                        <h3 th:text="${question.shortName}" class="heading-small">Project summary</h3>
+                                    </div>
+                                    <div class="column-third">
+                                        <p th:unless=${question.shortName.equals('Scope')} class="form-hint no-margin">No feedback provided</p>
+                                        <p th:if=${question.shortName.equals('Scope')}>
+                                            In scope? <span th:text="${scores.inScope}">4</span>/<span th:text="${scores.totalScope}">5</span> Yes
+                                        </p>
+                                    </div>
                                 </div>
-                                <div class="column-third">
-                                    <p th:unless=${question.shortName.equals('Scope')} class="form-hint no-margin">No feedback provided</p>
-                                    <p th:if=${question.shortName.equals('Scope')}>
-                                        In scope? <span th:text="${scores.inScope}">4</span>/<span th:text="${scores.totalScope}">5</span> Yes
-                                    </p>
-                                </div>
+                            </li>
+                        </th:block>
+                    </ul>
+                </th:block>
+                <th:block th:if="${!section.name.equals('Project details')}">
+                    <h2 class="heading-medium no-margin-bottom">Application questions</h2>
+                    <p class="form-hint">Each question has been assessed by several independent assessors. They have given a score and feedback for each.</p>
+
+                    <ul class="list-overview">
+                        <li class="section-status" th:each="question : ${sectionQuestions.get(section.id)}">
+                        <div class="grid-row">
+                            <div class="column-two-thirds">
+                                <h3 class="heading-small">
+                                    <a th:href="@{/application/{apId}/question/{qId}/feedback(apId=${currentApplication.id},qId=${question.id})}"
+                                        th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.shortName}">1. Business opportunity</a>
+                                </h3>
                             </div>
-                        </li>
-                    </th:block>
-                </ul>
-            </th:block>
-
-            <!--/* TODO INFUND-8168 & INFUND-8169
-            <h2 class="heading-medium no-margin-bottom">Application questions</h2>
-            <p class="form-hint">Each question has been assessed by several independent assessors. They have given a score and feedback for each.</p>
-
-            <ul class="list-overview">
-                <li class="section-status">
-                    <div class="grid-row">
-                        <div class="column-two-thirds">
-                            <h3 class="heading-small">
-                                <a>1. Business opportunity</a>
-                            </h3>
+                            <div>
+                                <div class="column-third" th:text="|Average score ${scores.scores.get(question.id)} / ${question.assessorMaximumScore}|">Average score 7 / 10</div>
+                            </div>
                         </div>
-                        <div>
-                            <div class="column-third">Average score 7 / 10</div>
+                        </li>
+                    </ul>
+                    <div class="grid-row extra-margin">
+                        <div class="column-two-thirds">
+                            &nbsp;
+                        </div>
+                        <div class="column-third">
+                            <p>Average overall: <strong class="heading-" th:text="|${scores.averagePercentage}%|">70%</strong></p>
                         </div>
                     </div>
-                </li>
-            </ul>
+                </th:block>
+            </section>
 
-            <div class="grid-row extra-margin">
-                <div class="column-two-thirds">
-                    &nbsp;
-                </div>
-                <div class="column-third">
-                    <p>Average overall: <strong class="heading-">70%</strong></p>
-                </div>
-            </div>
+            <section th:if="${hasFinanceSection}">
+                <h2 class="heading-medium">Finance</h2>
+                <div class="collapsible">
+                    <h3>Finances summaries</h3>
+                    <div class="question">
+                        <div th:replace="finance/finance-summary :: application_finances_summary"></div>
 
+                        <h2 class="heading-medium">Funding breakdown</h2>
+                        <th:block th:insert="finance/finance-summary :: financial_summary_table" />
+
+                        <div th:if="${academicOrganisations != null and academicOrganisations.size() > 0}">
+                            <h2 class="heading-medium">Academic partner breakdown</h2>
+                            <p>Academic partners submit their project costs through the Je-S system. For a full breakdown of their project costs, please see the documents below.</p>
+                            <th:block th:insert="finance/finance-summary :: academic_partner_breakdown" />
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!--/*
             <h2 class="heading-medium">Finances</h2>
             <p class="form-hint">These finances were submitted at the application stage.</p>
 
@@ -232,14 +252,15 @@
                 </div>
             </div>*/-->
 
-            <!--/* TODO INFUND-8172
-            <h2 class="heading-medium">Assessor feedback</h2>
-            <ul class="boxed-list">
-                <li>
-                    <h3 class="heading-small">Assessor 1</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
-                </li>
-            </ul>*/-->
+            <div th:if="!${#lists.isEmpty(feedback)}">
+                <h2 class="heading-medium">Assessor feedback</h2>
+                <ul class="boxed-list">
+                    <li th:each="item, iterStat : ${feedback}">
+                        <h3 class="heading-small" th:text="|Assessor ${iterStat.count}|">Assessor 1</h3>
+                        <p th:text="${item}">Feedback text</p>
+                    </li>
+                </ul>
+            </div>
 
             <th:block th:insert="fragments/layout :: main-content-end" />
         </main>

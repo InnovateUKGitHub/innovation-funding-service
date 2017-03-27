@@ -16,6 +16,7 @@ import org.mockito.InjectMocks;
 import java.util.List;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;

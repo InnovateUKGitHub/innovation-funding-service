@@ -20,6 +20,7 @@ var govukNodeModules = [
 var vendorJsFiles = [
   nodeModulesPath + 'js-cookie/src/js.cookie.js',
   nodeModulesPath + 'jquery/dist/jquery.js',
+  nodeModulesPath + 'simplestatemanager/src/ssm.js',
   'js/vendor/jquery-ui/jquery-ui.min.js',
   'js/vendor/govuk/*.js',
   '!js/vendor/govuk/ie.js',

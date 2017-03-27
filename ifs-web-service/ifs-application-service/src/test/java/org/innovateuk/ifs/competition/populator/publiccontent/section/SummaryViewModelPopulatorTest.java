@@ -63,7 +63,7 @@ public class SummaryViewModelPopulatorTest {
 
     @Test
     public void populateSection() {
-        populator.populateSection(viewModel, publicContentResource, publicContentSectionResource);
+        populator.populateSection(viewModel, publicContentResource, publicContentSectionResource, Boolean.FALSE);
 
         assertEquals("Summary", viewModel.getDescription());
         assertEquals(FundingType.GRANT.getDisplayName(), viewModel.getFundingType());

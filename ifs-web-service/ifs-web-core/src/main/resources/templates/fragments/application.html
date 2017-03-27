@@ -91,7 +91,7 @@
   <section th:if="${hasFinanceSection}">
       <h2 class="heading-medium">Finance</h2>
       <div class="collapsible">
-          <h3>Finances Summary
+          <h3>Finances summary
               <th:block th:if="${currentApplication.isOpen()}">
                   <div class="section-status section-complete" th:if="${sectionsMarkedAsComplete.contains(financeSectionId)}">Complete</div>
                   <div class="section-status section-incomplete" th:unless="${sectionsMarkedAsComplete.contains(financeSectionId)}">Incomplete</div>
@@ -107,12 +107,11 @@
               <h2 class="heading-medium">Funding breakdown</h2>
               <th:block th:insert="finance/finance-summary :: financial_summary_table" />
 
-              <div th:if="${academicOrganisations != null and academicOrganisations.size() > 0}">
+              <th:block th:if="${maySeeAcademicBreakdown and academicOrganisations != null and academicOrganisations.size() > 0}">
                   <h2 class="heading-medium">Academic partner breakdown</h2>
-                  <p>Academic partners submit their project costs through the Je-S system. For a full breakdown of their project costs, please see the
-                      below documents.</p>
+                  <p>Academic partners submit their project costs through the Je-S system. For a full breakdown of their project costs, please see the documents below.</p>
                   <th:block th:insert="finance/finance-summary :: academic_partner_breakdown" />
-              </div>
+              </th:block>
           </div>
       </div>
   </section>

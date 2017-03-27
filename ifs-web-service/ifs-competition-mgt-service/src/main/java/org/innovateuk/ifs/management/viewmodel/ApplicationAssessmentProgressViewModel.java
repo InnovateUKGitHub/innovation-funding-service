@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ public class ApplicationAssessmentProgressViewModel {
 
     private long applicationId;
     private String applicationName;
+    private String applicationInnovationArea;
     private Long competitionId;
     private String competitionName;
     private boolean inAssessment;
@@ -21,9 +23,13 @@ public class ApplicationAssessmentProgressViewModel {
     private List<ApplicationAvailableAssessorsRowViewModel> available;
     private List<ApplicationAssessmentProgressRejectedRowViewModel> rejected;
     private List<ApplicationAssessmentProgressPreviouslyAssignedRowViewModel> previouslyAssigned;
+    private List<InnovationSectorResource> innovationSectors;
+    private Long filterInnovationArea;
+    private PaginationViewModel pagination;
 
     public ApplicationAssessmentProgressViewModel(long applicationId,
                                                   String applicationName,
+                                                  String applicationInnovationArea,
                                                   Long competitionId,
                                                   String competitionName,
                                                   boolean inAssessment,
@@ -32,9 +38,13 @@ public class ApplicationAssessmentProgressViewModel {
                                                   List<ApplicationAssessmentProgressAssignedRowViewModel> assigned,
                                                   List<ApplicationAssessmentProgressRejectedRowViewModel> rejected,
                                                   List<ApplicationAssessmentProgressPreviouslyAssignedRowViewModel> previouslyAssigned,
-                                                  List<ApplicationAvailableAssessorsRowViewModel> available) {
+                                                  List<ApplicationAvailableAssessorsRowViewModel> available,
+                                                  List<InnovationSectorResource> innovationSectors,
+                                                  Long filterInnovation,
+                                                  PaginationViewModel pagination) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
+        this.applicationInnovationArea = applicationInnovationArea;
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.inAssessment = inAssessment;
@@ -44,6 +54,9 @@ public class ApplicationAssessmentProgressViewModel {
         this.rejected = rejected;
         this.previouslyAssigned = previouslyAssigned;
         this.available = available;
+        this.innovationSectors = innovationSectors;
+        this.filterInnovationArea = filterInnovation;
+        this.pagination = pagination;
     }
 
     public long getApplicationId() {
@@ -52,6 +65,10 @@ public class ApplicationAssessmentProgressViewModel {
 
     public String getApplicationName() {
         return applicationName;
+    }
+
+    public String getApplicationInnovationArea() {
+        return applicationInnovationArea;
     }
 
     public Long getCompetitionId() {
@@ -90,6 +107,18 @@ public class ApplicationAssessmentProgressViewModel {
         return available;
     }
 
+    public List<InnovationSectorResource> getInnovationSectors() {
+        return innovationSectors;
+    }
+
+    public Long getFilterInnovationArea() {
+        return filterInnovationArea;
+    }
+
+    public PaginationViewModel getPagination() {
+        return pagination;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -102,6 +131,7 @@ public class ApplicationAssessmentProgressViewModel {
                 .append(applicationId, that.applicationId)
                 .append(inAssessment, that.inAssessment)
                 .append(applicationName, that.applicationName)
+                .append(applicationInnovationArea, that.applicationInnovationArea)
                 .append(competitionId, that.competitionId)
                 .append(competitionName, that.competitionName)
                 .append(leadOrganisation, that.leadOrganisation)
@@ -110,6 +140,9 @@ public class ApplicationAssessmentProgressViewModel {
                 .append(available, that.available)
                 .append(rejected, that.rejected)
                 .append(previouslyAssigned, that.previouslyAssigned)
+                .append(innovationSectors, that.innovationSectors)
+                .append(filterInnovationArea, that.filterInnovationArea)
+                .append(pagination, that.pagination)
                 .isEquals();
     }
 
@@ -118,6 +151,7 @@ public class ApplicationAssessmentProgressViewModel {
         return new HashCodeBuilder(17, 37)
                 .append(applicationId)
                 .append(applicationName)
+                .append(applicationInnovationArea)
                 .append(competitionId)
                 .append(competitionName)
                 .append(inAssessment)
@@ -127,6 +161,9 @@ public class ApplicationAssessmentProgressViewModel {
                 .append(available)
                 .append(rejected)
                 .append(previouslyAssigned)
+                .append(innovationSectors)
+                .append(filterInnovationArea)
+                .append(pagination)
                 .toHashCode();
     }
 }

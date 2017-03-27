@@ -1,31 +1,36 @@
 package org.innovateuk.ifs.competitionsetup.form;
 
-import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.validator.constraints.Range;
+import org.innovateuk.ifs.commons.validation.constraints.ValidAggregatedDate;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.MilestoneType;
 
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
+import java.util.Set;
+
+import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 
 /**
  * Milestone Form Entry for the Milestones form.
  */
+@ValidAggregatedDate(yearField="year", monthField="month", dayField="day", message="{validation.standard.date.format}")
 public class MilestoneRowForm {
-    @Range(min = 1, max = 31)
-    private Integer day;
-    @Range(min = 1, max = 12)
-    private Integer month;
-    @Range(min = 2016, max = 9000)
+	private static final Log LOG = LogFactory.getLog(MilestoneRowForm.class);
+	private static final Set<MilestoneType> WITH_TIME_TYPES = asSet(MilestoneType.SUBMISSION_DATE);
+
+    @Range(min=2000, max = 9999, message="{validation.nonifs.detailsform.yyyy.range.format}")
     private Integer year;
+    private Integer month;
+    private Integer day;
+
     private MilestoneTime time;
 
     private MilestoneType milestoneType;
     private String dayOfWeek;
-    private boolean editable;
     private LocalDateTime date;
-
-    private static final Log LOG = LogFactory.getLog(MilestoneRowForm.class);
 
     public MilestoneRowForm() {
 
@@ -37,11 +42,14 @@ public class MilestoneRowForm {
             this.setDay(dateTime.getDayOfMonth());
             this.setMonth(dateTime.getMonth().getValue());
             this.setYear(dateTime.getYear());
-            this.setTime(MilestoneTime.fromLocalDateTime(dateTime));
             this.setDate(dateTime);
-            this.editable = LocalDateTime.now().isBefore(dateTime);
+            if (isTimeOption()) {
+                this.setTime(MilestoneTime.fromLocalDateTime(dateTime));
+            }
         } else {
-            this.editable = true;
+            if (isTimeOption()) {
+                this.setTime(MilestoneTime.TWELVE_PM);
+            }
         }
     }
 
@@ -89,12 +97,13 @@ public class MilestoneRowForm {
         return milestoneType.name();
     }
 
-    public boolean isEditable() {
-        return editable;
+    public boolean editableForCompetition(CompetitionResource competitionResource) {
+        return competitionResource.isNonIfs() ||
+                !(competitionResource.isSetupAndLive() && date.isBefore(LocalDateTime.now()));
     }
 
-    public void setEditable(boolean editable) {
-        this.editable = editable;
+    public boolean isTimeOption() {
+        return WITH_TIME_TYPES.contains(milestoneType);
     }
 
     public LocalDateTime getDate() {
@@ -141,9 +150,9 @@ public class MilestoneRowForm {
         return null;
     }
 
-    public LocalDateTime getMilestoneAsDateTime(){
+    public LocalDateTime getMilestoneAsDateTime() {
         if (day != null && month != null && year != null){
-            if ( time != null) {
+            if ( time != null && isTimeOption()) {
                 return LocalDateTime.of(year, month, day, time.getHour(), 0);
             } else {
                 return LocalDateTime.of(year, month, day, 0, 0);

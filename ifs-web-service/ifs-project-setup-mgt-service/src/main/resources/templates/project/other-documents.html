@@ -8,13 +8,13 @@
 <th:block th:insert="fragments/layout :: global-header" />
 <main id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <div th:include="fragments/layout :: header-sub"
+    <div th:insert="fragments/layout :: header-sub"
          th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{competitionId}/status(competitionId=${model.competitionId})}"
          th:remove="tag"/>
 
     <form th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post">
         <div class="page-title">
-            <th:block th:insert="fragments/elements :: project-title (projectId=${model.applicationId}, projectName=${model.projectName})"                   />
+            <th:block th:insert="fragments/elements :: project-title (projectId=${model.applicationId}, projectName=${model.projectName})"/>
             <h1 class="heading-xlarge">Other documents</h1>
         </div>
         <hr/>
@@ -53,7 +53,7 @@
 
         <th:block th:if="${(model.collaborationAgreementFileDetails != null) and (model.exploitationPlanFileDetails != null)}">
 
-            <h2 class="heading-medium">Collaboration Agreement</h2>
+            <h2 class="heading-medium">Collaboration agreement</h2>
             <a th:href="@{/project/{id}/partner/documents/collaboration-agreement(id=${model.projectId})}"
              class="uploaded-file" th:text="${model.collaborationAgreementFileDetails.filename}">The-uploaded-file-example.pdf</a>
 

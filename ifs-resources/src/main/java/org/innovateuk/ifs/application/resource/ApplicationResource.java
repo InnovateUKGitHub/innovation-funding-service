@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.application.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
 import org.innovateuk.ifs.commons.validation.constraints.FutureLocalDate;
@@ -63,11 +63,9 @@ public class ApplicationResource {
     private Boolean resubmission;
     private String previousApplicationNumber;
     private String previousApplicationTitle;
-
-    private Set<ResearchCategoryResource> researchCategories;
-
-    @NotNull(message="{validation.application.research.category.required}")
-    private Long researchCategoryId;
+    private ResearchCategoryResource researchCategory;
+    private InnovationAreaResource innovationArea;
+    private boolean noInnovationAreaApplicable;
 
     public Long getId() {
         return id;
@@ -83,15 +81,6 @@ public class ApplicationResource {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    @JsonIgnore
-    public String getApplicationDisplayName() {
-        if(StringUtils.isNotEmpty(name)) {
-            return name;
-        } else {
-            return competitionName;
-        }
     }
 
     public LocalDate getStartDate() {
@@ -275,20 +264,28 @@ public class ApplicationResource {
         this.stateAidAgreed = stateAidAgreed;
     }
 
-    public Set<ResearchCategoryResource> getResearchCategories() {
-        return researchCategories;
+    public ResearchCategoryResource getResearchCategory() {
+        return researchCategory;
     }
 
-    public void setResearchCategories(Set<ResearchCategoryResource> researchCategories) {
-        this.researchCategories = researchCategories;
+    public void setResearchCategory(ResearchCategoryResource researchCategory) {
+        this.researchCategory = researchCategory;
     }
 
-    @JsonIgnore
-    public Long getResearchCategoryId() {
-        return researchCategoryId;
+    public InnovationAreaResource getInnovationArea() {
+        return innovationArea;
     }
 
-    public void setResearchCategoryId(Long researchCategoryId) {
-        this.researchCategoryId = researchCategoryId;
+    public void setInnovationArea(InnovationAreaResource innovationArea) {
+        this.innovationArea = innovationArea;
     }
+
+    public boolean getNoInnovationAreaApplicable() {
+        return noInnovationAreaApplicable;
+    }
+
+    public void setNoInnovationAreaApplicable(boolean noInnovationAreaApplicable) {
+        this.noInnovationAreaApplicable = noInnovationAreaApplicable;
+    }
+
 }

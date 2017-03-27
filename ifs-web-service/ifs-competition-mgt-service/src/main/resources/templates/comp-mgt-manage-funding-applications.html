@@ -9,7 +9,7 @@
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main id="content" th:object="${form}">
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition dashboard',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" />
     <h1 class="heading-xlarge">
                 <span class="heading-secondary"><th:block th:text="${model.competitionId}"/>: <th:block
                     th:text="${model.competitionName}"/></span>
@@ -26,7 +26,41 @@
     </div>
 
     <div th:replace="competition/key-statistics :: key-statistics(keyStatistics=${model.keyStatistics})" />
+    <form method="GET" th:object="${manageFundingApplicationsQueryForm}">
+        <div class="search-filters extra-margin">
+            <fieldset>
+                <legend class="heading-medium">Filter applications</legend>
+                <div class="grid-row">
+                    <div class="column-third">
+                        <label class="form-label" for="stringFilter">Search by application number.</label>
+                        <input type="text" class="form-control" id="stringFilter" name="stringFilter" th:field="*{stringFilter}"/>
+                    </div>
+                    <div class="column-third">
+                        <label class="form-label" for="sendFilter">Sent</label>
+                        <select name="sendFilter" id="sendFilter" class="form-control" th:field="*{sendFilter}">
+                            <option value="">All</option>
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                    <div class="column-third">
+                        <label class="form-label" for="fundingFilter">Funding</label>
+                        <select name="fundingFilter" id="fundingFilter" class="form-control" th:field="*{fundingFilter}">
+                            <option value="">Show all</option>
+                            <option value="FUNDED">Successful</option>
+                            <option value="UNFUNDED">Unsuccessful</option>
+                            <option value="ON_HOLD">On hold</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="column-third alignright">
+                    <a href="?">Clear all filters</a>
+                    <button class="button">Filter</button>
+                </div>
 
+            </fieldset>
+        </div>
+    </form>
     <form method="post" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}">
         <div class="grid-row sorting">
             <div class="column-half">
@@ -80,6 +114,7 @@
                             <td th:case="${T(org.innovateuk.ifs.application.resource.FundingDecision).FUNDED}">Successful</td>
                             <td th:case="${T(org.innovateuk.ifs.application.resource.FundingDecision).UNFUNDED}">Unsuccessful</td>
                             <td th:case="${T(org.innovateuk.ifs.application.resource.FundingDecision).UNDECIDED}">Undecided</td>
+                            <td th:case="${T(org.innovateuk.ifs.application.resource.FundingDecision).ON_HOLD}">On hold</td>
                             <td th:case="*">-</td>
                         </th:block>
                         <td th:text="${applicationSummary.manageFundingEmailDate} ? 'Sent' : '-'">-</td>
@@ -110,7 +145,7 @@
             </div>
         </div>
     </form>
-
+    <div th:include="fragments/elements :: general-pagination(pagination=${model.pagination})" th:remove="tag"/>
 
 
     <th:block th:insert="fragments/layout :: main-content-end" />

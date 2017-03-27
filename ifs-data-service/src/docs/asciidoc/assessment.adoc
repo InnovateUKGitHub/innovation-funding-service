@@ -68,6 +68,18 @@ include::{snippets}/assessment/recommend/http-response.adoc[]
 ==== Curl Example
 include::{snippets}/assessment/recommend/curl-request.adoc[]
 
+=== Get application assessment feedback
+==== Request
+include::{snippets}/assessment/get-application-feedback/http-request.adoc[]
+include::{snippets}/assessment/get-application-feedback/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessment/get-application-feedback/http-response.adoc[]
+include::{snippets}/assessment/get-application-feedback/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/assessment/get-application-feedback/curl-request.adoc[]
+
 === Reject an invitation for an assessment
 ==== Request
 include::{snippets}/assessment/reject/http-request.adoc[]

@@ -11,6 +11,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
@@ -22,6 +26,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.springframework.data.domain.Sort.Direction.*;
 
 public class CompetitionInviteRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<CompetitionInviteRepository> {
 
@@ -43,14 +48,14 @@ public class CompetitionInviteRepositoryIntegrationTest extends BaseRepositoryIn
 
     @Before
     public void setup() {
-        competition = competitionRepository.save( newCompetition().withName("competition").build() );
-        innovationArea = innovationAreaRepository.save(newInnovationArea().withName("innovation area").build() );
+        competition = competitionRepository.save(newCompetition().withName("competition").build());
+        innovationArea = innovationAreaRepository.save(newInnovationArea().withName("innovation area").build());
     }
 
     @Test
     public void findAll() {
-        repository.save( new CompetitionInvite("name1", "tom@poly.io", "hash", competition, innovationArea)  );
-        repository.save( new CompetitionInvite("name2", "tom@2poly.io", "hash2", competition, innovationArea)  );
+        repository.save(new CompetitionInvite("name1", "tom@poly.io", "hash", competition, innovationArea));
+        repository.save(new CompetitionInvite("name2", "tom@2poly.io", "hash2", competition, innovationArea));
 
         Iterable<CompetitionInvite> invites = repository.findAll();
 
@@ -98,7 +103,12 @@ public class CompetitionInviteRepositoryIntegrationTest extends BaseRepositoryIn
                 .withStatus(CREATED, CREATED, OPENED, OPENED, SENT, SENT)
                 .build(6));
 
-        List<CompetitionInvite> retrievedInvites = repository.getByCompetitionIdAndStatus(competition.getId(), CREATED);
+        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "name"));
+
+        Page<CompetitionInvite> pageResult = repository.getByCompetitionIdAndStatus(competition.getId(), CREATED, pageable);
+
+        List<CompetitionInvite> retrievedInvites = pageResult.getContent();
+
         assertEquals(1, retrievedInvites.size());
 
         assertEquals(competition, retrievedInvites.get(0).getTarget());
@@ -122,7 +132,7 @@ public class CompetitionInviteRepositoryIntegrationTest extends BaseRepositoryIn
                 .withStatus(CREATED, CREATED, OPENED, OPENED, SENT, SENT)
                 .build(6));
 
-        long count = repository.countByCompetitionIdAndStatusIn(competition.getId(), of(CREATED,OPENED));
+        long count = repository.countByCompetitionIdAndStatusIn(competition.getId(), of(CREATED, OPENED));
         assertEquals(2, count);
     }
 
@@ -145,7 +155,7 @@ public class CompetitionInviteRepositoryIntegrationTest extends BaseRepositoryIn
 
     @Test(expected = DataIntegrityViolationException.class)
     public void save_duplicateHash() {
-        repository.save( new CompetitionInvite("name1", "tom@poly.io", "sameHash", competition, innovationArea)  );
-        repository.save( new CompetitionInvite("name2", "tom@2poly.io", "sameHash", competition, innovationArea)  );
+        repository.save(new CompetitionInvite("name1", "tom@poly.io", "sameHash", competition, innovationArea));
+        repository.save(new CompetitionInvite("name2", "tom@2poly.io", "sameHash", competition, innovationArea));
     }
 }

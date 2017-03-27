@@ -53,8 +53,7 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               INFUND-6922 Update 'Competition setup' menu page to include a link to new 'Public content' page
 Suite Setup       Custom suite setup
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        CompAdmin  Pending
-# TODO This suite needs to be re-enabled when INFUND-8090 and INFUND-8086
+Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
 Resource          CompAdmin_Commons.robot
 
@@ -65,8 +64,8 @@ ${landingPage}    ${server}/management/competition/setup/${READY_TO_OPEN_COMPETI
 User can create a new competition
     [Documentation]    INFUND-2945, INFUND-2982, INFUND-2983, INFUND-2986, INFUND-3888, INFUND-3002, INFUND-2980, INFUND-4725
     [Tags]    HappyPath
-    Given the user clicks the button/link    id=section-3
-    When the user clicks the button/link    jQuery=.button:contains("Create competition")
+    Given the user navigates to the page       ${CA_UpcomingComp}
+    When the user clicks the button/link       jQuery=.button:contains("Create competition")
     And The user should not see the element    jQuery('.button:contains("Save")
     And The user should not see the element    link=Funding information
     And The user should not see the element    link=Eligibility
@@ -78,8 +77,8 @@ User can create a new competition
 
 New competition shows in Preparation section
     [Documentation]    INFUND-2980
-    Given The user clicks the button/link    link=All competitions
-    And The user clicks the button/link    id=section-3
+    Given The user clicks the button/link  link=All competitions
+    And the user navigates to the page     ${CA_UpcomingComp}
     Then the competition should show in the correct section    css=section:nth-of-type(1) li:nth-child(2)    No competition title defined    #this keyword checks if the new application shows in the second line of the "In preparation" competitions
 
 Initial details - User enters valid values and marks as done
@@ -97,7 +96,7 @@ Initial details - User enters valid values and marks as done
     And the user should see the text in the page    Ian Cooper
     And the user should see the text in the page    Competition title
     And the user should see the text in the page    Emerging and enabling technologies
-    And the user should see the text in the page    Creative economy
+    And the user should see the text in the page    Satellite Applications
     And the user should see the text in the page    Sector
     And the user should see the text in the page    Yes
     And the user should see the element             jQuery=.button:contains("Edit")
@@ -108,8 +107,8 @@ Initial details - Sector competitions allow multiple innovation areas
     Given the user clicks the button/link            jQuery=.button:contains("Edit")
     When the user enters multiple innovation areas
     And the user clicks the button/link              jQuery=.button:contains("Done")
-    Then The user should see the text in the page    Cyber Security
-    And The user should see the text in the page     Design
+    Then The user should see the text in the page    Space technology
+    And The user should see the text in the page     Creative Industries
 
 Initial Details - User can remove an innovation area
     [Documentation]    INFUND-6478, INFUND-6479
@@ -117,7 +116,7 @@ Initial Details - User can remove an innovation area
     Given the user clicks the button/link  jQuery=.button:contains("Edit")
     And the user clicks the button/link    jQuery=#innovation-row-2 button:contains('Remove')
     When the user clicks the button/link   jQuery=.button:contains("Done")
-    Then the user should not see the text in the page  Creative economy
+    Then the user should not see the text in the page  Space technology
 
 Initial Details - drop down menu is populated with comp admin users
     [Documentation]    INFUND-6905
@@ -137,8 +136,8 @@ Initial details - Comp Type and Date should not be editable
     And the user should see the text in the page    Ian Cooper
     And the user should see the text in the page    Test competition
     And the user should see the text in the page    Emerging and enabling technologies
-    And the user should see the text in the page    Design
-    And the user should see the text in the page    Sector
+    And the user should see the text in the page    Creative Industries
+    And the user should see the text in the page    Satellite Applications
     And the user should see the text in the page    Yes
 
 
@@ -177,8 +176,8 @@ Internal user can navigate to Public Content without having any issues
 New application shows in Preparation section with the new name
     [Documentation]    INFUND-2980
     Given the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
-    And The user clicks the button/link    link=All competitions
-    And The user clicks the button/link    id=section-3
+    And The user clicks the button/link   link=All competitions
+    And the user navigates to the page    ${CA_UpcomingComp}
     Then the competition should show in the correct section    css=section:nth-of-type(1) > ul    Test competition    #This keyword checks if the new competition shows in the "In preparation" test
 
 Funding information: calculations
@@ -247,7 +246,7 @@ Eligibility: Contain the correct options
     And the user should see the element    jQuery=label:contains(Either)
     And the user should see the element    jQuery=div:nth-child(7) label:contains("Yes")
     And the user should see the element    jQuery=div:nth-child(7) label:contains("No")
-    And the user should see the element    jQuery=label:contains(Technical feasibility)
+    And the user should see the element    jQuery=label:contains(Feasibility studies)
     And the user should see the element    jQuery=label:contains(Industrial research)
     And the user should see the element    jQuery=label:contains(Experimental development)
     And the resubmission should not have a default selection
@@ -272,7 +271,7 @@ Eligibility: Mark as Done then Edit again
     And the user should see the text in the page    Single
     And the user should see the text in the page    Business
     And the user should see the text in the page    50%
-    And the user should see the text in the page    Technical feasibility
+    And the user should see the text in the page    Feasibility studies
     And the user should see the text in the page    Industrial research
     And the user should see the text in the page    Experimental development
     And The user should not see the element    id=streamName
@@ -482,10 +481,10 @@ User should be able to Save the Competition as Open
     [Documentation]    INFUND-4468, INFUND-3002
     [Tags]  Pending
     # TODO Pending due to INFUND-7643
-    When the user clicks the button/link    jQuery=.button:contains("Save")
+    When the user clicks the button/link   jQuery=.button:contains("Save")
     And the user clicks the button/link    link=All competitions
-    And the user clicks the button/link    id=section-3
-    Then the competition should show in the correct section    css=section:nth-of-type(2) ul    Test competition
+    And the user navigates to the page     ${CA_UpcomingComp}
+    Then the competition should show in the correct section  css=section:nth-of-type(2) ul    Test competition
     # The above line checks that the section 'Ready to Open' there is a competition named Test competition
 
 Assessor: Contain the correct options
@@ -577,19 +576,19 @@ the user fills the milestones with valid data
     wait for autosave
 
 the weekdays should be correct
-    element should contain    css=tr:nth-child(1) td:nth-child(2)    Thu
-    element should contain    css=tr:nth-child(2) td:nth-child(2)    Fri
-    element should contain    css=tr:nth-child(3) td:nth-child(2)    Sat
-    element should contain    css=tr:nth-child(4) td:nth-child(2)    Sun
-    element should contain    css=tr:nth-child(5) td:nth-child(2)    Mon
-    element should contain    css=tr:nth-child(6) td:nth-child(2)    Tue
-    element should contain    css=tr:nth-child(7) td:nth-child(2)    Wed
-    element should contain    css=tr:nth-child(8) td:nth-child(2)    Thu
-    element should contain    css=tr:nth-child(9) td:nth-child(2)    Fri
-    element should contain    css=tr:nth-child(10) td:nth-child(2)    Sat
-    element should contain    css=tr:nth-child(11) td:nth-child(2)    Sun
-    element should contain    css=tr:nth-child(12) td:nth-child(2)    Mon
-    element should contain    css=tr:nth-child(13) td:nth-child(2)    Tue
+    element should contain    css=tr:nth-child(1) td:nth-child(3)    Thu
+    element should contain    css=tr:nth-child(2) td:nth-child(3)    Fri
+    element should contain    css=tr:nth-child(3) td:nth-child(3)    Sat
+    element should contain    css=tr:nth-child(4) td:nth-child(3)    Sun
+    element should contain    css=tr:nth-child(5) td:nth-child(3)    Mon
+    element should contain    css=tr:nth-child(6) td:nth-child(3)    Tue
+    element should contain    css=tr:nth-child(7) td:nth-child(3)    Wed
+    element should contain    css=tr:nth-child(8) td:nth-child(3)    Thu
+    element should contain    css=tr:nth-child(9) td:nth-child(3)    Fri
+    element should contain    css=tr:nth-child(10) td:nth-child(3)    Sat
+    element should contain    css=tr:nth-child(11) td:nth-child(3)    Sun
+    element should contain    css=tr:nth-child(12) td:nth-child(3)    Mon
+    element should contain    css=tr:nth-child(13) td:nth-child(3)    Tue
 
 the pre-field date should be correct
     Element Should Contain    css=#milestone-OPEN_DATE~ .js-addWeekDay    Sat
@@ -607,7 +606,7 @@ The user enters valid data in the initial details
     Given the user enters text to a text field                css=#title  Competition title
     When the user selects the option from the drop-down menu  Sector  id=competitionTypeId
     And the user selects the option from the drop-down menu   Emerging and enabling technologies  id=innovationSectorCategoryId
-    And the user selects the option from the drop-down menu   Creative economy  id=innovationAreaCategoryId-0
+    And the user selects the option from the drop-down menu   Satellite Applications  id=innovationAreaCategoryId-0
     And the user enters text to a text field    id=openingDateDay    01
     And the user enters text to a text field    Id=openingDateMonth    12
     And the user enters text to a text field    id=openingDateYear  ${nextyear}
@@ -668,6 +667,6 @@ Custom suite setup
 
 the user enters multiple innovation areas
     the user clicks the button/link    jQuery=.buttonlink:contains("+ add another innovation area")
-    the user selects the option from the drop-down menu    Cyber Security    id=innovationAreaCategoryId-1
+    the user selects the option from the drop-down menu    Space technology    id=innovationAreaCategoryId-1
     the user clicks the button/link    jQuery=.buttonlink:contains("+ add another innovation area")
-    the user selects the option from the drop-down menu    Design    id=innovationAreaCategoryId-2
+    the user selects the option from the drop-down menu    Creative Industries    id=innovationAreaCategoryId-2

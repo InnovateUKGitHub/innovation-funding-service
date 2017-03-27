@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.user.domain;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ProfileInnovationAreaLink;
 import org.innovateuk.ifs.commons.util.AuditableEntity;
 import org.innovateuk.ifs.user.resource.BusinessType;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -15,7 +15,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * A {@link User}'s profile with their {@link Address}, skills areas and signed {@link Contract}.
+ * A {@link User}'s profile with their {@link Address}, skills areas and signed {@link Agreement}.
  */
 @Entity
 public class Profile extends AuditableEntity {
@@ -36,21 +36,25 @@ public class Profile extends AuditableEntity {
     @Enumerated(EnumType.STRING)
     private BusinessType businessType;
 
-    @ManyToOne(targetEntity = Contract.class, fetch = FetchType.LAZY, cascade=CascadeType.PERSIST)
-    @JoinColumn(name = "contract_id", referencedColumnName = "id")
-    private Contract contract;
+    @ManyToOne(targetEntity = Agreement.class, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "agreement_id", referencedColumnName = "id")
+    private Agreement agreement;
 
-    private LocalDateTime contractSignedDate;
+    private LocalDateTime agreementSignedDate;
 
     public Profile() {
         // no-arg constructor
     }
 
-    public void signContract(Contract contract, LocalDateTime signedDate) {
-        if (contract == null) throw new NullPointerException("contract cannot be null");
-        if (signedDate == null) throw new NullPointerException("signedDate cannot be null");
-        this.contract = contract;
-        this.contractSignedDate = signedDate;
+    public void signAgreement(Agreement agreement, LocalDateTime signedDate) {
+        if (agreement == null) {
+            throw new NullPointerException("agreement cannot be null");
+        }
+        if (signedDate == null) {
+            throw new NullPointerException("signedDate cannot be null");
+        }
+        this.agreement = agreement;
+        this.agreementSignedDate = signedDate;
     }
 
     public Long getId() {
@@ -100,20 +104,20 @@ public class Profile extends AuditableEntity {
         this.businessType = businessType;
     }
 
-    public Contract getContract() {
-        return contract;
+    public Agreement getAgreement() {
+        return agreement;
     }
 
-    public void setContract(Contract contract) {
-        this.contract = contract;
+    public void setAgreement(Agreement agreement) {
+        this.agreement = agreement;
     }
 
-    public LocalDateTime getContractSignedDate() {
-        return contractSignedDate;
+    public LocalDateTime getAgreementSignedDate() {
+        return agreementSignedDate;
     }
 
-    public void setContractSignedDate(LocalDateTime contractSignedDate) {
-        this.contractSignedDate = contractSignedDate;
+    public void setAgreementSignedDate(LocalDateTime agreementSignedDate) {
+        this.agreementSignedDate = agreementSignedDate;
     }
 
     // TODO the profile belongs to a User so should the User be a member?
@@ -121,8 +125,8 @@ public class Profile extends AuditableEntity {
         boolean skillsComplete = skillsAreas != null;
         boolean affiliationsComplete = user != null && user.getAffiliations() != null
                 && !user.getAffiliations().isEmpty();
-        boolean contractComplete = contractSignedDate != null;
-        return skillsComplete && affiliationsComplete && contractComplete;
+        boolean agreementComplete = agreementSignedDate != null;
+        return skillsComplete && affiliationsComplete && agreementComplete;
     }
 
     @Override
@@ -143,8 +147,8 @@ public class Profile extends AuditableEntity {
                 .append(skillsAreas, profile.skillsAreas)
                 .append(innovationAreas, profile.innovationAreas)
                 .append(businessType, profile.businessType)
-                .append(contract, profile.contract)
-                .append(contractSignedDate, profile.contractSignedDate)
+                .append(agreement, profile.agreement)
+                .append(agreementSignedDate, profile.agreementSignedDate)
                 .isEquals();
     }
 
@@ -156,8 +160,8 @@ public class Profile extends AuditableEntity {
                 .append(skillsAreas)
                 .append(innovationAreas)
                 .append(businessType)
-                .append(contract)
-                .append(contractSignedDate)
+                .append(agreement)
+                .append(agreementSignedDate)
                 .toHashCode();
     }
 }

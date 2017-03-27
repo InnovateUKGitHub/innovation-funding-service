@@ -80,7 +80,7 @@ public class QueryTest {
     }
 
     private void addPostWithUserHavingRole(UserRoleType role) {
-        final User user = newUser().withRoles(newRole().withType(role).build(1)).build();
+        final User user = newUser().withRoles(newRole().withType(role).buildSet(1)).build();
         final Post p1 = new Post(33L, user, null, null, null);
         query.addPost(p1);
     }

@@ -12,12 +12,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class CompetitionSetupFinanceServiceImpl implements CompetitionSetupFinanceService {
 
-	@Autowired
-	private CompetitionSetupFinanceRestService competitionSetupFinanceRestService;
+    @Autowired
+    private CompetitionSetupFinanceRestService competitionSetupFinanceRestService;
 
 
     @Override
-	public ServiceResult<Void> updateFinance(CompetitionSetupFinanceResource competitionSetupFinanceResource) {
+    public ServiceResult<Void> updateFinance(CompetitionSetupFinanceResource competitionSetupFinanceResource) {
         return competitionSetupFinanceRestService.save(competitionSetupFinanceResource).toServiceResult();
     }
 

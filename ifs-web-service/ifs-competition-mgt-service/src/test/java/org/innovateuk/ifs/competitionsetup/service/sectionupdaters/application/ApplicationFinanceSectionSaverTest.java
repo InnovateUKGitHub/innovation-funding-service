@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.competitionsetup.service.sectionupdaters.application;
 
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupFinanceResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;

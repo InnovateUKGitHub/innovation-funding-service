@@ -8,10 +8,7 @@ import org.innovateuk.ifs.application.finance.view.FinanceHandler;
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
-import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.application.service.OrganisationService;
-import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
@@ -73,6 +70,8 @@ public class DefaultFinanceModelManagerTest {
     private ApplicationService applicationService;
     @Mock
     private CompetitionService competitionService;
+	@Mock
+	private OrganisationSizeService organisationSizeService;
 	
     private Model model;
     private Long applicationId;
@@ -106,7 +105,7 @@ public class DefaultFinanceModelManagerTest {
 		
 		manager.addOrganisationFinanceDetails(model, applicationId, costsQuestions, userId, form, organisationId);
 		
-		assertEquals(6, model.asMap().size());
+		assertEquals(9, model.asMap().size());
 		verify(financeFormHandler, never()).addCostWithoutPersisting(applicationId, userId, costsQuestions.get(0).getId());
 	}
 	
@@ -123,7 +122,7 @@ public class DefaultFinanceModelManagerTest {
 		
 		manager.addOrganisationFinanceDetails(model, applicationId, costsQuestions, userId, form, organisationId);
 		
-		assertEquals(6, model.asMap().size());
+		assertEquals(9, model.asMap().size());
 		verify(financeFormHandler, never()).addCostWithoutPersisting(applicationId, userId, costsQuestions.get(0).getId());
 	}
 	
@@ -139,8 +138,8 @@ public class DefaultFinanceModelManagerTest {
 				financeFormHandler);
 		
 		manager.addOrganisationFinanceDetails(model, applicationId, costsQuestions, userId, form, organisationId);
-		
-		assertEquals(6, model.asMap().size());
+
+		assertEquals(9, model.asMap().size());
 		verify(financeFormHandler).addCostWithoutPersisting(applicationId, userId, costsQuestions.get(0).getId());
 	}
 
@@ -155,13 +154,14 @@ public class DefaultFinanceModelManagerTest {
 		applicationFinance.setFinanceOrganisationDetails(financeOrganisationDetails);
 		when(financeService.getApplicationFinanceDetails(userId, applicationId)).thenReturn(applicationFinance);
 		
-		String organisationType = "orgtype";
+		Long organisationType = 1L;
+		String organisationTypeName = "Business";
 
-		OrganisationTypeResource organisationTypeResource = newOrganisationTypeResource().withName(organisationType).build();
+		OrganisationTypeResource organisationTypeResource = newOrganisationTypeResource().withName(organisationTypeName).build();
 
 		when(organisationTypeService.getForOrganisationId(organisationId)).thenReturn(restSuccess(organisationTypeResource));
 
-		when(organisationService.getOrganisationType(userId, applicationId)).thenReturn(organisationTypeResource.getName());
+		when(organisationService.getOrganisationType(userId, applicationId)).thenReturn(organisationType);
 		
 		when(financeHandler.getFinanceFormHandler(organisationType)).thenReturn(financeFormHandler);
 		
@@ -170,7 +170,7 @@ public class DefaultFinanceModelManagerTest {
 		FinanceRowItem costItem = new LabourCost();
 		when(financeFormHandler.addCostWithoutPersisting(applicationId, userId, costsQuestions.get(0).getId())).thenReturn(costItem);
 
-		OrganisationResource organisation = newOrganisationResource().withId(organisationId).withOrganisationType(organisationTypeResource.getId()).withOrganisationTypeName(organisationType).withOrganisationType().build();
+		OrganisationResource organisation = newOrganisationResource().withId(organisationId).withOrganisationType(organisationTypeResource.getId()).withOrganisationTypeName(organisationTypeName).withOrganisationType().build();
 		when(organisationService.getOrganisationById(organisationId)).thenReturn(organisation);
 	}
 }

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.validation.Valid;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -60,7 +61,7 @@ public class NonIfsCompetitionController {
 
 
     @PostMapping("/non-ifs-competition/setup/{competitionId}")
-    public String save(Model model, @ModelAttribute(FORM_ATTR) NonIfsDetailsForm form,
+    public String save(Model model, @Valid @ModelAttribute(FORM_ATTR) NonIfsDetailsForm form,
                        BindingResult bindingResult, ValidationHandler validationHandler,
                        @PathVariable("competitionId") Long competitionId) {
         CompetitionResource competition = competitionService.getById(competitionId);

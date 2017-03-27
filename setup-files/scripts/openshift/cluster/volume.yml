@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: fileupload-vol
+  labels:
+    dev: dev
+spec:
+  accessModes:
+  - ReadWriteMany
+  capacity:
+    storage: 500M
+  glusterfs:
+    endpoints: glusterfs-cluster
+    path: gv0
+  persistentVolumeReclaimPolicy: Recycle

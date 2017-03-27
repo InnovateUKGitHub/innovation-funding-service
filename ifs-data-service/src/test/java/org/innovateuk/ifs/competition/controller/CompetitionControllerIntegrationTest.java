@@ -68,12 +68,12 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
     private static final String COMPETITION_NAME_UPDATED = "Competition name updated";
     private static final long INNOVATION_SECTOR_ID = 1L;
     private static final String INNOVATION_SECTOR_NAME = "Health and life sciences";
-    private static final long INNOVATION_AREA_ID = 9L;
-    private static final long INNOVATION_AREA_ID_TWO = 10L;
-    private static final long INNOVATION_AREA_ID_THREE = 11L;
-    private static final String INNOVATION_AREA_NAME = "User Experience";
-    private static final String INNOVATION_AREA_NAME_TWO = "Emerging Tech and Industries";
-    private static final String INNOVATION_AREA_NAME_THREE = "Robotics and AS";
+    private static final long INNOVATION_AREA_ID = 6L;
+    private static final long INNOVATION_AREA_ID_TWO = 7L;
+    private static final long INNOVATION_AREA_ID_THREE = 8L;
+    private static final String INNOVATION_AREA_NAME = "Satellite Applications";
+    private static final String INNOVATION_AREA_NAME_TWO = "Emerging Technology";
+    private static final String INNOVATION_AREA_NAME_THREE = "Robotics and Autonomous Systems";
     private static final String EXISTING_COMPETITION_NAME = "Connected digital additive manufacturing";
     private static final long RESEARCH_CATEGORY_ID_ONE = 33L;
 

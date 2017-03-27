@@ -1,9 +1,8 @@
 package org.innovateuk.ifs.validator;
 
-import org.innovateuk.ifs.application.domain.Application;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.proxy.HibernateProxyHelper;
+import org.innovateuk.ifs.application.domain.Application;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -48,6 +47,16 @@ public class ApplicationMarkAsCompleteValidator implements Validator {
             rejectValue(errors, "durationInMonths", "validation.project.duration.range.invalid");
         }
 
+        if (!applicationInnovationAreaIsInCorrectState(application)) {
+            LOG.debug("MarkAsComplete application details validation message for innovation area: " + application.getInnovationArea());
+            rejectValue(errors, "innovationArea", "validation.application.innovationarea.category.required");
+        }
+
+        if (application.getResearchCategory() == null) {
+            LOG.debug("MarkAsComplete application details validation message for research category is null");
+            rejectValue(errors, "researchCategory", "validation.application.research.category.required");
+        }
+
         if (application.getResubmission() != null) {
             if (application.getResubmission()) {
                 if (StringUtils.isEmpty(application.getPreviousApplicationNumber())) {
@@ -63,6 +72,9 @@ public class ApplicationMarkAsCompleteValidator implements Validator {
             LOG.debug("MarkAsComplete application details validation message for resubmission indicator: " + application.getResubmission());
             rejectValue(errors, "resubmission", "validation.application.must.indicate.resubmission.or.not");
         }
+    }
 
+    private boolean applicationInnovationAreaIsInCorrectState(Application application) {
+        return application.getNoInnovationAreaApplicable() == true || (application.getNoInnovationAreaApplicable() == false && application.getInnovationArea() !=null);
     }
 }

@@ -18,16 +18,19 @@
             <div class="message-alert extra-margin-bottom" th:unless="${model.profileStatus.complete}">
                 <h2 class="heading-small no-margin">Complete your assessor account</h2>
 
-                <p>You must complete your profile before we can assign you applications.</p>
+                <p>
+                    Please complete the following sections of your account. We cannot assign applications to you for
+                    assessment until these sections are complete.
+                </p>
                 <ul class="list list-bullet extra-margin-top">
                     <li th:unless="${model.profileStatus.skillsComplete}">
-                        <a th:href="@{/profile/skills}">your skills</a>
+                        <a th:href="@{/profile/skills/edit}">your skills</a>
                     </li>
                     <li th:unless="${model.profileStatus.affiliationsComplete}">
-                        <a th:href="@{/profile/declaration}">your declaration of interest</a>
+                        <a th:href="@{/profile/declaration/edit}">your declaration of interest</a>
                     </li>
-                    <li th:unless="${model.profileStatus.contractComplete}">
-                        <a th:href="@{/profile/contract}">your contract</a>
+                    <li th:unless="${model.profileStatus.agreementComplete}">
+                        <a th:href="@{/profile/agreement}">your assessor agreement</a>
                     </li>
                 </ul>
             </div>
@@ -125,7 +128,7 @@
                 </div>
             </div>
 
-            <h2 class="heading-medium">Your contract</h2>
+            <h2 class="heading-medium">Your assessor details</h2>
             <ul class="list list-bullet">
                 <li>
                     <a th:href="@{/profile/skills}">your skills</a>
@@ -134,7 +137,7 @@
                     <a th:href="@{/profile/declaration}">your declaration of interest</a>
                 </li>
                 <li>
-                    <a th:href="@{/profile/contract}">your contract</a>
+                    <a th:href="@{/profile/agreement}">your assessor agreement</a>
                 </li>
                 <li>
                     <a th:href="@{/profile/travel}">travel and subsistence rates</a>
@@ -151,9 +154,6 @@
                     <a th:href="">change your password</a>
                 </li>
                 */-->
-                <li>
-                    <a th:href="@{/assessor/terms-and-conditions}">read terms and conditions</a>
-                </li>
             </ul>
 
             <th:block th:insert="fragments/layout :: main-content-end" />

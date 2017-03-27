@@ -159,9 +159,9 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(3, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("queryTitle"));
-        assertEquals("The title cannot be empty.", bindingResult.getFieldError("queryTitle").getDefaultMessage());
+        assertEquals("This field cannot be left blank.", bindingResult.getFieldError("queryTitle").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("query"));
-        assertEquals("The query cannot be empty.", bindingResult.getFieldError("query").getDefaultMessage());
+        assertEquals("This field cannot be left blank.", bindingResult.getFieldError("query").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("section"));
         assertEquals("The section is not recognised, please select a valid section.", bindingResult.getFieldError("section").getDefaultMessage());
     }
@@ -192,9 +192,9 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(2, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("queryTitle"));
-        assertEquals("The title is too long, please reduce it to {1} characters.", bindingResult.getFieldError("queryTitle").getDefaultMessage());
+        assertEquals("This field cannot contain more than {1} characters.", bindingResult.getFieldError("queryTitle").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("query"));
-        assertEquals("The query is too long, please reduce it to {1} characters.", bindingResult.getFieldError("query").getDefaultMessage());
+        assertEquals("This field cannot contain more than {1} characters.", bindingResult.getFieldError("query").getDefaultMessage());
     }
 
     @Test
@@ -223,7 +223,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("query"));
-        assertEquals("The query is too long, please reduce it to {0} words.", bindingResult.getFieldError("query").getDefaultMessage());
+        assertEquals("Maximum word count exceeded. Please reduce your word count to {1}.", bindingResult.getFieldError("query").getDefaultMessage());
     }
 
     @Test

@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.application.viewmodel;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.util.StringUtils;
 
 /**
@@ -45,5 +47,31 @@ public class NavigationViewModel {
 
     public Boolean getHasNavigation(){
         return !StringUtils.isEmpty(previousUrl) || !StringUtils.isEmpty(nextUrl);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        NavigationViewModel that = (NavigationViewModel) o;
+
+        return new EqualsBuilder()
+                .append(previousUrl, that.previousUrl)
+                .append(previousText, that.previousText)
+                .append(nextUrl, that.nextUrl)
+                .append(nextText, that.nextText)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(previousUrl)
+                .append(previousText)
+                .append(nextUrl)
+                .append(nextText)
+                .toHashCode();
     }
 }

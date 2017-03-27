@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.financecheck;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
+import org.innovateuk.ifs.project.finance.resource.FinanceCheckOverviewResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
 import org.innovateuk.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
@@ -20,13 +21,9 @@ public interface FinanceCheckService {
 
     FinanceCheckResource getByProjectAndOrganisation(ProjectOrganisationCompositeId key);
 
-    ServiceResult<Void> update(FinanceCheckResource toUpdate);
-
     ServiceResult<FinanceCheckSummaryResource> getFinanceCheckSummary(Long projectId);
 
-    ServiceResult<Void> approveFinanceCheck(Long projectId, Long organisationId);
-
-    FinanceCheckProcessResource getFinanceCheckApprovalStatus(Long projectId, Long organisationId);
+    ServiceResult<FinanceCheckOverviewResource> getFinanceCheckOverview(Long projectId);
 
     FinanceCheckEligibilityResource getFinanceCheckEligibilityDetails(Long projectId, Long organisationId);
 
@@ -44,7 +41,7 @@ public interface FinanceCheckService {
 
     ServiceResult<Void> saveQueryPost(PostResource post, long threadId);
 
-    ServiceResult<List<QueryResource>> loadQueries(Long projectFinanceId);
+    ServiceResult<List<QueryResource>> getQueries(Long projectFinanceId);
 
     ServiceResult<Long> saveNote(NoteResource note);
 

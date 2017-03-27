@@ -1,4 +1,5 @@
 ext.serverPort=8080
 ext.activeProfile="local"
 ext.ifsDataServiceRestBaseURL="http://data-service:8080"
-ext.ifsIdpLogoutUrl="https://ifs-local-dev/Logout"
+ext.ifsIdpLogoutUrl="https://ifs.local-dev/Logout"
+ext.ifsWebGoogleanalyticsTrackingid=""

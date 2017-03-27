@@ -34,8 +34,8 @@ public interface UserService {
     ServiceResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber, String gender, Long ethnicity, String disability);
     ProfileSkillsResource getProfileSkills(Long userId);
     ServiceResult<Void> updateProfileSkills(Long userId, BusinessType businessType, String skillsAreas);
-    ProfileContractResource getProfileContract(Long userId);
-    ServiceResult<Void> updateProfileContract(Long userId);
+    ProfileAgreementResource getProfileAgreement(Long userId);
+    ServiceResult<Void> updateProfileAgreement(Long userId);
     List<AffiliationResource> getUserAffiliations(Long userId);
     ServiceResult<Void> updateUserAffiliations(Long userId, List<AffiliationResource> affiliations);
     List<UserResource> findUserByType(UserRoleType type);

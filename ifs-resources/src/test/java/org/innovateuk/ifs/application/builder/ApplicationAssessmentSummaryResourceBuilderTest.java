@@ -18,6 +18,7 @@ public class ApplicationAssessmentSummaryResourceBuilderTest {
     public void buildOne() {
         long expectedId = 1L;
         String expectedName = "application";
+        String expectedInnovationArea = "innovation area";
         Long expectedCompetitionId = 2L;
         String expectedCompetitionName = "competition";
         String expectedLeadOrganisation = "leadOrganisation";
@@ -27,6 +28,7 @@ public class ApplicationAssessmentSummaryResourceBuilderTest {
         ApplicationAssessmentSummaryResource applicationAssessmentSummaryResource = newApplicationAssessmentSummaryResource()
                 .withId(expectedId)
                 .withName(expectedName)
+                .withInnovationArea(expectedInnovationArea)
                 .withCompetitionId(expectedCompetitionId)
                 .withCompetitionName(expectedCompetitionName)
                 .withLeadOrganisation(expectedLeadOrganisation)
@@ -36,6 +38,7 @@ public class ApplicationAssessmentSummaryResourceBuilderTest {
 
         assertEquals(expectedId, applicationAssessmentSummaryResource.getId());
         assertEquals(expectedName, applicationAssessmentSummaryResource.getName());
+        assertEquals(expectedInnovationArea, applicationAssessmentSummaryResource.getInnovationArea());
         assertEquals(expectedCompetitionId, applicationAssessmentSummaryResource.getCompetitionId());
         assertEquals(expectedCompetitionName, applicationAssessmentSummaryResource.getCompetitionName());
         assertEquals(expectedLeadOrganisation, applicationAssessmentSummaryResource.getLeadOrganisation());
@@ -47,6 +50,7 @@ public class ApplicationAssessmentSummaryResourceBuilderTest {
     public void buildMany() {
         Long[] expectedIds = {1L, 2L};
         String[] expectedNames = {"name1", "name2"};
+        String[] expectedInnovationAreas = {"innovation area1", "innovation area2"};
         Long[] expectedCompetitionIds = {3L, 4L};
         String[] expectedCompetitionNames = {"competition1", "competition2"};
         String[] expectedLeadOrganisations = {"leadOrganisation1", "leadOrganisation"};
@@ -57,6 +61,7 @@ public class ApplicationAssessmentSummaryResourceBuilderTest {
         List<ApplicationAssessmentSummaryResource> applicationAssessmentSummaryResources = newApplicationAssessmentSummaryResource()
                 .withId(expectedIds)
                 .withName(expectedNames)
+                .withInnovationArea(expectedInnovationAreas)
                 .withCompetitionId(expectedCompetitionIds)
                 .withCompetitionName(expectedCompetitionNames)
                 .withLeadOrganisation(expectedLeadOrganisations)
@@ -67,6 +72,7 @@ public class ApplicationAssessmentSummaryResourceBuilderTest {
         ApplicationAssessmentSummaryResource first = applicationAssessmentSummaryResources.get(0);
         assertEquals(expectedIds[0].longValue(), first.getId());
         assertEquals(expectedNames[0], first.getName());
+        assertEquals(expectedInnovationAreas[0], first.getInnovationArea());
         assertEquals(expectedCompetitionIds[0], first.getCompetitionId());
         assertEquals(expectedCompetitionNames[0], first.getCompetitionName());
         assertEquals(expectedLeadOrganisations[0], first.getLeadOrganisation());
@@ -76,6 +82,7 @@ public class ApplicationAssessmentSummaryResourceBuilderTest {
         ApplicationAssessmentSummaryResource second = applicationAssessmentSummaryResources.get(1);
         assertEquals(expectedIds[1].longValue(), second.getId());
         assertEquals(expectedNames[1], second.getName());
+        assertEquals(expectedInnovationAreas[1], second.getInnovationArea());
         assertEquals(expectedCompetitionIds[1], second.getCompetitionId());
         assertEquals(expectedCompetitionNames[1], second.getCompetitionName());
         assertEquals(expectedLeadOrganisations[1], second.getLeadOrganisation());

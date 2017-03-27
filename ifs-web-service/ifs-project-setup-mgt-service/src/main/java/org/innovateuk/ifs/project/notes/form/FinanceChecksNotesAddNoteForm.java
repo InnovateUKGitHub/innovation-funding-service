@@ -9,13 +9,13 @@ import javax.validation.constraints.Size;
 
 public class FinanceChecksNotesAddNoteForm extends BaseBindingResultTarget {
 
-    @NotBlank(message = "{validation.notesandqueries.note.required}")
-    @Size(max = FinanceChecksNotesFormConstraints.MAX_NOTE_CHARACTERS, message = "{validation.notesandqueries.note.character.length.max}")
-    @WordCount(max = FinanceChecksNotesFormConstraints.MAX_NOTE_WORDS, message = "{validation.notesandqueries.note.word.length.max}")
+    @NotBlank(message = "{validation.field.must.not.be.blank}")
+    @Size(max = FinanceChecksNotesFormConstraints.MAX_NOTE_CHARACTERS, message = "{validation.field.too.many.characters}")
+    @WordCount(max = FinanceChecksNotesFormConstraints.MAX_NOTE_WORDS, message = "{validation.field.max.word.count}")
     private String note;
 
-    @NotBlank(message = "{validation.notesandqueries.note.title.required}")
-    @Size(max = FinanceChecksNotesFormConstraints.MAX_TITLE_CHARACTERS, message = "{validation.notesandqueries.note.title.length.max}")
+    @NotBlank(message = "{validation.field.must.not.be.blank}")
+    @Size(max = FinanceChecksNotesFormConstraints.MAX_TITLE_CHARACTERS, message = "{validation.field.too.many.characters}")
     private String noteTitle;
 
     private MultipartFile attachment;

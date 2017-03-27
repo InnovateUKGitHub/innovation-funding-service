@@ -1,21 +1,23 @@
 package org.innovateuk.ifs.application.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.innovateuk.ifs.application.builder.QuestionBuilder.newQuestion;
+import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
-import static org.junit.Assert.assertEquals;
+import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static org.junit.Assert.*;
 
 public class ApplicationTest {
     private Application application;
@@ -54,43 +56,75 @@ public class ApplicationTest {
     }
     @Test
     public void addFormInputResponse() {
-    	FormInput fi = newFormInput().build();
-    	FormInputResponse fir = newFormInputResponse().withFormInputs(fi).build();
-    	
-    	application.addFormInputResponse(fir);
+    	FormInput formInput = newFormInput().withQuestion(newQuestion().withMultipleStatuses(true).build()).build();
+        ProcessRole processRole = newProcessRole().withOrganisationId(1L).build();
+        FormInputResponse formInputResponse = newFormInputResponse().withFormInputs(formInput).withUpdatedBy(processRole).build();
+
+    	application.addFormInputResponse(formInputResponse, processRole);
     	
     	assertEquals(1, application.getFormInputResponses().size());
-    	assertEquals(fir, application.getFormInputResponses().get(0));
+    	assertEquals(formInputResponse, application.getFormInputResponses().get(0));
     }
     
     @Test
     public void addFormInputResponsesForDifferentInputs() {
-    	FormInput fi1 = newFormInput().build();
-    	FormInputResponse fir1 = newFormInputResponse().withFormInputs(fi1).build();
-    	FormInput fi2 = newFormInput().build();
-    	FormInputResponse fir2 = newFormInputResponse().withFormInputs(fi2).build();
-    	
-    	application.addFormInputResponse(fir1);
-    	application.addFormInputResponse(fir2);
+        ProcessRole processRole = newProcessRole().withOrganisationId(1L).build();
+    	FormInput formInput1 = newFormInput().withQuestion(newQuestion().withMultipleStatuses(false).build()).build();
+    	FormInputResponse formInputResponse1 = newFormInputResponse().withFormInputs(formInput1).withUpdatedBy(processRole).build();
+    	FormInput formInput2 = newFormInput().withQuestion(newQuestion().withMultipleStatuses(false).build()).build();
+    	FormInputResponse formInputResponse2 = newFormInputResponse().withFormInputs(formInput2).withUpdatedBy(processRole).build();
+
+
+        application.addFormInputResponse(formInputResponse1, processRole);
+    	application.addFormInputResponse(formInputResponse2, processRole);
     	
     	assertEquals(2, application.getFormInputResponses().size());
-    	assertEquals(fir1, application.getFormInputResponses().get(0));
-    	assertEquals(fir2, application.getFormInputResponses().get(1));
+    	assertEquals(formInputResponse1, application.getFormInputResponses().get(0));
+    	assertEquals(formInputResponse2, application.getFormInputResponses().get(1));
     }
     
     @Test
-    public void addFormInputResponsesForSameInputs() {
-    	FormInput fi = newFormInput().build();
-    	FormInputResponse fir1 = newFormInputResponse().withFormInputs(fi).withValue("1").build();
-    	FormInputResponse fir2 = newFormInputResponse().withFormInputs(fi).withValue("2").build();
+    public void addFormInputResponsesForSameInputsAndProcessRoles() {
+    	FormInput formInput = newFormInput().withQuestion(newQuestion().withMultipleStatuses(true).build()).build();
+        ProcessRole processRole = newProcessRole().withOrganisationId(1L).build();
+    	FormInputResponse formInputResponse1 = newFormInputResponse().withFormInputs(formInput).withValue("1").withUpdatedBy(processRole).build();
+    	FormInputResponse formInputResponse2 = newFormInputResponse().withFormInputs(formInput).withValue("2").withUpdatedBy(processRole).build();
     	
-    	application.addFormInputResponse(fir1);
-    	application.addFormInputResponse(fir2);
+    	application.addFormInputResponse(formInputResponse1, processRole);
+    	application.addFormInputResponse(formInputResponse2, processRole);
     	
     	assertEquals(1, application.getFormInputResponses().size());
-    	assertEquals(fir1, application.getFormInputResponses().get(0));
+    	assertEquals(formInputResponse1, application.getFormInputResponses().get(0));
     	assertEquals("2", application.getFormInputResponses().get(0).getValue());
     }
 
+    @Test
+    public void addFormInputResponsesForSameInputsAndDifferentProcessRoles() {
+        FormInput formInput = newFormInput().withQuestion(newQuestion().withMultipleStatuses(true).build()).build();
+        ProcessRole processRole1 = newProcessRole().withOrganisationId(1L).build();
+        ProcessRole processRole2 = newProcessRole().withOrganisationId(2L).build();
+        FormInputResponse formInputResponse1 = newFormInputResponse().withFormInputs(formInput).withUpdatedBy(processRole1).build();
+        FormInputResponse formInputResponse2 = newFormInputResponse().withFormInputs(formInput).withUpdatedBy(processRole2).build();
 
+        application.addFormInputResponse(formInputResponse1, processRole1);
+        application.addFormInputResponse(formInputResponse2, processRole2);
+
+        assertEquals(2, application.getFormInputResponses().size());
+        assertEquals(formInputResponse1, application.getFormInputResponses().get(0));
+        assertEquals(formInputResponse2, application.getFormInputResponses().get(1));
+    }
+
+    @Test(expected=IllegalStateException.class)
+    public void addingInnovationAreaAndThenNotApplicableShouldResultInIllegalStateException() {
+        Application application = new Application();
+        application.setInnovationArea(newInnovationArea().build());
+        application.setNoInnovationAreaApplicable(true);
+    }
+
+    @Test(expected=IllegalStateException.class)
+    public void addingNotApplicableAndThenInnovationAreaShouldResultInIllegalStateException() {
+        Application application = new Application();
+        application.setNoInnovationAreaApplicable(true);
+        application.setInnovationArea(newInnovationArea().build());
+    }
 }

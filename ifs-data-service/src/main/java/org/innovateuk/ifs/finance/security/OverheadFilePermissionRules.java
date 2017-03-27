@@ -10,10 +10,12 @@ import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.security.SecurityRuleUtil.checkProcessRole;
+import static org.innovateuk.ifs.security.SecurityRuleUtil.isInternal;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 
@@ -58,6 +60,17 @@ public class OverheadFilePermissionRules extends BasePermissionRules {
     public boolean consortiumCanReadDetailsAnOverheadsFileForTheirApplicationAndOrganisation(final FinanceRow overheads, final UserResource user) {
         return isCollaborator(overheads, user);
     }
+
+    @PermissionRule(value = "READ_OVERHEAD_CONTENTS", description = "The internal user can read the overhead file contents for any application and organisation")
+    public boolean internalUserCanReadContentsOfAnOverheadsFileForTheirApplicationAndOrganisation(final FinanceRow overheads, final UserResource user) {
+        return isInternal(user);
+    }
+
+    @PermissionRule(value = "READ_OVERHEAD_DETAILS", description = "The internal user can read the overhead file details for any application and organisation")
+    public boolean internalUserCanReadDetailsOfAnOverheadsFileForTheirApplicationAndOrganisation(final FinanceRow overheads, final UserResource user) {
+        return isInternal(user);
+    }
+
     private boolean isCollaborator(final FinanceRow overheads, final UserResource user) {
         final ApplicationFinance applicationFinance = (ApplicationFinance) overheads.getTarget();
         final Long applicationId = applicationFinance.getApplication().getId();
@@ -66,4 +79,5 @@ public class OverheadFilePermissionRules extends BasePermissionRules {
         final boolean isCollaborator = checkProcessRole(user, applicationId, organisationId, COLLABORATOR, roleRepository, processRoleRepository);
         return isLead || isCollaborator;
     }
+
 }

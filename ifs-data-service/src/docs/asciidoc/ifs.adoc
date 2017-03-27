@@ -138,9 +138,9 @@ include::question.adoc[]
 == Section
 include::section.adoc[]
 
-[[contract]]
-== Contract
-include::contract.adoc[]
+[[agreement]]
+== Agreement
+include::agreement.adoc[]
 
 [[competition]]
 == Competition
@@ -161,6 +161,10 @@ include::competitionSetupQuestion.adoc[]
 [[competitionSetupFinance]]
 == Competition Setup Finance
 include::competitionSetupFinance.adoc[]
+
+[[inviteorganisation]]
+== Invite Organisation
+include::invite-organisation.adoc[]
 
 [[Milestone]]
 == Milestone

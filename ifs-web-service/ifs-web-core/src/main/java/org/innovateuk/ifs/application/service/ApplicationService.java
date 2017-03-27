@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 
@@ -23,5 +24,7 @@ public interface ApplicationService {
     int getAssignedQuestionsCount(Long applicantId, Long processRoleId);
     ServiceResult<ApplicationResource> findByProcessRoleId(Long id);
     OrganisationResource getLeadOrganisation(Long applicationId);
+    RestResult<Long> getTurnover(Long applicationId);
+    RestResult<Long> getHeadCount(Long applicationId);
     ServiceResult<Void> removeCollaborator(Long applicationInviteId);
 }

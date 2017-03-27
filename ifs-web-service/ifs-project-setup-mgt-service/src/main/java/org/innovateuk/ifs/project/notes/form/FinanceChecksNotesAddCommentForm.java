@@ -8,9 +8,9 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.constraints.Size;
 
 public class FinanceChecksNotesAddCommentForm extends BaseBindingResultTarget {
-    @NotBlank(message = "{validation.notesandqueries.comment.required}")
-    @Size(max = FinanceChecksNotesFormConstraints.MAX_NOTE_CHARACTERS, message = "{validation.notesandqueries.comment.character.length.max}")
-    @WordCount(max = FinanceChecksNotesFormConstraints.MAX_NOTE_WORDS, message = "{validation.notesandqueries.comment.word.length.max}")
+    @NotBlank(message = "{validation.field.must.not.be.blank}")
+    @Size(max = FinanceChecksNotesFormConstraints.MAX_NOTE_CHARACTERS, message = "{validation.field.too.many.characters}")
+    @WordCount(max = FinanceChecksNotesFormConstraints.MAX_NOTE_WORDS, message = "{validation.field.max.word.count}")
     private String comment;
 
     private MultipartFile attachment;

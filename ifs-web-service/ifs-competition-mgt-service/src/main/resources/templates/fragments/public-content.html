@@ -1,6 +1,5 @@
     <!-- =================== Public content section - Competition information and search  ============================== -->
 <div th:fragment="section-search(model, form)" xmlns:th="http://www.w3.org/1999/html">
-    <p>This information is used for search results and the opening section of the competition page.</p>
     <th:block th:if="${model.readOnly}">
         <dl class="readonly-list">
             <dt>Short description</dt>
@@ -8,12 +7,13 @@
             <dt>Project funding range</dt>
             <dd th:text="${form.projectFundingRange}"></dd>
             <dt>Eligibility summary</dt>
-            <dd th:text="${form.eligibilitySummary}"></dd>
+            <dd><div class="wysiwyg-styles" ifs:utext="${form.eligibilitySummary}"></div></dd>
             <dt>Keywords</dt>
             <dd th:text="${form.keywords}"></dd>
         </dl>
     </th:block>
     <th:block th:unless="${model.readOnly}">
+        <p>This information is used for search results and the opening section of the competition page.</p>
         <fieldset>
             <div class="form-group">
                 <label class="form-label-bold" for="short-description">
@@ -22,6 +22,7 @@
                 </label>
                 <input class="form-control width-full" id="short-description" type="text" th:field="${form.shortDescription}"
                        required="required"
+                       maxlength="255"
                        th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.shortDescription.required}" />
             </div>
             <div class="form-group">
@@ -31,6 +32,7 @@
                 </label>
                 <input class="form-control" id="funding-range" type="text" th:field="${form.projectFundingRange}"
                        required="required"
+                       maxlength="255"
                        th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.projectFundingRange.required}" />
             </div>
             <div class="form-group">
@@ -38,9 +40,15 @@
                     Eligibility summary
                     <span class="form-hint">Appears against the competition search result.</span>
                 </label>
-                <input class="form-control" id="eligibility-summary" type="text" th:field="${form.eligibilitySummary}"
-                       required="required"
-                       th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.eligibilitySummary.required}" />
+                <div class="textarea-wrapped">
+                    <textarea data-editor="html"
+                           class="form-control"
+                           id="eligibility-summary"
+                           ifs:utext="${form.eligibilitySummary}"
+                           th:field="${form.eligibilitySummary}"
+                           required="required"
+                           th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.eligibilitySummary.required}"></textarea>
+                </div>
             </div>
             <div class="form-group">
                 <label class="form-label-bold" for="keywords">
@@ -49,6 +57,7 @@
                 </label>
                 <input class="form-control width-full" id="keywords" type="text" th:field="${form.keywords}"
                        required="required"
+                       maxlength="255"
                        th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.keywords.required}"/>
             </div>
         </fieldset>
@@ -57,11 +66,10 @@
 
 <!-- =================== Public content section - Summary  ========================================================= -->
 <div th:fragment="section-summary(model, form)" xmlns:th="http://www.w3.org/1999/html">
-    <p>Text entered into this section will appear in the summary tab.</p>
     <th:block th:if="${model.readOnly}">
         <dl class="readonly-data">
             <dt>Competition description</dt>
-            <dd ifs:utext="${form.description}"></dd>
+            <dd><div class="wysiwyg-styles" ifs:utext="${form.description}"></div></dd>
             <dt>Funding type</dt>
             <dd th:text="${form.fundingType}"></dd>
             <dt>Project size</dt>
@@ -70,6 +78,7 @@
         <th:block th:include="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" />
     </th:block>
     <th:block th:unless="${model.readOnly}">
+        <p>Text entered into this section will appear in the summary tab.</p>
         <fieldset>
             <div class="form-group">
                 <label class="form-label-bold" for="description">
@@ -124,11 +133,11 @@
 
 <!-- =================== Public content section - Eligibility  ===================================================== -->
 <div th:fragment="section-eligibility(model, form)" xmlns:th="http://www.w3.org/1999/html">
-    <p>Text entered into this section will appear within the eligibility tab.</p>
     <th:block th:if="${model.readOnly}">
         <th:block th:include="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" />
     </th:block>
     <th:block th:unless="${model.readOnly}">
+        <p>Text entered into this section will appear within the eligibility tab.</p>
         <h2 class="heading-medium no-margin">Content</h2>
         <th:block th:include="fragments/public-content :: content-groups(form=${form},model=${model})" />
     </th:block>
@@ -145,6 +154,7 @@
         </dl>
     </div>
     <th:block th:unless="${model.readOnly}">
+        <p>Text entered into this section will appear within the dates tab.</p>
         <hr />
         <p>Generated automatically from the competition milestones.</p>
         <dl>
@@ -250,12 +260,15 @@
         <th:block th:include="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" />
     </th:block>
     <th:block th:unless="${model.readOnly}">
+        <p>Text entered into this section will appear within the scope tab.</p>
         <h2 class="heading-medium no-margin">Content</h2>
         <th:block th:include="fragments/public-content :: content-groups(form=${form},model=${model})" />
     </th:block>
 </div>
 
+<!-- =================== Public content section - Supporting information  ========================================== -->
 <div th:fragment="section-supporting-information(model, form)" xmlns:th="http://www.w3.org/1999/html">
+    <p>Text entered into this section will appear within the supporting information tab.</p>
     <th:block th:if="${model.readOnly}">
         <th:block th:include="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" />
     </th:block>
@@ -265,11 +278,13 @@
     </th:block>
 </div>
 
+<!-- =================== Public content section - How to apply  ==================================================== -->
 <div th:fragment="section-how-to-apply(model, form)" xmlns:th="http://www.w3.org/1999/html">
     <th:block th:if="${model.readOnly}">
         <th:block th:include="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" />
     </th:block>
     <th:block th:unless="${model.readOnly}">
+        <p>Text entered into this section will appear within the how to apply tab.</p>
         <h2 class="heading-medium">Content</h2>
         <th:block th:include="fragments/public-content :: content-groups(form=${form},model=${model})" />
     </th:block>

@@ -54,26 +54,30 @@ def downloadFile(shibCookieName, shibCookieValue, downloadUrl, downloadFileLocat
   curlCommand = "curl --insecure --cookie " + shibCookieName + "=" + shibCookieValue + " " + downloadUrl + " -o " + downloadFileLocation
   shell(curlCommand)
 
+def downloadPublicFile(downloadUrl, downloadFileLocation):
+  curlCommand = "curl --insecure " + downloadUrl + " -o " + downloadFileLocation
+  shell(curlCommand)
+
 # Log a user in and download a file.
 # Example use case:
 # ./download.py john.doe@innovateuk.test Passw0rd https://ifs-local-dev/management/competition/1/download /tmp/file.xlsx
 # Note that repeated use in quick succession on various non developer environments will cause failure due to - most likely - to automatic lockup.
 
 def main():
-  if len(sys.argv) != 5:
-    print "[*] Usage: ./download.py [test_user] [password] [download_url] [filename]"
-    print "[*] eg ./download.py john.doe@innovateuk.test Passw0rd https://ifs-local-dev/management/competition/10/applications/download downloaded_files/submitted_applications.xlsx"
-    sys.exit()
-  user = sys.argv[1] # e.g. john.doe@innovateuk.test
-  password = sys.argv[2] # e.g. Passw0rd
-  downloadUrl = sys.argv[3] # e.g. https://ifs-local-dev/management/competition/1/download
-  downloadFileLocation = sys.argv[4] # e.g. /tmp/file.xlsx
-
-  baseUrl = getBaseUrl(downloadUrl)
-  loginPostUrl, baseAuthUrl = getBaseAuthUrlAndPortUrl(baseUrl)
-  sAMLResponse, relayState = postCredentialsAndGetShibbolethParameters(user, password, baseAuthUrl, loginPostUrl)
-  shibCookieName, shibCookieValue = postShibbolethParametersForSession(sAMLResponse, relayState, baseUrl)
-  downloadFile(shibCookieName, shibCookieValue, downloadUrl, downloadFileLocation)
+    if len(sys.argv) == 3:
+       downloadUrl = sys.argv[1]
+       downloadFileLocation = sys.argv[2]
+       downloadPublicFile(downloadUrl, downloadFileLocation)
+    else:
+       user = sys.argv[1] # e.g. john.doe@innovateuk.test
+       password = sys.argv[2] # e.g. Passw0rd
+       downloadUrl = sys.argv[3] # e.g. https://ifs-local-dev/management/competition/1/download
+       downloadFileLocation = sys.argv[4] # e.g. /tmp/file.xlsx
+       baseUrl = getBaseUrl(downloadUrl)
+       loginPostUrl, baseAuthUrl = getBaseAuthUrlAndPortUrl(baseUrl)
+       sAMLResponse, relayState = postCredentialsAndGetShibbolethParameters(user, password, baseAuthUrl, loginPostUrl)
+       shibCookieName, shibCookieValue = postShibbolethParametersForSession(sAMLResponse, relayState, baseUrl)
+       downloadFile(shibCookieName, shibCookieValue, downloadUrl, downloadFileLocation)
 
 if __name__ == '__main__':
   main()

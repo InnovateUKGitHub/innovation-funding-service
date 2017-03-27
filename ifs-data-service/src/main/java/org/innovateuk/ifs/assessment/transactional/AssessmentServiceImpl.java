@@ -143,6 +143,16 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     }
 
     @Override
+    public ServiceResult<ApplicationAssessmentFeedbackResource> getApplicationFeedback(long applicationId) {
+        return serviceSuccess(new ApplicationAssessmentFeedbackResource(
+                    simpleMap(
+                            assessmentRepository.findByTargetId(applicationId),
+                            assessment -> assessment.getFundingDecision().getFeedback()
+                    )
+        ));
+    }
+
+    @Override
     public ServiceResult<Void> notifyAssessorsByCompetition(long competitionId) {
         return getCompetition(competitionId).andOnSuccess(competition -> {
             List<Assessment> assessments = assessmentRepository.findByActivityStateStateAndTargetCompetitionId(

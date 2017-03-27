@@ -4,6 +4,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.finance.view.OrganisationFinanceOverview;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.assessment.form.AssessmentOverviewForm;
@@ -12,16 +13,19 @@ import org.innovateuk.ifs.assessment.model.AssessmentOverviewModelPopulator;
 import org.innovateuk.ifs.assessment.model.RejectAssessmentModelPopulator;
 import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
+import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.service.AssessmentService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseService;
 import org.innovateuk.ifs.assessment.viewmodel.*;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.OrganisationSize;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
@@ -29,6 +33,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
@@ -49,23 +54,24 @@ import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newS
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
 import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.CONFLICT_OF_INTEREST;
+import static org.innovateuk.ifs.assessment.resource.AssessmentStates.ACCEPTED;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ASSESSMENT_REJECTION_FAILED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.finance.builder.OrganisationFinanceOverviewBuilder.newOrganisationFinanceOverviewBuilder;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.form.resource.FormInputType.*;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -373,6 +379,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .with(id(assessmentId))
                 .withApplication(applicationId)
                 .withApplicationName("application name")
+                .withActivityState(ACCEPTED)
                 .build();
 
         when(assessmentService.getRejectableById(assessmentId)).thenReturn(assessment);
@@ -384,7 +391,8 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
 
         RejectAssessmentViewModel expectedViewModel = new RejectAssessmentViewModel(assessmentId,
                 applicationId,
-                "application name"
+                "application name",
+                ACCEPTED
         );
 
         MvcResult result = mockMvc.perform(post("/{assessmentId}/reject", assessmentId)
@@ -423,6 +431,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .with(id(assessmentId))
                 .withApplication(applicationId)
                 .withApplicationName("application name")
+                .withActivityState(ACCEPTED)
                 .build();
 
         when(assessmentService.getRejectableById(assessmentId)).thenReturn(assessment);
@@ -435,7 +444,8 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
 
         RejectAssessmentViewModel expectedViewModel = new RejectAssessmentViewModel(assessmentId,
                 applicationId,
-                "application name"
+                "application name",
+                ACCEPTED
         );
 
         MvcResult result = mockMvc.perform(post("/{assessmentId}/reject", assessmentId)
@@ -475,6 +485,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .with(id(assessmentId))
                 .withApplication(applicationId)
                 .withApplicationName("application name")
+                .withActivityState(ACCEPTED)
                 .build();
 
         when(assessmentService.getRejectableById(assessmentId)).thenReturn(assessment);
@@ -487,7 +498,8 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
 
         RejectAssessmentViewModel expectedViewModel = new RejectAssessmentViewModel(assessmentId,
                 applicationId,
-                "application name"
+                "application name",
+                ACCEPTED
         );
 
         MvcResult result = mockMvc.perform(post("/{assessmentId}/reject", assessmentId)
@@ -527,6 +539,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .with(id(assessmentId))
                 .withApplication(applicationId)
                 .withApplicationName("application name")
+                .withActivityState(ACCEPTED)
                 .build();
 
         when(assessmentService.getRejectableById(assessmentId)).thenReturn(assessment);
@@ -540,7 +553,8 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
 
         RejectAssessmentViewModel expectedViewModel = new RejectAssessmentViewModel(assessmentId,
                 applicationId,
-                "application name"
+                "application name",
+                ACCEPTED
         );
 
         MvcResult result = mockMvc.perform(post("/{assessmentId}/reject", assessmentId)
@@ -578,6 +592,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .with(id(assessmentId))
                 .withApplication(applicationId)
                 .withApplicationName("application name")
+                .withActivityState(ACCEPTED)
                 .build();
 
         when(assessmentService.getRejectableById(assessmentId)).thenReturn(assessment);
@@ -586,7 +601,8 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
 
         RejectAssessmentViewModel expectedViewModel = new RejectAssessmentViewModel(assessmentId,
                 applicationId,
-                "application name"
+                "application name",
+                ACCEPTED
         );
 
         mockMvc.perform(get("/{assessmentId}/reject/confirm", assessmentId))
@@ -600,17 +616,54 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         inOrder.verifyNoMoreInteractions();
     }
 
+    @Test
+    public void downloadAppendix() throws Exception {
+        long assessmentId = 1L;
+        long applicationId = 2L;
+        long formInputId = 3L;
+
+        ProcessRoleResource assessorRole = newProcessRoleResource().build();
+        ByteArrayResource fileContents = new ByteArrayResource("The returned file data".getBytes());
+        FileEntryResource fileEntry = newFileEntryResource().withMediaType("text/hello").withFilesizeBytes(1234L).build();
+        FormInputResponseFileEntryResource formInputResponseFileEntry =
+                new FormInputResponseFileEntryResource(fileEntry, formInputId, applicationId, assessorRole.getId());
+
+        loginDefaultUser();
+        UserResource assessor = getLoggedInUser();
+
+        when(processRoleService.findProcessRole(assessor.getId(), applicationId)).thenReturn(assessorRole);
+        when(formInputResponseService.getFile(formInputId,
+                applicationId,
+                assessorRole.getId()))
+                .thenReturn(restSuccess(fileContents));
+        when(formInputResponseService.getFileDetails(formInputId, applicationId, assessorRole.getId()))
+                .thenReturn(restSuccess(formInputResponseFileEntry));
+
+        mockMvc.perform(get("/{assessmentId}/application/{applicationId}/formInput/{formInputId}/download",
+                    assessmentId,
+                    applicationId,
+                    formInputId))
+                .andExpect(status().isOk())
+                .andExpect(content().string("The returned file data"))
+                .andExpect(header().string("Content-Type", "text/hello"))
+                .andExpect(header().longValue("Content-Length", "The returned file data".length()));
+
+        verify(processRoleService).findProcessRole(assessor.getId(), applicationId);
+        verify(formInputResponseService).getFile(formInputId, applicationId, assessorRole.getId());
+        verify(formInputResponseService).getFileDetails(formInputId, applicationId, assessorRole.getId());
+    }
+
     private List<ApplicationFinanceResource> setupFinances(ApplicationResource app, SortedSet<OrganisationResource> orgSet) {
         List<OrganisationResource> orgList = orgSet.stream().collect(Collectors.toList());
         List<ApplicationFinanceResource> appFinanceList = new ArrayList<>();
-        appFinanceList.add(new ApplicationFinanceResource(1L, orgList.get(0).getId(), app.getId(), OrganisationSize.LARGE));
-        appFinanceList.add(new ApplicationFinanceResource(2L, orgList.get(1).getId(), app.getId(), OrganisationSize.LARGE));
+        appFinanceList.add(new ApplicationFinanceResource(1L, orgList.get(0).getId(), app.getId(), 2L));
+        appFinanceList.add(new ApplicationFinanceResource(2L, orgList.get(1).getId(), app.getId(), 2L));
 
         when(financeService.getApplicationFinanceTotals(app.getId())).thenReturn(appFinanceList);
 
         when(applicationFinanceRestService.getResearchParticipationPercentage(anyLong())).thenReturn(restSuccess(0.0));
-        when(financeHandler.getFinanceFormHandler("Business")).thenReturn(defaultFinanceFormHandler);
-        when(financeHandler.getFinanceModelManager("Business")).thenReturn(defaultFinanceModelManager);
+        when(financeHandler.getFinanceFormHandler(1L)).thenReturn(defaultFinanceFormHandler);
+        when(financeHandler.getFinanceModelManager(1L)).thenReturn(defaultFinanceModelManager);
 
         return appFinanceList;
     }

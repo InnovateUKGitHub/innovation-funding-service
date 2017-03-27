@@ -32,18 +32,38 @@
 
     <div th:fragment="textarea"  class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.getId()}__]')} ? error : ''">
 
-      <label class="form-label form-label-bold" th:for="'form-textarea-'+${formInput.getId()}" th:id="'form-label-'+${formInput.getId()}">
-        <th:block th:if="${readonly}">
-            <span th:if="${question.getName()}" th:text="${question.name}" />
+        <th:block th:if="${!userIsLeadApplicant}">
+            <div class="assign-container assign-container--alert" th:classappend="(${currentUser.getId() == questionAssignee?.assigneeUserId} ? 'assign-alert')">
+                <th:block th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
+                          th:include="question-type/form-elements :: current-assignee"/>
+            </div>
         </th:block>
-        <th:block th:unless="${readonly}">
-          <span th:if="${question.getName()}" th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.name}" />
-          <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.getDescription()})" />
-        </th:block>
-        <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" />
-      </label>
-      <th:block th:unless="${readonly}" th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
-      <th:block th:insert="question-type/form-elements :: form-textarea-wrapped" />
+
+        <th:block th:insert="question-type/form-elements :: assign-buttons-dialog" th:unless="${readonly} or ${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} or ${!userIsLeadApplicant}"/>
+
+        <div th:unless="${readonly}" class="textarea-header">
+
+            <th:block th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}">
+                <div class="success-alert assignee extra-margin-bottom">
+                    <p>This question is marked as complete</p>
+                </div>
+            </th:block>
+
+        </div>
+
+        <label class="form-label form-label-bold" th:for="'form-textarea-'+${formInput.getId()}" th:id="'form-label-'+${formInput.getId()}">
+            <th:block th:if="${readonly}">
+                <span class="heading-medium" th:if="${question.getName()}" th:text="${question.name}" />
+            </th:block>
+            <th:block th:unless="${readonly}">
+              <span class="heading-medium" th:if="${question.getName()}" th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.name}" />
+              <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.getDescription()})" />
+            </th:block>
+            <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" />
+        </label>
+
+        <th:block th:unless="${readonly}" th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
+        <th:block th:insert="question-type/form-elements :: form-textarea-wrapped" th:with="hideAlerts=${true}" />
     </div>
 
     <!-- ===========================Form: Date input =========================== -->
@@ -82,7 +102,7 @@
                 <a th:if="${isCompManagementDownload}" th:href="@{${compManagementDownloadURL}}" class="uploaded-file" th:text="${filename}">The-uploaded-file-example.pdf</a>
                 <a th:unless="${isCompManagementDownload}" th:href="@{${downloadURL}}" class="uploaded-file" th:text="${filename}">The-uploaded-file-example.pdf</a>
             </div>
-            <div th:unless="${readonly}" class="alignright" th:if="${(not question.isMarkAsCompletedEnabled() or (question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id) and (questionAssignee?.assigneeUserId == currentUser?.getId() or (questionAssignee?.getAssignee() == null))))}">
+            <div th:unless="${readonly}" class="alignleft" th:if="${(not question.isMarkAsCompletedEnabled() or (question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id) and (questionAssignee?.assigneeUserId == currentUser?.getId() or (questionAssignee?.getAssignee() == null))))}">
                 <button class="button-secondary no-margin-right" type="submit" th:name="${removeName}">Remove</button>
             </div>
         </div>
@@ -128,34 +148,55 @@
                          required="required"
                          th:errorclass="field-error" />
                 </div>
-                <div class="form-group" th:classappend="${#fields.hasErrors('*{application.researchCategoryId}')} ? 'error'">
-                    <div class="message-alert extra-margin-bottom" th:if="${hasApplicationFinances}">
-                        <h2 class="heading-small no-margin">Research category determines funding</h2>
-                        <p>The research category is used to calculate the funding for all collaborators in the application.</p>
-                        <p>Changing this selection will reset the funding level for all collaborators that have completed their funding section.</p>
-                    </div>
+                <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.startDate__}')} ? 'error'">
+                    <fieldset>
+                        <legend>
+                            <span class="heading-medium">Estimated timescales</span>
+                            <span class="form-hint">Project start date</span>
+                            <th:block th:insert="question-type/form-elements :: form-hint (hint='For example: 31 12 2015')"  />
+                            <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.startDate')"  />
+                        </legend>
+                        <th:block th:insert="question-type/form-elements :: form-dateinput (id='application_details-startdate', field='application.startDate',readonly=${readonly})" />
+                    </fieldset>
+                </div>
+                <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.durationInMonths__}')} ? 'error'">
+                    <th:block th:insert="question-type/form-elements :: form-label (name='Duration in months',id=${id},bold=false)" />
+                    <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.durationInMonths')"  />
+                    <input class="form-control width-extra-small"
+                           id="application_details-duration"
+                           th:field="*{__application.durationInMonths__}"
+                           th:errorclass="field-error"
+                           type="text"
+                           pattern="^([1-9]|0[1-9]|[1-2][0-9]|3[0-6])$"
+                           required="required"
+                           th:attr="data-pattern-errormessage=#{validation.project.duration.range.invalid}" />
+                    <!--/* this is solved with a pattern because setting a number and min="" and max="" doesn't support one message (your project should last between 1 and 36 months).
+                    This could be fixed by doing a total refactor of javascript or set two different messages (Your project should be more than 1, less than 36), or like this with a regex */-->
+                </div>
+
+                <div class="form-group">
                     <fieldset>
                         <legend>
                             <span class="heading-medium">Research category</span>
-                            <th:block th:insert="question-type/form-elements :: form-hint (hint='Please confirm the research category for your project, further guidance is available from the &lt;a href=https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#funding-rules>Innovate UK funding rules.&lt;/a&gt;')" />
-                            <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.researchCategoryId')" />
+                            <th:block th:insert="question-type/form-elements :: form-hint (hint='The type of research affects the level of funding a business can receive under UK state aid rules. Changing the research category will reset the funding level for all business participants.')" />
                         </legend>
-                        <label class="block-label selection-button-radio"
-                               th:classappend="${cat.id == rsCategoryId} ? 'selected'"
-                               th:each="cat : ${researchCategories}"
-                               th:for="${'financePosition-cat-' + cat.id}">
-                            <input th:value="${cat.id}"
-                                       type="radio"
-                                       th:name="application.researchCategoryId"
-                                       th:id="${'financePosition-cat-' + cat.id}"
-                                       th:checked="${cat.id == rsCategoryId}"
-                                       required="required"
-                                       th:attr="data-required-errormessage=#{validation.application.research.category.required}"/>
-                            <th:block th:text="${cat.name}" />
-                        </label>
+                        <span th:if="${model.questionApplicationViewModel.selectedResearchCategoryName != null}">Chosen research category: <th:block th:text="${model.questionApplicationViewModel.selectedResearchCategoryName}"/></span><br/>
+                        <button class="buttonlink" name="submit-section-redirect" th:value="${'/form/question/' + question.id + '/research-category'}"
+                                type="submit"><span th:text="${model.questionApplicationViewModel.selectedResearchCategoryName != null ? 'Change your research category' : 'Choose your research category'}">Choose your research category</span></button>
                     </fieldset>
                 </div>
-                <div class="form-group"  th:classappend="${#fields.hasErrors('*{__application.resubmission__}')} ? 'error'">
+
+                <div class="form-group">
+                    <fieldset>
+                        <legend>
+                            <span class="heading-medium">Innovation area</span>
+                            <th:block th:insert="question-type/form-elements :: form-hint (hint='This is the primary innovation area for your project. This will help Innovate UK select suitable assessors for your application.')" />
+                        </legend>
+                        Chosen innovation area: <th:block th:text="${model.questionApplicationViewModel.selectedInnovationAreaName}" /><br/>
+                        <button class="buttonlink" name="submit-section-redirect" th:value="${'/form/question/' + question.id + '/innovation-area'}" type="submit">Change your innovation area</button>
+                    </fieldset>
+                </div>
+                <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.resubmission__}')} ? 'error'">
                     <fieldset>
                         <legend>
                             <span class="form-label form-label-bold">Is this application a resubmission of a previous application?</span>
@@ -164,25 +205,27 @@
                         </legend>
                         <label class="block-label selection-button-radio "
                                th:classappend="${currentApplication.resubmission != null and currentApplication.resubmission} ? 'selected'"
-                               for="resubmission-yes"
+                               for="application.resubmission-yes"
                                data-target="resubmission-details">
                             <input type="radio"
-                                   id="resubmission-yes"
+                                   id="application.resubmission-yes"
                                    th:field="*{__application.resubmission__}"
                                    value="true"
                                    required="required"
-                                   th:checked="${currentApplication.resubmission != null and currentApplication.resubmission}" />
-                            Yes
+                                   th:checked="${currentApplication.resubmission != null and currentApplication.resubmission}"
+                                   th:attr="data-required-errormessage=#{validation.application.must.indicate.resubmission.or.not}"/>
+                                    Yes
                         </label>
                         <label class="block-label selection-button-radio"
                                th:classappend="${currentApplication.resubmission != null and !currentApplication.resubmission} ? 'selected'"
-                               for="resubmission-no">
+                               for="application.resubmission-no">
                                 <input type="radio"
-                                       id="resubmission-no"
+                                       id="application.resubmission-no"
                                        th:field="*{__application.resubmission__}"
                                        value="false"
                                        required="required"
-                                       th:checked="${currentApplication.resubmission != null and !currentApplication.resubmission}" />
+                                       th:checked="${currentApplication.resubmission != null and !currentApplication.resubmission}"
+                                       th:attr="data-required-errormessage=#{validation.application.must.indicate.resubmission.or.not}"/>
                                     No
                         </label>
                     </fieldset>
@@ -216,79 +259,36 @@
                                th:attr="data-required-errormessage=#{validation.application.previous.application.title.required}" />
                     </div>
                 </div>
-                <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.startDate__}')} ? 'error'">
-                    <fieldset>
-                        <legend>
-                             <span class="heading-medium">Estimated timescales</span>
-                             <span class="form-hint">Project start date</span>
-                             <th:block th:insert="question-type/form-elements :: form-hint (hint='For example: 31 12 2015')"  />
-                             <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.startDate')"  />
-                        </legend>
-                        <th:block th:insert="question-type/form-elements :: form-dateinput (id='application_details-startdate', field='application.startDate',readonly=${readonly})" />
-                    </fieldset>
-                </div>
-                <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.durationInMonths__}')} ? 'error'">
-                    <th:block th:insert="question-type/form-elements :: form-label (name='Duration in months',id=${id},bold=false)" />
-                    <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.durationInMonths')"  />
-                    <input class="form-control width-extra-small"
-                           id="application_details-duration"
-                           th:field="*{__application.durationInMonths__}"
-                           th:errorclass="field-error"
-                           type="text"
-                           pattern="^([1-9]|0[1-9]|[1-2][0-9]|3[0-6])$"
-                           required="required"
-                           th:attr="data-pattern-errormessage=#{validation.project.duration.range.invalid}" />
-                          <!--/* this is solved with a pattern because setting a number and min="" and max="" doesn't support one message (your project should last between 1 and 36 months).
-                          This could be fixed by doing a total refactor of javascript or set two different messages (Your project should be more than 1, less than 36), or like this with a regex */-->
-                </div>
-                <h2 class="heading-small no-margin">Lead organisation</h2>
-                <th:block th:text="${leadOrganisation.name}" />
-                <h2 class="heading-small no-margin-bottom extra-margin">Partners</h2>
-                <ul class="list list-bullet">
-                    <li th:each="organisation : ${applicationOrganisations}" th:unless="${organisation.equals(leadOrganisation)}">
-                        <span th:text="${organisation.getName()}"></span>
-                    </li>
-                    <li th:each="pendingOrganisationName : ${pendingOrganisationNames}">
-                        <span th:text="${pendingOrganisationName}"></span>
-                        <small>(pending)</small>
-                    </li>
-                </ul>
             </th:block>
             <!--/* end of edit template */-->
             <th:block th:if="${readonly or appIsClosed}">
+                <div class="success-alert extra-margin-bottom">
+                    Application details is marked as complete
+                </div>
                 <dl class="readonly-data">
                     <dt>Project title</dt>
-                    <dd th:text="${currentApplication.name}">A novel solution to an old problem</dd>
-                    <th:block th:unless="${rsCategoryId == null}">
-                        <dt>Research area</dt>
-                        <th:block th:each="cat : ${researchCategories}">
-                            <dd th:if="${cat.id == rsCategoryId}" th:text="${cat.name}" />
-                        </th:block>
-                    </th:block>
+                    <dd th:text="${currentApplication.name}"></dd>
+                </dl>
+                <h2 class="heading-medium">Estimated timescales</h2>
+                <dl class="readonly-data">
+                    <dt>When do you wish to start your project?</dt>
+                    <dd th:if="${currentApplication.startDate}" th:text="${#temporals.format(currentApplication.startDate, 'd MMMM yyyy')}"></dd>
+                    <dt>Duration in months</dt>
+                    <dd><th:block th:text="${currentApplication.durationInMonths}"/> months</dd>
+                    <dt>Research category</dt>
+                    <dd th:text="${currentApplication.researchCategory.name}"></dd>
+                    <dt>Innovation area</dt>
+                    <dd th:text="${currentApplication.innovationArea.name} ?: 'Not listed'"></dd>
                     <th:block th:unless="${currentApplication.resubmission == null}">
                         <dt>Is this application a resubmission of a previous application?</dt>
-                        <dd th:text="${currentApplication.resubmission ? 'Yes' : 'No'}">No</dd>
+                        <dd th:text="${currentApplication.resubmission ? 'Yes' : 'No'}"></dd>
                         <th:block th:if="${currentApplication.resubmission == true}">
                             <dt>Previous application number</dt>
-                            <dd th:text="${currentApplication.previousApplicationNumber}">1234</dd>
+                            <dd th:text="${currentApplication.previousApplicationNumber}"></dd>
                             <dt>Previous application title</dt>
-                            <dd th:text="${currentApplication.previousApplicationTitle}">A interesting solution to an old problem</dd>
+                            <dd th:text="${currentApplication.previousApplicationTitle}"></dd>
                         </th:block>
                     </th:block>
-                    <dt>Project start date</dt>
-                    <dd th:if="${currentApplication.startDate}" th:text="${#temporals.format(currentApplication.startDate, 'd MMMM yyyy')}">16 January 2017</dd>
-                    <dt>Duration in months</dt>
-                    <dd th:text="${currentApplication.durationInMonths}">22 months</dd>
-                    <dt>Lead organisation</dt>
-                    <dd th:text="${leadOrganisation.name}">Empire Ltd</dd>
-                    <dt>Partners</dt>
-                    <dd th:each="organisation : ${applicationOrganisations}" th:unless="${organisation.equals(leadOrganisation)}">
-                        <th:block th:text="${organisation.name}"></th:block>
-                    </dd>
-                    <dd th:each="pendingOrganisationName : ${pendingOrganisationNames}">
-                        <th:block th:text="${pendingOrganisationName}"></th:block>
-                        <small>(pending)</small>
-                    </dd>
                 </dl>
             </th:block>
             <th:block th:unless="${(currentUser.id != questionAssignee?.assigneeUserId and questionAssignee?.assignee!=null) or (questionAssignee?.assignee==null and !userIsLeadApplicant)}">

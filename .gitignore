@@ -6,6 +6,7 @@ nbijl.xml
 .bundle/config
 
 
+
 # idea files
 */**.iml
 .idea
@@ -18,6 +19,9 @@ nbijl.xml
 bin/
 
 
+#Ignore generated docker files
+**/Dockerfile
+docker-compose.yml
 
 
 # ignore properties
@@ -36,7 +40,6 @@ bin/
 ### Gradle ###
 .gradle
 build/
-gradle.properties
 
 # Ignore Gradle GUI config
 gradle-app.setting
@@ -122,3 +125,6 @@ ifs-web-service.iws
 ifs-libs/*
 .gradletasknamecache
 EMAIL_VARIABLES_SENSITIVE.robot
+
+os-files-tmp/
+shib-init

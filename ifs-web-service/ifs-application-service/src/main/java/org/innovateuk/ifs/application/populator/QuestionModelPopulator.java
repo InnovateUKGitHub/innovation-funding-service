@@ -78,9 +78,6 @@ public class QuestionModelPopulator extends BaseModelPopulator {
     @Autowired
     private CategoryService categoryService;
 
-    @Autowired
-    private FinanceService financeService;
-
     public QuestionViewModel populateModel(final Long questionId, final Long applicationId, final UserResource user, final Model model,
                                            final ApplicationForm form, final QuestionOrganisationDetailsViewModel organisationDetailsViewModel) {
         QuestionResource question = questionService.getById(questionId);
@@ -123,7 +120,6 @@ public class QuestionModelPopulator extends BaseModelPopulator {
 
         return questionViewModel;
     }
-
     private QuestionApplicationViewModel addApplicationDetails(ApplicationResource application,
                                                                CompetitionResource competition,
                                                                Long userId,
@@ -145,15 +141,29 @@ public class QuestionModelPopulator extends BaseModelPopulator {
                 questionApplicationViewModel.setLeadOrganisation(org)
         );
 
-        userOrganisation.ifPresent(org -> questionApplicationViewModel.setHasApplicationFinances(
-                financeService.getApplicationFinanceDetails(userId, application.getId(), org.getId()) != null));
-
         addApplicationFormDetailInputs(application, form);
-
-        questionApplicationViewModel.setResearchCategories(categoryService.getResearchCategories());
-        questionApplicationViewModel.setResearchCategoryId(application.getResearchCategories().stream().findFirst().map(cat -> cat.getId()).orElse(null));
+        addSelectedInnovationAreaName(application, questionApplicationViewModel);
+        addSelectedResearchCategoryName(application, questionApplicationViewModel);
 
         return questionApplicationViewModel;
+    }
+
+    private void addSelectedInnovationAreaName(ApplicationResource applicationResource, QuestionApplicationViewModel questionApplicationViewModel) {
+        if(applicationResource.getNoInnovationAreaApplicable()) {
+            questionApplicationViewModel.setSelectedInnovationAreaName("No Innovation Area applicable.");
+        }
+        else if(applicationResource.getInnovationArea() != null && applicationResource.getInnovationArea().getName() != null) {
+            questionApplicationViewModel.setSelectedInnovationAreaName(applicationResource.getInnovationArea().getName());
+        }
+        else {
+            questionApplicationViewModel.setSelectedInnovationAreaName("None selected.");
+        }
+    }
+
+    private void addSelectedResearchCategoryName(ApplicationResource applicationResource, QuestionApplicationViewModel questionApplicationViewModel) {
+        if(applicationResource.getResearchCategory() != null && applicationResource.getResearchCategory().getName() != null) {
+            questionApplicationViewModel.setSelectedResearchCategoryName(applicationResource.getResearchCategory().getName());
+        }
     }
 
     private Boolean calculateAllReadOnly(CompetitionResource competition, QuestionResource questionResource, List<QuestionStatusResource> questionStatuses, Long userId, Set<Long> completedDetails) {

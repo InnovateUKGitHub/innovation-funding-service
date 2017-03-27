@@ -8,7 +8,7 @@ import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
 import static java.util.Arrays.asList;
 
 /**
- * Component to check the progress of Project Setup.  This is used by the {@link ProjectSetupSectionPartnerAccessor} to
+ * Component to check the progress of Project Setup.  This is used by the {@link ProjectSetupSectionsAccessibilityHelper} to
  * determine which sections are available at a given time
  */
 class ProjectSetupProgressChecker {
@@ -32,7 +32,7 @@ class ProjectSetupProgressChecker {
     }
 
     public boolean isBankDetailsApproved(OrganisationResource organisation) {
-        return COMPLETE.equals(getMatchingPartnerStatus(organisation).getBankDetailsStatus());
+        return asList(COMPLETE, NOT_REQUIRED).contains(getMatchingPartnerStatus(organisation).getBankDetailsStatus());
     }
 
     public boolean isBankDetailsQueried(OrganisationResource organisation) {

@@ -20,38 +20,41 @@
         <th:block th:insert="finance/finance-summary :: financial_summary_table" />
         <p>This is the level of cost detail that the assessors will see during the assessment process.</p>
 
-        <h2 class="heading-medium">Academic partner breakdown</h2>
-        <p>Academic partners submit their project costs through the Je-S system. For a full breakdown of their project costs please see the documents below.</p>
-        <th:block th:insert="finance/finance-summary :: academic_partner_breakdown" />
+        <th:block th:if="${maySeeAcademicBreakdown}">
+            <h2 class="heading-medium">Academic partner breakdown</h2>
+            <p>Academic partners submit their project costs through the Je-S system. For a full breakdown of their project costs please see the documents below.</p>
+            <th:block th:insert="finance/finance-summary :: academic_partner_breakdown" />
+        </th:block>
     </th:block>
 
-
-    <th:block th:fragment="academic_partner_breakdown" th:if="${financeTotalPerType}">
-        <div th:each="organisation : ${academicOrganisations}" th:unless="${academicFileEntries == null}">
-            <h3 th:text="${organisation.name}" class="heading-medium">University</h3>
-            <div th:if="${academicFileEntries.containsKey(organisation.id)}" th:with="applicationFinanceResource = ${academicFileEntries.get(organisation.id).left}, fileEntry = ${academicFileEntries.get(organisation.id).right}">
-                <div class="upload-section">
-                    <h3 class="heading-small no-margin">Download Je-S form:</h3>
-                    <div class="uploaded-file"><a th:href="'/application/'+ ${currentApplication.id} + '/form/' + ${applicationFinanceResource.id} + '/finance-download'" th:text="${fileEntry.name}"></a></div>
+    <th:block th:if="${maySeeAcademicBreakdown}">
+        <th:block th:fragment="academic_partner_breakdown" th:if="${financeTotalPerType}">
+            <div th:each="organisation : ${academicOrganisations}" th:unless="${academicFileEntries == null}">
+                <h3 th:text="${organisation.name}" class="heading-medium">University</h3>
+                <div th:if="${academicFileEntries.containsKey(organisation.id)}" th:with="applicationFinanceResource = ${academicFileEntries.get(organisation.id).left}, fileEntry = ${academicFileEntries.get(organisation.id).right}">
+                    <div class="upload-section">
+                        <h3 class="heading-small no-margin">Download Je-S form:</h3>
+                        <div class="uploaded-file"><a th:href="'/application/'+ ${currentApplication.id} + '/form/' + ${applicationFinanceResource.id} + '/finance-download'" th:text="${fileEntry.name}"></a></div>
+                    </div>
+                </div>
+                <div th:unless="${academicFileEntries.containsKey(organisation.id)}">
+                    <div class="upload-section">
+                        <h3 class="heading-small no-margin">Download Je-S form:</h3>
+                        <div class="uploaded-file">No file currently uploaded</div>
+                    </div>
                 </div>
             </div>
-            <div th:unless="${academicFileEntries.containsKey(organisation.id)}">
-                <div class="upload-section">
-                    <h3 class="heading-small no-margin">Download Je-S form:</h3>
-                    <div class="uploaded-file">No file currently uploaded</div>
-                </div>
-            </div>
-        </div>
+        </th:block>
     </th:block>
 
 
     <!-- ===========================Form: financial summary/breakdown table =========================== -->
     <th:block th:fragment="financial_summary_table" th:if="${financeTotalPerType}">
-        <div class="form-group project-cost-breakdown">
+        <div class="project-cost-breakdown">
             <div style="overflow: auto;">
                 <th:block th:unless="${applicationOrganisations != null}">
                     <div class="warning-alert">
-                        This competition has already closed, you are no longer able to submit your application.
+                        Registration is now closed, you are no longer able to submit your application.
                     </div>
                 </th:block>
                 <table>
@@ -232,7 +235,7 @@
             <th:block th:each="applicationOrganisation : ${applicationOrganisations}">
                 <a th:if="${applicationOrganisation.id == userOrganisation.id}"
                    th:unless="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}"
-                   th:href="@{/application/{id}/form/section/7/(id=${currentApplication.getId()})}" >Return to the finances section to complete your finances</a>
+                   th:href="@{/application/{id}/form/{sectionType}(id=${currentApplication.getId()},sectionType=${T(org.innovateuk.ifs.application.resource.SectionType).FINANCE})}" >Return to the finances section to complete your finances</a>
             </th:block>
 
             <p>This application cannot be submitted unless finances have been marked as complete by all partners.</p>

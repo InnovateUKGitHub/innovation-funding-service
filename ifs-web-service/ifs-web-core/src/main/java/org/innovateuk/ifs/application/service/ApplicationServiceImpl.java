@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -188,5 +189,15 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Override
     public ServiceResult<Void> removeCollaborator(Long applicationInviteId) {
         return inviteRestService.removeApplicationInvite(applicationInviteId).toServiceResult();
+    }
+
+    @Override
+    public RestResult<Long> getTurnover(Long applicationId) {
+        return applicationRestService.getTurnover(applicationId);
+    }
+
+    @Override
+    public RestResult<Long> getHeadCount(Long applicationId) {
+        return applicationRestService.getHeadCount(applicationId);
     }
 }

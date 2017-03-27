@@ -11,18 +11,25 @@
 <main id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='javascript:history.back()',currentApplication=${currentApplication}" />
-    <h1 class="heading-large">Create your account</h1>
 
-    <p class="form-hint icon-info-small-blue">Your organisation must be UK based to receive funding from Innovate UK</p>
+    <h1 class="heading-xlarge">
+        <span class="heading-secondary">Create your account</span>
+        Add operating address
+    </h1>
 
-    <h2 class="heading-medium" th:text="${organisationForm.organisationType.name}"></h2>
+    <div class="message-alert">
+        <p>Your organisation must be UK based to receive funding from Innovate UK.</p>
+    </div>
+
+    <h2 class="heading-medium">Organisation</h2>
 
     <th:block th:insert="fragments/addresses :: organisation-details" />
 
-    <form th:action="@{/organisation/create/selected-organisation/{companyId}(companyId=${organisationForm.searchOrganisationId})}" th:object="${organisationForm}" method="POST">
+    <form th:action="@{/organisation/create/selected-organisation/{companyId}(companyId=${organisationForm.searchOrganisationId})}" th:object="${organisationForm}" method="POST" class="extra-margin">
         <input type="hidden" th:field="*{searchOrganisationId}" />
 
-        <h2 class="heading-medium">Operating address</h2>
+        <h2 class="heading-medium no-margin">Operating address</h2>
+        <p class="form-hint">This is the address your organisation works from</p>
         <fieldset>
             <legend class="visuallyhidden">Operating address</legend>
             <div  th:class="${#fields.hasErrors('*{useSearchResultAddress}')} ? 'form-block error' : 'form-block'">
@@ -30,11 +37,12 @@
                 <label class="block-label selection-button-checkbox" for="address-same" data-target="manual-company-input"
                        data-target-inverted="true">
                     <input id="address-same" th:field="*{useSearchResultAddress}" type="checkbox" value="yes"/>
-                    The registered address is the same as the operating address
+                    The operating address is the same as the registered organisation address
                 </label>
             </div>
         </fieldset>
-        <th:block th:insert="fragments/addresses :: company-address-details" th:with="form=${organisationForm}" />
+        <th:block th:insert="fragments/addresses :: company-address-details"
+                  th:with="form=${organisationForm},addressType=${'operating address'}" />
 
         <button type="submit" name="save-organisation-details" class="button button-large extra-margin">Save organisation and continue</button>
     </form>

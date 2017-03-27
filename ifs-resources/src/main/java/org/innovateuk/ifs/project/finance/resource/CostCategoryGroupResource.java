@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.SortedMap;
 import java.util.function.Function;
 
-import static org.innovateuk.ifs.util.CollectionFunctions.toSortedMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.toSortedMapWithList;
 
 public class CostCategoryGroupResource {
 
@@ -36,7 +36,7 @@ public class CostCategoryGroupResource {
     }
 
     public SortedMap<String, List<CostCategoryResource>> orderedLabelledCostCategories(){
-        return toSortedMap(getCostCategories(), cc -> cc.getLabel() != null ? cc.getLabel() : "", Function.identity());
+        return toSortedMapWithList(getCostCategories(), cc -> cc.getLabel() != null ? cc.getLabel() : "", Function.identity());
     }
 
     public void setCostCategories(List<CostCategoryResource> costCategories) {

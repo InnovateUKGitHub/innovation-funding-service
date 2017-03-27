@@ -3,6 +3,9 @@ package org.innovateuk.ifs.publiccontent.transactional;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.*;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
+import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
+import org.innovateuk.ifs.competition.transactional.MilestoneService;
 import org.innovateuk.ifs.publiccontent.domain.ContentSection;
 import org.innovateuk.ifs.publiccontent.domain.Keyword;
 import org.innovateuk.ifs.publiccontent.domain.PublicContent;
@@ -26,6 +29,7 @@ import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.publiccontent.resource.PublicContentStatus.COMPLETE;
 import static org.innovateuk.ifs.competition.publiccontent.resource.PublicContentStatus.IN_PROGRESS;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.*;
 import static org.innovateuk.ifs.publiccontent.builder.ContentEventResourceBuilder.newContentEventResource;
 import static org.innovateuk.ifs.publiccontent.builder.ContentGroupResourceBuilder.newContentGroupResource;
 import static org.innovateuk.ifs.publiccontent.builder.ContentSectionBuilder.newContentSection;
@@ -57,6 +61,12 @@ public class PublicContentServiceImplTest extends BaseServiceUnitTest<PublicCont
 
     @Mock
     private ContentEventService contentEventService;
+
+    @Mock
+    private MilestoneService milestoneService;
+
+    @Mock
+    private CompetitionSetupService competitionSetupService;
 
     @Override
     protected PublicContentServiceImpl supplyServiceUnderTest() {
@@ -115,11 +125,26 @@ public class PublicContentServiceImplTest extends BaseServiceUnitTest<PublicCont
     }
 
     @Test
-    public void testPublishWithIncompleteSections() {
-        PublicContent publicContent = newPublicContent().withContentSections(
+    public void testPublishWithIncompleteSectionsFailure() {
+        PublicContent publicContent = newPublicContent().withCompetitionId(COMPETITION_ID).withContentSections(
                 newContentSection().withStatus(IN_PROGRESS).build(2)
         ).build();
         when(publicContentRepository.findByCompetitionId(COMPETITION_ID)).thenReturn(publicContent);
+        mockPublicMilestonesValid(true);
+
+        ServiceResult<Void> result = service.publishByCompetitionId(COMPETITION_ID);
+
+        assertFalse(result.isSuccess());
+        verify(publicContentRepository).findByCompetitionId(COMPETITION_ID);
+    }
+    @Test
+    public void testPublishWithMissingDatesFailure() {
+        PublicContent publicContent = newPublicContent().withCompetitionId(COMPETITION_ID).withContentSections(
+                newContentSection().withStatus(PublicContentStatus.COMPLETE).build(2)
+        ).build();
+        when(publicContentRepository.findByCompetitionId(COMPETITION_ID)).thenReturn(publicContent);
+        mockPublicMilestonesValid(false);
+
 
         ServiceResult<Void> result = service.publishByCompetitionId(COMPETITION_ID);
 
@@ -127,19 +152,21 @@ public class PublicContentServiceImplTest extends BaseServiceUnitTest<PublicCont
         verify(publicContentRepository).findByCompetitionId(COMPETITION_ID);
     }
 
-
     @Test
-    public void testPublishWithCompleteSections() {
-        PublicContent publicContent = newPublicContent().withContentSections(
+    public void testPublishWithCompleteSectionsAndDatesSuccess() {
+        PublicContent publicContent = newPublicContent().withCompetitionId(COMPETITION_ID).withContentSections(
                 newContentSection().withStatus(PublicContentStatus.COMPLETE).build(2)
         ).build();
         when(publicContentRepository.findByCompetitionId(COMPETITION_ID)).thenReturn(publicContent);
+        when(competitionSetupService.markSectionComplete(COMPETITION_ID, CONTENT)).thenReturn(serviceSuccess());
+        mockPublicMilestonesValid(true);
 
         ServiceResult<Void> result = service.publishByCompetitionId(COMPETITION_ID);
 
         assertTrue(result.isSuccess());
         verify(publicContentRepository).findByCompetitionId(COMPETITION_ID);
     }
+
 
     @Test
     public void testUpdateSectionPublished() {
@@ -149,7 +176,9 @@ public class PublicContentServiceImplTest extends BaseServiceUnitTest<PublicCont
         when(publicContentRepository.save(publicContent)).thenReturn(publicContent);
         when(publicContent.getContentSections()).thenReturn(newContentSection().withStatus(PublicContentStatus.COMPLETE).build(1));
         when(publicContent.getId()).thenReturn(1L);
+        when(publicContent.getCompetitionId()).thenReturn(COMPETITION_ID);
         when(publicContent.getPublishDate()).thenReturn(LocalDateTime.now());
+        mockPublicMilestonesValid(true);
 
         ServiceResult<Void> result = service.updateSection(publicContentResource, PublicContentSectionType.SEARCH);
 
@@ -282,4 +311,8 @@ public class PublicContentServiceImplTest extends BaseServiceUnitTest<PublicCont
         });
     }
 
+    private void mockPublicMilestonesValid(boolean valid) {
+        when(milestoneService.allPublicDatesComplete(COMPETITION_ID))
+                .thenReturn(serviceSuccess(valid));
+    }
 }

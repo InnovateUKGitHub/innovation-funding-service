@@ -4,6 +4,7 @@ import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.PdfWriter;
 import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -21,9 +22,9 @@ import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.service.FileTemplateRenderer;
 import org.innovateuk.ifs.file.transactional.FileService;
-import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.transactional.FinanceRowService;
+import org.innovateuk.ifs.util.PrioritySorting;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
 import org.innovateuk.ifs.project.finance.transactional.FinanceCheckService;
@@ -36,13 +37,13 @@ import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.resource.SpendProfileTableResource;
+import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
 import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
-import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
@@ -60,15 +61,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Supplier;
 
-import static java.util.stream.Collectors.toCollection;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
-
 import static java.io.File.separator;
+import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.*;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GRANT_OFFER_LETTER_CANNOT_BE_REMOVED;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_UNABLE_TO_CONVERT_TO_PDF;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_ALREADY_COMPLETE;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapValue;
@@ -117,7 +114,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     private SpendProfileTableCalculator spendProfileTableCalculator;
 
     @Autowired
-    private OrganisationFinanceDelegate organisationFinanceDelegate;
+    private FinanceUtil financeUtil;
 
     @Autowired
     private GOLWorkflowHandler golWorkflowHandler;
@@ -251,14 +248,6 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         }
     }
 
-    private final List<String> organisationsListWithLeadOnTopAndPartnersAlphabeticallyOrdered(List<String> organisationNames, Organisation leadOrganisation) {
-        final List<String> organisations = organisationNames.stream()
-                .filter(po -> !po.equals(leadOrganisation.getName()))
-                .sorted().collect(toList());
-        organisations.add(0, leadOrganisation.getName());
-        return organisations;
-    }
-
     private Map<String, Object> getTemplateData(Project project) {
         ProcessRole leadProcessRole = project.getApplication().getLeadApplicantProcessRole();
         Organisation leadOrganisation = organisationRepository.findOne(leadProcessRole.getOrganisationId());
@@ -266,11 +255,10 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         final List<String> addresses = getAddresses(project);
         List<String> organisationNames = new LinkedList<>();
         YearlyGOLProfileTable yearlyGolProfileTable = getYearlyGOLProfileTableExcludingNonAcademicUnfundedNonLeadPartners(project, leadOrganisation, organisationNames);
-        final List<String> organisations = organisationsListWithLeadOnTopAndPartnersAlphabeticallyOrdered(organisationNames, leadOrganisation);
-        templateReplacements.put("SortedOrganisations", organisations);
+        templateReplacements.put("SortedOrganisations", sortedOrganisations(organisationNames, leadOrganisation.getName()));
         templateReplacements.put("LeadContact", project.getApplication().getLeadApplicant().getName());
         templateReplacements.put("LeadOrgName", leadOrganisation.getName());
-        templateReplacements.put("Address1", addresses.size() == 0 ? "" : addresses.get(0));
+        templateReplacements.put("Address1", addresses.isEmpty() ? "" : addresses.get(0));
         templateReplacements.put("Address2", addresses.size() < 2 ? "" : addresses.get(1));
         templateReplacements.put("Address3", addresses.size() < 3 ? "" : addresses.get(2));
         templateReplacements.put("TownCity", addresses.size() < 4 ? "" : addresses.get(3));
@@ -284,6 +272,10 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         templateReplacements.put("ApplicationNumber", project.getApplication().getId());
         templateReplacements.put("TableData", yearlyGolProfileTable);
         return templateReplacements;
+    }
+
+    private List<String> sortedOrganisations(List<String> orgs, String lead) {
+        return new PrioritySorting<>(orgs, lead, identity()).unwrap().stream().map(StringEscapeUtils::escapeXml10).collect(toList());
     }
 
     private List<String> getAddresses(Project project) {
@@ -474,7 +466,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
                 monthlyCostsPerOrganisationMap, months, financeCheckSummary.getTotalPercentageGrant());
 
         Set<Organisation> organisationsExcludedFromGrantOfferLetter = project.getOrganisations().stream().filter(organisation ->
-                !organisationFinanceDelegate.isUsingJesFinances(organisation.getOrganisationType().getName())
+                !financeUtil.isUsingJesFinances(organisation.getOrganisationType().getId())
                         && !organisation.getName().equals(leadOrganisation.getName())
                         && organisationAndGrantPercentageMap.get(organisation.getName()).equals(0)
                         && organisationGrantAllocationTotal.get(organisation.getName()).stream().reduce(BigDecimal.ZERO, BigDecimal::add).compareTo(BigDecimal.ZERO) == 0)
@@ -495,9 +487,18 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
 
         includedOrganisations.forEach(includedOrg -> includedOrganisationNames.add(includedOrg.getName()));
 
-        return new YearlyGOLProfileTable(organisationAndGrantPercentageMap, organisationYearsMap,
-                organisationEligibleCostTotal, organisationGrantAllocationTotal,
-                yearEligibleCostTotal, yearlyGrantAllocationTotal);
+        return new YearlyGOLProfileTable(escapeXml10(organisationAndGrantPercentageMap),
+                                         escapeXml10(organisationYearsMap),
+                                         escapeXml10(organisationEligibleCostTotal),
+                                         escapeXml10(organisationGrantAllocationTotal),
+                                         escapeXml10(yearEligibleCostTotal),
+                                         escapeXml10(yearlyGrantAllocationTotal));
+    }
+
+    private <T> Map<String, T>escapeXml10(Map<String, T> unescapedMap) {
+        Map<String, T> escapedMap = new HashMap<>();
+        unescapedMap.forEach((organisation, value) -> escapedMap.put(StringEscapeUtils.escapeXml10(organisation), value));
+        return escapedMap;
     }
 
     private Map<String, List<BigDecimal>> getMonthlyEligibleCostPerOrganisation(Map<String,
@@ -553,7 +554,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
 
     private ServiceResult<Void> grantPercentagePerOrganisation(ApplicationFinanceResource applicationFinanceResource, Organisation organisation, Map<String, Integer> organisationAndGrantPercentageMap) {
         organisationAndGrantPercentageMap.put(organisation.getName(),
-                organisationFinanceDelegate.isUsingJesFinances(organisation.getOrganisationType().getName())
+                financeUtil.isUsingJesFinances(organisation.getOrganisationType().getId())
                         ? 100 : applicationFinanceResource.getGrantClaimPercentage());
         return serviceSuccess();
     }

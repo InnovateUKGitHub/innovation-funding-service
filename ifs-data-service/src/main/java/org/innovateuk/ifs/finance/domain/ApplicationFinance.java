@@ -54,4 +54,34 @@ public class ApplicationFinance extends Finance {
     public void setApplication(Application application) {
         this.application = application;
     }
+
+    public Integer getMaximumFundingLevel() {
+        return getOrganisation().getOrganisationType().getGrantClaimMaximums().stream()
+                .filter(this::isMatchingGrantClaimMaximum)
+                .findAny()
+                .map(GrantClaimMaximum::getMaximum)
+                .orElse(0);
+    }
+
+    private boolean isMatchingGrantClaimMaximum(GrantClaimMaximum grantClaimMaximum) {
+         return isMatchingCompetitionType(grantClaimMaximum)
+                && isMatchingOrganisationSize(grantClaimMaximum)
+                && isMatchingResearchCategory(grantClaimMaximum);
+    }
+
+    private boolean isMatchingCompetitionType(GrantClaimMaximum grantClaimMaximum) {
+        return grantClaimMaximum.getCompetitionType().getId().equals(getApplication().getCompetition().getCompetitionType().getId());
+    }
+
+    private boolean isMatchingOrganisationSize(GrantClaimMaximum grantClaimMaximum) {
+        return (grantClaimMaximum.getOrganisationSize() == null && getOrganisationSize() == null)
+                || (getOrganisationSize() != null
+                && grantClaimMaximum.getOrganisationSize().getId().equals(getOrganisationSize().getId()));
+    }
+
+    private boolean isMatchingResearchCategory(GrantClaimMaximum grantClaimMaximum) {
+        return getApplication().getResearchCategory() != null &&
+                grantClaimMaximum.getResearchCategory().getId().equals(getApplication().getResearchCategory().getId());
+    }
+
 }

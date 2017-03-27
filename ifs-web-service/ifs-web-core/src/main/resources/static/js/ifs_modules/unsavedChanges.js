@@ -24,7 +24,7 @@ IFS.core.unsavedChanges = (function () {
     initUnsavedChangesWarning: function () {
       // don't show the warning when the user is submitting the form.
       var formSubmit = false
-      jQuery('body').on(s.formelement, 'submit', function () {
+      jQuery(s.formelement).on('submit', function () {
         formSubmit = true
       })
 

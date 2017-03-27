@@ -1,8 +1,12 @@
 package org.innovateuk.ifs.project.viability.controller;
 
+import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.application.service.OrganisationSizeService;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.finance.resource.OrganisationSizeResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
@@ -12,7 +16,6 @@ import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
 import org.innovateuk.ifs.project.viability.form.FinanceChecksViabilityForm;
 import org.innovateuk.ifs.project.viability.viewmodel.FinanceChecksViabilityViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.OrganisationSize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -25,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.math.RoundingMode.HALF_EVEN;
@@ -49,6 +53,12 @@ public class FinanceChecksViabilityController {
 
     @Autowired
     private ProjectFinanceService financeService;
+
+    @Autowired
+    private ApplicationService applicationService;
+
+    @Autowired
+    private OrganisationSizeService organisationSizeService;
 
     @RequestMapping(method = GET)
     public String viewViability(@PathVariable("projectId") Long projectId,
@@ -143,17 +153,29 @@ public class FinanceChecksViabilityController {
         Integer contributionToProject = toZeroScaleInt(financesForOrganisation.getTotalContribution());
 
         String companyRegistrationNumber = organisation.getCompanyHouseNumber();
-        Integer turnover = null; // for this release, these will always be null
-        Integer headCount = null; // for this release, these will always be null
-        OrganisationSize organisationSize = organisation.getOrganisationSize();
+
+        Long headCount = null;
+        RestResult<Long> headCountResult = applicationService.getHeadCount(projectService.getById(projectId).getApplication());
+        if (headCountResult.isSuccess()) {
+            headCount = headCountResult.getSuccessObject();
+        }
+        Long turnover = null;
+        RestResult<Long> turnOverResult = applicationService.getTurnover(projectService.getById(projectId).getApplication());
+        if (turnOverResult.isSuccess()) {
+            turnover = turnOverResult.getSuccessObject();
+        }
 
         String approver = viability.getViabilityApprovalUserFirstName() + " " + viability.getViabilityApprovalUserLastName();
         LocalDate approvalDate = viability.getViabilityApprovalDate();
 
+        List<OrganisationSizeResource> sizes = organisationSizeService.getOrganisationSizes();
+        Optional<OrganisationSizeResource> organisationSizeResource = sizes.stream().filter(size -> size.getId().equals(financesForOrganisation.getOrganisationSize())).findAny();
+        String organisationSizeDescription = organisationSizeResource.map(OrganisationSizeResource::getDescription).orElse(null);
         return new FinanceChecksViabilityViewModel(organisationName, leadPartnerOrganisation,
                 totalCosts, percentageGrant, fundingSought, otherPublicSectorFunding, contributionToProject,
-                companyRegistrationNumber, turnover, headCount, organisationSize, projectId, viabilityConfirmed,
-                viabilityConfirmed, approver, approvalDate, organisationId);
+                companyRegistrationNumber, turnover, headCount, projectId, viabilityConfirmed,
+                viabilityConfirmed, approver, approvalDate, organisationId,
+                organisationSizeDescription);
     }
 
     private FinanceChecksViabilityForm getViabilityForm(Long projectId, Long organisationId) {

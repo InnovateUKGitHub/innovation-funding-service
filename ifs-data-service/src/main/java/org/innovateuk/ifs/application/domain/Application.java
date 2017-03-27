@@ -1,8 +1,9 @@
 package org.innovateuk.ifs.application.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
+import org.innovateuk.ifs.category.domain.ApplicationInnovationAreaLink;
 import org.innovateuk.ifs.category.domain.ApplicationResearchCategoryLink;
+import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.file.domain.FileEntry;
@@ -21,8 +22,10 @@ import javax.validation.constraints.Min;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Application defines database relations and a model to use client side and server side.
@@ -75,8 +78,13 @@ public class Application implements ProcessActivity {
     @OneToMany(mappedBy = "application", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
     private List<FormInputResponse> formInputResponses = new ArrayList<>();
 
-    @OneToMany(mappedBy = "application", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ApplicationResearchCategoryLink> researchCategories = new HashSet<>();
+    @OneToOne(mappedBy = "application", cascade = CascadeType.ALL, orphanRemoval = true)
+    private ApplicationResearchCategoryLink researchCategory;
+
+    @OneToOne(mappedBy = "application", cascade = CascadeType.ALL, orphanRemoval = true)
+    private ApplicationInnovationAreaLink innovationArea;
+
+    private boolean noInnovationAreaApplicable;
 
     private Boolean stateAidAgreed;
 
@@ -193,8 +201,7 @@ public class Application implements ProcessActivity {
     public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
-
-    @JsonIgnore
+    
     public List<ApplicationFinance> getApplicationFinances() {
         return applicationFinances;
     }
@@ -211,32 +218,26 @@ public class Application implements ProcessActivity {
         this.applicationFinances = applicationFinances;
     }
 
-    @JsonIgnore
     public ProcessRole getLeadApplicantProcessRole() {
         return getLeadProcessRole().orElse(null);
     }
 
-    @JsonIgnore
     private Optional<ProcessRole> getLeadProcessRole() {
         return this.processRoles.stream().filter(p -> UserRoleType.LEADAPPLICANT.getName().equals(p.getRole().getName())).findAny();
     }
 
-    @JsonIgnore
     public User getLeadApplicant() {
         return getLeadProcessRole().map(role -> role.getUser()).orElse(null);
     }
 
-    @JsonIgnore
     public Long getLeadOrganisationId() {
         return getLeadProcessRole().map(role -> role.getOrganisationId()).orElse(null);
     }
 
-    @JsonIgnore
     public List<ApplicationInvite> getInvites() {
         return this.invites;
     }
 
-    @JsonIgnore
     public boolean isOpen() {
         return Objects.equals(applicationStatus.getId(), ApplicationStatusConstants.OPEN.getId());
     }
@@ -278,8 +279,8 @@ public class Application implements ProcessActivity {
         this.formInputResponses = formInputResponses;
     }
 
-    public void addFormInputResponse(FormInputResponse formInputResponse) {
-        Optional<FormInputResponse> existing = getFormInputResponseByFormInput(formInputResponse.getFormInput());
+    public void addFormInputResponse(FormInputResponse formInputResponse, ProcessRole processRole) {
+        Optional<FormInputResponse> existing = getFormInputResponseByFormInputAndProcessRole(formInputResponse.getFormInput(), processRole);
         if (existing.isPresent()) {
             existing.get().setFileEntry(formInputResponse.getFileEntry());
             existing.get().setUpdateDate(formInputResponse.getUpdateDate());
@@ -290,9 +291,17 @@ public class Application implements ProcessActivity {
         }
     }
 
-    public Optional<FormInputResponse> getFormInputResponseByFormInput(FormInput formInput) {
-        return formInputResponses.stream().filter(fir -> formInput.equals(fir.getFormInput())).findFirst();
+    public Optional<FormInputResponse> getFormInputResponseByFormInputAndProcessRole(FormInput formInput, ProcessRole processRole) {
+        if (formInput.getQuestion().getMultipleStatuses()) {
+            return formInputResponses.stream().filter(fir -> formInput.equals(fir.getFormInput())
+                    && fir.getUpdatedBy().getOrganisationId().equals(processRole.getOrganisationId())).findFirst();
+        } else {
+            return formInputResponses.stream().filter(fir -> formInput.equals(fir.getFormInput())).findFirst();
+        }
     }
+
+
+
 
     public BigDecimal getCompletion() {
         return completion;
@@ -310,12 +319,53 @@ public class Application implements ProcessActivity {
         this.stateAidAgreed = stateAidAgreed;
     }
 
-    public Set<ResearchCategory> getResearchCategories() {
-        return researchCategories.stream().map(ApplicationResearchCategoryLink::getCategory).collect(Collectors.toSet());
+    public ResearchCategory getResearchCategory() {
+        if(researchCategory!=null) {
+            return researchCategory.getCategory();
+        }
+
+        return null;
     }
 
-    public void addResearchCategory(ResearchCategory researchCategory) {
-        researchCategories.clear();
-        researchCategories.add(new ApplicationResearchCategoryLink(this, researchCategory));
+    public void setResearchCategory(ResearchCategory newResearchCategory) {
+        if (newResearchCategory == null) {
+            researchCategory = null;
+        }
+        else {
+            researchCategory = new ApplicationResearchCategoryLink(this, newResearchCategory);
+        }
+    }
+
+    public InnovationArea getInnovationArea() {
+        if(innovationArea!=null) {
+            return innovationArea.getCategory();
+        }
+
+        return null;
+    }
+
+    public void setInnovationArea(InnovationArea newInnovationArea) {
+        if (newInnovationArea == null) {
+            innovationArea = null;
+        }
+        else {
+            if (this.noInnovationAreaApplicable) {
+                throw new IllegalStateException("InnovationArea not reconcilable with current value of noInnovationAreaApplies.");
+            }
+            innovationArea = new ApplicationInnovationAreaLink(this, newInnovationArea);
+        }
+    }
+
+    public boolean getNoInnovationAreaApplicable()
+    {
+        return noInnovationAreaApplicable;
+    }
+
+    public void setNoInnovationAreaApplicable(boolean noInnovationAreaApplicable) {
+        if (noInnovationAreaApplicable && innovationArea != null) {
+            throw new IllegalStateException("noInnovationAreaApplicable cannot be set while an innovationArea is not null.");
+        }
+
+        this.noInnovationAreaApplicable = noInnovationAreaApplicable;
     }
 }

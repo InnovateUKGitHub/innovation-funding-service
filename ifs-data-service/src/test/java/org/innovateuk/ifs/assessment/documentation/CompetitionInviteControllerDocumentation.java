@@ -2,38 +2,44 @@ package org.innovateuk.ifs.assessment.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.controller.CompetitionInviteController;
-import org.innovateuk.ifs.email.resource.EmailContent;
+import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.junit.Before;
 import org.junit.Test;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
 import java.util.List;
+import java.util.Optional;
 
+import static java.lang.Boolean.TRUE;
+import static java.util.Optional.of;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.documentation.AssessorCreatedInvitePageResourceDocs.assessorCreatedInvitePageResourceBuilder;
+import static org.innovateuk.ifs.documentation.AssessorCreatedInvitePageResourceDocs.assessorCreatedInvitePageResourceFields;
 import static org.innovateuk.ifs.documentation.AssessorCreatedInviteResourceDocs.assessorCreatedInviteResourceFields;
+import static org.innovateuk.ifs.documentation.AssessorInviteOverviewPageResourceDocs.assessorInviteOverviewPageResourceFields;
 import static org.innovateuk.ifs.documentation.AssessorInviteOverviewResourceDocs.assessorInviteOverviewResourceFields;
+import static org.innovateuk.ifs.documentation.AvailableAssessorPageResourceDocs.availableAssessorPageResourceBuilder;
+import static org.innovateuk.ifs.documentation.AvailableAssessorPageResourceDocs.availableAssessorPageResourceFields;
 import static org.innovateuk.ifs.documentation.AvailableAssessorResourceDocs.availableAssessorResourceFields;
 import static org.innovateuk.ifs.documentation.CompetitionInviteDocs.*;
 import static org.innovateuk.ifs.documentation.CompetitionInviteStatisticsResourceDocs.competitionInviteStatisticsResourceBuilder;
 import static org.innovateuk.ifs.documentation.CompetitionInviteStatisticsResourceDocs.competitionInviteStatisticsResourceFields;
-import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
-import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
+import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewPageResourceBuilder.newAssessorInviteOverviewPageResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
-import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
-import static org.innovateuk.ifs.invite.builder.CompetitionInviteStatisticsResourceBuilder.newCompetitionInviteStatisticsResource;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
+import static org.springframework.data.domain.Sort.Direction.ASC;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -41,8 +47,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class CompetitionInviteControllerDocumentation extends BaseControllerMockMVCTest<CompetitionInviteController> {
-
-    private RestDocumentationResultHandler document;
 
     @Override
     protected CompetitionInviteController supplyControllerUnderTest() {
@@ -62,7 +66,7 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
                         pathParameters(
                                 parameterWithName("inviteId").description("Id of the created invite being requested")
                         ),
-                        responseFields(assessorToSendFields)
+                        responseFields(assessorInviteToSendResourceFields)
                 ));
     }
 
@@ -141,7 +145,7 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
     public void checkExistingUser() throws Exception {
         String hash = "invitehash";
 
-        when(competitionInviteServiceMock.checkExistingUser(hash)).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(competitionInviteServiceMock.checkExistingUser(hash)).thenReturn(serviceSuccess(TRUE));
 
         mockMvc.perform(get("/competitioninvite/checkExistingUser/{hash}", hash))
                 .andExpect(status().isOk())
@@ -156,64 +160,121 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
     @Test
     public void getAvailableAssessors() throws Exception {
         long competitionId = 1L;
-        List<AvailableAssessorResource> expectedAvailableAssessorResources = newAvailableAssessorResource().build(2);
+        Optional<Long> innovationArea = of(4L);
 
-        when(competitionInviteServiceMock.getAvailableAssessors(competitionId)).thenReturn(serviceSuccess(expectedAvailableAssessorResources));
+        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "firstName"));
 
-        mockMvc.perform(get("/competitioninvite/getAvailableAssessors/{competitionId}", competitionId))
+        when(competitionInviteServiceMock.getAvailableAssessors(competitionId, pageable, innovationArea))
+                .thenReturn(serviceSuccess(availableAssessorPageResourceBuilder.build()));
+
+        mockMvc.perform(get("/competitioninvite/getAvailableAssessors/{competitionId}", competitionId)
+                .param("size", "20")
+                .param("page", "0")
+                .param("sort", "firstName,asc")
+                .param("innovationArea", "4"))
                 .andExpect(status().isOk())
                 .andDo(document("competitioninvite/{method-name}",
                         pathParameters(
                                 parameterWithName("competitionId").description("Id of the competition")
                         ),
-                        responseFields(
-                                fieldWithPath("[]").description("List of available assessors for the competition")
-                        ).andWithPrefix("[].", availableAssessorResourceFields)
+                        requestParameters(
+                                parameterWithName("size").optional()
+                                        .description("Maximum number of elements in a single page. Defaults to 20."),
+                                parameterWithName("page").optional()
+                                        .description("Page number of the paginated data. Starts at 0. Defaults to 0."),
+                                parameterWithName("sort").optional()
+                                        .description("The property to sort the elements on. For example `sort=firstName,asc`. Defaults to `firstName,asc`"),
+                                parameterWithName("innovationArea").optional()
+                                        .description("Innovation area ID to filter assessors by.")
+                        ),
+                        responseFields(availableAssessorPageResourceFields)
+                                .andWithPrefix("content[].", availableAssessorResourceFields)
                 ));
 
-        verify(competitionInviteServiceMock, only()).getAvailableAssessors(competitionId);
+        verify(competitionInviteServiceMock, only()).getAvailableAssessors(competitionId, pageable, innovationArea);
     }
 
     @Test
     public void getCreatedInvites() throws Exception {
         long competitionId = 1L;
-        List<AssessorCreatedInviteResource> expectedAssessorCreatedInviteResources = newAssessorCreatedInviteResource().build(2);
 
-        when(competitionInviteServiceMock.getCreatedInvites(competitionId)).thenReturn(serviceSuccess(expectedAssessorCreatedInviteResources));
+        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "name"));
 
-        mockMvc.perform(get("/competitioninvite/getCreatedInvites/{competitionId}", 1L))
+        when(competitionInviteServiceMock.getCreatedInvites(competitionId, pageable)).thenReturn(serviceSuccess(assessorCreatedInvitePageResourceBuilder.build()));
+
+        mockMvc.perform(get("/competitioninvite/getCreatedInvites/{competitionId}", 1L)
+                .param("size", "20")
+                .param("page", "0")
+                .param("sort", "name,asc"))
                 .andExpect(status().isOk())
                 .andDo(document("competitioninvite/{method-name}",
                         pathParameters(
                                 parameterWithName("competitionId").description("Id of the competition")
                         ),
-                        responseFields(
-                                fieldWithPath("[]").description("List of the created assessor invites for the competition")
-                        ).andWithPrefix("[].", assessorCreatedInviteResourceFields)
+                        requestParameters(
+                                parameterWithName("size").optional()
+                                        .description("Maximum number of elements in a single page. Defaults to 20."),
+                                parameterWithName("page").optional()
+                                        .description("Page number of the paginated data. Starts at 0. Defaults to 0."),
+                                parameterWithName("sort").optional()
+                                        .description("The property to sort the elements on. For example `sort=name,asc`. Defaults to `name,asc`")
+                        ),
+                        responseFields(assessorCreatedInvitePageResourceFields)
+                                .andWithPrefix("content[]", assessorCreatedInviteResourceFields)
                 ));
 
-        verify(competitionInviteServiceMock, only()).getCreatedInvites(competitionId);
+        verify(competitionInviteServiceMock, only()).getCreatedInvites(competitionId, pageable);
     }
 
     @Test
     public void getInvitationOverview() throws Exception {
         long competitionId = 1L;
-        List<AssessorInviteOverviewResource> expectedAssessorInviteOverviewResources = newAssessorInviteOverviewResource().build(2);
+        Optional<Long> innovationArea = of(10L);
+        Optional<ParticipantStatus> status = of(ACCEPTED);
+        Optional<Boolean> compliant = of(TRUE);
 
-        when(competitionInviteServiceMock.getInvitationOverview(competitionId)).thenReturn(serviceSuccess(expectedAssessorInviteOverviewResources));
+        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 
-        mockMvc.perform(get("/competitioninvite/getInvitationOverview/{competitionId}", 1L))
+        List<AssessorInviteOverviewResource> content = newAssessorInviteOverviewResource().build(2);
+        AssessorInviteOverviewPageResource expectedPageResource = newAssessorInviteOverviewPageResource()
+                .withContent(content)
+                .build();
+
+        when(competitionInviteServiceMock.getInvitationOverview(competitionId, pageable, innovationArea, status, compliant))
+                .thenReturn(serviceSuccess(expectedPageResource));
+
+        mockMvc.perform(get("/competitioninvite/getInvitationOverview/{competitionId}", 1L)
+                .param("size", "20")
+                .param("page", "0")
+                .param("sort", "invite.name,asc")
+                .param("innovationArea", "10")
+                .param("status", "ACCEPTED")
+                .param("compliant", "1"))
                 .andExpect(status().isOk())
                 .andDo(document("competitioninvite/{method-name}",
                         pathParameters(
                                 parameterWithName("competitionId").description("Id of the competition")
                         ),
-                        responseFields(
-                                fieldWithPath("[]").description("List of overviews representing each of the assessor invites for the competition")
-                        ).andWithPrefix("[].", assessorInviteOverviewResourceFields)
+                        requestParameters(
+                                parameterWithName("size").optional()
+                                        .description("Maximum number of elements in a single page. Defaults to 20."),
+                                parameterWithName("page").optional()
+                                        .description("Page number of the paginated data. Starts at 0. Defaults to 0."),
+                                parameterWithName("sort").optional()
+                                        .description("The property to sort the elements on. For example `sort=invite.name,asc`. Defaults to `invite.name,asc`"),
+                                parameterWithName("innovationArea").optional()
+                                        .description("Innovation area ID to filter assessors by."),
+                                parameterWithName("status").optional()
+                                        .description("Participant status to filter assessors by. Can only be 'ACCEPTED', 'REJECTED' or 'PENDING'."),
+                                parameterWithName("compliant").optional()
+                                        .description("Flag to filter assessors by their compliance.")
+
+                        ),
+                        responseFields(assessorInviteOverviewPageResourceFields)
+                                .andWithPrefix("content[].", assessorInviteOverviewResourceFields)
                 ));
 
-        verify(competitionInviteServiceMock, only()).getInvitationOverview(competitionId);
+        verify(competitionInviteServiceMock, only()).getInvitationOverview(competitionId, pageable, innovationArea, status, compliant);
     }
 
     @Test
@@ -318,25 +379,19 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
     @Test
     public void sendInvite() throws Exception {
         long inviteId = 1L;
-        EmailContent content = newEmailContentResource()
-                .withSubject("subject")
-                .withPlainText("plain text")
-                .withHtmlText("<html>html text</htm>")
-                .build();
 
-        AssessorInviteToSendResource resource = assessorInviteToSendResourceBuilder.build();
-
-        when(competitionInviteServiceMock.sendInvite(inviteId, content)).thenReturn(serviceSuccess(resource));
+        AssessorInviteSendResource assessorInviteSendResource = assessorInviteSendResourceBuilder.build();
+        when(competitionInviteServiceMock.sendInvite(inviteId, assessorInviteSendResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/competitioninvite/sendInvite/{inviteId}", inviteId)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(content)))
+                .content(objectMapper.writeValueAsString(assessorInviteSendResource)))
                 .andExpect(status().isOk())
                 .andDo(document("competitioninvite/{method-name}",
                         pathParameters(
                                 parameterWithName("inviteId").description("Id of the created invite being sent")
                         ),
-                        responseFields(assessorToSendFields)
+                        requestFields(assessorInviteSendResourceFields)
                 ));
     }
 }

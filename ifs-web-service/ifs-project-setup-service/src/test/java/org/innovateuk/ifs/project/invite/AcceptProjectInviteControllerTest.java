@@ -3,7 +3,7 @@ package org.innovateuk.ifs.project.invite;
 import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
-import org.innovateuk.ifs.project.viewmodel.JoinAProjectViewModel;
+import org.innovateuk.ifs.project.projectdetails.viewmodel.JoinAProjectViewModel;
 import org.innovateuk.ifs.registration.service.AcceptProjectInviteController;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;

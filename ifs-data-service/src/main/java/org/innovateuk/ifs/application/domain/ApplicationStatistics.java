@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Immutable;
 import org.hibernate.annotations.Where;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
@@ -15,6 +16,7 @@ import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
 /**
  * ApplicationStatistics defines a view on the application table for statistical information
  */
+@Immutable
 @Entity
 @Table(name = "Application")
 public class ApplicationStatistics {
@@ -31,6 +33,10 @@ public class ApplicationStatistics {
 
     private Long competition;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "applicationStatusId", referencedColumnName = "id")
+    private ApplicationStatus applicationStatus;
+
     @OneToMany(mappedBy = "applicationId")
     private List<ProcessRole> processRoles = new ArrayList<>();
 
@@ -43,52 +49,32 @@ public class ApplicationStatistics {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public Long getCompetition() {
         return competition;
     }
 
-    public void setCompetition(Long competition) {
-        this.competition = competition;
+    public ApplicationStatus getApplicationStatus() {
+        return applicationStatus;
     }
 
-    @JsonIgnore
     private Optional<ProcessRole> getLeadProcessRole() {
         return this.processRoles.stream().filter(p -> UserRoleType.LEADAPPLICANT.getName().equals(p.getRole().getName())).findAny();
     }
 
-    @JsonIgnore
     public Long getLeadOrganisationId() {
         return getLeadProcessRole().map(ProcessRole::getOrganisationId).orElse(null);
     }
 
-    @JsonIgnore
     public List<ProcessRole> getProcessRoles() {
         return processRoles;
     }
 
-    public void setProcessRoles(List<ProcessRole> processRoles) {
-        this.processRoles = processRoles;
-    }
-
-    @JsonIgnore
     public List<Assessment> getAssessments() {
         return assessments;
-    }
-
-    public void setAssessments(List<Assessment> assessments) {
-        this.assessments = assessments;
     }
 
     public int getAssessors() {

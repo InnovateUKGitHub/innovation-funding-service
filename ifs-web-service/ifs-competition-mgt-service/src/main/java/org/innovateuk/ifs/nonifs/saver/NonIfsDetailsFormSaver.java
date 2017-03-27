@@ -4,7 +4,6 @@ import org.hibernate.validator.internal.util.CollectionHelper;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.MilestoneService;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
-import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
@@ -15,11 +14,11 @@ import org.innovateuk.ifs.nonifs.form.NonIfsDetailsForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 
 /**
@@ -27,6 +26,8 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
  */
 @Service
 public class NonIfsDetailsFormSaver {
+
+    private static List<MilestoneType> PUBLIC_MILESTONE_TYPES = asList(MilestoneType.OPEN_DATE, MilestoneType.SUBMISSION_DATE, MilestoneType.RELEASE_FEEDBACK);
 
     @Autowired
     private CompetitionService competitionService;
@@ -43,16 +44,23 @@ public class NonIfsDetailsFormSaver {
 
         Map<String, MilestoneRowForm> mappedMilestones = createMilestoneMap(form);
         mapFormFields(form, competitionResource);
+        return competitionService.update(competitionResource).andOnSuccess(() -> {
+            List<MilestoneResource> milestones = getPublicMilestones(competitionResource);
+            return competitionSetupMilestoneService.updateMilestonesForCompetition(milestones, mappedMilestones, competitionResource.getId());
+        });
+    }
 
-        List<Error> errors = competitionSetupMilestoneService.validateMilestoneDates(mappedMilestones);
-        if (!errors.isEmpty()) {
-            return serviceFailure(errors);
-        } else {
-            return competitionService.update(competitionResource).andOnSuccess(() -> {
-                List<MilestoneResource> milestones = milestoneService.getAllMilestonesByCompetitionId(competitionResource.getId());
-                return competitionSetupMilestoneService.updateMilestonesForCompetition(milestones, mappedMilestones, competitionResource.getId());
-            });
+    private List<MilestoneResource> getPublicMilestones(CompetitionResource competitionResource) {
+        List<MilestoneResource> milestones = milestoneService.getAllMilestonesByCompetitionId(competitionResource.getId());
+        if (milestones.isEmpty()) {
+            createPublicMilestones(competitionResource.getId());
+            milestones = milestoneService.getAllMilestonesByCompetitionId(competitionResource.getId());
         }
+        return milestones;
+    }
+
+    private void createPublicMilestones(Long competitionId) {
+        PUBLIC_MILESTONE_TYPES.forEach(type -> milestoneService.create(type, competitionId));
     }
 
     private void mapFormFields(NonIfsDetailsForm form, CompetitionResource competitionResource) {
@@ -64,15 +72,9 @@ public class NonIfsDetailsFormSaver {
 
     private Map<String, MilestoneRowForm> createMilestoneMap(NonIfsDetailsForm form) {
         Map<String, MilestoneRowForm> milestones = new HashMap<>();
-        putDateIfFuture(milestones, MilestoneType.OPEN_DATE, form.getOpenDate());
-        putDateIfFuture(milestones, MilestoneType.SUBMISSION_DATE, form.getCloseDate());
-        putDateIfFuture(milestones, MilestoneType.RELEASE_FEEDBACK, form.getApplicantNotifiedDate());
+        milestones.put(MilestoneType.OPEN_DATE.name(), form.getOpenDate());
+        milestones.put(MilestoneType.SUBMISSION_DATE.name(), form.getCloseDate());
+        milestones.put(MilestoneType.RELEASE_FEEDBACK.name(), form.getApplicantNotifiedDate());
         return milestones;
-    }
-
-    private void putDateIfFuture(Map<String, MilestoneRowForm> milestones, MilestoneType type, MilestoneRowForm row) {
-        if(row.getMilestoneAsDateTime().isAfter(LocalDateTime.now())) {
-            milestones.put(type.name(), row);
-        }
     }
 }

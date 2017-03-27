@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.assessment.service;
 
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
+import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
@@ -44,5 +45,10 @@ public class AssessorFormInputResponseRestServiceImpl extends BaseRestService im
     @Override
     public RestResult<ApplicationAssessmentAggregateResource> getApplicationAssessmentAggregate(long applicationId) {
         return getWithRestResult(format("%s/application/%s/scores", assessorFormInputResponseRestUrl, applicationId), ApplicationAssessmentAggregateResource.class);
+    }
+
+    @Override
+    public RestResult<AssessmentFeedbackAggregateResource> getAssessmentAggregateFeedback(long applicationId, long questionId) {
+        return getWithRestResult(format("%s/application/%s/question/%s/feedback", assessorFormInputResponseRestUrl, applicationId, questionId), AssessmentFeedbackAggregateResource.class);
     }
 }

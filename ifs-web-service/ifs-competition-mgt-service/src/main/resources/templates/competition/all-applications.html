@@ -62,7 +62,7 @@
                         <legend class="heading-medium">Filter applications</legend>
                         <div class="grid-row">
                             <div class="column-two-thirds">
-                                <label class="form-label" for="filterSearch">Search by application number</label>
+                                <label class="form-label" for="filterSearch">Search by application number.</label>
                                 <input type="text" class="form-control" id="filterSearch" name="filterSearch" th:value="${model.filter}"/>
                                 <a href="?" th:href="'?sort=' + ${model.sorting}">Clear all filters</a>
                             </div>
@@ -111,7 +111,7 @@
                             </td>
                             <td th:text="${row.projectTitle}">Machine learning in robots</td>
                             <td th:text="${row.lead}">PWC</td>
-                            <td th:text="${row.innovationArea}">HVM</td>
+                            <td th:text="${row.innovationArea} ?: 'Not listed'">HVM</td>
                             <td th:text="${row.status}">Submitted</td>
                             <td class="alignright" th:text="${row.percentageComplete}">100</td>
                         </tr>

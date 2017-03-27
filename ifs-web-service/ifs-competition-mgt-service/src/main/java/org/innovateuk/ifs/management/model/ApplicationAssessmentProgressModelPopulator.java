@@ -1,9 +1,12 @@
 package org.innovateuk.ifs.management.model;
 
 import org.innovateuk.ifs.application.resource.ApplicationAssessmentSummaryResource;
+import org.innovateuk.ifs.application.resource.ApplicationAssessorPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
 import org.innovateuk.ifs.application.service.ApplicationAssessmentSummaryRestService;
+import org.innovateuk.ifs.application.service.CategoryService;
 import org.innovateuk.ifs.category.resource.CategoryResource;
+import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.competition.resource.AvailableAssessorsSortFieldType;
 import org.innovateuk.ifs.management.viewmodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,26 +33,19 @@ public class ApplicationAssessmentProgressModelPopulator {
     @Autowired
     private ApplicationAssessmentSummaryRestService applicationAssessmentSummaryRestService;
 
-    private static Map<AvailableAssessorsSortFieldType, Comparator<ApplicationAvailableAssessorsRowViewModel>> sortMap =
-            Collections.unmodifiableMap(Stream.of(
-                    new AbstractMap.SimpleEntry<>(TITLE, comparing(ApplicationAvailableAssessorsRowViewModel::getName)),
-                    new AbstractMap.SimpleEntry<>(SKILLS, comparing(ApplicationAvailableAssessorsRowViewModel::getSkillAreas)),
-                    new AbstractMap.SimpleEntry<>(TOTAL_APPLICATIONS, comparing(ApplicationAvailableAssessorsRowViewModel::getTotalApplicationsCount)),
-                    new AbstractMap.SimpleEntry<>(ASSIGNED_APPLICATIONS, comparing(ApplicationAvailableAssessorsRowViewModel::getAssignedCount)),
-                    new AbstractMap.SimpleEntry<>(SUBMITTED_APPLICATIONS, comparing(ApplicationAvailableAssessorsRowViewModel::getSubmittedApplications)))
-                    .collect(Collectors.toMap((e) -> e.getKey(), (e) -> e.getValue())));
+    @Autowired
+    private CategoryService categoryService;
 
-    public ApplicationAssessmentProgressViewModel populateModel(Long applicationId, AvailableAssessorsSortFieldType sortSelection) {
+    public ApplicationAssessmentProgressViewModel populateModel(Long applicationId, Long filterInnovationArea, int page, String assessorOrigin) {
         ApplicationAssessmentSummaryResource applicationAssessmentSummary = applicationAssessmentSummaryRestService
                 .getApplicationAssessmentSummary(applicationId).getSuccessObjectOrThrowException();
 
-        List<ApplicationAssessorResource> assessors = applicationAssessmentSummaryRestService.getAssessors(applicationId).getSuccessObjectOrThrowException();
-        Map<Boolean, List<ApplicationAssessorResource>> assessorsPartitionedByAvailable = assessors.stream().collect(partitioningBy(ApplicationAssessorResource::isAvailable));
-        List<ApplicationAssessorResource> notAvailableAssessors = assessorsPartitionedByAvailable.getOrDefault(Boolean.FALSE, Collections.emptyList());
-        List<ApplicationAssessorResource> availableAssessors = assessorsPartitionedByAvailable.getOrDefault(Boolean.TRUE, Collections.emptyList());
+        List<ApplicationAssessorResource> notAvailableAssessors = applicationAssessmentSummaryRestService.getAssignedAssessors(applicationId).getSuccessObjectOrThrowException();
+        ApplicationAssessorPageResource availableAssessors = applicationAssessmentSummaryRestService.getAvailableAssessors(applicationId, page, 20, filterInnovationArea).getSuccessObjectOrThrowException();
 
         return new ApplicationAssessmentProgressViewModel(applicationAssessmentSummary.getId(),
                 applicationAssessmentSummary.getName(),
+                applicationAssessmentSummary.getInnovationArea(),
                 applicationAssessmentSummary.getCompetitionId(),
                 applicationAssessmentSummary.getCompetitionName(),
                 IN_ASSESSMENT == applicationAssessmentSummary.getCompetitionStatus(),
@@ -58,8 +54,13 @@ public class ApplicationAssessmentProgressModelPopulator {
                 getAssignedAssessors(notAvailableAssessors),
                 getRejectedAssessors(notAvailableAssessors),
                 getPreviouslyAssignedAssessors(notAvailableAssessors),
-                getSortedAvailableAssessors(availableAssessors, sortSelection));
+                getAvailableAssessors(availableAssessors.getContent()),
+                getInnovationSectors(),
+                filterInnovationArea,
+                new PaginationViewModel(availableAssessors, assessorOrigin));
     }
+
+    private List<InnovationSectorResource> getInnovationSectors() { return categoryService.getInnovationSectors(); }
 
     private List<ApplicationAssessmentProgressAssignedRowViewModel> getAssignedAssessors(List<ApplicationAssessorResource> assessors) {
         return assessors.stream()
@@ -124,12 +125,8 @@ public class ApplicationAssessmentProgressModelPopulator {
                 simpleMap(applicationAssessorResource.getInnovationAreas(), CategoryResource::getName));
     }
 
-    private List<ApplicationAvailableAssessorsRowViewModel> getSortedAvailableAssessors(List<ApplicationAssessorResource> assessors,
-                                                                                        AvailableAssessorsSortFieldType selectedSort) {
-        List<ApplicationAvailableAssessorsRowViewModel> available = assessors.stream()
-                .map(this::getAvailableRowViewModel).collect(toList());
-        available.sort(sortMap.get(selectedSort));
-        return available;
+    private List<ApplicationAvailableAssessorsRowViewModel> getAvailableAssessors(List<ApplicationAssessorResource> assessors) {
+        return assessors.stream().map(this::getAvailableRowViewModel).collect(toList());
     }
 
     private ApplicationAvailableAssessorsRowViewModel getAvailableRowViewModel(ApplicationAssessorResource applicationAssessorResource) {

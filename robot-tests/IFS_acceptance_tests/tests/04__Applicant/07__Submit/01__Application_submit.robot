@@ -14,30 +14,43 @@ Documentation     -INFUND-172: As a lead applicant and I am on the application s
 ...               INFUND-1786 As a lead applicant I would like view the submitting an application terms and conditions page so that I know what I am agreeing to
 Suite Setup       new account complete all but one
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Applicant  Pending
+Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
+Resource          ../FinanceSection_Commons.robot
 
 *** Variables ***
 
 *** Test Cases ***
-Submit button disabled when the application is incomplete
-    [Documentation]    INFUND-195
-    [Tags]    Email    HappyPath
-    When the user clicks the button/link    jQuery=.button:contains("Review and submit")
-    Then the submit button should be disabled
-    [Teardown]    the applicant marks the first section as complete
-
-Submit button disabled when finance section is incomplete
+Submit button disabled when application is incomplete
     [Documentation]    INFUND-927
     [Tags]    Email    HappyPath
     Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=${application_name}
-    Given the user clicks the button/link    link=Your finances
-    When the user clicks the button/link    jQuery=button:contains("Edit")
+    When the user clicks the button/link    link=${application_name}
+    And the user clicks the button/link    link=Your finances
     And the user clicks the button/link    link= Application Overview
     And the user clicks the button/link    jQuery=.button:contains("Review and submit")
     Then the submit button should be disabled
-    [Teardown]    The user marks the finances as complete
+
+Applicant has read only view after submission
+    [Documentation]    INFUND-7405, INFUND-8599
+    [Tags]    HappyPath
+    When the user navigates to the page    ${DASHBOARD_URL}
+    and the user clicks the button/link      link=${application_name}
+    then the applicant completes the application details    Application details
+    and the user clicks the button/link     link=Return to application overview
+    and the user clicks the button/link     link=Your finances
+    and the user marks the finances as complete    ${application_name}
+    when the user clicks the button/link     link=Review and submit
+    then the user should not see the element     css=input
+
+Your Project costs section is read-only once application is submitted
+    [Documentation]     INFUND-6788,INFUND-7405
+    [Tags]
+    When the user navigates to Your-finances page     ${application_name}
+    then the user clicks the button/link    link=Your project costs
+    and the user should not see the element     css=input
+    When the user clicks the button/link    jQuery=button:contains("Overhead costs")
+    then the user should not see the element      css=input
 
 Submit flow (complete application)
     [Documentation]    INFUND-205
@@ -49,7 +62,7 @@ Submit flow (complete application)
     ...    INFUND-4010
     [Tags]    HappyPath    Email    SmokeTest
     [Setup]    Delete the emails from both test mailboxes
-    Given log in as a different user    ${submit_test_email}    Passw0rd123
+    Given log in as a different user    ${submit_test_email}  ${correct_password}
     And the user navigates to the page    ${SERVER}
     And the user clicks the button/link    link=${application_name}
     When the user clicks the button/link    link=Review and submit
@@ -59,7 +72,7 @@ Submit flow (complete application)
     And the applicant clicks Yes in the submit modal
     Then the user should be redirected to the correct page    submit
     And the user should see the text in the page    Application submitted
-    And the user should see the text in the page    you will be notified of our decision by December
+    And the user should see the text in the page    you will be notified of our decision by
 
 The applicant should get a confirmation email
     [Documentation]    INFUND-1887
@@ -118,15 +131,6 @@ the applicant accepts the terms and conditions
     the user selects the checkbox    agree-terms-page
     the user selects the checkbox    agree-state-aid-page
 
-The user marks the finances as complete
-    the user navigates to the page    ${DASHBOARD_URL}
-    the user clicks the button/link    link=${application_name}
-    the user clicks the button/link    link=Your finances
-    the user selects the checkbox    agree-terms-page
-    the user selects the checkbox    agree-state-aid-page
-    the user moves focus to the element    jQuery=button:contains("Mark all as complete")
-    the user clicks the button/link    jQuery=button:contains("Mark all as complete")
-
 the applicant marks the first section as complete
     Given the user navigates to the page  ${DASHBOARD_URL}
     the user clicks the button/link    link=${application_name}
@@ -135,4 +139,4 @@ the applicant marks the first section as complete
 the applicant clicks the submit and then clicks the "close button" in the modal
     Wait Until Element Is Enabled Without Screenshots    jQuery=.button:contains("Submit application")
     the user clicks the button/link    jQuery=.button:contains("Submit application")
-    the user clicks the button/link    jQuery=button:contains("X")
+    the user clicks the button/link    jQuery=button:contains("Close")

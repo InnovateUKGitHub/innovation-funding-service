@@ -2,10 +2,7 @@ package org.innovateuk.ifs.project.finance.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckResource;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckURIs;
+import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +28,12 @@ public class FinanceCheckRestServiceImpl extends BaseRestService implements Fina
     public RestResult<FinanceCheckSummaryResource> getFinanceCheckSummary(Long projectId) {
         String url = FinanceCheckURIs.BASE_URL + "/" + projectId + FinanceCheckURIs.PATH;
         return getWithRestResult(url, FinanceCheckSummaryResource.class);
+    }
+
+    @Override
+    public RestResult<FinanceCheckOverviewResource> getFinanceCheckOverview(Long projectId) {
+        String url = FinanceCheckURIs.BASE_URL + "/" + projectId + FinanceCheckURIs.PATH + "/overview";
+        return getWithRestResult(url, FinanceCheckOverviewResource.class);
     }
 
     @Override

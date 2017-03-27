@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.competition.transactional;
 
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
-import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
@@ -16,6 +16,10 @@ public interface MilestoneService {
     @SecuredBySpring(value="READ", securedType=MilestoneResource.class,
             description = "All users can get see the public milestones for the given competition")
     ServiceResult<List<MilestoneResource>> getAllPublicMilestonesByCompetitionId(final Long id);
+
+    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
+    @SecuredBySpring(value = "VALIDATE_PUBLIC_DATES", securedType = MilestoneResource.class, description = "Only comp admin or project finance can validate the public dates.")
+    ServiceResult<Boolean> allPublicDatesComplete(final Long id);
 
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
     @SecuredBySpring(value="READ", securedType=MilestoneResource.class,

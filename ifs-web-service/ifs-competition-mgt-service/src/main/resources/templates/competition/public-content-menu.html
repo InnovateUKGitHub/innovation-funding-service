@@ -65,6 +65,16 @@
         </div>
         <hr />
     </form>
+
+    <ul class="pagination" th:unless="${model.competition.nonIfs}">
+        <li class="prev">
+            <a rel="prev" title="Navigate to prev part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.competition.id},sectionPath='assessors')}">
+                <span class="pagination-label">Previous</span>
+                <span class="pagination-part-title">Assessors</span>
+            </a>
+        </li>
+    </ul>
+
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 

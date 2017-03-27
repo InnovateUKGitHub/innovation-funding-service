@@ -142,4 +142,12 @@ public class FormInputResponseRepositoryIntegrationTest extends BaseRepositoryIn
     public void findOneByApplicationIdAndFormInputQuestionName_nonExistentQuestion() {
         assertNull(repository.findOneByApplicationIdAndFormInputQuestionName(1L, "Not exists"));
     }
+
+    @Test
+    public void findOneByApplicationIdAndQuestionId() {
+        List<FormInputResponse> responses = repository.findByApplicationIdAndFormInputQuestionId(1L, 1L);
+        assertEquals(1, responses.size());
+        assertEquals(1L, (long)responses.get(0).getId());
+        assertTrue(responses.get(0).getValue().startsWith("Within the Industry one issue has caused progress"));
+    }
 }

@@ -9,10 +9,10 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.resource.TokenType;
-import org.innovateuk.ifs.user.domain.Contract;
+import org.innovateuk.ifs.user.domain.Agreement;
 import org.innovateuk.ifs.user.domain.Profile;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.repository.ContractRepository;
+import org.innovateuk.ifs.user.repository.AgreementRepository;
 import org.innovateuk.ifs.user.repository.ProfileRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.*;
@@ -25,6 +25,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static java.lang.Boolean.TRUE;
+import static java.time.LocalDateTime.now;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
@@ -33,7 +34,7 @@ import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnov
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
-import static org.innovateuk.ifs.user.builder.ContractBuilder.newContract;
+import static org.innovateuk.ifs.user.builder.AgreementBuilder.newAgreement;
 import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static org.innovateuk.ifs.user.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.ProfileSkillsEditResourceBuilder.newProfileSkillsEditResource;
@@ -60,7 +61,7 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
     }
 
     @Autowired
-    private ContractRepository contractRepository;
+    private AgreementRepository agreementRepository;
 
     @Autowired
     private InnovationAreaRepository innovationAreaRepository;
@@ -159,7 +160,7 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
     public void testVerifyEmailExpired() {
         // save a token with a created date such that the token should have expired by now
         final String hash = "3514d94130e7959ad39e521554cd53eca4c4f6877740016af3e869c02869af16d4ccd85a53a62a3a";
-        tokenRepository.save(new Token(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), 1L, hash, LocalDateTime.now().minusMinutes(emailTokenValidityMins), JsonNodeFactory.instance.objectNode()));
+        tokenRepository.save(new Token(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getName(), 1L, hash, now().minusMinutes(emailTokenValidityMins), JsonNodeFactory.instance.objectNode()));
 
         loginSystemRegistrationUser();
         RestResult<Void> restResult = controller.verifyEmail(hash);
@@ -245,30 +246,27 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
     }
 
     @Test
-    public void testUpdateProfileContract() {
+    public void testUpdateProfileAgreement() {
         loginPaulPlum();
 
         User user = userRepository.findOne(getPaulPlum().getId());
         Long userId = user.getId();
 
-        // Save a contract as the current contract
-        contractRepository.deleteAll();
-        Contract contract = contractRepository.save(newContract()
+        // Save an agreement as the current agreement
+        agreementRepository.deleteAll();
+        Agreement agreement = agreementRepository.save(newAgreement()
                 .with(id(null))
                 .withCurrent(Boolean.TRUE)
-                .withText("Contract text...")
-                .withAnnexA("Annex one text...")
-                .withAnnexB("Annex two text...")
-                .withAnnexC("Annex three text...")
+                .withText("Agreement text...")
                 .build());
 
-        RestResult<Void> restResult = controller.updateProfileContract(userId);
+        RestResult<Void> restResult = controller.updateProfileAgreement(userId);
         assertTrue(restResult.isSuccess());
 
         User userAfterUpdate = userRepository.findOne(userId);
         Profile profile = profileRepository.findOne(userAfterUpdate.getProfileId());
 
-        assertEquals(contract, profile.getContract());
+        assertEquals(agreement, profile.getAgreement());
     }
 
     @Ignore("TODO DW - INFUND-936 - this test will cause issues when not running Shib or on an environment like Bamboo where no Shib is available")
@@ -413,7 +411,7 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
         Long userId = user.getId();
         Profile profile = newProfile()
                 .withSkillsAreas("java developer")
-                .withContractSignedDate(LocalDateTime.now())
+                .withAgreementSignedDate(now())
                 .build();
         profile = profileRepository.save(profile);
 
@@ -433,7 +431,7 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
                 .withUser(user.getId())
                 .withSkillsComplete(true)
                 .withAffliliationsComplete(true)
-                .withContractComplete(true)
+                .withAgreementComplete(true)
                 .build();
         assertEquals(expectedUserProfileStatus, profileStatus);
     }

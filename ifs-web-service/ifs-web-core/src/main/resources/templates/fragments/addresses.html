@@ -1,6 +1,6 @@
 
 <div th:fragment="company-address-details">
-    <div id="manual-company-input" class="extra-margin">
+    <div id="manual-company-input">
         <fieldset>
             <legend th:if="${legend}" class="visuallyhidden" th:text="${legend}" />
             <legend th:unless="${legend}" class="visuallyhidden">Organisation details</legend>
@@ -33,7 +33,8 @@
         </fieldset>
         <fieldset id="address-details" class="extra-margin" th:if="${form.addressForm.selectedPostcodeIndex != null or form.addressForm.manualAddress}">
             <input type="hidden" th:field="*{addressForm.manualAddress}" />
-            <legend class="visuallyhidden">Address details</legend>
+            <legend class="heading-medium" th:if="${addressType}" th:text="|Your ${addressType}|">ADDRESS TYPE</legend>
+            <legend class="visuallyhidden" th:unless="${addressType}">Address details</legend>
             <div th:class="${#fields.hasErrors('*{addressForm.selectedPostcode.addressLine1}') and form.addressForm.triedToSave} ? 'form-group error' : 'form-group'">
                 <label class="form-label" for="addressForm.selectedPostcode.addressLine1">
                     <span class="form-label-bold">Street</span>
@@ -93,34 +94,6 @@
 </div>
 
 
-<!--<div th:fragment="organisation-size">-->
-    <!--<h2 class="heading-small">Organisation size</h2>-->
-    <!--<div th:class="${#fields.hasErrors('*{organisationSize}') and form.addressForm.triedToSave} ? 'form-group error' : 'form-group'">-->
-        <!--<fieldset>-->
-            <!--<legend>-->
-                <!--<span class="visuallyhidden">Organisation size</span>-->
-                <!--<p class="form-hint">More information on defining your company size is available from the <a href="http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm" rel="external">EU Definition</a></p>-->
-                <!--<span class="error-message" th:if="${#fields.hasErrors('*{organisationSize}') and form.addressForm.triedToSave}" th:errors="*{organisationSize}"></span>-->
-            <!--</legend>-->
-            <!--<div class="form-block">-->
-                <!--<label class="block-label selection-button-radio" for="radio-1">-->
-                    <!--<input id="radio-1" type="radio" th:field="*{organisationSize}" value="SMALL"/>-->
-                    <!--Micro / small-->
-                <!--</label>-->
-                <!--<label class="block-label selection-button-radio" for="radio-2">-->
-                    <!--<input id="radio-2" type="radio" th:field="*{organisationSize}" value="MEDIUM"/>-->
-                    <!--Medium-->
-                <!--</label>-->
-                <!--<label class="block-label selection-button-radio" for="radio-3">-->
-                    <!--<input id="radio-3" type="radio" th:field="*{organisationSize}" value="LARGE"/>-->
-                    <!--Large-->
-                <!--</label>-->
-            <!--</div>-->
-        <!--</fieldset>-->
-    <!--</div>-->
-<!--</div>-->
-
-
 <div th:fragment="organisation-details-minimal">
     <fieldset>
         <legend class="visuallyhidden" th:text="${organisationForm.organisationType.name} + ''">? Organisation</legend>
@@ -135,13 +108,16 @@
     <fieldset>
         <legend class="visuallyhidden" th:text="${organisationForm.organisationType.name} + ''">? Organisation</legend>
         <div class="form-block">
-            <h3 class="heading-small" th:text="${organisationForm.organisationType.name}+' name'" />
+            <h3 class="heading-small">Organisation type</h3>
+            <p th:text="${organisationForm.organisationType.name}">Businesss</p>
+
+            <h3 class="heading-small">Registered name</h3>
             <p th:text="${organisationForm.organisationName}"></p>
 
-            <span th:if="${T(org.innovateuk.ifs.user.resource.OrganisationTypeEnum).BUSINESS.organisationTypeId == organisationForm.organisationType.id}">
-                <h3 th:if="${selectedOrganisation?.organisationSearchId}" class="heading-small">Registration number</h3>
+            <th:block th:if="${selectedOrganisation?.organisationSearchId}">
+                <h3 class="heading-small">Registration number</h3>
                 <p th:text="${selectedOrganisation?.organisationSearchId}"></p>
-            </span>
+            </th:block>
 
             <div th:if="${selectedOrganisation?.organisationAddress != null}">
                 <h3 class="heading-small">Registered Address</h3>
@@ -168,7 +144,6 @@
 
 <div th:fragment="business-details">
     <fieldset>
-        <legend class="visuallyhidden" th:text="${organisationForm.organisationType.name} + ''">? Organisation</legend>
         <div class="form-block">
             <h3 class="heading-small">Organisation name</h3>
             <p th:text="${organisationForm.organisationName}"></p>

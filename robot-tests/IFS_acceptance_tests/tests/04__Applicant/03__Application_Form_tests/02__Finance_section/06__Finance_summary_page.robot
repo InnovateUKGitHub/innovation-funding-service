@@ -19,8 +19,9 @@ Resource          ../../FinanceSection_Commons.robot
 
 *** Variables ***
 ${OVERVIEW_PAGE_PROVIDING_SUSTAINABLE_CHILDCARE_APPLICATION}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_2}
-${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SECTION}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_2}/form/section/7  #Your finances page
-${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SUMMARY}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_2}/form/section/8
+${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SECTION}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_2}/form/section/187  #Your finances page
+${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SUMMARY}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_2}/form/section/198
+${applicationPluto}  Planetary science Pluto's telltale heart
 
 *** Test Cases ***
 Calculations for Lead applicant
@@ -46,12 +47,13 @@ Contribution to project and funding sought should not be negative number
     [Documentation]    INFUND-524
     ...
     ...    This test case still use the old application after the refactoring
-    [Tags]
+    [Tags]    Pending
+    # TODO Pending due to INFUND-8706
     [Setup]  log in as a different user    &{lead_applicant_credentials}
-    When the user navigates to Your-finances page       Providing sustainable childcare
-    and the user fills in the project costs
-    and the user fills in the organisation information       Providing sustainable childcare
-    and the user checks your funding section for the project      Providing sustainable childcare
+    When the user navigates to Your-finances page  ${applicationPluto}
+    And the user fills in the project costs
+    And the user fills in the organisation information  ${applicationPluto}
+    And the user checks your funding section for the project  ${applicationPluto}
     Then the contribution to project and funding sought should be 0 and not a negative number
 
 Your Finance includes Finance summary table for lead applicant
@@ -87,9 +89,10 @@ Green check should show when the finances are complete
     [Documentation]    INFUND-927, INFUND-894, INFUND-446
     [Tags]
     [Setup]
+    #TODO   investigate intermmitent failure
     When the user navigates to Your-finances page    Robot test application
     And the user marks the finances as complete     Robot test application
-    Then the user redirects to the page    Please provide Innovate UK with information about your project.    Application overview
+    Then the user redirects to the page    Please provide information about your project.    Application overview
     And the user clicks the button/link    link=Finances overview
     Then Green check should be visible
     [Teardown]    The user closes the browser
@@ -98,17 +101,17 @@ Alert shows If the academic research participation is too high
     [Documentation]    INFUND-1436
     [Tags]    Email
     [Setup]    Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    participate in their application
-    Given guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
+    Given guest user log-in    ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
     And The user navigates to the academic application finances
     And The user clicks the button/link       link=Your project costs
     When the user enters text to a text field      id=incurred-staff    1000
-    And Guest user log-in    &{lead_applicant_credentials}
+    And log in as a different user  &{lead_applicant_credentials}
     And the user navigates to the finance overview of the academic
     Then the user should see the text in the page    The participation levels of this project are not within the required range
     And the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=Review and submit
-    And the user clicks the button/link    jquery=button:contains("Finances Summary")
+    And the user clicks the button/link    jQuery=button:contains("Finances summary")
     Then the user should see the text in the page    The participation levels of this project are not within the required range
     [Teardown]
 
@@ -122,9 +125,9 @@ Alert should not show If research participation is below the maximum level
     And the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=Review and submit
-    And the user clicks the button/link    jquery=button:contains("Finances Summary")
+    And the user clicks the button/link    jquery=button:contains("Finances summary")
     Then the user should see the text in the page    The participation levels of this project are within the required range
-    [Teardown]
+
 
 *** Keywords ***
 
@@ -182,15 +185,18 @@ the red warning should be visible
     Page Should Contain Image    css=.finance-summary tr:nth-of-type(1) img[src*="/images/warning-icon"]
 
 Lead enters a valid research participation value
-    When The user navigates to the academic application finances
+    When the user navigates to the academic application finances
     the user clicks the button/link       link=Your project costs
     the user clicks the button/link    jQuery=button:contains("Labour")
     the user should see the element    name=add_cost
     the user clicks the button/link    jQuery=button:contains('Add another role')
     the user should see the element    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input
-    The user enters large text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    1200000000
-    the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    1000
     the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input    Test
+    wait for autosave
+    the user enters large text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    1200000000
+    wait for autosave
+    the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    1000
+    wait for autosave
     then the user selects the checkbox      id=agree-state-aid-page
     the user clicks the button/link        jQuery= button:contains('Mark as complete')
     wait for autosave

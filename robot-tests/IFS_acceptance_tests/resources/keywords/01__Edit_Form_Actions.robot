@@ -176,7 +176,7 @@ The user enters large text to a text field
     [Arguments]    ${TEXT_FIELD}    ${TEXT_INPUT}
     Wait Until Element Is Visible Without Screenshots    ${TEXT_FIELD}
     Clear Element Text    ${TEXT_FIELD}
-    Wait Until Keyword Succeeds Without Screenshots    10    500ms    input text    ${TEXT_FIELD}    ${TEXT_INPUT}
+    Wait Until Keyword Succeeds Without Screenshots    10    1500ms    input text    ${TEXT_FIELD}    ${TEXT_INPUT}
     Mouse Out    ${TEXT_FIELD}
     Run Keyword And Ignore Error Without Screenshots    focus    link=Sign out
     Wait for autosave
@@ -259,14 +259,14 @@ the user should see the dropdown option selected
     Page Should Contain    BETA
 
 the user edits the project summary question
-    focus    css=#form-input-11 .editor
-    Clear Element Text    css=#form-input-11 .editor
-    Input Text    css=#form-input-11 .editor    I am a robot
+    focus    css=#form-input-1039 .editor
+    Clear Element Text    css=#form-input-1039 .editor
+    Input Text    css=#form-input-1039 .editor    I am a robot
     wait for autosave
 
 the applicant adds some content and marks this section as complete
-    Focus    css=#form-input-4 .editor
-    Input Text    css=#form-input-4 .editor    This is some random text
+    Focus    css=#form-input-1057 .editor
+    Input Text    css=#form-input-1057 .editor    This is some random text
     the user clicks the button/link    name=mark_as_complete
     the user should see the element    name=mark_as_incomplete
 

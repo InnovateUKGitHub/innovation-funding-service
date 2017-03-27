@@ -14,7 +14,7 @@
 <main id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
 
-    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{id}/status (id=${model.competitionSummary.competitionId})}"  th:remove="tag"></div>
+    <div th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{id}/status (id=${model.competitionSummary.competitionId})}" th:remove="tag"></div>
 
     <div class="grid-row">
         <div class="column-two-thirds">
@@ -42,7 +42,7 @@
         </th:block>
     </th:block>
 
-    <h2 th:include="fragments/elements :: project-title (projectId=${model.applicationId}, projectName=${model.projectName})" th:remove="tag" />
+    <h2 th:insert="fragments/elements :: project-title (projectId=${model.applicationId}, projectName=${model.projectName})" th:remove="tag" />
 
     <h2 class="heading-medium">Grant offer letter</h2>
 

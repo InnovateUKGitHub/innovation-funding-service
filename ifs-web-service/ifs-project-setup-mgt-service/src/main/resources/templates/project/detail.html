@@ -14,7 +14,7 @@
 <main id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
 
-    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{id}/status (id=${model.competitionId})}"  th:remove="tag"></div>
+    <div th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{id}/status (id=${model.competitionId})}" th:remove="tag"></div>
 
     <div class="page-title">
         <th:block th:insert="fragments/elements :: project-title (projectId=${model.project.application}, projectName=${model.project.name})" />
@@ -63,7 +63,7 @@
 
     <h2 class="heading-medium">Partner finance contacts</h2>
 
-    <p>Each partner must provide a finance contact. We will contact them with any queries around partner finances.</p>
+    <p>Each partner must provide a finance contact. We will contact them with any finance queries.</p>
 
     <table id="project-details-finance">
         <thead>

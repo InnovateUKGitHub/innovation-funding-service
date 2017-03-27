@@ -56,7 +56,7 @@
                 <dd th:text="${model.innovationArea}">Agriculture and food</dd>
             </dl>
 
-            <p class="extra-margin extra-margin-bottom">Choose a tab to find, invite and assign assessors to one or more applications.</p>
+            <p class="extra-margin extra-margin-bottom">Choose a tab to find, invite and see an overview of assessors.</p>
 
             <ul class="inline-nav">
                 <li class="selected">
@@ -72,51 +72,29 @@
 
             <div class="grid-row">
                 <div class="column-three-quarters">
-                    <h2 class="heading-small no-margin-top">Find people on the system that you would like to invite to be an assessor.</h2>
-                    <p>Find people to add to your assessor invite list for this competition. Alternatively, you can use the dropdown filters to narrow your results.</p>
+                    <h2 class="heading-small no-margin-top">Find registered assessors and add them to your invite list for this competition.</h2>
                 </div>
             </div>
 
-            <!--/* TODO INFUND-6403
-            <form>
-                <div class="search-filters">
+            <form method="GET" th:object="${filterForm}">
+                <div class="search-filters extra-margin">
                     <div class="grid-row">
-                        <div class="column-half">
-                            <div class="form-group">
-                                <label for="filterInnovationType">Type</label>
-                                <select name="filterInnovationType" id="filterInnovationType" class="form-control">
-                                    <option selected="selected">Any</option>
-                                </select>
-                            </div>
+                        <div class="column-two-thirds">
+                            <label class="form-label" for="filterInnovationArea">Innovation area</label>
+                            <select name="innovationArea"
+                                    id="filterInnovationArea" class="form-control extra-margin-bottom"
+                                    th:field="*{innovationArea}">
+                                <option value="">Any</option>
+                                <optgroup th:each="innovationSector : ${model.innovationSectorOptions}" th:label="${innovationSector.name}">
+                                    <option th:each="innovationArea : ${innovationSector.children}"
+                                            th:value="${innovationArea.id}"
+                                            th:text="${innovationArea.name}">
+                                    </option>
+                                </optgroup>
+                            </select>
+                            <a href="?page=0">Clear all filters</a>
                         </div>
-
-                        <div class="column-half">
-                            <div class="form-group">
-                                <label for="filterInnovationArea">Innovation area</label>
-                                <select name="filterInnovationArea" id="filterInnovationArea" class="form-control">
-                                    <option selected="selected">Any</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="grid-row">
-                        <div class="column-half">
-                             <div class="form-group">
-                                 <label class="form-label" for="filterSearch">Keyword</label>
-                                 <input type="text" class="form-control" id="filterSearch" name="filterSearch" />
-                             </div>
-                        </div>
-
-                        <div class="column-quarter">
-                             <label class="form-label" for="filterContract">Contract and DOI</label>
-                             <select name="filterContract" id="filterContract" class="form-control">
-                                 <option value="Show all">Show all</option>
-                             </select>
-                        </div>
-
-                        <div class="column-quarter alignright">
-                            <button class="button button-clear">Clear filters</button>
+                        <div class="column-third">
                             <button class="button">Filter</button>
                         </div>
                     </div>
@@ -125,9 +103,11 @@
 
             <div class="grid-row sorting">
                 <div class="column-half">
-                    <span class="heading-large">20</span> assessors
+                    <span class="heading-xlarge no-margin" th:text="${model.pagination.totalCount}">20</span>
+                    <span class="heading-small">assessors</span>
                 </div>
 
+                <!--/*
                 <div class="column-half alignright">
                     <label for="inviteFilter">Sort by
                         <select class="form-control" id="inviteFilter" name="inviteFilter">
@@ -136,10 +116,10 @@
                     </label>
                     <button class="button button-secondary button-small" type="submit">Sort</button>
                 </div>
+                */-->
             </div>
-            */-->
 
-            <form method="POST" th:action="@{/competition/{competitionId}/assessors/find(competitionId=${model.competitionId})}">
+            <form method="POST" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}">
                 <table>
                     <thead>
                         <tr>
@@ -164,8 +144,10 @@
                                 <span class="no" th:unless="${assessor.compliant}">No</span>
                             </td>
                             <td class="alignright">
-                                <button class="button button-secondary" name="add" th:value="${assessor.email}" th:unless="${assessor.added}">Add<span class="hidden" th:text="${assessor.name}"> John Barnes</span></button>
-                                <button class="button button-secondary" name="remove" th:value="${assessor.email}" th:if="${assessor.added}">Remove<span class="hidden" th:text="${assessor.name}"> John Barnes</span></button>
+                                <button class="button button-secondary" name="add"
+                                        th:value="${assessor.email}">
+                                    Add <span class="hidden" th:text="${assessor.name}">John Barnes</span>
+                                </button>
                             </td>
                         </tr>
                         <tr th:if="${#lists.isEmpty(model.assessors)}">
@@ -174,6 +156,8 @@
                     </tbody>
                 </table>
             </form>
+
+            <div th:include="fragments/elements :: general-pagination(pagination=${model.pagination})" th:remove="tag"/>
 
             <th:block th:insert="fragments/layout :: main-content-end" />
         </main>

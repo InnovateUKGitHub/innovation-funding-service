@@ -1,13 +1,3 @@
-=== Make the decision to fund or not fund the applications to a given competition
-==== Request
-include::{snippets}/applicationfunding/make-funding-decision/http-request.adoc[]
-
-==== Response
-include::{snippets}/applicationfunding/make-funding-decision/http-response.adoc[]
-
-==== Curl Example
-include::{snippets}/applicationfunding/make-funding-decision/curl-request.adoc[]
-
 === Save the application funding decision data for a given competition
 ==== Request
 include::{snippets}/applicationfunding/save-funding-decision-data/http-request.adoc[]
@@ -17,3 +7,15 @@ include::{snippets}/applicationfunding/save-funding-decision-data/http-response.
 
 ==== Curl Example
 include::{snippets}/applicationfunding/save-funding-decision-data/curl-request.adoc[]
+
+=== Send a funding decision email to lead applicants
+==== Request
+include::{snippets}/applicationfunding/send-notifications/http-request.adoc[]
+include::{snippets}/applicationfunding/send-notifications/request-fields.adoc[]
+
+==== Response
+include::{snippets}/applicationfunding/send-notifications/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/applicationfunding/send-notifications/curl-request.adoc[]
+

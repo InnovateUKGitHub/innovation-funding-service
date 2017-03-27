@@ -1,15 +1,15 @@
 package org.innovateuk.ifs.invite.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
+import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
-import static java.util.Collections.emptyList;
 
 public class InviteOrganisationResourceBuilder extends BaseBuilder<InviteOrganisationResource, InviteOrganisationResourceBuilder> {
 
@@ -27,19 +27,23 @@ public class InviteOrganisationResourceBuilder extends BaseBuilder<InviteOrganis
     }
 
     public InviteOrganisationResourceBuilder withId(Long... ids) {
-        return withArray((id, inviteResource) -> setField("id", id, inviteResource), ids);
+        return withArraySetFieldByReflection("id", ids);
     }
 
-    public InviteOrganisationResourceBuilder withOrganisationName(final String... organisationNames) {
-        return withArray((organisationName, inviteResource) -> setField("organisationName", organisationName, inviteResource), organisationNames);
+    public InviteOrganisationResourceBuilder withOrganisationName(String... organisationNames) {
+        return withArraySetFieldByReflection("organisationName", organisationNames);
     }
 
-    public InviteOrganisationResourceBuilder withInviteResources(List<ApplicationInviteResource> inviteResource) {
-        return with(inviteOrganisationResource -> inviteOrganisationResource.setInviteResources(inviteResource));
+    public InviteOrganisationResourceBuilder withOrganisationNameConfirmed(String... organisationNameConfirmeds) {
+        return withArraySetFieldByReflection("organisationNameConfirmed", organisationNameConfirmeds);
     }
 
-    public InviteOrganisationResourceBuilder withOrganisation(final Long... organisationIds) {
-        return withArray((organisationId, inviteResource) -> setField("organisation", organisationId, inviteResource), organisationIds);
+    public InviteOrganisationResourceBuilder withInviteResources(List<ApplicationInviteResource>... inviteResourceLists) {
+        return withArraySetFieldByReflection("inviteResources", inviteResourceLists);
+    }
+
+    public InviteOrganisationResourceBuilder withOrganisation(Long... organisationIds) {
+        return withArraySetFieldByReflection("organisation", organisationIds);
     }
 
     @Override

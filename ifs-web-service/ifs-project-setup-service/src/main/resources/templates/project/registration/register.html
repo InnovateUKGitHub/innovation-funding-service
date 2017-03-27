@@ -30,26 +30,11 @@
 
             <h2 class="heading-medium">Your details</h2>
 
-
-
-                <div th:class="${#fields.hasErrors('title')}? 'form-group error':'form-group'">
-                    <label class="form-label" for="title">
-                        <span class="form-label-bold">Title</span>
-                        <span class="error-message" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
-                    </label>
-                    <select class="form-control width-medium" id="title" name="title" th:field="*{title}">
-                        <option value="Mr">Mr</option>
-                        <option value="Miss">Miss</option>
-                        <option value="Mrs">Mrs</option>
-                        <option value="Ms">Ms</option>
-                        <option value="Dr">Dr</option>
-                    </select>
-                </div>
                 <div th:class="${#fields.hasErrors('firstName')}? 'form-group error':'form-group'">
                     <label class="form-label" for="firstName">
                         <span class="form-label-bold">First name</span>
                         <span th:if="${#fields.hasErrors('firstName')}" th:remove="tag">
-                              <span class="error-message"  th:each="err : ${#fields.errors('firstName')}" th:text="${err}" />
+                              <span class="error-message" th:each="err : ${#fields.errors('firstName')}" th:text="${err}" />
                         </span>
                     </label>
                     <input th:class="${#fields.hasErrors('firstName') ? 'form-control field-error' : 'form-control'}"
@@ -68,7 +53,7 @@
                     <label class="form-label" for="lastName">
                         <span class="form-label-bold">Last name</span>
                         <span th:if="${#fields.hasErrors('lastName')}" th:remove="tag">
-                              <span class="error-message"  th:each="err : ${#fields.errors('lastName')}" th:text="${err}" />
+                              <span class="error-message" th:each="err : ${#fields.errors('lastName')}" th:text="${err}" />
                         </span>
                     </label>
                     <input th:class="${#fields.hasErrors('lastName') ? 'form-control field-error' : 'form-control'}"
@@ -87,7 +72,7 @@
                         <span class="form-label-bold">Phone number</span>
                         <span class="form-hint">We may use this to contact you about the application</span>
                         <span th:if="${#fields.hasErrors('phoneNumber')}" th:remove="tag">
-                              <span class="error-message"  th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}" />
+                              <span class="error-message" th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}" />
                         </span>
                      </label>
                     <input th:class="${#fields.hasErrors('phoneNumber') ? 'form-control field-error' : 'form-control'}"
@@ -113,7 +98,7 @@
                         <span th:unless="${invitee}">
                             <span class="form-hint">You will need this to sign into your account</span>
                             <span th:if="${#fields.hasErrors('email')}" th:remove="tag">
-                                  <span class="error-message"  th:each="err : ${#fields.errors('email')}" th:text="${err}" />
+                                  <span class="error-message" th:each="err : ${#fields.errors('email')}" th:text="${err}" />
                             </span>
                         </span>
                     </label>
@@ -129,50 +114,8 @@
                     </span>
                 </div>
 
+                <th:block th:insert="fragments/password :: registration"/>
 
-                <div th:class="${#fields.hasErrors('password')}? 'form-group error':'form-group'">
-                    <label class="form-label" for="password">
-                        <span class="form-label-bold">Create password</span>
-                        <span class="form-hint">Your password is case-sensitive and needs to:
-                          <ul class="list list-bullet">
-                            <li>be between 10 and 30 characters long</li>
-                            <li>contain at least 1 capital letter</li>
-                            <li>contain at least 1 number</li>
-                          </ul>
-                          Your password can include spaces to make a phrase.
-                        </span>
-                        <span th:if="${#fields.hasErrors('password')}" th:remove="tag">
-                              <span class="error-message"  th:each="err : ${#fields.errors('password')}" th:text="${err}" />
-                        </span>
-                    </label>
-                    <input th:class="${#fields.hasErrors('password') ? 'form-control field-error' : 'form-control'}"
-                           type="password"
-                           th:field="*{password}"
-                           required="required"
-                           minlength="10"
-                           maxlength="30"
-                           th:attr="data-required-errormessage=#{validation.standard.password.required},
-                                    data-minlength-errormessage=#{validation.standard.password.length.min(null,null,'10')},
-                                    data-maxlength-errormessage=#{validation.standard.password.length.max}" />
-                </div>
-                <div th:class="${#fields.hasErrors('retypedPassword')}? 'form-group error':'form-group'">
-                    <label class="form-label" for="retypedPassword">
-                        <span class="form-label-bold">Re-type password</span>
-                        <span th:if="${#fields.hasErrors('password')}" th:remove="tag">
-                              <span class="error-message"  th:each="err : ${#fields.errors('password')}" th:text="${err}" />
-                        </span>
-                    </label>
-                    <input th:class="${#fields.hasErrors('retypedPassword') ? 'form-control field-error' : 'form-control'}"
-                           type="password"
-                           th:field="*{retypedPassword}"
-                           required="required"
-                           minlength="10"
-                           maxlength="30"
-                           th:attr="data-required-errormessage=#{validation.standard.retypedpassword.required},
-                                    data-minlength-errormessage=#{validation.standard.password.length.min(null,null,'10')},
-                                    data-maxlength-errormessage=#{validation.standard.password.length.max(30)}"
-                           />
-                </div>
                 <div th:class="${#fields.hasErrors('termsAndConditions')}? 'form-group error':'form-group'">
                   <fieldset>
                       <legend>

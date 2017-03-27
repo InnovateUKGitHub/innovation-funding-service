@@ -3,10 +3,10 @@ package org.innovateuk.ifs.testdata.builders;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.resource.OrganisationSizeResource;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.*;
 import org.innovateuk.ifs.testdata.builders.data.IndustrialCostData;
-import org.innovateuk.ifs.user.resource.OrganisationSize;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -17,10 +17,10 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.finance.builder.LabourCostBuilder.newLabourCost;
 import static org.innovateuk.ifs.finance.builder.MaterialsCostBuilder.newMaterials;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
-import static java.util.Collections.emptyList;
 
 /**
  * Generates Indisutrial Finances for an Organisation on an Application
@@ -105,7 +105,7 @@ public class IndustrialCostDataBuilder extends BaseDataBuilder<IndustrialCostDat
                 new OtherCost(null, description, estimatedCost));
     }
 
-    public IndustrialCostDataBuilder withOrganisationSize(OrganisationSize organsationSize) {
+    public IndustrialCostDataBuilder withOrganisationSize(Long organsationSize) {
         return with(data -> {
 
             ApplicationFinanceResource applicationFinance =

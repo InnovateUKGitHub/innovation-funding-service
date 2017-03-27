@@ -17,7 +17,7 @@ project.ext['flyway.placeholderSuffix']='}'
 project.ext['flyway.locations']="db/migration,db/setup,db/webtest"
 ext.ifsFlywayLocations="db/migration,db/setup,db/webtest"
 
-ext.silRestBaseURL="http://ifs-data-service:8080/silstub"
+ext.silRestBaseURL="http://data-service:8080/silstub"
 //
 // The production application will use the SIL to send emails out.  For non-production environments, the IFS application
 // can talk to a SIL stub within the IFS application itself.  The below configuration allows you to configure whether or
@@ -33,15 +33,15 @@ ext.ifsSmtpPassword="smtp"
 ext.ifsSmtpTlsEnabled=false
 ext.ifsMailTimeoutMillis=10000
 
-ext.idpRestBaseURL="https://iuk-auth-localdev/regapi"
+ext.idpRestBaseURL="https://iuk-auth-localdev:9443/regapi"
 
-ext.ifsDataServiceRestBaseURL="http://ifs-data-service:8080"
+ext.ifsDataServiceRestBaseURL="http://data-service:8080"
 
 ext.postcodeLookupKey=""
 
 ext.ifsFileStorageLocation="/tmp/uploads"
 
-ext.ifsWebBaseURL="https://ifs-local-dev"
+ext.ifsWebBaseURL="https://ifs.local-dev"
 
 ext.serverPort=8080
 ext.activeProfile="local"

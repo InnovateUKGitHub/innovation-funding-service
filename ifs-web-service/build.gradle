@@ -6,10 +6,9 @@ project(':ifs-web-service').bootRepackage {
     onlyIf{ Task task -> false}
 }
 
-build.enabled = false
 jar.enabled=false
 
-task endpointDocumentation() {
+task endpointDocumentation(type: Task) {
     dependsOn "ifs-application-service:test"
     dependsOn "ifs-assessment-service:test"
     dependsOn "ifs-competition-mgt-service:test"
@@ -18,27 +17,32 @@ task endpointDocumentation() {
 
     def combinedFilename = 'build/web-endpoints.csv'
 
-    def files = fileTree(dir: '.', include: '**/*-endpoints.csv', exclude: combinedFilename)
-    def lines = []
-    files.each {
-        it.eachLine { line ->
-            lines << line
-        }
-    }
-
-    def buildFolder = new File("build")
-    buildFolder.mkdirs()
-    def combinedFile = new File(combinedFilename)
-    if (combinedFile.exists()) {
-        combinedFile.delete()
-    }
-    combinedFile.append('"path", "method", "constraint", "rule", "description"\n')
-    combinedFile.append(
-        lines
-            .findAll {
-                it.startsWith('"/')
+    doLast {
+        def files = fileTree(dir: '.', include: '**/*-endpoints.csv', exclude: combinedFilename)
+        def lines = []
+        files.each {
+            it.eachLine { line ->
+                lines << line
             }
-            .sort()
-            .join("\n")
-    )
+        }
+
+        File buildFolder = file("build")
+        buildFolder.mkdirs()
+        File combinedFile = file(combinedFilename)
+        if (combinedFile.exists()) {
+            combinedFile.delete()
+        }
+        combinedFile.append('"path", "method", "constraint", "rule", "description"\n')
+        combinedFile.append(
+                lines
+                        .findAll {
+                    it.startsWith('"/')
+                }
+                .sort()
+                        .join("\n")
+        )
+        println("Wrote web endpoint documentation to " + combinedFile)
+    }
 }
+
+build.finalizedBy endpointDocumentation

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Innovation Areas'" />
+    </head>
+    <body th:with="context='applicant'" class="application details innovation-areas">
+        <th:block th:insert="fragments/layout :: body-start" />
+        <th:block th:insert="fragments/layout :: global-header" />
+
+        <main id="content">
+            <th:block th:insert="fragments/layout :: main-content-start" />
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/application/{applicationId}/form/question/{questionId}(applicationId=${model.applicationId},questionId=${model.questionId})}" />
+
+            <div class="page-title">
+                <p class="subtitle" th:text="${model.currentCompetitionName}">Competition title</p>
+                <h1 class="heading-xlarge">Innovation areas</h1>
+                <p>
+                    Choose the primary innovation area for your project. This will help us to select suitable assessors for your application, if you need help choosing, read our <a href="#">guidance on the innovation areas.</a>
+                </p>
+            </div>
+
+            <form method="post" th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}">
+                <div class="form-group">
+                    <fieldset>
+                        <legend class="visuallyhidden">
+                            Choose the primary innovation area for your project. This will help us to select suitable assessors for your application, if you need help choosing, read our <a href="#">guidance on the innovation areas.</a>.
+                        </legend>
+                        <th:block th:each="innovationArea : ${model.availableInnovationAreas}">
+                            <label class="block-label selection-button-radio" th:for="${'innovationAreaChoice-'+innovationArea.id}">
+                                <input type="radio" name="innovationAreaChoice" th:id="${'innovationAreaChoice-'+innovationArea.id}" th:value="${innovationArea.id}" th:checked="${model.selectedInnovationAreaId} == ${innovationArea.id}" required="required">
+                                <th:block th:text="${innovationArea.name}" />
+                                <span class="form-hint" th:text="${innovationArea.description}">description</span>
+                            </label>
+                        </th:block>
+                        <p class="form-block">or</p>
+                        <label class="block-label selection-button-radio">
+                            <input type="radio" name="innovationAreaChoice" value="NOT_APPLICABLE" th:checked="${model.noInnovationAreaApplicable}" required="required">
+                            My innovation area is not listed
+                        </label>
+                    </fieldset>
+                </div>
+                <button class="button" name="save-innovation-area">Save</button>
+                <a th:href="@{/application/__${model.applicationId}__/form/question/__${model.questionId}__}">Cancel</a>
+            </form>
+
+            <th:block th:insert="fragments/layout :: main-content-end" />
+        </main>
+
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
+    </body>
+</html>

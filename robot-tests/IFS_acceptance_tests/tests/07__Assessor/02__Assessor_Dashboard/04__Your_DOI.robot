@@ -17,7 +17,7 @@ Back to the dashboard link
     ...
     ...    INFUND-7060
     Given The user should see the element    jQuery=.message-alert.extra-margin-bottom a:contains("your declaration of interest")    #this checks the alert message on the top of the page
-    When the user clicks the button/link    jQuery=a:contains("your declaration of interest")
+    When the user clicks the button/link    jQuery=h2:contains("Your assessor details") + ul a:contains("your declaration of interest")
     And The user should see the text in the element    css=p:nth-child(4)    Not answered
     And The user should see the text in the element    css=p:nth-child(14)    Not answered
     And the user clicks the button/link    jQuery=a:contains("Assessor dashboard")
@@ -29,29 +29,28 @@ Server-side validations when No selected at yes/no
     ...    INFUND-7060
     [Tags]    HappyPath
     Given the user clicks the button/link    jQuery=a:contains("your declaration of interest")
-    When the user clicks the button/link    jQuery=a:contains("Edit")
-    Then the user clicks the button/link    jQuery=button:contains("Save")
+    Then the user clicks the button/link    jQuery=button:contains("Save and return to your declaration of interest")
     Then The user should see a summary error    Please correct the errors in the form below.
     And the user should see a field error    Please enter a principal employer.
     And the user should see a field error    Please enter your role with your principal employer.
     And the user should see a field error    You must agree that your account is accurate.
-    And the user should see a field error    Please tell us if you have any appointments, directorships or consultancies.
+    And the user should see a field error    Please tell us if you have any appointments or directorships.
     And the user should see a field error    Please tell us if you have any other financial interests.
-    And the user should see a field error    Please tell us if any of your close family members have any appointments, directorships or consultancies.
-    And the user should see a field error    Please tell us if any of your close family members have any other financial interests.
+    And the user should see a field error    Please tell us if any of your immediate family members have any appointments or directorships.
+    And the user should see a field error    Please tell us if any of your immediate family members have any other financial interests.
 
 Server-side when Yes selected at yes/no
     [Documentation]    INFUND-3715
     [Tags]    HappyPath
     Given the user selects the radio button    hasAppointments    yes
-    When the user clicks the button/link    jQuery=button:contains("Save")
+    When the user clicks the button/link    jQuery=button:contains("Save and return to your declaration of interest")
     Then the user should see a field error    Please enter an organisation.
     And the user should see a field error    Please enter a position.
     And the user selects the radio button    hasAppointments    no
     When the user selects the radio button    hasFinancialInterests    Yes
     And the user selects the radio button    hasFamilyAffiliations    Yes
     And the user selects the radio button    hasFamilyFinancialInterests    Yes
-    And the user clicks the button/link    jQuery=button:contains("Save")
+    And the user clicks the button/link    jQuery=button:contains("Save and return to your declaration of interest")
     Then the user should see a field error    Please enter a relation.
     And the user should see a field error    Please enter an organisation.
     And the user should see a field error    Please enter a position.
@@ -66,8 +65,8 @@ Client-side validations
     And The user should not see the text in the page    Please enter your role with your principal employer.
     And The user should not see the text in the page    Please enter your financial interests.
     And The user should not see the text in the page    Please enter your family's financial interests.
-    And The user should not see the text in the page    Please tell us if any of your close family members have any appointments, directorships or consultancies.
-    And The user should not see the text in the page    Please tell us if any of your close family members have any other financial interests.
+    And The user should not see the text in the page    Please tell us if any of your immediate family members have any appointments or directorships.
+    And The user should not see the text in the page    Please tell us if any of your immediate family members have any other financial interests.
     And The user should not see the text in the page    You must agree that your account is accurate.
 
 Successful save for the DOI form
@@ -75,7 +74,7 @@ Successful save for the DOI form
     ...
     ...    INFUND-5432
     [Tags]
-    When the user clicks the button/link    jQuery=button:contains("Save")
+    When the user clicks the button/link    jQuery=button:contains("Save and return to your declaration of interest")
     Then the user should be redirected to the correct page    ${assessment_declaration_url}
     And the user should see the text in the page    University
     And the user should see the text in the page    Professor
@@ -104,7 +103,7 @@ the user correctly fills out the role, principle employer and accurate fields
     the user enters text to a text field    id=familyFinancialInterests    My interests
     the user moves focus to the element    css=.selection-button-checkbox
     the user selects the checkbox    accurateAccount1
-    focus    jQuery=button:contains("Save and continue")
+    focus    jQuery=button:contains("Save and return to your declaration of interest")
     Wait For Autosave
 
 the user should see the correct inputs in the declaration form

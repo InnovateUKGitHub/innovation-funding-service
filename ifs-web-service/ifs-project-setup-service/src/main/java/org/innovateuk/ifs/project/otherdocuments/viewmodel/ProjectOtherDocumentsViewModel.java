@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.otherdocuments.viewmodel;
 
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.project.resource.ApprovalType;
-import org.innovateuk.ifs.project.viewmodel.BasicProjectDetailsViewModel;
+import org.innovateuk.ifs.project.projectdetails.viewmodel.BasicProjectDetailsViewModel;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,7 +22,6 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
     private List<String> rejectionReasons;
     private boolean approvalDecisionMade;
     private ApprovalType approved;
-    private boolean leadPartner;
     private boolean projectManager;
     private boolean submitAllowed;
     private LocalDateTime submitDate;
@@ -33,7 +32,6 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
                                           FileDetailsViewModel exploitationPlanFileDetails,
                                           List<String> partnerOrganisationNames,
                                           List<String> rejectionReasons,
-                                          boolean leadPartner,
                                           boolean projectManager,
                                           boolean otherDocumentsSubmitted,
                                           ApprovalType otherDocumentsApproved,
@@ -49,7 +47,6 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
         this.rejectionReasons = rejectionReasons;
         this.approved = otherDocumentsApproved;
         this.approvalDecisionMade = !ApprovalType.UNSET.equals(otherDocumentsApproved);
-        this.leadPartner = leadPartner;
         this.projectManager = projectManager;
         this.submitAllowed = submitAllowed;
         this.submitDate = submitDate;
@@ -81,12 +78,10 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
     }
 
     public boolean isEditable() {
-        return leadPartner && !otherDocumentsSubmitted && !ApprovalType.APPROVED.equals(approved);
+        return projectManager && !otherDocumentsSubmitted && !ApprovalType.APPROVED.equals(approved);
     }
 
-    public boolean isApproved() { return leadPartner && ApprovalType.APPROVED.equals(approved); }
-
-    public boolean isRejected() { return leadPartner && ApprovalType.REJECTED.equals(approved); }
+    public boolean isRejected() { return ApprovalType.REJECTED.equals(approved); }
 
     public boolean isShowSubmitDocumentsButton() {
         return projectManager && !otherDocumentsSubmitted && submitAllowed && !isRejected();
@@ -110,12 +105,8 @@ public class ProjectOtherDocumentsViewModel implements BasicProjectDetailsViewMo
         return approvalDecisionMade && ApprovalType.APPROVED.equals(approved);
     }
 
-    public boolean isLeadPartner(){
-        return leadPartner;
-    }
-
-    public boolean isShowLeadPartnerGuidanceInformation() {
-        return leadPartner && isEditable();
+    public boolean isShowGuidanceInformation() {
+        return !otherDocumentsSubmitted && !ApprovalType.APPROVED.equals(approved);
     }
 
     public boolean isShowDocumentsBeingReviewedMessage() {

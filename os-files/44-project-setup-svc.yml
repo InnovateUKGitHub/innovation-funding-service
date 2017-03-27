@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    creationTimestamp: null
+    name: project-setup-svc
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: project-setup-svc
+    strategy:
+      type: Rolling
+      rollingParams:
+        timeoutSeconds: 600
+        maxSurge: 2
+        maxUnavailable: 0
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          deploymentconfig: project-setup-svc
+      spec:
+        containers:
+        - image: innovateuk/project-setup-service:1.0-SNAPSHOT
+          readinessProbe:
+            httpGet:
+              path: /project-setup/health
+              port: 8080
+          name: project-setup-svc
+          imagePullPolicy: Always
+          env:
+          - name: SPRING_APPLICATION_JSON
+            value: '{"logout":{"url": "https://<<SHIB-ADDRESS>>/Logout/"}}'
+          ports:
+          - containerPort: 8080
+          resources:
+            limits:
+              memory: 1G
+    test: false
+    triggers:
+    - type: ConfigChange
+    status: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    name: project-setup-svc
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      targetPort: 8080
+    - name: 8009-tcp
+      port: 8009
+      targetPort: 8009
+    selector:
+      deploymentconfig: project-setup-svc
+  status:
+    loadBalancer: {}

@@ -5,6 +5,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
 
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
@@ -29,6 +30,8 @@ public class CompetitionParticipantResource {
     private long submittedAssessments;
     private long totalAssessments;
     private CompetitionStatus competitionStatus;
+
+    private Clock clock = Clock.systemDefaultZone();
 
     public String getCompetitionName() {
         return competitionName;
@@ -159,7 +162,7 @@ public class CompetitionParticipantResource {
 
     @JsonIgnore
     public long getAssessmentDaysLeft() {
-        return DAYS.between(LocalDateTime.now(), assessorDeadlineDate);
+        return DAYS.between(LocalDateTime.now(clock), assessorDeadlineDate);
     }
 
     @JsonIgnore

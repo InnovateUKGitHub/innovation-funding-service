@@ -53,7 +53,11 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 	
 	@Test
 	public void testUpdateMilestones() {
+		Competition competition = newCompetition().build();
+		when(competitionRepository.findById(1L)).thenReturn(competition);
+
 		List<MilestoneResource> milestones = newMilestoneResource()
+				.withCompetitionId(1L,1L)
                 .withType(FUNDERS_PANEL, ASSESSMENT_PANEL)
                 .withDate(LocalDateTime.of(2050, 3, 11, 0, 0), LocalDateTime.of(2050, 3, 10, 0, 0))
                 .build(2);
@@ -74,8 +78,9 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 	public void testUpdateNotSequential() {
 		Competition competition = newCompetition().build();
 		when(competitionRepository.findById(1L)).thenReturn(competition);
-		
+
 		List<MilestoneResource> milestones = newMilestoneResource()
+				.withCompetitionId(1L, 1L)
                 .withType(FUNDERS_PANEL, ASSESSMENT_PANEL)
                 .withDate(LocalDateTime.of(2050, 3, 10, 0, 0), LocalDateTime.of(2050, 3, 11, 0, 0))
                 .build(2);
@@ -94,6 +99,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 		when(competitionRepository.findById(1L)).thenReturn(competition);
 		
 		List<MilestoneResource> milestones = newMilestoneResource()
+				.withCompetitionId(1L, 1L)
                 .withType(FUNDERS_PANEL, ASSESSMENT_PANEL)
                 .withDate(LocalDateTime.of(2050, 3, 11, 0, 0), null)
                 .build(2);
@@ -112,6 +118,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 		when(competitionRepository.findById(1L)).thenReturn(competition);
 		
 		List<MilestoneResource> milestones = newMilestoneResource()
+				.withCompetitionId(1L, 1L)
                 .withType(FUNDERS_PANEL, ASSESSMENT_PANEL)
                 .withDate(LocalDateTime.of(2050, 3, 11, 0, 0), LocalDateTime.of(1985, 3, 10, 0, 0))
                 .build(2);
@@ -130,6 +137,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 		when(competitionRepository.findById(1L)).thenReturn(competition);
 		
 		List<MilestoneResource> milestones = newMilestoneResource()
+				.withCompetitionId(1L, 1L)
                 .withType(FUNDERS_PANEL, ASSESSMENT_PANEL, ALLOCATE_ASSESSORS, ASSESSOR_ACCEPTS)
                 .build(4);
 
@@ -175,6 +183,29 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 	}
 
 	@Test
+	public void allPublicDatesCompletSuccess() {
+		List<Milestone> milestones = newMilestone().withType(MilestoneType.OPEN_DATE, MilestoneType.RELEASE_FEEDBACK, MilestoneType.SUBMISSION_DATE).withDate(LocalDateTime.now()).build(3);
+		when(milestoneRepository.findByCompetitionIdAndTypeIn(1L, asList(MilestoneType.OPEN_DATE, MilestoneType.RELEASE_FEEDBACK, MilestoneType.SUBMISSION_DATE)))
+				.thenReturn(milestones);
+
+		ServiceResult<Boolean> result = service.allPublicDatesComplete(1L);
+
+		assertTrue(result.isSuccess());
+		assertTrue(result.getSuccessObject());
+	}
+	@Test
+	public void allPublicDatesCompleteFailure() {
+		List<Milestone> milestones = newMilestone().withType(MilestoneType.RELEASE_FEEDBACK, MilestoneType.SUBMISSION_DATE).build(2);
+		when(milestoneRepository.findByCompetitionIdAndTypeIn(1L, asList(MilestoneType.OPEN_DATE, MilestoneType.RELEASE_FEEDBACK, MilestoneType.SUBMISSION_DATE)))
+				.thenReturn(milestones);
+
+		ServiceResult<Boolean> result = service.allPublicDatesComplete(1L);
+
+		assertTrue(result.isSuccess());
+		assertFalse(result.getSuccessObject());
+	}
+
+	@Test
 	public void getMilestoneByTypeAndCompetition() {
         Milestone milestone = newMilestone().withType(NOTIFICATIONS).build();
 		when(milestoneRepository.findByTypeAndCompetitionId(NOTIFICATIONS, 1L)).thenReturn(milestone);
@@ -183,6 +214,68 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 		assertTrue(result.isSuccess());
 		assertEquals(MilestoneType.NOTIFICATIONS, milestone.getType());
 		assertNull(milestone.getDate());
+	}
+
+	@Test
+	public void testUpdateMilestones_milestonesForNonIfsCompetitionDoNotHaveToBeInFuture() {
+		Competition nonIfsCompetition = newCompetition().withNonIfs(true).build();
+		when(competitionRepository.findById(1L)).thenReturn(nonIfsCompetition);
+
+		LocalDateTime lastYearSomewhere = LocalDateTime.now()
+				.minusYears(1);
+		LocalDateTime lastYearSomewhereButLater = LocalDateTime.now()
+				.minusYears(1)
+				.plusDays(1);
+
+		List<MilestoneResource> pastMilestones = newMilestoneResource()
+				.withCompetitionId(1L,1L)
+				.withType(FUNDERS_PANEL, ASSESSMENT_PANEL)
+				.withDate(lastYearSomewhereButLater, lastYearSomewhere)
+				.build(2);
+
+		ServiceResult<Void> result = service.updateMilestones(pastMilestones);
+
+		assertTrue(result.isSuccess());
+	}
+
+	@Test
+	public void testUpdateMilestones_milestonesForIfsCompetitionHaveToBeInFuture() {
+		Competition ifsCompetition = newCompetition().withNonIfs(false).build();
+		when(competitionRepository.findById(1L)).thenReturn(ifsCompetition);
+
+		LocalDateTime lastYearSomewhere = LocalDateTime.now()
+				.minusYears(1);
+		LocalDateTime lastYearSomewhereButLater = LocalDateTime.now()
+				.minusYears(1)
+				.plusDays(1);
+
+		List<MilestoneResource> pastMilestones = newMilestoneResource()
+				.withCompetitionId(1L,1L)
+				.withType(FUNDERS_PANEL, ASSESSMENT_PANEL)
+				.withDate(lastYearSomewhereButLater, lastYearSomewhere)
+				.build(2);
+
+		ServiceResult<Void> result = service.updateMilestones(pastMilestones);
+
+		assertTrue(result.isFailure());
+		assertEquals(result.getErrors().get(0).getErrorKey(), "error.milestone.pastdate");
+	}
+
+	@Test
+	public void testUpdateMilestones_whenMilestonesAreReferencingDifferentCompetitionsShouldReturnError() {
+		Competition competition = newCompetition().build();
+		when(competitionRepository.findById(1L)).thenReturn(competition);
+
+		List<MilestoneResource> milestones = newMilestoneResource()
+				.withCompetitionId(1L,2L)
+				.withType(FUNDERS_PANEL, ASSESSMENT_PANEL)
+				.withDate(LocalDateTime.of(2050, 3, 11, 0, 0), LocalDateTime.of(2050, 3, 10, 0, 0))
+				.build(2);
+
+		ServiceResult<Void> result = service.updateMilestones(milestones);
+
+		assertTrue(result.isFailure());
+		assertEquals(result.getErrors().get(0).getErrorKey(), "error.title.status.400");
 	}
 
 	@Override
