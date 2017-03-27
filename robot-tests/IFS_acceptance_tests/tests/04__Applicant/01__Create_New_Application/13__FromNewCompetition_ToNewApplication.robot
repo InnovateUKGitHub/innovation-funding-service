@@ -273,9 +273,9 @@ Applicant can view and edit project growth table
     and the user clicks the button/link     jQuery=button:contains("Mark as complete")
 
 Newly created collaborator can view and edit project Growth table
-    [Documentation]     INFUND-8426
+    [Documentation]  INFUND-8426
     [Tags]
-    [Setup]    Invite a non-existing collaborator in Appplication with Growth table
+    [Setup]  Invite a non-existing collaborator in Appplication with Growth table
     When the user navigates to the growth table finances
     and the user clicks the button/link     link=Your organisation
     and the user selects medium organisation size
@@ -446,7 +446,7 @@ the user can edit resubmit and read only of the organisation
 the lead applicant invites an existing user
     [Arguments]  ${comp_title}  ${EMAIL_INVITED}
     the user clicks the button/link    link=${comp_title}
-    the user clicks the button/link    link=view and add participants to your application
+    the user clicks the button/link    link=view team members and add collaborators
     the user clicks the button/link    link=Invite new contributors
     the user clicks the button/link    jQuery=button:contains('Add additional partner organisation')
     Input Text                         name=organisations[1].organisationName    innovate
@@ -462,7 +462,7 @@ the user navigates to the growth table finances
 
 Invite a non-existing collaborator in Appplication with Growth table
     the user clicks the button/link      jQuery=a:contains("Application Overview")
-    the user clicks the button/link       jQuery=a:contains("view and add participants to your application")
+    the user clicks the button/link       jQuery=a:contains("view team members and add collaborators")
     the user clicks the button/link       jQuery=a:contains("Add partner organisation")
     the user should see the element       jQuery=h1:contains(Add organisation)
     the user enters text to a text field      id=organisationName    innovate
@@ -492,7 +492,7 @@ the user completes the new account creation
     wait for autosave
     the user clicks the button/link     jQuery=button:contains("Save organisation and continue")
     then the user should not see an error in the page
-    the user clicks the button/link     jQuery=a:contains("Save and continue")
+    the user clicks the button/link     jQuery=a:contains("Confirm")
     the user should be redirected to the correct page    ${SERVER}/registration/register
     the user enters text to a text field     jQuery=input[id="firstName"]   liam
     the user enters text to a text field     JQuery=input[id="lastName"]   smithson
@@ -509,23 +509,3 @@ the user completes the new account creation
     the user enters text to a text field      jQuery=input[id="username"]   liam@innovate.com
     the user enters text to a text field      jQuery=input[id="password"]  Research123
     the user clicks the button/link         jQuery=button:contains("Sign in")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

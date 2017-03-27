@@ -14,12 +14,9 @@
   <div class="grid-row">
       <div class="column-two-thirds">
             <div class="page-title">
-                <th:block th:insert="fragments/competition-management :: competition-id(competition=${competitionSummary})" />
-                <h1 class="heading-xlarge" th:text="${competitionSummary.competitionName}" />
+                <th:block th:insert="fragments/competition-management :: competition-id-and-name(${competitionSummary.competitionId},${competitionSummary.competitionName})" />
+                <h1 class="heading-xlarge">Funding decision</h1>
             </div>
-      </div>
-      <div class="column-third alignright extra-margin">
-        <th:block th:insert="fragments/competition-management :: competition-status(competition=${competitionSummary})" />
       </div>
   </div>
 

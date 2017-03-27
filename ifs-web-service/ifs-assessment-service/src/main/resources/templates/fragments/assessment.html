@@ -80,7 +80,7 @@
         <div th:unless="${question.isComplete()}" class="section-status section-incomplete">Incomplete</div>
 
         <div class="section-score" th:if="${question.scoreFormInputExists}">
-            Score:
+            Score
             <span th:text="|${question.scoreGiven}/${question.scorePossible}|" th:if="${question.scoreGiven}" th:remove="tag" />
             <span th:unless="${question.scoreGiven}" th:remove="tag">N/A</span>
         </div>

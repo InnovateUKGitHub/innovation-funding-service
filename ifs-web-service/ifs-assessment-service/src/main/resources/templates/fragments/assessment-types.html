@@ -32,11 +32,11 @@
             <summary>
                 <span class="summary" th:text="${field.guidanceTitle}" />
             </summary>
-            <div class="panel">
+            <div class="panel wysiwyg-styles">
                 <p th:if="${field.guidanceAnswer}" th:text="${field.guidanceAnswer}" />
                 <table th:unless="${#lists.isEmpty(field.guidanceRows)}">
                     <tr th:each="guidance : ${field.guidanceRows}">
-                        <th scope="row" th:text="${guidance.subject}" />
+                        <th class="cell-nowrap" scope="row" th:text="${guidance.subject}" />
                         <td th:text="${guidance.justification}" />
                     </tr>
                 </table>

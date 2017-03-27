@@ -165,4 +165,4 @@ Clear the login fields
 the user clicks the forgot psw link
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    click element    link=forgot your password?
     Run Keyword If    '${status}' == 'FAIL'    click element    jQuery=summary:contains("Need help signing in or creating an account?")
-    Run Keyword If    '${status}' == 'FAIL'    click element    link=Forgotten your password
+    Run Keyword If    '${status}' == 'FAIL'    click element    link=Forgotten your password?

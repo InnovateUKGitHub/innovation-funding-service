@@ -27,8 +27,8 @@ Number of days remaining until submission should be correct
 
 *** Keywords ***
 the user should see the date for submission of application
-    the user should see the element    css=.in-progress li:nth-child(1) .day
-    the user should see the element    css=.in-progress li:nth-child(1) .month
+    the user should see the element    css=.in-progress li:nth-child(2) .day
+    the user should see the element    css=.in-progress li:nth-child(2) .month
 
 the user should see the number of days remaining
-    the user should see the element    css=.in-progress li:nth-child(1) .days-remaining
+    the user should see the element    css=.in-progress li:nth-child(2) .days-remaining

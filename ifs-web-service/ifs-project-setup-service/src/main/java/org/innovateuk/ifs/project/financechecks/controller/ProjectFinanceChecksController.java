@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.financechecks.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.DefaultProjectFinanceModelManager;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
 import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceChangesViewModel;
@@ -100,9 +99,6 @@ public class ProjectFinanceChecksController {
 
     @Autowired
     private ProjectFinanceService projectFinanceService;
-
-    @Autowired
-    private FinanceService applicationFinanceService;
 
     @Autowired
     private FinanceCheckService financeCheckService;
@@ -260,7 +256,7 @@ public class ProjectFinanceChecksController {
             }
             ProjectFinanceChecksViewModel viewModel = buildFinanceChecksLandingPage(projectComposite, attachments, queryId);
             model.addAttribute("model", viewModel);
-            return ServiceResult.serviceSuccess();
+            return result;
         });
     }
 
