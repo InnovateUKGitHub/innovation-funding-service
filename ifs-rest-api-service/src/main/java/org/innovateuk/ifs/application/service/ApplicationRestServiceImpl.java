@@ -90,14 +90,4 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     public RestResult<ApplicationResource> findByProcessRoleId(Long id) {
         return getWithRestResult(processRoleRestURL + "/" + id + "/application", ApplicationResource.class);
     }
-
-    @Override
-    public RestResult<Long> getTurnover(Long applicationId, Long organisationId) {
-        return getWithRestResult(applicationRestURL + "/turnover/" + applicationId + "/" + organisationId, Long.TYPE);
-    }
-
-    @Override
-    public RestResult<Long> getHeadCount(Long applicationId,  Long organisationId) {
-        return getWithRestResult(applicationRestURL + "/headcount/" + applicationId + "/" + organisationId, Long.TYPE);
-    }
 }

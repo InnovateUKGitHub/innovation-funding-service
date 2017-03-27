@@ -158,32 +158,4 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
         Integer actualCount = service.getAssignedQuestionsCount(applicationId, assigneeId).getSuccessObject();
         assertEquals(actualCount, Integer.valueOf(count));
     }
-
-    @Test
-    public void test_getHeadcount() {
-        long applicationId = 1L;
-        long organisationId = 2L;
-        String expectedUrl = applicationRestURL + "/headcount/" + applicationId + "/" + organisationId;
-        Long count = 1L;
-
-        setupGetWithRestResultExpectations(expectedUrl, Long.TYPE, count);
-
-        // now run the method under test
-        Long actualCount = service.getHeadCount(applicationId, organisationId).getSuccessObject();
-        assertEquals(actualCount, Long.valueOf(count));
-    }
-
-    @Test
-    public void test_getTurnover() {
-        long applicationId = 1L;
-        long organisationId = 2L;
-        String expectedUrl = applicationRestURL + "/turnover/" + applicationId + "/" + organisationId;
-        Long count = 1L;
-
-        setupGetWithRestResultExpectations(expectedUrl, Long.TYPE, count);
-
-        // now run the method under test
-        Long actualCount = service.getTurnover(applicationId, organisationId).getSuccessObject();
-        assertEquals(actualCount, Long.valueOf(count));
-    }
 }

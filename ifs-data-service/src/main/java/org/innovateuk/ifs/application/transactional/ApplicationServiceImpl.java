@@ -30,7 +30,6 @@ import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.form.repository.FormInputResponseRepository;
-import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
@@ -51,21 +50,17 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_OPEN;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_UNABLE_TO_DELETE_FILE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
-import static org.innovateuk.ifs.form.resource.FormInputType.*;
-
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
-import static org.innovateuk.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.innovateuk.ifs.util.MathFunctions.percentage;
 
@@ -480,36 +475,6 @@ public class ApplicationServiceImpl extends CompetitionSetupTransactionalService
         return getApplication(applicationId).andOnSuccessReturn(this::progressPercentageForApplication);
     }
 
-    @Override
-    public ServiceResult<Long> getTurnoverByOrganisationId(Long applicationId, Long organisationId) {
-        return getByApplicationId(applicationId, organisationId, FINANCIAL_YEAR_END, STAFF_TURNOVER);
-    }
-
-    @Override
-    public ServiceResult<Long> getHeadCountByOrganisationId(Long applicationId, Long organisationId) {
-        return getByApplicationId(applicationId, organisationId, FINANCIAL_STAFF_COUNT, STAFF_COUNT);
-    }
-
-    private ServiceResult<Long> getByApplicationId(Long applicationId, Long organisationId, FormInputType financeType, FormInputType nonFinanceType) {
-        Application app = applicationRepository.findOne(applicationId);
-        return isIncludeGrowthTable(app.getCompetition().getId()).
-                andOnSuccess((isIncludeGrowthTable) -> {
-                    if (isIncludeGrowthTable) {
-                        return getOnlyForApplication(app, organisationId, financeType).andOnSuccessReturn(result -> Long.parseLong(result.getValue()));
-                    } else {
-                        return getOnlyForApplication(app, organisationId, nonFinanceType).andOnSuccessReturn(result -> Long.parseLong(result.getValue()));
-                    }
-                });
-    }
-
-    private ServiceResult<FormInputResponse> getOnlyForApplication(Application app, Long organisationId, FormInputType formInputType) {
-        return getOnlyElementOrFail(formInputRepository.findByCompetitionIdAndTypeIn(app.getCompetition().getId(), asList(formInputType))).andOnSuccess((formInput) -> {
-            List<FormInputResponse> inputResponse = formInputResponseRepository.findByApplicationIdAndFormInputId(app.getId(), formInput.getId())
-                    .stream().filter(response -> organisationId.equals(response.getUpdatedBy().getOrganisationId())).collect(toList());
-            return getOnlyElementOrFail(inputResponse);
-        });
-    }
-
     public ServiceResult<Void> notifyApplicantsByCompetition(Long competitionId) {
         List<ProcessRole> applicants = applicationRepository.findByCompetitionId(competitionId)
                 .stream()
@@ -592,5 +557,4 @@ public class ApplicationServiceImpl extends CompetitionSetupTransactionalService
         }
         return true;
     }
-
 }
