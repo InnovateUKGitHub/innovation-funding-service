@@ -46,11 +46,14 @@
         .secondary-notification{
             @extend .notification;
             color: $secondary-text-colour;
-
+        }
+        .secondary-notification-button{
+            @include core-16;
         }
         .action-required{
             @extend .notification;
             @extend %action-required;
+            font-weight: bold;
             @include media-down(mobile) {
                 padding-left: 20px;
             }

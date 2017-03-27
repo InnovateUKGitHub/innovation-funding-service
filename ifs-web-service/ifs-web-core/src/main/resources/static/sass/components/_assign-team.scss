@@ -33,9 +33,21 @@ The assign container is normally a `<select>`, which gets progressivly transform
     display: block;
     margin-bottom: 1em;
 
-    .assign-button{
-      margin-left: 1em;
+    .action-required,
+    .secondary-notification{
+      padding-right: 1em;
     }
+  }
+
+  .assign-button-container{
+    display: inline-block;
+    position: relative;
+
+    .action-required,
+    .secondary-notification{
+      padding-right: 0;
+    }
+
   }
 
   .assign-team {
@@ -87,7 +99,6 @@ The assign container is normally a `<select>`, which gets progressivly transform
   padding:0;
   margin: 0 5px 0 0;
   text-align: left;
-  vertical-align:top;
 }
 
 .no-js .assign-container .assign-team {
