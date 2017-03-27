@@ -10,6 +10,7 @@
 
 <main id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
+
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to ' + ${model.organisationTypeName} + ' organisation',
         linkClass='link-back',linkUrl='/organisation/create/find-organisation'" />
 
@@ -18,14 +19,16 @@
         Organisation address
     </h1>
 
-    <p class="form-hint icon-info-small-blue">
-        <th:block th:unless="${model.research}">
-            Your organisation must be UK based to receive funding from Innovate UK
-        </th:block>
-        <th:block th:if="${model.research}">
-            Your organisation must be registered Je-S to be a research organisation by Innovate UK
-        </th:block>
-    </p>
+    <div class="message-alert">
+        <p>
+            <th:block th:unless="${model.research}">
+                Your organisation must be UK based to receive funding from Innovate UK
+            </th:block>
+            <th:block th:if="${model.research}">
+                Your organisation must be registered Je-S to be a research organisation by Innovate UK
+            </th:block>
+        </p>
+    </div>
 
     <th:block th:insert="fragments/addresses :: organisation-details-minimal" />
 

@@ -17,12 +17,16 @@
         <th:block th:text="${organisationForm.organisationType.name}" />
     </h1>
     <th:block th:if="${organisationForm.notResearch}">
-        <p class="form-hint icon-info-small-blue">Your organisation must be UK based to receive funding from Innovate UK.</p>
+        <div class="message-alert">
+            <p>Your organisation must be UK based to receive funding from Innovate UK.</p>
+        </div>
         <p>There are 2 ways to identify your organisation. Through Companies House lookup or of you are not registered you can enter your organisation details manually.</p>
         <h2 class="heading-medium">Search on Companies House</h2>
     </th:block>
     <th:block th:if="${organisationForm.research}">
-        <p class="form-hint icon-info-small-blue">Your organisation must be on Je-S before we will consider you to be a research organisation.</p>
+        <div class="message-alert">
+            <p>Your organisation must be on Je-S before we will consider you to be a research organisation.</p>
+        </div>
     </th:block>
 
     <form th:action="@{/organisation/create/find-organisation}" th:object="${organisationForm}" method="POST">
