@@ -10,16 +10,15 @@ import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
-import org.innovateuk.ifs.util.PrioritySorting;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
+import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,19 +61,14 @@ public class ApplicationTeamModelPopulator {
         OrganisationResource leadOrganisation = getLeadOrganisation(applicationId);
 
         List<InviteOrganisationResource> inviteOrganisationResources = getOrganisationInvites(applicationId, leadOrganisation.getId());
-        final Optional<InviteOrganisationResource> leadOrganisationInvite
-                = simpleFindFirst(inviteOrganisationResources, ior -> ior.getOrganisation() != null && ior.getOrganisation().equals(leadOrganisation.getId()));
-
-        final List<InviteOrganisationResource> sortedInvites = new PrioritySorting<>(inviteOrganisationResources,
-                leadOrganisationInvite.orElse(null), InviteOrganisationResource::getOrganisationName).unwrap();
 
         boolean userLeadApplicant = isUserLeadApplicant(loggedInUserId, leadApplicant);
 
-        List<ApplicationTeamOrganisationRowViewModel> organisationRowViewModelsForInvites = sortedInvites.stream()
+        List<ApplicationTeamOrganisationRowViewModel> organisationRowViewModelsForInvites = inviteOrganisationResources.stream()
                 .map(inviteOrganisationResource -> getOrganisationViewModel(inviteOrganisationResource, leadOrganisation.getId(),
                         loggedInUserId, userLeadApplicant)).collect(toList());
 
-        if (isNoInvitesForLeadOrganisation(sortedInvites, leadOrganisation.getId())) {
+        if (isNoInvitesForLeadOrganisation(inviteOrganisationResources, leadOrganisation.getId())) {
             organisationRowViewModelsForInvites = appendLeadOrganisation(organisationRowViewModelsForInvites, leadOrganisation, userLeadApplicant);
         }
 
@@ -137,8 +131,15 @@ public class ApplicationTeamModelPopulator {
     private List<InviteOrganisationResource> getOrganisationInvites(long applicationId, long leadOrganisationId) {
         List<InviteOrganisationResource> inviteOrganisationResources = inviteRestService.getInvitesByApplication(
                 applicationId).handleSuccessOrFailure(failure -> emptyList(), success -> success);
-        inviteOrganisationResources.sort(compareByLeadOrganisationThenById(leadOrganisationId));
-        return inviteOrganisationResources;
+        return sortOrganisationInvitesByLeadOrganisationThenByName(inviteOrganisationResources, leadOrganisationId);
+    }
+
+    private List<InviteOrganisationResource> sortOrganisationInvitesByLeadOrganisationThenByName(
+            List<InviteOrganisationResource> inviteOrganisationResources, long leadOrganisationId) {
+
+        Optional<InviteOrganisationResource> leadOrganisationInvite = simpleFindFirst(inviteOrganisationResources, inviteOrganisationResource ->
+                isInviteForOrganisation(inviteOrganisationResource, leadOrganisationId));
+        return new PrioritySorting<>(inviteOrganisationResources, leadOrganisationInvite.orElse(null), this::getOrganisationName).unwrap();
     }
 
     private String getOrganisationName(InviteOrganisationResource inviteOrganisationResource) {
@@ -152,21 +153,15 @@ public class ApplicationTeamModelPopulator {
     }
 
     private boolean isUserLeadApplicant(long userId, UserResource leadApplicant) {
-        return userId == leadApplicant.getId();
+        return leadApplicant.getId().equals(userId);
     }
 
     private boolean isInviteForOrganisation(InviteOrganisationResource inviteOrganisationResource, long organisationId) {
-        return inviteOrganisationResource.getOrganisation() != null && inviteOrganisationResource.getOrganisation() == organisationId;
+        return inviteOrganisationResource.getOrganisation() != null && inviteOrganisationResource.getOrganisation().equals(organisationId);
     }
 
     private boolean isUserMemberOfOrganisation(long userId, InviteOrganisationResource inviteOrganisationResource) {
         return inviteOrganisationResource.getInviteResources().stream().anyMatch(applicationInviteResource ->
-                applicationInviteResource.getUser() != null && userId == applicationInviteResource.getUser());
-    }
-
-    private Comparator<? super InviteOrganisationResource> compareByLeadOrganisationThenById(long leadOrganisationId) {
-        return (organisation1, organisation2) -> isInviteForOrganisation(organisation1, leadOrganisationId) ? -1 :
-                isInviteForOrganisation(organisation2, leadOrganisationId) ? 1 :
-                        organisation1.getId().compareTo(organisation2.getId());
+                applicationInviteResource.getUser() != null && applicationInviteResource.getUser().equals(userId));
     }
 }
