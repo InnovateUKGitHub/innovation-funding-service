@@ -21,9 +21,9 @@ public class AssessorScoreValidator extends BaseValidator {
             String value = response.getValue();
 
             try {
-                int intValue = Integer.parseInt(value);
+                int assessorScore = Integer.parseInt(value);
 
-                if (intValue < 0 || intValue > maxScore) {
+                if (assessorScore < 0 || assessorScore > maxScore) {
                     rejectValue(errors, "value", "validation.assessor.score.betweenZeroAndMax", maxScore);
                 }
             } catch (NumberFormatException e) {

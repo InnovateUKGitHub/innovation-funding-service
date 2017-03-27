@@ -17,6 +17,7 @@ import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.util.AssessorScoreAverageCollector;
+import org.innovateuk.ifs.validator.AssessorScoreValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -76,7 +77,7 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
                 .getSuccessObjectOrThrowException();
 
         String value = StringUtils.stripToNull(response.getValue());
-        boolean same = (value == null && createdResponse.getValue() == null) || (value != null && value.equals(createdResponse.getValue()));
+        boolean same = StringUtils.compare(value, createdResponse.getValue()) == 0;
 
         if (!same) {
             createdResponse.setUpdatedDate(now());
