@@ -97,5 +97,5 @@ function cleanUp() {
 }
 
 function scaleDataService() {
-    oc scale dc data-service --replicas=3 ${SVC_ACCOUNT_CLAUSE}
+    oc scale dc data-service --replicas=2 ${SVC_ACCOUNT_CLAUSE}
 }
