@@ -1,11 +1,11 @@
 *** Settings ***
 Documentation     INFUND-2601 As a competition administrator I want a view of all applications at the 'Funders Panel' stage
-
+...
+...               INFUND-8065 Filter on 'Funding decision' dashboard
 Suite Setup       guest user log-in  &{internal_finance_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
-
 
 *** Variables ***
 ${funders_panel_competition_url}    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/funding
