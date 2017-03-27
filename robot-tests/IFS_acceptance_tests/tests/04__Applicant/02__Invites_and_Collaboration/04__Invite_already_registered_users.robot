@@ -56,7 +56,7 @@ Invite a user with the same organisation under the same organisation
     [Documentation]    INFUND-3759
     [Setup]    Guest user log-in    ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     When Existing user creates a new application and invites a user from the same organisation
-    Then the invited user should get a message to contact the helpdesk    ${test_mailbox_one}+invite2@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    to participate in their application
+    Then the invited user should get a message to contact the helpdesk    ${test_mailbox_one}+invite2@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation
 
 *** Keywords ***
 the user enters profile details
@@ -92,7 +92,7 @@ Existing user creates a new application and invites a user from the same organis
 The invited user should get a message to contact the helpdesk
     [Arguments]    ${recipient}    ${subject}    ${pattern}
     And the guest user opens the browser
-    When the user reads his email and clicks the link    ${recipient}    ${subject}    ${pattern}
+    When the user reads his email and clicks the link    ${recipient}    ${subject}    ${pattern}   3
     When the user clicks the button/link    link=Continue or sign in
     And the guest user inserts user email & password    ${recipient}  ${correct_password}
     And the guest user clicks the log-in button
