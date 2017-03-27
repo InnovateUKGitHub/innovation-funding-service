@@ -18,25 +18,13 @@ import java.util.List;
  */
 public interface CompetitionParticipantRepository extends PagingAndSortingRepository<CompetitionParticipant, Long> {
 
-    @Override
-    List<CompetitionParticipant> findAll();
-
-    CompetitionParticipant getByInviteHash(String hash);
-
-    List<CompetitionParticipant> getByUserIdAndRole(Long userId, CompetitionParticipantRole role);
-
-    List<CompetitionParticipant> getByCompetitionIdAndRole(Long competitionId, CompetitionParticipantRole role);
-
-    @Query("SELECT competitionParticipant " +
+    static final String BY_COMP_AND_STATUS = "SELECT competitionParticipant " +
             "FROM CompetitionParticipant competitionParticipant " +
             "WHERE competitionParticipant.competition.id = :competitionId " +
             "AND competitionParticipant.role = 'ASSESSOR' " +
-            "AND (:status IS NULL OR competitionParticipant.status = :status)")
-    Page<CompetitionParticipant> getAssessorsByCompetitionAndStatus(@Param("competitionId") long competitionId,
-                                                                    @Param("status") ParticipantStatus status,
-                                                                    Pageable pageable);
+            "AND (:status IS NULL OR competitionParticipant.status = :status)";
 
-    @Query("SELECT competitionParticipant " +
+    static final String BY_COMP_INNOVATION_AREA_STATUS_AND_COMPLIANT = "SELECT competitionParticipant " +
             "FROM CompetitionParticipant competitionParticipant " +
             "LEFT JOIN Profile profile ON profile.id = competitionParticipant.user.profileId " +
             "WHERE competitionParticipant.competition.id = :competitionId " +
@@ -51,15 +39,59 @@ public interface CompetitionParticipantRepository extends PagingAndSortingReposi
             "       AND innovationAreas.category.id = :innovationAreaId " +
             "   ) " +
             "   OR competitionParticipant.invite.innovationArea.id = :innovationAreaId) " +
-            "AND (:isCompliant IS NULL OR (:isCompliant = true AND (" +
-            "   EXISTS(" +
-            "       SELECT affiliation.id " +
-            "       FROM Affiliation affiliation " +
-            "       WHERE affiliation.user.id = competitionParticipant.user.id " +
-            "   ) " +
-            "   AND profile.skillsAreas IS NOT NULL " +
-            "   AND profile.agreement IS NOT NULL " +
-            ")))")
+            "AND (:isCompliant IS NULL " +
+            "   OR (:isCompliant = true AND (" +
+            "       EXISTS(" +
+            "           SELECT affiliation.id " +
+            "           FROM Affiliation affiliation " +
+            "           WHERE affiliation.user.id = competitionParticipant.user.id " +
+            "       ) " +
+            "       AND profile.skillsAreas IS NOT NULL " +
+            "       AND profile.agreement IS NOT NULL) " +
+            "   OR (:isCompliant = false AND (" +
+            "       NOT EXISTS(" +
+            "           SELECT affiliation.id " +
+            "           FROM Affiliation affiliation " +
+            "           WHERE affiliation.user.id = competitionParticipant.user.id " +
+            "       ) " +
+            "       OR profile.skillsAreas IS NULL " +
+            "       OR profile.agreement IS NULL)" +
+            "   )" +
+            "))";
+
+    static final String PARTICIPANTS_WITHOUT_ASSESSMENTS = "SELECT cp FROM CompetitionParticipant cp WHERE cp.competition.id = :compId " +
+            "AND cp.role = :role " +
+            "AND cp.status = :status " +
+            "AND NOT EXISTS " +
+            "(SELECT 'found' FROM Assessment a WHERE " +
+            "a.participant.user = cp.user " +
+            "AND a.target.id = :appId) " +
+            "AND (:innovationAreaId is null OR EXISTS " +
+            "(SELECT 'area' FROM Profile p JOIN p.innovationAreas ia WHERE " +
+            "p.id = cp.user.profileId " +
+            "AND ia.category.id = :innovationAreaId ))";
+
+    static final String PARTICIPANTS_WITH_ASSESSMENTS = "SELECT cp FROM CompetitionParticipant cp WHERE " +
+            "cp.competition.id = :compId " +
+            "AND cp.role = :role " +
+            "AND cp.status = :status " +
+            "AND EXISTS (SELECT 'found' FROM Assessment a WHERE a.participant.user = cp.user AND a.target.id = :appId)";
+
+    @Override
+    List<CompetitionParticipant> findAll();
+
+    CompetitionParticipant getByInviteHash(String hash);
+
+    List<CompetitionParticipant> getByUserIdAndRole(Long userId, CompetitionParticipantRole role);
+
+    List<CompetitionParticipant> getByCompetitionIdAndRole(Long competitionId, CompetitionParticipantRole role);
+
+    @Query(BY_COMP_AND_STATUS)
+    Page<CompetitionParticipant> getAssessorsByCompetitionAndStatus(@Param("competitionId") long competitionId,
+                                                                    @Param("status") ParticipantStatus status,
+                                                                    Pageable pageable);
+
+    @Query(BY_COMP_INNOVATION_AREA_STATUS_AND_COMPLIANT)
     Page<CompetitionParticipant> getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(@Param("competitionId") long competitionId,
                                                                                                  @Param("innovationAreaId") Long innovationAreaId,
                                                                                                  @Param("status") ParticipantStatus status,
@@ -74,17 +106,7 @@ public interface CompetitionParticipantRepository extends PagingAndSortingReposi
 
     int countByCompetitionIdAndRoleAndStatus(Long competitionId, CompetitionParticipantRole role, ParticipantStatus status);
 
-    @Query("SELECT cp FROM CompetitionParticipant cp WHERE cp.competition.id = :compId " +
-            "AND cp.role = :role " +
-            "AND cp.status = :status " +
-            "AND NOT EXISTS " +
-                "(SELECT 'found' FROM Assessment a WHERE " +
-                "a.participant.user = cp.user " +
-                "AND a.target.id = :appId) " +
-            "AND (:innovationAreaId is null OR EXISTS " +
-                "(SELECT 'area' FROM Profile p JOIN p.innovationAreas ia WHERE " +
-                "p.id = cp.user.profileId " +
-                "AND ia.category.id = :innovationAreaId ))")
+    @Query(PARTICIPANTS_WITHOUT_ASSESSMENTS)
     Page<CompetitionParticipant> findParticipantsWithoutAssessments(@Param("compId") long competitionId,
                                                                     @Param("role") CompetitionParticipantRole role,
                                                                     @Param("status") ParticipantStatus status,
@@ -92,11 +114,7 @@ public interface CompetitionParticipantRepository extends PagingAndSortingReposi
                                                                     @Param("innovationAreaId") Long filterInnovationArea,
                                                                     Pageable pageable);
 
-    @Query("SELECT cp FROM CompetitionParticipant cp WHERE " +
-            "cp.competition.id = :compId " +
-            "AND cp.role = :role " +
-            "AND cp.status = :status " +
-            "AND EXISTS (SELECT 'found' FROM Assessment a WHERE a.participant.user = cp.user AND a.target.id = :appId)")
+    @Query(PARTICIPANTS_WITH_ASSESSMENTS)
     List<CompetitionParticipant> findParticipantsWithAssessments(
             @Param("compId") Long competitionId,
             @Param("role") CompetitionParticipantRole role,

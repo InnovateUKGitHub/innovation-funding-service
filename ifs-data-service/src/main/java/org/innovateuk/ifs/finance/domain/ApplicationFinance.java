@@ -80,8 +80,8 @@ public class ApplicationFinance extends Finance {
     }
 
     private boolean isMatchingResearchCategory(GrantClaimMaximum grantClaimMaximum) {
-        return !getApplication().getResearchCategories().isEmpty() &&
-                grantClaimMaximum.getResearchCategory().getId().equals(getApplication().getResearchCategories().iterator().next().getId());
+        return getApplication().getResearchCategory() != null &&
+                grantClaimMaximum.getResearchCategory().getId().equals(getApplication().getResearchCategory().getId());
     }
 
 }

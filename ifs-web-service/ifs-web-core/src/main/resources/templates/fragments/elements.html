@@ -190,7 +190,7 @@
             </legend>
             <label class="block-label selection-button-checkbox" for="agree-terms-page">
                 <input id="agree-terms-page" th:field="${form.termsAgreed}" type="checkbox" value="yes" data-switches-button-status="#mark-all-as-complete" />
-                As a member of this consortium I agree to the funding <a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.application.currentCompetition.id})}">terms and conditions</a> set out by Innovate UK.
+                I agree to the <a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.application.currentCompetition.id})}">conditions of the grant offer</a> set out by Innovate UK.
             </label>
         </fieldset>
     </div>
