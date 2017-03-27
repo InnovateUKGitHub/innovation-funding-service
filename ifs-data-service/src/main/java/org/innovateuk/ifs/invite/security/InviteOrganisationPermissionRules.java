@@ -48,7 +48,7 @@ public class InviteOrganisationPermissionRules {
         return isApplicationCollaboratorForOrganisationOrIsLeadApplicant(inviteOrganisation, user);
     }
 
-    @PermissionRule(value = "READ", description = "System Registration user can view an organisation invite to the application")
+    @PermissionRule(value = "READ_FOR_UPDATE", description = "System Registration user can view or update an organisation invite to the application")
     public boolean systemRegistrarCanViewOrganisationInviteToTheApplication(final InviteOrganisationResource inviteOrganisation, final UserResource user) {
         return isSystemRegistrationUser(user);
     }
