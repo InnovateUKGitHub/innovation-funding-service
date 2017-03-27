@@ -3,7 +3,7 @@ package org.innovateuk.ifs.controller;
 import java.beans.PropertyEditorSupport;
 
 /**
- * Class to support use of case-insesnitive enums as method parameters
+ * Class to support use of case-insensitive enums as method parameters
  */
 public class CaseInsensitiveConverter<T extends Enum<T>> extends PropertyEditorSupport {
 
