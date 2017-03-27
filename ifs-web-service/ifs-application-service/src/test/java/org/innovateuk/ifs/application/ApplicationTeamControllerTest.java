@@ -80,12 +80,12 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
                         new ApplicationTeamApplicantRowViewModel("Steve Smith", "steve.smith@empire.com", true, false),
                         new ApplicationTeamApplicantRowViewModel("Paul Davidson", "paul.davidson@empire.com", false, false)
                 ), true),
+                new ApplicationTeamOrganisationRowViewModel(orgIdEggs, inviteOrgIdEggs, "EGGS", false, singletonList(
+                        new ApplicationTeamApplicantRowViewModel("Paul Tom", "paul.tom@egg.com", false, false)
+                ), true),
                 new ApplicationTeamOrganisationRowViewModel(orgIdLudlow, inviteOrgIdLudlow, "Ludlow", false, asList(
                         new ApplicationTeamApplicantRowViewModel("Jessica Doe", "jessica.doe@ludlow.com", false, false),
                         new ApplicationTeamApplicantRowViewModel("Ryan Dell", "ryan.dell@ludlow.com", false, true)
-                ), true),
-                new ApplicationTeamOrganisationRowViewModel(orgIdEggs, inviteOrgIdEggs, "EGGS", false, singletonList(
-                        new ApplicationTeamApplicantRowViewModel("Paul Tom", "paul.tom@egg.com", false, false)
                 ), true)
         );
 
@@ -133,13 +133,13 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
                         new ApplicationTeamApplicantRowViewModel("Steve Smith", "steve.smith@empire.com", true, false),
                         new ApplicationTeamApplicantRowViewModel("Paul Davidson", "paul.davidson@empire.com", false, false)
                 ), false),
+                new ApplicationTeamOrganisationRowViewModel(orgIdEggs, inviteOrgIdEggs, "EGGS", false, singletonList(
+                        new ApplicationTeamApplicantRowViewModel("Paul Tom", "paul.tom@egg.com", false, false)
+                ), false),
                 new ApplicationTeamOrganisationRowViewModel(orgIdLudlow, inviteOrgIdLudlow, "Ludlow", false, asList(
                         new ApplicationTeamApplicantRowViewModel("Jessica Doe", "jessica.doe@ludlow.com", false, false),
                         new ApplicationTeamApplicantRowViewModel("Ryan Dell", "ryan.dell@ludlow.com", false, true)
-                ), true),
-                new ApplicationTeamOrganisationRowViewModel(orgIdEggs, inviteOrgIdEggs, "EGGS", false, singletonList(
-                        new ApplicationTeamApplicantRowViewModel("Paul Tom", "paul.tom@egg.com", false, false)
-                ), false)
+                ), true)
         );
 
         ApplicationTeamViewModel expectedViewModel = new ApplicationTeamViewModel(
@@ -186,13 +186,13 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
                 new ApplicationTeamOrganisationRowViewModel(orgIdEmpire, inviteOrgIdEmpire, "Empire Ltd", true, singletonList(
                         new ApplicationTeamApplicantRowViewModel("Steve Smith", "steve.smith@empire.com", true, false)
                 ), false),
+                new ApplicationTeamOrganisationRowViewModel(orgIdEggs, inviteOrgIdEggs, "EGGS", false, singletonList(
+                        new ApplicationTeamApplicantRowViewModel("Paul Tom", "paul.tom@egg.com", false, false)
+                ), false),
                 new ApplicationTeamOrganisationRowViewModel(orgIdLudlow, inviteOrgIdLudlow, "Ludlow", false, asList(
                         new ApplicationTeamApplicantRowViewModel("Jessica Doe", "jessica.doe@ludlow.com", false, false),
                         new ApplicationTeamApplicantRowViewModel("Ryan Dell", "ryan.dell@ludlow.com", false, true)
-                ), true),
-                new ApplicationTeamOrganisationRowViewModel(orgIdEggs, inviteOrgIdEggs, "EGGS", false, singletonList(
-                        new ApplicationTeamApplicantRowViewModel("Paul Tom", "paul.tom@egg.com", false, false)
-                ), false)
+                ), true)
         );
 
         ApplicationTeamViewModel expectedViewModel = new ApplicationTeamViewModel(
@@ -240,12 +240,12 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
                         new ApplicationTeamApplicantRowViewModel("Steve Smith", "steve.smith@empire.com", true, false),
                         new ApplicationTeamApplicantRowViewModel("Paul Davidson", "paul.davidson@empire.com", false, false)
                 ), true),
+                new ApplicationTeamOrganisationRowViewModel(orgIdEggs, inviteOrgIdEggs, "EGGS", false, singletonList(
+                        new ApplicationTeamApplicantRowViewModel("Paul Tom", "paul.tom@egg.com", false, false)
+                ), true),
                 new ApplicationTeamOrganisationRowViewModel(orgIdLudlow, inviteOrgIdLudlow, "Ludlow", false, asList(
                         new ApplicationTeamApplicantRowViewModel("Jessica Doe", "jessica.doe@ludlow.com", false, true),
                         new ApplicationTeamApplicantRowViewModel("Ryan Dell", "ryan.dell@ludlow.com", false, true)
-                ), true),
-                new ApplicationTeamOrganisationRowViewModel(orgIdEggs, inviteOrgIdEggs, "EGGS", false, singletonList(
-                        new ApplicationTeamApplicantRowViewModel("Paul Tom", "paul.tom@egg.com", false, false)
                 ), true)
         );
 

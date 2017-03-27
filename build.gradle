@@ -125,6 +125,7 @@ buildscript {
         classpath "com.avast.gradle:docker-compose-gradle-plugin:0.3.21"
         classpath "se.transmode.gradle:gradle-docker:1.2"
         classpath 'net.researchgate:gradle-release:2.4.0'
+	    classpath "gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.13.1"
     }
 
 }
@@ -147,6 +148,7 @@ dependencyUpdates.resolutionStrategy = {
 apply plugin: "org.sonarqube"
 apply plugin: 'docker-compose'
 apply plugin: 'net.researchgate.release'
+apply plugin: "com.github.hierynomus.license"
 
 release {
     preTagCommitMessage = '[Gradle Release Plugin] - Performing release: '

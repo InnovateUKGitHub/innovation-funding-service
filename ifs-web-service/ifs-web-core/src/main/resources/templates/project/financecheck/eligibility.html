@@ -70,7 +70,7 @@
         <th:block th:if="${summaryModel.isExternalView()}">
             <h2 class="heading-medium">Detailed finances</h2>
             <p>Changes made to your finances will be visible here. Please review this section carefully as you are responsible for the accuracy of any approved finances.</p>
-            <a th:href="@{/project/{projectId}/partner-organisation/{organisationId}/finance-checks/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}">View changes to finances</a>
+            <p><a th:href="@{/project/{projectId}/partner-organisation/{organisationId}/finance-checks/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}">View changes to finances</a></p>
         </th:block>
 
         <th:block th:unless="${summaryModel.isExternalView()}">
@@ -78,13 +78,13 @@
                 <h2 class="heading-medium">Project finance overview</h2>
                 <p>These finances were initially submitted at the application stage. All saved changes to finances will be viewable by the applicants.</p>
                 <p>All potential changes must be discussed with the lead applicant. You can do this by raising queries through IFS.</p>
-                <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}">Review all changes to project finances</a>
+                <p><a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}">Review all changes to project finances</a></p>
             </th:block>
 
             <th:block th:if="${summaryModel.isApproved()}">
                 <h2 class="heading-medium">Detailed finances</h2>
                 <p>These finances were submitted by the applicant during the application stage. They include all changes made during the eligibility checks.</p>
-                <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}">View changes to finances</a>
+                <p><a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}">View changes to finances</a></p>
             </th:block>
         </th:block>
 
@@ -95,7 +95,7 @@
                 <span th:unless="${summaryModel.isExternalView()}" class="finance-total" data-calculation-format="percentage" data-calculation-operations="/,*"
                       th:attr="data-mirror='#section-percentage-'+${subSection.id},data-calculation-fields='100, #total-cost, #section-total-'+${subSection.id}"></span>
 
-                <span class="finance-total" th:if="${subSection.name == 'Overhead costs'}">(<span data-calculation-format="percentage" data-calculation-operations="/,*" data-calculation-fields="[data-current-overhead-total], [class~=labour-total] ,100"></span> of Labour)</span>
+                <span class="finance-total" th:if="${subSection.name == 'Overhead costs'}">(<span data-calculation-format="percentage" data-calculation-on-pageload="" data-calculation-operations="/,*" data-calculation-fields="[data-current-overhead-total], [class~=labour-total] ,100"></span> of Labour)</span>
             </h3>
             <div class="collapsible-content"
                  th:with="viewmode=${summaryModel.isApproved() or summaryModel.isExternalView()} ? 'approved' : (${param.section != null} ? (${param.section[0]} == ${subSection.id} ? 'edit' : 'readonly') : 'readonly')">
