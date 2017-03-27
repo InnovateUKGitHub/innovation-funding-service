@@ -181,7 +181,7 @@ Project finance user can view the file
     And the file has been scanned for viruses
     When the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
-    And the user goes back to the previous page ignoring form submission
+    Close Window
     [Teardown]    the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
 
 Project finance user can upload more than one file
@@ -195,11 +195,11 @@ Project finance user can still view both files
     [Tags]
     When the user clicks the button/link    jQuery=a:contains("testing.pdf"):nth-of-type(1)
     Then the user should not see an error in the page
-    And the user goes back to the previous page ignoring form submission
+    Close Window
     And the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
     When the user clicks the button/link    jQuery=a:contains("testing.pdf"):nth-of-type(2)
     Then the user should not see an error in the page
-    And the user goes back to the previous page ignoring form submission
+    Close Window
     And the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
 
 Post new query server side validations
@@ -313,7 +313,7 @@ Finance contact can view the project finance user's uploads
     And the user goes back to the previous page
     When the user clicks the button/link    jQuery=a:contains("${valid_pdf}"):nth-of-type(2)
     Then the user should not see an error in the page
-    And the user goes back to the previous page ignoring form submission
+    Close Window
 
 Queries show in reverse chronological order for finance contact
     [Documentation]    INFUND-4843
@@ -362,7 +362,7 @@ Finance contact can view the file
     And the file has been scanned for viruses
     When the user clicks the button/link    jQuery=.extra-margin a:contains("${valid_pdf}")
     Then the user should not see an error in the page
-    [Teardown]    the user goes back to the previous page ignoring form submission
+    [Teardown]    Close Window
 
 Finance contact can upload more than one file
     [Documentation]    INFUND-4843
@@ -375,10 +375,10 @@ Finance contact can still view both files
     [Tags]
     When the user clicks the button/link    jQuery=.extra-margin a:contains("${valid_pdf}"):nth-of-type(1)
     Then the user should not see an error in the page
-    And the user goes back to the previous page ignoring form submission
+    Close Window
     When the user clicks the button/link    jQuery=.extra-margin a:contains("${valid_pdf}"):nth-of-type(2)
     Then the user should not see an error in the page
-    And the user goes back to the previous page ignoring form submission
+    Close Window
 
 Response to query server side validations
     [Documentation]    INFUND-4843
@@ -449,10 +449,10 @@ Project finance user can view the finance contact's uploaded files
     [Tags]
     When the user clicks the button/link    jQuery=a:contains("${valid_pdf}"):nth-of-type(3)
     Then the user should not see an error in the page
-    And the user goes back to the previous page ignoring form submission
+    Close Window
     When the user clicks the button/link    jQuery=a:contains("${valid_pdf}"):nth-of-type(4)
     Then the user should not see an error in the page
-    And the user goes back to the previous page ignoring form submission
+    Close Window
 
 Project finance user can continue the conversation
     [Documentation]    INFUND-7752
@@ -468,7 +468,7 @@ Finance contact receives an email when a new response is posted
     [Tags]    Email
     Then the user reads his email    ${test_mailbox_one}+fundsuccess@gmail.com    You have a reply to your query    We have replied to a query regarding your finances
 
-Finance contact can view the new response
+Finance contact can view the new response`
     [Documentation]    INFUND-7752
     [Tags]
     Given log in as a different user    ${test_mailbox_one}+fundsuccess@gmail.com    ${short_password}
@@ -542,7 +542,7 @@ Finance contact can view the file in notes
     And the file has been scanned for viruses
     When the user clicks the button/link    jQuery=.extra-margin a:contains("${valid_pdf}")
     Then the user should not see an error in the page
-    And the user goes back to the previous page ignoring form submission
+    Close Window
     [Teardown]    the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
 
 Finance contact can upload more than one file to notes
@@ -556,10 +556,10 @@ Finance contact can still view both files in notes
     [Tags]
     When the user clicks the button/link    jQuery=.extra-margin li:nth-of-type(1) a:contains("${valid_pdf}")
     Then the user should not see an error in the page
-    And the user goes back to the previous page ignoring form submission
+    Close Window
     When the user clicks the button/link    jQuery=.extra-margin li:nth-of-type(2) a:contains("${valid_pdf}")
     Then the user should not see an error in the page
-    And the user goes back to the previous page ignoring form submission
+    Close Window
     And the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
 
 Create new note server side validations
@@ -627,7 +627,7 @@ Large pdf uploads not allowed for note comments
     Given the user clicks the button/link    id=post-new-comment
     When the user uploads the file     name=attachment    ${too_large_pdf}
     Then the user should see the text in the page    ${too_large_pdf_validation_error}
-    [Teardown]    the user goes back to the previous page ignoring form submission
+    [Teardown]    Close Window
 
 Non pdf uploads not allowed for note comments
     [Documentation]    INFUND-7756
@@ -661,7 +661,7 @@ Finance contact can view the file in note comments
     And the file has been scanned for viruses
     When the user clicks the button/link    jQuery=.extra-margin a:contains("${valid_pdf}")
     Then the user should not see an error in the page
-    And the user goes back to the previous page ignoring form submission
+    Close Window
     [Teardown]   the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
 
 Finance contact can upload more than one file to note comments
@@ -675,10 +675,10 @@ Finance contact can still view both files in note comments
     [Tags]
     When the user clicks the button/link    jQuery=.extra-margin li:nth-of-type(1) a:contains("${valid_pdf}")
     Then the user should not see an error in the page
-    And the user goes back to the previous page ignoring form submission
+    Close Window
     When the user clicks the button/link    jQuery=.extra-margin li:nth-of-type(2) a:contains("${valid_pdf}")
     Then the user should not see an error in the page
-    And the user goes back to the previous page ignoring form submission
+    Close Window
     And the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
 
 Note comments server side validations
@@ -1691,7 +1691,3 @@ Project finance user amends other costs details in eligibility for lead
     Then verify total costs of project            £ 204,913
     And the user should see the element           jQuery=section:nth-of-type(7) a:contains("Edit")
     And the user should not see the element       jQuery=section:nth-of-type(7) button[name=save-eligibility]
-
-the user goes back to the previous page ignoring form submission
-    the user goes back to the previous page
-    the user reloads the page
