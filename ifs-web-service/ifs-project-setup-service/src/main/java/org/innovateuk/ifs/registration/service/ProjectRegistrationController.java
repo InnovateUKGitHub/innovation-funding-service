@@ -1,5 +1,9 @@
 package org.innovateuk.ifs.registration.service;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -19,13 +23,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.registration.service.AcceptProjectInviteController.*;
+import static org.innovateuk.ifs.registration.service.AcceptProjectInviteController.INVITE_HASH;
+import static org.innovateuk.ifs.registration.service.AcceptProjectInviteController.errorMessages;
+import static org.innovateuk.ifs.registration.service.AcceptProjectInviteController.populateModelWithErrorsAndReturnErrorView;
 
 @Controller
 @PreAuthorize("permitAll")
@@ -99,7 +101,7 @@ public class ProjectRegistrationController {
                 return restSuccess(REGISTRATION_SUCCESS_VIEW);
             } else {
                 result.getErrors().forEach(error -> bindingResult.reject("registration." + error.getErrorKey()));
-                return restSuccess(REGISTER_MAPPING);
+                return restSuccess(REGISTRATION_REGISTER_VIEW);
             }
 
         }).getSuccessObject();
