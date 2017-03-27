@@ -13,7 +13,7 @@ Academic organisations search
     Given we create a new user    ${test_mailbox_one}+invitedacademics${unique_email_number}@gmail.com
     Given the lead applicant invites a registered user    ${test_mailbox_one}+academicinvite${unique_email_number}@gmail.com    ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com
     When the user reads his email and clicks the link    ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    participate in their application
-    And the user clicks the button/link    jQuery=.button:contains("Create")
+    And the user clicks the button/link    jQuery=.button:contains("Yes, accept invitation")
     When the user selects the radio button    organisationType    2
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And The user should see the text in the page    Your organisation must be on Je-S before we will consider you to be a research organisation
@@ -43,7 +43,7 @@ Accept invitation as academic
     And the user enters text to a text field    id=addressForm.selectedPostcode.county    Poppleshire
     And the user enters text to a text field    id=addressForm.selectedPostcode.postcode    POPPS123
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
-    And the user clicks the button/link    jQuery=.button:contains("Save and continue")
+    And the user clicks the button/link    jQuery=.button:contains("Confirm")
     And the user fills the create account form    Steven    Gerrard
     And If the user goes to the previous page he should redirect to the login page
     And the user reads his email and clicks the link  ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com  Please verify your email address  You have recently set up an account
@@ -61,4 +61,4 @@ Accept invitation as academic
 *** Keywords ***
 If the user goes to the previous page he should redirect to the login page
     And the user goes back to the previous page
-    Then the user should see the text in the page    New to this service?
+    Then the user should see the text in the page    Sign in

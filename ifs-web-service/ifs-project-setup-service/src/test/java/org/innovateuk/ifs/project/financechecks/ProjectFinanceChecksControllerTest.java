@@ -241,7 +241,7 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
 
         FinanceChecksEligibilityViewModel viewModel = (FinanceChecksEligibilityViewModel) model.get("summaryModel");
 
-        assertTrue(viewModel.isReadOnly());
+        assertTrue(viewModel.isExternalView());
     }
 
     private void setUpViewEligibilityMocking(EligibilityResource eligibility) {

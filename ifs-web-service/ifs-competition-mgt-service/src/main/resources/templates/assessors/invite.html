@@ -85,6 +85,7 @@
                           method="POST"
                           th:object="${form}"
                           novalidate="novalidate">
+                        <button class="hidden-save" type="submit" name="inviteNewUsers" tabindex="-1" aria-hidden="true">Add assessors to list</button>
                         <p>Enter the new assessor's details below to add them to your invite list.</p>
 
                         <div class="form-group" th:classappend="${#fields.hasErrors('selectedInnovationArea')}? error">

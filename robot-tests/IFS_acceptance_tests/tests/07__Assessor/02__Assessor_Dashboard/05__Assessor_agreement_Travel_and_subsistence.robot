@@ -26,20 +26,12 @@ Travel and subsistence rates
     And the user should see the text in the page    Please make sure your travel claims, receipts and tickets are all submitted.
     [Teardown]    And the user clicks the button/link    link=Assessor dashboard
 
-Server-side validations
-    [Documentation]    INFUND-1481
-    ...
-    ...    INFUND-5432
-    [Tags]    HappyPath
-    Given The user should see the element    link=your assessor agreement    #his checks the alert message on the top of the page
-    And the user clicks the button/link    jQuery=a:contains("your assessor agreement")
-    When the user clicks the button/link    jQuery=button:contains("Save and return to assessor dashboard")
-    Then the user should see an error    Please agree to the terms and conditions.
-
 Cancel returns you back to the dashboard
     [Documentation]    INFUND-8009
     [Tags]
-    Given the user clicks the button/link    jQuery=a:contains(Cancel)
+    Given The user should see the element   link=your assessor agreement    #his checks the alert message on the top of the page
+    And the user clicks the button/link    jQuery=a:contains("your assessor agreement")
+    When the user clicks the button/link    jQuery=a:contains(Cancel)
     Then the user should be redirected to the correct page    ${assessor_dashboard_url}
     [Teardown]    the user clicks the button/link    jQuery=a:contains("your assessor agreement")
 
@@ -57,6 +49,14 @@ Assessor agreement
     Then the user should be redirected to the correct page without the usual headers    ${Server}/assessment/documents/New%20simple%20assessor%20agreement.pdf
     And The user goes back to the previous page
     [Teardown]    The user navigates to the page    ${Server}/assessment/profile/agreement
+
+Find out more about our travel and subsistence rates
+    [Documentation]    INFUND-8806
+    [Tags]
+    Given the user should see the text in the page    Find out more about our travel and subsistence rates
+    When the user clicks the button/link    link=travel and subsistence rates
+    Then the user should be redirected to the correct page    ${Server}/assessment/profile/travel
+    And The user goes back to the previous page
 
 Client-side validations and Submit
     [Documentation]    INFUND-1481

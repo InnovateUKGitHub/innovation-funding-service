@@ -15,7 +15,6 @@ public class AssessmentSummaryViewModel {
     private String applicationName;
     private long daysLeft;
     private long daysLeftPercentage;
-    private List<AssessmentSummaryQuestionViewModel> questionsForScoreOverview;
     private List<AssessmentSummaryQuestionViewModel> questionsForReview;
     private int totalScoreGiven;
     private int totalScorePossible;
@@ -26,7 +25,6 @@ public class AssessmentSummaryViewModel {
                                       String applicationName,
                                       long daysLeft,
                                       long daysLeftPercentage,
-                                      List<AssessmentSummaryQuestionViewModel> questionsForScoreOverview,
                                       List<AssessmentSummaryQuestionViewModel> questionsForReview,
                                       int totalScoreGiven,
                                       int totalScorePossible,
@@ -36,7 +34,6 @@ public class AssessmentSummaryViewModel {
         this.applicationName = applicationName;
         this.daysLeft = daysLeft;
         this.daysLeftPercentage = daysLeftPercentage;
-        this.questionsForScoreOverview = questionsForScoreOverview;
         this.questionsForReview = questionsForReview;
         this.totalScoreGiven = totalScoreGiven;
         this.totalScorePossible = totalScorePossible;
@@ -61,10 +58,6 @@ public class AssessmentSummaryViewModel {
 
     public long getDaysLeftPercentage() {
         return daysLeftPercentage;
-    }
-
-    public List<AssessmentSummaryQuestionViewModel> getQuestionsForScoreOverview() {
-        return questionsForScoreOverview;
     }
 
     public List<AssessmentSummaryQuestionViewModel> getQuestionsForReview() {
@@ -104,7 +97,6 @@ public class AssessmentSummaryViewModel {
                 .append(totalScorePossible, that.totalScorePossible)
                 .append(totalScorePercentage, that.totalScorePercentage)
                 .append(applicationName, that.applicationName)
-                .append(questionsForScoreOverview, that.questionsForScoreOverview)
                 .append(questionsForReview, that.questionsForReview)
                 .isEquals();
     }
@@ -117,7 +109,6 @@ public class AssessmentSummaryViewModel {
                 .append(applicationName)
                 .append(daysLeft)
                 .append(daysLeftPercentage)
-                .append(questionsForScoreOverview)
                 .append(questionsForReview)
                 .append(totalScoreGiven)
                 .append(totalScorePossible)

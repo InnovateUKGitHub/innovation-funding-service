@@ -256,6 +256,7 @@ public class BaseUnitTest {
     public Map<Long, FormInputResponseResource> formInputsToFormInputResponses;
     public List<CompetitionResource> competitionResources;
     public CompetitionResource competitionResource;
+    private Long competitionId = 1l;
     public List<UserResource> users;
     public List<OrganisationResource> organisations;
     TreeSet<OrganisationResource> organisationSet;
@@ -402,7 +403,7 @@ public class BaseUnitTest {
     }
 
     public void setupCompetition() {
-        competitionResource = newCompetitionResource().with(id(1L)).with(name("Competition x")).with(description("Description afds")).
+        competitionResource = newCompetitionResource().with(id(competitionId)).with(name("Competition x")).with(description("Description afds")).
                 withStartDate(LocalDateTime.now().minusDays(2)).withEndDate(LocalDateTime.now().plusDays(5)).withCompetitionStatus(CompetitionStatus.OPEN)
                 .build();
 
@@ -557,15 +558,15 @@ public class BaseUnitTest {
 
         List<ApplicationResource> applicationResources = asList(
                 newApplicationResource().with(id(1L)).with(name("Rovel Additive Manufacturing Process")).withStartDate(LocalDate.now().plusMonths(3))
-                        .withApplicationStatus(ApplicationStatusConstants.CREATED).withResearchCategories(newResearchCategoryResource().buildSet(1)).build(),
+                        .withApplicationStatus(ApplicationStatusConstants.CREATED).withResearchCategory(newResearchCategoryResource().build()).build(),
                 newApplicationResource().with(id(2L)).with(name("Providing sustainable childcare")).withStartDate(LocalDate.now().plusMonths(4))
-                        .withApplicationStatus(ApplicationStatusConstants.SUBMITTED).withResearchCategories(newResearchCategoryResource().buildSet(1)).build(),
+                        .withApplicationStatus(ApplicationStatusConstants.SUBMITTED).withResearchCategory(newResearchCategoryResource().build()).build(),
                 newApplicationResource().with(id(3L)).with(name("Mobile Phone Data for Logistics Analytics")).withStartDate(LocalDate.now().plusMonths(5))
-                        .withApplicationStatus(ApplicationStatusConstants.APPROVED).withResearchCategories(newResearchCategoryResource().buildSet(1)).build(),
+                        .withApplicationStatus(ApplicationStatusConstants.APPROVED).withResearchCategory(newResearchCategoryResource().build()).build(),
                 newApplicationResource().with(id(4L)).with(name("Using natural gas to heat homes")).withStartDate(LocalDate.now().plusMonths(6))
-                        .withApplicationStatus(ApplicationStatusConstants.REJECTED).withResearchCategories(newResearchCategoryResource().buildSet(1)).build(),
+                        .withApplicationStatus(ApplicationStatusConstants.REJECTED).withResearchCategory(newResearchCategoryResource().build()).build(),
                 newApplicationResource().with(id(5L)).with(name("Rovel Additive Manufacturing Process Ltd")).withStartDate(LocalDate.now().plusMonths(3))
-                        .withApplicationStatus(ApplicationStatusConstants.CREATED).withResearchCategories(newResearchCategoryResource().buildSet(1)).build()
+                        .withApplicationStatus(ApplicationStatusConstants.CREATED).withResearchCategory(newResearchCategoryResource().build()).build()
         );
 
         Map<Long, ApplicationResource> idsToApplicationResources = applicationResources.stream().collect(toMap(a -> a.getId(), a -> a));
@@ -725,6 +726,7 @@ public class BaseUnitTest {
         String email = "invited@email.com";
         invite.setEmail(email);
         invite.setInviteOrganisation(inviteOrganisation.getId());
+        invite.setCompetitionId(competitionId);
         inviteOrganisation.setInviteResources(Arrays.asList(invite));
 
         when(inviteRestService.getInviteByHash(eq(INVITE_HASH))).thenReturn(restSuccess(invite));
@@ -732,7 +734,7 @@ public class BaseUnitTest {
         when(inviteOrganisationRestService.put(any())).thenReturn(restSuccess());
         when(inviteRestService.checkExistingUser(eq(INVITE_HASH))).thenReturn(restSuccess(false));
         when(inviteRestService.checkExistingUser(eq(INVALID_INVITE_HASH))).thenReturn(restFailure(notFoundError(UserResource.class, email)));
-        when(inviteRestService.getInviteByHash(eq(INVALID_INVITE_HASH))).thenReturn(restFailure(emptyList()));
+        when(inviteRestService.getInviteByHash(eq(INVALID_INVITE_HASH))).thenReturn(restFailure(notFoundError(ApplicationResource.class, INVALID_INVITE_HASH)));
         when(inviteRestService.getInviteOrganisationByHash(INVITE_HASH)).thenReturn(restSuccess(new InviteOrganisationResource()));
 
         acceptedInvite = new ApplicationInviteResource();

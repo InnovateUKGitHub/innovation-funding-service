@@ -59,6 +59,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
@@ -231,20 +232,13 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     @Override
-    public ServiceResult<Set<InviteOrganisationResource>> getInvitesByApplication(Long applicationId) {
-        Set<InviteOrganisation> inviteOrganisations = new HashSet();
-
-        for (InviteOrganisation inviteOrganisation : inviteOrganisationRepository.findByInvitesApplicationId(applicationId)) {
-            List<ApplicationInvite> invitesFiltered = inviteOrganisation.getInvites().stream().filter(invite -> invite.getTarget().getId().equals(applicationId)).collect(Collectors.toList());
-            inviteOrganisation.setInvites(invitesFiltered);
-            inviteOrganisations.add(inviteOrganisation);
-        }
-
-        if (inviteOrganisations.size() > 0) {
-            return serviceSuccess(Sets.newHashSet(inviteOrganisationMapper.mapToResource(inviteOrganisations)));
-        } else {
-            return serviceSuccess(new HashSet());
-        }
+    public ServiceResult<List<InviteOrganisationResource>> getInvitesByApplication(Long applicationId) {
+        return serviceSuccess(
+                simpleMap(
+                        inviteOrganisationRepository.findDistinctByInvitesApplicationId(applicationId),
+                        inviteOrganisationMapper::mapToResource
+                )
+        );
     }
 
     @Override
@@ -320,7 +314,8 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     public ServiceResult<Void> removeApplicationInvite(Long applicationInviteId) {
         try {
             ApplicationInvite applicationInvite = applicationInviteMapper.mapIdToDomain(applicationInviteId);
-            if(applicationInvite == null) {
+
+            if (applicationInvite == null) {
                 return serviceFailure(notFoundError(ApplicationInvite.class));
             }
 
@@ -334,7 +329,15 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
             setAssignedQuestionStatusesToLeadApplicant(leadApplicantProcessRole, applicationId, processRoles);
 
             removeProcessRolesOnApplication(processRoles);
-            applicationInviteRepository.delete(applicationInvite);
+
+            InviteOrganisation inviteOrganisation = applicationInvite.getInviteOrganisation();
+
+            if (inviteOrganisation.getInvites().size() < 2) {
+                inviteOrganisationRepository.delete(inviteOrganisation);
+            } else {
+                inviteOrganisation.getInvites().remove(applicationInvite);
+                inviteOrganisationRepository.save(inviteOrganisation);
+            }
 
             return serviceSuccess();
         } catch (IllegalArgumentException e) {
@@ -401,15 +404,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         if (newInviteOrganisation == null && inviteResource.getInviteOrganisation() != null) {
             newInviteOrganisation = inviteOrganisationRepository.findOne(inviteResource.getInviteOrganisation());
         }
-        ApplicationInvite invite = new ApplicationInvite(inviteResource.getName(), inviteResource.getEmail(), application, newInviteOrganisation, null, InviteStatus.CREATED);
-        if (newInviteOrganisation.getOrganisation() != null) {
-            List<InviteOrganisation> existingOrgInvite = inviteOrganisationRepository.findByOrganisationId(newInviteOrganisation.getOrganisation().getId());
-            if (!existingOrgInvite.isEmpty()) {
-                invite.setInviteOrganisation(existingOrgInvite.get(0));
-            }
-        }
-
-        return invite;
+        return new ApplicationInvite(inviteResource.getName(), inviteResource.getEmail(), application, newInviteOrganisation, null, InviteStatus.CREATED);
     }
 
     private boolean inviteOrganisationResourceIsValid(InviteOrganisationResource inviteOrganisationResource) {
@@ -517,7 +512,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         processRoles.forEach(processRole -> {
             List<QuestionStatus> questionStatuses = questionStatusRepository.findByApplicationIdAndMarkedAsCompleteById(applicationId, processRole.getId());
             List<QuestionStatus> toDelete = new ArrayList<>();
-            if(!questionStatuses.isEmpty()) {
+            if (!questionStatuses.isEmpty()) {
                 questionStatuses.forEach(questionStatus -> {
                     if (!questionStatus.getQuestion().getMultipleStatuses()) {
                         questionStatus.setMarkedAsCompleteBy(leadApplicantProcessRole);
@@ -570,7 +565,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     private void removeProcessRolesOnApplication(List<ProcessRole> processRoles) {
-        if(!processRoles.isEmpty()) {
+        if (!processRoles.isEmpty()) {
             processRoleRepository.delete(processRoles);
         }
     }

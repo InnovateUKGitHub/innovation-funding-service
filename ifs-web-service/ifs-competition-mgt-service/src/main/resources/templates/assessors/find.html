@@ -85,9 +85,12 @@
                                     id="filterInnovationArea" class="form-control extra-margin-bottom"
                                     th:field="*{innovationArea}">
                                 <option value="">Any</option>
-                                <option th:each="innovationArea : ${model.innovationAreaOptions}"
-                                        th:value="${innovationArea.id}"
-                                        th:text="${innovationArea.name}"></option>
+                                <optgroup th:each="innovationSector : ${model.innovationSectorOptions}" th:label="${innovationSector.name}">
+                                    <option th:each="innovationArea : ${innovationSector.children}"
+                                            th:value="${innovationArea.id}"
+                                            th:text="${innovationArea.name}">
+                                    </option>
+                                </optgroup>
                             </select>
                             <a href="?page=0">Clear all filters</a>
                         </div>

@@ -12,5 +12,9 @@
 
   button{
     margin: 25px 0 0 0;
+
+    &.no-margin {
+      margin: 0;
+    }
   }
 }

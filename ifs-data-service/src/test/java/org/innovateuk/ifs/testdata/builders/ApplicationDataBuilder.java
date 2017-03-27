@@ -52,7 +52,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
 
                 ResearchCategoryMapper researchCategoryMapper = new ResearchCategoryMapperImpl();
                 ResearchCategory category = researchCategoryRepository.findByName(researchCategory);
-                created.setResearchCategories(Collections.singleton(researchCategoryMapper.mapToResource(category)));
+                created.setResearchCategory(researchCategoryMapper.mapToResource(category));
                 created.setResubmission(resubmission);
                 created = applicationService.saveApplicationDetails(created.getId(), created)
                         .getSuccessObjectOrThrowException();
@@ -112,7 +112,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
             List<Organisation> organisations = organisationRepository.findByUsersId(collaborator.getId());
             Organisation organisation = organisations.get(0);
 
-            ApplicationInviteResource singleInvite = doInviteCollaborator(data, Optional.of(organisation.getId()), organisation.getName(),
+            ApplicationInviteResource singleInvite = doInviteCollaborator(data, organisation.getName(),
                     Optional.of(collaborator.getId()), collaborator.getEmail(), collaborator.getName(), Optional.empty());
 
             doAs(systemRegistrar(), () -> inviteService.acceptInvite(singleInvite.getHash(), collaborator.getId()));
@@ -124,7 +124,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
         return asLeadApplicant(data -> {
             Organisation organisation = retrieveOrganisationByName(organisationName);
             Optional<Long> organisationId = organisation != null ? Optional.of(organisation.getId()) : Optional.empty();
-            doInviteCollaborator(data, organisationId, organisationName, Optional.empty(), email, name, Optional.of(hash));
+            doInviteCollaborator(data, organisationName, Optional.empty(), email, name, Optional.of(hash));
         });
     }
 
@@ -163,7 +163,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
         });
     }
 
-    private ApplicationInviteResource doInviteCollaborator(ApplicationData data, Optional<Long> organisationId, String organisationName, Optional<Long> userId, String email, String name, Optional<String> hash) {
+    private ApplicationInviteResource doInviteCollaborator(ApplicationData data, String organisationName, Optional<Long> userId, String email, String name, Optional<String> hash) {
 
         ApplicationInviteResourceBuilder baseApplicationInviteBuilder =
                 userId.map(id -> newApplicationInviteResource().withUsers(id)).orElse(newApplicationInviteResource());
@@ -182,16 +182,15 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                 build(1);
 
         inviteService.createApplicationInvites(newInviteOrganisationResource().
-                withOrganisation(organisationId.map(id -> id).orElse(null)).
                 withOrganisationName(organisationName).
                 withInviteResources(applicationInvite).
                 build()).getSuccessObjectOrThrowException();
 
         testService.flushAndClearSession();
 
-        Set<InviteOrganisationResource> invites = inviteService.getInvitesByApplication(data.getApplication().getId()).getSuccessObjectOrThrowException();
+        List<InviteOrganisationResource> invites = inviteService.getInvitesByApplication(data.getApplication().getId()).getSuccessObjectOrThrowException();
 
-        InviteOrganisationResource newInvite = simpleFindFirst(new ArrayList<>(invites), i -> simpleFindFirst(i.getInviteResources(), r -> r.getEmail().equals(email)).isPresent()).get();
+        InviteOrganisationResource newInvite = simpleFindFirst(invites, i -> simpleFindFirst(i.getInviteResources(), r -> r.getEmail().equals(email)).isPresent()).get();
         ApplicationInviteResource usersInvite = simpleFindFirst(newInvite.getInviteResources(), r -> r.getEmail().equals(email)).get();
 
         hash.ifPresent(h -> {

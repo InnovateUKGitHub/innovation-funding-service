@@ -1,17 +1,16 @@
 package org.innovateuk.ifs.application.repository;
 
-import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.List;
-
 import org.innovateuk.ifs.application.domain.Application;
-
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
+
+import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * This interface is used to generate Spring Data Repositories.
@@ -28,7 +27,10 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 	static final String COMP_STATUS_FILTER = "SELECT a FROM Application a WHERE " +
 			"a.competition.id = :compId " +
 			"AND (a.applicationStatus.id IN :statuses) " +
-			"AND (str(a.id) LIKE CONCAT('%', :filter, '%'))";
+			"AND (str(a.id) LIKE CONCAT('%', :filter, '%')) " +
+			"AND (:funding IS NULL " +
+			"	OR (str(:funding) = 'UNDECIDED' AND a.fundingDecision IS NULL)" +
+			"	OR (a.fundingDecision = :funding))";
 
 	static final String COMP_FUNDING_FILTER = "SELECT a FROM Application a WHERE " +
 			"a.competition.id = :compId " +
@@ -42,7 +44,6 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 
     @Override
     List<Application> findAll();
-    
     Page<Application> findByCompetitionId(Long competitionId, Pageable pageable);
 
     @Query(COMP_FILTER)
@@ -59,18 +60,16 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 	Page<Application> findByCompetitionIdAndApplicationStatusIdInAndIdLike(@Param("compId") Long competitionId,
 																		   @Param("statuses") Collection<Long> applicationStatusIds,
 																		   @Param("filter") String filter,
+																		   @Param("funding") FundingDecisionStatus funding,
 																		   Pageable pageable);
 
 	@Query(COMP_STATUS_FILTER)
 	List<Application> findByCompetitionIdAndApplicationStatusIdInAndIdLike(@Param("compId") Long competitionId,
 																		   @Param("statuses") Collection<Long> applicationStatusIds,
-																		   @Param("filter") String filter);
+																		   @Param("filter") String filter,
+																		   @Param("funding") FundingDecisionStatus funding);
 
 	Page<Application> findByCompetitionIdAndApplicationStatusIdNotIn(Long competitionId, Collection<Long> applicationStatusIds, Pageable pageable);
-
-	List<Application> findByCompetitionIdAndApplicationStatusId(Long competitionId, Long applicationStatusId);
-
-	Page<Application> findByCompetitionIdAndApplicationStatusId(Long competitionId, Long applicationStatusId, Pageable pageable);
 
 	List<Application> findByCompetitionIdAndApplicationStatusIdIn(Long competitionId, Collection<Long> applicationStatusIds);
 
