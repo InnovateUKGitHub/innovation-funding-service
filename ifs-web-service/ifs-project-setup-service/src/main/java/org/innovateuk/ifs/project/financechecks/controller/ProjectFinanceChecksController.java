@@ -261,7 +261,7 @@ public class ProjectFinanceChecksController {
             }
             ProjectFinanceChecksViewModel viewModel = buildFinanceChecksLandingPage(projectComposite, attachments, queryId);
             model.addAttribute("model", viewModel);
-            return ServiceResult.serviceSuccess();
+            return result;
         });
     }
 
