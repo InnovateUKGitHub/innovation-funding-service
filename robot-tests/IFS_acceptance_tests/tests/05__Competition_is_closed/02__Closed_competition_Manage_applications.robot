@@ -31,7 +31,7 @@ Filtering the Assessors in the Allocate Applications page
     Given the user clicks the button/Link    jQuery=tr:contains(Neural Industries) .no-margin
     And the user should see the element    jQuery=h3:contains("Innovation area") ~ span:contains("Urban living")
     Then the user should see the element    jQuery=tr:nth-child(1) td:contains("Benjamin Nixon")    #this check verfies that the list of assessors in alphabetical order
-    When the user selects the option from the drop-down menu    Resource efficiency    id=filterInnovationArea
+    When the user selects the option from the drop-down menu    Materials, process and manufacturing design technologies    id=filterInnovationArea
     And the user clicks the button/link    jQuery=button:contains(Filter)
     Then the user should see the element    jQuery=td:contains("Benjamin Nixon")
     And the user should see the element    jQuery=td:contains("Paige Godfrey")
@@ -42,9 +42,8 @@ Filtering the Assessors in the Allocate Applications page
 Filtering Assessors in the Assign assessors page
     [Documentation]    INFUND-8062
     Given the user clicks the button/Link    jQuery=tr:contains(Benjamin) .no-margin
-    When the user selects the option from the drop-down menu    Digital Manufacturing    id=filterInnovationArea
+    When the user selects the option from the drop-down menu    Materials, process and manufacturing design technologies    id=filterInnovationArea
     And the user clicks the button/link    jQuery=button:contains(Filter)
-    Then the user should see the element    jQuery=td:contains("Joel George")
-    And the user should see the element    jQuery=td:contains("Madeleine Martin")
+    Then the user should see the element    jQuery=td:contains("Paige Godfrey")
     And the user clicks the button/link    jQuery=a:contains("Clear all filters")
     Then the user should see the element    jQuery=td:contains("Riley Butler")
