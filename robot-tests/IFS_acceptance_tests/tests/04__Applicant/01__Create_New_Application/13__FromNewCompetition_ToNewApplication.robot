@@ -446,7 +446,7 @@ the user can edit resubmit and read only of the organisation
 the lead applicant invites an existing user
     [Arguments]  ${comp_title}  ${EMAIL_INVITED}
     the user clicks the button/link    link=${comp_title}
-    the user clicks the button/link    link=view and add participants to your application
+    the user clicks the button/link    link=view team members and add collaborators
     the user clicks the button/link    link=Invite new contributors
     the user clicks the button/link    jQuery=button:contains('Add additional partner organisation')
     Input Text                         name=organisations[1].organisationName    innovate
