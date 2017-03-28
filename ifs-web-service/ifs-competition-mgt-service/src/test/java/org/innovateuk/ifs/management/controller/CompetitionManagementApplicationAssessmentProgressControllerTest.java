@@ -354,7 +354,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                                 .withName("Data", "Cyber Security")
                                 .buildSet(2),
                         newInnovationAreaResource()
-                                .withName("User Experience", "Precision Medicine")
+                                .withName("User Experience", "Precision medicine")
                                 .buildSet(2),
                         newInnovationAreaResource()
                                 .withName("Advanced Materials", "Nuclear")
@@ -421,7 +421,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                 new ApplicationAssessmentProgressPreviouslyAssignedRowViewModel(10L, "Paul Cousins", 24, 6, BUSINESS,
                         asList("Data", "Cyber Security")),
                 new ApplicationAssessmentProgressPreviouslyAssignedRowViewModel(11L, "Graeme Crawford", 2, 1, ACADEMIC,
-                        asList("User Experience", "Precision Medicine")),
+                        asList("User Experience", "Precision medicine")),
                 new ApplicationAssessmentProgressPreviouslyAssignedRowViewModel(12L, "Lawrence Currie", 5, 3, BUSINESS,
                         asList("Advanced Materials", "Nuclear"))
         );
