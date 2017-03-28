@@ -29,19 +29,24 @@ The assign container is normally a `<select>`, which gets progressivly transform
   position:relative;
 
   &.assigned-alert,
-  &.assign-alert{
+  &.assign-alert {
     display: block;
     margin-bottom: 1em;
 
     .action-required,
-    .secondary-notification{
+    .secondary-notification {
       padding-right: 1em;
     }
   }
 
-  .assign-button-container{
+  .assign-button-container {
+
     display: inline-block;
     position: relative;
+
+    @include media-down(mobile) {
+      position: static;
+    }
 
     .action-required,
     .secondary-notification{
@@ -54,14 +59,30 @@ The assign container is normally a `<select>`, which gets progressivly transform
     @include core-16;
     @include border-radius(2px);
     border: 1px solid $grey-3;
-    padding:10px 15px;
-    position:absolute;
+    padding: 10px 15px;
+    position: absolute;
     z-index: 1;
-    background-color:#fff;
-    width:200px;
-    color:$secondary-text-colour;
-    margin-top:10px;
+    background-color: #fff;
+    width: 200px;
+    color: $secondary-text-colour;
+    margin-top: 10px;
+
+    @include media-down(mobile) {
+      left: 0;
+      width: 90%;
+    }
   }
+
+  .assign-team {
+    li {
+      margin: 0.75em 0;
+
+      @include media-down(mobile) {
+        margin: 1.5em 0;
+      }
+     }
+   }
+
 
   .assign-button{
     display: inline;
@@ -110,7 +131,21 @@ The assign container is normally a `<select>`, which gets progressivly transform
   padding-bottom:2px;
 }
 
-.no-js .assign-container--alert .assign-team{
-  background: $panel-colour;
-  margin-bottom: 1em;
+.no-js {
+
+  .assigned-alert,
+  .assign-alert {
+    margin-bottom: 1em;
+
+    .assign-team{
+      background: $grey-4;
+    }
+  }
+
+  .assign-button,
+  .secondary-notification-button {
+    > span {
+      @extend .visuallyhidden;
+    }
+  }
 }
