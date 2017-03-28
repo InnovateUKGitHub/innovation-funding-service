@@ -72,7 +72,7 @@ public class CategoryControllerIntegrationTest extends BaseControllerIntegration
         assertThat(categories, containsInAnyOrder(asList(
                 hasProperty("name", equalTo("Advanced therapies")),
                 hasProperty("name", equalTo("Precision Medicine")),
-                hasProperty("name", equalTo("Medicines Technology")),
+                hasProperty("name", equalTo("Diagnostics, medical technology and devices")),
                 hasProperty("name", equalTo("Bioscience")),
                 hasProperty("name", equalTo("Agri Productivity")),
                 hasProperty("name", equalTo("Enhanced Food Quality"))

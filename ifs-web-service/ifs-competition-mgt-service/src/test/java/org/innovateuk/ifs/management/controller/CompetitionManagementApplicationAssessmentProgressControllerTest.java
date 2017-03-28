@@ -309,7 +309,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                                 .withName("User Experience", "Resource efficiency")
                                 .buildSet(2),
                         newInnovationAreaResource()
-                                .withName("Technical feasibility", "Medicines Technology")
+                                .withName("Technical feasibility", "Diagnostics, medical technology and devices")
                                 .buildSet(2)
                 )
                 .withMostRecentAssessmentId(100L, 101L, 102L, 103L, 104L, 105L)
@@ -403,7 +403,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                 new ApplicationAssessmentProgressAssignedRowViewModel(5L, "Valerie Lloyd", 6, 2, BUSINESS,
                         asList("User Experience", "Resource efficiency"), true, true, true, false, 104L),
                 new ApplicationAssessmentProgressAssignedRowViewModel(6L, "Gareth Morris", 3, 1, ACADEMIC,
-                        asList("Technical feasibility", "Medicines Technology"), true, true, true, true, 105L));
+                        asList("Technical feasibility", "Diagnostics, medical technology and devices"), true, true, true, true, 105L));
     }
 
     private List<ApplicationAssessmentProgressRejectedRowViewModel> setupExpectedRejectedRows() {
