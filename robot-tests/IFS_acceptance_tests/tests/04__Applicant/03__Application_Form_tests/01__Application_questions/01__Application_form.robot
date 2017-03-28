@@ -90,7 +90,7 @@ Navigation of the form sections
     [Documentation]    INFUND-189
     [Tags]    HappyPath
     And the user clicks the button/link    link=Application details
-    Then the user should see the text in the page    Enter the full title of your project
+    Then the user should see the text in the page    Enter the full title of your proposed project.
     When the applicant navigates to the next section
     Then the user should see the text in the page    Please provide a short summary of your project.
     When the applicant navigates to the next section
