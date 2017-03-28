@@ -288,6 +288,33 @@ Non finance contact can view query
     Then the user should see the element    link=Finance checks
     And the user should not see the element    flag status for finance checks
 
+Non finance contact or Lead-partner can view Finance checks status in the external Project Setup dashboard
+    [Documentation]     INFUND-8787
+    [Tags]
+    When the user should see the element    link=Finance checks
+    Then the user should see the element    jQuery=ul li.require-action:nth-of-type(5):contains("We will review your financial information.")
+    And the user should see the element     jQuery=ul li.require-action:nth-of-type(5):contains("To be completed")
+
+Non finance contact or First-Partner can view Finance checks status in the external Project Setup dashboard
+    [Documentation]     INFUND-8787
+    [Tags]
+    Given log in as a different user    pete.tom@egg.com    ${short_password}
+    When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
+    Then the user should see the element    link=Finance checks
+    And the user should not see the element    flag status for finance checks
+    And the user should see the element     jQuery=ul li.waiting:nth-of-type(5):contains("We will review your financial information.")
+    And the user should see the element     jQuery=ul li.waiting:nth-of-type(5):contains("Awaiting review")
+
+Non finance contact or Second-Partner can view Finance checks status in the external Project Setup dashboard
+    [Documentation]     INFUND-8787
+    [Tags]
+    Given log in as a different user    jessica.doe@ludlow.co.uk    ${short_password}
+    When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
+    Then the user should see the element    link=Finance checks
+    And the user should not see the element    flag status for finance checks
+    And the user should see the element     jQuery=ul li.waiting:nth-of-type(5):contains("We will review your financial information.")
+    And the user should see the element     jQuery=ul li.waiting:nth-of-type(5):contains("Awaiting review")
+
 Finance checks section status updated for finance contact
     [Documentation]    INFUND-4843, INFUND 8787
     [Tags]
@@ -295,6 +322,8 @@ Finance checks section status updated for finance contact
     When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     Then the user should see the element    link=Finance checks
     And the user should not see the element    flag status for finance checks
+    And the user should see the element     jQuery=ul li.require-action:nth-of-type(5):contains("We will review your financial information.")
+    And the user should see the element     jQuery=ul li.require-action:nth-of-type(5):contains("To be completed")
 
 Finance contact can view query
     [Documentation]    INFUND-4843
@@ -1258,17 +1287,46 @@ Finance contact can access the external view of the finance checks page
     [Tags]    HappyPath
     [Setup]    Log in as a different user    ${test_mailbox_one}+fundsuccess@gmail.com    Passw0rd
     Given the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
+    Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
+    And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
+    Then the user should see the element    link=Finance checks
     When the user clicks the button/link    link=Finance checks
     And the user should not see an error in the page
     And the user should see the text in the page   The finance checks have been completed and your finances approved.
 
-Non finance contact can view finance checks page
+Non finance contact or Lead-Partner can view finance checks page
     [Documentation]    INFUND-7573, INFUND 8787
     [Tags]
     [Setup]    Log in as a different user   steve.smith@empire.com    Passw0rd
     When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
+    Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
+    And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
     Then the user should see the element    link=Finance checks
     And the user clicks the button/link     link=Finance checks
+    Then the user should see the text in the page   The finance checks have been completed and your finances approved.
+
+Non finance contact or First-Partner can view Finance checks status in the external Project Setup dashboard
+    [Documentation]     INFUND-8787
+    [Tags]
+    Given log in as a different user    pete.tom@egg.com    ${short_password}
+    When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
+    Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
+    And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
+    Then the user should see the element    link=Finance checks
+    And the user should not see the element    flag status for finance checks
+    When the user clicks the button/link     link=Finance checks
+    Then the user should see the text in the page   The finance checks have been completed and your finances approved.
+
+Non finance contact or Second-Partner can view Finance checks status in the external Project Setup dashboard
+    [Documentation]     INFUND-8787
+    [Tags]
+    Given log in as a different user    jessica.doe@ludlow.co.uk    ${short_password}
+    When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
+    Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
+    And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
+    Then the user should see the element    link=Finance checks
+    And the user should not see the element    flag status for finance checks
+    When the user clicks the button/link     link=Finance checks
     Then the user should see the text in the page   The finance checks have been completed and your finances approved.
 
 *** Keywords ***
