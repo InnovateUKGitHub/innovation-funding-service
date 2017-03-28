@@ -85,7 +85,7 @@ public class ApplicationAssessorResourceBuilderTest {
                         .withName("Creative economy", "Offshore Renewable Energy")
                         .buildSet(2),
                 newInnovationAreaResource()
-                        .withName("Urban Living", "Advanced Therapies")
+                        .withName("Urban Living", "Advanced therapies")
                         .buildSet(2)
         };
         String[] expectedSkillAreas = {"skillAreas1", "skillAreas2"};

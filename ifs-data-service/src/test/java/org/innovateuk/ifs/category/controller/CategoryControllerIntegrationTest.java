@@ -70,7 +70,7 @@ public class CategoryControllerIntegrationTest extends BaseControllerIntegration
         assertThat(categories, hasSize(6));
         assertThat(categories, everyItem(hasProperty("sector", equalTo(1L))));
         assertThat(categories, containsInAnyOrder(asList(
-                hasProperty("name", equalTo("Advanced Therapies")),
+                hasProperty("name", equalTo("Advanced therapies")),
                 hasProperty("name", equalTo("Precision Medicine")),
                 hasProperty("name", equalTo("Medicines Technology")),
                 hasProperty("name", equalTo("Bioscience")),
