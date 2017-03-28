@@ -50,7 +50,6 @@ New assessor can login with the new account
 New assessor should have the correct innovation area
     [Documentation]    INFUND-8092
     When The user clicks the button/link    link=your skills
-    Then The user should see the text in the page    Emerging and enabling technologies
     And The user should see the text in the page    Emerging Technology
 
 CompAdmin should see Assessor's profile and Innovation Area
@@ -60,7 +59,6 @@ CompAdmin should see Assessor's profile and Innovation Area
     And the user clicks the button/link    jQuery=a:contains("Invite assessors to assess the competition")
     And the user clicks the button/link    link=Overview
     When the user clicks the button/link    link=E2E
-    Then the user should see the text in the page    Emerging and enabling technologies
     And the user should see the text in the page    Emerging Technology
 
 CompAdmin Invites assessor to assess an application
