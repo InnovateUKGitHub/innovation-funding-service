@@ -73,7 +73,7 @@
             <input type="hidden" th:field="*{manualEntry}" />
             <h2 class="heading-medium">Not on Companies House?</h2>
             <p>You can enter your organisation details manually, but you may have to supply additional details at a later point.</p>
-            <th:block th:with="isOpen=${#strings.isEmpty('*{organisationSearchName}') or !#strings.isEmpty(organisationForm.addressForm.postcodeInput) or organisationForm.addressForm.manualAddress}">
+            <th:block th:with="isOpen=${#strings.isEmpty('*{organisationSearchName}') or !#strings.isEmpty(organisationForm.organisationName) or !#strings.isEmpty(organisationForm.addressForm.postcodeInput) or organisationForm.addressForm.manualAddress}">
                 <details th:attr="open=${isOpen} ? 'open' : null ">
                     <summary th:attr="aria-expanded=${isOpen} ? 'true' : 'false'"><span class="summary">Enter details manually</span></summary>
                     <div class="panel"th:attr="aria-hidden=${isOpen} ? 'false' : 'true'">
