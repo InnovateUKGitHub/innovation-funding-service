@@ -53,12 +53,15 @@
                         </select>
                     </div>
                 </div>
-                <div class="column-third alignright">
-                    <a href="?">Clear all filters</a>
-                    <button class="button">Filter</button>
-                </div>
-
             </fieldset>
+            <div class="grid-row">
+                <div class="column-half">
+                    <a href="?" class="button button-clear no-margin">Clear all filters</a>
+                </div>
+                <div class="column-half alignright">
+                    <button class="button no-margin">Filter</button>
+                </div>
+            </div>
         </div>
     </form>
     <form method="post" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}">
