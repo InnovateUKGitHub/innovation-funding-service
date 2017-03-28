@@ -149,7 +149,7 @@ public class CompetitionSetupApplicationController {
         return ifUserCanAccessEditPage(competitionResource, () -> getQuestionPage(model, competitionResource, questionId, true, null));
     }
 
-    @RequestMapping(value = "/question", method = RequestMethod.POST, params = "question.type=ASSESSED_QUESTION")
+    @RequestMapping(value = "/question/{questionId}/edit", method = RequestMethod.POST, params = "question.type=ASSESSED_QUESTION")
     public String submitAssessedQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationQuestionForm competitionSetupForm,
                                             BindingResult bindingResult,
                                             ValidationHandler validationHandler,

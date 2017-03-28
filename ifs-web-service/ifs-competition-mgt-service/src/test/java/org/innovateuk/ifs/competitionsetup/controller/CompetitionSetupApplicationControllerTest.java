@@ -22,21 +22,19 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.Optional;
-
-import static org.innovateuk.ifs.competition.builder.CompetitionSetupQuestionResourceBuilder.newCompetitionSetupQuestionResource;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.builder.CompetitionSetupQuestionResourceBuilder.newCompetitionSetupQuestionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.ASSESSED_QUESTION;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.SCOPE;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.APPLICATION_FORM;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection.*;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -54,8 +52,8 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     private static final CompetitionResource UNEDITABLE_COMPETITION = newCompetitionResource()
             .withCompetitionStatus(CompetitionStatus.OPEN)
             .withSetupComplete(true)
-            .withStartDate(LocalDateTime.now().minusDays(1))
-            .withFundersPanelDate(LocalDateTime.now().plusDays(1)).build();
+            .withStartDate(ZonedDateTime.now().minusDays(1))
+            .withFundersPanelDate(ZonedDateTime.now().plusDays(1)).build();
 
     @Mock
     private CategoryService categoryService;
@@ -283,7 +281,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(QUESTIONS))).thenReturn(serviceFailure(Collections.emptyList()));
         when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(question));
 
-        mockMvc.perform(post(URL_PREFIX + "/question")
+        mockMvc.perform(post(URL_PREFIX + "/question/" + questionId.toString() + "/edit")
                 .param("question.type", ASSESSED_QUESTION.name())
                 .param("question.questionId", questionId.toString())
                 .param("question.title", "My Title")
@@ -321,7 +319,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(QUESTIONS))).thenReturn(serviceFailure(Collections.emptyList()));
         when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(question));
 
-        MvcResult result = mockMvc.perform(post(URL_PREFIX + "/question")
+        MvcResult result = mockMvc.perform(post(URL_PREFIX + "/question/" + questionId + "/edit")
                 .param("question.questionId", questionId.toString())
                 .param("question.writtenFeedback", "true")
                 .param("question.assessmentGuidanceTitle", "")
