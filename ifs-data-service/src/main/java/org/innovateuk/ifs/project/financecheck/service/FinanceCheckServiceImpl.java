@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.financecheck.service;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.transactional.ApplicationServiceImpl;
+import org.innovateuk.ifs.commons.competitionsetup.CompetitionSetupTransactionalService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -101,7 +101,9 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     private FormInputResponseRepository formInputResponseRepository;
 
     @Autowired
-    private ApplicationServiceImpl applicationService;
+    private CompetitionSetupTransactionalService competitionSetupTransactionalService;
+
+    private BigDecimal percentDivisor = new BigDecimal("100");
 
     @Override
     public ServiceResult<FinanceCheckResource> getByProjectAndOrganisation(ProjectOrganisationCompositeId key) {
@@ -110,7 +112,6 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
                 andOnSuccessReturn(this::mapToResource);
 
     }
-    private BigDecimal percentDivisor = new BigDecimal("100");
 
     @Override
     public ServiceResult<FinanceCheckProcessResource> getFinanceCheckApprovalStatus(Long projectId, Long organisationId) {
@@ -238,17 +239,17 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     @Override
     public ServiceResult<Long> getTurnoverByOrganisationId(Long applicationId, Long organisationId) {
-        return getByApplicationId(applicationId, organisationId, FINANCIAL_YEAR_END, STAFF_TURNOVER);
+        return getByApplicationAndOrganisationId(applicationId, organisationId, FINANCIAL_YEAR_END, STAFF_TURNOVER);
     }
 
     @Override
     public ServiceResult<Long> getHeadCountByOrganisationId(Long applicationId, Long organisationId) {
-        return getByApplicationId(applicationId, organisationId, FINANCIAL_STAFF_COUNT, STAFF_COUNT);
+        return getByApplicationAndOrganisationId(applicationId, organisationId, FINANCIAL_STAFF_COUNT, STAFF_COUNT);
     }
 
-    private ServiceResult<Long> getByApplicationId(Long applicationId, Long organisationId, FormInputType financeType, FormInputType nonFinanceType) {
+    private ServiceResult<Long> getByApplicationAndOrganisationId(Long applicationId, Long organisationId, FormInputType financeType, FormInputType nonFinanceType) {
         Application app = applicationRepository.findOne(applicationId);
-        return applicationService.isIncludeGrowthTable(app.getCompetition().getId()).
+        return competitionSetupTransactionalService.isIncludeGrowthTable(app.getCompetition().getId()).
                 andOnSuccess((isIncludeGrowthTable) -> {
                     if (isIncludeGrowthTable) {
                         return getOnlyForApplication(app, organisationId, financeType).andOnSuccessReturn(result -> Long.parseLong(result.getValue()));
@@ -356,48 +357,6 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         }
 
         return totalFundingSought.multiply(BigDecimal.valueOf(100)).divide(projectTotal, 0, HALF_EVEN);
-    }
-
-    public ServiceResult<Void> validate(FinanceCheckResource toSave) {
-        List<BigDecimal> costs = simpleMap(toSave.getCostGroup().getCosts(), CostResource::getValue);
-
-        return getPartnerOrganisation(toSave.getProject(), toSave.getOrganisation()).andOnSuccess(
-                partnerOrganisation -> {
-                    OrganisationType organisationType = partnerOrganisation.getOrganisation().getOrganisationType();
-                    if(organisationType.getId().equals(OrganisationTypeEnum.RESEARCH.getOrganisationTypeId())){
-                        return aggregate(costNull(costs), costLessThanZeroErrors(costs)).andOnSuccess(() -> serviceSuccess());
-                    } else {
-                        return aggregate(costNull(costs), costFractional(costs), costLessThanZeroErrors(costs)).andOnSuccess(() -> serviceSuccess());
-                    }
-                }
-        );
-    }
-
-    private ServiceResult<Void> costFractional(List<BigDecimal> costs) {
-        for (BigDecimal cost : costs) {
-            if (cost != null && cost.remainder(ONE).compareTo(ZERO) != 0) {
-                return serviceFailure(new Error(FINANCE_CHECKS_CONTAINS_FRACTIONS_IN_COST, HttpStatus.BAD_REQUEST));
-            }
-        }
-        return serviceSuccess();
-    }
-
-    private ServiceResult<Void> costLessThanZeroErrors(List<BigDecimal> costs) {
-        for (BigDecimal cost : costs) {
-            if (cost != null && cost.compareTo(ZERO) < 0) {
-                return serviceFailure(new Error(FINANCE_CHECKS_COST_LESS_THAN_ZERO, HttpStatus.BAD_REQUEST));
-            }
-        }
-        return serviceSuccess();
-    }
-
-    private ServiceResult<Void> costNull(List<BigDecimal> costs) {
-        for (BigDecimal cost : costs) {
-            if (cost == null) {
-                return serviceFailure(new Error(FINANCE_CHECKS_COST_NULL, HttpStatus.BAD_REQUEST));
-            }
-        }
-        return serviceSuccess();
     }
 
     private BigDecimal getResearchParticipationPercentage(ServiceResult<Double> researchParticipationPercentage) {

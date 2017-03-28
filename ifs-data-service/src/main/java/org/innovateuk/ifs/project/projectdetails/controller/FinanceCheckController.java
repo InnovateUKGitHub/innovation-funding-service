@@ -51,7 +51,6 @@ public class FinanceCheckController {
         return financeCheckService.getFinanceCheckEligibilityDetails(projectId, organisationId).toGetResponse();
     }
 
-
     @GetMapping("/turnover/{applicationId}/{organisationId}")
     public RestResult<Long> getTurnoverByOrganisationId(@PathVariable("applicationId") final Long applicationId, @PathVariable("organisationId") final Long organisationId) {
         return financeCheckService.getTurnoverByOrganisationId(applicationId, organisationId).toGetResponse();

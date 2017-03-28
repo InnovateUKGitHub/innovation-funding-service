@@ -212,8 +212,8 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
 
         when(financeCheckServiceMock.getTurnoverByOrganisationId(applicationId, organisationId)).thenReturn(serviceSuccess(2L));
 
-        MvcResult mvcResult = mockMvc.perform(get("/application/turnover/{applicationId}/{organisationId}", applicationId, organisationId))
-                .andDo(document("application/{method-name}",
+        MvcResult mvcResult = mockMvc.perform(get("/project/turnover/{applicationId}/{organisationId}", applicationId, organisationId))
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("applicationId").description("Id of the application for which the applicant's annual turnover is requested"),
                                 parameterWithName("organisationId").description("Id of the organisation for which the applicant's annual turnover is requested")
@@ -229,8 +229,8 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
 
         when(financeCheckServiceMock.getHeadCountByOrganisationId(applicationId, organisationId)).thenReturn(serviceSuccess(2L));
 
-        MvcResult mvcResult = mockMvc.perform(get("/application/headcount/{applicationId}/{organisationId}", applicationId, organisationId))
-                .andDo(document("application/{method-name}",
+        MvcResult mvcResult = mockMvc.perform(get("/project/headcount/{applicationId}/{organisationId}", applicationId, organisationId))
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("applicationId").description("Id of the application for which the applicant's staff headcount is requested"),
                                 parameterWithName("organisationId").description("Id of the organisation for which the applicant's staff headcount is requested")

@@ -25,6 +25,7 @@ import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.category.repository.InnovationSectorRepository;
 import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
 import org.innovateuk.ifs.category.transactional.CategoryService;
+import org.innovateuk.ifs.commons.competitionsetup.CompetitionSetupTransactionalService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.test.BaseTest;
 import org.innovateuk.ifs.competition.mapper.AssessorCountOptionMapper;
@@ -644,6 +645,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ApplicationResearchCategoryService applicationResearchCategoryService;
+
+    @Mock
+    protected CompetitionSetupTransactionalService competitionSetupTransactionalServiceMock;
 
     @Before
     public void setupMockInjection() {

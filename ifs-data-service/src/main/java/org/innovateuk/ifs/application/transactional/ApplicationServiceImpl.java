@@ -15,7 +15,6 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryId;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
-import org.innovateuk.ifs.commons.competitionsetup.CompetitionSetupTransactionalService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -29,10 +28,12 @@ import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
+import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
+import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
@@ -68,7 +69,7 @@ import static org.innovateuk.ifs.util.MathFunctions.percentage;
  * Transactional and secured service focused around the processing of Applications
  */
 @Service
-public class ApplicationServiceImpl extends CompetitionSetupTransactionalService implements ApplicationService {
+public class ApplicationServiceImpl extends BaseTransactionalService implements ApplicationService {
     enum Notifications {
         APPLICATION_SUBMITTED,
         APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED
@@ -87,6 +88,8 @@ public class ApplicationServiceImpl extends CompetitionSetupTransactionalService
     private FileService fileService;
     @Autowired
     private FormInputResponseRepository formInputResponseRepository;
+    @Autowired
+    private FormInputRepository formInputRepository;
     @Autowired
     private QuestionService questionService;
     @Autowired

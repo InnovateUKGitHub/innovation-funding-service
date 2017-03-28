@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.financecheck.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.commons.competitionsetup.CompetitionSetupTransactionalService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -42,6 +43,8 @@ import org.innovateuk.ifs.workflow.resource.State;
 import org.innovateuk.threads.resource.FinanceChecksSectionType;
 import org.innovateuk.threads.resource.QueryResource;
 import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
 
 import java.math.BigDecimal;
@@ -94,6 +97,7 @@ import static org.mockito.Mockito.when;
 public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceCheckServiceImpl> {
     private Long applicationId = 123L;
     private Long organisationId = 234L;
+    private Long competitionId = 456L;
 
     @Test
     public void testGetByProjectAndOrganisationNotFound() {
@@ -141,82 +145,6 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         assertEquals(financeCheck.getCostGroup().getCosts().get(0).getCostCategory().getId(), result.getSuccessObject().getCostGroup().getCosts().get(0).getCostCategory().getId());
     }
 
-    @Test
-    public void testSaveFinanceCheckValidationFail(){
-        Long projectId = 1L;
-        Long organisationId = 2L;
-
-        Organisation organisation = newOrganisation().withId(organisationId).withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
-        PartnerOrganisation partnerOrganisation = newPartnerOrganisation().withOrganisation(organisation).build();
-
-        FinanceCheckResource financeCheckResource = newFinanceCheckResource().
-                withProject(projectId).
-                withOrganisation(organisationId).
-                withCostGroup(newCostGroupResource().
-                        withCosts(newCostResource().
-                                withValue(new BigDecimal("1.01"), null, new BigDecimal("-1"), new BigDecimal("1.00")).build(4)).
-                        build()).
-                build();
-
-        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisation);
-
-        ServiceResult result = service.validate(financeCheckResource);
-
-        assertTrue(result.isFailure());
-        assertEquals(3, result.getErrors().size());
-        assertEquals(3, result.getErrors().size());
-        assertTrue(result.getErrors().contains(new Error(FINANCE_CHECKS_COST_LESS_THAN_ZERO, HttpStatus.BAD_REQUEST)));
-        assertTrue(result.getErrors().contains(new Error(FINANCE_CHECKS_CONTAINS_FRACTIONS_IN_COST,  HttpStatus.BAD_REQUEST)));
-        assertTrue(result.getErrors().contains(new Error(FINANCE_CHECKS_COST_NULL, HttpStatus.BAD_REQUEST)));
-    }
-
-    @Test
-    public void testSaveFinanceCheckValidationPass(){
-        Long projectId = 1L;
-        Long organisationId = 2L;
-
-        Organisation organisation = newOrganisation().withId(organisationId).withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
-        PartnerOrganisation partnerOrganisation = newPartnerOrganisation().withOrganisation(organisation).build();
-
-        FinanceCheckResource financeCheckResource = newFinanceCheckResource().
-                withProject(projectId).
-                withOrganisation(organisationId).
-                withCostGroup(newCostGroupResource().
-                        withCosts(newCostResource().
-                                withValue(new BigDecimal("1.00"), BigDecimal.ZERO, BigDecimal.ONE).build(3)).
-                        build()).
-                build();
-
-        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisation);
-
-        ServiceResult result = service.validate(financeCheckResource);
-
-        assertTrue(result.isSuccess());
-    }
-
-    @Test
-    public void testSaveFinanceCheckValidationPassOnUseOfDecimalsForAcademicPartners(){
-        Long projectId = 1L;
-        Long organisationId = 2L;
-
-        Organisation organisation = newOrganisation().withId(organisationId).withOrganisationType(OrganisationTypeEnum.RESEARCH).build();
-        PartnerOrganisation partnerOrganisation = newPartnerOrganisation().withOrganisation(organisation).build();
-
-        FinanceCheckResource financeCheckResource = newFinanceCheckResource().
-                withProject(projectId).
-                withOrganisation(organisationId).
-                withCostGroup(newCostGroupResource().
-                        withCosts(newCostResource().
-                                withValue(new BigDecimal("1.10"), BigDecimal.ZERO, BigDecimal.ONE).build(3)).
-                        build()).
-                build();
-
-        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisation);
-
-        ServiceResult result = service.validate(financeCheckResource);
-
-        assertTrue(result.isSuccess());
-    }
 
     @Test
     public void testGetFinanceCheckSummary(){
@@ -789,10 +717,12 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         assertEquals(BigDecimal.valueOf(2), overview.getCompetitionMaximumResearchPercentage());
         assertEquals(BigDecimal.valueOf(0), overview.getResearchParticipationPercentage());
     }
+
     @Test
     public void test_GetTurnoverNonFinancial() {
         setupFinancialAndNonFinancialTestData(false, false, false);
 
+        when(competitionSetupTransactionalServiceMock.isIncludeGrowthTable(competitionId)).thenReturn(serviceSuccess(false));
         ServiceResult<Long> result = service.getTurnoverByOrganisationId(applicationId, organisationId);
 
         assertTrue(result.isSuccess());
@@ -803,6 +733,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     public void test_GetHeadcountNonFinancial() {
         setupFinancialAndNonFinancialTestData(false, false, false);
 
+        when(competitionSetupTransactionalServiceMock.isIncludeGrowthTable(competitionId)).thenReturn(serviceSuccess(false));
         ServiceResult<Long> result = service.getHeadCountByOrganisationId(applicationId, organisationId);
 
         assertTrue(result.isSuccess());
@@ -812,6 +743,8 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     @Test
     public void test_GetTurnoverFinancial() {
         setupFinancialAndNonFinancialTestData(true, false, false);
+
+        when(competitionSetupTransactionalServiceMock.isIncludeGrowthTable(competitionId)).thenReturn(serviceSuccess(true));
         ServiceResult<Long> result = service.getTurnoverByOrganisationId(applicationId, organisationId);
 
         assertTrue(result.isSuccess());
@@ -822,6 +755,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     public void test_GetHeadcountFinancial() {
         setupFinancialAndNonFinancialTestData(true, false, false);
 
+        when(competitionSetupTransactionalServiceMock.isIncludeGrowthTable(competitionId)).thenReturn(serviceSuccess(true));
         ServiceResult<Long> result = service.getHeadCountByOrganisationId(applicationId, organisationId);
 
         assertTrue(result.isSuccess());
@@ -832,6 +766,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     public void test_GetHeadcountFinancialNoHeadcountResponse() {
         setupFinancialAndNonFinancialTestData(true, true, false);
 
+        when(competitionSetupTransactionalServiceMock.isIncludeGrowthTable(competitionId)).thenReturn(serviceSuccess(true));
         ServiceResult<Long> result = service.getHeadCountByOrganisationId(applicationId, organisationId);
 
         assertTrue(result.isFailure());
@@ -841,6 +776,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     public void test_GetHeadcountFinancialNoHeadcountInput() {
         setupFinancialAndNonFinancialTestData(true, false, true);
 
+        when(competitionSetupTransactionalServiceMock.isIncludeGrowthTable(competitionId)).thenReturn(serviceSuccess(true));
         ServiceResult<Long> result = service.getHeadCountByOrganisationId(applicationId, organisationId);
 
         assertTrue(result.isFailure());
@@ -849,6 +785,8 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     @Test
     public void test_GetTurnoverFinancialNoTurnoverResponse() {
         setupFinancialAndNonFinancialTestData(true, true, false);
+
+        when(competitionSetupTransactionalServiceMock.isIncludeGrowthTable(competitionId)).thenReturn(serviceSuccess(true));
         ServiceResult<Long> result = service.getTurnoverByOrganisationId(applicationId, organisationId);
 
         assertTrue(result.isFailure());
@@ -857,11 +795,12 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     @Test
     public void test_GetTurnoverFinancialNoTurnoverInput() {
         setupFinancialAndNonFinancialTestData(true, false, true);
+
+        when(competitionSetupTransactionalServiceMock.isIncludeGrowthTable(competitionId)).thenReturn(serviceSuccess(true));
         ServiceResult<Long> result = service.getTurnoverByOrganisationId(applicationId, organisationId);
 
         assertTrue(result.isFailure());
     }
-
 
     @Override
     protected FinanceCheckServiceImpl supplyServiceUnderTest() {
@@ -900,7 +839,6 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     }
 
     private void setupFinancialAndNonFinancialTestData(boolean isIncludeGrowthTable, boolean noResponse, boolean noInput) {
-        Long competitionId = 456L;
         Long turnoverFormInputId = 678L;
         Long staffCountFormInputId = 987L;
         Competition comp = new Competition();
