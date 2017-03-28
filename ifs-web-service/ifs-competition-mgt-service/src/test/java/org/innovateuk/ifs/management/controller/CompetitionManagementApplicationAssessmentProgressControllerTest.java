@@ -303,7 +303,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                                 .withName("Creative Economy", "Bioscience")
                                 .buildSet(2),
                         newInnovationAreaResource()
-                                .withName("Enhanced Food Quality", "Cyber Security")
+                                .withName("Independent living and wellbeing", "Cyber Security")
                                 .buildSet(2),
                         newInnovationAreaResource()
                                 .withName("User Experience", "Resource efficiency")
@@ -399,7 +399,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                 new ApplicationAssessmentProgressAssignedRowViewModel(3L, "Rachel Carr", 5, 1, BUSINESS,
                         asList("Creative Economy", "Bioscience"), true, true, false, false, 102L),
                 new ApplicationAssessmentProgressAssignedRowViewModel(4L, "Samantha Peacock", 7, 5, ACADEMIC,
-                        asList("Enhanced Food Quality", "Cyber Security"), true, true, true, false, 103L),
+                        asList("Independent living and wellbeing", "Cyber Security"), true, true, true, false, 103L),
                 new ApplicationAssessmentProgressAssignedRowViewModel(5L, "Valerie Lloyd", 6, 2, BUSINESS,
                         asList("User Experience", "Resource efficiency"), true, true, true, false, 104L),
                 new ApplicationAssessmentProgressAssignedRowViewModel(6L, "Gareth Morris", 3, 1, ACADEMIC,
