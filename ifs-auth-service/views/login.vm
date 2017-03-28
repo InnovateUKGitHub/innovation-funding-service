@@ -94,7 +94,7 @@
         <span>This is a new service – your <a href="mailto:IFSfeedback@innovateuk.gov.uk">feedback</a> will help us to improve it.</span>
       </p>
     </div>
-    <main id="content">
+    <main tabindex="-1" id="content">
       #parse("login-error.vm")
 
             <h1 class="heading-large">Innovation Funding Service</h1>

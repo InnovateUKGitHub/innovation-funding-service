@@ -10,7 +10,7 @@
 <th:block th:insert="fragments/modals :: modal-confirm-allow-spend-profile-edits (orgName=${model.organisationName})"/>
 <th:block th:insert="fragments/modals :: modal-overlay" />
 
-<main id="content" class="no-grid">
+<main tabindex="-1" id="content" class="no-grid">
     <div class="grid-container">
         <th:block th:insert="fragments/layout :: main-content-start" />
         <th:block th:unless="${model.projectManager}" th:insert="fragments/layout :: header-sub"
