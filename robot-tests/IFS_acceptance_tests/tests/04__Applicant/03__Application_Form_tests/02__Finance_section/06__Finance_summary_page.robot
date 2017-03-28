@@ -21,7 +21,7 @@ Resource          ../../FinanceSection_Commons.robot
 ${OVERVIEW_PAGE_PROVIDING_SUSTAINABLE_CHILDCARE_APPLICATION}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_2}
 ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SECTION}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_2}/form/section/187  #Your finances page
 ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SUMMARY}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_2}/form/section/198
-${applicationPluto}  Planetary science Pluto's telltale heart
+${applicationPluto}  ${OPEN_COMPETITION_APPLICATION_2_NAME}
 
 *** Test Cases ***
 Calculations for Lead applicant
@@ -60,7 +60,7 @@ Your Finance includes Finance summary table for lead applicant
     [Documentation]    INFUND-6893
     [Tags]    HappyPath
     [Setup]  log in as a different user    &{lead_applicant_credentials}
-    When the user navigates to Your-finances page  Providing sustainable childcare
+    When the user navigates to Your-finances page  ${applicationPluto}
     Then The user should see the text in the page     Your finances
     And the finance summary table in Your Finances has correct values for lead
     And the user clicks the button/link       link=Return to application overview
@@ -69,7 +69,7 @@ Your Finance includes Finance summary table for collaborator
      [Documentation]    INFUND-6893
      [Tags]
      [Setup]  log in as a different user    &{collaborator2_credentials}
-    When the user navigates to Your-finances page  Providing sustainable childcare
+    When the user navigates to Your-finances page  ${applicationPluto}
     Then The user should see the text in the page     Your finances
     And the finance summary table in Your Finances has correct values for collaborator
     And The user clicks the button/link        link=Return to application overview

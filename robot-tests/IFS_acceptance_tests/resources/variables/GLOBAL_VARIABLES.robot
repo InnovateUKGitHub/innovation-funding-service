@@ -31,22 +31,23 @@ ${EMPIRE_LTD_NAME}    Empire Ltd
 ${OPEN_COMPETITION_NAME}                  Predicting market trends programme
 ${OPEN_COMPETITION}                       ${competition_ids['${OPEN_COMPETITION_NAME}']}
 ${OPEN_COMPETITION_NAME_2}                Home and industrial efficiency programme
-${OPEN_COMPETITION_APPLICATION_NAME}      A novel solution to an old problem
-${OPEN_COMPETITION_APPLICATION_1}         ${application_ids['${OPEN_COMPETITION_APPLICATION_NAME}']}
-${OPEN_COMPETITION_APPLICATION_1_NUMBER}  ${application_ids['${OPEN_COMPETITION_APPLICATION_NAME}']}
-${OPEN_COMPETITION_APPLICATION_2_NAME}    Providing sustainable childcare
-${OPEN_COMPETITION_APPLICATION_2}         ${application_ids['${OPEN_COMPETITION_APPLICATION_2_NAME}']}
+${OPEN_COMPETITION_APPLICATION_NAME}      Climate science the history of Greenland\'s ice
+# Using double quotes below, cause there's an apostrophe in the title
+${OPEN_COMPETITION_APPLICATION_1}         ${application_ids["${OPEN_COMPETITION_APPLICATION_NAME}"]}
+${OPEN_COMPETITION_APPLICATION_1_NUMBER}  ${application_ids["${OPEN_COMPETITION_APPLICATION_NAME}"]}
+${OPEN_COMPETITION_APPLICATION_2_NAME}    Planetary science Pluto\'s telltale heart
+${OPEN_COMPETITION_APPLICATION_2}         ${application_ids["${OPEN_COMPETITION_APPLICATION_2_NAME}"]}
 ${OPEN_COMPETITION_APPLICATION_3_TITLE}   Hydrology the dynamics of Earth\'s surface water
 ${OPEN_COMPETITION_APPLICATION_3}         ${application_ids["${OPEN_COMPETITION_APPLICATION_3_TITLE}"]}
-# Using double quotes above, cause there's an apostrophe in the title
-${OPEN_COMPETITION_APPLICATION_4_NAME}    Shared infrastructures for economical production lines
+
+${OPEN_COMPETITION_APPLICATION_4_NAME}    Greenland was nearly ice-free for extended periods during the Pleistocene
 ${OPEN_COMPETITION_APPLICATION_4}         ${application_ids['${OPEN_COMPETITION_APPLICATION_4_NAME}']}
-${OPEN_COMPETITION_APPLICATION_5_NAME}    A new innovative solution
+${OPEN_COMPETITION_APPLICATION_5_NAME}    Evolution of the global phosphorus cycle
 ${OPEN_COMPETITION_APPLICATION_5}         ${application_ids['${OPEN_COMPETITION_APPLICATION_5_NAME}']}
 ${OPEN_COMPETITION_APPLICATION_5_NUMBER}  ${application_ids['${OPEN_COMPETITION_APPLICATION_5_NAME}']}
 ${READY_TO_OPEN_COMPETITION_NAME}         Photonics for health
 ${READY_TO_OPEN_COMPETITION}              ${competition_ids['${READY_TO_OPEN_COMPETITION_NAME}']}
-${COMP_SETUP_COMPETITION}    9
+${COMP_SETUP_COMPETITION}                 ${competition_ids['none']}
 ${NOT_EDITABLE_COMPETITION_NAME}          Integrated delivery programme - low carbon vehicles
 ${NOT_EDITABLE_COMPETITION}               ${competition_ids['${NOT_EDITABLE_COMPETITION_NAME}']}
 ${FUNDERS_PANEL_COMPETITION_NAME}         Internet of Things

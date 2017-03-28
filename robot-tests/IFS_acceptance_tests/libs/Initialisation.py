@@ -6,6 +6,7 @@ config = ''
 
 try:
     os.environ['bamboo_IFS_MYSQL_USER_NAME']
+    print("Using server mysql config")
     config = {
         'user': os.environ['bamboo_IFS_MYSQL_USER_NAME'],
         'passwd': os.environ['bamboo_IFS_MYSQL_PASSWORD'],
@@ -14,7 +15,7 @@ try:
         'port': 3306,
     }
 except KeyError:
-    print("Run Mysql Locally")
+    print("Using local mysql config")
     config = {
         'user': 'root',
         'passwd': 'password',
@@ -22,13 +23,12 @@ except KeyError:
         'db': 'ifs',
         'port': 3306,
     }
-print config
 
-_open_competition_application_name =     'A novel solution to an old problem'
-_open_competition_application_2_name =   'Providing sustainable childcare'
+_open_competition_application_name =     'Climate science the history of Greenland\'s ice'
+_open_competition_application_2_name =   'Planetary science Pluto\'s telltale heart'
 _open_competition_application_3_title =  'Hydrology the dynamics of Earth\'s surface water'
-_open_competition_application_4_name =   'Shared infrastructures for economical production lines'
-_open_competition_application_5_name =   'A new innovative solution'
+_open_competition_application_4_name =   'Greenland was nearly ice-free for extended periods during the Pleistocene'
+_open_competition_application_5_name =   'Evolution of the global phosphorus cycle'
 _funders_panel_application_1_title =     'Sensing & Control network using the lighting infrastructure'
 _funders_panel_application_2_title =     'Matter - Planning for Web'
 _in_assessment_application_1_title =     '3D-printed buildings'
@@ -54,7 +54,10 @@ cursor.execute("SELECT `id`,`name` FROM competition")
 # Fetch all competition records
 competition_ids = {}
 for comp in cursor.fetchall():
-    competition_ids[comp[1]] = int(comp[0])
+    if comp[1] is None:
+        competition_ids['none'] = int(comp[0])
+    else:
+        competition_ids[comp[1]] = int(comp[0])
 
 # execute SQL query using execute() method, to fetch the Applications
 cursor.execute("SELECT `id`,`name` FROM application WHERE name IN (%s)" % _formatted_app_list,
@@ -64,7 +67,6 @@ cursor.execute("SELECT `id`,`name` FROM application WHERE name IN (%s)" % _forma
 application_ids = {}
 for app in cursor.fetchall():
     application_ids[app[1]] = int(app[0])
-    print app[1], app[0]
 
 # disconnect from server
 db.close()
