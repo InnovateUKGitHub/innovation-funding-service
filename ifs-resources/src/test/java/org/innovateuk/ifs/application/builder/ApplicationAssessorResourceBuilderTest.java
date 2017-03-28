@@ -29,7 +29,7 @@ public class ApplicationAssessorResourceBuilderTest {
         String expectedLastName = "lastName";
         BusinessType expectedBusinessType = ACADEMIC;
         Set<InnovationAreaResource> expectedInnovationAreas = newInnovationAreaResource()
-                .withName("Early Stage Manufacturing", "Bioscience")
+                .withName("Early Stage Manufacturing", "Biosciences")
                 .buildSet(2);
         String expectedSkillAreas = "skillAreas";
         AssessmentRejectOutcomeValue expectedRejectReason = NOT_AREA_OF_EXPERTISE;

@@ -300,7 +300,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                                 .withName("Internet of Things", "Open")
                                 .buildSet(2),
                         newInnovationAreaResource()
-                                .withName("Creative Economy", "Bioscience")
+                                .withName("Creative Economy", "Biosciences")
                                 .buildSet(2),
                         newInnovationAreaResource()
                                 .withName("Independent living and wellbeing", "Cyber Security")
@@ -333,7 +333,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                                 .withName("Internet of Things", "Open")
                                 .buildSet(2),
                         newInnovationAreaResource()
-                                .withName("Creative Economy", "Bioscience")
+                                .withName("Creative Economy", "Biosciences")
                                 .buildSet(2))
                 .withRejectReason(CONFLICT_OF_INTEREST, TOO_MANY_ASSESSMENTS, NOT_AREA_OF_EXPERTISE)
                 .withRejectComment("Member of board of directors", "I do like reviewing the applications to your competitions but please do not assign so many to me.", "No prior experience")
@@ -397,7 +397,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                 new ApplicationAssessmentProgressAssignedRowViewModel(2L, "Richard Bown", 4, 3, ACADEMIC,
                         asList("Internet of Things", "Open"), true, false, false, false, 101L),
                 new ApplicationAssessmentProgressAssignedRowViewModel(3L, "Rachel Carr", 5, 1, BUSINESS,
-                        asList("Creative Economy", "Bioscience"), true, true, false, false, 102L),
+                        asList("Creative Economy", "Biosciences"), true, true, false, false, 102L),
                 new ApplicationAssessmentProgressAssignedRowViewModel(4L, "Samantha Peacock", 7, 5, ACADEMIC,
                         asList("Independent living and wellbeing", "Cyber Security"), true, true, true, false, 103L),
                 new ApplicationAssessmentProgressAssignedRowViewModel(5L, "Valerie Lloyd", 6, 2, BUSINESS,
@@ -413,7 +413,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                 new ApplicationAssessmentProgressRejectedRowViewModel(8L, "Anne Chadwick", 7, 4, BUSINESS,
                         asList("Internet of Things", "Open"), TOO_MANY_ASSESSMENTS, "I do like reviewing the applications to your competitions but please do not assign so many to me."),
                 new ApplicationAssessmentProgressRejectedRowViewModel(9L, "David Cherrie", 1, 1, ACADEMIC,
-                        asList("Creative Economy", "Bioscience"), NOT_AREA_OF_EXPERTISE, "No prior experience"));
+                        asList("Creative Economy", "Biosciences"), NOT_AREA_OF_EXPERTISE, "No prior experience"));
     }
 
     private List<ApplicationAssessmentProgressPreviouslyAssignedRowViewModel> setupExpectedPreviouslyAssignedRows() {
