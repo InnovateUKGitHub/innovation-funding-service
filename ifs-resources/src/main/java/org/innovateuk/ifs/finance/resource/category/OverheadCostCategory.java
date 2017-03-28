@@ -41,7 +41,7 @@ public class OverheadCostCategory implements FinanceRowCostCategory {
     }
 
     private void setTotalCost(Overhead overhead) {
-        if (overhead.getRateType().equals(OverheadRateType.TOTAL)){
+        if (overhead.getRateType().equals(OverheadRateType.CUSTOM_AMOUNT)){
             total = new BigDecimal(overhead.getRate());
         }
         else {
