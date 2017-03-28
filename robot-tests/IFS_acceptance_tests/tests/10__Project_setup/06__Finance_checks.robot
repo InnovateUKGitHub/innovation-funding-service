@@ -69,7 +69,6 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...
 ...               INFUND-8787 The Finance checks status in the external Project Setup dashboard can change to being enabled to all partners in the partner organisation as soon as the Finance Contact has been provided in Project Details.
 
-#Suite Setup       The user goes to the queries page
 Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -149,7 +148,7 @@ Large pdf uploads not allowed
     [Tags]
     When the user uploads the file     name=attachment    ${too_large_pdf}
     Then the user should see the text in the page    ${too_large_pdf_validation_error}
-    [Teardown]    the user goes now back to the previous page
+    [Teardown]    the user goes back to the previous page
 
 Non pdf uploads not allowed
     [Documentation]    INFUND-4840
@@ -183,8 +182,8 @@ Project finance user can view the file
     And the file has been scanned for viruses
     When the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
-#    And the user goes now back to the previous page
-    And the user closes the pdf tab and goes back to the form page
+#    And the user goes back to the previous page
+    And the user goes back to the initial page after having checked the attachment
     [Teardown]    the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
 
 Project finance user can upload more than one file
@@ -198,13 +197,13 @@ Project finance user can still view both files
     [Tags]
     When the user clicks the button/link    jQuery=a:contains("${valid_pdf}"):nth-of-type(1)
     Then the user should not see an error in the page
-#    And the user goes now back to the previous page
-    And the user closes the pdf tab and goes back to the form page
+#    And the user goes back to the previous page
+    And the user goes back to the initial page after having checked the attachment
     And the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
     When the user clicks the button/link    jQuery=a:contains("${valid_pdf}"):nth-of-type(2)
     Then the user should not see an error in the page
-#    And the user goes now back to the previous page
-    And the user closes the pdf tab and goes back to the form page
+#    And the user goes back to the previous page
+    And the user goes back to the initial page after having checked the attachment
     And the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
 
 Post new query server side validations
@@ -315,10 +314,10 @@ Finance contact can view the project finance user's uploads
     [Tags]
     When the user clicks the button/link    jQuery=a:contains("${valid_pdf}"):nth-of-type(1)
     Then the user should not see an error in the page
-    And the user goes now back to the previous page
+    And the user goes back to the previous page
     When the user clicks the button/link    jQuery=a:contains("${valid_pdf}"):nth-of-type(2)
     Then the user should not see an error in the page
-    And the user goes now back to the previous page
+    And the user goes back to the previous page
 
 Queries show in reverse chronological order for finance contact
     [Documentation]    INFUND-4843
@@ -332,7 +331,7 @@ Large pdf uploads not allowed for query response
     Given the user clicks the button/link    jQuery=.button.button-secondary:eq(0)
     When the user uploads the file     name=attachment    ${too_large_pdf}
     Then the user should see the text in the page    ${too_large_pdf_validation_error}
-    [Teardown]    the user goes now back to the previous page
+    [Teardown]    the user goes back to the previous page
 
 #TODO Pending tag to be removed with resolution of INFUND-8855
 Non pdf uploads not allowed for query response
@@ -366,9 +365,9 @@ Finance contact can view the file
     Given the user should see the element    link=${valid_pdf}
     And the file has been scanned for viruses
     When the user clicks the button/link    jQuery=a:contains("${valid_pdf}")
-    Then the user closes the pdf tab and goes back to the form page
-#    [Teardown]    the user goes now back to the previous page
-#    [Teardown]    the user closes the pdf tab and goes back to the form page
+    Then the user goes back to the initial page after having checked the attachment
+#    [Teardown]    the user goes back to the previous page
+#    [Teardown]    the user goes back to the initial page after having checked the attachment
 
 Finance contact can upload more than one file
     [Documentation]    INFUND-4843
@@ -381,11 +380,11 @@ Finance contact can still view both files
     [Tags]
     When the user clicks the button/link    jQuery=form a:contains("${valid_pdf}"):nth-of-type(1)
     Then the user should not see an error in the page
-#    And the user goes now back to the previous page
-    And the user closes the pdf tab and goes back to the form page
+#    And the user goes back to the previous page
+    And the user goes back to the initial page after having checked the attachment
     When the user clicks the button/link    jQuery=form a:contains("${valid_pdf}"):nth-of-type(2)
     Then the user should not see an error in the page
-    And the user closes the pdf tab and goes back to the form page
+    And the user goes back to the initial page after having checked the attachment
 
 Response to query server side validations
     [Documentation]    INFUND-4843
@@ -456,10 +455,10 @@ Project finance user can view the finance contact's uploaded files
     [Tags]
     When the user clicks the button/link    jQuery=a:contains("${valid_pdf}"):nth-of-type(3)
     Then the user should not see an error in the page
-    And the user goes now back to the previous page
+    And the user goes back to the previous page
     When the user clicks the button/link    jQuery=a:contains("${valid_pdf}"):nth-of-type(4)
     Then the user should not see an error in the page
-    And the user goes now back to the previous page
+    And the user goes back to the previous page
 
 Project finance user can continue the conversation
     [Documentation]    INFUND-7752
@@ -515,7 +514,7 @@ Large pdf uploads not allowed for notes
     Given the user clicks the button/link    jQuery=.button:contains("Create a new note")
     When the user uploads the file     name=attachment    ${too_large_pdf}
     Then the user should see the text in the page    ${too_large_pdf_validation_error}
-    [Teardown]    the user goes now back to the previous page
+    [Teardown]    the user goes back to the previous page
 
 Non pdf uploads not allowed for notes
     [Documentation]    INFUND-4845
@@ -549,8 +548,8 @@ Project finance can view the file in notes
     And the file has been scanned for viruses
     When the user clicks the button/link    jQuery=a:contains("${valid_pdf}")
     Then the user should not see an error in the page
-#    And the user goes now back to the previous page
-    And the user closes the pdf tab and goes back to the form page
+#    And the user goes back to the previous page
+    And the user goes back to the initial page after having checked the attachment
     [Teardown]    the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
 
 Project finance can upload more than one file to notes
@@ -564,12 +563,12 @@ Project finance can still view both files in notes
     [Tags]
     When the user clicks the button/link    jQuery=li:nth-of-type(1) a:contains("${valid_pdf}")
     Then the user should not see an error in the page
-#    And the user goes now back to the previous page
-    And the user closes the pdf tab and goes back to the form page
+#    And the user goes back to the previous page
+    And the user goes back to the initial page after having checked the attachment
     When the user clicks the button/link    jQuery=li:nth-of-type(2) a:contains("${valid_pdf}")
     Then the user should not see an error in the page
-#    And the user goes now back to the previous page
-    And the user closes the pdf tab and goes back to the form page
+#    And the user goes back to the previous page
+    And the user goes back to the initial page after having checked the attachment
     And the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
 
 Create new note server side validations
@@ -637,7 +636,7 @@ Large pdf uploads not allowed for note comments
     Given the user clicks the button/link    id=post-new-comment
     When the user uploads the file     name=attachment    ${too_large_pdf}
     Then the user should see the text in the page    ${too_large_pdf_validation_error}
-    [Teardown]    the user goes now back to the previous page
+    [Teardown]    the user goes back to the previous page
 
 Non pdf uploads not allowed for note comments
     [Documentation]    INFUND-7756
@@ -651,6 +650,8 @@ Finance contact can upload a pdf file to note comments
     Then the user uploads the file      name=attachment   ${valid_pdf}
     And the user should see the text in the page    ${valid_pdf}
 
+# 1 attachment at this point
+
 Finance contact can remove the file from note comments
     [Documentation]    INFUND-7756
     [Tags]
@@ -658,22 +659,26 @@ Finance contact can remove the file from note comments
     Then the user should not see the element    jQuery=form a:contains("${valid_pdf}")
     And the user should not see an error in the page
 
+# 0 attachments at this point
+
 Finance contact can re-upload the file to note comments
     [Documentation]    INFUND-7756
     [Tags]
     When the user uploads the file    name=attachment    ${valid_pdf}
     Then the user should see the element    jQuery=form a:contains("${valid_pdf}")
 
+# 1 attachment at this point
+
 Finance contact can view the file in note comments
     [Documentation]    INFUND-7756
     [Tags]
     Given the user should see the element    link=${valid_pdf}
     And the file has been scanned for viruses
-    When the user clicks the button/link    jQuery=form a:contains("${valid_pdf}")   #NUNO
-#    Then the user should not see an error in the page
-#    And the user goes now back to the previous page    NUNO Here check html code on this - It's fine
-    And the user closes the pdf tab and goes back to the form page
+    When the user clicks the button/link    jQuery=form a:contains("${valid_pdf}")
+    And the user goes back to the initial page after having checked the attachment
     Then the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
+
+# 0 attachment at this point
 
 Finance contact can upload more than one file to note comments
     [Documentation]    INFUND-7756
@@ -681,17 +686,17 @@ Finance contact can upload more than one file to note comments
     Then the user uploads the file      name=attachment    ${valid_pdf}
     And the user should see the element    jQuery=form li:nth-of-type(2) a:contains("${valid_pdf}")
 
+# 1 attachment at this point
+
 Finance contact can still view both files in note comments
     [Documentation]    INFUND-7756
     [Tags]
     When the user clicks the button/link    jQuery=form li:nth-of-type(1) a:contains("${valid_pdf}")
     Then the user should not see an error in the page
-#    And the user goes now back to the previous page
-    And the user closes the pdf tab and goes back to the form page
-    When the user clicks the button/link    jQuery=form li:nth-of-type(2) a:contains("${valid_pdf}")
+    And the user goes back to the initial page after having checked the attachment
+    When the user clicks the button/link    jQuery=form li:nth-of-type(2) a:contains("${valid_pdf}")    #fails as there is only one attachment at this point
     Then the user should not see an error in the page
-#    And the user goes now back to the previous page
-    And the user closes the pdf tab and goes back to the form page
+    And the user goes back to the initial page after having checked the attachment
     And the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
 
 Note comments server side validations
@@ -1287,13 +1292,8 @@ Non finance contact can view finance checks page
     And the user clicks the button/link     link=Finance checks
     Then the user should see the text in the page   The finance checks have been completed and your finances approved.
 
+
 *** Keywords ***
-
-The user goes to the queries page
-#        lee.bowman@innovateuk.test    Passw0rd
-    guest user log-in        &{internal_finance_credentials}
-    the user navigates to the page     https://ifs.local-dev/project-setup-management/project/12/finance-check/organisation/22/query/new-query?query_section=Unknown
-
 
 the table row has expected values
     the user sees the text in the element    jQuery=.table-overview tbody td:nth-child(2)    3 months
@@ -1712,11 +1712,7 @@ Project finance user amends other costs details in eligibility for lead
     And the user should see the element           jQuery=section:nth-of-type(7) a:contains("Edit")
     And the user should not see the element       jQuery=section:nth-of-type(7) button[name=save-eligibility]
 
-the user goes now back to the previous page
-    the user goes back to the previous page
-    the user reloads the page
-
-the user closes the pdf tab and goes back to the form page
+the user goes back to the initial page after having checked the attachment
     Sleep  7s
     the user should not see an error in the page
     Select Window
