@@ -329,10 +329,9 @@ Large pdf uploads not allowed for query response
     Then the user should see the text in the page    ${too_large_pdf_validation_error}
     [Teardown]    the user goes back to the previous page
 
-#TODO Pending tag to be removed with resolution of INFUND-8855
 Non pdf uploads not allowed for query response
     [Documentation]    INFUND-4843
-    [Tags]  Pending
+    [Tags]
     When the user uploads the file      name=attachment    ${text_file}
     Then the user should see the text in the page    ${wrong_filetype_validation_error}
 
