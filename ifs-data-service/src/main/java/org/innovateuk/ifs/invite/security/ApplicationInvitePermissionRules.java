@@ -67,7 +67,7 @@ public class ApplicationInvitePermissionRules {
 
     private boolean isNotOwnInvite(final ApplicationInviteResource invite, final UserResource user) {
         if (invite.getUser() == null) {
-           return true;
+            return true;
         }
         return !invite.getUser().equals(user.getId());
     }
