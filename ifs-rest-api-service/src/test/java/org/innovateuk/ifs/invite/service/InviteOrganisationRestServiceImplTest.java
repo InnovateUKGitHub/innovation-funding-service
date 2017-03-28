@@ -44,20 +44,6 @@ public class InviteOrganisationRestServiceImplTest extends BaseRestServiceUnitTe
     }
 
     @Test
-    public void getByIdWithInvitesForApplication() throws Exception {
-        long inviteOrganisationId = 1L;
-        long applicationId = 2L;
-
-        InviteOrganisationResource expected = newInviteOrganisationResource().build();
-
-        setupGetWithRestResultExpectations(format("%s/%s/application/%s", restUrl, inviteOrganisationId, applicationId),
-                InviteOrganisationResource.class, expected);
-        InviteOrganisationResource actual = service.getByIdWithInvitesForApplication(inviteOrganisationId, applicationId)
-                .getSuccessObjectOrThrowException();
-        assertEquals(expected, actual);
-    }
-
-    @Test
     public void getByOrganisationIdWithInvitesForApplication() throws Exception {
         long organisationId = 1L;
         long applicationId = 2L;

@@ -39,7 +39,7 @@ Application team page
     [Tags]    HappyPath
     [Setup]    The user navigates to the page    ${DASHBOARD_URL}
     Given the user clicks the button/link    link=Invite robot test application
-    When the user clicks the button/link    link=view and add participants to your application
+    When the user clicks the button/link    link=view team members and add collaborators
     Then the user should see the text in the page    Application team
     And the user should see the text in the page    View and manage your participants in the application.
     And the lead applicant should have the correct status
@@ -160,7 +160,7 @@ Business organisation (partner accepts invitation)
     ...    INFUND-2336
     [Tags]    HappyPath    Email    SmokeTest
     [Setup]    The guest user opens the browser
-    When the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    participate in their application
+    When the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation    3
     And the user clicks the button/link    jQuery=.button:contains("Yes, accept invitation")
     And the user selects the radio button    organisationType    1
     And the user clicks the button/link    jQuery=.button:contains("Continue")
@@ -188,7 +188,7 @@ Parner can see the Application team
     [Documentation]    INFUND-7976
     When the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
-    And the user clicks the button/link    link=view and add participants to your application
+    And the user clicks the button/link    link=view team members and add collaborators
     Then the user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(1):contains("Steve Smith")
     And the user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(2):contains("steve.smith@empire.com")
     And the user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(3):contains("Lead")
@@ -227,7 +227,7 @@ Lead applicant invites a non registered user in the same organisation
     [Setup]    Delete the emails from both test mailboxes
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
-    When the user clicks the button/link    link=view and add participants to your application
+    When the user clicks the button/link    link=view team members and add collaborators
     When the user clicks the button/link    jQuery=a:contains("Update Empire Ltd")
     Then the user should see the text in the page    Update Empire Ltd
     And the user clicks the button/link    jQuery=button:contains("Add new applicant")
@@ -242,7 +242,7 @@ Registered partner should not create new org but should follow the create accoun
     [Documentation]    INFUND-1463
     [Tags]    Email
     [Setup]    The guest user opens the browser
-    When the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    participate in their application
+    When the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation    3
     And the user should see the text in the page    Join an application
     And the user clicks the button/link    jQuery=.button:contains("Yes, accept invitation")
     And the user should see the text in the page    Confirm your organisation
@@ -276,7 +276,7 @@ the user can see the updated company name throughout the application
     And the user should see the element    jQuery=h3:contains("Your funding")
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=${application_name}
-    When the user clicks the button/link    link=view and add participants to your application
+    When the user clicks the button/link    link=view team members and add collaborators
     Then the user should see the element    jQuery=h2:contains("NOMENSA LTD")
 
 the lead applicant cannot be removed

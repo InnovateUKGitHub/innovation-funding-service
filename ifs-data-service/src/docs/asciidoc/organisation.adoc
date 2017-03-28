@@ -1,0 +1,87 @@
+=== Retrieve organisation by id
+==== Request
+include::{snippets}/organisation/find-by-id/http-request.adoc[]
+include::{snippets}/organisation/find-by-id/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/organisation/find-by-id/http-response.adoc[]
+include::{snippets}/organisation/find-by-id/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/organisation/find-by-id/curl-request.adoc[]
+
+=== Retrieve organisations by application id
+==== Request
+include::{snippets}/organisation/find-by-application-id/http-request.adoc[]
+include::{snippets}/organisation/find-by-application-id/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/organisation/find-by-application-id/http-response.adoc[]
+include::{snippets}/organisation/find-by-application-id/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/organisation/find-by-application-id/curl-request.adoc[]
+
+
+=== Retrieve primary organisation by user
+==== Request
+include::{snippets}/organisation/get-primary-for-user/http-request.adoc[]
+include::{snippets}/organisation/get-primary-for-user/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/organisation/get-primary-for-user/http-response.adoc[]
+include::{snippets}/organisation/get-primary-for-user/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/organisation/get-primary-for-user/curl-request.adoc[]
+
+=== Create organisation
+==== Request
+include::{snippets}/organisation/create/http-request.adoc[]
+include::{snippets}/organisation/create/request-fields.adoc[]
+
+==== Response
+include::{snippets}/organisation/create/http-response.adoc[]
+include::{snippets}/organisation/create/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/organisation/create/curl-request.adoc[]
+
+=== Update organisation
+==== Request
+include::{snippets}/organisation/save-resource/http-request.adoc[]
+include::{snippets}/organisation/save-resource/request-fields.adoc[]
+
+==== Response
+include::{snippets}/organisation/save-resource/http-response.adoc[]
+include::{snippets}/organisation/save-resource/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/organisation/save-resource/curl-request.adoc[]
+
+=== Update organisation
+==== Request
+include::{snippets}/organisation/update-name-and-registration/http-request.adoc[]
+include::{snippets}/organisation/update-name-and-registration/path-parameters.adoc[]
+include::{snippets}/organisation/update-name-and-registration/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/organisation/update-name-and-registration/http-response.adoc[]
+include::{snippets}/organisation/update-name-and-registration/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/organisation/update-name-and-registration/curl-request.adoc[]
+
+=== Add address
+==== Request
+include::{snippets}/organisation/add-address/http-request.adoc[]
+include::{snippets}/organisation/add-address/path-parameters.adoc[]
+include::{snippets}/organisation/add-address/request-parameters.adoc[]
+include::{snippets}/organisation/add-address/request-fields.adoc[]
+
+==== Response
+include::{snippets}/organisation/add-address/http-response.adoc[]
+include::{snippets}/organisation/add-address/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/organisation/add-address/curl-request.adoc[]

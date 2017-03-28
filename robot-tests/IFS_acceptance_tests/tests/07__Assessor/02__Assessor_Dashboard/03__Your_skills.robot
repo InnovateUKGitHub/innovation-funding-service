@@ -69,7 +69,7 @@ Save Skills should redirect to the read-only view
     Then the user should be redirected to the correct page    ${assessment_skills_url}
     And the user sees the text in the element    id=skillAreas    assessor skill areas text
     And the user sees the text in the element    id=assessorType    Business
-    And the user should see the text in the page    Resource efficiency
+    And the user should see the text in the page    Materials, process and manufacturing design technologies
 
 Your skills does not appear in dashboard alert
     [Documentation]    INFUND-5182
