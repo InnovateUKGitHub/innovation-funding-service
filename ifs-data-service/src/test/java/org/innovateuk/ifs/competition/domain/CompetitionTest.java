@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -134,8 +135,8 @@ public class CompetitionTest {
     public void competitionClosingSoon() {
         CompetitionResource competitionResource = new CompetitionResource();
         competitionResource.setCompetitionStatus(OPEN);
-        competitionResource.setStartDate(LocalDateTime.now().minusDays(4));
-        competitionResource.setEndDate(LocalDateTime.now().plusHours(1));
+        competitionResource.setStartDate(ZonedDateTime.now().minusDays(4));
+        competitionResource.setEndDate(ZonedDateTime.now().plusHours(1));
         assertTrue(competitionResource.isClosingSoon());
     }
 
@@ -143,8 +144,8 @@ public class CompetitionTest {
     public void competitionNotClosingSoon() {
         CompetitionResource competitionResource = new CompetitionResource();
         competitionResource.setCompetitionStatus(OPEN);
-        competitionResource.setStartDate(LocalDateTime.now().minusDays(4));
-        competitionResource.setEndDate(LocalDateTime.now().plusHours(3).plusMinutes(1));
+        competitionResource.setStartDate(ZonedDateTime.now().minusDays(4));
+        competitionResource.setEndDate(ZonedDateTime.now().plusHours(3).plusMinutes(1));
         assertFalse(competitionResource.isClosingSoon());
     }
 

@@ -16,13 +16,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemResourceBuilder.newPublicContentItemResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Mockito.when;
@@ -60,8 +60,8 @@ public class CompetitionOverviewPopulatorTest {
     @Mock
     private SupportingInformationViewModelPopulator supportingInformationViewModelPopulator;
 
-    private final LocalDateTime openDate = LocalDateTime.of(2017,1,1,0,0);
-    private final LocalDateTime closeDate = LocalDateTime.of(2017,1,1,0,0);
+    private final ZonedDateTime openDate = ZonedDateTime.now();
+    private final ZonedDateTime closeDate = ZonedDateTime.now();
     private final String competitionTitle = "Title of competition";
     private final String nonIfsUrl = "www.google.co.uk";
 
@@ -101,9 +101,9 @@ public class CompetitionOverviewPopulatorTest {
 
         assertEquals(publicContentResource.getShortDescription(), viewModel.getShortDescription());
         assertEquals(publicContentResource.getCompetitionId(), viewModel.getCompetitionId());
-        assertEquals(openDate, viewModel.getCompetitionOpenDate());
-        assertEquals(closeDate, viewModel.getCompetitionCloseDate());
-        assertEquals(closeDate.minusDays(7), viewModel.getRegistrationCloseDate());
+        assertEquals(openDate.toLocalDateTime(), viewModel.getCompetitionOpenDate());
+        assertEquals(closeDate.toLocalDateTime(), viewModel.getCompetitionCloseDate());
+        assertEquals(closeDate.minusDays(7).toLocalDateTime(), viewModel.getRegistrationCloseDate());
         assertEquals(competitionTitle, viewModel.getCompetitionTitle());
         assertEquals(nonIfsUrl, viewModel.getNonIfsUrl());
         assertEquals(true, viewModel.isUserIsLoggedIn());
@@ -117,8 +117,8 @@ public class CompetitionOverviewPopulatorTest {
 
         assertEquals(null, viewModel.getShortDescription());
         assertEquals(null, viewModel.getCompetitionId());
-        assertEquals(openDate, viewModel.getCompetitionOpenDate());
-        assertEquals(closeDate, viewModel.getCompetitionCloseDate());
+        assertEquals(openDate.toLocalDateTime(), viewModel.getCompetitionOpenDate());
+        assertEquals(closeDate.toLocalDateTime(), viewModel.getCompetitionCloseDate());
         assertEquals(competitionTitle, viewModel.getCompetitionTitle());
         assertEquals(true, viewModel.isUserIsLoggedIn());
     }
@@ -129,8 +129,8 @@ public class CompetitionOverviewPopulatorTest {
 
         assertEquals(null, viewModel.getShortDescription());
         assertEquals(null, viewModel.getCompetitionId());
-        assertEquals(openDate, viewModel.getCompetitionOpenDate());
-        assertEquals(closeDate, viewModel.getCompetitionCloseDate());
+        assertEquals(openDate.toLocalDateTime(), viewModel.getCompetitionOpenDate());
+        assertEquals(closeDate.toLocalDateTime(), viewModel.getCompetitionCloseDate());
         assertEquals(competitionTitle, viewModel.getCompetitionTitle());
         assertEquals(true, viewModel.isUserIsLoggedIn());
     }

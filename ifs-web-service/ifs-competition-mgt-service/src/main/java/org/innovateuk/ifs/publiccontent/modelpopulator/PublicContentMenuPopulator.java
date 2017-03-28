@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.publiccontent.service.PublicContentService;
 import org.innovateuk.ifs.publiccontent.viewmodel.PublicContentMenuViewModel;
+import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +23,7 @@ public class PublicContentMenuPopulator {
     public PublicContentMenuViewModel populate(Long competitionId) {
         PublicContentResource publicContent = publicContentService.getCompetitionById(competitionId);
         PublicContentMenuViewModel viewModel = new PublicContentMenuViewModel();
-        viewModel.setPublishDate(publicContent.getPublishDate());
+        viewModel.setPublishDate(TimeZoneUtil.toBritishSummerTime(publicContent.getPublishDate()));
         viewModel.setSections(publicContent.getContentSections());
         viewModel.setCompetition(competitionService.getById(competitionId));
         return viewModel;

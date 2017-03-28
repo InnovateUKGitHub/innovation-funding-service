@@ -17,6 +17,8 @@ import org.innovateuk.ifs.user.resource.UserRoleType;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -207,8 +209,8 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         List<MilestoneResource> milestones = milestoneService.getAllMilestonesByCompetitionId(data.getCompetition().getId()).getSuccessObjectOrThrowException();
         MilestoneResource submissionDateMilestone = simpleFindFirst(milestones, m -> milestoneType.equals(m.getType())).get();
 
-        LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS);
-        LocalDateTime submissionDeadline = submissionDateMilestone.getDate();
+        ZonedDateTime now = ZonedDateTime.now().truncatedTo(ChronoUnit.DAYS);
+        ZonedDateTime submissionDeadline = submissionDateMilestone.getDate();
 
         final long daysPassedSinceSubmissionEnded;
         if (LocalTime.now().isAfter(submissionDeadline.toLocalTime())) {
@@ -330,7 +332,10 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 milestone = milestoneService.create(milestoneType, data.getCompetition().getId()).getSuccessObjectOrThrowException();
             }
 
-            milestone.setDate(date);
+
+
+            milestone.setDate(ZonedDateTime.of(date.getYear(), date.getMonthValue(), date.getDayOfMonth(),
+                    date.getHour(), date.getMinute(), date.getSecond(), date.getNano(), ZoneId.of("Europe/London")));
             milestoneService.updateMilestone(milestone);
 
             data.addOriginalMilestone(milestone);

@@ -20,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 import static java.util.Collections.singletonList;
@@ -235,8 +236,8 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
 
         PublicContentItemResource resultObject = result.getSuccessObject();
 
-        assertEquals(competition.getEndDate(), resultObject.getCompetitionCloseDate());
-        assertEquals(competition.getStartDate(), resultObject.getCompetitionOpenDate());
+        assertEquals(competition.getEndDate().atZone(ZoneId.systemDefault()), resultObject.getCompetitionCloseDate());
+        assertEquals(competition.getStartDate().atZone(ZoneId.systemDefault()), resultObject.getCompetitionOpenDate());
         assertEquals(competition.getName(), resultObject.getCompetitionTitle());
         assertEquals(publicContentResource, resultObject.getPublicContentResource());
 

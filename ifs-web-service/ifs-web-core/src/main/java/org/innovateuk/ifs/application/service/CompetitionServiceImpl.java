@@ -13,6 +13,7 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -94,7 +95,7 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     @Override
-    public String generateCompetitionCode(Long competitionId, LocalDateTime openingDate) {
+    public String generateCompetitionCode(Long competitionId, ZonedDateTime openingDate) {
         return competitionsRestService.generateCompetitionCode(competitionId, openingDate).getSuccessObjectOrThrowException();
     }
 

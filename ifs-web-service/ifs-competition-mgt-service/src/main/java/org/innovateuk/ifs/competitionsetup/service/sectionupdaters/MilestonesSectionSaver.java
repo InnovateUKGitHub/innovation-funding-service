@@ -19,7 +19,7 @@ import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,6 +29,8 @@ import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.util.TimeZoneUtil.fromBritishSummerTime;
+import static org.innovateuk.ifs.util.TimeZoneUtil.toBritishSummerTime;
 
 /**
  * Competition setup section saver for the milestones section.
@@ -70,7 +72,7 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
         //If competition is already set up only allow to save of future milestones.
         if (Boolean.TRUE.equals(competition.getSetupComplete())) {
             List<MilestoneType> futureTypes = milestones.stream()
-                    .filter(milestoneResource -> milestoneResource.getDate() == null || LocalDateTime.now().isBefore(milestoneResource.getDate()))
+                    .filter(milestoneResource -> milestoneResource.getDate() == null || ZonedDateTime.now().isBefore(milestoneResource.getDate()))
                     .map(milestoneResource -> milestoneResource.getType())
                     .collect(Collectors.toList());
 
@@ -123,7 +125,7 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
 
     private List<Error> validateMilestoneDateOnAutosave(MilestoneResource milestone, String fieldName, String value) {
         Integer day = null, month = null, year = null, hour = 0;
-        LocalDateTime currentDate = milestone.getDate();
+        ZonedDateTime currentDate = milestone.getDate();
 
 	    if(isTimeField(fieldName)) {
             if(null != currentDate) {
@@ -139,7 +141,7 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
             year = Integer.parseInt(dateParts[2]);
 
             if(null != currentDate) {
-                hour = milestone.getDate().getHour();
+                hour = toBritishSummerTime(milestone.getDate()).getHour();
             }
         }
 
@@ -147,7 +149,7 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
             return asList(fieldError(fieldName, fieldName.toString(), "error.milestone.invalid"));
         }
         else {
-            milestone.setDate(LocalDateTime.of(year, month, day, hour, 0));
+            milestone.setDate(fromBritishSummerTime(year, month, day, hour));
         }
 
         return Collections.emptyList();

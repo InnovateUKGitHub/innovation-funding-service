@@ -10,7 +10,7 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
@@ -38,7 +38,7 @@ public interface CompetitionService {
 
     ServiceResult<Void> initApplicationFormByCompetitionType(Long competitionId, Long competitionTypeId);
 
-    String generateCompetitionCode(Long competitionId, LocalDateTime openingDate);
+    String generateCompetitionCode(Long competitionId, ZonedDateTime openingDate);
 
     ServiceResult<Void> returnToSetup(Long competitionId);
 

@@ -11,6 +11,7 @@ import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
 import org.innovateuk.ifs.competitionsetup.form.MilestonesForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
+import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -19,6 +20,8 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 import static java.util.Arrays.asList;
@@ -49,7 +52,7 @@ public class MilestonesSectionSaverTest {
     public void testSaveMilestone() {
         MilestonesForm competitionSetupForm = new MilestonesForm();
 
-        LocalDateTime milestoneDate = LocalDateTime.of(2017, 1, 1, 0, 0);
+        ZonedDateTime milestoneDate = LocalDateTime.of(2017, 1, 1, 0, 0).atZone(ZoneId.systemDefault());
 
         CompetitionResource competition = newCompetitionResource()
                 .withMilestones(asList(1L))
@@ -82,14 +85,14 @@ public class MilestonesSectionSaverTest {
     public void testSaveMilestoneSetupComplete() {
         MilestonesForm competitionSetupForm = new MilestonesForm();
 
-        LocalDateTime pastDate = LocalDateTime.now().minusDays(1);
-        LocalDateTime futureDate = LocalDateTime.now().plusDays(1);
+        ZonedDateTime pastDate = ZonedDateTime.now().minusDays(1);
+        ZonedDateTime futureDate = ZonedDateTime.now().plusDays(1);
 
         CompetitionResource competition = newCompetitionResource()
                 .withMilestones(Arrays.asList(1L, 2L))
                 .withSetupComplete(true)
-                .withStartDate(LocalDateTime.now().minusDays(1))
-                .withFundersPanelDate(LocalDateTime.now().plusDays(1))
+                .withStartDate(ZonedDateTime.now().minusDays(1))
+                .withFundersPanelDate(ZonedDateTime.now().plusDays(1))
                 .withId(1L).build();
 
         MilestoneResource milestonePast = newMilestoneResource()
@@ -127,7 +130,7 @@ public class MilestonesSectionSaverTest {
         LinkedMap<String, MilestoneRowForm>  milestoneList = new LinkedMap<>();
 
         resources.forEach(milestoneResource -> {
-            MilestoneRowForm milestone = new MilestoneRowForm(milestoneResource.getType(), milestoneResource.getDate());
+            MilestoneRowForm milestone = new MilestoneRowForm(milestoneResource.getType(), TimeZoneUtil.toBritishSummerTime(milestoneResource.getDate()));
             milestoneList.put(milestoneResource.getType().name(), milestone);
         });
 
@@ -198,7 +201,7 @@ public class MilestonesSectionSaverTest {
         return newMilestoneResource()
                 .withId(1L)
                 .withName(MilestoneType.OPEN_DATE)
-                .withDate(LocalDateTime.of(LocalDateTime.now().plusYears(1).getYear(), 12, 1, 0, 0))
+                .withDate(LocalDateTime.of(LocalDateTime.now().plusYears(1).getYear(), 12, 1, 0, 0).atZone(ZoneId.systemDefault()))
                 .withCompetitionId(1L).build();
     }
 

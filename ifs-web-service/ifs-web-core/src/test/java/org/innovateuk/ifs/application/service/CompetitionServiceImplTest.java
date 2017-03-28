@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -131,9 +132,9 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     @Test
     public void generateCompetitionCode() throws Exception {
         final String expected = "201606-01";
-        when(competitionsRestService.generateCompetitionCode(1L, LocalDateTime.of(2016, 06, 16, 0, 0, 0))).thenReturn(restSuccess(expected));
+        when(competitionsRestService.generateCompetitionCode(1L, LocalDateTime.of(2016, 06, 16, 0, 0, 0).atZone(ZoneId.systemDefault()))).thenReturn(restSuccess(expected));
 
-        final String found = service.generateCompetitionCode(1L, LocalDateTime.of(2016, 06, 16, 0, 0, 0));
+        final String found = service.generateCompetitionCode(1L, LocalDateTime.of(2016, 06, 16, 0, 0, 0).atZone(ZoneId.systemDefault()));
         assertEquals(expected, found);
     }
 

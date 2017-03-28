@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -46,7 +47,7 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
             MilestoneRowForm milestoneWithUpdate = milestoneEntries.getOrDefault(milestoneResource.getType().name(), null);
 
             if(milestoneWithUpdate != null) {
-                LocalDateTime temp = milestoneWithUpdate.getMilestoneAsDateTime();
+                ZonedDateTime temp = milestoneWithUpdate.getMilestoneAsZonedDateTime();
                 if (temp != null) {
                     milestoneResource.setDate(temp);
                     updatedMilestones.add(milestoneResource);

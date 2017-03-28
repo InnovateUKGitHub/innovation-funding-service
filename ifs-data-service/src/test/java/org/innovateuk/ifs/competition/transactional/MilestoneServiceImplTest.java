@@ -18,6 +18,8 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -45,7 +47,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 			@Override
 			public Milestone answer(InvocationOnMock invocation) throws Throwable {
 				MilestoneResource arg = invocation.getArgumentAt(0, MilestoneResource.class);
-                Milestone milestone = newMilestone().withType(arg.getType()).withDate(arg.getDate()).build();
+                Milestone milestone = newMilestone().withType(arg.getType()).withDate(arg.getDate().toLocalDateTime()).build();
 				return milestone;
 			}
 		});
@@ -59,7 +61,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 		List<MilestoneResource> milestones = newMilestoneResource()
 				.withCompetitionId(1L,1L)
                 .withType(FUNDERS_PANEL, ASSESSMENT_PANEL)
-                .withDate(LocalDateTime.of(2050, 3, 11, 0, 0), LocalDateTime.of(2050, 3, 10, 0, 0))
+                .withDate(LocalDateTime.of(2050, 3, 11, 0, 0).atZone(ZoneId.systemDefault()), LocalDateTime.of(2050, 3, 10, 0, 0).atZone(ZoneId.systemDefault()))
                 .build(2);
 
 		ServiceResult<Void> result = service.updateMilestones(milestones);
@@ -82,7 +84,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 		List<MilestoneResource> milestones = newMilestoneResource()
 				.withCompetitionId(1L, 1L)
                 .withType(FUNDERS_PANEL, ASSESSMENT_PANEL)
-                .withDate(LocalDateTime.of(2050, 3, 10, 0, 0), LocalDateTime.of(2050, 3, 11, 0, 0))
+                .withDate(LocalDateTime.of(2050, 3, 10, 0, 0).atZone(ZoneId.systemDefault()), LocalDateTime.of(2050, 3, 11, 0, 0).atZone(ZoneId.systemDefault()))
                 .build(2);
 
 		ServiceResult<Void> result = service.updateMilestones(milestones);
@@ -101,7 +103,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 		List<MilestoneResource> milestones = newMilestoneResource()
 				.withCompetitionId(1L, 1L)
                 .withType(FUNDERS_PANEL, ASSESSMENT_PANEL)
-                .withDate(LocalDateTime.of(2050, 3, 11, 0, 0), null)
+                .withDate(LocalDateTime.of(2050, 3, 11, 0, 0).atZone(ZoneId.systemDefault()), null)
                 .build(2);
 
 		ServiceResult<Void> result = service.updateMilestones(milestones);
@@ -120,7 +122,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 		List<MilestoneResource> milestones = newMilestoneResource()
 				.withCompetitionId(1L, 1L)
                 .withType(FUNDERS_PANEL, ASSESSMENT_PANEL)
-                .withDate(LocalDateTime.of(2050, 3, 11, 0, 0), LocalDateTime.of(1985, 3, 10, 0, 0))
+                .withDate(LocalDateTime.of(2050, 3, 11, 0, 0).atZone(ZoneId.systemDefault()), LocalDateTime.of(1985, 3, 10, 0, 0).atZone(ZoneId.systemDefault()))
                 .build(2);
 
 		ServiceResult<Void> result = service.updateMilestones(milestones);
@@ -151,7 +153,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 
 	@Test
 	public void updateMilestone() {
-		LocalDateTime milestoneDate = LocalDateTime.now();
+		ZonedDateTime milestoneDate = ZonedDateTime.now();
 
 		ServiceResult<Void> result = service.updateMilestone(newMilestoneResource().withType(MilestoneType.BRIEFING_EVENT).withDate(milestoneDate.plusMonths(1)).build());
 		assertTrue(result.isSuccess());
@@ -221,9 +223,9 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 		Competition nonIfsCompetition = newCompetition().withNonIfs(true).build();
 		when(competitionRepository.findById(1L)).thenReturn(nonIfsCompetition);
 
-		LocalDateTime lastYearSomewhere = LocalDateTime.now()
+		ZonedDateTime lastYearSomewhere = ZonedDateTime.now()
 				.minusYears(1);
-		LocalDateTime lastYearSomewhereButLater = LocalDateTime.now()
+		ZonedDateTime lastYearSomewhereButLater = ZonedDateTime.now()
 				.minusYears(1)
 				.plusDays(1);
 
@@ -243,9 +245,9 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 		Competition ifsCompetition = newCompetition().withNonIfs(false).build();
 		when(competitionRepository.findById(1L)).thenReturn(ifsCompetition);
 
-		LocalDateTime lastYearSomewhere = LocalDateTime.now()
+		ZonedDateTime lastYearSomewhere = ZonedDateTime.now()
 				.minusYears(1);
-		LocalDateTime lastYearSomewhereButLater = LocalDateTime.now()
+		ZonedDateTime lastYearSomewhereButLater = ZonedDateTime.now()
 				.minusYears(1)
 				.plusDays(1);
 
@@ -269,7 +271,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 		List<MilestoneResource> milestones = newMilestoneResource()
 				.withCompetitionId(1L,2L)
 				.withType(FUNDERS_PANEL, ASSESSMENT_PANEL)
-				.withDate(LocalDateTime.of(2050, 3, 11, 0, 0), LocalDateTime.of(2050, 3, 10, 0, 0))
+				.withDate(LocalDateTime.of(2050, 3, 11, 0, 0).atZone(ZoneId.systemDefault()), LocalDateTime.of(2050, 3, 10, 0, 0).atZone(ZoneId.systemDefault()))
 				.build(2);
 
 		ServiceResult<Void> result = service.updateMilestones(milestones);

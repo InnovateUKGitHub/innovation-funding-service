@@ -4,6 +4,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
 import org.innovateuk.ifs.nonifs.form.NonIfsDetailsForm;
+import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,9 +19,9 @@ public class NonIfsDetailsFormPopulator {
         form.setInnovationSectorCategoryId(competitionResource.getInnovationSector());
         form.setInnovationAreaCategoryId(competitionResource.getInnovationAreas().stream().findAny().orElse(null));
         form.setUrl(competitionResource.getNonIfsUrl());
-        form.setApplicantNotifiedDate(new MilestoneRowForm(MilestoneType.RELEASE_FEEDBACK, competitionResource.getReleaseFeedbackDate()));
-        form.setOpenDate(new MilestoneRowForm(MilestoneType.OPEN_DATE, competitionResource.getStartDate()));
-        form.setCloseDate(new MilestoneRowForm(MilestoneType.SUBMISSION_DATE, competitionResource.getEndDate()));
+        form.setApplicantNotifiedDate(new MilestoneRowForm(MilestoneType.RELEASE_FEEDBACK, TimeZoneUtil.toBritishSummerTime(competitionResource.getReleaseFeedbackDate())));
+        form.setOpenDate(new MilestoneRowForm(MilestoneType.OPEN_DATE, TimeZoneUtil.toBritishSummerTime(competitionResource.getStartDate())));
+        form.setCloseDate(new MilestoneRowForm(MilestoneType.SUBMISSION_DATE, TimeZoneUtil.toBritishSummerTime(competitionResource.getEndDate())));
         return form;
     }
 }

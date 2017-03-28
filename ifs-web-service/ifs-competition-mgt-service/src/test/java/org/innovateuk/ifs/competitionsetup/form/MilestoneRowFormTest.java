@@ -5,6 +5,7 @@ import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.*;
@@ -30,7 +31,7 @@ public class MilestoneRowFormTest {
     public void testEditableForCompetition() {
         CompetitionResource nonIfsCompetition = newCompetitionResource().withNonIfs(true).build();
         CompetitionResource notSetupCompetition = newCompetitionResource().withSetupComplete(false).build();
-        CompetitionResource setupCompetition = newCompetitionResource().withSetupComplete(true).withStartDate(LocalDateTime.now().minusDays(1)).build();
+        CompetitionResource setupCompetition = newCompetitionResource().withSetupComplete(true).withStartDate(ZonedDateTime.now().minusDays(1)).build();
 
 
         MilestoneRowForm pastRow = new MilestoneRowForm(MilestoneType.OPEN_DATE, LocalDateTime.now().minusDays(1));

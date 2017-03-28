@@ -4,7 +4,7 @@ import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -29,11 +29,11 @@ public class PublicContentItemResourceBuilder extends BaseBuilder<PublicContentI
         return with(publicContentItem -> setField("competitionTitle", competitionTitle, publicContentItem));
     }
 
-    public PublicContentItemResourceBuilder withCompetitionOpenDate(LocalDateTime competitionOpenDate) {
+    public PublicContentItemResourceBuilder withCompetitionOpenDate(ZonedDateTime competitionOpenDate) {
         return with(publicContentItem -> setField("competitionOpenDate", competitionOpenDate, publicContentItem));
     }
 
-    public PublicContentItemResourceBuilder withCompetitionCloseDate(LocalDateTime competitionCloseDate) {
+    public PublicContentItemResourceBuilder withCompetitionCloseDate(ZonedDateTime competitionCloseDate) {
         return with(publicContentItem -> setField("competitionCloseDate", competitionCloseDate, publicContentItem));
     }
 

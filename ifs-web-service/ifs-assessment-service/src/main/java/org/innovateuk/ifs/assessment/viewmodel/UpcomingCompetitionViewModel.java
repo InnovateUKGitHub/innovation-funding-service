@@ -1,8 +1,9 @@
 package org.innovateuk.ifs.assessment.viewmodel;
 
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.util.TimeZoneUtil;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -24,10 +25,10 @@ public class UpcomingCompetitionViewModel {
         this.competitionId = competitionResource.getId();
         this.competitionName = competitionResource.getName();
         this.competitionDescription = competitionResource.getDescription();
-        this.assessmentPeriodDateFrom = competitionResource.getAssessorAcceptsDate();
-        this.assessmentPeriodDateTo = competitionResource.getAssessorDeadlineDate();
+        this.assessmentPeriodDateFrom = TimeZoneUtil.toBritishSummerTime(competitionResource.getAssessorAcceptsDate());
+        this.assessmentPeriodDateTo = TimeZoneUtil.toBritishSummerTime(competitionResource.getAssessorDeadlineDate());
         this.assessorPay = competitionResource.getAssessorPay();
-        this.assessorBriefingDate = competitionResource.getAssessorBriefingDate();
+        this.assessorBriefingDate = TimeZoneUtil.toBritishSummerTime(competitionResource.getAssessorBriefingDate());
     }
 
     public long getCompetitionId() {

@@ -13,6 +13,7 @@ import org.innovateuk.ifs.publiccontent.modelpopulator.AbstractPublicContentView
 import org.innovateuk.ifs.publiccontent.modelpopulator.PublicContentViewModelPopulator;
 import org.innovateuk.ifs.publiccontent.viewmodel.DatesViewModel;
 import org.innovateuk.ifs.publiccontent.viewmodel.submodel.DateViewModel;
+import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -67,7 +68,7 @@ public class DatesViewModelPopulator extends AbstractPublicContentViewModelPopul
 
     private DateViewModel mapMilestoneToDateViewModel(MilestoneResource milestoneResource) {
         DateViewModel dateViewModel = new DateViewModel();
-        dateViewModel.setDateTime(milestoneResource.getDate());
+        dateViewModel.setDateTime(TimeZoneUtil.toBritishSummerTime(milestoneResource.getDate()));
         switch (milestoneResource.getType()) {
             case OPEN_DATE:
                 dateViewModel.setContent("Competition opens");

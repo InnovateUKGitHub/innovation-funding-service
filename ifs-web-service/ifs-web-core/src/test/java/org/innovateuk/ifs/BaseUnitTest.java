@@ -2,6 +2,7 @@ package org.innovateuk.ifs;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.agreement.service.AgreementService;
 import org.innovateuk.ifs.application.UserApplicationRole;
 import org.innovateuk.ifs.application.builder.QuestionResourceBuilder;
 import org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder;
@@ -26,7 +27,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
 import org.innovateuk.ifs.competition.service.CompetitionsRestService;
-import org.innovateuk.ifs.agreement.service.AgreementService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.category.GrantClaimCategory;
@@ -76,7 +76,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -404,7 +404,7 @@ public class BaseUnitTest {
 
     public void setupCompetition() {
         competitionResource = newCompetitionResource().with(id(competitionId)).with(name("Competition x")).with(description("Description afds")).
-                withStartDate(LocalDateTime.now().minusDays(2)).withEndDate(LocalDateTime.now().plusDays(5)).withCompetitionStatus(CompetitionStatus.OPEN)
+                withStartDate(ZonedDateTime.now().minusDays(2)).withEndDate(ZonedDateTime.now().plusDays(5)).withCompetitionStatus(CompetitionStatus.OPEN)
                 .build();
 
         QuestionResourceBuilder questionResourceBuilder = newQuestionResource().withCompetition(competitionResource.getId());

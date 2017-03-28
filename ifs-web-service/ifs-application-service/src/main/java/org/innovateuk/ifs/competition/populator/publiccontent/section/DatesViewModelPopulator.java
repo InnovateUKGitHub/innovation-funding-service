@@ -10,6 +10,7 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectio
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.viewmodel.publiccontent.section.DatesViewModel;
 import org.innovateuk.ifs.competition.viewmodel.publiccontent.section.submodel.DateViewModel;
+import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -59,7 +60,7 @@ public class DatesViewModelPopulator extends AbstractPublicContentSectionViewMod
         if(competitionCloseDateMilestone.isPresent()) {
             registrationClosesDate.setMustBeStrong(false);
             registrationClosesDate.setContent("Registration closes");
-            registrationClosesDate.setDateTime(competitionCloseDateMilestone.get().getDate().minusDays(7));
+            registrationClosesDate.setDateTime(TimeZoneUtil.toBritishSummerTime(competitionCloseDateMilestone.get().getDate().minusDays(7)));
         }
 
         return registrationClosesDate;
@@ -71,7 +72,7 @@ public class DatesViewModelPopulator extends AbstractPublicContentSectionViewMod
         milestonesNeeded.forEach(milestoneResource -> {
             DateViewModel publicContentDate = new DateViewModel();
 
-            publicContentDate.setDateTime(milestoneResource.getDate());
+            publicContentDate.setDateTime(TimeZoneUtil.toBritishSummerTime(milestoneResource.getDate()));
             publicContentDate.setMustBeStrong(Boolean.FALSE);
             switch (milestoneResource.getType()) {
                 case OPEN_DATE:

@@ -6,9 +6,11 @@ import org.hibernate.validator.constraints.Range;
 import org.innovateuk.ifs.commons.validation.constraints.ValidAggregatedDate;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
+import org.innovateuk.ifs.util.TimeZoneUtil;
 
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Set;
 
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
@@ -52,6 +54,7 @@ public class MilestoneRowForm {
             }
         }
     }
+
 
     public Integer getDay() {
         return day;
@@ -156,6 +159,19 @@ public class MilestoneRowForm {
                 return LocalDateTime.of(year, month, day, time.getHour(), 0);
             } else {
                 return LocalDateTime.of(year, month, day, 0, 0);
+            }
+        } else {
+            return null;
+        }
+    }
+
+    public ZonedDateTime getMilestoneAsZonedDateTime() {
+
+        if (day != null && month != null && year != null){
+            if ( time != null && isTimeOption()) {
+                return TimeZoneUtil.fromBritishSummerTime(year, month, day, time.getHour());
+            } else {
+                return TimeZoneUtil.fromBritishSummerTime(year, month, day);
             }
         } else {
             return null;

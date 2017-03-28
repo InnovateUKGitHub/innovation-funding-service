@@ -14,6 +14,7 @@ import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -53,8 +54,8 @@ public class AssessorCompetitionDashboardModelPopulator {
 
     public AssessorCompetitionDashboardViewModel populateModel(Long competitionId, Long userId) {
         CompetitionResource competition = competitionService.getById(competitionId);
-        LocalDateTime acceptDeadline = competition.getAssessorAcceptsDate();
-        LocalDateTime submitDeadline = competition.getAssessorDeadlineDate();
+        LocalDateTime acceptDeadline = TimeZoneUtil.toBritishSummerTime(competition.getAssessorAcceptsDate());
+        LocalDateTime submitDeadline = TimeZoneUtil.toBritishSummerTime(competition.getAssessorDeadlineDate());
 
         Map<Boolean, List<AssessorCompetitionDashboardApplicationViewModel>> applicationsPartitionedBySubmitted =
                 getApplicationsPartitionedBySubmitted(userId, competitionId);

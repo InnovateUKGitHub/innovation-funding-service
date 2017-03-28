@@ -7,6 +7,7 @@ import org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.publiccontent.builder.ContentGroupResourceBuilder.newContentGroupResource;
@@ -48,7 +49,7 @@ public class PublicContentResourceDocs {
             .withKeywords(asList("keyword1", "keyword2"))
             .withProjectFundingRange("range")
             .withProjectSize("size")
-            .withPublishDate(LocalDateTime.now())
+            .withPublishDate(ZonedDateTime.now())
             .withShortDescription("short")
             .withSummary("sum")
             .withContentSections(

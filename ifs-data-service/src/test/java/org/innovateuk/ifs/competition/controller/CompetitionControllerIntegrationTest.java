@@ -21,6 +21,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -144,25 +145,25 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         List<CompetitionResource> competitions = checkCompetitionCount(5);
 
         // Generate number 1 in this month year combination
-        RestResult<String> generatedCode = controller.generateCompetitionCode(LocalDateTime.of(2016, 6, 5, 12, 00), competitions.get(0).getId());
+        RestResult<String> generatedCode = controller.generateCompetitionCode(LocalDateTime.of(2016, 6, 5, 12, 0).atZone(ZoneId.systemDefault()), competitions.get(0).getId());
         assertTrue(generatedCode.isSuccess());
         assertEquals("1606-1", generatedCode.getSuccessObject());
         flushAndClearSession();
 
 
         // Generate number 2 in this month year combination
-        generatedCode = controller.generateCompetitionCode(LocalDateTime.of(2016, 6, 5, 12, 00), competitions.get(1).getId());
+        generatedCode = controller.generateCompetitionCode(LocalDateTime.of(2016, 6, 5, 12, 0).atZone(ZoneId.systemDefault()), competitions.get(1).getId());
         assertTrue(generatedCode.isSuccess());
         assertEquals("1606-2", generatedCode.getSuccessObject());
         flushAndClearSession();
 
         // Generate number 3 in this month year combination
-        generatedCode = controller.generateCompetitionCode(LocalDateTime.of(2016, 6, 5, 12, 00), competitions.get(2).getId());
+        generatedCode = controller.generateCompetitionCode(LocalDateTime.of(2016, 6, 5, 12, 0).atZone(ZoneId.systemDefault()), competitions.get(2).getId());
         assertTrue(generatedCode.isSuccess());
         assertEquals("1606-3", generatedCode.getSuccessObject());
 
         // if generated twice the first code should not be updated.
-        generatedCode = controller.generateCompetitionCode(LocalDateTime.of(2020, 11, 11, 12, 00), competitions.get(2).getId());
+        generatedCode = controller.generateCompetitionCode(LocalDateTime.of(2020, 11, 11, 12, 0).atZone(ZoneId.systemDefault()), competitions.get(2).getId());
         assertTrue(generatedCode.isSuccess());
         assertEquals("1606-3", generatedCode.getSuccessObject());
 

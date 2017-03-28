@@ -15,6 +15,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -52,7 +53,7 @@ public class CompetitionSetupMilestoneServiceImplTest {
         List<MilestoneResource> oldMilestones = asList(
                 newMilestoneResource()
                 .with(milestoneResource -> milestoneResource.setType(MilestoneType.SUBMISSION_DATE))
-                .withDate(LocalDateTime.MAX)
+                .withDate(LocalDateTime.MAX.atZone(ZoneId.systemDefault()))
                 .build());
 
         LinkedMap<String, MilestoneRowForm> newMilestones = new LinkedMap<>();

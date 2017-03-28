@@ -2,8 +2,10 @@ package org.innovateuk.ifs.management.viewmodel;
 
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
+import org.innovateuk.ifs.util.TimeZoneUtil;
 
 import java.time.LocalDateTime;
+
 
 /**
  * Row model for the milestones on the in flight dashboard
@@ -15,7 +17,7 @@ public class MilestonesRowViewModel {
 
     public MilestonesRowViewModel(MilestoneResource milestoneResource) {
         this.milestoneType = milestoneResource.getType();
-        this.dateTime = milestoneResource.getDate();
+        this.dateTime = TimeZoneUtil.toBritishSummerTime(milestoneResource.getDate());
         if (this.dateTime != null) {
             this.passed = LocalDateTime.now().isAfter(dateTime);
         } else {

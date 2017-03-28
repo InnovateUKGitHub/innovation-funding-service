@@ -1,8 +1,10 @@
 package org.innovateuk.ifs.competition.viewmodel;
 
 import org.innovateuk.ifs.competition.viewmodel.publiccontent.AbstractPublicSectionContentViewModel;
+import org.innovateuk.ifs.util.TimeZoneUtil;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
@@ -10,9 +12,8 @@ import java.util.List;
  */
 public class CompetitionOverviewViewModel {
     private String competitionTitle;
-    private LocalDateTime competitionOpenDate;
-    private LocalDateTime registrationCloseDate;
-    private LocalDateTime competitionCloseDate;
+    private ZonedDateTime competitionOpenDate;
+    private ZonedDateTime competitionCloseDate;
     private Long competitionId;
     private String shortDescription;
     private String nonIfsUrl;
@@ -29,26 +30,22 @@ public class CompetitionOverviewViewModel {
     }
 
     public LocalDateTime getCompetitionOpenDate() {
-        return competitionOpenDate;
+        return TimeZoneUtil.toBritishSummerTime(competitionOpenDate);
     }
 
-    public void setCompetitionOpenDate(LocalDateTime competitionOpenDate) {
+    public void setCompetitionOpenDate(ZonedDateTime competitionOpenDate) {
         this.competitionOpenDate = competitionOpenDate;
     }
 
     public LocalDateTime getRegistrationCloseDate() {
-        return registrationCloseDate;
-    }
-
-    public void setRegistrationCloseDate(LocalDateTime registrationCloseDate) {
-        this.registrationCloseDate = registrationCloseDate;
+        return TimeZoneUtil.toBritishSummerTime(competitionCloseDate.minusDays(7));
     }
 
     public LocalDateTime getCompetitionCloseDate() {
-        return competitionCloseDate;
+        return TimeZoneUtil.toBritishSummerTime(competitionCloseDate);
     }
 
-    public void setCompetitionCloseDate(LocalDateTime competitionCloseDate) {
+    public void setCompetitionCloseDate(ZonedDateTime competitionCloseDate) {
         this.competitionCloseDate = competitionCloseDate;
     }
 
@@ -101,12 +98,12 @@ public class CompetitionOverviewViewModel {
     }
 
     public boolean isShowNotOpenYetMessage() {
-        return getCompetitionOpenDate().isAfter(LocalDateTime.now());
+        return competitionOpenDate.isAfter(ZonedDateTime.now());
     }
 
     public boolean isShowClosedMessage() {
         return nonIfs ?  getRegistrationCloseDate().isBefore(LocalDateTime.now()) :
-                getCompetitionCloseDate().isBefore(LocalDateTime.now());
+                competitionCloseDate.isBefore(ZonedDateTime.now());
     }
 
     public boolean isDisableApplyButton() {

@@ -20,6 +20,8 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import static org.hamcrest.CoreMatchers.hasItems;
@@ -105,7 +107,7 @@ public class InitialDetailsSectionSaverTest {
         Set<Long> actualInnovationAreaIds = competition.getInnovationAreas().stream().collect(Collectors.toSet());
         assertEquals(expectedInnovationAreaIds, actualInnovationAreaIds);
         assertEquals(competition.getInnovationSector(), innovationSectorId);
-        assertEquals(openingDate, competition.getStartDate());
+        assertEquals(openingDate, competition.getStartDate().toLocalDateTime());
         assertEquals(competition.getCompetitionType(), competitionTypeId);
         assertEquals(innovationSectorId, competition.getInnovationSector());
 
@@ -163,8 +165,8 @@ public class InitialDetailsSectionSaverTest {
         Long competitionTypeId = 3L;
         Long innovationSectorId = 4L;
 
-        LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
-        LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
+        ZonedDateTime yesterday = ZonedDateTime.now().minusDays(1);
+        ZonedDateTime tomorrow = ZonedDateTime.now().plusDays(1);
 
         CompetitionResource competition = newCompetitionResource()
                 .withSetupComplete(true)
@@ -194,7 +196,7 @@ public class InitialDetailsSectionSaverTest {
         MilestoneResource milestone = new MilestoneResource();
         milestone.setId(10L);
         milestone.setType(MilestoneType.OPEN_DATE);
-        milestone.setDate(LocalDateTime.of(2020, 12, 1, 0, 0));
+        milestone.setDate(LocalDateTime.of(2020, 12, 1, 0, 0).atZone(ZoneId.systemDefault()));
         milestone.setCompetitionId(1L);
         return milestone;
     }
