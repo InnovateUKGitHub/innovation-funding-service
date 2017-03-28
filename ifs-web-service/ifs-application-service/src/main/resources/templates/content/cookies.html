@@ -10,7 +10,7 @@
 
 <main id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:if="${#authentication} ? ${#authorization.expression('isAuthenticated()')} : ${false}" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/}" />
 
     <div class="grid-row">
         <div class="column-two-thirds">
@@ -178,7 +178,7 @@
             </div>
         </div>
         <div class="column-one-third">
-            <th:block th:insert="content/fragments :: content-menu" />
+            <th:block th:insert="content/fragments :: content-menu(current=${'cookies'})" />
         </div>
     </div>
     <th:block th:insert="fragments/layout :: main-content-end" />
