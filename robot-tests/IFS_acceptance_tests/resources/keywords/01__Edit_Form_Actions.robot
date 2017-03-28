@@ -4,7 +4,6 @@ Resource          ../defaultResources.robot
 *** Keywords ***
 the user selects the checkbox
     [Arguments]    ${checkbox}
-    the user should see the checkbox    ${checkbox}
     ${status}    ${value}=    Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label[not(contains(@class,"selected"))]
     Execute Javascript    jQuery('form label a').contents().unwrap();    # we cannot click the checkbox itself as it is hidden, however if we click the label it will click the anchor in the label, therefore I remove the <a> before submit, but keep the text
     Run Keyword If    '${status}' == 'PASS'    Click Element    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label
@@ -19,7 +18,6 @@ the user selects the checkbox
 
 the user unselects the checkbox
     [Arguments]    ${checkbox}
-    the user should see the checkbox    ${checkbox}
     ${status}    ${value}=    Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label[contains(@class,"selected")]
     Execute Javascript    jQuery('form label a').contents().unwrap();    # we cannot click the checkbox itself as it is hidden, however if we click the label it will click the anchor in the label, therefore I remove the <a> before submit, but keep the text
     Run Keyword If    '${status}' == 'PASS'    Click Element    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label
