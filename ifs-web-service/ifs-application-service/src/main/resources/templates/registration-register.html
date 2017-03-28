@@ -8,7 +8,7 @@
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main id="content">
+<main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='javascript:history.back()',currentApplication=${currentApplication}" />
 
@@ -131,7 +131,7 @@
                                  th:field="*{termsAndConditions}"
                                  required="required"
                                  th:attr="data-required-errormessage=#{validation.account.termsandconditions.required}" />
-                          I agree to the <a href="/info/terms-and-conditions">terms and conditions</a>
+                          I agree to the <a href="/info/terms-and-conditions" target="_blank">terms and conditions</a> (this link will open in a new window.)
                       </label>
                   </fieldset>
                 </div>

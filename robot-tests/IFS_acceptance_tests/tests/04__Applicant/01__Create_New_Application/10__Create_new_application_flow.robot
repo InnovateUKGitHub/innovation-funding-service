@@ -156,7 +156,7 @@ the new application should be visible in the dashboard page
     the user should see the text in the page    Application number:
 
 the user clicks the Not on company house link
-    the user clicks the button/link    name=not-in-company-house
+    the user clicks the button/link    jQuery=summary:contains("Enter details manually")
     the user clicks the button/link    name=manual-address
     The user enters text to a text field    id=addressForm.selectedPostcode.addressLine1    street
     The user enters text to a text field    id=addressForm.selectedPostcode.town    town
