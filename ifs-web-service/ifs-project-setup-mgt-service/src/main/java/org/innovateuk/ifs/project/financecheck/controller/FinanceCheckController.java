@@ -64,8 +64,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @RequestMapping("/project/{projectId}/finance-check")
 public class FinanceCheckController {
 
-    private static final String FORM_ATTR_NAME = "form";
-
     @Autowired
     private ProjectService projectService;
 
@@ -80,15 +78,6 @@ public class FinanceCheckController {
 
     @Autowired
     private FinanceCheckService financeCheckService;
-
-    @Autowired
-    private OrganisationService organisationService;
-
-    @Autowired
-    private PartnerOrganisationService partnerOrganisationService;
-
-    @Autowired
-    private FinanceUtil financeUtil;
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
     @RequestMapping(method = GET)
