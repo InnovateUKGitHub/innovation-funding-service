@@ -165,7 +165,7 @@ public class CompetitionSetupApplicationController {
                 () -> competitionSetupService.saveCompetitionSetupSubsection(competitionSetupForm, competitionResource, APPLICATION_FORM, QUESTIONS));
     }
 
-    @RequestMapping(value = "/question", method = RequestMethod.POST)
+    @RequestMapping(value = "/question/{questionId}/edit", method = RequestMethod.POST)
     public String submitProjectDetailsQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationProjectForm competitionSetupForm,
                                                BindingResult bindingResult,
                                                ValidationHandler validationHandler,
