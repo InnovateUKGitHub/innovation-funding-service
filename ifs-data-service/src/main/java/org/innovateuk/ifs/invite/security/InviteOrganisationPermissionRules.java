@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
+import static org.innovateuk.ifs.security.SecurityRuleUtil.isSystemRegistrationUser;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.checkProcessRole;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
@@ -45,6 +46,11 @@ public class InviteOrganisationPermissionRules {
             return isLeadApplicantForAllApplications(inviteOrganisation, user);
         }
         return isApplicationCollaboratorForOrganisationOrIsLeadApplicant(inviteOrganisation, user);
+    }
+
+    @PermissionRule(value = "READ_FOR_UPDATE", description = "System Registration user can view or update an organisation invite to the application")
+    public boolean systemRegistrarCanViewOrganisationInviteToTheApplication(final InviteOrganisationResource inviteOrganisation, final UserResource user) {
+        return isSystemRegistrationUser(user);
     }
 
     @PermissionRule(value = "SAVE", description = "lead applicant can save an organisation invite for the application")
