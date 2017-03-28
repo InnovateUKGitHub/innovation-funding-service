@@ -1,11 +1,13 @@
 package org.innovateuk.ifs.user.resource;
 
-import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.apache.commons.lang3.StringEscapeUtils.escapeXml10;
 
 public class OrganisationResource {
     private Long id;
@@ -17,6 +19,7 @@ public class OrganisationResource {
     private List<Long> users = new ArrayList<>();
     private Long organisationType;
     private String organisationTypeName;
+    private String organisationTypeDescription;
 
     public Long getId() {
         return id;
@@ -82,6 +85,22 @@ public class OrganisationResource {
         this.users = users;
     }
 
+    public String getOrganisationTypeName() {
+        return organisationTypeName;
+    }
+
+    public void setOrganisationTypeName(String organisationTypeName) {
+        this.organisationTypeName = organisationTypeName;
+    }
+
+    public String getOrganisationTypeDescription() {
+        return organisationTypeDescription;
+    }
+
+    public void setOrganisationTypeDescription(String organisationTypeDescription) {
+        this.organisationTypeDescription = organisationTypeDescription;
+    }
+
     @Override
     public boolean equals(Object o) {
         return EqualsBuilder.reflectionEquals(this, o, false);
@@ -90,13 +109,5 @@ public class OrganisationResource {
     @Override
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(this);
-    }
-
-    public String getOrganisationTypeName() {
-        return organisationTypeName;
-    }
-
-    public void setOrganisationTypeName(String organisationTypeName) {
-        this.organisationTypeName = organisationTypeName;
     }
 }

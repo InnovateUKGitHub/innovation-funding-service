@@ -31,6 +31,10 @@ public class InviteOrganisationBuilder extends BaseBuilder<InviteOrganisation, I
         return new InviteOrganisation();
     }
 
+    public InviteOrganisationBuilder withOrganisationName(String... organisationNames) {
+        return withArraySetFieldByReflection("organisationName", organisationNames);
+    }
+
     public InviteOrganisationBuilder withOrganisation(Organisation... organisations) {
         return withArraySetFieldByReflection("organisation", organisations);
     }
