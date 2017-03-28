@@ -23,6 +23,7 @@
             <h2 class="heading-medium" th:text="${model.leadOrganisation} ? ${model.organisationName} + ', Lead organisation' : ${model.organisationName}">Empire Ltd, Lead organisation</h2>
 
             <form th:action="${actionUrl}"
+                  novalidate="novalidate"
                   th:object="${form}" method="POST" class="contributorsForm" th:with="
                   actionUrl=${model.inviteOrganisationId} ?
                   @{/application/{applicationId}/team/update(applicationId=${model.applicationId},inviteOrganisation=${model.inviteOrganisationId})} :
