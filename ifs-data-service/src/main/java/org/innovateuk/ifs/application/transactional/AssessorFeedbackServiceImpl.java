@@ -123,7 +123,7 @@ public class AssessorFeedbackServiceImpl extends BaseTransactionalService implem
     
 	@Override
 	public ServiceResult<Boolean> assessorFeedbackUploaded(long competitionId) {
-		long countNotUploaded = applicationRepository.countByCompetitionIdAndApplicationStatusIdInAndAssessorFeedbackFileEntryIsNull(competitionId, SUBMITTED_STATUS_IDS);
+		long countNotUploaded = applicationRepository.countByCompetitionIdAndApplicationStatusInAndAssessorFeedbackFileEntryIsNull(competitionId, SUBMITTED_STATUS_IDS);
 		boolean allUploaded = countNotUploaded == 0L;
 		return serviceSuccess(allUploaded);
 	}
@@ -141,7 +141,7 @@ public class AssessorFeedbackServiceImpl extends BaseTransactionalService implem
     }
 
     private ServiceResult<Void> getCompetitionOnSuccessToNotifyLeadApplicantsOfAssessorFeedback (Competition competition, long competitionId) {
-        List<Application> applicationsToPublishAssessorFeedbackFor = applicationRepository.findByCompetitionIdAndApplicationStatusIdIn(competitionId, FUNDING_DECISIONS_MADE_STATUS_IDS);
+        List<Application> applicationsToPublishAssessorFeedbackFor = applicationRepository.findByCompetitionIdAndApplicationStatusIn(competitionId, FUNDING_DECISIONS_MADE_STATUS_IDS);
 
         Pair<List<Application>, List<Application>> applicationsByFundingSuccess = simplePartition(applicationsToPublishAssessorFeedbackFor, applicationApprovedFilter);
         List<Application> successfulApplications = applicationsByFundingSuccess.getLeft();

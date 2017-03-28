@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.mapper;
 
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
+import org.innovateuk.ifs.application.constant.ApplicationStatus;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
@@ -63,7 +63,7 @@ public abstract class ApplicationSummaryMapper {
         if (source.getFundingDecision() != null) {
             result.setFundingDecision(fundingDecisionMapper.mapToResource(source.getFundingDecision()));
         }
-        if (ApplicationStatusConstants.APPROVED.getId().equals(source.getApplicationStatus().getId())) {
+        if (ApplicationStatus.APPROVED.getId().equals(source.getApplicationStatus().getId())) {
             result.setFundingDecision(FundingDecision.FUNDED);
         }
 
@@ -87,9 +87,9 @@ public abstract class ApplicationSummaryMapper {
 
     private String status(Application source, Integer completedPercentage) {
 
-        if (ApplicationStatusConstants.SUBMITTED.getId().equals(source.getApplicationStatus().getId())
-                || ApplicationStatusConstants.APPROVED.getId().equals(source.getApplicationStatus().getId())
-                || ApplicationStatusConstants.REJECTED.getId().equals(source.getApplicationStatus().getId())) {
+        if (ApplicationStatus.SUBMITTED.getId().equals(source.getApplicationStatus().getId())
+                || ApplicationStatus.APPROVED.getId().equals(source.getApplicationStatus().getId())
+                || ApplicationStatus.REJECTED.getId().equals(source.getApplicationStatus().getId())) {
             return "Submitted";
         }
 

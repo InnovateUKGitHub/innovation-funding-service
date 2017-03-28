@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.transactional;
 
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
+import org.innovateuk.ifs.application.constant.ApplicationStatus;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.mapper.ApplicationSummaryMapper;
@@ -31,18 +31,18 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 @Service
 public class ApplicationSummaryServiceImpl extends BaseTransactionalService implements ApplicationSummaryService {
 
-    public static final Collection<Long> SUBMITTED_STATUS_IDS = asList(
-            ApplicationStatusConstants.APPROVED.getId(),
-            ApplicationStatusConstants.REJECTED.getId(),
-            ApplicationStatusConstants.SUBMITTED.getId());
+    public static final Collection<ApplicationStatus> SUBMITTED_STATUS_IDS = asList(
+            ApplicationStatus.APPROVED,
+            ApplicationStatus.REJECTED,
+            ApplicationStatus.SUBMITTED);
 
-    public static final Collection<Long> CREATED_AND_OPEN_STATUS_IDS = asList(
-            ApplicationStatusConstants.CREATED.getId(),
-            ApplicationStatusConstants.OPEN.getId());
+    public static final Collection<ApplicationStatus> CREATED_AND_OPEN_STATUS_IDS = asList(
+            ApplicationStatus.CREATED,
+            ApplicationStatus.OPEN);
 
-    public static final Collection<Long> FUNDING_DECISIONS_MADE_STATUS_IDS = asList(
-            ApplicationStatusConstants.APPROVED.getId(),
-            ApplicationStatusConstants.REJECTED.getId());
+    public static final Collection<ApplicationStatus> FUNDING_DECISIONS_MADE_STATUS_IDS = asList(
+            ApplicationStatus.APPROVED,
+            ApplicationStatus.REJECTED);
 
     private static final Map<String, Sort> SORT_FIELD_TO_DB_SORT_FIELDS = new HashMap<String, Sort>() {{
         put("name", new Sort(ASC, new String[]{"name", "id"}));
@@ -90,9 +90,9 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
             Optional<FundingDecisionStatus> fundingFilter) {
         String filterStr = filter.map(String::trim).orElse("");
         return applicationSummaries(sortBy, pageIndex, pageSize,
-                pageable -> applicationRepository.findByCompetitionIdAndApplicationStatusIdInAndIdLike(
+                pageable -> applicationRepository.findByCompetitionIdAndApplicationStatusInAndIdLike(
                         competitionId, SUBMITTED_STATUS_IDS, filterStr, fundingFilter.orElse(null), pageable),
-                () -> applicationRepository.findByCompetitionIdAndApplicationStatusIdInAndIdLike(
+                () -> applicationRepository.findByCompetitionIdAndApplicationStatusInAndIdLike(
                         competitionId, SUBMITTED_STATUS_IDS, filterStr, fundingFilter.orElse(null)));
     }
 
@@ -101,9 +101,9 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
             Long competitionId, String sortBy, int pageIndex, int pageSize) {
 
         return applicationSummaries(sortBy, pageIndex, pageSize,
-                pageable -> applicationRepository.findByCompetitionIdAndApplicationStatusIdNotIn(
+                pageable -> applicationRepository.findByCompetitionIdAndApplicationStatusNotIn(
                         competitionId, SUBMITTED_STATUS_IDS, pageable),
-                () -> applicationRepository.findByCompetitionIdAndApplicationStatusIdNotIn(
+                () -> applicationRepository.findByCompetitionIdAndApplicationStatusNotIn(
                         competitionId, SUBMITTED_STATUS_IDS));
     }
 
@@ -111,9 +111,9 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
     public ServiceResult<ApplicationSummaryPageResource> getFeedbackRequiredApplicationSummariesByCompetitionId(
             Long competitionId, String sortBy, int pageIndex, int pageSize) {
         return applicationSummaries(sortBy, pageIndex, pageSize,
-                pageable -> applicationRepository.findByCompetitionIdAndApplicationStatusIdInAndAssessorFeedbackFileEntryIsNull(
+                pageable -> applicationRepository.findByCompetitionIdAndApplicationStatusInAndAssessorFeedbackFileEntryIsNull(
                         competitionId, FUNDING_DECISIONS_MADE_STATUS_IDS, pageable),
-                () -> applicationRepository.findByCompetitionIdAndApplicationStatusIdInAndAssessorFeedbackFileEntryIsNull(
+                () -> applicationRepository.findByCompetitionIdAndApplicationStatusInAndAssessorFeedbackFileEntryIsNull(
                         competitionId, FUNDING_DECISIONS_MADE_STATUS_IDS));
 
     }

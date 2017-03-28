@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
+import org.innovateuk.ifs.application.constant.ApplicationStatus;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -42,7 +43,7 @@ public class CompetitionSummaryServiceImplTest extends BaseUnitTestMocksTest {
 
         when(competitionRepositoryMock.findById(COMP_ID)).thenReturn(competition);
         when(applicationRepositoryMock.countByCompetitionId(COMP_ID)).thenReturn(83);
-        when(applicationRepositoryMock.countByCompetitionIdAndApplicationStatusIdInAndCompletionLessThanEqual(
+        when(applicationRepositoryMock.countByCompetitionIdAndApplicationStatusInAndCompletionLessThanEqual(
                 COMP_ID, CREATED_AND_OPEN_STATUS_IDS, new BigDecimal(50L))
         )
                 .thenReturn(1);
@@ -54,7 +55,7 @@ public class CompetitionSummaryServiceImplTest extends BaseUnitTestMocksTest {
                 .thenReturn(serviceSuccess(
                         newCompletedPercentageResource().withCompletedPercentage(new BigDecimal("80")).build()
                 ));
-        when(applicationRepositoryMock.countByCompetitionIdAndApplicationStatusIdNotInAndCompletionGreaterThan(
+        when(applicationRepositoryMock.countByCompetitionIdAndApplicationStatusNotInAndCompletionGreaterThan(
                 COMP_ID, SUBMITTED_STATUS_IDS, new BigDecimal(50L))
         )
                 .thenReturn(1);
@@ -66,8 +67,8 @@ public class CompetitionSummaryServiceImplTest extends BaseUnitTestMocksTest {
                 .thenReturn(serviceSuccess(
                         newCompletedPercentageResource().withCompletedPercentage(new BigDecimal("80")).build()
                 ));
-        when(applicationRepositoryMock.countByCompetitionIdAndApplicationStatusIdIn(COMP_ID, SUBMITTED_STATUS_IDS)).thenReturn(5);
-        when(applicationRepositoryMock.countByCompetitionIdAndApplicationStatusId(COMP_ID, 3L)).thenReturn(8);
+        when(applicationRepositoryMock.countByCompetitionIdAndApplicationStatusIn(COMP_ID, SUBMITTED_STATUS_IDS)).thenReturn(5);
+        when(applicationRepositoryMock.countByCompetitionIdAndApplicationStatus(COMP_ID, ApplicationStatus.APPROVED)).thenReturn(8);
         when(competitionParticipantRepositoryMock.countByCompetitionIdAndRole(COMP_ID, ASSESSOR)).thenReturn(10);
     }
 

@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.populator;
 
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
+import org.innovateuk.ifs.application.constant.ApplicationStatus;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.viewmodel.ApplicationTeamApplicantRowViewModel;
@@ -53,7 +53,7 @@ public class ApplicationTeamModelPopulator {
     }
 
     private boolean isApplicationStatusCreated(ApplicationResource applicationResource) {
-        return ApplicationStatusConstants.CREATED == ApplicationStatusConstants.getFromId(applicationResource.getApplicationStatus());
+        return ApplicationStatus.CREATED == applicationResource.getApplicationStatus();
     }
 
     private List<ApplicationTeamOrganisationRowViewModel> getOrganisationViewModels(long applicationId, long loggedInUserId,

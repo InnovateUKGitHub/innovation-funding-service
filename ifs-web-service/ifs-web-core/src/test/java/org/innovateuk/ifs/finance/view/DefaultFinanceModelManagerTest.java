@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.finance.view;
 
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
+import org.innovateuk.ifs.application.constant.ApplicationStatus;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.DefaultFinanceModelManager;
 import org.innovateuk.ifs.application.finance.view.FinanceFormHandler;
@@ -112,7 +112,7 @@ public class DefaultFinanceModelManagerTest {
 	@Test
 	public void testAddOrganisationFinanceDetailsOpenCompetitionSubmittedApplication() {
 
-		ApplicationResource application = newApplicationResource().withCompetition(competitionId).withApplicationStatus(ApplicationStatusConstants.SUBMITTED).build();
+		ApplicationResource application = newApplicationResource().withCompetition(competitionId).withApplicationStatus(ApplicationStatus.SUBMITTED).build();
 		CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.OPEN).build();
 		
 		FinanceFormHandler financeFormHandler = mock(FinanceFormHandler.class);

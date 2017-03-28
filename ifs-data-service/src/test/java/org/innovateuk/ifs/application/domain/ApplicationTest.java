@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.domain;
 
+import org.innovateuk.ifs.application.constant.ApplicationStatus;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.form.domain.FormInput;
@@ -33,7 +34,7 @@ public class ApplicationTest {
     public void setUp() throws Exception {
         id = 0L;
         name = "testApplicationName";
-        applicationStatus = new ApplicationStatus();
+        applicationStatus = ApplicationStatus.CREATED;
         competition = new Competition();
         applicationFinances = new ArrayList<>();
 
