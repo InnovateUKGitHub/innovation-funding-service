@@ -114,10 +114,12 @@
             <h3 class="heading-small">Registered name</h3>
             <p th:text="${organisationForm.organisationName}"></p>
 
-            <span th:if="${T(org.innovateuk.ifs.user.resource.OrganisationTypeEnum).BUSINESS.organisationTypeId == organisationForm.organisationType.id}">
-                <h3 th:if="${selectedOrganisation?.organisationSearchId}" class="heading-small">Registration number</h3>
-                <p th:text="${selectedOrganisation?.organisationSearchId}"></p>
-            </span>
+            <th:block th:if="${organisationForm.notResearch}">
+                <th:block th:if="${selectedOrganisation?.organisationSearchId}">
+                    <h3 class="heading-small">Registration number</h3>
+                    <p th:text="${selectedOrganisation?.organisationSearchId}"></p>
+                </th:block>
+            </th:block>
 
             <div th:if="${selectedOrganisation?.organisationAddress != null}">
                 <h3 class="heading-small">Registered Address</h3>
@@ -129,7 +131,9 @@
                 <div th:text="${selectedOrganisation?.organisationAddress?.postcode}"></div>
             </div>
 
-            <div th:if="${confirmDetails == true and organisationForm.useSearchResultAddress == false and organisationForm.addressForm.selectedPostcode != null}">
+            <div th:if="${confirmDetails == true
+                            and organisationForm.useSearchResultAddress == false
+                            and organisationForm.addressForm.selectedPostcode != null}">
                 <h3 class="heading-small">Operating Address</h3>
                 <div th:text="${organisationForm.addressForm.selectedPostcode?.addressLine1}"></div>
                 <div th:text="${organisationForm.addressForm.selectedPostcode?.addressLine2}"></div>

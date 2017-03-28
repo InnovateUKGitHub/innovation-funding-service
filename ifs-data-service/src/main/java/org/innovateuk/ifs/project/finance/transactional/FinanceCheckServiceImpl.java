@@ -8,6 +8,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.transactional.FinanceRowService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
+import org.innovateuk.ifs.util.PrioritySorting;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.finance.domain.*;
@@ -120,6 +121,8 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         Application application = project.getApplication();
         Competition competition = application.getCompetition();
         List<PartnerOrganisation> partnerOrganisations = partnerOrganisationRepository.findByProjectId(projectId);
+        final PartnerOrganisation leadPartner = simpleFindFirst(partnerOrganisations, PartnerOrganisation::isLeadOrganisation).get();
+        final List<PartnerOrganisation> sortedPartnersList = new PrioritySorting<>(partnerOrganisations, leadPartner, po -> po.getOrganisation().getName()).unwrap();
         Optional<SpendProfile> spendProfile = spendProfileRepository.findOneByProjectIdAndOrganisationId(projectId, partnerOrganisations.get(0).getOrganisation().getId());
         boolean financeChecksAllApproved = getFinanceCheckApprovalStatus(projectId);
 
@@ -128,8 +131,9 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         String spendProfileGeneratedBy = spendProfile.map(p -> p.getGeneratedBy().getName()).orElse(null);
         LocalDate spendProfileGeneratedDate = spendProfile.map(p -> LocalDate.from(p.getGeneratedDate().toInstant().atOffset(ZoneOffset.UTC))).orElse(null);
 
-        return serviceSuccess(new FinanceCheckSummaryResource(overviewResource, competition.getId(), competition.getName(), spendProfile.isPresent(), getPartnerStatuses(partnerOrganisations,
-                projectId), financeChecksAllApproved, spendProfileGeneratedBy, spendProfileGeneratedDate));
+        return serviceSuccess(new FinanceCheckSummaryResource(overviewResource, competition.getId(), competition.getName(),
+                spendProfile.isPresent(), getPartnerStatuses(sortedPartnersList, projectId), financeChecksAllApproved,
+                spendProfileGeneratedBy, spendProfileGeneratedDate));
     }
 
     @Override
@@ -193,12 +197,9 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
             boolean anyQueryAwaitingResponse = isQueryActionRequired(projectId, org.getOrganisation().getId()).getSuccessObject();
 
-            return new FinanceCheckPartnerStatusResource(
-                org.getOrganisation().getId(),
-                org.getOrganisation().getName(),
-                viability.getLeft(), viability.getRight(),
-                eligibility.getLeft(), eligibility.getRight(),
-                anyQueryAwaitingResponse);
+            return new FinanceCheckPartnerStatusResource(org.getOrganisation().getId(), org.getOrganisation().getName(),
+                    org.isLeadOrganisation(), viability.getLeft(), viability.getRight(), eligibility.getLeft(),
+                    eligibility.getRight(), anyQueryAwaitingResponse);
         });
     }
 

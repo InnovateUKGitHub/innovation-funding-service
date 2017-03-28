@@ -66,6 +66,10 @@ table {
     vertical-align: top;
   }
 
+  .cell-nowrap {
+    white-space: nowrap;
+  }
+
   .width-30-percent {
     box-sizing: border-box;
     padding-right: 1em;
@@ -109,6 +113,10 @@ table {
   table{
     max-width: 100%;
   }
+}
+
+.hint {
+  color: $grey-1;
 }
 
 /* SG

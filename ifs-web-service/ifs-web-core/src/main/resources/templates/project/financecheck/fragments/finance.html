@@ -1436,10 +1436,10 @@
                 </tfoot>
                 <tbody>
                     <th:block th:each="summary : ${summaries.financeCheckSummariesResources}" th:with="partner=${summaries.getPartnerFromSummary(summary.organisationId)}">
-                        <tr >
+                        <tr>
                             <th scope="col">
-                                <strong th:text="${partner.organisationName}">Organisation Name<br /></strong>
-                                <small th:text="${partner.isLeadOrganisation()} ? 'Lead Partner' : 'Partner'" ></small>
+                                <strong th:text="${partner.getOrganisationName()}">Organisation Name<br /></strong>
+                                <small th:if="${partner.isLeadOrganisation()}">Lead</small>
                             </th>
                             <td class="numeric"><strong>&pound; <th:block th:text="${#numbers.formatInteger(summary.totalCost,1,'COMMA')}" /></strong></td>
                             <td th:text="${#numbers.formatInteger(summary.percentageGrant,1,'NONE')+'%'}" class="numeric" />
@@ -1491,11 +1491,12 @@
                         </tr>
                     </tfoot>
                     <tbody>
-                    <th:block th:each="finance : ${breakdowns.finances}" th:with="partner=${breakdowns.getPartnerFromBreakdown(finance.organisation)}">
+                    <!--<th:block th:each="finance : ${breakdowns.finances}" th:with="partner=${breakdowns.getPartnerFromBreakdown(finance.organisation)}">-->
+                    <th:block th:each="partner : ${breakdowns.getOrganisationResources()}" th:with="finance=${breakdowns.getPartnerFinances(partner.organisation)}">
                         <tr>
                             <th scope="col">
                                 <strong th:text="${partner.getOrganisationName()}">Organisation Name<br /></strong>
-                                <small th:text="${partner.isLeadOrganisation()} ? 'Lead Partner' : 'Partner'" ></small>
+                                <small th:if="${partner.isLeadOrganisation()}">Lead</small>
                             </th>
                             <td class="numeric"><strong>&pound; <th:block th:text="${#numbers.formatInteger(finance.getTotal(),1,'COMMA')}" /></strong></td>
                             <th:block th:each="rowType : ${finance.financeOrganisationDetails.keySet()}" th:with="row=${finance.financeOrganisationDetails.get(rowType)}">

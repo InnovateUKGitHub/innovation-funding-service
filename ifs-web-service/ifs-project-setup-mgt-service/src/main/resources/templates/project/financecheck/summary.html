@@ -46,14 +46,17 @@
           <th scope="col" class="aligncentre">Viability</th>
           <th scope="col" class="aligncentre cell-border-right">RAG</th>
           <th scope="col" class="aligncentre">Eligibility</th>
-          <th scope="col" class="aligncentre">RAG</th>
+          <th scope="col" class="aligncentre cell-border-right">RAG</th>
           <th scope="col" class="aligncentre">Queries raised</th>
           <th scope="col" class="aligncentre">Notes</th>
         </tr>
       </thead>
       <tbody>
         <tr th:each="orgDetails, status : ${model.financeCheckSummaryResource.partnerStatusResources}">
-            <th scope="row" th:text="${orgDetails.name}" />
+            <th scope="row" >
+                <th:block th:text="${orgDetails.name}">org name</th:block>
+                <th:block th:if="${orgDetails.isLead()}"> (Lead)</th:block>
+            </th>
             <td class="aligncentre">
                 <a th:if="${!orgDetails.viability.notApplicable}" th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/viability(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
                    th:text="${#messages.msg('ifs.project.setup.viability.' + orgDetails.viability)}"

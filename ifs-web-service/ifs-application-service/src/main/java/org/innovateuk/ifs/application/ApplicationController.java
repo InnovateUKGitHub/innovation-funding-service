@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
@@ -227,10 +226,7 @@ public class ApplicationController {
             questionService.assignQuestion(applicationId, request, assignedBy);
         } else if (params.containsKey(MARK_AS_COMPLETE)) {
             Long markQuestionCompleteId = Long.valueOf(request.getParameter(MARK_AS_COMPLETE));
-            String questionformInputKey = String.format("formInput[%1$s]", markQuestionCompleteId);
-            String questionFormInputValue = request.getParameter(questionformInputKey);
-
-            if (markQuestionCompleteId != null && StringUtils.isNotEmpty(questionFormInputValue)) {
+            if (markQuestionCompleteId != null) {
                 ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), applicationId);
                 List<ValidationMessages> markAsCompleteErrors = questionService.markAsComplete(markQuestionCompleteId, applicationId, processRole.getId());
 
