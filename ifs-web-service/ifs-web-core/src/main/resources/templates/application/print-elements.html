@@ -7,20 +7,20 @@
 
     <h2 class="heading-small">Project title</h2>
     <div class="textarea-wrapped">
-        <div class="readonly" th:text="${application_title}" />
+        <div class="readonly" th:text="${applicationTitle}" />
     </div>
 
     <h2 class="heading-small">Research category</h2>
     <div class="textarea-wrapped">
-        <div class="readonly" th:text="${researchCategoryName}" />
+        <div class="readonly" th:text="${applicationResearchCategory}" />
     </div>
 
     <h2 class="heading-small">Estimated timescales</h2>
     <p>Project start date :<br/>
-        <th:block th:text="${application_startdate_day}" />-<th:block th:text="${application_startdate_month}" />-<th:block th:text="${application_startdate_year}" />
+        <th:block th:text="${applicationStartdateDay}" />-<th:block th:text="${applicationStartdateMonth}" />-<th:block th:text="${applicationStartdateYear}" />
     </p>
     <p>Duration in months :<br/>
-      <th:block th:text="${application_duration}" />
+      <th:block th:text="${applicationDuration}" />
     </p>
 
     <h2 class="heading-small">Lead organisation</h2>

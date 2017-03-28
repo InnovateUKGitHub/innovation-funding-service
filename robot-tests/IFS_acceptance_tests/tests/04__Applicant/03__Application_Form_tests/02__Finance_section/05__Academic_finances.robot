@@ -4,7 +4,7 @@ Documentation     INFUND-917: As an academic partner i want to input my finances
 ...               INFUND-918: As an academic partner i want to be able to mark my finances as complete, so that the lead partner can have confidence in my finances
 ...
 ...               INFUND-2399: As a Academic partner I want to be able to add my finances including decimals for accurate recording of my finances
-Suite Setup       Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    participate in their project
+Suite Setup       Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation
 Suite Teardown    the user closes the browser
 Force Tags        Email    Applicant    Pending
 Resource          ../../../../resources/defaultResources.robot
@@ -118,7 +118,7 @@ Mark all as complete
     When the user enters text to a text field    id=tsb-ref    123123
     Then textfield value should be    id=tsb-ref    123123
     When the user clicks the button/link    jQuery=.button:contains("Mark all as complete")
-    Then the user redirects to the page    Please provide Innovate UK with information about your project.    Application overview
+    Then the user redirects to the page    Please provide information about your project.    Application overview
     and the user navigates to the finance overview of the academic
     And the user should see the element    css=.finance-summary tr:nth-of-type(2) img[src*="/images/field/tick-icon"]
 
@@ -185,10 +185,12 @@ Lead applicant marks the finances as complete
     Given guest user log-in    steve.smith@empire.com    Passw0rd
     The user navigates to the academic application finances
     the user selects the radio button    financePosition-organisationSize    ${SMALL_ORGANISATION_SIZE}
+    the user enters text to a text field    jQuery=label:contains("Turnover") + input    150
+    the user enters text to a text field    jQuery=label:contains("employees") + input    0
     The user enters text to a text field    id=cost-financegrantclaim    20
     The user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No)
     When the user marks the finances as complete
-    Then the user redirects to the page    Please provide Innovate UK with information about your project.    Application overview
+    Then the user redirects to the page    Please provide information about your project.    Application overview
     the user closes the browser
 
 Lead applicant marks the finances as incomplete

@@ -270,6 +270,20 @@ Applicant can view and edit project growth table
     Then the user should view the project growth table
     And the user can edit the project growth table
     And the user populates the project growth table
+    and the user clicks the button/link     jQuery=button:contains("Mark as complete")
+
+Newly created collaborator can view and edit project Growth table
+    [Documentation]  INFUND-8426
+    [Tags]
+    [Setup]  Invite a non-existing collaborator in Appplication with Growth table
+    When the user navigates to the growth table finances
+    and the user clicks the button/link     link=Your organisation
+    and the user selects medium organisation size
+    then the user enters text to a text field    css=input[name$="month"]    12
+    and the user enters text to a text field    css=input[name$="year"]    2016
+    and the user populates the project growth table
+    and the user clicks the button/link      jQuery=button:contains("Mark as complete")
+    and the user should not see an error in the page
 
 Invite Collaborator in Application with Growth table
     [Documentation]  INFUND-8518
@@ -277,7 +291,7 @@ Invite Collaborator in Application with Growth table
     # TODO INFUND-8561
     [Setup]  the user navigates to the page             ${dashboard_url}
     Given the lead applicant invites an existing user   ${compWITHGrowth}  ${collaborator1_credentials["email"]}
-    When the user reads his email and clicks the link   ${collaborator1_credentials["email"]}  Invitation to collaborate in ${compWITHGrowth}  participate in their application
+    When the user reads his email and clicks the link   ${collaborator1_credentials["email"]}  Invitation to collaborate in ${compWITHGrowth}  You will be joining as part of the organisation    3
     Then the user should see the element                jQuery=h1:contains("We have found an account with the invited email address")
     And the user clicks the button/link                 link=Sign into the Innovation Funding Service.
     When guest user log-in                              &{collaborator1_credentials}
@@ -333,15 +347,15 @@ the user should see his finances empty
     the user should see the element    jQuery=thead:contains("Total project costs") ~ *:contains("£0")
 
 the user selects technical feasibility and no to resubmission and an innovation area
-    # Often those labels need double click. Thus i made a separate keyword to looks more tidy
-    the user clicks the button/link    jQuery=button:contains(Change your innovation area)
-    the user clicks the button/link    jQuery=label[for="innovationAreaChoice-5"]
-    the user clicks the button/link    jQuery=label[for="innovationAreaChoice-5"]
+    the user clicks the button/link    jQuery=legend:contains("Research category")
+    the user clicks the button/link    jQuery=button:contains("Choose your research category")
+    the user clicks the button twice   jQuery=label[for^="researchCategoryChoice"]:contains("Feasibility studies")
     the user clicks the button/link    jQuery=button:contains(Save)
-    the user clicks the button/link    jQuery=label[for="financePosition-cat-33"]
-    the user clicks the button/link    jQuery=label[for="financePosition-cat-33"]
-    the user clicks the button/link    jQuery=label[for="application.resubmission-no"]
-    the user clicks the button/link    jQuery=label[for="application.resubmission-no"]
+    the user clicks the button/link    jQuery=button:contains("Change your innovation area")
+    the user clicks the button twice   jQuery=label[for="innovationAreaChoice-5"]
+    the user clicks the button/link    jQuery=button:contains(Save)
+    the user clicks the button twice   jQuery=label[for="application.resubmission-no"]
+
 
 the user decides about the growth table
     [Arguments]    ${edit}    ${read}
@@ -432,7 +446,7 @@ the user can edit resubmit and read only of the organisation
 the lead applicant invites an existing user
     [Arguments]  ${comp_title}  ${EMAIL_INVITED}
     the user clicks the button/link    link=${comp_title}
-    the user clicks the button/link    link=view and add participants to your application
+    the user clicks the button/link    link=view team members and add collaborators
     the user clicks the button/link    link=Invite new contributors
     the user clicks the button/link    jQuery=button:contains('Add additional partner organisation')
     Input Text                         name=organisations[1].organisationName    innovate
@@ -445,3 +459,53 @@ the user navigates to the growth table finances
     the user navigates to the page  ${DASHBOARD_URL}
     the user clicks the button/link    jQuery=a:contains('Untitled application'):last
     the user clicks the button/link  link=Your finances
+
+Invite a non-existing collaborator in Appplication with Growth table
+    the user clicks the button/link      jQuery=a:contains("Application Overview")
+    the user clicks the button/link       jQuery=a:contains("view team members and add collaborators")
+    the user clicks the button/link       jQuery=a:contains("Add partner organisation")
+    the user should see the element       jQuery=h1:contains(Add organisation)
+    the user enters text to a text field      id=organisationName    innovate
+    the user enters text to a text field       id=applicants0.name    liam
+    the user enters text to a text field       id=applicants0.email    liam@innovate.com
+    the user clicks the button/link        jQuery=button:contains("Add organisation and invite applicants")
+    the user should not see an error in the page
+    the user logs out if they are logged in
+    newly invited collaborator can create account and sign in
+
+Newly invited collaborator can create account and sign in
+    the user reads his email and clicks the link     liam@innovate.com  Invitation to collaborate in ${compWITHGrowth}  You will be joining as part of the organisation    3
+    the user clicks the button/link      jQuery=a:contains("Yes, accept invitation")
+    the user should see the element      jquery=h1:contains("Choose your organisation type")
+    the user completes the new account creation
+
+the user completes the new account creation
+    the user selects the radio button    organisationType  radio-1
+     #TODO change the radio button option to radio-4 once INFUND-8896 is fixed
+    the user clicks the button/link     jQuery=button:contains("Continue")
+    the user should see the element     jQuery=span:contains("Create your account")
+    the user enters text to a text field     id=organisationSearchName   innovate
+    the user clicks the button/link        jQuery=button:contains("Search")
+    wait for autosave
+    the user clicks the button/link        jQuery=a:contains("INNOVATE LTD")
+    the user selects the checkbox     address-same
+    wait for autosave
+    the user clicks the button/link     jQuery=button:contains("Save organisation and continue")
+    then the user should not see an error in the page
+    the user clicks the button/link     jQuery=a:contains("Confirm")
+    the user should be redirected to the correct page    ${SERVER}/registration/register
+    the user enters text to a text field     jQuery=input[id="firstName"]   liam
+    the user enters text to a text field     JQuery=input[id="lastName"]   smithson
+    the user enters text to a text field     jQuery=input[id="phoneNumber"]   077712567890
+    the user enters text to a text field     jQuery=input[id="password"]  Research123
+    the user enters text to a text field    jQuery=input[id="retypedPassword"]   Research123
+    the user selects the checkbox      termsAndConditions
+    the user clicks the button/link     jQuery=button:contains("Create account")
+    the user should see the text in the page    Please verify your email address
+    the user reads his email and clicks the link      liam@innovate.com   Please verify your email address    Once verified you can sign into your account.
+    the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
+    the user clicks the button/link     link=Sign in
+    then the user should see the text in the page      Sign in
+    the user enters text to a text field      jQuery=input[id="username"]   liam@innovate.com
+    the user enters text to a text field      jQuery=input[id="password"]  Research123
+    the user clicks the button/link         jQuery=button:contains("Sign in")

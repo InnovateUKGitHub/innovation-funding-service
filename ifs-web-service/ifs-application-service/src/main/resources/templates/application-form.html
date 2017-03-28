@@ -40,9 +40,7 @@
                      questionAssignee=(${model.assignable.questionAssignee}), markedAsComplete=(${model.application.markedAsComplete}), userIsLeadApplicant=(${model.userIsLeadApplicant}),
                      currentApplication=(${model.application.currentApplication}), currentUser=(${model.currentUser}), assignableUsers=(${model.assignable.assignableUsers}),
                      pendingAssignableUsers=(${model.assignable.pendingAssignableUsers}), leadOrganisation=(${model.leadOrganisation}), pendingOrganisationNames=(${model.pendingOrganisationNames}),
-                     applicationOrganisations=(${model.applicationOrganisations}), leadApplicant=(${model.leadApplicant}),
-                     researchCategories=(${model.application.researchCategories}), rsCategoryId=(${model.application.researchCategoryId}),
-                     hasApplicationFinances=(${model.application.hasApplicationFinances}), subFinanceSection=${false}">
+                     applicationOrganisations=(${model.applicationOrganisations}), leadApplicant=(${model.leadApplicant}), subFinanceSection=${false}">
 
                     <th:block th:if="${formInput.type.displayableQuestionType}">
                         <div th:replace="question-type/types :: ${formInput.type.nameLower}" />
@@ -52,7 +50,7 @@
                     <p class="subtitle" th:if="${model.currentSection.getDescription()}" th:text="${model.currentSection.getDescription()}" />
                     <th:block th:unless="${model.hasFinanceView}">
                         <div class="warning-alert">
-                            This competition has already closed, you are no longer able to submit your application.
+                            Registration is now closed, you are no longer able to submit your application.
                         </div>
                     </th:block>
 

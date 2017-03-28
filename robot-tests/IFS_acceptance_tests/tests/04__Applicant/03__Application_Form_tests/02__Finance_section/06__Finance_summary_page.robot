@@ -19,8 +19,9 @@ Resource          ../../FinanceSection_Commons.robot
 
 *** Variables ***
 ${OVERVIEW_PAGE_PROVIDING_SUSTAINABLE_CHILDCARE_APPLICATION}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_2}
-${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SECTION}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_2}/form/section/7  #Your finances page
-${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SUMMARY}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_2}/form/section/8
+${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SECTION}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_2}/form/section/187  #Your finances page
+${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SUMMARY}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_2}/form/section/198
+${applicationPluto}  Planetary science Pluto's telltale heart
 
 *** Test Cases ***
 Calculations for Lead applicant
@@ -49,10 +50,10 @@ Contribution to project and funding sought should not be negative number
     [Tags]    Pending
     # TODO Pending due to INFUND-8706
     [Setup]  log in as a different user    &{lead_applicant_credentials}
-    When the user navigates to Your-finances page       Providing sustainable childcare
+    When the user navigates to Your-finances page  ${applicationPluto}
     And the user fills in the project costs
-    And the user fills in the organisation information       Providing sustainable childcare
-    And the user checks your funding section for the project      Providing sustainable childcare
+    And the user fills in the organisation information  ${applicationPluto}
+    And the user checks your funding section for the project  ${applicationPluto}
     Then the contribution to project and funding sought should be 0 and not a negative number
 
 Your Finance includes Finance summary table for lead applicant
@@ -91,7 +92,7 @@ Green check should show when the finances are complete
     #TODO   investigate intermmitent failure
     When the user navigates to Your-finances page    Robot test application
     And the user marks the finances as complete     Robot test application
-    Then the user redirects to the page    Please provide Innovate UK with information about your project.    Application overview
+    Then the user redirects to the page    Please provide information about your project.    Application overview
     And the user clicks the button/link    link=Finances overview
     Then Green check should be visible
     [Teardown]    The user closes the browser
@@ -99,7 +100,7 @@ Green check should show when the finances are complete
 Alert shows If the academic research participation is too high
     [Documentation]    INFUND-1436
     [Tags]    Email
-    [Setup]    Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    participate in their application
+    [Setup]    Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation
     Given guest user log-in    ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
     And The user navigates to the academic application finances
     And The user clicks the button/link       link=Your project costs

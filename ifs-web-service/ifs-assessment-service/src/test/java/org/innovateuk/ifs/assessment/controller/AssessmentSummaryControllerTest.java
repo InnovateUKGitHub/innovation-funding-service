@@ -30,7 +30,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.*;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.nCopies;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
 import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
@@ -76,9 +77,6 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
         AssessmentResource assessmentResource = setupAssessment(applicationId, competitionResource.getId());
         List<QuestionResource> questionResources = setupQuestions(competitionResource.getId(), assessmentResource.getId());
 
-        AssessmentSummaryQuestionViewModel expectedScoreOverviewQuestion1ViewModel = new AssessmentSummaryQuestionViewModel(
-                questionResources.get(2).getId(), "1. Business opportunity", "Q1", true, 15, 20, "feedback", null, true);
-
         AssessmentSummaryQuestionViewModel expectedReviewQuestion1ViewModel = new AssessmentSummaryQuestionViewModel(
                 questionResources.get(1).getId(), "Scope", "", false, null, null, null, true, true);
 
@@ -95,7 +93,6 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
                 "Application name",
                 3L,
                 50L,
-                singletonList(expectedScoreOverviewQuestion1ViewModel),
                 asList(expectedReviewQuestion1ViewModel, expectedReviewQuestion2ViewModel, expectedReviewQuestion3ViewModel),
                 15,
                 20,
