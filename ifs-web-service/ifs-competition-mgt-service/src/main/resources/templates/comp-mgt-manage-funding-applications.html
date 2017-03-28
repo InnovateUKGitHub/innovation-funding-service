@@ -102,10 +102,13 @@
                     <tbody>
                     <tr th:each="applicationSummary, stat : ${model.content}">
                         <td class="form-group-cell">
-                            <label class="block-label selection-button-checkbox" th:for="'app-row-' + ${applicationSummary.id}">
+                            <label th:if="${applicationSummary.applicationFundingDecisionIsChangeable()}" class="block-label selection-button-checkbox" th:for="'app-row-' + ${applicationSummary.id}">
                                 <input data-switches-button-status="[name=write-an-send-email]" type="checkbox" class="app-row-select row-successful" th:field="*{ids[__${stat.index}__]}" th:value="${applicationSummary.id}" aria-labelledby="select-applications-label" th:id="'app-row-' + ${applicationSummary.id}"/>
                                 <span class="invisible">Select application</span>
                             </label>
+                            <th:block th:unless="${applicationSummary.applicationFundingDecisionIsChangeable()}">
+                                -
+                            </th:block>
                         </td>
                         <td th:text="${applicationSummary.id}">194731</td>
                         <td th:text="${applicationSummary.name}">Machine learning in robots</td>
