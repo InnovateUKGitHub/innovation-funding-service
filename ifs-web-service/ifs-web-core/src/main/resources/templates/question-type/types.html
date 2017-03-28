@@ -135,8 +135,8 @@
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.name__}')} ? 'error'">
                     <label for="application_details-title">
-                        <span class="form-label form-label-bold">Project title</span>
-                        <th:block th:insert="question-type/form-elements :: form-hint (hint='Enter the full title of your project')" />
+                        <span class="form-label form-label-bold">Application title</span>
+                        <th:block th:insert="question-type/form-elements :: form-hint (hint='Enter the full title of your proposed project.')" />
                     </label>
                     <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.name')" />
                     <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
