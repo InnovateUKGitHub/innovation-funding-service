@@ -5,7 +5,7 @@ Dear ${notificationTarget.name},
 You are invited by ${sentByName} to participate in an application for grant funding from Innovate UK. You will be joining as part of the organisation ${inviteOrganisationName}. The application is for the competition ${competitionName}.
 ${leadApplicant} (${leadApplicantEmail}) is the lead applicant. If you have any queries, please contact them directly.
 
-Next steps
+Next steps:
 1) Review the invitation.
 2) Accept or reject the invitation.
 3) Sign in or create an account.
