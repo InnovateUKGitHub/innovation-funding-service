@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.model;
 
+import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.service.CategoryService;
 import org.innovateuk.ifs.application.service.CompetitionService;
@@ -9,6 +10,7 @@ import org.innovateuk.ifs.assessment.viewmodel.AssessmentFeedbackViewModel;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
@@ -87,7 +89,7 @@ public class AssessmentFeedbackModelPopulator {
                 question.getName(),
                 question.getAssessorMaximumScore(),
                 applicantResponseValue,
-                assessmentFormInputs,
+                formatGuidanceScores(assessmentFormInputs),
                 scoreFormInputExists,
                 scopeFormInputExists,
                 appendixDetails != null,
@@ -124,5 +126,15 @@ public class AssessmentFeedbackModelPopulator {
 
     private boolean hasFormInputWithType(List<FormInputResource> formInputs, FormInputType type) {
         return formInputs.stream().anyMatch(formInput -> type == formInput.getType());
+    }
+
+    private List<FormInputResource> formatGuidanceScores(List<FormInputResource> assessorInputs) {
+        for (FormInputResource input : assessorInputs) {
+            for (GuidanceRowResource row : input.getGuidanceRows()) {
+                row.setSubject(row.getSubject().replace(",", " to "));
+            }
+        }
+
+        return assessorInputs;
     }
 }
