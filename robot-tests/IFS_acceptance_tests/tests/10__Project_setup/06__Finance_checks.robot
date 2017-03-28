@@ -1193,7 +1193,7 @@ Confirming eligibility should show info on a readonly page for partner
     And the user should not see the element    id=rag-rating
     And the user should not see the checkbox    project-eligible
 
-Confirming eligibility should update on the finance checks page
+Confirming partner eligibility should update on the finance checks page
     [Documentation]    INFUND-4823, INFUND-7076
     [Tags]
     When the user clicks the button/link    link=Finance checks
