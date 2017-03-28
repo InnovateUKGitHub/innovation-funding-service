@@ -10,11 +10,13 @@
 
 <main id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to choose your organisation type',linkClass='link-back',linkUrl='/organisation/create/type/new-account-organisation-type',currentApplication=${currentApplication}" />
+    <th:block th:unless="${initialUserFlow}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to choose your organisation type',linkClass='link-back',linkUrl='/organisation/create/type/new-account-organisation-type',currentApplication=${currentApplication}" />
+    <th:block th:if="${initialUserFlow}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back ',linkClass='link-back',linkUrl='javascript:history.back()'" />
 
     <h1 class="heading-xlarge">
         <span class="heading-secondary">Create your account</span>
-        <th:block th:text="${organisationForm.organisationType.name}" />
+        <th:block th:if="${initialUserFlow}">Your organisation</th:block>>
+        <th:block th:unless="${initialUserFlow}" th:text="${organisationForm.organisationType.name}"/>
     </h1>
     <th:block th:if="${organisationForm.notResearch}">
         <div class="message-alert">
@@ -31,7 +33,8 @@
 
     <form th:action="@{/organisation/create/find-organisation}" th:object="${organisationForm}" method="POST" class="extra-margin">
         <fieldset>
-            <legend class="visuallyhidden" th:text="${organisationForm.organisationType.name} + ''">? organisation</legend>
+            <legend th:if="${initialUserFlow}">Your organisation</legend>
+            <legend th:unless="${initialUserFlow}" th:text="${organisationForm.organisationType.name}"/>
 
             <div th:class="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'form-group error' : 'form-group'">
                 <label class="form-label" for="org-name">
