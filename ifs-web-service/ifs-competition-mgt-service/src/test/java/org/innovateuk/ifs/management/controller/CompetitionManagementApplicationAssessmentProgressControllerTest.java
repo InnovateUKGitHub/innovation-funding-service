@@ -376,7 +376,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                                 .withName("Experimental development", "Infrastructure")
                                 .buildSet(2),
                         newInnovationAreaResource()
-                                .withName("Electronics, Sensors and photonics", "Agri Productivity")
+                                .withName("Electronics, Sensors and photonics", "Digital health")
                                 .buildSet(2),
                         newInnovationAreaResource()
                                 .withName("Manufacturing Readiness", "Offshore Renewable Energy")
