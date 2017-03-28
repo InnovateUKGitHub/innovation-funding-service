@@ -10,10 +10,10 @@ import java.util.Map;
 
 public class NotificationEmailsForm {
 
-    @NotEmpty (message="{validation.field.must.not.be.blank}")
+    @NotEmpty (message="{validation.manage.funding.notifications.title.required}")
     private String subject;
 
-    @NotEmpty(message="{validation.field.must.not.be.blank}")
+    @NotEmpty(message="{validation.manage.funding.notifications.message.required}")
     private String message;
 
     @NotEmpty(message="{validation.manage.funding.applications.no.application.selected}")
