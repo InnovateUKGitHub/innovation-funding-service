@@ -3,6 +3,7 @@ package org.innovateuk.ifs.registration.viewmodel;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 
 /**
  * View model for invited organisation confirmation
@@ -12,6 +13,7 @@ public class ConfirmOrganisationInviteOrganisationViewModel {
     private String organisationType;
     private String registrationName;
     private String registrationNumber;
+    private Long organisationTypeId;
     private String emailLeadApplicant;
     private AddressResource organisationAddress;
     private String registerUrl;
@@ -19,6 +21,7 @@ public class ConfirmOrganisationInviteOrganisationViewModel {
     public ConfirmOrganisationInviteOrganisationViewModel(ApplicationInviteResource inviteResource, OrganisationResource organisation, AddressResource organisationAddress, String registerUrl) {
         this.partOfOrganisation = inviteResource.getInviteOrganisationNameConfirmedSafe();
         this.organisationType = organisation.getOrganisationTypeName();
+        this.organisationTypeId = organisation.getOrganisationType();
         this.registrationName = organisation.getName();
         this.registrationNumber = organisation.getCompanyHouseNumber();
         this.emailLeadApplicant = inviteResource.getLeadApplicantEmail();
@@ -42,8 +45,8 @@ public class ConfirmOrganisationInviteOrganisationViewModel {
         return registrationNumber;
     }
 
-    public Boolean getRegistrationNumberNotEmpty() {
-        return !registrationNumber.isEmpty();
+    public Boolean getRegistrationNumberNotEmptyAndNotResearch() {
+        return !registrationNumber.isEmpty() && !OrganisationTypeEnum.isResearch(organisationTypeId);
     }
 
     public String getEmailLeadApplicant() {
