@@ -48,7 +48,7 @@ public class OverheadsHandler extends FinanceRowHandler {
             return "customRate";
         }
         else if(rateTypeName.equals(CUSTOM_AMOUNT.name())) {
-            return  "custom_amount";
+            return  "total";
         }
 
         return null;
