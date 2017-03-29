@@ -749,16 +749,17 @@ Proj finance can see the maximum research participation level
     Then the user should see the text in the element   css=.list-eligibility dt:nth-of-type(1)   Maximum research participation
     And the user should see the text in the element    css=.list-eligibility dd:nth-of-type(1)    50 %
     And the user should see the text in the element    css=.list-eligibility dt:nth-of-type(2)    Current research participation
-    And the user should see the text in the element    css=.list-eligibility dd:nth-of-type(2)    0.2 %
+    And the user should see the text in the element    css=.list-eligibility dd:nth-of-type(2)    66.71 %
     And the user should see the text in the page       Maximum research participation exceeded
     When the user clicks the button/link               link=Project finance overview
     Then the user should see the text in the element   css=.list-eligibility dt:nth-of-type(1)   Maximum research participation
     And the user should see the text in the element    css=.list-eligibility dd:nth-of-type(1)    50 %
     And the user should see the text in the element    css=.list-eligibility dt:nth-of-type(2)    Current research participation
-    And the user should see the text in the element    css=.list-eligibility dd:nth-of-type(2)    0.2 %
-    And the user should see the text in the page       The research participation levels of this project are within the required range.
+    And the user should see the text in the element    css=.list-eligibility dd:nth-of-type(2)    66.71 %
+    And the user should see the text in the page       Maximum research participation exceeded
+    And the user should see the text in the page       Please seek confirmation that the project is still eligible for funding.
     When the user clicks the button/link               link=Finance checks
-    And the user should not see the text in the page   Maximum research participation exceeded
+    And the user should see the text in the page        Maximum research participation exceeded
     [Teardown]    the user navigates to the page       ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
 
 
