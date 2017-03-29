@@ -60,9 +60,10 @@ public class ApplicationTeamManagementController {
                                         @RequestParam(name = "organisation") long organisationId,
                                         @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                         @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form) {
-        model.addAttribute("model", applicationTeamManagementModelPopulator.populateModelByOrganisationId(applicationId, organisationId,
-                loggedInUser.getId()));
-        addExistingApplicantsToForm(model, form);
+        ApplicationTeamManagementViewModel viewModel = applicationTeamManagementModelPopulator.populateModelByOrganisationId(
+                applicationId, organisationId, loggedInUser.getId());
+        model.addAttribute("model", viewModel);
+        addExistingApplicantsToForm(viewModel, form);
         return "application-team/edit-org";
     }
 
@@ -72,9 +73,10 @@ public class ApplicationTeamManagementController {
                                                             @RequestParam(name = "inviteOrganisation") long inviteOrganisationId,
                                                             @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                                             @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form) {
-        model.addAttribute("model", applicationTeamManagementModelPopulator.populateModelByInviteOrganisationId(applicationId, inviteOrganisationId,
-                loggedInUser.getId()));
-        addExistingApplicantsToForm(model, form);
+        ApplicationTeamManagementViewModel viewModel = applicationTeamManagementModelPopulator.populateModelByInviteOrganisationId(
+                applicationId, inviteOrganisationId, loggedInUser.getId());
+        model.addAttribute("model", viewModel);
+        addExistingApplicantsToForm(viewModel, form);
         return "application-team/edit-org";
     }
 
@@ -271,10 +273,9 @@ public class ApplicationTeamManagementController {
         });
     }
 
-    private void addExistingApplicantsToForm(Model model, ApplicationTeamUpdateForm form) {
-        ApplicationTeamManagementViewModel viewModel = (ApplicationTeamManagementViewModel) model.asMap().get("model");
+    // Detecting duplicate applicants when the form is submitted requires the pre-population of existing applicants for reference.
+    private void addExistingApplicantsToForm(ApplicationTeamManagementViewModel viewModel, ApplicationTeamUpdateForm form) {
         List<ApplicationTeamManagementApplicantRowViewModel> applicants = viewModel.getApplicants();
-
         form.setExistingApplicants(simpleMap(applicants, row -> row.getEmail()));
     }
 }

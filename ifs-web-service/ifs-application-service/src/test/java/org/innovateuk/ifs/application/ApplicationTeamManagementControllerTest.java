@@ -81,6 +81,9 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
                 new ApplicationTeamManagementApplicantRowViewModel("Steve Smith", "steve.smith@empire.com", true, false, false),
                 new ApplicationTeamManagementApplicantRowViewModel(applicationInviteId, "Paul Davidson", "paul.davidson@empire.com", false, false, true));
 
+        ApplicationTeamUpdateForm expectedForm = new ApplicationTeamUpdateForm();
+        expectedForm.setExistingApplicants(asList(expectedApplicants.get(0).getEmail(), expectedApplicants.get(1).getEmail()));
+
         ApplicationTeamManagementViewModel expectedViewModel = new ApplicationTeamManagementViewModel(
                 applicationResource.getId(),
                 "Application name",
@@ -95,6 +98,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         mockMvc.perform(get("/application/{applicationId}/team/update?organisation={organisationId}", applicationResource.getId(), expectedOrganisation.getId()))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedViewModel))
+                .andExpect(model().attribute("form", expectedForm))
                 .andExpect(view().name("application-team/edit-org"));
 
         InOrder inOrder = inOrder(applicationService, inviteOrganisationRestService, userService, inviteRestService);
@@ -122,6 +126,9 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
                 new ApplicationTeamManagementApplicantRowViewModel(applicationInviteId1, "Jessica Doe", "jessica.doe@ludlow.com", false, false, true),
                 new ApplicationTeamManagementApplicantRowViewModel(applicationInviteId2, "Ryan Dell", "ryan.dell@ludlow.com", false, true, true));
 
+        ApplicationTeamUpdateForm expectedForm = new ApplicationTeamUpdateForm();
+        expectedForm.setExistingApplicants(asList(expectedApplicants.get(0).getEmail(), expectedApplicants.get(1).getEmail()));
+
         ApplicationTeamManagementViewModel expectedViewModel = new ApplicationTeamManagementViewModel(
                 applicationResource.getId(),
                 "Application name",
@@ -136,6 +143,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         mockMvc.perform(get("/application/{applicationId}/team/update?organisation={organisationId}", applicationResource.getId(), expectedOrganisation.getId()))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedViewModel))
+                .andExpect(model().attribute("form", expectedForm))
                 .andExpect(view().name("application-team/edit-org"));
 
         InOrder inOrder = inOrder(applicationService, inviteOrganisationRestService, userService, inviteRestService);
@@ -163,6 +171,9 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
                 new ApplicationTeamManagementApplicantRowViewModel(applicationInviteId1, "Jessica Doe", "jessica.doe@ludlow.com", false, false, false),
                 new ApplicationTeamManagementApplicantRowViewModel(applicationInviteId2, "Ryan Dell", "ryan.dell@ludlow.com", false, true, false));
 
+        ApplicationTeamUpdateForm expectedForm = new ApplicationTeamUpdateForm();
+        expectedForm.setExistingApplicants(asList(expectedApplicants.get(0).getEmail(), expectedApplicants.get(1).getEmail()));
+
         ApplicationTeamManagementViewModel expectedViewModel = new ApplicationTeamManagementViewModel(
                 applicationResource.getId(),
                 "Application name",
@@ -177,6 +188,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         mockMvc.perform(get("/application/{applicationId}/team/update?organisation={organisationId}", applicationResource.getId(), expectedOrganisation.getId()))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedViewModel))
+                .andExpect(model().attribute("form", expectedForm))
                 .andExpect(view().name("application-team/edit-org"));
 
         InOrder inOrder = inOrder(applicationService, inviteOrganisationRestService, userService, inviteRestService);
@@ -203,6 +215,9 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
                 new ApplicationTeamManagementApplicantRowViewModel(applicationInviteId1, "Jessica Doe", "jessica.doe@ludlow.com", false, true, true),
                 new ApplicationTeamManagementApplicantRowViewModel(applicationInviteId2, "Ryan Dell", "ryan.dell@ludlow.com", false, true, true));
 
+        ApplicationTeamUpdateForm expectedForm = new ApplicationTeamUpdateForm();
+        expectedForm.setExistingApplicants(asList(expectedApplicants.get(0).getEmail(), expectedApplicants.get(1).getEmail()));
+
         ApplicationTeamManagementViewModel expectedViewModel = new ApplicationTeamManagementViewModel(
                 applicationResource.getId(),
                 "Application name",
@@ -217,6 +232,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         mockMvc.perform(get("/application/{applicationId}/team/update?inviteOrganisation={inviteOrganisationId}", applicationResource.getId(), inviteOrganisationResource.getId()))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedViewModel))
+                .andExpect(model().attribute("form", expectedForm))
                 .andExpect(view().name("application-team/edit-org"));
 
         InOrder inOrder = inOrder(applicationService, inviteOrganisationRestService, userService, inviteRestService);
