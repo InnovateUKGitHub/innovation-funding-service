@@ -146,7 +146,7 @@ Viability and eligibility sections both available
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Post a new query")
     Then the user should see the option in the drop-down menu    Viability    section
-    And the user should see the option in the drop-down menu    Eligibility    sectionnice :)
+    And the user should see the option in the drop-down menu    Eligibility    section
 
 Large pdf uploads not allowed
     [Documentation]    INFUND-4840
