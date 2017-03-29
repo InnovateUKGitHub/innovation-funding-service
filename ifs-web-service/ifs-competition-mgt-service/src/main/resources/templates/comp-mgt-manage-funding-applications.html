@@ -8,7 +8,7 @@
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main id="content" th:object="${form}">
+<main tabindex="-1" id="content" th:object="${form}">
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" />
     <h1 class="heading-xlarge">
                 <span class="heading-secondary"><th:block th:text="${model.competitionId}"/>: <th:block

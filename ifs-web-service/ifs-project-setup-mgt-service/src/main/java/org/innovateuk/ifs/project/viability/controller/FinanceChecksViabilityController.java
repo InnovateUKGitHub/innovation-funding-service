@@ -8,6 +8,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.resource.OrganisationSizeResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.finance.service.OrganisationDetailsRestService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.finance.resource.Viability;
@@ -52,10 +53,10 @@ public class FinanceChecksViabilityController {
     private OrganisationService organisationService;
 
     @Autowired
-    private ProjectFinanceService financeService;
+    private OrganisationDetailsRestService organisationDetailsService;
 
     @Autowired
-    private ApplicationService applicationService;
+    private ProjectFinanceService financeService;
 
     @Autowired
     private OrganisationSizeService organisationSizeService;
@@ -155,12 +156,12 @@ public class FinanceChecksViabilityController {
         String companyRegistrationNumber = organisation.getCompanyHouseNumber();
 
         Long headCount = null;
-        RestResult<Long> headCountResult = applicationService.getHeadCount(projectService.getById(projectId).getApplication());
+        RestResult<Long> headCountResult = organisationDetailsService.getHeadCount(projectService.getById(projectId).getApplication(), organisationId);
         if (headCountResult.isSuccess()) {
             headCount = headCountResult.getSuccessObject();
         }
         Long turnover = null;
-        RestResult<Long> turnOverResult = applicationService.getTurnover(projectService.getById(projectId).getApplication());
+        RestResult<Long> turnOverResult = organisationDetailsService.getTurnover(projectService.getById(projectId).getApplication(), organisationId);
         if (turnOverResult.isSuccess()) {
             turnover = turnOverResult.getSuccessObject();
         }
