@@ -10,7 +10,6 @@
 
 <main id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <th:block th:insert="fragments/layout :: header-sub" th:if="${#authentication} ? ${#authorization.expression('isAuthenticated()')} : ${false}" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/}" />
 
     <div class="grid-row">
         <div class="column-two-thirds">
