@@ -153,7 +153,7 @@ the user completes the funding section with funding level
     the user enters text to a text field    css=[name*=other_funding-securedDate]    12-2008
     the user enters text to a text field    css=[name*=other_funding-fundingAmount]    20000
     the user selects the checkbox    termsAgreed
-    the user clicks the button/link    jQuery=.button:contains("Mark as complete")
+    the user clicks the button/link    jQuery=button:contains("Mark as complete")
 
 the funding section has been reset including funding level
     [Arguments]    ${funding_level}

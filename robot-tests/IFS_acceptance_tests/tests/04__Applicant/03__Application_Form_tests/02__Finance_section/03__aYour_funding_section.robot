@@ -48,7 +48,7 @@ Other funding validations
     Then the user should not see the text in the page    This field cannot be left blank
     And the user should not see an error in the page
     And the user selects the checkbox    termsAgreed
-    And the user clicks the button/link    jQuery=.button:contains("Mark as complete")
+    And the user clicks the button/link    jQuery=button:contains("Mark as complete")
 
 If funding is complete. application details has a warning message
     [Documentation]    INFUND-6895
