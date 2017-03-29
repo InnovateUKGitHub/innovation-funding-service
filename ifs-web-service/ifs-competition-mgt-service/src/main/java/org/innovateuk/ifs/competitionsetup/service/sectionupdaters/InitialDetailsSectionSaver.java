@@ -73,7 +73,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
                 competition.setName(initialDetailsForm.getTitle());
 
                 if (shouldTryToSaveStartDate(initialDetailsForm)) {
-                    ZonedDateTime startDate = TimeZoneUtil.fromBritishSummerTime(initialDetailsForm.getOpeningDateYear(),
+                    ZonedDateTime startDate = TimeZoneUtil.fromUkTimeZone(initialDetailsForm.getOpeningDateYear(),
                             initialDetailsForm.getOpeningDateMonth(), initialDetailsForm.getOpeningDateDay());
                     competition.setStartDate(startDate);
 
@@ -143,7 +143,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
 			}
 		}
 
-	    MilestoneRowForm milestoneEntry = new MilestoneRowForm(MilestoneType.OPEN_DATE, TimeZoneUtil.toBritishSummerTime(openingDate));
+	    MilestoneRowForm milestoneEntry = new MilestoneRowForm(MilestoneType.OPEN_DATE, TimeZoneUtil.toUkTimeZone(openingDate));
 
 
         List<MilestoneResource> milestones = milestoneService.getAllMilestonesByCompetitionId(competitionId);
@@ -167,7 +167,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
         if("openingDate".equals(fieldName)) {
             try {
                 String[] dateParts = value.split("-");
-                ZonedDateTime startDate = TimeZoneUtil.fromBritishSummerTime(
+                ZonedDateTime startDate = TimeZoneUtil.fromUkTimeZone(
                         Integer.parseInt(dateParts[2]),
                         Integer.parseInt(dateParts[1]),
                         Integer.parseInt(dateParts[0]));

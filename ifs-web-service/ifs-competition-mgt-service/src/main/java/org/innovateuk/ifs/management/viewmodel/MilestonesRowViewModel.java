@@ -17,7 +17,7 @@ public class MilestonesRowViewModel {
 
     public MilestonesRowViewModel(MilestoneResource milestoneResource) {
         this.milestoneType = milestoneResource.getType();
-        this.dateTime = TimeZoneUtil.toBritishSummerTime(milestoneResource.getDate());
+        this.dateTime = TimeZoneUtil.toUkTimeZone(milestoneResource.getDate());
         if (this.dateTime != null) {
             this.passed = LocalDateTime.now().isAfter(dateTime);
         } else {

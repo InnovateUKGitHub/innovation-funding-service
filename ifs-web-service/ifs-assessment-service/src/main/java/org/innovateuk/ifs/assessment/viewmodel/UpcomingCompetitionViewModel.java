@@ -25,10 +25,10 @@ public class UpcomingCompetitionViewModel {
         this.competitionId = competitionResource.getId();
         this.competitionName = competitionResource.getName();
         this.competitionDescription = competitionResource.getDescription();
-        this.assessmentPeriodDateFrom = TimeZoneUtil.toBritishSummerTime(competitionResource.getAssessorAcceptsDate());
-        this.assessmentPeriodDateTo = TimeZoneUtil.toBritishSummerTime(competitionResource.getAssessorDeadlineDate());
+        this.assessmentPeriodDateFrom = TimeZoneUtil.toUkTimeZone(competitionResource.getAssessorAcceptsDate());
+        this.assessmentPeriodDateTo = TimeZoneUtil.toUkTimeZone(competitionResource.getAssessorDeadlineDate());
         this.assessorPay = competitionResource.getAssessorPay();
-        this.assessorBriefingDate = TimeZoneUtil.toBritishSummerTime(competitionResource.getAssessorBriefingDate());
+        this.assessorBriefingDate = TimeZoneUtil.toUkTimeZone(competitionResource.getAssessorBriefingDate());
     }
 
     public long getCompetitionId() {

@@ -56,7 +56,7 @@ public class MilestonesFormPopulator implements CompetitionSetupFormPopulator {
     }
 
     private MilestoneRowForm populateMilestoneFormEntries(MilestoneResource milestone) {
-        return new MilestoneRowForm(milestone.getType(), TimeZoneUtil.toBritishSummerTime(milestone.getDate()));
+        return new MilestoneRowForm(milestone.getType(), TimeZoneUtil.toUkTimeZone(milestone.getDate()));
     }
 }
 

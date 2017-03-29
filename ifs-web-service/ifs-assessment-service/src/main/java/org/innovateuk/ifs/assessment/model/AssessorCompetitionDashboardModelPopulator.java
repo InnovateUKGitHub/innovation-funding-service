@@ -54,8 +54,8 @@ public class AssessorCompetitionDashboardModelPopulator {
 
     public AssessorCompetitionDashboardViewModel populateModel(Long competitionId, Long userId) {
         CompetitionResource competition = competitionService.getById(competitionId);
-        LocalDateTime acceptDeadline = TimeZoneUtil.toBritishSummerTime(competition.getAssessorAcceptsDate());
-        LocalDateTime submitDeadline = TimeZoneUtil.toBritishSummerTime(competition.getAssessorDeadlineDate());
+        LocalDateTime acceptDeadline = TimeZoneUtil.toUkTimeZone(competition.getAssessorAcceptsDate());
+        LocalDateTime submitDeadline = TimeZoneUtil.toUkTimeZone(competition.getAssessorDeadlineDate());
 
         Map<Boolean, List<AssessorCompetitionDashboardApplicationViewModel>> applicationsPartitionedBySubmitted =
                 getApplicationsPartitionedBySubmitted(userId, competitionId);

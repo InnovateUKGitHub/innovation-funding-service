@@ -30,7 +30,7 @@ public class CompetitionOverviewViewModel {
     }
 
     public LocalDateTime getCompetitionOpenDate() {
-        return TimeZoneUtil.toBritishSummerTime(competitionOpenDate);
+        return TimeZoneUtil.toUkTimeZone(competitionOpenDate);
     }
 
     public void setCompetitionOpenDate(ZonedDateTime competitionOpenDate) {
@@ -38,11 +38,11 @@ public class CompetitionOverviewViewModel {
     }
 
     public LocalDateTime getRegistrationCloseDate() {
-        return TimeZoneUtil.toBritishSummerTime(competitionCloseDate.minusDays(7));
+        return TimeZoneUtil.toUkTimeZone(competitionCloseDate.minusDays(7));
     }
 
     public LocalDateTime getCompetitionCloseDate() {
-        return TimeZoneUtil.toBritishSummerTime(competitionCloseDate);
+        return TimeZoneUtil.toUkTimeZone(competitionCloseDate);
     }
 
     public void setCompetitionCloseDate(ZonedDateTime competitionCloseDate) {

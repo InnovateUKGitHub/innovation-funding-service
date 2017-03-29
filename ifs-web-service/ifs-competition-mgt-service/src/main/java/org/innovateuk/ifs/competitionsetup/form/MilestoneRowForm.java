@@ -169,9 +169,9 @@ public class MilestoneRowForm {
 
         if (day != null && month != null && year != null){
             if ( time != null && isTimeOption()) {
-                return TimeZoneUtil.fromBritishSummerTime(year, month, day, time.getHour());
+                return TimeZoneUtil.fromUkTimeZone(year, month, day, time.getHour());
             } else {
-                return TimeZoneUtil.fromBritishSummerTime(year, month, day);
+                return TimeZoneUtil.fromUkTimeZone(year, month, day);
             }
         } else {
             return null;

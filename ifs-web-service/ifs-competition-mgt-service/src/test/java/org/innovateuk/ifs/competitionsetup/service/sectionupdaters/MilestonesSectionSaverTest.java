@@ -130,7 +130,7 @@ public class MilestonesSectionSaverTest {
         LinkedMap<String, MilestoneRowForm>  milestoneList = new LinkedMap<>();
 
         resources.forEach(milestoneResource -> {
-            MilestoneRowForm milestone = new MilestoneRowForm(milestoneResource.getType(), TimeZoneUtil.toBritishSummerTime(milestoneResource.getDate()));
+            MilestoneRowForm milestone = new MilestoneRowForm(milestoneResource.getType(), TimeZoneUtil.toUkTimeZone(milestoneResource.getDate()));
             milestoneList.put(milestoneResource.getType().name(), milestone);
         });
 

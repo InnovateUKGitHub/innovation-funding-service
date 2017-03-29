@@ -30,7 +30,7 @@ import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.TimeZoneUtil.fromBritishSummerTime;
-import static org.innovateuk.ifs.util.TimeZoneUtil.toBritishSummerTime;
+import static org.innovateuk.ifs.util.TimeZoneUtil.toUkTimeZone;
 
 /**
  * Competition setup section saver for the milestones section.
@@ -141,7 +141,7 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
             year = Integer.parseInt(dateParts[2]);
 
             if(null != currentDate) {
-                hour = toBritishSummerTime(milestone.getDate()).getHour();
+                hour = toUkTimeZone(milestone.getDate()).getHour();
             }
         }
 
@@ -149,7 +149,7 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
             return asList(fieldError(fieldName, fieldName.toString(), "error.milestone.invalid"));
         }
         else {
-            milestone.setDate(fromBritishSummerTime(year, month, day, hour));
+            milestone.setDate(fromUkTimeZone(year, month, day, hour));
         }
 
         return Collections.emptyList();

@@ -68,7 +68,7 @@ public class DatesViewModelPopulator extends AbstractPublicContentViewModelPopul
 
     private DateViewModel mapMilestoneToDateViewModel(MilestoneResource milestoneResource) {
         DateViewModel dateViewModel = new DateViewModel();
-        dateViewModel.setDateTime(TimeZoneUtil.toBritishSummerTime(milestoneResource.getDate()));
+        dateViewModel.setDateTime(TimeZoneUtil.toUkTimeZone(milestoneResource.getDate()));
         switch (milestoneResource.getType()) {
             case OPEN_DATE:
                 dateViewModel.setContent("Competition opens");
