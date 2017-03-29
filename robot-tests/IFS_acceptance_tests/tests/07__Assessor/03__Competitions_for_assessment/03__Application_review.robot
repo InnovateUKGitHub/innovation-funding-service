@@ -94,6 +94,20 @@ Application questions should be scorable
     And The user should see the text in the page    How does financial support from Innovate UK
     And the user should see the text in the page    This is the applicant response for adding value.
     Then The user should see the element    jQuery=label:contains(Question score)
+    [Teardown]    the user clicks the button/link    link=Back to your assessment overview
+
+Appendix can be opened on the question view
+    [Documentation]
+    [Tags]
+    Given the user should see the element    jQuery=a:contains("products-and-services-personalised-technical-approach.pdf")
+    And the user should see the element    jQuery=a:contains("products-and-services-personalised-innovation.pdf")
+    And the user should see the element    jQuery=a:contains("products-and-services-personalised-project-team.pdf")
+    When the user clicks the button/link    jQuery=a:contains("6. Innovation")
+    And the user clicks the button/link    jQuery=a:contains("products-and-services-personalised-innovation.pdf")
+    Then the user should not see an error in the page
+    And the user goes back to the previous page
+    And the user downloads the file    ${assessor_credentials["email"]}    ${server}/assessment/130/question/122    ${DOWNLOAD_FOLDER}/appendix.pdf
+    [Teardown]    remove the file from the operating system    appendix.pdf
 
 Scope: Status in the overview is updated
     [Documentation]    INFUND-1483
