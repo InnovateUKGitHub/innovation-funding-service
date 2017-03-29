@@ -291,4 +291,78 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         assertTrue(response.getFailure().is(new Error(COMPETITION_CANNOT_RELEASE_FEEDBACK)));
         assertEquals(CompetitionStatus.ASSESSOR_FEEDBACK, competition.getCompetitionStatus());
     }
+
+    @Test
+    public void manageInformState() throws Exception {
+        Long competitionId = 1L;
+        List<Milestone> milestones = newMilestone()
+                .withDate(LocalDateTime.now().minusDays(1))
+                .withType(OPEN_DATE,
+                        SUBMISSION_DATE,
+                        ALLOCATE_ASSESSORS,
+                        ASSESSORS_NOTIFIED,
+                        ASSESSMENT_CLOSED,
+                        ASSESSMENT_PANEL,
+                        PANEL_DATE,
+                        FUNDERS_PANEL)
+                .build(9);
+        milestones.addAll(newMilestone()
+                .withDate(LocalDateTime.now().plusDays(1))
+                .withType(RELEASE_FEEDBACK)
+                .build(1));
+
+        Competition competition = newCompetition().withSetupComplete(true)
+                .withMilestones(milestones)
+                .build();
+
+        CompetitionFundedKeyStatisticsResource keyStatistics = new CompetitionFundedKeyStatisticsResource();
+        keyStatistics.setApplicationsAwaitingDecision(0);
+        keyStatistics.setApplicationsSubmitted(5);
+        keyStatistics.setApplicationsNotifiedOfDecision(5);
+
+        when(competitionRepositoryMock.findById(competitionId)).thenReturn(competition);
+        when(competitionKeyStatisticsServiceMock.getFundedKeyStatisticsByCompetition(competitionId)).thenReturn(serviceSuccess(keyStatistics));
+
+        ServiceResult<Void> response = service.manageInformState(competitionId);
+
+        assertTrue(response.isSuccess());
+            assertEquals(CompetitionStatus.ASSESSOR_FEEDBACK, competition.getCompetitionStatus());
+    }
+
+    @Test
+    public void manageInformState_noStateChange() throws Exception {
+        Long competitionId = 1L;
+        List<Milestone> milestones = newMilestone()
+                .withDate(LocalDateTime.now().minusDays(1))
+                .withType(OPEN_DATE,
+                        SUBMISSION_DATE,
+                        ALLOCATE_ASSESSORS,
+                        ASSESSORS_NOTIFIED,
+                        ASSESSMENT_CLOSED,
+                        ASSESSMENT_PANEL,
+                        PANEL_DATE,
+                        FUNDERS_PANEL)
+                .build(9);
+        milestones.addAll(newMilestone()
+                .withDate(LocalDateTime.now().plusDays(1))
+                .withType(RELEASE_FEEDBACK)
+                .build(1));
+
+        Competition competition = newCompetition().withSetupComplete(true)
+                .withMilestones(milestones)
+                .build();
+
+        CompetitionFundedKeyStatisticsResource keyStatistics = new CompetitionFundedKeyStatisticsResource();
+        keyStatistics.setApplicationsAwaitingDecision(0);
+        keyStatistics.setApplicationsSubmitted(5);
+        keyStatistics.setApplicationsNotifiedOfDecision(4);
+
+        when(competitionRepositoryMock.findById(competitionId)).thenReturn(competition);
+        when(competitionKeyStatisticsServiceMock.getFundedKeyStatisticsByCompetition(competitionId)).thenReturn(serviceSuccess(keyStatistics));
+
+        ServiceResult<Void> response = service.manageInformState(competitionId);
+
+        assertTrue(response.isSuccess());
+        assertEquals(CompetitionStatus.FUNDERS_PANEL, competition.getCompetitionStatus());
+    }
 }
