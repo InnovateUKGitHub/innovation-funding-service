@@ -550,7 +550,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
     }
 
     @Test
-    public void testApproveSignedGOLFailure() throws Exception {
+    public void testApproveSignedGOLFailureLowerCaseEnum() throws Exception {
         Long competitionId = 1L;
         Long projectId = 123L;
         Long applicationId = 789L;
@@ -586,7 +586,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Pr
         when(projectService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
 
 
-        MvcResult result = mockMvc.perform(post("/project/" + projectId + "/grant-offer-letter/signed/" + ApprovalType.APPROVED)).
+        MvcResult result = mockMvc.perform(post("/project/" + projectId + "/grant-offer-letter/signed/" + ApprovalType.APPROVED.toString().toLowerCase())).
                 andExpect(view().name("project/grant-offer-letter-send")).
                 andReturn();
 

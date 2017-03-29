@@ -114,7 +114,7 @@ invite a new academic
     [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
     guest user log-in    ${EMAIL_LEAD}    ${correct_password}
     the user clicks the button/link    link=${application_name}
-    the user clicks the button/link    link=view and add participants to your application
+    the user clicks the button/link    link=view team members and add collaborators
     the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
     the user clicks the button/link    jQuery=.button:contains("Add additional partner organisation")
     the user enters text to a text field    name=organisations[1].organisationName    university of liverpool
@@ -169,16 +169,11 @@ The user should see the text in the element
     [Arguments]    ${element}    ${text}
     Wait Until Element Is Visible Without Screenshots    ${element}
     Wait Until Element Contains Without Screenshots    ${element}    ${text}
-    Page Should Not Contain    Error
-    Page Should Not Contain    Page or resource not found
-    Page Should Not Contain    You do not have the necessary permissions for your request
-    Page Should Not Contain    something went wrong
+    the user should not see an error in the page
 
 The user should not see the text in the element
     [Arguments]    ${element}    ${text}
     Wait Until Element Is Visible Without Screenshots    ${element}
     Wait Until Element Does Not Contain Without Screenshots    ${element}    ${text}
-    Page Should Not Contain    Error
-    Page Should Not Contain    Page or resource not found
-    Page Should Not Contain    You do not have the necessary permissions for your request
-    Page Should Not Contain    something went wrong
+    the user should not see an error in the page
+

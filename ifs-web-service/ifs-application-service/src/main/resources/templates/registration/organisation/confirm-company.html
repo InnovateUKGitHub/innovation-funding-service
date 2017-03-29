@@ -8,12 +8,14 @@
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main id="content">
+<main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
 
     <h1 class="heading-large">Create your account</h1>
 
-    <p class="form-hint icon-info-small-blue">Your organisation must be UK based to receive funding from Innovate UK</p>
+    <div class="message-alert">
+        <p>Your organisation must be UK based to receive funding from Innovate UK.</p>
+    </div>
 
     <h2 class="heading-medium" th:text="${organisationForm.organisationType.name}"></h2>
 

@@ -2,9 +2,9 @@
 
 REGISTRY=docker-registry-default.apps.prod.ifs-test-clusters.com
 
-LDAP_VERSION=0.2.1
-IDP_VERSION=0.3.2
-SP_VERSION=0.3.2
+LDAP_VERSION=0.4.0
+IDP_VERSION=0.4.1
+SP_VERSION=0.4.0
 
 docker login -p $(oc whoami -t) -e unused -u unused ${REGISTRY}
 

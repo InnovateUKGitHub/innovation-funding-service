@@ -118,7 +118,7 @@ Verify the name of the new application
     And the user edits the competition title
     Then the user should see the text in the page    ${test_title}
     And the progress indicator should show 0
-    And the user clicks the button/link    link=view and add participants to your application
+    And the user clicks the button/link    link=view team members and add collaborators
     And the user should see the text in the page    Application team
     And the user should see the text in the page    View and manage your participants
     And the new application should be visible in the dashboard page
@@ -156,7 +156,7 @@ the new application should be visible in the dashboard page
     the user should see the text in the page    Application number:
 
 the user clicks the Not on company house link
-    the user clicks the button/link    name=not-in-company-house
+    the user clicks the button/link    jQuery=summary:contains("Enter details manually")
     the user clicks the button/link    name=manual-address
     The user enters text to a text field    id=addressForm.selectedPostcode.addressLine1    street
     The user enters text to a text field    id=addressForm.selectedPostcode.town    town
