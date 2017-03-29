@@ -36,14 +36,14 @@ Large message panel
     margin: 0;
   }
 
- 	@include media-down(mobile){
+ 	@include media-down(mobile) {
     padding: 20px 10px 20px 30px;
     background-position: 8px 50%;
     background-size: 16px 16px;
 
-  		p a {
-  			 margin-left: 0;
-  		}
+    p a {
+      margin-left: 0;
+    }
  	}
 
 }
