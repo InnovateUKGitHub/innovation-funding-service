@@ -108,7 +108,7 @@ public class CompetitionSetupApplicationController {
         if(competitionResource.isNonIfs()) {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
         }
-        return ifUserCanAccessEditPage(competitionResource, () -> getFinancePage(model, competitionResource, true, null));
+        return ifUserCanAccessEditPageMarkSectionAsIncomplete(competitionResource, () -> getFinancePage(model, competitionResource, true, null));
     }
 
     @RequestMapping(value = "/question/finance/edit", method = RequestMethod.POST)
@@ -146,7 +146,7 @@ public class CompetitionSetupApplicationController {
         if(competitionResource.isNonIfs()) {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
         }
-        return ifUserCanAccessEditPage(competitionResource, () -> getQuestionPage(model, competitionResource, questionId, true, null));
+        return ifUserCanAccessEditPageMarkSectionAsIncomplete(competitionResource, () -> getQuestionPage(model, competitionResource, questionId, true, null));
     }
 
     @RequestMapping(value = "/question", method = RequestMethod.POST, params = "question.type=ASSESSED_QUESTION")
@@ -204,7 +204,7 @@ public class CompetitionSetupApplicationController {
         if(competitionResource.isNonIfs()) {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
         }
-        return ifUserCanAccessEditPage(competitionResource, () ->  getDetailsPage(model, competitionResource, true, null));
+        return ifUserCanAccessEditPageMarkSectionAsIncomplete(competitionResource, () ->  getDetailsPage(model, competitionResource, true, null));
 
     }
 
@@ -283,11 +283,12 @@ public class CompetitionSetupApplicationController {
         model.addAttribute("editable", isEditable);
     }
 
-    private String ifUserCanAccessEditPage(CompetitionResource competition, Supplier<String> successAction) {
+    private String ifUserCanAccessEditPageMarkSectionAsIncomplete(CompetitionResource competition, Supplier<String> successAction) {
         if(CompetitionSetupSection.APPLICATION_FORM.preventEdit(competition)) {
             LOG.error(String.format("Competition with id %1$d cannot edit section %2$s: ", competition.getId(), CompetitionSetupSection.APPLICATION_FORM));
             return "redirect:/dashboard";
         } else {
+            competitionService.setSetupSectionMarkedAsIncomplete(competition.getId(), CompetitionSetupSection.APPLICATION_FORM);
             return successAction.get();
         }
     }
