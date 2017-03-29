@@ -1709,7 +1709,5 @@ Project finance user amends other costs details in eligibility for lead
     And the user should not see the element       jQuery=section:nth-of-type(7) button[name=save-eligibility]
 
 the user goes back to the initial page after having checked the attachment
-#    Sleep  7s
     the user should not see an error in the page
-    Select Window
-
+    Select Window    #this goes back to the initial page
