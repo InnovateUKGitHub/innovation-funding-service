@@ -290,13 +290,12 @@ public class RegistrationController {
 
     private void checkForExistingEmail(String email, BindingResult bindingResult) {
         if(!bindingResult.hasFieldErrors(EMAIL_FIELD_NAME) && StringUtils.hasText(email)) {
-            Optional<UserResource> existingUserSearch = userService.findUserByEmailForAnonymousUserFlow(email);
+            Optional<UserResource> existingUserSearch = userService.findUserByEmail(email);
             if (existingUserSearch.isPresent()) {
                 ValidationMessages.rejectValue(bindingResult, EMAIL_FIELD_NAME, "validation.standard.email.exists");
             }
         }
     }
-
 
     private void addEnvelopeErrorsToBindingResultErrors(List<Error> errors, BindingResult bindingResult) {
         errors.forEach(
