@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.finance.resource.cost;
 
 import org.innovateuk.ifs.finance.domain.FinanceRow;
-import org.innovateuk.ifs.project.finance.domain.CostCategory;
+import org.innovateuk.ifs.project.financecheck.domain.CostCategory;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -11,7 +11,7 @@ import static java.util.Arrays.asList;
 
 /**
  * TODO INFUND-5192
- * There is not currently a good way of generating {@link org.innovateuk.ifs.project.finance.domain.CostCategory} for academic partners in an extendable way.
+ * There is not currently a good way of generating {@link CostCategory} for academic partners in an extendable way.
  * This will need to be addressed, but in the meantime this enum hard codes the information.
  */
 public enum AcademicCostCategoryGenerator implements CostCategoryGenerator<AcademicCostCategoryGenerator> {
