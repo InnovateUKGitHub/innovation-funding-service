@@ -74,6 +74,8 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...               INFUND-7580 The participation levels of this project are within the required range
 ...
 ...               INFUND-8787 The Finance checks status in the external Project Setup dashboard.
+...
+...               INFUND-4846 Project finance team member I want to view a finance overview for the consortium
 
 Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 Suite Teardown    the user closes the browser
@@ -1287,78 +1289,106 @@ Project finance can approve academic eligibility
     And the user should not see the checkbox    project-eligible
     When the user clicks the button/link    link=Finance checks
 
-Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
-    [Documentation]    INFUND-4428
+Project finance user can view a finance overview for the consortium
+    [Documentation]    INFUND-4846
     [Tags]
-    [Setup]    Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
-    When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
-    And the user should see the element    jQuery=ul li.complete:nth-child(1)
-    And the user should see the text in the page    Successful application
-    And the user should see the element    jQuery=ul li.complete:nth-child(2)
-    And the user should see the element    jQuery=ul li.complete:nth-child(4)
-    And the user should see the element    jQuery=ul li.complete:nth-child(5)
-    And the user should see the element    jQuery=ul li.read-only:nth-child(6)
+    When the user clicks the button/link    link=Project finance overview
+    Then the user should see the element    jQuery=h1:contains("Finance overview")
+    And the user should see the element     jQuery=h3:contains("Overview")
+    And the user should see the element     jQuery=.table-overview th:nth-of-type(1):contains("Start date")
+    And the user should see the element     jQuery=.table-overview th:nth-of-type(2):contains("Duration")
+    And the user should see the element     jQuery=.table-overview th:nth-of-type(3):contains("Total project cost")
+    And the user should see the element     jQuery=.table-overview th:nth-of-type(4):contains("Grant applied for")
+    And the user should see the element     jQuery=.table-overview th:nth-of-type(5):contains("Other public sector funding")
+    And the user should see the element     jQuery=.table-overview th:nth-of-type(6):contains("Total % grant")
+    And the user should see the element     jQuery=.table-overview tr:nth-of-type(1) td:nth-of-type(1)  1 Oct 2020
 
-Status updates correctly for internal user's table
-     [Documentation]    INFUND-4049,INFUND-5543
-     [Tags]      HappyPath
-     [Setup]    log in as a different user   &{Comp_admin1_credentials}
-     When the user navigates to the page    ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION}/status
-     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok      # Project details
-     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.action      # MO
-     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status       # Bank details
-     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action     # Finance checks are actionable from the start-workaround for Private beta assessment
-     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status            # Spend Profile
-     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.waiting  # Other Docs
-     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(7).status          # GOL
+    And the user should see the element     jQuery=.table-overview tr:nth-of-type(1) td:nth-of-type(2)  3 months
+    And the user should see the element     jQuery=.table-overview tr:nth-of-type(1) td:nth-of-type(3)  £ 322,113
+    And the user should see the element     jQuery=.table-overview tr:nth-of-type(1) td:nth-of-type(4)  £ 91,157
+    And the user should see the element     jQuery=.table-overview tr:nth-of-type(1) td:nth-of-type(5)  £ 6,170
+    And the user should see the element     jQuery=.table-overview tr:nth-of-type(1) td:nth-of-type(6)  28%
 
-Other internal users do not have access to Finance checks
-    [Documentation]    INFUND-4821
-    [Tags]    HappyPath
-    [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
-    # This is added to HappyPath because CompAdmin should NOT have access to FC page
-    Then the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check    You do not have the necessary permissions for your request
-
-Finance contact can access the external view of the finance checks page
-    [Documentation]    INFUND-7573, INFUND 8787
-    [Tags]    HappyPath
-    [Setup]    Log in as a different user    ${test_mailbox_one}+fundsuccess@gmail.com    Passw0rd
-    Given the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
-    Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
-    And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
-    When the user clicks the button/link    link=Finance checks
-    And the user should not see an error in the page
-    And the user should see the text in the page   The finance checks have been completed and your finances approved.
-
-Lead-Partner can view finance checks page
-    [Documentation]    INFUND-7573, INFUND 8787
+Project finance user can view Finance summaries for the consortium
+    [Documentation]    INFUND-4846
     [Tags]
-    [Setup]    Log in as a different user   steve.smith@empire.com    Passw0rd
-    When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
-    Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
-    And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
-    Then the user clicks the button/link     link=Finance checks
-    And the user should see the text in the page   The finance checks have been completed and your finances approved.
+    Given the user should see the element  jQuery=h3:contains("Finance summaries")
+    Then the user should see the element
 
-Academic user can view Finance checks page
-    [Documentation]     INFUND-8787
-    [Tags]
-    Given log in as a different user    pete.tom@egg.com    ${short_password}
-    When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
-    Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
-    And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
-    Then the user clicks the button/link    link=Finance checks
-    And the user should see the text in the page   The finance checks have been completed and your finances approved.
 
-Non Lead Partner can view Finance checks page
-    [Documentation]     INFUND-8787
-    [Tags]
-    Given log in as a different user    jessica.doe@ludlow.co.uk    ${short_password}
-    When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
-    Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
-    And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
-    Then the user clicks the button/link    link=Finance checks
-    And the user should see the text in the page   The finance checks have been completed and your finances approved.
+
+#Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
+#    [Documentation]    INFUND-4428
+#    [Tags]
+#    [Setup]    Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
+#    When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
+#    And the user should see the element    jQuery=ul li.complete:nth-child(1)
+#    And the user should see the text in the page    Successful application
+#    And the user should see the element    jQuery=ul li.complete:nth-child(2)
+#    And the user should see the element    jQuery=ul li.complete:nth-child(4)
+#    And the user should see the element    jQuery=ul li.complete:nth-child(5)
+#    And the user should see the element    jQuery=ul li.read-only:nth-child(6)
+#
+#Status updates correctly for internal user's table
+#     [Documentation]    INFUND-4049,INFUND-5543
+#     [Tags]      HappyPath
+#     [Setup]    log in as a different user   &{Comp_admin1_credentials}
+#     When the user navigates to the page    ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION}/status
+#     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok      # Project details
+#     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.action      # MO
+#     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status       # Bank details
+#     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action     # Finance checks are actionable from the start-workaround for Private beta assessment
+#     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status            # Spend Profile
+#     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.waiting  # Other Docs
+#     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(7).status          # GOL
+#
+#Other internal users do not have access to Finance checks
+#    [Documentation]    INFUND-4821
+#    [Tags]    HappyPath
+#    [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
+#    # This is added to HappyPath because CompAdmin should NOT have access to FC page
+#    Then the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check    You do not have the necessary permissions for your request
+#
+#Finance contact can access the external view of the finance checks page
+#    [Documentation]    INFUND-7573, INFUND 8787
+#    [Tags]    HappyPath
+#    [Setup]    Log in as a different user    ${test_mailbox_one}+fundsuccess@gmail.com    Passw0rd
+#    Given the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
+#    Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
+#    And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
+#    When the user clicks the button/link    link=Finance checks
+#    And the user should not see an error in the page
+#    And the user should see the text in the page   The finance checks have been completed and your finances approved.
+#
+#Lead-Partner can view finance checks page
+#    [Documentation]    INFUND-7573, INFUND 8787
+#    [Tags]
+#    [Setup]    Log in as a different user   steve.smith@empire.com    Passw0rd
+#    When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
+#    Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
+#    And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
+#    Then the user clicks the button/link     link=Finance checks
+#    And the user should see the text in the page   The finance checks have been completed and your finances approved.
+#
+#Academic user can view Finance checks page
+#    [Documentation]     INFUND-8787
+#    [Tags]
+#    Given log in as a different user    pete.tom@egg.com    ${short_password}
+#    When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
+#    Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
+#    And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
+#    Then the user clicks the button/link    link=Finance checks
+#    And the user should see the text in the page   The finance checks have been completed and your finances approved.
+#
+#Non Lead Partner can view Finance checks page
+#    [Documentation]     INFUND-8787
+#    [Tags]
+#    Given log in as a different user    jessica.doe@ludlow.co.uk    ${short_password}
+#    When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
+#    Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
+#    And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
+#    Then the user clicks the button/link    link=Finance checks
+#    And the user should see the text in the page   The finance checks have been completed and your finances approved.
 
 
 *** Keywords ***
