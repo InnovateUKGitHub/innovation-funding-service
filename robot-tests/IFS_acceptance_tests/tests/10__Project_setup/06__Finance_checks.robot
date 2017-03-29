@@ -286,32 +286,29 @@ Non finance contact can view query
     Given log in as a different user    steve.smith@empire.com    ${short_password}
     When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     Then the user should see the element    link=Finance checks
-    And the user should not see the element    flag status for finance checks
 
-Non finance contact or Lead-partner can view Finance checks status in the external Project Setup dashboard
+Finance contact can view Finance checks status in the external Project Setup dashboard
     [Documentation]     INFUND-8787
     [Tags]
     When the user should see the element    link=Finance checks
     Then the user should see the element    jQuery=ul li.require-action:nth-of-type(5):contains("We will review your financial information.")
     And the user should see the element     jQuery=ul li.require-action:nth-of-type(5):contains("To be completed")
 
-Non finance contact or First-Partner can view Finance checks status in the external Project Setup dashboard
+Academic user can view Finance checks status in the external Project Setup dashboard
     [Documentation]     INFUND-8787
     [Tags]
     Given log in as a different user    pete.tom@egg.com    ${short_password}
     When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     Then the user should see the element    link=Finance checks
-    And the user should not see the element    flag status for finance checks
     And the user should see the element     jQuery=ul li.waiting:nth-of-type(5):contains("We will review your financial information.")
     And the user should see the element     jQuery=ul li.waiting:nth-of-type(5):contains("Awaiting review")
 
-Non finance contact or Second-Partner can view Finance checks status in the external Project Setup dashboard
+Non Lead Partner can view Finance checks status in the external Project Setup dashboard
     [Documentation]     INFUND-8787
     [Tags]
     Given log in as a different user    jessica.doe@ludlow.co.uk    ${short_password}
     When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     Then the user should see the element    link=Finance checks
-    And the user should not see the element    flag status for finance checks
     And the user should see the element     jQuery=ul li.waiting:nth-of-type(5):contains("We will review your financial information.")
     And the user should see the element     jQuery=ul li.waiting:nth-of-type(5):contains("Awaiting review")
 
@@ -321,7 +318,6 @@ Finance checks section status updated for finance contact
     Given log in as a different user    ${test_mailbox_one}+fundsuccess@gmail.com    ${short_password}
     When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     Then the user should see the element    link=Finance checks
-    And the user should not see the element    flag status for finance checks
     And the user should see the element     jQuery=ul li.require-action:nth-of-type(5):contains("We will review your financial information.")
     And the user should see the element     jQuery=ul li.require-action:nth-of-type(5):contains("To be completed")
 
@@ -446,12 +442,6 @@ Respond to older query
     When the user enters text to a text field    css=.editor    this is some response text for other query
     When the user clicks the button/link    jQuery=.button:contains("Post response")
     When the user should not see the element    css=.editor
-
-Finance checks section status changes to hourglass
-    [Documentation]    INFUND-4843, INFUND 8787
-    [Tags]
-    When the user clicks the button/link    link=Project setup status
-    Then the user should not see the element    flag status for finance checks
 
 Queries raised column updates to 'view'
     [Documentation]    INFUND-4843
@@ -972,13 +962,13 @@ Project finance user can amend all sections of eligibility for lead
 
 Project Finance user can view three Radio Button Options when expanded Lead-Partner's "Overhead costs" section
     [Documentation]     INFUND-7577
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Overhead costs")
     Then the user should see the three Radio Button Options
 
 Project Finance user can Edit and Save Lead-Partner's 20%-of-labour-costs option
     [Documentation]     INFUND-7577
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     Then the user clicks the button/link    jQuery=label[data-target="overhead-default-percentage"]
     And the user should see the element     jQuery=section:nth-of-type(2) button span:contains("£ 12,120")
@@ -994,7 +984,7 @@ Project Finance user can Edit and Save Lead-Partner's 20%-of-labour-costs option
 
 Project Finance user can Edit and Save Lead-Partner's No-overhead-costs option
     [Documentation]     INFUND-7577
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     Then the user clicks the button/link    jQuery=label[data-target="overhead-none"]
     And the user should see the element     jQuery=h3:contains("No overhead costs")
@@ -1006,7 +996,7 @@ Project Finance user can Edit and Save Lead-Partner's No-overhead-costs option
 
 Project Finance user can Edit, enters invalid values and saves in Lead-Partner's Calculate-overheads option
     [Documentation]     INFUND-7577
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     Then the user clicks the button/link    jQuery=label[data-target="overhead-total"]
     And the user should see the element     jQuery=h3:contains("Uploaded spreadsheet")
@@ -1022,7 +1012,7 @@ Project Finance user can Edit, enters invalid values and saves in Lead-Partner's
 
 Project Finance user can provide overhead value for Lead-Partner manually instead of calculations from spreadsheet.
     [Documentation]     INFUND-7577
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    css=a.eligibility-0
     Then the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     And the user enters text to a text field     jQuery=section:nth-of-type(2) input[id^="cost-overheads"][id$="calculate"]  1954
@@ -1114,13 +1104,13 @@ Project finance user can amend all sections of eligibility for partner
 
 Project Finance user can view three Radio Button Options when expanded Partner's "Overhead costs" section
     [Documentation]     INFUND-7577
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Overhead costs")
     Then the user should see the three Radio Button Options
 
 Project Finance user can Edit and Save Partner's 20%-of-labour-costs option
     [Documentation]     INFUND-7577
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     Then the user clicks the button/link    jQuery=label[data-target="overhead-default-percentage"]
     And the user should see the element     jQuery=section:nth-of-type(2) button span:contains("£ 11,956")
@@ -1136,7 +1126,7 @@ Project Finance user can Edit and Save Partner's 20%-of-labour-costs option
 
 Project Finance user can Edit and Save Partner's No-overhead-costs option
     [Documentation]     INFUND-7577
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     Then the user clicks the button/link    jQuery=label[data-target="overhead-none"]
     And the user should see the element     jQuery=h3:contains("No overhead costs")
@@ -1148,7 +1138,7 @@ Project Finance user can Edit and Save Partner's No-overhead-costs option
 
 Project Finance user can Edit, enters invalid values and saves in Partner's Calculate-overheads option
     [Documentation]     INFUND-7577
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     Then the user clicks the button/link    jQuery=label[data-target="overhead-total"]
     And the user should see the element     jQuery=h3:contains("Uploaded spreadsheet")
@@ -1164,7 +1154,7 @@ Project Finance user can Edit, enters invalid values and saves in Partner's Calc
 
 Project Finance user can provide overhead value for Partner manually instead of calculations from spreadsheet.
     [Documentation]     INFUND-7577
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    css=a.eligibility-2
     Then the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     And the user enters text to a text field     jQuery=section:nth-of-type(2) input[id^="cost-overheads"][id$="calculate"]  9078
@@ -1289,45 +1279,39 @@ Finance contact can access the external view of the finance checks page
     Given the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
     And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
-    Then the user should see the element    link=Finance checks
     When the user clicks the button/link    link=Finance checks
     And the user should not see an error in the page
     And the user should see the text in the page   The finance checks have been completed and your finances approved.
 
-Non finance contact or Lead-Partner can view finance checks page
+Lead-Partner can view finance checks page
     [Documentation]    INFUND-7573, INFUND 8787
     [Tags]
     [Setup]    Log in as a different user   steve.smith@empire.com    Passw0rd
     When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
     And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
-    Then the user should see the element    link=Finance checks
-    And the user clicks the button/link     link=Finance checks
-    Then the user should see the text in the page   The finance checks have been completed and your finances approved.
+    Then the user clicks the button/link     link=Finance checks
+    And the user should see the text in the page   The finance checks have been completed and your finances approved.
 
-Non finance contact or First-Partner can view Finance checks status in the external Project Setup dashboard
+Academic user can view Finance checks page
     [Documentation]     INFUND-8787
     [Tags]
     Given log in as a different user    pete.tom@egg.com    ${short_password}
     When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
     And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
-    Then the user should see the element    link=Finance checks
-    And the user should not see the element    flag status for finance checks
-    When the user clicks the button/link     link=Finance checks
-    Then the user should see the text in the page   The finance checks have been completed and your finances approved.
+    Then the user clicks the button/link    link=Finance checks
+    And the user should see the text in the page   The finance checks have been completed and your finances approved.
 
-Non finance contact or Second-Partner can view Finance checks status in the external Project Setup dashboard
+Non Lead Partner can view Finance checks page
     [Documentation]     INFUND-8787
     [Tags]
     Given log in as a different user    jessica.doe@ludlow.co.uk    ${short_password}
     When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
     And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
-    Then the user should see the element    link=Finance checks
-    And the user should not see the element    flag status for finance checks
-    When the user clicks the button/link     link=Finance checks
-    Then the user should see the text in the page   The finance checks have been completed and your finances approved.
+    Then the user clicks the button/link    link=Finance checks
+    And the user should see the text in the page   The finance checks have been completed and your finances approved.
 
 *** Keywords ***
 the table row has expected values
