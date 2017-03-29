@@ -568,7 +568,7 @@ Project finance can still view both files in notes
     When the user clicks the button/link    jQuery=li:nth-of-type(2) a:contains("${valid_pdf}")
     Then the user should not see an error in the page
     And the user goes back to the initial page after having checked the attachment
-    And the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)    # Nuno NEEDED?
+    And the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
 
 Create new note server side validations
     [Documentation]    INFUND-4845
