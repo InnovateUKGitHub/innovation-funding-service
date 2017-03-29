@@ -69,6 +69,10 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...
 ...               INFUND-7578 Organisation details - Headcount and Turnover
 ...
+...               INFUND-7579 Maximum research participation exceeded
+...
+...               INFUND-7580 The participation levels of this project are within the required range
+...
 ...               INFUND-8787 The Finance checks status in the external Project Setup dashboard.
 
 Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
@@ -741,6 +745,39 @@ Project Finance user can view academic Jes form
     When the user clicks the button/link    link=jes-form80.pdf
     Then the user should not see an error in the page
     [Teardown]    the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+
+Proj finance can see the within limit research participation level
+    [Documentation]    INFUND-7580
+    [Tags]
+    When the user clicks the button/link  link=Project finance overview
+    Then the user should see the text in the element   css=.list-eligibility dt:nth-of-type(1)   Maximum research participation
+    And the user should see the text in the element    css=.list-eligibility dd:nth-of-type(1)    100 %
+    And the user should see the text in the element    css=.list-eligibility dt:nth-of-type(2)    Current research participation
+    And the user should see the text in the element    css=.list-eligibility dd:nth-of-type(2)    0.2 %
+    And the user should see the text in the page       The research participation levels of this project are within the required range.
+    When the user clicks the button/link               link=Finance checks
+    And the user should not see the text in the page   The research participation levels of this project are within the required range.
+
+Proj finance can see the maximum research participation level
+    [Documentation]    INFUND-7579
+    [Tags]
+    When the user navigates to the page                ${server}/project-setup-management/project/${ELBOW_GREASE_PROJECT_ID}/finance-check
+    Then the user should see the text in the element   css=.list-eligibility dt:nth-of-type(1)   Maximum research participation
+    And the user should see the text in the element    css=.list-eligibility dd:nth-of-type(1)    50 %
+    And the user should see the text in the element    css=.list-eligibility dt:nth-of-type(2)    Current research participation
+    And the user should see the text in the element    css=.list-eligibility dd:nth-of-type(2)    66.71 %
+    And the user should see the text in the page       Maximum research participation exceeded
+    When the user clicks the button/link               link=Project finance overview
+    Then the user should see the text in the element   css=.list-eligibility dt:nth-of-type(1)   Maximum research participation
+    And the user should see the text in the element    css=.list-eligibility dd:nth-of-type(1)    50 %
+    And the user should see the text in the element    css=.list-eligibility dt:nth-of-type(2)    Current research participation
+    And the user should see the text in the element    css=.list-eligibility dd:nth-of-type(2)    66.71 %
+    And the user should see the text in the page       Maximum research participation exceeded
+    And the user should see the text in the page       Please seek confirmation that the project is still eligible for funding.
+    When the user clicks the button/link               link=Finance checks
+    And the user should see the text in the page        Maximum research participation exceeded
+    [Teardown]    the user navigates to the page       ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+
 
 Viability checks are populated in the table
     [Documentation]    INFUND-4822, INFUND-7095
