@@ -6,11 +6,11 @@ import java.time.ZonedDateTime;
 
 public class TimeZoneUtil {
 
-    public static final ZoneId BST = ZoneId.of("Europe/London");
+    private static final ZoneId UK_TIME_ZONE = ZoneId.of("Europe/London");
 
     public static LocalDateTime toBritishSummerTime(ZonedDateTime zonedDateTime) {
         if (zonedDateTime != null) {
-            return zonedDateTime.withZoneSameInstant(BST).toLocalDateTime();
+            return zonedDateTime.withZoneSameInstant(UK_TIME_ZONE).toLocalDateTime();
         }
         return null;
     }
@@ -20,7 +20,7 @@ public class TimeZoneUtil {
     }
 
     public static ZonedDateTime fromBritishSummerTime(int year, int month, int day, int hours) {
-        return ZonedDateTime.of(year, month, day, hours, 0, 0, 0, BST);
+        return ZonedDateTime.of(year, month, day, hours, 0, 0, 0, UK_TIME_ZONE);
 
     }
 
