@@ -439,8 +439,7 @@ Project Manager can view partners' spend profiles
     And the user should not see the element         jQuery=.button:contains("Mark as complete")
     And the user goes back to the previous page
     When the user should see all spend profiles as complete
-    Then the user should see the element            jQuery=a:contains("Review spend profiles")
-    # Note that the above button cannot be cought with its complete text, due to a break
+    Then the user should see the element            jQuery=.button:contains("Review and send total project spend profile")
 
 Partners are not able to see the spend profile summary page
     [Documentation]    INFUND-3766
@@ -455,7 +454,7 @@ Project Manager can view combined spend profile
     [Tags]    HappyPath
     [Setup]    log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
     Given the user navigates to the page     ${external_spendprofile_summary}
-    When the user clicks the button/link     jQuery=.button:contains("Review spend profiles")
+    When the user clicks the button/link     jQuery=.button:contains("Review and send total project spend profile")
     Then the user should see the text in the page    This is the spend profile for your project.
     And the user should see the text in the page     Your submitted spend profile will be used as the base for your project spend over the following financial years.
 
@@ -507,7 +506,7 @@ Project Manager can send the project's spend profiles
     [Tags]    HappyPath
     [Setup]    log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
     Given the user navigates to the page     ${external_spendprofile_summary}
-    When the user clicks the button/link     jQuery=.button:contains("Review spend profiles")
+    When the user clicks the button/link     jQuery=.button:contains("Review and send total project spend profile")
     Then the user clicks the button/link     jQuery=.button:contains("Send project spend profile")
     And the user should see the element      jQuery=button:contains("Cancel")
     When the user clicks the button/link     jQuery=.modal-confirm-spend-profile-totals .button[value="Send"]
@@ -575,7 +574,7 @@ Comp Admin is able to see Spend Profile approval page
     And the user should see the text in the page  Innovation Lead
     And the user should see the text in the page  Peter Freeman
     When the user clicks the button/link    jQuery=#content .button.button.button-warning.large:contains("Reject")
-    Then the user should see the text in the page    Before taking this action please contact the project manager
+    Then the user should see the text in the page    You should contact the Project Manager to explain why the spend profile is being returned.
     When the user clicks the button/link    jQuery=.modal-reject-profile button:contains("Cancel")
     Then the user should not see an error in the page
     When the user selects the checkbox    approvedByLeadTechnologist
@@ -621,7 +620,7 @@ Project Finance is able to Reject Spend Profile
     Given the user navigates to the page     ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/spend-profile/approval
     And the user should see the element      jQuery=#content .button.button.button-warning.large:contains("Reject")
     When the user clicks the button/link     jQuery=#content .button.button.button-warning.large:contains("Reject")
-    Then the user should see the text in the page    Before taking this action please contact the project manager
+    Then the user should see the text in the page    You should contact the Project Manager to explain why the spend profile is being returned.
     When the user clicks the button/link    jQuery=.modal-reject-profile button:contains("Cancel")
     Then the user should not see an error in the page
     When the user clicks the button/link    jQuery=#content .button.button.button-warning.large:contains("Reject")
@@ -665,7 +664,7 @@ Lead partner no longer has the 'submitted' view of the spend profiles
     And the user clicks the button/link    link=Spend profile
     Then the user should not see the element    jQuery=.success-alert.extra-margin-bottom p:contains("All project spend profiles have been sent to Innovate UK.")
     And the user should see the text in the page    This overview shows the spend profile status of each organisation in your project.
-    And the user should see the element    jQuery=.button:contains("Review spend profiles")
+    And the user should see the element    jQuery=.button:contains("Review and send total project spend profile")
 
 Lead partner can return edit rights to other project partners
     [Documentation]    INFUND-6977
@@ -720,7 +719,7 @@ Lead partner can send the combined spend profile
     [Documentation]    INFUND-6977
     [Setup]    log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
     Given the user navigates to the page     ${external_spendprofile_summary}
-    When the user clicks the button/link     jQuery=.button:contains("Review spend profiles")
+    When the user clicks the button/link     jQuery=.button:contains("Review and send total project spend profile")
     Then the user clicks the button/link     jQuery=.button:contains("Send project spend profile")
     And the user should see the element      jQuery=button:contains("Cancel")
     When the user clicks the button/link     jQuery=.modal-confirm-spend-profile-totals .button[value="Send"]

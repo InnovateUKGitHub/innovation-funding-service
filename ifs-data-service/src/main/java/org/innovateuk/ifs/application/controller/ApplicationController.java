@@ -93,14 +93,4 @@ public class ApplicationController {
                 applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(name, competitionId, userId);
         return applicationResult.toPostCreateResponse();
     }
-
-    @RequestMapping("/turnover/{applicationId}")
-    public RestResult<Long> getTurnoverByApplicationId(@PathVariable("applicationId") final Long applicationId) {
-        return applicationService.getTurnoverByApplicationId(applicationId).toGetResponse();
-    }
-
-    @RequestMapping("/headcount/{applicationId}")
-    public RestResult<Long> getHeadCountByApplicationId(@PathVariable("applicationId") final Long applicationId) {
-        return applicationService.getHeadCountByApplicationId(applicationId).toGetResponse();
-    }
 }
