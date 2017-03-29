@@ -32,12 +32,12 @@ UPDATE category
 
 -- We've run out of areas to renane - insert the remaining.
 INSERT INTO category (`NAME`, `type`, parent_id, description, priority)
-SELECT "Preclinical technologies and drug target discovery", "INNOVATION_AREA", sector.id, "Technologies and approaches to improve and accelerate new medicines' development", 0
+SELECT "Preclinical technologies and drug target discovery", "INNOVATION_AREA", sector.id, "Technologies and approaches to improve and accelerate new medicine's development", 0
   FROM category AS sector
  WHERE sector.`NAME` = "Health and life sciences";
 
 INSERT INTO category (`NAME`, `type`, parent_id, description, priority)
-SELECT "Therapeutics and medicines development", "INNOVATION_AREA", sector.id, "Development of innovative pharmaceuticals and biopharmaceuticals, including vaccines and antimicrobials", 0
+SELECT "Therapeutic and medicine development", "INNOVATION_AREA", sector.id, "Development of innovative pharmaceuticals and biopharmaceuticals, including vaccines and antimicrobials", 0
   FROM category AS sector
  WHERE sector.`NAME` = "Health and life sciences";
 

@@ -77,7 +77,7 @@ public class CategoryControllerIntegrationTest extends BaseControllerIntegration
                 hasProperty("name", equalTo("Independent living and wellbeing")),
                 hasProperty("name", equalTo("Precision medicine")),
                 hasProperty("name", equalTo("Preclinical technologies and drug target discovery")),
-                hasProperty("name", equalTo("Therapeutics and medicines development"))
+                hasProperty("name", equalTo("Therapeutic and medicine development"))
         )));
     }
 }
