@@ -8,7 +8,7 @@
         <th:block th:insert="fragments/layout :: body-start"/>
         <th:block th:insert="fragments/layout :: global-header"/>
 
-        <main id="content">
+        <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start"/>
             <th:block th:insert="fragments/layout :: header-sub"
                       th:with="linkTitle='Application overview',linkClass='link-back',linkUrl=@{/application/{applicationId}(applicationId=${model.applicationId})}"/>
@@ -19,12 +19,12 @@
                 <h1 class="heading-xlarge">Application team</h1>
             </div>
 
-            <p>View and manage your contributors and partners in the application. If an individual is ‘pending’ they have not yet confirmed their role within this project. Click on a name to send this person an email.</p>
+            <p>View and manage your participants in the application. If an individual is 'pending' they have not yet joined the application.</p>
 
-            <p th:unless="${model.applicationCanBegin}">To change the lead applicant for this application please email Innovate UK <a href="mailto:support@innovateuk.gov.uk">support@innovateuk.gov.uk</a>.</p>
+            <p th:unless="${model.applicationCanBegin}">To change the lead applicant please email Innovate UK <a href="mailto:support@innovateuk.gov.uk">support@innovateuk.gov.uk</a>.</p>
 
             <div th:if="${model.applicationCanBegin}" class="message-alert">
-                <h2 class="heading-medium no-margin-bottom">As the lead applicant you can:</h2>
+                <h2 class="heading-small">As the lead applicant you can:</h2>
                 <ul class="list-bullet">
                     <li>add collaborating and contributing organisations and individuals</li>
                     <li>manage organisations and individuals</li>
@@ -33,21 +33,24 @@
             </div>
 
             <th:block th:each="organisation : ${model.organisations}">
-                <h2 class="heading-medium" th:text="${organisation.lead} ? ${organisation.name} + ', Lead organisation' : ${organisation.name}">Empire Ltd, Lead organisation</h2>
+                <h2 class="heading-medium">
+                    <th:block th:text="${organisation.name}">Organisation name</th:block>
+                    <th:block th:if="${organisation.lead}"> (Lead)</th:block>
+                </h2>
 
                 <table class="table-overflow">
                     <thead>
                         <tr>
                             <th class="width-30-percent" scope="col">Applicant</th>
                             <th class="width-50-percent" scope="col">Email</th>
-                            <th scope="col">Status</th>
+                            <th scope="col"><span class="visually-hidden">Additional details</span></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr th:each="applicant : ${organisation.applicants}">
                             <td th:text="${applicant.name}">Steve Smith</td>
                             <td th:text="${applicant.email}">steve.smith@empire.com</td>
-                            <td th:text="${applicant.lead} ? 'Lead' : (${applicant.pending} ? 'Pending' : '')">Lead</td>
+                            <td th:text="${applicant.lead} ? 'Lead' : (${applicant.pending} ? 'Invite pending' : '')">Lead</td>
                         </tr>
                     </tbody>
                 </table>

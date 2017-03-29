@@ -147,6 +147,8 @@ task buildDocker(type: Docker, dependsOn: build) {
     }
 }
 
+buildDocker.dependsOn prepareDockerFile
+
 asciidoctor {
     onlyIf { file(snippetsDir).exists() }
     dependsOn test

@@ -55,6 +55,7 @@
       })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
       ga('create', /*[[${GoogleAnalyticsTrackingID}]]*/, 'auto');
       ga('send', 'pageview');
+       ga('set', 'anonymizeIp', true);
     /*]]>*/
     </script>
 
@@ -117,7 +118,7 @@
         </div>
     </header>
 
-    <div class="grid-container phase-banner">
+    <div class="grid-container phase-banner" th:classappend="${fullwidth != null} ? 'full-width'">
       <p>
         <strong class="phase-tag">BETA</strong>
         <span>This is a new service – your <a href="mailto:IFSfeedback@innovateuk.gov.uk">feedback</a> will help us to improve it.</span>
@@ -172,17 +173,16 @@
                th:href="${linkUrl}"
                th:text="${linkTitle}" />
         </nav>
-        <div class="deadline" th:if="${currentCompetition != null}">Days left to submit&nbsp;&nbsp;
-            <th:block th:insert="fragments/elements :: pie-small" th:with="daysPercentage=${currentCompetition.getStartDateToEndDatePercentage()},daysLeft=${currentCompetition.getDaysLeft()}" />
-        </div>
+        <div class="deadline" th:if="${currentCompetition != null}">Days left to submit <span th:text="${currentCompetition.getDaysLeft()}"></span></div>
     </div>
 </th:block>
 
 
 <th:block th:fragment="header-sub-generic">
     <div class="sub-header">
-        <div class="deadline"><th:block th:text="${deadlineText}" />&nbsp;&nbsp;
-            <th:block th:insert="fragments/elements :: pie-small" th:with="daysPercentage=${daysPercentage},daysLeft=${daysLeft}" />
+        <div class="deadline">
+            <th:block th:text="${deadlineText}" />
+            <span th:text="${daysLeft}"></span>
         </div>
         <strong th:text="${title}" />
     </div>

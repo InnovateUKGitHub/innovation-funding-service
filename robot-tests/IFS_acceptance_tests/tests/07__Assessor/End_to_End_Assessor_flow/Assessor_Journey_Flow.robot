@@ -50,7 +50,6 @@ New assessor can login with the new account
 New assessor should have the correct innovation area
     [Documentation]    INFUND-8092
     When The user clicks the button/link    link=your skills
-    Then The user should see the text in the page    Emerging and enabling technologies
     And The user should see the text in the page    Emerging Technology
 
 CompAdmin should see Assessor's profile and Innovation Area
@@ -60,13 +59,12 @@ CompAdmin should see Assessor's profile and Innovation Area
     And the user clicks the button/link    jQuery=a:contains("Invite assessors to assess the competition")
     And the user clicks the button/link    link=Overview
     When the user clicks the button/link    link=E2E
-    Then the user should see the text in the page    Emerging and enabling technologies
     And the user should see the text in the page    Emerging Technology
 
 CompAdmin Invites assessor to assess an application
     [Setup]    The user clicks the button/link    link=My dashboard
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    And The user clicks the button/link    jQuery=a:contains("Assessor management - assignments")
+    And The user clicks the button/link    jQuery=a:contains("Assessor management: Assignments")
     And the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
     And the user clicks the button/link    jQuery=.pagination-label:contains(Next)
     And the user clicks the button/link    jQuery=.pagination-label:contains(Next)
@@ -79,13 +77,13 @@ CompAdmin Invites assessor to assess an application
 
 Assessor is notified by Email
     [Setup]    The guest user opens the browser
-    Given the user reads his email and clicks the link    ${test_mailbox_one}+AJE2E@gmail.com    Applications ready for assessment    You have been allocated applications
+    Given the user reads his email and clicks the link    ${test_mailbox_one}+AJE2E@gmail.com    Your applications for the competition    You have been allocated some applications
 
 Assessor accepts the invite for the Application
     When The user enters text to a text field    id=username    ${test_mailbox_one}+AJE2E@gmail.com
     And The user enters text to a text field    id=password    Passw0rd123
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
-    When The user clicks the button/link    Link=Rainfall
+    When The user clicks the button/link    Link=Park living
     And The user clicks the button/link    jQuery=button:contains("Accept")
     Then the user should be redirected to the correct page    ${Assessor_application_dashboard}
 
@@ -128,9 +126,6 @@ click the link assessor
 The user fills and submits the registration form
     When The user enters text to a text field    id=firstName    Tom
     And The user enters text to a text field    id=lastName    Fister
-    And the user selects the radio button    gender    gender2
-    And the user selects the radio button    ethnicity    ethnicity2
-    And the user selects the radio button    disability    disability2
     And the user enters text to a text field    id=phoneNumber    1234567891011
     And The user enters text to a text field    id=addressForm.postcodeInput    BS14NT
     And the user clicks the button/link    id=postcode-lookup

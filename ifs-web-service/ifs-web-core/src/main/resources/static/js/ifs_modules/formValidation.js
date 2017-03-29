@@ -206,10 +206,18 @@ IFS.core.formValidation = (function () {
       var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i // eslint-disable-line
       var errorMessage = IFS.core.formValidation.getErrorMessage(field, 'email')
 
-      var validEmail = re.test(email)
-      if (!validEmail) {
-        if (showMessage) { IFS.core.formValidation.setInvalid(field, errorMessage) }
-        return false
+      // check if email value exists to avoid invalid email message on empty fields
+      if (email) {
+        var validEmail = re.test(email)
+
+        // check if email address is invalid
+        if (!validEmail) {
+          if (showMessage) { IFS.core.formValidation.setInvalid(field, errorMessage) }
+          return false
+        } else {
+          if (showMessage) { IFS.core.formValidation.setValid(field, errorMessage) }
+          return true
+        }
       } else {
         if (showMessage) { IFS.core.formValidation.setValid(field, errorMessage) }
         return true

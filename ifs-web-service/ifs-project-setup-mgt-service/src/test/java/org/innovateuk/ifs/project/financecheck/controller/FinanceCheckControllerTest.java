@@ -3,137 +3,24 @@ package org.innovateuk.ifs.project.financecheck.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.builder.FileEntryResourceBuilder;
 import org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckResource;
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckState;
-import org.innovateuk.ifs.project.financecheck.form.FinanceCheckForm;
-import org.innovateuk.ifs.project.financecheck.viewmodel.FinanceCheckViewModel;
-import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
-import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.junit.Test;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.project.builder.CostGroupResourceBuilder.newCostGroupResource;
-import static org.innovateuk.ifs.project.builder.PartnerOrganisationResourceBuilder.newPartnerOrganisationResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.innovateuk.ifs.project.finance.builder.FinanceCheckProcessResourceBuilder.newFinanceCheckProcessResource;
-import static org.innovateuk.ifs.project.finance.builder.FinanceCheckResourceBuilder.newFinanceCheckResource;
-import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<FinanceCheckController> {
-    @Test
-    public void testView() throws Exception {
-        Long competitionId = 1L;
-        Long projectId = 123L;
-        Long organisationId = 456L;
-        Long applicationId = 789L;
-        Long financeFileEntry = 1L;
-
-        ProjectOrganisationCompositeId key = new ProjectOrganisationCompositeId(projectId, organisationId);
-        OrganisationResource organisationResource = newOrganisationResource().withId(organisationId)
-                .withOrganisationType(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId())
-                .withOrganisationTypeName("BUSINESS")
-                .build();
-        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).build();
-        ProjectResource projectResource = newProjectResource().withId(projectId).withApplication(applicationResource).build();
-        List<PartnerOrganisationResource> partnerOrganisationResources = newPartnerOrganisationResource().withProject(projectId).build(3);
-        ApplicationFinanceResource applicationFinanceResource = ApplicationFinanceResourceBuilder.newApplicationFinanceResource()
-                .withFinanceFileEntry(financeFileEntry)
-                .build();
-        FileEntryResource jesFileEntryResource = FileEntryResourceBuilder.newFileEntryResource().build();
-
-        when(applicationService.getById(applicationId)).thenReturn(newApplicationResource().withId(applicationId).withCompetition(competitionId).build());
-        when(projectService.getById(projectId)).thenReturn(projectResource);
-
-        when(organisationService.getOrganisationById(organisationId)).thenReturn(organisationResource);
-        when(financeCheckServiceMock.getByProjectAndOrganisation(key)).thenReturn(newFinanceCheckResource().build());
-        when(financeUtilMock.isUsingJesFinances(organisationResource.getOrganisationTypeName())).thenReturn(false);
-
-        when(financeCheckServiceMock.getFinanceCheckApprovalStatus(projectId, organisationId)).thenReturn(
-                newFinanceCheckProcessResource().
-                        withCanApprove(true).
-                        withState(FinanceCheckState.APPROVED).
-                        withInternalParticipant(newUserResource().withFirstName("Mr").withLastName("Approver").build()).
-                        withModifiedDate(LocalDateTime.of(2016, 10, 04, 12, 13, 14)).
-                        build());
-        when(partnerOrganisationServiceMock.getPartnerOrganisations(projectId)).thenReturn(serviceSuccess(partnerOrganisationResources));
-
-        when(financeService.getApplicationFinanceByApplicationIdAndOrganisationId(applicationResource.getId(), organisationId)).thenReturn(applicationFinanceResource);
-        when(financeService.getFinanceEntry(applicationFinanceResource.getFinanceFileEntry())).thenReturn(RestResult.restSuccess(jesFileEntryResource));
-
-        MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + organisationId)).
-                andExpect(view().name("project/financecheck/partner-project-eligibility")).
-                andReturn();
-
-        FinanceCheckViewModel financeCheckViewModel = (FinanceCheckViewModel) result.getModelAndView().getModel().get("model");
-        assertEquals(LocalDate.of(2016, 10, 04), financeCheckViewModel.getApprovalDate());
-        assertEquals("Mr Approver", financeCheckViewModel.getApproverName());
-        assertNull(financeCheckViewModel.getFinanceContactEmail());
-        assertNull(financeCheckViewModel.getFinanceContactName());
-        assertTrue(financeCheckViewModel.isFinanceChecksApproved());
-        assertFalse(financeCheckViewModel.isUsingJesFinances());
-        assertEquals(new FileDetailsViewModel(jesFileEntryResource), financeCheckViewModel.getJesFileDetails());
-
-        FinanceCheckForm form = (FinanceCheckForm) result.getModelAndView().getModel().get("form");
-        assertEquals(form.getCosts().size(), 0);
-    }
-
-    @Test
-    public void testUpdate() throws Exception {
-        Long projectId = 123L;
-        Long organisationId = 456L;
-        FinanceCheckResource financeCheckResource = newFinanceCheckResource().build();
-        when(financeCheckServiceMock.getByProjectAndOrganisation(new ProjectOrganisationCompositeId(projectId, organisationId))).thenReturn(financeCheckResource);
-        when(financeCheckServiceMock.update(financeCheckResource)).thenReturn(serviceSuccess());
-        mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + organisationId).
-                contentType(MediaType.APPLICATION_FORM_URLENCODED)).
-                andExpect(status().is3xxRedirection());
-    }
-
-    @Test
-    public void testApproveFinanceCheck() throws Exception {
-
-        FinanceCheckResource financeCheck = newFinanceCheckResource().
-                withCostGroup(newCostGroupResource().build()).
-                build();
-
-        when(financeCheckServiceMock.update(financeCheck)).thenReturn(serviceSuccess());
-        when(financeCheckServiceMock.approveFinanceCheck(123L, 456L)).thenReturn(serviceSuccess());
-        when(financeCheckServiceMock.getByProjectAndOrganisation(new ProjectOrganisationCompositeId(123L, 456L))).thenReturn(financeCheck);
-
-        mockMvc.perform(post("/project/{projectId}/finance-check/organisation/{organisationId}", 123L, 456L).
-                param("approve", "true"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/project/123/finance-check/organisation/456"));
-
-        verify(financeCheckServiceMock).update(financeCheck);
-        verify(financeCheckServiceMock).approveFinanceCheck(123L, 456L);
-    }
 
     @Test
     public void testDownloadJesFileWhenFinanceFileEntryNotPresent() throws Exception {
@@ -208,11 +95,6 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
         assertEquals("inline; filename=\"jes-file.pdf\"", response.getHeader("Content-Disposition"));
         assertEquals(10, response.getContentLength());
 
-    }
-
-    private <T extends Enum> T getEnumForIndex(Class<T> enums, int index) {
-        T[] enumConstants = enums.getEnumConstants();
-        return enumConstants[index % enumConstants.length];
     }
 
     @Override

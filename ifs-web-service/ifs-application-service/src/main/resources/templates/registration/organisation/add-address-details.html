@@ -8,20 +8,34 @@
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main id="content">
+<main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
 
-    <h1 class="heading-large">Create your account</h1>
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to ' + ${model.organisationTypeName} + ' organisation',
+        linkClass='link-back',linkUrl='/organisation/create/find-organisation'" />
 
-    <p class="form-hint icon-info-small-blue">Your organisation must be UK based to receive funding from Innovate UK</p>
+    <h1 class="heading-xlarge">
+        <span class="heading-secondary">Create your account</span>
+        Organisation address
+    </h1>
 
-    <h2 class="heading-medium" th:text="${organisationForm.organisationType.name} + ''">? Organisation</h2>
+    <div class="message-alert">
+        <p>
+            <th:block th:unless="${model.research}">
+                Your organisation must be UK based to receive funding from Innovate UK
+            </th:block>
+            <th:block th:if="${model.research}">
+                Your organisation must be registered Je-S to be a research organisation by Innovate UK
+            </th:block>
+        </p>
+    </div>
 
     <th:block th:insert="fragments/addresses :: organisation-details-minimal" />
 
     <form th:action="@{/organisation/create/selected-organisation/{organisationId}/{postcode}/{selectedPostcode}(organisationId=${organisationForm.searchOrganisationId}, postcode=${organisationForm.addressForm.postcodeInput}, selectedPostcode=${organisationForm.addressForm.selectedPostcodeIndex})}" th:object="${organisationForm}" method="POST">
         <input type="hidden" th:field="*{searchOrganisationId}" />
-        <h2 class="heading-medium">Address</h2>
+        <h2 class="heading-medium no-margin-bottom">Operating address</h2>
+        <p>This is the address that your organisation works from</p>
         <th:block th:insert="fragments/addresses :: company-address-details" th:with="form=${organisationForm}" />
 
         <button type="submit" name="save-organisation-details" class="button button-large extra-margin">Save organisation and continue</button>

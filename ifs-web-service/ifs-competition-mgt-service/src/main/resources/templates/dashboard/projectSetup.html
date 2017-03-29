@@ -8,13 +8,13 @@
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main id="content">
+<main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
 
     <form role="search" method="get" id="searchform" th:action="@{'/dashboard/search'}">
         <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${''})" />
     </form>
-    <th:block th:insert="competition/dashboard :: comp-dashboard-navigation (tab=${'projectSetup'}, counts=${counts})" />
+    <th:block th:insert="competition/dashboard :: comp-dashboard-navigation (selectedTab=${'projectSetup'}, counts=${counts})" />
 
     <section th:with="projectSetupComps=${competitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).PROJECT_SETUP)}">
         <h2 class="heading-medium"

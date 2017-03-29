@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Finance checks overview'" />
+</head>
+<body th:with="context='project-management'" class="finance-checks-overview">
+
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<main tabindex="-1" id="content">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/partner-organisation/{organisationId}/finance-checks(projectId=${project.id},organisationId=${organisation})}" />
+
+    <div class="page-title">
+        <p class="subtitle"><th:block th:text="${project.name}" /></p>
+        <h1 class="heading-xlarge">Finance overview</h1>
+    </div>
+    <p>This is the financial overview of all partners in this collaboration, each partner will be going through finance checks. The overview provides the progress of all partners through this section, as well as a view of their finances during review.</p>
+
+    <h3 class="heading-medium">Finance summaries</h3>
+    <p>This is the level of cost detail that the assessors will see during the assessment process.</p>
+
+    <th:block th:insert="project/financecheck/fragments/finance :: project-finance-summaries(summaries=${model.summaries})" />
+
+    <h3 class="heading-medium">Project cost breakdown</h3>
+
+    <th:block th:insert="project/financecheck/fragments/finance :: project-finance-cost-breakdown(breakdowns=${model.breakdown})" />
+
+
+
+</main>
+</body>
+</html>

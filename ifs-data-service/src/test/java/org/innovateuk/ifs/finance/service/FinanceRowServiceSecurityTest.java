@@ -435,6 +435,11 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
         }
 
         @Override
+        public ServiceResult<Double> getResearchParticipationPercentageFromProject(@P("projectId") Long projectId) {
+            return null;
+        }
+
+        @Override
         public ServiceResult<ApplicationFinanceResource> addCost(ApplicationFinanceResourceId applicationFinanceResourceId) {
             return null;
         }

@@ -1,21 +1,28 @@
 <#import "layout/default.html" as layout>
 <@layout.default>
   <p style="margin: 0 0 1em 0;">Dear ${notificationTarget.name},</p>
-  <p style="margin: 0 0 1em 0;">${leadApplicantTitle} ${leadApplicant} at ${leadOrganisation} has invited you/${inviteOrganisationName} to participate in their application for the ${competitionName} competition.</p>
-  <p style="margin: 0 0 1em 0;">If you have any queries, please contact the lead applicant ${leadApplicantEmail}.</p>
-  <p style="margin: 0 0 1em 0;">To accept the invitation please sign in or register using the link below.</p>
+    <p style="margin: 0 0 1em 0;">You are invited by ${sentByName} to participate in an application for grant funding from Innovate UK. You will be joining as part of the organisation ${inviteOrganisationName}. The application is for the competition <a href="${competitionUrl}">${competitionName}</a>.</p>
+  <p style="margin: 0 0 1em 0;">${leadApplicant} (<a href="mailto:${leadApplicantEmail}">${leadApplicantEmail}</a>) is the lead applicant. If you have any queries, please contact them directly.</p>
+  <p style="margin: 0 0 1em 0;"><strong>Next steps:</strong></p>
+  <ol>
+    <li>Review the invitation.</li>
+    <li>Accept or reject the invitation.</li>
+    <li>Sign in or create an account.</li>
+  </ol>
   <table style="padding-bottom: 2em" width="100%" border="0" cellspacing="0" cellpadding="0">
       <tr>
           <td>
               <table border="0" cellspacing="0" cellpadding="0">
                   <tr>
                       <td bgcolor="#EB7035" style="background: #00823b; color: #ffffff; text-decoration: none; padding: 10px 20px; border-bottom: 2px solid #003618; display: inline-block" align="center">
-                          <a href="${inviteUrl}" style="font-size: 19px; font-weight: normal; color: #ffffff; text-decoration: none; display: inline-block; font-family: arial, sans-serif;">Accept invitation</a>
+                          <a href="${inviteUrl}" style="font-size: 19px; font-weight: normal; color: #ffffff; text-decoration: none; display: inline-block; font-family: arial, sans-serif;">Review invitation</a>
                       </td>
                   </tr>
               </table>
           </td>
       </tr>
   </table>
+  <p style="margin: 0 0 1em 0;">Or copy and paste this URL into your browser: <a href="${inviteUrl}">${inviteUrl}</a></p>
+  <p style="margin: 0 0 1em 0;">Yours sincerely,</p>
   <@layout.senderHTML />
 </@layout.default>

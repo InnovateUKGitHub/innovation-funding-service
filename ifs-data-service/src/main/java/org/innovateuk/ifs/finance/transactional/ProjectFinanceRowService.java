@@ -56,9 +56,7 @@ public interface ProjectFinanceRowService {
     @PostAuthorize("hasPermission(returnObject, 'READ_PROJECT_FINANCE')")
     ServiceResult<ProjectFinanceResource> financeChecksDetails(Long projectId, Long organisationId);
 
-    @PreAuthorize("hasAuthority('project_finance')")
-    @SecuredBySpring(value = "READ", securedType = ProjectFinanceResource.class,
-            description = "Project Finance users can view financial overviews of Organisations on Projects")
+    @PreAuthorize("hasPermission(#projectId, 'READ_OVERVIEW')")
     ServiceResult<List<ProjectFinanceResource>> financeChecksTotals(Long projectId);
 
     @NotSecured(value = "This is not getting data from the database, just getting a FinanceRowHandler for project", mustBeSecuredByOtherServices = false)

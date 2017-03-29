@@ -20,7 +20,7 @@ import javax.validation.constraints.Size;
 public class AssessorProfileEditDetailsForm extends BaseBindingResultTarget {
 
     @NotEmpty(message = "{validation.standard.firstname.required}")
-    @Pattern(regexp = "[\\p{L} -]*", message = "{validation.standard.firstname.required}")
+    @Pattern(regexp = "[\\p{L} -']*", message = "{validation.standard.firstname.required}")
     @Size.List({
             @Size(min = 2, message = "{validation.standard.firstname.length.min}"),
             @Size(max = 70, message = "{validation.standard.firstname.length.max}"),
@@ -28,7 +28,7 @@ public class AssessorProfileEditDetailsForm extends BaseBindingResultTarget {
     private String firstName;
 
     @NotEmpty(message = "{validation.standard.lastname.required}")
-    @Pattern(regexp = "[\\p{L} -]*", message = "{validation.standard.lastname.required}")
+    @Pattern(regexp = "[\\p{L} -']*", message = "{validation.standard.lastname.required}")
     @Size.List({
             @Size(min = 2, message = "{validation.standard.lastname.length.min}"),
             @Size(max = 70, message = "{validation.standard.lastname.length.max}"),
@@ -36,13 +36,13 @@ public class AssessorProfileEditDetailsForm extends BaseBindingResultTarget {
     private String lastName;
 
     @NotNull(message = "{validation.standard.gender.selectionrequired}")
-    private Gender gender;
+    private Gender gender = Gender.NOT_STATED;
 
     @NotNull(message = "{validation.standard.ethnicity.selectionrequired}")
     private EthnicityResource ethnicity;
 
     @NotNull(message = "{validation.standard.disability.selectionrequired}")
-    private Disability disability;
+    private Disability disability = Disability.NOT_STATED;
 
     @Valid
     private AddressResource addressForm = new AddressResource();
@@ -54,6 +54,11 @@ public class AssessorProfileEditDetailsForm extends BaseBindingResultTarget {
     })
     @Pattern(regexp = "([0-9\\ +-])+", message = "{validation.standard.phonenumber.format}")
     private String phoneNumber;
+
+    public AssessorProfileEditDetailsForm() {
+        this.ethnicity = new EthnicityResource();
+        ethnicity.setId(7L);
+    }
 
     public String getFirstName() {
         return firstName;
@@ -75,24 +80,12 @@ public class AssessorProfileEditDetailsForm extends BaseBindingResultTarget {
         return gender;
     }
 
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
-
     public EthnicityResource getEthnicity() {
         return ethnicity;
     }
 
-    public void setEthnicity(EthnicityResource ethnicity) {
-        this.ethnicity = ethnicity;
-    }
-
     public Disability getDisability() {
         return disability;
-    }
-
-    public void setDisability(Disability disability) {
-        this.disability = disability;
     }
 
     public AddressResource getAddressForm() {

@@ -8,7 +8,7 @@
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
-<main id="content">
+<main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})}" />
 
@@ -92,12 +92,12 @@
           <p>Make sure the partner has reviewed and understood any changes made to their finances before approval.</p>
           <div class="form-group">
             <label class="block-label selection-button-checkbox" for="project-viable" data-target="add-rag-rating">
-              <input  id="project-viable" type="checkbox" th:field="*{confirmViabilityChecked}" data-disable-button-until-checked="#confirm-button" /><th:block th:text="${model.organisationName}" /> is viable for this project
+              <input  id="project-viable" type="checkbox" th:field="*{confirmViabilityChecked}" data-switches-button-status="#confirm-button" /><th:block th:text="${model.organisationName}" /> is viable for this project
             </label>
           </div>
           <div class="form-group" id="add-rag-rating">
             <label for="rag-rating" class="form-label">Please enter the RAG rating for this viability review</label>
-            <select th:field="*{ragStatus}" id="rag-rating" class="form-control" data-disable-button-until-checked="#confirm-button">
+            <select th:field="*{ragStatus}" id="rag-rating" class="form-control" data-switches-button-status="#confirm-button">
               <option value="UNSET" th:selected="${form.ragStatus == null}">--</option>
               <option value="GREEN">Green</option>
               <option value="AMBER">Amber</option>

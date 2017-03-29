@@ -51,8 +51,7 @@ public class FreemarkerGOLTemplateRendererIntegrationTest extends BaseIntegratio
                 "ProjectTitle", "<Time Machine> & \"Teleportation\"", // test escape html
                 "ProjectStartDate", DUMMY_PROJECT_START_DATE,
                 "ProjectLength", "3",
-                "ApplicationNumber", "12334",
-                "TableData", getYearlyGOLProfileTable()
+                "ApplicationNumber", "12334"
         );
         assertRenderedGOLFileExpectedLines(GOL_HTML_TEMPLATE_NAME, templateArguments);
     }

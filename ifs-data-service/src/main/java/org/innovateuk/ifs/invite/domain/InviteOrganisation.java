@@ -6,6 +6,8 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.CascadeType.ALL;
+
 /*
 * The InviteOrganisation entity serves the purpose of grouping Invites by organisation name entered in the application.
 * When an actual organisation exists the InviteOrganisation can link the associated Invites to that organisation.
@@ -23,8 +25,8 @@ public class InviteOrganisation {
     @JoinColumn(name = "organisationId", referencedColumnName = "id")
     private Organisation organisation;
 
-    @OneToMany(mappedBy = "inviteOrganisation")
-    private List<ApplicationInvite> invites;
+    @OneToMany(mappedBy = "inviteOrganisation", cascade = ALL, orphanRemoval = true)
+    private List<ApplicationInvite> invites = new ArrayList<>();
 
     public InviteOrganisation() {
     	// no-arg constructor
@@ -61,10 +63,13 @@ public class InviteOrganisation {
     }
 
     public List<ApplicationInvite> getInvites() {
-        return (invites == null) ? new ArrayList<>() : invites;
+        return invites;
     }
 
     public void setInvites(List<ApplicationInvite> invites) {
+        if (invites == null) {
+            throw new NullPointerException("invites cannot be null");
+        }
         this.invites = invites;
     }
 }

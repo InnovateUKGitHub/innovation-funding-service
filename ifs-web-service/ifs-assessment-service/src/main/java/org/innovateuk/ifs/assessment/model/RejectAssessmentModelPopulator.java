@@ -20,7 +20,8 @@ public class RejectAssessmentModelPopulator {
 
         return new RejectAssessmentViewModel(assessment.getId(),
                 assessment.getApplication(),
-                assessment.getApplicationName()
+                assessment.getApplicationName(),
+                assessment.getAssessmentState()
         );
     }
 

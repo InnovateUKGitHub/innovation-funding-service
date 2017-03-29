@@ -38,7 +38,6 @@ public class FinanceRowHandlerTest {
 
     @Test
     public void getIntegerValue() throws Exception {
-        AcademicFinanceHandler costHandler = new AcademicFinanceHandler();
         Integer expecting = new Integer("500000");
         assertTrue(expecting.compareTo(NumberUtils.getIntegerValue("500,000", new Integer("0"))) == 0);
         assertTrue(expecting.compareTo(NumberUtils.getIntegerValue("500,000.000", new Integer("0"))) == 0);

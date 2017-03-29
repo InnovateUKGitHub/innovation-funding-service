@@ -2,14 +2,12 @@
 <@layout.defaultPlainText>
 Dear ${name},
 
-Your applications for the competition ${competitionName} are ready for you to assess.
-
-You have been allocated applications to assess within this competition. Please sign into the Innovation Funding Service to accept or reject these allocations.
+You have been allocated some applications to assess within this competition. Please sign into the Innovation Funding Service to accept or reject these allocations.
 
 ${competitionUrl}
 
-- your response is required by ${acceptsDeadline}.
-- the assessment deadline is ${assessmentDeadline}.
+- your response is required by ${acceptsDeadline}
+- the assessment deadline is ${assessmentDeadline}
 
 If you have any questions around the assessments, please contact the Competitions Team.
 

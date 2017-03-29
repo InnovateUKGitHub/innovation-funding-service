@@ -38,7 +38,7 @@
         <summary>
             <span class="summary" th:text="${guidable.getGuidanceTitle()}"/>
         </summary>
-        <div class="panel" ifs:utext="${guidable.getGuidanceAnswer()}"/>
+        <div class="panel wysiwyg-styles" ifs:utext="${guidable.getGuidanceAnswer()}"/>
     </details>
 </th:block>
 <!-- ========================= input field type text =========================== -->
@@ -180,6 +180,21 @@
 <!-- ========================= textarea wrapped within all extra's =========================== -->
 
 <th:block th:fragment="form-textarea-wrapped">
+
+    <th:block th:unless="${hideAlerts}">
+        <th:block th:insert="question-type/form-elements :: ready-for-review" th:if="${!userIsLeadApplicant}"/>
+        <th:block th:insert="question-type/form-elements :: assign-buttons"
+                  th:unless="${readonly} or ${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} or ${!userIsLeadApplicant}"/>
+    </th:block>
+
+    <div th:unless="${readonly} or ${hideAlerts}" class="textarea-header">
+
+        <th:block th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}">
+            <div class="success-alert assignee">This question is <strong>marked as complete</strong></div>
+        </th:block>
+
+    </div>
+
     <div th:class="'textarea-wrapped ' +
                    (${readonly} ? '' : (
                             (${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} ? 'marked-as-complete' :
@@ -193,27 +208,6 @@
 
          th:with="currentUser=${#authentication.getDetails()},validationId='formInput['+${question.getId()}+']'">
 
-         <div th:unless="${readonly}" class="textarea-header">
-           <img th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
-                 src="/images/field/field-done.png"
-                th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done.png')}"
-                alt=""
-                 class="marked-as-complete" />
-
-            <th:block th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}">
-                  <div class="assignee">This question is <strong>marked as complete</strong></div>
-            </th:block>
-
-            <img th:if="${!(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) and ((currentUser.getId() == questionAssignee?.assigneeUserId) or ((questionAssignee?.assignee == null) and (leadApplicant?.getId() == currentUser.getId())))}"
-                 src="/images/field/field-assigned.png"
-                 th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-assigned.png')}"
-                 alt=""
-                 class="assigned-to-me" />
-
-            <th:block th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
-                 th:include="question-type/form-elements :: current-assignee" />
-        </div>
-
         <textarea th:id="'form-textarea-'+${formInput.id}"
                   th:name="'formInput['+${formInput.id}+']'"
                   th:field="*{formInput[__${formInput.id}__]}"
@@ -226,22 +220,42 @@
                   th:attr="data-required-errormessage=#{validation.field.please.enter.some.text}"
                   required="required"></textarea>
 
-        <div class="textarea-footer">
-          <p>
-            <th:block th:insert="question-type/form-elements :: last-update-info" />
-            <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=${formInput.getWordCount()}, currentWordsLeft=${response?.getWordCountLeft()})" />
-          </p>
+        <div class="form-footer">
 
-            <th:block th:insert="question-type/form-elements :: ready-for-review" th:if="${!userIsLeadApplicant}" />
-            <th:block th:insert="question-type/form-elements :: assign-buttons" th:unless="${readonly} or ${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} or ${!userIsLeadApplicant}" />
+            <div class="form-footer__actions">
+                <th:block th:if="${competitionIsOpen} == null or ${competitionIsOpen}">
 
-            <th:block th:if="${competitionIsOpen} == null or ${competitionIsOpen}">
-                <!--/* if  readonly we show the edit form button */-->
-                <th:block th:if="${readonly and userIsLeadApplicant}" th:include="question-type/form-elements :: form-edit-question-button" />
-                <!--/*  we show mark as complete buttons and the question should be assigned to you or */-->
-                <th:block th:if="${userIsLeadApplicant}" th:include="question-type/form-elements :: form-mark-as-complete-buttons" />
-            </th:block>
+                    <th:block th:if="${userIsLeadApplicant}">
+                        <!--/*  we show mark as complete buttons and the question should be assigned to you or */-->
+                        <th:block th:include="question-type/form-elements :: form-mark-as-complete-buttons" />
+                        <!--/* if  readonly we show the edit form button */-->
+                        <th:block th:if="${readonly}" th:include="question-type/form-elements :: form-edit-question-button" />
+                    </th:block>
+
+                </th:block>
+
+                <th:block th:insert="question-type/form-elements :: ready-for-review" th:if="${!userIsLeadApplicant}" th:with="displayBlock=${true}" />
+            </div>
+
+            <div class="form-footer__info">
+
+                <span class="textarea-footer"></span>
+                <span class="update-label">Last updated: </span>
+                <th:block th:if="${response?.getUpdateDate()}">
+                    <span class="update-details">
+                        <th:block th:include="fragments/elements :: pretty-date (date=${response?.getUpdateDate()})"/> by
+                        <th:block th:if="${response?.getUpdatedByUser() == currentUser.getId()}">you</th:block>
+                        <th:block th:unless="${response?.getUpdatedByUser() == currentUser.getId()}"
+                                  th:text="${response?.getUpdatedByUserName()}"/>
+                    </span>
+                </th:block>
+
+                <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=${formInput.getWordCount()}, currentWordsLeft=${response?.getWordCountLeft()})" />
+
+            </div>
+
         </div>
+
     </div>
 </th:block>
 <!-- ========================= Current Assignee =========================== -->
@@ -272,35 +286,61 @@
     </button>
   </div>
 </th:block>
-<th:block th:fragment="assign-buttons">
-    <div class="assign-container" th:if="${question.isAssignEnabled()}">
-        <div class="assign-button">
-              <th:block th:insert="question-type/form-elements :: assigned-to" />
-        </div>
-        <div class="assign-team">
-            <!--/* Reassign question */-->
-              <select name="assign_question" class="prog-menu">
-                  <th:block th:each="assignableUser : ${assignableUsers}">
-                      <option th:value="${question.getId()}+'_'+${assignableUser.getId()}"
-                              th:unless="${(questionAssignee?.assigneeUserId == assignableUser.getUser()) or ((questionAssignee?.assignee == null) and (leadApplicant?.getId() == assignableUser.getUser()))}"
-                              th:text="${assignableUser.userName}"
-                              />
-                      <option th:if="${(questionAssignee?.assigneeUserId == assignableUser.getUser()) or ((questionAssignee?.assignee == null) and (leadApplicant?.getId() == assignableUser.getUser()))}"
-                              th:text="${assignableUser?.userName}"
-                              selected="selected"
-                              disabled="disabled"/>
-                  </th:block>
-                  <th:block th:each="pendingAssignableUser : ${pendingAssignableUsers}">
-                  	<option th:text="${pendingAssignableUser.name + ' (pending)'}"  disabled="disabled"/>
-                  </th:block>
-              </select>
-              <button type="submit">Reassign</button>
-        </div>
+
+<th:block th:fragment="assign-buttons-dialog">
+
+    <div th:class="(${currentUser.getId() == questionAssignee?.assigneeUserId} ? 'assign-container assign-alert' : 'assign-container assigned-alert')"
+         th:if="${question.isAssignEnabled()}">
+        <th:block th:insert="question-type/form-elements :: assign-button-body" />
     </div>
+
+    <th:block th:unless="${question.isAssignEnabled()}">
+        <th:block th:insert="question-type/form-elements :: assigned-to" />
+    </th:block>
+</th:block>
+
+<th:block th:fragment="assign-buttons">
+
+    <div th:class="(${currentUser.getId() == questionAssignee?.assigneeUserId} ? 'assign-container action-required' : 'assign-container')"
+         th:if="${question.isAssignEnabled()}">
+        <th:block th:insert="question-type/form-elements :: assign-button-body" />
+    </div>
+
     <th:block th:unless="${question.isAssignEnabled()}">
       <th:block th:insert="question-type/form-elements :: assigned-to" />
     </th:block>
 </th:block>
+
+<!-- ========================= Assign - make selection =========================== -->
+<th:block th:fragment="assign-button-body">
+
+    <div class="assign-button">
+        <th:block th:insert="question-type/form-elements :: assigned-to" />
+    </div>
+    <div class="assign-team">
+        <!--/* Reassign question */-->
+        <select name="assign_question" class="prog-menu">
+            <th:block th:each="assignableUser : ${assignableUsers}">
+                <option th:value="${question.getId()}+'_'+${assignableUser.getId()}"
+                        th:unless="${(questionAssignee?.assigneeUserId == assignableUser.getUser()) or ((questionAssignee?.assignee == null) and (leadApplicant?.getId() == assignableUser.getUser()))}"
+                        th:text="${assignableUser.userName}"
+                />
+                <option th:if="${(questionAssignee?.assigneeUserId == assignableUser.getUser()) or ((questionAssignee?.assignee == null) and (leadApplicant?.getId() == assignableUser.getUser()))}"
+                        th:text="${assignableUser?.userName}"
+                        selected="selected"
+                        disabled="disabled"/>
+            </th:block>
+            <th:block th:each="pendingAssignableUser : ${pendingAssignableUsers}">
+                <option th:text="${pendingAssignableUser.name + ' (pending)'}"  disabled="disabled"/>
+            </th:block>
+        </select>
+        <button type="submit">Reassign</button>
+    </div>
+    <th:block th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} or ${hideAssignedTo}"
+              th:include="question-type/form-elements :: current-assignee" />
+
+</th:block>
+
 <!-- ========================= Assigned to =========================== -->
 <th:block th:fragment="assigned-to">
   <th:block th:if="${questionAssignee?.assignee != null} ">
@@ -337,19 +377,19 @@
 
 <th:block th:fragment="form-mark-as-complete-buttons">
     <th:block th:unless="${appIsClosed}">
-    <button th:if="${(question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id) and (questionAssignee?.assigneeUserId == currentUser?.getId() or (questionAssignee?.getAssignee() == null)))}"
+        <button th:unless="${readonly}"
+                th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
+                type="submit"
+                name="mark_as_incomplete"
+                th:value="${question.getId()}"
+                th:class="${costCategory!=null} ? 'button' : 'buttonlink'">Edit
+        </button>
+        <button th:if="${(question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id) and (questionAssignee?.assigneeUserId == currentUser?.getId() or (questionAssignee?.getAssignee() == null)))}"
             type="submit"
             name="mark_as_complete"
-            th:value="${question.getId()}"
-            th:class="${readonly} or ${costCategory!=null} ? 'button' : 'buttonlink'">Mark as complete
-    </button>
-    <button th:unless="${readonly}"
-            th:if="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
-            type="submit"
-            name="mark_as_incomplete"
-            th:value="${question.getId()}"
-            th:class="${costCategory!=null} ? 'button' : 'buttonlink'">Edit
-    </button>
+            class="buttonlink"
+            th:value="${question.getId()}">Mark as complete
+        </button>
     </th:block>
 </th:block>
 
@@ -379,14 +419,13 @@
 <!-- ========================= edit link =========================== -->
 
 <th:block th:fragment="form-edit-question-button">
-    <button class="button-secondary"
+    <button class="buttonlink"
             type="submit"
             name="edit_question"
             th:unless="${appIsClosed}"
             th:value="${question.getId()}"
-            th:class="${readonly} or ${costCategory!=null} ? 'button-secondary' : 'buttonlink'"
             th:attrappend="formaction='/application/'+${currentApplication.getId()}+'/form/question/edit/'+${question.getId()}">
-            Edit
+            Return and edit
     </button>
 </th:block>
 
@@ -404,8 +443,10 @@
 
 <!-- ===========================Form: readonly file download link =========================== -->
 <th:block th:fragment="readonly-file-download (filename, filesizeKbytes, fileDescription, downloadURL)" class="form-group download extra-margin">
-    <h3 class="heading-small no-margin" th:text="${fileDescription}">View the file:</h3>
-    <a href="#" th:href="${downloadURL}" th:text="${filename + ' (' + filesizeKbytes + ' KB)'}">10294856feedback.pdf (161.96 KB)</a>
+    <div class="form-group download">
+        <h3 class="heading-small no-margin" th:text="${fileDescription}">View the file:</h3>
+        <a href="#" th:href="${downloadURL}" th:text="${filename + ' (' + filesizeKbytes + ' KB)'}">10294856feedback.pdf (161.96 KB)</a>
+    </div>
 </th:block>
 
 </html>

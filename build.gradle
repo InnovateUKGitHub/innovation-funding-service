@@ -1,6 +1,6 @@
 allprojects {
     group 'innovateuk'
-    version '1.0-SNAPSHOT'
+    version project.version
 
     apply plugin: 'idea'
     apply plugin: 'java'
@@ -12,10 +12,9 @@ allprojects {
     targetCompatibility = 1.8
 }
 
+apply from: "openshift-support.gradle"
 
-if(project.hasProperty('profile') && profile == 'automated') {
-    ext.openshiftEnv = project.properties['openshiftEnv'] ?: "automated"
-}
+
 
 if(!project.hasProperty('osTestArgs')) {
     ext.osTestArgs = ""
@@ -38,6 +37,15 @@ subprojects {
                 fileTree(dir: it,
                         exclude: ['**/*Mapper**'])
             })
+        }
+
+        task prepareDockerFile (type: Copy) {
+            outputs.upToDateWhen { false }
+            from 'src/main/docker/'
+            into 'src/main/docker/'
+            include 'Dockerfile-template'
+            rename 'Dockerfile-template', 'Dockerfile'
+            filter(ReplaceTokens, tokens: [version : project.properties['version']])
         }
     }
 
@@ -116,6 +124,8 @@ buildscript {
         classpath 'org.owasp:dependency-check-gradle:1.4.5'
         classpath "com.avast.gradle:docker-compose-gradle-plugin:0.3.21"
         classpath "se.transmode.gradle:gradle-docker:1.2"
+        classpath 'net.researchgate:gradle-release:2.4.0'
+	    classpath "gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.13.1"
     }
 
 }
@@ -137,6 +147,28 @@ dependencyUpdates.resolutionStrategy = {
 
 apply plugin: "org.sonarqube"
 apply plugin: 'docker-compose'
+apply plugin: 'net.researchgate.release'
+apply plugin: "com.github.hierynomus.license"
+
+release {
+    preTagCommitMessage = '[Gradle Release Plugin] - Performing release: '
+    newVersionCommitMessage = '[Gradle Release Plugin] - Preparing new release version: '
+    //Note: When testing releases (i.e. not performing real releases) this tagTemplate should be changed to something different
+    // for example tagTemplate = 'TEST RELEASE ${version} ' this will ensure that we don't pollute our tags with fake releases.
+    tagTemplate = '${version}'
+
+    scmAdapters = [
+            net.researchgate.release.GitAdapter,
+    ]
+
+    git {
+        requireBranch = 'master'
+        pushToRemote = 'origin'
+        pushToBranchPrefix = ''
+        commitVersionFileOnly = false
+    }
+}
+
 
 
 sonarqube {
@@ -158,42 +190,24 @@ dockerCompose {
 
 }
 
-
-task robotTestsFilter (type: Copy) {
-    from 'robot-tests/IFS_acceptance_tests/resources/variables/'
-    into 'robot-tests/IFS_acceptance_tests/resources/variables/'
-    include 'EMAIL_VARIABLES_TEMPLATE.robot'
-    rename 'EMAIL_VARIABLES_TEMPLATE.robot', 'EMAIL_VARIABLES_SENSITIVE.robot'
-    filter(ReplaceTokens, tokens: [test_mailbox_one_password : project.properties['ifs.robot.mailbox.one.password'], test_mailbox_two_password : project.properties['ifs.robot.mailbox.two.password']])
+task prepareComposeFile (type: Copy) {
+    outputs.upToDateWhen { false }
+    from '.'
+    into '.'
+    include 'docker-compose-template.yml'
+    rename 'docker-compose-template.yml', 'docker-compose.yml'
+    filter(ReplaceTokens, tokens: [version : project.properties['version']])
 }
 
-
-task osDeployRemote(type:Exec) {
-    executable = 'setup-files/scripts/openshift/os-deploy.sh'
-    args = [openshiftEnv, "remote"]
+task dockerTidy(type:Exec) {
+    executable = 'setup-files/scripts/docker/docker_tidy_up.sh'
+    print project.version
+    args = [project.version]
 }
 
-task osDeployLocal(type:Exec) {
-    executable = 'setup-files/scripts/openshift/os-deploy.sh'
-    args = [openshiftEnv, "local"]
-}
-
-task osTestRemote(type:Exec) {
-    dependsOn robotTestsFilter
-    executable = 'setup-files/scripts/openshift/os-test-remote.sh'
-    args = [openshiftEnv, osTestArgs]
-}
+composeUp.dependsOn prepareComposeFile
 
 import org.apache.tools.ant.filters.*
-task osStopTests(type:Exec) {
-    executable = 'setup-files/scripts/openshift/os-stop-tests.sh'
-    args = [openshiftEnv]
-}
-
-task osTestResults(type:Exec) {
-    executable = 'setup-files/scripts/openshift/os-test-results.sh'
-    args = [openshiftEnv]
-}
 
 task happyRobotTests(type:Exec) {
     workingDir 'robot-tests'

@@ -39,18 +39,6 @@ public class AgreementBuilder extends BaseBuilder<Agreement, AgreementBuilder> {
         return withArray((text, agreement) -> setField("text", text, agreement), texts);
     }
 
-    public AgreementBuilder withAnnexA(String... annexAs) {
-        return withArray((annexA, agreement) -> setField("annexA", annexA, agreement), annexAs);
-    }
-
-    public AgreementBuilder withAnnexB(String... annexBs) {
-        return withArray((annexB, agreement) -> setField("annexB", annexB, agreement), annexBs);
-    }
-
-    public AgreementBuilder withAnnexC(String... annexCs) {
-        return withArray((annexC, agreement) -> setField("annexC", annexC, agreement), annexCs);
-    }
-
     @Override
     protected Agreement createInitial() {
         return createDefault(Agreement.class);

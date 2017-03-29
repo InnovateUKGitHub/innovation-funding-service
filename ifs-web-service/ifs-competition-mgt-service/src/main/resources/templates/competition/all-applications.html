@@ -8,7 +8,7 @@
         <th:block th:insert="fragments/layout :: body-start" />
        <th:block th:insert="fragments/layout :: global-header" />
 
-        <main id="content">
+        <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
             <div th:include="fragments/layout :: header-sub"
                  th:with="linkTitle='Applications',linkClass='link-back',linkUrl=@{/competition/{competitionId}/applications(competitionId=${model.competitionId})}"
@@ -111,7 +111,7 @@
                             </td>
                             <td th:text="${row.projectTitle}">Machine learning in robots</td>
                             <td th:text="${row.lead}">PWC</td>
-                            <td th:text="${row.innovationArea} ?: 'Not listed.'">HVM</td>
+                            <td th:text="${row.innovationArea} ?: 'Not listed'">HVM</td>
                             <td th:text="${row.status}">Submitted</td>
                             <td class="alignright" th:text="${row.percentageComplete}">100</td>
                         </tr>

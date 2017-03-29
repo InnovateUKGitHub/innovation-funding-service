@@ -8,7 +8,7 @@
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main id="content">
+        <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/assessment :: assessment-header-deadline-sub (linkTitle='Back to your assessment overview',linkClass='link-back',linkUrl=@{${navigation.overviewUrl}},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft})" />
 
@@ -39,7 +39,11 @@
                 </div>
 
                 <div th:if="${model.appendixExists}">
-                    <div th:replace="question-type/form-elements :: readonly-file-download (filename=${model.appendixDetails.filename}, filesizeKbytes=${model.appendixDetails.filesizeKbytes}, fileDescription=${model.appendixFileDescription}+':', downloadURL=@{/})" />
+                    <div th:replace="question-type/form-elements :: readonly-file-download
+                    (filename=${model.appendixDetails.filename},
+                    filesizeKbytes=${model.appendixDetails.filesizeKbytes},
+                    fileDescription=${model.appendixFileDescription}+':',
+                    downloadURL=@{/{assessmentId}/application/{applicationId}/formInput/{formInputId}/download(assessmentId=${model.assessmentId},applicationId=${model.applicationId},formInputId=${model.appendixDetails.formInputId})})" />
                 </div>
 
                 <div class="question" th:each="field : ${model.assessmentFormInputs}" th:id="'form-input-'+${field.id}">

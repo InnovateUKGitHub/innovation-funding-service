@@ -10,12 +10,8 @@ import org.junit.Test;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
-import static org.innovateuk.ifs.invite.security.InviteOrganisationServiceSecurityTest.TestInviteOrganisationService.ARRAY_SIZE_FOR_POST_FILTER_TESTS;
-import static org.junit.Assert.assertFalse;
 import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-
 
 /**
  * Testing how the secured methods in {@link InviteOrganisationService} interact with Spring Security
@@ -32,33 +28,29 @@ public class InviteOrganisationServiceSecurityTest extends BaseServiceSecurityTe
     }
 
     @Test
-    public void testFindAll() {
-        final ServiceResult<Iterable<InviteOrganisationResource>> all = classUnderTest.findAll();
-        assertFalse(all.getSuccessObject().iterator().hasNext());
-        verify(inviteOrganisationPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).leadApplicantCanViewOrganisationInviteToTheApplication(isA(InviteOrganisationResource.class), isA(UserResource.class));
-        verify(inviteOrganisationPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).collaboratorCanViewOrganisationInviteToTheApplication(isA(InviteOrganisationResource.class), isA(UserResource.class));
-    }
-
-
-    @Test
-    public void testFindOne() {
-        final long inviteId = 1L;
+    public void getById() {
         assertAccessDenied(
-                () -> classUnderTest.findOne(inviteId),
+                () -> classUnderTest.getById(1L),
                 () -> {
-                    verify(inviteOrganisationPermissionRules).collaboratorCanViewOrganisationInviteToTheApplication(isA(InviteOrganisationResource.class), isA(UserResource.class));
-                    verify(inviteOrganisationPermissionRules).leadApplicantCanViewOrganisationInviteToTheApplication(isA(InviteOrganisationResource.class), isA(UserResource.class));
+                    verify(inviteOrganisationPermissionRules).consortiumCanViewAnInviteOrganisation(isA(InviteOrganisationResource.class), isA(UserResource.class));
+                    verify(inviteOrganisationPermissionRules).systemRegistrarCanViewOrganisationInviteToTheApplication(isA(InviteOrganisationResource.class),isA(UserResource.class));
                 });
     }
 
     @Test
-    public void testSave() {
+    public void getByOrganisationIdWithInvitesForApplication() {
+        assertAccessDenied(
+                () -> classUnderTest.getByOrganisationIdWithInvitesForApplication(1L, 2L),
+                () -> verify(inviteOrganisationPermissionRules).consortiumCanViewAnInviteOrganisation(isA(InviteOrganisationResource.class), isA(UserResource.class)));
+    }
+
+    @Test
+    public void save() {
         assertAccessDenied(
                 () -> classUnderTest.save(newInviteOrganisationResource().build()),
                 () -> verify(inviteOrganisationPermissionRules).leadApplicantCanSaveInviteAnOrganisationToTheApplication(isA(InviteOrganisationResource.class), isA(UserResource.class))
         );
     }
-
 
     @Override
     protected Class<TestInviteOrganisationService> getClassUnderTest() {
@@ -67,27 +59,14 @@ public class InviteOrganisationServiceSecurityTest extends BaseServiceSecurityTe
 
     public static class TestInviteOrganisationService implements InviteOrganisationService {
 
-        static final int ARRAY_SIZE_FOR_POST_FILTER_TESTS = 2;
-
-
         @Override
-        public ServiceResult<InviteOrganisationResource> findOne(Long id) {
+        public ServiceResult<InviteOrganisationResource> getById(long id) {
             return serviceSuccess(newInviteOrganisationResource().build());
         }
 
         @Override
-        public ServiceResult<InviteOrganisationResource> getByIdWithInvitesForApplication(long inviteOrganisationId, long applicationId) {
-            return null;
-        }
-
-        @Override
         public ServiceResult<InviteOrganisationResource> getByOrganisationIdWithInvitesForApplication(long organisationId, long applicationId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Iterable<InviteOrganisationResource>> findAll() {
-            return serviceSuccess(newInviteOrganisationResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
+            return serviceSuccess(newInviteOrganisationResource().build());
         }
 
         @Override

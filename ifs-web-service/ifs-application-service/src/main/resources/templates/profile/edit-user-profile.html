@@ -9,7 +9,7 @@
 <th:block th:insert="fragments/layout :: global-header" />
 
 
-<main id="content">
+<main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Your Profile',linkClass='link-back',linkUrl=@{/profile/view}" />
 
@@ -26,21 +26,6 @@
         </div>
         <fieldset>
             <legend class="visuallyhidden">Your details</legend>
-            <div th:class="${#fields.hasErrors('title')}? 'form-group error':'form-group'">
-                <label class="form-label" for="title">
-                    <span class="form-label-bold">Title</span>
-                    <span th:if="${#fields.hasErrors('title')}" th:remove="tag">
-                          <span class="error-message"  th:each="err : ${#fields.errors('title')}" th:text="${err}" />
-                    </span>
-                </label>
-                <select class="form-control width-medium" th:field="*{title}">
-                    <option value="Mr">Mr</option>
-                    <option value="Miss">Miss</option>
-                    <option value="Mrs">Mrs</option>
-                    <option value="Ms">Ms</option>
-                    <option value="Dr">Dr</option>
-                </select>
-            </div>
             <div th:class="${#fields.hasErrors('firstName')}? 'form-group error':'form-group'">
                 <label class="form-label" for="firstName">
                     <span class="form-label-bold">First name</span>
@@ -75,60 +60,6 @@
                        th:attr="data-minlength-errormessage=#{validation.standard.lastname.length.min(null,null,2)},
                                 data-maxlength-errormessage=#{validation.standard.lastname.length.max},
                                 data-required-errormessage=#{validation.standard.lastname.required}" />
-            </div>
-            <div class="form-group" th:classappend="${#fields.hasErrors('gender')}? error">
-                <fieldset class="inline">
-                    <legend>
-                        <span class="heading-small">Gender</span>
-                        <span th:if="${#fields.hasErrors('gender')}" th:remove="tag">
-                                      <span class="error-message" th:each="err : ${#fields.errors('gender')}" th:text="${err}"/>
-                                    </span>
-                    </legend>
-                    <label class="block-label selection-button-radio" th:each="gen : ${T(org.innovateuk.ifs.user.resource.Gender).values()}">
-                        <input th:field="*{gender}"
-                               th:value="${gen}"
-                               type="radio"
-                               required="required"
-                               th:attr="data-required-errormessage=#{validation.standard.gender.selectionrequired}" />
-                        <span th:text="${gen.displayName}" th:remove="tag"/>
-                    </label>
-                </fieldset>
-            </div>
-            <div class="form-group" th:classappend="${#fields.hasErrors('ethnicity')}? error">
-                <fieldset class="inline">
-                    <legend>
-                        <span class="heading-small">Your ethnic group</span>
-                        <span th:if="${#fields.hasErrors('ethnicity')}" th:remove="tag">
-                                  <span class="error-message" th:each="err : ${#fields.errors('ethnicity')}" th:text="${err}"/>
-                                </span>
-                    </legend>
-                    <label class="block-label selection-button-radio" th:each="eth : ${ethnicityOptions}">
-                        <input th:field="*{ethnicity}"
-                               th:value="${eth.id}"
-                               type="radio"
-                               required="required"
-                               th:attr="data-required-errormessage=#{validation.standard.ethnicity.selectionrequired}" />
-                        <span th:text="${eth.description}" th:remove="tag"/>
-                    </label>
-                </fieldset>
-            </div>
-            <div class="form-group" th:classappend="${#fields.hasErrors('disability')}? error">
-                <fieldset class="inline">
-                    <legend>
-                        <span class="heading-small">Do you consider yourself disabled?</span>
-                        <span th:if="${#fields.hasErrors('disability')}" th:remove="tag">
-                                    <span class="error-message" th:each="err : ${#fields.errors('disability')}" th:text="${err}" />
-                                </span>
-                    </legend>
-                    <label class="block-label selection-button-radio" th:each="dis : ${T(org.innovateuk.ifs.user.resource.Disability).values()}">
-                        <input th:field="*{disability}"
-                               th:value="${dis}"
-                               type="radio"
-                               required="required"
-                               th:attr="data-required-errormessage=#{validation.standard.disability.selectionrequired}" />
-                        <span th:text="${dis.displayName}" th:remove="tag" />
-                    </label>
-                </fieldset>
             </div>
             <div th:class="${#fields.hasErrors('phoneNumber')}? 'form-group error':'form-group'">
                 <label class="form-label" for="phoneNumber">

@@ -32,13 +32,13 @@ Summary:All the sections are present
     [Documentation]    INFUND-4648
     [Tags]    HappyPath
     When The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    and The user clicks the button/link    link=Intelligent Building
-    and The user clicks the button/link    jQuery=.button:contains("Review and complete your assessment")
-    Then The user should see the element    jQuery=h2:contains("Overall scores")
-    And The user should see the element    jQuery=h2:contains("Review assessment")
-    And The user should see the element    jQuery=span:contains("Do you believe that this application is suitable for funding?")
-    And The user should see the element    id=form-input-feedback
-    And The user should see the element    id=form-input-comments
+    And the user should see that the element is disabled    id=submit-assessment-button
+    And the user clicks the button/link    link=Intelligent Building
+    And the user clicks the button/link    jQuery=.button:contains("Review and complete your assessment")
+    Then the user should see the element    jQuery=h2:contains("Review assessment")
+    And the user should see the element    jQuery=span:contains("Do you believe that this application is suitable for funding?")
+    And the user should see the element    id=form-input-feedback
+    And the user should see the element    id=form-input-comments
 
 Summary:Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
@@ -97,49 +97,62 @@ Summary:Questions should show the scores
     [Documentation]    INFUND-550
     [Tags]    HappyPath
     Then The user should see the text in the page    Total: 100/100
-    And The user should see the text in the page    ${DEFAULT_ACADEMIC_GRANT_RATE_WITH_PERCENTAGE}
-    And the table should show the correct scores
-    And the collapsible button should contain    jQuery=button:contains(1. Business opportunity)    Score: 10/10
-    And the collapsible button should contain    jQuery=button:contains(2. Potential market)    Score: 10/10
-    And the collapsible button should contain    jQuery=button:contains(3. Project exploitation)    Score: 10/10
-    And the collapsible button should contain    jQuery=button:contains(4. Economic benefit)    Score: 10/10
-    And the collapsible button should contain    jQuery=button:contains(5. Technical approach)    Score: 10/10
-    And the collapsible button should contain    jQuery=button:contains(6. Innovation)    Score: 10/10
-    And the collapsible button should contain    jQuery=button:contains(7. Risks)    Score: 10/10
-    And the collapsible button should contain    jQuery=button:contains(8. Project team)    Score: 10/10
-    And the collapsible button should contain    jQuery=button:contains(9. Funding)    Score: 10/10
-    And the collapsible button should contain    jQuery=button:contains(10. Adding value)    Score: 10/10
-
-Summary:Overall scores section
-    [Documentation]    INFUND-4648
-    Then each question will contain links to respective questions
-    And the table should show the correct scores
-    And the total scores should be correct
+    And The user should see the text in the page    100%
+    And the collapsible button should contain    jQuery=button:contains(1. Business opportunity)    Score 10/10
+    And the collapsible button should contain    jQuery=button:contains(2. Potential market)    Score 10/10
+    And the collapsible button should contain    jQuery=button:contains(3. Project exploitation)    Score 10/10
+    And the collapsible button should contain    jQuery=button:contains(4. Economic benefit)    Score 10/10
+    And the collapsible button should contain    jQuery=button:contains(5. Technical approach)    Score 10/10
+    And the collapsible button should contain    jQuery=button:contains(6. Innovation)    Score 10/10
+    And the collapsible button should contain    jQuery=button:contains(7. Risks)    Score 10/10
+    And the collapsible button should contain    jQuery=button:contains(8. Project team)    Score 10/10
+    And the collapsible button should contain    jQuery=button:contains(9. Funding)    Score 10/10
+    And the collapsible button should contain    jQuery=button:contains(10. Adding value)    Score 10/10
 
 Summary:Feedback should show in each section
     [Documentation]    INFUND-550
-    When The user clicks the button/link    jQuery=button:contains(1. Business opportunity)
-    Then The user should see the text in the page    Testing Business opportunity feedback text
-    When The user clicks the button/link    jQuery=button:contains(2. Potential market)
-    Then The user should see the text in the page    Testing Potential market feedback text
-    When The user clicks the button/link    jQuery=button:contains(3. Project exploitation)
-    Then The user should see the text in the page    Testing Project exploitation feedback text
-    When The user clicks the button/link    jQuery=button:contains(4. Economic benefit)
-    Then The user should see the text in the page    Testing Economic benefit feedback text
-    When The user clicks the button/link    jQuery=button:contains(5. Technical approach)
-    Then The user should see the text in the page    Testing Technical approach feedback text
-    When The user clicks the button/link    jQuery=button:contains(6. Innovation)
-    Then The user should see the text in the page    Testing Innovation feedback text
-    When The user clicks the button/link    jQuery=button:contains(7. Risks)
-    Then The user should see the text in the page    Testing Risks feedback text
-    When The user clicks the button/link    jQuery=button:contains(8. Project team)
-    Then The user should see the text in the page    Testing Project team feedback text
-    When The user clicks the button/link    jQuery=button:contains(9. Funding)
-    Then The user should see the text in the page    Testing Funding feedback text
-    When The user clicks the button/link    jQuery=button:contains(10. Adding value)
-    Then The user should see the text in the page    Testing Adding value feedback text
-    When The user clicks the button/link    jQuery=button:contains(Scope)
-    Then The user should see the text in the page    Testing scope feedback text
+    When the user clicks the button/link    jQuery=button:contains(1. Business opportunity)
+    Then the user should see the text in the page    Testing Business opportunity feedback text
+    When the user clicks the button/link    jQuery=button:contains(2. Potential market)
+    Then the user should see the text in the page    Testing Potential market feedback text
+    When the user clicks the button/link    jQuery=button:contains(3. Project exploitation)
+    Then the user should see the text in the page    Testing Project exploitation feedback text
+    When the user clicks the button/link    jQuery=button:contains(4. Economic benefit)
+    Then the user should see the text in the page    Testing Economic benefit feedback text
+    When the user clicks the button/link    jQuery=button:contains(5. Technical approach)
+    Then the user should see the text in the page    Testing Technical approach feedback text
+    When the user clicks the button/link    jQuery=button:contains(6. Innovation)
+    Then the user should see the text in the page    Testing Innovation feedback text
+    When the user clicks the button/link    jQuery=button:contains(7. Risks)
+    Then the user should see the text in the page    Testing Risks feedback text
+    When the user clicks the button/link    jQuery=button:contains(8. Project team)
+    Then the user should see the text in the page    Testing Project team feedback text
+    When the user clicks the button/link    jQuery=button:contains(9. Funding)
+    Then the user should see the text in the page    Testing Funding feedback text
+    When the user clicks the button/link    jQuery=button:contains(10. Adding value)
+    Then the user should see the text in the page    Testing Adding value feedback text
+    When the user clicks the button/link    jQuery=button:contains(Scope)
+    Then the user should see the text in the page    Testing scope feedback text
+
+Summary:Assessor can return to each question
+    [Documentation]    INFUND-4648
+    And the user should see the element    jQuery=#collapsible-0 a:contains(Return to this question in the application)
+    And the user should see the element    jQuery=#collapsible-1 a:contains(Return to this question in the application)
+    And the user should see the element    jQuery=#collapsible-2 a:contains(Return to this question in the application)
+    And the user should see the element    jQuery=#collapsible-3 a:contains(Return to this question in the application)
+    And the user should see the element    jQuery=#collapsible-4 a:contains(Return to this question in the application)
+    And the user should see the element    jQuery=#collapsible-5 a:contains(Return to this question in the application)
+    And the user should see the element    jQuery=#collapsible-6 a:contains(Return to this question in the application)
+    And the user should see the element    jQuery=#collapsible-7 a:contains(Return to this question in the application)
+    And the user should see the element    jQuery=#collapsible-8 a:contains(Return to this question in the application)
+    And the user should see the element    jQuery=#collapsible-9 a:contains(Return to this question in the application)
+    And the user should see the element    jQuery=#collapsible-10 a:contains(Return to this question in the application)
+    When the user clicks the button/link    jQuery=#collapsible-1 a:contains(Return to this question in the application)
+    Then the user should see the text in the page    What is the business opportunity that your project addresses?
+    And the user goes back to the previous page
+    When the user clicks the button/link    jQuery=#collapsible-10 a:contains(Return to this question in the application)
+    Then the user should see the text in the page    How does financial support from Innovate UK and its funding partners add value?
+    And the user goes back to the previous page
 
 Summary:Assessor should be able to re-edit before submit
     [Documentation]    INFUND-3400
@@ -343,55 +356,9 @@ the user adds score and feedback for every question
     Wait Until Page Contains Without Screenshots    Saving
     The user clicks the button/link    jquery=button:contains("Save and return to assessment overview")
 
-the table should show the correct scores
-    Element should contain    css=.table-overflow tr:nth-of-type(1) td:nth-of-type(1)    10
-    Element should contain    css=.table-overflow tr:nth-of-type(1) td:nth-of-type(2)    10
-    Element should contain    css=.table-overflow tr:nth-of-type(1) td:nth-of-type(3)    10
-    Element should contain    css=.table-overflow tr:nth-of-type(1) td:nth-of-type(4)    10
-    Element should contain    css=.table-overflow tr:nth-of-type(1) td:nth-of-type(5)    10
-    Element should contain    css=.table-overflow tr:nth-of-type(1) td:nth-of-type(6)    10
-    Element should contain    css=.table-overflow tr:nth-of-type(1) td:nth-of-type(7)    10
-    Element should contain    css=.table-overflow tr:nth-of-type(1) td:nth-of-type(8)    10
-    Element should contain    css=.table-overflow tr:nth-of-type(1) td:nth-of-type(9)    10
-    Element should contain    css=.table-overflow tr:nth-of-type(1) td:nth-of-type(10)    10
-
-each question will contain links to respective questions
-    The user should see the element    link=Q1
-    The user should see the element    link=Q2
-    The user should see the element    link=Q3
-    The user should see the element    link=Q4
-    The user should see the element    link=Q5
-    The user should see the element    link=Q6
-    The user should see the element    link=Q7
-    The user should see the element    link=Q8
-    The user should see the element    link=Q9
-    The user should see the element    link=Q10
-    the user clicks the button/link    link=Q1
-    Then The user should see the text in the page    What is the business opportunity that your project addresses?
-    The user goes back to the previous page
-    the user clicks the button/link    link=Q10
-    Then The user should see the text in the page    How does financial support from Innovate UK and its funding partners add value?
-    The user goes back to the previous page
-
-the scores under each question should be correct
-    Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(1)    10
-    Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(2)    10
-    Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(3)    10
-    Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(4)    10
-    Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(5)    10
-    Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(6)    10
-    Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(7)    10
-    Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(8)    10
-    Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(9)    10
-    Element should contain    css=.table-overflow tr:nth-of-type(2) td:nth-of-type(10)    10
-
 the word count should be correct
     [Arguments]    ${wordCount}
     the user should see the text in the page    ${wordCount}
-
-the total scores should be correct
-    Element should contain    css=div:nth-child(5) p.no-margin strong    Total: 100/100
-    Element should contain    css=div:nth-child(5) p:nth-child(2) strong    ${DEFAULT_ACADEMIC_GRANT_RATE_WITH_PERCENTAGE}
 
 The user accepts the juggling is word that sound funny application
     The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}

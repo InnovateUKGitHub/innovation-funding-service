@@ -523,6 +523,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         when(applicationService.getById(applicationId)).thenReturn(application);
         when(competitionService.getById(competitionId)).thenReturn(competition);
         when(applicationSummaryService.getCompetitionSummaryByCompetitionId(competitionId)).thenReturn(competitionSummary);
+        when(projectService.getLeadOrganisation(projectId)).thenReturn(newOrganisationResource().withName("Partner Org 1").build());
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(newOrganisationResource().withName("Partner Org 1", "Partner Org 2").build(2));
         when(projectService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(teamStatus);
         List<ProjectUserResource> projectUsers = newProjectUserResource().with(id(999L)).withUserName("Dave Smith").

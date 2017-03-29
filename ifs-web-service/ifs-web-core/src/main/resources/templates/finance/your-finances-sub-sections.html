@@ -25,8 +25,7 @@
 
             <h2 class="heading-medium">Finance summary</h2>
             <p>This is a breakdown of your project costs and sources of funding for this project.</p>
-            <div th:insert="finance/your-finances-sub-sections :: your_finance_summary"/>
-
+            <th:block th:insert="finance/your-finances-sub-sections :: your_finance_summary" />
         </th:block>
     </th:block>
 
@@ -147,7 +146,14 @@
                 <th:block th:if="${model.showSectionAsLockedFunding(subSection)}">
                     <div class="task-full-width">
                         <h3 class="heading-small" th:text="${subSection.name}"></h3>
-                        <p>You must select a research category in <a th:href="@{/application/{id}/form/question/{questionId}(id=${model.application.currentApplication.id}, questionId=${model.applicationDetailsQuestionId})}">application details</a> before you can supply funding. You must also state your organisation size in the <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.currentApplication.id}, sectionId=${model.yourOrganisationSectionId})}">your organisation</a> section.</p>
+                        <th:block th:if="${model.userIsLeadApplicant}">
+                            <p>You must select a research category in <a th:href="@{/application/{id}/form/question/{questionId}(id=${model.application.currentApplication.id}, questionId=${model.applicationDetailsQuestionId})}">application details</a> before you can supply funding.
+                                You must also state your organisation size in the <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.currentApplication.id}, sectionId=${model.yourOrganisationSectionId})}">your organisation</a> section.</p>
+                        </th:block>
+                        <th:block th:unless="${model.userIsLeadApplicant}">
+                            <p>The lead applicant must select a research category in application details before you can supply funding.
+                                You must also state your organisation size in the <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.currentApplication.id}, sectionId=${model.yourOrganisationSectionId})}">your organisation</a> section.</p>
+                        </th:block>
                     </div>
                 </th:block>
                 <th:block th:if="${model.showSectionStatus(subSection)}">
@@ -157,43 +163,32 @@
             </li>
         </th:block>
     </th:block>
-
-
     <th:block th:fragment="your_finance_summary">
-
         <div class="form-group" style="overflow:auto;">
-            <table th:with="organisationId=${model.application.userOrganisation.id},
-                            hasOrganisationFinance=${model.financeOverview.hasFinancesForOrganisation(organisationId)}">
+            <table th:with="organisationId=${model.application.userOrganisation.id},hasOrganisationFinance=${model.financeOverview.hasFinancesForOrganisation(organisationId)}">
                 <thead>
-                <tr>
-                    <th scope="col" class="numeric width-small">Total project costs</th>
-                    <th scope="col" class="numeric width-small">% Grant</th>
-                    <th scope="col" class="numeric width-small">Funding sought</th>
-                    <th scope="col" class="numeric width-small">Other public sector funding</th>
-                    <th scope="col" class="numeric width-small">Contribution to project</th>
-                </tr>
+                    <tr>
+                        <th scope="col" class="numeric width-small">Total project costs</th>
+                        <th scope="col" class="numeric width-small">% Grant</th>
+                        <th scope="col" class="numeric width-small">Funding sought</th>
+                        <th scope="col" class="numeric width-small">Other public sector funding</th>
+                        <th scope="col" class="numeric width-small">Contribution to project</th>
+                    </tr>
                 </thead>
                 <tbody>
-                <tr>
-                <div th:if="${hasOrganisationFinance}"
-                     th:with="organisationFinance=${model.financeOverview.organisationFinances.get(organisationId)}" th:remove="tag">
-                    <td class="numeric"> 
-                        <strong th:text="'£'+${#numbers.formatDecimal(organisationFinance.total, 0, 'COMMA', 0, 'POINT')}" /> 
-                    </td> 
-                    <td class="numeric" th:text="${organisationFinance.grantClaimPercentage}+'%'"/> 
-                    <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationFinance.totalFundingSought, 0, 'COMMA', 0, 'POINT')}"/> 
-                    <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationFinance.totalOtherFunding, 0, 'COMMA', 0, 'POINT')}"/> 
-                    <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationFinance.totalContribution, 0, 'COMMA', 0, 'POINT')}"/> 
-                </div>
-                <div th:unless="${hasOrganisationFinance}" th:remove="tag">
-                    <td class="numeric">
-                        <strong>&pound;0</strong>
-                    </td>
+                <tr th:if="${hasOrganisationFinance}" th:with="organisationFinance=${model.financeOverview.organisationFinances.get(organisationId)}">
+                    <td class="numeric"><strong>&pound;<th:block th:text="${#numbers.formatDecimal(organisationFinance.total, 0, 'COMMA', 0, 'POINT')}" /></strong></td>
+                    <td class="numeric">&pound;<th:block th:text="${organisationFinance.grantClaimPercentage}+'%'" /></td>
+                    <td class="numeric">&pound;<th:block th:text="${#numbers.formatDecimal(organisationFinance.totalFundingSought, 0, 'COMMA', 0, 'POINT')}" /></td>
+                    <td class="numeric">&pound;<th:block th:text="${#numbers.formatDecimal(organisationFinance.totalOtherFunding, 0, 'COMMA', 0, 'POINT')}" /></td>
+                    <td class="numeric">&pound;<th:block th:text="${#numbers.formatDecimal(organisationFinance.totalContribution, 0, 'COMMA', 0, 'POINT')}" /></td>
+                </tr>
+                <tr th:unless="${hasOrganisationFinance}">
+                    <td class="numeric"><strong>&pound;0</strong></td>
                     <td class="numeric">0%</td>
                     <td class="numeric">&pound;0</td>
                     <td class="numeric">&pound;0</td>
                     <td class="numeric">&pound;0</td>
-                </div>
                 </tr>
                 </tbody>
             </table>

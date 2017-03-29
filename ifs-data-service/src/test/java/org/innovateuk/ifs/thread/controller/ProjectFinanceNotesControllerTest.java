@@ -1,8 +1,7 @@
 package org.innovateuk.ifs.thread.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.project.finance.controller.ProjectFinanceNotesController;
-import org.innovateuk.ifs.project.finance.controller.ProjectFinanceQueriesController;
+import org.innovateuk.ifs.project.financecheck.controller.ProjectFinanceNotesController;
 import org.innovateuk.threads.resource.NoteResource;
 import org.innovateuk.threads.resource.PostResource;
 import org.junit.Test;
@@ -26,12 +25,12 @@ public class ProjectFinanceNotesControllerTest extends BaseControllerMockMVCTest
 
     @Override
     protected ProjectFinanceNotesController supplyControllerUnderTest() {
-        return new ProjectFinanceNotesController(projectFinanceNotesService);
+        return new ProjectFinanceNotesController(financeCheckNotesService);
     }
 
     @Override
     public void setupMockMvc() {
-        controller = new ProjectFinanceNotesController(projectFinanceNotesService);
+        controller = new ProjectFinanceNotesController(financeCheckNotesService);
         super.setupMockMvc();
     }
 
@@ -39,33 +38,33 @@ public class ProjectFinanceNotesControllerTest extends BaseControllerMockMVCTest
     public void testFindOne() throws Exception {
         final Long noteId = 22L;
         NoteResource note = new NoteResource(noteId, null, null, null, null);
-        when(projectFinanceNotesService.findOne(noteId)).thenReturn(serviceSuccess(note));
+        when(financeCheckNotesService.findOne(noteId)).thenReturn(serviceSuccess(note));
 
         mockMvc.perform(get("/project/finance/notes/{threadId}", noteId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(note)));
 
-        verify(projectFinanceNotesService).findOne(22L);
+        verify(financeCheckNotesService).findOne(22L);
     }
 
     @Test
     public void testFindAll() throws Exception {
         final Long contextId = 22L;
         NoteResource note = new NoteResource(3L, null, null, null, null);
-        when(projectFinanceNotesService.findAll(contextId)).thenReturn(serviceSuccess(asList(note)));
+        when(financeCheckNotesService.findAll(contextId)).thenReturn(serviceSuccess(asList(note)));
 
         mockMvc.perform(get("/project/finance/notes/all/{contextClassId}", contextId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(asList(note))));
 
-        verify(projectFinanceNotesService).findAll(contextId);
+        verify(financeCheckNotesService).findAll(contextId);
     }
 
     @Test
     public void testCreate() throws Exception {
         final Long contextId = 22L;
         final NoteResource note = new NoteResource(35L, contextId, null, null, null);
-        when(projectFinanceNotesService.create(note)).thenReturn(serviceSuccess(note.id));
+        when(financeCheckNotesService.create(note)).thenReturn(serviceSuccess(note.id));
 
         mockMvc.perform(post("/project/finance/notes")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -73,20 +72,20 @@ public class ProjectFinanceNotesControllerTest extends BaseControllerMockMVCTest
                 .andExpect(content().string(objectMapper.writeValueAsString(35L)))
                 .andExpect(status().isCreated());
 
-        verify(projectFinanceNotesService).create(note);
+        verify(financeCheckNotesService).create(note);
     }
 
     @Test
     public void testAddPost() throws Exception {
         Long threadId = 22L;
         PostResource post = new PostResource(33L, null, null, null, null);
-        when(projectFinanceNotesService.addPost(post, threadId)).thenReturn(serviceSuccess());
+        when(financeCheckNotesService.addPost(post, threadId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/finance/notes/{threadId}/post", threadId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(post)))
                 .andExpect(status().isCreated());
 
-        verify(projectFinanceNotesService).addPost(post, threadId);
+        verify(financeCheckNotesService).addPost(post, threadId);
     }
 }

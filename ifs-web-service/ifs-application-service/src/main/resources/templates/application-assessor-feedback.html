@@ -9,13 +9,13 @@
 <th:block th:insert="fragments/layout :: global-header" />
 
 
-<main id="content">
+<main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
 
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Feedback overview',linkClass='link-back',linkUrl=@{/application/{applicationId}/summary(applicationId=${model.application.id})}"  th:remove="tag"></div>
 
     <div class="page-title">
-        <th:block th:insert="fragments/elements :: application-title (applicationId=${model.application.id},applicationName=${model.application.applicationDisplayName})"/>
+        <th:block th:insert="fragments/elements :: application-title (applicationId=${model.application.id},applicationName=${model.application.name})"/>
         <h1 class="heading-xlarge no-margin" th:text="${model.question.shortName}"/>
     </div>
 

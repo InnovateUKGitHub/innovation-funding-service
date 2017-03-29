@@ -15,14 +15,8 @@ public class InviteOrganisationController {
     private InviteOrganisationService service;
 
     @GetMapping(value = "/{id}")
-    public RestResult<InviteOrganisationResource> findById(@PathVariable("id") final Long id) {
-        return service.findOne(id).toGetResponse();
-    }
-
-    @GetMapping(value = "/{id}/application/{applicationId}")
-    public RestResult<InviteOrganisationResource> getByIdWithInvitesForApplication(@PathVariable("id") long id,
-                                                                                   @PathVariable("applicationId") long applicationId) {
-        return service.getByIdWithInvitesForApplication(id, applicationId).toGetResponse();
+    public RestResult<InviteOrganisationResource> getById(@PathVariable("id") long id) {
+        return service.getById(id).toGetResponse();
     }
 
     @GetMapping(value = "/organisation/{organisationId}/application/{applicationId}")
@@ -32,8 +26,8 @@ public class InviteOrganisationController {
     }
 
     @PutMapping(value = "/save")
-    public RestResult<Void> put(@RequestBody final InviteOrganisationResource inviteOrganisationResource) {
-        if (service.findOne(inviteOrganisationResource.getId()).isSuccess()) {
+    public RestResult<Void> put(@RequestBody InviteOrganisationResource inviteOrganisationResource) {
+        if (service.getById(inviteOrganisationResource.getId()).isSuccess()) {
             return service.save(inviteOrganisationResource).toPutResponse();
         } else {
             return RestResult.restFailure(HttpStatus.NOT_ACCEPTABLE);

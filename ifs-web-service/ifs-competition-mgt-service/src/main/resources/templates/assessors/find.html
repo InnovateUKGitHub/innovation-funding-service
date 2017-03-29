@@ -8,7 +8,7 @@
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main id="content">
+        <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" />
 
@@ -56,7 +56,7 @@
                 <dd th:text="${model.innovationArea}">Agriculture and food</dd>
             </dl>
 
-            <p class="extra-margin extra-margin-bottom">Choose a tab to find, invite and assign assessors to one or more applications.</p>
+            <p class="extra-margin extra-margin-bottom">Choose a tab to find, invite and see an overview of assessors.</p>
 
             <ul class="inline-nav">
                 <li class="selected">
@@ -85,9 +85,12 @@
                                     id="filterInnovationArea" class="form-control extra-margin-bottom"
                                     th:field="*{innovationArea}">
                                 <option value="">Any</option>
-                                <option th:each="innovationArea : ${model.innovationAreaOptions}"
-                                        th:value="${innovationArea.id}"
-                                        th:text="${innovationArea.name}"></option>
+                                <optgroup th:each="innovationSector : ${model.innovationSectorOptions}" th:label="${innovationSector.name}">
+                                    <option th:each="innovationArea : ${innovationSector.children}"
+                                            th:value="${innovationArea.id}"
+                                            th:text="${innovationArea.name}">
+                                    </option>
+                                </optgroup>
                             </select>
                             <a href="?page=0">Clear all filters</a>
                         </div>

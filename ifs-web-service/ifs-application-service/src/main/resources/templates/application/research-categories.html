@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Research category'" />
+</head>
+<body th:with="context='applicant'" class="application details innovation-areas">
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<main tabindex="-1" id="content">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Application details',linkClass='link-back',linkUrl=@{/application/{applicationId}/form/question/{questionId}(applicationId=${model.applicationId},questionId=${model.questionId})}" />
+
+    <div class="page-title">
+        <p class="subtitle" th:text="${model.currentCompetitionName}">Competition title</p>
+        <h1 class="heading-xlarge">Research category</h1>
+    </div>
+
+    <form method="post" th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}">
+        <div class="form-group">
+            <div class="message-alert extra-margin-bottom" th:if="${model.hasApplicationFinances}">
+                <h2 class="heading-small no-margin">What type of research are you undertaking in this project?</h2>
+                <p>The type of research affects the level of funding a business can receive under UK state aid rules.
+                    Changing the research category will reset the funding level for all business participants.
+                </p>
+            </div>
+
+            <fieldset>
+                <legend class="extra-margin-bottom">
+                    <span class="heading-medium">Research category</span>
+                    <span class="form-hint">What type of research is your project undertaking? Further guidance is available from <a
+                        href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#categories-of-research-and-development"
+                        target="_blank">Innovate UK funding rules</a>.</span>
+                </legend>
+                <th:block th:each="researchCategory : ${model.availableResearchCategories}">
+                    <label class="block-label selection-button-radio" th:for="${'researchCategoryChoice-'+researchCategory.id}">
+                        <input type="radio" name="researchCategoryChoice" th:id="${'researchCategoryChoice-'+researchCategory.id}" th:value="${researchCategory.id}" th:checked="${model.selectedResearchCategoryId} == ${researchCategory.id}" required="required">
+                        <th:block th:text="${researchCategory.name}" />
+                        <span class="form-hint" th:text="${researchCategory.description}">description</span>
+                    </label>
+                </th:block>
+            </fieldset>
+        </div>
+        <button class="button" name="save-research-category">Save</button>
+        <a th:href="@{/application/__${model.applicationId}__/form/question/__${model.questionId}__}">Cancel</a>
+    </form>
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+</body>
+</html>

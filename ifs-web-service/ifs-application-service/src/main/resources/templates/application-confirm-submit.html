@@ -8,7 +8,7 @@
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main id="content">
+<main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication}" />
 
@@ -17,7 +17,7 @@
 	</div>
 
 	<div th:if="${cannotSubmit}" class="event-alert" >
-        <p><span>This competition has already closed, you are no longer able to submit your application.</span></p>
+        <p><span>Registration is now closed, you are no longer able to submit your application.</span></p>
     </div>
 
 	<h2 class="heading-medium">This is your final chance to make changes to the application.</h2>

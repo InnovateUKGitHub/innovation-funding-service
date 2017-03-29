@@ -76,7 +76,7 @@ Applicant can't access the review summary page
 First Assessor shouldn't be able to see second assessor's assessments
     [Documentation]    INFUND-4569
     [Tags]
-    [Setup]    guest user log-in    paul.plum@gmail.com    Passw0rd
+    [Setup]    guest user log-in  &{assessor_credentials}
     When the user navigates to the assessor page    ${Assessment_overview_11}
     Then The user should see permissions error message
 
@@ -90,7 +90,7 @@ First assessor shouldn't be able to access second assessor's application questio
 Second assessor shouldn't be able to see first assessor's assessments
     [Documentation]    INFUND-4569
     [Tags]
-    [Setup]    guest user log-in    felix.wilson@gmail.com    Passw0rd
+    [Setup]    guest user log-in  &{assessor2_credentials}
     When the user navigates to the assessor page    ${Assessment_overview_9}
     Then The user should see permissions error message
 

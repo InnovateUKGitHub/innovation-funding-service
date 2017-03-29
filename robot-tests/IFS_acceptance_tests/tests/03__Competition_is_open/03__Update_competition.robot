@@ -75,8 +75,9 @@ Assessed Questions are editable (Ready to Open)
     And the user clicks the button/link    jQuery=.button:contains("Edit this question")
     And the user edits the assessed question information
     And the user clicks the button/link    jQuery=.button[value="Save and close"]
-    And the user clicks the button/link    link=Business opportunity
-    And the user sees the correct assessed question information
+    And wait for autosave
+    When the user clicks the button/link    link=Business opportunity
+    Then the user sees the correct assessed question information
     And the user clicks the button/link    link = Return to application questions
 
 Finances are editable (Ready to Open)

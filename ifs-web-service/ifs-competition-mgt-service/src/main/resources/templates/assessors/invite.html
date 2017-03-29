@@ -8,7 +8,7 @@
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main id="content">
+        <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" />
 
@@ -56,7 +56,7 @@
                 <dd th:text="${model.innovationArea}">Agriculture and food</dd>
             </dl>
 
-            <p class="extra-margin extra-margin-bottom">Choose a tab to find, invite and assign assessors to one or more applications.</p>
+            <p class="extra-margin extra-margin-bottom">Choose a tab to find, invite and see an overview of assessors.</p>
 
             <ul class="inline-nav">
                 <li class="not-selected">
@@ -85,6 +85,7 @@
                           method="POST"
                           th:object="${form}"
                           novalidate="novalidate">
+                        <button class="hidden-save" type="submit" name="inviteNewUsers" tabindex="-1" aria-hidden="true">Add assessors to list</button>
                         <p>Enter the new assessor's details below to add them to your invite list.</p>
 
                         <div class="form-group" th:classappend="${#fields.hasErrors('selectedInnovationArea')}? error">

@@ -29,14 +29,15 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.function.Supplier;
 
-import static java.util.Collections.singletonList;
-import static java.util.EnumSet.complementOf;
-import static java.util.EnumSet.of;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.user.resource.UserRoleType.APPLICANT;
+import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
+import static java.util.Collections.singletonList;
+import static java.util.EnumSet.complementOf;
+import static java.util.EnumSet.of;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
@@ -59,7 +60,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
     }
 
     @Test
-    public void sendNotificationApplicationSubmitted() {
+    public void testSendNotificationApplicationSubmitted() {
         final long applicationId = 1L;
         when(applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(newApplicationResource().build());
         assertAccessDenied(
@@ -70,7 +71,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
 
 
     @Test
-    public void getApplicationResource() {
+    public void testGetApplicationResource() {
         final long applicationId = 1L;
         when(applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(newApplicationResource().build());
         assertAccessDenied(
@@ -84,13 +85,13 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
 
 
     @Test
-    public void createApplicationByAppNameForUserIdAndCompetitionId_allowedIfGlobalApplicationRole() {
+    public void testCreateApplicationByAppNameForUserIdAndCompetitionId_allowedIfGlobalApplicationRole() {
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(APPLICANT).build())).build());
         classUnderTest.createApplicationByApplicationNameForUserIdAndCompetitionId("An application", 123L, 456L);
     }
 
     @Test
-    public void createApplicationByAppNameForUserIdAndCompetitionId_deniedIfNotLoggedIn() {
+    public void testCreateApplicationByAppNameForUserIdAndCompetitionId_deniedIfNotLoggedIn() {
 
         setLoggedInUser(null);
         try {
@@ -102,7 +103,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
     }
 
     @Test
-    public void createApplicationByAppNameForUserIdAndCompetitionId_deniedIfNoGlobalRolesAtAll() {
+    public void testCreateApplicationByAppNameForUserIdAndCompetitionId_deniedIfNoGlobalRolesAtAll() {
 
         try {
             classUnderTest.createApplicationByApplicationNameForUserIdAndCompetitionId("An application", 123L, 456L);
@@ -113,7 +114,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
     }
 
    @Test
-   public void createApplicationByAppNameForUserIdAndCompetitionId_deniedIfNotCorrectGlobalRolesOrASystemRegistrar() {
+    public void testCreateApplicationByAppNameForUserIdAndCompetitionId_deniedIfNotCorrectGlobalRolesOrASystemRegistrar() {
         EnumSet<UserRoleType> nonApplicantRoles = complementOf(of(APPLICANT, SYSTEM_REGISTRATION_USER));
 
         nonApplicantRoles.forEach(role -> {
@@ -129,7 +130,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
     }
 
     @Test
-    public void createFormInputResponseFileUpload() {
+    public void testCreateFormInputResponseFileUpload() {
 
         FileEntryResource fileEntry = newFileEntryResource().build();
         FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L, 456L, 789L);
@@ -142,7 +143,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
     }
 
     @Test
-    public void createFormInputResponseFileUploadDenied() {
+    public void testCreateFormInputResponseFileUploadDenied() {
 
         FileEntryResource fileEntry = newFileEntryResource().build();
         FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L, 456L, 789L);
@@ -160,7 +161,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
     }
 
     @Test
-    public void updateFormInputResponseFileUpload() {
+    public void testUpdateFormInputResponseFileUpload() {
 
         FileEntryResource fileEntry = newFileEntryResource().build();
         FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L, 456L, 789L);
@@ -173,7 +174,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
     }
 
     @Test
-    public void updateFormInputResponseFileUploadDenied() {
+    public void testUpdateFormInputResponseFileUploadDenied() {
 
         FileEntryResource fileEntry = newFileEntryResource().build();
         FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L, 456L, 789L);
@@ -192,7 +193,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
 
 
     @Test
-    public void deleteFormInputResponseFileUpload() {
+    public void testDeleteFormInputResponseFileUpload() {
 
         FileEntryResource fileEntry = newFileEntryResource().build();
         FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L, 456L, 789L);
@@ -206,7 +207,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
     }
 
     @Test
-    public void deleteFormInputResponseFileUploadDenied() {
+    public void testDeleteFormInputResponseFileUploadDenied() {
 
         FileEntryResource fileEntry = newFileEntryResource().build();
         FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L, 456L, 789L);
@@ -225,7 +226,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
     }
 
     @Test
-    public void deleteFormInputResponseButResourceLookupFails() {
+    public void testDeleteFormInputResponseButResourceLookupFails() {
 
         FileEntryResource fileEntry = newFileEntryResource().build();
         FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L, 456L, 789L);
@@ -244,7 +245,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
     }
 
     @Test
-    public void getFormInputResponseFileUpload() {
+    public void testGetFormInputResponseFileUpload() {
 
         FileEntryResource fileEntry = newFileEntryResource().build();
         FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L, 456L, 789L);
@@ -258,7 +259,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
     }
 
     @Test
-    public void getFormInputResponseFileUploadDenied() {
+    public void testGetFormInputResponseFileUploadDenied() {
 
         FileEntryResource fileEntry = newFileEntryResource().build();
         FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L, 456L, 789L);
@@ -277,7 +278,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
     }
 
     @Test
-    public void getFormInputResponseFileUploadButLookupFails() {
+    public void testGetFormInputResponseFileUploadButLookupFails() {
 
         FileEntryResource fileEntry = newFileEntryResource().build();
         FormInputResponseFileEntryResource file = new FormInputResponseFileEntryResource(fileEntry, 123L, 456L, 789L);
@@ -292,11 +293,6 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         }
 
         verify(fileUploadRules, never()).applicantCanDownloadFilesInResponsesForOwnApplication(file, getLoggedInUser());
-    }
-
-    @Test
-    public void notifyApplicantsByCompetition() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.notifyApplicantsByCompetition(1L), COMP_ADMIN, PROJECT_FINANCE);
     }
 
     @Override
@@ -400,14 +396,13 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
             return null;
         }
 
-        @Override public ServiceResult<Long> getTurnoverByApplicationId(final Long applicationId) { return null; }
-
-        @Override public ServiceResult<Long> getHeadCountByApplicationId(final Long applicationId) { return null; }
-
         @Override
         public ServiceResult<Void> notifyApplicantsByCompetition(Long competitionId) {
             return null;
         }
 
+        @Override public ServiceResult<ApplicationResource> setApplicationFundingEmailDateTime(@P("applicationId") final Long applicationId, final LocalDateTime fundingEmailDate) {
+            return null;
+        }
     }
 }

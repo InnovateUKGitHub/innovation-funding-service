@@ -130,8 +130,6 @@ the user fills in the CS Assessors
     the user should see the element  jQuery=img[title$="is done"] + h3:contains("Assessors")
 
 the user fills in the Public content and publishes
-    # Navigate to the public content page
-    the user clicks the button/link  link=Public content
     # Fill in the Competition information and search
     the user clicks the button/link             link=Competition information and search
     the user enters text to a text field        id=short-description        Short public description
@@ -177,8 +175,6 @@ the user fills in the Public content and publishes
     the user should see the element         css=img[title='The "Supporting information" section is marked as done']
     # Publish and return
     the user clicks the button/link         jQuery=button:contains("Publish public content")
-    the user clicks the button/link         link=Return to setup overview
-    the user should see the element         css=img[title='The "Public content" section is done']
 
 Change the open date of the Competition in the database to one day before
     [Arguments]  ${competition}
@@ -187,6 +183,6 @@ Change the open date of the Competition in the database to one day before
 
 the internal user navigates to public content
     [Arguments]  ${comp}
-    the user navigates to the page      ${CA_UpcomingComp}
+    the user navigates to the page     ${CA_UpcomingComp}
     the user clicks the button/link    link=${comp}
     the user clicks the button/link    link=Public content
