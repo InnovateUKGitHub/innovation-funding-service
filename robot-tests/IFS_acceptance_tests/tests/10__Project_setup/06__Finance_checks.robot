@@ -164,7 +164,6 @@ Project finance user can upload a pdf file
     Then the user uploads the file      name=attachment    ${valid_pdf}
     And the user should see the text in the page    ${valid_pdf}
 
-# 1 at this point
 
 Project finance can remove the file
     [Documentation]    INFUND-4840
