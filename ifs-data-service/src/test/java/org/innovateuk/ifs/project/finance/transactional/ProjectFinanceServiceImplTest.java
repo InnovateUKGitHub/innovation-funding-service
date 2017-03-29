@@ -376,13 +376,9 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project.getId(),
                 organisation2.getId())).thenReturn(Optional.empty());
 
-        ProjectUser financeContact2 = newProjectUser().withUser(null).build();
+        ProjectUser financeContact2 = newProjectUser().withUser((User[]) null).build();
         when(projectUsersHelperMock.getFinanceContact(project.getId(), organisation1.getId())).thenReturn(Optional.empty());
         when(projectUsersHelperMock.getFinanceContact(project.getId(), organisation2.getId())).thenReturn(Optional.of(financeContact2));
-
-        Map<String, Object> expectedNotificationArguments = asMap(
-                "dashboardUrl", "https://ifs-local-dev/dashboard"
-        );
 
         ServiceResult<Void> generateResult = service.generateSpendProfile(projectId);
         assertTrue(generateResult.isFailure());
