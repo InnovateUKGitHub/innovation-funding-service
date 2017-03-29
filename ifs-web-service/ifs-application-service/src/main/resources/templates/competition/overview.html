@@ -7,7 +7,7 @@
     <th:block th:insert="fragments/layout :: global-header" />
 
     <th:block th:insert="fragments/layout :: body-start" />
-    <main id="content">
+    <main tabindex="-1" id="content">
         <th:block th:insert="fragments/layout :: main-content-start" />
         <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to all competitions',linkClass='link-back',linkUrl='/competition/search'" />
 
