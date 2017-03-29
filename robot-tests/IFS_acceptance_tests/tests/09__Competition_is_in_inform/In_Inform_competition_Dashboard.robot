@@ -60,6 +60,16 @@ Filtering on the Manage funding applications page
     And the user should see the element    jQuery=td:nth-child(2):contains("70")
     [Teardown]    The user clicks the button/link    link=Competition
 
+Checking release feedback button state is correct
+    [Documentation]    INFUND-7950
+    [Tags]
+    Given the user clicks the button/link    link=Input and review funding decision
+    And the user selects the checkbox    app-row-3
+    And the user clicks the button/link    jQuery=button:contains("On hold")
+    When the user clicks the button/link    jQuery=.link-back:contains("Competition")
+    Then the user should see that the element is disabled    jQuery=button:contains("Release feedback")
+    [Teardown]    User sends the notification to enable release feedback
+
 Release feedback
     [Documentation]    INFUND-8050
     [Tags]    Email    HappyPath
@@ -152,3 +162,16 @@ the application details are correct
     the user should see the element    jQuery=p:contains("Project start date: ")
     the user should see the element    jQuery=p:contains("Duration")
     the user should see the element    jQuery=h3:contains("Total project cost")
+
+User sends the notification to enable release feedback
+    the user clicks the button/link    link=Input and review funding decision
+    the user selects the checkbox    app-row-3
+    the user clicks the button/link    jQuery=button:contains("Unsuccessful")
+    the user clicks the button/link    jQuery=.link-back:contains("Competition")
+    the user clicks the button/link    jQuery=button:contains("Manage funding notifications")
+    the user selects the checkbox     app-row-70
+    the user clicks the button/link    jQuery=button:contains("Write and send email")
+    the user enters text to a text field    id=subject    Subject
+    the user enters text to a text field    jQuery=.editor    Text
+    the user clicks the button/link    jQuery=button:contains("Send email to all applicants")
+    the user clicks the button/link    jQuery=.link-back:contains("Competition")
