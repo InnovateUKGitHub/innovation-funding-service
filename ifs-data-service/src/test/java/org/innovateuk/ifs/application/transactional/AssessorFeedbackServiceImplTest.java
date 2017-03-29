@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.transactional;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.application.constant.ApplicationStatus;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -30,8 +31,8 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.application.constant.ApplicationStatusConstants.APPROVED;
-import static org.innovateuk.ifs.application.constant.ApplicationStatusConstants.REJECTED;
+import static org.innovateuk.ifs.application.constant.ApplicationStatus.APPROVED;
+import static org.innovateuk.ifs.application.constant.ApplicationStatus.REJECTED;
 import static org.innovateuk.ifs.application.transactional.ApplicationFundingServiceImplMockTest.createNotificationExpectationsWithGlobalArgs;
 import static org.innovateuk.ifs.application.transactional.ApplicationFundingServiceImplMockTest.createSimpleNotificationExpectations;
 import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.FUNDING_DECISIONS_MADE_STATUS_IDS;
@@ -230,7 +231,7 @@ public class AssessorFeedbackServiceImplTest extends BaseServiceUnitTest<Assesso
     @Test
     public void testFeedbackUploadedNotUploaded() {
     	
-    	when(applicationRepositoryMock.countByCompetitionIdAndApplicationStatusIdInAndAssessorFeedbackFileEntryIsNull(123L, Arrays.asList(3L, 4L, 2L))).thenReturn(5);
+    	when(applicationRepositoryMock.countByCompetitionIdAndApplicationStatusInAndAssessorFeedbackFileEntryIsNull(123L, Arrays.asList(ApplicationStatus.APPROVED, ApplicationStatus.REJECTED, ApplicationStatus.SUBMITTED))).thenReturn(5);
     	
     	ServiceResult<Boolean> result = service.assessorFeedbackUploaded(123L);
     	
@@ -241,7 +242,7 @@ public class AssessorFeedbackServiceImplTest extends BaseServiceUnitTest<Assesso
     @Test
     public void testFeedbackUploadedIsUploaded() {
     	
-    	when(applicationRepositoryMock.countByCompetitionIdAndApplicationStatusIdInAndAssessorFeedbackFileEntryIsNull(123L, Arrays.asList(3L, 4L, 2L))).thenReturn(0);
+    	when(applicationRepositoryMock.countByCompetitionIdAndApplicationStatusInAndAssessorFeedbackFileEntryIsNull(123L, Arrays.asList(ApplicationStatus.APPROVED, ApplicationStatus.REJECTED, ApplicationStatus.SUBMITTED))).thenReturn(0);
     	
     	ServiceResult<Boolean> result = service.assessorFeedbackUploaded(123L);
     	
@@ -320,7 +321,7 @@ public class AssessorFeedbackServiceImplTest extends BaseServiceUnitTest<Assesso
 
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
 
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusIdIn(competition.getId(), FUNDING_DECISIONS_MADE_STATUS_IDS)).
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusIn(competition.getId(), FUNDING_DECISIONS_MADE_STATUS_IDS)).
                 thenReturn(asList(fundedApplication1, unfundedApplication2, fundedApplication3));
 
         when(roleRepositoryMock.findOneByName(LEADAPPLICANT.getName())).thenReturn(leadApplicantRole);
@@ -376,7 +377,7 @@ public class AssessorFeedbackServiceImplTest extends BaseServiceUnitTest<Assesso
 
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
 
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusIdIn(competition.getId(), FUNDING_DECISIONS_MADE_STATUS_IDS)).
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusIn(competition.getId(), FUNDING_DECISIONS_MADE_STATUS_IDS)).
                 thenReturn(asList(fundedApplication1, unfundedApplication2));
 
         asList(fundedApplication1, unfundedApplication2).forEach(application ->

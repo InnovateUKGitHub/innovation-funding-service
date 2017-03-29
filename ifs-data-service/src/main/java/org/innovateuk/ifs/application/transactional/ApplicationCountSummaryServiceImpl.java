@@ -40,7 +40,7 @@ public class ApplicationCountSummaryServiceImpl extends BaseTransactionalService
 
         String filterStr = filter.map(String::trim).orElse("");
         Pageable pageable = new PageRequest(pageIndex, pageSize);
-        Page<ApplicationStatistics> applicationStatistics = applicationStatisticsRepository.findByCompetitionAndApplicationStatusIdIn(competitionId, SUBMITTED_STATUS_IDS, filterStr, pageable);
+        Page<ApplicationStatistics> applicationStatistics = applicationStatisticsRepository.findByCompetitionAndApplicationStatusIn(competitionId, SUBMITTED_STATUS_IDS, filterStr, pageable);
 
         return find(applicationStatistics, notFoundError(Page.class)).andOnSuccessReturn(stats -> applicationCountSummaryPageMapper.mapToResource(stats));
     }

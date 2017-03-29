@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.service;
 
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
+import org.innovateuk.ifs.application.constant.ApplicationStatus;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -84,15 +84,15 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
     
     private boolean applicationStatusInProgress(ApplicationResource a) {
-    	return appStatusIn(a, ApplicationStatusConstants.CREATED, ApplicationStatusConstants.OPEN);
+    	return appStatusIn(a, ApplicationStatus.CREATED, ApplicationStatus.OPEN);
     }
 
 	private boolean applicationStatusFinished(ApplicationResource a) {
-		return appStatusIn(a, ApplicationStatusConstants.APPROVED, ApplicationStatusConstants.REJECTED);
+		return appStatusIn(a, ApplicationStatus.APPROVED, ApplicationStatus.REJECTED);
     }
 	
     private boolean applicationStatusSubmitted(ApplicationResource a) {
-    	return a.getApplicationStatus().equals(ApplicationStatusConstants.SUBMITTED.getId());
+    	return a.getApplicationStatus() == ApplicationStatus.SUBMITTED;
     }
     
     private boolean competitionOpen(ApplicationResource a) {
@@ -110,9 +110,9 @@ public class ApplicationServiceImpl implements ApplicationService {
     	return compStatusIn(competition, CompetitionStatus.ASSESSOR_FEEDBACK, CompetitionStatus.PROJECT_SETUP);
 	}
     
-    private boolean appStatusIn(ApplicationResource app, ApplicationStatusConstants... statuses) {
-    	for(ApplicationStatusConstants status: statuses) {
-    		if(status.getId().equals(app.getApplicationStatus())) {
+    private boolean appStatusIn(ApplicationResource app, ApplicationStatus... statuses) {
+    	for(ApplicationStatus status: statuses) {
+    		if (status == app.getApplicationStatus()) {
     			return true;
     		}
     	}

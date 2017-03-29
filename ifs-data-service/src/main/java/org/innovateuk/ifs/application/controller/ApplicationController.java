@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
+import org.innovateuk.ifs.application.constant.ApplicationStatus;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
@@ -59,7 +59,7 @@ public class ApplicationController {
                                                           @RequestParam("statusId") final Long statusId) {
         ServiceResult<ApplicationResource> updateStatusResult = applicationService.updateApplicationStatus(id, statusId);
 
-        if(updateStatusResult.isSuccess() && ApplicationStatusConstants.SUBMITTED.getId().equals(statusId)){
+        if(updateStatusResult.isSuccess() && ApplicationStatus.SUBMITTED.getId().equals(statusId)){
             applicationService.saveApplicationSubmitDateTime(id, LocalDateTime.now());
             applicationService.sendNotificationApplicationSubmitted(id);
         }

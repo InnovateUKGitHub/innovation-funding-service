@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.domain;
 
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
+import org.innovateuk.ifs.application.constant.ApplicationStatus;
 import org.innovateuk.ifs.category.domain.ApplicationInnovationAreaLink;
 import org.innovateuk.ifs.category.domain.ApplicationResearchCategoryLink;
 import org.innovateuk.ifs.category.domain.InnovationArea;
@@ -57,8 +57,8 @@ public class Application implements ProcessActivity {
     @OneToMany(mappedBy = "application")
     private List<ApplicationFinance> applicationFinances = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "applicationStatusId", referencedColumnName = "id")
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "status")
     private ApplicationStatus applicationStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -89,7 +89,6 @@ public class Application implements ProcessActivity {
     private Boolean stateAidAgreed;
 
     public Application() {
-        /*default constructor*/
     }
 
     public Application(Long id, String name, ApplicationStatus applicationStatus) {
@@ -239,9 +238,8 @@ public class Application implements ProcessActivity {
     }
 
     public boolean isOpen() {
-        return Objects.equals(applicationStatus.getId(), ApplicationStatusConstants.OPEN.getId());
+        return applicationStatus == ApplicationStatus.OPEN;
     }
-
 
     public void setInvites(List<ApplicationInvite> invites) {
         this.invites = invites;

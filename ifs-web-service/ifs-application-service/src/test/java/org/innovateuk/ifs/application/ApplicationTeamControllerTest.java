@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
+import org.innovateuk.ifs.application.constant.ApplicationStatus;
 import org.innovateuk.ifs.application.populator.ApplicationTeamModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.viewmodel.ApplicationTeamApplicantRowViewModel;
@@ -27,8 +27,8 @@ import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.application.constant.ApplicationStatusConstants.CREATED;
-import static org.innovateuk.ifs.application.constant.ApplicationStatusConstants.OPEN;
+import static org.innovateuk.ifs.application.constant.ApplicationStatus.CREATED;
+import static org.innovateuk.ifs.application.constant.ApplicationStatus.OPEN;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
@@ -388,7 +388,7 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
         return setupApplicationResource(organisationsMap, OPEN);
     }
 
-    private ApplicationResource setupApplicationResource(Map<String, OrganisationResource> organisationsMap, ApplicationStatusConstants applicationStatus) {
+    private ApplicationResource setupApplicationResource(Map<String, OrganisationResource> organisationsMap, ApplicationStatus applicationStatus) {
         ApplicationResource applicationResource = newApplicationResource()
                 .withName("Application name")
                 .withApplicationStatus(applicationStatus)

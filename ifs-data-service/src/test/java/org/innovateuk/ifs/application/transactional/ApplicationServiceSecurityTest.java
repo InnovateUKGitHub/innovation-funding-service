@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.transactional;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.BaseServiceSecurityTest;
+import org.innovateuk.ifs.application.constant.ApplicationStatus;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
@@ -388,7 +389,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
 
         @Override
         public ServiceResult<List<Application>> getApplicationsByCompetitionIdAndStatus(Long competitionId,
-                                                                                        Collection<Long> applicationStatusId) {
+                                                                                        Collection<ApplicationStatus> applicationStatusId) {
             return null;
         }
 

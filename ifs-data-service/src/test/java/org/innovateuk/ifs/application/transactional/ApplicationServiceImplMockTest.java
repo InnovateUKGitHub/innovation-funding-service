@@ -4,9 +4,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.builder.ApplicationBuilder;
 import org.innovateuk.ifs.application.builder.QuestionBuilder;
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
+import org.innovateuk.ifs.application.constant.ApplicationStatus;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.domain.ApplicationStatus;
 import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryId;
@@ -54,8 +53,6 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.application.builder.ApplicationStatusBuilder.newApplicationStatus;
-import static org.innovateuk.ifs.application.constant.ApplicationStatusConstants.CREATED;
 import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -137,7 +134,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         Organisation organisation = newOrganisation().with(name("testOrganisation")).withId(organisationId).build();
         Role leadApplicantRole = newRole().withType(LEADAPPLICANT).build();
         ProcessRole processRole = newProcessRole().withUser(user).withRole(leadApplicantRole).withOrganisationId(organisation.getId()).build();
-        ApplicationStatus applicationStatus = newApplicationStatus().withName(CREATED).build();
+        ApplicationStatus applicationStatus = ApplicationStatus.CREATED;
 
         Application application = ApplicationBuilder.newApplication().
                 withId(1L).
@@ -149,7 +146,6 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         ApplicationResource applicationResource = newApplicationResource().build();
 
-        when(applicationStatusRepositoryMock.findByName(CREATED.getName())).thenReturn(singletonList(applicationStatus));
         when(roleRepositoryMock.findOneByName(leadApplicantRole.getName())).thenReturn(leadApplicantRole);
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
         when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
@@ -160,7 +156,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         Supplier<Application> applicationExpectations = () -> argThat(lambdaMatches(created -> {
             assertEquals("testApplication", created.getName());
-            assertEquals(applicationStatus.getId(), created.getApplicationStatus().getId());
+            assertEquals(applicationStatus, created.getApplicationStatus());
             assertEquals(Long.valueOf(3), created.getDurationInMonths());
             assertEquals(competition.getId(), created.getCompetition().getId());
             assertNull(created.getStartDate());
@@ -650,7 +646,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         Role role = newRole().with(name(roleName)).build();
         Organisation organisation = newOrganisation().with(id(organisationId)).build();
         User user = newUser().with(id(userId)).build();
-        ApplicationStatus applicationStatus = newApplicationStatus().withName(ApplicationStatusConstants.CREATED.getName()).build();
+        ApplicationStatus applicationStatus = ApplicationStatus.CREATED;
 
         String applicationName = "testApplication";
 
@@ -663,7 +659,6 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         ApplicationResource newApplication = newApplicationResource().build();
 
-        when(applicationStatusRepositoryMock.findByName(applicationStatus.getName())).thenReturn(singletonList(applicationStatus));
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
         when(roleRepositoryMock.findOneByName(role.getName())).thenReturn(role);
         when(userRepositoryMock.findOne(userId)).thenReturn(user);

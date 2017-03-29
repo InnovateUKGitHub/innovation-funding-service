@@ -11,7 +11,7 @@ import static java.util.Arrays.asList;
  * Java enumeration of the current available Application workflow statuses.
  * The value of these entries are used when saving to the database.
  */
-public enum ApplicationStatusConstants {
+public enum ApplicationStatus {
     CREATED(1L, "created"), // initial state
     SUBMITTED(2L, "submitted"),
     APPROVED(3L, "approved"),
@@ -21,23 +21,23 @@ public enum ApplicationStatusConstants {
     private final Long id;
     private final String name;
 
-    private static final Map<Long, ApplicationStatusConstants> lookup = new TreeMap<>();
+    private static final Map<Long, ApplicationStatus> lookup = new TreeMap<>();
 
     static {
-        for (ApplicationStatusConstants d : ApplicationStatusConstants.values()) {
+        for (ApplicationStatus d : ApplicationStatus.values()) {
             lookup.put(d.getId(), d);
         }
     }
 
-    public static ApplicationStatusConstants getFromId(Long applicationStatusId){
+    public static ApplicationStatus getFromId(Long applicationStatusId){
         return lookup.get(applicationStatusId);
     }
 
-    public static ApplicationStatusConstants getFromName(String name){
+    public static ApplicationStatus getFromName(String name){
         return simpleFindFirst(asList(values()), a -> a.getName().equals(name)).get();
     }
 
-    ApplicationStatusConstants(Long id, String name){
+    ApplicationStatus(Long id, String name){
         this.id = id;
         this.name = name;
     }
@@ -49,4 +49,13 @@ public enum ApplicationStatusConstants {
     public String getName() {
         return name;
     }
+
+    public static Map<Long, ApplicationStatus> applicationStatusMap() {
+        return lookup;
+    }
+
+    public boolean isApproved() {
+        return this == APPROVED;
+    }
+
 }

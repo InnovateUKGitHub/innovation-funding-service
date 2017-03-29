@@ -3,7 +3,7 @@ package org.innovateuk.ifs.application;
 import com.google.common.collect.ImmutableMap;
 import org.hamcrest.Matchers;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
+import org.innovateuk.ifs.application.constant.ApplicationStatus;
 import org.innovateuk.ifs.application.populator.*;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
@@ -504,7 +504,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(model().attribute("currentApplication", app))
                 .andReturn();
 
-        verify(applicationService).updateStatus(app.getId(), ApplicationStatusConstants.SUBMITTED.getId());
+        verify(applicationService).updateStatus(app.getId(), ApplicationStatus.SUBMITTED.getId());
     }
 
     @Test
