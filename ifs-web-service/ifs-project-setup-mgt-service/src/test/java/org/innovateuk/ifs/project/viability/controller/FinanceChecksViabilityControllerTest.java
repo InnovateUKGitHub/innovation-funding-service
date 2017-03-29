@@ -57,11 +57,13 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
     private OrganisationResource industrialOrganisation = newOrganisationResource().
             withName("Industrial Org").
             withCompanyHouseNumber("123456789").
+            withId(1L).
             build();
 
     private OrganisationResource academicOrganisation = newOrganisationResource().
             withName("Academic Org").
             withCompanyHouseNumber("987654321").
+            withId(2L).
             build();
 
     private ApplicationResource app = newApplicationResource().withId(456L).withCompetition(123L).build();
@@ -149,8 +151,8 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         when(applicationService.getById(456L)).thenReturn(app);
         when(organisationSizeService.getOrganisationSizes()).thenReturn(new ArrayList<>());
 
-        when(applicationService.getHeadCount(456L)).thenReturn(RestResult.restSuccess(1L));
-        when(applicationService.getTurnover(456L)).thenReturn(RestResult.restSuccess(2L));
+        when(organisationDetailsRestService.getHeadCount(456L, 1L)).thenReturn(RestResult.restSuccess(1L));
+        when(organisationDetailsRestService.getTurnover(456L, 1L)).thenReturn(RestResult.restSuccess(2L));
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/viability",
                 project.getId(), industrialOrganisation.getId())).
@@ -198,8 +200,8 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         when(projectFinanceService.isCreditReportConfirmed(project.getId(), academicOrganisation.getId())).thenReturn(true);
         when(organisationSizeService.getOrganisationSizes()).thenReturn(new ArrayList<>());
         when(projectService.getById(project.getId())).thenReturn(project);
-        when(applicationService.getHeadCount(456L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_SINGLE_ENTRY_EXPECTED));
-        when(applicationService.getTurnover(456L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_SINGLE_ENTRY_EXPECTED));
+        when(organisationDetailsRestService.getHeadCount(456L, 2L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_SINGLE_ENTRY_EXPECTED));
+        when(organisationDetailsRestService.getTurnover(456L, 2L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_SINGLE_ENTRY_EXPECTED));
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/viability",
                 project.getId(), academicOrganisation.getId())).

@@ -30,6 +30,11 @@ task osDeployDemo(type:Exec) {
     args = [openshiftEnv, "demo", project.version]
 }
 
+task osUpgradeRemote(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-upgrade.sh'
+    args = [openshiftEnv, "remote", project.version]
+}
+
 task osUpgradeProduction(type:Exec) {
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "production", project.version]
