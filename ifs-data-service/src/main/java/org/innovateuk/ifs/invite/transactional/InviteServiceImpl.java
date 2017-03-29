@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.invite.transactional;
 
-import com.google.common.collect.Sets;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -12,7 +11,6 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.BaseEitherBackedResult;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.form.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
@@ -322,13 +320,16 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
             ProcessRole leadApplicantProcessRole = applicationInvite.getTarget().getLeadApplicantProcessRole();
             Long applicationId = applicationInvite.getTarget().getId();
 
-            List<ProcessRole> processRoles = processRoleRepository.findByUserAndApplicationId(applicationInvite.getUser(), applicationInvite.getTarget().getId());
+            List<ProcessRole> processRoles = processRoleRepository.findByUserAndApplicationId(
+                    applicationInvite.getUser(),
+                    applicationInvite.getTarget().getId()
+            );
 
-            setAssignedQuestionsToLeadApplicant(leadApplicantProcessRole, processRoles);
-            setMarkedAsCompleteQuestionStatusesToLeadApplicant(leadApplicantProcessRole, applicationId, processRoles);
-            setAssignedQuestionStatusesToLeadApplicant(leadApplicantProcessRole, applicationId, processRoles);
+            reassignCollaboratorResponsesAndQuestionStatuses(applicationId, leadApplicantProcessRole, processRoles);
 
-            removeProcessRolesOnApplication(processRoles);
+            if (!processRoles.isEmpty()) {
+                processRoleRepository.delete(processRoles);
+            }
 
             InviteOrganisation inviteOrganisation = applicationInvite.getInviteOrganisation();
 
@@ -508,65 +509,89 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     }
 
-    private void setMarkedAsCompleteQuestionStatusesToLeadApplicant(ProcessRole leadApplicantProcessRole, Long applicationId, List<ProcessRole> processRoles) {
-        processRoles.forEach(processRole -> {
-            List<QuestionStatus> questionStatuses = questionStatusRepository.findByApplicationIdAndMarkedAsCompleteById(applicationId, processRole.getId());
-            List<QuestionStatus> toDelete = new ArrayList<>();
-            if (!questionStatuses.isEmpty()) {
-                questionStatuses.forEach(questionStatus -> {
-                    if (!questionStatus.getQuestion().getMultipleStatuses()) {
-                        questionStatus.setMarkedAsCompleteBy(leadApplicantProcessRole);
+    private void reassignCollaboratorResponsesAndQuestionStatuses(long applicationId,
+                                                                  ProcessRole leadApplicantProcessRole,
+                                                                  List<ProcessRole> collaboratorProcessRoles) {
+        collaboratorProcessRoles.forEach(collaboratorProcessRole -> {
+            List<ProcessRole> organisationRoles = processRoleRepository.findByApplicationIdAndOrganisationId(applicationId, collaboratorProcessRole.getOrganisationId());
+            organisationRoles.remove(collaboratorProcessRole);
+
+            reassignCollaboratorFormResponses(leadApplicantProcessRole, collaboratorProcessRole, organisationRoles);
+            reassignCollaboratorQuestionStatuses(applicationId, leadApplicantProcessRole, collaboratorProcessRole, organisationRoles);
+        });
+    }
+
+    private void reassignCollaboratorFormResponses(ProcessRole leadApplicantProcessRole,
+                                                   ProcessRole collaboratorProcessRole,
+                                                   List<ProcessRole> organisationRoles) {
+        formInputResponseRepository.findByUpdatedById(collaboratorProcessRole.getId())
+                .forEach(collaboratorResponse -> {
+                    if (collaboratorResponse.getFormInput().getQuestion().hasMultipleStatuses()) {
+                        if (organisationRoles.isEmpty()) {
+                            formInputResponseRepository.delete(collaboratorResponse);
+                        } else {
+                            collaboratorResponse.setUpdatedBy(organisationRoles.get(0));
+                            formInputResponseRepository.save(collaboratorResponse);
+                        }
                     } else {
-                        setMarkedAsCompleteForQuestionWithMultipleQuestions(applicationId, processRole, questionStatus, toDelete);
+                        collaboratorResponse.setUpdatedBy(leadApplicantProcessRole);
+                        formInputResponseRepository.save(collaboratorResponse);
                     }
                 });
-                questionStatuses.removeAll(toDelete);
-                questionStatusRepository.save(questionStatuses);
+    }
+
+    private void reassignCollaboratorQuestionStatuses(long applicationId,
+                                                      ProcessRole leadApplicantProcessRole,
+                                                      ProcessRole collaboratorProcessRole,
+                                                      List<ProcessRole> organisationRoles) {
+        List<QuestionStatus> questionStatuses = questionStatusRepository.findByApplicationIdAndMarkedAsCompleteByIdOrAssigneeIdOrAssignedById(
+                applicationId,
+                collaboratorProcessRole.getId(),
+                collaboratorProcessRole.getId(),
+                collaboratorProcessRole.getId()
+        );
+
+        questionStatuses.forEach(questionStatus -> {
+            if (questionStatus.getQuestion().hasMultipleStatuses()) {
+                if (organisationRoles.isEmpty()) {
+                    questionStatusRepository.delete(questionStatus);
+                } else {
+                    questionStatus = reassignQuestionStatusRoles(questionStatus, organisationRoles.get(0), leadApplicantProcessRole);
+                    questionStatusRepository.save(questionStatus);
+                }
+            } else {
+                questionStatus = reassignQuestionStatusRoles(questionStatus, leadApplicantProcessRole, leadApplicantProcessRole);
+                questionStatusRepository.save(questionStatus);
             }
         });
     }
 
-    private void setMarkedAsCompleteForQuestionWithMultipleQuestions(Long applicationId, ProcessRole roleToRemove, QuestionStatus questionStatus, List<QuestionStatus> statusesToDelete) {
-        List<ProcessRole> rolesFromSameOrganisation = processRoleRepository.findByApplicationIdAndOrganisationId(applicationId, roleToRemove.getOrganisationId());
-        rolesFromSameOrganisation.remove(roleToRemove);
-        if (rolesFromSameOrganisation.isEmpty()) {
-            questionStatusRepository.delete(questionStatus);
-            statusesToDelete.add(questionStatus);
-        } else {
-            questionStatus.setMarkedAsCompleteBy(rolesFromSameOrganisation.get(0));
+    private QuestionStatus reassignQuestionStatusRoles(QuestionStatus questionStatus, ProcessRole reassignTo, ProcessRole leadApplicantRole) {
+        if (questionStatus.getAssignee() != null && questionStatus.getAssignedBy() != null) {
+            ProcessRole assignee =
+                    convertToProcessRoleIfOriginalRoleNotForLeadApplicant(questionStatus.getAssignee(), reassignTo, leadApplicantRole);
+            ProcessRole assignedBy =
+                    convertToProcessRoleIfOriginalRoleNotForLeadApplicant(questionStatus.getAssignedBy(), reassignTo, leadApplicantRole);
+
+            questionStatus.setAssignee(assignee, assignedBy, LocalDateTime.now());
         }
-    }
 
-    private void setAssignedQuestionStatusesToLeadApplicant(ProcessRole leadApplicantProcessRole, Long applicationId, List<ProcessRole> processRoles) {
-        processRoles.forEach(processRole -> {
-            List<QuestionStatus> questionStatuses = questionStatusRepository.findByApplicationIdAndAssigneeIdOrAssignedById(applicationId, processRole.getId(), processRole.getId());
-            if (!questionStatuses.isEmpty()) {
-                questionStatuses.forEach(questionStatus ->
-                        questionStatus.setAssignee(
-                                leadApplicantProcessRole,
-                                leadApplicantProcessRole,
-                                LocalDateTime.now())
-                );
-                questionStatusRepository.save(questionStatuses);
-            }
-        });
-    }
+        if (questionStatus.getMarkedAsCompleteBy() != null) {
+            ProcessRole markedAsCompleteBy =
+                    convertToProcessRoleIfOriginalRoleNotForLeadApplicant(questionStatus.getMarkedAsCompleteBy(), reassignTo, leadApplicantRole);
 
-    private void setAssignedQuestionsToLeadApplicant(ProcessRole leadApplicantProcessRole, List<ProcessRole> processRoles) {
-        processRoles.forEach(processRole -> {
-            List<FormInputResponse> collaboratorQuestions = formInputResponseRepository.findByUpdatedById(processRole.getId());
-            if (!collaboratorQuestions.isEmpty()) {
-                collaboratorQuestions.forEach(collaboratorQuestion -> {
-                    collaboratorQuestion.setUpdatedBy(leadApplicantProcessRole);
-                    formInputResponseRepository.save(collaboratorQuestion);
-                });
-            }
-        });
-    }
-
-    private void removeProcessRolesOnApplication(List<ProcessRole> processRoles) {
-        if (!processRoles.isEmpty()) {
-            processRoleRepository.delete(processRoles);
+            questionStatus.setMarkedAsCompleteBy(markedAsCompleteBy);
         }
+
+        return questionStatus;
+    }
+
+    private ProcessRole convertToProcessRoleIfOriginalRoleNotForLeadApplicant(ProcessRole processRoleFrom,
+                                                                              ProcessRole processRoleTo,
+                                                                              ProcessRole leadApplicantRole) {
+        return Optional.of(processRoleFrom)
+                .filter(originalRole -> !originalRole.getId().equals(leadApplicantRole.getId()))
+                .map(originalRole -> processRoleTo)
+                .orElse(leadApplicantRole);
     }
 }
