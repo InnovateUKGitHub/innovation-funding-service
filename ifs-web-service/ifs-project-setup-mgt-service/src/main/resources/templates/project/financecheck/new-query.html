@@ -9,7 +9,7 @@
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main id="content" th:with="baseUrl=@{${model.baseUrl}(projectId=${model.projectId},organisationId=${model.organisationId})}">
+<main tabindex="-1" id="content" th:with="baseUrl=@{${model.baseUrl}(projectId=${model.projectId},organisationId=${model.organisationId})}">
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})},currentCompetition=null" />
 

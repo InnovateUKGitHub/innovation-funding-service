@@ -31,7 +31,10 @@ public class InviteOrganisationServiceSecurityTest extends BaseServiceSecurityTe
     public void getById() {
         assertAccessDenied(
                 () -> classUnderTest.getById(1L),
-                () -> verify(inviteOrganisationPermissionRules).consortiumCanViewAnInviteOrganisation(isA(InviteOrganisationResource.class), isA(UserResource.class)));
+                () -> {
+                    verify(inviteOrganisationPermissionRules).consortiumCanViewAnInviteOrganisation(isA(InviteOrganisationResource.class), isA(UserResource.class));
+                    verify(inviteOrganisationPermissionRules).systemRegistrarCanViewOrganisationInviteToTheApplication(isA(InviteOrganisationResource.class),isA(UserResource.class));
+                });
     }
 
     @Test

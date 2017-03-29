@@ -1,34 +1,23 @@
 package org.innovateuk.ifs.thread.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
-import org.innovateuk.ifs.finance.domain.ProjectFinance;
-import org.innovateuk.ifs.project.finance.service.ProjectFinanceNotesService;
 import org.innovateuk.ifs.threads.security.ProjectFinanceNotePermissionRules;
-import org.innovateuk.ifs.threads.security.ProjectFinanceQueryPermissionRules;
-import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.threads.resource.FinanceChecksSectionType;
 import org.innovateuk.threads.resource.NoteResource;
 import org.innovateuk.threads.resource.PostResource;
-import org.innovateuk.threads.resource.QueryResource;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.finance.domain.builder.ProjectFinanceBuilder.newProjectFinance;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
-import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.FINANCE_CONTACT;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
 
 public class ProjectFinanceNotePermissionRulesTest extends BasePermissionRulesTest<ProjectFinanceNotePermissionRules> {
     private NoteResource noteResource;

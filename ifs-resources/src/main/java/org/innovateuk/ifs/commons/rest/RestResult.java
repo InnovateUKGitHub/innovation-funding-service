@@ -4,10 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ErrorTemplate;
 import org.innovateuk.ifs.commons.error.exception.*;
-import org.innovateuk.ifs.commons.service.BaseEitherBackedResult;
-import org.innovateuk.ifs.commons.service.ExceptionThrowingFunction;
-import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
-import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.commons.service.*;
 import org.innovateuk.ifs.util.Either;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -18,6 +15,7 @@ import org.springframework.web.client.HttpStatusCodeException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
@@ -53,6 +51,11 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
 
     @Override
     public <R> RestResult<R> andOnFailure(Runnable failureHandler) {
+        return (RestResult<R>) super.andOnFailure(failureHandler);
+    }
+
+    @Override
+    public <R> RestResult<R> andOnFailure(Consumer<RestFailure> failureHandler) {
         return (RestResult<R>) super.andOnFailure(failureHandler);
     }
 

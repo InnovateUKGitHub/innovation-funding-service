@@ -39,8 +39,8 @@ import org.innovateuk.ifs.invite.transactional.InviteService;
 import org.innovateuk.ifs.invite.transactional.RejectionReasonService;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
-import org.innovateuk.ifs.project.finance.transactional.FinanceCheckService;
-import org.innovateuk.ifs.project.finance.transactional.ProjectFinanceService;
+import org.innovateuk.ifs.project.financecheck.service.FinanceCheckService;
+import org.innovateuk.ifs.project.financecheck.transactional.SpendProfileService;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.transactional.ProjectService;
 import org.innovateuk.ifs.publiccontent.repository.ContentEventRepository;
@@ -137,7 +137,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected ApplicationFinanceRepository applicationFinanceRepository;
     protected ProjectUserRepository projectUserRepository;
     protected BankDetailsService bankDetailsService;
-    protected ProjectFinanceService projectFinanceService;
+    protected SpendProfileService spendProfileService;
     protected FinanceCheckService financeCheckService;
     protected RejectionReasonService rejectionReasonService;
     protected UserProfileService userProfileService;
@@ -194,7 +194,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         this.applicationFinanceRepository = serviceLocator.getBean(ApplicationFinanceRepository.class);
         this.projectUserRepository = serviceLocator.getBean(ProjectUserRepository.class);
         this.bankDetailsService = serviceLocator.getBean(BankDetailsService.class);
-        this.projectFinanceService = serviceLocator.getBean(ProjectFinanceService.class);
+        this.spendProfileService = serviceLocator.getBean(SpendProfileService.class);
         this.financeCheckService = serviceLocator.getBean(FinanceCheckService.class);
         this.competitionFunderRepository = serviceLocator.getBean(CompetitionFunderRepository.class);
         this.innovationAreaRepository = serviceLocator.getBean(InnovationAreaRepository.class);
