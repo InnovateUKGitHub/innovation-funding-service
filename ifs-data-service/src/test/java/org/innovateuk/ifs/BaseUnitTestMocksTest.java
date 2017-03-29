@@ -25,6 +25,7 @@ import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.category.repository.InnovationSectorRepository;
 import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
 import org.innovateuk.ifs.category.transactional.CategoryService;
+import org.innovateuk.ifs.commons.competitionsetup.CompetitionSetupTransactionalService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.test.BaseTest;
 import org.innovateuk.ifs.competition.mapper.AssessorCountOptionMapper;
@@ -68,14 +69,14 @@ import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.project.bankdetails.mapper.BankDetailsMapper;
 import org.innovateuk.ifs.project.bankdetails.repository.BankDetailsRepository;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
-import org.innovateuk.ifs.project.finance.repository.*;
-import org.innovateuk.ifs.project.finance.service.ProjectFinanceNotesService;
-import org.innovateuk.ifs.project.finance.service.ProjectFinanceQueriesService;
-import org.innovateuk.ifs.project.finance.transactional.FinanceCheckService;
-import org.innovateuk.ifs.project.finance.transactional.ProjectFinanceService;
-import org.innovateuk.ifs.project.finance.workflow.financechecks.configuration.EligibilityWorkflowHandler;
-import org.innovateuk.ifs.project.finance.workflow.financechecks.configuration.FinanceCheckWorkflowHandler;
-import org.innovateuk.ifs.project.finance.workflow.financechecks.configuration.ViabilityWorkflowHandler;
+import org.innovateuk.ifs.project.financecheck.repository.*;
+import org.innovateuk.ifs.project.financecheck.service.FinanceCheckNotesService;
+import org.innovateuk.ifs.project.financecheck.service.FinanceCheckQueriesService;
+import org.innovateuk.ifs.project.financecheck.service.FinanceCheckService;
+import org.innovateuk.ifs.project.financecheck.transactional.SpendProfileService;
+import org.innovateuk.ifs.project.financecheck.workflow.financechecks.configuration.EligibilityWorkflowHandler;
+import org.innovateuk.ifs.project.financecheck.workflow.financechecks.configuration.FinanceCheckWorkflowHandler;
+import org.innovateuk.ifs.project.financecheck.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
 import org.innovateuk.ifs.project.mapper.MonitoringOfficerMapper;
 import org.innovateuk.ifs.project.mapper.ProjectMapper;
@@ -409,10 +410,10 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected AssessorFeedbackService assessorFeedbackServiceMock;
 
     @Mock
-    protected ProjectFinanceQueriesService projectFinanceQueriesService;
+    protected FinanceCheckQueriesService financeCheckQueriesService;
 
     @Mock
-    protected ProjectFinanceNotesService projectFinanceNotesService;
+    protected FinanceCheckNotesService financeCheckNotesService;
 
     @Mock
     protected ProjectFinanceAttachmentService projectFinanceAttachmentServiceMock;
@@ -487,7 +488,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected SpendProfileRepository spendProfileRepositoryMock;
 
     @Mock
-    protected ProjectFinanceService projectFinanceServiceMock;
+    protected SpendProfileService spendProfileServiceMock;
 
     @Mock
     protected UserAuthenticationService userAuthenticationService;
@@ -644,6 +645,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ApplicationResearchCategoryService applicationResearchCategoryService;
+
+    @Mock
+    protected CompetitionSetupTransactionalService competitionSetupTransactionalServiceMock;
 
     @Before
     public void setupMockInjection() {

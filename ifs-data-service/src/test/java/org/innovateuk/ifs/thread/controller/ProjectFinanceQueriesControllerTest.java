@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.thread.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.project.finance.controller.ProjectFinanceQueriesController;
+import org.innovateuk.ifs.project.financecheck.controller.ProjectFinanceQueriesController;
 import org.innovateuk.threads.resource.PostResource;
 import org.innovateuk.threads.resource.QueryResource;
 import org.junit.Test;
@@ -24,12 +24,12 @@ public class ProjectFinanceQueriesControllerTest extends BaseControllerMockMVCTe
 
     @Override
     protected ProjectFinanceQueriesController supplyControllerUnderTest() {
-        return new ProjectFinanceQueriesController(projectFinanceQueriesService);
+        return new ProjectFinanceQueriesController(financeCheckQueriesService);
     }
 
     @Override
     public void setupMockMvc() {
-        controller = new ProjectFinanceQueriesController(projectFinanceQueriesService);
+        controller = new ProjectFinanceQueriesController(financeCheckQueriesService);
         super.setupMockMvc();
     }
 
@@ -37,33 +37,33 @@ public class ProjectFinanceQueriesControllerTest extends BaseControllerMockMVCTe
     public void testFindOne() throws Exception {
         final Long queryId = 22L;
         QueryResource query = new QueryResource(queryId, null, null, null, null, false, null);
-        when(projectFinanceQueriesService.findOne(queryId)).thenReturn(serviceSuccess(query));
+        when(financeCheckQueriesService.findOne(queryId)).thenReturn(serviceSuccess(query));
 
         mockMvc.perform(get("/project/finance/queries/{threadId}", queryId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(query)));
 
-        verify(projectFinanceQueriesService).findOne(22L);
+        verify(financeCheckQueriesService).findOne(22L);
     }
 
     @Test
     public void testFindAll() throws Exception {
         final Long contextId = 22L;
         QueryResource query = new QueryResource(3L, null, null, null, null, false, null);
-        when(projectFinanceQueriesService.findAll(contextId)).thenReturn(serviceSuccess(asList(query)));
+        when(financeCheckQueriesService.findAll(contextId)).thenReturn(serviceSuccess(asList(query)));
 
         mockMvc.perform(get("/project/finance/queries/all/{contextClassId}", contextId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(asList(query))));
 
-        verify(projectFinanceQueriesService).findAll(contextId);
+        verify(financeCheckQueriesService).findAll(contextId);
     }
 
     @Test
     public void testCreate() throws Exception {
         final Long contextId = 22L;
         final QueryResource query = new QueryResource(35L, contextId, null, null, null, false, null);
-        when(projectFinanceQueriesService.create(query)).thenReturn(serviceSuccess(query.id));
+        when(financeCheckQueriesService.create(query)).thenReturn(serviceSuccess(query.id));
 
         mockMvc.perform(post("/project/finance/queries")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -71,20 +71,20 @@ public class ProjectFinanceQueriesControllerTest extends BaseControllerMockMVCTe
                 .andExpect(content().string(objectMapper.writeValueAsString(35L)))
                 .andExpect(status().isCreated());
 
-        verify(projectFinanceQueriesService).create(query);
+        verify(financeCheckQueriesService).create(query);
     }
 
     @Test
     public void testAddPost() throws Exception {
         Long threadId = 22L;
         PostResource post = new PostResource(33L, null, null, null, null);
-        when(projectFinanceQueriesService.addPost(post, threadId)).thenReturn(serviceSuccess());
+        when(financeCheckQueriesService.addPost(post, threadId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/finance/queries/{threadId}/post", threadId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(post)))
                 .andExpect(status().isCreated());
 
-        verify(projectFinanceQueriesService).addPost(post, threadId);
+        verify(financeCheckQueriesService).addPost(post, threadId);
     }
 }
