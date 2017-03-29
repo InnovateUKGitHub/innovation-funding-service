@@ -5,6 +5,8 @@ import org.innovateuk.ifs.application.form.ApplicationTeamAddOrganisationForm;
 import org.innovateuk.ifs.application.form.ApplicationTeamUpdateForm;
 import org.innovateuk.ifs.application.populator.ApplicationTeamManagementModelPopulator;
 import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.viewmodel.ApplicationTeamManagementApplicantRowViewModel;
+import org.innovateuk.ifs.application.viewmodel.ApplicationTeamManagementViewModel;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
@@ -25,6 +27,7 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.processAnyFailuresOrSucceed;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
@@ -59,6 +62,7 @@ public class ApplicationTeamManagementController {
                                         @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form) {
         model.addAttribute("model", applicationTeamManagementModelPopulator.populateModelByOrganisationId(applicationId, organisationId,
                 loggedInUser.getId()));
+        addExistingApplicantsToForm(model, form);
         return "application-team/edit-org";
     }
 
@@ -70,6 +74,7 @@ public class ApplicationTeamManagementController {
                                                             @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form) {
         model.addAttribute("model", applicationTeamManagementModelPopulator.populateModelByInviteOrganisationId(applicationId, inviteOrganisationId,
                 loggedInUser.getId()));
+        addExistingApplicantsToForm(model, form);
         return "application-team/edit-org";
     }
 
@@ -256,11 +261,20 @@ public class ApplicationTeamManagementController {
     }
 
     private void validateUniqueEmails(ApplicationTeamUpdateForm form, BindingResult bindingResult) {
-        Set<String> emails = new HashSet<>();
+        Set<String> emails = new HashSet<>(form.getExistingApplicants());
+
         forEachWithIndex(form.getApplicants(), (index, applicantInviteForm) -> {
             if (!emails.add(applicantInviteForm.getEmail())) {
-                bindingResult.rejectValue(format("applicants[%s].email", index), "email.already.in.invite");
+                bindingResult.rejectValue(format("applicants[%s].email", index), "email.already.in.invite",
+                        "You have used this email address for another applicant.");
             }
         });
+    }
+
+    private void addExistingApplicantsToForm(Model model, ApplicationTeamUpdateForm form) {
+        ApplicationTeamManagementViewModel viewModel = (ApplicationTeamManagementViewModel) model.asMap().get("model");
+        List<ApplicationTeamManagementApplicantRowViewModel> applicants = viewModel.getApplicants();
+
+        form.setExistingApplicants(simpleMap(applicants, row -> row.getEmail()));
     }
 }

@@ -235,7 +235,6 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         Map<String, UserResource> usersMap = setupUserResources();
         setupOrganisationInviteWithInviteForLeadOrg(applicationResource.getId(), usersMap, organisationsMap);
         UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
-
         OrganisationResource organisation = organisationsMap.get("Empire Ltd");
 
         ApplicationTeamUpdateForm expectedForm = new ApplicationTeamUpdateForm();
@@ -244,6 +243,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
                 new ApplicantInviteForm("Joe Smith", "joe.smith@empire.com")
         );
         expectedForm.setApplicants(applicants);
+        expectedForm.setExistingApplicants(singletonList(leadApplicant.getEmail()));
 
         List<ApplicationInviteResource> applicationInvites = asList(
                 new ApplicationInviteResource(applicants.get(0).getName(), applicants.get(0).getEmail(), applicationResource.getId()),
@@ -259,7 +259,8 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
                 .param("applicants[0].name", applicants.get(0).getName())
                 .param("applicants[0].email", applicants.get(0).getEmail())
                 .param("applicants[1].name", applicants.get(1).getName())
-                .param("applicants[1].email", applicants.get(1).getEmail()))
+                .param("applicants[1].email", applicants.get(1).getEmail())
+                .param("existingApplicants[0]", leadApplicant.getEmail()))
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/application/%s/team", applicationResource.getId())));
@@ -276,12 +277,14 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         Map<String, UserResource> usersMap = setupUserResources();
         InviteOrganisationResource inviteOrganisationResource = setupOrganisationInviteWithAnUnconfirmedOrganisation(usersMap);
         UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
+        UserResource existingApplicant = usersMap.get("jessica.doe@ludlow.com");
 
         ApplicationTeamUpdateForm expectedForm = new ApplicationTeamUpdateForm();
         List<ApplicantInviteForm> applicants = singletonList(
                 new ApplicantInviteForm("Fred Brown", "fred.brown@ludlow.com")
         );
         expectedForm.setApplicants(applicants);
+        expectedForm.setExistingApplicants(singletonList(existingApplicant.getEmail()));
 
         ApplicationInviteResource applicationInvite = newApplicationInviteResource()
                 .withId((Long) null)
@@ -299,7 +302,8 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         mockMvc.perform(post("/application/{applicationId}/team/update?inviteOrganisation={inviteOrganisationId}", applicationResource.getId(), inviteOrganisationResource.getId())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("applicants[0].name", applicants.get(0).getName())
-                .param("applicants[0].email", applicants.get(0).getEmail()))
+                .param("applicants[0].email", applicants.get(0).getEmail())
+                .param("existingApplicants[0]", existingApplicant.getEmail()))
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/application/%s/team", applicationResource.getId())));
@@ -316,6 +320,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         Map<String, UserResource> usersMap = setupUserResources();
         setupOrganisationInviteWithInviteForLeadOrg(applicationResource.getId(), usersMap, organisationsMap);
         UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
+        UserResource existingApplicant = usersMap.get("jessica.doe@ludlow.com");
 
         OrganisationResource organisation = organisationsMap.get("Ludlow");
 
@@ -324,6 +329,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
                 new ApplicantInviteForm("Joe Smith", "joe.smith@empire.com")
         );
         expectedForm.setApplicants(applicants);
+        expectedForm.setExistingApplicants(singletonList(existingApplicant.getEmail()));
 
         ApplicationInviteResource applicationInvite = newApplicationInviteResource()
                 .withId((Long) null)
@@ -339,7 +345,8 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         mockMvc.perform(post("/application/{applicationId}/team/update?organisation={organisationId}", applicationResource.getId(), organisation.getId())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("applicants[0].name", applicants.get(0).getName())
-                .param("applicants[0].email", applicants.get(0).getEmail()))
+                .param("applicants[0].email", applicants.get(0).getEmail())
+                .param("existingApplicants[0]", existingApplicant.getEmail()))
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/application/%s/team", applicationResource.getId())));
@@ -355,6 +362,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
         Map<String, UserResource> usersMap = setupUserResources();
         setupOrganisationInviteWithInviteForLeadOrg(applicationResource.getId(), usersMap, organisationsMap);
+        UserResource existingApplicant = usersMap.get("jessica.doe@ludlow.com");
 
         OrganisationResource organisation = organisationsMap.get("Ludlow");
 
@@ -363,6 +371,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
                 new ApplicantInviteForm("Joe Smith", "joe.smith@empire.com")
         );
         expectedForm.setApplicants(applicants);
+        expectedForm.setExistingApplicants(singletonList(existingApplicant.getEmail()));
 
         ApplicationInviteResource applicationInvite = newApplicationInviteResource()
                 .withId((Long) null)
@@ -378,7 +387,8 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         mockMvc.perform(post("/application/{applicationId}/team/update?organisation={organisationId}", applicationResource.getId(), organisation.getId())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("applicants[0].name", applicants.get(0).getName())
-                .param("applicants[0].email", applicants.get(0).getEmail()))
+                .param("applicants[0].email", applicants.get(0).getEmail())
+                .param("existingApplicants[0]", existingApplicant.getEmail()))
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/application/%s/team", applicationResource.getId())));
@@ -389,7 +399,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
     }
 
     @Test
-    public void submitUpdateLeadOrganisation_loggedInUserIsLead_invalid() throws Exception {
+    public void submitUpdateLeadOrganisation_loggedInUserIsLead_invalidForm() throws Exception {
         Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
         ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
         Map<String, UserResource> usersMap = setupUserResources();
@@ -404,7 +414,8 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         setLoggedInUser(leadApplicant);
         MvcResult result = mockMvc.perform(post("/application/{applicationId}/team/update?organisation={organisationId}", applicationResource.getId(), organisation.getId())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("applicants[0].name", applicants.get(0).getName()))
+                .param("applicants[0].name", applicants.get(0).getName())
+                .param("existingApplicants[0]", leadApplicant.getEmail()))
                 .andExpect(status().isOk())
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors("form", "applicants[0].email"))
@@ -427,7 +438,47 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
     }
 
     @Test
-    public void submitUpdateLeadOrganisation_duplicateApplicant() throws Exception {
+    public void submitUpdateLeadOrganisation_duplicateApplicantWebTier() throws Exception {
+        Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
+        ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
+        Map<String, UserResource> usersMap = setupUserResources();
+        setupOrganisationInviteWithInviteForLeadOrg(applicationResource.getId(), usersMap, organisationsMap);
+        UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
+
+        OrganisationResource organisation = organisationsMap.get("Empire Ltd");
+        List<ApplicantInviteForm> applicants = singletonList(
+                new ApplicantInviteForm("Steve Smith", "steve.smith@empire.com")
+        );
+
+        setLoggedInUser(leadApplicant);
+        MvcResult result = mockMvc.perform(post("/application/{applicationId}/team/update?organisation={organisationId}", applicationResource.getId(), organisation.getId())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("applicants[0].name", applicants.get(0).getName())
+                .param("applicants[0].email", applicants.get(0).getEmail())
+                .param("existingApplicants[0]", leadApplicant.getEmail()))
+                .andExpect(status().isOk())
+                .andExpect(model().hasErrors())
+                .andExpect(model().attributeHasFieldErrors("form", "applicants[0].email"))
+                .andExpect(view().name("application-team/edit-org"))
+                .andReturn();
+
+        ApplicationTeamUpdateForm form = (ApplicationTeamUpdateForm) result.getModelAndView().getModel().get("form");
+
+        BindingResult bindingResult = form.getBindingResult();
+        assertEquals(0, bindingResult.getGlobalErrorCount());
+        assertEquals(1, bindingResult.getFieldErrorCount());
+        assertTrue(bindingResult.hasFieldErrors("applicants[0].email"));
+        assertEquals("You have used this email address for another applicant.", bindingResult.getFieldError("applicants[0].email").getDefaultMessage());
+
+        InOrder inOrder = inOrder(applicationService, inviteOrganisationRestService, userService, inviteRestService);
+        inOrder.verify(applicationService).getById(applicationResource.getId());
+        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
+        inOrder.verify(userService).findById(leadApplicant.getId());
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void submitUpdateLeadOrganisation_duplicateApplicantDataTier() throws Exception {
         Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
         ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
         Map<String, UserResource> usersMap = setupUserResources();
@@ -456,7 +507,8 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         MvcResult result = mockMvc.perform(post("/application/{applicationId}/team/update?organisation={organisationId}", applicationResource.getId(), organisation.getId())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("applicants[0].name", applicants.get(0).getName())
-                .param("applicants[0].email", applicants.get(0).getEmail()))
+                .param("applicants[0].email", applicants.get(0).getEmail())
+                .param("existingApplicants[0]", "phil.jones@empire.com"))
                 .andExpect(status().isOk())
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors("form", "applicants[0].email"))
