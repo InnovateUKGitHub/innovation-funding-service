@@ -114,7 +114,7 @@
                 </div>
             </div>
         </fieldset>
-        <th:block th:if="${model.newAttachmentLinks.size() > 0}">
+        <th:block th:unless="${model.newAttachmentLinks.isEmpty()}">
             <fieldset>
                 <legend class="heading-small">Supporting documentation</legend>
                 <th:block th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">

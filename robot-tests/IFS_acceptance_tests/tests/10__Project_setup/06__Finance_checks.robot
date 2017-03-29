@@ -144,7 +144,6 @@ Viability and eligibility sections both available
     Then the user should see the option in the drop-down menu    Viability    section
     And the user should see the option in the drop-down menu    Eligibility    section
 
-
 Large pdf uploads not allowed
     [Documentation]    INFUND-4840
     [Tags]
@@ -367,8 +366,6 @@ Finance contact can view the file
     And the file has been scanned for viruses
     When the user clicks the button/link    jQuery=a:contains("${valid_pdf}")
     Then the user goes back to the initial page after having checked the attachment
-#    [Teardown]    the user goes back to the previous page
-#    [Teardown]    the user goes back to the initial page after having checked the attachment
 
 Finance contact can upload more than one file
     [Documentation]    INFUND-4843
@@ -381,7 +378,6 @@ Finance contact can still view both files
     [Tags]
     When the user clicks the button/link    jQuery=form a:contains("${valid_pdf}"):nth-of-type(1)
     Then the user should not see an error in the page
-#    And the user goes back to the previous page
     And the user goes back to the initial page after having checked the attachment
     When the user clicks the button/link    jQuery=form a:contains("${valid_pdf}"):nth-of-type(2)
     Then the user should not see an error in the page
