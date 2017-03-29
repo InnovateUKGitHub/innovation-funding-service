@@ -50,7 +50,7 @@ Filtering on the Manage funding applications page
     [Documentation]    INFUND-8066
     [Tags]
     Given The user clicks the button/link    jQuery=.button:contains("Manage funding notifications")
-    Given the user enters text to a text field    id=stringFilter    68
+    And the user enters text to a text field    id=stringFilter    68
     And the user selects the option from the drop-down menu    Yes    id=sendFilter
     And the user selects the option from the drop-down menu    Successful    id=fundingFilter
     When the user clicks the button/link    jQuery=button:contains("Filter")
@@ -68,7 +68,6 @@ Release feedback
     When The user clicks the button/link    jQuery=a:contains(Live)
     Then The user should not see the text in the page    ${INFORM_COMPETITION_NAME}
     And the user reads his email    ${test_mailbox_two}+releasefeedback@gmail.com    Feedback for your application    The feedback provided by the independent assessors has been reviewed by Innovate UK
-    [Teardown]
 
 Unsuccessful applicant sees unsuccessful alert
     [Documentation]    INFUND-7861
