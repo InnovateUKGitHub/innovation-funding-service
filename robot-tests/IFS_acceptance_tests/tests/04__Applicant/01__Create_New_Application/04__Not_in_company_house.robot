@@ -15,7 +15,7 @@ Not in Companies House company link
     [Tags]    HappyPath
     Given the user navigates to the page    ${find_org_on_company_house_url}
     And the user should see the text in the page    Not on Companies House?
-    When the user clicks the button/link    name=not-in-company-house
+    When the user clicks the button/link    jQuery=summary:contains("Enter details manually")
     Then the user should see the text in the page    Organisation name
     And the user should see the text in the page    Postcode
 
