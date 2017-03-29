@@ -3,11 +3,10 @@ package org.innovateuk.ifs.management.model;
 
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
+import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
-import org.innovateuk.ifs.application.service.ApplicationSummaryService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.management.viewmodel.CompetitionInFlightStatsViewModel;
 import org.innovateuk.ifs.management.viewmodel.SendNotificationsViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,7 +28,6 @@ public class SendNotificationsModelPopulator {
 
     public SendNotificationsViewModel populate(long competitionId, List<Long> applicationIds){
 
-
         ApplicationSummaryPageResource pagedApplications = applicationSummaryRestService
                 .getAllApplications(competitionId, null, 0, Integer.MAX_VALUE, null)
                 .getSuccessObjectOrThrowException();
@@ -39,7 +37,18 @@ public class SendNotificationsModelPopulator {
                 .collect(Collectors.toList());
 
         CompetitionResource competitionResource = competitionService.getById(competitionId);
-        CompetitionInFlightStatsViewModel keyStatistics = competitionInFlightStatsModelPopulator.populateStatsViewModel(competitionResource);
-        return new SendNotificationsViewModel(filteredApplications, keyStatistics, competitionId, competitionResource.getName());
+
+        long successfulCount = getApplicationCountByFundingDecision(filteredApplications, FundingDecision.FUNDED);
+        long unsuccessfulCount = getApplicationCountByFundingDecision(filteredApplications, FundingDecision.UNFUNDED);
+        long onHoldCount = getApplicationCountByFundingDecision(filteredApplications, FundingDecision.ON_HOLD);
+
+        return new SendNotificationsViewModel(filteredApplications, successfulCount, unsuccessfulCount, onHoldCount, competitionId, competitionResource.getName());
+    }
+
+    private long getApplicationCountByFundingDecision(List<ApplicationSummaryResource> filteredApplications, FundingDecision fundingDecision) {
+        return filteredApplications.stream()
+                .filter(application -> application.getFundingDecision() == fundingDecision)
+                .collect(Collectors.toList())
+                .size();
     }
 }

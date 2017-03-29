@@ -67,6 +67,8 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...
 ...               INFUND-7577 Finance Checks - Overheads displayed in the expanded Overheads section of the partner’s project finances and Project Finance user can Edit, Save, Change selection from 0% to 20% to Calculate overhead, contains spreadsheet when uploaded
 ...
+...               INFUND-7578 Organisation details - Headcount and Turnover
+...
 ...               INFUND-8787 The Finance checks status in the external Project Setup dashboard can change to being enabled to all partners in the partner organisation as soon as the Finance Contact has been provided in Project Details.
 
 Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
@@ -329,10 +331,9 @@ Large pdf uploads not allowed for query response
     Then the user should see the text in the page    ${too_large_pdf_validation_error}
     [Teardown]    the user goes back to the previous page
 
-#TODO Pending tag to be removed with resolution of INFUND-8855
 Non pdf uploads not allowed for query response
     [Documentation]    INFUND-4843
-    [Tags]  Pending
+    [Tags]
     When the user uploads the file      name=attachment    ${text_file}
     Then the user should see the text in the page    ${wrong_filetype_validation_error}
 
@@ -738,9 +739,11 @@ Viability checks are populated in the table
 Project finance user can see the viability check page for the lead partner
     [Documentation]    INFUND-4831, INFUND-4830, INFUND-4825
     [Tags]
-    when the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")    # clicking the review button for the lead partner
+    When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")    # clicking the review button for the lead partner
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
     And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_COMPANY_NUMBER}
+    And the user should see the text in the element  css=.standard-definition-list dd:nth-of-type(3)  ${PROJECT_SETUP_APPLICATION_1_LEAD_COMPANY_TURNOVER}   #turnover
+    And the user should see the text in the element    css=.standard-definition-list dd:nth-of-type(4)  ${PROJECT_SETUP_APPLICATION_1_LEAD_COMPANY_HEADCOUNT}    #headcount
 
 Project finance user can see the lead partner's information
     [Documentation]    INFUND-4825
@@ -805,11 +808,13 @@ Confirming viability should update on the finance checks page
     Then the user should see the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Approved")
 
 Project finance user can see the viability checks for the industrial partner
-    [Documentation]    INFUND-4831, INFUND-4830
+    [Documentation]    INFUND-4831, INFUND-4830, INFUND-7578
     [Tags]
     When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(3) td:nth-child(2) a:contains("Review")
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
     And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_NUMBER}
+    And the user should see the text in the element  css=.standard-definition-list dd:nth-of-type(3)  ${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_TURNOVER}
+    And the user should see the text in the element    css=.standard-definition-list dd:nth-of-type(4)  ${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_HEADCOUNT}
 
 Checking the approve viability checkbox enables RAG selection but not confirm viability button for partner
     [Documentation]    INFUND-4831, INFUND-4856, INFUND-4830
@@ -947,13 +952,13 @@ Project finance user can amend all sections of eligibility for lead
 
 Project Finance user can view three Radio Button Options when expanded Lead-Partner's "Overhead costs" section
     [Documentation]     INFUND-7577
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Overhead costs")
     Then the user should see the three Radio Button Options
 
 Project Finance user can Edit and Save Lead-Partner's 20%-of-labour-costs option
     [Documentation]     INFUND-7577
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     Then the user clicks the button/link    jQuery=label[data-target="overhead-default-percentage"]
     And the user should see the element     jQuery=section:nth-of-type(2) button span:contains("£ 12,120")
@@ -969,7 +974,7 @@ Project Finance user can Edit and Save Lead-Partner's 20%-of-labour-costs option
 
 Project Finance user can Edit and Save Lead-Partner's No-overhead-costs option
     [Documentation]     INFUND-7577
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     Then the user clicks the button/link    jQuery=label[data-target="overhead-none"]
     And the user should see the element     jQuery=h3:contains("No overhead costs")
@@ -981,7 +986,7 @@ Project Finance user can Edit and Save Lead-Partner's No-overhead-costs option
 
 Project Finance user can Edit, enters invalid values and saves in Lead-Partner's Calculate-overheads option
     [Documentation]     INFUND-7577
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     Then the user clicks the button/link    jQuery=label[data-target="overhead-total"]
     And the user should see the element     jQuery=h3:contains("Uploaded spreadsheet")
@@ -997,7 +1002,7 @@ Project Finance user can Edit, enters invalid values and saves in Lead-Partner's
 
 Project Finance user can provide overhead value for Lead-Partner manually instead of calculations from spreadsheet.
     [Documentation]     INFUND-7577
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    css=a.eligibility-0
     Then the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     And the user enters text to a text field     jQuery=section:nth-of-type(2) input[id^="cost-overheads"][id$="calculate"]  1954
@@ -1089,13 +1094,13 @@ Project finance user can amend all sections of eligibility for partner
 
 Project Finance user can view three Radio Button Options when expanded Partner's "Overhead costs" section
     [Documentation]     INFUND-7577
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Overhead costs")
     Then the user should see the three Radio Button Options
 
 Project Finance user can Edit and Save Partner's 20%-of-labour-costs option
     [Documentation]     INFUND-7577
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     Then the user clicks the button/link    jQuery=label[data-target="overhead-default-percentage"]
     And the user should see the element     jQuery=section:nth-of-type(2) button span:contains("£ 11,956")
@@ -1111,7 +1116,7 @@ Project Finance user can Edit and Save Partner's 20%-of-labour-costs option
 
 Project Finance user can Edit and Save Partner's No-overhead-costs option
     [Documentation]     INFUND-7577
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     Then the user clicks the button/link    jQuery=label[data-target="overhead-none"]
     And the user should see the element     jQuery=h3:contains("No overhead costs")
@@ -1123,7 +1128,7 @@ Project Finance user can Edit and Save Partner's No-overhead-costs option
 
 Project Finance user can Edit, enters invalid values and saves in Partner's Calculate-overheads option
     [Documentation]     INFUND-7577
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     Then the user clicks the button/link    jQuery=label[data-target="overhead-total"]
     And the user should see the element     jQuery=h3:contains("Uploaded spreadsheet")
@@ -1139,7 +1144,7 @@ Project Finance user can Edit, enters invalid values and saves in Partner's Calc
 
 Project Finance user can provide overhead value for Partner manually instead of calculations from spreadsheet.
     [Documentation]     INFUND-7577
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    css=a.eligibility-2
     Then the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     And the user enters text to a text field     jQuery=section:nth-of-type(2) input[id^="cost-overheads"][id$="calculate"]  9078
@@ -1194,7 +1199,7 @@ Confirming eligibility should show info on a readonly page for partner
     And the user should not see the element    id=rag-rating
     And the user should not see the checkbox    project-eligible
 
-Confirming eligibility should update on the finance checks page
+Confirming partner eligibility should update on the finance checks page
     [Documentation]    INFUND-4823, INFUND-7076
     [Tags]
     When the user clicks the button/link    link=Finance checks
