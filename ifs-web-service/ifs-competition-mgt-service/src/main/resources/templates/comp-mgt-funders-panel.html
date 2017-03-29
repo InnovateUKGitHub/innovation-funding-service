@@ -7,7 +7,7 @@
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" th:with="fullwidth=true"/>
-<main id="content" class="full-width">
+<main tabindex="-1" id="content" class="full-width">
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${competitionSummary.competitionId})}" />
 
