@@ -332,7 +332,7 @@ all partners submit their Spend Profile
     the user clicks the button/link    link=${Gabtype_Name}
     the user clicks the button/link    jQuery=.button:contains("Mark as complete")
     the user navigates to the page     ${server}/project-setup/project/${PS_GOL_Competition_Id}/partner-organisation/${Gabtype_Id}/spend-profile
-    the user clicks the button/link    jQuery=.button:contains("Review spend profiles")
+    the user clicks the button/link    jQuery=.button:contains("Review and send total project spend profile")
     the user clicks the button/link    jQuery=.button:contains("Send project spend profile")
     the user clicks the button/link    jQuery=.modal-confirm-spend-profile-totals .button[value="Send"]
 

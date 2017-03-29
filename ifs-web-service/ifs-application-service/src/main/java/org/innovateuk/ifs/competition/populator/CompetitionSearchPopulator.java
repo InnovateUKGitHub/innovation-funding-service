@@ -30,31 +30,23 @@ public class CompetitionSearchPopulator {
         CompetitionSearchViewModel viewModel = new CompetitionSearchViewModel();
         viewModel.setInnovationAreas(categoryService.getInnovationAreas());
 
-        Optional<PublicContentItemPageResource> pageResource = publicContentItemRestService.getByFilterValues(
+        PublicContentItemPageResource pageResource = publicContentItemRestService.getByFilterValues(
                 innovationAreaId,
                 keywords,
                 pageNumber,
-                CompetitionSearchViewModel.PAGE_SIZE).getOptionalSuccessObject();
+                CompetitionSearchViewModel.PAGE_SIZE).getSuccessObjectOrThrowException();
 
         innovationAreaId.ifPresent(viewModel::setSelectedInnovationAreaId);
         keywords.ifPresent(viewModel::setSearchKeywords);
 
-        if(pageNumber.isPresent()) {
+        if (pageNumber.isPresent()) {
             viewModel.setPageNumber(pageNumber.get());
-        }
-        else {
+        } else {
             viewModel.setPageNumber(0);
         }
 
-        if(pageResource.isPresent()) {
-            viewModel.setPublicContentItems(pageResource.get().getContent());
-            viewModel.setTotalResults(pageResource.get().getTotalElements());
-        }
-        else {
-            viewModel.setTotalResults(0L);
-        }
-
-
+        viewModel.setPublicContentItems(pageResource.getContent());
+        viewModel.setTotalResults(pageResource.getTotalElements());
         viewModel.setNextPageLink(createPageLink(innovationAreaId, keywords, pageNumber, 1));
         viewModel.setPreviousPageLink(createPageLink(innovationAreaId, keywords, pageNumber, -1));
 
@@ -65,7 +57,7 @@ public class CompetitionSearchPopulator {
         List<NameValuePair> searchparams = new ArrayList<>();
 
         Integer page = delta;
-        if(pageNumber.isPresent()) {
+        if (pageNumber.isPresent()) {
             page = pageNumber.get() + delta;
         }
 

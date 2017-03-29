@@ -69,7 +69,7 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...
 ...               INFUND-7578 Organisation details - Headcount and Turnover
 ...
-...               INFUND-8787 The Finance checks status in the external Project Setup dashboard can change to being enabled to all partners in the partner organisation as soon as the Finance Contact has been provided in Project Details.
+...               INFUND-8787 The Finance checks status in the external Project Setup dashboard.
 
 Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 Suite Teardown    the user closes the browser
@@ -288,17 +288,40 @@ Non finance contact can view query
     Given log in as a different user    steve.smith@empire.com    ${short_password}
     When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     Then the user should see the element    link=Finance checks
-    #  TODO The below line can be uncommented once 8787 is done
-    # And the user should not see the element    flag status for finance checks
+
+Finance contact can view Finance checks status in the external Project Setup dashboard
+    [Documentation]     INFUND-8787
+    [Tags]
+    When the user should see the element    link=Finance checks
+    Then the user should see the element    jQuery=ul li.require-action:nth-of-type(5):contains("We will review your financial information.")
+    And the user should see the element     jQuery=ul li.require-action:nth-of-type(5):contains("To be completed")
+
+Academic user can view Finance checks status in the external Project Setup dashboard
+    [Documentation]     INFUND-8787
+    [Tags]
+    Given log in as a different user    pete.tom@egg.com    ${short_password}
+    When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
+    Then the user should see the element    link=Finance checks
+    And the user should see the element     jQuery=ul li.waiting:nth-of-type(5):contains("We will review your financial information.")
+    And the user should see the element     jQuery=ul li.waiting:nth-of-type(5):contains("Awaiting review")
+
+Non Lead Partner can view Finance checks status in the external Project Setup dashboard
+    [Documentation]     INFUND-8787
+    [Tags]
+    Given log in as a different user    jessica.doe@ludlow.co.uk    ${short_password}
+    When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
+    Then the user should see the element    link=Finance checks
+    And the user should see the element     jQuery=ul li.waiting:nth-of-type(5):contains("We will review your financial information.")
+    And the user should see the element     jQuery=ul li.waiting:nth-of-type(5):contains("Awaiting review")
 
 Finance checks section status updated for finance contact
-    [Documentation]    INFUND-4843
+    [Documentation]    INFUND-4843, INFUND 8787
     [Tags]
     Given log in as a different user    ${test_mailbox_one}+fundsuccess@gmail.com    ${short_password}
     When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     Then the user should see the element    link=Finance checks
-    #  TODO The below line can be uncommented once 8787 is done
-    # And the user should see the element    flag status for finance checks
+    And the user should see the element     jQuery=ul li.require-action:nth-of-type(5):contains("We will review your financial information.")
+    And the user should see the element     jQuery=ul li.require-action:nth-of-type(5):contains("To be completed")
 
 Finance contact can view query
     [Documentation]    INFUND-4843
@@ -421,13 +444,6 @@ Respond to older query
     When the user enters text to a text field    css=.editor    this is some response text for other query
     When the user clicks the button/link    jQuery=.button:contains("Post response")
     When the user should not see the element    css=.editor
-
-Finance checks section status changes to hourglass
-    [Documentation]    INFUND-4843
-    [Tags]
-    When the user clicks the button/link    link=Project setup status
-    #  TODO The below line can be uncommented once 8787 is done
-    # Then the user should see the element    flag status for finance checks
 
 Queries raised column updates to 'view'
     [Documentation]    INFUND-4843
@@ -1263,21 +1279,45 @@ Other internal users do not have access to Finance checks
     Then the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check    You do not have the necessary permissions for your request
 
 Finance contact can access the external view of the finance checks page
-    [Documentation]    INFUND-7573
+    [Documentation]    INFUND-7573, INFUND 8787
     [Tags]    HappyPath
     [Setup]    Log in as a different user    ${test_mailbox_one}+fundsuccess@gmail.com    Passw0rd
     Given the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
+    Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
+    And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
     When the user clicks the button/link    link=Finance checks
     And the user should not see an error in the page
+    And the user should see the text in the page   The finance checks have been completed and your finances approved.
 
-Non finance contact can view finance checks page
+Lead-Partner can view finance checks page
     [Documentation]    INFUND-7573, INFUND 8787
     [Tags]
     [Setup]    Log in as a different user   steve.smith@empire.com    Passw0rd
     When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
-    Then the user should see the element    link=Finance checks
-    And the user clicks the button/link     link=Finance checks
-    Then the user should see the text in the page   The finance checks have been completed and your finances approved.
+    Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
+    And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
+    Then the user clicks the button/link     link=Finance checks
+    And the user should see the text in the page   The finance checks have been completed and your finances approved.
+
+Academic user can view Finance checks page
+    [Documentation]     INFUND-8787
+    [Tags]
+    Given log in as a different user    pete.tom@egg.com    ${short_password}
+    When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
+    Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
+    And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
+    Then the user clicks the button/link    link=Finance checks
+    And the user should see the text in the page   The finance checks have been completed and your finances approved.
+
+Non Lead Partner can view Finance checks page
+    [Documentation]     INFUND-8787
+    [Tags]
+    Given log in as a different user    jessica.doe@ludlow.co.uk    ${short_password}
+    When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
+    Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
+    And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
+    Then the user clicks the button/link    link=Finance checks
+    And the user should see the text in the page   The finance checks have been completed and your finances approved.
 
 *** Keywords ***
 the table row has expected values
