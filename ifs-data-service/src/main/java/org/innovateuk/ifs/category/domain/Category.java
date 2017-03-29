@@ -21,7 +21,6 @@ public abstract class Category {
     private Set<CategoryInnerLink> links = new HashSet<>();
 
     Category() {
-        // default constructor
     }
 
     protected Category(String name) {
