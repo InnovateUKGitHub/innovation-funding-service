@@ -37,7 +37,7 @@ public class OverheadsHandler extends FinanceRowHandler<Overhead> {
             case CUSTOM_RATE:
                 super.validate(overhead, bindingResult, Overhead.RateNotZero.class);
                 break;
-            case CUSTOM_AMOUNT:
+            case TOTAL:
                 super.validate(overhead, bindingResult, Overhead.TotalCost.class);
                 break;
             case NONE:

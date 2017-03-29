@@ -8,7 +8,7 @@ IFS.core.financeSpecifics = (function () {
         'NONE': '[id^="section-total-"][id$="-cost-none"]',
         'DEFAULT_PERCENTAGE': '[id^="section-total-"][id$="-default"]',
         'CUSTOM_RATE': '[id^="section-total-"][id$="-custom"]',
-        'CUSTOM_AMOUNT': '[id^="section-total-"][id$="-calculate-formatted"]'
+        'TOTAL': '[id^="section-total-"][id$="-calculate-formatted"]'
       }
     },
     init: function () {

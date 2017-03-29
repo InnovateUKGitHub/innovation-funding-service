@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.finance.resource.cost.OverheadRateType.CUSTOM_RATE;
-import static org.innovateuk.ifs.finance.resource.cost.OverheadRateType.CUSTOM_AMOUNT;
+import static org.innovateuk.ifs.finance.resource.cost.OverheadRateType.TOTAL;
 
 /**
  * Handles the conversion of form fields to overhead
@@ -47,7 +47,7 @@ public class OverheadsHandler extends FinanceRowHandler {
         if(rateTypeName.equals(CUSTOM_RATE.name())) {
             return "customRate";
         }
-        else if(rateTypeName.equals(CUSTOM_AMOUNT.name())) {
+        else if(rateTypeName.equals(TOTAL.name())) {
             return  "total";
         }
 
@@ -77,7 +77,7 @@ public class OverheadsHandler extends FinanceRowHandler {
             case DEFAULT_PERCENTAGE:
                 return OverheadRateType.DEFAULT_PERCENTAGE.getRate();
             case CUSTOM_RATE:
-            case CUSTOM_AMOUNT:
+            case TOTAL:
                 return customRate;
             case NONE:
             default:
