@@ -8,7 +8,7 @@
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main id="content">
+        <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="currentApplication=${model.application.currentApplication},linkTitle=${backTitle},linkClass='link-back',linkUrl=${backURL}" />
 
@@ -50,7 +50,7 @@
                     <p class="subtitle" th:if="${model.currentSection.getDescription()}" th:text="${model.currentSection.getDescription()}" />
                     <th:block th:unless="${model.hasFinanceView}">
                         <div class="warning-alert">
-                            This competition has already closed, you are no longer able to submit your application.
+                            Registration is now closed, you are no longer able to submit your application.
                         </div>
                     </th:block>
 

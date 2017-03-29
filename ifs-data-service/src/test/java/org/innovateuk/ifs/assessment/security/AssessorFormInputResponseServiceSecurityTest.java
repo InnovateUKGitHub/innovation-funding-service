@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.assessment.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.security.ApplicationLookupStrategy;
 import org.innovateuk.ifs.application.security.ApplicationPermissionRules;
@@ -11,6 +10,7 @@ import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.transactional.AssessorFormInputResponseService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -84,6 +84,18 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
     }
 
     @Test
+    public void saveUpdatedFormInputResponse() {
+        Long assessorFormInputResponseId = 2L;
+        AssessorFormInputResponseResource response = newAssessorFormInputResponseResource().build();
+
+        when(assessorFormInputResponseLookupStrategy.getAssessorFormInputResponseResource(assessorFormInputResponseId)).thenReturn(newAssessorFormInputResponseResource().withId(assessorFormInputResponseId).build());
+        assertAccessDenied(
+                () -> classUnderTest.saveUpdatedFormInputResponse(response),
+                () -> verify(assessorFormInputResponsePermissionRules).userCanUpdateAssessorFormInputResponse(isA(AssessorFormInputResponseResource.class), isA(UserResource.class))
+        );
+    }
+
+    @Test
     public void getApplicationAggregateScores() {
         long applicationId = 2;
 
@@ -105,6 +117,18 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
         );
     }
 
+    @Test
+    public void mapToFormInput() {
+        Long assessorFormInputResponseId = 2L;
+        AssessorFormInputResponseResource response = newAssessorFormInputResponseResource().build();
+
+        when(assessorFormInputResponseLookupStrategy.getAssessorFormInputResponseResource(assessorFormInputResponseId)).thenReturn(newAssessorFormInputResponseResource().withId(assessorFormInputResponseId).build());
+        assertAccessDenied(
+                () -> classUnderTest.mapToFormInputResponse(response),
+                () -> verify(assessorFormInputResponsePermissionRules).userCanUpdateAssessorFormInputResponse(isA(AssessorFormInputResponseResource.class), isA(UserResource.class))
+        );
+    }
+
     public static class TestAssessorFormInputResponseService implements AssessorFormInputResponseService {
         @Override
         public ServiceResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponses(Long assessmentId) {
@@ -117,7 +141,12 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
         }
 
         @Override
-        public ServiceResult<Void> updateFormInputResponse(AssessorFormInputResponseResource response) {
+        public ServiceResult<AssessorFormInputResponseResource> updateFormInputResponse(AssessorFormInputResponseResource response) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> saveUpdatedFormInputResponse(AssessorFormInputResponseResource response) {
             return null;
         }
 
@@ -128,6 +157,11 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
 
         @Override
         public ServiceResult<AssessmentFeedbackAggregateResource> getAssessmentAggregateFeedback(long applicationId, long questionId) {
+            return null;
+        }
+
+        @Override
+        public FormInputResponse mapToFormInputResponse(AssessorFormInputResponseResource response) {
             return null;
         }
     }

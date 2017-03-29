@@ -8,16 +8,15 @@ Resource          ../../../resources/defaultResources.robot
 *** Test Cases ***
 Academic organisations search
     [Documentation]    INFUND-1231
-    [Tags]    HappyPath    Email    SmokeTest   Pending
-    # TODO INFUND-8878
+    [Tags]    HappyPath    Email    SmokeTest
     [Setup]    Delete the emails from both test mailboxes
     Given we create a new user    ${test_mailbox_one}+invitedacademics${unique_email_number}@gmail.com
     Given the lead applicant invites a registered user    ${test_mailbox_one}+academicinvite${unique_email_number}@gmail.com    ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com
-    When the user reads his email and clicks the link    ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    participate in their application
+    When the user reads his email and clicks the link    ${test_mailbox_one}+inviteacademics${unique_email_number}@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation   3
     And the user clicks the button/link    jQuery=.button:contains("Yes, accept invitation")
     When the user selects the radio button    organisationType    2
     And the user clicks the button/link    jQuery=.button:contains("Continue")
-    And The user should see the text in the page    Your organisation must be on Je-S before we will consider you to be a research organisation
+    And The user should see the text in the page    Your organisation must be registered on Je-S before we will consider you to be a research organisation
     And the user clicks the button/link    jQuery=.button:contains("Search")
     Then the user should see an error    Please enter an organisation name to search.
     When the user enters text to a text field    id=organisationSearchName    abcd
@@ -29,8 +28,7 @@ Academic organisations search
 
 Accept invitation as academic
     [Documentation]    INFUND-1166, INFUND-917, INFUND-2450, INFUND-2256
-    [Tags]    HappyPath    Email    SmokeTest   Pending
-    # TODO INFUND-8878
+    [Tags]    HappyPath    Email    SmokeTest
     [Setup]    Delete the emails from both test mailboxes
     When the user enters text to a text field    id=organisationSearchName    Liv
     And the user clicks the button/link    jQuery=.button:contains("Search")

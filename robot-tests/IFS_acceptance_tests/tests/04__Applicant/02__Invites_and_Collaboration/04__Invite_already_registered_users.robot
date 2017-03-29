@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     INFUND-1458 As a existing user with an invitation to collaborate on an application and I am already registered with IFS I want to be able to use my existing credentials and confirm my details so that I don't have to follow the registration process again.
 ...
-...               INFUND-2716: Error in where the name of an invited partner doesn't update in 'view and add participants to your application'
+...               INFUND-2716: Error in where the name of an invited partner doesn't update in 'view team members and add collaborators'
 ...
 ...               INFUND-3759: Existing Applicant should be able to accept invitations for other applications in the same organisation
 Suite Setup       The guest user opens the browser
@@ -18,7 +18,7 @@ The invited user should not follow the registration flow again
     [Setup]    Delete the emails from both test mailboxes
     Given we create a new user    ${test_mailbox_one}+invitedregistered@gmail.com
     Given the lead applicant invites a registered user    ${test_mailbox_one}+invite2@gmail.com    ${test_mailbox_one}+invitedregistered@gmail.com
-    When the user reads his email and clicks the link    ${test_mailbox_one}+invitedregistered@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    participate in their application
+    When the user reads his email and clicks the link    ${test_mailbox_one}+invitedregistered@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation    3
     Then the user should see the text in the page    We have found an account with the invited email address
 
 The user clicks the login link
@@ -43,7 +43,7 @@ The continue button should redirect to the overview page
     Then the user should see the text in the page    Application overview
 
 The user edits the name this should be changed in the View team page
-    [Documentation]    INFUND-2716: Error in where the name of an invited partner doesn't update in 'view and add participants to your application'.
+    [Documentation]    INFUND-2716: Error in where the name of an invited partner doesn't update in 'view team members and add collaborators'.
     [Tags]    HappyPath
     Given the user navigates to the page    ${DASHBOARD_URL}
     When the user clicks the button/link    link=view and edit your profile details
@@ -53,12 +53,10 @@ The user edits the name this should be changed in the View team page
     [Teardown]    TestTeardown User closes the browser
 
 Invite a user with the same organisation under the same organisation
-    [Tags]  Pending
-    # TODO INFUND-8883
     [Documentation]    INFUND-3759
     [Setup]    Guest user log-in    ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     When Existing user creates a new application and invites a user from the same organisation
-    Then the invited user should get a message to contact the helpdesk    ${test_mailbox_one}+invite2@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    to participate in their application
+    Then the invited user should get a message to contact the helpdesk    ${test_mailbox_one}+invite2@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation
 
 *** Keywords ***
 the user enters profile details
@@ -70,7 +68,7 @@ the user enters profile details
 the user should see the change in the view team members page
     The user clicks the button/link    link=My dashboard
     The user clicks the button/link    css=#content section:nth-of-type(1) li:nth-child(2) h3 a
-    The user clicks the button/link    link=view and add participants to your application
+    The user clicks the button/link    link=view team members and add collaborators
     The user should see the element    jQuery=.table-overflow:eq(1) td:nth-child(1):contains("Dennis Bergkamp")
 
 Existing user creates a new application and invites a user from the same organisation
@@ -94,7 +92,7 @@ Existing user creates a new application and invites a user from the same organis
 The invited user should get a message to contact the helpdesk
     [Arguments]    ${recipient}    ${subject}    ${pattern}
     And the guest user opens the browser
-    When the user reads his email and clicks the link    ${recipient}    ${subject}    ${pattern}
+    When the user reads his email and clicks the link    ${recipient}    ${subject}    ${pattern}   3
     When the user clicks the button/link    link=Continue or sign in
     And the guest user inserts user email & password    ${recipient}  ${correct_password}
     And the guest user clicks the log-in button

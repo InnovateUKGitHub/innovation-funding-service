@@ -9,7 +9,7 @@
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main id="content">
+<main tabindex="-1" id="content">
   <th:block th:insert="fragments/layout :: main-content-start" />
   <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{competitionId}/status(competitionId=${model.financeCheckSummaryResource.competitionId})}" />
 
@@ -46,7 +46,7 @@
           <th scope="col" class="aligncentre">Viability</th>
           <th scope="col" class="aligncentre cell-border-right">RAG</th>
           <th scope="col" class="aligncentre">Eligibility</th>
-          <th scope="col" class="aligncentre">RAG</th>
+          <th scope="col" class="aligncentre cell-border-right">RAG</th>
           <th scope="col" class="aligncentre">Queries raised</th>
           <th scope="col" class="aligncentre">Notes</th>
         </tr>

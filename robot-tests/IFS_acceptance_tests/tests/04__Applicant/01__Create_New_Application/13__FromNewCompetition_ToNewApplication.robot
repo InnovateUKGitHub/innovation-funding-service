@@ -291,7 +291,7 @@ Invite Collaborator in Application with Growth table
     # TODO INFUND-8561
     [Setup]  the user navigates to the page             ${dashboard_url}
     Given the lead applicant invites an existing user   ${compWITHGrowth}  ${collaborator1_credentials["email"]}
-    When the user reads his email and clicks the link   ${collaborator1_credentials["email"]}  Invitation to collaborate in ${compWITHGrowth}  participate in their application
+    When the user reads his email and clicks the link   ${collaborator1_credentials["email"]}  Invitation to collaborate in ${compWITHGrowth}  You will be joining as part of the organisation    3
     Then the user should see the element                jQuery=h1:contains("We have found an account with the invited email address")
     And the user clicks the button/link                 link=Sign into the Innovation Funding Service.
     When guest user log-in                              &{collaborator1_credentials}
@@ -446,7 +446,7 @@ the user can edit resubmit and read only of the organisation
 the lead applicant invites an existing user
     [Arguments]  ${comp_title}  ${EMAIL_INVITED}
     the user clicks the button/link    link=${comp_title}
-    the user clicks the button/link    link=view and add participants to your application
+    the user clicks the button/link    link=view team members and add collaborators
     the user clicks the button/link    link=Invite new contributors
     the user clicks the button/link    jQuery=button:contains('Add additional partner organisation')
     Input Text                         name=organisations[1].organisationName    innovate
@@ -462,7 +462,7 @@ the user navigates to the growth table finances
 
 Invite a non-existing collaborator in Appplication with Growth table
     the user clicks the button/link      jQuery=a:contains("Application Overview")
-    the user clicks the button/link       jQuery=a:contains("view and add participants to your application")
+    the user clicks the button/link       jQuery=a:contains("view team members and add collaborators")
     the user clicks the button/link       jQuery=a:contains("Add partner organisation")
     the user should see the element       jQuery=h1:contains(Add organisation)
     the user enters text to a text field      id=organisationName    innovate
@@ -474,7 +474,7 @@ Invite a non-existing collaborator in Appplication with Growth table
     newly invited collaborator can create account and sign in
 
 Newly invited collaborator can create account and sign in
-    the user reads his email and clicks the link     liam@innovate.com  Invitation to collaborate in ${compWITHGrowth}  participate in their application
+    the user reads his email and clicks the link     liam@innovate.com  Invitation to collaborate in ${compWITHGrowth}  You will be joining as part of the organisation    3
     the user clicks the button/link      jQuery=a:contains("Yes, accept invitation")
     the user should see the element      jquery=h1:contains("Choose your organisation type")
     the user completes the new account creation

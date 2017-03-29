@@ -67,6 +67,8 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...
 ...               INFUND-7577 Finance Checks - Overheads displayed in the expanded Overheads section of the partner’s project finances and Project Finance user can Edit, Save, Change selection from 0% to 20% to Calculate overhead, contains spreadsheet when uploaded
 ...
+...               INFUND-7578 Organisation details - Headcount and Turnover
+...
 ...               INFUND-8787 The Finance checks status in the external Project Setup dashboard can change to being enabled to all partners in the partner organisation as soon as the Finance Contact has been provided in Project Details.
 ...
 ...               INFUND-7579 Maximum research participation exceeded
@@ -333,10 +335,9 @@ Large pdf uploads not allowed for query response
     Then the user should see the text in the page    ${too_large_pdf_validation_error}
     [Teardown]    the user goes back to the previous page
 
-#TODO Pending tag to be removed with resolution of INFUND-8855
 Non pdf uploads not allowed for query response
     [Documentation]    INFUND-4843
-    [Tags]  Pending
+    [Tags]
     When the user uploads the file      name=attachment    ${text_file}
     Then the user should see the text in the page    ${wrong_filetype_validation_error}
 
@@ -723,7 +724,7 @@ Project Finance user can view academic Jes form
     [Tags]    HappyPath
     # note that we are viewing the file above rather than the same project as the other tests in this suite due to INFUND-6724
     Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    When the user clicks the button/link    css=a.eligibility-2
+    When the user clicks the button/link    css=a.eligibility-1
     Then the user should see the text in the page    Download Je-S form
     When the user clicks the button/link    link=jes-form80.pdf
     Then the user should not see an error in the page
@@ -766,17 +767,19 @@ Viability checks are populated in the table
     [Tags]
     And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(2)    Review
     And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(3)    Not set
-    And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(2) td:nth-child(2)    Review
-    And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(2) td:nth-child(3)    Not set
-    And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(3) td:nth-child(2)    N/A
-    And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(3) td:nth-child(3)    N/A
+    And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(2) td:nth-child(2)    N/A
+    And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(2) td:nth-child(3)    N/A
+    And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(3) td:nth-child(2)    Review
+    And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(3) td:nth-child(3)    Not set
 
 Project finance user can see the viability check page for the lead partner
     [Documentation]    INFUND-4831, INFUND-4830, INFUND-4825
     [Tags]
-    when the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")    # clicking the review button for the lead partner
+    When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")    # clicking the review button for the lead partner
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
     And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_COMPANY_NUMBER}
+    And the user should see the text in the element  css=.standard-definition-list dd:nth-of-type(3)  ${PROJECT_SETUP_APPLICATION_1_LEAD_COMPANY_TURNOVER}   #turnover
+    And the user should see the text in the element    css=.standard-definition-list dd:nth-of-type(4)  ${PROJECT_SETUP_APPLICATION_1_LEAD_COMPANY_HEADCOUNT}    #headcount
 
 Project finance user can see the lead partner's information
     [Documentation]    INFUND-4825
@@ -841,11 +844,13 @@ Confirming viability should update on the finance checks page
     Then the user should see the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Approved")
 
 Project finance user can see the viability checks for the industrial partner
-    [Documentation]    INFUND-4831, INFUND-4830
+    [Documentation]    INFUND-4831, INFUND-4830, INFUND-7578
     [Tags]
-    When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(2) td:nth-child(2) a:contains("Review")
+    When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(3) td:nth-child(2) a:contains("Review")
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
     And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_NUMBER}
+    And the user should see the text in the element  css=.standard-definition-list dd:nth-of-type(3)  ${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_TURNOVER}
+    And the user should see the text in the element    css=.standard-definition-list dd:nth-of-type(4)  ${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_HEADCOUNT}
 
 Checking the approve viability checkbox enables RAG selection but not confirm viability button for partner
     [Documentation]    INFUND-4831, INFUND-4856, INFUND-4830
@@ -869,7 +874,7 @@ Credit report information saves when leaving the page for partner
     [Tags]
     When the user selects the checkbox    creditReportConfirmed
     And the user clicks the button/link    jQuery=.button-secondary:contains("Save and return to finance checks")
-    And the user clicks the button/link    jQuery=table.table-progress tr:nth-child(2) td:nth-child(2) a:contains("Review")
+    And the user clicks the button/link    jQuery=table.table-progress tr:nth-child(3) td:nth-child(2) a:contains("Review")
     Then checkbox should be selected    creditReportConfirmed
 
 Clicking cancel on the viability modal for partner
@@ -899,7 +904,7 @@ Confirming viability should update on the finance checks page for partner
     [Documentation]    INFUND-4831, INFUND-4822
     [Tags]
     When the user clicks the button/link    link=Finance checks
-    Then the user should see the element    jQuery=table.table-progress tr:nth-child(2) td:nth-child(2) a:contains("Approved")
+    Then the user should see the element    jQuery=table.table-progress tr:nth-child(3) td:nth-child(2) a:contains("Approved")
 
 Eligibility checks are populated in the table
     [Documentation]    INFUND-4823
@@ -983,13 +988,13 @@ Project finance user can amend all sections of eligibility for lead
 
 Project Finance user can view three Radio Button Options when expanded Lead-Partner's "Overhead costs" section
     [Documentation]     INFUND-7577
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Overhead costs")
     Then the user should see the three Radio Button Options
 
 Project Finance user can Edit and Save Lead-Partner's 20%-of-labour-costs option
     [Documentation]     INFUND-7577
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     Then the user clicks the button/link    jQuery=label[data-target="overhead-default-percentage"]
     And the user should see the element     jQuery=section:nth-of-type(2) button span:contains("£ 12,120")
@@ -1005,7 +1010,7 @@ Project Finance user can Edit and Save Lead-Partner's 20%-of-labour-costs option
 
 Project Finance user can Edit and Save Lead-Partner's No-overhead-costs option
     [Documentation]     INFUND-7577
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     Then the user clicks the button/link    jQuery=label[data-target="overhead-none"]
     And the user should see the element     jQuery=h3:contains("No overhead costs")
@@ -1017,7 +1022,7 @@ Project Finance user can Edit and Save Lead-Partner's No-overhead-costs option
 
 Project Finance user can Edit, enters invalid values and saves in Lead-Partner's Calculate-overheads option
     [Documentation]     INFUND-7577
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     Then the user clicks the button/link    jQuery=label[data-target="overhead-total"]
     And the user should see the element     jQuery=h3:contains("Uploaded spreadsheet")
@@ -1033,7 +1038,7 @@ Project Finance user can Edit, enters invalid values and saves in Lead-Partner's
 
 Project Finance user can provide overhead value for Lead-Partner manually instead of calculations from spreadsheet.
     [Documentation]     INFUND-7577
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    css=a.eligibility-0
     Then the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     And the user enters text to a text field     jQuery=section:nth-of-type(2) input[id^="cost-overheads"][id$="calculate"]  1954
@@ -1099,7 +1104,7 @@ Project finance user can see the Eligibility check page for the partner
     [Documentation]    INFUND-4823
     [Tags]
     Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(2) td:nth-child(4) a:contains("Review")
+    When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(3) td:nth-child(4) a:contains("Review")
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
 
 Project finance user can see the partner's information about eligibility
@@ -1125,13 +1130,13 @@ Project finance user can amend all sections of eligibility for partner
 
 Project Finance user can view three Radio Button Options when expanded Partner's "Overhead costs" section
     [Documentation]     INFUND-7577
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Overhead costs")
     Then the user should see the three Radio Button Options
 
 Project Finance user can Edit and Save Partner's 20%-of-labour-costs option
     [Documentation]     INFUND-7577
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     Then the user clicks the button/link    jQuery=label[data-target="overhead-default-percentage"]
     And the user should see the element     jQuery=section:nth-of-type(2) button span:contains("£ 11,956")
@@ -1147,7 +1152,7 @@ Project Finance user can Edit and Save Partner's 20%-of-labour-costs option
 
 Project Finance user can Edit and Save Partner's No-overhead-costs option
     [Documentation]     INFUND-7577
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     Then the user clicks the button/link    jQuery=label[data-target="overhead-none"]
     And the user should see the element     jQuery=h3:contains("No overhead costs")
@@ -1159,7 +1164,7 @@ Project Finance user can Edit and Save Partner's No-overhead-costs option
 
 Project Finance user can Edit, enters invalid values and saves in Partner's Calculate-overheads option
     [Documentation]     INFUND-7577
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     Then the user clicks the button/link    jQuery=label[data-target="overhead-total"]
     And the user should see the element     jQuery=h3:contains("Uploaded spreadsheet")
@@ -1175,8 +1180,8 @@ Project Finance user can Edit, enters invalid values and saves in Partner's Calc
 
 Project Finance user can provide overhead value for Partner manually instead of calculations from spreadsheet.
     [Documentation]     INFUND-7577
-    [Tags]    HappyPath
-    When the user clicks the button/link    css=a.eligibility-1
+    [Tags]
+    When the user clicks the button/link    css=a.eligibility-2
     Then the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     And the user enters text to a text field     jQuery=section:nth-of-type(2) input[id^="cost-overheads"][id$="calculate"]  9078
     Then the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Save")
@@ -1190,7 +1195,7 @@ Project finance user can see the eligibility checks for the industrial partner
     [Documentation]    INFUND-4823
     [Tags]
     When the user clicks the button/link   link=Finance checks
-    And the user clicks the button/link    jQuery=table.table-progress tr:nth-child(2) td:nth-child(4) a:contains("Review")
+    And the user clicks the button/link    jQuery=table.table-progress tr:nth-child(3) td:nth-child(4) a:contains("Review")
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
 
 Checking the approve eligibility checkbox enables RAG selection but not confirm viability button for partner
@@ -1230,11 +1235,11 @@ Confirming eligibility should show info on a readonly page for partner
     And the user should not see the element    id=rag-rating
     And the user should not see the checkbox    project-eligible
 
-Confirming eligibility should update on the finance checks page
+Confirming partner eligibility should update on the finance checks page
     [Documentation]    INFUND-4823, INFUND-7076
     [Tags]
     When the user clicks the button/link    link=Finance checks
-    Then the user should see the element    jQuery=table.table-progress tr:nth-child(2) td:nth-child(4) a:contains("Approved")
+    Then the user should see the element    jQuery=table.table-progress tr:nth-child(3) td:nth-child(4) a:contains("Approved")
     And The user should see the element    jQuery=.generate-spend-profile-main-button
     And the user should see the element    xpath=//*[@class='button generate-spend-profile-main-button' and @disabled='disabled']
 
@@ -1250,7 +1255,7 @@ Project finance can approve academic eligibility
     [Documentation]    INFUND-4428
     [Tags]      HappyPath
     ${today} =  get today
-    When the user clicks the button/link     jQuery=table.table-progress tr:nth-child(3) td:nth-child(4) a:contains("Review")
+    When the user clicks the button/link     jQuery=table.table-progress tr:nth-child(2) td:nth-child(4) a:contains("Review")
     Then the user should see the text in the page   Je-S Form overview
     When the user selects the checkbox    project-eligible
     When the user selects the option from the drop-down menu    Green    id=rag-rating
@@ -1336,7 +1341,6 @@ the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project se
     the user moves focus to the element     jQuery=label[for="app-row-2"]
     the user selects the checkbox       app-row-2
     the user clicks the button/link     jQuery=button:contains("Successful")
-    #the user clicks the button/link     xpath=//*[@id="content"]/form[1]/div[1]/div[2]/fieldset/button[1]
     the user should see the element    jQuery=td:contains("Successful")
     the user clicks the button/link     jQuery=a:contains("Competition")
     the user clicks the button/link     jQuery=button:contains("Manage funding notifications")
@@ -1455,8 +1459,8 @@ the rag rating updates on the finance check page for partner for viability
    [Arguments]    ${rag_rating}
    When the user selects the option from the drop-down menu    ${rag_rating}    id=rag-rating
    And the user clicks the button/link    jQuery=.button-secondary:contains("Save and return to finance checks")
-   Then the user should see the text in the element    jQuery=table.table-progress tr:nth-child(2) td:nth-child(3)    ${rag_rating}
-   And the user clicks the button/link    jQuery=table.table-progress tr:nth-child(2) td:nth-child(2) a:contains("Review")
+   Then the user should see the text in the element    jQuery=table.table-progress tr:nth-child(3) td:nth-child(3)    ${rag_rating}
+   And the user clicks the button/link    jQuery=table.table-progress tr:nth-child(3) td:nth-child(2) a:contains("Review")
    And the user should see the element    jQuery=.button:contains("Confirm viability"):not(.disabled)    # Checking here both that the button exists and that it isn't disabled
 
 the rag rating updates on the finance check page for lead for eligibility
@@ -1471,8 +1475,8 @@ the rag rating updates on the finance check page for partner for eligibility
    [Arguments]    ${rag_rating}
    When the user selects the option from the drop-down menu    ${rag_rating}    id=rag-rating
    And the user clicks the button/link    jQuery=.button-secondary:contains("Return to finance checks")
-   Then the user should see the text in the element    jQuery=table.table-progress tr:nth-child(2) td:nth-child(5)    ${rag_rating}
-   And the user clicks the button/link    jQuery=table.table-progress tr:nth-child(2) td:nth-child(4) a:contains("Review")
+   Then the user should see the text in the element    jQuery=table.table-progress tr:nth-child(3) td:nth-child(5)    ${rag_rating}
+   And the user clicks the button/link    jQuery=table.table-progress tr:nth-child(3) td:nth-child(4) a:contains("Review")
    And the user should see the element    jQuery=.button:contains("Approve eligible costs"):not(.disabled)    # Checking here both that the button exists and that it isn't disabled
 
 verify total costs of project
