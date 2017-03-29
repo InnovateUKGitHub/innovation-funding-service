@@ -332,7 +332,7 @@ public class ApplicationFormController {
             model.addAttribute("form", form);
 
             /* End save action */
-            if (isMarkAsCompleteRequestWithValidationErrors(params, errors, bindingResult)) {
+            if (isUploadWithValidationErrors(request, errors) || isMarkAsCompleteRequestWithValidationErrors(params, errors, bindingResult)) {
                 validationHandler.addAnyErrors(errors);
 
                 // Add any validated fields back in invalid entries are displayed on re-render
@@ -350,6 +350,10 @@ public class ApplicationFormController {
 
     private Boolean isMarkAsCompleteRequestWithValidationErrors(Map<String, String[]> params, ValidationMessages errors, BindingResult bindingResult) {
         return ((errors.hasErrors() || bindingResult.hasErrors()) && isMarkQuestionRequest(params));
+    }
+
+    private Boolean isUploadWithValidationErrors(HttpServletRequest request, ValidationMessages errors) {
+        return (request.getParameter(UPLOAD_FILE) != null && errors.hasErrors());
     }
 
     private Boolean isAllowedToUpdateQuestion(Long questionId, Long applicationId, Long userId) {
