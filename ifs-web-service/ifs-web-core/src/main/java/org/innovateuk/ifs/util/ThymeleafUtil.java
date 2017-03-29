@@ -6,6 +6,8 @@ import org.innovateuk.ifs.config.IfsThymeleafExpressionObjectFactory;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.util.StringFunctions.countWords;
@@ -19,6 +21,7 @@ import static org.innovateuk.ifs.util.StringFunctions.countWords;
  */
 public class ThymeleafUtil {
     private static final Log LOG = LogFactory.getLog(ThymeleafUtil.class);
+    private static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mma");
 
     /**
      * Combines the request URI with the query string where present.
@@ -50,5 +53,9 @@ public class ThymeleafUtil {
 
     public long calculatePercentage(long part, long total){
         return Math.round(part * 100.0/total);
+    }
+
+    public String displayTime(ZonedDateTime zonedDateTime) {
+        return TimeZoneUtil.toUkTimeZone(zonedDateTime).format(timeFormatter).toLowerCase();
     }
 }

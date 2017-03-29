@@ -16,6 +16,7 @@ import org.innovateuk.ifs.competitionsetup.form.MilestoneTime;
 import org.innovateuk.ifs.competitionsetup.form.MilestonesForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.util.CollectionFunctions;
+import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +30,6 @@ import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.util.TimeZoneUtil.fromBritishSummerTime;
 import static org.innovateuk.ifs.util.TimeZoneUtil.toUkTimeZone;
 
 /**
@@ -149,7 +149,7 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
             return asList(fieldError(fieldName, fieldName.toString(), "error.milestone.invalid"));
         }
         else {
-            milestone.setDate(fromUkTimeZone(year, month, day, hour));
+            milestone.setDate(TimeZoneUtil.fromUkTimeZone(year, month, day, hour));
         }
 
         return Collections.emptyList();
