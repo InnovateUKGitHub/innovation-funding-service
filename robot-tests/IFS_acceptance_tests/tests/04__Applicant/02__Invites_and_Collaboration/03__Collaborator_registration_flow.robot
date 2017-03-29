@@ -68,7 +68,7 @@ Catapult search (empty, invalid & valid inputs)
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     When the user clicks the button/link    jQuery=.button:contains("Search")
     Then the user should see the text in the page    Please enter an organisation name to search.
-    When the user clicks the button/link    jQuery=.buttonlink:contains("Enter details manually")
+    When the user clicks the button/link    jQuery=summary:contains("Enter details manually")
     And the user enters text to a text field    name=organisationName    Digital Catapult
     When the user clicks the button/link    jQuery=.button:contains("Find UK address")
     And the user should see the text in the page    Please enter a UK postcode

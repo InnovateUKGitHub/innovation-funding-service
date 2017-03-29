@@ -43,10 +43,12 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -57,7 +59,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
@@ -125,49 +126,39 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         validator.validate(invite, errors);
 
         if (errors.hasErrors()) {
-            errors.getFieldErrors().stream().peek(e -> LOG.debug(String.format("Field error: %s ", e.getField())));
-            ServiceResult<Void> inviteResult = serviceFailure(internalServerErrorError());
-
-            inviteResult.handleSuccessOrFailure(
-                    failure -> handleInviteError(invite, failure),
-                    success -> handleInviteSuccess(invite)
-            );
-
-            return inviteResult;
+            errors.getFieldErrors().stream().peek(e -> LOG.debug(format("Field error: %s ", e.getField())));
+            return serviceFailure(internalServerErrorError()).andOnFailure(logInviteError(invite));
         } else {
             if (invite.getId() == null) {
                 applicationInviteRepository.save(invite);
             }
             invite.setHash(generateInviteHash());
             applicationInviteRepository.save(invite);
-
-            ServiceResult<Void> inviteResult = inviteCollaboratorToApplication(baseUrl, invite);
-
-            inviteResult.handleSuccessOrFailure(
-                    failure -> handleInviteError(invite, failure),
-                    success -> handleInviteSuccess(invite)
-            );
-
-            return inviteResult;
+            return inviteCollaboratorToApplication(baseUrl, invite).
+                    andOnSuccessReturnVoid(() -> handleInviteSuccess(invite)).
+                    andOnFailure(logInviteError(invite));
         }
     }
 
-    private boolean handleInviteSuccess(ApplicationInvite i) {
-        applicationInviteRepository.save(i.send(loggedInUserSupplier.get(), LocalDateTime.now()));
-        return true;
+    private void handleInviteSuccess(ApplicationInvite invite) {
+        applicationInviteRepository.save(invite.send(loggedInUserSupplier.get(), LocalDateTime.now()));
     }
 
-    private boolean handleInviteError(ApplicationInvite i, ServiceFailure failure) {
-        LOG.error(String.format("Invite failed %s , %s (error count: %s)", i.getId(), i.getEmail(), failure.getErrors().size()));
-        return true;
+    private Consumer<ServiceFailure> logInviteError(ApplicationInvite i) {
+        return failure -> LOG.error(format("Invite failed %s , %s (error count: %s)", i.getId(), i.getEmail(), failure.getErrors().size()));
     }
 
     private String getInviteUrl(String baseUrl, ApplicationInvite invite) {
-        return String.format("%s/accept-invite/%s", baseUrl, invite.getHash());
+        return format("%s/accept-invite/%s", baseUrl, invite.getHash());
+    }
+
+    private String getCompetitionDetailsUrl(String baseUrl, ApplicationInvite invite) {
+        return baseUrl + "/competition/" + invite.getTarget().getCompetition().getId() + "/details";
     }
 
     @Override
     public ServiceResult<Void> inviteCollaboratorToApplication(String baseUrl, ApplicationInvite invite) {
+        User loggedInUser = loggedInUserSupplier.get();
         NotificationSource from = systemNotificationSource;
         NotificationTarget to = new ExternalUserNotificationTarget(invite.getName(), invite.getEmail());
 
@@ -175,7 +166,9 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         if (StringUtils.isNotEmpty(invite.getTarget().getName())) {
             notificationArguments.put("applicationName", invite.getTarget().getName());
         }
+        notificationArguments.put("sentByName", loggedInUser.getName());
         notificationArguments.put("competitionName", invite.getTarget().getCompetition().getName());
+        notificationArguments.put("competitionUrl", getCompetitionDetailsUrl(baseUrl, invite));
         notificationArguments.put("inviteUrl", getInviteUrl(baseUrl, invite));
         if (invite.getInviteOrganisation().getOrganisation() != null) {
             notificationArguments.put("inviteOrganisationName", invite.getInviteOrganisation().getOrganisation().getName());
@@ -266,7 +259,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
                 return serviceSuccess();
             }
-            LOG.error(String.format("Invited emailaddress not the same as the users emailaddress %s => %s ", user.getEmail(), invite.getEmail()));
+            LOG.error(format("Invited emailaddress not the same as the users emailaddress %s => %s ", user.getEmail(), invite.getEmail()));
             Error e = new Error("Invited emailaddress not the same as the users emailaddress", NOT_ACCEPTABLE);
             return serviceFailure(e);
         });
@@ -354,17 +347,12 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         return find(applicationInviteRepository.getByHash(hash), notFoundError(ApplicationInvite.class, hash));
     }
 
-    private ServiceResult<List<ApplicationInvite>> findByApplicationId(Long applicationId) {
-        LOG.debug("Invites found by application id: " + applicationId + " are: " + applicationInviteRepository.findByApplicationId(applicationId).stream().count());
-        return serviceSuccess(applicationInviteRepository.findByApplicationId(applicationId));
-    }
-
     private InviteResultsResource sendInvites(List<ApplicationInvite> invites) {
         List<ServiceResult<Void>> results = inviteCollaborators(webBaseUrl, invites);
 
         long failures = results.stream().filter(BaseEitherBackedResult::isFailure).count();
         long successes = results.stream().filter(BaseEitherBackedResult::isSuccess).count();
-        LOG.info(String.format("Invite sending requests %s Success: %s Failures: %s", invites.size(), successes, failures));
+        LOG.info(format("Invite sending requests %s Success: %s Failures: %s", invites.size(), successes, failures));
 
         InviteResultsResource resource = new InviteResultsResource();
         resource.setInvitesSendFailure((int) failures);
