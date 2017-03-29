@@ -55,6 +55,6 @@ public interface CompetitionService {
     ServiceResult<Void> releaseFeedback(long competitionId);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
-    @SecuredBySpring(value = "", description = "Comp Admins can ")
+    @SecuredBySpring(value = "MANAGE_INFORM", description = "Comp Admins can manage whether the inform state is changed to")
     ServiceResult<Void> manageInformState(long competitionId);
 }
