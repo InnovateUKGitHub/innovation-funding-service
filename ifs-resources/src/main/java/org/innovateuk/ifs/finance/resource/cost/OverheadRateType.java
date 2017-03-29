@@ -2,7 +2,7 @@ package org.innovateuk.ifs.finance.resource.cost;
 
 public enum OverheadRateType{
     NONE(null, null, "None"),
-    DEFAULT_PERCENTAGE(20, "DEFAULT_PERCENTAGE", "Default %"),
+    DEFAULT_PERCENTAGE(20, "defaultPercentage", "Default %"),
     TOTAL(null, "total", "Custom Amount"),
     CUSTOM_RATE(null, "customRate", "Custom Rate"); // NOTE: Now that competiton 1 is gone, there is no need to keep custom rate. TODO: Check with Rogier and remove if safe : INFUND-7322
 
