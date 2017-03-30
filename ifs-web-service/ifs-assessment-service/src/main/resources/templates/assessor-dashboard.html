@@ -77,7 +77,13 @@
                                     <h3 class="heading-small"><a
                                         th:href="@{/assessor/dashboard/competition/{competitionId}(competitionId=${activeCompetition.competitionId})}"
                                         th:text="${activeCompetition.displayLabel}"/></h3>
-                                    <div class="action-required">
+                                    <div th:if="${activeCompetition.progressTotal - activeCompetition.progressAssessed == 0}">
+                                        <strong>
+                                            There are currently no assessments for you to review.
+                                        </strong>
+                                    </div>
+
+                                    <div th:if="${activeCompetition.progressTotal - activeCompetition.progressAssessed > 0}" class="action-required">
                                         <strong>
                                             <span th:text="${activeCompetition.progressTotal - activeCompetition.progressAssessed}" class="accepted-applications">
                                                 COUNT
