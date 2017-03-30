@@ -41,10 +41,10 @@
             <fieldset>
                 <div class="alignright">
                     <label for="querySection">Query section</label>
-                    <select id="querySection" onchange="$(this.options[this.selectedIndex].dataset.hide).hide(); $(this.options[this.selectedIndex].dataset.show).show();" class="form-control">
-                        <option data-show=".queries-list .query" value="all">All</option>
-                        <option data-hide=".queries-list .query" data-show=".queries-list .viability-section" value="viability">Viability</option>
-                        <option data-hide=".queries-list .query" data-show=".queries-list .eligibility-section" value="eligibility">Eligibility</option>
+                    <select id="querySection" onchange="IFS.core.filtering.with(this.options[this.selectedIndex].dataset)" class="form-control">
+                        <option data-elements-to-show=".queries-list .query" value="all">All</option>
+                        <option data-elements-to-hide=".queries-list .query" data-elements-to-show=".queries-list .viability-section" value="viability">Viability</option>
+                        <option data-elements-to-hide=".queries-list .query" data-elements-to-show=".queries-list .eligibility-section" value="eligibility">Eligibility</option>
                     </select>
                 </div>
             </fieldset>
@@ -77,7 +77,7 @@
                         </small>
                     </p>
                     <p data-md-to-html="" class="wysiwyg-styles" th:text="${post.body}"></p>
-                    <legend th:if="${post.attachments.size() > 0}" class="heading-small">Supporting documentation</legend>
+                    <legend th:unless="${post.attachments.isEmpty()}" class="heading-small">Supporting documentation</legend>
                     <th:block th:each="attachment : ${post.attachments}">
                         <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name}">file</a><br />
                     </th:block>
