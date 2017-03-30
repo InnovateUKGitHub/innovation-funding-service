@@ -68,11 +68,11 @@ task osTestRemote(type:Exec) {
 
 task osStopTests(type:Exec) {
     executable = 'setup-files/scripts/openshift/os-stop-tests.sh'
-    args = [openshiftEnv]
+    args = []
 }
 
 task osTestResults(type:Exec) {
     executable = 'setup-files/scripts/openshift/os-test-results.sh'
-    args = [openshiftEnv]
+    args = []
 }
 

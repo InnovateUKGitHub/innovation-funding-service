@@ -10,8 +10,8 @@ SELECT @turnover_id := id FROM form_input WHERE competition_id = @comp_id AND qu
 SELECT @headcount_id := id FROM form_input WHERE competition_id = @comp_id AND question_id=@question_id AND form_input_type_id =25;
 SELECT @user_id := id FROM user WHERE email = 'steve.smith@empire.com';
 SELECT @user_id_4 := id FROM user WHERE email = 'jessica.doe@ludlow.co.uk';
-SELECT @process_role_id := id FROM ifs.process_role WHERE user_id = @user_id;
-SELECT @process_role_id_4 := id FROM ifs.process_role WHERE user_id = @user_id_4;
+SELECT @process_role_id := id FROM process_role WHERE user_id = @user_id;
+SELECT @process_role_id_4 := id FROM process_role WHERE user_id = @user_id_4;
 SELECT @financial_turnover_id := id FROM form_input WHERE competition_id = @comp_id AND question_id=@question_id AND form_input_type_id =26;
 SELECT @financial_headcount_id := id FROM form_input WHERE competition_id = @comp_id AND question_id=@question_id AND form_input_type_id =28;
 UPDATE form_input_response SET updated_by_id = @process_role_id WHERE value = '4560000' AND form_input_id =  @financial_turnover_id AND application_id = @app_id;
@@ -28,8 +28,8 @@ SELECT @your_organisation_section_id_2 := id FROM section WHERE competition_id =
 SELECT @question_id_2 := id FROM question WHERE section_id = @your_organisation_section_id_2;
 SELECT @user_id_2 := id FROM user WHERE email = 'ralph.young@ooba.example.com';
 SELECT @user_id_3 := id FROM user WHERE email = 'tina.taylor@wordpedia.example.com';
-SELECT @process_role_id_2 := id FROM ifs.process_role WHERE user_id = @user_id_2;
-SELECT @process_role_id_3 := id FROM ifs.process_role WHERE user_id = @user_id_3;
+SELECT @process_role_id_2 := id FROM process_role WHERE user_id = @user_id_2;
+SELECT @process_role_id_3 := id FROM process_role WHERE user_id = @user_id_3;
 SELECT @turnover_id := id FROM form_input WHERE competition_id = @comp_id_2 AND question_id=@question_id_2 AND form_input_type_id =24;
 SELECT @headcount_id := id FROM form_input WHERE competition_id = @comp_id_2 AND question_id=@question_id_2 AND form_input_type_id =25;
 UPDATE form_input_response SET updated_by_id = @process_role_id_2 WHERE value = '123000' AND form_input_id =  @turnover_id AND application_id = @app_id_2;
