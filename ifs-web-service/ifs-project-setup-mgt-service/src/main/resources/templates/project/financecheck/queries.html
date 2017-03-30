@@ -43,8 +43,8 @@
                     <label for="querySection">Query section</label>
                     <select id="querySection" onchange="IFS.core.filtering.with(this.options[this.selectedIndex].dataset)" class="form-control">
                         <option data-elements-to-show=".queries-list .query" value="all">All</option>
-                        <option data-elements-to-hide=".queries-list .query" data-elements-to-show=".queries-list .viability-section" value="viability">Viability</option>
-                        <option data-elements-to-hide=".queries-list .query" data-elements-to-show=".queries-list .eligibility-section" value="eligibility">Eligibility</option>
+                        <option data-elements-to-hide=".queries-list .query" data-elements-to-show=".queries-list .viability-section" value="viability">Viability only</option>
+                        <option data-elements-to-hide=".queries-list .query" data-elements-to-show=".queries-list .eligibility-section" value="eligibility">Eligibility only</option>
                     </select>
                 </div>
             </fieldset>
@@ -64,7 +64,7 @@
     <hr />
 
     <div class="queries-list" th:each="query : ${model.getQueries()}">
-        <div  th:with="querySection=${query.sectionType.name()}" th:class="${'query ' + querySection.toLowerCase()+'-section'}">
+        <div  th:with="querySection=${query.sectionType.name().toLowerCase()}" th:class="${'query ' + querySection+'-section'}">
             <h2 class="heading-medium non-margin-bottom" th:text="${query.title}">Query Thread Title</h2>
             <h3 class="heading-small no-margin" th:text="${#strings.capitalize(querySection)}">Query section</h3>
             <th:block th:each="(post, iteration : ${query.viewModelPosts})">
