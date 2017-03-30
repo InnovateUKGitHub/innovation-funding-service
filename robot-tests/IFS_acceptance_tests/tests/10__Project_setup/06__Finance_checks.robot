@@ -784,6 +784,32 @@ Proj finance can see the maximum research participation level
     And the user should see the text in the page        Maximum research participation exceeded
     [Teardown]    the user navigates to the page       ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
 
+Project finance user can view finance overview for the consortium
+    [Documentation]    INFUND-4846
+    [Tags]
+    When the user clicks the button/link    link=Project finance overview
+    #Then the user should see the element    css=#content h1:nth-of-type(1)
+    #And the user should see the element     css=#content h3:nth-of-type(1)
+    #Then the user verifies the table heading for Overview section
+    # the below figures are listed as:       RowNumber  StartDate      Duration    TotalProjectCost    GrantAppliedFor     OtherPublicSectorFunding    Total%Grant
+    And the categories are verified for Overview section    1   1 Oct 2020  3 months    £ 503,248   £ 145,497    £ 6,170     29%
+
+Project finance user can view Finance summaries for the consortium
+    [Documentation]    INFUND-4846
+    [Tags]
+    #Given the user should see the element   css=#content h3:nth-of-type(2)
+    #Given the user should see the text in the page  Finance summaries
+    #When the user verifies the table heading for Finance summaries section
+    Then the user should see the text in the element    css=#content div:nth-of-type(3) table tbody tr:nth-of-type(1) th:nth-of-type(1) strong:contains("Empire Ltd")
+    # the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
+    And the categories are verified for Finance summaries section   1   £ 301,355   30%     £ 90,406    £ 3,702     £ 207,246
+    Then the user should see the text in the element    css=#content div:nth-of-type(3) table tbody tr:nth-of-type(2) th:nth-of-type(1) strong:contains("EGGS")
+    And the categories are verified for Finance summaries section   2   £ 990   0%  £ 0     £ 0     £ 990
+    Then the user should see the text in the element    css=#content div:nth-of-type(3) table tbody tr:nth-of-type(3) th:nth-of-type(1) strong:contains("Ludlow")
+    And the categories are verified for Finance summaries section   3   £ 200,903   30%     £ 60,271    £ 2,468     £ 138,164
+    Then the user should see the text in the element    css=#content div:nth-of-type(3) table tfoot tr:nth-of-type(1) th:nth-of-type(1):contains("Total")
+    And the Total calculation for Finance summaries are verified    1   £ 503,248   £ 150,677    £ 6,170     £ 346,401
+    [Teardown]    the user navigates to the page       ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
 
 Viability checks are populated in the table
     [Documentation]    INFUND-4822, INFUND-7095
@@ -1289,102 +1315,104 @@ Project finance can approve academic eligibility
     And the user should not see the checkbox    project-eligible
     When the user clicks the button/link    link=Finance checks
 
-Project finance user can view a finance overview for the consortium
+Project finance user can view Updated finance overview for the consortium
     [Documentation]    INFUND-4846
     [Tags]
     When the user clicks the button/link    link=Project finance overview
-    Then the user should see the element    jQuery=#content h1:nth-of-type(1)
-    And the user should see the element     jQuery=#content h3:nth-of-type(1)
+    #Then the user should see the text in the element    jQuery=#content h1:nth-of-type(1)
+    #And the user should see the text in the element     jQuery=#content h3:nth-of-type(1)
     Then the user verifies the table heading for Overview section
+    # the below figures are listed as:       RowNumber  StartDate      Duration    TotalProjectCost    GrantAppliedFor     OtherPublicSectorFunding    Total%Grant
     And the categories are verified for Overview section    1   1 Oct 2020  3 months    £ 322,113   £ 91,157    £ 6,170     28%
 
-Project finance user can view Finance summaries for the consortium
+Project finance user can view Updated Finance summaries for the consortium
     [Documentation]    INFUND-4846
     [Tags]
-    Given the user should see the element   jQuery=#content h3:nth-of-type(2)
+    #Given the user should see the text in the element   jQuery=#content h3:nth-of-type(2)
     #Given the user should see the text in the page  Finance summaries
     When the user verifies the table heading for Finance summaries section
-    Then the user should see the element    jQuery=#content div:nth-of-type(3) table tbody tr:nth-of-type(1) th:nth-of-type(1):contains("Empire Ltd")
-    And the categories are verified for Finance summaries section   1   £ 206,867   30%     £ 62,060    £ 141,105
-    Then the user should see the element    jQuery=#content div:nth-of-type(3) table tbody tr:nth-of-type(2) th:nth-of-type(1):contains("EGGS")
+    Then the user should see the text in the element    css=#content div:nth-of-type(3) table tbody tr:nth-of-type(1) th:nth-of-type(1):contains("Empire Ltd")
+    # the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
+    And the categories are verified for Finance summaries section   1   £ 206,867   30%     £ 62,060    £ 3,702     £ 141,105
+    Then the user should see the text in the element    css=#content div:nth-of-type(3) table tbody tr:nth-of-type(2) th:nth-of-type(1):contains("EGGS")
     And the categories are verified for Finance summaries section   2   £ 990   0%  £ 0     £ 0     £ 990
-    Then the user should see the element    jQuery=#content div:nth-of-type(3) table tbody tr:nth-of-type(3) th:nth-of-type(1):contains("Ludlow")
+    Then the user should see the text in the element    css=#content div:nth-of-type(3) table tbody tr:nth-of-type(3) th:nth-of-type(1):contains("Ludlow")
     And the categories are verified for Finance summaries section   3   £ 114,256   30%     £ 34,277    £ 2,468     £ 77,511
-    Then the user should see the element    jQuery=#content div:nth-of-type(3) table tfoot tr:nth-of-type(1) th:nth-of-type(1):contains("Total")
+    Then the user should see the text in the element    css=#content div:nth-of-type(3) table tfoot tr:nth-of-type(1) th:nth-of-type(1):contains("Total")
     And the Total calculation for Finance summaries are verified    1   £ 322,113   £ 96,337    £ 6,170     £ 219,606
 
-#Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
-#    [Documentation]    INFUND-4428
-#    [Tags]
-#    [Setup]    Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
-#    When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
-#    And the user should see the element    jQuery=ul li.complete:nth-child(1)
-#    And the user should see the text in the page    Successful application
-#    And the user should see the element    jQuery=ul li.complete:nth-child(2)
-#    And the user should see the element    jQuery=ul li.complete:nth-child(4)
-#    And the user should see the element    jQuery=ul li.complete:nth-child(5)
-#    And the user should see the element    jQuery=ul li.read-only:nth-child(6)
-#
-#Status updates correctly for internal user's table
-#     [Documentation]    INFUND-4049,INFUND-5543
-#     [Tags]      HappyPath
-#     [Setup]    log in as a different user   &{Comp_admin1_credentials}
-#     When the user navigates to the page    ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION}/status
-#     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok      # Project details
-#     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.action      # MO
-#     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status       # Bank details
-#     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action     # Finance checks are actionable from the start-workaround for Private beta assessment
-#     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status            # Spend Profile
-#     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.waiting  # Other Docs
-#     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(7).status          # GOL
-#
-#Other internal users do not have access to Finance checks
-#    [Documentation]    INFUND-4821
-#    [Tags]    HappyPath
-#    [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
-#    # This is added to HappyPath because CompAdmin should NOT have access to FC page
-#    Then the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check    You do not have the necessary permissions for your request
-#
-#Finance contact can access the external view of the finance checks page
-#    [Documentation]    INFUND-7573, INFUND 8787
-#    [Tags]    HappyPath
-#    [Setup]    Log in as a different user    ${test_mailbox_one}+fundsuccess@gmail.com    Passw0rd
-#    Given the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
-#    Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
-#    And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
-#    When the user clicks the button/link    link=Finance checks
-#    And the user should not see an error in the page
-#    And the user should see the text in the page   The finance checks have been completed and your finances approved.
-#
-#Lead-Partner can view finance checks page
-#    [Documentation]    INFUND-7573, INFUND 8787
-#    [Tags]
-#    [Setup]    Log in as a different user   steve.smith@empire.com    Passw0rd
-#    When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
-#    Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
-#    And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
-#    Then the user clicks the button/link     link=Finance checks
-#    And the user should see the text in the page   The finance checks have been completed and your finances approved.
-#
-#Academic user can view Finance checks page
-#    [Documentation]     INFUND-8787
-#    [Tags]
-#    Given log in as a different user    pete.tom@egg.com    ${short_password}
-#    When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
-#    Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
-#    And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
-#    Then the user clicks the button/link    link=Finance checks
-#    And the user should see the text in the page   The finance checks have been completed and your finances approved.
-#
-#Non Lead Partner can view Finance checks page
-#    [Documentation]     INFUND-8787
-#    [Tags]
-#    Given log in as a different user    jessica.doe@ludlow.co.uk    ${short_password}
-#    When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
-#    Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
-#    And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
-#    Then the user clicks the button/link    link=Finance checks
-#    And the user should see the text in the page   The finance checks have been completed and your finances approved.
+Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
+    [Documentation]    INFUND-4428
+    [Tags]
+    [Setup]    Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
+    When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
+    And the user should see the element    jQuery=ul li.complete:nth-child(1)
+    And the user should see the text in the page    Successful application
+    And the user should see the element    jQuery=ul li.complete:nth-child(2)
+    And the user should see the element    jQuery=ul li.complete:nth-child(4)
+    And the user should see the element    jQuery=ul li.complete:nth-child(5)
+    And the user should see the element    jQuery=ul li.read-only:nth-child(6)
+
+Status updates correctly for internal user's table
+     [Documentation]    INFUND-4049,INFUND-5543
+     [Tags]      HappyPath
+     [Setup]    log in as a different user   &{Comp_admin1_credentials}
+     When the user navigates to the page    ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION}/status
+     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok      # Project details
+     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.action      # MO
+     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status       # Bank details
+     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action     # Finance checks are actionable from the start-workaround for Private beta assessment
+     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status            # Spend Profile
+     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.waiting  # Other Docs
+     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(7).status          # GOL
+
+Other internal users do not have access to Finance checks
+    [Documentation]    INFUND-4821
+    [Tags]    HappyPath
+    [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
+    # This is added to HappyPath because CompAdmin should NOT have access to FC page
+    Then the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check    You do not have the necessary permissions for your request
+
+Finance contact can access the external view of the finance checks page
+    [Documentation]    INFUND-7573, INFUND 8787
+    [Tags]    HappyPath
+    [Setup]    Log in as a different user    ${test_mailbox_one}+fundsuccess@gmail.com    Passw0rd
+    Given the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
+    Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
+    And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
+    When the user clicks the button/link    link=Finance checks
+    And the user should not see an error in the page
+    And the user should see the text in the page   The finance checks have been completed and your finances approved.
+
+Lead-Partner can view finance checks page
+    [Documentation]    INFUND-7573, INFUND 8787
+    [Tags]
+    [Setup]    Log in as a different user   steve.smith@empire.com    Passw0rd
+    When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
+    Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
+    And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
+    Then the user clicks the button/link     link=Finance checks
+    And the user should see the text in the page   The finance checks have been completed and your finances approved.
+
+Academic user can view Finance checks page
+    [Documentation]     INFUND-8787
+    [Tags]
+    Given log in as a different user    pete.tom@egg.com    ${short_password}
+    When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
+    Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
+    And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
+    Then the user clicks the button/link    link=Finance checks
+    And the user should see the text in the page   The finance checks have been completed and your finances approved.
+
+Non Lead Partner can view Finance checks page
+    [Documentation]     INFUND-8787
+    [Tags]
+    Given log in as a different user    jessica.doe@ludlow.co.uk    ${short_password}
+    When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
+    Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
+    And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
+    Then the user clicks the button/link    link=Finance checks
+    And the user should see the text in the page   The finance checks have been completed and your finances approved.
 
 
 *** Keywords ***
@@ -1811,42 +1839,42 @@ the user goes back to the initial page after having checked the attachment
     Select Window    #this goes back to the initial page
 
 the user verifies the table heading for Overview section
-    Then the user should see the element    jQuery=.table-overview th:nth-of-type(1):contains("Start date")
-    And the user should see the element     jQuery=.table-overview th:nth-of-type(2):contains("Duration")
-    And the user should see the element     jQuery=.table-overview th:nth-of-type(3):contains("Total project cost")
-    And the user should see the element     jQuery=.table-overview th:nth-of-type(4):contains("Grant applied for")
-    And the user should see the element     jQuery=.table-overview th:nth-of-type(5):contains("Other public sector funding")
-    And the user should see the element     jQuery=.table-overview th:nth-of-type(6):contains("Total % grant")
+    the user should see the text in the element     jQuery=.table-overview th:nth-of-type(1):contains("Start date")
+    the user should see the text in the element     jQuery=.table-overview th:nth-of-type(2):contains("Duration")
+    the user should see the text in the element     jQuery=.table-overview th:nth-of-type(3):contains("Total project cost")
+    the user should see the text in the element     jQuery=.table-overview th:nth-of-type(4):contains("Grant applied for")
+    the user should see the text in the element     jQuery=.table-overview th:nth-of-type(5):contains("Other public sector funding")
+    the user should see the text in the element     jQuery=.table-overview th:nth-of-type(6):contains("Total % grant")
 
 the categories are verified for Overview section
     [Arguments]  ${row_number}  ${start_date}  ${duration}  ${total_project_cost}  ${grant_applied_for}  ${other_public_sector_fund}  ${total_percent_grant}
-    the user should see the text in the element     jQuery=.table-overview tr:nth-of-type(${row_number}) td:nth-of-type(1)  ${start_date}
-    the user should see the text in the element     jQuery=.table-overview tr:nth-of-type(${row_number}) td:nth-of-type(2)  ${duration}
-    the user should see the text in the element     jQuery=.table-overview tr:nth-of-type(${row_number}) td:nth-of-type(3)  ${total_project_cost}
-    the user should see the text in the element     jQuery=.table-overview tr:nth-of-type(${row_number}) td:nth-of-type(4)  ${grant_applied_for}
-    the user should see the text in the element     jQuery=.table-overview tr:nth-of-type(${row_number}) td:nth-of-type(5)  ${other_public_sector_fund}
-    the user should see the text in the element     jQuery=.table-overview tr:nth-of-type(${row_number}) td:nth-of-type(6)  ${total_percent_grant}
+    the user should see the text in the element     css=.table-overview tr:nth-of-type(${row_number}) td:nth-of-type(1)  ${start_date}
+    the user should see the text in the element     css=.table-overview tr:nth-of-type(${row_number}) td:nth-of-type(2)  ${duration}
+    the user should see the text in the element     css=.table-overview tr:nth-of-type(${row_number}) td:nth-of-type(3)  ${total_project_cost}
+    the user should see the text in the element     css=.table-overview tr:nth-of-type(${row_number}) td:nth-of-type(4)  ${grant_applied_for}
+    the user should see the text in the element     css=.table-overview tr:nth-of-type(${row_number}) td:nth-of-type(5)  ${other_public_sector_fund}
+    the user should see the text in the element     css=.table-overview tr:nth-of-type(${row_number}) td:nth-of-type(6)  ${total_percent_grant}
 
 the user verifies the table heading for Finance summaries section
-    Then the user should see the element    jQuery=#content div:nth-of-type(3) table thead tr th:nth-of-type(1):contains("Partner")
-    And the user should see the element     jQuery=#content div:nth-of-type(3) table thead tr th:nth-of-type(2):contains("Total costs")
-    And the user should see the element     jQuery=#content div:nth-of-type(3) table thead tr th:nth-of-type(3):contains("% Grant")
-    And the user should see the element     jQuery=#content div:nth-of-type(3) table thead tr th:nth-of-type(4):contains("Funding sought")
-    And the user should see the element     jQuery=#content div:nth-of-type(3) table thead tr th:nth-of-type(5):contains("Other public sector funding")
-    And the user should see the element     jQuery=#content div:nth-of-type(3) table thead tr th:nth-of-type(6):contains("Contribution to project")
+    the user should see the text in the element     jQuery=#content div:nth-of-type(3) table thead tr th:nth-of-type(1):contains("Partner")
+    the user should see the text in the element     jQuery=#content div:nth-of-type(3) table thead tr th:nth-of-type(2):contains("Total costs")
+    the user should see the text in the element     jQuery=#content div:nth-of-type(3) table thead tr th:nth-of-type(3):contains("% Grant")
+    the user should see the text in the element     jQuery=#content div:nth-of-type(3) table thead tr th:nth-of-type(4):contains("Funding sought")
+    the user should see the text in the element     jQuery=#content div:nth-of-type(3) table thead tr th:nth-of-type(5):contains("Other public sector funding")
+    the user should see the text in the element     jQuery=#content div:nth-of-type(3) table thead tr th:nth-of-type(6):contains("Contribution to project")
 
 the categories are verified for Finance summaries section
     [Arguments]  ${row_number}  ${total_costs}  ${percentage_grant}  ${funding_sought}  ${other_public_sector_funding}  ${contribution_to_project}
     #the user should see the text in the element   jQuery=#content div:nth-of-type(3) table thead tr th:nth-of-type(1)  ${partner}
-    the user should see the text in the element   jQuery=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(1) strong   ${total_costs}
-    the user should see the text in the element   jQuery=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(2)  ${percentage_grant}
-    the user should see the text in the element   jQuery=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(3)  ${funding_sought}
-    the user should see the text in the element   jQuery=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(4)  ${other_public_sector_funding}
-    the user should see the text in the element   jQuery=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(5)  ${contribution_to_project}
+    the user should see the text in the element     css=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(1) strong   ${total_costs}
+    the user should see the text in the element     css=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(2)  ${percentage_grant}
+    the user should see the text in the element     css=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(3)  ${funding_sought}
+    the user should see the text in the element     css=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(4)  ${other_public_sector_funding}
+    the user should see the text in the element     css=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(5)  ${contribution_to_project}
 
 the Total calculation for Finance summaries are verified
     [Arguments]  ${row_number}  ${allPartners_totalcost}   ${allPartners_fundingSought}   ${allPartners_otherPublicSectorFunding}  ${allPartners_contributionToProject}
-    the user should see the text in the element     jQuery=#content div:nth-of-type(3) table tfoot tr:nth-of-type(${row_number}) td:nth-of-type(1)  ${allPartners_totalcost}
-    the user should see the text in the element     jQuery=#content div:nth-of-type(3) table tfoot tr:nth-of-type(${row_number}) td:nth-of-type(3)  ${allPartners_fundingSought}
-    the user should see the text in the element     jQuery=#content div:nth-of-type(3) table tfoot tr:nth-of-type(${row_number}) td:nth-of-type(4)  ${allPartners_otherPublicSectorFunding}
-    the user should see the text in the element     jQuery=#content div:nth-of-type(3) table tfoot tr:nth-of-type(${row_number}) td:nth-of-type(5)  ${allPartners_contributionToProject}
+    the user should see the text in the element     css=#content div:nth-of-type(3) table tfoot tr:nth-of-type(${row_number}) td:nth-of-type(1) strong  ${allPartners_totalcost}
+    the user should see the text in the element     css=#content div:nth-of-type(3) table tfoot tr:nth-of-type(${row_number}) td:nth-of-type(3) strong  ${allPartners_fundingSought}
+    the user should see the text in the element     css=#content div:nth-of-type(3) table tfoot tr:nth-of-type(${row_number}) td:nth-of-type(4) strong  ${allPartners_otherPublicSectorFunding}
+    the user should see the text in the element     css=#content div:nth-of-type(3) table tfoot tr:nth-of-type(${row_number}) td:nth-of-type(5) strong  ${allPartners_contributionToProject}
