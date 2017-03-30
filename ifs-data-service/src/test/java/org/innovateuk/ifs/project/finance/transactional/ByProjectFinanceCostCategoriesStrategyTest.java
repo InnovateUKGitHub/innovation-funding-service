@@ -33,8 +33,8 @@ import static org.innovateuk.ifs.project.builder.CostCategoryTypeBuilder.newCost
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.finance.transactional.ByProjectFinanceCostCategoriesStrategy.DESCRIPTION_PREFIX;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.user.resource.OrganisationTypeEnum.ACADEMIC;
 import static org.innovateuk.ifs.user.resource.OrganisationTypeEnum.BUSINESS;
-import static org.innovateuk.ifs.user.resource.OrganisationTypeEnum.RESEARCH;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static java.util.Arrays.asList;
 import static java.util.EnumSet.allOf;
@@ -82,7 +82,10 @@ public class ByProjectFinanceCostCategoriesStrategyTest extends BaseServiceUnitT
         // Setup
         ApplicationResource ar = newApplicationResource().build();
         ProjectResource pr = newProjectResource().withApplication(ar.getId()).build();
-        OrganisationResource or = newOrganisationResource().withOrganisationType(RESEARCH.getOrganisationTypeId()).build(); // Academic
+        OrganisationResource or = newOrganisationResource()
+                .withOrganisationType(ACADEMIC.getOrganisationTypeId())
+                .withOrganisationTypeName("University (HEI)")
+                .build(); // Academic
         ProjectFinanceResource projectFinance = newProjectFinanceResource().build();
         CostCategoryType expectedCct = newCostCategoryType().
                 withName("A name that will not match - we care only about the contained CostCategories").
@@ -96,6 +99,7 @@ public class ByProjectFinanceCostCategoriesStrategyTest extends BaseServiceUnitT
         // Mocks
         when(projectServiceMock.getProjectById(pr.getId())).thenReturn(serviceSuccess(pr));
         when(organisationServiceMock.findById(or.getId())).thenReturn(serviceSuccess(or));
+        when(financeUtilMock.isUsingJesFinances(or.getOrganisationTypeName())).thenReturn(true);
         when(projectFinanceRowServiceMock.financeChecksDetails(pr.getId(), or.getId())).thenReturn(serviceSuccess(projectFinance));
         when(costCategoryTypeRepositoryMock.findAll()).thenReturn(asList(expectedCct)); // This is the one already created and should be returned
         // Method under test
@@ -109,7 +113,10 @@ public class ByProjectFinanceCostCategoriesStrategyTest extends BaseServiceUnitT
         // Setup
         ApplicationResource ar = newApplicationResource().build();
         ProjectResource pr = newProjectResource().withApplication(ar.getId()).build();
-        OrganisationResource or = newOrganisationResource().withOrganisationType(RESEARCH.getOrganisationTypeId()).build(); // Academic
+        OrganisationResource or = newOrganisationResource()
+                .withOrganisationType(ACADEMIC.getOrganisationTypeId())
+                .withOrganisationTypeName("University (HEI)")
+                .build(); // Academic
         ProjectFinanceResource projectFinance = newProjectFinanceResource().build();
         CostCategoryType expectedCct = newCostCategoryType().
                 withName(DESCRIPTION_PREFIX + simpleJoiner(sorted(allOf(AcademicCostCategoryGenerator.class)), AcademicCostCategoryGenerator::getName, ", ")).
@@ -123,6 +130,7 @@ public class ByProjectFinanceCostCategoriesStrategyTest extends BaseServiceUnitT
         // Mocks
         when(projectServiceMock.getProjectById(pr.getId())).thenReturn(serviceSuccess(pr));
         when(organisationServiceMock.findById(or.getId())).thenReturn(serviceSuccess(or));
+        when(financeUtilMock.isUsingJesFinances(or.getOrganisationTypeName())).thenReturn(true);
         when(projectFinanceRowServiceMock.financeChecksDetails(pr.getId(), or.getId())).thenReturn(serviceSuccess(projectFinance));
         when(costCategoryTypeRepositoryMock.findAll()).thenReturn(new ArrayList<>()); // Force a create code execution
         when(costCategoryTypeRepositoryMock.save(matcherForCostCategoryType(expectedCct))).thenReturn(expectedCct);
