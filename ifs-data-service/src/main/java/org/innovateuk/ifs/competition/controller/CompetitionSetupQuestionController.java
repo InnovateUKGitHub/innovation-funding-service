@@ -22,7 +22,7 @@ public class CompetitionSetupQuestionController {
         return competitionSetupQuestionService.getByQuestionId(id).toGetResponse();
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @PutMapping("/{id}")
     public RestResult<Void> save(@PathVariable("id") final Long questionId,
                                  @RequestBody final CompetitionSetupQuestionResource competitionSetupQuestionResource) {
         return competitionSetupQuestionService.save(competitionSetupQuestionResource).toPutResponse();

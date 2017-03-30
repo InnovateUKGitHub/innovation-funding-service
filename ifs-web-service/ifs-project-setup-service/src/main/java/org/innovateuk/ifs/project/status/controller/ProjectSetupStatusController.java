@@ -6,10 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.NativeWebRequest;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,7 +27,7 @@ public class ProjectSetupStatusController {
 
     public static final String PROJECT_SETUP_PAGE = "project/setup-status";
 
-    @RequestMapping(value = "/{projectId}", method = RequestMethod.GET)
+    @GetMapping("/{projectId}")
     public String viewProjectSetupStatus(Model model, @PathVariable("projectId") final Long projectId,
                                          @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                          NativeWebRequest springRequest) {

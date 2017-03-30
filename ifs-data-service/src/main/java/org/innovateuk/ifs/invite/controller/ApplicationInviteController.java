@@ -48,27 +48,27 @@ public class ApplicationInviteController {
         return inviteService.getInvitesByApplication(applicationId).toGetResponse();
     }
 
-    @RequestMapping(value = "/saveInvites", method = RequestMethod.POST)
+    @PostMapping("/saveInvites")
     public RestResult<InviteResultsResource> saveInvites(@RequestBody List<ApplicationInviteResource> inviteResources) {
         return inviteService.saveInvites(inviteResources).toPostCreateResponse();
     }
 
-    @RequestMapping(value = "/acceptInvite/{hash}/{userId}", method = RequestMethod.PUT)
+    @PutMapping("/acceptInvite/{hash}/{userId}")
     public RestResult<Void> acceptInvite( @PathVariable("hash") String hash, @PathVariable("userId") Long userId) {
         return inviteService.acceptInvite(hash, userId).toPutResponse();
     }
 
-    @RequestMapping(value = "/removeInvite/{inviteId}", method = RequestMethod.DELETE)
+    @DeleteMapping("/removeInvite/{inviteId}")
     public RestResult<Void> removeApplicationInvite(@PathVariable("inviteId") Long applicationInviteResourceId) {
         return inviteService.removeApplicationInvite(applicationInviteResourceId).toDeleteResponse();
     }
 
-    @RequestMapping(value = "/checkExistingUser/{hash}", method = RequestMethod.GET)
+    @GetMapping("/checkExistingUser/{hash}")
     public RestResult<Boolean> checkExistingUser( @PathVariable("hash") String hash) {
         return inviteService.checkUserExistingByInviteHash(hash).toGetResponse();
     }
 
-    @RequestMapping(value = GET_USER_BY_HASH_MAPPING + "{hash}", method = RequestMethod.GET)
+    @GetMapping(GET_USER_BY_HASH_MAPPING + "{hash}")
     public RestResult<UserResource> getUser( @PathVariable("hash") String hash) {
         return inviteService.getUserByInviteHash(hash).toGetResponse();
     }

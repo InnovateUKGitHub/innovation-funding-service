@@ -103,7 +103,7 @@ public class QuestionController {
     	return questionService.getQuestionsBySectionIdAndType(sectionId, type).toGetResponse();
     }
 	
-	@RequestMapping(path = "/", method = RequestMethod.PUT)
+	@PutMapping("/")
     public RestResult<QuestionResource> save(@RequestBody final QuestionResource questionResource) {
         return questionService.save(questionResource).toGetResponse();
     }

@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
-
 /**
  * ApplicationController exposes Application data and operations through a REST API.
  */
@@ -54,7 +52,7 @@ public class ApplicationController {
         return applicationService.getProgressPercentageByApplicationId(applicationId).toGetResponse();
     }
 
-    @RequestMapping(value = "/updateApplicationStatus", method = RequestMethod.PUT)
+    @PutMapping("/updateApplicationStatus")
     public RestResult<Void> updateApplicationStatus(@RequestParam("applicationId") final Long id,
                                                           @RequestParam("statusId") final Long statusId) {
         ServiceResult<ApplicationResource> updateStatusResult = applicationService.updateApplicationStatus(id, statusId);
@@ -82,7 +80,7 @@ public class ApplicationController {
         return applicationService.getApplicationsByCompetitionIdAndUserId(competitionId, userId, role).toGetResponse();
     }
 
-    @RequestMapping(value = "/createApplicationByName/{competitionId}/{userId}", method = POST)
+    @PostMapping("/createApplicationByName/{competitionId}/{userId}")
     public RestResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(
             @PathVariable("competitionId") final Long competitionId,
             @PathVariable("userId") final Long userId,

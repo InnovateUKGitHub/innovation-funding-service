@@ -7,14 +7,13 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * SectionController exposes Application data and operations through a REST API.
@@ -43,21 +42,21 @@ public class SectionController {
         return sectionService.getCompletedSections(applicationId, organisationId).toGetResponse();
     }
 
-    @RequestMapping(value = "/markAsComplete/{sectionId}/{applicationId}/{markedAsCompleteById}", method = POST)
+    @PostMapping("/markAsComplete/{sectionId}/{applicationId}/{markedAsCompleteById}")
     public RestResult<List<ValidationMessages>> markAsComplete(@PathVariable("sectionId") final Long sectionId,
                                                                @PathVariable("applicationId") final Long applicationId,
                                                                @PathVariable("markedAsCompleteById") final Long markedAsCompleteById) {
         return sectionService.markSectionAsComplete(sectionId, applicationId, markedAsCompleteById).toGetResponse();
     }
 
-    @RequestMapping(value = "/markAsNotRequired/{sectionId}/{applicationId}/{markedAsCompleteById}", method = POST)
+    @PostMapping("/markAsNotRequired/{sectionId}/{applicationId}/{markedAsCompleteById}")
     public RestResult<Void> markAsNotRequired(@PathVariable("sectionId") final Long sectionId,
                                                                @PathVariable("applicationId") final Long applicationId,
                                                                @PathVariable("markedAsCompleteById") final Long markedAsCompleteById) {
         return sectionService.markSectionAsNotRequired(sectionId, applicationId, markedAsCompleteById).toGetResponse();
     }
 
-    @RequestMapping(value = "/markAsInComplete/{sectionId}/{applicationId}/{markedAsInCompleteById}", method = POST)
+    @PostMapping("/markAsInComplete/{sectionId}/{applicationId}/{markedAsInCompleteById}")
     public RestResult<Void> markAsInComplete(@PathVariable("sectionId") final Long sectionId,
                                            @PathVariable("applicationId") final Long applicationId,
                                            @PathVariable("markedAsInCompleteById") final Long markedAsInCompleteById) {

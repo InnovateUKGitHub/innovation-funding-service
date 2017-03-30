@@ -22,7 +22,6 @@ import java.util.List;
 
 import static org.innovateuk.ifs.file.controller.FileControllerUtils.*;
 import static org.innovateuk.ifs.finance.resource.ApplicationFinanceConstants.RESEARCH_PARTICIPATION_PERCENTAGE;
-import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
  * This RestController exposes CRUD operations to both the
@@ -102,7 +101,7 @@ public class ApplicationFinanceController {
         return financeRowService.financeTotals(applicationId).toGetResponse();
     }
 
-    @RequestMapping(value = "/financeDocument", method = POST, produces = "application/json")
+    @PostMapping(value = "/financeDocument", produces = "application/json")
     public RestResult<FileEntryResource> addFinanceDocument(
             @RequestHeader(value = "Content-Type", required = false) String contentType,
             @RequestHeader(value = "Content-Length", required = false) String contentLength,
@@ -114,7 +113,7 @@ public class ApplicationFinanceController {
                 financeRowService.createFinanceFileEntry(applicationFinanceId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
     }
 
-    @RequestMapping(value = "/financeDocument", method = PUT, produces = "application/json")
+    @PutMapping(value = "/financeDocument", produces = "application/json")
     public RestResult<Void> updateFinanceDocument(
             @RequestHeader(value = "Content-Type", required = false) String contentType,
             @RequestHeader(value = "Content-Length", required = false) String contentLength,
@@ -126,7 +125,7 @@ public class ApplicationFinanceController {
                 financeRowService.updateFinanceFileEntry(applicationFinanceId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
     }
 
-    @RequestMapping(value = "/financeDocument", method = DELETE, produces = "application/json")
+    @DeleteMapping(value = "/financeDocument", produces = "application/json")
     public RestResult<Void> deleteFinanceDocument(
             @RequestParam("applicationFinanceId") long applicationFinanceId) throws IOException {
 
@@ -134,14 +133,14 @@ public class ApplicationFinanceController {
         return deleteResult.toDeleteResponse();
     }
 
-    @RequestMapping(value = "/financeDocument", method = GET)
+    @GetMapping("/financeDocument")
     public @ResponseBody ResponseEntity<Object> getFileContents(
             @RequestParam("applicationFinanceId") long applicationFinanceId) throws IOException {
 
         return handleFileDownload(() -> financeRowService.getFileContents(applicationFinanceId));
     }
 
-    @RequestMapping(value = "/financeDocument/fileentry", method = GET)
+    @GetMapping("/financeDocument/fileentry")
     public RestResult<FileEntryResource> getFileDetails(@RequestParam("applicationFinanceId") long applicationFinanceId) throws IOException {
         return financeRowService.getFileContents(applicationFinanceId).
                 andOnSuccessReturn(FileAndContents::getFileEntry).

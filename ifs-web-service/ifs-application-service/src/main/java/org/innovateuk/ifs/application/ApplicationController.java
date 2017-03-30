@@ -43,7 +43,6 @@ import java.util.Optional;
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.collectValidationMessages;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PROJECT_SETUP;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 /**
  * This controller will handle all requests that are related to the application overview.
@@ -122,7 +121,7 @@ public class ApplicationController {
     }
 
     @ProfileExecution
-    @RequestMapping(value= "/{applicationId}", method = RequestMethod.GET)
+    @GetMapping("/{applicationId}")
     public String applicationDetails(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
                                      HttpServletRequest request) {
 
@@ -132,7 +131,7 @@ public class ApplicationController {
     }
 
     @ProfileExecution
-    @RequestMapping(value= "/{applicationId}", method = RequestMethod.POST)
+    @PostMapping(value= "/{applicationId}")
     public String applicationDetails(@PathVariable("applicationId") long applicationId, HttpServletRequest request) {
 
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
@@ -165,7 +164,7 @@ public class ApplicationController {
     }
 
     @ProfileExecution
-    @RequestMapping(value = "/{applicationId}/summary", method = RequestMethod.GET)
+    @GetMapping("/{applicationId}/summary")
     public String applicationSummary(@ModelAttribute("form") ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
                                      HttpServletRequest request) {
         List<FormInputResponseResource> responses = formInputResponseService.getByApplication(applicationId);
@@ -214,7 +213,7 @@ public class ApplicationController {
     }
 
     @ProfileExecution
-    @RequestMapping(value = "/{applicationId}/summary", method = RequestMethod.POST)
+    @PostMapping("/{applicationId}/summary")
     public String applicationSummarySubmit(@PathVariable("applicationId") long applicationId,
                                            HttpServletRequest request) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
@@ -250,7 +249,7 @@ public class ApplicationController {
         return "application-confirm-submit";
     }
 
-    @RequestMapping(value = "/{applicationId}/submit", method = RequestMethod.POST)
+    @PostMapping("/{applicationId}/submit")
     public String applicationSubmit(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
                                     HttpServletRequest request, HttpServletResponse response){
     	UserResource user = userAuthenticationService.getAuthenticatedUser(request);
@@ -285,7 +284,7 @@ public class ApplicationController {
     }
 
     @ProfileExecution
-    @RequestMapping(value = "/create/{competitionId}", method = RequestMethod.POST)
+    @PostMapping("/create/{competitionId}")
     public String applicationCreate(Model model,
                                     @PathVariable("competitionId") long competitionId,
                                     @RequestParam(value = "application_name", required = true) String applicationName,
@@ -314,7 +313,7 @@ public class ApplicationController {
         return "application-terms-and-conditions";
     }
 
-    @RequestMapping(value = "/{applicationId}/assessorFeedback", method = GET)
+    @GetMapping("/{applicationId}/assessorFeedback")
     public @ResponseBody ResponseEntity<ByteArrayResource> downloadAssessorFeedbackFile(
             @PathVariable("applicationId") long applicationId) {
 
@@ -341,7 +340,7 @@ public class ApplicationController {
      * @return
      */
     @ProfileExecution
-    @RequestMapping(value = "/{applicationId}/section/{sectionId}", method = RequestMethod.POST)
+    @PostMapping("/{applicationId}/section/{sectionId}")
     public String assignQuestion(@PathVariable("applicationId") long applicationId,
                                  @PathVariable("sectionId") long sectionId,
                                  HttpServletRequest request,

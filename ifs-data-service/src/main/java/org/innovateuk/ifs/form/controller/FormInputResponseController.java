@@ -59,7 +59,7 @@ public class FormInputResponseController {
         return formInputService.findResponseByApplicationIdAndQuestionId(applicationId, questionId).toGetResponse();
     }
 
-    @RequestMapping(value = "/saveQuestionResponse", method = RequestMethod.POST)
+    @PostMapping("/saveQuestionResponse")
     public RestResult<ValidationMessages> saveQuestionResponse(@RequestBody JsonNode jsonObj) {
 
         Long userId = jsonObj.get("userId").asLong();
