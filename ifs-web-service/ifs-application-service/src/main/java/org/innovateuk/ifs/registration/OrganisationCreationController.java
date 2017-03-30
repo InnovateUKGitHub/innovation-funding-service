@@ -142,7 +142,7 @@ public class OrganisationCreationController {
         cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
         model.addAttribute(ORGANISATION_FORM, organisationForm);
 
-        model.addAttribute("initialUserFlow", organisationTypeIsChosenByDefault(request));
+        model.addAttribute("isLeadApplicant", organisationTypeIsChosenByDefault(request));
         model.addAttribute("searchLabel",getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchLabel",  request.getLocale()));
         model.addAttribute("searchHint", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchHint",  request.getLocale()));
 

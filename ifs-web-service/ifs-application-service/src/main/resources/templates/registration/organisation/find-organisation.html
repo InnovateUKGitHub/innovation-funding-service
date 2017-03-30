@@ -10,13 +10,13 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <th:block th:unless="${initialUserFlow}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to choose your organisation type',linkClass='link-back',linkUrl='/organisation/create/type/new-account-organisation-type',currentApplication=${currentApplication}" />
-    <th:block th:if="${initialUserFlow}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back ',linkClass='link-back',linkUrl='javascript:history.back()'" />
+    <th:block th:unless="${isLeadApplicant}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to choose your organisation type',linkClass='link-back',linkUrl='/organisation/create/type/new-account-organisation-type',currentApplication=${currentApplication}" />
+    <th:block th:if="${isLeadApplicant}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back ',linkClass='link-back',linkUrl='javascript:history.back()'" />
 
     <h1 class="heading-xlarge">
         <span class="heading-secondary">Create your account</span>
-        <th:block th:if="${initialUserFlow}">Your organisation</th:block>>
-        <th:block th:unless="${initialUserFlow}" th:text="${organisationForm.organisationType.name}"/>
+        <th:block th:if="${isLeadApplicant}">Your organisation</th:block>
+        <th:block th:unless="${isLeadApplicant}" th:text="${organisationForm.organisationType.name}"/>
     </h1>
     <th:block th:if="${organisationForm.notResearch}">
         <div class="message-alert">
