@@ -26,7 +26,6 @@ import java.util.function.Supplier;
 
 import static java.util.EnumSet.allOf;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-//import static org.innovateuk.ifs.user.resource.OrganisationTypeEnum.isResearch;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -61,7 +60,6 @@ public class ByProjectFinanceCostCategoriesStrategy implements CostCategoryTypeS
                         find(projectFinanceResource(project.getId(), organisation.getId())).
                                 andOnSuccess((finances) -> {
                                     List<? extends CostCategoryGenerator> costCategoryGenerators;
-                                    /*if (!isResearch(organisation.getOrganisationType())) {*/
                                     if (!financeUtil.isUsingJesFinances(organisation.getOrganisationTypeName())) {
                                         Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = finances.getFinanceOrganisationDetails();
                                         costCategoryGenerators = sort(financeOrganisationDetails.keySet());

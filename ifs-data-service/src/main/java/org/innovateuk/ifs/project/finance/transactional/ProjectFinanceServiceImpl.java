@@ -35,7 +35,6 @@ import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
-import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.innovateuk.ifs.validator.util.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -219,9 +218,8 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             table.setMarkedAsComplete(spendProfile.isMarkedAsComplete());
             checkTotalForMonthsAndAddToTable(table);
 
-           /*boolean isResearch = OrganisationTypeEnum.isResearch(organisation.getOrganisationType().getId());*/
-           boolean isResearch = financeUtil.isUsingJesFinances(organisation.getOrganisationType().getName());
-            if (isResearch) {
+           boolean isUsingJesFinances = financeUtil.isUsingJesFinances(organisation.getOrganisationType().getName());
+            if (isUsingJesFinances) {
                 table.setCostCategoryGroupMap(groupCategories(table));
             }
 
