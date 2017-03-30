@@ -128,11 +128,11 @@
                         </div>
                     </div>
                 </fieldset>
-                <th:block th:if="${model.newAttachmentLinks.size() > 0}">
+                <th:block th:unless="${model.newAttachmentLinks.isEmpty()}">
                     <fieldset>
                         <legend class="heading-small">Supporting documentation</legend>
                         <th:block th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
-                            <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},query_section=${model.querySection},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId)}">filename</a>
+                            <a target="_blank" th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},query_section=${model.querySection},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId)}">filename</a>
                             <button name="removeAttachment" class="buttonlink" th:value="${attachmentId}">Remove</button><br />
                         </th:block>
                     </fieldset>
