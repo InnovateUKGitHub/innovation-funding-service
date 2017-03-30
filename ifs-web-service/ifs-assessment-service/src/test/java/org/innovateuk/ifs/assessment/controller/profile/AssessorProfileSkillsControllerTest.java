@@ -65,12 +65,12 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
                 setUpInnovationAreasForSector("Emerging and enabling technologies",
                         "Data", "Cyber Security"),
                 setUpInnovationAreasForSector("Health and life sciences",
-                        "Bioscience", "Enhanced Food Quality"));
+                        "Biosciences", "Independent living and wellbeing"));
         UserResource userResource = setUpProfileSkills(businessType, skillAreas, innovationAreaResources);
 
         Map<String, List<String>> expectedInnovationAreas = new LinkedHashMap<>();
         expectedInnovationAreas.put("Emerging and enabling technologies", asList("Data", "Cyber Security"));
-        expectedInnovationAreas.put("Health and life sciences", asList("Bioscience", "Enhanced Food Quality"));
+        expectedInnovationAreas.put("Health and life sciences", asList("Biosciences", "Independent living and wellbeing"));
 
         AssessorProfileSkillsViewModel expectedModel = new AssessorProfileSkillsViewModel(expectedInnovationAreas,
                 skillAreas, businessType);
