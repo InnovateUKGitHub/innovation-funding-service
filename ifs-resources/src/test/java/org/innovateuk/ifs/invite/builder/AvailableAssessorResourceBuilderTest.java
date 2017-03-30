@@ -54,7 +54,7 @@ public class AvailableAssessorResourceBuilderTest {
                         .withName("Creative economy", "Offshore Renewable Energy")
                         .build(2),
                 newInnovationAreaResource()
-                        .withName("Urban Living", "Advanced Therapies")
+                        .withName("Urban Living", "Advanced therapies")
                         .build(2)
         };
         Boolean[] expectedCompliants = {TRUE, FALSE};
