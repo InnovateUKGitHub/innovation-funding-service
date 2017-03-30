@@ -37,6 +37,18 @@
         <div class="column-half">
             <a id="post-new-query" th:href="@{{baseUrl}/new-query(baseUrl=${baseUrl},query_section=${model.querySection})}" class="button button-large" th:test="${baseUrl}">Post a new query</a>
         </div>
+        <div class="column-half">
+            <fieldset>
+                <div class="alignright">
+                    <label for="querySection">Query section</label>
+                    <select id="querySection" onchange="$(this.options[this.selectedIndex].dataset.hide).hide(); $(this.options[this.selectedIndex].dataset.show).show();" class="form-control">
+                        <option data-show=".queries-list .query" value="all">All</option>
+                        <option data-hide=".queries-list .query" data-show=".queries-list .viability-section" value="viability">Viability</option>
+                        <option data-hide=".queries-list .query" data-show=".queries-list .eligibility-section" value="eligibility">Eligibility</option>
+                    </select>
+                </div>
+            </fieldset>
+        </div>
     </div>
 
     <div class="error-summary" th:if="${nonFormErrors != null} and ${not #lists.isEmpty(nonFormErrors)}">
