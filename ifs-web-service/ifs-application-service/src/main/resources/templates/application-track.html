@@ -21,7 +21,7 @@
       <ul>
         <li>Application number: <span th:text="${currentApplication.id}" /></li>
         <li>
-          Your application was submitted into the competition '<span th:text="${currentCompetition.name}" />'
+          Your application for the competition '<span th:text="${currentCompetition.name}" />' was submitted
           <th:block th:if="${currentApplication.submittedDate != null}">
             on
             <th:block th:text="${#temporals.monthName(currentApplication.submittedDate)}" />
@@ -49,12 +49,11 @@
     </ul>
 
     <h3 class="heading-medium">Decision notification</h3>
-    <p>You and your project partners will be emailed notification of the funding decision by
+    <p>You and your project partners will be emailed notification of the decision by
       <strong th:if="${currentCompetition.fundersPanelDate != null}">
         <th:block th:insert="fragments/elements :: ordinal-day (date=${currentCompetition.fundersPanelDate})" />
         <th:block th:text="${#temporals.monthName(currentCompetition.fundersPanelDate)}" />
-        <th:block th:text="${#temporals.year(currentCompetition.fundersPanelDate)}" />
-      </strong>.
+        <th:block th:text="${#temporals.year(currentCompetition.fundersPanelDate)}" /></strong>.
     </p>
 
     <div class="grid-row">
@@ -79,11 +78,10 @@
 
     <h3 class="heading-medium">Application feedback</h3>
     <p>Application feedback will be provided by
-      <strong th:if="${currentCompetition.fundersPanelDate != null}">
-      <th:block th:insert="fragments/elements :: ordinal-day (date=${currentCompetition.fundersPanelDate})" />
-      <th:block th:text="${#temporals.monthName(currentCompetition.fundersPanelDate)}" />
-      <th:block th:text="${#temporals.year(currentCompetition.fundersPanelDate)}" />
-      </strong>.
+      <strong th:if="${currentCompetition.releaseFeedbackDate != null}">
+        <th:block th:insert="fragments/elements :: ordinal-day (date=${currentCompetition.releaseFeedbackDate})" />
+        <th:block th:text="${#temporals.monthName(currentCompetition.releaseFeedbackDate)}" />
+        <th:block th:text="${#temporals.year(currentCompetition.releaseFeedbackDate)}" /></strong>.
       <br />We will email you when this becomes available.
     </p>
 
