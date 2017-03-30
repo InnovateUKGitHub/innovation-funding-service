@@ -34,7 +34,7 @@
 
         <th:block th:if="${!userIsLeadApplicant}">
             <th:block th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}">
-                <div class="assign-container" th:classappend="(${currentUser.getId() == questionAssignee?.assigneeUserId} ? 'assign-alert' : 'assigned-alert')">
+                <div class="assign-container" th:classappend="${currentUser.id == questionAssignee?.assigneeUserId} ? 'assign-alert' : 'assigned-alert'">
                     <th:block th:include="question-type/form-elements :: current-assignee"/>
                 </div>
             </th:block>
