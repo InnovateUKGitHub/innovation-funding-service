@@ -63,7 +63,7 @@ The User can Add and Remove Assessors
     Then The user should see the text in the page    will.smith@gmail.com
     And The user should see the text in the page    Will Smith
     And The user should see the element    jQuery=td:contains("Will Smith") ~ td .yes
-    And the user should see the element    jQuery=td:contains("Will Smith") ~ td:nth-child(3):contains("Precision Medicine")
+    And the user should see the element    jQuery=td:contains("Will Smith") ~ td:nth-child(3):contains("Precision medicine")
     And the user should see the element    jQuery=td:contains("Will Smith") ~ td:nth-child(3):contains("Nanotechnology / nanomaterials")
     And the user should see the element    jQuery=td:contains("Will Smith") ~ td:nth-child(3):contains("Energy systems")
     And the calculations of the Assessors on invite list should be correct
@@ -108,7 +108,7 @@ The user can select the profile link
     Then the user should see the text in the page    will.smith@gmail.com
     And the user should see the text in the page    028572565937
     And the user should see the text in the page    Solar energy research
-    And the user should see the text in the page    Precision Medicine
+    And the user should see the text in the page    Precision medicine
     And the user should see the text in the page    Business
     [Teardown]    The user clicks the button/link    link=Back
 
