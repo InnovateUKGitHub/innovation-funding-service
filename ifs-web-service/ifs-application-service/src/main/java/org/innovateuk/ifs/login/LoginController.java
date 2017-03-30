@@ -3,6 +3,7 @@ package org.innovateuk.ifs.login;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.login.form.ResetPasswordForm;
 import org.innovateuk.ifs.login.form.ResetPasswordRequestForm;
@@ -56,7 +57,11 @@ public class LoginController {
             return LOGIN_BASE + "/" + RESET_PASSWORD;
         } else {
             LOG.warn("Reset password for: " + resetPasswordRequestForm.getEmail());
-            userService.sendPasswordResetNotification(resetPasswordRequestForm.getEmail());
+            try {
+                userService.sendPasswordResetNotification(resetPasswordRequestForm.getEmail());
+            } catch (ObjectNotFoundException e) {
+                LOG.warn("Invalid email address : " + resetPasswordRequestForm.getEmail());
+            }
             return LOGIN_BASE + "/" + RESET_PASSWORD_NOTIFICATION_SEND;
         }
     }
