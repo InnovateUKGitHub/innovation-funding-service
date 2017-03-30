@@ -13,7 +13,7 @@
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Application team',linkClass='link-back',linkUrl=@{/application/{applicationId}/team(applicationId=${model.applicationId})}" />
 
             <div class="page-title">
-                <th:block th:insert="fragments/elements :: application-title (applicationId=${model.applicationId},applicationName=${model.applicationName})" />
+                <th:block th:insert="fragments/elements :: application-title (applicationName=${model.applicationName})" />
                 <h1 class="heading-xlarge" th:text="|Update ${model.organisationName}|">Update Empire Ltd</h1>
             </div>
 

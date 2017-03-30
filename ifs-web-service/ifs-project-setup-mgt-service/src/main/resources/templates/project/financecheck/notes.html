@@ -13,7 +13,7 @@
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})},currentCompetition=null" />
 
             <div class="page-title">
-                <th:block th:insert="fragments/elements :: project-title (projectId=${model.projectId}, projectName=${model.projectName})" />
+                <th:block th:insert="fragments/elements :: project-title (projectName=${model.projectName})" />
                 <h1 class="heading-xlarge">
                     <th:block th:text="${model.organisationName}" />
                     <small th:if="${model.leadPartnerOrganisation}">(Lead Partner)</small>
