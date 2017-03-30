@@ -652,6 +652,16 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     }
 
     @Test
+    public void applicationDetailsFormSubmit_incorrectFileType() throws Exception {
+        MvcResult result = mockMvc.perform(
+                post("/application/{applicationId}/form/question/{questionId}", application.getId(), questionId)
+                .param("upload_file", "")
+        ).andReturn();
+
+        BindingResult bindingResult = (BindingResult)result.getModelAndView().getModel().get("org.springframework.validation.BindingResult.form");
+    }
+
+    @Test
     public void testApplicationFormSubmitGivesNoValidationErrorsIfNoQuestionIsEmptyOnSectionSubmit() throws Exception {
         Long userId = loggedInUser.getId();
 
