@@ -99,10 +99,11 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
 
     @Test
     public void testNotifyLeadApplicantsOfFundingDecisions() {
-        
-        Application application1 = newApplication().build();
-        Application application2 = newApplication().build();
-        Application application3 = newApplication().build();
+        Competition competition = newCompetition().build();
+
+        Application application1 = newApplication().withCompetition(competition).build();
+        Application application2 = newApplication().withCompetition(competition).build();
+        Application application3 = newApplication().withCompetition(competition).build();
 
         User application1LeadApplicant = newUser().build();
         User application2LeadApplicant = newUser().build();
@@ -143,6 +144,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
         );
         when(notificationServiceMock.sendNotification(createNotificationExpectationsWithGlobalArgs(expectedFundingNotification), eq(EMAIL))).thenReturn(serviceSuccess());
         when(applicationServiceMock.setApplicationFundingEmailDateTime(any(Long.class), any(LocalDateTime.class))).thenReturn(serviceSuccess(new ApplicationResource()));
+        when(competitionServiceMock.manageInformState(competition.getId())).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.notifyLeadApplicantsOfFundingDecisions(notificationResource);
         assertTrue(result.isSuccess());
@@ -159,8 +161,10 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     @Test
     public void testNotifyLeadApplicantsOfFundingDecisionsAndJustLeadApplicants() {
 
-        Application application1 = newApplication().build();
-        Application application2 = newApplication().build();
+        Competition competition = newCompetition().build();
+
+        Application application1 = newApplication().withCompetition(competition).build();
+        Application application2 = newApplication().withCompetition(competition).build();
 
         // add some collaborators into the mix - they should not receive Notifications
         User application1LeadApplicant = newUser().build();
@@ -205,6 +209,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
 
         when(notificationServiceMock.sendNotification(createSimpleNotificationExpectations(expectedFundingNotification), eq(EMAIL))).thenReturn(serviceSuccess());
         when(applicationServiceMock.setApplicationFundingEmailDateTime(any(Long.class), any(LocalDateTime.class))).thenReturn(serviceSuccess(new ApplicationResource()));
+        when(competitionServiceMock.manageInformState(competition.getId())).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.notifyLeadApplicantsOfFundingDecisions(notificationResource);
         assertTrue(result.isSuccess());

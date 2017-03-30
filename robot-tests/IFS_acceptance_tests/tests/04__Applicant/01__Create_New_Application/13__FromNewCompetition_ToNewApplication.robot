@@ -348,7 +348,7 @@ the user should see his finances empty
 
 the user selects feasibility studies and no to resubmission and an innovation area
     the user clicks the button/link    jQuery=legend:contains("Research category")
-    the user clicks the button/link    jQuery=button:contains("Choose your research category")
+    the user clicks the button/link    jQuery=button:contains("Choose your research")
     the user clicks the button twice   jQuery=label[for^="researchCategoryChoice"]:contains("Feasibility studies")
     the user clicks the button/link    jQuery=button:contains(Save)
     the user clicks the button/link    jQuery=button:contains("Change your innovation area")
