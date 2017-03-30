@@ -13,7 +13,7 @@
           th:attr="data-competition=${competition.id}" data-section="initial"
           method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
 
-        <div class="error-summary" th:attr="aria-hidden=${!#fields.hasGlobalErrors()}">
+        <div class="error-summary" th:if="${#fields.hasGlobalErrors()}">
             <h2 class="heading-medium error-summary-heading">
                 Unable to save section
             </h2>
