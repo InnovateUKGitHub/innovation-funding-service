@@ -24,7 +24,7 @@ public class CommonThreadController<R> {
         return service.findOne(threadId).toGetResponse();
     }
 
-    @PostMapping("")
+    @PostMapping
     public RestResult<Long> create(@RequestBody R thread) {
         return service.create(thread).toPostCreateResponse();
     }

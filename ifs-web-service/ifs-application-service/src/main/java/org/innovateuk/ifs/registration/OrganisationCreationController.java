@@ -121,7 +121,7 @@ public class OrganisationCreationController {
         this.validator = validator;
     }
 
-    @RequestMapping("/" + CREATE_ORGANISATION_TYPE)
+    @GetMapping("/" + CREATE_ORGANISATION_TYPE)
     public String createAccountOrganisationType(@ModelAttribute Form form, Model model) {
         model.addAttribute("form", form);
         return TEMPLATE_PATH + "/" + CREATE_ORGANISATION_TYPE;
@@ -497,7 +497,7 @@ public class OrganisationCreationController {
         return "redirect:" + BASE_URL + "/" + FIND_ORGANISATION;
     }
 
-    @RequestMapping("/save-organisation")
+    @GetMapping("/save-organisation")
     public String saveOrganisation(@ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm, Model model, HttpServletRequest request, HttpServletResponse response) throws IOException {
         organisationForm = getFormDataFromCookie(organisationForm, model, request);
         OrganisationSearchResult selectedOrganisation = addSelectedOrganisation(organisationForm, model);

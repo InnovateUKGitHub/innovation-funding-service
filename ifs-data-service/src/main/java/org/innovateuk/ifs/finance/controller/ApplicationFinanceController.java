@@ -22,6 +22,8 @@ import java.util.List;
 
 import static org.innovateuk.ifs.file.controller.FileControllerUtils.*;
 import static org.innovateuk.ifs.finance.resource.ApplicationFinanceConstants.RESEARCH_PARTICIPATION_PERCENTAGE;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * This RestController exposes CRUD operations to both the
@@ -39,7 +41,7 @@ public class ApplicationFinanceController {
     @Qualifier("applicationFinanceFileValidator")
     private FileHttpHeadersValidator fileValidator;
 
-    @RequestMapping("/findByApplicationOrganisation/{applicationId}/{organisationId}")
+    @GetMapping("/findByApplicationOrganisation/{applicationId}/{organisationId}")
     public RestResult<ApplicationFinanceResource> findByApplicationOrganisation(
             @PathVariable("applicationId") final Long applicationId,
             @PathVariable("organisationId") final Long organisationId) {
@@ -47,7 +49,7 @@ public class ApplicationFinanceController {
         return financeRowService.findApplicationFinanceByApplicationIdAndOrganisation(applicationId, organisationId).toGetResponse();
     }
 
-    @RequestMapping("/findByApplication/{applicationId}")
+    @GetMapping("/findByApplication/{applicationId}")
     public RestResult<List<ApplicationFinanceResource>> findByApplication(
             @PathVariable("applicationId") final Long applicationId) {
 
@@ -55,7 +57,7 @@ public class ApplicationFinanceController {
     }
 
     // TODO DW - INFUND-1555 - remove ObjectNode usage
-    @RequestMapping("/getResearchParticipationPercentage/{applicationId}")
+    @GetMapping("/getResearchParticipationPercentage/{applicationId}")
     public RestResult<ObjectNode> getResearchParticipationPercentage(@PathVariable("applicationId") final Long applicationId) {
 
         ServiceResult<ObjectNode> result = financeRowService.getResearchParticipationPercentage(applicationId).andOnSuccessReturn(percentage -> {
@@ -68,7 +70,7 @@ public class ApplicationFinanceController {
         return result.toGetResponse();
     }
 
-    @RequestMapping("/add/{applicationId}/{organisationId}")
+    @RequestMapping(value = "/add/{applicationId}/{organisationId}", method = {GET, POST})
     public RestResult<ApplicationFinanceResource> add(
             @PathVariable("applicationId") final Long applicationId,
             @PathVariable("organisationId") final Long organisationId) {
@@ -76,27 +78,27 @@ public class ApplicationFinanceController {
         return financeRowService.addCost(new ApplicationFinanceResourceId(applicationId, organisationId)).toPostCreateResponse();
     }
 
-    @RequestMapping("/getById/{applicationFinanceId}")
+    @GetMapping("/getById/{applicationFinanceId}")
     public RestResult<ApplicationFinanceResource> findOne(@PathVariable("applicationFinanceId") final Long applicationFinanceId) {
         return financeRowService.getApplicationFinanceById(applicationFinanceId).toGetResponse();
     }
 
-    @RequestMapping("/update/{applicationFinanceId}")
+    @PostMapping("/update/{applicationFinanceId}")
     public RestResult<ApplicationFinanceResource> update(@PathVariable("applicationFinanceId") final Long applicationFinanceId, @RequestBody final ApplicationFinanceResource applicationFinance) {
         return financeRowService.updateCost(applicationFinanceId, applicationFinance).toPutWithBodyResponse();
     }
 
-    @RequestMapping("/financeDetails/{applicationId}/{organisationId}")
+    @GetMapping("/financeDetails/{applicationId}/{organisationId}")
     public RestResult<ApplicationFinanceResource> financeDetails(@PathVariable("applicationId") final Long applicationId, @PathVariable("organisationId") final Long organisationId) {
         return financeRowService.financeDetails(applicationId, organisationId).toGetResponse();
     }
 
-    @RequestMapping("/financeDetails/{applicationId}")
+    @GetMapping("/financeDetails/{applicationId}")
     public RestResult<List<ApplicationFinanceResource>> financeDetails(@PathVariable("applicationId") final Long applicationId) {
         return financeRowService.financeDetails(applicationId).toGetResponse();
     }
 
-    @RequestMapping("/financeTotals/{applicationId}")
+    @GetMapping("/financeTotals/{applicationId}")
     public RestResult<List<ApplicationFinanceResource>> financeTotals(@PathVariable("applicationId") final Long applicationId) {
         return financeRowService.financeTotals(applicationId).toGetResponse();
     }

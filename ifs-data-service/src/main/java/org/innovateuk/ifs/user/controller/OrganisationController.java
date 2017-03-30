@@ -23,17 +23,17 @@ public class OrganisationController {
     @Autowired
     private OrganisationService organisationService;
 
-    @RequestMapping("/findByApplicationId/{applicationId}")
+    @GetMapping("/findByApplicationId/{applicationId}")
     public RestResult<Set<OrganisationResource>> findByApplicationId(@PathVariable("applicationId") final Long applicationId) {
         return organisationService.findByApplicationId(applicationId).toGetResponse();
     }
 
-    @RequestMapping("/findById/{organisationId}")
+    @GetMapping("/findById/{organisationId}")
     public RestResult<OrganisationResource> findById(@PathVariable("organisationId") final Long organisationId) {
         return organisationService.findById(organisationId).toGetResponse();
     }
 
-    @RequestMapping("/getPrimaryForUser/{userId}")
+    @GetMapping("/getPrimaryForUser/{userId}")
     public RestResult<OrganisationResource> getPrimaryForUser(@PathVariable("userId") final Long userId) {
         return organisationService.getPrimaryForUser(userId).toGetResponse();
     }

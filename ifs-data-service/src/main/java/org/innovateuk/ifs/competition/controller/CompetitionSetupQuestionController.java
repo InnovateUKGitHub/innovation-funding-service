@@ -17,7 +17,7 @@ public class CompetitionSetupQuestionController {
     @Autowired
     private CompetitionSetupQuestionService competitionSetupQuestionService;
 
-    @RequestMapping("/{id}")
+    @GetMapping("/{id}")
     public RestResult<CompetitionSetupQuestionResource> getByQuestionId(@PathVariable("id") final Long id) {
         return competitionSetupQuestionService.getByQuestionId(id).toGetResponse();
     }

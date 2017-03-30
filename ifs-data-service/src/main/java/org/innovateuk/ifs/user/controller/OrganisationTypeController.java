@@ -5,6 +5,7 @@ import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.transactional.OrganisationTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,18 +23,18 @@ public class OrganisationTypeController {
     private OrganisationService organisationService;
 
 
-    @RequestMapping("/{id}")
+    @GetMapping("/{id}")
     public RestResult<OrganisationTypeResource> findById(@PathVariable("id") final Long id) {
         return service.findOne(id).toGetResponse();
     }
 
-    @RequestMapping("/getAll")
+    @GetMapping("/getAll")
     public RestResult<List<OrganisationTypeResource>> findAll() {
         return service.findAll().toGetResponse();
     }
 
 
-    @RequestMapping("/getTypeForOrganisation/{organisationId}")
+    @GetMapping("/getTypeForOrganisation/{organisationId}")
     public RestResult<OrganisationTypeResource> findTypeForOrganisation(@PathVariable Long organisationId) {
         return organisationService.findById(organisationId).
                 andOnSuccess(organisation -> service.findOne(organisation.getOrganisationType())).
