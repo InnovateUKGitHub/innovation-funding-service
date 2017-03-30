@@ -33,7 +33,6 @@ import static org.innovateuk.ifs.project.builder.CostCategoryTypeBuilder.newCost
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.finance.transactional.ByProjectFinanceCostCategoriesStrategy.DESCRIPTION_PREFIX;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.innovateuk.ifs.user.resource.OrganisationTypeEnum.ACADEMIC;
 import static org.innovateuk.ifs.user.resource.OrganisationTypeEnum.BUSINESS;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static java.util.Arrays.asList;
@@ -82,10 +81,7 @@ public class ByProjectFinanceCostCategoriesStrategyTest extends BaseServiceUnitT
         // Setup
         ApplicationResource ar = newApplicationResource().build();
         ProjectResource pr = newProjectResource().withApplication(ar.getId()).build();
-        OrganisationResource or = newOrganisationResource()
-                .withOrganisationType(ACADEMIC.getOrganisationTypeId())
-                .withOrganisationTypeName("University (HEI)")
-                .build(); // Academic
+        OrganisationResource or = newOrganisationResource().build();
         ProjectFinanceResource projectFinance = newProjectFinanceResource().build();
         CostCategoryType expectedCct = newCostCategoryType().
                 withName("A name that will not match - we care only about the contained CostCategories").
@@ -113,10 +109,7 @@ public class ByProjectFinanceCostCategoriesStrategyTest extends BaseServiceUnitT
         // Setup
         ApplicationResource ar = newApplicationResource().build();
         ProjectResource pr = newProjectResource().withApplication(ar.getId()).build();
-        OrganisationResource or = newOrganisationResource()
-                .withOrganisationType(ACADEMIC.getOrganisationTypeId())
-                .withOrganisationTypeName("University (HEI)")
-                .build(); // Academic
+        OrganisationResource or = newOrganisationResource().build();
         ProjectFinanceResource projectFinance = newProjectFinanceResource().build();
         CostCategoryType expectedCct = newCostCategoryType().
                 withName(DESCRIPTION_PREFIX + simpleJoiner(sorted(allOf(AcademicCostCategoryGenerator.class)), AcademicCostCategoryGenerator::getName, ", ")).

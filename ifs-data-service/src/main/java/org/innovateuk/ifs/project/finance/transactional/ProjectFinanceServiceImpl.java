@@ -184,47 +184,47 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
                 project(projectOrganisationCompositeId.getProjectId())).
                 andOnSuccess((spendProfile, project) -> {
 
-            List<CostCategory> costCategories = spendProfile.getCostCategoryType().getCostCategories();
-            Organisation organisation = organisationRepository.findOne(projectOrganisationCompositeId.getOrganisationId());
-            CostGroup eligibleCosts = spendProfile.getEligibleCosts();
-            CostGroup spendProfileFigures = spendProfile.getSpendProfileFigures();
+                    List<CostCategory> costCategories = spendProfile.getCostCategoryType().getCostCategories();
+                    Organisation organisation = organisationRepository.findOne(projectOrganisationCompositeId.getOrganisationId());
+                    CostGroup eligibleCosts = spendProfile.getEligibleCosts();
+                    CostGroup spendProfileFigures = spendProfile.getSpendProfileFigures();
 
-            Map<Long, BigDecimal> eligibleCostsPerCategory =
-                    simpleToLinkedMap(
-                            costCategories,
-                            CostCategory::getId,
-                            category -> findSingleMatchingCostByCategory(eligibleCosts, category).getValue());
+                    Map<Long, BigDecimal> eligibleCostsPerCategory =
+                            simpleToLinkedMap(
+                                    costCategories,
+                                    CostCategory::getId,
+                                    category -> findSingleMatchingCostByCategory(eligibleCosts, category).getValue());
 
-            Map<Long, List<Cost>> spendProfileCostsPerCategory =
-                    simpleToLinkedMap(
-                            costCategories,
-                            CostCategory::getId,
-                            category -> findMultipleMatchingCostsByCategory(spendProfileFigures, category));
+                    Map<Long, List<Cost>> spendProfileCostsPerCategory =
+                            simpleToLinkedMap(
+                                    costCategories,
+                                    CostCategory::getId,
+                                    category -> findMultipleMatchingCostsByCategory(spendProfileFigures, category));
 
-            LocalDate startDate = spendProfile.getProject().getTargetStartDate();
-            int durationInMonths = spendProfile.getProject().getDurationInMonths().intValue();
+                    LocalDate startDate = spendProfile.getProject().getTargetStartDate();
+                    int durationInMonths = spendProfile.getProject().getDurationInMonths().intValue();
 
-            List<LocalDate> months = IntStream.range(0, durationInMonths).mapToObj(startDate::plusMonths).collect(toList());
-            List<LocalDateResource> monthResources = simpleMap(months, LocalDateResource::new);
+                    List<LocalDate> months = IntStream.range(0, durationInMonths).mapToObj(startDate::plusMonths).collect(toList());
+                    List<LocalDateResource> monthResources = simpleMap(months, LocalDateResource::new);
 
-            Map<Long, List<BigDecimal>> spendFiguresPerCategoryOrderedByMonth =
-                    simpleLinkedMapValue(spendProfileCostsPerCategory, costs -> orderCostsByMonths(costs, months, project.getTargetStartDate()));
+                    Map<Long, List<BigDecimal>> spendFiguresPerCategoryOrderedByMonth =
+                            simpleLinkedMapValue(spendProfileCostsPerCategory, costs -> orderCostsByMonths(costs, months, project.getTargetStartDate()));
 
-            SpendProfileTableResource table = new SpendProfileTableResource();
-            table.setCostCategoryResourceMap(buildCostCategoryIdMap(costCategories));
-            table.setMonths(monthResources);
-            table.setEligibleCostPerCategoryMap(eligibleCostsPerCategory);
-            table.setMonthlyCostsPerCategoryMap(spendFiguresPerCategoryOrderedByMonth);
-            table.setMarkedAsComplete(spendProfile.isMarkedAsComplete());
-            checkTotalForMonthsAndAddToTable(table);
+                    SpendProfileTableResource table = new SpendProfileTableResource();
+                    table.setCostCategoryResourceMap(buildCostCategoryIdMap(costCategories));
+                    table.setMonths(monthResources);
+                    table.setEligibleCostPerCategoryMap(eligibleCostsPerCategory);
+                    table.setMonthlyCostsPerCategoryMap(spendFiguresPerCategoryOrderedByMonth);
+                    table.setMarkedAsComplete(spendProfile.isMarkedAsComplete());
+                    checkTotalForMonthsAndAddToTable(table);
 
-           boolean isUsingJesFinances = financeUtil.isUsingJesFinances(organisation.getOrganisationType().getName());
-            if (isUsingJesFinances) {
-                table.setCostCategoryGroupMap(groupCategories(table));
-            }
+                    boolean isUsingJesFinances = financeUtil.isUsingJesFinances(organisation.getOrganisationType().getName());
+                    if (isUsingJesFinances) {
+                        table.setCostCategoryGroupMap(groupCategories(table));
+                    }
 
-            return serviceSuccess(table);
-        });
+                    return serviceSuccess(table);
+                });
     }
 
     private Map<Long, CostCategoryResource> buildCostCategoryIdMap(List<CostCategory> costCategories) {
