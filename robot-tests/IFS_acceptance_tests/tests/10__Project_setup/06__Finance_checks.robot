@@ -1105,8 +1105,7 @@ Confirming eligibility should show info on a readonly page
     When the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
     And the user clicks the button/link    name=confirm-eligibility    # Clicking the confirm button on the modal
     Then the user should see the element    jQuery=a.button-secondary:contains("Return to finance checks")
-    And the user should see the text in the page  The partner's finance eligibility has been approved by Lee Bowman,
-     #${today}
+    And the user should see the text in the page  The partner's finance eligibility has been approved by Lee Bowman, ${today}
     And the user should not see the element    id=rag-rating
     And the user should not see the checkbox    project-eligible
 
@@ -1255,8 +1254,7 @@ Confirming eligibility should show info on a readonly page for partner
     When the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
     And the user clicks the button/link    name=confirm-eligibility    # Clicking the confirm button on the modal
     Then the user should see the element    jQuery=.button-secondary:contains("Return to finance checks")
-    And the user should see the text in the page  The partner's finance eligibility has been approved by Lee Bowman,
-     #${today}
+    And the user should see the text in the page  The partner's finance eligibility has been approved by Lee Bowman, ${today}
     And the user should not see the element    id=rag-rating
     And the user should not see the checkbox    project-eligible
 
@@ -1286,8 +1284,7 @@ Project finance can approve academic eligibility
     When the user selects the option from the drop-down menu    Green    id=rag-rating
     And the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
     And the user clicks the button/link    name=confirm-eligibility    # Clicking the confirm button on the modal
-    And the user should see the text in the page  The partner's finance eligibility has been approved by Lee Bowman,
-    #${today}
+    And the user should see the text in the page  The partner's finance eligibility has been approved by Lee Bowman, ${today}
     And the user should not see the element    id=rag-rating
     And the user should not see the checkbox    project-eligible
     When the user clicks the button/link    link=Finance checks
@@ -1296,66 +1293,25 @@ Project finance user can view a finance overview for the consortium
     [Documentation]    INFUND-4846
     [Tags]
     When the user clicks the button/link    link=Project finance overview
-    Then the user should see the element    jQuery=.column-two-thirds:contains("Finance overview")
-    And the user should see the element     jQuery=#content h3:nth-of-type(1):contains("Overview")
-    And the user should see the element     jQuery=.table-overview th:nth-of-type(1):contains("Start date")
-    And the user should see the element     jQuery=.table-overview th:nth-of-type(2):contains("Duration")
-    And the user should see the element     jQuery=.table-overview th:nth-of-type(3):contains("Total project cost")
-    And the user should see the element     jQuery=.table-overview th:nth-of-type(4):contains("Grant applied for")
-    And the user should see the element     jQuery=.table-overview th:nth-of-type(5):contains("Other public sector funding")
-    And the user should see the element     jQuery=.table-overview th:nth-of-type(6):contains("Total % grant")
-
-    And the user should see the element     jQuery=.table-overview tr:nth-of-type(1) td:nth-of-type(1)  1 Oct 2020
-    And the user should see the element     jQuery=.table-overview tr:nth-of-type(1) td:nth-of-type(2)  3 months
-    And the user should see the element     jQuery=.table-overview tr:nth-of-type(1) td:nth-of-type(3)  £ 322,113
-    And the user should see the element     jQuery=.table-overview tr:nth-of-type(1) td:nth-of-type(4)  £ 91,157
-    And the user should see the element     jQuery=.table-overview tr:nth-of-type(1) td:nth-of-type(5)  £ 6,170
-    And the user should see the element     jQuery=.table-overview tr:nth-of-type(1) td:nth-of-type(6)  28%
+    Then the user should see the element    jQuery=#content h1:nth-of-type(1)
+    And the user should see the element     jQuery=#content h3:nth-of-type(1)
+    Then the user verifies the table heading for Overview section
+    And the categories are verified for Overview section    1   1 Oct 2020  3 months    £ 322,113   £ 91,157    £ 6,170     28%
 
 Project finance user can view Finance summaries for the consortium
     [Documentation]    INFUND-4846
     [Tags]
-    Given the user should see the element   jQuery=#content h3:nth-of-type(2):contains("Finance summaries")
+    Given the user should see the element   jQuery=#content h3:nth-of-type(2)
     #Given the user should see the text in the page  Finance summaries
-    #Zero Row Values
-    Then the user should see the element    jQuery=#content div:nth-of-type(3) table thead tr th:nth-of-type(1):contains("Partner")
-    And the user should see the element     jQuery=#content div:nth-of-type(3) table thead tr th:nth-of-type(2):contains("Total costs")
-    And the user should see the element     jQuery=#content div:nth-of-type(3) table thead tr th:nth-of-type(3):contains("% Grant")
-    And the user should see the element     jQuery=#content div:nth-of-type(3) table thead tr th:nth-of-type(4):contains("Funding sought")
-    And the user should see the element     jQuery=#content div:nth-of-type(3) table thead tr th:nth-of-type(5):contains("Other public sector funding")
-    And the user should see the element     jQuery=#content div:nth-of-type(3) table thead tr th:nth-of-type(6):contains("Contribution to project")
-
-    #First Row Values
-    And the user should see the element     jQuery=#content div:nth-of-type(3) table tbody tr:nth-of-type(1) th:nth-of-type(1):contains("Empire Ltd")
-    And the user should see the element     jQuery=#content div:nth-of-type(3) table tbody tr:nth-of-type(1) td:nth-of-type(1)  £ 206,867
-    And the user should see the element     jQuery=#content div:nth-of-type(3) table tbody tr:nth-of-type(1) td:nth-of-type(2)  30%
-    And the user should see the element     jQuery=#content div:nth-of-type(3) table tbody tr:nth-of-type(1) td:nth-of-type(3)  £ 62,060
-    And the user should see the element     jQuery=#content div:nth-of-type(3) table tbody tr:nth-of-type(1) td:nth-of-type(4)  £ 3,702
-    And the user should see the element     jQuery=#content div:nth-of-type(3) table tbody tr:nth-of-type(1) td:nth-of-type(5)  £ 141,105
-
-    #Second Row Values
-    And the user should see the element     jQuery=#content div:nth-of-type(3) table tbody tr:nth-of-type(2) th:nth-of-type(1):contains("EGGS")
-    And the user should see the element     jQuery=#content div:nth-of-type(3) table tbody tr:nth-of-type(2) td:nth-of-type(1)  £ 990
-    And the user should see the element     jQuery=#content div:nth-of-type(3) table tbody tr:nth-of-type(2) td:nth-of-type(2)  0%
-    And the user should see the element     jQuery=#content div:nth-of-type(3) table tbody tr:nth-of-type(2) td:nth-of-type(3)  £ 0
-    And the user should see the element     jQuery=#content div:nth-of-type(3) table tbody tr:nth-of-type(2) td:nth-of-type(4)  £ 0
-    And the user should see the element     jQuery=#content div:nth-of-type(3) table tbody tr:nth-of-type(2) td:nth-of-type(5)  £ 990
-
-    #Thrid Row Values
-    And the user should see the element     jQuery=#content div:nth-of-type(3) table tbody tr:nth-of-type(3) th:nth-of-type(1):contains("Ludlow")
-    And the user should see the element     jQuery=#content div:nth-of-type(3) table tbody tr:nth-of-type(3) td:nth-of-type(1)  £ 114,256
-    And the user should see the element     jQuery=#content div:nth-of-type(3) table tbody tr:nth-of-type(3) td:nth-of-type(2)  30%
-    And the user should see the element     jQuery=#content div:nth-of-type(3) table tbody tr:nth-of-type(3) td:nth-of-type(3)  £ 34,277
-    And the user should see the element     jQuery=#content div:nth-of-type(3) table tbody tr:nth-of-type(3) td:nth-of-type(4)  £ 2,468
-    And the user should see the element     jQuery=#content div:nth-of-type(3) table tbody tr:nth-of-type(3) td:nth-of-type(5)  £ 77,511
-
-    #Total Values
-    And the user should see the element     jQuery=#content div:nth-of-type(3) table tfoot tr:nth-of-type(1) th:nth-of-type(1):contains("Total")
-    And the user should see the element     jQuery=#content div:nth-of-type(3) table tfoot tr:nth-of-type(1) td:nth-of-type(1)  £ 322,113
-    And the user should see the element     jQuery=#content div:nth-of-type(3) table tfoot tr:nth-of-type(1) td:nth-of-type(3)  £ 96,337
-    And the user should see the element     jQuery=#content div:nth-of-type(3) table tfoot tr:nth-of-type(1) td:nth-of-type(4)  £ 6,170
-    And the user should see the element     jQuery=#content div:nth-of-type(3) table tfoot tr:nth-of-type(1) td:nth-of-type(5)  £ 219,606
-
+    When the user verifies the table heading for Finance summaries section
+    Then the user should see the element    jQuery=#content div:nth-of-type(3) table tbody tr:nth-of-type(1) th:nth-of-type(1):contains("Empire Ltd")
+    And the categories are verified for Finance summaries section   1   £ 206,867   30%     £ 62,060    £ 141,105
+    Then the user should see the element    jQuery=#content div:nth-of-type(3) table tbody tr:nth-of-type(2) th:nth-of-type(1):contains("EGGS")
+    And the categories are verified for Finance summaries section   2   £ 990   0%  £ 0     £ 0     £ 990
+    Then the user should see the element    jQuery=#content div:nth-of-type(3) table tbody tr:nth-of-type(3) th:nth-of-type(1):contains("Ludlow")
+    And the categories are verified for Finance summaries section   3   £ 114,256   30%     £ 34,277    £ 2,468     £ 77,511
+    Then the user should see the element    jQuery=#content div:nth-of-type(3) table tfoot tr:nth-of-type(1) th:nth-of-type(1):contains("Total")
+    And the Total calculation for Finance summaries are verified    1   £ 322,113   £ 96,337    £ 6,170     £ 219,606
 
 #Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
 #    [Documentation]    INFUND-4428
@@ -1853,3 +1809,44 @@ Project finance user amends other costs details in eligibility for lead
 the user goes back to the initial page after having checked the attachment
     the user should not see an error in the page
     Select Window    #this goes back to the initial page
+
+the user verifies the table heading for Overview section
+    Then the user should see the element    jQuery=.table-overview th:nth-of-type(1):contains("Start date")
+    And the user should see the element     jQuery=.table-overview th:nth-of-type(2):contains("Duration")
+    And the user should see the element     jQuery=.table-overview th:nth-of-type(3):contains("Total project cost")
+    And the user should see the element     jQuery=.table-overview th:nth-of-type(4):contains("Grant applied for")
+    And the user should see the element     jQuery=.table-overview th:nth-of-type(5):contains("Other public sector funding")
+    And the user should see the element     jQuery=.table-overview th:nth-of-type(6):contains("Total % grant")
+
+the categories are verified for Overview section
+    [Arguments]  ${row_number}  ${start_date}  ${duration}  ${total_project_cost}  ${grant_applied_for}  ${other_public_sector_fund}  ${total_percent_grant}
+    the user should see the text in the element     jQuery=.table-overview tr:nth-of-type(${row_number}) td:nth-of-type(1)  ${start_date}
+    the user should see the text in the element     jQuery=.table-overview tr:nth-of-type(${row_number}) td:nth-of-type(2)  ${duration}
+    the user should see the text in the element     jQuery=.table-overview tr:nth-of-type(${row_number}) td:nth-of-type(3)  ${total_project_cost}
+    the user should see the text in the element     jQuery=.table-overview tr:nth-of-type(${row_number}) td:nth-of-type(4)  ${grant_applied_for}
+    the user should see the text in the element     jQuery=.table-overview tr:nth-of-type(${row_number}) td:nth-of-type(5)  ${other_public_sector_fund}
+    the user should see the text in the element     jQuery=.table-overview tr:nth-of-type(${row_number}) td:nth-of-type(6)  ${total_percent_grant}
+
+the user verifies the table heading for Finance summaries section
+    Then the user should see the element    jQuery=#content div:nth-of-type(3) table thead tr th:nth-of-type(1):contains("Partner")
+    And the user should see the element     jQuery=#content div:nth-of-type(3) table thead tr th:nth-of-type(2):contains("Total costs")
+    And the user should see the element     jQuery=#content div:nth-of-type(3) table thead tr th:nth-of-type(3):contains("% Grant")
+    And the user should see the element     jQuery=#content div:nth-of-type(3) table thead tr th:nth-of-type(4):contains("Funding sought")
+    And the user should see the element     jQuery=#content div:nth-of-type(3) table thead tr th:nth-of-type(5):contains("Other public sector funding")
+    And the user should see the element     jQuery=#content div:nth-of-type(3) table thead tr th:nth-of-type(6):contains("Contribution to project")
+
+the categories are verified for Finance summaries section
+    [Arguments]  ${row_number}  ${total_costs}  ${percentage_grant}  ${funding_sought}  ${other_public_sector_funding}  ${contribution_to_project}
+    #the user should see the text in the element   jQuery=#content div:nth-of-type(3) table thead tr th:nth-of-type(1)  ${partner}
+    the user should see the text in the element   jQuery=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(1) strong   ${total_costs}
+    the user should see the text in the element   jQuery=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(2)  ${percentage_grant}
+    the user should see the text in the element   jQuery=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(3)  ${funding_sought}
+    the user should see the text in the element   jQuery=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(4)  ${other_public_sector_funding}
+    the user should see the text in the element   jQuery=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(5)  ${contribution_to_project}
+
+the Total calculation for Finance summaries are verified
+    [Arguments]  ${row_number}  ${allPartners_totalcost}   ${allPartners_fundingSought}   ${allPartners_otherPublicSectorFunding}  ${allPartners_contributionToProject}
+    the user should see the text in the element     jQuery=#content div:nth-of-type(3) table tfoot tr:nth-of-type(${row_number}) td:nth-of-type(1)  ${allPartners_totalcost}
+    the user should see the text in the element     jQuery=#content div:nth-of-type(3) table tfoot tr:nth-of-type(${row_number}) td:nth-of-type(3)  ${allPartners_fundingSought}
+    the user should see the text in the element     jQuery=#content div:nth-of-type(3) table tfoot tr:nth-of-type(${row_number}) td:nth-of-type(4)  ${allPartners_otherPublicSectorFunding}
+    the user should see the text in the element     jQuery=#content div:nth-of-type(3) table tfoot tr:nth-of-type(${row_number}) td:nth-of-type(5)  ${allPartners_contributionToProject}
