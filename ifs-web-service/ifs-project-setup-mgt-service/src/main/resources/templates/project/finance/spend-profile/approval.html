@@ -11,7 +11,7 @@
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main id="content">
+<main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
 
     <div th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{id}/status (id=${model.competitionSummary.competitionId})}" th:remove="tag"></div>
@@ -48,8 +48,8 @@
     </th:block>
 
     <th:block th:unless="${model.empty}">
-        <p>This overview details the spend profile for each partner for the project, it also enables the download of the spend profile so it can be shared with the Monitoring officer.</p>
-        <p>You can download the spend profile of each project partner here so that you can share it with the Monitoring Officer.</p>
+        <p>This overview details the spend profile of each partner.</p>
+        <p>You can download each spend profile to enable sharing with the Monitoring Officer.</p>
         <h2 class="heading-medium">Innovation Lead</h2>
         <p th:unless="${#strings.isEmpty(model.leadTechnologist)}" th:text="${model.leadTechnologist}" >
             Innovation Lead

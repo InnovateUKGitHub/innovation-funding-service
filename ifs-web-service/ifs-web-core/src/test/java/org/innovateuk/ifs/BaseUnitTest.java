@@ -34,6 +34,7 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.FinanceRowRestService;
+import org.innovateuk.ifs.finance.service.OrganisationDetailsRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -238,6 +239,8 @@ public class BaseUnitTest {
     public ApplicationInnovationAreaRestService applicationInnovationAreaRestService;
     @Mock
     public CategoryRestService categoryRestServiceMock;
+    @Mock
+    public OrganisationDetailsRestService organisationDetailsRestService;
 
     @Spy
     @InjectMocks
