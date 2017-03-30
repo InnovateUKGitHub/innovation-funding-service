@@ -115,7 +115,7 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
         assertNotNull(cookies[0]);
         assertNotNull(cookies[1]);
         assertEquals("", Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("flashMessage")).findAny().get().getValue());
-        assertEquals(URLEncoder.encode("{\"organisationType\":1}", CharEncoding.UTF_8),
+        assertEquals(URLEncoder.encode("{\"organisationType\":1,\"selectedByDefault\":true}", CharEncoding.UTF_8),
                 getDecryptedCookieValue(cookies, "organisationType"));
     }
 
