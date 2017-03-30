@@ -39,7 +39,7 @@ function deploy() {
         oc create -f os-files-tmp/shib/5-shib.yml ${SVC_ACCOUNT_CLAUSE}
         oc create -f os-files-tmp/shib/named-envs/56-${TARGET}-idp.yml ${SVC_ACCOUNT_CLAUSE}
     else
-        oc create -f os-files-tmp/imap/ ${SVC_ACCOUNT_CLAUSE}
+        oc create -f os-files-tmp/mail/ ${SVC_ACCOUNT_CLAUSE}
         oc create -f os-files-tmp/mysql/ ${SVC_ACCOUNT_CLAUSE}
         oc create -f os-files-tmp/shib/ ${SVC_ACCOUNT_CLAUSE}
         oc create -f os-files-tmp/gluster/ ${SVC_ACCOUNT_CLAUSE}
