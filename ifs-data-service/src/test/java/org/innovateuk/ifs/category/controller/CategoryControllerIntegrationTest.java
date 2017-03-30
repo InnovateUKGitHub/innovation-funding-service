@@ -38,7 +38,7 @@ public class CategoryControllerIntegrationTest extends BaseControllerIntegration
         assertTrue(categoriesResult.isSuccess());
         List<InnovationAreaResource> categories = categoriesResult.getSuccessObject();
 
-        assertThat(categories, hasSize(36));
+        assertThat(categories, hasSize(38));
         assertThat(categories, everyItem(hasProperty("sector", notNullValue())));
     }
 
@@ -67,15 +67,17 @@ public class CategoryControllerIntegrationTest extends BaseControllerIntegration
         assertTrue(categoriesResult.isSuccess());
         List<InnovationAreaResource> categories = categoriesResult.getSuccessObject();
 
-        assertThat(categories, hasSize(6));
+        assertThat(categories, hasSize(8));
         assertThat(categories, everyItem(hasProperty("sector", equalTo(1L))));
         assertThat(categories, containsInAnyOrder(asList(
-                hasProperty("name", equalTo("Advanced Therapies")),
-                hasProperty("name", equalTo("Precision Medicine")),
-                hasProperty("name", equalTo("Medicines Technology")),
-                hasProperty("name", equalTo("Bioscience")),
-                hasProperty("name", equalTo("Agri Productivity")),
-                hasProperty("name", equalTo("Enhanced Food Quality"))
+                hasProperty("name", equalTo("Advanced therapies")),
+                hasProperty("name", equalTo("Biosciences")),
+                hasProperty("name", equalTo("Diagnostics, medical technology and devices")),
+                hasProperty("name", equalTo("Digital health")),
+                hasProperty("name", equalTo("Independent living and wellbeing")),
+                hasProperty("name", equalTo("Precision medicine")),
+                hasProperty("name", equalTo("Preclinical technologies and drug target discovery")),
+                hasProperty("name", equalTo("Therapeutic and medicine development"))
         )));
     }
 }

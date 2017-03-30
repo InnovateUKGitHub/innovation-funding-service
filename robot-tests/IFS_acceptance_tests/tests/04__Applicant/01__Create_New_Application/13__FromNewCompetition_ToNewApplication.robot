@@ -86,7 +86,7 @@ Applicant fills in the Application Details
     Given the user should see the element    jQuery=h1:contains("Application overview")
     When the user clicks the button/link    link=Application details
     Then the user enters text to a text field    css=#application_details-title    ${applicationTitle}
-    And the user selects technical feasibility and no to resubmission and an innovation area
+    And the user selects feasibility studies and no to resubmission and an innovation area
     And the user enters text to a text field    css=#application_details-startdate_day    ${day}
     And the user enters text to a text field    css=#application_details-startdate_month    ${month}
     And the user enters text to a text field    css=#application_details-startdate_year    ${nextyear}
@@ -291,7 +291,7 @@ Invite Collaborator in Application with Growth table
     # TODO INFUND-8561
     [Setup]  the user navigates to the page             ${dashboard_url}
     Given the lead applicant invites an existing user   ${compWITHGrowth}  ${collaborator1_credentials["email"]}
-    When the user reads his email and clicks the link   ${collaborator1_credentials["email"]}  Invitation to collaborate in ${compWITHGrowth}  participate in their application
+    When the user reads his email and clicks the link   ${collaborator1_credentials["email"]}  Invitation to collaborate in ${compWITHGrowth}  You will be joining as part of the organisation    3
     Then the user should see the element                jQuery=h1:contains("We have found an account with the invited email address")
     And the user clicks the button/link                 link=Sign into the Innovation Funding Service.
     When guest user log-in                              &{collaborator1_credentials}
@@ -346,9 +346,9 @@ the the user should see that the funding depends on the research area
 the user should see his finances empty
     the user should see the element    jQuery=thead:contains("Total project costs") ~ *:contains("£0")
 
-the user selects technical feasibility and no to resubmission and an innovation area
+the user selects feasibility studies and no to resubmission and an innovation area
     the user clicks the button/link    jQuery=legend:contains("Research category")
-    the user clicks the button/link    jQuery=button:contains("Choose your research category")
+    the user clicks the button/link    jQuery=button:contains("Choose your research")
     the user clicks the button twice   jQuery=label[for^="researchCategoryChoice"]:contains("Feasibility studies")
     the user clicks the button/link    jQuery=button:contains(Save)
     the user clicks the button/link    jQuery=button:contains("Change your innovation area")
@@ -474,7 +474,7 @@ Invite a non-existing collaborator in Appplication with Growth table
     newly invited collaborator can create account and sign in
 
 Newly invited collaborator can create account and sign in
-    the user reads his email and clicks the link     liam@innovate.com  Invitation to collaborate in ${compWITHGrowth}  participate in their application
+    the user reads his email and clicks the link     liam@innovate.com  Invitation to collaborate in ${compWITHGrowth}  You will be joining as part of the organisation    3
     the user clicks the button/link      jQuery=a:contains("Yes, accept invitation")
     the user should see the element      jquery=h1:contains("Choose your organisation type")
     the user completes the new account creation

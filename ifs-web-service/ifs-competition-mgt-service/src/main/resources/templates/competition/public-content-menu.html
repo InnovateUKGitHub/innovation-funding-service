@@ -8,7 +8,7 @@
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main id="content">
+<main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
     <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${form}" method="post">
         <!-- Link back -->
@@ -18,6 +18,9 @@
         <div class="page-title">
             <th:block th:insert="fragments/elements :: competition-title (competition=${model.competition})" />
             <h1 class="heading-xlarge">Public content</h1>
+        </div>
+        <div class="panel">
+            This information will be publicly viewable by prospective applicants.
         </div>
 
         <div class="error-summary" th:if="${#fields.hasErrors('*')}">
