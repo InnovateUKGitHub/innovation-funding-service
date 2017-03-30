@@ -14,13 +14,12 @@ import org.mockito.Mock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
+import static java.time.LocalDateTime.now;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_RELEASE_FEEDBACK;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_INVITE_CLOSED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
@@ -155,7 +154,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         assertEquals(size, response.getSize());
 
         CompetitionSearchResultItem expectedSearchResult = new CompetitionSearchResultItem(competition.getId(),
-                competition.getName(), Collections.EMPTY_SET, 0, "", CompetitionStatus.COMPETITION_SETUP, competitionType,0,null);
+                competition.getName(), Collections.EMPTY_SET, 0, "", CompetitionStatus.COMPETITION_SETUP, competitionType, 0, null);
         assertEquals(singletonList(expectedSearchResult), response.getContent());
     }
 
@@ -176,10 +175,10 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     public void closeAssessment() throws Exception {
         Long competitionId = 1L;
         List<Milestone> milestones = newMilestone()
-                .withDate(LocalDateTime.now().minusDays(1))
-                .withType(OPEN_DATE,SUBMISSION_DATE,ASSESSORS_NOTIFIED).build(3);
+                .withDate(now().minusDays(1))
+                .withType(OPEN_DATE, SUBMISSION_DATE, ASSESSORS_NOTIFIED).build(3);
         milestones.addAll(newMilestone()
-                .withDate(LocalDateTime.now().plusDays(1))
+                .withDate(now().plusDays(1))
                 .withType(NOTIFICATIONS, ASSESSOR_DEADLINE)
                 .build(2));
         Competition competition = newCompetition().withSetupComplete(true)
@@ -189,7 +188,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
         service.closeAssessment(competitionId);
 
-        assertEquals(CompetitionStatus.FUNDERS_PANEL,competition.getCompetitionStatus());
+        assertEquals(CompetitionStatus.FUNDERS_PANEL, competition.getCompetitionStatus());
     }
 
 
@@ -197,10 +196,10 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     public void notifyAssessors() throws Exception {
         Long competitionId = 1L;
         List<Milestone> milestones = newMilestone()
-                .withDate(LocalDateTime.now().minusDays(1))
-                .withType(OPEN_DATE,SUBMISSION_DATE,ALLOCATE_ASSESSORS).build(3);
+                .withDate(now().minusDays(1))
+                .withType(OPEN_DATE, SUBMISSION_DATE, ALLOCATE_ASSESSORS).build(3);
         milestones.addAll(newMilestone()
-                .withDate(LocalDateTime.now().plusDays(1))
+                .withDate(now().plusDays(1))
                 .withType(ASSESSMENT_CLOSED)
                 .build(1));
 
@@ -211,7 +210,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
         service.notifyAssessors(competitionId);
 
-        assertEquals(CompetitionStatus.IN_ASSESSMENT,competition.getCompetitionStatus());
+        assertEquals(CompetitionStatus.IN_ASSESSMENT, competition.getCompetitionStatus());
     }
 
 
@@ -219,7 +218,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     public void releaseFeedback() throws Exception {
         Long competitionId = 1L;
         List<Milestone> milestones = newMilestone()
-                .withDate(LocalDateTime.now().minusDays(1))
+                .withDate(now().minusDays(1))
                 .withType(OPEN_DATE,
                         SUBMISSION_DATE,
                         ALLOCATE_ASSESSORS,
@@ -231,7 +230,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
                         NOTIFICATIONS)
                 .build(9);
         milestones.addAll(newMilestone()
-                .withDate(LocalDateTime.now().plusDays(1))
+                .withDate(now().plusDays(1))
                 .withType(RELEASE_FEEDBACK)
                 .build(1));
 
@@ -257,7 +256,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     public void releaseFeedback_cantRelease() throws Exception {
         Long competitionId = 1L;
         List<Milestone> milestones = newMilestone()
-                .withDate(LocalDateTime.now().minusDays(1))
+                .withDate(now().minusDays(1))
                 .withType(OPEN_DATE,
                         SUBMISSION_DATE,
                         ALLOCATE_ASSESSORS,
@@ -269,7 +268,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
                         NOTIFICATIONS)
                 .build(9);
         milestones.addAll(newMilestone()
-                .withDate(LocalDateTime.now().plusDays(1))
+                .withDate(now().plusDays(1))
                 .withType(RELEASE_FEEDBACK)
                 .build(1));
 
@@ -296,7 +295,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     public void manageInformState() throws Exception {
         Long competitionId = 1L;
         List<Milestone> milestones = newMilestone()
-                .withDate(LocalDateTime.now().minusDays(1))
+                .withDate(now().minusDays(1))
                 .withType(OPEN_DATE,
                         SUBMISSION_DATE,
                         ALLOCATE_ASSESSORS,
@@ -307,13 +306,15 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
                         FUNDERS_PANEL)
                 .build(9);
         milestones.addAll(newMilestone()
-                .withDate(LocalDateTime.now().plusDays(1))
+                .withDate(now().plusDays(1))
                 .withType(RELEASE_FEEDBACK)
                 .build(1));
 
         Competition competition = newCompetition().withSetupComplete(true)
                 .withMilestones(milestones)
                 .build();
+
+        assertEquals(CompetitionStatus.FUNDERS_PANEL, competition.getCompetitionStatus());
 
         CompetitionFundedKeyStatisticsResource keyStatistics = new CompetitionFundedKeyStatisticsResource();
         keyStatistics.setApplicationsAwaitingDecision(0);
@@ -326,14 +327,14 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         ServiceResult<Void> response = service.manageInformState(competitionId);
 
         assertTrue(response.isSuccess());
-            assertEquals(CompetitionStatus.ASSESSOR_FEEDBACK, competition.getCompetitionStatus());
+        assertEquals(CompetitionStatus.ASSESSOR_FEEDBACK, competition.getCompetitionStatus());
     }
 
     @Test
     public void manageInformState_noStateChange() throws Exception {
         Long competitionId = 1L;
         List<Milestone> milestones = newMilestone()
-                .withDate(LocalDateTime.now().minusDays(1))
+                .withDate(now().minusDays(1))
                 .withType(OPEN_DATE,
                         SUBMISSION_DATE,
                         ALLOCATE_ASSESSORS,
@@ -344,13 +345,15 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
                         FUNDERS_PANEL)
                 .build(9);
         milestones.addAll(newMilestone()
-                .withDate(LocalDateTime.now().plusDays(1))
+                .withDate(now().plusDays(1))
                 .withType(RELEASE_FEEDBACK)
                 .build(1));
 
         Competition competition = newCompetition().withSetupComplete(true)
                 .withMilestones(milestones)
                 .build();
+
+        assertEquals(CompetitionStatus.FUNDERS_PANEL, competition.getCompetitionStatus());
 
         CompetitionFundedKeyStatisticsResource keyStatistics = new CompetitionFundedKeyStatisticsResource();
         keyStatistics.setApplicationsAwaitingDecision(0);
