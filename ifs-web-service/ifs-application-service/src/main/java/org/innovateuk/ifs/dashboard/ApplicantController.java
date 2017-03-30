@@ -115,8 +115,7 @@ public class ApplicantController {
             .collect(
                 Collectors.toMap(
                     ApplicationResource::getId,
-                    application -> competitionService.getById(application.getCompetition())
-                )
+                    application -> competitionService.getById(application.getCompetition()), (p1, p2) -> p1)
             );
     }
 
