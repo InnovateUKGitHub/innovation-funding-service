@@ -16,6 +16,7 @@ import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.financecheck.domain.*;
 import org.innovateuk.ifs.project.resource.*;
+import org.innovateuk.ifs.project.transactional.EmailService;
 import org.innovateuk.ifs.project.util.DateUtil;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.OrganisationType;
@@ -43,6 +44,7 @@ import static org.hamcrest.core.IsNull.notNullValue;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
 import static org.innovateuk.ifs.project.builder.CostCategoryBuilder.newCostCategory;
@@ -70,6 +72,9 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
     @Mock
     private SpendProfileCostCategorySummaryStrategy spendProfileCostCategorySummaryStrategy;
+
+    @Mock
+    private EmailService projectEmailService;
 
     @Mock
     private ValidationUtil validationUtil;
@@ -151,24 +156,21 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
                 "dashboardUrl", "https://ifs-local-dev/dashboard"
         );
 
-        SystemNotificationSource from = systemNotificationSourceMock;
         NotificationTarget to1 = new ExternalUserNotificationTarget("A Z", "z@abc.com");
-        Notification notification1 = new Notification(from, singletonList(to1), SpendProfileServiceImpl.Notifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE, expectedNotificationArguments);
 
         NotificationTarget to2 = new ExternalUserNotificationTarget("A A", "a@abc.com");
-        Notification notification2 = new Notification(from, singletonList(to2), SpendProfileServiceImpl.Notifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE, expectedNotificationArguments);
 
-        when(notificationServiceMock.sendNotification(notification1, NotificationMedium.EMAIL)).thenReturn(ServiceResult.serviceSuccess());
-
-        when(notificationServiceMock.sendNotification(notification2, NotificationMedium.EMAIL)).thenReturn(ServiceResult.serviceSuccess());
+        when(projectEmailService.sendEmail(singletonList(to1), expectedNotificationArguments, SpendProfileServiceImpl.Notifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE)).thenReturn(serviceSuccess());
+        when(projectEmailService.sendEmail(singletonList(to2), expectedNotificationArguments, SpendProfileServiceImpl.Notifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE)).thenReturn(serviceSuccess());
 
         ServiceResult<Void> generateResult = service.generateSpendProfile(projectId);
         assertTrue(generateResult.isSuccess());
 
         verify(spendProfileRepositoryMock).save(spendProfileExpectations(expectedOrganisation1Profile));
         verify(spendProfileRepositoryMock).save(spendProfileExpectations(expectedOrganisation2Profile));
-        verify(notificationServiceMock).sendNotification(notification1, NotificationMedium.EMAIL);
-        verify(notificationServiceMock).sendNotification(notification2, NotificationMedium.EMAIL);
+
+        verify(projectEmailService).sendEmail(singletonList(to1), expectedNotificationArguments, SpendProfileServiceImpl.Notifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE);
+        verify(projectEmailService).sendEmail(singletonList(to2), expectedNotificationArguments, SpendProfileServiceImpl.Notifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE);
     }
 
     @Test
@@ -332,16 +334,13 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
                 "dashboardUrl", "https://ifs-local-dev/dashboard"
         );
 
-        SystemNotificationSource from = systemNotificationSourceMock;
         NotificationTarget to1 = new ExternalUserNotificationTarget("A Z", "z@abc.com");
-        Notification notification1 = new Notification(from, singletonList(to1), SpendProfileServiceImpl.Notifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE, expectedNotificationArguments);
 
         NotificationTarget to2 = new ExternalUserNotificationTarget("A A", "a@abc.com");
-        Notification notification2 = new Notification(from, singletonList(to2), SpendProfileServiceImpl.Notifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE, expectedNotificationArguments);
 
-        when(notificationServiceMock.sendNotification(notification1, NotificationMedium.EMAIL)).thenReturn(ServiceResult.serviceSuccess());
+        when(projectEmailService.sendEmail(singletonList(to1), expectedNotificationArguments, SpendProfileServiceImpl.Notifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE)).thenReturn(serviceSuccess());
+        when(projectEmailService.sendEmail(singletonList(to2), expectedNotificationArguments, SpendProfileServiceImpl.Notifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE)).thenReturn(serviceFailure(CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_SINGLE));
 
-        when(notificationServiceMock.sendNotification(notification2, NotificationMedium.EMAIL)).thenReturn(ServiceResult.serviceFailure(CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_SINGLE));
 
         ServiceResult<Void> generateResult = service.generateSpendProfile(projectId);
         assertTrue(generateResult.isFailure());
@@ -349,8 +348,8 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         verify(spendProfileRepositoryMock, times(2)).save(isA(SpendProfile.class));
 
-        verify(notificationServiceMock).sendNotification(notification1, NotificationMedium.EMAIL);
-        verify(notificationServiceMock).sendNotification(notification2, NotificationMedium.EMAIL);
+        verify(projectEmailService).sendEmail(singletonList(to1), expectedNotificationArguments, SpendProfileServiceImpl.Notifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE);
+        verify(projectEmailService).sendEmail(singletonList(to2), expectedNotificationArguments, SpendProfileServiceImpl.Notifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE);
     }
 
     @Test
@@ -486,17 +485,16 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         Map<String, Object> expectedNotificationArguments = asMap(
                 "dashboardUrl", "https://ifs-local-dev/dashboard"
         );
-        SystemNotificationSource from = systemNotificationSourceMock;
-        NotificationTarget to1 = new ExternalUserNotificationTarget("A Z", "z@abc.com");
-        Notification notification1 = new Notification(from, singletonList(to1), SpendProfileServiceImpl.Notifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE, expectedNotificationArguments);
 
-        when(notificationServiceMock.sendNotification(notification1, NotificationMedium.EMAIL)).thenReturn(ServiceResult.serviceSuccess());
+        NotificationTarget to1 = new ExternalUserNotificationTarget("A Z", "z@abc.com");
+
+        when(projectEmailService.sendEmail(singletonList(to1), expectedNotificationArguments, SpendProfileServiceImpl.Notifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE)).thenReturn(serviceSuccess());
 
         ServiceResult<Void> generateResult = service.generateSpendProfileForPartnerOrganisation(projectId, organisation1.getId(), userId);
         assertTrue(generateResult.isSuccess());
 
         verify(spendProfileRepositoryMock).save(spendProfileExpectations(expectedOrganisation1Profile));
-        verify(notificationServiceMock).sendNotification(notification1, NotificationMedium.EMAIL);
+        verify(projectEmailService).sendEmail(singletonList(to1), expectedNotificationArguments, SpendProfileServiceImpl.Notifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE);
         verifyNoMoreInteractions(spendProfileRepositoryMock);
     }
 

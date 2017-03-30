@@ -14,10 +14,7 @@ import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
 import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
-import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
-import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
-import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
@@ -33,6 +30,7 @@ import org.innovateuk.ifs.project.financecheck.workflow.financechecks.configurat
 import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.resource.*;
+import org.innovateuk.ifs.project.transactional.EmailService;
 import org.innovateuk.ifs.project.transactional.ProjectGrantOfferService;
 import org.innovateuk.ifs.project.transactional.ProjectService;
 import org.innovateuk.ifs.project.users.ProjectUsersHelper;
@@ -64,14 +62,12 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static java.math.BigDecimal.ROUND_HALF_UP;
-import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
-import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.project.finance.resource.TimeUnit.MONTH;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -148,10 +144,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     private ProjectUsersHelper projectUsersHelper;
 
     @Autowired
-    private NotificationService notificationService;
-
-    @Autowired
-    private SystemNotificationSource systemNotificationSource;
+    private EmailService projectEmailService;
 
     static {
         RESEARCH_CAT_GROUP_ORDER.add(AcademicCostCategoryGenerator.DIRECTLY_INCURRED_STAFF.getLabel());
@@ -282,11 +275,8 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         Optional<ProjectUser> financeContact = projectUsersHelper.getFinanceContact(project.getId(), organisation.getId());
         if (financeContact.isPresent() && financeContact.get().getUser() != null) {
             NotificationTarget financeContactTarget = new ExternalUserNotificationTarget(financeContact.get().getUser().getName(), financeContact.get().getUser().getEmail());
-
             Map<String, Object> globalArguments = createGlobalArgsForFinanceContactSpendProfileAvailableEmail();
-
-            Notification financeContactNotification = new Notification(systemNotificationSource, singletonList(financeContactTarget), Notifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE, globalArguments, emptyMap());
-            return notificationService.sendNotification(financeContactNotification, EMAIL);
+            return projectEmailService.sendEmail(singletonList(financeContactTarget), globalArguments, Notifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE);
         }
         return serviceFailure(CommonFailureKeys.SPEND_PROFILE_FINANCE_CONTACT_NOT_PRESENT);
     }
