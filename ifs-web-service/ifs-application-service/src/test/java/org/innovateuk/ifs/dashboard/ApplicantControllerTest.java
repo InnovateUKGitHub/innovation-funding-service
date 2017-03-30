@@ -50,6 +50,8 @@ public class ApplicantControllerTest extends BaseControllerMockMVCTest<Applicant
     @Test
     public void testDashboard() throws Exception {
         when(projectService.findByUser(loggedInUser.getId())).thenReturn(serviceSuccess(Collections.singletonList(new ProjectResource())));
+        when(applicationService.getById(anyLong())).thenReturn(new ApplicationResource());
+
         mockMvc.perform(get("/applicant/dashboard"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("applicant-dashboard"))
@@ -70,6 +72,7 @@ public class ApplicantControllerTest extends BaseControllerMockMVCTest<Applicant
         when(applicationService.getAssignedQuestionsCount(eq(progressMap.get(0).getId()), anyLong())).thenReturn(2);
         when(applicationStatusService.getApplicationStatusById(progressMap.get(0).getApplicationStatus())).thenReturn(restSuccess(new ApplicationStatusResource(1L,"CREATED")));
         when(projectService.findByUser(applicant.getId())).thenReturn(serviceSuccess(Collections.singletonList(new ProjectResource())));
+        when(applicationService.getById(anyLong())).thenReturn(new ApplicationResource());
 
         mockMvc.perform(get("/applicant/dashboard"))
                 .andExpect(status().isOk())
@@ -94,6 +97,7 @@ public class ApplicantControllerTest extends BaseControllerMockMVCTest<Applicant
         when(processRoleService.findProcessRole(this.users.get(1).getId(), progressMap.get(0).getId())).thenReturn(processRoles.get(0));
         when(applicationStatusService.getApplicationStatusById(progressMap.get(0).getApplicationStatus())).thenReturn(restSuccess(new ApplicationStatusResource(1L,"CREATED")));
         when(projectService.findByUser(collabUsers.getId())).thenReturn(serviceSuccess(Collections.singletonList(new ProjectResource())));
+        when(applicationService.getById(anyLong())).thenReturn(new ApplicationResource());
 
         mockMvc.perform(get("/applicant/dashboard"))
                 .andExpect(status().isOk())
