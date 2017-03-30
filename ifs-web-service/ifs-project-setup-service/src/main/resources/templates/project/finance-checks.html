@@ -7,7 +7,7 @@
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main id="content" th:with="baseUrl=@{${model.baseUrl}(projectId=${model.projectId},organisationId=${model.organisationId})}">
+<main tabindex="-1" id="content" th:with="baseUrl=@{${model.baseUrl}(projectId=${model.projectId},organisationId=${model.organisationId})}">
     <th:block th:insert="fragments/layout :: main-content-start" />
 
     <div th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${model.projectId})}" th:remove="tag"></div>
@@ -130,11 +130,11 @@
                         </div>
                     </div>
                 </fieldset>
-                <th:block th:if="${model.newAttachmentLinks.size() > 0}">
+                <th:block th:unless="${model.newAttachmentLinks.isEmpty()}">
                     <fieldset>
                         <legend class="heading-small">Supporting documentation</legend>
                         <th:block th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
-                            <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId)}">filename</a>
+                            <a target="_blank" th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId)}">filename</a>
                             <button name="removeAttachment" class="buttonlink" th:value="${attachmentId}">Remove</button><br />
                         </th:block>
                     </fieldset>

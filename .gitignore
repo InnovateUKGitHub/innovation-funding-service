@@ -128,3 +128,5 @@ EMAIL_VARIABLES_SENSITIVE.robot
 
 os-files-tmp/
 shib-init
+
+robot-tests/test-results-*
