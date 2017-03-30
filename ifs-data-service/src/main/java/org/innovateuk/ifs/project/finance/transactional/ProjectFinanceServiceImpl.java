@@ -29,6 +29,7 @@ import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.transactional.ProjectGrantOfferService;
 import org.innovateuk.ifs.project.transactional.ProjectService;
+import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
@@ -132,6 +133,9 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     @Autowired
     private OrganisationFinanceDelegate organisationFinanceDelegate;
 
+    @Autowired
+    private FinanceUtil financeUtil;
+
     static {
         RESEARCH_CAT_GROUP_ORDER.add(AcademicCostCategoryGenerator.DIRECTLY_INCURRED_STAFF.getLabel());
         RESEARCH_CAT_GROUP_ORDER.add(AcademicCostCategoryGenerator.DIRECTLY_ALLOCATED_INVESTIGATORS.getLabel());
@@ -215,7 +219,8 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             table.setMarkedAsComplete(spendProfile.isMarkedAsComplete());
             checkTotalForMonthsAndAddToTable(table);
 
-           boolean isResearch = OrganisationTypeEnum.isResearch(organisation.getOrganisationType().getId());
+           /*boolean isResearch = OrganisationTypeEnum.isResearch(organisation.getOrganisationType().getId());*/
+           boolean isResearch = financeUtil.isUsingJesFinances(organisation.getOrganisationType().getName());
             if (isResearch) {
                 table.setCostCategoryGroupMap(groupCategories(table));
             }

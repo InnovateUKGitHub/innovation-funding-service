@@ -136,7 +136,8 @@ public class FinanceChecksGenerator {
     private FinanceCheck populateFinanceCheck(FinanceCheck financeCheck) {
         Organisation organisation = financeCheck.getOrganisation();
         Application application = financeCheck.getProject().getApplication();
-        if (OrganisationTypeEnum.isResearch(organisation.getOrganisationType().getId())) {
+        /*if (OrganisationTypeEnum.isResearch(organisation.getOrganisationType().getId())) {*/
+        if (financeUtil.isUsingJesFinances(organisation.getOrganisationType().getName())) {
             ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(application.getId(), organisation.getId());
             List<ApplicationFinanceRow> financeRows = financeRowRepository.findByTargetId(applicationFinance.getId());
             financeCheck.getCostGroup().getCosts().forEach(
