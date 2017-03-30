@@ -241,6 +241,10 @@ function clearOldReports() {
   mkdir target
 }
 
+function getZAPReport() {
+    wget -qO - ifs.local-dev:9000/OTHER/core/other/htmlreport/ > target/${targetDir}/ZAPReport.html
+}
+
 # ====================================
 # The actual start point of our script
 # ====================================
@@ -305,9 +309,10 @@ rerunFailed=0
 parallel=0
 stopGrid=0
 noDeploy=0
+showZapReport=0
 
 testDirectory='IFS_acceptance_tests/tests'
-while getopts ":p :q :h :t :r :c :n :w :d: :I: :E:" opt ; do
+while getopts ":p :q :h :t :r :c :n :w :z :d: :I: :E:" opt ; do
     case ${opt} in
         p)
             parallel=1
@@ -327,6 +332,9 @@ while getopts ":p :q :h :t :r :c :n :w :d: :I: :E:" opt ; do
         r)
 		    rerunFailed=1
     	;;
+    	z)
+    	    showZapReport=1
+        ;;
     	d)
             testDirectory="$OPTARG"
             parallel=0
@@ -395,6 +403,8 @@ else
     runTests
 fi
 
+getZAPReport
+
 if [[ ${stopGrid} -eq 1 ]]
 then
     stopSeleniumGrid
@@ -403,8 +413,16 @@ fi
 if [[ $(which google-chrome) ]]
 then
     google-chrome target/${targetDir}/log.html &
+    if [[ ${showZapReport} -eq 1 ]]
+    then
+        google-chrome target/${targetDir}/ZAPReport.html &
+    fi
 else
     wd=$(pwd)
-    logs="target/${targetDir}/log.html"
-    open "file://${wd}/${logs}"
+    logs="target/${targetDir}"
+    open "file://${wd}/${logs}/log.html"
+    if [[ ${showZapReport} -eq 1 ]]
+    then
+        open "file://${wd}/${logs}/ZAPReport.html"
+    fi
 fi
