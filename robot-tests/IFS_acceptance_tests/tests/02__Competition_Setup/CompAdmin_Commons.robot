@@ -53,7 +53,9 @@ the user fills in the CS Funding Information
     the user enters text to a text field  id=budgetCode  Ch0col@73
     the user enters text to a text field  id=activityCode  133t
     the user clicks the button/link       jQuery=button:contains("Generate code")
+    wait for autosave
     the user clicks the button/link       jQuery=button:contains("Done")
+    the user should not see an error in the page
     the user clicks the button/link       link=Competition setup
 
 the user fills in the CS Eligibility
