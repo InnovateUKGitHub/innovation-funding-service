@@ -50,17 +50,41 @@ the user marks every section but one as complete
     the user clicks the button/link    link=${application_name}
     the user clicks the button/link    link=Project summary
     the user marks the section as complete    1039
+    the user clicks the button/link    link=Application Overview
+    the user clicks the button/link    link=Public description
     the user marks the section as complete    1040
+    the user clicks the button/link    link=Application Overview
+    the user clicks the button/link    link=Scope
     the user marks the section as complete    1041
+    the user clicks the button/link    link=Application Overview
+    the user clicks the button/link    link=1. Business opportunity
     the user marks the section as complete    1045
+    the user clicks the button/link    link=Application Overview
+    the user clicks the button/link    link=2. Potential market
     the user marks the section as complete    1049
+    the user clicks the button/link    link=Application Overview
+    the user clicks the button/link    link=3. Project exploitation
     the user marks the section as complete    1053
+    the user clicks the button/link    link=Application Overview
+    the user clicks the button/link    link=4. Economic benefit
     the user marks the section as complete    1057
+    the user clicks the button/link    link=Application Overview
+    the user clicks the button/link    link=5. Technical approach
     the user marks the section as complete    1061
+    the user clicks the button/link    link=Application Overview
+    the user clicks the button/link    link=6. Innovation
     the user marks the section as complete    1065
+    the user clicks the button/link    link=Application Overview
+    the user clicks the button/link    link=7. Risks
     the user marks the section as complete    1069
+    the user clicks the button/link    link=Application Overview
+    the user clicks the button/link    link=8. Project team
     the user marks the section as complete    1073
+    the user clicks the button/link    link=Application Overview
+    the user clicks the button/link    link=9. Funding
     the user marks the section as complete    1077
+    the user clicks the button/link    link=Application Overview
+    the user clicks the button/link    link=10. Adding value
     the user marks the section as complete    1081
 
 the user marks the section as complete
@@ -70,7 +94,7 @@ the user marks the section as complete
     Mouse Out    css=#form-input-${form-id} .editor
     wait for autosave
     the user clicks the button/link    name=mark_as_complete
-    the user clicks the button/link    css=.next
+    #the user clicks the button/link    css=.next
 
 Create new application with the same user
     When the user navigates to the page    ${COMPETITION_DETAILS_URL}
@@ -127,12 +151,12 @@ Invite and accept the invitation
     When the user clicks the button/link    link=view team members and add collaborators
     And the user clicks the button/link    jQuery=a:contains("Add partner organisation")
     And the user enters text to a text field    name=organisationName    Academic Test
-    And the user enters text to a text field    name=applicants[0].name     Arsene Wenger
+    And the user enters text to a text field    name=applicants[0].name    Arsene Wenger
     And the user enters text to a text field    name=applicants[0].email    ${test_mailbox_one}+academictest@gmail.com
     And the user clicks the button/link    jQuery=button:contains("Add organisation and invite applicants")
     And the user closes the browser
     And the guest user opens the browser
-    When the user reads his email and clicks the link    ${recipient}    ${subject}    ${pattern}   3
+    When the user reads his email and clicks the link    ${recipient}    ${subject}    ${pattern}    3
     And the user clicks the button/link    jQuery=.button:contains("Yes, accept invitation")
     When the user selects the radio button    organisationType    2
     And the user clicks the button/link    jQuery=.button:contains("Continue")
@@ -149,9 +173,9 @@ Invite and accept the invitation
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     And the user clicks the button/link    jQuery=.button:contains("Confirm")
     And the user fills the create account form    Arsene    Wenger
-    And the user reads his email and clicks the link  ${test_mailbox_one}+academictest@gmail.com  Please verify your email address  We now need you to verify your email address
+    And the user reads his email and clicks the link    ${test_mailbox_one}+academictest@gmail.com    Please verify your email address    We now need you to verify your email address
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
-    And guest user log-in    ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
+    And guest user log-in    ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
 
 The user redirects to the page
     [Arguments]    ${TEXT1}    ${TEXT2}
@@ -207,7 +231,7 @@ invite a registered user
     the user reads his email and clicks the link    ${EMAIL_LEAD}    Please verify your email address    Once verified you can sign into your account
     the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     the user clicks the button/link    jQuery=.button:contains("Sign in")
-    the guest user inserts user email & password    ${EMAIL_LEAD}  ${correct_password}
+    the guest user inserts user email & password    ${EMAIL_LEAD}    ${correct_password}
     the guest user clicks the log-in button
     the user clicks the button/link    link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user clicks the button/link    jQuery=a:contains("Add partner organisation")
@@ -263,15 +287,15 @@ the user enters the details and clicks the create account
     Input Text    id=email    ${REG_EMAIL}
     Input Password    id=password    Passw0rd123
     Input Password    id=retypedPassword    Passw0rd123
-    the user selects the checkbox  termsAndConditions
+    the user selects the checkbox    termsAndConditions
     Submit Form
 
 the user fills the create account form
     [Arguments]    ${NAME}    ${LAST_NAME}
     Input Text    id=firstName    ${NAME}
     Input Text    id=lastName    ${LAST_NAME}
-    Input Text        id=phoneNumber    0612121212
+    Input Text    id=phoneNumber    0612121212
     Input Password    id=password    Passw0rd123
     Input Password    id=retypedPassword    Passw0rd123
-    the user selects the checkbox  termsAndConditions
-    the user clicks the button/link  jQuery=.button:contains("Create account")
+    the user selects the checkbox    termsAndConditions
+    the user clicks the button/link    jQuery=.button:contains("Create account")
