@@ -309,7 +309,7 @@
             <td th:text="${changePair.changed.cost}" colspan="2"></td>
         </tr>
         <tr class="change-row" th:with="difference=${changePair.changed.totalDiff(changePair.submitted)}">
-            <td th:text="${#numbers.formatDecimal(difference,0, 'COMMA', 0, 'POINT')}" colspan="6" class="numeric"></td>
+            <td th:text="${#numbers.formatDecimal(difference, 0, 'COMMA', 0, 'POINT')}" colspan="6" class="numeric"></td>
         </tr>
     </th:block>
 
