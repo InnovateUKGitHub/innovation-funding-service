@@ -1,9 +1,12 @@
 package org.innovateuk.ifs.application;
 
 import org.innovateuk.ifs.application.form.ApplicantInviteForm;
+import org.innovateuk.ifs.application.form.ApplicationTeamAddOrganisationForm;
 import org.innovateuk.ifs.application.form.ApplicationTeamUpdateForm;
 import org.innovateuk.ifs.application.populator.ApplicationTeamManagementModelPopulator;
 import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.viewmodel.ApplicationTeamManagementApplicantRowViewModel;
+import org.innovateuk.ifs.application.viewmodel.ApplicationTeamManagementViewModel;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
@@ -18,14 +21,18 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.processAnyFailuresOrSucceed;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
+import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -53,8 +60,10 @@ public class ApplicationTeamManagementController {
                                         @RequestParam(name = "organisation") long organisationId,
                                         @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                         @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form) {
-        model.addAttribute("model", applicationTeamManagementModelPopulator.populateModelByOrganisationId(applicationId, organisationId,
-                loggedInUser.getId()));
+        ApplicationTeamManagementViewModel viewModel = applicationTeamManagementModelPopulator.populateModelByOrganisationId(
+                applicationId, organisationId, loggedInUser.getId());
+        model.addAttribute("model", viewModel);
+        addExistingApplicantsToForm(viewModel, form);
         return "application-team/edit-org";
     }
 
@@ -64,8 +73,10 @@ public class ApplicationTeamManagementController {
                                                             @RequestParam(name = "inviteOrganisation") long inviteOrganisationId,
                                                             @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                                             @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form) {
-        model.addAttribute("model", applicationTeamManagementModelPopulator.populateModelByInviteOrganisationId(applicationId, inviteOrganisationId,
-                loggedInUser.getId()));
+        ApplicationTeamManagementViewModel viewModel = applicationTeamManagementModelPopulator.populateModelByInviteOrganisationId(
+                applicationId, inviteOrganisationId, loggedInUser.getId());
+        model.addAttribute("model", viewModel);
+        addExistingApplicantsToForm(viewModel, form);
         return "application-team/edit-org";
     }
 
@@ -77,6 +88,8 @@ public class ApplicationTeamManagementController {
                                            @Valid @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form,
                                            @SuppressWarnings("unused") BindingResult bindingResult,
                                            ValidationHandler validationHandler) {
+
+        validateUniqueEmails(form, bindingResult);
         Supplier<String> failureView = () -> getUpdateOrganisation(model, applicationId, organisationId, loggedInUser, form);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
@@ -95,6 +108,7 @@ public class ApplicationTeamManagementController {
                                                                @Valid @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamUpdateForm form,
                                                                @SuppressWarnings("unused") BindingResult bindingResult,
                                                                ValidationHandler validationHandler) {
+        validateUniqueEmails(form, bindingResult);
         Supplier<String> failureView = () -> getUpdateOrganisationByInviteOrganisation(model, applicationId, inviteOrganisationId, loggedInUser, form);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
@@ -246,5 +260,22 @@ public class ApplicationTeamManagementController {
         applicationInviteResource.setInviteOrganisation(inviteOrganisationId);
 
         return applicationInviteResource;
+    }
+
+    private void validateUniqueEmails(ApplicationTeamUpdateForm form, BindingResult bindingResult) {
+        Set<String> emails = new HashSet<>(form.getExistingApplicants());
+
+        forEachWithIndex(form.getApplicants(), (index, applicantInviteForm) -> {
+            if (!emails.add(applicantInviteForm.getEmail())) {
+                bindingResult.rejectValue(format("applicants[%s].email", index), "email.already.in.invite",
+                        "You have used this email address for another applicant.");
+            }
+        });
+    }
+
+    // Detecting duplicate applicants when the form is submitted requires the pre-population of existing applicants for reference.
+    private void addExistingApplicantsToForm(ApplicationTeamManagementViewModel viewModel, ApplicationTeamUpdateForm form) {
+        List<ApplicationTeamManagementApplicantRowViewModel> applicants = viewModel.getApplicants();
+        form.setExistingApplicants(simpleMap(applicants, row -> row.getEmail()));
     }
 }
