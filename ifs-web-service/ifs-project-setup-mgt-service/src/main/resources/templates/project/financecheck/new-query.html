@@ -114,19 +114,15 @@
                 <p class="uploaded-file">No file currently uploaded</p>
             </th:block>
             <th:block th:if="${model.newAttachmentLinks.size() > 0}">
-                <th:block th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
+                <div th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
                     <a class="uploaded-file" th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},query_section=${model.querySection},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId)}">filename</a>
-                    <div class="alignright">
-                        <button name="removeAttachment" class="buttonlink" th:value="${attachmentId}">Remove</button>
-                    </div>
-                </th:block>
+                    <button name="removeAttachment" class="button-secondary" th:value="${attachmentId}">Remove</button>
+                </div>
             </th:block>
 
             <h3 class="heading-small no-margin">Upload supporting documentation in pdf format </h3>
             <th:block th:if="${#fields.hasErrors('attachment')}">
-                <span>
-                    <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
-                </span>
+                <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
             </th:block>
             <input type="file" id="attachment" class="inputfile" name="attachment">
             <label for="attachment" class="button-secondary extra-margin">+ Upload</label>
