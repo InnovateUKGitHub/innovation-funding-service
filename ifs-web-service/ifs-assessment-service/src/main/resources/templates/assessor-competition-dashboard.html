@@ -9,7 +9,7 @@
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main id="content">
+        <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/assessment :: assessment-header-sub (linkTitle='Assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard})" />
 
@@ -28,9 +28,7 @@
                 </div>
 
                 <div class="column-one-third">
-                    <ul class="list list-bullet">
-                        <li><a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}">competition brief</a></li>
-                    </ul>
+                    <p><a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}" target="_blank" rel="external noopener noreferrer">View competition brief (opens in a new window)</a></p>
                 </div>
             </div>
 
@@ -120,7 +118,10 @@
                         <p class="extra-margin form-hint">Once you have completed your assessment of these applications, use the checkboxes to submit assessments individually or as a series. You cannot edit any submitted assessments.</p>
 
                         <div class="alignright">
-                            <button id="submit-assessment-button" class="button large button-pull-right no-margin extra-margin" type="submit"
+                            <button id="submit-assessment-button" type="submit"
+                                    class="button large button-pull-right no-margin extra-margin"
+                                    th:classappend="${!model.submitVisible} ? disabled"
+                                    th:disabled="${!model.submitVisible}"
                                     th:formaction="@{/assessor/dashboard/confirm-competition/{id}(id=${model.competitionId})}"
                                     data-js-modal="modal-submit-assessments">Submit assessments</button>
                         </div>

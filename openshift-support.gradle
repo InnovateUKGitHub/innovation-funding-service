@@ -1,0 +1,78 @@
+//support tasks for dealing with Openshift
+
+
+if(project.hasProperty('profile') && profile == 'automated') {
+    ext.openshiftEnv = project.properties['openshiftEnv'] ?: "automated"
+}
+
+task osDeployRemote(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-deploy.sh'
+    args = [openshiftEnv, "remote", project.version]
+}
+
+task osDeployLocal(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-deploy.sh'
+    args = [openshiftEnv, "local"]
+}
+
+task osDeployProduction(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-deploy.sh'
+    args = [openshiftEnv, "production", project.version]
+}
+
+task osDeployUat(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-deploy.sh'
+    args = [openshiftEnv, "uat", project.version]
+}
+
+task osDeployDemo(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-deploy.sh'
+    args = [openshiftEnv, "demo", project.version]
+}
+
+task osUpgradeRemote(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-upgrade.sh'
+    args = [openshiftEnv, "remote", project.version]
+}
+
+task osUpgradeProduction(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-upgrade.sh'
+    args = [openshiftEnv, "production", project.version]
+}
+
+task osUpgradeUat(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-upgrade.sh'
+    args = [openshiftEnv, "uat", project.version]
+}
+
+task osUpgradeDemo(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-upgrade.sh'
+    args = [openshiftEnv, "demo", project.version]
+}
+
+task robotTestsFilter (type: Copy) {
+    from 'robot-tests/IFS_acceptance_tests/resources/variables/'
+    into 'robot-tests/IFS_acceptance_tests/resources/variables/'
+    include 'EMAIL_VARIABLES_TEMPLATE.robot'
+    rename 'EMAIL_VARIABLES_TEMPLATE.robot', 'EMAIL_VARIABLES_SENSITIVE.robot'
+    filter(ReplaceTokens, tokens: [test_mailbox_one_password : project.properties['ifs.robot.mailbox.one.password'], test_mailbox_two_password : project.properties['ifs.robot.mailbox.two.password']])
+}
+
+import org.apache.tools.ant.filters.*
+
+task osTestRemote(type:Exec) {
+    dependsOn robotTestsFilter
+    executable = 'setup-files/scripts/openshift/os-test-remote.sh'
+    args = [openshiftEnv]
+}
+
+task osStopTests(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-stop-tests.sh'
+    args = []
+}
+
+task osTestResults(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-test-results.sh'
+    args = []
+}
+

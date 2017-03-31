@@ -38,10 +38,10 @@ create new account for submitting
     And the user clicks the button/link    link=HIVE IT LIMITED
     And the user selects the checkbox    address-same
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
-    And the user clicks the button/link    jQuery=.button:contains("Confirm and continue")
+    And the user clicks the button/link    jQuery=.button:contains("Confirm")
     And the user enters text to a text field    name=email    ${test_mailbox_one}+submittest@gmail.com
     And the user fills the create account form    Temur    Ketsbaia
-    When the user reads his email and clicks the link    ${test_mailbox_one}+submittest@gmail.com    Please verify your email address    If you did not request an account with us
+    When the user reads his email and clicks the link    ${test_mailbox_one}+submittest@gmail.com    Please verify your email address    Once verified you can sign into your account
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
 
 the user marks every section but one as complete
@@ -49,19 +49,19 @@ the user marks every section but one as complete
     the user navigates to the page    ${server}
     the user clicks the button/link    link=${application_name}
     the user clicks the button/link    link=Project summary
-    the user marks the section as complete    11
-    the user marks the section as complete    12
-    the user marks the section as complete    13
-    the user marks the section as complete    1
-    the user marks the section as complete    2
-    the user marks the section as complete    3
-    the user marks the section as complete    4
-    the user marks the section as complete    5
-    the user marks the section as complete    6
-    the user marks the section as complete    7
-    the user marks the section as complete    8
-    the user marks the section as complete    15
-    the user marks the section as complete    16
+    the user marks the section as complete    1039
+    the user marks the section as complete    1040
+    the user marks the section as complete    1041
+    the user marks the section as complete    1045
+    the user marks the section as complete    1049
+    the user marks the section as complete    1053
+    the user marks the section as complete    1057
+    the user marks the section as complete    1061
+    the user marks the section as complete    1065
+    the user marks the section as complete    1069
+    the user marks the section as complete    1073
+    the user marks the section as complete    1077
+    the user marks the section as complete    1081
 
 the user marks the section as complete
     [Arguments]    ${form-id}
@@ -76,7 +76,7 @@ Create new application with the same user
     When the user navigates to the page    ${COMPETITION_DETAILS_URL}
     And the user clicks the button/link    jQuery=.button:contains("Apply now")
     And the user clicks the button/link    jQuery=.button:contains("Apply now")
-    And the user clicks the button/link    jQuery=Label:contains("Yes I want to create a new application")
+    And the user clicks the button/link    jQuery=Label:contains("Yes, I want to create a new application")
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user clicks the button/link    jQuery=a:contains("Begin application")
     And the user clicks the button/link    link=Application details
@@ -90,7 +90,7 @@ create new submit application
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
     And the guest user inserts user email & password    ${test_mailbox_one}+submittest@gmail.com    Passw0rd123
     And the guest user clicks the log-in button
-    And the user clicks the button/link    jQuery=Label:contains("Yes I want to create a new application")
+    And the user clicks the button/link    jQuery=Label:contains("Yes, I want to create a new application")
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user clicks the button/link    jQuery=a:contains("Begin application")
     And the user clicks the button/link    link=Application details
@@ -101,7 +101,7 @@ Create new invite application with the same user
     When the user navigates to the page    ${COMPETITION_DETAILS_URL}
     And the user clicks the button/link    jQuery=.button:contains("Apply now")
     And the user clicks the button/link    jQuery=.button:contains("Apply now")
-    And the user clicks the button/link    jQuery=Label:contains("Yes I want to create a new application")
+    And the user clicks the button/link    jQuery=Label:contains("Yes, I want to create a new application")
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user clicks the button/link    jQuery=a:contains("Begin application")
     And the user clicks the button/link    link=Application details
@@ -112,7 +112,7 @@ Create new academic application with the same user
     When the user navigates to the page    ${COMPETITION_DETAILS_URL}
     And the user clicks the button/link    jQuery=.button:contains("Apply now")
     And the user clicks the button/link    jQuery=.button:contains("Apply now")
-    And the user clicks the button/link    jQuery=Label:contains("Yes I want to create a new application")
+    And the user clicks the button/link    jQuery=Label:contains("Yes, I want to create a new application")
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user clicks the button/link    jQuery=a:contains("Begin application")
     And the user clicks the button/link    link=Application details
@@ -123,8 +123,8 @@ Invite and accept the invitation
     [Arguments]    ${recipient}    ${subject}    ${pattern}
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
-    And the user should see the text in the page    view and add participants to your application
-    When the user clicks the button/link    link=view and add participants to your application
+    And the user should see the text in the page    view team members and add collaborators
+    When the user clicks the button/link    link=view team members and add collaborators
     And the user clicks the button/link    jQuery=a:contains("Add partner organisation")
     And the user enters text to a text field    name=organisationName    Academic Test
     And the user enters text to a text field    name=applicants[0].name     Arsene Wenger
@@ -132,11 +132,9 @@ Invite and accept the invitation
     And the user clicks the button/link    jQuery=button:contains("Add organisation and invite applicants")
     And the user closes the browser
     And the guest user opens the browser
-    When the user reads his email and clicks the link    ${recipient}    ${subject}    ${pattern}
-    And the user clicks the button/link    jQuery=.button:contains("Create")
+    When the user reads his email and clicks the link    ${recipient}    ${subject}    ${pattern}   3
+    And the user clicks the button/link    jQuery=.button:contains("Yes, accept invitation")
     When the user selects the radio button    organisationType    2
-    And the user clicks the button/link    jQuery=.button:contains("Continue")
-    When the user selects the radio button    organisationType    5
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     When the user enters text to a text field    id=organisationSearchName    Liv
     And the user clicks the button/link    jQuery=.button:contains("Search")
@@ -149,9 +147,9 @@ Invite and accept the invitation
     And the user enters text to a text field    id=addressForm.selectedPostcode.county    Poppleshire
     And the user enters text to a text field    id=addressForm.selectedPostcode.postcode    POPPS123
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
-    And the user clicks the button/link    jQuery=.button:contains("Confirm and continue")
+    And the user clicks the button/link    jQuery=.button:contains("Confirm")
     And the user fills the create account form    Arsene    Wenger
-    And the user reads his email and clicks the link    ${test_mailbox_one}+academictest@gmail.com    Please verify your email address    Please click on the verification link to confirm your email address
+    And the user reads his email and clicks the link  ${test_mailbox_one}+academictest@gmail.com  Please verify your email address  We now need you to verify your email address
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
     And guest user log-in    ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
 
@@ -203,15 +201,15 @@ invite a registered user
     the user clicks the button/link    LINK=INNOVATE LTD
     the user selects the checkbox    address-same
     the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
-    the user clicks the button/link    jQuery=.button:contains("Confirm and continue")
+    the user clicks the button/link    jQuery=.button:contains("Confirm")
     the user enters the details and clicks the create account    ${EMAIL_LEAD}
     the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
-    the user reads his email and clicks the link    ${EMAIL_LEAD}    Please verify your email address    If you did not request an account with us
+    the user reads his email and clicks the link    ${EMAIL_LEAD}    Please verify your email address    Once verified you can sign into your account
     the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     the user clicks the button/link    jQuery=.button:contains("Sign in")
     the guest user inserts user email & password    ${EMAIL_LEAD}  ${correct_password}
     the guest user clicks the log-in button
-    the user clicks the button/link    link=${OPEN_COMPETITION_LINK}
+    the user clicks the button/link    link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user clicks the button/link    jQuery=a:contains("Add partner organisation")
     the user enters text to a text field    name=organisationName    innovate
     the user enters text to a text field    name=applicants[0].name    Partner name
@@ -233,10 +231,10 @@ we create a new user
     The user clicks the button/link    LINK=INNOVATE LTD
     The user selects the checkbox    address-same
     The user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
-    The user clicks the button/link    jQuery=.button:contains("Confirm and continue")
+    The user clicks the button/link    jQuery=.button:contains("Confirm")
     The user enters the details and clicks the create account    ${EMAIL_INVITED}
     The user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
-    the user reads his email and clicks the link    ${EMAIL_INVITED}    Please verify your email address    If you did not request an account with us
+    the user reads his email and clicks the link    ${EMAIL_INVITED}    Please verify your email address    Once verified you can sign into your account
     The user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     The user clicks the button/link    jQuery=.button:contains("Sign in")
     The guest user inserts user email & password    ${EMAIL_INVITED}    Passw0rd123
@@ -253,7 +251,7 @@ the user follows the flow to register their organisation
     And the user clicks the button/link    link=INNOVATE LTD
     And the user selects the checkbox    address-same
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
-    And the user clicks the button/link    jQuery=.button:contains("Confirm and continue")
+    And the user clicks the button/link    jQuery=.button:contains("Confirm")
 
 the user enters the details and clicks the create account
     [Arguments]    ${REG_EMAIL}
@@ -263,9 +261,6 @@ the user enters the details and clicks the create account
     Input Text    id=lastName    ANDERSON
     Input Text    id=phoneNumber    23232323
     Input Text    id=email    ${REG_EMAIL}
-    And the user selects the radio button    gender    gender2
-    And the user selects the radio button    ethnicity    ethnicity2
-    And the user selects the radio button    disability    disability2
     Input Password    id=password    Passw0rd123
     Input Password    id=retypedPassword    Passw0rd123
     the user selects the checkbox  termsAndConditions
@@ -275,9 +270,6 @@ the user fills the create account form
     [Arguments]    ${NAME}    ${LAST_NAME}
     Input Text    id=firstName    ${NAME}
     Input Text    id=lastName    ${LAST_NAME}
-    the user selects the radio button  gender  gender2
-    the user selects the radio button  ethnicity  ethnicity2
-    the user selects the radio button  disability  disability2
     Input Text        id=phoneNumber    0612121212
     Input Password    id=password    Passw0rd123
     Input Password    id=retypedPassword    Passw0rd123

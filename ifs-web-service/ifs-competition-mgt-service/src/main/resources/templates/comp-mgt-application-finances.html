@@ -10,7 +10,7 @@
 
 
 <!-- Application Finances for Competition MGT -->
-<main>
+<main tabindex="-1">
 <div id="content" class="full-width">
   <th:block th:insert="fragments/layout :: main-content-start" />
   <div class="grid-row">
@@ -33,7 +33,7 @@
 
 
 	<div class="page-title">
-            <th:block th:insert="fragments/elements :: application-title (applicationId=${currentApplication.id},applicationName=${currentApplication.applicationDisplayName})" />
+            <th:block th:insert="fragments/elements :: application-title (applicationId=${currentApplication.id},applicationName=${currentApplication.name})" />
             <h1 class="heading-xlarge"  th:text="${title}" />
         </div>
         <form action="#"  method="post" th:object="${form}" enctype="multipart/form-data"

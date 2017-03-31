@@ -8,7 +8,7 @@
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main id="content" th:object="${form}">
+<main tabindex="-1" id="content" th:object="${form}">
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" />
     <h1 class="heading-xlarge">
                 <span class="heading-secondary"><th:block th:text="${model.competitionId}"/>: <th:block
@@ -26,7 +26,44 @@
     </div>
 
     <div th:replace="competition/key-statistics :: key-statistics(keyStatistics=${model.keyStatistics})" />
-
+    <form method="GET" th:object="${manageFundingApplicationsQueryForm}">
+        <div class="search-filters extra-margin">
+            <fieldset>
+                <legend class="heading-medium">Filter applications</legend>
+                <div class="grid-row">
+                    <div class="column-third">
+                        <label class="form-label" for="stringFilter">Search by application number.</label>
+                        <input type="text" class="form-control" id="stringFilter" name="stringFilter" th:field="*{stringFilter}"/>
+                    </div>
+                    <div class="column-third">
+                        <label class="form-label" for="sendFilter">Sent</label>
+                        <select name="sendFilter" id="sendFilter" class="form-control" th:field="*{sendFilter}">
+                            <option value="">All</option>
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                    <div class="column-third">
+                        <label class="form-label" for="fundingFilter">Funding</label>
+                        <select name="fundingFilter" id="fundingFilter" class="form-control" th:field="*{fundingFilter}">
+                            <option value="">Show all</option>
+                            <option value="FUNDED">Successful</option>
+                            <option value="UNFUNDED">Unsuccessful</option>
+                            <option value="ON_HOLD">On hold</option>
+                        </select>
+                    </div>
+                </div>
+            </fieldset>
+            <div class="grid-row">
+                <div class="column-half">
+                    <a href="?" class="button button-clear no-margin">Clear all filters</a>
+                </div>
+                <div class="column-half alignright">
+                    <button class="button no-margin">Filter</button>
+                </div>
+            </div>
+        </div>
+    </form>
     <form method="post" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}">
         <div class="grid-row sorting">
             <div class="column-half">
@@ -65,10 +102,13 @@
                     <tbody>
                     <tr th:each="applicationSummary, stat : ${model.content}">
                         <td class="form-group-cell">
-                            <label class="block-label selection-button-checkbox" th:for="'app-row-' + ${applicationSummary.id}">
+                            <label th:if="${applicationSummary.applicationFundingDecisionIsChangeable()}" class="block-label selection-button-checkbox" th:for="'app-row-' + ${applicationSummary.id}">
                                 <input data-switches-button-status="[name=write-an-send-email]" type="checkbox" class="app-row-select row-successful" th:field="*{ids[__${stat.index}__]}" th:value="${applicationSummary.id}" aria-labelledby="select-applications-label" th:id="'app-row-' + ${applicationSummary.id}"/>
                                 <span class="invisible">Select application</span>
                             </label>
+                            <th:block th:unless="${applicationSummary.applicationFundingDecisionIsChangeable()}">
+                                -
+                            </th:block>
                         </td>
                         <td th:text="${applicationSummary.id}">194731</td>
                         <td th:text="${applicationSummary.name}">Machine learning in robots</td>
@@ -108,7 +148,7 @@
             </div>
         </div>
     </form>
-
+    <div th:include="fragments/elements :: general-pagination(pagination=${model.pagination})" th:remove="tag"/>
 
 
     <th:block th:insert="fragments/layout :: main-content-end" />

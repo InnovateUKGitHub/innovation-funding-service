@@ -27,7 +27,6 @@ import org.innovateuk.ifs.invite.mapper.InviteProjectMapper;
 import org.innovateuk.ifs.invite.repository.InviteProjectRepository;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.notifications.resource.*;
-import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
 import org.innovateuk.ifs.organisation.repository.OrganisationAddressRepository;
@@ -37,12 +36,12 @@ import org.innovateuk.ifs.project.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
-import org.innovateuk.ifs.project.finance.domain.SpendProfile;
-import org.innovateuk.ifs.project.finance.repository.SpendProfileRepository;
-import org.innovateuk.ifs.project.finance.transactional.CostCategoryTypeStrategy;
-import org.innovateuk.ifs.project.finance.workflow.financechecks.configuration.EligibilityWorkflowHandler;
-import org.innovateuk.ifs.project.finance.workflow.financechecks.configuration.FinanceCheckWorkflowHandler;
-import org.innovateuk.ifs.project.finance.workflow.financechecks.configuration.ViabilityWorkflowHandler;
+import org.innovateuk.ifs.project.financecheck.domain.SpendProfile;
+import org.innovateuk.ifs.project.financecheck.repository.SpendProfileRepository;
+import org.innovateuk.ifs.project.financecheck.transactional.CostCategoryTypeStrategy;
+import org.innovateuk.ifs.project.financecheck.workflow.financechecks.configuration.EligibilityWorkflowHandler;
+import org.innovateuk.ifs.project.financecheck.workflow.financechecks.configuration.FinanceCheckWorkflowHandler;
+import org.innovateuk.ifs.project.financecheck.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
 import org.innovateuk.ifs.project.mapper.MonitoringOfficerMapper;
@@ -61,6 +60,7 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -81,7 +81,6 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.*;
-import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.NOT_REQUIRED;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -133,10 +132,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     private OrganisationMapper organisationMapper;
 
     @Autowired
-    private NotificationService notificationService;
-
-    @Autowired
-    private SystemNotificationSource systemNotificationSource;
+    private  EmailService projectEmailService;
 
     @Autowired
     private FileService fileService;
@@ -212,7 +208,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Override
     public ServiceResult<ProjectResource> createProjectFromApplication(Long applicationId) {
-        return createProjectFromApplicationId(applicationId);
+        return createSingletonProjectFromApplicationId(applicationId);
     }
 
     @Override
@@ -269,7 +265,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Override
     public ServiceResult<Void> createProjectsFromFundingDecisions(Map<Long, FundingDecision> applicationFundingDecisions) {
-        applicationFundingDecisions.keySet().stream().filter(d -> applicationFundingDecisions.get(d).equals(FundingDecision.FUNDED)).forEach(this::createProjectFromApplicationId);
+        applicationFundingDecisions.keySet().stream().filter(d -> applicationFundingDecisions.get(d).equals(FundingDecision.FUNDED)).forEach(this::createSingletonProjectFromApplicationId);
         return serviceSuccess();
     }
 
@@ -357,11 +353,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         NotificationTarget moTarget = createMonitoringOfficerNotificationTarget(monitoringOfficer);
         NotificationTarget pmTarget = createProjectManagerNotificationTarget(projectManager);
 
-        Notification monitoringOfficerNotification = createMonitoringOfficerAssignedNotification(monitoringOfficer, moTarget, ProjectServiceImpl.Notifications.MONITORING_OFFICER_ASSIGNED, project, projectManager);
-        Notification projectManagerNotification = createMonitoringOfficerAssignedNotification(monitoringOfficer, pmTarget, ProjectServiceImpl.Notifications.MONITORING_OFFICER_ASSIGNED_PROJECT_MANAGER, project, projectManager);
-
-        ServiceResult<Void> moAssignedEmailSendResult = notificationService.sendNotification(monitoringOfficerNotification, EMAIL);
-        ServiceResult<Void> pmAssignedEmailSendResult = notificationService.sendNotification(projectManagerNotification, EMAIL);
+        ServiceResult<Void> moAssignedEmailSendResult = projectEmailService.sendEmail(singletonList(moTarget), createGlobalArgsForMonitoringOfficerAssignedEmail(monitoringOfficer, project, projectManager), ProjectServiceImpl.Notifications.MONITORING_OFFICER_ASSIGNED);
+        ServiceResult<Void> pmAssignedEmailSendResult = projectEmailService.sendEmail(singletonList(pmTarget), createGlobalArgsForMonitoringOfficerAssignedEmail(monitoringOfficer, project, projectManager), ProjectServiceImpl.Notifications.MONITORING_OFFICER_ASSIGNED_PROJECT_MANAGER);
 
         return processAnyFailuresOrSucceed(asList(moAssignedEmailSendResult, pmAssignedEmailSendResult));
     }
@@ -567,29 +560,12 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                 andOnSuccess(() -> project.setExploitationPlan(null));
     }
 
-    private NotificationTarget createPartnerNotificationTargets(final ProjectUser user) {
-        return new ExternalUserNotificationTarget(user.getUser().getName(), user.getUser().getEmail());
-    }
-
-    private Notification createLiveProjectNotification(List<NotificationTarget> notificationTargets, Enum template) {
-
-        return new Notification(systemNotificationSource, notificationTargets, template, emptyMap());
-    }
-
     private NotificationTarget createProjectManagerNotificationTarget(final User projectManager) {
         String fullName = getProjectManagerFullName(projectManager);
 
         return new ExternalUserNotificationTarget(fullName, projectManager.getEmail());
     }
 
-    private Notification createMonitoringOfficerAssignedNotification(MonitoringOfficerResource monitoringOfficer, NotificationTarget notificationTarget, Enum template, final Project project, final User projectManager) {
-
-        Map<String, Object> globalArguments = createGlobalArgsForMonitoringOfficerAssignedEmail(monitoringOfficer, project, projectManager);
-
-        return new Notification(systemNotificationSource, singletonList(notificationTarget), template
-                , globalArguments, emptyMap());
-
-    }
 
     private NotificationTarget createMonitoringOfficerNotificationTarget(MonitoringOfficerResource monitoringOfficer) {
 
@@ -728,14 +704,17 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                 userId -> simpleFindFirst(project.getProjectUsers(),
                         pu -> pu.getUser().getId().equals(userId) && pu.getRole().isPartner()));
 
-        List<Organisation> allPartnerOrganisations = project.getOrganisations();
         List<Organisation> partnerOrganisationsToInclude =
-                simpleFilter(allPartnerOrganisations, partner ->
+                simpleFilter(project.getOrganisations(), partner ->
                         partner.getId().equals(leadOrganisation.getId()) ||
-                                (partnerUserForFilterUser.map(pu -> partner.getId().equals(pu.getOrganisation().getId())).orElse(true)));
+                                (partnerUserForFilterUser.map(pu -> partner.getId().equals(pu.getOrganisation().getId()))
+                                        .orElse(true)));
+
+        List<Organisation> sortedOrganisationsToInclude
+                = new PrioritySorting<>(partnerOrganisationsToInclude, leadOrganisation, Organisation::getName).unwrap();
 
         List<ProjectPartnerStatusResource> projectPartnerStatusResources =
-                simpleMap(partnerOrganisationsToInclude, partner -> getProjectPartnerStatus(project, partner));
+                simpleMap(sortedOrganisationsToInclude, partner -> getProjectPartnerStatus(project, partner));
 
         ProjectTeamStatusResource projectTeamStatusResource = new ProjectTeamStatusResource();
         projectTeamStatusResource.setPartnerStatuses(projectPartnerStatusResources);
@@ -802,9 +781,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     private ServiceResult<Void> inviteContact(Long projectId, InviteProjectResource projectResource, Notifications kindOfNotification) {
 
-        Notification notification = createInviteContactNotification(projectId, projectResource, kindOfNotification);
-        ServiceResult<Void> inviteContactEmailSendResult = notificationService.sendNotification(notification, EMAIL);
         ProjectInvite projectInvite = inviteProjectMapper.mapToDomain(projectResource);
+        ServiceResult<Void> inviteContactEmailSendResult = projectEmailService.sendEmail(singletonList(createInviteContactNotificationTarget(projectInvite)), createGlobalArgsForInviteContactEmail(projectId, projectResource), kindOfNotification);
         inviteContactEmailSendResult.handleSuccessOrFailure(
                 failure -> handleInviteError(projectInvite, failure),
                 success -> handleInviteSuccess(projectInvite)
@@ -821,14 +799,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         LOG.error(String.format("Invite failed %s , %s (error count: %s)", i.getId(), i.getEmail(), failure.getErrors().size()));
         List<Error> errors = failure.getErrors();
         return serviceFailure(errors);
-    }
-
-    private Notification createInviteContactNotification(Long projectId, InviteProjectResource projectResource, ProjectServiceImpl.Notifications kindOfNotification) {
-        Map<String, Object> globalArguments = createGlobalArgsForInviteContactEmail(projectId, projectResource);
-        ProjectInvite projectInvite = inviteProjectMapper.mapToDomain(projectResource);
-        NotificationTarget notificationTarget = createInviteContactNotificationTarget(projectInvite);
-        return new Notification(systemNotificationSource, singletonList(notificationTarget),
-                kindOfNotification, globalArguments, emptyMap());
     }
 
     private NotificationTarget createInviteContactNotificationTarget(ProjectInvite projectInvite) {
@@ -932,6 +902,14 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return pu.getOrganisation().getId().equals(leadPartnerOrganisation.getId());
     }
 
+    private ServiceResult<ProjectResource> createSingletonProjectFromApplicationId(final Long applicationId) {
+
+        return checkForExistingProjectWithApplicationId(applicationId).handleSuccessOrFailure(
+                failure -> createProjectFromApplicationId(applicationId),
+                success -> serviceSuccess(success)
+        );
+    }
+
     private ServiceResult<ProjectResource> createProjectFromApplicationId(final Long applicationId) {
 
         return getApplication(applicationId).andOnSuccess(application -> {
@@ -972,6 +950,10 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                             andOnSuccess(() -> generateFinanceCheckEntitiesForNewProject(newProject)).
                             andOnSuccessReturn(() -> projectMapper.mapToResource(newProject)));
         });
+    }
+
+    private ServiceResult<ProjectResource> checkForExistingProjectWithApplicationId(Long applicationId) {
+        return getByApplicationId(applicationId);
     }
 
     private ServiceResult<Void> createProcessEntriesForNewProject(Project newProject) {
@@ -1121,15 +1103,13 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                 return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_MUST_BE_AVAILABLE_BEFORE_SEND);
             }
 
-            NotificationSource from = systemNotificationSource;
             User projectManager = getExistingProjectManager(project).get().getUser();
             NotificationTarget pmTarget = createProjectManagerNotificationTarget(projectManager);
 
             Map<String, Object> notificationArguments = new HashMap<>();
             notificationArguments.put("dashboardUrl", webBaseUrl);
 
-            Notification notification = new Notification(from, singletonList(pmTarget), ProjectServiceImpl.Notifications.GRANT_OFFER_LETTER_PROJECT_MANAGER, notificationArguments);
-            ServiceResult<Void> notificationResult = notificationService.sendNotification(notification, EMAIL);
+            ServiceResult<Void> notificationResult = projectEmailService.sendEmail(singletonList(pmTarget), notificationArguments, ProjectServiceImpl.Notifications.GRANT_OFFER_LETTER_PROJECT_MANAGER);
 
             if (!notificationResult.isSuccess()) {
                 return serviceFailure(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE);
@@ -1156,8 +1136,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         Project project = projectRepository.findOne(projectId);
         List<NotificationTarget> notificationTargets = getLiveProjectNotificationTarget(project);
 
-        Notification partnerNotification = createLiveProjectNotification(notificationTargets, Notifications.PROJECT_LIVE);
-        ServiceResult<Void> sendEmailResult = notificationService.sendNotification(partnerNotification, EMAIL);
+        ServiceResult<Void> sendEmailResult = projectEmailService.sendEmail(notificationTargets, emptyMap(), Notifications.PROJECT_LIVE);
 
         return processAnyFailuresOrSucceed(sendEmailResult);
     }

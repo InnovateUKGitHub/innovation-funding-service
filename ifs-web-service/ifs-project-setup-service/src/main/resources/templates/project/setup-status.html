@@ -7,7 +7,7 @@
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main id="content">
+<main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
     <div th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=${url}" th:remove="tag"></div>
 
@@ -46,7 +46,7 @@
                         <a th:href="${'/application/' + model.applicationId + '/summary'}" class="buttonlink">View
                             application and feedback</a>
                         <a th:href="${'/competition/' + model.competitionId + '/info/terms-and-conditions'}"
-                           class="buttonlink">View terms and conditions of grant offer</a>
+                           class="buttonlink">View the grant terms and conditions</a>
                     </p>
                 </div>
                 <th:block th:insert="project/fragments :: project-setup-status-indicator('complete')"/>
@@ -123,7 +123,7 @@
                             <th:block th:if="${model.financeChecksSection.notRequired}">(not required)</th:block>
                         </th:block>
                     </h2>
-                    <p class="no-margin">We will review all project costs.</p>
+                    <p class="no-margin">We will review your financial information.</p>
                 </div>
                 <th:block th:insert="project/fragments :: project-setup-status-indicator(${model.financeChecksStatus.getSectionStatus()})"/>
             </li>
@@ -136,7 +136,7 @@
                             profile</a>
                         <th:block th:if="${model.spendProfileSection.notAccessible}">Spend profile</th:block>
                     </h2>
-                    <p class="no-margin">Once we have approved your financial information, we will produce a spend profile.</p>
+                    <p class="no-margin">Once we have approved your finances you can change your project spend profile.</p>
                 </div>
                 <th:block th:insert="project/fragments :: project-setup-status-indicator(${model.spendProfileStatus.getSectionStatus()})"
                           th:if="${model.spendProfileSection.accessible}"/>
@@ -154,7 +154,7 @@
                     </h2>
 
                     <!-- TODO: INFUND - 6376 Prototype mentions Project manager should submit. Needs verification -->
-                    <p>The Project Manager will need to upload the following:</p>
+                    <p>Your Project Manager will need to upload the following:</p>
                     <ul class="list list-bullet">
                         <li>a collaboration agreement</li>
                         <li>exploitation plan</li>
@@ -173,8 +173,7 @@
                            th:href="@{/project/{id}/offer(id=${model.projectId})}">Grant offer letter</a>
                         <th:block th:if="${model.grantOfferLetterSection.notAccessible}">Grant offer letter</th:block>
                     </h2>
-                    <p class="no-margin">Once all tasks are complete we will send a grant offer letter to the lead partner. When the lead
-                        partner has returned the letter to us, you can begin the project.</p>
+                    <p class="no-margin">Once all tasks are complete the Project Manager can review and accept the grant offer letter on behalf of the project.</p>
                 </div>
                 <th:block th:insert="project/fragments :: project-setup-status-indicator(${model.grantOfferLetterStatus.getSectionStatus()})"
                           th:if="${model.grantOfferLetterSection.accessible}"/>

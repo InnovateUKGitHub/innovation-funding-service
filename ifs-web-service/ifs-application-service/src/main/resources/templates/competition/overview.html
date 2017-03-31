@@ -4,11 +4,10 @@
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Competition Overview'" />
 </head>
 <body th:with="context='applicant'" class="competition-overview">
-
-    <th:block th:insert="fragments/layout :: body-start" />
     <th:block th:insert="fragments/layout :: global-header" />
 
-    <main id="content">
+    <th:block th:insert="fragments/layout :: body-start" />
+    <main tabindex="-1" id="content">
         <th:block th:insert="fragments/layout :: main-content-start" />
         <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to all competitions',linkClass='link-back',linkUrl='/competition/search'" />
 
@@ -18,7 +17,7 @@
         <p class="wysiwyg-styles" ifs:utext="${model.shortDescription}"></p>
 
         <ul class="list">
-            <li><strong>Competition opens:</strong> <span th:text="${#temporals.format(model.competitionOpenDate, 'EEEE d MMM yyyy')}"></span></li>
+            <li><strong>Competition opens:</strong> <span th:text="${#temporals.format(model.competitionOpenDate, 'EEEE d MMMM yyyy')}"></span></li>
 
             <li th:unless="${model.nonIfs}" th:with="date=${#temporals.format(model.competitionCloseDate, 'EEEE d MMMM yyyy')},
                          time=${#strings.toLowerCase(#temporals.format(model.competitionCloseDate, ' h:mma'))}">
@@ -30,46 +29,42 @@
 
         </ul>
         <div>
-            <div th:unless="${model.showApplyButton}" class="warning-alert">
+            <div th:if="${model.showNotOpenYetMessage}" class="warning-alert">
+                This competition has not yet opened.
+            </div>
+            <div th:if="${model.showClosedMessage}" class="warning-alert">
                 This competition is now closed.
             </div>
-            <th:block th:unless="${model.nonIfs}">
-                <p class="extra-margin">
+            <th:block>
+                <p class="extra-margin-top">
                     <a class="button"
-                       th:if="${model.showApplyButton}"
-                       th:href="@{/application/create/check-eligibility/{competitionId}(competitionId=${model.competitionId})}">
-                        Start or continue your application
+                       th:disabled="${model.disableApplyButton}"
+                       th:href="${model.applyButtonUrl}"
+                       th:text="${model.applyButtonText}">
                     </a>
-                    <button th:unless="${model.showApplyButton}" class="button" disabled="disabled">
-                        Start or continue your application
-                    </button>
                 </p>
-            </th:block>
-            <th:block th:if="${model.nonIfs}">
-                <p class="extra-margin">
-                    <a th:href="${model.nonIfsUrl}" th:if="${model.showApplyButton}" class="button">
-                        Register and apply online
-                    </a>
-                    <button th:unless="${model.showApplyButton}" class="button" disabled="disabled">
-                        Register and apply online
-                    </button>
+                <p class="extra-margin" th:if="${model.showSignInText}">
+                    <th:block th:unless="${model.userIsLoggedIn}">
+                        Or <a th:href="@{/}" >sign in</a> to continue an existing application
+                    </th:block>
+                    <th:block th:if="${model.userIsLoggedIn}">
+                        Or go to your <a th:href="@{/}">dashboard</a> to continue an existing application
+                    </th:block>
                 </p>
             </th:block>
         </div>
 
-        <ul class="inline-nav hide-mobile">
-            <th:block th:each="sectionType : ${model.allContentSections}">
-                <li th:class="${(sectionType.active ? 'selected' : 'not-selected' )}">
-                    <h2>
-                        <a th:href="@{/competition/{competitionId}/overview/{type}(competitionId=${model.competitionId}, type=${sectionType.path})}">
-                            <strong th:text="${sectionType.text}"></strong>
-                        </a>
-                    </h2>
-                </li>
+        <div id="competition-overview-tabs" class="tabs">
+            <ul>
+                <th:block th:each="sectionType : ${model.allSections}">
+                    <li>
+                        <a th:href="${'#' + sectionType.path}" th:text="${sectionType.text}"></a>
+                    </li>
+                </th:block>
+            </ul>
+            <th:block th:each="section : ${model.allSections}">
+                <th:block th:insert="competition/section/fragments :: ${section.path} (section=${section}, competitionId=${model.competitionId})"/>
             </th:block>
-        </ul>
-        <div>
-            <th:block th:insert="competition/section/fragments :: ${model.currentSection.sectionPath} (section=${model.currentSection}, competitionId=${model.competitionId})"/>
         </div>
 
         <div th:insert="fragments/layout :: main-content-end" th:remove="tag" />

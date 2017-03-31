@@ -1,62 +1,28 @@
 #!/bin/bash
-set -ex
+
+set -e
 
 PROJECT=$1
 TARGET=$2
+VERSION=$3
 
-if [[ ${TARGET} == "remote" ]]
-then
-    HOST=prod.ifs-test-clusters.com
-else
-    HOST=ifs-local
-fi
+if [[ ${TARGET} == "production" ]]; then PROJECT="production"; fi
+if [[ ${TARGET} == "demo" ]]; then PROJECT="demo"; fi
+if [[ ${TARGET} == "uat" ]]; then PROJECT="uat"; fi
+
+if [[ (${TARGET} == "local") ]]; then HOST=ifs-local; else HOST=prod.ifs-test-clusters.com; fi
+
+if [ -z "$bamboo_openshift_svc_account_token" ]; then  SVC_ACCOUNT_TOKEN=$(oc whoami -t); else SVC_ACCOUNT_TOKEN=${bamboo_openshift_svc_account_token}; fi
+
+SVC_ACCOUNT_CLAUSE="--namespace=${PROJECT} --token=${SVC_ACCOUNT_TOKEN} --server=https://console.prod.ifs-test-clusters.com:443 --insecure-skip-tls-verify=true"
+REGISTRY_TOKEN=${SVC_ACCOUNT_TOKEN};
 
 ROUTE_DOMAIN=apps.$HOST
 REGISTRY=docker-registry-default.apps.prod.ifs-test-clusters.com
-#REGISTRY=docker-registry-default.apps.dev.ifs-test-clusters.com
 INTERNAL_REGISTRY=172.30.80.28:5000
-
 
 echo "Deploying the $PROJECT Openshift project"
 
-function tailorAppInstance() {
-    sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/*.yml
-    sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/shib/*.yml
-    sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/shib/*.yml
-    sed -i.bak "s/<<IMAP-ADDRESS>>/imap-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/*.yml
-    sed -i.bak "s/<<ADMIN-ADDRESS>>/admin-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/*.yml
-}
-
-function useContainerRegistry() {
-    sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" os-files-tmp/*.yml
-    sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" os-files-tmp/robot-tests/*.yml
-
-    sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/*.yml
-    sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/innovateuk/#g" os-files-tmp/shib/*.yml
-    sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/robot-tests/*.yml
-
-    docker tag innovateuk/data-service:1.0-SNAPSHOT \
-        ${REGISTRY}/${PROJECT}/data-service:1.0-SNAPSHOT
-    docker tag innovateuk/project-setup-service:1.0-SNAPSHOT \
-        ${REGISTRY}/${PROJECT}/project-setup-service:1.0-SNAPSHOT
-    docker tag innovateuk/project-setup-management-service:1.0-SNAPSHOT \
-        ${REGISTRY}/${PROJECT}/project-setup-management-service:1.0-SNAPSHOT
-    docker tag innovateuk/competition-management-service:1.0-SNAPSHOT \
-        ${REGISTRY}/${PROJECT}/competition-management-service:1.0-SNAPSHOT
-    docker tag innovateuk/assessment-service:1.0-SNAPSHOT \
-        ${REGISTRY}/${PROJECT}/assessment-service:1.0-SNAPSHOT
-    docker tag innovateuk/application-service:1.0-SNAPSHOT \
-        ${REGISTRY}/${PROJECT}/application-service:1.0-SNAPSHOT
-
-    docker login -p $(oc whoami -t) -e unused -u unused ${REGISTRY}
-
-    docker push ${REGISTRY}/${PROJECT}/data-service:1.0-SNAPSHOT
-    docker push ${REGISTRY}/${PROJECT}/project-setup-service:1.0-SNAPSHOT
-    docker push ${REGISTRY}/${PROJECT}/project-setup-management-service:1.0-SNAPSHOT
-    docker push ${REGISTRY}/${PROJECT}/competition-management-service:1.0-SNAPSHOT
-    docker push ${REGISTRY}/${PROJECT}/assessment-service:1.0-SNAPSHOT
-    docker push ${REGISTRY}/${PROJECT}/application-service:1.0-SNAPSHOT
-}
 
 function deploy() {
     if [[ ${TARGET} == "local" ]]
@@ -64,56 +30,76 @@ function deploy() {
         oc adm policy add-scc-to-user anyuid -n $PROJECT -z default
     fi
 
-    oc create -f os-files-tmp/
-    oc create -f os-files-tmp/shib/
+    if [[ ${TARGET} == "production" || ${TARGET} == "demo" || ${TARGET} == "uat" ]]
+    then
+        oc create -f os-files-tmp/gluster/10-gluster-svc.yml ${SVC_ACCOUNT_CLAUSE}
+        oc create -f os-files-tmp/gluster/11-gluster-endpoints.yml ${SVC_ACCOUNT_CLAUSE}
+        oc create -f os-files-tmp/gluster/named-envs/12-${TARGET}-file-upload-claim.yml ${SVC_ACCOUNT_CLAUSE}
+        oc create -f os-files-tmp/ ${SVC_ACCOUNT_CLAUSE}
+        oc create -f os-files-tmp/shib/5-shib.yml ${SVC_ACCOUNT_CLAUSE}
+        oc create -f os-files-tmp/shib/named-envs/56-${TARGET}-idp.yml ${SVC_ACCOUNT_CLAUSE}
+    else
+        oc create -f os-files-tmp/mail/ ${SVC_ACCOUNT_CLAUSE}
+        oc create -f os-files-tmp/mysql/ ${SVC_ACCOUNT_CLAUSE}
+        oc create -f os-files-tmp/shib/ ${SVC_ACCOUNT_CLAUSE}
+        oc create -f os-files-tmp/gluster/ ${SVC_ACCOUNT_CLAUSE}
+        oc create -f os-files-tmp/spring-admin/ ${SVC_ACCOUNT_CLAUSE}
+        oc create -f os-files-tmp/ ${SVC_ACCOUNT_CLAUSE}
+    fi
 }
 
 function blockUntilServiceIsUp() {
     UNREADY_PODS=1
     while [ ${UNREADY_PODS} -ne "0" ]
     do
-        UNREADY_PODS=$(oc get pods -o custom-columns='NAME:{.metadata.name},READY:{.status.conditions[?(@.type=="Ready")].status}' | grep -v True | sed 1d | wc -l)
-        oc get pods
+        UNREADY_PODS=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} -o custom-columns='NAME:{.metadata.name},READY:{.status.conditions[?(@.type=="Ready")].status}' | grep -v True | sed 1d | wc -l)
+        oc get pods ${SVC_ACCOUNT_CLAUSE}
         echo "$UNREADY_PODS pods still not ready"
         sleep 5s
     done
-    oc get routes
+    oc get routes ${SVC_ACCOUNT_CLAUSE}
 }
 
 function shibInit() {
-     oc rsh $(oc get pods | awk '/ldap/ { print $1 }') /usr/local/bin/ldap-sync-from-ifs-db.sh ifs-database
-}
-
-function cleanUp() {
-    rm -rf os-files-tmp
-    rm -rf shibboleth
-}
-
-function cloneConfig() {
-    cp -r os-files os-files-tmp
+     oc rsh ${SVC_ACCOUNT_CLAUSE} $(oc get pods  ${SVC_ACCOUNT_CLAUSE} | awk '/ldap/ { print $1 }') /usr/local/bin/ldap-sync-from-ifs-db.sh ifs-database
 }
 
 function createProject() {
-    until oc new-project $PROJECT
+    until oc new-project $PROJECT ${SVC_ACCOUNT_CLAUSE}
     do
-      oc delete project $PROJECT || true
+      oc delete project $PROJECT ${SVC_ACCOUNT_CLAUSE} || true
       sleep 10
     done
 }
 
-# Entry point
+. $(dirname $0)/deploy-functions.sh
 
+# Entry point
 cleanUp
 cloneConfig
 tailorAppInstance
-createProject
+if [[ ${TARGET} != "production" && ${TARGET} != "demo" && ${TARGET} != "uat" ]]
+then
+    createProject
+fi
 
-if [[ ${TARGET} == "remote" ]]
+if [[ (${TARGET} != "local") ]]
 then
     useContainerRegistry
 fi
 
 deploy
 blockUntilServiceIsUp
-shibInit
+
+if [[ ${TARGET} == "local" || ${TARGET} == "remote" ]]
+then
+    shibInit
+fi
+
+if [[ ${TARGET} == "production" || ${TARGET} == "uat" ]]
+then
+    # We only scale up data-service once data-service started up and performed the Flyway migrations on one thread
+    scaleDataService
+fi
+
 cleanUp

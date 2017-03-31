@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Accept Invite'" />
+</head>
+<body th:with="context='applicant'" class="create-application-eligibility">
+
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<main tabindex="-1" id="content">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+
+    <h1 class="heading-large">Sorry, you are unable to accept this invitation.</h1>
+    <p>You are signed in with a different email address. Please sign out and sign back in using the email address that the invite was sent to.</p>
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+</body>
+</html>

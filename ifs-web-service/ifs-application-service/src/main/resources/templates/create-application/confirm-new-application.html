@@ -8,14 +8,14 @@
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main id="content">
+<main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub"          th:with="linkTitle='Back',linkClass='link-back',linkUrl='javascript:history.back()',currentApplication=${currentApplication}" />
     <div class="grid-row">
 
 
-        <h1 class="heading-large">Application in progress</h1>
-        <p>You have already started an application in this competition. Please confirm whether you want to continue with your existing application or create a new one.</p>
+        <h1 class="heading-large">You have an application in progress</h1>
+        <p>You have already started an application in this competition. Do you want to continue with your existing application or create a new one in the same competition?</p>
 
         <form method="post" action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}">
 
@@ -27,14 +27,14 @@
                                type="radio"
                                th:name="create-application"
                                value="true"/>
-                        Yes I want to create a new application
+                         Yes, I want to create a new application
                     </label>
                     <label class="block-label selection-button-radio" for="new-application-no">
                         <input type="radio"
                                id="new-application-no"
                                name="create-application"
                                value="false"/>
-                        No I wish to continue with an existing application
+                        No, I want to continue with my existing application
                     </label>
                 </div>
             </fieldset>

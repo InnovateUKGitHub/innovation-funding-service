@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Join an application'" />
+    </head>
+    <body th:with="context='applicant'" class="create-application-eligibility">
+        <th:block th:insert="fragments/layout :: body-start" />
+        <th:block th:insert="fragments/layout :: global-header" />
+        <main tabindex="-1" id="content">
+            <th:block th:insert="fragments/layout :: main-content-start" />
+            <h1 class="heading-xlarge no-margin-bottom">Invitation to collaborate</h1>
+            <p>You have been invited to join an application in the competition '
+                <a th:href="@{/competition/{competitionId}/details(competitionId=${model.competitionId})}" th:text="${model.competitionName}"></a>
+                '.
+            </p>
+            <div>
+                <h1 class="heading-large">Application details</h1>
+                <dl class="extra-margin-bottom">
+                    <dt>Lead organisation:</dt>
+                    <dd th:text="${model.leadOrganisationName}"></dd>
+
+                    <dt>Lead applicant:</dt>
+                    <dd th:text="${model.leadApplicantName}"></dd>
+                </dl>
+                <p>The lead applicant has invited you to participate in this application as part of the following organisation: <strong th:text="${model.inviteOrganisationName}"></strong></p>
+                <p>If this is not the correct organisation, please email the lead applicant at <a th:href="${'mailto:' + model.leadApplicantEmail}" th:text="${model.leadApplicantEmail}"></a></p>
+
+                <h2 class="heading-medium">Are you happy to accept the invitation to participate?</h2>
+                <p>As you are new to the service, you will be taken through the account creation process.</p>
+                <a th:href="${model.inviteOrganisationExists} ? @{/accept-invite/confirm-invited-organisation} : @{/organisation/create/type/new-account-organisation-type}" class="button">Yes, accept invitation</a>
+                <p>If you do not wish to accept this invitation, please let the lead applicant know.</p>
+            </div>
+            <th:block th:insert="fragments/layout :: main-content-end" />
+        </main>
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
+    </body>
+</html>

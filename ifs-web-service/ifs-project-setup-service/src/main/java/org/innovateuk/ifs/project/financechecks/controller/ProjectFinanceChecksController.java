@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.financechecks.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.DefaultProjectFinanceModelManager;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
 import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceChangesViewModel;
@@ -90,34 +89,31 @@ public class ProjectFinanceChecksController {
     private static final String FORM_ATTR = "form";
 
     @Autowired
-    ProjectService projectService;
+    private ProjectService projectService;
 
     @Autowired
-    ApplicationService applicationService;
+    private ApplicationService applicationService;
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Autowired
-    ProjectFinanceService projectFinanceService;
+    private ProjectFinanceService projectFinanceService;
 
     @Autowired
-    FinanceService applicationFinanceService;
+    private FinanceCheckService financeCheckService;
 
     @Autowired
-    FinanceCheckService financeCheckService;
+    private OrganisationService organisationService;
 
     @Autowired
-    OrganisationService organisationService;
+    private UserAuthenticationService userAuthenticationService;
 
     @Autowired
-    UserAuthenticationService userAuthenticationService;
+    private SectionService sectionService;
 
     @Autowired
-    SectionService sectionService;
-
-    @Autowired
-    CompetitionService competitionService;
+    private CompetitionService competitionService;
 
     @Autowired
     private ApplicationModelPopulator applicationModelPopulator;
@@ -260,7 +256,7 @@ public class ProjectFinanceChecksController {
             }
             ProjectFinanceChecksViewModel viewModel = buildFinanceChecksLandingPage(projectComposite, attachments, queryId);
             model.addAttribute("model", viewModel);
-            return ServiceResult.serviceSuccess();
+            return result;
         });
     }
 
@@ -397,7 +393,7 @@ public class ProjectFinanceChecksController {
 
         return new ProjectFinanceChecksViewModel(projectResource,
                 organisationResource,
-                loadQueryModel(compositeId.getProjectId(),compositeId.getOrganisationId()),
+                getQueriesAndPopulateViewModel(compositeId.getProjectId(),compositeId.getOrganisationId()),
                 approved,
                 attachmentLinks,
                 FinanceChecksQueryConstraints.MAX_QUERY_WORDS,
@@ -411,12 +407,12 @@ public class ProjectFinanceChecksController {
         return COMPLETE.equals(organisationStatus.map(ProjectPartnerStatusResource::getFinanceChecksStatus).orElse(null));
     }
 
-    private List<ThreadViewModel> loadQueryModel(Long projectId, Long organisationId) {
+    private List<ThreadViewModel> getQueriesAndPopulateViewModel(Long projectId, Long organisationId) {
 
         List<ThreadViewModel> queryModel = new LinkedList<>();
 
         ProjectFinanceResource projectFinance = projectFinanceService.getProjectFinance(projectId, organisationId);
-        ServiceResult<List<QueryResource>> queries = financeCheckService.loadQueries(projectFinance.getId());
+        ServiceResult<List<QueryResource>> queries = financeCheckService.getQueries(projectFinance.getId());
         if (queries.isSuccess()) {
             // order queries by most recent post
             List<QueryResource> sortedQueries = queries.getSuccessObject().stream().
@@ -545,7 +541,7 @@ public class ProjectFinanceChecksController {
     }
 
     private String doViewEligibilityChanges(ProjectResource project, OrganisationResource organisation, Long userId, Model model) {
-        ProjectFinanceChangesViewModel projectFinanceChangesViewModel = ((DefaultProjectFinanceModelManager)financeHandler.getProjectFinanceModelManager(organisation.getOrganisationTypeName())).getProjectFinanceChangesViewModel(false, project, organisation, userId);
+        ProjectFinanceChangesViewModel projectFinanceChangesViewModel = ((DefaultProjectFinanceModelManager)financeHandler.getProjectFinanceModelManager(organisation.getOrganisationType())).getProjectFinanceChangesViewModel(false, project, organisation, userId);
         model.addAttribute("model", projectFinanceChangesViewModel);
         return "project/financecheck/eligibility-changes";
     }

@@ -6,13 +6,9 @@ import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.mapstruct.Mapper;
 
 @Mapper(
-    componentModel = "spring",
-    uses = {
-
-    }
+    componentModel = "spring"
 )
 public abstract class OrganisationTypeMapper extends BaseMapper<OrganisationType, OrganisationTypeResource, Long> {
-
 
     public Long mapOrganisationTypeToId(OrganisationType object) {
         if (object == null) {

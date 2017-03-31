@@ -1,0 +1,75 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    creationTimestamp: null
+    name: data-service
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: data-service
+    strategy:
+      type: Rolling
+      rollingParams:
+        timeoutSeconds: 600
+        maxSurge: 1 #So Flyway runs on one thread at a time
+        maxUnavailable: 0
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          deploymentconfig: data-service
+      spec:
+        containers:
+        - image: innovateuk/data-service:1.0-SNAPSHOT
+          readinessProbe:
+            httpGet:
+              path: /monitoring/health
+              port: 8080
+          name: data-service
+          imagePullPolicy: Always
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - "sh"
+                  - "-c"
+                  - >
+                    echo "$DATA_SERVICE_PORT_8080_TCP_ADDR ifs-data-service" >> /etc/hosts && echo "$IDP_PORT_443_TCP_ADDR iuk-auth-localdev" >> /etc/hosts
+          env:
+          - name: IFS_WEB_BASEURL
+            value: 'https://<<SHIB-ADDRESS>>'
+          - name: IDP_REST_BASEURL
+            value: 'https://<<SHIB-IDP-ADDRESS>>/regapi'
+          ports:
+          - containerPort: 8080
+          resources:
+            limits:
+              memory: 1500M
+          volumeMounts:
+          - mountPath: /tmp/uploads
+            name: dir-1
+        volumes:
+          - name: dir-1
+            persistentVolumeClaim:
+              claimName: file-upload-claim
+    test: false
+    triggers:
+    - type: ConfigChange
+  status: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    name: data-service
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      targetPort: 8080
+    selector:
+      deploymentconfig: data-service
+  status:
+    loadBalancer: {}

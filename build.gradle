@@ -12,10 +12,9 @@ allprojects {
     targetCompatibility = 1.8
 }
 
+apply from: "openshift-support.gradle"
 
-if(project.hasProperty('profile') && profile == 'automated') {
-    ext.openshiftEnv = project.properties['openshiftEnv'] ?: "automated"
-}
+
 
 if(!project.hasProperty('osTestArgs')) {
     ext.osTestArgs = ""
@@ -126,6 +125,7 @@ buildscript {
         classpath "com.avast.gradle:docker-compose-gradle-plugin:0.3.21"
         classpath "se.transmode.gradle:gradle-docker:1.2"
         classpath 'net.researchgate:gradle-release:2.4.0'
+	    classpath "gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.13.1"
     }
 
 }
@@ -148,6 +148,7 @@ dependencyUpdates.resolutionStrategy = {
 apply plugin: "org.sonarqube"
 apply plugin: 'docker-compose'
 apply plugin: 'net.researchgate.release'
+apply plugin: "com.github.hierynomus.license"
 
 release {
     preTagCommitMessage = '[Gradle Release Plugin] - Performing release: '
@@ -198,43 +199,15 @@ task prepareComposeFile (type: Copy) {
     filter(ReplaceTokens, tokens: [version : project.properties['version']])
 }
 
+task dockerTidy(type:Exec) {
+    executable = 'setup-files/scripts/docker/docker_tidy_up.sh'
+    print project.version
+    args = [project.version]
+}
+
 composeUp.dependsOn prepareComposeFile
 
-task robotTestsFilter (type: Copy) {
-    from 'robot-tests/IFS_acceptance_tests/resources/variables/'
-    into 'robot-tests/IFS_acceptance_tests/resources/variables/'
-    include 'EMAIL_VARIABLES_TEMPLATE.robot'
-    rename 'EMAIL_VARIABLES_TEMPLATE.robot', 'EMAIL_VARIABLES_SENSITIVE.robot'
-    filter(ReplaceTokens, tokens: [test_mailbox_one_password : project.properties['ifs.robot.mailbox.one.password'], test_mailbox_two_password : project.properties['ifs.robot.mailbox.two.password']])
-}
-
-
-task osDeployRemote(type:Exec) {
-    executable = 'setup-files/scripts/openshift/os-deploy.sh'
-    args = [openshiftEnv, "remote"]
-}
-
-task osDeployLocal(type:Exec) {
-    executable = 'setup-files/scripts/openshift/os-deploy.sh'
-    args = [openshiftEnv, "local"]
-}
-
-task osTestRemote(type:Exec) {
-    dependsOn robotTestsFilter
-    executable = 'setup-files/scripts/openshift/os-test-remote.sh'
-    args = [openshiftEnv, osTestArgs]
-}
-
 import org.apache.tools.ant.filters.*
-task osStopTests(type:Exec) {
-    executable = 'setup-files/scripts/openshift/os-stop-tests.sh'
-    args = [openshiftEnv]
-}
-
-task osTestResults(type:Exec) {
-    executable = 'setup-files/scripts/openshift/os-test-results.sh'
-    args = [openshiftEnv]
-}
 
 task happyRobotTests(type:Exec) {
     workingDir 'robot-tests'

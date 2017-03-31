@@ -22,7 +22,7 @@ Resource          ../../../resources/defaultResources.robot
 Navigation to the Overview page
     [Tags]    HappyPath
     When the user navigates to the overview page of the Robot test application
-    Then the user should see the text in the page  Please provide Innovate UK with information about your project
+    Then the user should see the text in the page  Please provide information about your project.
     And the user should see the element            jQuery=h1:contains("Application overview")
 
 Review and submit button
@@ -66,9 +66,9 @@ User can print the application
 
 *** Keywords ***
 the applicant can see the overview page divided in three sections
-    the user should see the element  jQuery=#section-1 h2:contains("Project details")
-    the user should see the element  jQuery=#section-2 h2:contains("Application questions")
-    the user should see the element  jQuery=#section-6 h2:contains("Finances")
+    the user should see the element  jQuery=#section-184 h2:contains("Project details")
+    the user should see the element  jQuery=#section-185 h2:contains("Application questions")
+    the user should see the element  jQuery=#section-186 h2:contains("Finances")
 
 the user should get a new print window
     Select Window    Title=Print Application - Innovation Funding Service

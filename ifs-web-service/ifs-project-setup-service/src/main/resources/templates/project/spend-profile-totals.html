@@ -8,7 +8,7 @@
 <th:block th:insert="fragments/layout :: global-header" />
 
 
-<main id="content" class="no-grid" th:with="project=${model.project}">
+<main tabindex="-1" id="content" class="no-grid" th:with="project=${model.project}">
     <div class="grid-container">
         <th:block th:insert="fragments/layout :: main-content-start" />
 
@@ -40,7 +40,7 @@
             </dl>
         </div>
         <h2 class="heading-medium">Project - Spend profile</h2>
-        <p>This is the proposed spend profile for your project.</p>
+        <p>This is the spend profile for your project.</p>
     </div>
 
     <div class="spend-profile-table">
@@ -67,8 +67,9 @@
                 </thead>
                 <tbody>
                 <tr th:each="row : ${model.table.getMonthlyCostsPerOrganisationMap()}" class="form-group-row">
-                    <th scope="row" class="fix-left">
-                        <span th:text="${model.table.getOrganisationNameMap().get(row.key)}" />
+                    <th scope="row" class="fix-left" th:with="organisationName=${model.table.getOrganisationNameMap().get(row.key)}">
+                        <span th:text="${organisationName}" />
+                        <span th:if="${organisationName.equals(model.table.leadOrganisation.name)}"> (Lead)</span>
                     </th>
                     <td th:each="cost : ${row.value}" th:text="${#numbers.formatInteger(cost,1,'COMMA')}"/>
                     <td class="fix-right" th:text="${'&pound; '+#numbers.formatInteger(model.table.organisationToActualTotal.get(row.key),1,'COMMA')}" />

@@ -8,7 +8,7 @@
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main id="content">
+        <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
             <div th:include="fragments/layout :: header-sub"
                  th:with="linkTitle='Assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}"
@@ -77,12 +77,10 @@
 
                 <h2 class="heading-medium">Mileage rates</h2>
 
-                <p>(These rates eliminate any individual tax/NIC liability)</p>
+                <p class="hint">These rates eliminate any individual tax/NIC liability</p>
 
-                <dl class="standard-definition-list extra-margin-bottom">
-                    <dt>Up to 10,000 miles</dt>
-                    <dd>45p (flat rate not dependent on car engine size)</dd>
-                </dl>
+                <h3 class="heading-small">Up to 10,000 miles</h3>
+                <p>45p <span class="hint">flat rate not dependent on car engine size</span></p>
 
                 <p class="extra-margin">
                     <strong>Please make sure your travel claims, receipts and tickets are all submitted.</strong>

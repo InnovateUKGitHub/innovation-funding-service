@@ -8,7 +8,7 @@
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main id="content">
+        <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Your details',linkClass='link-back',linkUrl=@{/profile/details}" />
 
@@ -65,62 +65,6 @@
                                     data-maxlength-errormessage=#{validation.standard.lastname.length.max}" />
                 </div>
 
-                <div class="form-group" th:classappend="${#fields.hasErrors('gender')}? error">
-                    <fieldset>
-                        <legend>
-                            <span class="heading-small">Gender</span>
-                            <th:block th:if="${#fields.hasErrors('gender')}">
-                              <span class="error-message" th:each="err : ${#fields.errors('gender')}" th:text="${err}"/>
-                            </th:block>
-                        </legend>
-                        <label class="block-label selection-button-radio" th:each="gen : ${T(org.innovateuk.ifs.user.resource.Gender).values()}">
-                            <input th:field="*{gender}"
-                                   th:value="${gen}"
-                                   type="radio"
-                                   required="required"
-                                   th:attr="data-required-errormessage=#{validation.standard.gender.selectionrequired}" />
-                            <th:block th:text="${gen.displayName}" />
-                        </label>
-                    </fieldset>
-                </div>
-
-                <div class="form-group" th:classappend="${#fields.hasErrors('ethnicity')}? error">
-                    <fieldset>
-                        <legend>
-                            <span class="heading-small">Your ethnic group</span>
-                            <th:block th:if="${#fields.hasErrors('ethnicity')}">
-                              <span class="error-message" th:each="err : ${#fields.errors('ethnicity')}" th:text="${err}"/>
-                            </th:block>
-                        </legend>
-                        <label class="block-label selection-button-radio" th:each="eth : ${ethnicityOptions}">
-                            <input th:field="*{ethnicity}"
-                                   th:value="${eth.id}"
-                                   type="radio"
-                                   required="required"
-                                   th:attr="data-required-errormessage=#{validation.standard.ethnicity.selectionrequired}" />
-                            <th:block th:text="${eth.description}" />
-                        </label>
-                    </fieldset>
-                </div>
-
-                <div class="form-group" th:classappend="${#fields.hasErrors('disability')}? error">
-                    <fieldset>
-                        <legend>
-                            <span class="heading-small">Do you consider yourself disabled?</span>
-                            <th:block th:if="${#fields.hasErrors('disability')}">
-                                <span class="error-message" th:each="err : ${#fields.errors('disability')}" th:text="${err}" />
-                            </th:block>
-                        </legend>
-                        <label class="block-label selection-button-radio" th:each="dis : ${T(org.innovateuk.ifs.user.resource.Disability).values()}">
-                            <input th:field="*{disability}"
-                                   th:value="${dis}"
-                                   type="radio"
-                                   required="required"
-                                   th:attr="data-required-errormessage=#{validation.standard.disability.selectionrequired}" />
-                            <th:block th:text="${dis.displayName}" />
-                        </label>
-                    </fieldset>
-                </div>
 
                 <fieldset class="extra-margin">
                     <legend class="visuallyhidden">Address details</legend>

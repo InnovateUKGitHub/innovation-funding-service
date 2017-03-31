@@ -72,12 +72,16 @@
 
 <!-- =========================== Element: Application Title =========================== -->
 <th:block th:fragment="application-title (applicationId, applicationName) ">
-    <p class="subtitle" th:text="${applicationId} + ': ' + ${applicationName} "/>
+    <th:block th:with="noTitle=#{ifs.application.no_title}">
+        <p class="subtitle" th:text="${applicationId} + ': ' + ${#strings.isEmpty(applicationName) ? noTitle : applicationName} "/>
+    </th:block>
 </th:block>
 
 <!-- =========================== Element: Competition Title =========================== -->
 <th:block th:fragment="competition-title (competition) ">
-    <p class="subtitle" th:text="${competition.id} + ': ' + ${competition.name == null ? 'No competition title defined' : competition.name} "/>
+    <th:block th:with="noTitle=#{ifs.competition.no_title}">
+        <p class="subtitle" th:text="${competition.id} + ': ' + ${#strings.isEmpty(competition.name) ? noTitle : competition.name} "/>
+    </th:block>
 </th:block>
 
 <!-- =========================== Element: Project Title =========================== -->
@@ -176,15 +180,20 @@
 
 <!--  ========================== Element: Agree to application terms =============== -->
 <th:block th:fragment="application-agree-to-terms">
- 	<div th:class="${#fields.hasErrors('termsAgreed')}? 'form-block error':'form-block'">
-        <th:block th:if="${#fields.hasErrors('termsAgreed')}">
-            <span class="error-message"  th:each="err : ${#fields.errors('termsAgreed')}" th:text="${err}" />
-        </th:block>
-		<label class="block-label selection-button-checkbox" for="agree-terms-page">
-        	<input id="agree-terms-page" th:field="${form.termsAgreed}" type="checkbox" value="yes" data-switches-button-status="#mark-all-as-complete" />
-            As a member of this consortium I agree to the funding <a target="_blank" th:href="@{/application/terms-and-conditions}">terms and conditions</a> set out by Innovate UK.
-		</label>
-	</div>
+    <div class="form-group" th:classappend="${#fields.hasErrors('termsAgreed')} ? 'error'">
+        <fieldset>
+            <legend>
+                <span class="visuallyhidden">Terms and conditions</span>
+                <th:block th:if="${#fields.hasErrors('termsAgreed')}">
+                    <span class="error-message"  th:each="err : ${#fields.errors('termsAgreed')}" th:text="${err}" />
+                </th:block>
+            </legend>
+            <label class="block-label selection-button-checkbox" for="agree-terms-page">
+                <input id="agree-terms-page" th:field="${form.termsAgreed}" type="checkbox" value="yes" data-switches-button-status="#mark-all-as-complete" />
+                As a member of this consortium I agree to the <a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${model.application.currentCompetition.id})}">grant terms and conditions</a> set out by Innovate UK.
+            </label>
+        </fieldset>
+    </div>
 </th:block>
 
 <!--  ========================== Element: Agree to application terms =============== -->
@@ -196,7 +205,7 @@
         <label class="block-label selection-button-checkbox" for="agree-state-aid-page">
             <input id="agree-state-aid-page" th:field="${form.stateAidAgreed}" type="checkbox" value="yes" data-switches-button-status="#mark-all-as-complete" />
             By ticking this box you are accepting that the project costs for your organisation are eligible as defined in the
-            <a href="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance">Project Costs guidance</a>
+            <a href="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance">project costs guidance</a>
         </label>
     </div>
 </th:block>

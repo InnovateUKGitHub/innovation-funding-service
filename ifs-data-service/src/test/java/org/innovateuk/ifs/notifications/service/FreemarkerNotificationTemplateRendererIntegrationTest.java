@@ -36,12 +36,14 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
         Map<String, Object> templateArguments = asMap(
                 "applicationName", "My Application",
                 "competitionName", "Competition 123",
+                "competitionUrl", "123",
                 "inviteUrl", "http://acceptinvite.com",
                 "inviteOrganisationName", "Nomensa",
                 "leadOrganisation", "Empire Ltd",
                 "leadApplicant", "Steve Smith",
                 "leadApplicantTitle","Mr",
-                "leadApplicantEmail", "steve@empire.com"
+                "leadApplicantEmail", "steve@empire.com",
+                "sentByName", "steve@empire.com"
         );
 
         assertRenderedEmailTemplateContainsExpectedLines("invite_collaborator_text_plain.txt", templateArguments);
@@ -185,6 +187,19 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
         assertRenderedEmailTemplateContainsExpectedLines("invite_project_manager_text_plain.txt", templateArguments);
         assertRenderedEmailTemplateContainsExpectedLines("invite_project_manager_text_html.html", templateArguments);
     }
+
+    @Test
+    public void testSendSpendProfileAvailableEmail() throws URISyntaxException, IOException {
+
+        Map<String, Object> templateArguments = asMap(
+                "dashboardUrl", "https://ifs-local-dev/spend-profile"
+        );
+
+        assertRenderedEmailTemplateContainsExpectedLines("finance_contact_spend_profile_available_subject.txt", templateArguments);
+        assertRenderedEmailTemplateContainsExpectedLines("finance_contact_spend_profile_available_text_plain.txt", templateArguments);
+        assertRenderedEmailTemplateContainsExpectedLines("finance_contact_spend_profile_available_text_html.html", templateArguments);
+    }
+
 
     private void assertRenderedEmailTemplateContainsExpectedLines(String templateName, Map<String, Object> templateArguments) throws IOException, URISyntaxException {
 

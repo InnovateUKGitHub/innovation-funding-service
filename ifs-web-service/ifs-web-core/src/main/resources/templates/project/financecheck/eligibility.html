@@ -10,11 +10,11 @@
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main id="content">
+<main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
 
-    <div th:if="${summaryModel.isReadOnly()}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/partner-organisation/{organisationId}/finance-checks(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})},currentCompetition=null" />
-    <div th:unless="${summaryModel.isReadOnly()}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})},currentCompetition=null" />
+    <div th:if="${summaryModel.isExternalView()}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/partner-organisation/{organisationId}/finance-checks(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})},currentCompetition=null" />
+    <div th:unless="${summaryModel.isExternalView()}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})},currentCompetition=null" />
 
     <div class="page-title">
         <th:block th:insert="fragments/elements :: project-title (projectId=${summaryModel.projectId}, projectName=${summaryModel.projectName})" />
@@ -28,6 +28,12 @@
         <div class="success-alert">
             <p>The partner's finance eligibility has been approved by <span th:text="${summaryModel.getApproverName()}"/>, <span th:text="${#temporals.format(summaryModel.getApprovalDate(), 'd MMMM yyyy')}"/></p>
         </div>
+    </th:block>
+
+    <th:block th:unless="${summaryModel.isShowApprovalMessage()}">
+        <th:block th:if="${summaryModel.isExternalView()}">
+            <p>Only your organisation can see this level of detail. All members of your organisation can access and edit your finances. Your designated finance partner will be the main contact for queries. You will be consulted before any changes are approved.</p>
+        </th:block>
     </th:block>
 
     <h2 class="heading-medium">Finances Overview</h2>
@@ -61,77 +67,77 @@
     </div>
 
     <th:block th:unless="${summaryModel.usingJesFinances}">
-    <th:block th:if="${summaryModel.isReadOnly()}">
-        <h2 class="heading-medium">Detailed finances</h2>
-        <p>Changes made to your finances will be visible here. Please review this section carefully as you are responsible for the accuracy of any approved finances.</p>
-        <a th:href="@{/project/{projectId}/partner-organisation/{organisationId}/finance-checks/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}">View changes to finances</a>
-    </th:block>
-
-    <th:block th:unless="${summaryModel.isReadOnly()}">
-        <th:block th:unless="${summaryModel.isApproved()}">
-            <h2 class="heading-medium">Project finance overview</h2>
-            <p>These finances were initially submitted at the application stage. All saved changes to finances will be viewable by the applicants.</p>
-            <p>All potential changes must be discussed with the lead applicant. You can do this by raising queries through IFS.</p>
-            <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}">Review all changes to project finances</a>
+        <th:block th:if="${summaryModel.isExternalView()}">
+            <h2 class="heading-medium">Detailed finances</h2>
+            <p>Changes made to your finances will be visible here. Please review this section carefully as you are responsible for the accuracy of any approved finances.</p>
+            <p><a th:href="@{/project/{projectId}/partner-organisation/{organisationId}/finance-checks/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}">View changes to finances</a></p>
         </th:block>
 
-        <th:block th:if="${summaryModel.isApproved()}">
-            <h2 class="heading-medium">Detailed finances</h2>
-            <p>These finances were submitted by the applicant during the application stage. They include all changes made during the eligibility checks.</p>
-            <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}">View changes to finances</a>
+        <th:block th:unless="${summaryModel.isExternalView()}">
+            <th:block th:unless="${summaryModel.isApproved()}">
+                <h2 class="heading-medium">Project finance overview</h2>
+                <p>These finances were initially submitted at the application stage. All saved changes to finances will be viewable by the applicants.</p>
+                <p>All potential changes must be discussed with the lead applicant. You can do this by raising queries through IFS.</p>
+                <p><a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}">Review all changes to project finances</a></p>
+            </th:block>
+
+            <th:block th:if="${summaryModel.isApproved()}">
+                <h2 class="heading-medium">Detailed finances</h2>
+                <p>These finances were submitted by the applicant during the application stage. They include all changes made during the eligibility checks.</p>
+                <p><a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}">View changes to finances</a></p>
+            </th:block>
         </th:block>
 
         <section class="collapsible" th:each="subSection, subSectionstats : ${subSections.get(currentSectionId)}" th:if="${subSections !=null}">
             <h3>
                 <th:block th:text="${subSection.getName()}"/>
                 <span class="finance-total" th:attr="data-mirror='#section-total-'+${subSection.id}"></span>
-                <span class="finance-total" data-calculation-format="percentage" data-calculation-operations="/,*"
+                <span th:unless="${summaryModel.isExternalView()}" class="finance-total" data-calculation-format="percentage" data-calculation-operations="/,*"
                       th:attr="data-mirror='#section-percentage-'+${subSection.id},data-calculation-fields='100, #total-cost, #section-total-'+${subSection.id}"></span>
 
-                <span class="finance-total" th:if="${subSection.name == 'Overhead costs'}">(<span data-calculation-format="percentage" data-calculation-operations="/,*" data-calculation-fields="[data-current-overhead-total], [class~=labour-total] ,100"></span> of Labour)</span>
+                <span class="finance-total" th:if="${subSection.name == 'Overhead costs'}">(<span data-calculation-format="percentage" data-calculation-on-pageload="" data-calculation-operations="/,*" data-calculation-fields="[data-current-overhead-total], [class~=labour-total] ,100"></span> of Labour)</span>
             </h3>
             <div class="collapsible-content"
-                 th:with="viewmode=${summaryModel.isApproved()} ? 'approved' : (${param.section != null} ? (${param.section[0]} == ${subSection.id} ? 'edit' : 'readonly') : 'readonly')">
+                 th:with="viewmode=${summaryModel.isApproved() or summaryModel.isExternalView()} ? 'approved' : (${param.section != null} ? (${param.section[0]} == ${subSection.id} ? 'edit' : 'readonly') : 'readonly')">
                 <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}"
                       enctype="multipart/form-data">
                     <th:block th:each="question : ${subsectionQuestions.get(subSection.id)}">
                         <th:block th:each="formInput, status : ${subSectionQuestionFormInputs.get(question.id)}">
 
-                                <th:block th:if="${formInput.type.isDisplayableFinanceType(model.finance.financeView) and model.finance.hasOrganisationFinance}"
-                                          th:with="organisationFinance=(${model.finance.organisationFinance}), organisationGrantClaimPercentage=(${model.finance.organisationGrantClaimPercentage}),
+                            <th:block th:if="${formInput.type.isDisplayableFinanceType(model.finance.financeView) and model.finance.hasOrganisationFinance}"
+                                      th:with="organisationFinance=(${model.finance.organisationFinance}), organisationGrantClaimPercentage=(${model.finance.organisationGrantClaimPercentage}),
                                                            organisationGrantClaimPercentageId=(${model.finance.organisationGrantClaimPercentageId}), organisationFinanceTotal=(${model.finance.organisationFinanceTotal}),
                                                            organisationFinanceSize=(${model.finance.organisationFinanceSize})">
-                                    <!--/*
-                                        viewmode=approved; generates the inputs as text,
-                                        viewmode=readonly, generates readonly inputs,
-                                        viewmode=edit, generates the editable inputs + repeating row elements)
-                                    */-->
-                                    <th:block th:replace="project/financecheck/fragments/finance :: ${formInput.type.nameLower} (viewmode=${viewmode})" th:with="formInputIndex=(${status.index})" />
-                                </th:block>
+                                <!--/*
+                                    viewmode=approved; generates the inputs as text,
+                                    viewmode=readonly, generates readonly inputs,
+                                    viewmode=edit, generates the editable inputs + repeating row elements)
+                                */-->
+                                <th:block th:replace="project/financecheck/fragments/finance :: ${formInput.type.nameLower} (viewmode=${viewmode})" th:with="formInputIndex=(${status.index})" />
                             </th:block>
                         </th:block>
-                        <div class="alignright-button" th:unless="${summaryModel.isReadOnly()}">
-                            <a th:href="@{?section={sectionId}(sectionId=${subSection.id})}" th:if="${viewmode=='readonly'}" class="button button-secondary">Edit</a>
-                            <button th:if="${viewmode=='edit'}" name="save-eligibility" class="button">Save</button>
-                        </div>
-                    </form>
-                </div>
-            </section>
-            <div class="grid-row total-cost">
-                <div class="column-half">
-                    <label for="total-cost" class="heading-medium">Total project costs</label>
-                </div>
-                <div class="column-half alignright">
-                    <input type="text"
-                           id="total-cost"
-                           readonly="readonly"
-                           class="heading-medium width-full alignright"
-                           data-calculation-fields="[id*=section-total]"
-                           data-calculation-operations="+"
-                           th:value="'£ ' + ${#numbers.formatDecimal(model.finance.organisationFinanceTotal, 0, 'COMMA', 0, 'POINT')}"/>
-                </div>
+                    </th:block>
+                    <div class="alignright-button" th:unless="${summaryModel.isExternalView()}">
+                        <a th:href="@{?section={sectionId}(sectionId=${subSection.id})}" th:if="${viewmode=='readonly'}" class="button button-secondary">Edit</a>
+                        <button th:if="${viewmode=='edit'}" name="save-eligibility" class="button">Save</button>
+                    </div>
+                </form>
             </div>
-        </th:block>
+        </section>
+        <div class="grid-row total-cost">
+            <div class="column-half">
+                <label for="total-cost" class="heading-medium">Total project costs</label>
+            </div>
+            <div class="column-half alignright">
+                <input type="text"
+                       id="total-cost"
+                       readonly="readonly"
+                       class="heading-medium width-full alignright"
+                       data-calculation-fields="[id*=section-total]"
+                       data-calculation-operations="+"
+                       th:value="'£ ' + ${#numbers.formatDecimal(model.finance.organisationFinanceTotal, 0, 'COMMA', 0, 'POINT')}"/>
+            </div>
+        </div>
     </th:block>
 
     <th:block th:if="${summaryModel.usingJesFinances}">
@@ -148,12 +154,12 @@
     <input type="hidden" id="cacheTest" value="" />
     <input type="hidden" id="projectId" th:value="${summaryModel.projectId}" />
     <input type="hidden" id="organisationId" th:value="${summaryModel.organisationId}" />
-    <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${eligibilityForm}" th:unless="${summaryModel.isReadOnly()}">
+    <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${eligibilityForm}" th:unless="${summaryModel.isExternalView()}">
 
         <th:block th:unless="${summaryModel.isApproved()}">
             <h2 class="heading-medium">Approve eligibility</h2>
             <p>After making any necessary changes, the eligible costs should be approved.</p>
-            <p>Make sure the applicant has reviewed and understood all changes before you approve.</p>
+            <p>Make sure the partner has reviewed and understood all changes before you approve.</p>
             <div class="form-group">
                 <label class="block-label selection-button-checkbox" for="project-eligible" data-target="add-rag-rating">
                     <input  id="project-eligible" type="checkbox" th:field="*{confirmEligibilityChecked}" data-switches-button-status="#confirm-button" />These funding costs have been reviewed and are acceptable
@@ -175,7 +181,7 @@
         <button th:if="${summaryModel.showSaveAndContinueButton}" class="button-secondary" name="save-and-continue">Return to finance checks</button>
         <a th:if="${summaryModel.showBackToFinanceCheckButton}" class="button button-secondary" th:href="@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})}">Return to finance checks</a>
     </form>
-    <div class="extra-margin" th:unless="${summaryModel.isReadOnly()}">
+    <div class="extra-margin" th:unless="${summaryModel.isExternalView()}">
         <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId},query_section=${T(org.innovateuk.threads.resource.FinanceChecksSectionType).ELIGIBILITY.name()})}" class="button button-secondary">Queries</a>
         <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/note(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}" class="button button-secondary">Notes</a>
     </div>

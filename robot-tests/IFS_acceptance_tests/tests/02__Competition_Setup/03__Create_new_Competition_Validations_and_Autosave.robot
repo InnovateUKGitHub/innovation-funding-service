@@ -24,6 +24,7 @@ Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
+Resource          CompAdmin_Commons.robot
 
 *** Test Cases ***
 Initial details: server-side validations
@@ -31,10 +32,10 @@ Initial details: server-side validations
     ...
     ...    IFUND-3888
     [Tags]    HappyPath
-    Given the user clicks the button/link    id=section-3
+    Given the user navigates to the page   ${CA_UpcomingComp}
     And the user clicks the button/link    jQuery=.button:contains("Create competition")
     And The user clicks the button/link    link=Initial details
-    When the user clicks the button/link    jQuery=.button:contains("Done")
+    When the user clicks the button/link   jQuery=.button:contains("Done")
     Then the user should see an error    Please enter a title.
     And the user should see an error    Please select a competition type.
     And the user should see an error    Please select an innovation sector.
@@ -57,7 +58,7 @@ Initial details: client-side validations
     Then the user should not see the error any more    Please select a competition type.
     When the user selects the option from the drop-down menu    Health and life sciences    id=innovationSectorCategoryId
     Then the user should not see the error any more    Please select an innovation sector.
-    When the user selects the option from the drop-down menu    Advanced Therapies    id=innovationAreaCategoryId-0
+    When the user selects the option from the drop-down menu    Advanced therapies    id=innovationAreaCategoryId-0
     Then the user should not see the error any more    Please select an innovation area.
     When the user enters text to a text field    id=openingDateDay    01
     #Then the user should not see the error any more    Please enter an opening day.
@@ -348,7 +349,7 @@ the user should see the correct values in the initial details form
     Should Be Equal    ${input_value}    Validations Test
     Page Should Contain    Programme
     Page Should Contain    Health and life sciences
-    Page Should Contain    Advanced Therapies
+    Page Should Contain    Advanced therapies
     ${input_value} =    Get Value    id=openingDateDay
     Should Be Equal As Strings    ${input_value}    1
     ${input_value} =    Get Value    Id=openingDateMonth
@@ -420,7 +421,7 @@ The user enters valid data in the initial details
     Given the user enters text to a text field    id=title    Validations Test
     And the user selects the option from the drop-down menu    Programme    id=competitionTypeId
     And the user selects the option from the drop-down menu    Health and life sciences    id=innovationSectorCategoryId
-    And the user selects the option from the drop-down menu    Advanced Therapies    id=innovationAreaCategoryId-0
+    And the user selects the option from the drop-down menu    Advanced therapies    id=innovationAreaCategoryId-0
     And the user enters text to a text field    id=openingDateDay    01
     And the user enters text to a text field    Id=openingDateMonth    12
     And the user enters text to a text field    id=openingDateYear    2017

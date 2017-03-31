@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.thread.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.project.finance.controller.ProjectFinanceQueriesController;
+import org.innovateuk.ifs.project.financecheck.controller.ProjectFinanceQueriesController;
 import org.innovateuk.threads.resource.FinanceChecksSectionType;
 import org.innovateuk.threads.resource.PostResource;
 import org.innovateuk.threads.resource.QueryResource;
@@ -48,7 +48,7 @@ public class ProjectFinanceQueriesControllerDocumentation extends BaseController
         final Long queryId = 3L;
         List<PostResource> posts = asList(new PostResource(97L, newUserResource().withId(7L).build(), "Post message", asList(), now()));
         final QueryResource query = new QueryResource(3L, 22L, posts, FinanceChecksSectionType.VIABILITY, "New query title", true, now());
-        when(projectFinanceQueriesService.findOne(queryId)).thenReturn(serviceSuccess(query));
+        when(financeCheckQueriesService.findOne(queryId)).thenReturn(serviceSuccess(query));
 
         mockMvc.perform(get("/project/finance/queries/{queryId}", queryId))
                 .andExpect(status().isOk())
@@ -63,7 +63,7 @@ public class ProjectFinanceQueriesControllerDocumentation extends BaseController
         final Long contextId = 22L;
         List<PostResource> posts = asList(new PostResource(33L, newUserResource().withId(7L).build(), "Post message", asList(), now()));
         final QueryResource query = new QueryResource(3L, 22L, posts, FinanceChecksSectionType.VIABILITY, "New query title", true, now());
-        when(projectFinanceQueriesService.findAll(contextId)).thenReturn(serviceSuccess(asList(query)));
+        when(financeCheckQueriesService.findAll(contextId)).thenReturn(serviceSuccess(asList(query)));
 
         mockMvc.perform(get("/project/finance/queries/all/{projectFinanceId}", contextId))
                 .andExpect(status().isOk())
@@ -78,7 +78,7 @@ public class ProjectFinanceQueriesControllerDocumentation extends BaseController
     public void addPost() throws Exception {
         Long queryId = 22L;
         PostResource post = new PostResource(null, newUserResource().withId(7L).build(), "Post message", asList(), null);
-        when(projectFinanceQueriesService.addPost(post, queryId)).thenReturn(serviceSuccess());
+        when(financeCheckQueriesService.addPost(post, queryId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/finance/queries/{queryId}/post", queryId)
                 .contentType(APPLICATION_JSON)
@@ -93,7 +93,7 @@ public class ProjectFinanceQueriesControllerDocumentation extends BaseController
         List<PostResource> posts = asList(new PostResource(null, newUserResource().withId(7L).build(), "Post message", asList(), null));
         final QueryResource query = new QueryResource(null, 22L, posts, FinanceChecksSectionType.VIABILITY, "New query title", false, null);
 
-        when(projectFinanceQueriesService.create(query)).thenReturn(serviceSuccess(55L));
+        when(financeCheckQueriesService.create(query)).thenReturn(serviceSuccess(55L));
 
         mockMvc.perform(MockMvcRequestBuilders.post("/project/finance/queries")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -105,7 +105,7 @@ public class ProjectFinanceQueriesControllerDocumentation extends BaseController
 
     @Override
     public void setupMockMvc() {
-        controller = new ProjectFinanceQueriesController(projectFinanceQueriesService);
+        controller = new ProjectFinanceQueriesController(financeCheckQueriesService);
         super.setupMockMvc();
     }
 

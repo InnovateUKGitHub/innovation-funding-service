@@ -6,7 +6,7 @@ import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResour
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckOverviewResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
-import org.innovateuk.ifs.project.finance.transactional.FinanceCheckService;
+import org.innovateuk.ifs.project.financecheck.service.FinanceCheckService;
 import org.innovateuk.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.user.resource.RoleResource;
@@ -23,8 +23,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStatusResourceBuilder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.UserRoleType.FINANCE_CONTACT;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.verify;
@@ -60,7 +58,7 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
         assertAccessDenied(
                 () -> classUnderTest.getFinanceCheckOverview(1L),
                 () -> {
-                    verify(projectFinancePermissionRules).financeContactsCanSeeTheProjectFinanceOverviewsForTheirProject(isA(Long.class), isA(UserResource.class));
+                    verify(projectFinancePermissionRules).partnersCanSeeTheProjectFinanceOverviewsForTheirProject(isA(Long.class), isA(UserResource.class));
                     verify(projectFinancePermissionRules).internalUsersCanSeeTheProjectFinanceOverviewsForAllProjects(isA(Long.class), isA(UserResource.class));
                 }
         );
@@ -127,6 +125,10 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
 
         @Override
         public ServiceResult<FinanceCheckEligibilityResource> getFinanceCheckEligibilityDetails(Long projectId, Long organisationId) { return serviceSuccess(newFinanceCheckEligibilityResource().build()); }
+
+        @Override public ServiceResult<Long> getTurnoverByOrganisationId(final Long applicationId, Long organisationId) { return null; }
+
+        @Override public ServiceResult<Long> getHeadCountByOrganisationId(final Long applicationId, Long organisationId) { return null; }
 
     }
 }

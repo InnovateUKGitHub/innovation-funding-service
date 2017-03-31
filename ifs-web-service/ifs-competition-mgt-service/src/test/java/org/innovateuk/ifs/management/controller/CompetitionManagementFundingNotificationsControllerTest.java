@@ -5,6 +5,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.LambdaMatcher;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
+import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.NotificationResource;
 import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
@@ -28,6 +29,7 @@ import org.springframework.http.MediaType;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.application.builder.ApplicationSummaryResourceBuilder.newApplicationSummaryResource;
 import static org.innovateuk.ifs.application.resource.FundingDecision.FUNDED;
@@ -79,6 +81,8 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
         int totalPages = pageNumber + 2;
         int totalElements = totalPages * (pageNumber + 1);
         String filter = "";
+        Optional<Boolean> sendFilter = Optional.empty();
+        Optional<FundingDecision> fundingFilter = Optional.empty();
         long changesSinceLastNotify = 10;
         String queryParams = "";
         // Mock setup
@@ -87,7 +91,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
 
         List<ApplicationSummaryResource> applications = newApplicationSummaryResource().with(uniqueIds()).build(pageSize);
         ApplicationSummaryPageResource applicationSummaryPageResource = new ApplicationSummaryPageResource(totalElements, totalPages, applications, pageNumber, pageSize);
-        when(applicationSummaryService.getWithFundingDecisionApplications(COMPETITION_ID, sortField, pageNumber, pageSize, filter)).thenReturn(applicationSummaryPageResource);
+        when(applicationSummaryService.getWithFundingDecisionApplications(COMPETITION_ID, sortField, pageNumber, pageSize, filter, sendFilter, fundingFilter)).thenReturn(applicationSummaryPageResource);
 
         CompetitionFundedKeyStatisticsResource keyStatistics = newCompetitionFundedKeyStatisticsResource().build();
         when(competitionKeyStatisticsRestServiceMock.getFundedKeyStatisticsByCompetition(COMPETITION_ID)).thenReturn(restSuccess(keyStatistics));
@@ -95,7 +99,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
 
         // Expected values to match against
         CompetitionInFlightStatsViewModel keyStatisticsModel = competitionInFlightStatsModelPopulator.populateStatsViewModel(competitionResource);
-        ManageFundingApplicationViewModel model = new ManageFundingApplicationViewModel(applicationSummaryPageResource, keyStatisticsModel, new PaginationViewModel(applicationSummaryPageResource, queryParams), sortField, filter, COMPETITION_ID, competitionResource.getName());
+        ManageFundingApplicationViewModel model = new ManageFundingApplicationViewModel(applicationSummaryPageResource, keyStatisticsModel, new PaginationViewModel(applicationSummaryPageResource, queryParams), sortField, COMPETITION_ID, competitionResource.getName());
 
 
         // Method under test
@@ -120,7 +124,6 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
 
     private Matcher<ManageFundingApplicationViewModel> manageFundingApplicationViewModelMatcher(ManageFundingApplicationViewModel toMatch) {
         return new LambdaMatcher<>(match -> {
-            assertEquals(toMatch.getFilter(), match.getFilter());
             assertEquals(toMatch.getCompetitionName(), match.getCompetitionName());
             assertEquals(toMatch.getSortField(), match.getSortField());
             assertEquals(toMatch.getCompetitionId(), match.getCompetitionId());
@@ -144,7 +147,7 @@ public class CompetitionManagementFundingNotificationsControllerTest extends Bas
         List<Long> applicationsIds = Arrays.asList(APPLICATION_ID_ONE);
         List<ApplicationSummaryResource> resourceList = Arrays.asList(new ApplicationSummaryResource());
 
-        SendNotificationsViewModel viewModel = new SendNotificationsViewModel(resourceList, null, COMPETITION_ID, "compName");
+        SendNotificationsViewModel viewModel = new SendNotificationsViewModel(resourceList, 0L, 0L, 0L, COMPETITION_ID, "compName");
         when(sendNotificationsModelPopulator.populate(COMPETITION_ID, applicationsIds)).thenReturn(viewModel);
         mockMvc.perform(get("/competition/{competitionId}/funding/send?application_ids={applicationId}", COMPETITION_ID, APPLICATION_ID_ONE))
                 .andExpect(status().isOk())

@@ -8,7 +8,7 @@
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main id="content">
+        <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" />
 
@@ -56,7 +56,7 @@
                 <dd th:text="${model.innovationArea}">Agriculture and food</dd>
             </dl>
 
-            <p class="extra-margin extra-margin-bottom">Choose a tab to find, invite and assign assessors to one or more applications.</p>
+            <p class="extra-margin extra-margin-bottom">Choose a tab to find, invite and see an overview of assessors.</p>
 
             <ul class="inline-nav">
                 <li class="not-selected">
@@ -79,65 +79,51 @@
 
             <form method="GET" th:object="${filterForm}">
                 <div class="search-filters">
-                    <div class="grid-row">
-                        <!--/*
-                        <div class="column-third">
-                            <div class="form-group">
-                                <label for="filterInnovationType">Type</label>
-                                <select name="filterInnovationType" id="filterInnovationType" class="form-control">
-                                    <option selected="selected">Any</option>
-                                </select>
+                    <fieldset>
+                        <legend class="heading-medium">Filter assessors</legend>
+                        <div class="grid-row">
+                            <div class="column-third">
+                                <div class="form-group">
+                                    <label for="filterInnovationArea">Innovation area</label>
+                                    <select name="innovationArea" id="filterInnovationArea" class="form-control" th:field="*{innovationArea}">
+                                        <option value="">Any</option>
+                                        <option th:each="innovationArea : ${model.innovationAreaOptions}"
+                                                th:value="${innovationArea.id}"
+                                                th:text="${innovationArea.name}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="column-third">
+                                 <div class="form-group">
+                                     <label class="form-label" for="filterStatus">Status</label>
+                                     <select name="status" id="filterStatus" class="form-control" th:field="*{status}">
+                                         <option value="">All</option>
+                                         <option value="ACCEPTED">Invite accepted</option>
+                                         <option value="PENDING">Invite sent</option>
+                                         <option value="REJECTED">Invite declined</option>
+                                     </select>
+                                 </div>
+                            </div>
+                            <div class="column-third">
+                                 <div class="form-group">
+                                     <label class="form-label" for="filterContract">Contract and DOI</label>
+                                     <select name="compliant" id="filterContract" class="form-control" th:field="*{compliant}">
+                                         <option value="">Show all</option>
+                                         <option value="1">Yes</option>
+                                         <option value="0">No</option>
+                                     </select>
+                                 </div>
                             </div>
                         </div>
-                        */-->
-
-                        <div class="column-third">
-                            <div class="form-group">
-                                <label for="filterInnovationArea">Innovation area</label>
-                                <select name="innovationArea" id="filterInnovationArea" class="form-control" th:field="*{innovationArea}">
-                                    <option value="">Any</option>
-                                    <option th:each="innovationArea : ${model.innovationAreaOptions}"
-                                            th:value="${innovationArea.id}"
-                                            th:text="${innovationArea.name}"></option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="column-third">
-                             <div class="form-group">
-                                 <label class="form-label" for="filterStatus">Status</label>
-                                 <select name="status" id="filterStatus" class="form-control" th:field="*{status}">
-                                     <option value="">All</option>
-                                     <option value="ACCEPTED">Invite accepted</option>
-                                     <option value="PENDING">Invite sent</option>
-                                     <option value="REJECTED">Invite declined</option>
-                                 </select>
-                             </div>
-                        </div>
-                    </div>
+                   </fieldset>
 
                     <div class="grid-row">
-                        <!--/*
-                        <div class="column-third">
-                             <div class="form-group">
-                                 <label class="form-label" for="filterKeyword">Keyword</label>
-                                 <input type="text" class="form-control" id="filterKeyword" name="filterKeyword" />
-                             </div>
-                        </div>
-                        */-->
-
-                        <div class="column-third">
-                             <label class="form-label" for="filterContract">Contract and DOI</label>
-                             <select name="compliant" id="filterContract" class="form-control" th:field="*{compliant}">
-                                 <option value="">Show all</option>
-                                 <option value="1">Yes</option>
-                                 <option value="0">No</option>
-                             </select>
+                        <div class="column-half">
+                            <a href="?page=0" class="button button-clear">Clear filters</a>
                         </div>
 
-                        <div class="column-third alignright">
-                            <a href="?page=0" class="button button-clear" type="reset">Clear filters</a>
-                            <button class="button" type="submit">Filter</button>
+                        <div class="column-half alignright">
+                            <button class="button no-margin" type="submit">Filter</button>
                         </div>
                     </div>
                 </div>

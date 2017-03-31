@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.registration;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.address.resource.AddressResource;
@@ -14,6 +15,7 @@ import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
+import org.innovateuk.ifs.registration.viewmodel.OrganisationAddressViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
@@ -34,7 +36,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -49,8 +50,8 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.OPERATING;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGISTERED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
-import static org.innovateuk.ifs.invite.service.InviteServiceImpl.INVITE_HASH;
-import static org.innovateuk.ifs.invite.service.InviteServiceImpl.ORGANISATION_TYPE;
+import static org.innovateuk.ifs.registration.AbstractAcceptInviteController.INVITE_HASH;
+import static org.innovateuk.ifs.registration.AbstractAcceptInviteController.ORGANISATION_TYPE;
 
 
 /**
@@ -141,16 +142,10 @@ public class OrganisationCreationController {
         cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
         model.addAttribute(ORGANISATION_FORM, organisationForm);
 
+        model.addAttribute("isLeadApplicant", organisationTypeIsChosenByDefault(request));
         model.addAttribute("searchLabel",getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchLabel",  request.getLocale()));
         model.addAttribute("searchHint", getMessageByOrganisationType(organisationForm.getOrganisationTypeEnum(), "SearchHint",  request.getLocale()));
 
-        if(OrganisationTypeEnum.BUSINESS.equals(organisationForm.getOrganisationTypeEnum()) ||
-                OrganisationTypeEnum.ACADEMIC.equals(organisationForm.getOrganisationTypeEnum())
-                ){
-            model.addAttribute("searchEnabled", true);
-        }else{
-            model.addAttribute("searchEnabled", false);
-        }
         return TEMPLATE_PATH + "/" + FIND_ORGANISATION;
     }
 
@@ -159,7 +154,7 @@ public class OrganisationCreationController {
         try{
             searchLabel = messageSource.getMessage(String.format("registration.%s.%s", orgTypeEnum.toString(), textKey), null, locale);
         }catch(NoSuchMessageException e){
-            LOG.error(e);
+            LOG.debug(e);
             searchLabel = messageSource.getMessage(String.format("registration.DEFAULT.%s", textKey), null, locale);
         }
         return searchLabel;
@@ -171,7 +166,6 @@ public class OrganisationCreationController {
 
         if (StringUtils.isNotBlank(organisationFormJson)) {
             organisationForm = JsonUtil.getObjectFromJson(organisationFormJson, OrganisationCreationForm.class);
-            addOrganisationType(organisationForm, request);
             bindingResult = new BeanPropertyBindingResult(organisationForm, ORGANISATION_FORM);
 
             if(organisationForm.getAddressForm().isTriedToSearch() && isBlank(organisationForm.getAddressForm().getPostcodeInput())) {
@@ -185,9 +179,10 @@ public class OrganisationCreationController {
             organisationFormValidate(organisationForm, bindingResult, addressBindingResult);
 
             searchOrganisation(organisationForm);
-        } else {
-            addOrganisationType(organisationForm, request);
         }
+
+        addOrganisationType(organisationForm, request);
+
         return organisationForm;
     }
 
@@ -228,6 +223,16 @@ public class OrganisationCreationController {
             }
         }
         return organisationType;
+    }
+
+    private boolean organisationTypeIsChosenByDefault(HttpServletRequest request) {
+        String organisationTypeJson = cookieUtil.getCookieValue(request, ORGANISATION_TYPE);
+
+        if(StringUtils.isNotBlank(organisationTypeJson)){
+            OrganisationTypeForm organisationTypeForm = JsonUtil.getObjectFromJson(organisationTypeJson, OrganisationTypeForm.class);
+            return organisationTypeForm.isSelectedByDefault();
+        }
+        return false;
     }
 
     private void organisationFormValidate(@Valid @ModelAttribute(ORGANISATION_FORM) OrganisationCreationForm organisationForm, BindingResult bindingResult, BindingResult addressBindingResult) {
@@ -273,7 +278,8 @@ public class OrganisationCreationController {
                                           HttpServletRequest request, HttpServletResponse response) {
         addOrganisationType(organisationForm, request);
         organisationForm.setOrganisationSearching(false);
-        organisationForm.setManualEntry(true);
+        boolean currentManualEntryValue = organisationForm.isManualEntry();
+        organisationForm.setManualEntry(!currentManualEntryValue);
         cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
         return "redirect:/organisation/create/" + FIND_ORGANISATION;
     }
@@ -302,7 +308,7 @@ public class OrganisationCreationController {
 
         cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
         model.addAttribute(ORGANISATION_FORM, organisationForm);
-
+        model.addAttribute("model", new OrganisationAddressViewModel(organisationForm.getOrganisationType()));
 
         if (OrganisationTypeEnum.BUSINESS.getOrganisationTypeId().equals(organisationForm.getOrganisationType().getId())) {
             return TEMPLATE_PATH + "/" + CONFIRM_SELECTED_ORGANISATION;
@@ -341,6 +347,8 @@ public class OrganisationCreationController {
 
         cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
         model.addAttribute(ORGANISATION_FORM, organisationForm);
+        model.addAttribute("model", new OrganisationAddressViewModel(organisationForm.getOrganisationType()));
+
         if (OrganisationTypeEnum.BUSINESS.getOrganisationTypeId().equals(organisationForm.getOrganisationType().getId())) {
             return TEMPLATE_PATH + "/" + CONFIRM_SELECTED_ORGANISATION;
         } else {
@@ -364,6 +372,7 @@ public class OrganisationCreationController {
 
         cookieUtil.saveToCookie(response, ORGANISATION_FORM, JsonUtil.getSerializedObject(organisationForm));
         model.addAttribute(ORGANISATION_FORM, organisationForm);
+        model.addAttribute("model", new OrganisationAddressViewModel(organisationForm.getOrganisationType()));
 
         if (OrganisationTypeEnum.BUSINESS.getOrganisationTypeId().equals(organisationForm.getOrganisationType().getId())) {
             return TEMPLATE_PATH + "/" + CONFIRM_SELECTED_ORGANISATION;
@@ -482,6 +491,7 @@ public class OrganisationCreationController {
         // when user comes to this page, set the organisationTypeForm, and redirect.
         OrganisationTypeForm organisationTypeForm = new OrganisationTypeForm();
         organisationTypeForm.setOrganisationType(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId());
+        organisationTypeForm.setSelectedByDefault(true);
         String orgTypeForm = JsonUtil.getSerializedObject(organisationTypeForm);
         cookieUtil.saveToCookie(response, ORGANISATION_TYPE, orgTypeForm);
         return "redirect:" + BASE_URL + "/" + FIND_ORGANISATION;
@@ -561,6 +571,5 @@ public class OrganisationCreationController {
         }
         return input;
     }
-
 
 }

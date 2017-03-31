@@ -3,7 +3,7 @@ package org.innovateuk.ifs.thread.attachment.security;
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.service.FileAndContents;
-import org.innovateuk.ifs.project.finance.security.AttachmentPermissionsRules;
+import org.innovateuk.ifs.project.financecheck.security.AttachmentPermissionsRules;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
 import org.innovateuk.ifs.threads.attachments.security.AttachmentLookupStrategy;
@@ -13,7 +13,6 @@ import org.innovateuk.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.threads.resource.QueryResource;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -47,7 +46,9 @@ public class ProjectFinanceAttachmentServiceSecurityTest extends BaseServiceSecu
         assertAccessDenied(
                 () -> classUnderTest.upload("application.pdf", "3234", "filename.pdf", 77L, null),
                 () -> {
-                    verify(attachmentPermissionsRules).onlyProjectFinanceAndFinanceContactCanUploadAttachments(isA(ProjectResource.class), isA(UserResource.class));
+                    verify(attachmentPermissionsRules).projectFinanceCanUploadAttachments(isA(ProjectResource.class), isA(UserResource.class));
+                    verify(attachmentPermissionsRules).projectPartnersCanUploadAttachments(isA(ProjectResource.class), isA(UserResource.class));
+
                     verifyNoMoreInteractions(attachmentPermissionsRules);
                 });
     }

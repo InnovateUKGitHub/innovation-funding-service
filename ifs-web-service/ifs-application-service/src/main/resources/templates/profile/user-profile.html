@@ -8,7 +8,7 @@
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main id="content">
+<main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}" />
 
@@ -33,12 +33,6 @@
     <p>
         <span th:text="${model.name}" th:remove="tag" />
     </p>
-    <h3 class="heading-small">Gender</h3>
-    <p th:text="${model.gender}" />
-    <h3 class="heading-small">Ethnicity</h3>
-    <p th:text="${model.ethnicity}" />
-    <h3 class="heading-small">Disability</h3>
-    <p th:text="${model.disability}" />
     <h3 class="heading-small">Phone number</h3>
     <p th:text="${model.phoneNumber}" />
     <h3 class="heading-small">Email address</h3>

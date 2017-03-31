@@ -9,10 +9,10 @@ GLUSTER_2_HOST=ip-10-0-0-64.eu-west-2.compute.internal
 DISK_NUM=$1
 
 # create gluster volume
-ssh -A -t -t centos@${GLUSTER_1} sudo mkdir -p /data/brick1/gv${DISK_NUM}
-ssh -A -t -t centos@${GLUSTER_2} sudo mkdir -p /data/brick1/gv${DISK_NUM}
+ssh -A -t -t centos@${GLUSTER_1} sudo mkdir -p /data/brick2/gv${DISK_NUM}
+ssh -A -t -t centos@${GLUSTER_2} sudo mkdir -p /data/brick2/gv${DISK_NUM}
 
-ssh -A -t -t centos@${GLUSTER_1} sudo gluster volume create gv${DISK_NUM} replica 2 ${GLUSTER_1_HOST}:/data/brick1/gv${DISK_NUM} ${GLUSTER_2_HOST}:/data/brick1/gv${DISK_NUM}
+ssh -A -t -t centos@${GLUSTER_1} sudo gluster volume create gv${DISK_NUM} replica 2 ${GLUSTER_1_HOST}:/data/brick2/gv${DISK_NUM} ${GLUSTER_2_HOST}:/data/brick2/gv${DISK_NUM}
 ssh -A -t -t centos@${GLUSTER_1} sudo gluster volume start gv${DISK_NUM}
 
 

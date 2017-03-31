@@ -8,10 +8,7 @@ the user selects the checkbox
     Execute Javascript    jQuery('form label a').contents().unwrap();    # we cannot click the checkbox itself as it is hidden, however if we click the label it will click the anchor in the label, therefore I remove the <a> before submit, but keep the text
     Run Keyword If    '${status}' == 'PASS'    Click Element    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label
     # Error checking
-    Page Should Not Contain    Error
-    Page Should Not Contain    something went wrong
-    Page Should Not Contain    Page or resource not found
-    Page Should Not Contain    You do not have the necessary permissions for your request
+    the user should not see an error in the page
     # Header checking (INFUND-1892)
     Element Should Be Visible    id=global-header
     Page Should Contain    BETA
@@ -22,10 +19,7 @@ the user unselects the checkbox
     Execute Javascript    jQuery('form label a').contents().unwrap();    # we cannot click the checkbox itself as it is hidden, however if we click the label it will click the anchor in the label, therefore I remove the <a> before submit, but keep the text
     Run Keyword If    '${status}' == 'PASS'    Click Element    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label
     # Error checking
-    Page Should Not Contain    Error
-    Page Should Not Contain    something went wrong
-    Page Should Not Contain    Page or resource not found
-    Page Should Not Contain    You do not have the necessary permissions for your request
+    the user should not see an error in the page
     # Header checking (INFUND-1892)
     Element Should Be Visible    id=global-header
     Page Should Contain    BETA
@@ -34,10 +28,7 @@ the user should see the checkbox
     [Arguments]    ${checkbox}
     Wait Until Element Is Visible Without Screenshots    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label[contains(@class,"selected")]
     # Error checking
-    Page Should Not Contain    Error
-    Page Should Not Contain    something went wrong
-    Page Should Not Contain    Page or resource not found
-    Page Should Not Contain    You do not have the necessary permissions for your request
+    the user should not see an error in the page
     # Header checking (INFUND-1892)
     Element Should Be Visible    id=global-header
     Page Should Contain    BETA
@@ -47,10 +38,7 @@ the user should see that the checkbox is disabled
     [Arguments]    ${checkbox}
     Wait Until Element Is Visible Without Screenshots    xpath=//*[@id="${checkbox}" or @name="${checkbox}" and @disabled='disabled']/ancestor::label[contains(@class,"selected")]
     # Error checking
-    Page Should Not Contain    Error
-    Page Should Not Contain    something went wrong
-    Page Should Not Contain    Page or resource not found
-    Page Should Not Contain    You do not have the necessary permissions for your request
+    the user should not see an error in the page
     # Header checking (INFUND-1892)
     Element Should Be Visible    id=global-header
     Page Should Contain    BETA
@@ -60,10 +48,7 @@ the user should not see the checkbox
     [Arguments]    ${checkbox}
     Wait Until Element Is Not Visible Without Screenshots    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label[contains(@class,"selected")]
     # Error checking
-    Page Should Not Contain    Error
-    Page Should Not Contain    something went wrong
-    Page Should Not Contain    Page or resource not found
-    Page Should Not Contain    You do not have the necessary permissions for your request
+    the user should not see an error in the page
     # Header checking (INFUND-1892)
     Element Should Be Visible    id=global-header
     Page Should Contain    BETA
@@ -74,10 +59,7 @@ the user selects the radio button
     the user should see the element    xpath=//*[starts-with(@name,"${RADIO_BUTTON}")][@value="${RADIO_BUTTON_OPTION}" or @id="${RADIO_BUTTON_OPTION}"]/ancestor::label
     Click Element    xpath=//*[starts-with(@name,"${RADIO_BUTTON}")][@value="${RADIO_BUTTON_OPTION}" or @id="${RADIO_BUTTON_OPTION}"]/ancestor::label
     # Error checking
-    Page Should Not Contain    Error
-    Page Should Not Contain    something went wrong
-    Page Should Not Contain    Page or resource not found
-    Page Should Not Contain    You do not have the necessary permissions for your request
+    the user should not see an error in the page
     # Header checking (INFUND-1892)
     Element Should Be Visible    id=global-header
     Page Should Contain    BETA
@@ -85,10 +67,7 @@ the user selects the radio button
 the user moves focus to the element
     [Arguments]    ${element}
     # Error checking
-    Page Should Not Contain    Error
-    Page Should Not Contain    something went wrong
-    Page Should Not Contain    Page or resource not found
-    Page Should Not Contain    You do not have the necessary permissions for your request
+    the user should not see an error in the page
     # Header checking (INFUND-1892)
     Element Should Be Visible    id=global-header
     Page Should Contain    BETA
@@ -99,10 +78,7 @@ the user should see the radio button in the page
     [Arguments]    ${RADIO_BUTTON}
     the user should see the element    xpath=//*[starts-with(@name,"${RADIO_BUTTON}")]/ancestor::label
     # Error checking
-    Page Should Not Contain    Error
-    Page Should Not Contain    something went wrong
-    Page Should Not Contain    Page or resource not found
-    Page Should Not Contain    You do not have the necessary permissions for your request
+    the user should not see an error in the page
     # Header checking (INFUND-1892)
     Element Should Be Visible    id=global-header
     Page Should Contain    BETA
@@ -113,10 +89,7 @@ the user sees that the radio button is selected
     Wait Until Element Is Visible Without Screenshots    xpath=//*[@name="${RADIO_BUTTON}"][@value="${SELECTION}" or @id="${SELECTION}"]/ancestor::label[contains(@class,"selected")]
     #[contains(@class,"selected")]
     # Error checking
-    Page Should Not Contain    Error
-    Page Should Not Contain    something went wrong
-    Page Should Not Contain    Page or resource not found
-    Page Should Not Contain    You do not have the necessary permissions for your request
+    the user should not see an error in the page
     # Header checking (INFUND-1892)
     Element Should Be Visible    id=global-header
     Page Should Contain    BETA
@@ -125,10 +98,7 @@ the user sees that the radio button is not selected
     [Arguments]    ${RADIO_BUTTON}
     Wait Until Element Is Visible Without Screenshots    xpath=//*[@name="${RADIO_BUTTON}"]/ancestor::label[not(contains(@class,"selected"))]
     # Error checking
-    Page Should Not Contain    Error
-    Page Should Not Contain    something went wrong
-    Page Should Not Contain    Page or resource not found
-    Page Should Not Contain    You do not have the necessary permissions for your request
+    the user should not see an error in the page
     # Header checking (INFUND-1892)
     Element Should Be Visible    id=global-header
     Page Should Contain    BETA
@@ -139,20 +109,14 @@ the user selects the option from the drop-down menu
     Select From List    ${drop-down}    ${option}
     mouse out    ${drop-down}
     # Error checking
-    Page Should Not Contain    Error
-    Page Should Not Contain    something went wrong
-    Page Should Not Contain    Page or resource not found
-    Page Should Not Contain    You do not have the necessary permissions for your request
+    the user should not see an error in the page
     # Header checking (INFUND-1892)
     Element Should Be Visible    id=global-header
     Page Should Contain    BETA
 
 the user submits the form
     Submit Form
-    Page Should Not Contain    Error
-    Page Should Not Contain Button    something went wrong
-    Page Should Not Contain    Page or resource not found
-    Page Should Not Contain    You do not have the necessary permissions for your request
+    the user should not see an error in the page
     # Header checking (INFUND-1892)
     Element Should Be Visible    id=global-header
     Page Should Contain    BETA
@@ -190,10 +154,7 @@ the user clears the text from the element
     [Arguments]    ${element}
     Wait Until Element Is Visible Without Screenshots    ${element}
     clear element text    ${element}
-    Page Should Not Contain    Error
-    Page Should Not Contain    something went wrong
-    Page Should Not Contain    Page or resource not found
-    Page Should Not Contain    You do not have the necessary permissions for your request
+    the user should not see an error in the page
     # Header checking    (INFUND-1892)
     Element Should Be Visible    id=global-header
     Page Should Contain    BETA
@@ -209,10 +170,7 @@ the user selects the index from the drop-down menu
     Select From List By Index    ${drop-down}    ${option}
     mouse out    ${drop-down}
     # Error checking
-    Page Should Not Contain    Error
-    Page Should Not Contain    something went wrong
-    Page Should Not Contain    Page or resource not found
-    Page Should Not Contain    You do not have the necessary permissions for your request
+    the user should not see an error in the page
     # Header checking (INFUND-1892)
     Element Should Be Visible    id=global-header
     Page Should Contain    BETA
@@ -224,10 +182,7 @@ the user should see the option in the drop-down menu
     list should contain value    ${drop-down-options}    ${option}
     mouse out    ${drop-down}
     # Error checking
-    Page Should Not Contain    Error
-    Page Should Not Contain    something went wrong
-    Page Should Not Contain    Page or resource not found
-    Page Should Not Contain    You do not have the necessary permissions for your request
+    the user should not see an error in the page
     # Header checking (INFUND-1892)
     Element Should Be Visible    id=global-header
     Page Should Contain    BETA
@@ -236,10 +191,7 @@ the user should see the option in the drop-down menu
 the user moves the mouse away from the element
     [Arguments]    ${element}
     # Error checking
-    Page Should Not Contain    Error
-    Page Should Not Contain    something went wrong
-    Page Should Not Contain    Page or resource not found
-    Page Should Not Contain    You do not have the necessary permissions for your request
+    the user should not see an error in the page
     # Header checking (INFUND-1892)
     Element Should Be Visible    id=global-header
     Page Should Contain    BETA
@@ -250,23 +202,20 @@ the user should see the dropdown option selected
     [Arguments]    ${option}    ${drop-down}
     List Selection Should Be    ${drop-down}    ${option}
     # Error checking
-    Page Should Not Contain    Error
-    Page Should Not Contain    something went wrong
-    Page Should Not Contain    Page or resource not found
-    Page Should Not Contain    You do not have the necessary permissions for your request
+    the user should not see an error in the page
     # Header checking    (INFUND-1892)
     Element Should Be Visible    id=global-header
     Page Should Contain    BETA
 
 the user edits the project summary question
-    focus    css=#form-input-11 .editor
-    Clear Element Text    css=#form-input-11 .editor
-    Input Text    css=#form-input-11 .editor    I am a robot
+    focus    css=#form-input-1039 .editor
+    Clear Element Text    css=#form-input-1039 .editor
+    Input Text    css=#form-input-1039 .editor    I am a robot
     wait for autosave
 
 the applicant adds some content and marks this section as complete
-    Focus    css=#form-input-4 .editor
-    Input Text    css=#form-input-4 .editor    This is some random text
+    Focus    css=#form-input-1057 .editor
+    Input Text    css=#form-input-1057 .editor    This is some random text
     the user clicks the button/link    name=mark_as_complete
     the user should see the element    name=mark_as_incomplete
 
@@ -280,3 +229,4 @@ The user enters multiple strings into a text field
     ${concatenated_string} =    repeat string    ${string}    ${multiplicity}
     Wait Until Element Is Visible Without Screenshots   ${field}
     Wait Until Keyword Succeeds Without Screenshots    30s    200ms    Input Text    ${field}    ${concatenated_string}
+

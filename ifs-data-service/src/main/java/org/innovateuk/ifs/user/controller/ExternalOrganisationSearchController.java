@@ -41,11 +41,12 @@ public class ExternalOrganisationSearchController {
 
         switch (organisationType){
             case BUSINESS:
+            case RTO:
+            case PUBLICSECTOR_OR_CHARITY:
                 return companyHouseService.searchOrganisations(organisationSearchText).toGetResponse();
-            case ACADEMIC:
+            case RESEARCH:
                 return organisationService.searchAcademic(organisationSearchText, SEARCH_ITEMS_MAX).toGetResponse();
             default:
-
                 break;
         }
 
@@ -57,11 +58,12 @@ public class ExternalOrganisationSearchController {
         OrganisationTypeEnum organisationType = OrganisationTypeEnum.getFromId(organisationTypeId);
         switch (organisationType){
             case BUSINESS:
+            case RTO:
+            case PUBLICSECTOR_OR_CHARITY:
                 return companyHouseService.getOrganisationById(organisationSearchId).toGetResponse();
-            case ACADEMIC:
+            case RESEARCH:
                 return organisationService.getSearchOrganisation(Long.valueOf(organisationSearchId)).toGetResponse();
             default:
-
                 break;
         }
 

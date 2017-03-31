@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.management.viewmodel;
 
-import org.innovateuk.ifs.category.resource.InnovationAreaResource;
+import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,13 +10,13 @@ import java.util.List;
  */
 public class InviteAssessorsFindViewModel extends InviteAssessorsViewModel<AvailableAssessorRowViewModel> {
 
-    private List<InnovationAreaResource> innovationAreaOptions = new ArrayList<>();
+    private List<InnovationSectorResource> innovationSectorOptions = new ArrayList<>();
 
-    public List<InnovationAreaResource> getInnovationAreaOptions() {
-        return innovationAreaOptions;
+    public List<InnovationSectorResource> getInnovationSectorOptions() {
+        return innovationSectorOptions;
     }
 
-    public void setInnovationAreaOptions(List<InnovationAreaResource> innovationAreaOptions) {
-        this.innovationAreaOptions = innovationAreaOptions;
+    public void setInnovationSectorOptions(List<InnovationSectorResource> innovationSectorOptions) {
+        this.innovationSectorOptions = innovationSectorOptions;
     }
 }

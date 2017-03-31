@@ -35,10 +35,10 @@ Lead applicant can assign a question
     #This test depends on the previous test suite to run first
     Given the applicant changes the name of the application
     And the user clicks the button/link    link= Public description
-    When the applicant assigns the question to the collaborator    css=#form-input-12 .editor    test1233    Dennis Bergkamp
+    When the applicant assigns the question to the collaborator    css=#form-input-1040 .editor    test1233    Dennis Bergkamp
     Then the user should see the notification    Question assigned successfully
-    And the user should see the element    css=#form-input-12 .readonly
-    And the question should contain the correct status/name    css=#form-input-12 .assignee span+span    Dennis Bergkamp
+    And the user should see the element    css=#form-input-1040 .readonly
+    And the question should contain the correct status/name    css=#form-input-1040 .assignee span+span    Dennis Bergkamp
 
 Lead applicant can assign question multiple times
     [Documentation]    INFUND-3288
@@ -46,10 +46,10 @@ Lead applicant can assign question multiple times
     ...    This test depends on the previous test suite to run first
     [Tags]    Email
     When the user assigns the question to the collaborator    Stuart ANDERSON
-    And the question should contain the correct status/name    css=#form-input-12 .assignee span+span    you
-    And the applicant assigns the question to the collaborator    css=#form-input-12 .editor    test1233    Dennis Bergkamp
-    Then the user should see the element    css=#form-input-12 .readonly
-    And the question should contain the correct status/name    css=#form-input-12 .assignee span+span    Dennis Bergkamp
+    And the question should contain the correct status/name    css=#form-input-1040 .assignee span+span    you
+    And the applicant assigns the question to the collaborator    css=#form-input-1040 .editor    test1233    Dennis Bergkamp
+    Then the user should see the element    css=#form-input-1040 .readonly
+    And the question should contain the correct status/name    css=#form-input-1040 .assignee span+span    Dennis Bergkamp
 
 The question is enabled for the assignee
     [Documentation]    INFUND-275
@@ -62,8 +62,8 @@ The question is enabled for the assignee
     Then the user should see the browser notification    Stuart ANDERSON has assigned a question to you
     And the user should see the element  jQuery=li:contains("Public description") > .action-required
     And the user clicks the button/link    link= Public description
-    And the user should see the element    css=#form-input-12 .editor
-    And the user should not see the element    css=#form-input-12 .readonly
+    And the user should see the element    css=#form-input-1040 .editor
+    And the user should not see the element    css=#form-input-1040 .readonly
 
 Collaborator should see the terms and conditions from the overview page
     [Documentation]    INFUND-2417
@@ -71,7 +71,7 @@ Collaborator should see the terms and conditions from the overview page
     ...    This test depends on the previous test suite to run first
     [Tags]    Email
     Given the user clicks the button/link    link=Application Overview
-    When The user clicks the button/link    link= view conditions of grant offer
+    When The user clicks the button/link    link= view the grant terms and conditions
     Then the user should see the text in the page    Terms and conditions of an Innovate UK grant award
     And the user should see the text in the page    Entire agreement
 
@@ -105,7 +105,7 @@ Last update message is correctly updating
     And the user clicks the button/link    link= Assign test
     And the user clicks the button/link    link= Public description
     When the collaborator edits the 'public description' question
-    Then the question should contain the correct status/name    css=#form-input-12 .textarea-footer    Last updated: Today by you
+    Then the question should contain the correct status/name    css=#form-input-1040 .form-footer .form-footer__info    Last updated: Today by you
 
 Collaborators cannot assign a question
     [Documentation]    INFUND-839
@@ -131,7 +131,7 @@ Collaborator cannot edit after marking ready for review
     ...
     ...    This test depends on the previous test suite to run first
     [Tags]    Email    HappyPath
-    Then the user should see the element    css=#form-input-12 .readonly
+    Then the user should see the element    css=#form-input-1040 .readonly
     [Teardown]
 
 Collaborators should not be able to edit application details
@@ -155,10 +155,10 @@ The question should be reassigned to the lead applicant
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link= Assign test
     Then the user should see the browser notification    Dennis Bergkamp has assigned a question to you
-    And the question should contain the correct status/name    jQuery=#section-1 li:nth-child(3) .assign-container    you
+    And the question should contain the correct status/name    jQuery=#section-184 li:nth-child(3) .assign-container    you
     And the user clicks the button/link    link= Public description
-    And the user should see the element    css=#form-input-12 .editor
-    And the user should not see the element    css=#form-input-12 .readonly
+    And the user should see the element    css=#form-input-1040 .editor
+    And the user should not see the element    css=#form-input-1040 .readonly
 
 Appendices are assigned along with the question
     [Documentation]    INFUND-409
@@ -169,7 +169,7 @@ Appendices are assigned along with the question
     And the user clicks the button/link    link= Assign test
     And the user clicks the button/link    link=6. Innovation
     And the user should see the text in the page    Upload
-    When the applicant assigns the question to the collaborator    css=#form-input-6 .editor    test1233    Dennis Bergkamp
+    When the applicant assigns the question to the collaborator    css=#form-input-1065 .editor    test1233    Dennis Bergkamp
     Then log in as a different user          ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link= Assign test
@@ -182,9 +182,9 @@ Collaborator can see that Research area is not selected
     [Documentation]  INFUND-6823
     [Tags]
     Given the user navigates to Your-finances page    Assign test
-    Then The user should see the element     jQuery=p:contains("You must select a research category in application details")
+    Then The user should see the element     jQuery=p:contains("The lead applicant must select a research category in application details")
 
-Lead selects Research Area
+Lead selects Research category
     [Documentation]  INFUND-6823
     [Tags]  Email
     [Setup]  log in as a different user       ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
@@ -194,10 +194,9 @@ Lead selects Research Area
     When the user navigates to the page       ${DASHBOARD_URL}
     Then the user clicks the button/link      link=Assign test
     When the user clicks the button/link      link=Application details
-    # The following line has been commented  as 'alert message' is commented in application details section html due to upcoming functionality
-    #Then the user should see the element      jQuery=h2:contains("Research category determines funding")
-    Then the user should see the element       jQuery=legend:contains("Research category")
-    And the user fills out innovation area and research category
+    And the user clicks the button/link      jQuery=button:contains("Choose your research category")
+    Then the user should see the element      jQuery=legend:contains("Research category")
+    And the user fills out the research category
 
 Lead marks finances as complete
     [Documentation]    INFUND-3016
@@ -236,7 +235,7 @@ The question is disabled for other collaborators
     Given Steve smith assigns a question to the collaborator
     Given log in as a different user       &{collaborator2_credentials}
     When the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
-    Then The user should see the element    css=#form-input-12 .readonly
+    Then The user should see the element    css=#form-input-1040 .readonly
 
 The question is disabled on the summary page for other collaborators
     [Documentation]    INFUND-2302
@@ -245,29 +244,30 @@ The question is disabled on the summary page for other collaborators
     [Tags]
     Given the user navigates to the page    ${SUMMARY_URL}
     When the user clicks the button/link    jQuery=button:contains("Public description")
-    Then the user should see the element    css=#form-input-12 .readonly
+    Then the user should see the element    css=#form-input-1040 .readonly
     And the user should not see the element    jQuery=button:contains("Assign to lead for review")
 
-Lead applicant should be able to remove the registered partner
-    [Documentation]    INFUND-4806
-    [Tags]
+Lead applicant should be able to remove the partner organisation
+    [Documentation]    INFUND-8590
+    [Tags]    Pending
     [Setup]    log in as a different user    ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
+    # TODO Pending due to INFUND-8590
     Given the user clicks the button/link    link= Assign test
-    And the user clicks the button/link    link=view and add participants to your application
+    And the user clicks the button/link    link=view team members and add collaborators
     And the user clicks the button/link    jQuery=.table-overflow:contains("Dennis") ~ p a
-    When the user clicks the button/link    jQuery=button:contains("Remove")
-    Then the user should not see the element    link=Dennis Bergkamp
-    #And the user clicks the button/link    jQuery=a:contains("Update organisation")
-    And the user clicks the button/link    jQuery=button:contains("Update organisation")
+    When the user clicks the button/link    jQuery=button:contains("Delete organisation"):first
+    And the user clicks the button/link    jQuery=.modal-delete-organisation button:contains("Delete organisation")
+    Then the user should see the text in the page    Application team
+    And the user should not see the text in the page    Dennis Bergkamp
     #The following steps check if the collaborator should not see the application in the dashboard page
     And log in as a different user  ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     And the user should not see the element    link= Assign test
 
 *** Keywords ***
 the collaborator edits the 'public description' question
-    Clear Element Text    css=#form-input-12 .editor
-    Focus    css=#form-input-12 .editor
-    The user enters text to a text field    css=#form-input-12 .editor    collaborator's text
+    Clear Element Text    css=#form-input-1040 .editor
+    Focus    css=#form-input-1040 .editor
+    The user enters text to a text field    css=#form-input-1040 .editor    collaborator's text
     Focus    link=Sign out
     wait for autosave
     the user reloads the page
@@ -283,20 +283,17 @@ the collaborator is able to edit the finances
     the user fills in the funding information  Assign test
 
 the applicant changes the name of the application
-    Given the user clicks the button/link     link= ${OPEN_COMPETITION_NAME}
+    Given the user clicks the button/link     link= ${UNTITLED_APPLICATION_DASHBOARD_LINK}
     And the user clicks the button/link       link= Application details
     And the user enters text to a text field  id=application_details-title  Assign test
     And The user clicks the button/link       jQuery=button:contains("Save and return")
 
 Steve smith assigns a question to the collaborator
     the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
-    When the applicant assigns the question to the collaborator  css=#form-input-12 .editor  test1233  Jessica Doe
+    When the applicant assigns the question to the collaborator  css=#form-input-1040 .editor  test1233  Jessica Doe
 
-the user fills out innovation area and research category
+the user fills out the research category
     # Often those labels need double click. Thus i made a separate keyword to looks more tidy
-    the user clicks the button/link    jQuery=button:contains(Change your innovation area)
-    the user clicks the button/link    jQuery=label[for="innovationAreaChoice-26"]
-    the user clicks the button/link    jQuery=label[for="innovationAreaChoice-26"]
+    the user clicks the button/link    jQuery=label[for="researchCategoryChoice-33"]
+    the user clicks the button/link    jQuery=label[for="researchCategoryChoice-33"]
     the user clicks the button/link    jQuery=button:contains(Save)
-    the user clicks the button/link    jQuery=label[for="financePosition-cat-33"]
-    the user clicks the button/link    jQuery=label[for="financePosition-cat-33"]

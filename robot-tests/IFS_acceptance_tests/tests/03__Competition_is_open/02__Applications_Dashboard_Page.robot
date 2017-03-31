@@ -62,17 +62,15 @@ The applications can be sorted by lead applicant
 Filter on application number
     [Documentation]    INFUND-8010
     [Tags]    HappyPath
-    Given the user enters text to a text field    id=filterSearch    14
+    Given the user enters text to a text field    id=filterSearch    105
     When the user clicks the button/link    jQuery=button:contains("Filter")
-    Then the user should see the text in the page    Using natural gas to heat homes
-    And the user should not see the text in the page    A novel solution to an old problem
+    Then the user should see the text in the page    Safeguarding pollinators and their values to human well-being
+    And the user should not see the text in the page    Climate science the history of Greenland's ice
     And the user clicks the button/link    jQuery=a:contains("Clear all filters")
-    And the user should see the text in the page    A novel solution to an old problem
+    And the user should see the text in the page    Climate science the history of Greenland's ice
 
 All Applications page: Key Statistics
-    [Documentation]    INFUND-2259
-    ...
-    ...    INFUND-7369
+    [Documentation]    INFUND-2259 INFUND-7369
     [Tags]
     Then the totals in the Key statistics should be correct
 
@@ -90,7 +88,7 @@ Comp admin can open the view mode of the application
     When the user clicks the button/link    link=${OPEN_COMPETITION_APPLICATION_1_NUMBER}
     Then the user should be redirected to the correct page    ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
     And the user should see the element    link=Print application
-    And the user should see the text in the page    A novel solution to an old problem
+    And the user should see the text in the page    Climate science the history of Greenland's ice
     And the user should see the text in the page    ${valid_pdf}
     And the user can view this file without any errors
     #    And the user should see the text in the page    ${quarantine_pdf}
@@ -118,7 +116,7 @@ Comp admin should be able to view but not edit the finances for every partner
 *** Keywords ***
 the user uploads the file to the 'technical approach' question
     [Arguments]    ${file_name}
-    Choose File    name=formInput[14]    ${UPLOAD_FOLDER}/${file_name}
+    Choose File    name=formInput[1062]    ${UPLOAD_FOLDER}/${file_name}
 
 the user can see the option to upload a file on the page
     [Arguments]    ${url}
@@ -126,7 +124,7 @@ the user can see the option to upload a file on the page
     the user should see the text in the page    Upload
 
 the user can view this file without any errors
-    the user clicks the button/link    link=testing.pdf(7 KB)
+    the user clicks the button/link    link=testing.pdf(10 KB)
     the user should not see an error in the page
     the user goes back to the previous page
 
@@ -162,7 +160,7 @@ the finance Project cost breakdown calculations should be correct
 
 the applicant edits the Subcontracting costs section
     the user clicks the button/link    link=Your project costs
-    the user clicks the button/link    jQuery=#form-input-20 button:contains("Subcontracting costs")
+    the user clicks the button/link    jQuery=#form-input-1085 button:contains("Subcontracting costs")
     the user should see the text in the page    Subcontractor name
     The user enters text to a text field    css=#collapsible-4 .form-row:nth-child(2) input[id$=subcontractingCost]    2000
     The user enters text to a text field    css=.form-row:nth-child(1) [name^="subcontracting-name"]    Jackson Ltd
@@ -279,7 +277,7 @@ The calculation of the open applications should be correct
     ${open_count}=    Get matching xpath count    //*[text()="open"]
     Run keyword if    ${open_count} != 0    open application calculations are correct
 
-Then the totals in the Key statistics should be correct
+The totals in the Key statistics should be correct
     #Calculation of the total number of Applications
     ${TOTAL_APPLICATIONS}=    Get matching xpath count    //table/tbody/tr
     ${TOTAL_COUNT}=    Get text    css=li:nth-child(1) > div > span

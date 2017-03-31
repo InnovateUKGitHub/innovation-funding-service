@@ -8,16 +8,13 @@
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main id="content">
+<main tabindex="-1" id="content">
     <th:block th:include="fragments/layout :: main-content-start" />
     <th:block th:include="fragments/competition-setup :: comp-setup-header-sub (linkTitle='Back',linkClass='link-back',linkUrl=@{${backUrl}})" th:remove="tag"></th:block>
 
     <div class="page-title">
-        <h1 class="heading-xlarge">
-                    <span class="heading-secondary"><th:block th:text="${currentApplication.id}"/>: <th:block
-                        th:text="${currentApplication.applicationDisplayName}"/></span>
-            Application overview
-        </h1>
+        <th:block th:insert="fragments/elements :: application-title (applicationId=${currentApplication.id},applicationName=${currentApplication.name})"/>
+        <h1 class="heading-xlarge no-margin">Application overview</h1>
     </div>
 
     <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}"

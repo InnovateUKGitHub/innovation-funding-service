@@ -8,7 +8,7 @@
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main id="content">
+        <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Your skills',linkClass='link-back',linkUrl=@{/profile/skills}" />
 
@@ -16,23 +16,20 @@
                 <h1 class="heading-xlarge">Edit your skills</h1>
             </div>
 
-            <p>These innovation areas have been chosen as your current areas of expertise. They will influence the types
+            <h2 class="heading-medium no-margin-bottom">Innovation areas</h2>
+
+            <p class="form-hint">These innovation areas have been chosen as your current areas of expertise. They will influence the types
                 of competition you will be invited to assess. If you would like to amend them or add new ones please
                 contact a member of the Competitions team <a href="mailto:support@innovateuk.gov.uk">support@innovateuk.gov.uk</a>.
             </p>
 
-            <h2 class="heading-medium no-margin-bottom">Innovation areas</h2>
-
             <ul class="list list-bullet" th:unless="${#maps.isEmpty(model.innovationAreas)}">
-                <li th:each="innovationSectorEntry : ${model.innovationAreas}"
+                <th:block th:each="innovationSectorEntry : ${model.innovationAreas}"
                     th:with="innovationSector=${innovationSectorEntry.key},innovationAreas=${innovationSectorEntry.value}">
-                    <span th:text="${innovationSector}" th:remove="tag">health and life sciences</span>
-                    <ul class="list list-bullet">
-                        <li th:each="innovationArea: ${innovationAreas}" th:text="${innovationArea}">
-                            information and communications technology (ICT)
-                        </li>
-                    </ul>
-                </li>
+                    <li th:each="innovationArea: ${innovationAreas}" th:text="${innovationArea}">
+                        information and communications technology (ICT)
+                    </li>
+                </th:block>
             </ul>
 
             <form th:action="@{/profile/skills/edit}" method="post" th:object="${form}" class="extra-margin">

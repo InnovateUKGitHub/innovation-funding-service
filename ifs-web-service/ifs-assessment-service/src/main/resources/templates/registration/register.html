@@ -8,7 +8,7 @@
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main id="content">
+        <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='javascript:history.back()',currentApplication=${currentApplication}" />
 
@@ -65,62 +65,6 @@
                                     data-required-errormessage=#{validation.standard.lastname.required}" />
                 </div>
 
-                <div class="form-group" th:classappend="${#fields.hasErrors('gender')}? error">
-                    <fieldset>
-                        <legend>
-                            <span class="heading-small">Gender</span>
-                            <span th:if="${#fields.hasErrors('gender')}" th:remove="tag">
-                              <span class="error-message" th:each="err : ${#fields.errors('gender')}" th:text="${err}"/>
-                            </span>
-                        </legend>
-                        <label class="block-label selection-button-radio" th:each="gen : ${T(org.innovateuk.ifs.user.resource.Gender).values()}">
-                            <input th:field="*{gender}"
-                                   th:value="${gen}"
-                                   type="radio"
-                                   required="required"
-                                   th:attr="data-required-errormessage=#{validation.standard.gender.selectionrequired}" />
-                            <span th:text="${gen.displayName}" th:remove="tag"/>
-                        </label>
-                    </fieldset>
-                </div>
-
-                <div class="form-group" th:classappend="${#fields.hasErrors('ethnicity')}? error">
-                    <fieldset>
-                        <legend>
-                            <span class="heading-small">Your ethnic group</span>
-                            <span th:if="${#fields.hasErrors('ethnicity')}" th:remove="tag">
-                              <span class="error-message" th:each="err : ${#fields.errors('ethnicity')}" th:text="${err}"/>
-                            </span>
-                        </legend>
-                        <label class="block-label selection-button-radio" th:each="eth : ${ethnicityOptions}">
-                            <input th:field="*{ethnicity}"
-                                   th:value="${eth.id}"
-                                   type="radio"
-                                   required="required"
-                                   th:attr="data-required-errormessage=#{validation.standard.ethnicity.selectionrequired}" />
-                            <span th:text="${eth.description}" th:remove="tag"/>
-                        </label>
-                    </fieldset>
-                </div>
-
-                <div class="form-group" th:classappend="${#fields.hasErrors('disability')}? error">
-                    <fieldset>
-                        <legend>
-                            <span class="heading-small">Do you consider yourself disabled?</span>
-                            <span th:if="${#fields.hasErrors('disability')}" th:remove="tag">
-                                <span class="error-message" th:each="err : ${#fields.errors('disability')}" th:text="${err}" />
-                            </span>
-                        </legend>
-                        <label class="block-label selection-button-radio" th:each="dis : ${T(org.innovateuk.ifs.user.resource.Disability).values()}">
-                            <input th:field="*{disability}"
-                                   th:value="${dis}"
-                                   type="radio"
-                                   required="required"
-                                   th:attr="data-required-errormessage=#{validation.standard.disability.selectionrequired}" />
-                            <span th:text="${dis.displayName}" th:remove="tag" />
-                        </label>
-                    </fieldset>
-                </div>
 
                 <th:block th:insert="fragments/addresses :: company-address-details" th:with="form=${form}, legend='Address search', formHint='Please provide your postal address for our records. As you will be invoicing us for assessments, we need this for your remittance advice.'"/>
 

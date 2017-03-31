@@ -10,7 +10,7 @@ import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.AddressForm;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
-import org.innovateuk.ifs.project.form.ProjectDetailsAddressForm;
+import org.innovateuk.ifs.project.projectdetails.form.ProjectDetailsAddressForm;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -25,25 +25,30 @@ import static org.innovateuk.ifs.address.resource.OrganisationAddressType.ADD_NE
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DETAILS_ADDRESS_SEARCH_OR_TYPE_MANUALLY;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 
+/**
+ * This controller handles address lookups
+ */
+//TODO this is a candidate for refactor
+
 public class AddressLookupBaseController {
     public static final String FORM_ATTR_NAME = "form";
-    static final String MANUAL_ADDRESS = "manual-address";
-    static final String SEARCH_ADDRESS = "search-address";
-    static final String SELECT_ADDRESS = "select-address";
+    protected static final String MANUAL_ADDRESS = "manual-address";
+    protected static final String SEARCH_ADDRESS = "search-address";
+    protected static final String SELECT_ADDRESS = "select-address";
 
     @Autowired
     private AddressRestService addressRestService;
 
-    void processAddressLookupFields(ProjectDetailsAddressForm form) {
+    protected void processAddressLookupFields(ProjectDetailsAddressForm form) {
         addAddressOptions(form);
         addSelectedAddress(form);
     }
 
-    Optional<OrganisationAddressResource> getAddress(final OrganisationResource organisation, final OrganisationAddressType addressType) {
+    protected Optional<OrganisationAddressResource> getAddress(final OrganisationResource organisation, final OrganisationAddressType addressType) {
         return organisation.getAddresses().stream().filter(a -> OrganisationAddressType.valueOf(a.getAddressType().getName()).equals(addressType)).findFirst();
     }
 
-    OrganisationAddressResource getOrganisationAddressResourceOrNull(
+    protected OrganisationAddressResource getOrganisationAddressResourceOrNull(
             ProjectDetailsAddressForm form,
             OrganisationResource organisationResource,
             OrganisationAddressType addressTypeToUseForNewAddress){
@@ -93,11 +98,11 @@ public class AddressLookupBaseController {
         return organisationAddressType != null && organisationAddressType != ADD_NEW;
     }
 
-    FieldError createPostcodeSearchFieldError() {
+    protected FieldError createPostcodeSearchFieldError() {
         return new FieldError("form", "addressForm.postcodeInput", "", true, new String[] {"EMPTY_POSTCODE_SEARCH"}, new Object[] {}, null);
     }
 
-    void addAddressNotProvidedValidationError(BindingResult bindingResult, ValidationHandler validationHandler){
+    protected void addAddressNotProvidedValidationError(BindingResult bindingResult, ValidationHandler validationHandler){
         ValidationMessages validationMessages = new ValidationMessages(bindingResult);
         validationMessages.addError(fieldError("addressType", new Error(PROJECT_SETUP_PROJECT_DETAILS_ADDRESS_SEARCH_OR_TYPE_MANUALLY)));
         validationHandler.addAnyErrors(validationMessages);

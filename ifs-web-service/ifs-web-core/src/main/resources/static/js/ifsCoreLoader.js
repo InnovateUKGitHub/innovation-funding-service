@@ -34,7 +34,6 @@ IFS.core.loadOrder = {
       IFS.core.modal.init()
       IFS.core.upload.init()
       IFS.core.autoSubmitForm.init()
-      IFS.core.pieChart.init()
       IFS.core.unsavedChanges.init()
       IFS.core.mirrorElements.init()
       IFS.core.debug.init()

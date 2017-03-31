@@ -13,6 +13,16 @@
           th:attr="data-competition=${competition.id}" data-section="initial"
           method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
 
+        <div class="error-summary" th:if="${#fields.hasGlobalErrors()}">
+            <h2 class="heading-medium error-summary-heading">
+                Unable to save section
+            </h2>
+
+            <ul class="error-summary-list">
+                <li th:each="err : ${#fields.globalErrors()}" th:text="${err}"></li>
+            </ul>
+        </div>
+
         <fieldset th:if="${editable}" id="section-1-edit">
 
             <legend class="visuallyhidden">Initial details</legend>
@@ -140,6 +150,8 @@
                                  th:class="${#fields.hasErrors('openingDateDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                  type="number"
                                  placeholder="DD"
+                                 min="1"
+                                 max="31"
                                  required="required"
                                  th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateday.required}"
                                  th:disabled="${!#strings.isEmpty(restrictInitialDetailsEdit)}"
@@ -155,6 +167,8 @@
                                  type="number"
                                  placeholder="MM"
                                  required="required"
+                                 min="1"
+                                 max="12"
                                  th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdatemonth.required}"
                                  th:disabled="${!#strings.isEmpty(restrictInitialDetailsEdit)}"
                                  th:field="${competitionSetupForm.openingDateMonth}" />
@@ -792,17 +806,13 @@
                              required="required"
                              th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].milestoneType'"
                              th:value="${milestoneEntry.key}" />
-                      <input type="hidden"
-                             required="required"
-                             th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].editable'"
-                             th:value="${milestoneEntry.value.editable}" />
                       <td class="time">
                           <select th:if="${milestoneEntry.value.timeOption}"
                                   th:id="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
                                   class="form-control width-large"
                                   required="required"
                                   th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
-                                  th:readonly="${!milestoneEntry.value.editable}">
+                                  th:readonly="${!milestoneEntry.value.editableForCompetition(competition)}">
                               <option th:each="time : ${T(org.innovateuk.ifs.competitionsetup.form.MilestoneTime).values()}"
                                       th:text="${time.display}" th:value="${time}" th:selected="${time == milestoneEntry.value.time}"></option>
                           </select>
@@ -820,7 +830,7 @@
                                            data-date=${milestoneEntry.value.day+'-'+milestoneEntry.value.month+'-'+milestoneEntry.value.year}"
                                  th:value="${milestoneEntry.value.day}"
                                  th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].day'"
-                                 th:readonly="${!milestoneEntry.value.editable}" />
+                                 th:readonly="${!milestoneEntry.value.editableForCompetition(competition)}" />
                       </td>
                       <td class="month">
                           <input type="number"
@@ -832,7 +842,7 @@
                                 th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key},data-date=${milestoneEntry.value.day+'-'+milestoneEntry.value.month+'-'+milestoneEntry.value.year}"
                                 th:value="${milestoneEntry.value.month}"
                                 th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].month'"
-                                th:readonly="${!milestoneEntry.value.editable}"/>
+                                th:readonly="${!milestoneEntry.value.editableForCompetition(competition)}"/>
                       </td>
                       <td class="year" >
                           <input type="number"
@@ -844,7 +854,7 @@
                                  class="form-control width-small"
                                  th:value="${milestoneEntry.value.year}"
                                  th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].year'"
-                                 th:readonly="${!milestoneEntry.value.editable}" />
+                                 th:readonly="${!milestoneEntry.value.editableForCompetition(competition)}" />
                           </td>
                     </tr>
                 </tbody>

@@ -69,45 +69,45 @@ check pattern in email
     ####################### CLICKING EMAILED LINKS ############################
 
 the user reads his email and clicks the link
-    [Arguments]    ${recipient}    ${subject}    ${pattern}
-    run keyword if    ${docker}==1    the user reads his email and clicks the link locally    ${recipient}    ${subject}    ${pattern}
-    run keyword if    ${docker}!=1    the user reads his email and clicks the link remotely    ${recipient}    ${subject}    ${pattern}
+    [Arguments]    ${recipient}    ${subject}    ${pattern}        ${link_number}=1
+    run keyword if    ${docker}==1    the user reads his email and clicks the link locally    ${recipient}    ${subject}    ${pattern}    ${link_number}
+    run keyword if    ${docker}!=1    the user reads his email and clicks the link remotely    ${recipient}    ${subject}    ${pattern}    ${link_number}
 
 the user reads his email from the default mailbox and clicks the link
-    [Arguments]    ${recipient}    ${subject}    ${pattern}
-    run keyword if    ${docker}==1    the user reads his email and clicks the link locally    ${recipient}    ${subject}    ${pattern}
-    run keyword if    ${docker}!=1    the user reads his email from the default mailbox and clicks the link remotely    ${recipient}    ${subject}    ${pattern}    ${test_mailbox_one}
+    [Arguments]    ${recipient}    ${subject}    ${pattern}        ${link_number}=1
+    run keyword if    ${docker}==1    the user reads his email and clicks the link locally    ${recipient}    ${subject}    ${pattern}    ${link_number}
+    run keyword if    ${docker}!=1    the user reads his email from the default mailbox and clicks the link remotely    ${recipient}    ${subject}    ${pattern}    ${test_mailbox_one}    ${link_number}
     ...    ${test_mailbox_one_password}
 
 the user reads his email from the second default mailbox and clicks the link
-    [Arguments]    ${recipient}    ${subject}    ${pattern}
-    run keyword if    ${docker}==1    the user reads his email and clicks the link locally    ${recipient}    ${subject}    ${pattern}
-    run keyword if    ${docker}!=1    the user reads his email from the default mailbox and clicks the link remotely    ${recipient}    ${subject}    ${pattern}    ${test_mailbox_two}
+    [Arguments]    ${recipient}    ${subject}    ${pattern}    ${link_number}=1
+    run keyword if    ${docker}==1    the user reads his email and clicks the link locally    ${recipient}    ${subject}    ${pattern}    ${link_number}
+    run keyword if    ${docker}!=1    the user reads his email from the default mailbox and clicks the link remotely    ${recipient}    ${subject}    ${pattern}    ${test_mailbox_two}    ${link_number}
     ...    ${test_mailbox_two_password}
 
 the user reads his email and clicks the link locally
-    [Arguments]    ${recipient}    ${subject}    ${pattern}
+    [Arguments]    ${recipient}    ${subject}    ${pattern}     ${link_number}
     Open Mailbox    server=${local_imap}    port=${local_imap_port}   user=smtp    password=smtp     is_secure=False
     ${email_to_test}=  wait for email    sender=${sender}    recipient=${recipient}    subject=${subject}    timeout=90
     log    ${subject}
-    the user reads the email and clicks the link    ${email_to_test}    ${pattern}
+    the user reads the email and clicks the link    ${email_to_test}    ${pattern}    ${link_number}
 
 the user reads his email and clicks the link remotely
-    [Arguments]    ${recipient}    ${subject}    ${pattern}
+    [Arguments]    ${recipient}    ${subject}    ${pattern}    ${link_number}
     Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_one}@gmail.com    password=${test_mailbox_one_password}
     ${email_to_test} =    wait for email    sender=${sender}    recipient=${recipient}    subject=${subject}    timeout=200
     log    ${subject}
-    the user reads the email and clicks the link    ${email_to_test}    ${pattern}
+    the user reads the email and clicks the link    ${email_to_test}    ${pattern}    ${link_number}
 
 the user reads his email from the default mailbox and clicks the link remotely
-    [Arguments]    ${recipient}    ${subject}    ${pattern}    ${mailbox}    ${mailbox_password}
+    [Arguments]    ${recipient}    ${subject}    ${pattern}    ${mailbox}    ${mailbox_password}    ${link_number}
     Open Mailbox    server=imap.googlemail.com    user=${mailbox}@gmail.com    password=${mailbox_password}
     ${email_to_test} =    wait for email    sender=${sender}    recipient=${recipient}    subject=${subject}    timeout=200
     log    ${subject}
-    the user reads the email and clicks the link    ${email_to_test}    ${pattern}
+    the user reads the email and clicks the link    ${email_to_test}    ${pattern}    ${link_number}
 
 the user reads the email and clicks the link
-    [Arguments]    ${email_to_test}    ${pattern}
+    [Arguments]    ${email_to_test}    ${pattern}    ${link_number}
     ${HTML}=    get email body    ${email_to_test}
     log    ${HTML}
     ${MATCHES}=    Get Matches From Email    ${email_to_test}    ${pattern}
@@ -115,7 +115,7 @@ the user reads the email and clicks the link
     Should Not Be Empty    ${MATCHES}
     ${ALL_LINKS}=    Get Links From Email    ${email_to_test}
     log    ${ALL_LINKS}
-    ${LINK}=    Get From List    ${ALL_LINKS}    1
+    ${LINK}=    Get From List    ${ALL_LINKS}    ${link_number}
     log    ${LINK}
     go to    ${LINK}
     delete email    ${email_to_test}

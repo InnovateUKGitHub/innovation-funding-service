@@ -169,10 +169,10 @@ include::{snippets}/competitioninvite/delete-invite/curl-request.adoc[]
 ==== Request
 include::{snippets}/competitioninvite/send-invite/http-request.adoc[]
 include::{snippets}/competitioninvite/send-invite/path-parameters.adoc[]
+include::{snippets}/competitioninvite/send-invite/request-fields.adoc[]
 
 ==== Response
 include::{snippets}/competitioninvite/send-invite/http-response.adoc[]
-include::{snippets}/competitioninvite/send-invite/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/competitioninvite/send-invite/curl-request.adoc[]

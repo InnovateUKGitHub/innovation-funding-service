@@ -8,7 +8,7 @@
                 <div th:class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ organisationGrantClaimPercentageId +'-grantClaimPercentage]}') or #fields.hasErrors('${form.formInput[cost-'+ organisationGrantClaimPercentageId +']}')}? 'error'">
                     <label class="form-label form-label-bold" for="cost-financegrantclaim">
                         <div th:text="'Enter your funding level (maximum ' + ${maximumGrantClaimPercentage} + '%).'" />
-                        <span class="form-hint" th:text="'Based on the project research area and your organisation size your maximum funding level is ' + ${maximumGrantClaimPercentage} + '%.'" />
+                        <span class="form-hint" th:text="'The maximum funding level is ' + ${maximumGrantClaimPercentage} + '%. This is based on your organisation size and the project research category.' " />
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+organisationGrantClaimPercentageId+'-grantClaimPercentage'})" />
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+organisationGrantClaimPercentageId})" />
                     </label>
@@ -262,7 +262,7 @@
                 <thead>
                     <tr>
                         <th scope="col">Role within project</th>
-                        <th scope="col" class="numeric">Gross Annual Salary</th>
+                        <th scope="col" class="numeric">Gross annual salary</th>
                         <th scope="col" class="numeric">Rate (£/day)</th>
                         <th scope="col" class="numeric">Days to be spent by all staff at this grade</th>
                         <th scope="col" class="numeric">Total costs</th>
@@ -448,7 +448,7 @@
         </th:block>
     </th:block>
     <!-- ===========================Form: overheads =========================== -->
-    <th:block th:fragment="overheads(viewmode)" th:with="costCategory=${organisationFinance.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))},type=${formInput.type.nameLower}">
+    <th:block th:fragment="overheads(viewmode)" th:with="costCategory=${organisationFinance.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))},type=${formInput.type.nameLower},labourQuestion=${financeQuestions.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).LABOUR)}">
         <th:block th:with="overheadCosts=${costCategory?.costs?.isEmpty()} ? null : ${costCategory?.costs[0]}, overheadRate=${overheadCosts?.rateType==null} ? ${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).NONE} : ${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).valueOf(overheadCosts?.rateType)}" >
 
             <th:block th:if="${viewmode == 'approved'}">
@@ -470,7 +470,7 @@
                             <tfoot>
                                 <tr>
                                     <th scope="row">Total overhead costs</th>
-                                    <td class="alignright"  id="section-total-10" th:text="'£ ' + ${#numbers.formatInteger(costCategory?.getTotal(),0, 'COMMA')}">£0</td>
+                                    <td class="alignright" th:id="${'section-total-'+subSection.id}" th:text="'£ ' + ${#numbers.formatInteger(costCategory?.getTotal(),0, 'COMMA')}">£0</td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -488,7 +488,7 @@
                             <tfoot>
                                 <tr>
                                     <th scope="col">Total administration support cost</th>
-                                    <td class="alignright"  id="section-total-10" th:text="'£ ' + ${#numbers.formatInteger(costCategory?.getTotal(),0, 'COMMA')}">£0</td>
+                                    <td class="alignright" th:id="${'section-total-'+subSection.id}" th:text="'£ ' + ${#numbers.formatInteger(costCategory?.getTotal(),0, 'COMMA')}">£0</td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -510,7 +510,7 @@
                             <tfoot>
                                 <tr>
                                     <th scope="row">Total cost of overheads as calculated in the spreadsheet</th>
-                                    <td class="alignright"  id="section-total-10" th:text="'£ ' + ${#numbers.formatInteger(costCategory?.getTotal(),0, 'COMMA')}">£0</td>
+                                    <td class="alignright" th:id="${'section-total-'+subSection.id}" th:text="'£ ' + ${#numbers.formatInteger(costCategory?.getTotal(),0, 'COMMA')}">£0</td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -569,7 +569,7 @@
                 <div class="form-group" id="overhead-none">
                     <h3 class="heading-medium">No overhead costs</h3>
                     <p>You are not currently applying for overhead costs</p>
-                    <input type="hidden" value="£ 0" data-calculation-rawvalue="0" id="section-total-10-labour-cost-none"/>
+                    <input type="hidden" value="£ 0" data-calculation-rawvalue="0" th:id="${'section-total-'+subSection.id+'-labour-cost-none'}"/>
                 </div>
                 <div id="overhead-default-percentage">
                     <h3 class="heading-medium">20% of labour costs</h3>
@@ -583,7 +583,7 @@
                                class="form-control form-control-1-4 alignright"
                                readonly="readonly"
                                th:id="${'section-total-'+subSection.id+'-default'}"
-                               th:attr="data-calculation-fields='#section-total-9,0.2',data-calculation-rawvalue=${overheadCosts?.getTotal()}"
+                               th:attr="data-calculation-fields=${'#section-total-'+labourQuestion.section+',0.2'},data-calculation-rawvalue=${overheadCosts?.getTotal()}"
                                data-calculation-operations="*"
                                th:value="${overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).DEFAULT_PERCENTAGE)} ? '£ ' + ${#numbers.formatDecimal(costCategory?.getTotal(),0, 'COMMA', 0, 'POINT')} : '£ 0'" />
                     </div>
@@ -622,7 +622,7 @@
                                class="form-control form-control-1-4 alignright"
                                readonly="readonly"
                                th:id="${'section-total-'+subSection.id+'-custom'}"
-                               th:attr="data-calculation-fields='#section-total-9,100,#'+${'cost-'+ type + '-'+overheadCosts?.id+'-customRate'},data-calculation-rawvalue=${overheadCosts?.getTotal()}"
+                               th:attr="data-calculation-fields=${'#section-total-'+labourQuestion.section+',100,#cost-'+ type + '-'+overheadCosts?.id+'-customRate'},data-calculation-rawvalue=${overheadCosts?.getTotal()}"
                                data-calculation-operations="/,*"
                                th:value="${overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).CUSTOM_RATE)} ? '£ ' + ${#numbers.formatDecimal(costCategory?.getTotal(),0, 'COMMA', 0, 'POINT')} : '£ 0'"/>
                     </div>
@@ -637,7 +637,10 @@
                     </p>
                     <div class="form-group download">
                         <h3 class="heading-small no-margin">Download the overhead calculation spreadsheet</h3>
-                        <a href="/files/overheads.xlsx">Overhead calculation spreadsheet.xlsx (16kb)</a>
+                        <ul>
+                            <li>Download as an Excel document <a href="/files/overheads.xlsx">overhead calculation spreadsheet.xlsx (16KB)</a></li>
+                            <li>Download as an Open Office document <a href="/files/overheads.ods">overhead calculation spreadsheet.ods (10KB)</a></li>
+                        </ul>
                     </div>
                     <div class="upload-section extra-margin">
                         <h3 class="heading-small no-margin">Upload your completed spreadsheet</h3>

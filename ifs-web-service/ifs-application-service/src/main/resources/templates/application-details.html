@@ -9,7 +9,7 @@
 <th:block th:insert="fragments/layout :: global-header" />
 
 
-<main id="content">
+<main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}"  th:remove="tag"></div>
 
@@ -18,30 +18,30 @@
   	<th:block th:insert="fragments/elements :: competition-status-message (app=${currentApplication}, competition=${currentCompetition})" />
 
     <div class="page-title">
-        <th:block th:insert="fragments/elements :: application-title (applicationId=${currentApplication.id},applicationName=${currentApplication.applicationDisplayName})" />
+        <th:block th:insert="fragments/elements :: application-title (applicationId=${currentApplication.id},applicationName=${currentApplication.name})" />
         <h1 class="heading-xlarge">Application overview</h1>
     </div>
 
     <div class="grid-row">
         <div class="column-half">
-          <dl class="dl-left">
-            <dd>Competition:</dd>
-            <dt th:text="${currentCompetition.name}" />
-            <dd>Funding body:</dd>
-            <dt>Innovate UK</dt>
-            <dd>Application deadline:</dd>
-            <dt>
-              <div th:remove="tag" th:text="${#strings.toLowerCase(#temporals.format(currentCompetition.endDate, 'hh:mma '))}" />
-              <div th:remove="tag" th:text="${#temporals.format(currentCompetition.endDate, 'EEEE d MMMM yyyy')}" />
-            </dt>
+          <dl class="font-xsmall">
+            <dt>Competition:</dt>
+            <dd th:text="${currentCompetition.name}" />
+            <dt>Funding body:</dt>
+            <dd>Innovate UK</dd>
+            <dt>Application deadline:</dt>
+            <dd>
+              <th:block th:text="${#strings.toLowerCase(#temporals.format(currentCompetition.endDate, 'hh:mma '))}" />
+              <th:block th:text="${#temporals.format(currentCompetition.endDate, 'EEEE d MMMM yyyy')}" />
+            </dd>
           </dl>
           <h2 class="heading-medium no-margin-bottom">Application progress</h2>
           <div th:include="fragments/elements :: progress-indicator" th:with="percentage=${completedQuestionsPercentage},size='medium'" class="extra-margin" />
         </div>
         <div class="column-half">
             <ul class="list list-bullet">
-                <li><a th:href="@{/application/{applicationId}/team(applicationId=${currentApplication.id})}">view and add participants to your application</a></li>
-                <li><a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${currentCompetition.id})}">view conditions of grant offer</a></li>
+                <li><a th:href="@{/application/{applicationId}/team(applicationId=${currentApplication.id})}">view team members and add collaborators</a></li>
+                <li><a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${currentCompetition.id})}">view the grant terms and conditions</a></li>
             </ul>
         </div>
     </div>
@@ -86,10 +86,8 @@
         </div>
     </form>
 
-    <div class="alignright-button">
-        <a th:href="@{/application/{id}/print(id=${currentApplication.getId()})}" rel="nofollow" target="_blank"><div class="icon icon-print"></div> Print your application</a>
-        <a class="button"  th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}" th:text="${ableToSubmitApplication ? 'Review and submit' : 'Review'}" />
-    </div>
+    <a class="button"  th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}" th:text="${ableToSubmitApplication ? 'Review and submit' : 'Review'}" />
+    <a th:href="@{/application/{id}/print(id=${currentApplication.getId()})}" rel="nofollow" target="_blank"><div class="icon icon-print"></div> Print your application</a>
 
 
     <th:block th:insert="fragments/layout :: main-content-end" />

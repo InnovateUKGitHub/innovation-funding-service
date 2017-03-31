@@ -8,7 +8,7 @@
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main id="content">
+        <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" />
 
@@ -21,15 +21,6 @@
                 <dd>
                     <th:block th:text="${model.firstName}" /> <th:block th:text="${model.lastName}" />
                 </dd>
-
-                <dt th:if="${model.gender}">Gender</dt>
-                <dd th:if="${model.gender}" th:text="${model.gender}? ${model.gender.displayName}" />
-
-                <dt th:if="${model.ethnicity}">Your ethnic group</dt>
-                <dd th:if="${model.ethnicity}" th:text="${model.ethnicity}? ${model.ethnicity.description}" />
-
-                <dt th:if="${model.disability}">Do you consider yourself disabled?</dt>
-                <dd th:if="${model.disability}" th:text="${model.disability}? ${model.disability.displayName}" />
 
                 <dt th:if="${model.address}">Address</dt>
                 <dd th:if="${model.address}">

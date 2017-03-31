@@ -7,9 +7,9 @@ import org.innovateuk.ifs.finance.repository.*;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
-import org.innovateuk.ifs.project.finance.domain.*;
-import org.innovateuk.ifs.project.finance.repository.FinanceCheckRepository;
-import org.innovateuk.ifs.project.finance.workflow.financechecks.configuration.ViabilityWorkflowHandler;
+import org.innovateuk.ifs.project.financecheck.domain.*;
+import org.innovateuk.ifs.project.financecheck.repository.FinanceCheckRepository;
+import org.innovateuk.ifs.project.financecheck.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.user.domain.Organisation;
@@ -78,7 +78,7 @@ public class FinanceChecksGenerator {
 
         ProjectFinance projectFinance = new ProjectFinance(organisation, applicationFinanceForOrganisation.getOrganisationSize(), newProject);
 
-        if (financeUtil.isUsingJesFinances(organisation.getOrganisationType().getName())) {
+        if (financeUtil.isUsingJesFinances(organisation.getOrganisationType().getId())) {
 
             PartnerOrganisation partnerOrganisation = partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(newProject.getId(), organisation.getId());
             viabilityWorkflowHandler.organisationIsAcademic(partnerOrganisation, null);

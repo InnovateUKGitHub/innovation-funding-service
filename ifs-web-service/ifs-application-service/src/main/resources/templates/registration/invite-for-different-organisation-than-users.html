@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Accept Invite'" />
+    </head>
+        <body th:with="context='applicant'" class="create-application-eligibility">
+
+        <th:block th:insert="fragments/layout :: body-start" />
+        <th:block th:insert="fragments/layout :: global-header" />
+
+        <main tabindex="-1" id="content">
+            <th:block th:insert="fragments/layout :: main-content-start" />
+            <h1 class="heading-large">Sorry, you are unable to accept this invitation.</h1>
+            <p>You have been invited to join this application as part of the organisation: <strong th:text="${model.inviteOrganisationName}"/></p>
+            <p>Your account is already registered with us as part of the organisation: <strong th:text="${model.userOrganisationName}"/></p>
+            <p>To represent <th:block th:text="${model.inviteOrganisationName}"/>, you need to be invited through a different email address and create a new account. Please contact
+                <th:block th:text="${model.leadApplicantName}"/> <a th:href="${'mailto:' + model.leadApplicantEmail}" th:text="${model.leadApplicantEmail}"></a>
+                to ask for a new invite to an alternate email address.
+            </p>
+            <th:block th:insert="fragments/layout :: main-content-end" />
+        </main>
+
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
+    </body>
+</html>

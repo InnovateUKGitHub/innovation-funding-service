@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Prototype modal dialogs'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.6.0/themes/prism.css" />
     <style>
@@ -12,7 +12,6 @@
 </head>
 <body>
 
-
 <div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
@@ -22,7 +21,7 @@
   <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader('Prot component library', '/prototypes/prot-styles')" th:remove="tag" />
 
-	<!-- HARDCODED PROTOTYPE HTML -->
+	 <!--HARDCODED PROTOTYPE HTML -->
 
   <h1 class="heading-large">
     <span class="heading-secondary">IFS elements</span>
@@ -31,9 +30,9 @@
 
   <th:block th:include="prototypes/fragments/prot-elements :: prot-snippet('modal-dialogs')" />
 
-	<!-- END OFHARDCODED PROTOTYPE HTML -->
+  <!--END OFHARDCODED PROTOTYPE HTML -->
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+  <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>
 
 <div th:include="fragments/layout :: footer" th:remove="tag" />

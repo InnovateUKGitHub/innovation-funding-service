@@ -8,7 +8,7 @@
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main id="content">
+        <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
 
             <div class="page-title">
@@ -128,7 +128,7 @@
                 </div>
             </div>
 
-            <h2 class="heading-medium">Your contract</h2>
+            <h2 class="heading-medium">Your assessor details</h2>
             <ul class="list list-bullet">
                 <li>
                     <a th:href="@{/profile/skills}">your skills</a>

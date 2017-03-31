@@ -3,7 +3,7 @@
 
 <!-- close button -->
 <th:block th:fragment="close-button" xmlns:th="http://www.w3.org/1999/xhtml">
-    <button class="js-close close" type="button" aria-label="Close Popup">X</button>
+    <button class="js-close close" type="button" aria-label="Close Popup">Close</button>
 </th:block>
 
 <!-- overlay -->
@@ -20,9 +20,10 @@
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 th:text="${messageTitle}" class="heading-medium no-margin"></h2>
         <p th:text="${message}"></p>
+        <hr />
         <div>
-            <a class="button large" th:href="${submitLink}" th:text="${submitText}"></a>
-            <button class="js-close button buttonlink large" type="button" th:text="${cancelText}"></button>
+            <a class="button" th:href="${submitLink}" th:text="${submitText}"></a>
+            <button class="js-close buttonlink" type="button" th:text="${cancelText}"></button>
         </div>
     </div>
 </th:block>
@@ -35,9 +36,10 @@
             <th:block th:insert="fragments/modals :: close-button" />
             <h2 th:text="${messageTitle}" class="heading-medium no-margin"></h2>
             <p th:text="${message}"></p>
+            <hr />
             <div>
-                <input type="submit" tabindex="0" class="button large" th:value="${submitText}"/>
-                <button type="button" tabindex="1" class="js-close button buttonlink large"
+                <input type="submit" tabindex="0" class="button" th:value="${submitText}"/>
+                <button type="button" tabindex="1" class="js-close buttonlink"
                         th:text="${cancelText}"></button>
             </div>
         </div>
@@ -51,10 +53,11 @@
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 th:text="${messageTitle}" class="heading-medium no-margin"></h2>
         <p th:text="${message}"></p>
+        <hr />
         <div>
-            <button role="button" tabindex="0" class="button large" th:name="${submitName}" type="submit"
+            <button role="button" tabindex="0" class="button" th:name="${submitName}" type="submit"
                     th:text="${submitText}"></button>
-            <button class="js-close button buttonlink large" type="button" th:text="${cancelText}"></button>
+            <button class="js-close buttonlink" type="button" th:text="${cancelText}"></button>
         </div>
     </div>
 </th:block>
@@ -67,14 +70,10 @@
         <h2 class="heading-medium no-margin">Notify applicants</h2>
         <p>Are you sure you wish to inform applicants if they have been successful in gaining funding?</p>
         <p>This step cannot be undone.</p>
-        <hr/>
-        <div class="grid-row extra-margin">
-            <div class="column-half">
-                <button type="button" class="js-close buttonlink large">Cancel</button>
-            </div>
-            <div class="column-half alignright-button">
-                <button class="button large" name="publish" value="publish" type="submit">Notify applicants</button>
-            </div>
+        <hr />
+        <div>
+            <button class="button" name="publish" value="publish" type="submit">Notify applicants</button>
+            <button type="button" class="js-close buttonlink">Cancel</button>
         </div>
     </div>
 </th:block>
@@ -87,16 +86,12 @@
         <h2 class="heading-medium no-margin">Publish assessor feedback</h2>
         <p>This will inform applicants that assessor feedback is available.</p>
         <p>This step cannot be undone.</p>
-        <hr/>
-        <div class="grid-row extra-margin">
+        <hr />
+        <div>
             <form method="post" action="#" id="submit-assessor-feedback-form"
                   th:action="@{/competition/{competitionId}/assessorfeedbacksubmit(competitionId=${competitionSummary.getCompetitionId()})}">
-                <div class="column-half">
-                    <button type="button" class="js-close buttonlink large">Cancel</button>
-                </div>
-                <div class="column-half alignright-button">
-                    <button class="button large" name="publish" value="publish" type="submit">Publish assessor feedback</button>
-                </div>
+                <button class="button" name="publish" value="publish" type="submit">Publish assessor feedback</button>
+                <button type="button" class="js-close buttonlink">Cancel</button>
             </form>
         </div>
     </div>
@@ -110,17 +105,13 @@
         <h2 class="heading-medium no-margin">Assign Monitoring Officer</h2>
         <p>This will notify the Project Manager and Monitoring Officer of this appointment. The Monitoring Officer will
             be visible to all members of the consortium.</p>
-        <hr/>
-        <div class="grid-row extra-margin">
-            <div class="column-half">
-                <button type="button" class="js-close buttonlink large">Cancel</button>
-            </div>
-            <div class="column-half alignright-button">
-                <input type="hidden" id="stage" name="stage" value="1"/>
-                <button th:formaction="@{/project/{projectId}/monitoring-officer/assign(projectId=${model.projectId})}"
-                        class="button">Assign Monitoring Officer
-                </button>
-            </div>
+        <hr />
+        <div>
+            <input type="hidden" id="stage" name="stage" value="1"/>
+            <button th:formaction="@{/project/{projectId}/monitoring-officer/assign(projectId=${model.projectId})}"
+                    class="button">Assign Monitoring Officer
+            </button>
+            <button type="button" class="js-close buttonlink">Cancel</button>
         </div>
     </div>
 </th:block>
@@ -131,14 +122,11 @@
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 class="heading-medium no-margin">Submit project details</h2>
         <p>Are you sure that you wish to submit your project details to Innovate UK?</p>
-        <hr/>
-        <div class="grid-row">
-            <div class="column-half">
-                <button type="button" class="js-close button buttonlink large">Cancel</button>
-            </div>
-            <form class="column-half alignright-button"
-                  th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}+'/submit'}" method="post">
-                <button class="button large" name="submit-app-details">Submit</button>
+        <hr />
+        <div>
+            <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}+'/submit'}" method="post">
+                <button class="button" name="submit-app-details">Submit</button>
+                <button type="button" class="js-close buttonlink">Cancel</button>
             </form>
         </div>
     </div>
@@ -147,17 +135,12 @@
 <th:block th:fragment="modal-bank-details">
     <div class="modal-bank" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
-
-        <h2 class="heading-medium no-margin">Submit bank details</h2>
+        <h2 class="heading-medium no-margin">Submit Bank Details</h2>
         <p>Your bank details will now be submitted to Innovate UK.</p>
-        <hr/>
-        <div class="grid-row">
-            <div class="column-half">
-                <button type="button" class="js-close button buttonlink large">Cancel</button>
-            </div>
-            <div class="column-half alignright-button" method="post">
-                <button class="button large" name="submit-app-details">Submit</button>
-            </div>
+        <hr />
+        <div method="post">
+            <button class="button" name="submit-app-details">Submit</button>
+            <button type="button" class="js-close buttonlink">Cancel</button>
         </div>
     </div>
 </th:block>
@@ -171,14 +154,10 @@
         <p>This will generate a flat spend profile for all project partners. This assumes that finance checks have
             been completed for all partners and this section will be locked.</p>
         <p>Partners will be notified that they can now create their spend profile.</p>
-        <hr/>
-        <div class="grid-row">
-            <div class="column-half">
-                <button type="button" class="js-close button buttonlink large">Cancel</button>
-            </div>
-            <div class="column-half alignright-button" method="post">
-                <button id="generate-spend-profile-modal-button" class="button large" name="submit-app-details">Generate spend profile</button>
-            </div>
+        <hr />
+        <div method="post">
+            <button id="generate-spend-profile-modal-button" class="button" name="submit-app-details">Generate spend profile</button>
+            <button type="button" class="js-close buttonlink">Cancel</button>
         </div>
     </div>
 </th:block>
@@ -189,15 +168,12 @@
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 class="heading-medium no-margin">Submit documents</h2>
         <p>Are you sure that you wish to submit your documents to Innovate UK?</p>
-        <hr/>
-        <div class="grid-row">
-            <div class="column-half">
-                <button type="button" class="js-close button buttonlink large">Cancel</button>
-            </div>
-            <form class="column-half alignright-button"
-                  th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}+'/submit'}" method="post">
-                <button class="button large" name="submit-other-documents">Submit</button>
+        <hr />
+        <div>
+            <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}+'/submit'}" method="post">
+                <button class="button" name="submit-other-documents">Submit</button>
             </form>
+            <button type="button" class="js-close buttonlink">Cancel</button>
         </div>
     </div>
 </th:block>
@@ -208,10 +184,10 @@
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 class="heading-medium no-margin">Update bank account details</h2>
         <p>Please confirm that any updates match the information supplied by the finance contact. After this update has been completed, previously supplied details will be overwritten.</p>
-        <hr/>
-        <div class="alignright-button">
-            <button type="button" class="js-close button buttonlink large">Cancel</button>
-            <button class="button large" name="submit-change-bank-details">Update bank account details</button>
+        <hr />
+        <div>
+            <button class="button" name="submit-change-bank-details">Update bank account details</button>
+            <button type="button" class="js-close buttonlink">Cancel</button>
         </div>
     </div>
 </th:block>
@@ -221,10 +197,10 @@
         <h2 class="heading-medium no-margin">Approve bank account</h2>
         <p>Approving the bank account will enable the finance checks to begin on the account</p>
         <p>This step should only be done after the bank account for the organisation has been checked and meets the requirements of Innovate UK</p>
-        <hr/>
-        <div class="alignright-button">
-            <button type="button" class="js-close button buttonlink large">Cancel</button>
-            <button class="button large" name="submit-approve-bank-details">Approve account</button>
+        <hr />
+        <div>
+            <button class="button" name="submit-approve-bank-details">Approve account</button>
+            <button type="button" class="js-close buttonlink">Cancel</button>
         </div>
     </div>
 </th:block>
@@ -236,51 +212,43 @@
         <h2 class="heading-medium no-margin">Accept documents</h2>
         <p>Once the documents are accepted, the project team can complete any remaining stages of the project set up
             process.</p>
-        <hr/>
-        <div class="grid-row">
-            <div class="column-half">
-                <button type="button" class="js-close button buttonlink large">Cancel</button>
-            </div>
-            <div class="column-half alignright">
-              <button class="button large" name="approved" value="true">Accept Documents</button>
-            </div>
+        <hr />
+        <div>
+            <button class="button" name="approved" value="true">Accept Documents</button>
+            <button type="button" class="js-close buttonlink">Cancel</button>
         </div>
     </div>
 </th:block>
 
 <!-- Reject Documents On Review -->
 <th:block th:fragment="modal-reject-docs">
-    <div class="modal-reject-docs" role="dialog" aria-hidden="true">
+    <div class="modal-reject-docs warning-modal" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
-        <h2 class="heading-medium no-margin">Reject documents</h2>
-        <p>If these documents are rejected, the project manager will be informed along with the reason for rejection.
-            They will then need to provide new versions of the documents before the project can begin.</p>
-        <hr/>
-        <div class="grid-row form-group">
-            <div class="column-half">
-                <button type="button" class="js-close button buttonlink large">Cancel</button>
-            </div>
-            <div class="column-half alignright-button">
-                <button class="button large button-warning" name="approved" value="false">Reject Documents</button>
-            </div>
+        <div class="modal-content">
+            <h2 class="heading-medium no-margin">Reject documents</h2>
+            <p>If these documents are rejected, the project manager will be informed along with the reason for rejection.
+                They will then need to provide new versions of the documents before the project can begin.</p>
+        </div>
+        <hr />
+        <div>
+            <button class="button" name="approved" value="false">Reject Documents</button>
+            <button type="button" class="js-close buttonlink">Cancel</button>
         </div>
     </div>
 </th:block>
 
 <!-- Confirmation on finance checks -->
 <th:block th:fragment="approve-eligibility-modal">
-  <div class="approve-eligibility-modal" role="dialog" aria-hidden="true">
-    <th:block th:insert="fragments/modals :: close-button" />
-    <h2 class="heading-medium no-margin">Approve eligible costs</h2>
-    <p>This partner will now be marked as eligible for this project.</p>
-    <hr />
-    <div class="column-half">
-        <button type="button" class="js-close buttonlink large">Cancel</button>
+    <div class="approve-eligibility-modal" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+        <h2 class="heading-medium no-margin">Approve eligible costs</h2>
+        <p>This partner will now be marked as eligible for this project.</p>
+        <hr />
+        <div>
+            <button class="button" name="approve">Approve eligible costs</button>
+            <button type="button" class="js-close buttonlink">Cancel</button>
+        </div>
     </div>
-    <div class="column-half alignright-button">
-      <button class="button" name="approve">Approve eligible costs</button>
-    </div>
-  </div>
 </th:block>
 
 <th:block th:fragment="modal-confirm-grant-offer-letter">
@@ -288,10 +256,10 @@
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 class="heading-medium no-margin">Send to Innovate UK</h2>
         <p>Once you send the signed grant offer letter we will review it and will contact you if we need further information.</p>
-        <hr/>
-        <div class="alignright-button">
-            <button type="button" class="js-close button buttonlink large">Cancel</button>
-            <button class="button large" name="confirmSubmit">Send to Innovate UK</button>
+        <hr />
+        <div>
+            <button class="button" name="confirmSubmit">Send to Innovate UK</button>
+            <button type="button" class="js-close buttonlink">Cancel</button>
         </div>
     </div>
 </th:block>
@@ -302,9 +270,10 @@
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 class="heading-medium no-margin">Send project spend profile</h2>
         <p>The project spend profile will be sent to both Innovate UK and the Monitoring Officer assigned to this project. This will be used for reference and the base for progress.</p>
+        <hr />
         <div>
-            <input type="submit" tabindex="0" class="button large" value="Send"/>
-            <button type="button" tabindex="1" class="js-close button buttonlink large">Cancel</button>
+            <input type="submit" tabindex="0" class="button" value="Send"/>
+            <button type="button" tabindex="1" class="js-close buttonlink">Cancel</button>
         </div>
     </div>
 </th:block>
@@ -317,9 +286,9 @@
         <p>Are you sure you want to submit your spend profile to the lead partner?</p>
         <hr />
         <form th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete(projectId=${model.projectId},organisationId=${model.organisationId})}" method="POST" >
-            <div class="alignright-button">
-                    <button type="button" class="js-close button buttonlink large">Cancel</button>
-                    <button class="button large" type="submit">Submit to lead partner</button>
+            <div>
+                <button class="button" type="submit">Submit to lead partner</button>
+                <button type="button" class="js-close buttonlink">Cancel</button>
             </div>
         </form>
     </div>
@@ -333,9 +302,9 @@
         <p><span class="heading-small no-margin"><th:block th:text="${orgName}" />'s</span> spend profile will be returned to them. They will be informed by email. If you have any specific requirements please contact them directly.</p>
         <hr />
         <form th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/incomplete(projectId=${model.projectId},organisationId=${model.organisationId})}" method="POST" >
-            <div class="alignright-button">
-                <button type="button" class="js-close button buttonlink large">Cancel</button>
-                <button class="button large" type="submit">Allow partner to edit</button>
+            <div>
+                <button class="button" type="submit">Allow partner to edit</button>
+                <button type="button" class="js-close buttonlink">Cancel</button>
             </div>
         </form>
     </div>
@@ -344,38 +313,34 @@
 <!-- Confirmation on approving spend profiles -->
 <th:block th:fragment="modal-accept-profile">
     <div class="modal-accept-profile" role="dialog" aria-hidden="true">
-      <th:block th:insert="fragments/modals :: close-button" />
-        <div>
-            <h2 class="heading-medium no-margin">Approved by Innovate UK</h2>
-            <p>The project spend profile has been approved and accepted by Innovate UK. The Project Manager will be
-                notified via email.</p>
-            <hr />
-            <form th:action="@{'/project/' + ${projectId} + '/spend-profile/approval/APPROVED'}" method="post">
-                <div class="column-half">
-                    <button type="button" class="js-close buttonlink large">Cancel</button>
-                </div>
-                <div class="column-half alignright-button">
-                    <button class="button large" type="submit">Approve</button>
-                </div>
-            </form>
-        </div>
+        <th:block th:insert="fragments/modals :: close-button" />
+        <h2 class="heading-medium no-margin">Approved by Innovate UK</h2>
+        <p>The project spend profile has been approved and accepted by Innovate UK. The Project Manager will be
+            notified via email.</p>
+        <hr />
+        <form th:action="@{'/project/' + ${projectId} + '/spend-profile/approval/APPROVED'}" method="post">
+            <div>
+                <button class="button" type="submit">Approve</button>
+                <button type="button" class="js-close buttonlink">Cancel</button>
+            </div>
+        </form>
     </div>
 </th:block>
 
 <th:block th:fragment="modal-reject-profile">
-    <div class="modal-reject-profile" role="dialog" aria-hidden="true">
+    <div class="modal-reject-profile warning-model" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
-        <h2 class="heading-medium no-margin">Reject spend profile</h2>
-        <p>Rejecting will return access to this section to all project partners.</p>
-        <p>Before taking this action please contact the project manager to explain why the the Spend Profile is being returned to them.</p>
+        <div class="modal-content">
+            <h2 class="heading-medium no-margin">Reject spend profile</h2>
+            <p>Rejecting will return access to the spend profile to all project partners.</p>
+            <p>You should contact the Project Manager to explain why the spend profile is being returned.</p>
+        </div>
+        <hr />
         <form th:action="@{'/project/' + ${projectId} + '/spend-profile/approval/REJECTED'}" method="post">
-          <hr />
-          <div class="column-half">
-              <button type="button" class="js-close buttonlink large">Cancel</button>
-          </div>
-          <div class="column-half alignright-button">
-              <button class="button button-warning large" type="submit">Reject spend profile</button>
-          </div>
+            <div>
+                <button class="button" type="submit">Reject spend profile</button>
+                <button type="button" class="js-close buttonlink">Cancel</button>
+            </div>
         </form>
     </div>
 </th:block>
@@ -384,19 +349,15 @@
 <th:block th:fragment="modal-accept-send-gol">
     <div class="modal-accept-send-gol" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
-        <div>
-            <h2 class="heading-medium no-margin">Send grant offer letter</h2>
-            <p>The Project Manager will be told by email.</p>
-            <hr />
-            <form th:action="@{'/project/' + ${projectId} + '/grant-offer-letter/send'}" method="post">
-                <div class="column-half">
-                    <button type="button" class="js-close buttonlink large">Cancel</button>
-                </div>
-                <div class="column-half alignright-button">
-                    <button class="button large" type="submit">Publish to project team</button>
-                </div>
-            </form>
-        </div>
+        <h2 class="heading-medium no-margin">Send grant offer letter</h2>
+        <p>The Project Manager will be told by email.</p>
+        <hr />
+        <form th:action="@{'/project/' + ${projectId} + '/grant-offer-letter/send'}" method="post">
+            <div>
+                <button class="button" type="submit">Publish to project team</button>
+                <button type="button" class="js-close buttonlink">Cancel</button>
+            </div>
+        </form>
     </div>
 </th:block>
 
@@ -404,19 +365,15 @@
 <th:block th:fragment="modal-accept-signed-gol">
     <div class="modal-accept-signed-gol" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
-        <div>
-            <h2 class="heading-medium no-margin">Accept signed grant offer letter</h2>
-            <p>This will inform the Project Manager that the signed grant offer letter has been accepted.</p>
-            <hr />
-            <form th:action="@{'/project/' + ${projectId} + '/grant-offer-letter/signed/APPROVED'}" method="post">
-                <div class="column-half">
-                    <button type="button" class="js-close buttonlink large">Cancel</button>
-                </div>
-                <div class="column-half alignright-button">
-                    <button class="button large"  type="submit">Accept signed grant offer letter</button>
-                </div>
-            </form>
-        </div>
+        <h2 class="heading-medium no-margin">Accept signed grant offer letter</h2>
+        <p>This will inform the Project Manager that the signed grant offer letter has been accepted.</p>
+        <hr />
+        <form th:action="@{'/project/' + ${projectId} + '/grant-offer-letter/signed/APPROVED'}" method="post">
+            <div>
+                <button class="button" type="submit">Accept signed grant offer letter</button>
+                <button type="button" class="js-close buttonlink">Cancel</button>
+            </div>
+        </form>
     </div>
 </th:block>
 
@@ -426,12 +383,10 @@
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 class="heading-medium no-margin-top">Confirm viability</h2>
         <p>This partner will now be marked as viable for this project.</p>
-        <hr/>
-        <div class="column-half">
-            <button class="buttonlink js-close" type="button">Cancel</button>
-        </div>
-        <div class="column-half alignright-button">
+        <hr />
+        <div>
             <button class="button" name="confirm-viability">Confirm viability</button>
+            <button class="buttonlink js-close" type="button">Cancel</button>
         </div>
     </div>
 </th:block>
@@ -442,12 +397,10 @@
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 class="heading-medium no-margin-top">Approve eligible costs</h2>
         <p>This partner will now be marked as eligible for this project.</p>
-        <hr/>
-        <div class="column-half">
-            <button class="buttonlink js-close" type="button">Cancel</button>
-        </div>
-        <div class="column-half alignright-button">
+        <hr />
+        <div>
             <button class="button" name="confirm-eligibility">Approve eligible costs</button>
+            <button class="buttonlink js-close" type="button">Cancel</button>
         </div>
     </div>
 </th:block>
@@ -460,12 +413,14 @@
         <p>Are you sure you wish to remove this organisation from the application. The innovate funding system will not inform collaborators of their removal, this action should be discussed with all applicants beforehand.</p>
         <p>This will remove all collaborators, and they will no longer be able to access this application. It will also delete the organisations financial details, and any assigned questions will be returned to you as the lead applicant.</p>
         <hr />
-
-        <div class="column-half">
-            <button type="button" class="js-close buttonlink large">Cancel</button>
-        </div>
-        <div class="column-half alignright-button">
-            <button class="button large" name="remove_person" value="remove_person" type="submit">Delete organisation</button>
+        <div>
+            <button class="button large"
+                    name="deleteLastApplicant"
+                    type="submit"
+                    th:value="${model.applicants.get(0).applicationInviteId}">
+                Delete organisation
+            </button>
+            <button type="button" class="js-close buttonlink">Cancel</button>
         </div>
     </div>
 </th:block>

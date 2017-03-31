@@ -17,12 +17,11 @@ import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
 import org.innovateuk.ifs.project.gol.YearlyGOLProfileTable;
-import org.innovateuk.ifs.project.resource.ApprovalType;
-import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
-import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.resource.ProjectState;
-import org.innovateuk.ifs.project.resource.SpendProfileTableResource;
-import org.innovateuk.ifs.user.domain.*;
+import org.innovateuk.ifs.project.resource.*;
+import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -71,8 +70,8 @@ import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.OrganisationTypeEnum.ACADEMIC;
 import static org.innovateuk.ifs.user.resource.OrganisationTypeEnum.BUSINESS;
+import static org.innovateuk.ifs.user.resource.OrganisationTypeEnum.RESEARCH;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
@@ -186,7 +185,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         tableZero.setMonths(asList(
                 new LocalDateResource(1, 3, 2019),new LocalDateResource(1, 4, 2019)));
 
-        organisations = newOrganisation().withOrganisationType(ACADEMIC).withName("Org1&", "Org2\"", "Org3<").build(3);
+        organisations = newOrganisation().withOrganisationType(RESEARCH).withName("Org1&", "Org2\"", "Org3<").build(3);
         nonAcademicUnfunded = newOrganisation().withOrganisationType(BUSINESS).withName("Org4").build();
         organisationResources = newOrganisationResource().build(4);
 
@@ -262,11 +261,11 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         when(organisationMapperMock.mapToResource(organisations.get(0))).thenReturn(organisationResources.get(0));
         when(organisationMapperMock.mapToResource(organisations.get(1))).thenReturn(organisationResources.get(1));
         when(organisationMapperMock.mapToResource(organisations.get(2))).thenReturn(organisationResources.get(2));
-        when(financeUtilMock.isUsingJesFinances(ACADEMIC.name())).thenReturn(true);
+        when(financeUtilMock.isUsingJesFinances(RESEARCH.getOrganisationTypeId())).thenReturn(true);
         when(financeRowServiceMock.financeDetails(project.getApplication().getId(), organisations.get(0).getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
         when(financeRowServiceMock.financeDetails(project.getApplication().getId(), organisations.get(1).getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
         when(financeRowServiceMock.financeDetails(project.getApplication().getId(), organisations.get(2).getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
-        when(projectFinanceServiceMock.getSpendProfileTable(any(ProjectOrganisationCompositeId.class)))
+        when(spendProfileServiceMock.getSpendProfileTable(any(ProjectOrganisationCompositeId.class)))
                 .thenReturn(ServiceResult.serviceSuccess(table));
         when(spendProfileTableCalculatorMock.calculateMonthlyTotals(table.getMonthlyCostsPerCategoryMap(),
                 table.getMonths().size())).thenReturn(monthlyTotals);
@@ -571,7 +570,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         Organisation o1 = organisation(BUSINESS, "OrgLeader&");
         Organisation o2 = organisation(BUSINESS, "Org2\"");
         Organisation o3 = organisation(BUSINESS, "Org3<");
-
+        
         Role leadAppRole = newRole(UserRoleType.LEADAPPLICANT)
                 .build();
         User u = newUser()
@@ -682,15 +681,15 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         when(organisationRepositoryMock.findOne(o1.getId())).thenReturn(o1);
         when(organisationRepositoryMock.findOne(o2.getId())).thenReturn(o2);
         when(organisationRepositoryMock.findOne(o3.getId())).thenReturn(o3);
-        when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(123L)).thenReturn(serviceSuccess(ApprovalType.APPROVED));
-        when(projectFinanceServiceMock.getSpendProfileTable(any(ProjectOrganisationCompositeId.class))).thenReturn(serviceSuccess(table));
+        when(spendProfileServiceMock.getSpendProfileStatusByProjectId(123L)).thenReturn(serviceSuccess(ApprovalType.APPROVED));
+        when(spendProfileServiceMock.getSpendProfileTable(any(ProjectOrganisationCompositeId.class))).thenReturn(serviceSuccess(table));
         when(projectRepositoryMock.findOne(123L)).thenReturn(project);
         when(rendererMock.renderTemplate(eq("common/grantoffer/grant_offer_letter.html"), any(Map.class))).thenReturn(ServiceResult.serviceSuccess(htmlFile));
         when(fileServiceMock.createFile(any(FileEntryResource.class), any(Supplier.class))).thenReturn(ServiceResult.serviceSuccess(fileEntryPair));
         when(fileEntryMapperMock.mapToResource(createdFile)).thenReturn(fileEntryResource);
         when(financeCheckServiceMock.getFinanceCheckSummary(project.getId())).thenReturn(ServiceResult.serviceSuccess(financeCheckSummaryResource));
 
-        when(financeUtilMock.isUsingJesFinances(BUSINESS.name())).thenReturn(false);
+        when(financeUtilMock.isUsingJesFinances(BUSINESS.getOrganisationTypeId())).thenReturn(false);
         when(financeRowServiceMock.financeDetails(project.getApplication().getId(), o1.getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
         when(financeRowServiceMock.financeDetails(project.getApplication().getId(), o2.getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
         when(financeRowServiceMock.financeDetails(project.getApplication().getId(), o3.getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
@@ -742,7 +741,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
     @Test
     public void testGenerateGrantOfferLetterFailureSpendProfilesNotApproved() {
         when(projectRepositoryMock.findOne(123L)).thenReturn(project);
-        when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(123L)).thenReturn(serviceSuccess(ApprovalType.REJECTED));
+        when(spendProfileServiceMock.getSpendProfileStatusByProjectId(123L)).thenReturn(serviceSuccess(ApprovalType.REJECTED));
 
         ServiceResult<Void> result = service.generateGrantOfferLetterIfReady(123L);
         assertTrue(result.isSuccess());
@@ -762,7 +761,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         PartnerOrganisation po = PartnerOrganisationBuilder.newPartnerOrganisation().withOrganisation(o1).withLeadOrganisation(true).build();
         Project project = newProject().withOtherDocumentsApproved(ApprovalType.REJECTED).withApplication(app).withPartnerOrganisations(asList(po)).withProjectUsers(asList(pm)).withDuration(10L).build();
 
-        when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(123L)).thenReturn(serviceSuccess(ApprovalType.APPROVED));
+        when(spendProfileServiceMock.getSpendProfileStatusByProjectId(123L)).thenReturn(serviceSuccess(ApprovalType.APPROVED));
         when(projectRepositoryMock.findOne(123L)).thenReturn(project);
 
         ServiceResult<Void> result = service.generateGrantOfferLetterIfReady(123L);
@@ -772,7 +771,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
     @Test
     public void testGenerateGrantOfferLetterNoProject() {
 
-        when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(123L)).thenReturn(serviceSuccess(ApprovalType.APPROVED));
+        when(spendProfileServiceMock.getSpendProfileStatusByProjectId(123L)).thenReturn(serviceSuccess(ApprovalType.APPROVED));
         when(projectRepositoryMock.findOne(123L)).thenReturn(null);
 
         ServiceResult<Void> result = service.generateGrantOfferLetterIfReady(123L);
@@ -801,9 +800,9 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
                 build();
 
         when(projectRepositoryMock.findOne(123L)).thenReturn(project);
-        when(financeUtilMock.isUsingJesFinances(BUSINESS.name())).thenReturn(false);
+        when(financeUtilMock.isUsingJesFinances(BUSINESS.getOrganisationTypeId())).thenReturn(false);
         when(financeRowServiceMock.financeDetails(project.getApplication().getId(), nonAcademicUnfunded.getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResourceZero));
-        when(projectFinanceServiceMock.getSpendProfileTable(new ProjectOrganisationCompositeId(projectId, nonAcademicUnfunded.getId())))
+        when(spendProfileServiceMock.getSpendProfileTable(new ProjectOrganisationCompositeId(projectId, nonAcademicUnfunded.getId())))
                 .thenReturn(ServiceResult.serviceSuccess(tableZero));
         when(spendProfileTableCalculatorMock.calculateMonthlyTotals(tableZero.getMonthlyCostsPerCategoryMap(),
                 tableZero.getMonths().size())).thenReturn(monthlyTotalsZero);
@@ -1022,15 +1021,15 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         when(organisationRepositoryMock.findOne(o1.getId())).thenReturn(o1);
         when(organisationRepositoryMock.findOne(o2.getId())).thenReturn(o2);
         when(organisationRepositoryMock.findOne(o3.getId())).thenReturn(o3);
-        when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(123L)).thenReturn(serviceSuccess(ApprovalType.APPROVED));
-        when(projectFinanceServiceMock.getSpendProfileTable(any(ProjectOrganisationCompositeId.class))).thenReturn(serviceSuccess(table));
+        when(spendProfileServiceMock.getSpendProfileStatusByProjectId(123L)).thenReturn(serviceSuccess(ApprovalType.APPROVED));
+        when(spendProfileServiceMock.getSpendProfileTable(any(ProjectOrganisationCompositeId.class))).thenReturn(serviceSuccess(table));
         when(projectRepositoryMock.findOne(123L)).thenReturn(project);
         when(rendererMock.renderTemplate(eq("common/grantoffer/grant_offer_letter.html"), any(Map.class))).thenReturn(ServiceResult.serviceSuccess(htmlFile));
         when(fileServiceMock.createFile(any(FileEntryResource.class), any(Supplier.class))).thenReturn(ServiceResult.serviceSuccess(fileEntryPair));
         when(fileEntryMapperMock.mapToResource(createdFile)).thenReturn(fileEntryResource);
         when(financeCheckServiceMock.getFinanceCheckSummary(project.getId())).thenReturn(ServiceResult.serviceSuccess(financeCheckSummaryResource));
 
-        when(financeUtilMock.isUsingJesFinances(BUSINESS.name())).thenReturn(false);
+        when(financeUtilMock.isUsingJesFinances(BUSINESS.getOrganisationTypeId())).thenReturn(false);
         when(financeRowServiceMock.financeDetails(project.getApplication().getId(), o1.getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResourceZeroGrantClaim));
         when(financeRowServiceMock.financeDetails(project.getApplication().getId(), o2.getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
         when(financeRowServiceMock.financeDetails(project.getApplication().getId(), o3.getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));

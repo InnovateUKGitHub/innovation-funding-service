@@ -7,22 +7,54 @@
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" th:with="fullwidth=true"/>
-<main id="content" class="full-width">
+<main tabindex="-1" id="content" class="full-width">
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${competitionSummary.competitionId})}" />
 
   <div class="grid-row">
       <div class="column-two-thirds">
             <div class="page-title">
-                <th:block th:insert="fragments/competition-management :: competition-id(competition=${competitionSummary})" />
-                <h1 class="heading-xlarge" th:text="${competitionSummary.competitionName}" />
+                <th:block th:insert="fragments/competition-management :: competition-id-and-name(${competitionSummary.competitionId},${competitionSummary.competitionName})" />
+                <h1 class="heading-xlarge">Funding decision</h1>
             </div>
-      </div>
-      <div class="column-third alignright extra-margin">
-        <th:block th:insert="fragments/competition-management :: competition-status(competition=${competitionSummary})" />
       </div>
   </div>
 
+    <form method="GET" th:object="${applicationSummaryQueryForm}">
+        <div class="search-filters extra-margin">
+            <fieldset>
+                <legend class="heading-medium">Filter applications</legend>
+                <div class="grid-row">
+                    <div class="column-half">
+                        <div class="form-group">
+                            <label class="form-label" for="stringFilter">Search by application number</label>
+                            <input type="text" class="form-control" id="stringFilter" name="stringFilter" th:field="*{stringFilter}"/>
+                        </div>
+                    </div>
+                    <div class="column-half">
+                        <div class="form-group">
+                            <label class="form-label" for="fundingFilter">Funding decision</label>
+                            <select name="fundingFilter" id="fundingFilter" class="form-control" th:field="*{fundingFilter}">
+                                <option value="">Show all</option>
+                                <option value="UNDECIDED">Blank</option>
+                                <option value="FUNDED">Successful</option>
+                                <option value="UNFUNDED">Unsuccessful</option>
+                                <option value="ON_HOLD">On hold</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            <div class="grid-row">
+                <div class="column-half">
+                    <a href="?" class="button button-clear no-margin">Clear all filters</a>
+                </div>
+                <div class="column-half alignright">
+                    <button class="button no-margin">Filter</button>
+                </div>
+            </div>
+        </div>
+    </form>
     <div th:if="${fundingNotDecidedForAllApplications}" class="event-alert">
         <p><span>A funding decision is required for all applications to the competition.</span></p>
     </div>
@@ -81,9 +113,7 @@
         </div>
 
     </form>
-    <form method="get">
-        <th:block th:insert="fragments/competition-management :: applications-pagination(results=${results})" />
-    </form>
+    <th:block th:include="fragments/elements :: general-pagination(pagination=${pagination})" />
 
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>

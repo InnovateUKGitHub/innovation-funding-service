@@ -55,7 +55,7 @@
             })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
             ga('create', '#springMessageText('ifs.webserver.googleanalytics.trackingid', '#')', 'auto');
             ga('send', 'pageview');
-            ga('set', 'anonymizeIp', true); 
+            ga('set', 'anonymizeIp', true);
         </script>
 
       <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -94,28 +94,19 @@
         <span>This is a new service – your <a href="mailto:IFSfeedback@innovateuk.gov.uk">feedback</a> will help us to improve it.</span>
       </p>
     </div>
-    <main id="content">
-
+    <main tabindex="-1" id="content">
       #parse("login-error.vm")
 
-      <div class="grid-row">
-          <section class="column-half">
-
-            <h1 class="heading-large">Sign in</h1>
-
+            <h1 class="heading-large">Innovation Funding Service</h1>
+            <h2 class="heading-medium">Sign in</h2>
             <form action="$flowExecutionUrl" method="post">
 
             #set ($serviceName = $rpUIContext.serviceName)
-            #if ($serviceName && !$rpContext.getRelyingPartyId().contains($serviceName))
-              <legend class="visuallyhidden">
-                Sign in
-              </legend>
-            #end
 
             #if ($passwordEnabled)
               <div class="form-group">
                 <label for="username" class="form-label"><span>E-mail address</span></label>
-                <input class="form-control form-control-3-4" id="username" name="j_username" type="email"
+                <input class="form-control" id="username" name="j_username" type="email"
                 	value="#if($username)$encoder.encodeForHTML($username)#end"
                     required="required"
                     data-required-errormessage="Please enter your e-mail address."
@@ -124,7 +115,7 @@
 
               <div class="form-group">
                 <label for="password" class="form-label">#springMessageText("idp.login.password", "Password")</label>
-                <input class="form-control form-control-3-4" id="password" name="j_password" type="password" value=""
+                <input class="form-control" id="password" name="j_password" type="password" value=""
                        required="required"
                        data-required-errormessage="Please enter your password.">
               </div>
@@ -134,6 +125,18 @@
                 <input id="_shib_idp_revokeConsent" type="checkbox" name="_shib_idp_revokeConsent" value="true">
                 #springMessageText("idp.attribute-release.revoke", "Clear prior granting of permission for release of your information to this service.")
               </div> -->
+
+              <details>
+                <summary><span class="summary">Need help signing in or creating an account?</span></summary>
+                <div class="panel panel-border-narrow">
+                  #set ($serviceName = $rpUIContext.serviceName)
+                  #if($serviceName && $rpContext.getRelyingPartyId().contains("assessor"))
+                  #parse("assessor.vm")
+                  #else
+                  #parse("applicant.vm")
+                  #end
+                </div>
+              </details>
 
             #if ($passwordEnabled)
               <div class="form-group extra-margin">
@@ -177,18 +180,8 @@
 
           -->
 
-          </section>
-          <section class="column-half">
 
-#set ($serviceName = $rpUIContext.serviceName)
-#if($serviceName && $rpContext.getRelyingPartyId().contains("assessor"))
-#parse("assessor.vm")
-#else
-#parse("applicant.vm")
-#end
 
-          </section>
-        </div>
 
         <p class="user-feedback"><span>Need help with this service?</span> <a href="$resourcesDomain/info/contact">Contact us</a></p>
         </main>
@@ -230,7 +223,7 @@
                 var emailField = jQuery("[type='email']").first();
                 var passwordField = jQuery("[type='password']").first();
                 var button = jQuery("button[type='submit']").first();
-                var valid = IFS.formValidation.checkEmail(emailField, false) && IFS.formValidation.checkRequired(passwordField, false);
+                var valid = IFS.core.formValidation.checkEmail(emailField, false) && IFS.core.formValidation.checkRequired(passwordField, false);
                 if (valid) {
                     button.get(0).childNodes[0].nodeValue='#springMessageText("idp.login.pleasewait", "Signing in, please wait...")';
                 }

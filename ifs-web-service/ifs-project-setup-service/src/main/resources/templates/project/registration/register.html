@@ -8,7 +8,7 @@
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main id="content">
+<main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='javascript:history.back()',currentApplication=${currentApplication}" />
         <h1 class="heading-large">Create your account</h1>
@@ -30,21 +30,6 @@
 
             <h2 class="heading-medium">Your details</h2>
 
-
-
-                <div th:class="${#fields.hasErrors('title')}? 'form-group error':'form-group'">
-                    <label class="form-label" for="title">
-                        <span class="form-label-bold">Title</span>
-                        <span class="error-message" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
-                    </label>
-                    <select class="form-control width-medium" id="title" name="title" th:field="*{title}">
-                        <option value="Mr">Mr</option>
-                        <option value="Miss">Miss</option>
-                        <option value="Mrs">Mrs</option>
-                        <option value="Ms">Ms</option>
-                        <option value="Dr">Dr</option>
-                    </select>
-                </div>
                 <div th:class="${#fields.hasErrors('firstName')}? 'form-group error':'form-group'">
                     <label class="form-label" for="firstName">
                         <span class="form-label-bold">First name</span>

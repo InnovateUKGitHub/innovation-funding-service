@@ -20,6 +20,7 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.util.MapFunctions;
+import org.innovateuk.ifs.validator.ApplicationFundingDecisionValidator;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -28,7 +29,6 @@ import org.mockito.stubbing.Answer;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -37,9 +37,8 @@ import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.application.constant.ApplicationStatusConstants.APPROVED;
-import static org.innovateuk.ifs.application.constant.ApplicationStatusConstants.REJECTED;
-import static org.innovateuk.ifs.application.constant.ApplicationStatusConstants.SUBMITTED;
+import static org.innovateuk.ifs.application.constant.ApplicationStatusConstants.*;
+import static org.innovateuk.ifs.application.resource.FundingDecision.FUNDED;
 import static org.innovateuk.ifs.application.resource.FundingDecision.UNDECIDED;
 import static org.innovateuk.ifs.application.transactional.ApplicationFundingServiceImpl.Notifications.APPLICATION_FUNDING;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
@@ -63,6 +62,9 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
 
     @Mock
     private FundingDecisionMapper fundingDecisionMapper;
+
+    @Mock
+    private ApplicationFundingDecisionValidator applicationFundingDecisionValidator;
     
     private ApplicationStatus approvedStatus;
     private ApplicationStatus rejectedStatus;
@@ -103,10 +105,11 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
 
     @Test
     public void testNotifyLeadApplicantsOfFundingDecisions() {
-        
-        Application application1 = newApplication().build();
-        Application application2 = newApplication().build();
-        Application application3 = newApplication().build();
+        Competition competition = newCompetition().build();
+
+        Application application1 = newApplication().withCompetition(competition).build();
+        Application application2 = newApplication().withCompetition(competition).build();
+        Application application3 = newApplication().withCompetition(competition).build();
 
         User application1LeadApplicant = newUser().build();
         User application2LeadApplicant = newUser().build();
@@ -137,8 +140,8 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
 
         Notification expectedFundingNotification = new Notification(systemNotificationSourceMock, expectedLeadApplicants, APPLICATION_FUNDING, expectedGlobalNotificationArguments);
 
-        List<Long> applicationIds = Arrays.asList(application1.getId(), application2.getId(), application3.getId());
-        List<Application> applications = Arrays.asList(application1, application2, application3);
+        List<Long> applicationIds = asList(application1.getId(), application2.getId(), application3.getId());
+        List<Application> applications = asList(application1, application2, application3);
         when(applicationRepositoryMock.findAll(applicationIds)).thenReturn(applications);
         when(applicationStatusRepositoryMock.findOne(APPROVED.getId())).thenReturn(ApplicationStatusBuilder.newApplicationStatus().withName(APPROVED).build());
         when(applicationStatusRepositoryMock.findOne(REJECTED.getId())).thenReturn(ApplicationStatusBuilder.newApplicationStatus().withName(REJECTED).build());
@@ -150,6 +153,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
         );
         when(notificationServiceMock.sendNotification(createNotificationExpectationsWithGlobalArgs(expectedFundingNotification), eq(EMAIL))).thenReturn(serviceSuccess());
         when(applicationServiceMock.setApplicationFundingEmailDateTime(any(Long.class), any(LocalDateTime.class))).thenReturn(serviceSuccess(new ApplicationResource()));
+        when(competitionServiceMock.manageInformState(competition.getId())).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.notifyLeadApplicantsOfFundingDecisions(notificationResource);
         assertTrue(result.isSuccess());
@@ -166,8 +170,10 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     @Test
     public void testNotifyLeadApplicantsOfFundingDecisionsAndJustLeadApplicants() {
 
-        Application application1 = newApplication().build();
-        Application application2 = newApplication().build();
+        Competition competition = newCompetition().build();
+
+        Application application1 = newApplication().withCompetition(competition).build();
+        Application application2 = newApplication().withCompetition(competition).build();
 
         // add some collaborators into the mix - they should not receive Notifications
         User application1LeadApplicant = newUser().build();
@@ -196,8 +202,8 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
         Notification expectedFundingNotification =
                 new Notification(systemNotificationSourceMock, expectedLeadApplicants, APPLICATION_FUNDING, emptyMap());
         
-        List<Long> applicationIds = Arrays.asList(application1.getId(), application2.getId());
-        List<Application> applications = Arrays.asList(application1, application2);
+        List<Long> applicationIds = asList(application1.getId(), application2.getId());
+        List<Application> applications = asList(application1, application2);
         when(applicationRepositoryMock.findAll(applicationIds)).thenReturn(applications);
         when(applicationStatusRepositoryMock.findOne(APPROVED.getId())).thenReturn(ApplicationStatusBuilder.newApplicationStatus().withName(APPROVED).build());
         when(applicationStatusRepositoryMock.findOne(REJECTED.getId())).thenReturn(ApplicationStatusBuilder.newApplicationStatus().withName(REJECTED).build());
@@ -214,6 +220,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
 
         when(notificationServiceMock.sendNotification(createSimpleNotificationExpectations(expectedFundingNotification), eq(EMAIL))).thenReturn(serviceSuccess());
         when(applicationServiceMock.setApplicationFundingEmailDateTime(any(Long.class), any(LocalDateTime.class))).thenReturn(serviceSuccess(new ApplicationResource()));
+        when(competitionServiceMock.manageInformState(competition.getId())).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.notifyLeadApplicantsOfFundingDecisions(notificationResource);
         assertTrue(result.isSuccess());
@@ -231,19 +238,56 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     	
     	Application application1 = newApplication().withId(1L).withCompetition(competition).withFundingDecision(FundingDecisionStatus.FUNDED).withApplicationStatus(openStatus).build();
      	Application application2 = newApplication().withId(2L).withCompetition(competition).withFundingDecision(FundingDecisionStatus.UNFUNDED).withApplicationStatus(openStatus).build();
-    	when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusId(competition.getId(), ApplicationStatusConstants.SUBMITTED.getId())).thenReturn(Arrays.asList(application1, application2));
+    	when(applicationRepositoryMock.findByCompetitionId(competition.getId())).thenReturn(asList(application1, application2));
+        when(applicationFundingDecisionValidator.isValid(any())).thenReturn(true);
 
     	Map<Long, FundingDecision> decision = asMap(1L, UNDECIDED);
     	
     	ServiceResult<Void> result = service.saveFundingDecisionData(competition.getId(), decision);
     	
     	assertTrue(result.isSuccess());
-    	verify(applicationRepositoryMock).findByCompetitionIdAndApplicationStatusId(competition.getId(), ApplicationStatusConstants.SUBMITTED.getId());
+    	verify(applicationRepositoryMock).findByCompetitionId(competition.getId());
     	assertEquals(openStatus, application1.getApplicationStatus());
     	assertEquals(openStatus, application2.getApplicationStatus());
     	assertEquals(FundingDecisionStatus.UNDECIDED, application1.getFundingDecision());
     	assertEquals(FundingDecisionStatus.UNFUNDED, application2.getFundingDecision());
     	assertNull(competition.getFundersPanelEndDate());
+    }
+
+    @Test
+    public void testSaveFundingDecisionDataWillResetEmailDate() {
+
+        Long applicationId = 1L;
+        Long competitionId = competition.getId();
+        Application application1 = newApplication().withId(applicationId).withCompetition(competition).withFundingDecision(FundingDecisionStatus.FUNDED).withApplicationStatus(openStatus).build();
+        when(applicationRepositoryMock.findByCompetitionId(competitionId)).thenReturn(asList(application1));
+        when(applicationFundingDecisionValidator.isValid(any())).thenReturn(true);
+
+
+        Map<Long, FundingDecision> applicationDecisions = asMap(applicationId, UNDECIDED);
+
+        ServiceResult<Void> result = service.saveFundingDecisionData(competitionId, applicationDecisions);
+
+        assertTrue(result.isSuccess());
+        verify(applicationRepositoryMock).findByCompetitionId(competitionId);
+        verify(applicationServiceMock).setApplicationFundingEmailDateTime(applicationId, null);
+    }
+
+    @Test
+    public void testSaveFundingDecisionDataWontResetEmailDateForSameDecision() {
+        Long applicationId = 1L;
+        Long competitionId = competition.getId();
+        Application application1 = newApplication().withId(applicationId).withCompetition(competition).withFundingDecision(FundingDecisionStatus.FUNDED).withApplicationStatus(openStatus).build();
+        when(applicationRepositoryMock.findByCompetitionId(competitionId)).thenReturn(asList(application1));
+        when(applicationFundingDecisionValidator.isValid(any())).thenReturn(true);
+
+        Map<Long, FundingDecision> applicationDecisions = asMap(applicationId, FUNDED);
+
+        ServiceResult<Void> result = service.saveFundingDecisionData(competitionId, applicationDecisions);
+
+        assertTrue(result.isSuccess());
+        verify(applicationRepositoryMock).findByCompetitionId(competitionId);
+        verify(applicationServiceMock, never()).setApplicationFundingEmailDateTime(any(Long.class), any(LocalDateTime.class));
     }
 
     public static Notification createNotificationExpectationsWithGlobalArgs(Notification expectedNotification) {

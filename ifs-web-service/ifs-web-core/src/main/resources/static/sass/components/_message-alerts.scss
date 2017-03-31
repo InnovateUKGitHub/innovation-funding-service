@@ -31,7 +31,7 @@ Large message panel
 	background-position: 20px 50%;
 	background-size: 20px 20px;
 	clear: both;
-	p, .heading-small, ul, ol {
+	p, .heading-small, .heading-medium, ul, ol {
 		margin: 0;
 	}
 	@include media-down(mobile){
@@ -77,23 +77,4 @@ Large message panel
 	@extend %alert-panel;
 	background-image: url('../images/icons/icon-messages/declare-icon.png');
 	border-color: $text-colour;
-}
-
-/* SG
-
-# IFS/Small Alert Dialog
-Small dialog warning usually used as a warning before submitting a form
-
-```
-<p class="form-hint icon-info-small-blue">Only you can see this level of detail</p>
-
- ```
-*/
-
-.icon-info-small-blue{
-	background: url(../images/icons/icon-messages/info-icon.png) no-repeat;
-	clear: both;
-	display: block;
-	min-height: 35px;
-	padding-left: 35px;
 }
