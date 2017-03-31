@@ -190,7 +190,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Void sendPasswordResetNotification(String email) {
-        return userRestService.sendPasswordResetNotification(email).getSuccessObjectOrThrowException();
+        Void successObjectOrThrowException = null;
+        try {
+            successObjectOrThrowException = userRestService.sendPasswordResetNotification(email).getSuccessObjectOrThrowException();
+        } catch (ObjectNotFoundException e) {
+            LOG.warn("Invalid email address : " + email);
+        }
+        return successObjectOrThrowException;
     }
 
     @Override

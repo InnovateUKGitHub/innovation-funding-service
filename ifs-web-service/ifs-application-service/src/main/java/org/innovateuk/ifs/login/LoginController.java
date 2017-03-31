@@ -57,11 +57,7 @@ public class LoginController {
             return LOGIN_BASE + "/" + RESET_PASSWORD;
         } else {
             LOG.warn("Reset password for: " + resetPasswordRequestForm.getEmail());
-            try {
-                userService.sendPasswordResetNotification(resetPasswordRequestForm.getEmail());
-            } catch (ObjectNotFoundException e) {
-                LOG.warn("Invalid email address : " + resetPasswordRequestForm.getEmail());
-            }
+            userService.sendPasswordResetNotification(resetPasswordRequestForm.getEmail());
             return LOGIN_BASE + "/" + RESET_PASSWORD_NOTIFICATION_SEND;
         }
     }
@@ -69,7 +65,6 @@ public class LoginController {
     @RequestMapping(value = "/" + LOGIN_BASE + "/" + RESET_PASSWORD + "/hash/{hash}", method = RequestMethod.GET)
     public String resetPassword(@PathVariable("hash") String hash, @ModelAttribute ResetPasswordForm resetPasswordForm, Model model, HttpServletRequest request) {
         userService.checkPasswordResetHash(hash);
-
         return LOGIN_BASE + "/" + RESET_PASSWORD_FORM;
     }
 
