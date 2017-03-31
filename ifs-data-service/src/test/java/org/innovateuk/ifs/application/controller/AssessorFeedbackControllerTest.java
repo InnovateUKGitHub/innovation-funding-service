@@ -104,60 +104,6 @@ public class AssessorFeedbackControllerTest extends BaseControllerMockMVCTest<As
                 assessorFeedbackServiceMock, getFileAction).
                 andDo(documentFileGetDetailsMethod(document, asListOfPairs("applicationId", "123"), emptyList()));
     }
-    
-    @Test
-    public void testAssessorFeedbackUploaded() throws Exception {
-
-        when(assessorFeedbackServiceMock.assessorFeedbackUploaded(123L)).thenReturn(serviceSuccess(true));
-
-        mockMvc.
-                perform(
-                        MockMvcRequestBuilders.get("/assessorfeedback/assessorFeedbackUploaded").
-                                param("competitionId", "123").
-                                header("IFS_AUTH_TOKEN", "123abc")
-                ).
-                andExpect(status().isOk()).
-                andExpect(content().string("true")).
-                andDo(documentAssessorFeedbackUploaded());
-
-        verify(assessorFeedbackServiceMock).assessorFeedbackUploaded(123L);
-    }
-    
-    @Test
-    public void testSubmitAssessorFeedback() throws Exception {
-
-        when(assessorFeedbackServiceMock.submitAssessorFeedback(123L)).thenReturn(serviceSuccess());
-        when(assessorFeedbackServiceMock.notifyLeadApplicantsOfAssessorFeedback(123L)).thenReturn(serviceSuccess());
-
-        mockMvc.
-                perform(
-                        MockMvcRequestBuilders.post("/assessorfeedback/submitAssessorFeedback/123").
-                                header("IFS_AUTH_TOKEN", "123abc")
-                ).
-                andExpect(status().isOk()).
-                andExpect(content().string("")).
-                andDo(documentSubmitAssessorFeedback());
-
-        verify(assessorFeedbackServiceMock).submitAssessorFeedback(123L);
-        verify(assessorFeedbackServiceMock).notifyLeadApplicantsOfAssessorFeedback(123L);
-    }
-
-    @Test
-    public void testSubmitAssessorFeedbackButSubmissionFailsSoNoEmailsSent() throws Exception {
-
-        when(assessorFeedbackServiceMock.submitAssessorFeedback(123L)).thenReturn(serviceFailure(internalServerErrorError()));
-
-        mockMvc.
-                perform(
-                        MockMvcRequestBuilders.post("/assessorfeedback/submitAssessorFeedback/123").
-                                header("IFS_AUTH_TOKEN", "123abc")
-                ).
-                andExpect(status().isInternalServerError()).
-                andExpect(content().json(toJson(new RestErrorResponse(internalServerErrorError()))));
-
-        verify(assessorFeedbackServiceMock).submitAssessorFeedback(123L);
-        verify(assessorFeedbackServiceMock, never()).notifyLeadApplicantsOfAssessorFeedback(123L);
-    }
 
     private RestDocumentationResultHandler documentAssessorFeedbackUploaded() {
     	return document("assessor-feedback/assessorFeedbackUploaded",

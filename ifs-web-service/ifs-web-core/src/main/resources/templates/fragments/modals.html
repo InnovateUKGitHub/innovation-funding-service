@@ -78,26 +78,6 @@
     </div>
 </th:block>
 
-<!-- Publish assessor feedback modal window -->
-<th:block th:fragment="modal-submit-assessor-feedback">
-    <div class="modal-submit-assessor-feedback" role="dialog" aria-hidden="true">
-        <th:block th:insert="fragments/modals :: close-button" />
-
-        <h2 class="heading-medium no-margin">Publish assessor feedback</h2>
-        <p>This will inform applicants that assessor feedback is available.</p>
-        <p>This step cannot be undone.</p>
-        <hr />
-        <div>
-            <form method="post" action="#" id="submit-assessor-feedback-form"
-                  th:action="@{/competition/{competitionId}/assessorfeedbacksubmit(competitionId=${competitionSummary.getCompetitionId()})}">
-                <button class="button" name="publish" value="publish" type="submit">Publish assessor feedback</button>
-                <button type="button" class="js-close buttonlink">Cancel</button>
-            </form>
-        </div>
-    </div>
-</th:block>
-
-
 <!-- save monotiring officer -->
 <th:block th:fragment="modal-assign-mo">
     <div class="modal-assign-mo" role="dialog" aria-hidden="true">

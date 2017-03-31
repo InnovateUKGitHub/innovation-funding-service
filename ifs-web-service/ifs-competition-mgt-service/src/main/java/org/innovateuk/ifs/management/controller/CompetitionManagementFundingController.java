@@ -41,9 +41,6 @@ public class CompetitionManagementFundingController {
     private ApplicationSummaryRestService applicationSummaryRestService;
 
     @Autowired
-    private AssessorFeedbackService assessorFeedbackService;
-
-    @Autowired
     private CompetitionService competitionService;
 
     @Autowired
