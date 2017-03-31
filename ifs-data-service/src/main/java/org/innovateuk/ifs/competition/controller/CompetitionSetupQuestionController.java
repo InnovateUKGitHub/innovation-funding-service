@@ -17,12 +17,12 @@ public class CompetitionSetupQuestionController {
     @Autowired
     private CompetitionSetupQuestionService competitionSetupQuestionService;
 
-    @RequestMapping("/{id}")
+    @GetMapping("/{id}")
     public RestResult<CompetitionSetupQuestionResource> getByQuestionId(@PathVariable("id") final Long id) {
         return competitionSetupQuestionService.getByQuestionId(id).toGetResponse();
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @PutMapping("/{id}")
     public RestResult<Void> save(@PathVariable("id") final Long questionId,
                                  @RequestBody final CompetitionSetupQuestionResource competitionSetupQuestionResource) {
         return competitionSetupQuestionService.save(competitionSetupQuestionResource).toPutResponse();

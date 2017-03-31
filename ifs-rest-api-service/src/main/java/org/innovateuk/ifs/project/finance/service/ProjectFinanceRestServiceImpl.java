@@ -15,12 +15,11 @@ import org.innovateuk.ifs.project.resource.SpendProfileCSVResource;
 import org.innovateuk.ifs.project.resource.SpendProfileResource;
 import org.innovateuk.ifs.project.resource.SpendProfileTableResource;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.projectFinanceResourceListType;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * Rest Service for dealing with Project finance operations
@@ -99,7 +98,7 @@ public class ProjectFinanceRestServiceImpl extends BaseRestService implements Pr
         return getWithRestResult(projectFinanceRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/viability", ViabilityResource.class);
     }
 
-    @RequestMapping(value = "/{projectId}/partner-organisation/{organisationId}/viability/{viability}", method = POST)
+    @PostMapping("/{projectId}/partner-organisation/{organisationId}/viability/{viability}")
     public RestResult<Void> saveViability(Long projectId, Long organisationId, Viability viability, ViabilityRagStatus viabilityRagStatus) {
 
         String postUrl = projectFinanceRestURL + "/" + projectId + "/partner-organisation/" + organisationId +
