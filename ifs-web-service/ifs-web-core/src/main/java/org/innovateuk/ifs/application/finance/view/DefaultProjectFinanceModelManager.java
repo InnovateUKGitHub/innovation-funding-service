@@ -150,7 +150,7 @@ public class DefaultProjectFinanceModelManager implements FinanceModelManager {
                 return ((LabourCostCategory)financeDetails.get(rowType)).getWorkingDaysPerYearCostItem();
             }
         }
-        throw new UnsupportedOperationException("Finance data is missing labour working days.  This is an unexpeted state.");
+        throw new UnsupportedOperationException("Finance data is missing labour working days.  This is an unexpected state.");
     }
 
     private Map<FinanceRowType, BigDecimal> buildSectionDifferencesMap(Map<FinanceRowType, FinanceRowCostCategory> organisationApplicationFinances,
