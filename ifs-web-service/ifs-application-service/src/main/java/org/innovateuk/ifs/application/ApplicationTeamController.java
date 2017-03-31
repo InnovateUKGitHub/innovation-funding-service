@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import static java.lang.String.format;
-import static org.innovateuk.ifs.application.constant.ApplicationStatus.CREATED;
-import static org.innovateuk.ifs.application.constant.ApplicationStatus.OPEN;
+import static org.innovateuk.ifs.application.resource.ApplicationStatus.CREATED;
+import static org.innovateuk.ifs.application.resource.ApplicationStatus.OPEN;
 
 /**
  * This controller will handle all requests that are related to the read only view of the application team.
@@ -64,7 +64,7 @@ public class ApplicationTeamController {
 
     private void changeApplicationStatusToOpen(ApplicationResource applicationResource) {
         if (CREATED == applicationResource.getApplicationStatus()) {
-            applicationService.updateStatus(applicationResource.getId(), OPEN.getId()).getSuccessObjectOrThrowException();
+            applicationService.updateStatus(applicationResource.getId(), OPEN).getSuccessObjectOrThrowException();
         }
     }
 }

@@ -1,8 +1,7 @@
 package org.innovateuk.ifs.application.service;
 
-import org.innovateuk.ifs.application.constant.ApplicationStatus;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.application.resource.ApplicationStatus;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -19,8 +18,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.application.service.Futures.call;
 import static java.util.stream.Collectors.toMap;
+import static org.innovateuk.ifs.application.service.Futures.call;
 
 /**
  * This class contains methods to retrieve and store {@link ApplicationResource} related data,
@@ -151,8 +150,8 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public ServiceResult<Void> updateStatus(Long applicationId, Long statusId) {
-        return applicationRestService.updateApplicationStatus(applicationId, statusId).toServiceResult();
+    public ServiceResult<Void> updateStatus(Long applicationId, ApplicationStatus status) {
+        return applicationRestService.updateApplicationStatus(applicationId, status).toServiceResult();
     }
 
     @Override

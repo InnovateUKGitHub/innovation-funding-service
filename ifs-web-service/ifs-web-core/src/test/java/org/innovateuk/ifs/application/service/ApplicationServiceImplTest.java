@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.application.constant.ApplicationStatus;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationStatus;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -19,15 +19,13 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import static java.math.BigDecimal.ZERO;
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static java.math.BigDecimal.ZERO;
-import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.calls;
 import static org.mockito.Mockito.when;
@@ -170,10 +168,10 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     @Test
     public void testUpdateStatus() throws Exception {
     	Long applicationId = 2L;
-        Long statusId = 1L;
-        when(applicationRestService.updateApplicationStatus(applicationId, statusId)).thenReturn(restSuccess());
-        service.updateStatus(applicationId, statusId);
-        Mockito.inOrder(applicationRestService).verify(applicationRestService, calls(1)).updateApplicationStatus(applicationId, statusId);
+        ApplicationStatus status = ApplicationStatus.APPROVED;
+        when(applicationRestService.updateApplicationStatus(applicationId, status)).thenReturn(restSuccess());
+        service.updateStatus(applicationId, status);
+        Mockito.inOrder(applicationRestService).verify(applicationRestService, calls(1)).updateApplicationStatus(applicationId, status);
     }
 
     @Test

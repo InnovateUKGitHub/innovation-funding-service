@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.validator;
 
-import org.innovateuk.ifs.application.constant.ApplicationStatus;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
+import org.innovateuk.ifs.application.resource.ApplicationStatus;
 import org.junit.Before;
 import org.junit.Test;
 

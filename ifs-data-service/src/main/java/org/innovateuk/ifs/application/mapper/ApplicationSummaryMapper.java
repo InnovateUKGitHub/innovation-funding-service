@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.mapper;
 
-import org.innovateuk.ifs.application.constant.ApplicationStatus;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.resource.ApplicationStatus;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
@@ -11,7 +11,6 @@ import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.mapstruct.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +62,7 @@ public abstract class ApplicationSummaryMapper {
         if (source.getFundingDecision() != null) {
             result.setFundingDecision(fundingDecisionMapper.mapToResource(source.getFundingDecision()));
         }
-        if (ApplicationStatus.APPROVED.getId().equals(source.getApplicationStatus().getId())) {
+        if (source.getApplicationStatus() == ApplicationStatus.APPROVED) {
             result.setFundingDecision(FundingDecision.FUNDED);
         }
 
@@ -87,9 +86,9 @@ public abstract class ApplicationSummaryMapper {
 
     private String status(Application source, Integer completedPercentage) {
 
-        if (ApplicationStatus.SUBMITTED.getId().equals(source.getApplicationStatus().getId())
-                || ApplicationStatus.APPROVED.getId().equals(source.getApplicationStatus().getId())
-                || ApplicationStatus.REJECTED.getId().equals(source.getApplicationStatus().getId())) {
+        if (source.getApplicationStatus() == ApplicationStatus.SUBMITTED
+                || source.getApplicationStatus() == ApplicationStatus.APPROVED
+                || source.getApplicationStatus() == ApplicationStatus.REJECTED) {
             return "Submitted";
         }
 

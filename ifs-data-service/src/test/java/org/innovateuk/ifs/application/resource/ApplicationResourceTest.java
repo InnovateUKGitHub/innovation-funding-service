@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.resource;
 
-import org.innovateuk.ifs.application.constant.ApplicationStatus;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.user.domain.ProcessRole;

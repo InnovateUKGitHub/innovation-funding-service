@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.application;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.constant.ApplicationStatus;
 import org.innovateuk.ifs.application.populator.ApplicationTeamModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationStatus;
 import org.innovateuk.ifs.application.viewmodel.ApplicationTeamApplicantRowViewModel;
 import org.innovateuk.ifs.application.viewmodel.ApplicationTeamOrganisationRowViewModel;
 import org.innovateuk.ifs.application.viewmodel.ApplicationTeamViewModel;
@@ -27,8 +27,8 @@ import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.application.constant.ApplicationStatus.CREATED;
-import static org.innovateuk.ifs.application.constant.ApplicationStatus.OPEN;
+import static org.innovateuk.ifs.application.resource.ApplicationStatus.CREATED;
+import static org.innovateuk.ifs.application.resource.ApplicationStatus.OPEN;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
@@ -333,7 +333,7 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
         Map<String, UserResource> usersMap = setupUserResources();
         UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
 
-        when(applicationService.updateStatus(applicationResource.getId(), OPEN.getId())).thenReturn(serviceSuccess());
+        when(applicationService.updateStatus(applicationResource.getId(), OPEN)).thenReturn(serviceSuccess());
 
         setLoggedInUser(leadApplicant);
         mockMvc.perform(get("/application/{applicationId}/begin", applicationResource.getId()))
@@ -343,7 +343,7 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
         InOrder inOrder = inOrder(applicationService, inviteRestService, userService);
         inOrder.verify(applicationService).getById(applicationResource.getId());
         inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
-        inOrder.verify(applicationService).updateStatus(applicationResource.getId(), OPEN.getId());
+        inOrder.verify(applicationService).updateStatus(applicationResource.getId(), OPEN);
         inOrder.verifyNoMoreInteractions();
     }
 

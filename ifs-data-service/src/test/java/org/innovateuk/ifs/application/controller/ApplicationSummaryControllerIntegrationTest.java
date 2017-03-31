@@ -1,11 +1,7 @@
 package org.innovateuk.ifs.application.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
-import org.innovateuk.ifs.application.constant.ApplicationStatus;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
-import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
-import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.user.resource.RoleResource;
@@ -94,7 +90,7 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
         assertEquals(5, resource.getApplicationsSubmitted());
 
         ApplicationResource application = applicationService.findAll().getSuccessObject().get(0);
-        applicationService.updateApplicationStatus(application.getId(), ApplicationStatus.SUBMITTED.getId());
+        applicationService.updateApplicationStatus(application.getId(), ApplicationStatus.SUBMITTED);
 
         result = controller.getCompetitionSummary(COMPETITION_ID);
         assertTrue(result.isSuccess());
