@@ -29,12 +29,12 @@ import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.transactional.ProjectGrantOfferService;
 import org.innovateuk.ifs.project.transactional.ProjectService;
+import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
-import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.innovateuk.ifs.validator.util.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -132,6 +132,9 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     @Autowired
     private OrganisationFinanceDelegate organisationFinanceDelegate;
 
+    @Autowired
+    private FinanceUtil financeUtil;
+
     static {
         RESEARCH_CAT_GROUP_ORDER.add(AcademicCostCategoryGenerator.DIRECTLY_INCURRED_STAFF.getLabel());
         RESEARCH_CAT_GROUP_ORDER.add(AcademicCostCategoryGenerator.DIRECTLY_ALLOCATED_INVESTIGATORS.getLabel());
@@ -181,47 +184,47 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
                 project(projectOrganisationCompositeId.getProjectId())).
                 andOnSuccess((spendProfile, project) -> {
 
-            List<CostCategory> costCategories = spendProfile.getCostCategoryType().getCostCategories();
-            Organisation organisation = organisationRepository.findOne(projectOrganisationCompositeId.getOrganisationId());
-            CostGroup eligibleCosts = spendProfile.getEligibleCosts();
-            CostGroup spendProfileFigures = spendProfile.getSpendProfileFigures();
+                    List<CostCategory> costCategories = spendProfile.getCostCategoryType().getCostCategories();
+                    Organisation organisation = organisationRepository.findOne(projectOrganisationCompositeId.getOrganisationId());
+                    CostGroup eligibleCosts = spendProfile.getEligibleCosts();
+                    CostGroup spendProfileFigures = spendProfile.getSpendProfileFigures();
 
-            Map<Long, BigDecimal> eligibleCostsPerCategory =
-                    simpleToLinkedMap(
-                            costCategories,
-                            CostCategory::getId,
-                            category -> findSingleMatchingCostByCategory(eligibleCosts, category).getValue());
+                    Map<Long, BigDecimal> eligibleCostsPerCategory =
+                            simpleToLinkedMap(
+                                    costCategories,
+                                    CostCategory::getId,
+                                    category -> findSingleMatchingCostByCategory(eligibleCosts, category).getValue());
 
-            Map<Long, List<Cost>> spendProfileCostsPerCategory =
-                    simpleToLinkedMap(
-                            costCategories,
-                            CostCategory::getId,
-                            category -> findMultipleMatchingCostsByCategory(spendProfileFigures, category));
+                    Map<Long, List<Cost>> spendProfileCostsPerCategory =
+                            simpleToLinkedMap(
+                                    costCategories,
+                                    CostCategory::getId,
+                                    category -> findMultipleMatchingCostsByCategory(spendProfileFigures, category));
 
-            LocalDate startDate = spendProfile.getProject().getTargetStartDate();
-            int durationInMonths = spendProfile.getProject().getDurationInMonths().intValue();
+                    LocalDate startDate = spendProfile.getProject().getTargetStartDate();
+                    int durationInMonths = spendProfile.getProject().getDurationInMonths().intValue();
 
-            List<LocalDate> months = IntStream.range(0, durationInMonths).mapToObj(startDate::plusMonths).collect(toList());
-            List<LocalDateResource> monthResources = simpleMap(months, LocalDateResource::new);
+                    List<LocalDate> months = IntStream.range(0, durationInMonths).mapToObj(startDate::plusMonths).collect(toList());
+                    List<LocalDateResource> monthResources = simpleMap(months, LocalDateResource::new);
 
-            Map<Long, List<BigDecimal>> spendFiguresPerCategoryOrderedByMonth =
-                    simpleLinkedMapValue(spendProfileCostsPerCategory, costs -> orderCostsByMonths(costs, months, project.getTargetStartDate()));
+                    Map<Long, List<BigDecimal>> spendFiguresPerCategoryOrderedByMonth =
+                            simpleLinkedMapValue(spendProfileCostsPerCategory, costs -> orderCostsByMonths(costs, months, project.getTargetStartDate()));
 
-            SpendProfileTableResource table = new SpendProfileTableResource();
-            table.setCostCategoryResourceMap(buildCostCategoryIdMap(costCategories));
-            table.setMonths(monthResources);
-            table.setEligibleCostPerCategoryMap(eligibleCostsPerCategory);
-            table.setMonthlyCostsPerCategoryMap(spendFiguresPerCategoryOrderedByMonth);
-            table.setMarkedAsComplete(spendProfile.isMarkedAsComplete());
-            checkTotalForMonthsAndAddToTable(table);
+                    SpendProfileTableResource table = new SpendProfileTableResource();
+                    table.setCostCategoryResourceMap(buildCostCategoryIdMap(costCategories));
+                    table.setMonths(monthResources);
+                    table.setEligibleCostPerCategoryMap(eligibleCostsPerCategory);
+                    table.setMonthlyCostsPerCategoryMap(spendFiguresPerCategoryOrderedByMonth);
+                    table.setMarkedAsComplete(spendProfile.isMarkedAsComplete());
+                    checkTotalForMonthsAndAddToTable(table);
 
-           boolean isResearch = OrganisationTypeEnum.isResearch(organisation.getOrganisationType().getId());
-            if (isResearch) {
-                table.setCostCategoryGroupMap(groupCategories(table));
-            }
+                    boolean isUsingJesFinances = financeUtil.isUsingJesFinances(organisation.getOrganisationType().getName());
+                    if (isUsingJesFinances) {
+                        table.setCostCategoryGroupMap(groupCategories(table));
+                    }
 
-            return serviceSuccess(table);
-        });
+                    return serviceSuccess(table);
+                });
     }
 
     private Map<Long, CostCategoryResource> buildCostCategoryIdMap(List<CostCategory> costCategories) {

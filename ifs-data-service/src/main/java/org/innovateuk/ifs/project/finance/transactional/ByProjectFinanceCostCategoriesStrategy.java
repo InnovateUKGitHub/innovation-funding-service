@@ -14,6 +14,7 @@ import org.innovateuk.ifs.project.finance.domain.CostCategoryType;
 import org.innovateuk.ifs.project.finance.repository.CostCategoryTypeRepository;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.transactional.ProjectService;
+import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,7 +26,6 @@ import java.util.function.Supplier;
 
 import static java.util.EnumSet.allOf;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.user.resource.OrganisationTypeEnum.isResearch;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -48,6 +48,9 @@ public class ByProjectFinanceCostCategoriesStrategy implements CostCategoryTypeS
     @Autowired
     private CostCategoryTypeRepository costCategoryTypeRepository;
 
+    @Autowired
+    private FinanceUtil financeUtil;
+
     static String DESCRIPTION_PREFIX = "Cost Category Type for Categories ";
 
     @Override
@@ -57,7 +60,7 @@ public class ByProjectFinanceCostCategoriesStrategy implements CostCategoryTypeS
                         find(projectFinanceResource(project.getId(), organisation.getId())).
                                 andOnSuccess((finances) -> {
                                     List<? extends CostCategoryGenerator> costCategoryGenerators;
-                                    if (!isResearch(organisation.getOrganisationType())) {
+                                    if (!financeUtil.isUsingJesFinances(organisation.getOrganisationTypeName())) {
                                         Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = finances.getFinanceOrganisationDetails();
                                         costCategoryGenerators = sort(financeOrganisationDetails.keySet());
                                     } else {
