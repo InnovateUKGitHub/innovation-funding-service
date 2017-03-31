@@ -84,6 +84,10 @@ public class FinanceCheckSummaryResourceBuilder extends BaseBuilder<FinanceCheck
         return withArray((financeChecksAllApproved, financeCheckResource) -> setField("financeChecksAllApproved", financeChecksAllApproved, financeCheckResource), financeChecksAllApprovedLst);
     }
 
+    public FinanceCheckSummaryResourceBuilder withBankDetailslApproved(Boolean... bankDetailslApprovedLst) {
+        return withArray((bankDetailslApproved, financeCheckResource) -> setField("bankDetailsApproved", bankDetailslApproved, financeCheckResource), bankDetailslApprovedLst);
+    }
+
 
     public FinanceCheckSummaryResourceBuilder withSpendProfileGeneratedBy(String... spendProfileGeneratedByLst) {
         return withArray((spendProfileGeneratedBy, financeCheckResource) -> setField("spendProfileGeneratedBy", spendProfileGeneratedBy, financeCheckResource), spendProfileGeneratedByLst);
