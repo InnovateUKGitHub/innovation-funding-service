@@ -488,4 +488,60 @@
     </th:block>
 </th:block>
 
+<th:block th:fragment="overheads">
+    <th:block th:if="${typeOfChange == 'Change'}">
+        <tr th:class="${changePair.submitted.rateType.name != changePair.changed.rateType.name} ? 'item-changed' : ''">
+            <td rowspan="3" th:text="${typeOfChange}"></td>
+            <td rowspan="3" th:text="${rowTypeName}"></td>
+
+            <th scope="row">Rate Type</th>
+            <td th:text="${changePair.submitted.rateType.label}"></td>
+            <td th:text="${changePair.changed.rateType.label}" colspan="2" th:class="${changePair.submitted.rateType.name != changePair.changed.rateType.name} ? 'item-changed' : ''"></td>
+        </tr>
+
+        <tr th:class="${changePair.submitted.rate != changePair.changed.rate} ? 'item-changed' : ''">
+            <th scope="row">Amount</th>
+            <td th:text="${changePair.submitted.rate}"></td>
+            <td th:text="${changePair.changed.rate}" colspan="2" th:class="${changePair.submitted.rate!= changePair.changed.rate} ? 'item-changed' : ''"></td>
+        </tr>
+        <tr></tr>
+    </th:block>
+
+    <th:block th:if="${typeOfChange == 'New'}">
+        <tr>
+            <td rowspan="3" th:text="${typeOfChange}"></td>
+            <td rowspan="3" th:text="${rowTypeName}"></td>
+
+            <th scope="row">Rate Type</th>
+            <td></td>
+            <td colspan="2" th:text="${changePair.changed.rateType.label}"></td>
+        </tr>
+
+        <tr>
+            <th scope="row">Amount</th>
+            <td></td>
+            <td th:text="${changePair.changed.rate}" colspan="2"></td>
+        </tr>
+        <tr></tr>
+    </th:block>
+
+    <th:block th:if="${typeOfChange == 'Remove'}">
+        <tr>
+            <td rowspan="3" th:text="${typeOfChange}"></td>
+            <td rowspan="3" th:text="${rowTypeName}"></td>
+
+            <th scope="row">Rate Type</th>
+            <td th:text="${changePair.submitted.rateType.label}"></td>
+            <td colspan="2"></td>
+        </tr>
+
+        <tr>
+            <th scope="row">Amount</th>
+            <td th:text="${changePair.submitted.rate}"></td>
+            <td colspan="2"></td>
+        </tr>
+        <tr></tr>
+    </th:block>
+</th:block>
+
 </html>
