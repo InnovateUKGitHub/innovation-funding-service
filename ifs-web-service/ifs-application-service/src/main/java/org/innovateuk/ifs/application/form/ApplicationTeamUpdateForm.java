@@ -20,6 +20,7 @@ public class ApplicationTeamUpdateForm implements BindingResultTarget {
 
     @Valid
     private List<ApplicantInviteForm> applicants = new ArrayList<>();
+    private List<String> existingApplicants;
     private Set<Long> markedForRemoval = new HashSet<>();
     private BindingResult bindingResult;
     private List<ObjectError> objectErrors;
@@ -38,6 +39,14 @@ public class ApplicationTeamUpdateForm implements BindingResultTarget {
 
     public void setMarkedForRemoval(Set<Long> markedForRemoval) {
         this.markedForRemoval = markedForRemoval;
+    }
+
+    public List<String> getExistingApplicants() {
+        return existingApplicants;
+    }
+
+    public void setExistingApplicants(List<String> existingApplicants) {
+        this.existingApplicants = existingApplicants;
     }
 
     @Override
@@ -62,18 +71,15 @@ public class ApplicationTeamUpdateForm implements BindingResultTarget {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
+        if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (o == null || getClass() != o.getClass()) return false;
 
         ApplicationTeamUpdateForm that = (ApplicationTeamUpdateForm) o;
 
         return new EqualsBuilder()
                 .append(applicants, that.applicants)
+                .append(existingApplicants, that.existingApplicants)
                 .append(markedForRemoval, that.markedForRemoval)
                 .append(bindingResult, that.bindingResult)
                 .append(objectErrors, that.objectErrors)
@@ -84,6 +90,7 @@ public class ApplicationTeamUpdateForm implements BindingResultTarget {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(applicants)
+                .append(existingApplicants)
                 .append(markedForRemoval)
                 .append(bindingResult)
                 .append(objectErrors)
