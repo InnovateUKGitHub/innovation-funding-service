@@ -124,7 +124,7 @@ the user can see the option to upload a file on the page
     the user should see the text in the page    Upload
 
 the user can view this file without any errors
-    the user clicks the button/link    link=testing.pdf(7 KB)
+    the user clicks the button/link    link=testing.pdf(10 KB)
     the user should not see an error in the page
     the user goes back to the previous page
 
