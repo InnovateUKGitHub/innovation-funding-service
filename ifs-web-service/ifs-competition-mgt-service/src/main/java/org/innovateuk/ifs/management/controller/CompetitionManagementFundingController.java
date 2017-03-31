@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
-import org.innovateuk.ifs.application.service.AssessorFeedbackService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.form.ApplicationSummaryQueryForm;
 import org.innovateuk.ifs.competition.form.FundingDecisionForm;
