@@ -12,9 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ public class ApplicationCreationAuthenticatedController {
     protected UserAuthenticationService userAuthenticationService;
 
 
-    @RequestMapping(value = "/{competitionId}", method = RequestMethod.GET)
+    @GetMapping("/{competitionId}")
     public String view(Model model,
                        @PathVariable(COMPETITION_ID) Long competitionId,
                        HttpServletRequest request) {
@@ -59,7 +60,7 @@ public class ApplicationCreationAuthenticatedController {
         }
     }
 
-    @RequestMapping(value = "/{competitionId}", method = RequestMethod.POST)
+    @PostMapping("/{competitionId}")
     public String post(Model model,
                        @PathVariable(COMPETITION_ID) Long competitionId,
                        HttpServletRequest request) {

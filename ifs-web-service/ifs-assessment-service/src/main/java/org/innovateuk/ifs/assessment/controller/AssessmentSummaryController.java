@@ -11,10 +11,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
 import java.util.function.Supplier;
@@ -35,7 +35,7 @@ public class AssessmentSummaryController {
     @Autowired
     private AssessmentSummaryModelPopulator assessmentSummaryModelPopulator;
 
-    @RequestMapping(value = "/{assessmentId}/summary", method = RequestMethod.GET)
+    @GetMapping("/{assessmentId}/summary")
     public String getSummary(Model model,
                              @ModelAttribute(FORM_ATTR_NAME) AssessmentSummaryForm form,
                              BindingResult bindingResult,
@@ -48,7 +48,7 @@ public class AssessmentSummaryController {
         return "assessment/application-summary";
     }
 
-    @RequestMapping(value = "/{assessmentId}/summary", method = RequestMethod.POST)
+    @PostMapping("/{assessmentId}/summary")
     public String save(Model model,
                        @Valid @ModelAttribute(FORM_ATTR_NAME) AssessmentSummaryForm form,
                        BindingResult bindingResult,
