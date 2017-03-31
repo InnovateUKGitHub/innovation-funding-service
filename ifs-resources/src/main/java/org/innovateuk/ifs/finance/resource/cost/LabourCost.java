@@ -165,8 +165,8 @@ public class LabourCost extends AbstractFinanceRowItem {
     }
 
     public BigDecimal totalDiff(Integer workingDaysPerYear, LabourCost otherOverhead){
-        BigDecimal thisTotal = getTotal(workingDaysPerYear) == null ? new BigDecimal(0) : getTotal(workingDaysPerYear);
-        BigDecimal otherTotal = otherOverhead.getTotal(workingDaysPerYear) == null ? new BigDecimal(0) : otherOverhead.getTotal(workingDaysPerYear);
+        BigDecimal thisTotal = getTotal(workingDaysPerYear) == null ? BigDecimal.ZERO : getTotal(workingDaysPerYear);
+        BigDecimal otherTotal = otherOverhead.getTotal(workingDaysPerYear) == null ? BigDecimal.ZERO : otherOverhead.getTotal(workingDaysPerYear);
         return thisTotal.subtract(otherTotal);
     }
 }

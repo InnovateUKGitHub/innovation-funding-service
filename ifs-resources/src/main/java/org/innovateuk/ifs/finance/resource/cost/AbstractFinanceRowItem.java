@@ -8,8 +8,8 @@ import java.math.BigDecimal;
 public abstract class AbstractFinanceRowItem implements FinanceRowItem {
     @Override
     public BigDecimal totalDiff(FinanceRowItem other){
-        BigDecimal thisRate = getTotal() == null ? new BigDecimal(0) : getTotal();
-        BigDecimal otherRate = other.getTotal() == null ? new BigDecimal(0) : other.getTotal();
+        BigDecimal thisRate = getTotal() == null ? BigDecimal.ZERO : getTotal();
+        BigDecimal otherRate = other.getTotal() == null ? BigDecimal.ZERO : other.getTotal();
         return thisRate.subtract(otherRate);
     }
 }
