@@ -19,6 +19,7 @@ import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static java.util.Collections.singletonList;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -104,7 +105,7 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
 
         when(financeRowServiceMock.addCost(any(ApplicationFinanceResourceId.class))).thenReturn(serviceSuccess(applicationFinanceResource));
 
-        mockMvc.perform(get("/applicationfinance/add/{applicationId}/{organisationId}", "123", "456"))
+        mockMvc.perform(post("/applicationfinance/add/{applicationId}/{organisationId}", "123", "456"))
                 .andExpect(status().isCreated());
 
         verify(financeRowServiceMock, times(1)).addCost(any(ApplicationFinanceResourceId.class));
@@ -112,22 +113,22 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
 
     @Test
     public void addControllerShouldReturnNotFoundOnMissingParams() throws Exception {
-        mockMvc.perform(get("/applicationfinance/add/{applicationId}/", "1"))
+        mockMvc.perform(post("/applicationfinance/add/{applicationId}/", "1"))
                 .andExpect(status().isNotFound());
 
-        mockMvc.perform(get("/applicationfinance/add/"))
+        mockMvc.perform(post("/applicationfinance/add/"))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     public void addShouldReturnBadRequestOnWrongParamType() throws Exception {
-        mockMvc.perform(get("/applicationfinance/add/{applicationId}/{organisationId}", "1", "wronger"))
+        mockMvc.perform(post("/applicationfinance/add/{applicationId}/{organisationId}", "1", "wronger"))
                 .andExpect(status().isBadRequest());
 
-        mockMvc.perform(get("/applicationfinance/add/{applicationId}/{organisationId}", "wronger", "1"))
+        mockMvc.perform(post("/applicationfinance/add/{applicationId}/{organisationId}", "wronger", "1"))
                 .andExpect(status().isBadRequest());
 
-        mockMvc.perform(get("/applicationfinance/add/{applicationId}/{organisationId}", "wronger", "wronger"))
+        mockMvc.perform(post("/applicationfinance/add/{applicationId}/{organisationId}", "wronger", "wronger"))
                 .andExpect(status().isBadRequest());
     }
 

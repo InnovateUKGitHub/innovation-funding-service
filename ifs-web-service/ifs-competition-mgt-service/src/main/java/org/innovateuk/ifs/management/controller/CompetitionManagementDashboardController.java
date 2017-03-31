@@ -30,19 +30,19 @@ public class CompetitionManagementDashboardController {
     @Autowired
     private CompetitionService competitionService;
 
-    @GetMapping(value="/dashboard")
+    @GetMapping("/dashboard")
     public String dashboard() {
         return "redirect:/dashboard/live";
     }
 
-    @GetMapping(value="/dashboard/live")
+    @GetMapping("/dashboard/live")
     public String live(Model model) {
         model.addAttribute("competitions", competitionDashboardSearchService.getLiveCompetitions());
         model.addAttribute("counts", competitionDashboardSearchService.getCompetitionCounts());
         return TEMPLATE_PATH + "live";
     }
 
-    @GetMapping(value="/dashboard/project-setup")
+    @GetMapping("/dashboard/project-setup")
     public String projectSetup(Model model) {
         final Map<CompetitionStatus, List<CompetitionSearchResultItem>> projectSetupCompetitions = competitionDashboardSearchService.getProjectSetupCompetitions();
         model.addAttribute("competitions", projectSetupCompetitions);
@@ -51,7 +51,7 @@ public class CompetitionManagementDashboardController {
         return TEMPLATE_PATH + "projectSetup";
     }
 
-    @GetMapping(value="/dashboard/upcoming")
+    @GetMapping("/dashboard/upcoming")
     public String upcoming(Model model) {
         final Map<CompetitionStatus, List<CompetitionSearchResultItem>> upcomingCompetitions = competitionDashboardSearchService.getUpcomingCompetitions();
         model.addAttribute("competitions", upcomingCompetitions);
@@ -60,7 +60,7 @@ public class CompetitionManagementDashboardController {
         return TEMPLATE_PATH + "upcoming";
     }
 
-    @GetMapping(value="/dashboard/complete")
+    @GetMapping("/dashboard/complete")
     public String complete(Model model) {
         //TODO INFUND-3833
         model.addAttribute("competitions", new ArrayList<CompetitionResource>());
@@ -69,14 +69,14 @@ public class CompetitionManagementDashboardController {
     }
 
 
-    @GetMapping(value="/dashboard/non-ifs")
+    @GetMapping("/dashboard/non-ifs")
     public String nonIfs(Model model) {
         model.addAttribute("competitions", competitionDashboardSearchService.getNonIfsCompetitions());
         model.addAttribute("counts", competitionDashboardSearchService.getCompetitionCounts());
         return TEMPLATE_PATH + "non-ifs";
     }
 
-    @GetMapping(value="/dashboard/search")
+    @GetMapping("/dashboard/search")
     public String search(@RequestParam(name = "searchQuery") String searchQuery,
                            @RequestParam(name = "page", defaultValue = "1") int page, Model model) {
         String trimmedSearchQuery = StringUtils.normalizeSpace(searchQuery);
