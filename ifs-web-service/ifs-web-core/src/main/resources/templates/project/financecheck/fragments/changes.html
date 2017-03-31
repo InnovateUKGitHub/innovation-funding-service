@@ -24,7 +24,7 @@
                 <td th:text="${changePair.changed.labourDays}" colspan="2" th:class="${changePair.submitted.labourDays != changePair.changed.labourDays} ? 'item-changed' : ''"></td>
             </tr>
             <tr class="change-row" th:with="difference=${changePair.changed.totalDiff(workingDays, changePair.submitted)}">
-                <td th:text="${#numbers.formatDecimal(difference,0, 'COMMA', 0, 'POINT')}" colspan="6" class="numeric"></td>
+                <td th:text="${#numbers.formatDecimal(difference, 0, 'COMMA', 0, 'POINT')}" colspan="6" class="numeric"></td>
             </tr>
         </th:block>
     </th:block>
@@ -102,7 +102,7 @@
             <td th:text="${changePair.changed.cost}" colspan="2"></td>
         </tr>
         <tr class="change-row" th:with="difference=${changePair.changed.totalDiff(changePair.submitted)}">
-            <td th:text="${#numbers.formatDecimal(difference,0, 'COMMA', 0, 'POINT')}" colspan="6" class="numeric"></td>
+            <td th:text="${#numbers.formatDecimal(difference, 0, 'COMMA', 0, 'POINT')}" colspan="6" class="numeric"></td>
         </tr>
     </th:block>
 
@@ -193,7 +193,7 @@
             <td th:text="${changePair.changed.getTotal()}" colspan="2"></td>
         </tr>
         <tr class="change-row" th:with="difference=${changePair.changed.totalDiff(changePair.submitted)}">
-            <td th:text="${#numbers.formatDecimal(difference,0, 'COMMA', 0, 'POINT')}" colspan="6" class="numeric"></td>
+            <td th:text="${#numbers.formatDecimal(difference, 0, 'COMMA', 0, 'POINT')}" colspan="6" class="numeric"></td>
         </tr>
     </th:block>
 
@@ -390,7 +390,7 @@
             <td th:text="${changePair.changed.cost}" colspan="2"></td>
         </tr>
         <tr class="change-row" th:with="difference=${changePair.changed.totalDiff(changePair.submitted)}">
-            <td th:text="${#numbers.formatDecimal(difference,0, 'COMMA', 0, 'POINT')}" colspan="6" class="numeric"></td>
+            <td th:text="${#numbers.formatDecimal(difference, 0, 'COMMA', 0, 'POINT')}" colspan="6" class="numeric"></td>
         </tr>
     </th:block>
 
@@ -455,7 +455,7 @@
             <td th:text="${changePair.changed.cost}" colspan="2"></td>
         </tr>
         <tr class="change-row" th:with="difference=${changePair.changed.totalDiff(changePair.submitted)}">
-            <td th:text="${#numbers.formatDecimal(difference,0, 'COMMA', 0, 'POINT')}" colspan="6" class="numeric"></td>
+            <td th:text="${#numbers.formatDecimal(difference, 0, 'COMMA', 0, 'POINT')}" colspan="6" class="numeric"></td>
         </tr>
     </th:block>
     <th:block th:if="${typeOfChange == 'New'}">
@@ -511,7 +511,7 @@
             <td th:text="${changePair.changed.rate}" colspan="2" th:class="${changePair.submitted.rate!= changePair.changed.rate} ? 'item-changed' : ''"></td>
         </tr>
         <tr class="change-row" th:with="difference=${changePair.changed.totalDiff(changePair.submitted)}">
-            <td th:text="${#numbers.formatDecimal(difference,0, 'COMMA', 0, 'POINT')}" colspan="6" class="numeric"></td>
+            <td th:text="${#numbers.formatDecimal(difference, 0, 'COMMA', 0, 'POINT')}" colspan="6" class="numeric"></td>
         </tr>
     </th:block>
 
