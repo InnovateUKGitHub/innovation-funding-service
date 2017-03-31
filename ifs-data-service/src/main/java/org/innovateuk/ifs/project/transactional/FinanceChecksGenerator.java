@@ -13,7 +13,6 @@ import org.innovateuk.ifs.project.finance.workflow.financechecks.configuration.V
 import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.user.domain.Organisation;
-import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -136,7 +135,7 @@ public class FinanceChecksGenerator {
     private FinanceCheck populateFinanceCheck(FinanceCheck financeCheck) {
         Organisation organisation = financeCheck.getOrganisation();
         Application application = financeCheck.getProject().getApplication();
-        if (OrganisationTypeEnum.isResearch(organisation.getOrganisationType().getId())) {
+        if (financeUtil.isUsingJesFinances(organisation.getOrganisationType().getName())) {
             ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(application.getId(), organisation.getId());
             List<ApplicationFinanceRow> financeRows = financeRowRepository.findByTargetId(applicationFinance.getId());
             financeCheck.getCostGroup().getCosts().forEach(
