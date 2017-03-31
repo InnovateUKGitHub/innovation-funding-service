@@ -20,7 +20,7 @@
     <th:block th:switch="${status.name()}">
         <td th:case="'COMPLETE'" class="status ok">complete</td>
         <td th:case="'ACTION_REQUIRED'" class="status action">incomplete</td>
-        <td th:case="'NOT_STARTED'" class="status">- <span class="visuallyhidden">Stage is not yet available</span></td>
+        <td th:case="'NOT_STARTED'" class="status"><span class="visuallyhidden">Stage is not yet available</span></td>
         <td th:case="'NOT_REQUIRED'" class="status na"><span class="visuallyhidden">Not required for this partner</span></td>
         <td th:case="'PENDING'" class="status waiting">pending</td>
         <td th:case="*"></td><!--/* just in case there is a different status we put out an empty td to not break the table */-->
