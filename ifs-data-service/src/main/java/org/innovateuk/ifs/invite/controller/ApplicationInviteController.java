@@ -32,7 +32,7 @@ public class ApplicationInviteController {
         return inviteService.createApplicationInvites(inviteOrganisationResource).toPostCreateResponse();
     }
 
-    @PostMapping("/getInviteByHash/{hash}")
+    @GetMapping("/getInviteByHash/{hash}")
     public RestResult<ApplicationInviteResource> getInviteByHash(@PathVariable("hash") String hash) {
         return inviteService.getInviteByHash(hash).toGetResponse();
     }

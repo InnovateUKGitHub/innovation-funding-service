@@ -5,7 +5,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.service.AddressRestService;
-import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
@@ -53,7 +52,6 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.registration.AbstractAcceptInviteController.INVITE_HASH;
 import static org.innovateuk.ifs.registration.AbstractAcceptInviteController.ORGANISATION_TYPE;
 
-
 /**
  * This Controller handles the users request to create an organisation. This is done when the users creates a new account. In most cases the user will first
  * choose his organisation Type in the AcceptInviteController. Pending on that choice, the related form will be rendered with this controller.
@@ -71,7 +69,6 @@ public class OrganisationCreationController {
     private static final String TEMPLATE_PATH = "registration/organisation";
     private static final String CONFIRM_SELECTED_ORGANISATION = "confirm-selected-organisation";
     private static final String ADD_ADDRESS_DETAILS = "add-address-details";
-    private static final String CREATE_ORGANISATION_TYPE = "create-organisation-type";
     private static final String FIND_BUSINESS = "find-business";
     private static final String FIND_ORGANISATION = "find-organisation";
     private static final String SELECTED_ORGANISATION = "selected-organisation";
@@ -119,12 +116,6 @@ public class OrganisationCreationController {
     @Qualifier("mvcValidator")
     public void setValidator(Validator validator) {
         this.validator = validator;
-    }
-
-    @GetMapping("/" + CREATE_ORGANISATION_TYPE)
-    public String createAccountOrganisationType(@ModelAttribute Form form, Model model) {
-        model.addAttribute("form", form);
-        return TEMPLATE_PATH + "/" + CREATE_ORGANISATION_TYPE;
     }
 
     @GetMapping(value = {"/" + FIND_ORGANISATION, "/" + FIND_ORGANISATION + "/**"})
