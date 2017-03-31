@@ -142,7 +142,7 @@ public class ApplicationController {
     }
 
     @ProfileExecution
-    @RequestMapping("/{applicationId}/section/{sectionId}")
+    @GetMapping("/{applicationId}/section/{sectionId}")
     public String applicationDetailsOpenSection(ApplicationForm form, Model model,
                                      @PathVariable("applicationId") long applicationId,
                                      @PathVariable("sectionId") long sectionId,
@@ -200,7 +200,7 @@ public class ApplicationController {
         }
     }
 
-    @RequestMapping(value = "/{applicationId}/question/{questionId}/feedback")
+    @GetMapping(value = "/{applicationId}/question/{questionId}/feedback")
     public String applicationAssessorQuestionFeedback(Model model, @PathVariable("applicationId") long applicationId,
                                               @PathVariable("questionId") long questionId) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
@@ -239,7 +239,7 @@ public class ApplicationController {
     }
 
     @ProfileExecution
-    @RequestMapping("/{applicationId}/confirm-submit")
+    @GetMapping("/{applicationId}/confirm-submit")
     public String applicationConfirmSubmit(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
                                            HttpServletRequest request){
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
@@ -268,7 +268,7 @@ public class ApplicationController {
     }
 
     @ProfileExecution
-    @RequestMapping("/{applicationId}/track")
+    @GetMapping("/{applicationId}/track")
     public String applicationTrack(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
                                     HttpServletRequest request){
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
@@ -278,7 +278,7 @@ public class ApplicationController {
         return "application-track";
     }
     @ProfileExecution
-    @RequestMapping("/create/{competitionId}")
+    @GetMapping("/create/{competitionId}")
     public String applicationCreatePage(){
         return "application-create";
     }
@@ -303,12 +303,12 @@ public class ApplicationController {
         }
     }
     @ProfileExecution
-    @RequestMapping(value = "/create-confirm-competition")
+    @GetMapping(value = "/create-confirm-competition")
     public String competitionCreateApplication(){
         return "application-create-confirm-competition";
     }
 
-    @RequestMapping(value = "/terms-and-conditions")
+    @GetMapping("/terms-and-conditions")
     public String termsAndConditions(){
         return "application-terms-and-conditions";
     }
@@ -325,7 +325,7 @@ public class ApplicationController {
     /**
      * Printable version of the application
      */
-    @RequestMapping(value="/{applicationId}/print")
+    @GetMapping(value="/{applicationId}/print")
     public String printApplication(@PathVariable("applicationId") long applicationId,
                                              Model model, HttpServletRequest request) {
         return applicationPrintPopulator.print(applicationId, model, request);

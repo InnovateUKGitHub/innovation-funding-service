@@ -391,7 +391,7 @@ public class ApplicationFormController {
         }
     }
 
-    @RequestMapping(value = "/add_cost/{"+QUESTION_ID+"}")
+    @GetMapping(value = "/add_cost/{"+QUESTION_ID+"}")
     public String addCostRow(@ModelAttribute(MODEL_ATTRIBUTE_FORM) ApplicationForm form,
                              BindingResult bindingResult,
                              Model model,
@@ -413,7 +413,7 @@ public class ApplicationFormController {
         return String.format("finance/finance :: %s_row", costType.getType());
     }
 
-    @RequestMapping(value = "/remove_cost/{costId}")
+    @GetMapping("/remove_cost/{costId}")
     public @ResponseBody String removeCostRow(@PathVariable("costId") final Long costId) throws JsonProcessingException {
         financeRowService.delete(costId);
         AjaxResult ajaxResult = new AjaxResult(HttpStatus.OK, "true");

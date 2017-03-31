@@ -6,7 +6,6 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.form.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.form.resource.FormInputResponseCommand;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
@@ -37,23 +36,23 @@ public class FormInputResponseController {
 
     private static final Log LOG = LogFactory.getLog(FormInputResponseController.class);
 
-    @RequestMapping("/findResponsesByApplication/{applicationId}")
+    @GetMapping("/findResponsesByApplication/{applicationId}")
     public RestResult<List<FormInputResponseResource>> findResponsesByApplication(@PathVariable("applicationId") final Long applicationId){
         return formInputService.findResponsesByApplication(applicationId).toGetResponse();
     }
 
-    @RequestMapping("/findResponseByFormInputIdAndApplicationId/{formInputId}/{applicationId}")
+    @GetMapping("/findResponseByFormInputIdAndApplicationId/{formInputId}/{applicationId}")
     public RestResult<List<FormInputResponseResource>> findByFormInputIdAndApplication(@PathVariable("formInputId") final Long formInputId, @PathVariable("applicationId") final Long applicationId){
         return formInputService.findResponsesByFormInputIdAndApplicationId(formInputId, applicationId).toGetResponse();
     }
 
-    @RequestMapping("/findByApplicationIdAndQuestionName/{applicationId}/{questionName}")
+    @GetMapping("/findByApplicationIdAndQuestionName/{applicationId}/{questionName}")
     public RestResult<FormInputResponseResource> findByApplicationIdAndQuestionName(@PathVariable long applicationId,
                                                                                  @PathVariable String questionName) {
         return formInputService.findResponseByApplicationIdAndQuestionName(applicationId, questionName).toGetResponse();
     }
 
-    @RequestMapping("/findByApplicationIdAndQuestionId/{applicationId}/{questionId}")
+    @GetMapping("/findByApplicationIdAndQuestionId/{applicationId}/{questionId}")
     public RestResult<List<FormInputResponseResource>> findByApplicationIdAndQuestionId(@PathVariable long applicationId,
                                                                                   @PathVariable long questionId) {
         return formInputService.findResponseByApplicationIdAndQuestionId(applicationId, questionId).toGetResponse();

@@ -323,7 +323,7 @@ public class CompetitionManagementApplicationController extends BaseController {
     /**
      * Printable version of the application
      */
-    @RequestMapping(value = "/{applicationId}/print")
+    @GetMapping(value = "/{applicationId}/print")
     public String printManagementApplication(@PathVariable("applicationId") Long applicationId,
                                              @PathVariable("competitionId") Long competitionId,
                                              Model model, HttpServletRequest request) {

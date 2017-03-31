@@ -70,7 +70,7 @@ public class ApplicationFinanceController {
         return result.toGetResponse();
     }
 
-    @RequestMapping(value = "/add/{applicationId}/{organisationId}", method = {GET, POST})
+    @PostMapping("/add/{applicationId}/{organisationId}")
     public RestResult<ApplicationFinanceResource> add(
             @PathVariable("applicationId") final Long applicationId,
             @PathVariable("organisationId") final Long organisationId) {

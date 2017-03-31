@@ -5,10 +5,7 @@ import org.innovateuk.ifs.address.transactional.AddressLookupService;
 import org.innovateuk.ifs.address.transactional.AddressService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,17 +23,17 @@ public class AddressController {
     @Autowired
     private AddressLookupService addressLookupService;
 
-    @RequestMapping("/doLookup")
+    @GetMapping("/doLookup")
     public RestResult<List<AddressResource>> doLookup(@RequestParam(name="lookup", defaultValue="") final String lookup) {
         return addressLookupService.doLookup(lookup).toGetResponse();
     }
 
-    @RequestMapping("/validatePostcode")
+    @GetMapping("/validatePostcode")
     public RestResult<Boolean> validatePostcode(@RequestParam(name="postcode", defaultValue="") final String postcode) {
         return addressLookupService.validatePostcode(postcode).toGetResponse();
     }
 
-    @RequestMapping("/{id}")
+    @GetMapping("/{id}")
     public RestResult<AddressResource> getById(@PathVariable("id") final Long id){
         return addressService.getById(id).toGetResponse();
     }

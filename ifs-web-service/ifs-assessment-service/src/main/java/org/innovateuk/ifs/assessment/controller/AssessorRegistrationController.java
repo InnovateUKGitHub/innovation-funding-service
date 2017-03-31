@@ -110,7 +110,7 @@ public class AssessorRegistrationController {
         });
     }
 
-    @RequestMapping(value = "/{inviteHash}/register/account-created")
+    @GetMapping(value = "/{inviteHash}/register/account-created")
     public String accountCreated(Model model, @PathVariable("inviteHash") String inviteHash, @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         boolean userIsLoggedIn = loggedInUser != null;
 

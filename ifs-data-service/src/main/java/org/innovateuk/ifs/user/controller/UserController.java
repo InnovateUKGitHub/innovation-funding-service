@@ -51,49 +51,49 @@ public class UserController {
     @Autowired
     private UserProfileService userProfileService;
 
-    @RequestMapping("/uid/{uid}")
+    @GetMapping("/uid/{uid}")
     public RestResult<UserResource> getUserByUid(@PathVariable("uid") final String uid) {
         return baseUserService.getUserResourceByUid(uid).toGetResponse();
     }
 
-    @RequestMapping("/id/{id}")
+    @GetMapping("/id/{id}")
     public RestResult<UserResource> getUserById(@PathVariable("id") final Long id) {
         return baseUserService.getUserById(id).toGetResponse();
     }
 
-    @RequestMapping("/findByRole/{userRoleName}")
+    @GetMapping("/findByRole/{userRoleName}")
     public RestResult<List<UserResource>> findByRole(@PathVariable("userRoleName") final String userRoleName) {
         return baseUserService.findByProcessRole(UserRoleType.fromName(userRoleName)).toGetResponse();
     }
 
-    @RequestMapping("/findAll/")
+    @GetMapping("/findAll/")
     public RestResult<List<UserResource>> findAll() {
         return baseUserService.findAll().toGetResponse();
     }
 
-    @RequestMapping("/findByEmail/{email}/")
+    @GetMapping("/findByEmail/{email}/")
     public RestResult<UserResource> findByEmail(@PathVariable("email") final String email) {
         return userService.findByEmail(email).toGetResponse();
     }
 
-    @RequestMapping("/findAssignableUsers/{applicationId}")
+    @GetMapping("/findAssignableUsers/{applicationId}")
     public RestResult<Set<UserResource>> findAssignableUsers(@PathVariable("applicationId") final Long applicationId) {
         return userService.findAssignableUsers(applicationId).toGetResponse();
     }
 
-    @RequestMapping("/findRelatedUsers/{applicationId}")
+    @GetMapping("/findRelatedUsers/{applicationId}")
     public RestResult<Set<UserResource>> findRelatedUsers(@PathVariable("applicationId") final Long applicationId) {
         return userService.findRelatedUsers(applicationId).toGetResponse();
     }
 
-    @RequestMapping("/" + URL_SEND_PASSWORD_RESET_NOTIFICATION + "/{emailaddress}/")
+    @GetMapping("/" + URL_SEND_PASSWORD_RESET_NOTIFICATION + "/{emailaddress}/")
     public RestResult<Void> sendPasswordResetNotification(@PathVariable("emailaddress") final String emailAddress) {
         return userService.findByEmail(emailAddress)
                 .andOnSuccessReturn(userService::sendPasswordResetNotification)
                 .toPutResponse();
     }
 
-    @RequestMapping("/" + URL_CHECK_PASSWORD_RESET_HASH + "/{hash}")
+    @GetMapping("/" + URL_CHECK_PASSWORD_RESET_HASH + "/{hash}")
     public RestResult<Void> checkPasswordReset(@PathVariable("hash") final String hash) {
         return tokenService.getPasswordResetToken(hash).andOnSuccessReturnVoid().toPutResponse();
     }
@@ -104,7 +104,7 @@ public class UserController {
                 .toPutResponse();
     }
 
-    @RequestMapping("/" + URL_VERIFY_EMAIL + "/{hash}")
+    @GetMapping("/" + URL_VERIFY_EMAIL + "/{hash}")
     public RestResult<Void> verifyEmail(@PathVariable("hash") final String hash) {
         final ServiceResult<Token> result = tokenService.getEmailToken(hash);
         LOG.debug(String.format("UserController verifyHash: %s", hash));

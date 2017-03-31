@@ -56,17 +56,17 @@ public class ProjectController {
     private UserAuthenticationService userAuthenticationService;
 
 
-    @RequestMapping("/{id}")
+    @GetMapping("/{id}")
     public RestResult<ProjectResource> getProjectById(@PathVariable("id") final Long id) {
         return projectService.getProjectById(id).toGetResponse();
     }
 
-    @RequestMapping("/application/{application}")
+    @GetMapping("/application/{application}")
     public RestResult<ProjectResource> getByApplicationId(@PathVariable("application") final Long application) {
         return projectService.getByApplicationId(application).toGetResponse();
     }
 
-    @RequestMapping("/")
+    @GetMapping("/")
     public RestResult<List<ProjectResource>> findAll() {
         return projectService.findAll().toGetResponse();
     }
@@ -90,7 +90,7 @@ public class ProjectController {
         return projectService.updateProjectAddress(leadOrganisationId, projectId, OrganisationAddressType.valueOf(addressType), addressResource).toPostResponse();
     }
 
-    @RequestMapping(value = "/user/{userId}")
+    @GetMapping(value = "/user/{userId}")
     public RestResult<List<ProjectResource>> findByUserId(@PathVariable("userId") final Long userId) {
         return projectService.findByUserId(userId).toGetResponse();
     }

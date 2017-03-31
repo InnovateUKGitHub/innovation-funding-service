@@ -25,29 +25,29 @@ public class ApplicationController {
     @Autowired
     private ApplicationService applicationService;
 
-    @RequestMapping("/{id}")
+    @GetMapping("/{id}")
     public RestResult<ApplicationResource> getApplicationById(@PathVariable("id") final Long id) {
             return applicationService.getApplicationById(id).toGetResponse();
     }
 
-    @RequestMapping("/")
+    @GetMapping("/")
     public RestResult<List<ApplicationResource>> findAll() {
         return applicationService.findAll().toGetResponse();
     }
 
-    @RequestMapping("/findByUser/{userId}")
+    @GetMapping("/findByUser/{userId}")
     public RestResult<List<ApplicationResource>> findByUserId(@PathVariable("userId") final Long userId) {
         return applicationService.findByUserId(userId).toGetResponse();
     }
 
-    @RequestMapping("/saveApplicationDetails/{id}")
+    @PostMapping("/saveApplicationDetails/{id}")
     public RestResult<Void> saveApplicationDetails(@PathVariable("id") final Long id,
                                                    @RequestBody ApplicationResource application) {
 
         return applicationService.saveApplicationDetails(id, application).toPostResponse();
     }
 
-    @RequestMapping("/getProgressPercentageByApplicationId/{applicationId}")
+    @GetMapping("/getProgressPercentageByApplicationId/{applicationId}")
     public RestResult<CompletedPercentageResource> getProgressPercentageByApplicationId(@PathVariable("applicationId") final Long applicationId) {
         return applicationService.getProgressPercentageByApplicationId(applicationId).toGetResponse();
     }
@@ -66,13 +66,13 @@ public class ApplicationController {
     }
 
 
-    @RequestMapping("/applicationReadyForSubmit/{applicationId}")
+    @GetMapping("/applicationReadyForSubmit/{applicationId}")
     public RestResult<ObjectNode> applicationReadyForSubmit(@PathVariable("applicationId") final Long id){
         return applicationService.applicationReadyForSubmit(id).toGetResponse();
     }
 
 
-    @RequestMapping("/getApplicationsByCompetitionIdAndUserId/{competitionId}/{userId}/{role}")
+    @GetMapping("/getApplicationsByCompetitionIdAndUserId/{competitionId}/{userId}/{role}")
     public RestResult<List<ApplicationResource>> getApplicationsByCompetitionIdAndUserId(@PathVariable("competitionId") final Long competitionId,
                                                                      @PathVariable("userId") final Long userId,
                                                                      @PathVariable("role") final UserRoleType role) {

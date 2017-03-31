@@ -22,12 +22,12 @@ public class ApplicationAssessmentSummaryController {
     @Autowired
     private ApplicationAssessmentSummaryService applicationAssessmentSummaryService;
 
-    @RequestMapping(value = "/{applicationId}/assignedAssessors")
+    @GetMapping(value = "/{applicationId}/assignedAssessors")
     public RestResult<List<ApplicationAssessorResource>> getAssignedAssessors(@PathVariable("applicationId") Long applicationId) {
         return applicationAssessmentSummaryService.getAssignedAssessors(applicationId).toGetResponse();
     }
 
-    @RequestMapping(value = "/{applicationId}/availableAssessors")
+    @GetMapping(value = "/{applicationId}/availableAssessors")
     public RestResult<ApplicationAssessorPageResource> getAvailableAssessors(@PathVariable("applicationId") Long applicationId,
                                                                              @RequestParam(value = "page", defaultValue = "0") int pageIndex,
                                                                              @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,

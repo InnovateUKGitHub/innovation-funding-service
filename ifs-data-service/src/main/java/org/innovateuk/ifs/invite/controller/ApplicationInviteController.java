@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 
 import static org.innovateuk.ifs.invite.resource.ApplicationInviteConstants.GET_USER_BY_HASH_MAPPING;
 
@@ -28,22 +27,22 @@ public class ApplicationInviteController {
     @Autowired
     private InviteService inviteService;
 
-    @RequestMapping("/createApplicationInvites")
+    @PostMapping("/createApplicationInvites")
     public RestResult<InviteResultsResource> createApplicationInvites(@RequestBody InviteOrganisationResource inviteOrganisationResource) {
         return inviteService.createApplicationInvites(inviteOrganisationResource).toPostCreateResponse();
     }
 
-    @RequestMapping("/getInviteByHash/{hash}")
+    @PostMapping("/getInviteByHash/{hash}")
     public RestResult<ApplicationInviteResource> getInviteByHash(@PathVariable("hash") String hash) {
         return inviteService.getInviteByHash(hash).toGetResponse();
     }
 
-    @RequestMapping("/getInviteOrganisationByHash/{hash}")
+    @GetMapping("/getInviteOrganisationByHash/{hash}")
     public RestResult<InviteOrganisationResource> getInviteOrganisationByHash(@PathVariable("hash") String hash) {
         return inviteService.getInviteOrganisationByHash(hash).toGetResponse();
     }
 
-    @RequestMapping("/getInvitesByApplicationId/{applicationId}")
+    @GetMapping("/getInvitesByApplicationId/{applicationId}")
     public RestResult<List<InviteOrganisationResource>> getInvitesByApplication(@PathVariable("applicationId") Long applicationId) {
         return inviteService.getInvitesByApplication(applicationId).toGetResponse();
     }
