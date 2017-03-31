@@ -71,7 +71,7 @@
 </th:block>
 
 <!-- =========================== Element: Application Title =========================== -->
-<th:block th:fragment="application-title (applicationId, applicationName) ">
+<th:block th:fragment="application-title (applicationName) ">
     <th:block th:with="noTitle=#{ifs.application.no_title}">
         <p class="subtitle" th:text="${#strings.isEmpty(applicationName) ? noTitle : applicationName} "/>
     </th:block>
@@ -85,7 +85,7 @@
 </th:block>
 
 <!-- =========================== Element: Project Title =========================== -->
-<th:block th:fragment="project-title (projectId, projectName) ">
+<th:block th:fragment="project-title (projectName) ">
     <p class="subtitle" th:text="${projectName} "/>
 </th:block>
 
