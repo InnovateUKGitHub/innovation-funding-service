@@ -406,6 +406,7 @@ Used to show information and CTAs under wrapped textarea used in application que
 
 .form-footer{
   @extend %contain-floats;
+  clear: both;
   color: $secondary-text-colour;
   background: $grey-4;
   padding: 0.8em;

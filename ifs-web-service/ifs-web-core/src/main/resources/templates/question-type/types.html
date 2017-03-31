@@ -293,10 +293,13 @@
                 </dl>
             </th:block>
             <th:block th:unless="${(currentUser.id != questionAssignee?.assigneeUserId and questionAssignee?.assignee!=null) or (questionAssignee?.assignee==null and !userIsLeadApplicant)}">
-                <p th:unless="${appIsClosed}">
-                    <th:block th:if="${readonly}" th:insert="question-type/form-elements :: form-edit-question-button" />
-                    <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons" />
-                </p>
+                <div class="form-footer" th:unless="${appIsClosed}">
+                    <div class="form-footer__actions">
+                        <th:block th:if="${readonly}"
+                                  th:insert="question-type/form-elements :: form-edit-question-button"/>
+                        <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons"/>
+                    </div>
+                </div>
             </th:block>
         </th:block>
     </th:block>
