@@ -21,7 +21,6 @@ public class ApplicationResearchCategoryLink extends CategoryLink<Application, R
     private Application application;
 
     ApplicationResearchCategoryLink() {
-        // default constructor
     }
 
     public ApplicationResearchCategoryLink(Application application, ResearchCategory researchCategory) {

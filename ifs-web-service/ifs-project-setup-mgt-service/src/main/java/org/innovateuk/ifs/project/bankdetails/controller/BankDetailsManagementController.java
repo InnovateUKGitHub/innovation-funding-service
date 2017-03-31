@@ -25,9 +25,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -39,8 +37,6 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.a
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElement;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * This controller is for serving internal project finance user, allowing them to view and manage project bank account details.
@@ -61,7 +57,7 @@ public class BankDetailsManagementController {
     private BankDetailsService bankDetailsService;
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_BANK_DETAILS_SECTION')")
-    @RequestMapping(value = "/review-all-bank-details", method = GET)
+    @GetMapping("/review-all-bank-details")
     public String viewPartnerBankDetails(
             Model model,
             @PathVariable("projectId") Long projectId,
@@ -72,7 +68,7 @@ public class BankDetailsManagementController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_BANK_DETAILS_SECTION')")
-    @RequestMapping(value = "/organisation/{organisationId}/review-bank-details", method = GET)
+    @GetMapping("/organisation/{organisationId}/review-bank-details")
     public String viewBankDetails(
             Model model,
             @PathVariable("projectId") Long projectId,
@@ -85,7 +81,7 @@ public class BankDetailsManagementController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_BANK_DETAILS_SECTION')")
-    @RequestMapping(value = "/organisation/{organisationId}/review-bank-details", method = POST)
+    @PostMapping("/organisation/{organisationId}/review-bank-details")
     public String approveBankDetails(
             Model model,
             @ModelAttribute(FORM_ATTR_NAME) ApproveBankDetailsForm form,
@@ -116,7 +112,7 @@ public class BankDetailsManagementController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_BANK_DETAILS_SECTION')")
-    @RequestMapping(value = "/organisation/{organisationId}/review-bank-details/change", method = GET)
+    @GetMapping("/organisation/{organisationId}/review-bank-details/change")
     public String changeBankDetailsView(
             Model model,
             @PathVariable("projectId") Long projectId,
@@ -131,7 +127,7 @@ public class BankDetailsManagementController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_BANK_DETAILS_SECTION')")
-    @RequestMapping(value = "/organisation/{organisationId}/review-bank-details/change", method = POST)
+    @PostMapping("/organisation/{organisationId}/review-bank-details/change")
     public String changeBankDetails(
             Model model,
             @PathVariable("projectId") Long projectId,

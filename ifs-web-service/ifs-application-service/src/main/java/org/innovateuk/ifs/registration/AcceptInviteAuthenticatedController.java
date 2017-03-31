@@ -14,9 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -46,7 +45,7 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
     private static final String INVITE_FOR_DIFFERENT_ORGANISATION_THAN_USERS_BUT_SAME_NAME_VIEW = "registration/invite-for-different-organisation-than-users-but-same-name";
 
 
-    @RequestMapping(value = "/accept-invite-authenticated/confirm-invited-organisation", method = RequestMethod.GET)
+    @GetMapping("/accept-invite-authenticated/confirm-invited-organisation")
     public String confirmInvite(HttpServletResponse response,
                                 HttpServletRequest request,
                                 @ModelAttribute("loggedInUser") UserResource loggedInUser,
@@ -70,7 +69,7 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
         return view.getSuccessObject();
     }
 
-    @RequestMapping(value = "/accept-invite-authenticated/confirm-invited-organisation/confirm", method = RequestMethod.GET)
+    @GetMapping("/accept-invite-authenticated/confirm-invited-organisation/confirm")
     public String confirmedInvite(HttpServletResponse response,
                                   HttpServletRequest request,
                                   @ModelAttribute("loggedInUser") UserResource loggedInUser,
