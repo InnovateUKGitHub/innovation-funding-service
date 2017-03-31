@@ -210,7 +210,7 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
         assertRenderedEmailTemplateContainsExpectedLines("finance_contact_spend_profile_available_text_plain.txt", templateArguments);
         assertRenderedEmailTemplateContainsExpectedLines("finance_contact_spend_profile_available_text_html.html", templateArguments);
     }
-    
+
     private void assertRenderedEmailTemplateContainsExpectedLines(String templateName, Map<String, Object> templateArguments) throws IOException, URISyntaxException {
 
         UserNotificationSource notificationSource = new UserNotificationSource(newUser().withFirstName("User").withLastName("1").build());
