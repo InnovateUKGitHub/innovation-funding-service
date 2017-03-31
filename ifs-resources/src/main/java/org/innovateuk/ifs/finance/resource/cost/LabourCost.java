@@ -14,7 +14,7 @@ import java.math.RoundingMode;
 /**
  * {@code LabourCost} implements {@link FinanceRowItem}
  */
-public class LabourCost implements FinanceRowItem {
+public class LabourCost extends AbstractFinanceRowItem {
 
     public interface YearlyWorkingDays {}
     private Long id;
@@ -162,5 +162,11 @@ public class LabourCost implements FinanceRowItem {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public BigDecimal totalDiff(Integer workingDaysPerYear, LabourCost otherOverhead){
+        BigDecimal thisTotal = getTotal(workingDaysPerYear) == null ? new BigDecimal(0) : getTotal(workingDaysPerYear);
+        BigDecimal otherTotal = otherOverhead.getTotal(workingDaysPerYear) == null ? new BigDecimal(0) : otherOverhead.getTotal(workingDaysPerYear);
+        return thisTotal.subtract(otherTotal);
     }
 }

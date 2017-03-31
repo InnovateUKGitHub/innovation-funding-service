@@ -8,7 +8,7 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
-public class OtherCost implements FinanceRowItem {
+public class OtherCost extends AbstractFinanceRowItem {
     private Long id;
 
     @NotBlank(message = NOT_BLANK_MESSAGE)
