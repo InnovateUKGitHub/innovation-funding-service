@@ -67,6 +67,7 @@ public class CompetitionParticipantServiceImpl implements CompetitionParticipant
 
         competitionParticipant.setSubmittedAssessments(getAssessmentsSubmittedForCompetitionCount(assessments));
         competitionParticipant.setTotalAssessments(getTotalAssessmentsAcceptedForCompetitionCount(assessments));
+        competitionParticipant.setPendingAssessments(getAssessmentsPendingForCompetitionCount(assessments));
     }
 
     private Long getAssessmentsSubmittedForCompetitionCount(List<Assessment> assessments) {
@@ -76,5 +77,9 @@ public class CompetitionParticipantServiceImpl implements CompetitionParticipant
     private Long getTotalAssessmentsAcceptedForCompetitionCount(List<Assessment> assessments) {
         Set<AssessmentStates> allowedAssessmentStates = EnumSet.of(ACCEPTED, OPEN, READY_TO_SUBMIT, SUBMITTED);
         return assessments.stream().filter(assessment -> allowedAssessmentStates.contains(assessment.getActivityState())).count();
+    }
+
+    private Long getAssessmentsPendingForCompetitionCount(List<Assessment> assessments) {
+        return assessments.stream().filter(assessment -> assessment.getActivityState().equals(PENDING)).count();
     }
 }
