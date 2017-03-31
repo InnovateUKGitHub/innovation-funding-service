@@ -158,4 +158,16 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
             return serviceFailure(new Error(COMPETITION_CANNOT_RELEASE_FEEDBACK));
         }
     }
+
+    @Override
+    public ServiceResult<Void> manageInformState(long competitionId) {
+        CompetitionFundedKeyStatisticsResource keyStatisticsResource =
+                competitionKeyStatisticsService.getFundedKeyStatisticsByCompetition(competitionId)
+                .getSuccessObjectOrThrowException();
+        if (keyStatisticsResource.isCanReleaseFeedback()) {
+            Competition competition = competitionRepository.findById(competitionId);
+            competition.setFundersPanelEndDate(LocalDateTime.now());
+        }
+        return serviceSuccess();
+    }
 }
