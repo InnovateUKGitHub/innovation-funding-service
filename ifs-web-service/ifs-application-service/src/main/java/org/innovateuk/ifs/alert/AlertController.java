@@ -6,9 +6,9 @@ import org.innovateuk.ifs.application.service.AlertService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
@@ -21,7 +21,7 @@ public class  AlertController {
     @Autowired
     private AlertService alertService;
 
-    @RequestMapping(value = "/findAllVisibleByType/{type}", method = RequestMethod.GET)
+    @GetMapping("/findAllVisibleByType/{type}")
     public @ResponseBody
     List<AlertResource> getAlertByTypeJSON(@PathVariable("type") AlertType type) {
         return alertService.findAllVisibleByType(type);

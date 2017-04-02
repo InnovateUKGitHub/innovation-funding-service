@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 import static org.innovateuk.ifs.file.controller.FileControllerUtils.*;
-import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
 @RequestMapping("/assessorfeedback")
@@ -27,7 +26,7 @@ public class AssessorFeedbackController {
     @Qualifier("assessorFeedbackFileValidator")
     private FileHttpHeadersValidator fileValidator;
 
-    @RequestMapping(value = "/assessorFeedbackDocument", method = POST, produces = "application/json")
+    @PostMapping(value = "/assessorFeedbackDocument", produces = "application/json")
     public RestResult<FileEntryResource> addAssessorFeedbackDocument(
             @RequestHeader(value = "Content-Type", required = false) String contentType,
             @RequestHeader(value = "Content-Length", required = false) String contentLength,
@@ -39,7 +38,7 @@ public class AssessorFeedbackController {
                 assessorFeedbackService.createAssessorFeedbackFileEntry(applicationId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
     }
 
-    @RequestMapping(value = "/assessorFeedbackDocument", method = GET)
+    @GetMapping("/assessorFeedbackDocument")
     public @ResponseBody
     ResponseEntity<Object> getFileContents(
             @RequestParam("applicationId") long applicationId) throws IOException {
@@ -47,7 +46,7 @@ public class AssessorFeedbackController {
         return handleFileDownload(() -> assessorFeedbackService.getAssessorFeedbackFileEntryContents(applicationId));
     }
 
-    @RequestMapping(value = "/assessorFeedbackDocument/fileentry", method = GET, produces = "application/json")
+    @GetMapping(value = "/assessorFeedbackDocument/fileentry", produces = "application/json")
     public RestResult<FileEntryResource> getFileEntryDetails(
             @RequestParam("applicationId") long applicationId) throws IOException {
 
@@ -55,7 +54,7 @@ public class AssessorFeedbackController {
     }
 
 
-    @RequestMapping(value = "/assessorFeedbackDocument", method = PUT, produces = "application/json")
+    @PutMapping(value = "/assessorFeedbackDocument", produces = "application/json")
     public RestResult<Void> updateAssessorFeedbackDocument(
             @RequestHeader(value = "Content-Type", required = false) String contentType,
             @RequestHeader(value = "Content-Length", required = false) String contentLength,
@@ -67,7 +66,7 @@ public class AssessorFeedbackController {
                 assessorFeedbackService.updateAssessorFeedbackFileEntry(applicationId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
     }
 
-    @RequestMapping(value = "/assessorFeedbackDocument", method = DELETE, produces = "application/json")
+    @DeleteMapping(value = "/assessorFeedbackDocument", produces = "application/json")
     public RestResult<Void> deleteAssessorFeedbackDocument(
             @RequestParam("applicationId") long applicationId) throws IOException {
 

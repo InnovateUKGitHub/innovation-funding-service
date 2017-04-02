@@ -7,6 +7,8 @@ import org.springframework.aop.support.StaticMethodMatcherPointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.lang.reflect.Method;
@@ -26,7 +28,9 @@ public class CallFuturesInModelAdvisor extends AbstractPointcutAdvisor {
             StaticMethodMatcherPointcut() {
                 @Override
                 public boolean matches(Method method, Class<?> targetClass) {
-                    return method.isAnnotationPresent(RequestMapping.class);
+                    return method.isAnnotationPresent(RequestMapping.class)
+                            || method.isAnnotationPresent(GetMapping.class)
+                            || method.isAnnotationPresent(PostMapping.class);
                 }
             };
 
