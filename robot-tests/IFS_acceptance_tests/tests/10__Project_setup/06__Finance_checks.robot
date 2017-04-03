@@ -74,6 +74,8 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...               INFUND-7580 The participation levels of this project are within the required range
 ...
 ...               INFUND-8787 The Finance checks status in the external Project Setup dashboard.
+...
+...               INFUND-4846 As a Project finance team member, I want to view Finance overview and Finance summaries for the consortium
 
 Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 Suite Teardown    the user closes the browser
@@ -686,13 +688,11 @@ Finance contact can view the file in note comments
     And the user goes back to the initial page after having checked the attachment
     And the user should see the element    jQuery=button:contains("Save comment")
 
-
 Finance contact can upload more than one file to note comments
     [Documentation]    INFUND-7756
     [Tags]
     Then the user uploads the file      name=attachment    ${valid_pdf}
     And the user should see the element    jQuery=form li:nth-of-type(2) a:contains("${valid_pdf}")
-
 
 Finance contact can still view both files in note comments
     [Documentation]    INFUND-7756
@@ -704,7 +704,6 @@ Finance contact can still view both files in note comments
     Then the user should not see an error in the page
     And the user goes back to the initial page after having checked the attachment
     And the user should see the element    jQuery=button:contains("Save comment")
-
 
 Note comments server side validations
     [Documentation]    INFUND-7756
@@ -780,6 +779,32 @@ Proj finance can see the maximum research participation level
     And the user should see the text in the page       Please seek confirmation that the project is still eligible for funding.
     When the user clicks the button/link               link=Finance checks
     And the user should see the text in the page        Maximum research participation exceeded
+    [Teardown]    the user navigates to the page       ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+
+Project finance user can view finance overview for the consortium
+    [Documentation]    INFUND-4846
+    [Tags]
+    When the user clicks the button/link    link=Project finance overview
+    Then the user should see the text in the element    css=#content h1:nth-of-type(1)  Finance overview
+    And the user should see the text in the element     css=#content h3:nth-of-type(1)  Overview
+    Then the user verifies the table heading for Overview section
+    # the below figures are listed as:       RowNumber  StartDate      Duration    TotalProjectCost    GrantAppliedFor     OtherPublicSectorFunding    Total%Grant
+    And the categories are verified for Overview section    1   1 Oct 2020  3 months    £ 503,248   £ 145,497    £ 6,170     29%
+
+Project finance user can view Finance summaries for the consortium
+    [Documentation]    INFUND-4846
+    [Tags]
+    Given the user should see the text in the element   css=#content h3:nth-of-type(2)      Finance summaries
+    When the user verifies the table heading for Finance summaries section
+    Then the user should see the text in the element    css=#content div:nth-of-type(3) table tbody tr:nth-of-type(1) th:nth-of-type(1) strong      Empire Ltd
+    # the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
+    And the categories are verified for Finance summaries section   1   £ 301,355   30%     £ 90,406    £ 3,702     £ 207,246
+    Then the user should see the text in the element    css=#content div:nth-of-type(3) table tbody tr:nth-of-type(2) th:nth-of-type(1) strong      EGGS
+    And the categories are verified for Finance summaries section   2   £ 990   0%  £ 0     £ 0     £ 990
+    Then the user should see the text in the element    css=#content div:nth-of-type(3) table tbody tr:nth-of-type(3) th:nth-of-type(1) strong      Ludlow
+    And the categories are verified for Finance summaries section   3   £ 200,903   30%     £ 60,271    £ 2,468     £ 138,164
+    Then the user should see the text in the element    css=#content div:nth-of-type(3) table tfoot tr:nth-of-type(1) th:nth-of-type(1)     Total
+    And the Total calculation for Finance summaries are verified    1   £ 503,248   £ 150,677    £ 6,170     £ 346,401
     [Teardown]    the user navigates to the page       ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
 
 Project finance can see finance breakdown for different categories
@@ -1314,6 +1339,31 @@ Project finance can approve academic eligibility
     And the user should not see the checkbox    project-eligible
     When the user clicks the button/link    link=Finance checks
 
+Project finance user can view Updated finance overview for the consortium
+    [Documentation]    INFUND-4846
+    [Tags]
+    When the user clicks the button/link    link=Project finance overview
+    Then the user should see the text in the element    css=#content h1:nth-of-type(1)  Finance overview
+    And the user should see the text in the element     css=#content h3:nth-of-type(1)  Overview
+    Then the user verifies the table heading for Overview section
+    # the below figures are listed as:       RowNumber  StartDate      Duration    TotalProjectCost    GrantAppliedFor     OtherPublicSectorFunding    Total%Grant
+    And the categories are verified for Overview section    1   1 Oct 2020  3 months    £ 322,113   £ 91,157    £ 6,170     28%
+
+Project finance user can view Updated Finance summaries for the consortium
+    [Documentation]    INFUND-4846
+    [Tags]
+    Given the user should see the text in the element   css=#content h3:nth-of-type(2)      Finance summaries
+    When the user verifies the table heading for Finance summaries section
+    Then the user should see the text in the element    css=#content div:nth-of-type(3) table tbody tr:nth-of-type(1) th:nth-of-type(1) strong      Empire Ltd
+    # the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
+    And the categories are verified for Finance summaries section   1   £ 206,867   30%     £ 62,060    £ 3,702     £ 141,105
+    Then the user should see the text in the element    css=#content div:nth-of-type(3) table tbody tr:nth-of-type(2) th:nth-of-type(1) strong      EGGS
+    And the categories are verified for Finance summaries section   2   £ 990   0%  £ 0     £ 0     £ 990
+    Then the user should see the text in the element    css=#content div:nth-of-type(3) table tbody tr:nth-of-type(3) th:nth-of-type(1) strong      Ludlow
+    And the categories are verified for Finance summaries section   3   £ 114,256   30%     £ 34,277    £ 2,468     £ 77,511
+    Then the user should see the text in the element    css=#content div:nth-of-type(3) table tfoot tr:nth-of-type(1) th:nth-of-type(1)     Total
+    And the Total calculation for Finance summaries are verified    1   £ 322,113   £ 96,337    £ 6,170     £ 219,606
+
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
     [Documentation]    INFUND-4428
     [Tags]
@@ -1386,7 +1436,6 @@ Non Lead Partner can view Finance checks page
     And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
     Then the user clicks the button/link    link=Finance checks
     And the user should see the text in the page   The finance checks have been completed and your finances approved.
-
 
 *** Keywords ***
 
@@ -1813,6 +1862,45 @@ the user goes back to the initial page after having checked the attachment
     the user should not see an error in the page
     Select Window    #this goes back to the initial page
 
+the user verifies the table heading for Overview section
+    the user should see the text in the element     css=.table-overview tr:nth-of-type(1) th:nth-of-type(1)      Start date
+    the user should see the text in the element     css=.table-overview tr:nth-of-type(1) th:nth-of-type(2)      Duration
+    the user should see the text in the element     css=.table-overview tr:nth-of-type(1) th:nth-of-type(3)      Total project cost
+    the user should see the text in the element     css=.table-overview tr:nth-of-type(1) th:nth-of-type(4)      Grant applied for
+    the user should see the text in the element     css=.table-overview tr:nth-of-type(1) th:nth-of-type(5)      Other public sector funding
+    the user should see the text in the element     css=.table-overview tr:nth-of-type(1) th:nth-of-type(6)      Total % grant
+
+the categories are verified for Overview section
+    [Arguments]  ${row_number}  ${start_date}  ${duration}  ${total_project_cost}  ${grant_applied_for}  ${other_public_sector_fund}  ${total_percent_grant}
+    the user should see the text in the element     css=.table-overview tr:nth-of-type(${row_number}) td:nth-of-type(1)  ${start_date}
+    the user should see the text in the element     css=.table-overview tr:nth-of-type(${row_number}) td:nth-of-type(2)  ${duration}
+    the user should see the text in the element     css=.table-overview tr:nth-of-type(${row_number}) td:nth-of-type(3)  ${total_project_cost}
+    the user should see the text in the element     css=.table-overview tr:nth-of-type(${row_number}) td:nth-of-type(4)  ${grant_applied_for}
+    the user should see the text in the element     css=.table-overview tr:nth-of-type(${row_number}) td:nth-of-type(5)  ${other_public_sector_fund}
+    the user should see the text in the element     css=.table-overview tr:nth-of-type(${row_number}) td:nth-of-type(6)  ${total_percent_grant}
+
+the user verifies the table heading for Finance summaries section
+    the user should see the text in the element     css=#content div:nth-of-type(3) thead tr:nth-of-type(1) th:nth-of-type(1)   Partner
+    the user should see the text in the element     css=#content div:nth-of-type(3) thead tr:nth-of-type(1) th:nth-of-type(2)   Total costs
+    the user should see the text in the element     css=#content div:nth-of-type(3) thead tr:nth-of-type(1) th:nth-of-type(3)   % Grant
+    the user should see the text in the element     css=#content div:nth-of-type(3) thead tr:nth-of-type(1) th:nth-of-type(4)   Funding sought
+    the user should see the text in the element     css=#content div:nth-of-type(3) thead tr:nth-of-type(1) th:nth-of-type(5)   Other public sector funding
+    the user should see the text in the element     css=#content div:nth-of-type(3) thead tr:nth-of-type(1) th:nth-of-type(6)   Contribution to project
+
+the categories are verified for Finance summaries section
+    [Arguments]  ${row_number}  ${total_costs}  ${percentage_grant}  ${funding_sought}  ${other_public_sector_funding}  ${contribution_to_project}
+    the user should see the text in the element     css=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(1) strong   ${total_costs}
+    the user should see the text in the element     css=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(2)  ${percentage_grant}
+    the user should see the text in the element     css=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(3)  ${funding_sought}
+    the user should see the text in the element     css=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(4)  ${other_public_sector_funding}
+    the user should see the text in the element     css=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(5)  ${contribution_to_project}
+
+the Total calculation for Finance summaries are verified
+    [Arguments]  ${row_number}  ${allPartners_totalcost}   ${allPartners_fundingSought}   ${allPartners_otherPublicSectorFunding}  ${allPartners_contributionToProject}
+    the user should see the text in the element     css=#content div:nth-of-type(3) table tfoot tr:nth-of-type(${row_number}) td:nth-of-type(1) strong  ${allPartners_totalcost}
+    the user should see the text in the element     css=#content div:nth-of-type(3) table tfoot tr:nth-of-type(${row_number}) td:nth-of-type(3) strong  ${allPartners_fundingSought}
+    the user should see the text in the element     css=#content div:nth-of-type(3) table tfoot tr:nth-of-type(${row_number}) td:nth-of-type(4) strong  ${allPartners_otherPublicSectorFunding}
+    the user should see the text in the element     css=#content div:nth-of-type(3) table tfoot tr:nth-of-type(${row_number}) td:nth-of-type(5) strong  ${allPartners_contributionToProject}
 all the categories are verified
     [Arguments]  ${row_number}  ${total}  ${labour}  ${overheads}  ${materials}  ${capital_usage}  ${subcontracting}  ${travel}   ${other_costs}
     the user should see the text in the element   css=.form-group tbody tr:nth-of-type(${row_number}) td:nth-of-type(1) strong  ${total}

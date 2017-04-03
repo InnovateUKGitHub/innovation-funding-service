@@ -90,7 +90,6 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
         registrationController.setValidator(new LocalValidatorFactoryBean());
 
         when(userService.findUserByEmail(anyString())).thenReturn(Optional.of(new UserResource()));
-        when(userService.findUserByEmailForAnonymousUserFlow(anyString())).thenReturn(Optional.of(new UserResource()));
         when(userService.createUserForOrganisation(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong())).thenReturn(serviceSuccess(new UserResource()));
         when(ethnicityRestService.findAllActive()).thenReturn(restSuccess(asList(EthnicityResourceBuilder.newEthnicityResource().withId(1L).withDescription("Nerdy People").withName("IFS programmer").withPriority(1).build())));
 
@@ -229,7 +228,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
         String email = "alreadyexistingemail@test.test";
 
         when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
-        when(userService.findUserByEmailForAnonymousUserFlow(email)).thenReturn(Optional.of(new UserResource()));
+        when(userService.findUserByEmail(email)).thenReturn(Optional.of(new UserResource()));
 
         mockMvc.perform(post("/registration/register")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -325,7 +324,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
         when(organisationService.getOrganisationByIdForAnonymousUserFlow(1L)).thenReturn(organisation);
 
         String testEmailAddress = "tester@tester.com";
-        when(userService.findUserByEmailForAnonymousUserFlow(anyString())).thenReturn(Optional.empty());
+        when(userService.findUserByEmail(anyString())).thenReturn(Optional.empty());
 
         Error error = Error.fieldError("password", "INVALID_PASSWORD", BAD_REQUEST.getReasonPhrase());
         when(userService.createLeadApplicantForOrganisationWithCompetitionId(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyLong(), anyString(), anyLong(), anyLong())).thenReturn(serviceFailure(error));
@@ -410,7 +409,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 anyString(),
                 eq(1L),
                 eq(null))).thenReturn(serviceSuccess(userResource));
-        when(userService.findUserByEmailForAnonymousUserFlow("test@test.test")).thenReturn(Optional.empty());
+        when(userService.findUserByEmail("test@test.test")).thenReturn(Optional.empty());
 
         mockMvc.perform(post("/registration/register")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -461,7 +460,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 anyString(),
                 eq(1L),
                 eq(null))).thenReturn(serviceSuccess(userResource));
-        when(userService.findUserByEmailForAnonymousUserFlow(eq("invited@email.com"))).thenReturn(Optional.empty());
+        when(userService.findUserByEmail(eq("invited@email.com"))).thenReturn(Optional.empty());
         when(inviteRestService.acceptInvite(eq(INVITE_HASH), anyLong())).thenReturn(restSuccess());
 
         mockMvc.perform(post("/registration/register")
