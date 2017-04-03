@@ -21,7 +21,7 @@ public interface UserService {
     void resendEmailVerificationNotification(String email);
     Boolean userHasApplicationForCompetition(Long userId, Long competitionId);
     UserResource retrieveUserById(Long id);
-    Void sendPasswordResetNotification(String email);
+    void sendPasswordResetNotification(String email);
     Void checkPasswordResetHash(String hash);
     ServiceResult<Void> resetPassword(String hash, String password);
     Optional<UserResource> findUserByEmail(String email);

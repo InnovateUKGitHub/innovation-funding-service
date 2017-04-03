@@ -189,13 +189,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Void sendPasswordResetNotification(String email) {
-        try {
+    public void sendPasswordResetNotification(String email) {
             userRestService.sendPasswordResetNotification(email);
-        } catch (ObjectNotFoundException e) {
-            LOG.warn("Email address "+email+" not found");
-        }
-        return null;
     }
 
     @Override
