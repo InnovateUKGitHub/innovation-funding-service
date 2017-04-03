@@ -2,6 +2,7 @@ package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
@@ -67,6 +68,7 @@ public class CompetitionParticipantServiceImplTest extends BaseUnitTestMocksTest
         assertSame(expected, found.get(0));
         assertEquals(0L, found.get(0).getSubmittedAssessments());
         assertEquals(0L, found.get(0).getTotalAssessments());
+        assertEquals(0L, found.get(0).getPendingAssessments());
 
         InOrder inOrder = inOrder(competitionParticipantRoleMapperMock, competitionParticipantRepositoryMock, competitionParticipantMapperMock, assessmentRepositoryMock);
         inOrder.verify(competitionParticipantRoleMapperMock, calls(1)).mapToDomain(any(CompetitionParticipantRoleResource.class));
@@ -93,8 +95,10 @@ public class CompetitionParticipantServiceImplTest extends BaseUnitTestMocksTest
                 .build();
 
         List<Assessment> assessments = newAssessment()
-                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, OPEN.getBackingState()), new ActivityState(APPLICATION_ASSESSMENT, SUBMITTED.getBackingState()))
-                .build(2);
+                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, OPEN.getBackingState()),
+                        new ActivityState(APPLICATION_ASSESSMENT, SUBMITTED.getBackingState()),
+                        new ActivityState(APPLICATION_ASSESSMENT, AssessmentStates.PENDING.getBackingState()))
+                .build(3);
 
         when(competitionParticipantRepositoryMock.getByUserIdAndRole(userId, ASSESSOR)).thenReturn(competitionParticipants);
         when(competitionParticipantMapperMock.mapToResource(same(competitionParticipant))).thenReturn(expected);
@@ -109,6 +113,7 @@ public class CompetitionParticipantServiceImplTest extends BaseUnitTestMocksTest
         assertSame(expected, found.get(0));
         assertEquals(1L, found.get(0).getSubmittedAssessments());
         assertEquals(2L, found.get(0).getTotalAssessments());
+        assertEquals(1L, found.get(0).getPendingAssessments());
 
         InOrder inOrder = inOrder(competitionParticipantRoleMapperMock, competitionParticipantRepositoryMock, competitionParticipantMapperMock, assessmentRepositoryMock);
         inOrder.verify(competitionParticipantRoleMapperMock, calls(1)).mapToDomain(any(CompetitionParticipantRoleResource.class));
@@ -183,6 +188,7 @@ public class CompetitionParticipantServiceImplTest extends BaseUnitTestMocksTest
         assertSame(expected, found.get(0));
         assertEquals(0L, found.get(0).getSubmittedAssessments());
         assertEquals(0L, found.get(0).getTotalAssessments());
+        assertEquals(0L, found.get(0).getPendingAssessments());
 
         InOrder inOrder = inOrder(competitionParticipantRoleMapperMock, competitionParticipantRepositoryMock, competitionParticipantMapperMock, assessmentRepositoryMock);
         inOrder.verify(competitionParticipantRoleMapperMock, calls(1)).mapToDomain(any(CompetitionParticipantRoleResource.class));

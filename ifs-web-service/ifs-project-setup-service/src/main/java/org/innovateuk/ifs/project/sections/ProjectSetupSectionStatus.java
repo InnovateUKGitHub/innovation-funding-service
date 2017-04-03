@@ -50,13 +50,12 @@ public class ProjectSetupSectionStatus {
     }
 
     public SectionStatus financeChecksSectionStatus(final ProjectActivityStates financeCheckState,
-                                                    final boolean allApproved,
                                                     final SectionAccess access) {
 
         if(access.equals(SectionAccess.NOT_ACCESSIBLE)) {
             return EMPTY;
         } else {
-            if (financeCheckState.equals(COMPLETE) && allApproved) {
+            if (financeCheckState.equals(COMPLETE)) {
                 return TICK;
             }
             if (financeCheckState.equals(ACTION_REQUIRED)) {
