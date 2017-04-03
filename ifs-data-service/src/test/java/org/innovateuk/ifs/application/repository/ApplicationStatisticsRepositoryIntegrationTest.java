@@ -17,7 +17,7 @@ import static org.junit.Assert.assertEquals;
 
 public class ApplicationStatisticsRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<ApplicationStatisticsRepository> {
 
-    public static final Collection<ApplicationStatus> SUBMITTED_STATUS_IDS = asList(
+    public static final Collection<ApplicationStatus> SUBMITTED_STATUSES = asList(
             ApplicationStatus.APPROVED,
             ApplicationStatus.REJECTED,
             ApplicationStatus.SUBMITTED);
@@ -32,7 +32,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
     public void findByCompetition() throws Exception {
         Long competitionId = 1L;
 
-        List<ApplicationStatistics> statisticsList = repository.findByCompetitionAndApplicationStatusIn(competitionId, SUBMITTED_STATUS_IDS);
+        List<ApplicationStatistics> statisticsList = repository.findByCompetitionAndApplicationStatusIn(competitionId, SUBMITTED_STATUSES);
         assertEquals(5, statisticsList.size());
 
     }
@@ -43,7 +43,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
 
         Pageable pageable = new PageRequest(1, 3);
 
-        Page<ApplicationStatistics> statisticsPage = repository.findByCompetitionAndApplicationStatusIn(competitionId, SUBMITTED_STATUS_IDS, "", pageable);
+        Page<ApplicationStatistics> statisticsPage = repository.findByCompetitionAndApplicationStatusIn(competitionId, SUBMITTED_STATUSES, "", pageable);
         assertEquals(5, statisticsPage.getTotalElements());
         assertEquals(3, statisticsPage.getSize());
         assertEquals(1, statisticsPage.getNumber());
@@ -55,7 +55,7 @@ public class ApplicationStatisticsRepositoryIntegrationTest extends BaseReposito
 
         Pageable pageable = new PageRequest(0, 20);
 
-        Page<ApplicationStatistics> statisticsPage = repository.findByCompetitionAndApplicationStatusIn(competitionId, SUBMITTED_STATUS_IDS,"4", pageable);
+        Page<ApplicationStatistics> statisticsPage = repository.findByCompetitionAndApplicationStatusIn(competitionId, SUBMITTED_STATUSES,"4", pageable);
         assertEquals(1, statisticsPage.getTotalElements());
         assertEquals(20, statisticsPage.getSize());
         assertEquals(0, statisticsPage.getNumber());
