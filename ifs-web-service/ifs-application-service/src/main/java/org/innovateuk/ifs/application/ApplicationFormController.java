@@ -198,7 +198,7 @@ public class ApplicationFormController {
     }
 
     @ProfileExecution
-    @RequestMapping(value = {QUESTION_URL + "{" + QUESTION_ID + "}", QUESTION_URL + "edit/{" + QUESTION_ID + "}"}, method = RequestMethod.GET)
+    @GetMapping(value = {QUESTION_URL + "{" + QUESTION_ID + "}", QUESTION_URL + "edit/{" + QUESTION_ID + "}"})
     public String showQuestion(@ModelAttribute(MODEL_ATTRIBUTE_FORM) ApplicationForm form,
                                @SuppressWarnings("unused") BindingResult bindingResult,
                                @SuppressWarnings("unused") ValidationHandler validationHandler,
@@ -218,7 +218,7 @@ public class ApplicationFormController {
     }
 
     @ProfileExecution
-    @RequestMapping(value = QUESTION_URL + "{" + QUESTION_ID + "}/forminput/{formInputId}/download", method = RequestMethod.GET)
+    @GetMapping(QUESTION_URL + "{" + QUESTION_ID + "}/forminput/{formInputId}/download")
     public @ResponseBody
     ResponseEntity<ByteArrayResource> downloadApplicationFinanceFile(
             @PathVariable(APPLICATION_ID) final Long applicationId,
@@ -231,7 +231,7 @@ public class ApplicationFormController {
         return getFileResponseEntity(resource, fileDetails.getFileEntryResource());
     }
 
-    @RequestMapping(value = "/{applicationFinanceId}/finance-download", method = RequestMethod.GET)
+    @GetMapping("/{applicationFinanceId}/finance-download")
     public @ResponseBody
     ResponseEntity<ByteArrayResource> downloadApplicationFinanceFile(
             @PathVariable("applicationFinanceId") final Long applicationFinanceId) {
@@ -242,7 +242,7 @@ public class ApplicationFormController {
     }
 
     @ProfileExecution
-    @RequestMapping(value = SECTION_URL + "{sectionId}", method = RequestMethod.GET)
+    @GetMapping(SECTION_URL + "{sectionId}")
     public String applicationFormWithOpenSection(@Valid @ModelAttribute(MODEL_ATTRIBUTE_FORM) ApplicationForm form, BindingResult bindingResult, Model model,
                                                  @PathVariable(APPLICATION_ID) final Long applicationId,
                                                  @PathVariable("sectionId") final Long sectionId,
@@ -287,7 +287,7 @@ public class ApplicationFormController {
     }
 
     @ProfileExecution
-    @RequestMapping(value = {QUESTION_URL + "{" + QUESTION_ID + "}", QUESTION_URL + "edit/{" + QUESTION_ID + "}"}, method = RequestMethod.POST)
+    @PostMapping(value = {QUESTION_URL + "{" + QUESTION_ID + "}", QUESTION_URL + "edit/{" + QUESTION_ID + "}"})
     public String questionFormSubmit(@Valid @ModelAttribute(MODEL_ATTRIBUTE_FORM) ApplicationForm form,
                                      BindingResult bindingResult,
                                      ValidationHandler validationHandler,
@@ -395,7 +395,7 @@ public class ApplicationFormController {
         }
     }
 
-    @RequestMapping(value = "/add_cost/{" + QUESTION_ID + "}")
+    @GetMapping(value = "/add_cost/{" + QUESTION_ID + "}")
     public String addCostRow(@ModelAttribute(MODEL_ATTRIBUTE_FORM) ApplicationForm form,
                              BindingResult bindingResult,
                              Model model,
@@ -417,7 +417,7 @@ public class ApplicationFormController {
         return String.format("finance/finance :: %s_row", costType.getType());
     }
 
-    @RequestMapping(value = "/remove_cost/{costId}")
+    @GetMapping("/remove_cost/{costId}")
     public @ResponseBody
     String removeCostRow(@PathVariable("costId") final Long costId) throws JsonProcessingException {
         financeRowService.delete(costId);
@@ -722,7 +722,7 @@ public class ApplicationFormController {
      * This is also used when the user clicks the 'mark-as-complete' button or reassigns a question to another user.
      */
     @ProfileExecution
-    @RequestMapping(value = SECTION_URL + "{sectionId}", method = RequestMethod.POST)
+    @PostMapping(SECTION_URL + "{sectionId}")
     public String applicationFormSubmit(@Valid @ModelAttribute(MODEL_ATTRIBUTE_FORM) ApplicationForm form,
                                         BindingResult bindingResult, ValidationHandler validationHandler,
                                         Model model,
@@ -970,7 +970,7 @@ public class ApplicationFormController {
      * This method is for supporting ajax saving from the application form.
      */
     @ProfileExecution
-    @RequestMapping(value = "/{competitionId}/saveFormElement", method = RequestMethod.POST)
+    @PostMapping("/{competitionId}/saveFormElement")
     @ResponseBody
     public JsonNode saveFormElement(@RequestParam("formInputId") String inputIdentifier,
                                     @RequestParam("value") String value,
@@ -1165,7 +1165,7 @@ public class ApplicationFormController {
 
 
     @ProfileExecution
-    @RequestMapping(value = "/{sectionType}", method = RequestMethod.GET)
+    @GetMapping("/{sectionType}")
     public String redirectToSection(@PathVariable("sectionType") SectionType type,
                                     @PathVariable(APPLICATION_ID) Long applicationId) {
         ApplicationResource application = applicationService.getById(applicationId);

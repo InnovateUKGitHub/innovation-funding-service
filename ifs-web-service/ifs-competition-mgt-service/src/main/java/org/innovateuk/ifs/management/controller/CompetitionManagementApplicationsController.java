@@ -9,10 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 
@@ -34,13 +31,13 @@ public class CompetitionManagementApplicationsController {
     @Autowired
     private SubmittedApplicationsModelPopulator submittedApplicationsModelPopulator;
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public String applicationsMenu(Model model, @PathVariable("competitionId") long competitionId) {
         model.addAttribute("model", applicationsMenuModelPopulator.populateModel(competitionId));
         return "competition/applications-menu";
     }
 
-    @RequestMapping(path = "/all", method = RequestMethod.GET)
+    @GetMapping("/all")
     public String allApplications(Model model,
                                   @PathVariable("competitionId") long competitionId,
                                   @RequestParam MultiValueMap<String, String> queryParams,
@@ -54,7 +51,7 @@ public class CompetitionManagementApplicationsController {
         return "competition/all-applications";
     }
 
-    @RequestMapping(path = "/submitted", method = RequestMethod.GET)
+    @GetMapping("/submitted")
     public String submittedApplications(Model model,
                                         @PathVariable("competitionId") long competitionId,
                                         @RequestParam MultiValueMap<String, String> queryParams,
