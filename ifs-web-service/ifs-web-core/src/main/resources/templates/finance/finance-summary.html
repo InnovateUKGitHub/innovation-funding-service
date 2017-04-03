@@ -250,7 +250,7 @@
         </div>
         <div th:if="${researchParticipationPercentage &gt; currentCompetition.maxResearchRatio}" class="warning-alert">
             <h2 class="heading-small no-margin">The participation levels of this project are not within the required range</h2>
-            <p>You will not be able to submit this application until the research participation is <span th:text="${currentCompetition.maxResearchRatio}"></span>% or less.</p>
+            <p>Your research partner costs must be <span th:text="${currentCompetition.maxResearchRatio}"></span>% or less of the total project costs.</p>
         </div>
     </th:block>
 </html>
