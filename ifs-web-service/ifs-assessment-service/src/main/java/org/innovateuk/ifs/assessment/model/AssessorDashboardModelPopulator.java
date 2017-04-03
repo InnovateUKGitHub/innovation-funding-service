@@ -56,6 +56,7 @@ public class AssessorDashboardModelPopulator {
                         cpr.getCompetitionName(),
                         cpr.getSubmittedAssessments(),
                         cpr.getTotalAssessments(),
+                        cpr.getPendingAssessments(),
                         cpr.getAssessorDeadlineDate().toLocalDate(),
                         cpr.getAssessmentDaysLeft(),
                         cpr.getAssessmentDaysLeftPercentage()
