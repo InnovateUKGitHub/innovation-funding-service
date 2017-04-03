@@ -63,8 +63,8 @@
 
     <hr />
 
-    <div class="queries-list" th:each="query : ${model.getQueries()}">
-        <div  th:with="querySection=${query.sectionType.name().toLowerCase()}" th:class="${'query ' + querySection+'-section'}">
+    <div class="queries-list">
+        <div th:each="query : ${model.getQueries()}" th:with="querySection=${query.sectionType.name().toLowerCase()}" th:class="${'query ' + querySection+'-section'}">
             <h2 class="heading-medium non-margin-bottom" th:text="${query.title}">Query Thread Title</h2>
             <h3 class="heading-small no-margin" th:text="${#strings.capitalize(querySection)}">Query section</h3>
             <th:block th:each="(post, iteration : ${query.viewModelPosts})">

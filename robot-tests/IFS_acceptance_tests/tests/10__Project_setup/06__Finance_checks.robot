@@ -254,6 +254,7 @@ New query can be posted
     When the user clicks the button/link    jQuery=.button:contains("Post Query")
     Then the user should see the text in the page    Lee Bowman - Innovate UK (Finance team)
 
+
 Query sections are no longer editable
     [Documentation]    INFUND-4840
     [Tags]
@@ -276,6 +277,7 @@ Project finance user can add another query
     Given the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(6)
     When the user clicks the button/link    jQuery=.button:contains("Post a new query")
     And the user enters text to a text field    id=queryTitle    another query title
+    And the user selects the option from the drop-down menu    VIABILITY    id=section
     And the user enters text to a text field    css=.editor    another query body
     And the user clicks the button/link    jQuery=.button:contains("Post Query")
     Then the user should not see an error in the page
@@ -283,8 +285,16 @@ Project finance user can add another query
 Queries show in reverse chronological order
     [Documentation]    INFUND-4840
     [Tags]
-    When the user should see the element    jQuery=h2:nth-of-type(4):contains("this is a title")    #
-    And the user should see the element    jQuery=h2:nth-of-type(3):contains("another query title")
+    Given the user should see the element   jQuery=#querySection
+    And the user should see the element     jQuery=.queries-list .query:nth-of-type(1) h2:contains("another query title")
+    And the user should see the element     jQuery=.queries-list .query:nth-of-type(2) h2:contains("this is a title")
+
+Project finance user can filter queries by section
+    [Documentation]  INFUND-4844
+    [Tags]
+    Given the user selects the option from the drop-down menu    Eligibility only    id=querySection
+    Then the user should see the element       jQuery=.queries-list .query:nth-of-type(2) h2:contains("this is a title")
+    And the user should not see the element    jQuery=.queries-list .query:nth-of-type(1) h2:contains("another query title")
 
 Non finance contact can view query
     [Documentation]    INFUND-4843, INFUND-8787
