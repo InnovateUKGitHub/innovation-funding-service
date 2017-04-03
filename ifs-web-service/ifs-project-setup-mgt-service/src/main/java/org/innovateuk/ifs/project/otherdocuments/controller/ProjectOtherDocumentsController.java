@@ -30,8 +30,6 @@ import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.get
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 import static java.util.Collections.singletonList;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * Controller backing the Other Documents page
@@ -49,7 +47,7 @@ public class ProjectOtherDocumentsController {
     private ApplicationService applicationService;
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
-    @RequestMapping(method = GET)
+    @GetMapping
     public String viewOtherDocumentsPage(Model model, @ModelAttribute(FORM_ATTR) ProjectPartnerDocumentsForm form,
                                          @PathVariable("projectId") Long projectId,
                                          @ModelAttribute("loggedInUser") UserResource loggedInUser) {
@@ -57,7 +55,7 @@ public class ProjectOtherDocumentsController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
-    @RequestMapping(method = POST)
+    @PostMapping
     public String acceptOrRejectOtherDocuments(Model model, @ModelAttribute(FORM_ATTR) ProjectPartnerDocumentsForm form,
                                                BindingResult bindingResult,
                                                ValidationHandler validationhandler,
@@ -71,7 +69,7 @@ public class ProjectOtherDocumentsController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
-    @RequestMapping(value = "/collaboration-agreement", method = GET)
+    @GetMapping("/collaboration-agreement")
     public
     @ResponseBody
     ResponseEntity<ByteArrayResource> downloadCollaborationAgreementFile(
@@ -84,7 +82,7 @@ public class ProjectOtherDocumentsController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
-    @RequestMapping(value = "/exploitation-plan", method = GET)
+    @GetMapping("/exploitation-plan")
     public
     @ResponseBody
     ResponseEntity<ByteArrayResource> downloadExploitationPlanFile(

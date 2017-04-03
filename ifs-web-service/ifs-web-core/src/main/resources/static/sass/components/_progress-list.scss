@@ -1,127 +1,272 @@
-.ifs-progress-list li {
-    position: relative;
-    clear:both;
-    &.column-half,
-    &.column-two-thirds {
-      clear:none;
+//updated dashboard styling
+
+/*--- Progress list ---*/
+
+.progress-list{
+  background-color: $panel-colour;
+  margin: 20px 0 50px;
+  padding: 15px;
+
+  &--individual-blocks{
+    background-color: $white;
+    margin: 30px 0 50px;
+    padding: 0;
+  }
+
+  > .heading-medium {
+    margin-top: 0;
+  }
+
+  > ul > li {
+    margin-top: 10px;
+    padding: 15px 0 15px 30px;
+    background-color: $white;
+    border: 1px solid $border-colour;
+    overflow: auto;
+    display: flex; // Using flex as a progressive enhancement for vertical alignment of dashboard elements. Container heights are varaiable depending on length of application titles.
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    @include media-down(mobile) {
+      padding: 15px;
     }
-    .linkbar a {
-      margin-right:15px;
-    }
-}
-.ifs-progress-list li h2,
-.ifs-progress-list li h3,
-.ifs-progress-list li h4 {
-    margin-top:0;
-}
-
-.ifs-progress-list .progress-status {
-    border: 3px solid $border-colour;
-    @include border-radius(50%);
-    width:78px;
-    height: 78px;
-    text-align: center;
-    float:left;
-    background: $grey-4  no-repeat center center;
-}
-.ifs-progress-list .progress-status:after {
-    position: absolute;
-    top:90px;
-    bottom:-10px;
-    content:"";
-    left: 40px;
-    border-right: 3px dashed $border-colour;
-}
-
-
-.ifs-progress-list .progress-info {
-    @include border-radius(5px);
-    border: 3px solid $border-colour;
-    padding:20px;
-    margin: 0 0 20px 100px;
-    position: relative;
-}
-
-.ifs-progress-list .progress-info:before {
-    content: "";
-    position: absolute;
-    left: -36px;
-    border: 18px solid transparent;
-    border-right: 18px solid $grey-2;
-}
-
-//blue project status
-.ifs-progress-list li.processing,
-.ifs-progress-list li.require-action {
-    a {
-      color:$white;
-    }
-    .progress-status,
-    .progress-info {
-        background-color: $link-colour;
-        color:$white;
-        border-color: $link-colour;
-    }
-    .progress-info:before {
-       border-right: 18px solid $link-colour;
-    }
-
-}
-.ifs-progress-list li.processing .progress-status {
-  background-image: url('/images/progress/hourglass.gif');
-}
-.ifs-progress-list li.require-action .progress-status {
-  background-image: url('/images/progress/flag.gif');
-}
-.ifs-progress-list li.waiting .progress-status {
-  background-image: url('/images/progress/hourglass-2.gif');
-}
-
-//status complete
-.ifs-progress-list li.complete  .progress-status {
-  background-image: url('/images/progress/check.gif');
-  background-color: #e5f2eb;
-
-}
-.ifs-progress-list li.successful  .progress-status {
-  background-image: url('/images/progress/check.gif');
-}
-//status fail
-.ifs-progress-list li.unsuccessful  .progress-status {
-  background-image: url('/images/progress/cross.gif');
-}
-
-.ifs-progress-list li.unsuccessful .progress-status:after,
-.ifs-progress-list li.successful .progress-status:after,
-.ifs-progress-list li.complete .progress-status:after {
-    border-right-style:solid;
-}
-.ifs-progress-list li.column-half .progress-status:after,
-.ifs-progress-list li:last-child .progress-status:after {
-    border:none;
-}
-//responsive
-@include media-down(tablet) {
-   .ifs-progress-list .progress-status {
-       width:40px;
-       height: 40px;
-       border-width:2px;
    }
-  .ifs-progress-list .progress-info {
-      margin-left:60px;
-  }
-  .ifs-progress-list .progress-status::after {
-     left:19px;
-     top:50px;
-  }
-  .ifs-progress-list .progress-info:before,
-  .ifs-progress-list li.current .progress-info:before {
-     top:5px;
-     border-width: 14px;
-     left:-28px;
-  }
-  .ifs-progress-list li  .progress-status {
-    background-size: auto 50%;
+
+  .task{
+    @include core-16;
+    float: left;
+    padding-right: 19px;
+    vertical-align: top;
+    flex: 1 0 auto;
+
+    .heading-small,
+    .heading-medium {
+      margin-top: 0;
+      margin-bottom: 0.3em;
+    }
+
+    @include media-down(tablet) {
+      margin-bottom: 15px;
+    }
+
+    @include media-down(mobile) {
+      float: none;
+      width: 90%;
+    }
+
+    .label-holder {
+      float: left;
+      height: 45px;
+      margin-top: 10px;
+      @include media-down(mobile) {
+        margin-top: 5px;
+      }
+    }
+
+    &.task-half-width {
+      //width: 50%;
+      @include media-down(mobile) {
+        width: 90%;
+      }
+    }
   }
 
+  .action-required {
+    margin-top: 10px;
+    vertical-align: top;
+
+    strong {
+      @extend  %action-required;
+      padding-left: 20px;
+      font-weight: 700;
+    }
+
+  }
+
+  .status {
+    float: right;
+    vertical-align: middle;
+    text-align: center;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin: 0;
+
+    @include media-down(mobile) {
+      width: 50%;
+    }
+  }
+
+  .status-msg {
+    @include core-14;
+    display: block;
+    text-align: center;
+    font-weight: bold;
+    box-sizing: border-box;
+    float: left;
+    padding: 0 0.5em;
+    margin: 0;
+
+    &.msg-deadline{
+      font-weight: bold;
+
+      &-today{
+        color: $red;
+      }
+
+      &-waiting{
+        color: $secondary-text-colour;
+        padding: 1em 0;
+      }
+
+    }
+
+    &.msg-progress{
+      @include core-16;
+      color: $text-colour;
+      font-weight: bold;
+      float: right;
+    }
+  }
+
+  .awaiting {
+    @extend .deadline;
+    color: $secondary-text-colour;
+  }
+
+  > span {
+    @include core-16;
+    display: block;
+    margin-top: 15px;
+    text-align: center;
+
+    @include media-down(mobile) {
+      margin-top: 0;
+    }
+  }
+
+  .negative-text {
+    color: $red;
+  }
+
+  .assessment-period {
+    float: right;
+    width: 20%;
+    flex: 1 0 120px;
+
+    dl {
+      @include core-14;
+    }
+  }
+
+  .status-complete {
+    @extend %icon-tick;
+    @include bold-16;
+    padding-left: 20px;
+    background-size: 14px;
+    background-position: left center;
+    color: $button-colour;
+  }
+
+  .status-reject {
+    @extend %icon-cross;
+    @include bold-16;
+    padding-left: 20px;
+    background-size: 14px;
+    background-position: left center;
+  }
+
+  .status-action-required {
+    @extend %action-required;
+    padding-left: 20px;
+    color: $text-colour;
+  }
+
+
+  .positive {
+    strong {
+      color: $button-colour;
+    }
+
+    .score > strong {
+      color: $button-colour;
+    }
+
+    .score {
+      .percent{
+        color: $text-colour
+      }
+    }
+
+    .msg-progress{
+      color: $green;
+    }
+
+  }
+
+  .negative {
+    .score > strong {
+      color: $red;
+    }
+
+    .percent{
+      color: $text-colour
+    }
+
+    .msg-progress{
+      color: $red;
+    }
+
+  }
+
+  .read-only,
+  .waiting{
+    background-color: $highlight-colour;
+    color: $secondary-text-colour;
+
+    .msg-progress{
+      color: $secondary-text-colour;
+      font-weight: normal;
+    }
+
+  }
+
+  /*-------- SETTING WIDTHS OF TASK AND STATUS -------------*/
+
+  .task{
+    width: 78%;
+  }
+
+  .status{
+    width: 19%;
+    flex: 1 0 150px;
+
+    @include media-down(mobile) {
+      flex: 1 0 auto;
+    }
+  }
+
+  .status-msg{
+    width: 100%;
+  }
+
+  .status-2-col{
+
+    .task{
+      width: 58%;
+    }
+
+    .status{
+      width: 39%;
+      flex: 1 1 300px;
+    }
+
+    .status-msg{
+      width: 50%;
+
+      &:first-child{
+        border-right: 1px dashed $border-colour;
+      }
+    }
+  }
 }

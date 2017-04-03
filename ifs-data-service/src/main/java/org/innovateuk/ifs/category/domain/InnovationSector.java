@@ -15,7 +15,6 @@ public class InnovationSector extends ParentCategory<InnovationArea> {
     private List<InnovationArea> children;
 
     public InnovationSector() {
-        // default constructor
     }
 
     public InnovationSector(String name) {

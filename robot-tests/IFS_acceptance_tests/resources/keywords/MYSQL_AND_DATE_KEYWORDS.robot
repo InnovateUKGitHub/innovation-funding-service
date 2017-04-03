@@ -65,27 +65,28 @@ get today
     ${today} =    Get Current Date    result_format=%-d %B %Y    exclude_millis=true
     [Return]    ${today}
 
-get today day
-    ${today} =    Get Current Date    result_format=%d    exclude_millis=true
-    [Return]    ${today}
-
 get tomorrow full
     ${today}=    get time
     ${tomorrow} =    Add time To Date  ${today}  1 day  result_format=%-d %B %Y  exclude_millis=true
     # This format is like: 4 February 2017
     [Return]  ${tomorrow}
 
-get tomorrow full next year
-    ${today} =    get time
-    ${tommorow} =  Add time To Date  ${today}  1 day  result_format=%-d %B  exclude_millis=true
-    ${nextyear} =  get next year
-    ${tomorrow_nextyear} =  Catenate  ${tommorow}  ${nextyear}
-    [Return]  ${tomorrow_nextyear}
-
 get tomorrow day
     ${today}=    get time
     ${tomorrow} =    Add time To Date  ${today}  1 day  result_format=%d  exclude_millis=true
     [Return]  ${tomorrow}
+
+get the day after tomorrow
+    ${today}=    get time
+    ${aftertomorrow} =    Add time To Date  ${today}  2 days  result_format=%d  exclude_millis=true
+    [Return]  ${aftertomorrow}
+
+get the day after tomorrow full next year
+    ${today} =    get time
+    ${tommorow} =  Add time To Date  ${today}  2 days  result_format=%-d %B  exclude_millis=true
+    ${nextyear} =  get next year
+    ${tomorrow_nextyear} =  Catenate  ${tommorow}  ${nextyear}
+    [Return]  ${tomorrow_nextyear}
 
 get tomorrow month
     ${today}=    get time
@@ -98,7 +99,7 @@ get tomorrow year
     [Return]  ${tomorrow}
 
 get next year
-    ${year} =  get time    year    NOW + 365d
+    ${year} =  get time    year    NOW + 370d
     [Return]  ${year}
 
 get comp id from comp title

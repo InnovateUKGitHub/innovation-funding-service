@@ -148,3 +148,5 @@ ${project_address_page}    ${server}/project-setup/project/${PROJECT_SETUP_APPLI
 ${project_manager_page}    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/details/start-date
 ${internal_spend_profile_approval}    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/spend-profile/approval
 ${internal_project_summary}    ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
+
+${ELBOW_GREASE_PROJECT_ID}  4
