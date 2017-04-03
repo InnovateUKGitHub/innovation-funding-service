@@ -1,18 +1,17 @@
 package org.innovateuk.ifs.application.transactional;
 
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.transactional.FinanceRowService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.transactional.FinanceRowService;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 @Service
 public class ApplicationSummarisationServiceImpl implements ApplicationSummarisationService {
@@ -62,5 +61,4 @@ public class ApplicationSummarisationServiceImpl implements ApplicationSummarisa
 	private ServiceResult<BigDecimal> result(BigDecimal value) {
 		return serviceSuccess(value.setScale(2, RoundingMode.HALF_UP));
 	}
-
 }

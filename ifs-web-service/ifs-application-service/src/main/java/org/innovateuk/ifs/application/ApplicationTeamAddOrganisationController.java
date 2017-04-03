@@ -54,7 +54,7 @@ public class ApplicationTeamAddOrganisationController {
     @Autowired
     private ApplicationTeamAddOrganisationModelPopulator applicationTeamAddOrganisationModelPopulator;
 
-    @GetMapping(value = "/addOrganisation")
+    @GetMapping("/addOrganisation")
     public String getAddOrganisation(Model model,
                                      @PathVariable("applicationId") long applicationId,
                                      @ModelAttribute("loggedInUser") UserResource loggedInUser,
@@ -69,7 +69,7 @@ public class ApplicationTeamAddOrganisationController {
         return doViewAddOrganisation(model, applicationResource);
     }
 
-    @PostMapping(value = "/addOrganisation")
+    @PostMapping("/addOrganisation")
     public String submitAddOrganisation(Model model,
                                         @PathVariable("applicationId") long applicationId,
                                         @ModelAttribute("loggedInUser") UserResource loggedInUser,

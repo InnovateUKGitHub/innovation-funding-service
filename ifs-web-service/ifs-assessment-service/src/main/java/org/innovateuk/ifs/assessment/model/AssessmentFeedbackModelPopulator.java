@@ -9,6 +9,7 @@ import org.innovateuk.ifs.assessment.viewmodel.AssessmentFeedbackViewModel;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
@@ -87,7 +88,7 @@ public class AssessmentFeedbackModelPopulator {
                 question.getName(),
                 question.getAssessorMaximumScore(),
                 applicantResponseValue,
-                assessmentFormInputs,
+                formatGuidanceScores(assessmentFormInputs),
                 scoreFormInputExists,
                 scopeFormInputExists,
                 appendixDetails != null,
@@ -124,5 +125,19 @@ public class AssessmentFeedbackModelPopulator {
 
     private boolean hasFormInputWithType(List<FormInputResource> formInputs, FormInputType type) {
         return formInputs.stream().anyMatch(formInput -> type == formInput.getType());
+    }
+
+    private List<FormInputResource> formatGuidanceScores(List<FormInputResource> assessorInputs) {
+        if (assessorInputs != null) {
+            for (FormInputResource input : assessorInputs) {
+                if (ASSESSOR_SCORE.equals(input.getType()) && input.getGuidanceRows() != null) {
+                    for (GuidanceRowResource row : input.getGuidanceRows()) {
+                        row.setSubject(row.getSubject().replace(",", " to "));
+                    }
+                }
+            }
+        }
+
+        return assessorInputs;
     }
 }

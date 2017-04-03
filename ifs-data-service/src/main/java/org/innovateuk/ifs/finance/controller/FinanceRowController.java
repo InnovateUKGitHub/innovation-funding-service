@@ -5,10 +5,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
@@ -32,7 +29,7 @@ public class FinanceRowController {
     @Autowired
     private ValidationUtil validationUtil;
 
-    @RequestMapping("/add/{applicationFinanceId}/{questionId}")
+    @PostMapping("/add/{applicationFinanceId}/{questionId}")
     public RestResult<ValidationMessages> add(
             @PathVariable("applicationFinanceId") final Long applicationFinanceId,
             @PathVariable("questionId") final Long questionId,
@@ -47,14 +44,14 @@ public class FinanceRowController {
         }
     }
     
-    @RequestMapping("/add-without-persisting/{applicationFinanceId}/{questionId}")
+    @PostMapping("/add-without-persisting/{applicationFinanceId}/{questionId}")
     public RestResult<FinanceRowItem> addWithoutPersisting(
             @PathVariable("applicationFinanceId") final Long applicationFinanceId,
             @PathVariable("questionId") final Long questionId) {
         return financeRowService.addCostWithoutPersisting(applicationFinanceId, questionId).toPostCreateResponse();
     }
 
-    @RequestMapping("/{id}")
+    @GetMapping("/{id}")
     public RestResult<FinanceRowItem> get(@PathVariable("id") final Long id) {
         return financeRowService.getCostItem(id).toGetResponse();
     }
@@ -63,7 +60,7 @@ public class FinanceRowController {
      * Save the updated FinanceRowItem and if there are validation messages, return those (but still save)
      * @return ValidationMessages resource object to store validation messages about invalid user input.
      */
-    @RequestMapping("/update/{id}")
+    @PutMapping("/update/{id}")
     public RestResult<ValidationMessages> update(@PathVariable("id") final Long id, @RequestBody final FinanceRowItem newCostItem) {
         RestResult<FinanceRowItem> updateResult = financeRowService.updateCost(id, newCostItem).toGetResponse();
         if(updateResult.isFailure()){
@@ -75,7 +72,7 @@ public class FinanceRowController {
         }
     }
 
-    @RequestMapping("/delete/{costId}")
+    @DeleteMapping("/delete/{costId}")
     public RestResult<Void> delete(@PathVariable("costId") final Long costId) {
         return financeRowService.deleteCost(costId).toDeleteResponse();
     }

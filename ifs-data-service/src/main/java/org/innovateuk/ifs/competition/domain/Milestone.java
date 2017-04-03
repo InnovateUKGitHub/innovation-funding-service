@@ -26,7 +26,6 @@ public class Milestone {
 
     // TODO INFUND-5908 make this package protected
     public Milestone() {
-        // default constructor
     }
 
     public Milestone(MilestoneType type, Competition competition) {

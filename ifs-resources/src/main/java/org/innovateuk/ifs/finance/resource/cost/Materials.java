@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 /**
  * {@code Materials} implements {@link FinanceRowItem}
  */
-public class Materials implements FinanceRowItem {
+public class Materials extends AbstractFinanceRowItem {
     private Long id;
 
     @NotNull(message = NOT_BLANK_MESSAGE)

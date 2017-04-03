@@ -61,8 +61,6 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.t
 import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * Handles the Competition Management Application overview page (and associated actions).
@@ -135,7 +133,7 @@ public class CompetitionManagementApplicationController extends BaseController {
     @Autowired
     protected ApplicationService applicationService;
 
-    @RequestMapping(value = "/{applicationId}", method = GET)
+    @GetMapping("/{applicationId}")
     public String displayApplicationOverview(@PathVariable("applicationId") final Long applicationId,
                                              @PathVariable("competitionId") final Long competitionId,
                                              @ModelAttribute("form") ApplicationForm form,
@@ -189,7 +187,7 @@ public class CompetitionManagementApplicationController extends BaseController {
                 .toUriString();
     }
 
-    @RequestMapping(value = "/{applicationId}/assessorFeedback", method = GET)
+    @GetMapping("/{applicationId}/assessorFeedback")
     @ResponseBody
     public ResponseEntity<ByteArrayResource> downloadAssessorFeedbackFile(
             @PathVariable("applicationId") final Long applicationId) {
@@ -199,7 +197,7 @@ public class CompetitionManagementApplicationController extends BaseController {
         return getFileResponseEntity(resource, fileDetails);
     }
 
-    @RequestMapping(value = "/{applicationId}", params = "uploadAssessorFeedback", method = POST)
+    @PostMapping(value = "/{applicationId}", params = "uploadAssessorFeedback")
     public String uploadAssessorFeedbackFile(
             @PathVariable("competitionId") final Long competitionId,
             @PathVariable("applicationId") final Long applicationId,
@@ -226,7 +224,7 @@ public class CompetitionManagementApplicationController extends BaseController {
         });
     }
 
-    @RequestMapping(value = "/{applicationId}", params = "removeAssessorFeedback", method = POST)
+    @PostMapping(value = "/{applicationId}", params = "removeAssessorFeedback")
     public String removeAssessorFeedbackFile(@PathVariable("competitionId") final Long competitionId,
                                              @PathVariable("applicationId") final Long applicationId,
                                              @RequestParam(value = "origin", defaultValue = "ALL_APPLICATIONS") String origin,
@@ -249,7 +247,7 @@ public class CompetitionManagementApplicationController extends BaseController {
         });
     }
 
-    @RequestMapping(value = "/{applicationId}/finances/{organisationId}", method = RequestMethod.GET)
+    @GetMapping("/{applicationId}/finances/{organisationId}")
     public String displayApplicationFinances(@PathVariable("applicationId") final Long applicationId,
                                              @PathVariable("competitionId") final Long competitionId,
                                              @PathVariable("organisationId") final Long organisationId,
@@ -300,7 +298,7 @@ public class CompetitionManagementApplicationController extends BaseController {
         return user;
     }
 
-    @RequestMapping(value = "/{applicationId}/forminput/{formInputId}/download", method = GET)
+    @GetMapping("/{applicationId}/forminput/{formInputId}/download")
     public
     @ResponseBody
     ResponseEntity<ByteArrayResource> downloadQuestionFile(
@@ -325,7 +323,7 @@ public class CompetitionManagementApplicationController extends BaseController {
     /**
      * Printable version of the application
      */
-    @RequestMapping(value = "/{applicationId}/print")
+    @GetMapping(value = "/{applicationId}/print")
     public String printManagementApplication(@PathVariable("applicationId") Long applicationId,
                                              @PathVariable("competitionId") Long competitionId,
                                              Model model, HttpServletRequest request) {

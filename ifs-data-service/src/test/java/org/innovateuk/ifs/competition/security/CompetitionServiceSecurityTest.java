@@ -134,6 +134,11 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.releaseFeedback(1L), PROJECT_FINANCE, COMP_ADMIN);
     }
 
+    @Test
+    public void manageInformState() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.manageInformState(1L), PROJECT_FINANCE, COMP_ADMIN);
+    }
+
     /**
      * Dummy implementation (for satisfying Spring Security's need to read parameter information from
      * methods, which is lost when using mocks)
@@ -195,5 +200,9 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
             return null;
         }
 
+        @Override
+        public ServiceResult<Void> manageInformState(long competitionId) {
+            return null;
+        }
     }
 }
