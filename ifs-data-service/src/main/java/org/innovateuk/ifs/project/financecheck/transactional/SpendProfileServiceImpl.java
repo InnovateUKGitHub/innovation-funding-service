@@ -13,8 +13,11 @@ import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
+import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
+import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
+import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.financecheck.domain.*;
 import org.innovateuk.ifs.project.financecheck.repository.CostCategoryRepository;
@@ -27,8 +30,10 @@ import org.innovateuk.ifs.project.financecheck.workflow.financechecks.configurat
 import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.resource.*;
+import org.innovateuk.ifs.project.transactional.EmailService;
 import org.innovateuk.ifs.project.transactional.ProjectGrantOfferService;
 import org.innovateuk.ifs.project.transactional.ProjectService;
+import org.innovateuk.ifs.project.users.ProjectUsersHelper;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
@@ -39,6 +44,7 @@ import org.innovateuk.ifs.util.CollectionFunctions;
 import org.innovateuk.ifs.util.EntityLookupCallbacks;
 import org.innovateuk.ifs.validator.util.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -56,6 +62,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static java.math.BigDecimal.ROUND_HALF_UP;
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
@@ -133,12 +140,25 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     @Autowired
     private OrganisationFinanceDelegate organisationFinanceDelegate;
 
+    @Autowired
+    private ProjectUsersHelper projectUsersHelper;
+
+    @Autowired
+    private EmailService projectEmailService;
+
     static {
         RESEARCH_CAT_GROUP_ORDER.add(AcademicCostCategoryGenerator.DIRECTLY_INCURRED_STAFF.getLabel());
         RESEARCH_CAT_GROUP_ORDER.add(AcademicCostCategoryGenerator.DIRECTLY_ALLOCATED_INVESTIGATORS.getLabel());
         RESEARCH_CAT_GROUP_ORDER.add(AcademicCostCategoryGenerator.INDIRECT_COSTS.getLabel());
         RESEARCH_CAT_GROUP_ORDER.add(AcademicCostCategoryGenerator.INDIRECT_COSTS_STAFF.getLabel());
     }
+
+    enum Notifications {
+        FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE
+    }
+
+    @Value("${ifs.web.baseURL}")
+    private String webBaseUrl;
 
     @Override
     public ServiceResult<Void> generateSpendProfile(Long projectId) {
@@ -235,8 +255,11 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
             User generatedBy,
             Calendar generatedDate) {
 
-        return find(project(projectId), organisation(organisationId)).andOnSuccess(
-                (project, organisation) -> generateSpendProfileForOrganisation(spendProfileCostCategorySummaries , project, organisation, generatedBy, generatedDate));
+        return find(project(projectId), organisation(organisationId)).andOnSuccess((project, organisation) ->
+                generateSpendProfileForOrganisation(spendProfileCostCategorySummaries , project, organisation, generatedBy, generatedDate).andOnSuccess(() ->
+                             sendFinanceContactEmail(project, organisation)
+                )
+        );
     }
 
     private ServiceResult<Void> generateSpendProfileForOrganisation(SpendProfileCostCategorySummaries spendProfileCostCategorySummaries, Project project, Organisation organisation, User generatedBy, Calendar generatedDate) {
@@ -246,6 +269,23 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         SpendProfile spendProfile = new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileCosts, generatedBy, generatedDate, false, ApprovalType.UNSET);
         spendProfileRepository.save(spendProfile);
         return serviceSuccess();
+    }
+
+    private ServiceResult<Void> sendFinanceContactEmail(Project project, Organisation organisation) {
+        Optional<ProjectUser> financeContact = projectUsersHelper.getFinanceContact(project.getId(), organisation.getId());
+        if (financeContact.isPresent() && financeContact.get().getUser() != null) {
+            NotificationTarget financeContactTarget = new ExternalUserNotificationTarget(financeContact.get().getUser().getName(), financeContact.get().getUser().getEmail());
+            Map<String, Object> globalArguments = createGlobalArgsForFinanceContactSpendProfileAvailableEmail();
+            return projectEmailService.sendEmail(singletonList(financeContactTarget), globalArguments, Notifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE);
+        }
+        return serviceFailure(CommonFailureKeys.SPEND_PROFILE_FINANCE_CONTACT_NOT_PRESENT);
+    }
+
+    private Map<String, Object> createGlobalArgsForFinanceContactSpendProfileAvailableEmail() {
+        Map<String, Object> globalArguments = new HashMap<>();
+        globalArguments.put("dashboardUrl", webBaseUrl);
+        return globalArguments;
+
     }
 
     private List<Cost> generateEligibleCosts(SpendProfileCostCategorySummaries spendProfileCostCategorySummaries) {

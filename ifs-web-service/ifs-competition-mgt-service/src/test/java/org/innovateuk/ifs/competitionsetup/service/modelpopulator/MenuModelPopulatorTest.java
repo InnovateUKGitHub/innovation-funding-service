@@ -68,7 +68,6 @@ public class MenuModelPopulatorTest {
 				.withResearchCategories(CollectionFunctions.asLinkedSet(2L, 3L))
 				.build();
 
-		LocalDateTime today = LocalDateTime.now();
 		PublicContentResource publicContentResource = newPublicContentResource().withPublishDate(null).build();
 		when(publicContentService.getCompetitionById(any(Long.class))).thenReturn(publicContentResource);
 

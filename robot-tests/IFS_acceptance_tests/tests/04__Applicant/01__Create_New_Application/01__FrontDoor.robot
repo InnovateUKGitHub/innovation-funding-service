@@ -12,6 +12,7 @@ Guest user navigates to Front Door
     [Setup]  the user navigates to the page  ${frontDoor}
     When the user should see the element     jQuery=h1:contains("Innovation competitions")
     And the user should see the element      jQuery=p:contains("Browse upcoming and live competitions.")
+    And the user should see the element      jQuery=a:contains("signing up for competition updates")
     When the user should see the element     css=#keywords
     Then the user should see the element     css=#innovation-area
     When the user clicks the button/link     link=Contact us

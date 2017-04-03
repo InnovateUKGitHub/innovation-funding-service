@@ -34,8 +34,6 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * Controller backing the Other Documents page
@@ -51,7 +49,7 @@ public class ProjectOtherDocumentsController {
     private ProjectService projectService;
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
-    @RequestMapping(method = GET)
+    @GetMapping
     public String viewOtherDocumentsPage(@PathVariable("projectId") Long projectId, Model model,
                                          @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
@@ -60,7 +58,7 @@ public class ProjectOtherDocumentsController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
-    @RequestMapping(value = "/confirm", method = GET)
+    @GetMapping("/confirm")
     public String viewConfirmDocumentsPage(@PathVariable("projectId") Long projectId, Model model,
                                            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         ProjectOtherDocumentsViewModel viewModel = getOtherDocumentsViewModel(projectId, loggedInUser);
@@ -71,7 +69,7 @@ public class ProjectOtherDocumentsController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
-    @RequestMapping(value = "/readonly", method = GET)
+    @GetMapping("/readonly")
     public String viewDocumentsPageAsReadOnly(@PathVariable("projectId") Long projectId, Model model,
                                            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
@@ -86,14 +84,14 @@ public class ProjectOtherDocumentsController {
 
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
-    @RequestMapping(value = "/submit", method = RequestMethod.POST)
+    @PostMapping("/submit")
     public String submitPartnerDocuments(Model model, @PathVariable("projectId") final Long projectId) {
         projectService.setPartnerDocumentsSubmitted(projectId).getSuccessObjectOrThrowException();
         return redirectToOtherDocumentsPage(projectId);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
-    @RequestMapping(value = "/collaboration-agreement", method = GET)
+    @GetMapping("/collaboration-agreement")
     public
     @ResponseBody
     ResponseEntity<ByteArrayResource> downloadCollaborationAgreementFile(
@@ -106,7 +104,7 @@ public class ProjectOtherDocumentsController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
-    @RequestMapping(params = "uploadCollaborationAgreementClicked", method = POST)
+    @PostMapping(params = "uploadCollaborationAgreementClicked")
     public String uploadCollaborationAgreementFile(
             @PathVariable("projectId") final Long projectId,
             @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm form,
@@ -125,7 +123,7 @@ public class ProjectOtherDocumentsController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
-    @RequestMapping(params = "removeCollaborationAgreementClicked", method = POST)
+    @PostMapping(params = "removeCollaborationAgreementClicked")
     public String removeCollaborationAgreementFile(@PathVariable("projectId") final Long projectId,
                                                    @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm form,
                                                    @SuppressWarnings("unused") BindingResult bindingResult,
@@ -138,7 +136,7 @@ public class ProjectOtherDocumentsController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
-    @RequestMapping(value = "/exploitation-plan", method = GET)
+    @GetMapping("/exploitation-plan")
     public
     @ResponseBody
     ResponseEntity<ByteArrayResource> downloadExploitationPlanFile(
@@ -150,7 +148,7 @@ public class ProjectOtherDocumentsController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
-    @RequestMapping(params = "uploadExploitationPlanClicked", method = POST)
+    @PostMapping(params = "uploadExploitationPlanClicked")
     public String uploadExploitationPlanFile(
             @PathVariable("projectId") final Long projectId,
             @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm form,
@@ -169,7 +167,7 @@ public class ProjectOtherDocumentsController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
-    @RequestMapping(params = "removeExploitationPlanClicked", method = POST)
+    @PostMapping(params = "removeExploitationPlanClicked")
     public String removeExploitationPlanFile(@PathVariable("projectId") final Long projectId,
                                              @ModelAttribute(FORM_ATTR) ProjectOtherDocumentsForm form,
                                              @SuppressWarnings("unused") BindingResult bindingResult,
