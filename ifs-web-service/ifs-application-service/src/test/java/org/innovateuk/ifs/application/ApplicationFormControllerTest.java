@@ -1123,17 +1123,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                         .param("remove_cost", String.valueOf(costId)))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/application/" + application.getId() + "/form/section/" + sectionId));
-
-        // verify that the method is called to send the data to the data services.
-        //Mockito.inOrder(financeRowService).verify(financeRowService, calls(1)).delete(costId);
     }
-
-//    @Test
-//    public void testAssignQuestion() throws Exception {
-//        Model model = new RequestModel;
-//        applicationFormController.assignQuestion(model, application.getId(), sectionId);
-//    }
-
 
     @Test
     public void testRedirectToSectionUnique() throws Exception {
