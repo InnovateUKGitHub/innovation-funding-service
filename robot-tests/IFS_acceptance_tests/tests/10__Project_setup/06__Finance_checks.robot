@@ -259,7 +259,6 @@ New query can be posted
     When the user clicks the button/link    jQuery=.button:contains("Post Query")
     Then the user should see the text in the page    Lee Bowman - Innovate UK (Finance team)
 
-
 Query sections are no longer editable
     [Documentation]    INFUND-4840
     [Tags]
