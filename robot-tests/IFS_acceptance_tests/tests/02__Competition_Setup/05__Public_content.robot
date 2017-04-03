@@ -151,11 +151,11 @@ Eligibility: User enters valid values and saves
     And the user enters valid data in the eligibility details
     Then the user enters text to a text field               jQuery=.contentGroup:first-of-type input[id^="heading"]   Nationality Eligibility Heading
     And the user enters text to a text field                jQuery=.contentGroup:first-of-type .editor   You can give your views on new or changing government policies by responding to consultations. Government departments take these responses into consideration before making decisions
-    And the user uploads the file                           jQuery=.contentGroup:first-of-type input[id^="contentGroups"]     ${valid_pdf}
+    And the user uploads the file                           jQuery=.contentGroup:first-of-type input[id^="contentGroups"][id$="attachment"]     ${valid_pdf}
     Then the user clicks the button/link                    jQuery=button:contains("+ add new section")
     And The user enters text to a text field                jQuery=.contentGroup:nth-of-type(2) input[id^="heading"]   Minimum Eligibility Threshold
     And The user enters text to a text field                jQuery=.contentGroup:nth-of-type(2) .editor    One of the important new changes we are introducing through these reforms is establishing the national eligibility criteria for adult care and support
-    And the user uploads the file                           jQuery=.contentGroup:nth-of-type(2) input[id^="file"]    ${valid_pdf}
+    And the user uploads the file                           jQuery=.contentGroup:nth-of-type(2) input[id^="contentGroups"][id$="attachment"]   ${valid_pdf}
     When the user clicks the button/link                    jQuery=button:contains("Save and return")
     Then the user should be redirected to the correct page  ${public_content_overview}
     And the user should see the element                     link=Eligibility
@@ -174,13 +174,13 @@ Eligibility: Contains the correct values when viewed, Edit sections
     Then the user clicks the button/link                        jQuery=button:contains("+ add new section")
     And The user enters text to a text field                    jQuery=.contentGroup:nth-of-type(3) input[id^="heading"]    Draft Care and Support - Eligibility Criteria
     And the user enters text to a text field                    jQuery=.contentGroup:nth-of-type(3) .editor   In these Regulations— Citation, commencement “basic personal care activities” means essential personal care tasks that a person carries out as part of normal daily, An adult’s needs meet the eligibility criteria if those needs are due to a physical or mental impairment or illness and the effect of such needs is that the adult.
-    And the user clicks the button/link                         jQuery=.contentGroup:first-of-type button:contains("remove")
-    And the user clicks the button/link                         jQuery=.contentGroup:nth-of-type(2) button:contains("remove")
-    Then the user uploads the file                              jQuery=.contentGroup:nth-of-type(3) input[id^="file"]    ${valid_pdf}
-    And the user uploads the file                               jQuery=.contentGroup:first-of-type input[id^="contentGroups"]     ${valid_pdf}
-    And the user uploads the file                               jQuery=.contentGroup:nth-of-type(2) input[id^="file"]    ${valid_pdf}
-    Then the user clicks the button/link                        jQuery=.contentGroup:nth-of-type(3) button:contains("remove")
-    And the user uploads the file                               jQuery=.contentGroup:nth-of-type(3) input[id^="file"]    ${valid_pdf}
+    And the user clicks the button/link                         jQuery=.contentGroup:first-of-type button:contains("Remove")
+    And the user clicks the button/link                         jQuery=.contentGroup:nth-of-type(2) button:contains("Remove")
+    Then the user uploads the file                              jQuery=.contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
+    And the user uploads the file                               jQuery=.contentGroup:first-of-type input[id^="contentGroups"][id$="attachment"]     ${valid_pdf}
+    And the user uploads the file                               jQuery=.contentGroup:nth-of-type(2) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
+    Then the user clicks the button/link                        jQuery=.contentGroup:nth-of-type(3) button:contains("Remove")
+    And the user uploads the file                               jQuery=.contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
     When the user clicks the button/link                        jQuery=button:contains("Save and return")
     And the user should see the element                         css=img[title='The "Eligibility" section is marked as done']
 
@@ -230,11 +230,11 @@ How to apply: User enters valid values and saves
     And the user enters valid data in How-to-apply details
     Then the user enters text to a text field               jQuery=.contentGroup:first-of-type input[id^="heading"]   The application process
     And the user enters text to a text field                jQuery=.contentGroup:first-of-type .editor   External, independent experts assess the quality your application. We will then select the projects that we fund, to build a portfolio of projects as described in the competition guidance for applicants. Please read this carefully before you apply.
-    And the user uploads the file                           jQuery=.contentGroup:first-of-type input[id^="contentGroups"]     ${valid_pdf}
+    And the user uploads the file                           jQuery=.contentGroup:first-of-type input[id^="contentGroups"][id$="attachment"]     ${valid_pdf}
     Then the user clicks the button/link                    jQuery=button:contains("+ add new section")
     And The user enters text to a text field                jQuery=.contentGroup:nth-of-type(2) input[id^="heading"]   Application questions
     And The user enters text to a text field                jQuery=.contentGroup:nth-of-type(2) .editor    Application questions are available for reference and to assist with preparation. If you need more information, contact the competition helpline on 0700 123 98765 or email us at support@innovateTest.worth.com
-    And the user uploads the file                           jQuery=.contentGroup:nth-of-type(2) input[id^="file"]    ${valid_pdf}
+    And the user uploads the file                           jQuery=.contentGroup:nth-of-type(2) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
     When the user clicks the button/link                    jQuery=button:contains("Save and return")
     Then the user should be redirected to the correct page  ${public_content_overview}
     And the user should see the element                     link=How to apply
@@ -249,7 +249,7 @@ How to apply: Contains the correct values when viewed, Edit sections
     And the user should see the element             jQuery=.button:contains("Return to public content")
     When the user clicks the button/link            jQuery=.button-secondary:contains("Edit")
     And the user enters text to a text field        jQuery=.contentGroup:nth-of-type(1) .editor   External independent experts assess the quality your application. We will then select the projects that we fund, to build a portfolio of projects as described in the competition guidance. Government departments & Some departments, like the Ministry of Defence, cover the whole UK. Others don’t – the Department for Work and Pensions doesn't cover Northern Ireland. This is because some aspects of government are devolved to Scotland, Wales and Northern Ireland. Other public bodiesThese have varying degrees of independence but are directly accountable to ministers. There are 4 types of non-departmental public bodies (NDPBs).Executive NDPBs do work for the government in specific areas
-    And the user moves focus to the element         css=#contentGroups-row-1 >div.form-group.textarea-wrapped >div.editor
+    And the user moves focus to the element         css=#contentGroup-row-1 >div.form-group.textarea-wrapped >div.editor
     And The user enters text to a text field        jQuery=.contentGroup:nth-of-type(2) .editor  Application questions are available for reference and to assist with preparation. If you need more information, contact the competition helpline on 0700 123 98765.
     Then the user clicks the button/link            jQuery=button:contains("+ add new section")
     And The user enters text to a text field        jQuery=.contentGroup:nth-of-type(3) input[id^="heading"]    Application Rules -- Competition Procedures
@@ -257,18 +257,18 @@ How to apply: Contains the correct values when viewed, Edit sections
     Then the user clicks the button/link            jQuery=button:contains("+ add new section")
     And The user enters text to a text field        jQuery=.contentGroup:nth-of-type(4) input[id^="heading"]    Competition Officers Contact
     And the user enters text to a text field        jQuery=.contentGroup:nth-of-type(4) .editor  You can access an up-to-date list of areas where Competition is managed locally and how to contact them on GOV.UK. Follow the guidelines attached.
-    And the user uploads the file                   jQuery=.contentGroup:nth-of-type(4) input[id^="file"]    ${valid_pdf}
-    And the user clicks the button/link             jQuery=.contentGroup:first-of-type button:contains("remove")
-    And the user clicks the button/link             jQuery=.contentGroup:nth-of-type(2) button:contains("remove")
+    And the user uploads the file                   jQuery=.contentGroup:nth-of-type(4) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
+    And the user clicks the button/link             jQuery=.contentGroup:first-of-type button:contains("Remove")
+    And the user clicks the button/link             jQuery=.contentGroup:nth-of-type(2) button:contains("Remove")
     Then the user clicks the button/link            jQuery=button:contains("+ add new section")
     And The user enters text to a text field        jQuery=.contentGroup:nth-of-type(5) input[id^="heading"]    Confidentiality and Conflicts
     And the user enters text to a text field        jQuery=.contentGroup:nth-of-type(5) .editor     We are confident that awarding an increase to your funding allocation is a good use of public funds, Providers with a Financial Memorandum or Conditions of Funding (Grant) or Conditions of Funding. For more information email us back on support@innovateTest.worth.com and find the attached memorandum.
-    Then the user uploads the file                  jQuery=.contentGroup:nth-of-type(3) input[id^="file"]    ${valid_pdf}
-    And the user uploads the file                   jQuery=.contentGroup:first-of-type input[id^="contentGroups"]     ${valid_pdf}
-    And the user uploads the file                   jQuery=.contentGroup:nth-of-type(2) input[id^="file"]    ${valid_pdf}
-    Then the user clicks the button/link            jQuery=.contentGroup:nth-of-type(3) button:contains("remove")
-    And the user uploads the file                   jQuery=.contentGroup:nth-of-type(3) input[id^="file"]    ${valid_pdf}
-    And the user uploads the file                   jQuery=.contentGroup:nth-of-type(5) input[id^="file"]    ${valid_pdf}
+    Then the user uploads the file                  jQuery=.contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
+    And the user uploads the file                   jQuery=.contentGroup:first-of-type input[id^="contentGroups"][id$="attachment"]     ${valid_pdf}
+    And the user uploads the file                   jQuery=.contentGroup:nth-of-type(2) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
+    Then the user clicks the button/link            jQuery=.contentGroup:nth-of-type(3) button:contains("Remove")
+    And the user uploads the file                   jQuery=.contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
+    And the user uploads the file                   jQuery=.contentGroup:nth-of-type(5) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
     When the user clicks the button/link            jQuery=button:contains("Save and return")
     And the user should see the element             css=img[title='The "How to apply" section is marked as done']
 
@@ -414,7 +414,7 @@ the user can add and remove multiple content groups
     And the user enters text to a text field    jQuery=.editor:eq(0)     Content 1
     And the user uploads the file               id=contentGroups-0.attachment  ${valid_pdf}
     Then the user should see the element        jQuery=.uploaded-file:contains("testing.pdf")
-    And the user clicks the button/link         jQuery=button:contains("remove")
+    And the user clicks the button/link         jQuery=button:contains("Remove")
     And the user clicks the button/link         jQuery=button:contains("+ add new section")
     And the user enters text to a text field    id=heading-1    Heading 2
     And the user enters text to a text field    jQuery=.editor:eq(1)     Content 2
