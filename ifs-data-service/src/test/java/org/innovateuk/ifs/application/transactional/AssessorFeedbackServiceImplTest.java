@@ -35,7 +35,7 @@ import static org.innovateuk.ifs.application.resource.ApplicationStatus.APPROVED
 import static org.innovateuk.ifs.application.resource.ApplicationStatus.REJECTED;
 import static org.innovateuk.ifs.application.transactional.ApplicationFundingServiceImplMockTest.createNotificationExpectationsWithGlobalArgs;
 import static org.innovateuk.ifs.application.transactional.ApplicationFundingServiceImplMockTest.createSimpleNotificationExpectations;
-import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.FUNDING_DECISIONS_MADE_STATUS_IDS;
+import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.FUNDING_DECISIONS_MADE_STATUSES;
 import static org.innovateuk.ifs.application.transactional.AssessorFeedbackServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED;
 import static org.innovateuk.ifs.application.transactional.AssessorFeedbackServiceImpl.Notifications.APPLICATION_NOT_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
@@ -321,7 +321,7 @@ public class AssessorFeedbackServiceImplTest extends BaseServiceUnitTest<Assesso
 
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
 
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusIn(competition.getId(), FUNDING_DECISIONS_MADE_STATUS_IDS)).
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusIn(competition.getId(), FUNDING_DECISIONS_MADE_STATUSES)).
                 thenReturn(asList(fundedApplication1, unfundedApplication2, fundedApplication3));
 
         when(roleRepositoryMock.findOneByName(LEADAPPLICANT.getName())).thenReturn(leadApplicantRole);
@@ -377,7 +377,7 @@ public class AssessorFeedbackServiceImplTest extends BaseServiceUnitTest<Assesso
 
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
 
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusIn(competition.getId(), FUNDING_DECISIONS_MADE_STATUS_IDS)).
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusIn(competition.getId(), FUNDING_DECISIONS_MADE_STATUSES)).
                 thenReturn(asList(fundedApplication1, unfundedApplication2));
 
         asList(fundedApplication1, unfundedApplication2).forEach(application ->

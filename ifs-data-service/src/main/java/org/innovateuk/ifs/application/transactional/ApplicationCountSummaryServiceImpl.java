@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATUS_IDS;
+import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATUSES;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -40,7 +40,7 @@ public class ApplicationCountSummaryServiceImpl extends BaseTransactionalService
 
         String filterStr = filter.map(String::trim).orElse("");
         Pageable pageable = new PageRequest(pageIndex, pageSize);
-        Page<ApplicationStatistics> applicationStatistics = applicationStatisticsRepository.findByCompetitionAndApplicationStatusIn(competitionId, SUBMITTED_STATUS_IDS, filterStr, pageable);
+        Page<ApplicationStatistics> applicationStatistics = applicationStatisticsRepository.findByCompetitionAndApplicationStatusIn(competitionId, SUBMITTED_STATUSES, filterStr, pageable);
 
         return find(applicationStatistics, notFoundError(Page.class)).andOnSuccessReturn(stats -> applicationCountSummaryPageMapper.mapToResource(stats));
     }

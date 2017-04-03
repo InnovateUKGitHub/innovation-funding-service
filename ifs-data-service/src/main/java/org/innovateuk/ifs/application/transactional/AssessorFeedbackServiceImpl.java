@@ -33,8 +33,8 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.application.resource.ApplicationStatus.APPROVED;
-import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.FUNDING_DECISIONS_MADE_STATUS_IDS;
-import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATUS_IDS;
+import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.FUNDING_DECISIONS_MADE_STATUSES;
+import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATUSES;
 import static org.innovateuk.ifs.application.transactional.AssessorFeedbackServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED;
 import static org.innovateuk.ifs.application.transactional.AssessorFeedbackServiceImpl.Notifications.APPLICATION_NOT_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -124,7 +124,7 @@ public class AssessorFeedbackServiceImpl extends BaseTransactionalService implem
     
 	@Override
 	public ServiceResult<Boolean> assessorFeedbackUploaded(long competitionId) {
-		long countNotUploaded = applicationRepository.countByCompetitionIdAndApplicationStatusInAndAssessorFeedbackFileEntryIsNull(competitionId, SUBMITTED_STATUS_IDS);
+		long countNotUploaded = applicationRepository.countByCompetitionIdAndApplicationStatusInAndAssessorFeedbackFileEntryIsNull(competitionId, SUBMITTED_STATUSES);
 		boolean allUploaded = countNotUploaded == 0L;
 		return serviceSuccess(allUploaded);
 	}
@@ -142,7 +142,7 @@ public class AssessorFeedbackServiceImpl extends BaseTransactionalService implem
     }
 
     private ServiceResult<Void> getCompetitionOnSuccessToNotifyLeadApplicantsOfAssessorFeedback (Competition competition, long competitionId) {
-        List<Application> applicationsToPublishAssessorFeedbackFor = applicationRepository.findByCompetitionIdAndApplicationStatusIn(competitionId, FUNDING_DECISIONS_MADE_STATUS_IDS);
+        List<Application> applicationsToPublishAssessorFeedbackFor = applicationRepository.findByCompetitionIdAndApplicationStatusIn(competitionId, FUNDING_DECISIONS_MADE_STATUSES);
 
         Pair<List<Application>, List<Application>> applicationsByFundingSuccess = simplePartition(applicationsToPublishAssessorFeedbackFor, applicationApprovedFilter);
         List<Application> successfulApplications = applicationsByFundingSuccess.getLeft();

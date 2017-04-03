@@ -23,7 +23,7 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
             "AND (a.applicationStatus IN :status) " +
             "AND (str(a.id) LIKE CONCAT('%', :filter, '%'))")
     Page<ApplicationStatistics> findByCompetitionAndApplicationStatusIn(@Param("compId") long competitionId,
-                                                                          @Param("status") Collection<ApplicationStatus> applicationStatusIds,
-                                                                          @Param("filter") String filter,
-                                                                          Pageable pageable);
+                                                                        @Param("status") Collection<ApplicationStatus> applicationStatusIds,
+                                                                        @Param("filter") String filter,
+                                                                        Pageable pageable);
 }

@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
-import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.CREATED_AND_OPEN_STATUS_IDS;
-import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATUS_IDS;
+import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.CREATED_AND_OPEN_STATUSES;
+import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATUSES;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 @Service
@@ -34,16 +34,16 @@ public class CompetitionSummaryServiceImpl extends BaseTransactionalService impl
         competitionSummaryResource.setTotalNumberOfApplications(applicationRepository.countByCompetitionId(competitionId));
         competitionSummaryResource.setApplicationsStarted(
                 applicationRepository.countByCompetitionIdAndApplicationStatusInAndCompletionLessThanEqual(
-                        competitionId, CREATED_AND_OPEN_STATUS_IDS, limit
+                        competitionId, CREATED_AND_OPEN_STATUSES, limit
                 )
         );
         competitionSummaryResource.setApplicationsInProgress(
                 applicationRepository.countByCompetitionIdAndApplicationStatusNotInAndCompletionGreaterThan(
-                        competitionId, SUBMITTED_STATUS_IDS, limit
+                        competitionId, SUBMITTED_STATUSES, limit
                 )
         );
         competitionSummaryResource.setApplicationsSubmitted(
-                applicationRepository.countByCompetitionIdAndApplicationStatusIn(competitionId, SUBMITTED_STATUS_IDS)
+                applicationRepository.countByCompetitionIdAndApplicationStatusIn(competitionId, SUBMITTED_STATUSES)
         );
         competitionSummaryResource.setApplicationsNotSubmitted(
                 competitionSummaryResource.getTotalNumberOfApplications() - competitionSummaryResource.getApplicationsSubmitted()

@@ -31,16 +31,16 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 @Service
 public class ApplicationSummaryServiceImpl extends BaseTransactionalService implements ApplicationSummaryService {
 
-    public static final Collection<ApplicationStatus> SUBMITTED_STATUS_IDS = asList(
+    public static final Collection<ApplicationStatus> SUBMITTED_STATUSES = asList(
             ApplicationStatus.APPROVED,
             ApplicationStatus.REJECTED,
             ApplicationStatus.SUBMITTED);
 
-    public static final Collection<ApplicationStatus> CREATED_AND_OPEN_STATUS_IDS = asList(
+    public static final Collection<ApplicationStatus> CREATED_AND_OPEN_STATUSES = asList(
             ApplicationStatus.CREATED,
             ApplicationStatus.OPEN);
 
-    public static final Collection<ApplicationStatus> FUNDING_DECISIONS_MADE_STATUS_IDS = asList(
+    public static final Collection<ApplicationStatus> FUNDING_DECISIONS_MADE_STATUSES = asList(
             ApplicationStatus.APPROVED,
             ApplicationStatus.REJECTED);
 
@@ -91,9 +91,9 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
         String filterStr = filter.map(String::trim).orElse("");
         return applicationSummaries(sortBy, pageIndex, pageSize,
                 pageable -> applicationRepository.findByCompetitionIdAndApplicationStatusInAndIdLike(
-                        competitionId, SUBMITTED_STATUS_IDS, filterStr, fundingFilter.orElse(null), pageable),
+                        competitionId, SUBMITTED_STATUSES, filterStr, fundingFilter.orElse(null), pageable),
                 () -> applicationRepository.findByCompetitionIdAndApplicationStatusInAndIdLike(
-                        competitionId, SUBMITTED_STATUS_IDS, filterStr, fundingFilter.orElse(null)));
+                        competitionId, SUBMITTED_STATUSES, filterStr, fundingFilter.orElse(null)));
     }
 
     @Override
@@ -102,9 +102,9 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 
         return applicationSummaries(sortBy, pageIndex, pageSize,
                 pageable -> applicationRepository.findByCompetitionIdAndApplicationStatusNotIn(
-                        competitionId, SUBMITTED_STATUS_IDS, pageable),
+                        competitionId, SUBMITTED_STATUSES, pageable),
                 () -> applicationRepository.findByCompetitionIdAndApplicationStatusNotIn(
-                        competitionId, SUBMITTED_STATUS_IDS));
+                        competitionId, SUBMITTED_STATUSES));
     }
 
     @Override
@@ -112,9 +112,9 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
             Long competitionId, String sortBy, int pageIndex, int pageSize) {
         return applicationSummaries(sortBy, pageIndex, pageSize,
                 pageable -> applicationRepository.findByCompetitionIdAndApplicationStatusInAndAssessorFeedbackFileEntryIsNull(
-                        competitionId, FUNDING_DECISIONS_MADE_STATUS_IDS, pageable),
+                        competitionId, FUNDING_DECISIONS_MADE_STATUSES, pageable),
                 () -> applicationRepository.findByCompetitionIdAndApplicationStatusInAndAssessorFeedbackFileEntryIsNull(
-                        competitionId, FUNDING_DECISIONS_MADE_STATUS_IDS));
+                        competitionId, FUNDING_DECISIONS_MADE_STATUSES));
 
     }
 

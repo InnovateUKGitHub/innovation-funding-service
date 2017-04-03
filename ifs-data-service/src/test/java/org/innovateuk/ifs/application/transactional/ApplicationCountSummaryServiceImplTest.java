@@ -13,7 +13,7 @@ import java.util.List;
 
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.application.builder.ApplicationStatisticsBuilder.newApplicationStatistics;
-import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATUS_IDS;
+import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATUSES;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.resource.UserRoleType.APPLICANT;
@@ -61,7 +61,7 @@ public class ApplicationCountSummaryServiceImplTest extends BaseServiceUnitTest<
 
         ApplicationCountSummaryPageResource resource = mock(ApplicationCountSummaryPageResource.class);
 
-        when(applicationStatisticsRepositoryMock.findByCompetitionAndApplicationStatusIn(eq(competitionId), eq(SUBMITTED_STATUS_IDS), eq("filter"), argThat(new PageableMatcher(0, 20)))).thenReturn(page);
+        when(applicationStatisticsRepositoryMock.findByCompetitionAndApplicationStatusIn(eq(competitionId), eq(SUBMITTED_STATUSES), eq("filter"), argThat(new PageableMatcher(0, 20)))).thenReturn(page);
         when(applicationCountSummaryPageMapperMock.mapToResource(page)).thenReturn(resource);
 
         ServiceResult<ApplicationCountSummaryPageResource> result = service.getApplicationCountSummariesByCompetitionId(competitionId, 0, 20, ofNullable("filter"));
