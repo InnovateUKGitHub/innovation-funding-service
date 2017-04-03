@@ -45,10 +45,10 @@
                 </p>
                 <p class="extra-margin" th:if="${model.showSignInText}">
                     <th:block th:unless="${model.userIsLoggedIn}">
-                        Or <a th:href="@{/}" >sign in</a> to continue an existing application
+                        Or <a th:href="@{/}" >sign in</a> to continue an existing application.
                     </th:block>
                     <th:block th:if="${model.userIsLoggedIn}">
-                        Or go to your <a th:href="@{/}">dashboard</a> to continue an existing application
+                        Or go to <a th:href="@{/}">your dashboard</a> to continue an existing application.
                     </th:block>
                 </p>
             </th:block>
