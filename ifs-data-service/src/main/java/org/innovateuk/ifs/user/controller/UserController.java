@@ -13,10 +13,7 @@ import org.innovateuk.ifs.user.transactional.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -27,9 +24,6 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.user.resource.UserRelatedURLs.*;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
-import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 /**
  * This RestController exposes CRUD operations to both the
@@ -57,60 +51,60 @@ public class UserController {
     @Autowired
     private UserProfileService userProfileService;
 
-    @RequestMapping("/uid/{uid}")
+    @GetMapping("/uid/{uid}")
     public RestResult<UserResource> getUserByUid(@PathVariable("uid") final String uid) {
         return baseUserService.getUserResourceByUid(uid).toGetResponse();
     }
 
-    @RequestMapping("/id/{id}")
+    @GetMapping("/id/{id}")
     public RestResult<UserResource> getUserById(@PathVariable("id") final Long id) {
         return baseUserService.getUserById(id).toGetResponse();
     }
 
-    @RequestMapping("/findByRole/{userRoleName}")
+    @GetMapping("/findByRole/{userRoleName}")
     public RestResult<List<UserResource>> findByRole(@PathVariable("userRoleName") final String userRoleName) {
         return baseUserService.findByProcessRole(UserRoleType.fromName(userRoleName)).toGetResponse();
     }
 
-    @RequestMapping("/findAll/")
+    @GetMapping("/findAll/")
     public RestResult<List<UserResource>> findAll() {
         return baseUserService.findAll().toGetResponse();
     }
 
-    @RequestMapping("/findByEmail/{email}/")
+    @GetMapping("/findByEmail/{email}/")
     public RestResult<UserResource> findByEmail(@PathVariable("email") final String email) {
         return userService.findByEmail(email).toGetResponse();
     }
 
-    @RequestMapping("/findAssignableUsers/{applicationId}")
+    @GetMapping("/findAssignableUsers/{applicationId}")
     public RestResult<Set<UserResource>> findAssignableUsers(@PathVariable("applicationId") final Long applicationId) {
         return userService.findAssignableUsers(applicationId).toGetResponse();
     }
 
-    @RequestMapping("/findRelatedUsers/{applicationId}")
+    @GetMapping("/findRelatedUsers/{applicationId}")
     public RestResult<Set<UserResource>> findRelatedUsers(@PathVariable("applicationId") final Long applicationId) {
         return userService.findRelatedUsers(applicationId).toGetResponse();
     }
 
-    @RequestMapping("/" + URL_SEND_PASSWORD_RESET_NOTIFICATION + "/{emailaddress}/")
+    @GetMapping("/" + URL_SEND_PASSWORD_RESET_NOTIFICATION + "/{emailaddress}/")
     public RestResult<Void> sendPasswordResetNotification(@PathVariable("emailaddress") final String emailAddress) {
         return userService.findByEmail(emailAddress)
                 .andOnSuccessReturn(userService::sendPasswordResetNotification)
                 .toPutResponse();
     }
 
-    @RequestMapping("/" + URL_CHECK_PASSWORD_RESET_HASH + "/{hash}")
+    @GetMapping("/" + URL_CHECK_PASSWORD_RESET_HASH + "/{hash}")
     public RestResult<Void> checkPasswordReset(@PathVariable("hash") final String hash) {
         return tokenService.getPasswordResetToken(hash).andOnSuccessReturnVoid().toPutResponse();
     }
 
-    @RequestMapping(value = "/" + URL_PASSWORD_RESET + "/{hash}", method = POST)
+    @PostMapping("/" + URL_PASSWORD_RESET + "/{hash}")
     public RestResult<Void> resetPassword(@PathVariable("hash") final String hash, @RequestBody final String password) {
         return userService.changePassword(hash, password)
                 .toPutResponse();
     }
 
-    @RequestMapping("/" + URL_VERIFY_EMAIL + "/{hash}")
+    @GetMapping("/" + URL_VERIFY_EMAIL + "/{hash}")
     public RestResult<Void> verifyEmail(@PathVariable("hash") final String hash) {
         final ServiceResult<Token> result = tokenService.getEmailToken(hash);
         LOG.debug(String.format("UserController verifyHash: %s", hash));
@@ -125,14 +119,14 @@ public class UserController {
                 });
     }
 
-    @RequestMapping(value = "/" + URL_RESEND_EMAIL_VERIFICATION_NOTIFICATION + "/{emailAddress}/", method = PUT)
+    @PutMapping("/" + URL_RESEND_EMAIL_VERIFICATION_NOTIFICATION + "/{emailAddress}/")
     public RestResult<Void> resendEmailVerificationNotification(@PathVariable("emailAddress") final String emailAddress) {
         return userService.findInactiveByEmail(emailAddress)
                 .andOnSuccessReturn(user -> registrationService.resendUserVerificationEmail(user))
                 .toPutResponse();
     }
 
-    @RequestMapping(value = "/createLeadApplicantForOrganisation/{organisationId}", method = POST)
+    @PostMapping("/createLeadApplicantForOrganisation/{organisationId}")
     public RestResult<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @RequestBody UserResource userResource) {
         return registrationService.createOrganisationUser(organisationId, userResource).andOnSuccessReturn(created ->
                 {
@@ -142,7 +136,7 @@ public class UserController {
         ).toPostCreateResponse();
     }
 
-    @RequestMapping(value = "/createLeadApplicantForOrganisation/{organisationId}/{competitionId}", method = POST)
+    @PostMapping("/createLeadApplicantForOrganisation/{organisationId}/{competitionId}")
     public RestResult<UserResource> createUser(@PathVariable("organisationId") final Long organisationId, @PathVariable("competitionId") final Long competitionId, @RequestBody UserResource userResource) {
         return registrationService.createOrganisationUser(organisationId, userResource).andOnSuccessReturn(created ->
                 {
@@ -152,55 +146,55 @@ public class UserController {
         ).toPostCreateResponse();
     }
 
-    @RequestMapping(value = "/updateDetails", method = POST)
+    @PostMapping("/updateDetails")
     public RestResult<Void> updateDetails(@RequestBody UserResource userResource) {
         return userProfileService.updateDetails(userResource).toPutResponse();
     }
 
-    @RequestMapping(value = "/id/{userId}/getProfileSkills", method = GET)
+    @GetMapping("/id/{userId}/getProfileSkills")
     public RestResult<ProfileSkillsResource> getProfileSkills(@PathVariable("userId") long userId) {
         return userProfileService.getProfileSkills(userId).toGetResponse();
     }
 
-    @RequestMapping(value = "/id/{userId}/updateProfileSkills", method = PUT)
+    @PutMapping("/id/{userId}/updateProfileSkills")
     public RestResult<Void> updateProfileSkills(@PathVariable("userId") long id,
                                                 @Valid @RequestBody ProfileSkillsEditResource profileSkills) {
         return userProfileService.updateProfileSkills(id, profileSkills).toPutResponse();
     }
 
-    @RequestMapping(value = "/id/{userId}/getProfileAgreement", method = GET)
+    @GetMapping("/id/{userId}/getProfileAgreement")
     public RestResult<ProfileAgreementResource> getProfileAgreement(@PathVariable("userId") long userId) {
         return userProfileService.getProfileAgreement(userId).toGetResponse();
     }
 
-    @RequestMapping(value = "/id/{userId}/updateProfileAgreement", method = PUT)
+    @PutMapping("/id/{userId}/updateProfileAgreement")
     public RestResult<Void> updateProfileAgreement(@PathVariable("userId") long userId) {
         return userProfileService.updateProfileAgreement(userId).toPutResponse();
     }
 
-    @RequestMapping(value = "/id/{userId}/getUserAffiliations", method = GET)
+    @GetMapping("/id/{userId}/getUserAffiliations")
     public RestResult<List<AffiliationResource>> getUserAffiliations(@PathVariable("userId") Long userId) {
         return userProfileService.getUserAffiliations(userId).toGetResponse();
     }
 
-    @RequestMapping(value = "/id/{userId}/updateUserAffiliations", method = PUT)
+    @PutMapping("/id/{userId}/updateUserAffiliations")
     public RestResult<Void> updateUserAffiliations(@PathVariable("userId") Long userId,
                                                    @RequestBody List<AffiliationResource> affiliations) {
         return userProfileService.updateUserAffiliations(userId, affiliations).toPutResponse();
     }
 
-    @RequestMapping(value = "/id/{userId}/getUserProfile", method = GET)
+    @GetMapping("/id/{userId}/getUserProfile")
     public RestResult<UserProfileResource> getUserProfile(@PathVariable("userId") Long userId) {
         return userProfileService.getUserProfile(userId).toGetResponse();
     }
 
-    @RequestMapping(value = "/id/{userId}/updateUserProfile", method = PUT)
+    @PutMapping("/id/{userId}/updateUserProfile")
     public RestResult<Void> updateUserProfile(@PathVariable("userId") Long userId,
                                               @RequestBody UserProfileResource profileDetails) {
         return userProfileService.updateUserProfile(userId, profileDetails).toPutResponse();
     }
 
-    @RequestMapping(value = "/id/{userId}/profileStatus", method = GET)
+    @GetMapping("/id/{userId}/profileStatus")
     public RestResult<UserProfileStatusResource> getUserProfileStatus(@PathVariable("userId") Long userId) {
         return userProfileService.getUserProfileStatus(userId).toGetResponse();
     }

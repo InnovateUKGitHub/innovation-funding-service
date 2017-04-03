@@ -13,10 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -42,14 +39,13 @@ public class LoginController {
     @Autowired
     private UserService userService;
 
-
-    @RequestMapping(value = "/" + LOGIN_BASE + "/" + RESET_PASSWORD, method = RequestMethod.GET)
+    @GetMapping("/" + LOGIN_BASE + "/" + RESET_PASSWORD)
     public String requestPasswordReset(ResetPasswordRequestForm resetPasswordRequestForm, Model model) {
         model.addAttribute("resetPasswordRequestForm", resetPasswordRequestForm);
         return LOGIN_BASE + "/" + RESET_PASSWORD;
     }
 
-    @RequestMapping(value = "/" + LOGIN_BASE + "/" + RESET_PASSWORD, method = RequestMethod.POST)
+    @PostMapping("/" + LOGIN_BASE + "/" + RESET_PASSWORD)
     public String requestPasswordResetPost(@ModelAttribute @Valid ResetPasswordRequestForm resetPasswordRequestForm, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("resetPasswordRequestForm", resetPasswordRequestForm);
@@ -61,13 +57,13 @@ public class LoginController {
         }
     }
 
-    @RequestMapping(value = "/" + LOGIN_BASE + "/" + RESET_PASSWORD + "/hash/{hash}", method = RequestMethod.GET)
+    @GetMapping("/" + LOGIN_BASE + "/" + RESET_PASSWORD + "/hash/{hash}")
     public String resetPassword(@PathVariable("hash") String hash, @ModelAttribute ResetPasswordForm resetPasswordForm, Model model, HttpServletRequest request) {
         userService.checkPasswordResetHash(hash);
         return LOGIN_BASE + "/" + RESET_PASSWORD_FORM;
     }
 
-    @RequestMapping(value = "/" + LOGIN_BASE + "/" + RESET_PASSWORD + "/hash/{hash}", method = RequestMethod.POST)
+    @PostMapping("/" + LOGIN_BASE + "/" + RESET_PASSWORD + "/hash/{hash}")
     public String resetPasswordPost(@PathVariable("hash") String hash, @Valid @ModelAttribute ResetPasswordForm resetPasswordForm, BindingResult bindingResult) {
         userService.checkPasswordResetHash(hash);
 

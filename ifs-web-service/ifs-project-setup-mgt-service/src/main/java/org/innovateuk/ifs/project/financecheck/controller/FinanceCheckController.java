@@ -23,15 +23,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.function.Supplier;
-
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * This controller is for allowing internal users to view and update application finances entered by applicants.
@@ -56,14 +50,14 @@ public class FinanceCheckController {
     private FinanceCheckService financeCheckService;
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
-    @RequestMapping(method = GET)
+    @GetMapping
     public String viewFinanceCheckSummary(@PathVariable Long projectId, Model model,
                                           @ModelAttribute FinanceCheckSummaryForm form) {
         return doViewFinanceCheckSummary(projectId, model);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
-    @RequestMapping(value = "/generate", method = POST)
+    @PostMapping("/generate")
     public String generateSpendProfile(@PathVariable Long projectId, Model model,
                                        @ModelAttribute FinanceCheckSummaryForm form,
                                        @SuppressWarnings("unused") BindingResult bindingResult,
@@ -78,7 +72,7 @@ public class FinanceCheckController {
     }
 
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
-    @RequestMapping(value = "/organisation/{organisationId}/jes-file", method = GET)
+    @GetMapping("/organisation/{organisationId}/jes-file")
     public @ResponseBody ResponseEntity<ByteArrayResource> downloadJesFile(@PathVariable("projectId") final Long projectId,
                                                                            @PathVariable("organisationId") Long organisationId) {
 

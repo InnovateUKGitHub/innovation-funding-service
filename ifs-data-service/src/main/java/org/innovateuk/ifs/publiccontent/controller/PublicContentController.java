@@ -17,24 +17,24 @@ public class PublicContentController {
     @Autowired
     private PublicContentService publicContentService;
 
-    @RequestMapping(value = "find-by-competition-id/{competitionId}", method = RequestMethod.GET)
+    @GetMapping("find-by-competition-id/{competitionId}")
     public RestResult<PublicContentResource> getCompetitionById(@PathVariable("competitionId") final Long competitionId) {
         return publicContentService.findByCompetitionId(competitionId).toGetResponse();
     }
 
-    @RequestMapping(value = "publish-by-competition-id/{competitionId}", method = RequestMethod.POST)
+    @PostMapping("publish-by-competition-id/{competitionId}")
     public RestResult<Void> publishByCompetition(@PathVariable("competitionId") final Long competitionId) {
         return publicContentService.publishByCompetitionId(competitionId).toPostResponse();
     }
 
-    @RequestMapping(value = "update-section/{section}/{id}", method = RequestMethod.POST)
+    @PostMapping("update-section/{section}/{id}")
     public RestResult<Void> updateSection(@PathVariable("id") final Long id,
                                           @PathVariable("section") final PublicContentSectionType section,
                                           @RequestBody final PublicContentResource resource) {
         return publicContentService.updateSection(resource, section).toPostResponse();
     }
 
-    @RequestMapping(value = "mark-section-as-complete/{section}/{id}", method = RequestMethod.POST)
+    @PostMapping("mark-section-as-complete/{section}/{id}")
     public RestResult<Void> markSectionAsComplete(@PathVariable("id") final Long id,
                                           @PathVariable("section") final PublicContentSectionType section,
                                           @RequestBody final PublicContentResource resource) {

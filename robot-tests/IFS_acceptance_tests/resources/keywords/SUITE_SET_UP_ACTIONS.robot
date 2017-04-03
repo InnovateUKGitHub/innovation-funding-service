@@ -149,7 +149,7 @@ Invite and accept the invitation
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     And the user clicks the button/link    jQuery=.button:contains("Confirm")
     And the user fills the create account form    Arsene    Wenger
-    And the user reads his email and clicks the link  ${test_mailbox_one}+academictest@gmail.com  Please verify your email address  We now need you to verify your email address
+    And the user reads his email and clicks the link  ${test_mailbox_one}+academictest@gmail.com  Please verify your email address  Please click on the verification link to confirm your email address
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
     And guest user log-in    ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
 

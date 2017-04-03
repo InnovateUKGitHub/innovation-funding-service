@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
@@ -23,7 +24,28 @@ public class RestResultExceptionHandlingAdvice {
 
     private static final Log LOG = LogFactory.getLog(RestResultExceptionHandlingAdvice.class);
 
-    @Around("@annotation(org.springframework.web.bind.annotation.RequestMapping) && execution(public org.innovateuk.ifs.commons.rest.RestResult *.*(..))")
+    @Pointcut("@annotation(org.springframework.web.bind.annotation.RequestMapping)")
+    public void requestMapping() {
+    }
+
+    @Pointcut("@annotation(org.springframework.web.bind.annotation.GetMapping)")
+    public void getMapping() {
+    }
+
+    @Pointcut("@annotation(org.springframework.web.bind.annotation.PostMapping)")
+    public void postMapping() {
+    }
+
+    @Pointcut("@annotation(org.springframework.web.bind.annotation.PutMapping)")
+    public void putMapping() {
+    }
+
+    @Pointcut("@annotation(org.springframework.web.bind.annotation.DeleteMapping)")
+    public void deleteMapping() {
+    }
+
+    @Around("(requestMapping() || getMapping() || postMapping() || putMapping() || deleteMapping())" +
+            " && execution(public org.innovateuk.ifs.commons.rest.RestResult *.*(..))")
     public Object handleReturnedRestResults(ProceedingJoinPoint joinPoint) throws Throwable {
         try {
             Object result = joinPoint.proceed();

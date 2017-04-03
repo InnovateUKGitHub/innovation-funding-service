@@ -207,10 +207,5 @@ public class UserServiceImpl implements UserService {
     public Optional<UserResource> findUserByEmail(String email) {
         return userRestService.findUserByEmail(email).getOptionalSuccessObject();
     }
-
-    @Override
-    public Optional<UserResource> findUserByEmailForAnonymousUserFlow(String email) {
-        return userRestService.findUserByEmail(email).getOptionalSuccessObject();
-    }
-
+    
 }

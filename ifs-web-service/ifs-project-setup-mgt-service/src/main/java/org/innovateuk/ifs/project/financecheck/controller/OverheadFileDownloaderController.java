@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.financecheck.controller;
 
-
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.service.OverheadFileRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,16 +10,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
 import java.util.concurrent.ExecutionException;
-
-import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 
 @RestController
 @RequestMapping("/download/overheadfile")
@@ -29,7 +25,7 @@ public  class OverheadFileDownloaderController {
     @Autowired
     private OverheadFileRestService overheadFileRestService;
 
-    @RequestMapping(value = "/{overheadId}")
+    @GetMapping(value = "/{overheadId}")
     public ResponseEntity<ByteArrayResource> downloadOverheadFile(
             @PathVariable("overheadId") final Long overheadId,
             HttpServletRequest request) throws ExecutionException, InterruptedException {

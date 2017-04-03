@@ -87,6 +87,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withAssessorDeadlineDate(now().plusDays(4))
                 .withSubmittedAssessments(1L)
                 .withTotalAssessments(3L)
+                .withPendingAssessments(1L)
                 .build();
         UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
                 .withSkillsComplete(true)
@@ -106,7 +107,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         AssessorDashboardViewModel model = (AssessorDashboardViewModel) result.getModelAndView().getModel().get("model");
 
         List<AssessorDashboardActiveCompetitionViewModel> expectedActiveCompetitions = singletonList(
-                new AssessorDashboardActiveCompetitionViewModel(2L, "Juggling Craziness", 1, 3,
+                new AssessorDashboardActiveCompetitionViewModel(2L, "Juggling Craziness", 1, 3, 1,
                         LocalDateTime.now().plusDays(4).toLocalDate(),
                         3,
                         50
@@ -134,6 +135,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withAssessorDeadlineDate(now.plusDays(5))
                 .withSubmittedAssessments(1L)
                 .withTotalAssessments(3L)
+                .withPendingAssessments(2L)
                 .withCompetitionStatus(IN_ASSESSMENT)
                 .build();
         ReflectionTestUtils.setField(participant, "clock", clock, Clock.class);
@@ -155,7 +157,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         AssessorDashboardViewModel model = (AssessorDashboardViewModel) result.getModelAndView().getModel().get("model");
 
         List<AssessorDashboardActiveCompetitionViewModel> expectedActiveCompetitions = singletonList(
-                new AssessorDashboardActiveCompetitionViewModel(2L, "Juggling Craziness", 1, 3,
+                new AssessorDashboardActiveCompetitionViewModel(2L, "Juggling Craziness", 1, 3, 2,
                         now.plusDays(5).toLocalDate(),
                         5,
                         16
@@ -199,7 +201,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         AssessorDashboardViewModel model = (AssessorDashboardViewModel) result.getModelAndView().getModel().get("model");
 
         List<AssessorDashboardActiveCompetitionViewModel> expectedActiveCompetitions = singletonList(
-                new AssessorDashboardActiveCompetitionViewModel(2L, "Juggling Craziness", 0, 0,
+                new AssessorDashboardActiveCompetitionViewModel(2L, "Juggling Craziness", 0, 0, 0,
                         LocalDateTime.now().plusDays(0).toLocalDate(),
                         0,
                         100
@@ -323,7 +325,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         AssessorDashboardViewModel model = (AssessorDashboardViewModel) result.getModelAndView().getModel().get("model");
 
         List<AssessorDashboardActiveCompetitionViewModel> expectedActiveCompetitions = singletonList(
-                new AssessorDashboardActiveCompetitionViewModel(2L, "Juggling Craziness", 0, 0,
+                new AssessorDashboardActiveCompetitionViewModel(2L, "Juggling Craziness", 0, 0, 0,
                         LocalDateTime.now().plusDays(0).toLocalDate(),
                         0,
                         100
