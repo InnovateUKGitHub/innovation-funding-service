@@ -21,7 +21,6 @@ public class ProfileInnovationAreaLink extends CategoryLink<Profile, InnovationA
     private Profile profile;
 
     ProfileInnovationAreaLink() {
-        // default constructor
     }
 
     public ProfileInnovationAreaLink(Profile profile, InnovationArea innovationArea) {

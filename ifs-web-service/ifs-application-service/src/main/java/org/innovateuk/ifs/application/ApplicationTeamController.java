@@ -36,14 +36,14 @@ public class ApplicationTeamController {
     @Autowired
     private ApplicationTeamModelPopulator applicationTeamModelPopulator;
 
-    @GetMapping(value = "/team")
+    @GetMapping("/team")
     public String getApplicationTeam(Model model, @PathVariable("applicationId") long applicationId,
                                      @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         model.addAttribute("model", applicationTeamModelPopulator.populateModel(applicationId, loggedInUser.getId()));
         return "application-team/team";
     }
 
-    @GetMapping(value = "/begin")
+    @GetMapping("/begin")
     public String beginApplication(@PathVariable("applicationId") long applicationId,
                                    @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);

@@ -9,8 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import org.innovateuk.ifs.application.service.AssessorFeedbackService;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
@@ -28,7 +27,7 @@ public class AssessorFeedbackController {
 	@Autowired
 	private CookieFlashMessageFilter cookieFlashMessageFilter;
 	
-	@RequestMapping(method = RequestMethod.POST, value = "/competition/{competitionId}/assessorfeedback")
+	@PostMapping("/competition/{competitionId}/assessorfeedback")
     public String assessorFeedbackCheck(Model model, HttpServletResponse response, @PathVariable("competitionId") Long competitionId){
 		
 		if(!assessorFeedbackService.feedbackUploaded(competitionId)) {
@@ -41,7 +40,7 @@ public class AssessorFeedbackController {
 		return "assessor-feedback-confirmation";
     }
 	
-	@RequestMapping(method = RequestMethod.POST, value = "/competition/{competitionId}/assessorfeedbacksubmit")
+	@PostMapping("/competition/{competitionId}/assessorfeedbacksubmit")
     public String submitAssessorFeedback(HttpServletRequest request, HttpServletResponse response, @PathVariable("competitionId") Long competitionId){
 		
 		if(!assessorFeedbackService.feedbackUploaded(competitionId)) {

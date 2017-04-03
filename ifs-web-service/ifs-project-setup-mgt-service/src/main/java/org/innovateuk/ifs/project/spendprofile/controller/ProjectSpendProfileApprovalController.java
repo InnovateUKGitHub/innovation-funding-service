@@ -23,16 +23,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.function.Supplier;
-
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * This Controller handles Spend Profile activity for the Internal Competition team members
@@ -65,13 +59,13 @@ public class ProjectSpendProfileApprovalController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
-    @RequestMapping(value = "/approval", method = GET)
+    @GetMapping("/approval")
     public String viewSpendProfileApproval(@PathVariable Long projectId, Model model) {
         return doViewSpendProfileApproval(projectId, model);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
-    @RequestMapping(value = "/approval/{approvalType}", method = POST)
+    @PostMapping("/approval/{approvalType}")
     public String saveSpendProfileApproval(@PathVariable Long projectId,
                                            @PathVariable ApprovalType approvalType,
                                            @ModelAttribute ProjectSpendProfileApprovalForm form,

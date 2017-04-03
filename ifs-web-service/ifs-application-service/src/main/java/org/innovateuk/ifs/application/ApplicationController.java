@@ -43,7 +43,6 @@ import static org.innovateuk.ifs.application.resource.ApplicationStatus.SUBMITTE
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.collectValidationMessages;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PROJECT_SETUP;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 /**
  * This controller will handle all requests that are related to the application overview.
@@ -122,7 +121,7 @@ public class ApplicationController {
     }
 
     @ProfileExecution
-    @RequestMapping(value= "/{applicationId}", method = RequestMethod.GET)
+    @GetMapping("/{applicationId}")
     public String applicationDetails(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
                                      HttpServletRequest request) {
 
@@ -132,7 +131,7 @@ public class ApplicationController {
     }
 
     @ProfileExecution
-    @RequestMapping(value= "/{applicationId}", method = RequestMethod.POST)
+    @PostMapping(value= "/{applicationId}")
     public String applicationDetails(@PathVariable("applicationId") long applicationId, HttpServletRequest request) {
 
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
@@ -143,7 +142,7 @@ public class ApplicationController {
     }
 
     @ProfileExecution
-    @RequestMapping("/{applicationId}/section/{sectionId}")
+    @GetMapping("/{applicationId}/section/{sectionId}")
     public String applicationDetailsOpenSection(ApplicationForm form, Model model,
                                      @PathVariable("applicationId") long applicationId,
                                      @PathVariable("sectionId") long sectionId,
@@ -165,7 +164,7 @@ public class ApplicationController {
     }
 
     @ProfileExecution
-    @RequestMapping(value = "/{applicationId}/summary", method = RequestMethod.GET)
+    @GetMapping("/{applicationId}/summary")
     public String applicationSummary(@ModelAttribute("form") ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
                                      HttpServletRequest request) {
         List<FormInputResponseResource> responses = formInputResponseService.getByApplication(applicationId);
@@ -201,7 +200,7 @@ public class ApplicationController {
         }
     }
 
-    @RequestMapping(value = "/{applicationId}/question/{questionId}/feedback")
+    @GetMapping(value = "/{applicationId}/question/{questionId}/feedback")
     public String applicationAssessorQuestionFeedback(Model model, @PathVariable("applicationId") long applicationId,
                                               @PathVariable("questionId") long questionId) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
@@ -214,7 +213,7 @@ public class ApplicationController {
     }
 
     @ProfileExecution
-    @RequestMapping(value = "/{applicationId}/summary", method = RequestMethod.POST)
+    @PostMapping("/{applicationId}/summary")
     public String applicationSummarySubmit(@PathVariable("applicationId") long applicationId,
                                            HttpServletRequest request) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
@@ -240,7 +239,7 @@ public class ApplicationController {
     }
 
     @ProfileExecution
-    @RequestMapping("/{applicationId}/confirm-submit")
+    @GetMapping("/{applicationId}/confirm-submit")
     public String applicationConfirmSubmit(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
                                            HttpServletRequest request){
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
@@ -250,7 +249,7 @@ public class ApplicationController {
         return "application-confirm-submit";
     }
 
-    @RequestMapping(value = "/{applicationId}/submit", method = RequestMethod.POST)
+    @PostMapping("/{applicationId}/submit")
     public String applicationSubmit(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
                                     HttpServletRequest request, HttpServletResponse response){
     	UserResource user = userAuthenticationService.getAuthenticatedUser(request);
@@ -269,7 +268,7 @@ public class ApplicationController {
     }
 
     @ProfileExecution
-    @RequestMapping("/{applicationId}/track")
+    @GetMapping("/{applicationId}/track")
     public String applicationTrack(ApplicationForm form, Model model, @PathVariable("applicationId") long applicationId,
                                     HttpServletRequest request){
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
@@ -279,13 +278,13 @@ public class ApplicationController {
         return "application-track";
     }
     @ProfileExecution
-    @RequestMapping("/create/{competitionId}")
+    @GetMapping("/create/{competitionId}")
     public String applicationCreatePage(){
         return "application-create";
     }
 
     @ProfileExecution
-    @RequestMapping(value = "/create/{competitionId}", method = RequestMethod.POST)
+    @PostMapping("/create/{competitionId}")
     public String applicationCreate(Model model,
                                     @PathVariable("competitionId") long competitionId,
                                     @RequestParam(value = "application_name", required = true) String applicationName,
@@ -304,17 +303,17 @@ public class ApplicationController {
         }
     }
     @ProfileExecution
-    @RequestMapping(value = "/create-confirm-competition")
+    @GetMapping(value = "/create-confirm-competition")
     public String competitionCreateApplication(){
         return "application-create-confirm-competition";
     }
 
-    @RequestMapping(value = "/terms-and-conditions")
+    @GetMapping("/terms-and-conditions")
     public String termsAndConditions(){
         return "application-terms-and-conditions";
     }
 
-    @RequestMapping(value = "/{applicationId}/assessorFeedback", method = GET)
+    @GetMapping("/{applicationId}/assessorFeedback")
     public @ResponseBody ResponseEntity<ByteArrayResource> downloadAssessorFeedbackFile(
             @PathVariable("applicationId") long applicationId) {
 
@@ -326,7 +325,7 @@ public class ApplicationController {
     /**
      * Printable version of the application
      */
-    @RequestMapping(value="/{applicationId}/print")
+    @GetMapping(value="/{applicationId}/print")
     public String printApplication(@PathVariable("applicationId") long applicationId,
                                              Model model, HttpServletRequest request) {
         return applicationPrintPopulator.print(applicationId, model, request);
@@ -341,7 +340,7 @@ public class ApplicationController {
      * @return
      */
     @ProfileExecution
-    @RequestMapping(value = "/{applicationId}/section/{sectionId}", method = RequestMethod.POST)
+    @PostMapping("/{applicationId}/section/{sectionId}")
     public String assignQuestion(@PathVariable("applicationId") long applicationId,
                                  @PathVariable("sectionId") long sectionId,
                                  HttpServletRequest request,
