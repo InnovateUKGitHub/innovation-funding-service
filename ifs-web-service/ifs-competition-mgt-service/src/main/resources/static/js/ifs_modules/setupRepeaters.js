@@ -119,9 +119,9 @@ IFS.competitionManagement.repeater = (function () {
                           '<textarea id="content-' + idCount + '" cols="30" rows="10" class="width-full form-control" data-editor="html" name="contentGroups[' + count + '].content" data-required-errormessage="' + contentRequiredErrorMessage + '" required="required"></textarea>' +
                       '</div>' +
                     '<div class="form-group upload-section">' +
-                        '<input type="file" id="file-upload-' + idCount + '" class="inputfile" name="contentGroups[' + count + '].attachment" />' +
-                        '<label for="file-upload-' + idCount + '" class="button-secondary extra-margin">+ Upload</label>' +
-                        '<button class="button-secondary" type="submit" name="uploadFile" data-for-file-upload="file-upload-' + idCount + '" value="' + count + '">Save</button>' +
+                        '<input type="file" id="contentGroups-' + idCount + '.attachment" class="inputfile" name="contentGroups[' + count + '].attachment" />' +
+                        '<label for="contentGroups-' + idCount + '.attachment" class="button-secondary extra-margin">+ Upload</label>' +
+                        '<button class="button-secondary" type="submit" name="uploadFile" data-for-file-upload="contentGroups-' + idCount + '.attachment" value="' + count + '">Save</button>' +
                         '<p class="uploaded-file">No file currently uploaded</p>' +
                     '</div>' +
                     '<button type="button" class="buttonlink no-margin" data-remove-row="contentGroup">Remove section</button>' +
