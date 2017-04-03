@@ -60,9 +60,7 @@
 
                      <div th:if="${assessorFeedback.fileUploaded}">
                          <a th:href="${assessorFeedbackDownloadLink}" class="uploaded-file" th:text="${assessorFeedback.filename}">The-uploaded-file-example.pdf</a>
-                         <div class="alignright">
-                             <button class="buttonlink no-margin-right" type="submit" name="removeAssessorFeedback">Remove</button>
-                         </div>
+                         <button class="secondary-button" type="submit" name="removeAssessorFeedback">Remove</button>
                      </div>
                      <div th:if="${!assessorFeedback.fileUploaded}">
                          <p class="uploaded-file">No file currently uploaded</p>
