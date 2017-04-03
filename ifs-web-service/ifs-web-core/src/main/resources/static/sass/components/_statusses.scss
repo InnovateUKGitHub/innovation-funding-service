@@ -168,25 +168,24 @@ Status is displayed in the collapsible header area.
   }
 
     .section-complete {
-        margin-left: 11px;
-        @extend %icon-tick;
+      margin-left: 11px;
+      @extend %icon-tick;
     }
 
     .section-incomplete {
-        @extend %icon-incomplete;
-
-        &.section-status {
-            color: $red;
-        }
+      @extend %icon-incomplete;
+      &.section-status {
+        color: $red;
+      }
     }
 
     @include media-down(mobile) {
-        div.section-status {
-            float: none;
-            padding-left: 25px;
-            padding-right: 0;
-            background-position: left 50%;
-        }
+      div.section-status {
+        float: none;
+        padding-left: 25px;
+        padding-right: 0;
+        background-position: left 50%;
+      }
     }
 }
 
@@ -237,78 +236,71 @@ Status is displayed in the collapsible header area.
 */
 
 .textarea-wrapped {
-    .textarea-header {
-        position: relative;
-    }
+  .textarea-header {
+    position: relative;
+  }
 
-    img.marked-as-complete,
-    img.assigned-to-me {
-        position: absolute;
-        left: 1px;
-        top: 1px;
-    }
+  img.marked-as-complete,
+  img.assigned-to-me {
+    position: absolute;
+    left: 1px;
+    top: 1px;
+  }
 
-    &.marked-as-complete textarea[readonly],
-    &.marked-as-complete .readonly,
-    &.marked-as-complete .textarea-header {
-        border-width: 2px;
-        border-color: $panel-colour;
-        background-color: $grey-4;
-    }
+  &.marked-as-complete textarea[readonly],
+  &.marked-as-complete .readonly,
+  &.marked-as-complete .textarea-header {
+    border-width: 2px;
+    border-color: $panel-colour;
+    background-color: $grey-4;
+  }
 
-    &.assigned-to-me .editor,
-    &.assigned-to-me textarea,
-    &.assigned-to-me .textarea-header {
-        border: 2px solid $text-colour;
-    }
+  &.assigned-to-me .editor,
+  &.assigned-to-me textarea,
+  &.assigned-to-me .textarea-header {
+    border: 2px solid $text-colour;
+  }
 
-    &.assigned-to-me .textarea-header + .editor,
-    &.assigned-to-me .textarea-header + textarea {
-        border-top: none;
-    }
+  &.assigned-to-me .textarea-header + .editor,
+  &.assigned-to-me .textarea-header + textarea {
+    border-top: none;
+  }
 
-    &.assigned-to-me .textarea-header {
-        border-bottom: none;
-    }
+  &.assigned-to-me .textarea-header {
+    border-bottom: none;
+  }
 }
 
 //project setup statusses overview
 caption {
-    font-weight: bold;
-    text-align: left;
+  font-weight: bold;
+  text-align: left;
 }
 
 td.status,
 th.status,
 span.status {
-    &.na {
-        background: $grey-3;
-    }
+  &.na {
+    background: $grey-3;
+  }
 
-    &.ok {
-        @extend %icon-tick;
-        color: $button-colour;
-        padding-left: 25px;
-    }
+  &.ok {
+    @extend %icon-tick;
+    color: $button-colour;
+    padding-left: 25px;
+  }
 
-    &.rejected {
-        @extend %icon-cross;
-    }
+  &.rejected {
+    @extend %icon-cross;
+  }
+  &.waiting {
+    color: $secondary-text-colour;
+  }
 
-    &.action {
-        //@extend %icon-assigned-to-me;
-    }
-
-    &.waiting {
-        //@extend %icon-timer;
-        //background-size: 33px 30px;
-        color: $secondary-text-colour;
-    }
-
-    a {
-        display: block;
-        padding-top: 50px;
-    }
+  a {
+    display: block;
+    padding-top: 50px;
+  }
 }
 
 .icon-table {
@@ -348,18 +340,18 @@ span.status {
 
 td.status,
 th.status {
-    text-align: center;
-    padding-left: 0.625em;
-    padding-right: 0.625em;
-    background-position: 10px 19px;
-    width: 70px;
+  text-align: center;
+  padding-left: 0.625em;
+  padding-right: 0.625em;
+  background-position: 10px 19px;
+  width: 70px;
 }
 
 span.status {
-    padding-left: 28px;
-    background-position: left center;
+  padding-left: 28px;
+  background-position: left center;
 
-    &.waiting {
-        background-size: 25px;
-    }
+  &.waiting {
+    background-size: 25px;
+  }
 }

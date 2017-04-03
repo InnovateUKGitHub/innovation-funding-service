@@ -23,13 +23,11 @@
         <td th:case="'COMPLETE'" class="status ok">
           <th:block th:if="${url}">
               <a th:href="${url}">
-                  <th:block th:if="${columnType == 'MO'}">Assigned</th:block>
-                  <th:block th:unless="${columnType == 'MO'}">Complete</th:block>
+                  <th:block th:text="${columnType == 'MO' ? 'Assigned' : 'Complete'}">Assigned</th:block>
               </a>
           </th:block>
           <th:block th:unless="${url}">
-            <th:block th:if="${columnType == 'MO'}">Assigned</th:block>
-            <th:block th:unless="${columnType == 'MO'}">Complete</th:block>
+            <th:block th:text="${columnType == 'MO' ? 'Assigned' : 'Complete'}">Assigned</th:block>
           </th:block>
         </td>
         <td th:case="'ACTION_REQUIRED'" class="status action">
@@ -55,13 +53,11 @@
         <td th:case="'PENDING'" class="status waiting">
           <th:block th:if="${url}">
               <a th:href="${url}">
-                <th:block th:if="${columnType == 'project-details'}"><span>Incomplete</span></th:block>
-                <th:block th:unless="${columnType == 'project-details'}">Pending</th:block>
+                <span th:text="${columnType == 'project-details' ? 'Incomplete' : 'Pending'}">Incomplete</span>
               </a>
           </th:block>
           <th:block th:unless="${url}">
-              <th:block th:if="${columnType == 'project-details'}"><span>Incomplete</span></th:block>
-              <th:block th:unless="${columnType == 'project-details'}">Pending</th:block>
+              <span th:text="${columnType == 'project-details' ? 'Incomplete' : 'Pending'}">Incomplete</span>
           </th:block>
         </td>
         <td th:case="'REJECTED'" class="status rejected">
