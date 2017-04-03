@@ -293,12 +293,26 @@ Queries show in reverse chronological order
     And the user should see the element     jQuery=.queries-list .query:nth-of-type(1) h2:contains("another query title")
     And the user should see the element     jQuery=.queries-list .query:nth-of-type(2) h2:contains("this is a title")
 
-Project finance user can filter queries by section
+Project finance user can filter queries by Eligibility section
     [Documentation]  INFUND-4844
     [Tags]
     Given the user selects the option from the drop-down menu    Eligibility only    id=querySection
     Then the user should see the element       jQuery=.queries-list .query:nth-of-type(2) h2:contains("this is a title")
     And the user should not see the element    jQuery=.queries-list .query:nth-of-type(1) h2:contains("another query title")
+
+Project finance user can filter queries by Viability section
+    [Documentation]  INFUND-4844
+    [Tags]
+    Given the user selects the option from the drop-down menu    Eligibility only    id=querySection
+    Then the user should see the element       jQuery=.queries-list .query:nth-of-type(1) h2:contains("another query title")
+    And the user should not see the element    jQuery=.queries-list .query:nth-of-type(2) h2:contains("this is a title")
+
+Project finance user can view all queries back
+    [Documentation]  INFUND-4844
+    [Tags]
+    Given the user selects the option from the drop-down menu    All    id=querySection
+    Then the user should see the element     jQuery=.queries-list .query:nth-of-type(1) h2:contains("another query title")
+    And the user should see the element      jQuery=.queries-list .query:nth-of-type(2) h2:contains("this is a title")
 
 Non finance contact can view query
     [Documentation]    INFUND-4843, INFUND-8787
