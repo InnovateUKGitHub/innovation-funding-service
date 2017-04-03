@@ -20,23 +20,23 @@ public class CompetitionKeyStatisticsController {
     @Autowired
     private CompetitionKeyStatisticsService competitionKeyStatisticsService;
 
-    @GetMapping(value ="/readyToOpen")
+    @GetMapping("/readyToOpen")
     public RestResult<CompetitionReadyToOpenKeyStatisticsResource> getReadyToOpenKeyStatistics(@PathVariable("id") long id) {
         return competitionKeyStatisticsService.getReadyToOpenKeyStatisticsByCompetition(id).toGetResponse();
     }
-    @GetMapping(value ="/open")
+    @GetMapping("/open")
     public RestResult<CompetitionOpenKeyStatisticsResource> getOpenKeyStatistics(@PathVariable("id") long id) {
         return competitionKeyStatisticsService.getOpenKeyStatisticsByCompetition(id).toGetResponse();
     }
-    @GetMapping(value ="/closed")
+    @GetMapping("/closed")
     public RestResult<CompetitionClosedKeyStatisticsResource> getClosedKeyStatistics(@PathVariable("id") long id) {
         return competitionKeyStatisticsService.getClosedKeyStatisticsByCompetition(id).toGetResponse();
     }
-    @GetMapping(value ="/inAssessment")
+    @GetMapping("/inAssessment")
     public RestResult<CompetitionInAssessmentKeyStatisticsResource> getInAssessmentKeyStatistics(@PathVariable("id") long id) {
         return competitionKeyStatisticsService.getInAssessmentKeyStatisticsByCompetition(id).toGetResponse();
     }
-    @GetMapping(value ="/funded")
+    @GetMapping("/funded")
     public RestResult<CompetitionFundedKeyStatisticsResource> getFundedKeyStatistics(@PathVariable("id") long id) {
         return competitionKeyStatisticsService.getFundedKeyStatisticsByCompetition(id).toGetResponse();
     }

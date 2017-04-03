@@ -98,13 +98,6 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
     }
 
     @Test
-    public void testCreateAccountOrganisationType() throws Exception {
-        mockMvc.perform(get("/organisation/create/create-organisation-type"))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("registration/organisation/create-organisation-type"));
-    }
-
-    @Test
     public void testFindBusiness() throws Exception {
         Cookie[] cookies = mockMvc.perform(MockMvcRequestBuilders.get("/organisation/create/find-business"))
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())

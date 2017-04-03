@@ -25,10 +25,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -70,7 +67,7 @@ public class AssessorRegistrationController {
     @Qualifier("mvcValidator")
     private Validator validator;
 
-    @RequestMapping(value = "/{inviteHash}/start", method = RequestMethod.GET)
+    @GetMapping("/{inviteHash}/start")
     public String becomeAnAssessor(Model model,
                                    @PathVariable("inviteHash") String inviteHash) {
 
@@ -78,14 +75,14 @@ public class AssessorRegistrationController {
         return "registration/become-assessor";
     }
 
-    @RequestMapping(value = "/{inviteHash}/register", method = RequestMethod.GET)
+    @GetMapping("/{inviteHash}/register")
     public String yourDetails(Model model,
                               @PathVariable("inviteHash") String inviteHash,
                               @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationForm form) {
         return doViewYourDetails(model, inviteHash);
     }
 
-    @RequestMapping(value = "/{inviteHash}/register", method = RequestMethod.POST)
+    @PostMapping("/{inviteHash}/register")
     public String submitYourDetails(Model model,
                                     @PathVariable("inviteHash") String inviteHash,
                                     @Valid @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationForm registrationForm,
@@ -113,7 +110,7 @@ public class AssessorRegistrationController {
         });
     }
 
-    @RequestMapping(value = "/{inviteHash}/register/account-created")
+    @GetMapping(value = "/{inviteHash}/register/account-created")
     public String accountCreated(Model model, @PathVariable("inviteHash") String inviteHash, @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         boolean userIsLoggedIn = loggedInUser != null;
 
@@ -134,7 +131,7 @@ public class AssessorRegistrationController {
         }).getSuccessObjectOrThrowException();
     }
 
-    @RequestMapping(value = "/{inviteHash}/register", params = "manual-address", method = RequestMethod.POST)
+    @PostMapping(value = "/{inviteHash}/register", params = "manual-address")
     public String manualAddress(Model model,
                                 @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationForm registrationForm,
                                 @PathVariable("inviteHash") String inviteHash) {
@@ -144,7 +141,7 @@ public class AssessorRegistrationController {
         return doViewYourDetails(model, inviteHash);
     }
 
-    @RequestMapping(value = "/{inviteHash}/register", params = "search-address", method = RequestMethod.POST)
+    @PostMapping(value = "/{inviteHash}/register", params = "search-address")
     public String searchAddress(Model model,
                                 @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationForm registrationForm,
                                 @PathVariable("inviteHash") String inviteHash,
@@ -163,7 +160,7 @@ public class AssessorRegistrationController {
         return validationHandler.failNowOrSucceedWith(view, view);
     }
 
-    @RequestMapping(value = "/{inviteHash}/register", params = "select-address", method = RequestMethod.POST)
+    @PostMapping(value = "/{inviteHash}/register", params = "select-address")
     public String selectAddress(Model model,
                                 @ModelAttribute(FORM_ATTR_NAME) AssessorRegistrationForm registrationForm,
                                 @PathVariable("inviteHash") String inviteHash) {

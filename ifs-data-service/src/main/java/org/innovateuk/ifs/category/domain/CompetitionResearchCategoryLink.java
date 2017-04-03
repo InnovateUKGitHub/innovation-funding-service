@@ -18,7 +18,6 @@ public class CompetitionResearchCategoryLink extends CategoryLink<Competition, R
     private Competition competition;
 
     CompetitionResearchCategoryLink() {
-        // default constructor
     }
 
     public CompetitionResearchCategoryLink(Competition competition, ResearchCategory category) {

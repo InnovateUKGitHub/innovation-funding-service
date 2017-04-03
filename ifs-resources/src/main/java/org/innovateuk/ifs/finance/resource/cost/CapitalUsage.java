@@ -10,38 +10,38 @@ import java.math.BigDecimal;
 /**
  * {@code CapitalUsage} implements {@link FinanceRowItem}
  */
-public class CapitalUsage implements FinanceRowItem {
+public class CapitalUsage extends AbstractFinanceRowItem {
     Long id;
     String name;
     @NotNull(message = NOT_BLANK_MESSAGE)
     @Min(value = 1, message = VALUE_MUST_BE_HIGHER_MESSAGE)
     @Digits(integer = MAX_DIGITS_INT, fraction = MAX_FRACTION, message = MAX_DIGITS_MESSAGE)
-    Integer deprecation;
+    private Integer deprecation;
 
     @NotBlank(message = NOT_BLANK_MESSAGE)
     @NotNull(message = NOT_BLANK_MESSAGE)
     @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
-    String description;
+    private String description;
 
     @NotBlank(message = NOT_BLANK_MESSAGE)
     @NotNull(message = NOT_BLANK_MESSAGE)
     @Length(max = MAX_STRING_LENGTH, message = MAX_LENGTH_MESSAGE)
-    String existing;
+    private String existing;
 
     @NotNull(message = NOT_BLANK_MESSAGE)
     @DecimalMin(value = "1", message = VALUE_MUST_BE_HIGHER_MESSAGE)
     @Digits(integer = MAX_DIGITS, fraction = MAX_FRACTION, message = MAX_DIGITS_MESSAGE)
-    BigDecimal npv;
+    private BigDecimal npv;
 
     @DecimalMin(value = "0", message = VALUE_MUST_BE_HIGHER_MESSAGE)
     @Digits(integer = MAX_DIGITS, fraction = MAX_FRACTION, message = MAX_DIGITS_MESSAGE)
-    BigDecimal residualValue;
+    private BigDecimal residualValue;
 
     @NotNull(message = NOT_BLANK_MESSAGE)
     @Min(value = 0, message = VALUE_MUST_BE_HIGHER_MESSAGE)
     @Max(value = 100, message = VALUE_MUST_BE_LOWER_MESSAGE)
     @Digits(integer = MAX_DIGITS_INT, fraction = MAX_FRACTION, message = MAX_DIGITS_MESSAGE)
-    Integer utilisation;
+    private Integer utilisation;
 
     public CapitalUsage() {
         this.name = getCostType().getType();

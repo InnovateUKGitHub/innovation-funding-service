@@ -33,13 +33,14 @@
     <div th:fragment="textarea"  class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.getId()}__]')} ? error : ''">
 
         <th:block th:if="${!userIsLeadApplicant}">
-            <div class="assign-container assign-container--alert" th:classappend="(${currentUser.getId() == questionAssignee?.assigneeUserId} ? 'assign-alert')">
-                <th:block th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
-                          th:include="question-type/form-elements :: current-assignee"/>
-            </div>
+            <th:block th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}">
+                <div class="assign-container" th:classappend="${currentUser.id == questionAssignee?.assigneeUserId} ? 'assign-alert' : 'assigned-alert'">
+                    <th:block th:include="question-type/form-elements :: current-assignee"/>
+                </div>
+            </th:block>
         </th:block>
 
-        <th:block th:insert="question-type/form-elements :: assign-buttons-dialog" th:unless="${readonly} or ${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} or ${!userIsLeadApplicant}"/>
+        <th:block th:insert="question-type/form-elements :: assign-buttons-dialog" th:unless="${readonly} or ${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} or ${!userIsLeadApplicant}" th:with="fullButtonText=${TRUE}"/>
 
         <div th:unless="${readonly}" class="textarea-header">
 
@@ -293,10 +294,13 @@
                 </dl>
             </th:block>
             <th:block th:unless="${(currentUser.id != questionAssignee?.assigneeUserId and questionAssignee?.assignee!=null) or (questionAssignee?.assignee==null and !userIsLeadApplicant)}">
-                <p th:unless="${appIsClosed}">
-                    <th:block th:if="${readonly}" th:insert="question-type/form-elements :: form-edit-question-button" />
-                    <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons" />
-                </p>
+                <div class="form-footer" th:unless="${appIsClosed}">
+                    <div class="form-footer__actions">
+                        <th:block th:if="${readonly}"
+                                  th:insert="question-type/form-elements :: form-edit-question-button"/>
+                        <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons"/>
+                    </div>
+                </div>
             </th:block>
         </th:block>
     </th:block>

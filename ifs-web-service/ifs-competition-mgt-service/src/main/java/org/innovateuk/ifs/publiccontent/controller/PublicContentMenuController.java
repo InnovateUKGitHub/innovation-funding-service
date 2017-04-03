@@ -9,10 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.function.Supplier;
@@ -36,12 +33,12 @@ public class PublicContentMenuController {
     @Autowired
     private PublicContentService publicContentService;
 
-    @RequestMapping(value = "/{competitionId}", method = RequestMethod.GET)
+    @GetMapping("/{competitionId}")
     public String publicContentMenu(Model model, @PathVariable(COMPETITION_ID_KEY) Long competitionId) {
         return menuPage(competitionId, model, new PublishForm());
     }
 
-    @RequestMapping(value = "/{competitionId}", method = RequestMethod.POST)
+    @PostMapping("/{competitionId}")
     public String publish(Model model, @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                           @Valid @ModelAttribute(FORM_ATTR_NAME)  PublishForm publishForm, BindingResult bindingResult, ValidationHandler validationHandler) {
 

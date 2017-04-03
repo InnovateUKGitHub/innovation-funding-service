@@ -29,10 +29,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.file.controller.FileControllerUtils.*;
 import static java.util.Optional.ofNullable;
-import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
  * ProjectController exposes Project data and operations through a REST API.
@@ -58,33 +56,33 @@ public class ProjectController {
     private UserAuthenticationService userAuthenticationService;
 
 
-    @RequestMapping("/{id}")
+    @GetMapping("/{id}")
     public RestResult<ProjectResource> getProjectById(@PathVariable("id") final Long id) {
         return projectService.getProjectById(id).toGetResponse();
     }
 
-    @RequestMapping("/application/{application}")
+    @GetMapping("/application/{application}")
     public RestResult<ProjectResource> getByApplicationId(@PathVariable("application") final Long application) {
         return projectService.getByApplicationId(application).toGetResponse();
     }
 
-    @RequestMapping("/")
+    @GetMapping("/")
     public RestResult<List<ProjectResource>> findAll() {
         return projectService.findAll().toGetResponse();
     }
 
-    @RequestMapping(method=RequestMethod.POST, value="/{id}/project-manager/{projectManagerId}")
+    @PostMapping(value="/{id}/project-manager/{projectManagerId}")
     public RestResult<Void> setProjectManager(@PathVariable("id") final Long id, @PathVariable("projectManagerId") final Long projectManagerId) {
         return projectService.setProjectManager(id, projectManagerId).toPostResponse();
     }
 
-    @RequestMapping(value = "/{projectId}/startdate", method = POST)
+    @PostMapping("/{projectId}/startdate")
     public RestResult<Void> updateProjectStartDate(@PathVariable("projectId") final Long projectId,
                                                    @RequestParam("projectStartDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate projectStartDate) {
         return projectService.updateProjectStartDate(projectId, projectStartDate).toPostResponse();
     }
 
-    @RequestMapping(value = "/{projectId}/address", method = POST)
+    @PostMapping("/{projectId}/address")
     public RestResult<Void> updateProjectAddress(@PathVariable("projectId") final Long projectId,
                                                  @RequestParam("leadOrganisationId") final Long leadOrganisationId,
                                                  @RequestParam("addressType") final String addressType,
@@ -92,51 +90,51 @@ public class ProjectController {
         return projectService.updateProjectAddress(leadOrganisationId, projectId, OrganisationAddressType.valueOf(addressType), addressResource).toPostResponse();
     }
 
-    @RequestMapping(value = "/user/{userId}")
+    @GetMapping(value = "/user/{userId}")
     public RestResult<List<ProjectResource>> findByUserId(@PathVariable("userId") final Long userId) {
         return projectService.findByUserId(userId).toGetResponse();
     }
 
-    @RequestMapping(value = "/{projectId}/organisation/{organisation}/finance-contact", method = POST)
+    @PostMapping("/{projectId}/organisation/{organisation}/finance-contact")
     public RestResult<Void> updateFinanceContact(@PathVariable("projectId") final Long projectId,
                                                  @PathVariable("organisation") final Long organisationId,
                                                  @RequestParam("financeContact") Long financeContactUserId) {
         return projectService.updateFinanceContact(projectId, organisationId, financeContactUserId).toPostResponse();
     }
 
-    @RequestMapping(value = "/{projectId}/invite-finance-contact", method = POST)
+    @PostMapping("/{projectId}/invite-finance-contact")
     public RestResult<Void> inviteFinanceContact(@PathVariable("projectId") final Long projectId,
                                                  @RequestBody @Valid final InviteProjectResource inviteResource) {
         return projectService.inviteFinanceContact(projectId, inviteResource).toPostResponse();
     }
 
-    @RequestMapping(value = "/{projectId}/invite-project-manager", method = POST)
+    @PostMapping("/{projectId}/invite-project-manager")
     public RestResult<Void> inviteProjectManager(@PathVariable("projectId") final Long projectId,
                                                  @RequestBody @Valid final InviteProjectResource inviteResource) {
         return projectService.inviteProjectManager(projectId, inviteResource).toPostResponse();
     }
 
-    @RequestMapping(value = "/{projectId}/project-users", method = GET)
+    @GetMapping("/{projectId}/project-users")
     public RestResult<List<ProjectUserResource>> getProjectUsers(@PathVariable("projectId") final Long projectId) {
         return projectService.getProjectUsers(projectId).toGetResponse();
     }
 
-    @RequestMapping(value = "/{projectId}/setApplicationDetailsSubmitted", method = POST)
+    @PostMapping("/{projectId}/setApplicationDetailsSubmitted")
     public RestResult<Void> setApplicationDetailsSubmitted(@PathVariable("projectId") final Long projectId){
         return projectService.submitProjectDetails(projectId, LocalDateTime.now()).toPostResponse();
     }
 
-    @RequestMapping(value = "/{projectId}/isSubmitAllowed", method = GET)
+    @GetMapping("/{projectId}/isSubmitAllowed")
     public RestResult<Boolean> isSubmitAllowed(@PathVariable("projectId") final Long projectId){
         return projectService.isSubmitAllowed(projectId).toGetResponse();
     }
 
-    @RequestMapping(value = "/{projectId}/monitoring-officer", method = GET)
+    @GetMapping("/{projectId}/monitoring-officer")
     public RestResult<MonitoringOfficerResource> getMonitoringOfficer(@PathVariable("projectId") final Long projectId) {
         return projectService.getMonitoringOfficer(projectId).toGetResponse();
     }
 
-    @RequestMapping(value = "/{projectId}/monitoring-officer", method = PUT)
+    @PutMapping("/{projectId}/monitoring-officer")
     public RestResult<Void> saveMonitoringOfficer(@PathVariable("projectId") final Long projectId,
                                                   @RequestBody @Valid final MonitoringOfficerResource monitoringOfficerResource) {
         final boolean[] sendNotification = new boolean[1];
@@ -150,13 +148,13 @@ public class ProjectController {
         return result.toPutResponse();
     }
 
-    @RequestMapping(value = "/{projectId}/getOrganisationByUser/{userId}", method = GET)
+    @GetMapping("/{projectId}/getOrganisationByUser/{userId}")
     public RestResult<OrganisationResource> getOrganisationByProjectAndUser(@PathVariable("projectId") final Long projectId,
                                                                             @PathVariable("userId") final Long userId){
         return projectService.getOrganisationByProjectAndUser(projectId, userId).toGetResponse();
     }
 
-    @RequestMapping(value = "/{projectId}/collaboration-agreement", method = POST, produces = "application/json")
+    @PostMapping(value = "/{projectId}/collaboration-agreement", produces = "application/json")
     public RestResult<FileEntryResource> addCollaborationAgreementDocument(
             @RequestHeader(value = "Content-Type", required = false) String contentType,
             @RequestHeader(value = "Content-Length", required = false) String contentLength,
@@ -169,7 +167,7 @@ public class ProjectController {
         );
     }
 
-    @RequestMapping(value = "/{projectId}/collaboration-agreement", method = GET)
+    @GetMapping("/{projectId}/collaboration-agreement")
     public @ResponseBody
     ResponseEntity<Object> getCollaborationAgreementFileContents(
             @PathVariable("projectId") long projectId) throws IOException {
@@ -177,7 +175,7 @@ public class ProjectController {
         return handleFileDownload(() -> projectService.getCollaborationAgreementFileContents(projectId));
     }
 
-    @RequestMapping(value = "/{projectId}/collaboration-agreement/details", method = GET, produces = "application/json")
+    @GetMapping(value = "/{projectId}/collaboration-agreement/details", produces = "application/json")
     public RestResult<FileEntryResource> getCollaborationAgreementFileEntryDetails(
             @PathVariable("projectId") long projectId) throws IOException {
 
@@ -185,7 +183,7 @@ public class ProjectController {
     }
 
 
-    @RequestMapping(value = "/{projectId}/collaboration-agreement", method = PUT, produces = "application/json")
+    @PutMapping(value = "/{projectId}/collaboration-agreement", produces = "application/json")
     public RestResult<Void> updateCollaborationAgreementDocument(
             @RequestHeader(value = "Content-Type", required = false) String contentType,
             @RequestHeader(value = "Content-Length", required = false) String contentLength,
@@ -197,14 +195,14 @@ public class ProjectController {
                 projectService.updateCollaborationAgreementFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
     }
 
-    @RequestMapping(value = "/{projectId}/collaboration-agreement", method = DELETE, produces = "application/json")
+    @DeleteMapping(value = "/{projectId}/collaboration-agreement", produces = "application/json")
     public RestResult<Void> deleteCollaborationAgreementDocument(
             @PathVariable("projectId") long projectId) throws IOException {
 
         return projectService.deleteCollaborationAgreementFile(projectId).toDeleteResponse();
     }
 
-    @RequestMapping(value = "/{projectId}/exploitation-plan", method = POST, produces = "application/json")
+    @PostMapping(value = "/{projectId}/exploitation-plan", produces = "application/json")
     public RestResult<FileEntryResource> addExploitationPlanDocument(
             @RequestHeader(value = "Content-Type", required = false) String contentType,
             @RequestHeader(value = "Content-Length", required = false) String contentLength,
@@ -216,7 +214,7 @@ public class ProjectController {
                 projectService.createExploitationPlanFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
     }
 
-    @RequestMapping(value = "/{projectId}/exploitation-plan", method = GET)
+    @GetMapping("/{projectId}/exploitation-plan")
     public @ResponseBody
     ResponseEntity<Object> getExploitationPlanFileContents(
             @PathVariable("projectId") long projectId) throws IOException {
@@ -224,14 +222,14 @@ public class ProjectController {
         return handleFileDownload(() -> projectService.getExploitationPlanFileContents(projectId));
     }
 
-    @RequestMapping(value = "/{projectId}/exploitation-plan/details", method = GET, produces = "application/json")
+    @GetMapping(value = "/{projectId}/exploitation-plan/details", produces = "application/json")
     public RestResult<FileEntryResource> getExploitationPlanFileEntryDetails(
             @PathVariable("projectId") long projectId) throws IOException {
 
         return projectService.getExploitationPlanFileEntryDetails(projectId).toGetResponse();
     }
 
-    @RequestMapping(value = "/{projectId}/exploitation-plan", method = PUT, produces = "application/json")
+    @PutMapping(value = "/{projectId}/exploitation-plan", produces = "application/json")
     public RestResult<Void> updateExploitationPlanDocument(
             @RequestHeader(value = "Content-Type", required = false) String contentType,
             @RequestHeader(value = "Content-Length", required = false) String contentLength,
@@ -243,21 +241,21 @@ public class ProjectController {
                 projectService.updateExploitationPlanFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
     }
 
-    @RequestMapping(value = "/{projectId}/exploitation-plan", method = DELETE, produces = "application/json")
+    @DeleteMapping(value = "/{projectId}/exploitation-plan", produces = "application/json")
     public RestResult<Void> deleteExploitationPlanDocument(
             @PathVariable("projectId") long projectId) throws IOException {
 
         return projectService.deleteExploitationPlanFile(projectId).toDeleteResponse();
     }
 
-    @RequestMapping(value = "/{projectId}/partner/documents/approved/{approved}", method = POST)
+    @PostMapping("/{projectId}/partner/documents/approved/{approved}")
     public RestResult<Void> acceptOrRejectOtherDocuments(@PathVariable("projectId") long projectId, @PathVariable("approved") Boolean approved) {
         //TODO INFUND-7493
         return projectService.acceptOrRejectOtherDocuments(projectId, approved).toPostResponse();
 
     }
 
-    @RequestMapping(value = "/{projectId}/partner/documents/ready", method = GET)
+    @GetMapping("/{projectId}/partner/documents/ready")
     public RestResult<Boolean>isOtherDocumentsSubmitAllowed(@PathVariable("projectId") final Long projectId,
                                                             HttpServletRequest request) {
 
@@ -265,60 +263,60 @@ public class ProjectController {
         return projectService.isOtherDocumentsSubmitAllowed(projectId, authenticatedUser.getId()).toGetResponse();
     }
 
-    @RequestMapping(value = "/{projectId}/partner/documents/submit", method = POST)
+    @PostMapping("/{projectId}/partner/documents/submit")
     public RestResult<Void>setPartnerDocumentsSubmitted(@PathVariable("projectId") final Long projectId) {
         return projectService.saveDocumentsSubmitDateTime(projectId, LocalDateTime.now()).toPostResponse();
     }
 
-    @RequestMapping(value = "/{projectId}/partners", method = POST)
+    @PostMapping("/{projectId}/partners")
     public RestResult<Void> addPartner(@PathVariable(value = "projectId")Long projectId,
                                        @RequestParam(value = "userId", required = true) Long userId,
                                        @RequestParam(value = "organisationId", required = true) Long organisationId) {
         return projectService.addPartner(projectId, userId, organisationId).toPostResponse();
     }
 
-    @RequestMapping(value = "/{projectId}/team-status", method = GET)
+    @GetMapping("/{projectId}/team-status")
     public RestResult<ProjectTeamStatusResource> getTeamStatus(@PathVariable(value = "projectId") Long projectId,
                                        @RequestParam(value = "filterByUserId", required = false) Long filterByUserId) {
         return projectService.getProjectTeamStatus(projectId, ofNullable(filterByUserId)).toGetResponse();
     }
 
-    @RequestMapping(value = "/{projectId}/project-manager", method = GET)
+    @GetMapping("/{projectId}/project-manager")
     public RestResult<ProjectUserResource> getProjectManager(@PathVariable(value = "projectId") Long projectId) {
         return projectService.getProjectManager(projectId).toGetResponse();
     }
 
-    @RequestMapping(value = "/{projectId}/status", method = GET)
+    @GetMapping("/{projectId}/status")
     public RestResult<ProjectStatusResource> getStatus(@PathVariable(value = "projectId") Long projectId) {
         return projectStatusService.getProjectStatusByProjectId(projectId).toGetResponse();
     }
 
-    @RequestMapping(value = "/{projectId}/is-send-grant-offer-letter-allowed", method = GET)
+    @GetMapping("/{projectId}/is-send-grant-offer-letter-allowed")
     public RestResult<Boolean> isSendGrantOfferLetterAllowed(@PathVariable("projectId") final Long projectId) {
         return projectService.isSendGrantOfferLetterAllowed(projectId).toGetResponse();
     }
-    @RequestMapping(value = "/{projectId}/grant-offer/send", method = POST)
+    @PostMapping("/{projectId}/grant-offer/send")
     public RestResult<Void> sendGrantOfferLetter(@PathVariable("projectId") final Long projectId) {
         return projectService.sendGrantOfferLetter(projectId).toPostResponse();
     }
 
-    @RequestMapping(value= "/{projectId}/is-grant-offer-letter-already-sent", method = GET)
+    @GetMapping("/{projectId}/is-grant-offer-letter-already-sent")
     public RestResult<Boolean> isGrantOfferLetterAlreadySent(@PathVariable("projectId") final Long projectId) {
         return projectService.isGrantOfferLetterAlreadySent(projectId).toGetResponse();
     }
 
-    @RequestMapping(value = "/{projectId}/signed-grant-offer-letter/approval/{approvalType}", method = POST)
+    @PostMapping("/{projectId}/signed-grant-offer-letter/approval/{approvalType}")
     public RestResult<Void> approveOrRejectSignedGrantOfferLetter(@PathVariable("projectId") final Long projectId,
                                                                   @PathVariable("approvalType") final ApprovalType approvalType) {
         return projectService.approveOrRejectSignedGrantOfferLetter(projectId, approvalType).toPostResponse();
     }
 
-    @RequestMapping(value = "/{projectId}/signed-grant-offer-letter/approval", method = GET)
+    @GetMapping("/{projectId}/signed-grant-offer-letter/approval")
     public RestResult<Boolean> isSignedGrantOfferLetterApproved(@PathVariable("projectId") final Long projectId) {
         return projectService.isSignedGrantOfferLetterApproved(projectId).toGetResponse();
     }
 
-    @RequestMapping(value = "/{projectId}/grant-offer-letter/state", method = GET)
+    @GetMapping("/{projectId}/grant-offer-letter/state")
     public RestResult<GOLState> getGrantOfferLetterWorkflowState(@PathVariable("projectId") final Long projectId) {
         return projectService.getGrantOfferLetterWorkflowState(projectId).toGetResponse();
     }

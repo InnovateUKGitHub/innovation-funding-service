@@ -19,9 +19,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -56,7 +54,7 @@ public class ProjectRegistrationController {
     private static final String REGISTRATION_SUCCESS_VIEW = "project/registration/successful";
     private static final String REGISTRATION_REGISTER_VIEW = "project/registration/register";
 
-    @RequestMapping(value = REGISTER_MAPPING, method = RequestMethod.GET)
+    @GetMapping(REGISTER_MAPPING)
     public String registerForm(Model model,
                                HttpServletRequest request,
                                HttpServletResponse response,
@@ -74,7 +72,7 @@ public class ProjectRegistrationController {
         ).getSuccessObject();
     }
 
-    @RequestMapping(value = REGISTER_MAPPING, method = RequestMethod.POST)
+    @PostMapping(REGISTER_MAPPING)
     public String registerFormSubmit(@Valid @ModelAttribute("registrationForm") RegistrationForm registrationForm,
                                      BindingResult bindingResult,
                                      HttpServletRequest request,

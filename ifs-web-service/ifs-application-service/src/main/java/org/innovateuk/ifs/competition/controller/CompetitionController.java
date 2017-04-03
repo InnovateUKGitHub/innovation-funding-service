@@ -39,7 +39,7 @@ public class CompetitionController {
     @Autowired
     private CompetitionOverviewPopulator overviewPopulator;
 
-    @GetMapping(value = "/{competitionId}/overview")
+    @GetMapping("/{competitionId}/overview")
     public String competitionOverview(Model model,
                                       @PathVariable("competitionId") final Long competitionId,
                                      HttpServletRequest request) {
@@ -52,7 +52,7 @@ public class CompetitionController {
         return TEMPLATE_PATH + "overview";
     }
 
-    @GetMapping(value = "/{competitionId}/download/{contentGroupId}")
+    @GetMapping("/{competitionId}/download/{contentGroupId}")
     public ResponseEntity<ByteArrayResource> getFileDetails(Model model,
                                                             @PathVariable("competitionId") Long competitionId,
                                                             @PathVariable("contentGroupId") Long contentGroupId) {

@@ -24,9 +24,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
@@ -38,8 +36,6 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_C
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * This controller will handle all requests that are related to spend profile.
@@ -75,7 +71,7 @@ public class ProjectSpendProfileController {
     private FinanceUtil financeUtil;
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
-    @RequestMapping(method = GET)
+    @GetMapping
     public String viewSpendProfile(Model model,
                                    @PathVariable("projectId") final Long projectId,
                                    @PathVariable("organisationId") final Long organisationId,
@@ -88,7 +84,7 @@ public class ProjectSpendProfileController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
-    @RequestMapping(value = "/review", method = GET)
+    @GetMapping("/review")
     public String reviewSpendProfilePage(Model model,
                                          @PathVariable("projectId") final Long projectId,
                                          @PathVariable("organisationId") final Long organisationId,
@@ -100,7 +96,7 @@ public class ProjectSpendProfileController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
-    @RequestMapping(value = "/edit", method = GET)
+    @GetMapping("/edit")
     public String editSpendProfile(Model model,
                                    HttpServletRequest request,
                                    @ModelAttribute(FORM_ATTR_NAME) SpendProfileForm form,
@@ -129,7 +125,7 @@ public class ProjectSpendProfileController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
-    @RequestMapping(value = "/edit", method = POST)
+    @PostMapping("/edit")
     public String saveSpendProfile(Model model,
                                    @ModelAttribute(FORM_ATTR_NAME) SpendProfileForm form,
                                    @SuppressWarnings("unused") BindingResult bindingResult,
@@ -169,7 +165,7 @@ public class ProjectSpendProfileController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION') && hasPermission(#projectId, 'MARK_SPEND_PROFILE_INCOMPLETE')")
-    @RequestMapping(value = "/incomplete", method = POST)
+    @PostMapping("/incomplete")
     public String markAsActionRequiredSpendProfile(Model model,
                                                    @ModelAttribute(FORM_ATTR_NAME) SpendProfileForm form,
                                                    BindingResult bindingResult,
@@ -187,7 +183,7 @@ public class ProjectSpendProfileController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
-    @RequestMapping(value = "/complete", method = POST)
+    @PostMapping("/complete")
     public String markAsCompleteSpendProfile(Model model,
                                              @PathVariable("projectId") final Long projectId,
                                              @PathVariable("organisationId") final Long organisationId,
@@ -197,7 +193,7 @@ public class ProjectSpendProfileController {
 
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
-    @RequestMapping(value = "/confirm", method = GET)
+    @GetMapping("/confirm")
     public String viewConfirmSpendProfilePage(@PathVariable("projectId") Long projectId,
                                               @PathVariable("organisationId") Long organisationId,
                                               Model model,
@@ -208,7 +204,7 @@ public class ProjectSpendProfileController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
-    @RequestMapping(value = "/incomplete", method = GET)
+    @GetMapping("/incomplete")
     public String viewConfirmEditSpendProfilePage(@PathVariable("projectId") Long projectId,
                                               @PathVariable("organisationId") Long organisationId,
                                               Model model,
