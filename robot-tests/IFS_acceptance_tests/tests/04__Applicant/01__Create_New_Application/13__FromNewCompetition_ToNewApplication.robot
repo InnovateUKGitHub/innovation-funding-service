@@ -275,7 +275,7 @@ Applicant can view and edit project growth table
 Newly created collaborator can view and edit project Growth table
     [Documentation]  INFUND-8426
     [Tags]
-    [Setup]  Invite a non-existing collaborator in Appplication with Growth table
+    [Setup]  Invite a non-existing collaborator in Application with Growth table
     When the user navigates to the growth table finances
     and the user clicks the button/link     link=Your organisation
     and the user selects medium organisation size
@@ -460,7 +460,7 @@ the user navigates to the growth table finances
     the user clicks the button/link    jQuery=a:contains('Untitled application'):last
     the user clicks the button/link  link=Your finances
 
-Invite a non-existing collaborator in Appplication with Growth table
+Invite a non-existing collaborator in Application with Growth table
     the user clicks the button/link      jQuery=a:contains("Application Overview")
     the user clicks the button/link       jQuery=a:contains("view team members and add collaborators")
     the user clicks the button/link       jQuery=a:contains("Add partner organisation")
