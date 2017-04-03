@@ -20,6 +20,43 @@ import java.util.Set;
  */
 public interface AssessmentRepository extends ProcessRepository<Assessment>, PagingAndSortingRepository<Assessment, Long> {
 
+    static final String FEEDBACK_COMPLETE = "SELECT CASE WHEN COUNT(fi.id) = 0" +
+            "  THEN 'TRUE'" +
+            "       ELSE 'FALSE' END AS feedback_complete " +
+            "FROM Application a" +
+            "  INNER JOIN Competition c" +
+            "    ON a.competition.id = c.id" +
+            "  INNER JOIN Assessment p" +
+            "    ON a.id = p.target.id" +
+            "  INNER JOIN Question q" +
+            "    ON q.competition.id = c.id" +
+            "  INNER JOIN FormInput fi" +
+            "    ON fi.question.id = q.id " +
+            "WHERE NOT EXISTS(" +
+            "    SELECT 1 AS response" +
+            "    FROM Assessment p" +
+            "      INNER JOIN AssessorFormInputResponse afir" +
+            "        ON afir.assessment.id = p.id" +
+            "    WHERE afir.value IS NOT NULL" +
+            "          AND afir.formInput.id = fi.id" +
+            "          AND p.id = :id" +
+            ")" +
+            "      AND fi.scope = 'ASSESSMENT'" +
+            "      AND fi.active = TRUE" +
+            "      AND p.id = :id";
+
+    static final String TOTAL_SCORE = "SELECT NEW org.innovateuk.ifs.assessment.resource.AssessmentTotalScoreResource(" +
+            "  CAST(COALESCE(SUM(afir.value),0) AS int)," +
+            "  CAST(SUM(q.assessorMaximumScore) AS int)) " +
+            "FROM Assessment a" +
+            "  JOIN a.target.competition.questions q" +
+            "  JOIN q.formInputs fi" +
+            "  LEFT JOIN a.responses afir" +
+            "    ON afir.formInput.id = fi " +
+            "WHERE fi.type = org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_SCORE" +
+            "  AND fi.active = TRUE" +
+            "  AND a.id = :id";
+
     @Override
     Set<Assessment> findAll();
 
@@ -43,42 +80,9 @@ public interface AssessmentRepository extends ProcessRepository<Assessment>, Pag
 
     int countByActivityStateStateInAndTargetCompetitionId(Collection<State> state, Long competitionId);
 
-    @Query(value = "SELECT CASE WHEN COUNT(fi.id) = 0" +
-            "  THEN 'TRUE'" +
-            "       ELSE 'FALSE' END AS feedback_complete " +
-            "FROM application a" +
-            "  INNER JOIN competition c" +
-            "    ON a.competition = c.id" +
-            "  INNER JOIN process p" +
-            "    ON a.id = p.target_id" +
-            "  INNER JOIN question q" +
-            "    ON q.competition_id = c.id" +
-            "  INNER JOIN form_input fi" +
-            "    ON fi.question_id = q.id " +
-            "WHERE NOT EXISTS(" +
-            "    SELECT 1 AS response" +
-            "    FROM process p" +
-            "      INNER JOIN assessor_form_input_response afir" +
-            "        ON afir.assessment_id = p.id" +
-            "    WHERE afir.value IS NOT NULL" +
-            "          AND afir.form_input_id = fi.id" +
-            "          AND p.id = :id" +
-            ")" +
-            "      AND fi.scope = 'ASSESSMENT'" +
-            "      AND fi.active = TRUE" +
-            "      AND p.id = :id", nativeQuery = true)
+    @Query(FEEDBACK_COMPLETE)
     boolean isFeedbackComplete(@Param("id") Long id);
 
-    @Query(value = "SELECT NEW org.innovateuk.ifs.assessment.resource.AssessmentTotalScoreResource(" +
-            "  CAST(COALESCE(SUM(afir.value),0) AS int)," +
-            "  CAST(SUM(q.assessorMaximumScore) AS int)) " +
-            "FROM Assessment a" +
-            "  JOIN a.target.competition.questions q" +
-            "  JOIN q.formInputs fi" +
-            "  LEFT JOIN a.responses afir" +
-            "    ON afir.formInput.id = fi " +
-            "WHERE fi.type = org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_SCORE" +
-            "  AND fi.active = TRUE" +
-            "  AND a.id = :id")
+    @Query(TOTAL_SCORE)
     AssessmentTotalScoreResource getTotalScore(@Param("id") Long id);
 }
