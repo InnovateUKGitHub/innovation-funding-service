@@ -734,7 +734,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
         ProjectActivityStates financeContactStatus = createFinanceContactStatus(project, partnerOrganisation);
         ProjectActivityStates bankDetailsStatus = createBankDetailStatus(project.getId(), project.getApplication().getId(), partnerOrganisation.getId(), bankDetails, financeContactStatus);
-        ProjectActivityStates financeChecksStatus = createFinanceCheckStatus(project, partnerOrganisation, bankDetailsStatus, isQueryActionRequired);
+        ProjectActivityStates financeChecksStatus = createFinanceCheckStatus(project, partnerOrganisation, isQueryActionRequired);
         ProjectActivityStates leadProjectDetailsSubmitted = createProjectDetailsStatus(project);
         ProjectActivityStates monitoringOfficerStatus = createMonitoringOfficerStatus(monitoringOfficer, leadProjectDetailsSubmitted);
         ProjectActivityStates spendProfileStatus = createSpendProfileStatus(financeChecksStatus, spendProfile);
