@@ -34,8 +34,8 @@ the user fills in the CS Initial details
     the user clicks the button/link                      link=Initial details
     the user enters text to a text field                 css=#title  ${compTitle}
     the user selects the option from the drop-down menu  Programme  id=competitionTypeId
-    the user selects the option from the drop-down menu  Emerging and enabling technologies  id=innovationSectorCategoryId
-    the user selects the option from the drop-down menu  Robotics and Autonomous Systems  css=select[id^=innovationAreaCategory]
+    the user selects the option from the drop-down menu  Emerging and enabling  id=innovationSectorCategoryId
+    the user selects the option from the drop-down menu  Robotics and autonomous systems  css=select[id^=innovationAreaCategory]
     the user enters text to a text field                 css=#openingDateDay  ${tomorrowday}
     the user enters text to a text field                 css=#openingDateMonth  ${month}
     the user enters text to a text field                 css=#openingDateYear  ${nextyear}
