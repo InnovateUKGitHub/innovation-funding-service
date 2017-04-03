@@ -7,6 +7,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * DTO for {@link org.innovateuk.ifs.invite.domain.CompetitionInvite}s.
@@ -17,11 +18,11 @@ public class CompetitionInviteResource extends InviteResource {
 
     private String competitionName;
 
-    private LocalDateTime acceptsDate;
+    private ZonedDateTime acceptsDate;
 
-    private LocalDateTime deadlineDate;
+    private ZonedDateTime deadlineDate;
 
-    private LocalDateTime briefingDate;
+    private ZonedDateTime briefingDate;
 
     private BigDecimal assessorPay;
 
@@ -65,27 +66,27 @@ public class CompetitionInviteResource extends InviteResource {
         this.status = status;
     }
 
-    public LocalDateTime getAcceptsDate() {
+    public ZonedDateTime getAcceptsDate() {
         return acceptsDate;
     }
 
-    public void setAcceptsDate(LocalDateTime acceptsDate) {
+    public void setAcceptsDate(ZonedDateTime acceptsDate) {
         this.acceptsDate = acceptsDate;
     }
 
-    public LocalDateTime getDeadlineDate() {
+    public ZonedDateTime getDeadlineDate() {
         return deadlineDate;
     }
 
-    public void setDeadlineDate(LocalDateTime deadlineDate) {
+    public void setDeadlineDate(ZonedDateTime deadlineDate) {
         this.deadlineDate = deadlineDate;
     }
 
-    public LocalDateTime getBriefingDate() {
+    public ZonedDateTime getBriefingDate() {
         return briefingDate;
     }
 
-    public void setBriefingDate(LocalDateTime briefingDate) {
+    public void setBriefingDate(ZonedDateTime briefingDate) {
         this.briefingDate = briefingDate;
     }
 

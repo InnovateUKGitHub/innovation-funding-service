@@ -7,6 +7,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -25,8 +26,8 @@ public class CompetitionParticipantResource {
     private CompetitionParticipantRoleResource role;
     private ParticipantStatusResource status;
     private String competitionName;
-    private LocalDateTime assessorAcceptsDate;
-    private LocalDateTime assessorDeadlineDate;
+    private ZonedDateTime assessorAcceptsDate;
+    private ZonedDateTime assessorDeadlineDate;
     private long submittedAssessments;
     private long totalAssessments;
     private CompetitionStatus competitionStatus;
@@ -105,19 +106,19 @@ public class CompetitionParticipantResource {
         this.status = status;
     }
 
-    public LocalDateTime getAssessorAcceptsDate() {
+    public ZonedDateTime getAssessorAcceptsDate() {
         return assessorAcceptsDate;
     }
 
-    public void setAssessorAcceptsDate(LocalDateTime assessorAcceptsDate) {
+    public void setAssessorAcceptsDate(ZonedDateTime assessorAcceptsDate) {
         this.assessorAcceptsDate = assessorAcceptsDate;
     }
 
-    public LocalDateTime getAssessorDeadlineDate() {
+    public ZonedDateTime getAssessorDeadlineDate() {
         return assessorDeadlineDate;
     }
 
-    public void setAssessorDeadlineDate(LocalDateTime assessorDeadlineDate) {
+    public void setAssessorDeadlineDate(ZonedDateTime assessorDeadlineDate) {
         this.assessorDeadlineDate = assessorDeadlineDate;
     }
 

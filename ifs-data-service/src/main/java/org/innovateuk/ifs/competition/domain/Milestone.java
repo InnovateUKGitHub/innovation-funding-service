@@ -3,7 +3,7 @@ package org.innovateuk.ifs.competition.domain;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.function.Consumer;
 
 /**
@@ -18,7 +18,7 @@ public class Milestone {
     @Enumerated(EnumType.STRING)
     private MilestoneType type;
 
-    private LocalDateTime date;
+    private ZonedDateTime date;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="competition_id", referencedColumnName="id")
@@ -38,7 +38,7 @@ public class Milestone {
         this.competition = competition;
     }
 
-    public Milestone(MilestoneType type, LocalDateTime date, Competition competition) {
+    public Milestone(MilestoneType type, ZonedDateTime date, Competition competition) {
         if (type == null) { throw new NullPointerException("type cannot be null"); }
         if (competition == null) { throw new NullPointerException("competition cannot be null"); }
         if (date == null) { throw new NullPointerException("date cannot be null"); }
@@ -72,11 +72,11 @@ public class Milestone {
         this.type = type;
     }
 
-    public LocalDateTime getDate() {
+    public ZonedDateTime getDate() {
         return date;
     }
 
-    public void setDate(LocalDateTime date) {
+    public void setDate(ZonedDateTime date) {
         this.date = date;
     }
 
@@ -85,13 +85,13 @@ public class Milestone {
         return date != null;
     }
 
-    public void ifSet(Consumer<LocalDateTime> consumer) {
+    public void ifSet(Consumer<ZonedDateTime> consumer) {
         if (date != null) {
             consumer.accept(date);
         }
     }
 
-    public boolean isReached(LocalDateTime now) {
+    public boolean isReached(ZonedDateTime now) {
         return date != null && !date.isAfter(now);
     }
 }

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.transactional;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -17,14 +18,13 @@ import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.util.EntityLookupCallbacks;
-import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.InputStream;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
@@ -131,7 +131,7 @@ public class AssessorFeedbackServiceImpl extends BaseTransactionalService implem
 	@Override
 	public ServiceResult<Void> submitAssessorFeedback(long competitionId) {
 		return getCompetition(competitionId).andOnSuccessReturnVoid(competition ->
-			competition.setReleaseFeedbackDate(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS))
+			competition.setReleaseFeedbackDate(ZonedDateTime.now().truncatedTo(ChronoUnit.SECONDS))
 		);
 	}
 

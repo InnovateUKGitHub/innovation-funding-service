@@ -8,10 +8,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-
 @Mapper(
     config = GlobalMapperConfig.class,
     uses = {
@@ -40,20 +36,5 @@ public abstract class MilestoneMapper extends BaseMapper<Milestone, MilestoneRes
     public Milestone build() {
         return createDefault(Milestone.class);
     }
-
-    public ZonedDateTime localDateTimeToZonedDateTime(LocalDateTime value) {
-        if (value == null) {
-            return null;
-        }
-        return value.atZone(ZoneId.systemDefault());
-    }
-
-    public LocalDateTime zonedDateTimeToLocalDateTime(ZonedDateTime value) {
-        if (value == null) {
-            return null;
-        }
-        return value.toLocalDateTime();
-    }
-
 
 }

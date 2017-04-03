@@ -25,9 +25,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriUtils;
 
 import java.io.UnsupportedEncodingException;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.*;
 
 import static java.util.Arrays.asList;
@@ -170,20 +167,13 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
     private PublicContentItemResource mapPublicContentToPublicContentItemResource(PublicContent publicContent, Competition competition) {
         PublicContentItemResource publicContentItemResource = new PublicContentItemResource();
         publicContentItemResource.setPublicContentResource(publicContentMapper.mapToResource(publicContent));
-        publicContentItemResource.setCompetitionOpenDate(mapDate(competition.getStartDate()));
-        publicContentItemResource.setCompetitionCloseDate(mapDate(competition.getEndDate()));
+        publicContentItemResource.setCompetitionOpenDate(competition.getStartDate());
+        publicContentItemResource.setCompetitionCloseDate(competition.getEndDate());
         publicContentItemResource.setCompetitionTitle(competition.getName());
         publicContentItemResource.setNonIfs(competition.isNonIfs());
         publicContentItemResource.setNonIfsUrl(competition.getNonIfsUrl());
 
         return publicContentItemResource;
-    }
-
-    private ZonedDateTime mapDate(LocalDateTime endDate) {
-        if (endDate == null) {
-            return null;
-        }
-        return endDate.atZone(ZoneId.systemDefault());
     }
 
     private PublicContentItemPageResource mapPageToPageItemResource(Page<Competition> competitionList) {

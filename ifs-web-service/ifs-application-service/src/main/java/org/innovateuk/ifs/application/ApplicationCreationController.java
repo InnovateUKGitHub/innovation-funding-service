@@ -22,7 +22,7 @@ import static java.lang.String.format;
 import static org.innovateuk.ifs.registration.AbstractAcceptInviteController.INVITE_HASH;
 
 /**
- * This controller will handle all requests that are related to the create of a application.
+ ZonedDateTimeZonedDateTime * This controller will handle all requests that are related to the create of a application.
  * This is used when the users want create a new application and that also includes the creation of the organisation.
  * These URLs are publicly available, since there user might not have a account yet.
  * <p>
