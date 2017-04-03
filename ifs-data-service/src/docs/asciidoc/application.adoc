@@ -103,25 +103,3 @@ include::{snippets}/application/update-application-status/http-response.adoc[]
 
 ==== Curl Example
 include::{snippets}/application/update-application-status/curl-request.adoc[]
-
-=== Get application staff head count
-==== Request
-include::{snippets}/application/get-headcount/http-request.adoc[]
-include::{snippets}/application/get-headcount/path-parameters.adoc[]
-
-==== Response
-include::{snippets}/application/get-headcount/http-response.adoc[]
-
-==== Curl Example
-include::{snippets}/application/get-headcount/curl-request.adoc[]
-
-=== Get application annual turnover
-==== Request
-include::{snippets}/application/get-turnover/http-request.adoc[]
-include::{snippets}/application/get-turnover/path-parameters.adoc[]
-
-==== Response
-include::{snippets}/application/get-turnover/http-response.adoc[]
-
-==== Curl Example
-include::{snippets}/application/get-turnover/curl-request.adoc[]

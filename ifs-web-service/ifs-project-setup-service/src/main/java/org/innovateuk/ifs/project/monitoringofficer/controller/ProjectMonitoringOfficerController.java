@@ -8,12 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Optional;
-
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 /**
  * Controller for the Partners' assigned Monitoring Officer page
@@ -26,7 +25,7 @@ public class ProjectMonitoringOfficerController {
     private ProjectService projectService;
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_MONITORING_OFFICER_SECTION')")
-    @RequestMapping(method = GET)
+    @GetMapping
     public String viewMonitoringOfficer(@PathVariable("projectId") Long projectId, Model model) {
 
         ProjectMonitoringOfficerViewModel viewModel = getMonitoringOfficerViewModel(projectId);
@@ -35,7 +34,7 @@ public class ProjectMonitoringOfficerController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_MONITORING_OFFICER_SECTION')")
-    @RequestMapping(value = "/readonly",method = GET)
+    @GetMapping("/readonly")
     public String viewMonitoringOfficerInReadOnly(@PathVariable("projectId") Long projectId, Model model) {
 
         ProjectMonitoringOfficerViewModel viewModel = getMonitoringOfficerViewModel(projectId);

@@ -1,13 +1,11 @@
 package org.innovateuk.ifs.application.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.Section;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.transactional.SectionService;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
-import org.innovateuk.ifs.competition.domain.Competition;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
@@ -35,7 +33,6 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.response
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -61,16 +58,13 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
         allSections.addAll(completedSections);
         allSections.addAll(incompleteSections);
         Set<Long> completedSectionIds = completedSections.stream().map(s -> s.getId()).collect(toSet());
-        Competition competition = newCompetition().withSections(allSections).build();
         Application application = newApplication().withCompetition(newCompetition().withSections(allSections).build()).build();
         when(sectionService.getCompletedSections(application.getId(), organisationId))
                 .thenReturn(serviceSuccess(completedSectionIds));
 
-        mockMvc.perform(post("/section/getCompletedSections/" + application.getId() + "/" + organisationId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(content().string(objectMapper.writeValueAsString(completedSectionIds)))
-                .andExpect(status().isOk());
+        mockMvc.perform(get("/section/getCompletedSections/" + application.getId() + "/" + organisationId))
+                .andExpect(status().isOk())
+                .andExpect(content().string(objectMapper.writeValueAsString(completedSectionIds)));
     }
 
     @Test
@@ -82,16 +76,13 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
         allSections.addAll(completedSections);
         allSections.addAll(incompleteSections);
         List<Long> incompleteSectionIds = incompleteSections.stream().map(s -> s.getId()).collect(toList());
-        Competition competition = newCompetition().withSections(allSections).build();
         Application application = newApplication().withCompetition(newCompetition().withSections(allSections).build()).build();
         when(sectionService.getIncompleteSections(application.getId()))
                 .thenReturn(serviceSuccess(incompleteSectionIds));
 
-        mockMvc.perform(post("/section/getIncompleteSections/" + application.getId())
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(content().string(objectMapper.writeValueAsString(incompleteSectionIds)))
-                .andExpect(status().isOk());
+        mockMvc.perform(get("/section/getIncompleteSections/" + application.getId()))
+                .andExpect(status().isOk())
+                .andExpect(content().string(objectMapper.writeValueAsString(incompleteSectionIds)));
     }
 
     @Test

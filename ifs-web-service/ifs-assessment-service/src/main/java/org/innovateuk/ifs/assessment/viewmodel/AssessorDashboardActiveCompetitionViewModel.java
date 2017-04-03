@@ -14,15 +14,19 @@ public class AssessorDashboardActiveCompetitionViewModel {
     private String displayLabel;
     private long progressAssessed;
     private long progressTotal;
+    private long pendingAssessments;
     private LocalDate submitDeadline;
     private long daysLeft;
     private long daysLeftPercentage;
 
-    public AssessorDashboardActiveCompetitionViewModel(Long competitionId, String displayLabel, long progressAssessed, long progressTotal, LocalDate submitDeadline, long daysLeft, long daysLeftPercentage) {
+    public AssessorDashboardActiveCompetitionViewModel(Long competitionId, String displayLabel, long progressAssessed,
+                                                       long progressTotal, long pendingAssessments, LocalDate submitDeadline,
+                                                       long daysLeft, long daysLeftPercentage) {
         this.competitionId = competitionId;
         this.displayLabel = displayLabel;
         this.progressAssessed = progressAssessed;
         this.progressTotal = progressTotal;
+        this.pendingAssessments = pendingAssessments;
         this.submitDeadline = submitDeadline;
         this.daysLeft = daysLeft;
         this.daysLeftPercentage = daysLeftPercentage;
@@ -60,6 +64,14 @@ public class AssessorDashboardActiveCompetitionViewModel {
         this.progressTotal = progressTotal;
     }
 
+    public long getPendingAssessments() {
+        return pendingAssessments;
+    }
+
+    public void setPendingAssessments(long pendingAssessments) {
+        this.pendingAssessments = pendingAssessments;
+    }
+
     public LocalDate getSubmitDeadline() {
         return submitDeadline;
     }
@@ -86,23 +98,20 @@ public class AssessorDashboardActiveCompetitionViewModel {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
+        if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (o == null || getClass() != o.getClass()) return false;
 
         AssessorDashboardActiveCompetitionViewModel that = (AssessorDashboardActiveCompetitionViewModel) o;
 
         return new EqualsBuilder()
+                .append(progressAssessed, that.progressAssessed)
+                .append(progressTotal, that.progressTotal)
+                .append(pendingAssessments, that.pendingAssessments)
                 .append(daysLeft, that.daysLeft)
                 .append(daysLeftPercentage, that.daysLeftPercentage)
                 .append(competitionId, that.competitionId)
                 .append(displayLabel, that.displayLabel)
-                .append(progressAssessed, that.progressAssessed)
-                .append(progressTotal, that.progressTotal)
                 .append(submitDeadline, that.submitDeadline)
                 .isEquals();
     }
@@ -114,6 +123,7 @@ public class AssessorDashboardActiveCompetitionViewModel {
                 .append(displayLabel)
                 .append(progressAssessed)
                 .append(progressTotal)
+                .append(pendingAssessments)
                 .append(submitDeadline)
                 .append(daysLeft)
                 .append(daysLeftPercentage)

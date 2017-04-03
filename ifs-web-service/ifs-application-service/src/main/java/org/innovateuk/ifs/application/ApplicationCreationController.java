@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -47,7 +48,7 @@ public class ApplicationCreationController {
     @Autowired
     private CookieUtil cookieUtil;
 
-    @RequestMapping("/check-eligibility/{competitionId}")
+    @GetMapping("/check-eligibility/{competitionId}")
     public String checkEligibility(Model model,
                                    @PathVariable(COMPETITION_ID) Long competitionId,
                                    HttpServletResponse response) {
@@ -59,12 +60,12 @@ public class ApplicationCreationController {
         return "create-application/check-eligibility";
     }
 
-    @RequestMapping("/your-details")
+    @GetMapping("/your-details")
     public String checkEligibility() {
         return "create-application/your-details";
     }
 
-    @RequestMapping("/initialize-application")
+    @GetMapping("/initialize-application")
     public String initializeApplication(HttpServletRequest request,
                                         HttpServletResponse response) {
         log.info("get competition id");
