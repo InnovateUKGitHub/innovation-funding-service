@@ -1,16 +1,11 @@
 package org.innovateuk.ifs.application.controller;
 
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryPageResource;
-import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource;
 import org.innovateuk.ifs.application.transactional.ApplicationCountSummaryService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -25,7 +20,7 @@ public class ApplicationCountSummaryController {
 
     private static final String DEFAULT_PAGE_SIZE = "20";
 
-    @RequestMapping("/findByCompetitionId/{competitionId}")
+    @GetMapping("/findByCompetitionId/{competitionId}")
     public RestResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionId(@PathVariable("competitionId") Long competitionId,
                                                                                                        @RequestParam(value = "page",defaultValue = "0") int pageIndex,
                                                                                                        @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,

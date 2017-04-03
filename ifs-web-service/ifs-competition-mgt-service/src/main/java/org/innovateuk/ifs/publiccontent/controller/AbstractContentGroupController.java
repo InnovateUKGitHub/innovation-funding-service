@@ -11,10 +11,7 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -29,21 +26,21 @@ import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.get
  */
 public abstract class AbstractContentGroupController<M extends AbstractPublicContentViewModel, F extends AbstractContentGroupForm> extends AbstractPublicContentSectionController<M, F> {
 
-    @RequestMapping(value = "/{competitionId}/edit", params = "uploadFile" ,method = RequestMethod.POST)
+    @PostMapping(value = "/{competitionId}/edit", params = "uploadFile")
     public String saveAndUpload(Model model, @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                 @ModelAttribute(FORM_ATTR_NAME) F form, BindingResult bindingResult, ValidationHandler validationHandler) {
         return saveAndFileAction(competitionId, model, form, validationHandler,
                 () -> publicContentService.uploadFile(competitionId, getType(), form.getContentGroups()));
     }
 
-    @RequestMapping(value = "/{competitionId}/edit", params = "removeFile" ,method = RequestMethod.POST)
+    @PostMapping(value = "/{competitionId}/edit", params = "removeFile")
     public String saveAndRemove(Model model, @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                 @ModelAttribute(FORM_ATTR_NAME) F form, BindingResult bindingResult, ValidationHandler validationHandler) {
         return saveAndFileAction(competitionId, model, form, validationHandler,
                 () -> publicContentService.removeFile(form));
     }
 
-    @RequestMapping(value = "/{competitionId}/edit/{contentGroupId}", method = RequestMethod.GET)
+    @GetMapping("/{competitionId}/edit/{contentGroupId}")
     public ResponseEntity<ByteArrayResource> getFileDetails(Model model,
                                                            @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                                            @PathVariable("contentGroupId") Long contentGroupId) {

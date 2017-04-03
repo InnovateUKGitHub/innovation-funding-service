@@ -18,17 +18,13 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * This controller will handle all requests that are related to the reviewing and sending of total project spend profiles.
@@ -49,19 +45,19 @@ public class TotalProjectSpendProfileController {
     @Autowired
     private SpendProfileTableCalculator spendProfileTableCalculator;
 
-    @RequestMapping(method = GET)
+    @GetMapping
     public String totals(Model model, @PathVariable("projectId") final Long projectId) {
         model.addAttribute("model", buildTotalViewModel(projectId));
         model.addAttribute(FORM_ATTR_NAME, new TotalSpendProfileForm());
         return SPEND_PROFILE_TOTALS_TEMPLATE;
     }
 
-    @RequestMapping(value = "confirmation", method = GET)
+    @GetMapping("confirmation")
     public String confirmation(@PathVariable("projectId") final Long projectId) {
         return BASE_DIR + "/spend-profile-total-confirmation";
     }
 
-    @RequestMapping(method = POST)
+    @PostMapping
     public String sendForReview(@PathVariable("projectId") final Long projectId,
                                 @ModelAttribute(FORM_ATTR_NAME) TotalSpendProfileForm form,
                                 @SuppressWarnings("unused") BindingResult bindingResult,

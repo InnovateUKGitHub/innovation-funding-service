@@ -16,13 +16,13 @@ public class CompetitionSetupFinanceController {
     @Autowired
     private CompetitionSetupFinanceService competitionSetupFinanceService;
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @PutMapping("/{id}")
     public RestResult<Void> save(@PathVariable("id") final Long competitionId,
                                  @RequestBody final CompetitionSetupFinanceResource competitionSetupFinanceResource) {
         return competitionSetupFinanceService.save(competitionSetupFinanceResource).toPutResponse();
 
     }
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @GetMapping("/{id}")
     public RestResult<CompetitionSetupFinanceResource> getForCompetition(@PathVariable("id") final Long competitionId){
         return competitionSetupFinanceService.getForCompetition(competitionId).toGetResponse();
     }

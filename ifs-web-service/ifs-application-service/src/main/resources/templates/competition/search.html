@@ -6,10 +6,10 @@
 <body th:with="context='applicant'" class="public-content">
     <th:block th:include="fragments/layout :: body-start" />
     <th:block th:include="fragments/layout :: global-header" />
-    <main id="content">
+    <main tabindex="-1" id="content">
         <th:block th:include="fragments/layout :: main-content-start" />
         <h1 class="heading-large">Innovation competitions</h1>
-        <p>Browse upcoming and live competitions. Find out when new competitions are launched by <a href="#">signing up for competition updates</a>.</p>
+        <p>Browse upcoming and live competitions. Find out when new competitions are launched by <a href="http://info.innovateuk.org/emailpref">signing up for competition updates</a>.</p>
         <div class="grid-row">
             <div class="column-third">
                 <form method="GET">
@@ -18,7 +18,7 @@
                             <legend>
                                 Filter competitions
                             </legend>
-                            <hr />
+                            <hr class="no-margin" />
                             <div class="form-group extra-margin">
                                 <label class="form-label" for="keywords">Keywords</label>
                                 <input th:value="${model.searchKeywords}" class="form-control width-full" id="keywords" name="keywords" type="text" />
@@ -38,7 +38,7 @@
                 </form>
             </div>
             <div class="column-two-thirds">
-                <p class="extra-margin-bottom no-margin-top" th:text="${model.totalResults == 1 ? '1 competition' : model.totalResults+' competitions' }"></p>
+                <p class="no-margin" th:text="${model.totalResults == 1 ? '1 competition' : model.totalResults+' competitions' }"></p>
                 <th:block th:if="${model.totalResults == 0}">
                     <div class="extra-margin-bottom">
                         <h2 class="heading-large">Please try:</h2>
@@ -48,7 +48,7 @@
                         </ul>
                     </div>
                 </th:block>
-                <hr />
+                <hr class="no-margin-top" />
                 <ul th:unless="${model.totalResults == 0}">
                    <li th:each="(publicContentItem, iteration : ${model.publicContentItems})">
                        <h2 class="heading-medium no-margin-top extra-margin-bottom">

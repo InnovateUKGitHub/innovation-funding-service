@@ -8,7 +8,7 @@
         <th:block th:insert="fragments/layout :: body-start" />
        <th:block th:insert="fragments/layout :: global-header" />
 
-        <main id="content">
+        <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
 
             <div th:include="fragments/layout :: header-sub"
@@ -48,7 +48,7 @@
                         <div class="grid-row">
                             <div class="column-two-thirds">
                                 <label class="form-label" for="filterSearch">Search by application number.</label>
-                                <input type="text" class="form-control" id="filterSearch" name="filterSearch" th:value="${model.filter}"/>
+                                <input type="text" class="form-control extra-margin-bottom" id="filterSearch" name="filterSearch" th:value="${model.filter}"/>
                                 <a href="?" th:href="'?sort=' + ${model.sorting}">Clear all filters</a>
                             </div>
                             <div class="column-third">

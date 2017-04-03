@@ -8,7 +8,7 @@
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main id="content">
+<main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Manage funding notifications',linkClass='link-back',linkUrl=@{/competition/{competitionId}/manage-funding-applications(competitionId=${model.competitionId})}" />
     <h1 class="heading-xlarge">
                 <span class="heading-secondary"><th:block th:text="${#numbers.formatInteger(model.competitionId,8)}"/>: <th:block

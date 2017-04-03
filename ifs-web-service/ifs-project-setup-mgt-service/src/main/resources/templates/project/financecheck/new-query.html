@@ -9,7 +9,7 @@
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main id="content" th:with="baseUrl=@{${model.baseUrl}(projectId=${model.projectId},organisationId=${model.organisationId})}">
+<main tabindex="-1" id="content" th:with="baseUrl=@{${model.baseUrl}(projectId=${model.projectId},organisationId=${model.organisationId})}">
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})},currentCompetition=null" />
 
@@ -107,27 +107,29 @@
                     </div>
                 </div>
             </div>
-
-        <div class="upload-section">
-            <h3 class="heading-small">Supporting documentation</h3>
-            <th:block th:if="${model.newAttachmentLinks.size() == 0}">
-                <p class="uploaded-file">No file currently uploaded</p>
-            </th:block>
-            <th:block th:if="${model.newAttachmentLinks.size() > 0}">
-                <div th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
-                    <a class="uploaded-file" th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},query_section=${model.querySection},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId)}">filename</a>
-                    <button name="removeAttachment" class="button-secondary" th:value="${attachmentId}">Remove</button>
-                </div>
-            </th:block>
-
-            <h3 class="heading-small no-margin">Upload supporting documentation in pdf format </h3>
-            <th:block th:if="${#fields.hasErrors('attachment')}">
-                <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
-            </th:block>
-            <input type="file" id="attachment" class="inputfile" name="attachment">
-            <label for="attachment" class="button-secondary extra-margin">+ Upload</label>
-            <button name="uploadAttachment" class="button-secondary" type="submit" data-for-file-upload="attachment">Save</button>
-        </div>
+        </fieldset>
+        <th:block th:unless="${model.newAttachmentLinks.isEmpty()}">
+            <fieldset>
+                <legend class="heading-small">Supporting documentation</legend>
+                <th:block th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
+                    <a target="_blank" th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},query_section=${model.querySection},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId)}">filename</a>
+                    <button name="removeAttachment" class="buttonlink" th:value="${attachmentId}">Remove</button><br />
+                </th:block>
+            </fieldset>
+        </th:block>
+        <fieldset>
+            <div class="upload-section unstyled-view">
+                <legend class="heading-small no-margin">Upload supporting documentation in pdf format</legend>
+                <th:block th:if="${#fields.hasErrors('attachment')}">
+                    <span>
+                        <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
+                    </span>
+                </th:block>
+                <input type="file" id="attachment" class="inputfile" name="attachment">
+                <label for="attachment" class="button-secondary extra-margin">+ Upload</label>
+                <button name="uploadAttachment" class="button-secondary" type="submit" data-for-file-upload="attachment">Save</button>
+            </div>
+        </fieldset>
         <hr />
         <input type="hidden" id="action" value="postQuery">
         <div class="grid-row">

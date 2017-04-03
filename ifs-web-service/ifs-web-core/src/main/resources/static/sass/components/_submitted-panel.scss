@@ -1,0 +1,31 @@
+.submitted-panel {
+	padding: 50px;
+	background-color: $turquoise;
+	color: $white;
+	text-align: center;
+	li {
+		margin-top: 10px;
+	}
+	.panel-links {
+		padding: 0 25%;
+		margin-top: 20px;
+		li {
+			display: inline-block;
+			padding: 0 20px;
+		}
+		a:link, a:hover, a:visited {
+			color: $white;
+		}
+	}
+
+	@include media-down(mobile) {
+		padding: 20px;
+		.panel-links {
+			padding: 0;
+			li {
+				display: block;
+				padding: 0;
+			}
+		}
+	}
+}

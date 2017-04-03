@@ -188,6 +188,19 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
         assertRenderedEmailTemplateContainsExpectedLines("invite_project_manager_text_html.html", templateArguments);
     }
 
+    @Test
+    public void testSendSpendProfileAvailableEmail() throws URISyntaxException, IOException {
+
+        Map<String, Object> templateArguments = asMap(
+                "dashboardUrl", "https://ifs-local-dev/spend-profile"
+        );
+
+        assertRenderedEmailTemplateContainsExpectedLines("finance_contact_spend_profile_available_subject.txt", templateArguments);
+        assertRenderedEmailTemplateContainsExpectedLines("finance_contact_spend_profile_available_text_plain.txt", templateArguments);
+        assertRenderedEmailTemplateContainsExpectedLines("finance_contact_spend_profile_available_text_html.html", templateArguments);
+    }
+
+
     private void assertRenderedEmailTemplateContainsExpectedLines(String templateName, Map<String, Object> templateArguments) throws IOException, URISyntaxException {
 
         UserNotificationSource notificationSource = new UserNotificationSource(newUser().withFirstName("User").withLastName("1").build());

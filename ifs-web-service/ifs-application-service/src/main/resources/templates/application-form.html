@@ -8,7 +8,7 @@
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main id="content">
+        <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="currentApplication=${model.application.currentApplication},linkTitle=${backTitle},linkClass='link-back',linkUrl=${backURL}" />
 
@@ -100,12 +100,11 @@
                         </th:block>
                     </th:block>
 
-                    <th:block>
-                        <div th:replace="finance/your-finances-sub-sections :: your_finances" />
-                    </th:block>
+                    <th:block th:include="finance/your-finances-sub-sections :: your_finances" />
 
-                    <div th:replace="finance/your-finances-sub-sections :: agree_terms" />
-                    <div th:replace="finance/your-finances-sub-sections :: subsection_buttons" />
+                    <th:block th:include="finance/your-finances-sub-sections :: agree_terms" />
+
+                    <th:block th:include="finance/your-finances-sub-sections :: subsection_buttons" />
 
                 </th:block>
 

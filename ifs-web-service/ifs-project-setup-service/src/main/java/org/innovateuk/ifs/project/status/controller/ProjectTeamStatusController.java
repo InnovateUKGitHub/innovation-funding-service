@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -15,7 +16,6 @@ import java.util.Optional;
 
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.ACTION_REQUIRED;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 /**
  * This controller will handle display of project activity status for all partners
@@ -28,7 +28,7 @@ public class ProjectTeamStatusController {
     @Autowired
     private ProjectService projectService;
 
-    @RequestMapping(method = GET)
+    @GetMapping
     public String viewProjectTeamStatus(Model model, @PathVariable("projectId") final Long projectId) {
         ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId, Optional.empty());
         setLeadPartnerProjectDetailsTeamStatus(teamStatus);

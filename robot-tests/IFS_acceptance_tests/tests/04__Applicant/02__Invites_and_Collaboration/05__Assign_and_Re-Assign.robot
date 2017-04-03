@@ -38,7 +38,7 @@ Lead applicant can assign a question
     When the applicant assigns the question to the collaborator    css=#form-input-1040 .editor    test1233    Dennis Bergkamp
     Then the user should see the notification    Question assigned successfully
     And the user should see the element    css=#form-input-1040 .readonly
-    And the question should contain the correct status/name    css=#form-input-1040 .assignee span+span    Dennis Bergkamp
+    And the question should contain the correct status/name    css=#form-input-1040 .assign-container .secondary-notification    Dennis Bergkamp
 
 Lead applicant can assign question multiple times
     [Documentation]    INFUND-3288
@@ -46,10 +46,10 @@ Lead applicant can assign question multiple times
     ...    This test depends on the previous test suite to run first
     [Tags]    Email
     When the user assigns the question to the collaborator    Stuart ANDERSON
-    And the question should contain the correct status/name    css=#form-input-1040 .assignee span+span    you
+    And the question should contain the correct status/name    css=#form-input-1040 .assign-container .action-required    you
     And the applicant assigns the question to the collaborator    css=#form-input-1040 .editor    test1233    Dennis Bergkamp
     Then the user should see the element    css=#form-input-1040 .readonly
-    And the question should contain the correct status/name    css=#form-input-1040 .assignee span+span    Dennis Bergkamp
+    And the question should contain the correct status/name    css=#form-input-1040 .assign-container .secondary-notification    Dennis Bergkamp
 
 The question is enabled for the assignee
     [Documentation]    INFUND-275
@@ -71,7 +71,7 @@ Collaborator should see the terms and conditions from the overview page
     ...    This test depends on the previous test suite to run first
     [Tags]    Email
     Given the user clicks the button/link    link=Application Overview
-    When The user clicks the button/link    link= view conditions of grant offer
+    When The user clicks the button/link    link= view the grant terms and conditions
     Then the user should see the text in the page    Terms and conditions of an Innovate UK grant award
     And the user should see the text in the page    Entire agreement
 

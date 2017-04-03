@@ -19,7 +19,7 @@ public class PublicContentItemController {
     @Autowired
     private PublicContentItemService publicContentItemService;
 
-    @RequestMapping(value = "find-by-filter", method = RequestMethod.GET)
+    @GetMapping("find-by-filter")
     public RestResult<PublicContentItemPageResource> findFilteredItems(@RequestParam(value = "innovationAreaId", required = false) Optional<Long> innovationAreaId,
                                                                        @RequestParam(value = "searchString", required = false) Optional<String> searchString,
                                                                        @RequestParam(value = "pageNumber", required = false) Optional<Integer> pageNumber,
@@ -27,7 +27,7 @@ public class PublicContentItemController {
         return publicContentItemService.findFilteredItems(innovationAreaId, searchString, pageNumber, pageSize).toGetResponse();
     }
 
-    @RequestMapping(value = "by-competition-id/{id}", method = RequestMethod.GET)
+    @GetMapping("by-competition-id/{id}")
     public RestResult<PublicContentItemResource> byCompetitionId(@PathVariable("id") final Long competitionId) {
         return publicContentItemService.byCompetitionId(competitionId).toGetResponse();
     }

@@ -9,7 +9,7 @@
 <th:block th:insert="fragments/modals :: modal-partner-documents" />
 <th:block th:insert="fragments/modals :: modal-overlay" />
 
-<main id="content">
+<main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}" />
 
