@@ -189,6 +189,17 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
     }
 
     @Test
+    public void testVerifyDefaultEmailAddressEmail() throws URISyntaxException, IOException {
+
+        Map<String, Object> templateArguments = asMap(
+                "verificationLink", "https://ifs-local-dev/invite"
+        );
+        assertRenderedEmailTemplateContainsExpectedLines("verify_email_address_text_html.html", "verify_email_address_text_html.html", templateArguments);
+        assertRenderedEmailTemplateContainsExpectedLines("verify_email_address_text_plain.txt", "verify_email_address_text_plain.txt", templateArguments);
+        assertRenderedEmailTemplateContainsExpectedLines("verify_email_address_subject.txt", "verify_email_address_subject.txt", templateArguments);
+    }
+
+    @Test
     public void testSendSpendProfileAvailableEmail() throws URISyntaxException, IOException {
 
         Map<String, Object> templateArguments = asMap(
@@ -200,7 +211,6 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
         assertRenderedEmailTemplateContainsExpectedLines("finance_contact_spend_profile_available_text_html.html", templateArguments);
     }
 
-
     private void assertRenderedEmailTemplateContainsExpectedLines(String templateName, Map<String, Object> templateArguments) throws IOException, URISyntaxException {
 
         UserNotificationSource notificationSource = new UserNotificationSource(newUser().withFirstName("User").withLastName("1").build());
@@ -211,6 +221,23 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
         String processedTemplate = renderResult.getSuccessObject();
 
         List<String> expectedMessageLines = Files.readAllLines(new File(Thread.currentThread().getContextClassLoader().getResource("expectedtemplates" + separator + "notifications" + separator + "email" + separator + templateName).toURI()).toPath());
+
+        simpleFilterNot(expectedMessageLines, StringUtils::isEmpty).forEach(expectedLine -> {
+            assertTrue("Expected to find the following line in the rendered template: " + expectedLine + "\n\nActually got:\n\n" + processedTemplate,
+                    processedTemplate.contains(expectedLine));
+        });
+    }
+
+    private void assertRenderedEmailTemplateContainsExpectedLines(String templateName, String expectedFileName, Map<String, Object> templateArguments) throws IOException, URISyntaxException {
+
+        UserNotificationSource notificationSource = new UserNotificationSource(newUser().withFirstName("User").withLastName("1").build());
+        UserNotificationTarget notificationTarget = new UserNotificationTarget(newUser().withFirstName("User").withLastName("2").build());
+
+        ServiceResult<String> renderResult = renderer.renderTemplate(notificationSource, notificationTarget, "notifications" + separator + "email" + separator + templateName, templateArguments);
+        assertTrue(renderResult.isSuccess());
+        String processedTemplate = renderResult.getSuccessObject();
+
+        List<String> expectedMessageLines = Files.readAllLines(new File(Thread.currentThread().getContextClassLoader().getResource("expectedtemplates" + separator + "notifications" + separator + "email" + separator + expectedFileName).toURI()).toPath());
 
         simpleFilterNot(expectedMessageLines, StringUtils::isEmpty).forEach(expectedLine -> {
             assertTrue("Expected to find the following line in the rendered template: " + expectedLine + "\n\nActually got:\n\n" + processedTemplate,
