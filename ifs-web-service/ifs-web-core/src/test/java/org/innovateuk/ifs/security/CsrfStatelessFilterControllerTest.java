@@ -25,6 +25,8 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.ViewResolver;
@@ -47,8 +49,6 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * <p>
@@ -198,13 +198,13 @@ public class CsrfStatelessFilterControllerTest {
     @RequestMapping("/csrf-test")
     static class SampleController {
 
-        @RequestMapping(value = "/test-post", method = POST)
+        @PostMapping("/test-post")
         public String testPost() {
             return "csrf-test";
         }
 
 
-        @RequestMapping(value = "/test-get", method = GET)
+        @GetMapping("/test-get")
         public String testGet() {
             return "csrf-test";
         }

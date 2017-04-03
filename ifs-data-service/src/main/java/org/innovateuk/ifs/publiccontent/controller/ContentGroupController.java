@@ -29,7 +29,7 @@ public class ContentGroupController {
     @Qualifier("publicContentAttachmentValidator")
     private FileHttpHeadersValidator fileValidator;
 
-    @RequestMapping(value = "upload-file", method = RequestMethod.POST, produces = "application/json")
+    @PostMapping(value = "upload-file", produces = "application/json")
     public RestResult<Void> uploadFile(@RequestHeader(value = "Content-Type", required = false) String contentType,
                                                  @RequestHeader(value = "Content-Length", required = false) String contentLength,
                                                  @RequestParam(value = "contentGroupId") long contentGroupId,
@@ -40,20 +40,20 @@ public class ContentGroupController {
                 contentGroupService.uploadFile(contentGroupId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
     }
 
-    @RequestMapping(value = "remove-file/{contentGroupId}", method = RequestMethod.POST)
+    @PostMapping("remove-file/{contentGroupId}")
     public RestResult<Void> removeFile(@PathVariable("contentGroupId") final Long contentGroupId) {
         return contentGroupService.removeFile(contentGroupId).toPostResponse();
     }
 
 
 
-    @RequestMapping(value = "/get-file-contents/{contentGroupId}", method = RequestMethod.GET)
+    @GetMapping("/get-file-contents/{contentGroupId}")
     public @ResponseBody ResponseEntity<Object> getFileContents(
             @PathVariable("contentGroupId") long contentGroupId) throws IOException {
         return handleFileDownload(() -> contentGroupService.getFileContents(contentGroupId));
     }
 
-    @RequestMapping(value = "/get-file-details/{contentGroupId}", method = RequestMethod.GET, produces = "application/json")
+    @GetMapping(value = "/get-file-details/{contentGroupId}", produces = "application/json")
     public RestResult<FileEntryResource> getFileEntryDetails(
             @PathVariable("contentGroupId") long contentGroupId) throws IOException {
 

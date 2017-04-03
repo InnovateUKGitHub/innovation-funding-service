@@ -82,7 +82,7 @@ public class RegistrationController {
     public final static String ORGANISATION_ID_PARAMETER_NAME = "organisationId";
     public final static String EMAIL_FIELD_NAME = "email";
 
-    @RequestMapping(value = "/success", method = RequestMethod.GET)
+    @GetMapping("/success")
     public String registrationSuccessful(
             @RequestHeader(value = "referer", required = false) final String referer,
             final HttpServletRequest request, HttpServletResponse response) {
@@ -93,7 +93,7 @@ public class RegistrationController {
         return "registration/successful";
     }
 
-    @RequestMapping(value = "/verified", method = RequestMethod.GET)
+    @GetMapping("/verified")
     public String verificationSuccessful(final HttpServletRequest request, final HttpServletResponse response) {
         if(!hasVerifiedCookieSet(request)){
             throw new ObjectNotFoundException("Attempt to access registration page directly...", Collections.emptyList());
@@ -103,7 +103,7 @@ public class RegistrationController {
         }
     }
 
-    @RequestMapping(value = "/verify-email/{hash}", method = RequestMethod.GET)
+    @GetMapping("/verify-email/{hash}")
     public String verifyEmailAddress(@PathVariable("hash") final String hash,
                                      final HttpServletResponse response){
         userService.verifyEmail(hash);
@@ -111,7 +111,7 @@ public class RegistrationController {
         return "redirect:/registration/verified";
     }
 
-    @RequestMapping(value = "/register", method = RequestMethod.GET)
+    @GetMapping("/register")
     public String registerForm(Model model, HttpServletRequest request, HttpServletResponse response) {
 
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
@@ -189,7 +189,7 @@ public class RegistrationController {
         return organisationService.getOrganisationByIdForAnonymousUserFlow(getOrganisationId(request));
     }
 
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    @PostMapping("/register")
     public String registerFormSubmit(@Valid @ModelAttribute("registrationForm") RegistrationForm registrationForm,
                                      BindingResult bindingResult,
                                      HttpServletResponse response,
@@ -246,13 +246,13 @@ public class RegistrationController {
         return destination;
     }
 
-    @RequestMapping(value = "/resend-email-verification", method = RequestMethod.GET)
+    @GetMapping("/resend-email-verification")
     public String resendEmailVerification(final ResendEmailVerificationForm resendEmailVerificationForm, final Model model) {
         model.addAttribute("resendEmailVerificationForm", resendEmailVerificationForm);
         return "registration/resend-email-verification";
     }
 
-    @RequestMapping(value = "/resend-email-verification", method = RequestMethod.POST)
+    @PostMapping("/resend-email-verification")
     public String resendEmailVerification(@Valid final ResendEmailVerificationForm resendEmailVerificationForm, final BindingResult bindingResult, final Model model) {
 
         if (bindingResult.hasErrors()) {

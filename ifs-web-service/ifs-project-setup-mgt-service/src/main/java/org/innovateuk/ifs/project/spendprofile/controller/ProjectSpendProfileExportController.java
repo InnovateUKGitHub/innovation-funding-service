@@ -6,14 +6,13 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 /**
  * This controller will handle all requests that are related to spend profile export/downloads.
@@ -31,7 +30,7 @@ public class ProjectSpendProfileExportController {
     private ProjectFinanceService projectFinanceService;
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
-    @RequestMapping(value = "/csv", method = GET)
+    @GetMapping("/csv")
     public void exportProjectPartnerSpendProfileAsCSV(@PathVariable("projectId") final Long projectId,
                                                       @PathVariable("organisationId") final Long organisationId,
                                                       @ModelAttribute("loggedInUser") UserResource loggedInUser,
