@@ -14,18 +14,18 @@ public class InviteOrganisationController {
     @Autowired
     private InviteOrganisationService service;
 
-    @GetMapping(value = "/{id}")
+    @GetMapping("/{id}")
     public RestResult<InviteOrganisationResource> getById(@PathVariable("id") long id) {
         return service.getById(id).toGetResponse();
     }
 
-    @GetMapping(value = "/organisation/{organisationId}/application/{applicationId}")
+    @GetMapping("/organisation/{organisationId}/application/{applicationId}")
     public RestResult<InviteOrganisationResource> getByOrganisationIdWithInvitesForApplication(@PathVariable("organisationId") long organisationId,
                                                                                                @PathVariable("applicationId") long applicationId) {
         return service.getByOrganisationIdWithInvitesForApplication(organisationId, applicationId).toGetResponse();
     }
 
-    @PutMapping(value = "/save")
+    @PutMapping("/save")
     public RestResult<Void> put(@RequestBody InviteOrganisationResource inviteOrganisationResource) {
         if (service.getById(inviteOrganisationResource.getId()).isSuccess()) {
             return service.save(inviteOrganisationResource).toPutResponse();

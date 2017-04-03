@@ -13,9 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.function.Supplier;
@@ -42,7 +40,7 @@ public class AssessorProfileSkillsController {
 
     private static final String FORM_ATTR_NAME = "form";
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public String getReadonlySkills(Model model,
                                     @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         ProfileSkillsResource profileSkillsResource = userService.getProfileSkills(loggedInUser.getId());
@@ -50,7 +48,7 @@ public class AssessorProfileSkillsController {
         return "profile/skills";
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/edit")
+    @GetMapping("/edit")
     public String getSkills(Model model,
                             @ModelAttribute("loggedInUser") UserResource loggedInUser,
                             @ModelAttribute(FORM_ATTR_NAME) AssessorProfileSkillsForm form,
@@ -58,7 +56,7 @@ public class AssessorProfileSkillsController {
         return doViewEditSkills(model, loggedInUser, form, bindingResult);
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/edit")
+    @PostMapping("/edit")
     public String submitSkills(Model model,
                                @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                @Valid @ModelAttribute(FORM_ATTR_NAME) AssessorProfileSkillsForm form,

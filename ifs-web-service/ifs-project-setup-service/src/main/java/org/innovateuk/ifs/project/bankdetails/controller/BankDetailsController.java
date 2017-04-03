@@ -22,10 +22,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Optional;
@@ -51,7 +48,7 @@ public class BankDetailsController extends AddressLookupBaseController {
     private OrganisationAddressRestService organisationAddressRestService;
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_BANK_DETAILS_SECTION')")
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public String bankDetails(Model model,
                               @PathVariable("projectId") final Long projectId,
                               @ModelAttribute("loggedInUser") UserResource loggedInUser,
@@ -67,7 +64,7 @@ public class BankDetailsController extends AddressLookupBaseController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_BANK_DETAILS_SECTION')")
-    @RequestMapping(value="readonly", method = RequestMethod.GET)
+    @GetMapping("readonly")
     public String bankDetailsAsReadOnly(Model model,
                               @PathVariable("projectId") final Long projectId,
                               @ModelAttribute("loggedInUser") UserResource loggedInUser,
@@ -84,7 +81,7 @@ public class BankDetailsController extends AddressLookupBaseController {
 
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_BANK_DETAILS_SECTION')")
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping
     public String submitBankDetails(Model model,
                                     @Valid @ModelAttribute(FORM_ATTR_NAME) BankDetailsForm form,
                                     @SuppressWarnings("unused") BindingResult bindingResult,
@@ -118,7 +115,7 @@ public class BankDetailsController extends AddressLookupBaseController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_BANK_DETAILS_SECTION')")
-    @RequestMapping(value = "/confirm", method = RequestMethod.POST)
+    @PostMapping("/confirm")
     public String confirmBankDetails(Model model,
                                      @Valid @ModelAttribute(FORM_ATTR_NAME) BankDetailsForm form,
                                      BindingResult bindingResult,
@@ -136,7 +133,7 @@ public class BankDetailsController extends AddressLookupBaseController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_BANK_DETAILS_SECTION')")
-    @RequestMapping(params = SEARCH_ADDRESS, method = RequestMethod.POST)
+    @PostMapping(params = SEARCH_ADDRESS)
     public String searchAddress(Model model,
                                 @PathVariable("projectId") Long projectId,
                                 @Valid @ModelAttribute(FORM_ATTR_NAME) BankDetailsForm form,
@@ -155,7 +152,7 @@ public class BankDetailsController extends AddressLookupBaseController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_BANK_DETAILS_SECTION')")
-    @RequestMapping(params = SELECT_ADDRESS, method = RequestMethod.POST)
+    @PostMapping(params = SELECT_ADDRESS)
     public String selectAddress(Model model,
                                 @PathVariable("projectId") Long projectId,
                                 @ModelAttribute(FORM_ATTR_NAME) BankDetailsForm form,
@@ -168,7 +165,7 @@ public class BankDetailsController extends AddressLookupBaseController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_BANK_DETAILS_SECTION')")
-    @RequestMapping(params = MANUAL_ADDRESS, method = RequestMethod.POST)
+    @PostMapping(params = MANUAL_ADDRESS)
     public String manualAddress(Model model,
                                 @ModelAttribute(FORM_ATTR_NAME) BankDetailsForm form,
                                 @PathVariable("projectId") Long projectId,

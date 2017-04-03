@@ -120,6 +120,7 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
                 withTotalPercentageGrant(new BigDecimal(50.00)).
                 withSpendProfilesGenerated(false).
                 withFinanceChecksAllApproved(false).
+                withBankDetailslApproved(false).
                 withPartnerStatusResources(partnerStatusResources).
                 build();
 

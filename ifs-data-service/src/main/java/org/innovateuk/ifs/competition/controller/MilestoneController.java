@@ -19,36 +19,36 @@ public class MilestoneController {
     @Autowired
     private MilestoneService milestoneService;
 
-    @GetMapping(value = "/{competitionId}/public")
+    @GetMapping("/{competitionId}/public")
     public RestResult<List<MilestoneResource>> getAllPublicMilestonesByCompetitionId(
             @PathVariable("competitionId") final Long competitionId){
         return milestoneService.getAllPublicMilestonesByCompetitionId(competitionId).toGetResponse();
     }
 
-    @GetMapping(value = "/{competitionId}")
+    @GetMapping("/{competitionId}")
     public RestResult<List<MilestoneResource>> getAllMilestonesByCompetitionId(
             @PathVariable("competitionId") final Long competitionId){
         return milestoneService.getAllMilestonesByCompetitionId(competitionId).toGetResponse();
     }
 
-    @GetMapping(value = "/{competitionId}/getByType")
+    @GetMapping("/{competitionId}/getByType")
     public RestResult<MilestoneResource> getMilestoneByTypeAndCompetitionId(@RequestParam("type") final MilestoneType type,
                                                                             @PathVariable("competitionId") final Long competitionId) {
         return milestoneService.getMilestoneByTypeAndCompetitionId(type, competitionId).toGetResponse();
     }
 
-    @PostMapping(value = "/{competitionId}")
+    @PostMapping("/{competitionId}")
     public RestResult<MilestoneResource> create(@RequestParam("type") final MilestoneType type,
                                                 @PathVariable("competitionId") final Long competitionId) {
         return milestoneService.create(type, competitionId).toPostCreateResponse();
     }
 
-    @PutMapping(value = "/many")
+    @PutMapping("/many")
     public RestResult<Void> saveMilestones(@RequestBody final List<MilestoneResource> milestones) {
          return milestoneService.updateMilestones(milestones).toPutResponse();
     }
 
-    @PutMapping(value = "/")
+    @PutMapping("/")
     public RestResult<Void> saveMilestone(@RequestBody final MilestoneResource milestone) {
         return milestoneService.updateMilestone(milestone).toPutResponse();
     }

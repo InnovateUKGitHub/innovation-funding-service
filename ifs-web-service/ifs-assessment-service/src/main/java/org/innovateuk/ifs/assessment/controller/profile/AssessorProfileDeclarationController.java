@@ -19,10 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -57,14 +54,14 @@ public class AssessorProfileDeclarationController {
 
     private static final String FORM_ATTR_NAME = "form";
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public String getDeclaration(Model model,
                                  @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         model.addAttribute("model", assessorProfileDeclarationModelPopulator.populateModel(loggedInUser));
         return "profile/declaration-of-interest";
     }
 
-    @RequestMapping(path = "/edit", method = RequestMethod.GET)
+    @GetMapping(path = "/edit")
     public String getEditDeclaration(@ModelAttribute("loggedInUser") UserResource loggedInUser,
                                      @ModelAttribute(FORM_ATTR_NAME) AssessorProfileDeclarationForm form,
                                      BindingResult bindingResult) {
@@ -74,7 +71,7 @@ public class AssessorProfileDeclarationController {
         return doEditDeclaration();
     }
 
-    @RequestMapping(path = "/edit", method = RequestMethod.POST)
+    @PostMapping(path = "/edit")
     public String submitDeclaration(@ModelAttribute("loggedInUser") UserResource loggedInUser,
                                     @Valid @ModelAttribute(FORM_ATTR_NAME) AssessorProfileDeclarationForm form,
                                     BindingResult bindingResult,
@@ -91,26 +88,26 @@ public class AssessorProfileDeclarationController {
         });
     }
 
-    @RequestMapping(path = "/edit", params = {"addAppointment"}, method = RequestMethod.POST)
+    @PostMapping(path = "/edit", params = {"addAppointment"})
     public String addAppointment(@ModelAttribute(FORM_ATTR_NAME) AssessorProfileDeclarationForm form) {
         form.getAppointments().add(new AssessorProfileAppointmentForm());
         return doEditDeclaration();
     }
 
-    @RequestMapping(path = "/edit", params = {"removeAppointment"}, method = RequestMethod.POST)
+    @PostMapping(path = "/edit", params = {"removeAppointment"})
     public String removeAppointment(@ModelAttribute(FORM_ATTR_NAME) AssessorProfileDeclarationForm form,
                                     @RequestParam(name = "removeAppointment") Integer position) {
         form.getAppointments().remove(position.intValue());
         return doEditDeclaration();
     }
 
-    @RequestMapping(path = "/edit", params = {"addFamilyMemberAffiliation"}, method = RequestMethod.POST)
+    @PostMapping(path = "/edit", params = {"addFamilyMemberAffiliation"})
     public String addFamilyMemberAffiliation(@ModelAttribute(FORM_ATTR_NAME) AssessorProfileDeclarationForm form) {
         form.getFamilyAffiliations().add(new AssessorProfileFamilyAffiliationForm());
         return doEditDeclaration();
     }
 
-    @RequestMapping(path = "/edit", params = {"removeFamilyMemberAffiliation"}, method = RequestMethod.POST)
+    @PostMapping(path = "/edit", params = {"removeFamilyMemberAffiliation"})
     public String removeFamilyMemberAffiliation(@ModelAttribute(FORM_ATTR_NAME) AssessorProfileDeclarationForm form,
                                                 @RequestParam(name = "removeFamilyMemberAffiliation") Integer position) {
         form.getFamilyAffiliations().remove(position.intValue());

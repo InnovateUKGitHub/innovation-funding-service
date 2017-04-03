@@ -2,17 +2,21 @@ package org.innovateuk.ifs.project.financecheck.transactional;
 
 import org.apache.commons.lang3.time.DateUtils;
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
+import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.project.builder.PartnerOrganisationBuilder;
 import org.innovateuk.ifs.project.builder.ProjectBuilder;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
+import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.financecheck.domain.*;
 import org.innovateuk.ifs.project.resource.*;
+import org.innovateuk.ifs.project.transactional.EmailService;
 import org.innovateuk.ifs.project.util.DateUtil;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.OrganisationType;
@@ -26,6 +30,7 @@ import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -39,6 +44,7 @@ import static org.hamcrest.core.IsNull.notNullValue;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
 import static org.innovateuk.ifs.project.builder.CostCategoryBuilder.newCostCategory;
@@ -46,6 +52,7 @@ import static org.innovateuk.ifs.project.builder.CostCategoryGroupBuilder.newCos
 import static org.innovateuk.ifs.project.builder.CostCategoryTypeBuilder.newCostCategoryType;
 import static org.innovateuk.ifs.project.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
+import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.project.builder.SpendProfileBuilder.newSpendProfile;
 import static org.innovateuk.ifs.project.finance.resource.TimeUnit.MONTH;
@@ -67,10 +74,15 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     private SpendProfileCostCategorySummaryStrategy spendProfileCostCategorySummaryStrategy;
 
     @Mock
+    private EmailService projectEmailService;
+
+    @Mock
     private ValidationUtil validationUtil;
 
     @Mock
     private Error mockedError;
+
+    private static final String webBaseUrl = "https://ifs-local-dev/dashboard";
 
     @Test
     public void testGenerateSpendProfile() {
@@ -133,11 +145,32 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         when(spendProfileRepositoryMock.save(spendProfileExpectations(expectedOrganisation1Profile))).thenReturn(null);
         when(spendProfileRepositoryMock.save(spendProfileExpectations(expectedOrganisation2Profile))).thenReturn(null);
 
+        User financeContactUser1 = newUser().withEmailAddress("z@abc.com").withFirstName("A").withLastName("Z").build();
+        ProjectUser financeContact1 = newProjectUser().withUser(financeContactUser1).build();
+        User financeContactUser2 = newUser().withEmailAddress("a@abc.com").withFirstName("A").withLastName("A").build();
+        ProjectUser financeContact2 = newProjectUser().withUser(financeContactUser2).build();
+        when(projectUsersHelperMock.getFinanceContact(project.getId(), organisation1.getId())).thenReturn(Optional.of(financeContact1));
+        when(projectUsersHelperMock.getFinanceContact(project.getId(), organisation2.getId())).thenReturn(Optional.of(financeContact2));
+
+        Map<String, Object> expectedNotificationArguments = asMap(
+                "dashboardUrl", "https://ifs-local-dev/dashboard"
+        );
+
+        NotificationTarget to1 = new ExternalUserNotificationTarget("A Z", "z@abc.com");
+
+        NotificationTarget to2 = new ExternalUserNotificationTarget("A A", "a@abc.com");
+
+        when(projectEmailService.sendEmail(singletonList(to1), expectedNotificationArguments, SpendProfileServiceImpl.Notifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE)).thenReturn(serviceSuccess());
+        when(projectEmailService.sendEmail(singletonList(to2), expectedNotificationArguments, SpendProfileServiceImpl.Notifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE)).thenReturn(serviceSuccess());
+
         ServiceResult<Void> generateResult = service.generateSpendProfile(projectId);
         assertTrue(generateResult.isSuccess());
 
         verify(spendProfileRepositoryMock).save(spendProfileExpectations(expectedOrganisation1Profile));
         verify(spendProfileRepositoryMock).save(spendProfileExpectations(expectedOrganisation2Profile));
+
+        verify(projectEmailService).sendEmail(singletonList(to1), expectedNotificationArguments, SpendProfileServiceImpl.Notifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE);
+        verify(projectEmailService).sendEmail(singletonList(to2), expectedNotificationArguments, SpendProfileServiceImpl.Notifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE);
     }
 
     @Test
@@ -289,10 +322,69 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project.getId(),
                 organisation2.getId())).thenReturn(Optional.empty());
 
+
+        User financeContactUser1 = newUser().withEmailAddress("z@abc.com").withFirstName("A").withLastName("Z").build();
+        ProjectUser financeContact1 = newProjectUser().withUser(financeContactUser1).build();
+        User financeContactUser2 = newUser().withEmailAddress("a@abc.com").withFirstName("A").withLastName("A").build();
+        ProjectUser financeContact2 = newProjectUser().withUser(financeContactUser2).build();
+        when(projectUsersHelperMock.getFinanceContact(project.getId(), organisation1.getId())).thenReturn(Optional.of(financeContact1));
+        when(projectUsersHelperMock.getFinanceContact(project.getId(), organisation2.getId())).thenReturn(Optional.of(financeContact2));
+
+        Map<String, Object> expectedNotificationArguments = asMap(
+                "dashboardUrl", "https://ifs-local-dev/dashboard"
+        );
+
+        NotificationTarget to1 = new ExternalUserNotificationTarget("A Z", "z@abc.com");
+
+        NotificationTarget to2 = new ExternalUserNotificationTarget("A A", "a@abc.com");
+
+        when(projectEmailService.sendEmail(singletonList(to1), expectedNotificationArguments, SpendProfileServiceImpl.Notifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE)).thenReturn(serviceSuccess());
+        when(projectEmailService.sendEmail(singletonList(to2), expectedNotificationArguments, SpendProfileServiceImpl.Notifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE)).thenReturn(serviceFailure(CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_SINGLE));
+
+
         ServiceResult<Void> generateResult = service.generateSpendProfile(projectId);
-        assertTrue(generateResult.isSuccess());
+        assertTrue(generateResult.isFailure());
+        assertTrue(generateResult.getFailure().is(CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_SINGLE));
 
         verify(spendProfileRepositoryMock, times(2)).save(isA(SpendProfile.class));
+
+        verify(projectEmailService).sendEmail(singletonList(to1), expectedNotificationArguments, SpendProfileServiceImpl.Notifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE);
+        verify(projectEmailService).sendEmail(singletonList(to2), expectedNotificationArguments, SpendProfileServiceImpl.Notifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE);
+    }
+
+    @Test
+    public void testGenerateSpendProfileSendEmailFailsDueToNoFinanceContact() {
+
+        GenerateSpendProfileData generateSpendProfileData = new GenerateSpendProfileData().build();
+
+        Project project = generateSpendProfileData.getProject();
+        Organisation organisation1 = generateSpendProfileData.getOrganisation1();
+        Organisation organisation2 = generateSpendProfileData.getOrganisation2();
+        PartnerOrganisation partnerOrganisation1 = project.getPartnerOrganisations().get(0);
+        PartnerOrganisation partnerOrganisation2 = project.getPartnerOrganisations().get(1);
+
+        setupGenerateSpendProfilesExpectations(generateSpendProfileData, project, organisation1, organisation2);
+
+        when(viabilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(ViabilityState.APPROVED);
+        when(viabilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(ViabilityState.NOT_APPLICABLE);
+        when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(EligibilityState.APPROVED);
+        when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(EligibilityState.APPROVED);
+
+        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project.getId(),
+                organisation1.getId())).thenReturn(Optional.empty());
+        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project.getId(),
+                organisation2.getId())).thenReturn(Optional.empty());
+
+        ProjectUser financeContact2 = newProjectUser().withUser((User[]) null).build();
+        when(projectUsersHelperMock.getFinanceContact(project.getId(), organisation1.getId())).thenReturn(Optional.empty());
+        when(projectUsersHelperMock.getFinanceContact(project.getId(), organisation2.getId())).thenReturn(Optional.of(financeContact2));
+
+        ServiceResult<Void> generateResult = service.generateSpendProfile(projectId);
+        assertTrue(generateResult.isFailure());
+        assertTrue(generateResult.getFailure().is(CommonFailureKeys.SPEND_PROFILE_FINANCE_CONTACT_NOT_PRESENT, CommonFailureKeys.SPEND_PROFILE_FINANCE_CONTACT_NOT_PRESENT));
+
+        verify(spendProfileRepositoryMock, times(2)).save(isA(SpendProfile.class));
+
     }
 
     private void setupGenerateSpendProfilesExpectations(GenerateSpendProfileData generateSpendProfileData, Project project, Organisation organisation1, Organisation organisation2) {
@@ -385,10 +477,24 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         when(spendProfileRepositoryMock.save(spendProfileExpectations(expectedOrganisation1Profile))).thenReturn(null);
 
+
+        User financeContactUser1 = newUser().withEmailAddress("z@abc.com").withFirstName("A").withLastName("Z").build();
+        ProjectUser financeContact1 = newProjectUser().withUser(financeContactUser1).build();
+        when(projectUsersHelperMock.getFinanceContact(project.getId(), organisation1.getId())).thenReturn(Optional.of(financeContact1));
+
+        Map<String, Object> expectedNotificationArguments = asMap(
+                "dashboardUrl", "https://ifs-local-dev/dashboard"
+        );
+
+        NotificationTarget to1 = new ExternalUserNotificationTarget("A Z", "z@abc.com");
+
+        when(projectEmailService.sendEmail(singletonList(to1), expectedNotificationArguments, SpendProfileServiceImpl.Notifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE)).thenReturn(serviceSuccess());
+
         ServiceResult<Void> generateResult = service.generateSpendProfileForPartnerOrganisation(projectId, organisation1.getId(), userId);
         assertTrue(generateResult.isSuccess());
 
         verify(spendProfileRepositoryMock).save(spendProfileExpectations(expectedOrganisation1Profile));
+        verify(projectEmailService).sendEmail(singletonList(to1), expectedNotificationArguments, SpendProfileServiceImpl.Notifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE);
         verifyNoMoreInteractions(spendProfileRepositoryMock);
     }
 
@@ -1516,7 +1622,9 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
     @Override
     protected SpendProfileServiceImpl supplyServiceUnderTest() {
-        return new SpendProfileServiceImpl();
+        SpendProfileServiceImpl spendProfileService = new SpendProfileServiceImpl();
+        ReflectionTestUtils.setField(spendProfileService, "webBaseUrl", webBaseUrl);
+        return spendProfileService;
     }
 
     private class GenerateSpendProfileData {

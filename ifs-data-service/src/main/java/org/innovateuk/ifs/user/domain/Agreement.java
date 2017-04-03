@@ -29,7 +29,6 @@ public class Agreement extends AuditableEntity {
     private String text;
 
     public Agreement() {
-        // default constructor
     }
 
     public Agreement(String text, boolean current) {

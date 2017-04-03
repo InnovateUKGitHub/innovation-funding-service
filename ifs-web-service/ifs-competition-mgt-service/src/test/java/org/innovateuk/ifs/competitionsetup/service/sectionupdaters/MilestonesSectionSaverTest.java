@@ -167,7 +167,7 @@ public class MilestonesSectionSaverTest {
     @Test
     public void testAutoSaveTimeWithEmptyDateCompetitionSetupSection() {
         String fieldName =  "milestoneEntries[BRIEFING_EVENT].time";
-        when(milestoneService.getMilestoneByTypeAndCompetitionId(MilestoneType.BRIEFING_EVENT, 2L)).thenReturn(newMilestoneResource().withDate(null).build());
+        when(milestoneService.getMilestoneByTypeAndCompetitionId(MilestoneType.BRIEFING_EVENT, 2L)).thenReturn(newMilestoneResource().withDate((LocalDateTime[]) null).build());
         MilestonesForm form = new MilestonesForm();
 
         CompetitionResource competition = newCompetitionResource().withId(2L).build();

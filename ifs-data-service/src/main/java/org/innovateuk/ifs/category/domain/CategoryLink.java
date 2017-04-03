@@ -25,7 +25,6 @@ public abstract class CategoryLink<T, C extends Category> {
     private C category;
 
     CategoryLink() {
-        // default constructor
     }
 
     protected CategoryLink(C category) {
