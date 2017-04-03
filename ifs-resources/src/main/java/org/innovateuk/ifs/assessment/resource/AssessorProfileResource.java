@@ -14,7 +14,6 @@ public class AssessorProfileResource {
     private ProfileResource profile;
 
     public AssessorProfileResource() {
-        // default constructor
     }
 
     public AssessorProfileResource(UserResource user, ProfileResource profile) {

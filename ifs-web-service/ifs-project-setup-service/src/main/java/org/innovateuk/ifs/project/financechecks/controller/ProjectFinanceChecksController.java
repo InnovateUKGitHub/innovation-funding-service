@@ -141,7 +141,7 @@ public class ProjectFinanceChecksController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
-    @GetMapping(value = "/{queryId}/new-response")
+    @GetMapping("/{queryId}/new-response")
     public String viewNewResponse(@PathVariable Long projectId,
                                   @PathVariable Long organisationId,
                                   @PathVariable Long queryId,
@@ -163,7 +163,7 @@ public class ProjectFinanceChecksController {
 
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
-    @PostMapping(value = "/{queryId}/new-response")
+    @PostMapping("/{queryId}/new-response")
     public String saveResponse(Model model,
                                @PathVariable("projectId") final Long projectId,
                                @PathVariable final Long organisationId,
@@ -261,7 +261,7 @@ public class ProjectFinanceChecksController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
-    @GetMapping(value = "/{queryId}/new-response/attachment/{attachmentId}")
+    @GetMapping("/{queryId}/new-response/attachment/{attachmentId}")
     public
     @ResponseBody
     ResponseEntity<ByteArrayResource> downloadResponseAttachment(@PathVariable Long projectId,
@@ -288,7 +288,7 @@ public class ProjectFinanceChecksController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
-    @GetMapping(value = "/attachment/{attachmentId}")
+    @GetMapping("/attachment/{attachmentId}")
     public
     @ResponseBody
     ResponseEntity<ByteArrayResource> downloadAttachment(@PathVariable Long projectId,
@@ -338,7 +338,7 @@ public class ProjectFinanceChecksController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
-    @GetMapping(value="/{queryId}/new-response/cancel")
+    @GetMapping("/{queryId}/new-response/cancel")
     public String cancelNewForm(@PathVariable Long projectId,
                                 @PathVariable Long organisationId,
                                 @PathVariable Long queryId,

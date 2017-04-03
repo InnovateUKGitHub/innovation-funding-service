@@ -19,37 +19,37 @@ public class FormInputController {
     @Autowired
     private FormInputService formInputService;
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @GetMapping("/{id}")
     public RestResult<FormInputResource> findOne(@PathVariable("id") Long id) {
         return formInputService.findFormInput(id).toGetResponse();
     }
 
-    @RequestMapping(value = "/findByQuestionId/{questionId}", method = RequestMethod.GET)
+    @GetMapping("/findByQuestionId/{questionId}")
     public RestResult<List<FormInputResource>> findByQuestionId(@PathVariable("questionId") Long questionId) {
         return formInputService.findByQuestionId(questionId).toGetResponse();
     }
 
-    @RequestMapping(value = "findByQuestionId/{questionId}/scope/{scope}", method = RequestMethod.GET)
+    @GetMapping("findByQuestionId/{questionId}/scope/{scope}")
     public RestResult<List<FormInputResource>> findByQuestionIdAndScope(@PathVariable("questionId") Long questionId, @PathVariable("scope") FormInputScope scope) {
         return formInputService.findByQuestionIdAndScope(questionId, scope).toGetResponse();
     }
 
-    @RequestMapping(value = "/findByCompetitionId/{competitionId}", method = RequestMethod.GET)
+    @GetMapping("/findByCompetitionId/{competitionId}")
     public RestResult<List<FormInputResource>> findByCompetitionId(@PathVariable("competitionId") Long competitionId) {
         return formInputService.findByCompetitionId(competitionId).toGetResponse();
     }
 
-    @RequestMapping(value = "/findByCompetitionId/{competitionId}/scope/{scope}", method = RequestMethod.GET)
+    @GetMapping("/findByCompetitionId/{competitionId}/scope/{scope}")
     public RestResult<List<FormInputResource>> findByCompetitionIdAndScope(@PathVariable("competitionId") Long competitionId, @PathVariable("scope") FormInputScope scope) {
         return formInputService.findByCompetitionIdAndScope(competitionId, scope).toGetResponse();
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.PUT)
+    @PutMapping("/")
     public RestResult<FormInputResource> save(@RequestBody FormInputResource formInputResource) {
         return formInputService.save(formInputResource).toGetResponse();
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @DeleteMapping("/{id}")
     public RestResult<Void> delete(@PathVariable("id") Long id) {
         return formInputService.delete(id).toDeleteResponse();
     }
