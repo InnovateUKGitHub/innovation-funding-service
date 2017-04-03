@@ -34,7 +34,7 @@ User is able to select only one type
     Then the radio button should have the new selection    1
 
 The type of organisation navigates to the correct page
-    [Documentation]    INFUND-1780, INFUND-1231
+    [Documentation]    INFUND-1780, INFUND-1231, INFUND 8531
     [Tags]
     When the user should see the element    jQuery=.form-hint:contains("UK based business.")
     And the user selects the radio button    organisationType    1
@@ -45,8 +45,15 @@ The type of organisation navigates to the correct page
     Given the user selects the radio button    organisationType    2
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     Then the user should see the text in the page    This is the organisation that you work for, this will search all organisations available on Je-S.
+    And the user enters text to a text field     id=organisationSearchName   zoo
+    And the user clicks the button/link        jQuery=button:contains("Search")
+    Then the user should see the element     jQuery=p:contains("Choose your organisation:")
+    When the user clicks the button/link        jQuery=a:contains("Zoological Soc London Inst of Zoology")
+    Then the user should see the text in the page    This is the address that your organisation works from
     When the user goes back to the previous page
-    And the user should see the element    jQuery=.form-hint:contains("Organisations which solely promote and conduct collaborative research and innovation.")
+    Then the user should see the text in the page    This is the organisation that you work for, this will search all organisations available on Je-S.
+    Given the user clicks the button/link    jQuery=a:contains("Back to choose your organisation type")
+    Then the user should see the element    jQuery=.form-hint:contains("Organisations which solely promote and conduct collaborative research and innovation.")
     Given the user selects the radio button    organisationType    3
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     Then the user should see the text in the page    Research and technology organisations (RTOs)
