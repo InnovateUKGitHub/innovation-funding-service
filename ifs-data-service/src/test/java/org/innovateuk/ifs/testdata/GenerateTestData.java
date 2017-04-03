@@ -16,6 +16,9 @@ import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.notifications.service.senders.email.EmailNotificationSender;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
+import org.innovateuk.ifs.publiccontent.domain.PublicContent;
+import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
+import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.sil.experian.resource.AccountDetails;
 import org.innovateuk.ifs.sil.experian.resource.SILBankDetails;
 import org.innovateuk.ifs.sil.experian.resource.ValidationResult;
@@ -130,7 +133,7 @@ public class GenerateTestData extends BaseIntegrationTest {
     private BankDetailsService bankDetailsService;
 
     @Autowired
-    private OrganisationSizeRepository organisationSizeRepository;
+    private PublicContentRepository publicContentRepository;
 
     private CompetitionDataBuilder competitionDataBuilder;
     private CompetitionFunderDataBuilder competitionFunderDataBuilder;
@@ -283,7 +286,7 @@ public class GenerateTestData extends BaseIntegrationTest {
     public void generateTestData() throws IOException {
 
         long before = System.currentTimeMillis();
-
+        fixUpDatabase();
         createInternalUsers();
         createExternalUsers();
         createCompetitions();
@@ -443,6 +446,21 @@ public class GenerateTestData extends BaseIntegrationTest {
         publicContentDateDataBuilder.withPublicContentDate(line.competitionName, line.date, line.content)
                 .build();
     }
+
+    /**
+     * We might need to fix up the database before we start generating data.
+     * This can happen if for example we have pushed something out to live that would make this generation step fail.
+     * Note that if we make a fix is made here it will most likely need a corresponding fix in sql script
+     * VX_Y_Z__Remove_old_competition.sql
+     * To repeat the fix when running up the full flyway mechanism
+     */
+    private void fixUpDatabase() {
+        // Remove the public content that is in place for competition one so that generation does not fail with
+        // PUBLIC_CONTENT_ALREADY_INITIALISED
+        PublicContent publicContentForCompetitionOne = publicContentRepository.findByCompetitionId(1L);
+        publicContentRepository.delete(publicContentForCompetitionOne.getId());
+    }
+
     private void createInternalUsers() {
         internalUserLines.forEach(line -> {
 
