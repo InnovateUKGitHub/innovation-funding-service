@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,7 +20,7 @@ public class CompetitionTypeController {
     @Autowired
     private CompetitionSetupService competitionSetupService;
 
-    @RequestMapping("/findAll")
+    @GetMapping("/findAll")
     public RestResult<List<CompetitionTypeResource>> findAllTypes() {
         return competitionSetupService.findAllTypes().toGetResponse();
     }

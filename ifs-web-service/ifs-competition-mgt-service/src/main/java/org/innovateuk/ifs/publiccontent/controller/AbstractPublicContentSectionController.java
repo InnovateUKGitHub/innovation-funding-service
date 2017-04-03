@@ -11,10 +11,7 @@ import org.innovateuk.ifs.publiccontent.viewmodel.AbstractPublicContentViewModel
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Optional;
@@ -38,17 +35,17 @@ public abstract class AbstractPublicContentSectionController<M extends AbstractP
     protected abstract PublicContentFormSaver<F> formSaver();
 
 
-    @RequestMapping(value = "/{competitionId}", method = RequestMethod.GET)
+    @GetMapping("/{competitionId}")
     public String readOnly(Model model, @PathVariable(COMPETITION_ID_KEY) Long competitionId) {
         return readOnly(competitionId, model, Optional.empty());
     }
 
-    @RequestMapping(value = "/{competitionId}/edit", method = RequestMethod.GET)
+    @GetMapping("/{competitionId}/edit")
     public String edit(Model model, @PathVariable(COMPETITION_ID_KEY) Long competitionId) {
         return edit(competitionId, model, Optional.empty());
     }
 
-    @RequestMapping(value = "/{competitionId}/edit", method = RequestMethod.POST)
+    @PostMapping(value = "/{competitionId}/edit")
     public String markAsComplete(Model model, @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                        @Valid @ModelAttribute(FORM_ATTR_NAME) F form, BindingResult bindingResult, ValidationHandler validationHandler) {
         return markAsComplete(competitionId, model, form, validationHandler);
