@@ -307,18 +307,18 @@ Project finance user can filter queries by Viability section
     [Tags]
     Given the user selects the option from the drop-down menu    Viability only    id=querySection
     Then the user should see the element   jQuery=.queries-list .query:nth-of-type(1) h2:contains("a viability query's title")
-    And the user should see the element    jQuery=h3:contains("Viability")
+    And the user should see the element    jQuery=.queries-list .query:nth-of-type(1) h3:contains("Viability")
     And the user should not see the element      jQuery=.queries-list .query:nth-of-type(2) h2:contains("an eligibility query's title")
-    And the user should not see the element      jQuery=h3:contains("Eligibility")
+    And the user should not see the element      jQuery=.queries-list .query:nth-of-type(2) h3:contains("Eligibility")
 
 Project finance user can view all queries back
     [Documentation]  INFUND-4844
     [Tags]
     Given the user selects the option from the drop-down menu    All    id=querySection
     Then the user should see the element     jQuery=.queries-list .query:nth-of-type(1) h2:contains("a viability query's title")
-    And the user should see the element    jQuery=h3:contains("Viability")
+    And the user should see the element    jQuery=.queries-list .query:nth-of-type(1) h3:contains("Viability")
     And the user should see the element      jQuery=.queries-list .query:nth-of-type(2) h2:contains("an eligibility query's title")
-    And the user should see the element    jQuery=.queries-list .query:nth-of-type(2) h3:contains("Viability")
+    And the user should see the element    jQuery=.queries-list .query:nth-of-type(2) h3:contains("Eligibility")
 
 Non finance contact can view query
     [Documentation]    INFUND-4843, INFUND-8787
