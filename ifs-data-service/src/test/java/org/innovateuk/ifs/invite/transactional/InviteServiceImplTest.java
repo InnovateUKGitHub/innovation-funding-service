@@ -389,13 +389,18 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
 
         InOrder inOrder = inOrder(formInputResponseRepositoryMock, questionStatusRepositoryMock, processRoleRepositoryMock, inviteOrganisationRepositoryMock);
 
-        inOrder.verify(formInputResponseRepositoryMock, times(2)).save(
-                createLambdaMatcher((FormInputResponse actual) -> actual.getUpdatedBy().equals(leadApplicantProcessRole)));
-        inOrder.verify(questionStatusRepositoryMock, times(2)).save(
-                createLambdaMatcher((QuestionStatus actual) ->
-                        actual.getMarkedAsCompleteBy().equals(leadApplicantProcessRole) &&
-                                actual.getAssignedBy().equals(leadApplicantProcessRole) &&
-                                actual.getAssignee().equals(leadApplicantProcessRole)));
+        inOrder.verify(formInputResponseRepositoryMock).save(
+                createLambdaMatcher((List<FormInputResponse> actual) ->
+                        actual.stream().allMatch(fir -> fir.getUpdatedBy().equals(leadApplicantProcessRole))
+                )
+        );
+        inOrder.verify(questionStatusRepositoryMock).save(
+                createLambdaMatcher((List<QuestionStatus> actual) ->
+                        actual.stream().allMatch(qs -> qs.getMarkedAsCompleteBy().equals(leadApplicantProcessRole) &&
+                                qs.getAssignedBy().equals(leadApplicantProcessRole) &&
+                                qs.getAssignee().equals(leadApplicantProcessRole))
+                )
+        );
         inOrder.verify(processRoleRepositoryMock).delete(inviteProcessRoles);
         inOrder.verify(inviteOrganisationRepositoryMock).save(applicationInvite.getInviteOrganisation());
 
@@ -482,14 +487,19 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
 
         InOrder inOrder = inOrder(formInputResponseRepositoryMock, questionStatusRepositoryMock, processRoleRepositoryMock, inviteOrganisationRepositoryMock);
 
-        inOrder.verify(formInputResponseRepositoryMock, times(2)).save(
-                createLambdaMatcher((FormInputResponse actual) -> actual.getUpdatedBy().equals(organisationProcessRoles.get(0))));
-        inOrder.verify(questionStatusRepositoryMock, times(2)).save(
-                createLambdaMatcher((QuestionStatus actual) ->
-                        actual.getMarkedAsCompleteBy().equals(organisationProcessRoles.get(0)) &&
-                                actual.getAssignedBy().equals(organisationProcessRoles.get(0)) &&
-                                actual.getAssignee().equals(leadApplicantProcessRole)
-                ));
+        inOrder.verify(formInputResponseRepositoryMock).save(
+                createLambdaMatcher((List<FormInputResponse> actual) ->
+                        actual.stream().allMatch(fir -> fir.getUpdatedBy().equals(organisationProcessRoles.get(0)))
+                )
+        );
+        inOrder.verify(questionStatusRepositoryMock).save(
+                createLambdaMatcher((List<QuestionStatus> actual) ->
+                        actual.stream().allMatch(qs -> qs.getMarkedAsCompleteBy().equals(organisationProcessRoles.get(0)) &&
+                                qs.getAssignedBy().equals(organisationProcessRoles.get(0)) &&
+                                qs.getAssignee().equals(leadApplicantProcessRole)
+                        )
+                )
+        );
         inOrder.verify(processRoleRepositoryMock).delete(inviteProcessRoles);
         inOrder.verify(inviteOrganisationRepositoryMock).save(applicationInvite.getInviteOrganisation());
 
@@ -565,10 +575,16 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
 
         InOrder inOrder = inOrder(formInputResponseRepositoryMock, questionStatusRepositoryMock, processRoleRepositoryMock, inviteOrganisationRepositoryMock);
 
-        inOrder.verify(formInputResponseRepositoryMock, times(2)).delete(
-                createLambdaMatcher((FormInputResponse actual) -> actual.getUpdatedBy().equals(inviteProcessRoles.get(0))));
-        inOrder.verify(questionStatusRepositoryMock, times(2)).delete(
-                createLambdaMatcher((QuestionStatus actual) -> actual.getMarkedAsCompleteBy().equals(inviteProcessRoles.get(0))));
+        inOrder.verify(formInputResponseRepositoryMock).delete(
+                createLambdaMatcher((List<FormInputResponse> actual) ->
+                        actual.stream().allMatch(fir -> fir.getUpdatedBy().equals(inviteProcessRoles.get(0)))
+                )
+        );
+        inOrder.verify(questionStatusRepositoryMock).delete(
+                createLambdaMatcher((List<QuestionStatus> actual) ->
+                        actual.stream().allMatch(qs -> qs.getMarkedAsCompleteBy().equals(inviteProcessRoles.get(0)))
+                )
+        );
         inOrder.verify(processRoleRepositoryMock).delete(inviteProcessRoles);
         inOrder.verify(inviteOrganisationRepositoryMock).save(applicationInvite.getInviteOrganisation());
 

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.invite.transactional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.validator.HibernateValidator;
@@ -11,6 +12,7 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.BaseEitherBackedResult;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.form.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
@@ -59,7 +61,9 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.simplePartition;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 
@@ -302,41 +306,30 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     @Override
-    public ServiceResult<Void> removeApplicationInvite(Long applicationInviteId) {
-        try {
-            ApplicationInvite applicationInvite = applicationInviteMapper.mapIdToDomain(applicationInviteId);
+    public ServiceResult<Void> removeApplicationInvite(long applicationInviteId) {
+        return find(applicationInviteMapper.mapIdToDomain(applicationInviteId), notFoundError(ApplicationInvite.class))
+                .andOnSuccessReturnVoid(applicationInvite -> {
+                    ProcessRole leadApplicantProcessRole = applicationInvite.getTarget().getLeadApplicantProcessRole();
+                    Long applicationId = applicationInvite.getTarget().getId();
 
-            if (applicationInvite == null) {
-                return serviceFailure(notFoundError(ApplicationInvite.class));
-            }
+                    List<ProcessRole> collaboratorProcessRoles = processRoleRepository.findByUserAndApplicationId(
+                            applicationInvite.getUser(),
+                            applicationInvite.getTarget().getId()
+                    );
 
-            ProcessRole leadApplicantProcessRole = applicationInvite.getTarget().getLeadApplicantProcessRole();
-            Long applicationId = applicationInvite.getTarget().getId();
+                    reassignCollaboratorResponsesAndQuestionStatuses(applicationId, leadApplicantProcessRole, collaboratorProcessRoles);
 
-            List<ProcessRole> processRoles = processRoleRepository.findByUserAndApplicationId(
-                    applicationInvite.getUser(),
-                    applicationInvite.getTarget().getId()
-            );
+                    processRoleRepository.delete(collaboratorProcessRoles);
 
-            reassignCollaboratorResponsesAndQuestionStatuses(applicationId, leadApplicantProcessRole, processRoles);
+                    InviteOrganisation inviteOrganisation = applicationInvite.getInviteOrganisation();
 
-            if (!processRoles.isEmpty()) {
-                processRoleRepository.delete(processRoles);
-            }
-
-            InviteOrganisation inviteOrganisation = applicationInvite.getInviteOrganisation();
-
-            if (inviteOrganisation.getInvites().size() < 2) {
-                inviteOrganisationRepository.delete(inviteOrganisation);
-            } else {
-                inviteOrganisation.getInvites().remove(applicationInvite);
-                inviteOrganisationRepository.save(inviteOrganisation);
-            }
-
-            return serviceSuccess();
-        } catch (IllegalArgumentException e) {
-            return serviceFailure(notFoundError(ApplicationInvite.class));
-        }
+                    if (inviteOrganisation.getInvites().size() < 2) {
+                        inviteOrganisationRepository.delete(inviteOrganisation);
+                    } else {
+                        inviteOrganisation.getInvites().remove(applicationInvite);
+                        inviteOrganisationRepository.save(inviteOrganisation);
+                    }
+                });
     }
 
     protected Supplier<ServiceResult<ApplicationInvite>> invite(final String hash) {
@@ -501,31 +494,40 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
                                                                   ProcessRole leadApplicantProcessRole,
                                                                   List<ProcessRole> collaboratorProcessRoles) {
         collaboratorProcessRoles.forEach(collaboratorProcessRole -> {
-            List<ProcessRole> organisationRoles = processRoleRepository.findByApplicationIdAndOrganisationId(applicationId, collaboratorProcessRole.getOrganisationId());
-            organisationRoles.remove(collaboratorProcessRole);
+            List<ProcessRole> organisationRoles = getOrganisationProcessRolesExcludingCollaborator(applicationId, collaboratorProcessRole);
 
             reassignCollaboratorFormResponses(leadApplicantProcessRole, collaboratorProcessRole, organisationRoles);
             reassignCollaboratorQuestionStatuses(applicationId, leadApplicantProcessRole, collaboratorProcessRole, organisationRoles);
         });
     }
 
+    private List<ProcessRole> getOrganisationProcessRolesExcludingCollaborator(long applicationId, ProcessRole collaboratorProcessRole) {
+        List<ProcessRole> organisationRoles = processRoleRepository.findByApplicationIdAndOrganisationId(applicationId, collaboratorProcessRole.getOrganisationId());
+        organisationRoles.remove(collaboratorProcessRole);
+        return organisationRoles;
+    }
+
     private void reassignCollaboratorFormResponses(ProcessRole leadApplicantProcessRole,
                                                    ProcessRole collaboratorProcessRole,
                                                    List<ProcessRole> organisationRoles) {
-        formInputResponseRepository.findByUpdatedById(collaboratorProcessRole.getId())
-                .forEach(collaboratorResponse -> {
-                    if (collaboratorResponse.getFormInput().getQuestion().hasMultipleStatuses()) {
-                        if (organisationRoles.isEmpty()) {
-                            formInputResponseRepository.delete(collaboratorResponse);
-                        } else {
-                            collaboratorResponse.setUpdatedBy(organisationRoles.get(0));
-                            formInputResponseRepository.save(collaboratorResponse);
-                        }
-                    } else {
-                        collaboratorResponse.setUpdatedBy(leadApplicantProcessRole);
-                        formInputResponseRepository.save(collaboratorResponse);
-                    }
-                });
+        List<FormInputResponse> formInputResponses = formInputResponseRepository.findByUpdatedById(collaboratorProcessRole.getId());
+
+        List<FormInputResponse> unassignableFormInputResponses = newArrayList();
+
+        formInputResponses.forEach(collaboratorResponse -> {
+            if (collaboratorResponse.getFormInput().getQuestion().hasMultipleStatuses()) {
+                if (organisationRoles.isEmpty()) {
+                    unassignableFormInputResponses.add(collaboratorResponse);
+                } else {
+                    collaboratorResponse.setUpdatedBy(organisationRoles.get(0));
+                }
+            } else {
+                collaboratorResponse.setUpdatedBy(leadApplicantProcessRole);
+            }
+        });
+
+        formInputResponseRepository.save(formInputResponses);
+        formInputResponseRepository.delete(unassignableFormInputResponses);
     }
 
     private void reassignCollaboratorQuestionStatuses(long applicationId,
@@ -539,19 +541,22 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
                 collaboratorProcessRole.getId()
         );
 
+        List<QuestionStatus> unassignableQuestionStatuses = newArrayList();
+
         questionStatuses.forEach(questionStatus -> {
             if (questionStatus.getQuestion().hasMultipleStatuses()) {
                 if (organisationRoles.isEmpty()) {
-                    questionStatusRepository.delete(questionStatus);
+                    unassignableQuestionStatuses.add(questionStatus);
                 } else {
-                    questionStatus = reassignQuestionStatusRoles(questionStatus, organisationRoles.get(0), leadApplicantProcessRole);
-                    questionStatusRepository.save(questionStatus);
+                    reassignQuestionStatusRoles(questionStatus, organisationRoles.get(0), leadApplicantProcessRole);
                 }
             } else {
-                questionStatus = reassignQuestionStatusRoles(questionStatus, leadApplicantProcessRole, leadApplicantProcessRole);
-                questionStatusRepository.save(questionStatus);
+                reassignQuestionStatusRoles(questionStatus, leadApplicantProcessRole, leadApplicantProcessRole);
             }
         });
+
+        questionStatusRepository.save(questionStatuses);
+        questionStatusRepository.delete(unassignableQuestionStatuses);
     }
 
     private QuestionStatus reassignQuestionStatusRoles(QuestionStatus questionStatus, ProcessRole reassignTo, ProcessRole leadApplicantRole) {
