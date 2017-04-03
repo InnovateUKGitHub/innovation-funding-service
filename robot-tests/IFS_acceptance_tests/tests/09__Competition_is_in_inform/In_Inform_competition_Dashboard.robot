@@ -34,7 +34,7 @@ Competition Dashboard
     And The user should see the text in the page    Inform
     And The user should see the text in the page    Programme
     And The user should see the text in the page    Materials and manufacturing
-    And The user should see the text in the page    Satellite Applications
+    And The user should see the text in the page    Satellite applications
     And The user should see the element    jQuery=a:contains("Invite assessors to assess the competition")
     And the user should not see the element    link=View and update competition setup
 
