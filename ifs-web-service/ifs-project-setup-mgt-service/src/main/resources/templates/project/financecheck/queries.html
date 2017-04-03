@@ -20,6 +20,7 @@
             <small th:if="${model.leadPartnerOrganisation}">(Lead Partner)</small>
         </h1>
     </div>
+
     <h2 class="heading-medium">Finance Contact</h2>
     <p>
         <th:block th:text="${model.financeContactName}">Finance Contact</th:block> <br />
@@ -54,25 +55,44 @@
         <h2 class="heading-medium non-margin-bottom" th:text="${query.title}">Query Thread Title</h2>
         <h3 class="heading-small no-margin" th:text="${#strings.capitalize(#strings.toLowerCase(query.sectionType))}">Query Thread Section</h3>
         <th:block th:each="(post, iteration : ${query.viewModelPosts})">
-            <p th:class="${iteration.index == 0} ? 'heading-small no-margin' : 'panel'">
-                <th:block th:text="${post.username}">Created by user</th:block>
-                <small>
-                    <th:block th:text="${#temporals.format(post.createdOn, 'dd MMMM yyyy')}"/>
-                    <th:block th:text="${#strings.toLowerCase(#temporals.format(post.createdOn, 'hh:mma'))}"/>
-                </small>
-            </p>
-            <p data-md-to-html="" class="wysiwyg-styles" th:text="${post.body}"></p>
-            <h3 th:if="${post.attachments.size() > 0}" class="heading-small">Supporting documentation</h3>
-            <th:block th:each="attachment : ${post.attachments}">
-                <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name}">file</a><br />
+            <th:block th:if="${iteration.index == 0}">
+                <p class="heading-small no-margin">
+                    <th:block th:text="${post.username}">Created by user</th:block>
+                    <small>
+                        <th:block th:text="${#temporals.format(post.createdOn, 'dd MMMM yyyy')}"/>
+                        <th:block th:text="${#strings.toLowerCase(#temporals.format(post.createdOn, 'hh:mma'))}"/>
+                    </small>
+                </p>
+                <p data-md-to-html="" class="wysiwyg-styles" th:text="${post.body}"></p>
+                <legend th:if="${post.attachments.size() > 0}" class="heading-small">Supporting documentation</legend>
+                <th:block th:each="attachment : ${post.attachments}">
+                    <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name}">file</a><br />
+                </th:block>
+            </th:block>
+            <th:block th:unless="${iteration.index == 0}">
+                <div class="panel">
+                    <p>
+                        <strong th:text="${post.username}">Created by user</strong>
+                        <small>
+                            <th:block th:text="${#temporals.format(post.createdOn, 'dd MMMM yyyy')}"/>
+                            <th:block th:text="${#strings.toLowerCase(#temporals.format(post.createdOn, 'hh:mma'))}"/>
+                        </small>
+                    </p>
+                    <p data-md-to-html="" class="wysiwyg-styles" th:text="${post.body}"></p>
+                    <h3 th:if="${post.attachments.size() > 0}" class="heading-small">Supporting documentation</h3>
+                    <th:block th:each="attachment : ${post.attachments}">
+                        <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name}">file</a><br />
+                    </th:block>
+                </div>
             </th:block>
         </th:block>
-        <hr />
+        <th:block th:if="${query.awaitingResponse and model.queryId == null}">
+            <hr />
+        </th:block>
         <th:block th:if="${!query.awaitingResponse and model.queryId == null}">
+            <hr />
             <div class="grid-row extra-margin-top">
-                <div class="column-half">
-                    <a id="post-new-response" th:href="@{{baseUrl}/{queryId}/new-response(baseUrl=${baseUrl},query_section=${model.querySection},queryId=${query.id})}" class="button button-secondary">Respond</a>
-                    <br />
+                <div class="column-half"><a id="post-new-response" th:href="@{{baseUrl}/{queryId}/new-response(baseUrl=${baseUrl},query_section=${model.querySection},queryId=${query.id})}" class="button button-secondary">Respond</a><br />
                 </div>
             </div>
         </th:block>
@@ -84,7 +104,9 @@
                         <label for="response" class="form-label-bold">
                             <span class="heading-small no-margin">Response</span>
                             <th:block th:if="${#fields.hasErrors('response')}">
-                                <span class="error-message" th:each="err : ${#fields.errors('response')}" th:text="${err}" />
+                                <span>
+                                    <span class="error-message" th:each="err : ${#fields.errors('response')}" th:text="${err}" />
+                                </span>
                             </th:block>
                         </label>
                         <div class="textarea-wrapped word-count">
@@ -92,7 +114,6 @@
                               required = "required"
                               th:field="*{response}"
                               id="response"
-                              class="form-control"
                               name="response"
                               th:attr="maxlength=${model.maxQueryCharacters},
                                        data-max_words=${model.maxQueryWords},
@@ -100,7 +121,7 @@
                                        data-maxwordslength-errormessage=#{validation.field.max.word.count(null,${model.maxQueryWords})},
                                        data-maxlength-errormessage=#{validation.field.too.many.characters(null, ${model.maxQueryCharacters})},
                                        data-required-errormessage=#{validation.field.must.not.be.blank}"
-                              th:classappend="${#fields.hasErrors('response') ? 'field-error'}"></textarea>
+                              th:classappend="${#fields.hasErrors('response') ? 'form-control field-error' : 'form-control'}"></textarea>
                             <div class="textarea-footer" th:with="response=*{response}">
                                 <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=${model.maxQueryWords}, currentWordsLeft=${#ifsUtil.wordsRemaining(model.maxQueryWords, content)})"/>
                             </div>

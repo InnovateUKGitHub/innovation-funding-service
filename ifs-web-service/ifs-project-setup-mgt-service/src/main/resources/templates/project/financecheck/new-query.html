@@ -35,12 +35,15 @@
     </p>
 
     <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl},query_section=${model.querySection})}" th:object="${form}" method="post" enctype="multipart/form-data" novalidate="novalidate">
-            <h3 class="heading-medium">Post new query</h3>
-            <div class="form-group" th:classappend="${#fields.hasErrors('queryTitle')}? 'error'">
+        <fieldset>
+            <legend class="heading-medium">Post new query</legend>
+            <div th:class="${#fields.hasErrors('queryTitle')}? 'form-group error':'form-group'">
                 <label for="queryTitle" class="form-label-bold">
                     <span class="heading-small no-margin">Title</span>
                     <th:block th:if="${#fields.hasErrors('queryTitle')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('queryTitle')}" th:text="${err}" />
+                        <span>
+                            <span class="error-message" th:each="err : ${#fields.errors('queryTitle')}" th:text="${err}" />
+                        </span>
                     </th:block>
                 </label>
                 <input name="queryTitle"
@@ -53,11 +56,13 @@
                                 data-required-errormessage=#{validation.field.must.not.be.blank},
                                 data-maxlength-errormessage=#{validation.field.too.many.characters(null,${model.maxTitleCharacters})}" />
             </div>
-            <div class="form-group" th:classappend="${#fields.hasErrors('section')}? 'error'">
+            <div th:class="${#fields.hasErrors('section')}? 'form-group error':'form-group'">
                 <label for="section" class="form-label-bold">
                     <span class="heading-small no-margin">Section</span>
                     <th:block th:if="${#fields.hasErrors('section')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('section')}" th:text="${err}" />
+                        <span>
+                            <span class="error-message" th:each="err : ${#fields.errors('section')}" th:text="${err}" />
+                        </span>
                     </th:block>
                 </label>
                 <select name="section" id="section" class="form-control">
@@ -81,11 +86,13 @@
                     </th:block>
                 </select>
             </div>
-            <div class="form-group" th:classappend="${#fields.hasErrors('query')}? 'error'">
+            <div th:class="${#fields.hasErrors('query')}? 'form-group error':'form-group'">
                 <label for="query" class="form-label-bold">
                     <span class="heading-small no-margin">Query</span>
                     <th:block th:if="${#fields.hasErrors('query')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('query')}" th:text="${err}" />
+                        <span>
+                            <span class="error-message" th:each="err : ${#fields.errors('query')}" th:text="${err}" />
+                        </span>
                     </th:block>
                 </label>
                 <div class="textarea-wrapped word-count">
@@ -94,7 +101,6 @@
                               th:field="*{query}"
                               id="query"
                               name="query"
-                              class="form-control"
                               th:attr="maxlength=${model.maxQueryCharacters},
                       data-max_words=${model.maxQueryWords},
                       data-maxwordslength=${model.maxQueryWords},
