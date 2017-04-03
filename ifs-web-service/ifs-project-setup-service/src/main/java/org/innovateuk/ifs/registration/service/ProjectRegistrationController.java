@@ -106,7 +106,7 @@ public class ProjectRegistrationController {
     }
 
     private boolean emailExists(String email) {
-        return userService.findUserByEmailForAnonymousUserFlow(email).isPresent();
+        return userService.findUserByEmail(email).isPresent();
     }
 
     private ServiceResult<UserResource> createUser(RegistrationForm registrationForm, Long organisationId) {

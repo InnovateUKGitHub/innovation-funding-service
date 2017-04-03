@@ -351,7 +351,7 @@ the user selects feasibility studies and no to resubmission and an innovation ar
     the user clicks the button/link    jQuery=button:contains("Choose your research")
     the user clicks the button twice   jQuery=label[for^="researchCategoryChoice"]:contains("Feasibility studies")
     the user clicks the button/link    jQuery=button:contains(Save)
-    the user clicks the button/link    jQuery=button:contains("Change your innovation area")
+    the user clicks the button/link    jQuery=button:contains("Choose your innovation area")
     the user clicks the button twice   jQuery=label[for="innovationAreaChoice-5"]
     the user clicks the button/link    jQuery=button:contains(Save)
     the user clicks the button twice   jQuery=label[for="application.resubmission-no"]
@@ -481,7 +481,7 @@ Newly invited collaborator can create account and sign in
 
 the user completes the new account creation
     the user selects the radio button    organisationType  radio-1
-     #TODO change the radio button option to radio-4 once INFUND-8896 is fixed
+     #TODO change the radio button option to radio-4 once INFUND-9078 is fixed
     the user clicks the button/link     jQuery=button:contains("Continue")
     the user should see the element     jQuery=span:contains("Create your account")
     the user enters text to a text field     id=organisationSearchName   innovate
