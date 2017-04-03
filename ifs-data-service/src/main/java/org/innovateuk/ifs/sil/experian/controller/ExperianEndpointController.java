@@ -3,6 +3,7 @@ package org.innovateuk.ifs.sil.experian.controller;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.sil.experian.resource.*;
 import org.springframework.context.annotation.Profile;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,7 +15,6 @@ import static org.innovateuk.ifs.util.JsonMappingUtil.fromJson;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.hibernate.jpa.internal.QueryImpl.LOG;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * A simple endpoint to allow stubbing of the SIL outbound email endpoint for non-integration test environments
@@ -35,7 +35,7 @@ public class ExperianEndpointController {
         buildVerficiationTestData();
     }
 
-    @RequestMapping(value = "/experianValidate", method = POST)
+    @PostMapping("/experianValidate")
     public RestResult<Object> experianValidate(@RequestBody SILBankDetails bankDetails) {
         LOG.info("Stubbing out SIL experian validation: " + bankDetails);
         ValidationResultWrapper validationResultWrapper = validationErrors.get(bankDetails);
@@ -50,7 +50,7 @@ public class ExperianEndpointController {
         return restSuccess(validationResultWrapper);
     }
 
-    @RequestMapping(value = "/experianVerify", method = POST)
+    @PostMapping("/experianVerify")
     public RestResult<Object> experianVerify(@RequestBody AccountDetails accountDetails) {
         VerificationResultWrapper verificationResultWrapper = verificationResults.get(accountDetails);
         if (verificationResultWrapper == null) {

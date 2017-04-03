@@ -35,13 +35,14 @@ public interface FinanceRowItem {
     String VALUE_MUST_BE_HIGHER_MESSAGE = "{validation.field.max.value.or.higher}";
     String VALUE_MUST_BE_LOWER_MESSAGE = "{validation.field.max.value.or.lower}";
 
-    public Long getId();
-    public BigDecimal getTotal();
-    public FinanceRowType getCostType();
-    public String getName();
-    public boolean isEmpty();
-    public default boolean excludeInRowCount(){
+    Long getId();
+    BigDecimal getTotal();
+    FinanceRowType getCostType();
+    String getName();
+    boolean isEmpty();
+    default boolean excludeInRowCount(){
         return isEmpty();
     }
-    public int getMinRows();
+    int getMinRows();
+    BigDecimal totalDiff(FinanceRowItem other);
 }

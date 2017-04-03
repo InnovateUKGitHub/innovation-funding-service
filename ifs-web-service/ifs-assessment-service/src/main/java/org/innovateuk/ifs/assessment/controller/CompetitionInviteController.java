@@ -16,10 +16,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -48,7 +48,7 @@ public class CompetitionInviteController extends BaseController {
     @Autowired
     private RejectCompetitionModelPopulator rejectCompetitionModelPopulator;
 
-    @RequestMapping(value = "/invite/competition/{inviteHash}", method = RequestMethod.GET)
+    @GetMapping("/invite/competition/{inviteHash}")
     public String openInvite(@PathVariable("inviteHash") String inviteHash,
                              @ModelAttribute("form") RejectCompetitionForm form,
                              @ModelAttribute("loggedInUser") UserResource loggedInUser,
@@ -59,7 +59,7 @@ public class CompetitionInviteController extends BaseController {
         return "assessor-competition-invite";
     }
 
-    @RequestMapping(value = "/invite/competition/{inviteHash}/accept", method = RequestMethod.POST)
+    @PostMapping("/invite/competition/{inviteHash}/accept")
     public String acceptInvite(@PathVariable("inviteHash") String inviteHash,
                                @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                Model model) {
@@ -85,14 +85,14 @@ public class CompetitionInviteController extends BaseController {
      * Unlike the other endpoints, this requires authentication through Shibboleth.
      * The /invite/ endpoints will not be authenticated and will not trigger a sign in screen.
      */
-    @RequestMapping(value = "/invite-accept/competition/{inviteHash}/accept", method = RequestMethod.GET)
+    @GetMapping("/invite-accept/competition/{inviteHash}/accept")
     @PreAuthorize("hasAuthority('assessor')")
     public String confirmAcceptInvite(@PathVariable("inviteHash") String inviteHash) {
         inviteRestService.acceptInvite(inviteHash).getSuccessObjectOrThrowException();
         return "redirect:/assessor/dashboard";
     }
 
-    @RequestMapping(value = "/invite/competition/{inviteHash}/reject", method = RequestMethod.POST)
+    @PostMapping("/invite/competition/{inviteHash}/reject")
     public String rejectInvite(Model model,
                                @PathVariable("inviteHash") String inviteHash,
                                @Valid @ModelAttribute("form") RejectCompetitionForm form,
@@ -109,14 +109,14 @@ public class CompetitionInviteController extends BaseController {
         });
     }
 
-    @RequestMapping(value = "/invite/competition/{inviteHash}/reject/confirm", method = RequestMethod.GET)
+    @GetMapping("/invite/competition/{inviteHash}/reject/confirm")
     public String rejectInviteConfirm(Model model,
                                       @ModelAttribute("form") RejectCompetitionForm form,
                                       @PathVariable("inviteHash") String inviteHash) {
         return doViewRejectInvitationConfirm(model, inviteHash);
     }
 
-    @RequestMapping(value = "/invite/competition/{inviteHash}/reject/thank-you", method = RequestMethod.GET)
+    @GetMapping("/invite/competition/{inviteHash}/reject/thank-you")
     public String rejectThankYou(@PathVariable("inviteHash") String inviteHash) {
         return "assessor-competition-reject";
     }

@@ -9,8 +9,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.ConstraintViolation;
@@ -318,7 +318,7 @@ public class FieldRequiredIfValidatorTest {
     @RequestMapping("/")
     public class TestController {
 
-        @RequestMapping(method = RequestMethod.POST)
+        @PostMapping
         public ModelAndView test(@Valid @ModelAttribute("form") TestForm form, BindingResult bindingResult) {
             if (bindingResult.hasErrors()) {
                 return new ModelAndView("failure");

@@ -22,9 +22,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -56,7 +57,7 @@ public class ProfileController {
     UserAuthenticationService userAuthenticationService;
 
 
-    @RequestMapping(value = "/view", method = RequestMethod.GET)
+    @GetMapping("/view")
     public String viewUserProfile(Model model, HttpServletRequest request) {
         final UserResource userResource = userAuthenticationService.getAuthenticatedUser(request, true);
         final OrganisationResource organisationResource = organisationService.getOrganisationForUser(userResource.getId());
@@ -105,7 +106,7 @@ public class ProfileController {
 	
 
 
-    @RequestMapping(value = "/edit", method = RequestMethod.POST)
+    @PostMapping("/edit")
     public String submitUserProfile(@Valid @ModelAttribute UserDetailsForm userDetailsForm, BindingResult bindingResult,
                                     Model model, HttpServletRequest request) {
         String destination = "profile/edit-user-profile";
@@ -127,7 +128,7 @@ public class ProfileController {
         return destination;
     }
 
-    @RequestMapping(value = "/edit", method = RequestMethod.GET)
+    @GetMapping("/edit")
     public String editUserProfile(HttpServletRequest request, Model model) {
         populateUserDetailsForm(model, request);
         boolean userIsLoggedIn = userIsLoggedIn(request);

@@ -32,12 +32,12 @@ public class AssessorFormInputResponseController {
     @Autowired
     private ValidationUtil validationUtil;
 
-    @GetMapping(value = "/assessment/{assessmentId}")
+    @GetMapping("/assessment/{assessmentId}")
     public RestResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponses(@PathVariable("assessmentId") Long assessmentId) {
         return assessorFormInputResponseService.getAllAssessorFormInputResponses(assessmentId).toGetResponse();
     }
 
-    @GetMapping(value = "/assessment/{assessmentId}/question/{questionId}")
+    @GetMapping("/assessment/{assessmentId}/question/{questionId}")
     public RestResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponsesByAssessmentAndQuestion(@PathVariable("assessmentId") Long assessmentId, @PathVariable("questionId") Long questionId) {
         return assessorFormInputResponseService.getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId).toGetResponse();
     }
@@ -60,12 +60,12 @@ public class AssessorFormInputResponseController {
         return messages.toPostWithBodyResponse();
     }
 
-    @GetMapping(value = "/application/{applicationId}/scores")
+    @GetMapping("/application/{applicationId}/scores")
     public RestResult<ApplicationAssessmentAggregateResource> getApplicationAggregateScores(@PathVariable("applicationId") long applicationId) {
         return assessorFormInputResponseService.getApplicationAggregateScores(applicationId).toGetResponse();
     }
 
-    @GetMapping(value = "/application/{applicationId}/question/{questionId}/feedback")
+    @GetMapping("/application/{applicationId}/question/{questionId}/feedback")
     public RestResult<AssessmentFeedbackAggregateResource> getAssessmentAggregateFeedback(@PathVariable("applicationId") long applicationId,
                                                                                           @PathVariable("questionId") long questionId) {
         return assessorFormInputResponseService.getAssessmentAggregateFeedback(applicationId, questionId).toGetResponse();
