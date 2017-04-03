@@ -212,11 +212,11 @@
 
 <!-- =========================== Element: Competition status warning ================ -->
 <th:block th:fragment="competition-status-message (app, competition)">
-		<div class="warning-alert"  th:if="${(app.applicationStatus.name == 'created' or app.applicationStatus.name == 'open') and competition.competitionStatus.name() != 'OPEN'}">
+		<div class="warning-alert"  th:if="${(app.applicationStatus.name() == 'CREATED' or app.applicationStatus.name() == 'OPEN') and competition.competitionStatus.name() != 'OPEN'}">
         <h2 class="heading-small no-margin">Application not submitted</h2>
         <p>This application has not been entered into the competition <th:block th:text="${competition.name}" /> as it was not submitted before the competition deadline.</p>
     </div>
-		<div class="success-alert" th:if="${(app.applicationStatus.name == 'approved')}">
+		<div class="success-alert" th:if="${(app.applicationStatus.name() == 'APPROVED')}">
 	        <h2 class="heading-small no-margin">Congratulations, your application has been successful</h2>
 	        <p>
                 <th:block th:unless="${competition.competitionStatus.isFeedbackReleased()}">You have been successful in this round of funding.</th:block>
@@ -227,7 +227,7 @@
                 <a th:href="@{/project-setup/project/{projectId}(projectId=${currentProject.id})}">Start to plan your project</a>
             </p>
         </div>
-        <div class="warning-alert" th:if="${(app.applicationStatus.name == 'rejected')}">
+        <div class="warning-alert" th:if="${(app.applicationStatus.name() == 'REJECTED')}">
             <h2 class="heading-small no-margin">Your application has not been successful in this competition.</h2>
             <p>
                 <th:block th:if="${competition.competitionStatus.isFeedbackReleased()}">Scores and written feedback from each assessor can be found below.</th:block>
