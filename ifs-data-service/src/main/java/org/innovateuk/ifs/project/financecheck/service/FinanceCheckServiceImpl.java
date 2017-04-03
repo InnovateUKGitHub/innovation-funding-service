@@ -143,6 +143,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         final List<PartnerOrganisation> sortedPartnersList = new PrioritySorting<>(partnerOrganisations, leadPartner, po -> po.getOrganisation().getName()).unwrap();
         Optional<SpendProfile> spendProfile = spendProfileRepository.findOneByProjectIdAndOrganisationId(projectId, partnerOrganisations.get(0).getOrganisation().getId());
         boolean financeChecksAllApproved = getFinanceCheckApprovalStatus(projectId);
+        boolean bankDetailsApproved = getBankDetailsApprovalStatus(projectId);
 
         FinanceCheckOverviewResource overviewResource = getFinanceCheckOverview(projectId).getSuccessObjectOrThrowException();
 
@@ -150,7 +151,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         LocalDate spendProfileGeneratedDate = spendProfile.map(p -> LocalDate.from(p.getGeneratedDate().toInstant().atOffset(ZoneOffset.UTC))).orElse(null);
 
         return serviceSuccess(new FinanceCheckSummaryResource(overviewResource, competition.getId(), competition.getName(),
-                spendProfile.isPresent(), getPartnerStatuses(sortedPartnersList, projectId), financeChecksAllApproved,
+                spendProfile.isPresent(), getPartnerStatuses(sortedPartnersList, projectId), financeChecksAllApproved, bankDetailsApproved,
                 spendProfileGeneratedBy, spendProfileGeneratedDate));
     }
 
@@ -203,6 +204,11 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     private boolean getFinanceCheckApprovalStatus(Long projectId) {
         ServiceResult<ProjectTeamStatusResource> teamStatusResult = projectService.getProjectTeamStatus(projectId, Optional.empty());
         return teamStatusResult.isSuccess() && !simpleFindFirst(teamStatusResult.getSuccessObject().getPartnerStatuses(), s -> !asList(COMPLETE, NOT_REQUIRED).contains(s.getFinanceChecksStatus())).isPresent();
+    }
+
+    private boolean getBankDetailsApprovalStatus(Long projectId) {
+        ServiceResult<ProjectTeamStatusResource> teamStatusResult = projectService.getProjectTeamStatus(projectId, Optional.empty());
+        return teamStatusResult.isSuccess() && !simpleFindFirst(teamStatusResult.getSuccessObject().getPartnerStatuses(), s -> !asList(COMPLETE, NOT_REQUIRED).contains(s.getBankDetailsStatus())).isPresent();
     }
 
     private List<FinanceCheckPartnerStatusResource> getPartnerStatuses(List<PartnerOrganisation> partnerOrganisations, Long projectId) {
