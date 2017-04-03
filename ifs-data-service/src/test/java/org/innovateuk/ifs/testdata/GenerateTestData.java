@@ -93,7 +93,7 @@ import static org.mockito.Mockito.when;
  */
 @ActiveProfiles({"integration-test,seeding-db"})
 @DirtiesContext
-//@Ignore
+@Ignore
 public class GenerateTestData extends BaseIntegrationTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(GenerateTestData.class);

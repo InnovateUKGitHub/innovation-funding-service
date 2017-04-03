@@ -4,6 +4,7 @@ import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_RESEARCH_C
 /**
  * Validator for Assessor Research Category questions.
  */
+@Component
 public class ResearchCategoryValidator extends BaseValidator {
 
     @Autowired
