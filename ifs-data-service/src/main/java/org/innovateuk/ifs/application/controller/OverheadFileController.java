@@ -15,7 +15,6 @@ import java.io.IOException;
 
 import static org.innovateuk.ifs.file.controller.FileControllerUtils.handleFileDownload;
 import static org.innovateuk.ifs.file.controller.FileControllerUtils.handleFileUpload;
-import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
  * Controller for handling the overheads calculation spreadsheet file upload
@@ -31,14 +30,14 @@ public class OverheadFileController {
     @Qualifier("overheadCalculationFileValidator")
     private FileHttpHeadersValidator fileValidator;
 
-    @RequestMapping(value = "/overheadCalculationDocumentDetails", method = GET, produces = "application/json")
+    @GetMapping(value = "/overheadCalculationDocumentDetails", produces = "application/json")
     public RestResult<FileEntryResource> getFileDetails(
             @RequestParam(value = "overheadId") long overheadId) {
 
         return overheadFileService.getFileEntryDetails(overheadId).toGetResponse();
     }
 
-    @RequestMapping(value = "/overheadCalculationDocument", method = GET)
+    @GetMapping("/overheadCalculationDocument")
     public @ResponseBody
     ResponseEntity<Object> getFileContents(
             @RequestParam("overheadId") long overheadId) throws IOException {
@@ -46,7 +45,7 @@ public class OverheadFileController {
         return handleFileDownload(() -> overheadFileService.getFileEntryContents(overheadId));
     }
 
-    @RequestMapping(value = "/overheadCalculationDocument", method = POST, produces = "application/json")
+    @PostMapping(value = "/overheadCalculationDocument", produces = "application/json")
     public RestResult<FileEntryResource> createCalculationFile(
             @RequestHeader(value = "Content-Type", required = false) String contentType,
             @RequestHeader(value = "Content-Length", required = false) String contentLength,
@@ -58,7 +57,7 @@ public class OverheadFileController {
                 overheadFileService.createFileEntry(overheadId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
     }
 
-    @RequestMapping(value = "/overheadCalculationDocument", method = PUT, produces = "application/json")
+    @PutMapping(value = "/overheadCalculationDocument", produces = "application/json")
     public RestResult<FileEntryResource> updateCalculationFile(
             @RequestHeader(value = "Content-Type", required = false) String contentType,
             @RequestHeader(value = "Content-Length", required = false) String contentLength,
@@ -70,7 +69,7 @@ public class OverheadFileController {
                 overheadFileService.updateFileEntry(overheadId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
     }
 
-    @RequestMapping(value = "/overheadCalculationDocument", method = DELETE, produces = "application/json")
+    @DeleteMapping(value = "/overheadCalculationDocument", produces = "application/json")
     public RestResult<Void> deleteCalculationFile(
             @RequestParam(value = "overheadId") long overheadId) throws IOException {
 

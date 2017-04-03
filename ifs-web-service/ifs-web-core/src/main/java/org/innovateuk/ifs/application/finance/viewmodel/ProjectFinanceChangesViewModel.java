@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceOverviewVi
 import org.innovateuk.ifs.finance.resource.category.ChangedFinanceRowPair;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.finance.resource.cost.LabourCost;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 
 import java.math.BigDecimal;
@@ -22,12 +23,20 @@ public class ProjectFinanceChangesViewModel {
     private Long projectId;
     private Long organisationId;
     private FinanceCheckEligibilityResource financeCheckEligibility;
+    private LabourCost applicationWorkingDaysPerYearCostItem;
+    private LabourCost projectWorkingDaysPerYearCostItem;
     private Map<FinanceRowType, BigDecimal> sectionDifferences;
     private Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> changes;
     private BigDecimal totalApplicationCosts;
     private BigDecimal totalProjectCostsAfterChanges;
 
-    public ProjectFinanceChangesViewModel(boolean isInternal, String organisationName, Long organisationId, String projectName, Long applicationId, Long projectId, FinanceCheckEligibilityResource financeCheckEligibilityResource, Map<FinanceRowType, BigDecimal> sectionDifferences, Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> changes, BigDecimal totalApplicationCosts, BigDecimal totalProjectCostsAfterChanges) {
+    public ProjectFinanceChangesViewModel(boolean isInternal, String organisationName, Long organisationId,
+                                          String projectName, Long applicationId, Long projectId,
+                                          FinanceCheckEligibilityResource financeCheckEligibilityResource,
+                                          LabourCost applicationWorkingDaysPerYearCostItem, LabourCost projectWorkingDaysPerYearCostItem,
+                                          Map<FinanceRowType, BigDecimal> sectionDifferences,
+                                          Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> changes,
+                                          BigDecimal totalApplicationCosts, BigDecimal totalProjectCostsAfterChanges) {
         this.isInternal = isInternal;
         this.organisationName = organisationName;
         this.projectName = projectName;
@@ -35,6 +44,8 @@ public class ProjectFinanceChangesViewModel {
         this.projectId = projectId;
         this.organisationId = organisationId;
         this.financeCheckEligibility = financeCheckEligibilityResource;
+        this.applicationWorkingDaysPerYearCostItem = applicationWorkingDaysPerYearCostItem;
+        this.projectWorkingDaysPerYearCostItem = projectWorkingDaysPerYearCostItem;
         this.sectionDifferences = sectionDifferences;
         this.changes = changes;
         this.totalApplicationCosts = totalApplicationCosts;
@@ -135,5 +146,21 @@ public class ProjectFinanceChangesViewModel {
 
     public void setInternal(boolean internal) {
         isInternal = internal;
+    }
+
+    public LabourCost getApplicationWorkingDaysPerYearCostItem() {
+        return applicationWorkingDaysPerYearCostItem;
+    }
+
+    public void setApplicationWorkingDaysPerYearCostItem(LabourCost applicationWorkingDaysPerYearCostItem) {
+        this.applicationWorkingDaysPerYearCostItem = applicationWorkingDaysPerYearCostItem;
+    }
+
+    public LabourCost getProjectWorkingDaysPerYearCostItem() {
+        return projectWorkingDaysPerYearCostItem;
+    }
+
+    public void setProjectWorkingDaysPerYearCostItem(LabourCost projectWorkingDaysPerYearCostItem) {
+        this.projectWorkingDaysPerYearCostItem = projectWorkingDaysPerYearCostItem;
     }
 }

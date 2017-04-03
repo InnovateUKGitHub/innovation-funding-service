@@ -1403,7 +1403,7 @@ Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     bank details are approved for all businesses
 
 the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
-    guest user log-in    lee.bowman@innovateuk.test    Passw0rd
+    guest user log-in  &{internal_finance_credentials}
     the user navigates to the page    ${COMP_MANAGEMENT_PROJECT_SETUP}
     ${update_comp}    ${value}=    Run Keyword And Ignore Error Without Screenshots    the user should not see the text in the page    ${FUNDERS_PANEL_COMPETITION_NAME}
     run keyword if    '${update_comp}' == 'PASS'    the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
@@ -1427,7 +1427,7 @@ the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project se
     the user should see the text in the page    Manage funding applications
 
 the users fill out project details
-    When Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
+    When Log in as a different user  &{collaborator1_credentials}
     Then the user navigates to the page    ${la_fromage_overview}
     And the user clicks the button/link    link=Project details
     Then the user should see the text in the page    Finance contacts
@@ -1435,7 +1435,7 @@ the users fill out project details
     And the user clicks the button/link    link=Ludlow
     And the user selects the radio button    financeContact    financeContact1
     And the user clicks the button/link    jQuery=.button:contains("Save")
-    When Log in as a different user    pete.tom@egg.com    Passw0rd
+    When Log in as a different user  &{collaborator2_credentials}
     Then the user navigates to the page    ${la_fromage_overview}
     And the user clicks the button/link    link=Project details
     Then the user should see the text in the page    Finance contacts
@@ -1443,7 +1443,7 @@ the users fill out project details
     And the user clicks the button/link    link=EGGS
     And the user selects the radio button    financeContact    financeContact1
     And the user clicks the button/link    jQuery=.button:contains("Save")
-    When Log in as a different user    steve.smith@empire.com    Passw0rd
+    When Log in as a different user  &{lead_applicant_credentials}
     Then the user navigates to the page    ${la_fromage_overview}
     And the user clicks the button/link    link=Project details
     Then the user should see the text in the page    Finance contacts
@@ -1490,6 +1490,8 @@ partner submits his bank details
     the user selects the radio button     addressType    REGISTERED
     the user clicks the button/link       jQuery=.button:contains("Submit bank account details")
     the user clicks the button/link       jQuery=.button:contains("Submit")
+    the user should see the element       jQuery=dt:contains("Account number") + dd:contains("*****795")
+    # Added this readonly check to verify that the bank details are indeed marked as done
 
 the project finance user has approved bank details
     Guest user log-in  &{internal_finance_credentials}
