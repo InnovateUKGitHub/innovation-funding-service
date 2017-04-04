@@ -12,9 +12,18 @@
     <div th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=${url}" th:remove="tag"></div>
 
     <div class="page-title">
-        <th:block th:insert="fragments/elements :: project-title (projectId=${model.applicationId}, projectName=${model.projectName})" />
+        <th:block th:insert="fragments/elements :: project-title (projectName=${model.projectName})" />
         <h1 class="heading-xlarge">Project setup status</h1>
     </div>
+
+    <dl class="font-xsmall extra-margin-bottom">
+        <dt>Project number:</dt>
+        <dd th:text="${model.applicationId}" />
+        <dt>Competition:</dt>
+        <dd th:text="${model.competitionName}" />
+        <dt>Funding body:</dt>
+        <dd>Innovate UK</dd>
+    </dl>
 
     <th:block th:if="${model.projectComplete}">
         <div class="success-alert extra-margin-bottom">

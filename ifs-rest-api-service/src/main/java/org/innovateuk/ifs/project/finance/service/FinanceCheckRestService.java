@@ -5,7 +5,6 @@ import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResour
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckOverviewResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
-import org.innovateuk.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
 
 /**
  * Rest Service for dealing with Project finance operations
@@ -21,8 +20,6 @@ public interface FinanceCheckRestService {
     RestResult<FinanceCheckOverviewResource> getFinanceCheckOverview(Long projectId);
 
     RestResult<Void> approveFinanceCheck(Long projectId, Long organisationId);
-
-    RestResult<FinanceCheckProcessResource> getFinanceCheckApprovalStatus(Long projectId, Long organisationId);
 
     RestResult<FinanceCheckEligibilityResource> getFinanceCheckEligibilityDetails(Long projectId, Long organisationId);
 }

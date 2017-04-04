@@ -69,13 +69,15 @@ import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.project.bankdetails.mapper.BankDetailsMapper;
 import org.innovateuk.ifs.project.bankdetails.repository.BankDetailsRepository;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
-import org.innovateuk.ifs.project.financecheck.repository.*;
+import org.innovateuk.ifs.project.financecheck.repository.CostCategoryRepository;
+import org.innovateuk.ifs.project.financecheck.repository.CostCategoryTypeRepository;
+import org.innovateuk.ifs.project.financecheck.repository.FinanceCheckRepository;
+import org.innovateuk.ifs.project.financecheck.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.financecheck.service.FinanceCheckNotesService;
 import org.innovateuk.ifs.project.financecheck.service.FinanceCheckQueriesService;
 import org.innovateuk.ifs.project.financecheck.service.FinanceCheckService;
 import org.innovateuk.ifs.project.financecheck.transactional.SpendProfileService;
 import org.innovateuk.ifs.project.financecheck.workflow.financechecks.configuration.EligibilityWorkflowHandler;
-import org.innovateuk.ifs.project.financecheck.workflow.financechecks.configuration.FinanceCheckWorkflowHandler;
 import org.innovateuk.ifs.project.financecheck.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
 import org.innovateuk.ifs.project.mapper.MonitoringOfficerMapper;
@@ -530,9 +532,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected ProjectUsersHelper projectUsersHelperMock;
 
     @Mock
-    protected FinanceCheckWorkflowHandler financeCheckWorkflowHandlerMock;
-
-    @Mock
     protected ViabilityWorkflowHandler viabilityWorkflowHandlerMock;
 
     @Mock
@@ -549,9 +548,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected FinanceCheckService financeCheckServiceMock;
-
-    @Mock
-    protected FinanceCheckProcessRepository financeCheckProcessRepository;
 
     @Mock
     protected FinanceCheckRepository financeCheckRepositoryMock;
