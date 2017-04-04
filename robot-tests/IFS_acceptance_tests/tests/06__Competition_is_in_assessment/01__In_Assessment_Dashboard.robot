@@ -15,7 +15,7 @@ In Assessment dashboard page
     And The user should see the text in the page    In assessment
     And The user should see the text in the page    Programme
     And The user should see the text in the page    Materials and manufacturing
-    And The user should see the text in the page    Satellite Applications
+    And The user should see the text in the page    Satellite applications
     And the user should not see the element    link=View and update competition setup
     #The following checks test if the correct buttons are disabled
     And the user should see the element    jQuery=.disabled[aria-disabled="true"]:contains("Input and review funding decision")

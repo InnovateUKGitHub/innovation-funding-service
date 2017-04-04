@@ -18,13 +18,15 @@
   	<th:block th:insert="fragments/elements :: competition-status-message (app=${currentApplication}, competition=${currentCompetition})" />
 
     <div class="page-title">
-        <th:block th:insert="fragments/elements :: application-title (applicationId=${currentApplication.id},applicationName=${currentApplication.name})" />
+        <th:block th:insert="fragments/elements :: application-title (applicationName=${currentApplication.name})" />
         <h1 class="heading-xlarge">Application overview</h1>
     </div>
 
     <div class="grid-row">
         <div class="column-half">
           <dl class="font-xsmall">
+            <dt>Application number:</dt>
+            <dd th:text="${currentApplication.id}" />
             <dt>Competition:</dt>
             <dd th:text="${currentCompetition.name}" />
             <dt>Funding body:</dt>

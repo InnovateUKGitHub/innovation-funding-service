@@ -19,7 +19,7 @@
              th:with="linkTitle='Spend profile overview',linkClass='link-back',linkUrl=@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile(projectId=${model.projectId},organisationId=${model.organisationId})}" />
 
         <div class="page-title">
-            <th:block th:insert="fragments/elements :: project-title (projectId=${model.applicationId}, projectName=${model.projectName})" />
+            <th:block th:insert="fragments/elements :: project-title (projectName=${model.projectName})" />
             <h1 class="heading-xlarge">Spend profile</h1>
         </div>
 

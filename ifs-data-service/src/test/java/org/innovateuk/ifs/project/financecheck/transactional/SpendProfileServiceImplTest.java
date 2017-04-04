@@ -7,7 +7,8 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
-import org.innovateuk.ifs.notifications.resource.*;
+import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
+import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.project.builder.PartnerOrganisationBuilder;
 import org.innovateuk.ifs.project.builder.ProjectBuilder;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
@@ -26,7 +27,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.validator.util.ValidationUtil;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
-import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -171,51 +171,6 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         verify(projectEmailService).sendEmail(singletonList(to1), expectedNotificationArguments, SpendProfileServiceImpl.Notifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE);
         verify(projectEmailService).sendEmail(singletonList(to2), expectedNotificationArguments, SpendProfileServiceImpl.Notifications.FINANCE_CONTACT_SPEND_PROFILE_AVAILABLE);
-    }
-
-    @Test
-    public void testGenerateSpendProfileButNotAllFinanceChecksCompleted() {
-
-        GenerateSpendProfileData generateSpendProfileData = new GenerateSpendProfileData().build();
-
-        Project project = generateSpendProfileData.getProject();
-        Organisation organisation1 = generateSpendProfileData.getOrganisation1();
-        Organisation organisation2 = generateSpendProfileData.getOrganisation2();
-        CostCategoryType costCategoryType1 = generateSpendProfileData.getCostCategoryType1();
-        CostCategoryType costCategoryType2 = generateSpendProfileData.getCostCategoryType2();
-        CostCategory type1Cat1 = generateSpendProfileData.type1Cat1;
-        CostCategory type1Cat2 = generateSpendProfileData.type1Cat2;
-        CostCategory type2Cat1 = generateSpendProfileData.type2Cat1;
-
-        when(financeCheckProcessRepository.findOneByTargetId(project.getPartnerOrganisations().get(0).getId())).thenReturn(
-                new FinanceCheckProcess((User) null, null, new ActivityState(null, State.READY_TO_SUBMIT)));
-        when(financeCheckProcessRepository.findOneByTargetId(project.getPartnerOrganisations().get(1).getId())).thenReturn(
-                new FinanceCheckProcess((User) null, null, new ActivityState(null, State.ACCEPTED)));
-
-        // setup expectations for getting project users to infer the partner organisations
-        List<ProjectUserResource> projectUsers =
-                newProjectUserResource().withOrganisation(organisation1.getId(), organisation2.getId()).build(2);
-        when(projectServiceMock.getProjectUsers(projectId)).thenReturn(serviceSuccess(projectUsers));
-
-        // setup expectations for finding finance figures per Cost Category from which to generate the spend profile
-        when(spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(project.getId(), organisation1.getId())).thenReturn(serviceSuccess(
-                new SpendProfileCostCategorySummaries(
-                        asList(
-                                new SpendProfileCostCategorySummary(type1Cat1, new BigDecimal("100.00"), project.getDurationInMonths()),
-                                new SpendProfileCostCategorySummary(type1Cat2, new BigDecimal("200.00"), project.getDurationInMonths())),
-                        costCategoryType1)));
-
-        when(spendProfileCostCategorySummaryStrategy.getCostCategorySummaries(project.getId(), organisation2.getId())).thenReturn(serviceSuccess(
-                new SpendProfileCostCategorySummaries(
-                        singletonList(new SpendProfileCostCategorySummary(type2Cat1, new BigDecimal("300.66"), project.getDurationInMonths())),
-                        costCategoryType2)));
-
-        ServiceResult<Void> generateResult = service.generateSpendProfile(projectId);
-        assertTrue(generateResult.isFailure());
-        assertTrue(generateResult.getFailure().is(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_FINANCE_CHECKS_APPROVED_OR_NOT_APPLICABLE));
-
-        verify(spendProfileRepositoryMock, never()).save(isA(SpendProfile.class));
-        verifyNoMoreInteractions(spendProfileRepositoryMock);
     }
 
     @Test
@@ -393,11 +348,6 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         CostCategory type1Cat1 = generateSpendProfileData.type1Cat1;
         CostCategory type1Cat2 = generateSpendProfileData.type1Cat2;
         CostCategory type2Cat1 = generateSpendProfileData.type2Cat1;
-
-        when(financeCheckProcessRepository.findOneByTargetId(project.getPartnerOrganisations().get(0).getId())).thenReturn(
-                new FinanceCheckProcess((User) null, null, new ActivityState(null, State.ACCEPTED)));
-        when(financeCheckProcessRepository.findOneByTargetId(project.getPartnerOrganisations().get(1).getId())).thenReturn(
-                new FinanceCheckProcess((User) null, null, new ActivityState(null, State.ACCEPTED)));
 
         // setup expectations for getting project users to infer the partner organisations
         List<ProjectUserResource> projectUsers =
@@ -1242,7 +1192,6 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         verify(projectFinanceRepositoryMock, never()).save(projectFinanceInDB);
         verify(eligibilityWorkflowHandlerMock, never()).eligibilityApproved(partnerOrganisationInDB, user);
-        verify(financeCheckWorkflowHandlerMock, never()).approveFinanceCheck(partnerOrganisationInDB, user);
     }
 
     @Test
@@ -1267,7 +1216,6 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         verify(projectFinanceRepositoryMock, never()).save(projectFinanceInDB);
         verify(eligibilityWorkflowHandlerMock, never()).eligibilityApproved(partnerOrganisationInDB, user);
-        verify(financeCheckWorkflowHandlerMock, never()).approveFinanceCheck(partnerOrganisationInDB, user);
 
     }
 
@@ -1293,7 +1241,6 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         assertSaveEligibilityResults(projectFinanceInDB, EligibilityRagStatus.UNSET);
 
         verify(eligibilityWorkflowHandlerMock, never()).eligibilityApproved(partnerOrganisationInDB, user);
-        verify(financeCheckWorkflowHandlerMock, never()).approveFinanceCheck(partnerOrganisationInDB, user);
     }
 
     @Test
@@ -1318,7 +1265,6 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         assertSaveEligibilityResults(projectFinanceInDB, EligibilityRagStatus.AMBER);
 
         verify(eligibilityWorkflowHandlerMock, never()).eligibilityApproved(partnerOrganisationInDB, user);
-        verify(financeCheckWorkflowHandlerMock, never()).approveFinanceCheck(partnerOrganisationInDB, user);
 
     }
 
@@ -1335,7 +1281,6 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         ProjectFinance projectFinanceInDB = setUpSaveEligibilityMocking(partnerOrganisationInDB, user, EligibilityState.REVIEW);
 
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
-        when(financeCheckWorkflowHandlerMock.approveFinanceCheck(partnerOrganisationInDB, user)).thenReturn(true);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         ServiceResult<Void> result = service.saveEligibility(projectOrganisationCompositeId, Eligibility.APPROVED, EligibilityRagStatus.GREEN);

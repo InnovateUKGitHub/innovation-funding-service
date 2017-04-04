@@ -87,7 +87,7 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
         return isLeadPartner(projectOrganisationCompositeId.getProjectId(), user.getId());
     }
 
-    @PermissionRule(value = "COMPLETE_SPEND_PROFILE_REVIEW", description = "Only a project manager can complete the projects spend profiles review")
+    @PermissionRule(value = "COMPLETE_SPEND_PROFILE_REVIEW", description = "Only a Project Manager can complete the projects spend profiles review")
     public boolean projectManagerCanCompleteSpendProfile(Long projectId, UserResource user) {
         return isProjectManager(projectId, user.getId());
     }
