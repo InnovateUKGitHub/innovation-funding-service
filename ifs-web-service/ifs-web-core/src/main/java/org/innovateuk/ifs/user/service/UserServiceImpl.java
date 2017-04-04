@@ -189,8 +189,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Void sendPasswordResetNotification(String email) {
-        return userRestService.sendPasswordResetNotification(email).getSuccessObjectOrThrowException();
+    public void sendPasswordResetNotification(String email) {
+            userRestService.sendPasswordResetNotification(email);
     }
 
     @Override
