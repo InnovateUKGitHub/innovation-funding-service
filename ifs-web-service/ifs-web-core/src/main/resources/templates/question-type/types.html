@@ -110,7 +110,7 @@
          */-->
         <!--/* file upload has been submitted to innovate uk or marked as complete */-->
         <th:block th:if="${viewmode == 'readonly'}">
-            <p th:unless="${#strings.isEmpty(filename)}" class="uploaded-file">No file currently uploaded</p>
+            <p th:if="${#strings.isEmpty(filename)}" class="uploaded-file">No file currently uploaded</p>
             <a th:unless="${#strings.isEmpty(filename)}" class="uploaded-file" th:href="${downloadUrl}"  th:text="${filename}">The-uploaded-file-example.pdf</a>
         </th:block>
         <!--/* file upload can still be changed */-->
