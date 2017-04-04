@@ -5,9 +5,11 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.validator.HibernateValidator;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.domain.QuestionStatus;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.mapper.ApplicationInviteMapper;
@@ -24,6 +26,7 @@ import org.innovateuk.ifs.user.domain.User;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.validation.BeanPropertyBindingResult;
@@ -36,14 +39,17 @@ import java.util.List;
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static org.hamcrest.CoreMatchers.equalTo;
+import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.QuestionBuilder.newQuestion;
+import static org.innovateuk.ifs.application.builder.QuestionStatusBuilder.newQuestionStatus;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
+import static org.innovateuk.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder.newApplicationInvite;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder.newInvite;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationBuilder.newInviteOrganisation;
@@ -53,8 +59,10 @@ import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisatio
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
@@ -267,7 +275,7 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
 
         ServiceResult<InviteResultsResource> result = inviteService.createApplicationInvites(inviteOrganisationResource);
         assertTrue(result.isFailure());
-        
+
         verify(inviteOrganisationRepositoryMock, never()).save(isA(InviteOrganisation.class));
         verify(applicationInviteRepositoryMock, never()).save(isA(List.class));
     }
@@ -315,12 +323,25 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void removeApplicationInvite() {
-        User user = newUser().build();
-        Application application = newApplication().build();
+    public void removeApplicationInvite_reassignsQuestionsToLeadApplicant() throws Exception {
+        User inviteUser = newUser().build();
+        List<ProcessRole> inviteProcessRoles = newProcessRole()
+                .withRole(newRole(COLLABORATOR))
+                .withUser(inviteUser)
+                .withOrganisationId(1L)
+                .build(1);
+
+        ProcessRole leadApplicantProcessRole = newProcessRole()
+                .withRole(newRole(LEADAPPLICANT))
+                .withUser(newUser().build())
+                .build();
+
+        Application application = newApplication()
+                .withProcessRoles(leadApplicantProcessRole, inviteProcessRoles.get(0))
+                .build();
         ApplicationInvite applicationInvite = newApplicationInvite()
-                .withId(24521L)
-                .withUser(user)
+                .withId(12L)
+                .withUser(inviteUser)
                 .withApplication(application)
                 .withInviteOrganisation(
                         newInviteOrganisation()
@@ -329,52 +350,247 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
                 )
                 .build();
 
-        List<ProcessRole> processRoles = newProcessRole().build(3);
-        ProcessRole manyMembersOfOrg = processRoles.get(0);
-        manyMembersOfOrg.setOrganisationId(1L);
-        ProcessRole otherMemberOfOrg = newProcessRole().build();
-        ProcessRole onlyMemberOfOrg = processRoles.get(1);
-        onlyMemberOfOrg.setOrganisationId(2L);
-        ProcessRole withoutQuestionStatus = processRoles.get(2);
-        withoutQuestionStatus.setOrganisationId(3L);
-        QuestionStatus singleStatusQuestion = new QuestionStatus(newQuestion().withMultipleStatuses(false).build(), null, onlyMemberOfOrg, true);
-        QuestionStatus multipleStatusQuestionLastMember = new QuestionStatus(newQuestion().withMultipleStatuses(true).build(), null, onlyMemberOfOrg, true);
-        QuestionStatus multipleStatusQuestionManyMember = new QuestionStatus(newQuestion().withMultipleStatuses(true).build(), null, manyMembersOfOrg, true);
+        Question question = newQuestion().withMultipleStatuses(false).build();
+
+        List<FormInputResponse> inviteResponses = newFormInputResponse()
+                .withFormInputs(
+                        newFormInput().withQuestion(question).build(1)
+                )
+                .withUpdatedBy(inviteProcessRoles.get(0))
+                .withValue("Test value")
+                .build(2);
+        List<QuestionStatus> questionStatuses = newQuestionStatus()
+                .withApplication(application)
+                .withQuestion(question)
+                .withMarkedAsCompleteBy(inviteProcessRoles.get(0))
+                .withAssignee(inviteProcessRoles.get(0))
+                .withAssignedBy(inviteProcessRoles.get(0))
+                .withMarkedAsComplete(true)
+                .build(2);
+
+        Long inviteProcessRoleId = inviteProcessRoles.get(0).getId();
 
         when(applicationInviteMapper.mapIdToDomain(applicationInvite.getId())).thenReturn(applicationInvite);
-        when(processRoleRepositoryMock.findByUserAndApplicationId(user, application.getId())).thenReturn(processRoles);
-        when(questionStatusRepositoryMock.findByApplicationIdAndMarkedAsCompleteById(application.getId(), manyMembersOfOrg.getId()))
-                .thenReturn(newArrayList(multipleStatusQuestionManyMember));
-        when(questionStatusRepositoryMock.findByApplicationIdAndMarkedAsCompleteById(application.getId(), onlyMemberOfOrg.getId()))
-                .thenReturn(newArrayList(singleStatusQuestion, multipleStatusQuestionLastMember));
-        when(questionStatusRepositoryMock.findByApplicationIdAndMarkedAsCompleteById(application.getId(), withoutQuestionStatus.getId()))
-                .thenReturn(newArrayList());
-        when(processRoleRepositoryMock.findByApplicationIdAndOrganisationId(application.getId(), manyMembersOfOrg.getOrganisationId()))
-                .thenReturn(newArrayList(manyMembersOfOrg, otherMemberOfOrg));
-        when(processRoleRepositoryMock.findByApplicationIdAndOrganisationId(application.getId(), onlyMemberOfOrg.getOrganisationId()))
-                .thenReturn(newArrayList(onlyMemberOfOrg));
+        when(processRoleRepositoryMock.findByUserAndApplicationId(inviteUser, application.getId())).thenReturn(inviteProcessRoles);
+        when(processRoleRepositoryMock.findByApplicationIdAndOrganisationId(application.getId(), inviteProcessRoles.get(0).getOrganisationId()))
+                .thenReturn(newArrayList(inviteProcessRoles.get(0)));
 
-        ServiceResult<Void> applicationInviteResult = inviteService.removeApplicationInvite(applicationInvite.getId());
-        assertTrue(applicationInviteResult.isSuccess());
+        when(formInputResponseRepositoryMock.findByUpdatedById(inviteProcessRoleId)).thenReturn(inviteResponses);
 
-        //Single status should be completed by lead
-        assertThat(singleStatusQuestion.getMarkedAsCompleteBy(), equalTo(applicationInvite.getTarget().getLeadApplicantProcessRole()));
+        when(questionStatusRepositoryMock.findByApplicationIdAndMarkedAsCompleteByIdOrAssigneeIdOrAssignedById(
+                application.getId(),
+                inviteProcessRoleId,
+                inviteProcessRoleId,
+                inviteProcessRoleId
+        ))
+                .thenReturn(questionStatuses);
 
-        verify(applicationInviteMapper).mapIdToDomain(applicationInvite.getId());
-        verify(processRoleRepositoryMock).findByUserAndApplicationId(user, application.getId());
-        verify(questionStatusRepositoryMock).findByApplicationIdAndMarkedAsCompleteById(application.getId(), manyMembersOfOrg.getId());
-        verify(questionStatusRepositoryMock).findByApplicationIdAndMarkedAsCompleteById(application.getId(), onlyMemberOfOrg.getId());
-        verify(questionStatusRepositoryMock).findByApplicationIdAndMarkedAsCompleteById(application.getId(), withoutQuestionStatus.getId());
-        verify(processRoleRepositoryMock).findByApplicationIdAndOrganisationId(application.getId(), manyMembersOfOrg.getOrganisationId());
-        verify(processRoleRepositoryMock).findByApplicationIdAndOrganisationId(application.getId(), onlyMemberOfOrg.getOrganisationId());
-        verify(questionStatusRepositoryMock).delete(multipleStatusQuestionLastMember);
-        verify(inviteOrganisationRepositoryMock).save(applicationInvite.getInviteOrganisation());
+        ServiceResult<Void> serviceResult = inviteService.removeApplicationInvite(applicationInvite.getId());
 
-        //Verify many member question status is completed by other member.
-        assertThat(multipleStatusQuestionManyMember.getMarkedAsCompleteBy(), equalTo(otherMemberOfOrg));
+        InOrder inOrder = inOrder(formInputResponseRepositoryMock, questionStatusRepositoryMock, processRoleRepositoryMock, inviteOrganisationRepositoryMock);
 
-        ServiceResult<Void> applicationInviteResultFailure = inviteService.removeApplicationInvite(11L);
-        assertTrue(applicationInviteResultFailure.isFailure());
+        inOrder.verify(formInputResponseRepositoryMock).save(
+                createLambdaMatcher((List<FormInputResponse> actual) ->
+                        actual.stream().allMatch(fir -> fir.getUpdatedBy().equals(leadApplicantProcessRole))
+                )
+        );
+        inOrder.verify(questionStatusRepositoryMock).save(
+                createLambdaMatcher((List<QuestionStatus> actual) ->
+                        actual.stream().allMatch(qs -> qs.getMarkedAsCompleteBy().equals(leadApplicantProcessRole) &&
+                                qs.getAssignedBy().equals(leadApplicantProcessRole) &&
+                                qs.getAssignee().equals(leadApplicantProcessRole))
+                )
+        );
+        inOrder.verify(processRoleRepositoryMock).delete(inviteProcessRoles);
+        inOrder.verify(inviteOrganisationRepositoryMock).save(applicationInvite.getInviteOrganisation());
+
+        inOrder.verifyNoMoreInteractions();
+
+        assertTrue(serviceResult.isSuccess());
+    }
+
+    @Test
+    public void removeApplicationInvite_reassignsQuestionsToOtherOrganisationMember() throws Exception {
+        User inviteUser = newUser().build();
+        List<ProcessRole> inviteProcessRoles = newProcessRole()
+                .withRole(COLLABORATOR)
+                .withUser(inviteUser)
+                .withOrganisationId(1L)
+                .build(1);
+
+        ProcessRole leadApplicantProcessRole = newProcessRole()
+                .withRole(LEADAPPLICANT)
+                .withUser(newUser().build())
+                .build();
+
+        List<ProcessRole> organisationProcessRoles = newArrayList(
+                newProcessRole()
+                        .withId(10L)
+                        .withRole(COLLABORATOR)
+                        .build(),
+                inviteProcessRoles.get(0),
+                newProcessRole()
+                        .withId(11L)
+                        .withRole(COLLABORATOR)
+                        .build()
+        );
+
+        Application application = newApplication()
+                .withProcessRoles(leadApplicantProcessRole, inviteProcessRoles.get(0))
+                .build();
+        ApplicationInvite applicationInvite = newApplicationInvite()
+                .withId(12L)
+                .withUser(inviteUser)
+                .withApplication(application)
+                .withInviteOrganisation(
+                        newInviteOrganisation()
+                                .withInvites(newInvite().build(2))
+                                .build())
+                .build();
+
+        Question question = newQuestion().withMultipleStatuses(true).build();
+
+        List<FormInputResponse> inviteResponses = newFormInputResponse()
+                .withFormInputs(
+                        newFormInput().withQuestion(question).build(1)
+                )
+                .withUpdatedBy(inviteProcessRoles.get(0))
+                .withValue("Test value")
+                .build(2);
+        List<QuestionStatus> questionStatuses = newQuestionStatus()
+                .withApplication(application)
+                .withQuestion(question)
+                .withAssignedBy(inviteProcessRoles.get(0))
+                .withAssignee(leadApplicantProcessRole)
+                .withMarkedAsCompleteBy(inviteProcessRoles.get(0))
+                .withMarkedAsComplete(true)
+                .build(2);
+
+        Long inviteProcessRoleId = inviteProcessRoles.get(0).getId();
+
+        when(applicationInviteMapper.mapIdToDomain(applicationInvite.getId())).thenReturn(applicationInvite);
+        when(processRoleRepositoryMock.findByUserAndApplicationId(inviteUser, application.getId())).thenReturn(inviteProcessRoles);
+        when(processRoleRepositoryMock.findByApplicationIdAndOrganisationId(application.getId(), inviteProcessRoles.get(0).getOrganisationId()))
+                .thenReturn(organisationProcessRoles);
+
+        when(formInputResponseRepositoryMock.findByUpdatedById(inviteProcessRoleId)).thenReturn(inviteResponses);
+
+        when(questionStatusRepositoryMock.findByApplicationIdAndMarkedAsCompleteByIdOrAssigneeIdOrAssignedById(
+                application.getId(),
+                inviteProcessRoleId,
+                inviteProcessRoleId,
+                inviteProcessRoleId
+        ))
+                .thenReturn(questionStatuses);
+
+        ServiceResult<Void> serviceResult = inviteService.removeApplicationInvite(applicationInvite.getId());
+
+        InOrder inOrder = inOrder(formInputResponseRepositoryMock, questionStatusRepositoryMock, processRoleRepositoryMock, inviteOrganisationRepositoryMock);
+
+        inOrder.verify(formInputResponseRepositoryMock).save(
+                createLambdaMatcher((List<FormInputResponse> actual) ->
+                        actual.stream().allMatch(fir -> fir.getUpdatedBy().equals(organisationProcessRoles.get(0)))
+                )
+        );
+        inOrder.verify(questionStatusRepositoryMock).save(
+                createLambdaMatcher((List<QuestionStatus> actual) ->
+                        actual.stream().allMatch(qs -> qs.getMarkedAsCompleteBy().equals(organisationProcessRoles.get(0)) &&
+                                qs.getAssignedBy().equals(organisationProcessRoles.get(0)) &&
+                                qs.getAssignee().equals(leadApplicantProcessRole)
+                        )
+                )
+        );
+        inOrder.verify(processRoleRepositoryMock).delete(inviteProcessRoles);
+        inOrder.verify(inviteOrganisationRepositoryMock).save(applicationInvite.getInviteOrganisation());
+
+        inOrder.verifyNoMoreInteractions();
+
+        assertTrue(serviceResult.isSuccess());
+    }
+
+    @Test
+    public void removeApplicationInvite_deletesQuestionsForLastOrganisationMember() throws Exception {
+        User inviteUser = newUser().build();
+        List<ProcessRole> inviteProcessRoles = newProcessRole()
+                .withRole(COLLABORATOR)
+                .withUser(inviteUser)
+                .withOrganisationId(1L)
+                .build(1);
+
+        ProcessRole leadApplicantProcessRole = newProcessRole()
+                .withRole(LEADAPPLICANT)
+                .withUser(newUser().build())
+                .build();
+
+        List<ProcessRole> organisationProcessRoles = newArrayList(inviteProcessRoles.get(0));
+
+        Application application = newApplication()
+                .withProcessRoles(leadApplicantProcessRole, inviteProcessRoles.get(0))
+                .build();
+        ApplicationInvite applicationInvite = newApplicationInvite()
+                .withId(12L)
+                .withUser(inviteUser)
+                .withApplication(application)
+                .withInviteOrganisation(
+                        newInviteOrganisation()
+                                .withInvites(newInvite().build(2))
+                                .build()
+                )
+                .build();
+
+        Question question = newQuestion().withMultipleStatuses(true).build();
+
+        List<FormInputResponse> inviteResponses = newFormInputResponse()
+                .withFormInputs(
+                        newFormInput().withQuestion(question).build(1)
+                )
+                .withUpdatedBy(inviteProcessRoles.get(0))
+                .withValue("Test value")
+                .build(2);
+        List<QuestionStatus> questionStatuses = newQuestionStatus()
+                .withApplication(application)
+                .withQuestion(question)
+                .withMarkedAsCompleteBy(inviteProcessRoles.get(0))
+                .withMarkedAsComplete(true)
+                .build(2);
+
+        Long inviteProcessRoleId = inviteProcessRoles.get(0).getId();
+
+        when(applicationInviteMapper.mapIdToDomain(applicationInvite.getId())).thenReturn(applicationInvite);
+        when(processRoleRepositoryMock.findByUserAndApplicationId(inviteUser, application.getId())).thenReturn(inviteProcessRoles);
+        when(processRoleRepositoryMock.findByApplicationIdAndOrganisationId(application.getId(), inviteProcessRoles.get(0).getOrganisationId()))
+                .thenReturn(organisationProcessRoles);
+
+        when(formInputResponseRepositoryMock.findByUpdatedById(inviteProcessRoleId)).thenReturn(inviteResponses);
+
+        when(questionStatusRepositoryMock.findByApplicationIdAndMarkedAsCompleteByIdOrAssigneeIdOrAssignedById(
+                application.getId(),
+                inviteProcessRoleId,
+                inviteProcessRoleId,
+                inviteProcessRoleId
+        ))
+                .thenReturn(questionStatuses);
+
+        ServiceResult<Void> serviceResult = inviteService.removeApplicationInvite(applicationInvite.getId());
+
+        InOrder inOrder = inOrder(formInputResponseRepositoryMock, questionStatusRepositoryMock, processRoleRepositoryMock, inviteOrganisationRepositoryMock);
+
+        inOrder.verify(formInputResponseRepositoryMock).delete(
+                createLambdaMatcher((List<FormInputResponse> actual) ->
+                        actual.stream().allMatch(fir -> fir.getUpdatedBy().equals(inviteProcessRoles.get(0)))
+                )
+        );
+        inOrder.verify(questionStatusRepositoryMock).delete(
+                createLambdaMatcher((List<QuestionStatus> actual) ->
+                        actual.stream().allMatch(qs -> qs.getMarkedAsCompleteBy().equals(inviteProcessRoles.get(0)))
+                )
+        );
+        inOrder.verify(processRoleRepositoryMock).delete(inviteProcessRoles);
+        inOrder.verify(inviteOrganisationRepositoryMock).save(applicationInvite.getInviteOrganisation());
+
+        inOrder.verifyNoMoreInteractions();
+
+        assertTrue(serviceResult.isSuccess());
     }
 
     @Test
@@ -388,19 +604,25 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
                 .withInviteOrganisation(newInviteOrganisation().build())
                 .build();
 
-        List<ProcessRole> processRoles = newProcessRole()
+        List<ProcessRole> inviteProcessRoles = newProcessRole()
+                .withOrganisationId(1L)
+                .build(1);
+        List<ProcessRole> organisationProcessRoles = newProcessRole()
                 .withOrganisationId(1L)
                 .build(1);
 
         when(applicationInviteMapper.mapIdToDomain(applicationInvite.getId())).thenReturn(applicationInvite);
-        when(processRoleRepositoryMock.findByUserAndApplicationId(user, application.getId())).thenReturn(processRoles);
+        when(processRoleRepositoryMock.findByUserAndApplicationId(user, application.getId())).thenReturn(inviteProcessRoles);
+        when(processRoleRepositoryMock.findByApplicationIdAndOrganisationId(application.getId(), inviteProcessRoles.get(0).getOrganisationId()))
+                .thenReturn(organisationProcessRoles);
+
         ServiceResult<Void> applicationInviteResult = inviteService.removeApplicationInvite(applicationInvite.getId());
 
-        verify(applicationInviteMapper).mapIdToDomain(applicationInvite.getId());
-        verify(processRoleRepositoryMock).findByUserAndApplicationId(user, application.getId());
-        verify(processRoleRepositoryMock).delete(processRoles);
-        verify(inviteOrganisationRepositoryMock).delete(applicationInvite.getInviteOrganisation());
-        verifyNoMoreInteractions(applicationInviteMapper, processRoleRepositoryMock, inviteOrganisationRepositoryMock);
+        InOrder inOrder = inOrder(formInputResponseRepositoryMock, questionStatusRepositoryMock, processRoleRepositoryMock, inviteOrganisationRepositoryMock);
+        inOrder.verify(processRoleRepositoryMock).findByApplicationIdAndOrganisationId(application.getId(), inviteProcessRoles.get(0).getOrganisationId());
+        inOrder.verify(processRoleRepositoryMock).delete(inviteProcessRoles);
+        inOrder.verify(inviteOrganisationRepositoryMock).delete(applicationInvite.getInviteOrganisation());
+        inOrder.verifyNoMoreInteractions();
 
         assertTrue(applicationInviteResult.isSuccess());
     }

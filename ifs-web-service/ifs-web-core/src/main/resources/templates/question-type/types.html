@@ -224,8 +224,9 @@
                             <span class="heading-medium">Innovation area</span>
                             <th:block th:insert="question-type/form-elements :: form-hint (hint='This is the primary innovation area for your project. This will help Innovate UK select suitable assessors for your application.')" />
                         </legend>
-                        Chosen innovation area: <th:block th:text="${model.questionApplicationViewModel.selectedInnovationAreaName}" /><br/>
-                        <button class="buttonlink" name="submit-section-redirect" th:value="${'/form/question/' + question.id + '/innovation-area'}" type="submit">Change your innovation area</button>
+                        <span th:if="${model.questionApplicationViewModel.selectedInnovationAreaName != null}">Chosen innovation area: <th:block th:text="${model.questionApplicationViewModel.selectedInnovationAreaName}"/></span><br/>
+                        <button class="buttonlink" name="submit-section-redirect" th:value="${'/form/question/' + question.id + '/innovation-area'}"
+                                type="submit"><span th:text="${model.questionApplicationViewModel.selectedInnovationAreaName != null ? 'Change your innovation area' : 'Choose your innovation area'}">Choose your innovation area</span></button>
                     </fieldset>
                 </div>
                 <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.resubmission__}')} ? 'error'">

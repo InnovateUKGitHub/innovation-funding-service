@@ -24,6 +24,7 @@ public class FinanceCheckSummaryResource {
     private BigDecimal totalPercentageGrant;
     private boolean spendProfilesGenerated;
     private boolean financeChecksAllApproved;
+    private boolean bankDetailsApproved;
     private String spendProfileGeneratedBy;
     private LocalDate spendProfileGeneratedDate;
     private List<FinanceCheckPartnerStatusResource> partnerStatusResources;
@@ -34,8 +35,8 @@ public class FinanceCheckSummaryResource {
     }
 
     public FinanceCheckSummaryResource(FinanceCheckOverviewResource overviewResource, Long competitionId, String competitionName, boolean spendProfilesGenerated,
-                                       List<FinanceCheckPartnerStatusResource> partnerStatusResources, boolean financeChecksAllApproved, String spendProfileGeneratedBy,
-                                       LocalDate spendProfileGeneratedDate) {
+                                       List<FinanceCheckPartnerStatusResource> partnerStatusResources, boolean financeChecksAllApproved, boolean bankDetailsApproved,
+                                       String spendProfileGeneratedBy, LocalDate spendProfileGeneratedDate) {
         this.projectId = overviewResource.getProjectId();
         this.projectName = overviewResource.getProjectName();
         this.competitionId = competitionId;
@@ -49,6 +50,7 @@ public class FinanceCheckSummaryResource {
         this.totalPercentageGrant = overviewResource.getTotalPercentageGrant();
         this.spendProfilesGenerated = spendProfilesGenerated;
         this.financeChecksAllApproved = financeChecksAllApproved;
+        this.bankDetailsApproved = bankDetailsApproved;
         this.spendProfileGeneratedBy = spendProfileGeneratedBy;
         this.spendProfileGeneratedDate = spendProfileGeneratedDate;
         this.researchParticipationPercentage = overviewResource.getResearchParticipationPercentage();
@@ -207,5 +209,13 @@ public class FinanceCheckSummaryResource {
 
     public void setCompetitionMaximumResearchPercentage(BigDecimal competitionMaximumResearchPercentage) {
         this.competitionMaximumResearchPercentage = competitionMaximumResearchPercentage;
+    }
+
+    public boolean isBankDetailsApproved() {
+        return bankDetailsApproved;
+    }
+
+    public void setBankDetailsApproved(boolean bankDetailsApproved) {
+        this.bankDetailsApproved = bankDetailsApproved;
     }
 }

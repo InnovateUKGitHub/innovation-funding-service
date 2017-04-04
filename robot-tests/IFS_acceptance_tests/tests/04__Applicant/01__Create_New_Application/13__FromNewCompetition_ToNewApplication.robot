@@ -275,7 +275,7 @@ Applicant can view and edit project growth table
 Newly created collaborator can view and edit project Growth table
     [Documentation]  INFUND-8426
     [Tags]
-    [Setup]  Invite a non-existing collaborator in Appplication with Growth table
+    [Setup]  Invite a non-existing collaborator in Application with Growth table
     When the user navigates to the growth table finances
     and the user clicks the button/link     link=Your organisation
     and the user selects medium organisation size
@@ -351,7 +351,7 @@ the user selects feasibility studies and no to resubmission and an innovation ar
     the user clicks the button/link    jQuery=button:contains("Choose your research")
     the user clicks the button twice   jQuery=label[for^="researchCategoryChoice"]:contains("Feasibility studies")
     the user clicks the button/link    jQuery=button:contains(Save)
-    the user clicks the button/link    jQuery=button:contains("Change your innovation area")
+    the user clicks the button/link    jQuery=button:contains("Choose your innovation area")
     the user clicks the button twice   jQuery=label[for="innovationAreaChoice-5"]
     the user clicks the button/link    jQuery=button:contains(Save)
     the user clicks the button twice   jQuery=label[for="application.resubmission-no"]
@@ -460,7 +460,7 @@ the user navigates to the growth table finances
     the user clicks the button/link    jQuery=a:contains('Untitled application'):last
     the user clicks the button/link  link=Your finances
 
-Invite a non-existing collaborator in Appplication with Growth table
+Invite a non-existing collaborator in Application with Growth table
     the user clicks the button/link      jQuery=a:contains("Application Overview")
     the user clicks the button/link       jQuery=a:contains("view team members and add collaborators")
     the user clicks the button/link       jQuery=a:contains("Add partner organisation")
@@ -481,7 +481,7 @@ Newly invited collaborator can create account and sign in
 
 the user completes the new account creation
     the user selects the radio button    organisationType  radio-1
-     #TODO change the radio button option to radio-4 once INFUND-8896 is fixed
+     #TODO change the radio button option to radio-4 once INFUND-9078 is fixed
     the user clicks the button/link     jQuery=button:contains("Continue")
     the user should see the element     jQuery=span:contains("Create your account")
     the user enters text to a text field     id=organisationSearchName   innovate
