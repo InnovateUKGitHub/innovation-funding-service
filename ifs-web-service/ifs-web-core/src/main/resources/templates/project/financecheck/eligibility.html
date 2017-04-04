@@ -69,8 +69,7 @@
     <th:block th:unless="${summaryModel.usingJesFinances}">
         <th:block th:if="${summaryModel.isExternalView()}">
             <h2 class="heading-medium">Detailed finances</h2>
-            <p th:if="${summaryModel.leadPartnerOrganisation}">These are your project finances. Changes that result from discussions with Innovate UK will be reflected here. Substantial changes to your project costs should be discussed with your Project Manager.</p>
-            <p th:unless="${summaryModel.leadPartnerOrganisation}">Changes made to your finances will be visible here. Please review this section carefully as you are responsible for the accuracy of any approved finances.</p>
+            <p>These are your project finances. Changes that result from discussions with Innovate UK will be reflected here. Substantial changes to your project costs should be discussed with your Project Manager.</p>
             <p><a th:href="@{/project/{projectId}/partner-organisation/{organisationId}/finance-checks/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}">View changes to finances</a></p>
         </th:block>
 
