@@ -106,7 +106,7 @@
                     <ul>
                         <li th:each="app : ${applicationsFinished}"
                             th:with="status=${applicationStatuses.get(app.id)}"
-                            th:class="${status == T(org.innovateuk.ifs.application.resource.ApplicationStatus.APPROVED} ? 'positive' : 'negative'">
+                            th:class="${status == T(org.innovateuk.ifs.application.resource.ApplicationStatus.APPROVED)} ? 'positive' : 'negative'">
                             <div class="task">
                                 <h3 class="heading-small">
                                     <a th:href="@{/application/{id}/summary(id=${app.getId()})}" th:text="${app.name}">placeholder</a>
@@ -119,7 +119,7 @@
                             <div class="status">
                                 <p th:if="${status == T(org.innovateuk.ifs.application.resource.ApplicationStatus).REJECTED}" class="status-msg msg-progress">Unsuccessful</p>
                                 <p th:if="${status == T(org.innovateuk.ifs.application.resource.ApplicationStatus).APPROVED}" class="status-msg msg-progress">Successful</p>
-                                <p th:if="${status == T(org.innovateuk.ifs.application.resource.ApplicationStatus).CREATED or status == T(org.innovateuk.ifs.application.resource.ApplicationStatus.OPEN}" class="status-msg msg-progress not-submitted">Not submitted</p>
+                                <p th:if="${status == T(org.innovateuk.ifs.application.resource.ApplicationStatus).CREATED or status == T(org.innovateuk.ifs.application.resource.ApplicationStatus).OPEN}" class="status-msg msg-progress not-submitted">Not submitted</p>
                             </div>
                         </li>
                     </ul>
