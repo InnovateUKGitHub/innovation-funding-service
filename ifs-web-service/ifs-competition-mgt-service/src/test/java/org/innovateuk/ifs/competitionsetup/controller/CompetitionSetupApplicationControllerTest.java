@@ -26,17 +26,16 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.competition.builder.CompetitionSetupQuestionResourceBuilder.newCompetitionSetupQuestionResource;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.builder.CompetitionSetupQuestionResourceBuilder.newCompetitionSetupQuestionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.ASSESSED_QUESTION;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType.SCOPE;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.APPLICATION_FORM;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -546,8 +545,6 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .andExpect(view().name("competition/application-details"));
     }
 
-
-    /*
     @Test
     public void testGetEditCompetitionQuestion() throws Exception {
 
@@ -556,11 +553,11 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .withType(CompetitionSetupQuestionType.ASSESSED_QUESTION).build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
-        when(competitionSetupQuestionService.getQuestion(QUESTION_ID)).thenReturn(question);
+        when(competitionSetupQuestionService.getQuestion(QUESTION_ID)).thenReturn(ServiceResult.serviceSuccess(question));
 
         mockMvc.perform(get(URL_PREFIX + "/question/" + QUESTION_ID + "/edit"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("competition/finances"));
+                .andExpect(view().name("competition/setup/question"));
 
         verify(competitionService, never()).update(competition);
         verify(competitionService).setSetupSectionMarkedAsIncomplete(competition.getId(), CompetitionSetupSection.APPLICATION_FORM);
@@ -570,11 +567,10 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     public void testGetEditCompetitionQuestionRedirect() throws Exception {
         when(competitionService.getById(COMPETITION_ID)).thenReturn(UNEDITABLE_COMPETITION);
 
-        mockMvc.perform(get(URL_PREFIX + "/question/1/edit"))
+        mockMvc.perform(get(URL_PREFIX + "/question/" + QUESTION_ID + "/edit"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/dashboard"));
 
         verify(competitionService, never()).update(UNEDITABLE_COMPETITION);
     }
-    */
 }
