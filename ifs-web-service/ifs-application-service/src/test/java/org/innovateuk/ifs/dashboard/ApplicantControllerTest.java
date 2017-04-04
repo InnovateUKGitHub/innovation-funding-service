@@ -51,7 +51,7 @@ public class ApplicantControllerTest extends BaseControllerMockMVCTest<Applicant
         mockMvc.perform(get("/applicant/dashboard"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("applicant-dashboard"))
-                .andExpect(model().attribute("applicationsInProcess", hasSize(0)))
+                .andExpect(model().attribute("applicationsInProgress", hasSize(0)))
                 .andExpect(model().attribute("applicationsFinished", hasSize(0)))
                 .andExpect(model().attribute("applicationsAssigned", hasSize(0)));
     }
@@ -71,7 +71,7 @@ public class ApplicantControllerTest extends BaseControllerMockMVCTest<Applicant
         mockMvc.perform(get("/applicant/dashboard"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("applicant-dashboard"))
-                .andExpect(model().attribute("applicationsInProcess", hasSize(1)))
+                .andExpect(model().attribute("applicationsInProgress", hasSize(1)))
                 .andExpect(model().attribute("applicationsFinished", hasSize(0)))
                 .andExpect(model().attribute("applicationsAssigned", hasSize(1)));
     }
@@ -94,7 +94,7 @@ public class ApplicantControllerTest extends BaseControllerMockMVCTest<Applicant
         mockMvc.perform(get("/applicant/dashboard"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("applicant-dashboard"))
-                .andExpect(model().attribute("applicationsInProcess", hasSize(1)))
+                .andExpect(model().attribute("applicationsInProgress", hasSize(1)))
                 .andExpect(model().attribute("applicationsFinished", hasSize(0)))
                 .andExpect(model().attribute("applicationsAssigned", hasSize(0)));
 
