@@ -102,12 +102,14 @@
 
     <th:block th:if="${model.isSentToProjectTeam()}">
         <h2 class="heading-medium no-margin">Signed grant offer letter</h2>
-        <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable()}">
-            <p><a th:href="@{/project/{id}/grant-offer-letter/signed-grant-offer-letter(id=${model.projectId})}" th:text="${model.signedGrantOfferLetterFile?.filename}">signed-offer-letter.PDF</a></p>
-        </th:block>
-        <th:block th:unless="${model.getSignedGrantOfferLetterFileAvailable()}">
-            <p>Awaiting upload by the Project Manager</p>
-        </th:block>
+        <div class="upload-section">
+            <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable()}">
+                <p><a class="uploaded-file" th:href="@{/project/{id}/grant-offer-letter/signed-grant-offer-letter(id=${model.projectId})}" th:text="${model.signedGrantOfferLetterFile?.filename}">signed-offer-letter.PDF</a></p>
+            </th:block>
+            <th:block th:unless="${model.getSignedGrantOfferLetterFileAvailable()}">
+                <p>Awaiting upload by the Project Manager</p>
+            </th:block>
+        </div>
     </th:block>
     <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable() and model.getSignedGrantOfferLetterApproved() != true}" th:remove="tag">
         <h2 class="heading-medium">Confirm receipt of signed grant offer letter</h2>
