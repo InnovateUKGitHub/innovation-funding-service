@@ -79,7 +79,7 @@
                                     </div>
                                     <span class="status-msg msg-progress" th:text="${applicationProgress.get(app.getId())}+'% complete'">PERCENTAGE COMPLETE</span>
                                 </div>
-                            </th:block>.name()
+                            </th:block>
                             <th:block th:if="${applicationStatuses.get(app.getId()) == T(org.innovateuk.ifs.application.resource.ApplicationStatus).SUBMITTED}">
                                 <div class="task">
                                     <h3 class="heading-small">
