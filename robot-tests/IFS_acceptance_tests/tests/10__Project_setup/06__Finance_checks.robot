@@ -76,6 +76,8 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...               INFUND-8787 The Finance checks status in the external Project Setup dashboard.
 ...
 ...               INFUND-4846 As a Project finance team member, I want to view Finance overview and Finance summaries for the consortium
+...
+...               INFUND-4837 Project finance team member able to view all originally submitted details of all partners against the revisions made during the Finance Checks eligibility section to make a clear comparison
 
 Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 Suite Teardown    the user closes the browser
@@ -1364,6 +1366,45 @@ Project finance user can view Updated Finance summaries for the consortium
     Then the user should see the text in the element    css=#content div:nth-of-type(3) table tfoot tr:nth-of-type(1) th:nth-of-type(1)     Total
     And the Total calculation for Finance summaries are verified    1   £ 322,113   £ 96,337    £ 6,170     £ 219,606
 
+#Project finance user can view Lead-partner's revisions made during the Finance Checks eligibility
+Project finance user can view Lead-partner's Changes to finances during the Finance Checks eligibility
+    [Documentation]    INFUND-4837
+    [Tags]
+    Given the user clicks the button/link       link=Finance checks
+    When the user clicks the button/link        css=a.eligibility-0
+    Then the user clicks the button/link        link=View changes to finances
+    And the user should see the text in the element    css=#content h1:nth-of-type(1)   Changes to finances
+    And the user should see the text in the element    css=#content h2:nth-of-type(1)   Project finances
+    And the user should see the text in the element    css=#content h2:nth-of-type(2)   Section changes
+    And the user should see the text in the element    css=#content h2:nth-of-type(3)   Changes from submitted finances
+
+Project finance user can view Lead-partner's Project finances in Changes-to-finances page
+    [Documentation]    INFUND-4837
+    [Tags]
+    When the user verifies the table heading for Project finances section
+    # the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
+    Then the categories are verified for Project finances section   1   £ 206,867   30%     £ 62,060    £ 3,702     £ 141,105
+
+Project finance user can view Lead-partner's Section changes in Changes-to-finances page
+    [Documentation]    INFUND-4837
+    [Tags]
+    When the user verifies the table heading for Section changes
+    # the below figures are listed as:     RowNumber   Labour    Overheads     Materials 	CapitalUsage    Subcontracting     TravelandSubsistence    OtherCosts
+    Then the categories are verified for Section changes    1    £   55,980    £   1,954    £   -98,200    £   9,548    £   -70,000    £   -3,970    £   10,200
+
+Project finance user can view Lead-partner's Changes-from-submitted-finances in Changes-to-finances page
+    [Documentation]    INFUND-4837
+    [Tags]
+    Given the user clicks the button/link       link=Eligibility
+    When the user clicks the button/link        link=View changes to finances
+    Then the user verifies the table heading for Changes-from-submitted-finances
+    And the revised categories are verified for Other-costs Section
+
+
+
+
+
+
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
     [Documentation]    INFUND-4428
     [Tags]
@@ -1911,3 +1952,62 @@ all the categories are verified
     the user should see the text in the element   css=.form-group tbody tr:nth-of-type(${row_number}) td:nth-of-type(6)  ${subcontracting}
     the user should see the text in the element   css=.form-group tbody tr:nth-of-type(${row_number}) td:nth-of-type(7)  ${travel}
     the user should see the text in the element   css=.form-group tbody tr:nth-of-type(${row_number}) td:nth-of-type(8)  ${other_costs}
+
+the user verifies the table heading for Project finances section
+    the user should see the text in the element     css=#content div:nth-of-type(3) thead tr:nth-of-type(1) th:nth-of-type(1)   Total costs
+    the user should see the text in the element     css=#content div:nth-of-type(3) thead tr:nth-of-type(1) th:nth-of-type(2)   % Grant
+    the user should see the text in the element     css=#content div:nth-of-type(3) thead tr:nth-of-type(1) th:nth-of-type(3)   Funding sought
+    the user should see the text in the element     css=#content div:nth-of-type(3) thead tr:nth-of-type(1) th:nth-of-type(4)   Other public sector funding
+    the user should see the text in the element     css=#content div:nth-of-type(3) thead tr:nth-of-type(1) th:nth-of-type(5)   Contribution to project
+
+# the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
+the categories are verified for Project finances section
+    [Arguments]  ${row_number}  ${total_costs}  ${percentage_grant}  ${funding_sought}  ${other_public_sector_funding}  ${contribution_to_project}
+    the user should see the text in the element     css=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(1)   ${total_costs}
+    the user should see the text in the element     css=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(2)   ${percentage_grant}
+    the user should see the text in the element     css=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(3)   ${funding_sought}
+    the user should see the text in the element     css=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(4)   ${other_public_sector_funding}
+    the user should see the text in the element     css=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(5)   ${contribution_to_project}
+
+
+
+the user verifies the table heading for Section changes
+    the user should see the text in the element     css=#content div:nth-of-type(4) thead tr:nth-of-type(1) th:nth-of-type(1)   Labour
+    the user should see the text in the element     css=#content div:nth-of-type(4) thead tr:nth-of-type(1) th:nth-of-type(2)   Overheads
+    the user should see the text in the element     css=#content div:nth-of-type(4) thead tr:nth-of-type(1) th:nth-of-type(3)   Materials
+    the user should see the text in the element     css=#content div:nth-of-type(4) thead tr:nth-of-type(1) th:nth-of-type(4)   Capital usage
+    the user should see the text in the element     css=#content div:nth-of-type(4) thead tr:nth-of-type(1) th:nth-of-type(5)   Subcontracting
+    the user should see the text in the element     css=#content div:nth-of-type(4) thead tr:nth-of-type(1) th:nth-of-type(6)   Travel and subsistence
+    the user should see the text in the element     css=#content div:nth-of-type(4) thead tr:nth-of-type(1) th:nth-of-type(7)   Other costs
+
+# the below figures are listed as:     RowNumber   Labour    Overheads     Materials 	CapitalUsage    Subcontracting     TravelandSubsistence    OtherCosts
+the categories are verified for Section changes
+    [Arguments]  ${row_number}  ${labour}  ${overheads}  ${materials}  ${capital_usage}  ${sub_contracting}  ${travel_and_subsistence}  ${other_costs}
+    the user should see the text in the element     css=#content div:nth-of-type(4) tbody tr:nth-of-type(${row_number}) td:nth-of-type(1)   ${labour}
+    the user should see the text in the element     css=#content div:nth-of-type(4) tbody tr:nth-of-type(${row_number}) td:nth-of-type(2)   ${overheads}
+    the user should see the text in the element     css=#content div:nth-of-type(4) tbody tr:nth-of-type(${row_number}) td:nth-of-type(3)   ${materials}
+    the user should see the text in the element     css=#content div:nth-of-type(4) tbody tr:nth-of-type(${row_number}) td:nth-of-type(4)   ${capital_usage}
+    the user should see the text in the element     css=#content div:nth-of-type(4) tbody tr:nth-of-type(${row_number}) td:nth-of-type(5)   ${sub_contracting}
+    the user should see the text in the element     css=#content div:nth-of-type(4) tbody tr:nth-of-type(${row_number}) td:nth-of-type(6)   ${travel_and_subsistence}
+    the user should see the text in the element     css=#content div:nth-of-type(4) tbody tr:nth-of-type(${row_number}) td:nth-of-type(7)   ${other_costs}
+
+
+
+the user verifies the table heading for Changes-from-submitted-finances
+    the user should see the text in the element     css=#content div:nth-of-type(5) thead tr:nth-of-type(1) th:nth-of-type(1)   Action
+    the user should see the text in the element     css=#content div:nth-of-type(5) thead tr:nth-of-type(1) th:nth-of-type(2)   Section
+    the user should see the text in the element     css=#content div:nth-of-type(5) thead tr:nth-of-type(1) th:nth-of-type(3)   Detail
+    the user should see the text in the element     css=#content div:nth-of-type(5) thead tr:nth-of-type(1) th:nth-of-type(4)   Submitted
+    the user should see the text in the element     css=#content div:nth-of-type(5) thead tr:nth-of-type(1) th:nth-of-type(5)   Updated
+    the user should see the text in the element     css=#content div:nth-of-type(5) thead tr:nth-of-type(1) th:nth-of-type(6)   Cost
+
+the revised categories are verified for Other-costs Section
+    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(1) td:nth-of-type(1)   Change
+    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(1) td:nth-of-type(2)   Other costs
+    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(1) th:nth-of-type(1)   Description and justification of cost
+    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(1) td:nth-of-type(3)   Some more costs
+    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(1) td:nth-of-type(4)   some other costs
+    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(2) th:nth-of-type(1)   Total
+    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(2) td:nth-of-type(1)   550
+    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(2) td:nth-of-type(2)   5000
+    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(3) td:nth-of-type(1)   4,450
