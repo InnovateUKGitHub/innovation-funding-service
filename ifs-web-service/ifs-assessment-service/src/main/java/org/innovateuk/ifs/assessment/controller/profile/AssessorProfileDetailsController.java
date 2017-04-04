@@ -15,9 +15,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -48,13 +49,13 @@ public class AssessorProfileDetailsController {
 
     private static final String FORM_ATTR_NAME = "form";
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public String getDetails(Model model,
                              @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         return doViewYourDetails(loggedInUser, model);
     }
 
-    @RequestMapping(value = "/edit", method = RequestMethod.GET)
+    @GetMapping("/edit")
     public String getDetailsEdit(Model model,
                                  @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                  @ModelAttribute(FORM_ATTR_NAME) AssessorProfileEditDetailsForm form,
@@ -62,7 +63,7 @@ public class AssessorProfileDetailsController {
         return doViewEditYourDetails(loggedInUser, model, form, bindingResult);
     }
 
-    @RequestMapping(value = "/edit", method = RequestMethod.POST)
+    @PostMapping("/edit")
     public String submitDetails(Model model,
                                 @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                 @Valid @ModelAttribute(FORM_ATTR_NAME) AssessorProfileEditDetailsForm form,

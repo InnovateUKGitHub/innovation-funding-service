@@ -45,8 +45,6 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.a
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * This Controller handles finance check notes activity for the finance team members
@@ -77,7 +75,7 @@ public class FinanceChecksNotesAddNoteController {
 
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
-    @RequestMapping(method = GET)
+    @GetMapping
     public String viewNewNote(@PathVariable final Long projectId,
                                @PathVariable final Long organisationId,
                                Model model,
@@ -97,7 +95,7 @@ public class FinanceChecksNotesAddNoteController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
-    @RequestMapping(method = POST)
+    @PostMapping
     public String saveNote(@PathVariable final Long projectId,
                             @PathVariable final Long organisationId,
                             @Valid @ModelAttribute(FORM_ATTR) FinanceChecksNotesAddNoteForm form,
@@ -147,7 +145,7 @@ public class FinanceChecksNotesAddNoteController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
-    @RequestMapping(method = POST, params = "uploadAttachment")
+    @PostMapping(params = "uploadAttachment")
     public String saveNewNoteAttachment(Model model,
                                          @PathVariable final Long projectId,
                                          @PathVariable final Long organisationId,
@@ -181,7 +179,7 @@ public class FinanceChecksNotesAddNoteController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
-    @RequestMapping(value = "/attachment/{attachmentId}", method = GET)
+    @GetMapping("/attachment/{attachmentId}")
     public
     @ResponseBody
     ResponseEntity<ByteArrayResource> downloadAttachment(@PathVariable Long projectId,
@@ -208,7 +206,7 @@ public class FinanceChecksNotesAddNoteController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
-    @RequestMapping(method = POST, params="removeAttachment")
+    @PostMapping(params="removeAttachment")
     public String removeAttachment(@PathVariable Long projectId,
                                    @PathVariable Long organisationId,
                                    @RequestParam(value = "removeAttachment") final Long attachmentId,
@@ -233,7 +231,7 @@ public class FinanceChecksNotesAddNoteController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
-    @RequestMapping(value="/cancel", method = GET)
+    @GetMapping("/cancel")
     public String cancelNewForm(@PathVariable Long projectId,
                                 @PathVariable Long organisationId,
                                 @ModelAttribute("loggedInUser") UserResource loggedInUser,

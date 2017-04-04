@@ -28,7 +28,7 @@ public class FinanceRowControllerTest extends BaseControllerMockMVCTest<FinanceR
 
         when(financeRowServiceMock.addCost(123L, 456L, null)).thenReturn(serviceSuccess(new GrantClaim()));
 
-        mockMvc.perform(get("/cost/add/{applicationFinanceId}/{questionId}", "123", "456"))
+        mockMvc.perform(post("/cost/add/{applicationFinanceId}/{questionId}", "123", "456"))
                 .andExpect(status().isCreated());
 
         verify(financeRowServiceMock, times(1)).addCost(123L, 456L, null);
@@ -39,7 +39,7 @@ public class FinanceRowControllerTest extends BaseControllerMockMVCTest<FinanceR
 
         when(financeRowServiceMock.addCostWithoutPersisting(123L, 456L)).thenReturn(serviceSuccess(new GrantClaim()));
 
-        mockMvc.perform(get("/cost/add-without-persisting/{applicationFinanceId}/{questionId}", "123", "456"))
+        mockMvc.perform(post("/cost/add-without-persisting/{applicationFinanceId}/{questionId}", "123", "456"))
                 .andExpect(status().isCreated());
 
         verify(financeRowServiceMock, times(1)).addCostWithoutPersisting(123L, 456L);
@@ -85,7 +85,7 @@ public class FinanceRowControllerTest extends BaseControllerMockMVCTest<FinanceR
         GrantClaim costItem = new GrantClaim();
         when(financeRowServiceMock.updateCost(eq(123L), isA(FinanceRowItem.class))).thenReturn(serviceFailure(notFoundError(FinanceRowMetaField.class, 123L)));
 
-        mockMvc.perform(get("/cost/update/{id}", "123")
+        mockMvc.perform(put("/cost/update/{id}", "123")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(costItem)))
                 .andExpect(status().isNotFound())
@@ -100,7 +100,7 @@ public class FinanceRowControllerTest extends BaseControllerMockMVCTest<FinanceR
         GrantClaim costItem = new GrantClaim();
         when(financeRowServiceMock.updateCost(eq(123L), isA(FinanceRowItem.class))).thenReturn(serviceSuccess(costItem));
 
-        mockMvc.perform(post("/cost/update/{id}", "123")
+        mockMvc.perform(put("/cost/update/{id}", "123")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(costItem)))
                 .andExpect(status().isOk());
@@ -113,7 +113,7 @@ public class FinanceRowControllerTest extends BaseControllerMockMVCTest<FinanceR
 
         when(financeRowServiceMock.deleteCost(123L)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(get("/cost/delete/123"))
+        mockMvc.perform(delete("/cost/delete/123"))
                 .andExpect(status().isNoContent());
 
         verify(financeRowServiceMock, times(1)).deleteCost(123L);

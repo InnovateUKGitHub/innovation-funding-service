@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * This controller will handle all requests that are related to the assessor dashboard.
@@ -22,14 +22,14 @@ public class AssessorDashboardController {
     private AssessorDashboardModelPopulator assessorDashboardModelPopulator;
 
     @PreAuthorize("hasAuthority('assessor')")
-    @RequestMapping(value = "/dashboard", method = RequestMethod.GET)
+    @GetMapping("/dashboard")
     public String dashboard(Model model, @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
         model.addAttribute("model", assessorDashboardModelPopulator.populateModel(loggedInUser.getId()));
         return "assessor-dashboard";
     }
 
-    @RequestMapping(value = "/terms-and-conditions", method = RequestMethod.GET)
+    @GetMapping("/terms-and-conditions")
     public String termsAndConditions() {
         return "terms-and-conditions";
     }

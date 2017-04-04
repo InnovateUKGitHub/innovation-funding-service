@@ -7,6 +7,7 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -15,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.concurrent.ExecutionException;
 
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 /**
  * Controller will handle requests related to uploading a file to be attached to an overhead question
@@ -27,7 +27,7 @@ public class OverheadFileDownloadController {
     @Autowired
     private OverheadFileRestService overheadFileRestService;
 
-    @RequestMapping(value = "/{overheadId}", method = GET)
+    @GetMapping("/{overheadId}")
     public @ResponseBody
     ResponseEntity<ByteArrayResource> downloadQuestionFile(
             @PathVariable("overheadId") final Long overheadId,

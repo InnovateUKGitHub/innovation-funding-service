@@ -22,7 +22,7 @@
         <div class="message-alert">
             <p>Your organisation must be UK based to receive funding from Innovate UK.</p>
         </div>
-        <p>There are 2 ways to identify your organisation. Through Companies House lookup or of you are not registered you can enter your organisation details manually.</p>
+        <p>You can identify your organisation through Companies House or enter your details manually.</p>
         <h2 class="heading-medium">Search on Companies House</h2>
     </th:block>
     <th:block th:if="${organisationForm.research}">
@@ -72,7 +72,7 @@
         <th:block th:if="${organisationForm.notResearch}">
             <input type="hidden" th:field="*{manualEntry}" />
             <h2 class="heading-medium">Not on Companies House?</h2>
-            <p>You can enter your organisation details manually, but you may have to supply additional details at a later point.</p>
+            <p>Enter your organisation details manually. You may need to supply additional details at a later point.</p>
             <th:block th:with="isOpen=${#strings.isEmpty('*{organisationSearchName}') or !#strings.isEmpty(organisationForm.organisationName) or !#strings.isEmpty(organisationForm.addressForm.postcodeInput) or organisationForm.addressForm.manualAddress}">
                 <details th:attr="open=${isOpen} ? 'open' : null ">
                     <summary th:attr="aria-expanded=${isOpen} ? 'true' : 'false'"><span class="summary">Enter details manually</span></summary>

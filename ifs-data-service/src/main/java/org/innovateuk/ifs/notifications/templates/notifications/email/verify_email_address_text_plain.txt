@@ -2,11 +2,14 @@
 <@layout.defaultPlainText>
 Dear ${notificationTarget.name},
 
-You have recently set up an account with the Innovation Funding Service. We now need you to verify your email address.
-
+You have recently set up an account with the Innovation Funding Service. Please copy the verification link to your browser:
 ${verificationLink}
 
-Once verified you can sign into your account.
+Once verified you can sign into your account and start your application. From your online dashboard you can also create your profile and manage your applications.
+
+If you did not request an account with us, please ignore this email.
+
+Yours sincerely,
 
 <@layout.senderPlainText />
 </@layout.defaultPlainText>

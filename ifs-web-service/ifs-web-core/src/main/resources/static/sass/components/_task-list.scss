@@ -1,10 +1,4 @@
 /*-------- Task list -------------*/
-%action-required {
-    background-image: url('../images/icons/icon-pencil.png');
-    background-repeat: no-repeat;
-    background-size: 14px;
-    background-position: 0 4px;
-}
 .task-list{
     margin: 10px 0 50px;
     > li{
@@ -41,38 +35,57 @@
             .assign-team{
                 margin-top: 0;
                 margin-bottom: 10px;
+
+                .no-js &{
+                  margin-bottom: 0;
+                }
             }
         }
         .secondary-notification{
             @extend .notification;
             color: $secondary-text-colour;
-
+        }
+        .secondary-notification-button{
+            @include core-16;
         }
         .action-required{
             @extend .notification;
             @extend %action-required;
+            font-weight: bold;
             @include media-down(mobile) {
                 padding-left: 20px;
             }
         }
         .assign-container{
-            width: 30%;
+            width: 40%;
+            box-sizing: border-box;
+
             .action-required,
             .secondary-notification{
                 display: inline;
                 width: 100%;
                 background: none;
                 padding-left: 0;
-                color: $link-colour;
             }
+
+            button{
+                .secondary-notification {
+                    color: $link-colour;
+                }
+            }
+
             @include media-down(mobile) {
                 display: block;
                 width: 100%;
                 margin-top: 10px;
                 padding-left: 0;
+
+                &.action-required {
+                  padding-left: 20px;
+                }
             }
         }
-        .task-status{
+        .task-status {
             position: absolute;
             bottom: 50%;
             right: 10px;
