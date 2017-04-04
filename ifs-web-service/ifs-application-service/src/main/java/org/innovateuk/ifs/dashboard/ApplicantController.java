@@ -64,7 +64,7 @@ public class ApplicantController {
         Map<Long, CompetitionResource> competitions = createCompetitionMap(inProgress, finished);
         Map<Long, ApplicationStatus> applicationStatusMap = createApplicationStatusMap(inProgress, finished);
 
-        model.addAttribute("applicationsInProcess", inProgress);
+        model.addAttribute("applicationsInProgress", inProgress);
         model.addAttribute("applicationsAssigned", getAssignedApplications(inProgress, user));
         model.addAttribute("applicationsFinished", finished);
         model.addAttribute("projectsInSetup", projectsInSetup);

@@ -47,11 +47,11 @@
                 </div>
             </section>
 
-            <section class="in-progress" th:unless="${applicationsInProcess.isEmpty()}">
+            <section class="in-progress" th:unless="${applicationsInProgress.isEmpty()}">
                 <div class="progress-list">
-                    <h2 class="heading-medium" th:text="${#lists.size(applicationsInProcess) == 1} ? 'Application in progress' : 'Applications in progress'"/>
+                    <h2 class="heading-medium" th:text="${#lists.size(applicationsInProgress) == 1} ? 'Application in progress' : 'Applications in progress'"/>
                     <ul>
-                        <li class="status-2-col" th:each="app : ${applicationsInProcess}" th:classappend="${applicationsAssigned?.contains(
+                        <li class="status-2-col" th:each="app : ${applicationsInProgress}" th:classappend="${applicationsAssigned?.contains(
                         app.id) ? 'assigned-to-me' : '' }">
                             <th:block th:unless="${applicationStatuses.get(app.getId()).name() == 'SUBMITTED'}">
                                 <div class="task" th:with="created=${T(org.innovateuk.ifs.application.resource.ApplicationStatus).CREATED == app.applicationStatus}">
@@ -100,7 +100,7 @@
                 </div>
             </section>
 
-            <section th:if="${!applicationsFinished.isEmpty()}" class="previous-applications">
+            <section class="previous-applications" th:unless="${applicationsFinished.isEmpty()}">
                 <div class="progress-list">
                     <h2 class="heading-medium">Previous applications</h2>
                     <ul>
