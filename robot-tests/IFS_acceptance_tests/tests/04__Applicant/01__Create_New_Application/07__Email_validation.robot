@@ -130,4 +130,4 @@ the user cannot login with the invalid email
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');
     Click Button    css=button[name="_eventId_proceed"]
     The user should see the text in the page    ${unsuccessful_login_message}
-    The user should see the text in the page    Your username/password combination doesn't seem to work
+    The user should see the text in the page    Your email/password combination doesn't seem to work

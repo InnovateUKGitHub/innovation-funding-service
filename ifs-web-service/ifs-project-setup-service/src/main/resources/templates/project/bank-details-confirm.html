@@ -13,7 +13,7 @@
 
   <div class="page-title">
       <p class="subtitle" th:text="${applicationId}"/>
-      <h1 class="heading-xlarge">Submit Bank Details</h1>
+      <h1 class="heading-xlarge">Submit bank details</h1>
   </div>
 
     <form th:object="${form}" th:action="@{/project/{id}/bank-details(id=${project.id})}" method="post">
