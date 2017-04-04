@@ -26,9 +26,10 @@ except KeyError:
 
 _open_competition_application_name =     'Climate science the history of Greenland\'s ice'
 _open_competition_application_2_name =   'Planetary science Pluto\'s telltale heart'
-_open_competition_application_3_title =  'Hydrology the dynamics of Earth\'s surface water'
+_open_competition_application_3_name =   'Hydrology the dynamics of Earth\'s surface water'
 _open_competition_application_4_name =   'Greenland was nearly ice-free for extended periods during the Pleistocene'
 _open_competition_application_5_name =   'Evolution of the global phosphorus cycle'
+_closed_competition_application_name =   'A new innovative solution'
 _funders_panel_application_1_title =     'Sensing & Control network using the lighting infrastructure'
 _funders_panel_application_2_title =     'Matter - Planning for Web'
 _in_assessment_application_1_title =     '3D-printed buildings'
@@ -36,10 +37,10 @@ _in_assessment_application_3_title =     'Intelligent Building'
 _in_assessment_application_4_title =     'Park living'
 _in_assessment_application_5_title =     'Products and Services Personalised'
 
-_application_list = { _open_competition_application_name, _open_competition_application_2_name, _open_competition_application_3_title,
-                      _open_competition_application_4_name, _open_competition_application_5_name, _funders_panel_application_1_title,
-                      _funders_panel_application_2_title, _in_assessment_application_1_title, _in_assessment_application_3_title,
-                      _in_assessment_application_4_title, _in_assessment_application_5_title}
+_application_list = { _open_competition_application_name, _open_competition_application_2_name, _open_competition_application_3_name,
+                      _open_competition_application_4_name, _open_competition_application_5_name, _closed_competition_application_name,
+                      _funders_panel_application_1_title, _funders_panel_application_2_title, _in_assessment_application_1_title,
+                      _in_assessment_application_3_title, _in_assessment_application_4_title, _in_assessment_application_5_title}
 _formatted_app_list = ','.join(['%s'] * len(_application_list))
 
 # Open database connection
