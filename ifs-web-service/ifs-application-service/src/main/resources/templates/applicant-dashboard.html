@@ -53,7 +53,7 @@
                     <ul>
                         <li class="status-2-col" th:each="app : ${applicationsInProgress}" th:classappend="${applicationsAssigned?.contains(
                         app.id) ? 'assigned-to-me' : '' }">
-                            <th:block th:unless="${applicationStatuses.get(app.getId()).name() == 'SUBMITTED'}">
+                            <th:block th:unless="${applicationStatuses.get(app.getId()) == T(org.innovateuk.ifs.application.resource.ApplicationStatus).SUBMITTED}">
                                 <div class="task" th:with="created=${T(org.innovateuk.ifs.application.resource.ApplicationStatus).CREATED == app.applicationStatus}">
                                     <h3 class="heading-small" th:with="teamUrl=@{/application/{id}/team(id=${app.getId()})}, formUrl=@{/application/{id}(id=${app.getId()})}, noTitle=#{ifs.application.dashboard.no_title}">
                                         <a th:href="${created ? teamUrl : formUrl}"
@@ -79,8 +79,8 @@
                                     </div>
                                     <span class="status-msg msg-progress" th:text="${applicationProgress.get(app.getId())}+'% complete'">PERCENTAGE COMPLETE</span>
                                 </div>
-                            </th:block>
-                            <th:block th:if="${applicationStatuses.get(app.getId()).name() == 'SUBMITTED'}">
+                            </th:block>.name()
+                            <th:block th:if="${applicationStatuses.get(app.getId()) == T(org.innovateuk.ifs.application.resource.ApplicationStatus).SUBMITTED}">
                                 <div class="task">
                                     <h3 class="heading-small">
                                         <a th:href="@{/application/{id}/track(id=${app.getId()})}" th:text="${app.name}">placeholder</a>
