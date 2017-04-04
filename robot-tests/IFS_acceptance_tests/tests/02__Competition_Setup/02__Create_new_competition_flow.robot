@@ -95,8 +95,8 @@ Initial details - User enters valid values and marks as done
     And the user should see the text in the page    1/12/${nextyear}
     And the user should see the text in the page    Ian Cooper
     And the user should see the text in the page    Competition title
-    And the user should see the text in the page    Emerging and enabling technologies
-    And the user should see the text in the page    Satellite Applications
+    And the user should see the text in the page    Emerging and enabling
+    And the user should see the text in the page    Satellite applications
     And the user should see the text in the page    Sector
     And the user should see the text in the page    Yes
     And the user should see the element             jQuery=.button:contains("Edit")
@@ -108,7 +108,7 @@ Initial details - Sector competitions allow multiple innovation areas
     When the user enters multiple innovation areas
     And the user clicks the button/link              jQuery=.button:contains("Done")
     Then The user should see the text in the page    Space technology
-    And The user should see the text in the page     Creative Industries
+    And The user should see the text in the page     Creative industries
 
 Initial Details - User can remove an innovation area
     [Documentation]    INFUND-6478, INFUND-6479
@@ -135,9 +135,9 @@ Initial details - Comp Type and Date should not be editable
     Then the user should see the text in the page   1/12/${nextyear}
     And the user should see the text in the page    Ian Cooper
     And the user should see the text in the page    Test competition
-    And the user should see the text in the page    Emerging and enabling technologies
-    And the user should see the text in the page    Creative Industries
-    And the user should see the text in the page    Satellite Applications
+    And the user should see the text in the page    Emerging and enabling
+    And the user should see the text in the page    Creative industries
+    And the user should see the text in the page    Satellite applications
     And the user should see the text in the page    Yes
 
 
@@ -605,8 +605,10 @@ the resubmission should not have a default selection
 The user enters valid data in the initial details
     Given the user enters text to a text field                css=#title  Competition title
     When the user selects the option from the drop-down menu  Sector  id=competitionTypeId
-    And the user selects the option from the drop-down menu   Emerging and enabling technologies  id=innovationSectorCategoryId
-    And the user selects the option from the drop-down menu   Satellite Applications  id=innovationAreaCategoryId-0
+    And the user selects the option from the drop-down menu   Infrastructure systems  id=innovationSectorCategoryId
+    And the user selects the option from the drop-down menu   Offshore wind  id=innovationAreaCategoryId-0
+    And the user selects the option from the drop-down menu   Emerging and enabling  id=innovationSectorCategoryId
+    And the user selects the option from the drop-down menu   Satellite applications  id=innovationAreaCategoryId-0
     And the user enters text to a text field    id=openingDateDay    01
     And the user enters text to a text field    Id=openingDateMonth    12
     And the user enters text to a text field    id=openingDateYear  ${nextyear}
@@ -669,4 +671,4 @@ the user enters multiple innovation areas
     the user clicks the button/link    jQuery=.buttonlink:contains("+ add another innovation area")
     the user selects the option from the drop-down menu    Space technology    id=innovationAreaCategoryId-1
     the user clicks the button/link    jQuery=.buttonlink:contains("+ add another innovation area")
-    the user selects the option from the drop-down menu    Creative Industries    id=innovationAreaCategoryId-2
+    the user selects the option from the drop-down menu    Creative industries    id=innovationAreaCategoryId-2

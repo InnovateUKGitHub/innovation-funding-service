@@ -52,7 +52,7 @@
                             <td th:text="${applicant.email}">steve.smith@empire.com</td>
                             <td th:text="${applicant.lead} ? 'Lead' : (${applicant.pending} ? 'Invite pending' : '')">Lead</td>
                             <td class="alignright">
-                                <button th:if="${applicant.removable and applicantStat.count > 1}"
+                                <button th:if="${applicant.removable and applicantStat.size > 1}"
                                         th:value="${applicant.applicationInviteId}"
                                         class="buttonlink"
                                         name="markForRemoval"
