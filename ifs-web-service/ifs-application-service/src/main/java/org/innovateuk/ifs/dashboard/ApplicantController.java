@@ -64,8 +64,10 @@ public class ApplicantController {
         List<ApplicationResource> finished = applicationService.getFinished(user.getId());
 
         List<ProjectResource> projectsInSetup = projectService.findByUser(user.getId()).getSuccessObject();
-        
-        Map<Long, CompetitionResource> competitions = createCompetitionMap(inProgress, finished);
+
+        List<ApplicationResource> applicationsForProjectsInSetup = getApplicationsForProjectsInSetup(projectsInSetup);
+
+        Map<Long, CompetitionResource> competitions = createCompetitionMap(inProgress, finished, applicationsForProjectsInSetup);
         Map<Long, ApplicationStatusResource> applicationStatusMap = createApplicationStatusMap(inProgress, finished);
 
         model.addAttribute("applicationsInProgress", inProgress);
@@ -113,9 +115,12 @@ public class ApplicantController {
             .collect(
                 Collectors.toMap(
                     ApplicationResource::getId,
-                    application -> competitionService.getById(application.getCompetition())
-                )
+                    application -> competitionService.getById(application.getCompetition()), (p1, p2) -> p1)
             );
     }
 
+    private final List<ApplicationResource> getApplicationsForProjectsInSetup(List<ProjectResource> resources){
+
+        return resources.stream().map(project -> applicationService.getById(project.getApplication())).collect(Collectors.toList());
+    }
 }

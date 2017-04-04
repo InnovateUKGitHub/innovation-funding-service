@@ -17,7 +17,7 @@
             <th:block th:insert="fragments/elements :: competition-closing-warning (competition=${currentCompetition})" />
 
             <div class="page-title">
-                <th:block th:insert="fragments/elements :: application-title (applicationId=${currentApplication.id},applicationName=${currentApplication.name})" />
+                <th:block th:insert="fragments/elements :: application-title (applicationName=${currentApplication.name})" />
                 <h1 class="heading-xlarge no-margin">Feedback overview</h1>
             </div>
 
@@ -31,6 +31,9 @@
                     <div class="column-half">
                         <h3 class="heading-small">Project title</h3>
                         <p th:text="${currentApplication.name}">Machine learning in robots</p>
+
+                        <h3 class="heading-small">Application number</h3>
+                        <p th:text="${currentApplication.id}">Machine learning in robots</p>
 
                         <h3 class="heading-small">Lead organisation</h3>
                         <p th:text="${leadOrganisation.name}">Aptrans Ltd</p>
