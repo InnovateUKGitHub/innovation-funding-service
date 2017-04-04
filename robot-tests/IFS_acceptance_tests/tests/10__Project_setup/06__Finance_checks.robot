@@ -841,7 +841,7 @@ Project finance can see finance breakdown for different categories
        [Tags]
        When the user clicks the button/link               link=Project finance overview
        Then the user should see the text in the element   css=.form-group tbody tr:nth-of-type(1) th strong  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
-       # the below figures are in this order Total 	Labour 	Overheads 	Materials 	Capital usage 	Subcontract cost  Travel and subs  Other Costs
+       # the below figures are in this order Total 	Labour 	Overheads 	Materials 	Capital usage 	Subcontracting cost  Travel and subsistence  Other Costs
        And all the categories are verified   1   £ 301,355  £ 4,622  £ 0  £ 150,300  £ 828  £ 135,000  £ 8,955  £ 1,650
        When the user should see the text in the element   css=.form-group tbody tr:nth-of-type(2) th strong  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
        Then all the categories are verified  2   £ 990      £ 286 	 £ 154 	£ 66     £ 0    £ 0        £ 44     £ 440
@@ -1344,7 +1344,7 @@ Project finance can see updated finance breakdown for different categories
        [Tags]
        When the user clicks the button/link   link=Project finance overview
        Then the user should see the text in the element   css=.form-group tbody tr:nth-of-type(1) th strong  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
-       # the below figures are in this order Total 	Labour 	Overheads 	Materials 	Capital usage 	Subcontract cost  Travel and subs  Other Costs
+       # the below figures are in this order Total 	Labour 	Overheads 	Materials 	Capital usage 	Subcontracting cost  Travel and subsistence  Other Costs
        And all the categories are verified  1   £ 206,867 	 £ 60,602  £ 1,954 	£ 52,100   £ 10,376   £ 65,000  £ 4,985   £ 11,850
        When the user should see the text in the element   css=.form-group tbody tr:nth-of-type(2) th strong  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
        Then all the categories are verified  2   £ 990 	     £ 286 	   £ 154    £ 66       £ 0 	      £ 0 	    £ 44      £ 440
