@@ -47,9 +47,12 @@ public class ApplicationResearchCategoryPopulator extends BaseModelPopulator {
 
     private void setHasApplicationFinances(ResearchCategoryViewModel researchCategoryViewModel, Long applicationId) {
 
-        boolean applicationFinanceDetailsEntered = financeService.getApplicationFinanceDetails(applicationId).stream()
-                .filter(applicationFinanceResource -> applicationFinanceResource.getOrganisationSize() != null).findFirst().isPresent();
+        boolean applicationFinanceDetailsEntered = false;
 
+        if (researchCategoryViewModel.getSelectedResearchCategoryId() != null) {
+            applicationFinanceDetailsEntered = financeService.getApplicationFinanceDetails(applicationId).stream()
+                    .filter(applicationFinanceResource -> applicationFinanceResource.getOrganisationSize() != null).findFirst().isPresent();
+        }
         researchCategoryViewModel.setHasApplicationFinances(applicationFinanceDetailsEntered);
     }
 }
