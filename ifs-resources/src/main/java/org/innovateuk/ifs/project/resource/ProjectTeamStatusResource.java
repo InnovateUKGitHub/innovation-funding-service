@@ -28,8 +28,6 @@ public class ProjectTeamStatusResource {
         this.partnerStatuses = partnerStatuses;
     }
 
-
-
     @JsonIgnore
     public ProjectPartnerStatusResource getLeadPartnerStatus() {
         return partnerStatuses.stream().filter(status -> status instanceof ProjectLeadStatusResource).findFirst().orElse(null);

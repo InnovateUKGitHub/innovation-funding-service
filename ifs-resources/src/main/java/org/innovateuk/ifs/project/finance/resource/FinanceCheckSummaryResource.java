@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -23,7 +24,6 @@ public class FinanceCheckSummaryResource {
     private BigDecimal otherPublicSectorFunding;
     private BigDecimal totalPercentageGrant;
     private boolean spendProfilesGenerated;
-    private boolean financeChecksAllApproved;
     private boolean bankDetailsApproved;
     private String spendProfileGeneratedBy;
     private LocalDate spendProfileGeneratedDate;
@@ -35,7 +35,7 @@ public class FinanceCheckSummaryResource {
     }
 
     public FinanceCheckSummaryResource(FinanceCheckOverviewResource overviewResource, Long competitionId, String competitionName, boolean spendProfilesGenerated,
-                                       List<FinanceCheckPartnerStatusResource> partnerStatusResources, boolean financeChecksAllApproved, boolean bankDetailsApproved,
+                                       List<FinanceCheckPartnerStatusResource> partnerStatusResources, boolean bankDetailsApproved,
                                        String spendProfileGeneratedBy, LocalDate spendProfileGeneratedDate) {
         this.projectId = overviewResource.getProjectId();
         this.projectName = overviewResource.getProjectName();
@@ -49,7 +49,6 @@ public class FinanceCheckSummaryResource {
         this.otherPublicSectorFunding = overviewResource.getOtherPublicSectorFunding();
         this.totalPercentageGrant = overviewResource.getTotalPercentageGrant();
         this.spendProfilesGenerated = spendProfilesGenerated;
-        this.financeChecksAllApproved = financeChecksAllApproved;
         this.bankDetailsApproved = bankDetailsApproved;
         this.spendProfileGeneratedBy = spendProfileGeneratedBy;
         this.spendProfileGeneratedDate = spendProfileGeneratedDate;
@@ -153,8 +152,9 @@ public class FinanceCheckSummaryResource {
         return spendProfileGeneratedDate;
     }
 
+    @JsonIgnore
     public boolean isFinanceChecksAllApproved() {
-        return financeChecksAllApproved && isViabilityAllApprovedOrNotRequired() && isEligibilityAllApprovedOrNotRequired();
+        return isViabilityAllApprovedOrNotRequired() && isEligibilityAllApprovedOrNotRequired();
     }
 
     private boolean isViabilityAllApprovedOrNotRequired() {
@@ -173,10 +173,6 @@ public class FinanceCheckSummaryResource {
                 Eligibility.NOT_APPLICABLE);
 
         return partnerStatusResources.stream().allMatch(org -> relevantStatuses.contains(org.getEligibility()));
-    }
-
-    public void setFinanceChecksAllApproved(boolean financeChecksAllApproved) {
-        this.financeChecksAllApproved = financeChecksAllApproved;
     }
 
     public void setSpendProfileGeneratedBy(String spendProfileGeneratedBy) {
