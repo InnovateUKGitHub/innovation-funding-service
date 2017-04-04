@@ -146,7 +146,7 @@ public class CompetitionSetupApplicationController {
         return ifUserCanAccessEditPageMarkSectionAsIncomplete(competitionResource, () -> getQuestionPage(model, competitionResource, questionId, true, null));
     }
 
-    @PostMapping(value = "/question", params = "question.type=ASSESSED_QUESTION")
+    @PostMapping(value = "/question/{questionId}/edit", params = "question.type=ASSESSED_QUESTION")
     public String submitAssessedQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationQuestionForm competitionSetupForm,
                                             BindingResult bindingResult,
                                             ValidationHandler validationHandler,
@@ -162,7 +162,7 @@ public class CompetitionSetupApplicationController {
                 () -> competitionSetupService.saveCompetitionSetupSubsection(competitionSetupForm, competitionResource, APPLICATION_FORM, QUESTIONS));
     }
 
-    @PostMapping("/question")
+    @PostMapping("/question/{questionId}/edit")
     public String submitProjectDetailsQuestion(@Valid @ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationProjectForm competitionSetupForm,
                                                BindingResult bindingResult,
                                                ValidationHandler validationHandler,
@@ -180,8 +180,6 @@ public class CompetitionSetupApplicationController {
 
         return validationHandler.performActionOrBindErrorsToField("", failureView, successView,
                 () -> competitionSetupService.saveCompetitionSetupSubsection(competitionSetupForm, competitionResource, APPLICATION_FORM, PROJECT_DETAILS));
-
-
     }
 
     @GetMapping(value = "/detail")
