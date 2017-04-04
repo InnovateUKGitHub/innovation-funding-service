@@ -67,5 +67,5 @@ public interface InviteService {
     ServiceResult<UserResource> getUserByInviteHash(@P("hash") String hash);
 
     @PreAuthorize("hasPermission(#applicationInviteId, 'org.innovateuk.ifs.invite.resource.ApplicationInviteResource', 'DELETE')")
-    ServiceResult<Void> removeApplicationInvite(Long applicationInviteId);
+    ServiceResult<Void> removeApplicationInvite(long applicationInviteId);
 }

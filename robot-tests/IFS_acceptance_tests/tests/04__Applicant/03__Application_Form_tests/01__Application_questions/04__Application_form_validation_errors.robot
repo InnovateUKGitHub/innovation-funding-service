@@ -114,7 +114,8 @@ Application details server side
 Empty text area
     [Documentation]    INFUND-43
     [Tags]
-    Given the user clicks the button/link    css=.pagination-part-title
+    [Setup]    The user clicks the button/link    link=Application Overview
+    Given the user clicks the button/link    link=Project summary
     When the applicant clears the text area of the "Project Summary"
     When the user clicks the button/link    jQuery=Button:contains("Mark as complete")
     Then the user should see an error    Please enter some text.

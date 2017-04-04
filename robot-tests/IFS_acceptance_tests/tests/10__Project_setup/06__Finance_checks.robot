@@ -223,7 +223,7 @@ Post new query server side validations
 Post new query client side validations
     [Documentation]    INFUND-4840
     [Tags]
-    When the user enters text to a text field    id=queryTitle    this is a title
+    When the user enters text to a text field    id=queryTitle    an eligibility query's title
     Then the user should not see the element    jQuery=label[for="queryTitle"] span:nth-child(2) span:contains(This field cannot be left blank.)
     When the user enters text to a text field    css=.editor    this is some query text
     Then the user should not see the element    jQuery=label[for="query] span:nth-child(2) span:contains(This field cannot be left blank.)
@@ -248,7 +248,7 @@ Query can be re-entered
     [Documentation]    INFUND-4840
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Post a new query")
-    And the user enters text to a text field    id=queryTitle    this is a title
+    And the user enters text to a text field    id=queryTitle    an eligibility query's title
     And the user enters text to a text field    css=.editor    this is some query text
     And the user uploads the file    name=attachment    ${valid_pdf}
     And the user uploads the file    name=attachment    ${valid_pdf}
@@ -280,7 +280,8 @@ Project finance user can add another query
     [Tags]
     Given the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(6)
     When the user clicks the button/link    jQuery=.button:contains("Post a new query")
-    And the user enters text to a text field    id=queryTitle    another query title
+    And the user enters text to a text field    id=queryTitle    a viability query's title
+    And the user selects the option from the drop-down menu    VIABILITY    id=section
     And the user enters text to a text field    css=.editor    another query body
     And the user clicks the button/link    jQuery=.button:contains("Post Query")
     Then the user should not see an error in the page
@@ -288,8 +289,36 @@ Project finance user can add another query
 Queries show in reverse chronological order
     [Documentation]    INFUND-4840
     [Tags]
-    When the user should see the element    jQuery=h2:nth-of-type(4):contains("this is a title")    #
-    And the user should see the element    jQuery=h2:nth-of-type(3):contains("another query title")
+    Given the user should see the element   jQuery=#querySection
+    And the user should see the element     jQuery=.queries-list .query:nth-of-type(1) h2:contains("a viability query's title")
+    And the user should see the element     jQuery=.queries-list .query:nth-of-type(2) h2:contains("an eligibility query's title")
+
+Project finance user can filter queries by Eligibility section
+    [Documentation]  INFUND-4844
+    [Tags]
+    Given the user selects the option from the drop-down menu    Eligibility only    id=querySection
+    Then the user should see the element       jQuery=.queries-list .query:nth-of-type(2) h2:contains("an eligibility query's title")
+    And the user should see the element       jQuery=.queries-list .query:nth-of-type(2) h3:contains("Eligibility")
+    And the user should not see the element    jQuery=.queries-list .query:nth-of-type(1) h2:contains("a viability query's title")
+    And the user should not see the element    jQuery=.queries-list .query:nth-of-type(1) h3:contains("Viability")
+
+Project finance user can filter queries by Viability section
+    [Documentation]  INFUND-4844
+    [Tags]
+    Given the user selects the option from the drop-down menu    Viability only    id=querySection
+    Then the user should see the element   jQuery=.queries-list .query:nth-of-type(1) h2:contains("a viability query's title")
+    And the user should see the element    jQuery=.queries-list .query:nth-of-type(1) h3:contains("Viability")
+    And the user should not see the element      jQuery=.queries-list .query:nth-of-type(2) h2:contains("an eligibility query's title")
+    And the user should not see the element      jQuery=.queries-list .query:nth-of-type(2) h3:contains("Eligibility")
+
+Project finance user can view all queries back
+    [Documentation]  INFUND-4844
+    [Tags]
+    Given the user selects the option from the drop-down menu    All    id=querySection
+    Then the user should see the element     jQuery=.queries-list .query:nth-of-type(1) h2:contains("a viability query's title")
+    And the user should see the element    jQuery=.queries-list .query:nth-of-type(1) h3:contains("Viability")
+    And the user should see the element      jQuery=.queries-list .query:nth-of-type(2) h2:contains("an eligibility query's title")
+    And the user should see the element    jQuery=.queries-list .query:nth-of-type(2) h3:contains("Eligibility")
 
 Non finance contact can view query
     [Documentation]    INFUND-4843, INFUND-8787
@@ -336,7 +365,7 @@ Finance contact can view query
     [Documentation]    INFUND-4843
     [Tags]
     When the user clicks the button/link    link=Finance checks
-    Then the user should see the text in the page    this is a title
+    Then the user should see the text in the page    an eligibility query's title
     And the user should see the text in the page    this is some query text
 
 Finance contact can view the project finance user's uploads
@@ -352,8 +381,8 @@ Finance contact can view the project finance user's uploads
 Queries show in reverse chronological order for finance contact
     [Documentation]    INFUND-4843
     [Tags]
-    When the user should see the element    jQuery=#content h2:nth-of-type(3):contains("this is a title")
-    And the user should see the element    jQuery=#content h2:nth-of-type(2):contains("another query title")
+    When the user should see the element    jQuery=#content h2:nth-of-type(3):contains("an eligibility query's title")
+    And the user should see the element    jQuery=#content h2:nth-of-type(2):contains("a viability query's title")
 
 Large pdf uploads not allowed for query response
     [Documentation]    INFUND-4843
@@ -597,7 +626,7 @@ Create new note server side validations
 Create new note client side validations
     [Documentation]    INFUND-4845
     [Tags]
-    When the user enters text to a text field    id=noteTitle    this is a title
+    When the user enters text to a text field    id=noteTitle    an eligibility query's title
     Then the user should not see the element    jQuery=label[for="noteTitle"] span:nth-child(2) span:contains(This field cannot be left blank.)
     When the user enters text to a text field    css=.editor    this is some note text
     Then the user should not see the element    jQuery=label[for="note"] span:nth-child(2) span:contains(This field cannot be left blank.)
@@ -622,7 +651,7 @@ Note can be re-entered
     [Documentation]    INFUND-4845
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Create a new note")
-    And the user enters text to a text field    id=noteTitle    this is a title
+    And the user enters text to a text field    id=noteTitle    an eligibility query's title
     And the user enters text to a text field    css=.editor    this is some note text
     And the user uploads the file    name=attachment    ${valid_pdf}
     And the user uploads the file    name=attachment    ${valid_pdf}
@@ -642,7 +671,7 @@ Note sections are no longer editable
 Project finance user can comment on the note
     [Documentation]    INFUND-7756
     [Tags]
-    When the user should see the text in the page    this is a title
+    When the user should see the text in the page    an eligibility query's title
     And the user should see the text in the page    this is some note text
     And the user should see the element    id=post-new-comment
 
@@ -1439,7 +1468,7 @@ Non Lead Partner can view Finance checks page
 
 *** Keywords ***
 
-the table row has expected values
+the table row has expected values   
     the user sees the text in the element    jQuery=.table-overview tbody td:nth-child(2)    3 months
     the user sees the text in the element    jQuery=.table-overview tbody td:nth-child(3)    £ 503,248
     the user sees the text in the element    jQuery=.table-overview tbody td:nth-child(4)    £ 145,497

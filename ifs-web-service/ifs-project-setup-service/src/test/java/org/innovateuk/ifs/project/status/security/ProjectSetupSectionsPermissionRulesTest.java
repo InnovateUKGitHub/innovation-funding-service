@@ -7,7 +7,7 @@ import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
-import org.innovateuk.ifs.project.sections.ProjectSetupSectionsAccessibilityHelper;
+import org.innovateuk.ifs.project.sections.ProjectSetupSectionAccessibilityHelper;
 import org.innovateuk.ifs.project.sections.SectionAccess;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
@@ -50,7 +50,7 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
     private ProjectSetupSectionsPermissionRules.ProjectSetupSectionPartnerAccessorSupplier accessorSupplier;
 
     @Mock
-    private ProjectSetupSectionsAccessibilityHelper accessor;
+    private ProjectSetupSectionAccessibilityHelper accessor;
 
     private UserResource user = newUserResource().build();
 
@@ -61,37 +61,37 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
 
     @Test
     public void testCompaniesHouseSectionAccess() {
-        assertScenariousForSections(ProjectSetupSectionsAccessibilityHelper::canAccessCompaniesHouseSection, () -> rules.partnerCanAccessCompaniesHouseSection(123L, user));
+        assertScenariousForSections(ProjectSetupSectionAccessibilityHelper::canAccessCompaniesHouseSection, () -> rules.partnerCanAccessCompaniesHouseSection(123L, user));
     }
 
     @Test
     public void testProjectDetailsSectionAccess() {
-        assertScenariousForSections(ProjectSetupSectionsAccessibilityHelper::canAccessProjectDetailsSection, () -> rules.partnerCanAccessProjectDetailsSection(123L, user));
+        assertScenariousForSections(ProjectSetupSectionAccessibilityHelper::canAccessProjectDetailsSection, () -> rules.partnerCanAccessProjectDetailsSection(123L, user));
     }
 
     @Test
     public void testMonitoringOfficerSectionAccess() {
-        assertNonLeadPartnerSuccessfulAccess(ProjectSetupSectionsAccessibilityHelper::canAccessMonitoringOfficerSection, () -> rules.partnerCanAccessMonitoringOfficerSection(123L, user));
+        assertNonLeadPartnerSuccessfulAccess(ProjectSetupSectionAccessibilityHelper::canAccessMonitoringOfficerSection, () -> rules.partnerCanAccessMonitoringOfficerSection(123L, user));
     }
 
     @Test
     public void testBankDetailsSectionAccess() {
-        assertNonLeadPartnerSuccessfulAccess(ProjectSetupSectionsAccessibilityHelper::canAccessBankDetailsSection, () -> rules.partnerCanAccessBankDetailsSection(123L, user));
+        assertNonLeadPartnerSuccessfulAccess(ProjectSetupSectionAccessibilityHelper::canAccessBankDetailsSection, () -> rules.partnerCanAccessBankDetailsSection(123L, user));
     }
 
     @Test
     public void testSpendProfileSectionAccess() {
-        assertNonLeadPartnerSuccessfulAccess(ProjectSetupSectionsAccessibilityHelper::canAccessSpendProfileSection, () -> rules.partnerCanAccessSpendProfileSection(123L, user));
+        assertNonLeadPartnerSuccessfulAccess(ProjectSetupSectionAccessibilityHelper::canAccessSpendProfileSection, () -> rules.partnerCanAccessSpendProfileSection(123L, user));
     }
 
     @Test
     public void testOtherDocumentsSectionAccess() {
-        assertNonLeadPartnerSuccessfulAccess(ProjectSetupSectionsAccessibilityHelper::canAccessOtherDocumentsSection, () -> rules.partnerCanAccessOtherDocumentsSection(123L, user));
+        assertNonLeadPartnerSuccessfulAccess(ProjectSetupSectionAccessibilityHelper::canAccessOtherDocumentsSection, () -> rules.partnerCanAccessOtherDocumentsSection(123L, user));
     }
 
     @Test
     public void testGrantOfferLetterSectionAccess() {
-        assertNonLeadPartnerSuccessfulAccess(ProjectSetupSectionsAccessibilityHelper::canAccessGrantOfferLetterSection, () -> rules.partnerCanAccessGrantOfferLetterSection(123L, user));
+        assertNonLeadPartnerSuccessfulAccess(ProjectSetupSectionAccessibilityHelper::canAccessGrantOfferLetterSection, () -> rules.partnerCanAccessGrantOfferLetterSection(123L, user));
     }
 
     @Test
@@ -198,7 +198,7 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
         verify(projectServiceMock).getProjectTeamStatus(projectId, Optional.of(user.getId()));
     }
 
-    private void assertLeadPartnerSuccessfulAccess(BiFunction<ProjectSetupSectionsAccessibilityHelper, OrganisationResource, SectionAccess> accessorCheck,
+    private void assertLeadPartnerSuccessfulAccess(BiFunction<ProjectSetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> accessorCheck,
                                                    Supplier<Boolean> ruleCheck) {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
@@ -231,7 +231,7 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
         verify(projectServiceMock).getProjectTeamStatus(123L, Optional.of(user.getId()));
     }
 
-    private void assertNonLeadPartnerSuccessfulAccess(BiFunction<ProjectSetupSectionsAccessibilityHelper, OrganisationResource, SectionAccess> accessorCheck,
+    private void assertNonLeadPartnerSuccessfulAccess(BiFunction<ProjectSetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> accessorCheck,
                                                       Supplier<Boolean> ruleCheck) {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
@@ -292,7 +292,7 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
         verify(projectServiceMock).getProjectTeamStatus(123L, Optional.of(user.getId()));
     }
 
-    private void assertScenariousForSections(BiFunction<ProjectSetupSectionsAccessibilityHelper, OrganisationResource, SectionAccess> accessorCheck, Supplier<Boolean> ruleCheck) {
+    private void assertScenariousForSections(BiFunction<ProjectSetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> accessorCheck, Supplier<Boolean> ruleCheck) {
         assertLeadPartnerSuccessfulAccess(accessorCheck, ruleCheck);
         resetMocks();
 
