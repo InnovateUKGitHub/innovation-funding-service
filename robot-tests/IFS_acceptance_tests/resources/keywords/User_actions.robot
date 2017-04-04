@@ -95,13 +95,13 @@ the user cannot login with either password
     Input Password    id=password    ${correct_password}
     Click Button    css=button[name="_eventId_proceed"]
     Page Should Contain    ${unsuccessful_login_message}
-    Page Should Contain    Your email/password combination doesn't seem to work
+    Page Should Contain    Your username/password combination doesn't seem to work
     go to    ${LOGIN_URL}
     Input Text    id=username    ${valid_email}
     Input Password    id=password    ${incorrect_password}
     Click Button    css=button[name="_eventId_proceed"]
     Page Should Contain    ${unsuccessful_login_message}
-    Page Should Contain    Your email/password combination doesn't seem to work
+    Page Should Contain    Your username/password combination doesn't seem to work
 
 
 the lead applicant invites a registered user

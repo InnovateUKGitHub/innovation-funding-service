@@ -432,7 +432,7 @@
 
     <!-- ===========================Form: materials =========================== -->
     <th:block th:fragment="materials (viewmode)" th:with="costCategory=${organisationFinance.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))}">
-        <p th:text="${question.getDescription()}"></p>
+        <p th:if="${viewmode == 'edit'}" th:text="${question.getDescription()}"></p>
 
         <th:block th:if="${(viewmode == 'approved')}">
             <table id="material-costs-table">
@@ -596,7 +596,7 @@
 
     <!-- ===========================Form: capital usage =========================== -->
     <th:block th:fragment="capital_usage(viewmode)" th:with="costCategory=${organisationFinance.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))}">
-        <p th:text="${question.getDescription()}"></p>
+        <p th:if="${viewmode == 'edit'}" th:text="${question.getDescription()}"></p>
         <th:block th:if="${(viewmode == 'approved')}">
             <table id="capital-usage-table">
                 <thead>
@@ -801,7 +801,7 @@
 
     <!-- ===========================Form: subcontracting cost =========================== -->
     <th:block th:fragment="subcontracting (viewmode)" th:with="costCategory=${organisationFinance.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))}">
-        <p th:text="${question.getDescription()}"></p>
+        <p th:if="${viewmode == 'edit'}" th:text="${question.getDescription()}"></p>
         <th:block th:if="${viewmode == 'approved'}">
             <table id="subcontracting-table">
                 <thead>
@@ -932,7 +932,7 @@
 
     <!-- ===========================Form: travel cost =========================== -->
     <th:block th:fragment="travel (viewmode)" th:with="costCategory=${organisationFinance.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))}">
-        <p th:text="${question.description}"></p>
+        <p th:if="${viewmode == 'edit'}" th:text="${question.description}"></p>
 
         <th:block th:if="${(viewmode == 'approved')}">
             <table id="travel-costs-table">
@@ -1087,7 +1087,7 @@
 
     <!-- ===========================Form: other cost =========================== -->
     <th:block th:fragment="other_costs (viewmode)" th:with="costCategory=${organisationFinance.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))},type=${formInput.type.nameLower}">
-        <p th:text="${question.description}" />
+        <p th:if="${viewmode == 'edit'}" th:text="${question.description}" />
         <th:block th:if="${(viewmode == 'approved')}">
             <table id="other-costs-table">
                 <thead>

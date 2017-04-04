@@ -96,7 +96,7 @@ the user cannot login with their new details
     Input Password    id=password    ${password}
     Click Button    css=button[name="_eventId_proceed"]
     Page Should Contain    ${unsuccessful_login_message}
-    Page Should Contain    Your email/password combination doesn't seem to work
+    Page Should Contain    Your username/password combination doesn't seem to work
 
 the user logs out if they are logged in
     Run Keyword And Ignore Error Without Screenshots    log out as user
