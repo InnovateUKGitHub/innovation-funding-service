@@ -122,13 +122,12 @@
                     </button>
                 </p>
 
-                <div th:if="${model.userLeadApplicant and !model.leadOrganisation and #lists.size(model.applicants) < 2}">
+                <div th:if="${model.userLeadApplicant and !model.leadOrganisation}">
                     <div class="alignright">
-                        <button name="deleteLastApplicant"
+                        <button name="deleteOrganisation"
                                 type="submit"
                                 class="button-secondary"
-                                data-js-modal="modal-delete-organisation"
-                                th:value="${model.applicants.get(0).applicationInviteId}">
+                                data-js-modal="modal-delete-organisation">
                             Delete organisation
                         </button>
                     </div>
@@ -140,7 +139,7 @@
                 <p th:if="${model.userLeadApplicant}">You should not remove members of your team without discussing this action with them first. Members who are removed may not receive a notification from Innovate UK.</p>
 
                 <p class="extra-margin">
-                    <button class="button" name="save_contributors" type="submit">Update organisation</button>
+                    <button class="button" name="updateOrganisation" type="submit">Update organisation</button>
                     <a th:href="@{/application/{applicationId}/team(applicationId=${model.applicationId})}" class="button button-clear">Cancel</a>
                 </p>
 
