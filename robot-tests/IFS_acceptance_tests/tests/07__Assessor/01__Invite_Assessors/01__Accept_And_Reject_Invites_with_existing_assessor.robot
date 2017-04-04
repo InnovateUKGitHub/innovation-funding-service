@@ -72,6 +72,7 @@ User can view the competition brief
     And the user should see the text in the page    ${UPCOMING_COMPETITION_TO_ASSESS_NAME}
     And the user should see the text in the page    Competition opens
     And the user should see the text in the page    Competition closes
+    And the user should see the text in the page    Or go to your dashboard to continue an existing application.
     And the user should see the element    jQuery=.button:contains("Start new application")
     And The user closes the competition brief
     [Teardown]

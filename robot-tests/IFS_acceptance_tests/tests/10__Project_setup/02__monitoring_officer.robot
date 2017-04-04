@@ -56,7 +56,7 @@ Comp admin can view the Supporting information details on MO page
     Then the user should see the text in the page    Monitoring Officer
     And the user should see the text in the page    Supporting information
     And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_TITLE}
-    And the user should see the text in the page    Satellite Applications
+    And the user should see the text in the page    Satellite applications
     And the user should see the text in the page    Empire Road
     And the user should see the text in the page    Sheffield
     And the user should see the text in the page    S1 2ED
@@ -74,7 +74,7 @@ Project finance user can view MO page, and go on to assign MO
     Then the user should see the text in the page    Monitoring Officer
     And the user should see the text in the page    Supporting information
     And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_TITLE}
-    And the user should see the text in the page    Satellite Applications
+    And the user should see the text in the page    Satellite applications
     And the user should see the text in the page    Empire Road
     And the user should see the text in the page    Sheffield
     And the user should see the text in the page    S1 2ED
