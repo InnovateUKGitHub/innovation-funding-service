@@ -1,16 +1,14 @@
 package org.innovateuk.ifs.project.financecheck.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.project.projectdetails.controller.FinanceCheckController;
 import org.innovateuk.ifs.project.finance.resource.*;
-import org.innovateuk.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
+import org.innovateuk.ifs.project.projectdetails.controller.FinanceCheckController;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.junit.Test;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -19,15 +17,11 @@ import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.LABOUR;
 import static org.innovateuk.ifs.project.builder.CostCategoryResourceBuilder.newCostCategoryResource;
 import static org.innovateuk.ifs.project.builder.CostGroupResourceBuilder.newCostGroupResource;
 import static org.innovateuk.ifs.project.builder.CostResourceBuilder.newCostResource;
-import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckOverviewResourceBuilder.newFinanceCheckOverviewResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStatusResourceBuilder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStatusResourceBuilder.newFinanceCheckPartnerStatusResource;
-import static org.innovateuk.ifs.project.finance.builder.FinanceCheckProcessResourceBuilder.newFinanceCheckProcessResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckResourceBuilder.newFinanceCheckResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckSummaryResourceBuilder.newFinanceCheckSummaryResource;
-import static org.innovateuk.ifs.project.finance.resource.FinanceCheckState.PENDING;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -73,36 +67,6 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
     }
 
     @Test
-    public void getFinanceCheckApprovalStatus() throws Exception {
-
-        FinanceCheckProcessResource status = newFinanceCheckProcessResource().
-                withCanApprove(true).
-                withInternalParticipant(newUserResource().withFirstName("John").withLastName("Doe").withEmail("john.doe@innovateuk.gov.uk").build()).
-                withParticipant(newProjectUserResource().withUserName("Steve Smith").withEmail("steve.smith@empire.com").withProject(123L).withOrganisation(456L).build()).
-                withState(PENDING).
-                withModifiedDate(LocalDateTime.of(2016, 10, 04, 12, 10, 02)).
-                build();
-
-        when(financeCheckServiceMock.getFinanceCheckApprovalStatus(123L, 456L)).thenReturn(serviceSuccess(status));
-
-        String url = FinanceCheckURIs.BASE_URL + "/{projectId}" + FinanceCheckURIs.ORGANISATION_PATH + "/{organisationId}" +
-                FinanceCheckURIs.PATH + "/status";
-
-        mockMvc.perform(get(url, 123L, 456L)).
-                andExpect(status().isOk()).
-                andExpect(content().json(toJson(status))).
-                andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project to which the Finance Check is linked"),
-                                parameterWithName("organisationId").description("Id of the organisation to which the Finance Check is linked")
-                        ),
-                        responseFields(financeCheckApprovalStatusFields)
-                ));
-
-        verify(financeCheckServiceMock).getFinanceCheckApprovalStatus(123L, 456L);
-    }
-
-    @Test
     public void getFinanceCheckSummary() throws Exception {
         Long projectId = 123L;
         Long competitionId = 456L;
@@ -119,7 +83,6 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
                 withOtherPublicSectorFunding(new BigDecimal(0.00)).
                 withTotalPercentageGrant(new BigDecimal(50.00)).
                 withSpendProfilesGenerated(false).
-                withFinanceChecksAllApproved(false).
                 withBankDetailslApproved(false).
                 withPartnerStatusResources(partnerStatusResources).
                 build();
