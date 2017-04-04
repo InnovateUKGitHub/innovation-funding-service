@@ -60,7 +60,6 @@ public class LoginController {
     @GetMapping("/" + LOGIN_BASE + "/" + RESET_PASSWORD + "/hash/{hash}")
     public String resetPassword(@PathVariable("hash") String hash, @ModelAttribute ResetPasswordForm resetPasswordForm, Model model, HttpServletRequest request) {
         userService.checkPasswordResetHash(hash);
-
         return LOGIN_BASE + "/" + RESET_PASSWORD_FORM;
     }
 

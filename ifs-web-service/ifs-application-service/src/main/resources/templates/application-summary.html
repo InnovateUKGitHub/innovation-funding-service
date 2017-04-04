@@ -24,7 +24,7 @@
             <th:block th:insert="fragments/elements :: competition-closing-warning (competition=${currentCompetition})" />
 
             <div class="page-title">
-                <th:block th:insert="fragments/elements :: application-title (applicationId=${currentApplication.id},applicationName=${currentApplication.name})" />
+                <th:block th:insert="fragments/elements :: application-title (applicationName=${currentApplication.name})" />
                 <h1 th:if="${currentApplication.isOpen()}" class="heading-xlarge no-margin">Application summary</h1>
                 <h1 th:unless="${currentApplication.isOpen()}" class="heading-xlarge no-margin">Application overview</h1>
             </div>

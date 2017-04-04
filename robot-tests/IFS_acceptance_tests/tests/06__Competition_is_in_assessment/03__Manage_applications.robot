@@ -39,7 +39,7 @@ Application number navigates to Overview
     [Documentation]    INFUND-7042
     [Tags]
     When the user clicks the button/link    link=22
-    Then The user should see the text in the page    22: Intelligent water system
+    Then The user should see the text in the page    Intelligent water system
     And the user should see the text in the page    University of Bath
     And the user should see the text in the page    Cardiff University
     [Teardown]    the user clicks the button/link    link=Back
