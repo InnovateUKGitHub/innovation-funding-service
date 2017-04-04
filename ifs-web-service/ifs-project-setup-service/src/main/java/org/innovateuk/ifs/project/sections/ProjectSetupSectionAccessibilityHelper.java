@@ -10,13 +10,13 @@ import static org.innovateuk.ifs.project.sections.SectionAccess.*;
 /**
  * This is a helper class for determining whether or not a given Project Setup section is available to access
  */
-public class ProjectSetupSectionsAccessibilityHelper {
+public class ProjectSetupSectionAccessibilityHelper {
 
-    private static final Log LOG = LogFactory.getLog(ProjectSetupSectionsAccessibilityHelper.class);
+    private static final Log LOG = LogFactory.getLog(ProjectSetupSectionAccessibilityHelper.class);
 
     private ProjectSetupProgressChecker projectSetupProgressChecker;
 
-    public ProjectSetupSectionsAccessibilityHelper(ProjectTeamStatusResource projectTeamStatus) {
+    public ProjectSetupSectionAccessibilityHelper(ProjectTeamStatusResource projectTeamStatus) {
         this.projectSetupProgressChecker = new ProjectSetupProgressChecker(projectTeamStatus);
     }
 

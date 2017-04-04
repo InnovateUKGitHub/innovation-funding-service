@@ -20,17 +20,17 @@ IFS.core.disableSubmitUntilChecked = (function () {
       var button = jQuery(buttonSelector)
       if (button.length) {
         var condition = button.is('[data-enable-button-when]') ? button.attr('data-enable-button-when') : 'all-checked'
-        var inputStatusses = IFS.core.disableSubmitUntilChecked.getInputStatus(buttonSelector)
+        var inputStatuses = IFS.core.disableSubmitUntilChecked.getInputStatus(buttonSelector)
 
         switch (condition) {
           case 'all-checked':
             // when all of the inputs are true
-            var allChecked = inputStatusses.indexOf(false) === -1
+            var allChecked = inputStatuses.indexOf(false) === -1
             IFS.core.disableSubmitUntilChecked.updateButton(button, allChecked)
             break
           case 'one-checked':
             // when at least one of the inputs is true
-            var oneChecked = inputStatusses.indexOf(true) !== -1
+            var oneChecked = inputStatuses.indexOf(true) !== -1
             IFS.core.disableSubmitUntilChecked.updateButton(button, oneChecked)
             break
         }
