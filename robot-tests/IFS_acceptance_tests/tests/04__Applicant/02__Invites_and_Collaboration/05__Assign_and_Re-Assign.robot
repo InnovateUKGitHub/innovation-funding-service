@@ -249,9 +249,8 @@ The question is disabled on the summary page for other collaborators
 
 Lead applicant should be able to remove the partner organisation
     [Documentation]    INFUND-8590
-    [Tags]    Pending
+    [Tags]
     [Setup]    log in as a different user    ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
-    # TODO Pending due to INFUND-8590
     Given the user clicks the button/link    link= Assign test
     And the user clicks the button/link    link=view team members and add collaborators
     And the user clicks the button/link    jQuery=.table-overflow:contains("Dennis") ~ p a
