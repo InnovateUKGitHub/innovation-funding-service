@@ -21,11 +21,10 @@ public interface UserService {
     void resendEmailVerificationNotification(String email);
     Boolean userHasApplicationForCompetition(Long userId, Long competitionId);
     UserResource retrieveUserById(Long id);
-    Void sendPasswordResetNotification(String email);
+    void sendPasswordResetNotification(String email);
     Void checkPasswordResetHash(String hash);
     ServiceResult<Void> resetPassword(String hash, String password);
     Optional<UserResource> findUserByEmail(String email);
-    Optional<UserResource> findUserByEmailForAnonymousUserFlow(String email);
     Set<UserResource> getAssignableUsers(ApplicationResource application);
     ServiceResult<UserResource> createUserForOrganisation(String firstName, String lastName, String password, String email, String title, String phoneNumber, Long organisationId);
     ServiceResult<UserResource> createLeadApplicantForOrganisationWithCompetitionId(String firstName, String lastName, String password, String email, String title,

@@ -70,13 +70,13 @@ public class AssessmentOverviewController {
         return "assessment/application-overview";
     }
 
-    @GetMapping(value = "/finances")
+    @GetMapping("/finances")
     public String getFinancesSummary(Model model, @PathVariable("assessmentId") Long assessmentId) {
         model.addAttribute("model", assessmentFinancesSummaryModelPopulator.populateModel(assessmentId, model));
         return "assessment/application-finances-summary";
     }
 
-    @GetMapping(value = "/application/{applicationId}/formInput/{formInputId}/download")
+    @GetMapping("/application/{applicationId}/formInput/{formInputId}/download")
     public @ResponseBody ResponseEntity<ByteArrayResource> downloadAppendix (
             @PathVariable("applicationId") Long applicationId,
             @PathVariable("formInputId") Long formInputId,
@@ -92,7 +92,7 @@ public class AssessmentOverviewController {
         return getFileResponseEntity(resource, fileDetails.getFileEntryResource());
     }
 
-    @PostMapping(value = "/reject")
+    @PostMapping("/reject")
     public String rejectInvitation(
             Model model,
             @Valid @ModelAttribute(FORM_ATTR_NAME) AssessmentOverviewForm form,
@@ -110,7 +110,7 @@ public class AssessmentOverviewController {
         });
     }
 
-    @GetMapping(value = "/reject/confirm")
+    @GetMapping("/reject/confirm")
     public String rejectInvitationConfirm(
             Model model,
             @ModelAttribute(FORM_ATTR_NAME) AssessmentOverviewForm form,

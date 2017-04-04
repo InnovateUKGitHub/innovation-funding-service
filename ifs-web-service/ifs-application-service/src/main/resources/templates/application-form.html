@@ -100,12 +100,11 @@
                         </th:block>
                     </th:block>
 
-                    <th:block>
-                        <div th:replace="finance/your-finances-sub-sections :: your_finances" />
-                    </th:block>
+                    <th:block th:include="finance/your-finances-sub-sections :: your_finances" />
 
-                    <div th:replace="finance/your-finances-sub-sections :: agree_terms" />
-                    <div th:replace="finance/your-finances-sub-sections :: subsection_buttons" />
+                    <th:block th:include="finance/your-finances-sub-sections :: agree_terms" />
+
+                    <th:block th:include="finance/your-finances-sub-sections :: subsection_buttons" />
 
                 </th:block>
 
@@ -120,21 +119,6 @@
                         <button th:unless="${model.isSection}" type="submit" class="button app-submit-btn" name="submit-section">Save and return to application overview</button>
                     </th:block>
                 </th:block>
-
-                <ul class="pagination" th:if="${model.navigation.hasNavigation}">
-                    <li class="prev" th:if="${model.navigation.previousUrl}">
-                        <a th:href="@{${model.navigation.previousUrl}}" rel="prev" title="Navigate to previous part">
-                            <span class="pagination-label">Previous</span>
-                            <span class="pagination-part-title" th:text="${model.navigation.previousText}">Business proposition</span>
-                        </a>
-                    </li>
-                    <li class="next" th:if="${model.navigation.nextUrl}">
-                        <a th:href="@{${model.navigation.nextUrl}}" rel="next" title="Navigate to next part">
-                            <span class="pagination-label">Next</span>
-                            <span class="pagination-part-title" th:text="${model.navigation.nextText}">Funding</span>
-                        </a>
-                    </li>
-                </ul>
             </form>
             <input type="hidden" id="cacheTest" value="" />
 

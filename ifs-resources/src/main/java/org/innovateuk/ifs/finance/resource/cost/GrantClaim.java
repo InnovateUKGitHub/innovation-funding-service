@@ -3,7 +3,7 @@ package org.innovateuk.ifs.finance.resource.cost;
 import javax.validation.constraints.Digits;
 import java.math.BigDecimal;
 
-public class GrantClaim implements FinanceRowItem {
+public class GrantClaim extends AbstractFinanceRowItem {
     private Long id;
 
     @Digits(integer = MAX_DIGITS, fraction = 0, message = MAX_DIGITS_MESSAGE)

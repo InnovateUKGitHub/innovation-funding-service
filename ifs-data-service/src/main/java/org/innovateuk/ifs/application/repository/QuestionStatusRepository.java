@@ -21,4 +21,8 @@ public interface QuestionStatusRepository extends CrudRepository<QuestionStatus,
     List<QuestionStatus> findByApplicationIdAndAssigneeIdOrAssignedById(@Param("applicationId") Long applicationId, @Param("assigneeId") Long assigneeId, @Param("assignedById") Long assignedById);
     int countByApplicationIdAndAssigneeId(@Param("applicationId") Long applicationId, @Param("assigneeId") Long assigneeId);
     List<QuestionStatus> findByApplicationIdAndMarkedAsCompleteById(@Param("applicationId") Long applicationId, @Param("markedAsCompleteById") Long markedAsCompleteById);
+    List<QuestionStatus> findByApplicationIdAndMarkedAsCompleteByIdOrAssigneeIdOrAssignedById(long applicationId,
+                                                                                              long markedAsCompleteById,
+                                                                                              long assigneeId,
+                                                                                              long assignedById);
 }

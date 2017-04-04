@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 import static org.innovateuk.ifs.file.controller.FileControllerUtils.*;
-import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
  *
@@ -35,7 +34,7 @@ public class FormInputResponseFileUploadController {
     @Qualifier("formInputResponseFileValidator")
     private FileHttpHeadersValidator fileValidator;
 
-    @RequestMapping(value = "/file", method = POST, produces = "application/json")
+    @PostMapping(value = "/file", produces = "application/json")
     public RestResult<FormInputResponseFileEntryCreatedResponse> createFile(
             @RequestHeader(value = "Content-Type", required = false) String contentType,
             @RequestHeader(value = "Content-Length", required = false) String contentLength,
@@ -52,7 +51,7 @@ public class FormInputResponseFileUploadController {
         });
     }
 
-    @RequestMapping(value = "/file", method = PUT, produces = "application/json")
+    @PutMapping(value = "/file", produces = "application/json")
     public RestResult<Void> updateFile(
             @RequestHeader(value = "Content-Type", required = false) String contentType,
             @RequestHeader(value = "Content-Length", required = false) String contentLength,
@@ -68,7 +67,7 @@ public class FormInputResponseFileUploadController {
         });
     }
 
-    @RequestMapping(value = "/file", method = GET)
+    @GetMapping("/file")
     public @ResponseBody ResponseEntity<Object> getFileContents(
             @RequestParam("formInputId") long formInputId,
             @RequestParam("applicationId") long applicationId,
@@ -77,7 +76,7 @@ public class FormInputResponseFileUploadController {
         return handleFileDownload(() -> doGetFile(formInputId, applicationId, processRoleId));
     }
 
-    @RequestMapping(value = "/fileentry", method = GET, produces = "application/json")
+    @GetMapping(value = "/fileentry", produces = "application/json")
     public RestResult<FormInputResponseFileEntryResource> getFileEntryDetails(
             @RequestParam("formInputId") long formInputId,
             @RequestParam("applicationId") long applicationId,
@@ -87,7 +86,7 @@ public class FormInputResponseFileUploadController {
         return result.andOnSuccessReturn(FormInputResponseFileAndContents::getFormInputResponseFileEntry).toGetResponse();
     }
 
-    @RequestMapping(value = "/file", method = DELETE, produces = "application/json")
+    @DeleteMapping(value = "/file", produces = "application/json")
     public RestResult<Void> deleteFileEntry(
             @RequestParam("formInputId") long formInputId,
             @RequestParam("applicationId") long applicationId,
