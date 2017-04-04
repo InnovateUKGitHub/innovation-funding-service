@@ -33,8 +33,8 @@
                                     </a>
                                 </h3>
                                 <ul class="application-details">
-                                    <li>Application number: <span th:text="${project.application}">APPLICATION NUMBER</span></li>
-                                    <li th:if="${competition}">Competition: <span th:text="${competitions.get(project.application).name}">COMPETITION NAME</span></li>
+                                    <li>Project number: <span th:text="${project.application}">PROJECT NUMBER</span></li>
+                                    <li>Competition: <span th:text="${competitions.get(project.application).name}">COMPETITION NAME</span></li>
                                 </ul>
                             </div>
                             <div class="status">
