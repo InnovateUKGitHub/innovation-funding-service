@@ -23,28 +23,6 @@
 
             <th:block th:insert="fragments/elements :: competition-status-message (app=${currentApplication}, competition=${currentCompetition})" />
 
-            <h2 class="heading-medium">Overall scores</h2>
-            <div class="table-overflow">
-                <table th:each="section : ${sections.values()}" th:if="${!section.name.equals('Project details') && !section.name.equals('Finances')}">
-                    <thead>
-                        <tr>
-                            <th class="width-150" scope="row">Question</th>
-                            <th th:each="question : ${sectionQuestions.get(section.id)}" scope="col">
-                                <a th:text="|Q${question.questionNumber}|">Q1</a>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th class="width-150" scope="row">Score</th>
-                            <td th:each="question : ${sectionQuestions.get(section.id)}">
-                                <span th:text="${scores.scores.get(question.id)}" th:remove="tag" />
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
             <h2 class="heading-medium no-margin-bottom">Application details</h2>
             <p class="form-hint">Assessors do not provide scores on these sections of the application.</p>
 
