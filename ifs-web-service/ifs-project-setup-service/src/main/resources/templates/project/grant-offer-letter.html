@@ -89,7 +89,7 @@
                     </div>
                 </details>
                 <th:block th:with="uploadViewmode='edit',
-                               downloadUrl=@{/project/{id}/offer/signed-grant-offer-letter(id=${model.projectId}),
+                               downloadUrl=@{/project/{id}/offer/signed-grant-offer-letter(id=${model.projectId})},
                                filename=${model.signedGrantOfferLetterFile?.filename},
                                inputField='signedGrantOfferLetter',
                                mayRemove=true,
