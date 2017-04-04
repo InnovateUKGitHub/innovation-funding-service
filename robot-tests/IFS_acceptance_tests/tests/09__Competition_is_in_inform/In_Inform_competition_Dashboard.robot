@@ -18,6 +18,8 @@ Documentation     INFUND-7365 Inflight competition dashboards: Inform dashboard
 ...               INFUND-8005 Feedback per question for applicant
 ...
 ...               INFUND-8876 No back navigation on applicant feedback view
+...
+...               INFUND-8066 Filter on 'Manage funding notifications' dashboard
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
@@ -32,17 +34,41 @@ Competition Dashboard
     And The user should see the text in the page    Inform
     And The user should see the text in the page    Programme
     And The user should see the text in the page    Materials and manufacturing
-    And The user should see the text in the page    Satellite Applications
+    And The user should see the text in the page    Satellite applications
     And The user should see the element    jQuery=a:contains("Invite assessors to assess the competition")
     And the user should not see the element    link=View and update competition setup
 
 Milestones for the In inform competition
-    [Documentation]    INFUND-7561    INFUND-7950
+    [Documentation]    INFUND-7561 INFUND-7950
     [Tags]
     Then the user should see the element    jQuery=.button:contains("Manage funding notifications")
     And the user should see the element    jQuery=button:contains("Release feedback")
     And the user should see the element    css=li:nth-child(13).done    #Verify that 12. Notifications
     And the user should see the element    css=li:nth-child(14).not-done    #Verify that 13. Release feedback is not done
+
+Filtering on the Manage funding applications page
+    [Documentation]    INFUND-8066
+    [Tags]
+    Given The user clicks the button/link    jQuery=.button:contains("Manage funding notifications")
+    And the user enters text to a text field    id=stringFilter    68
+    And the user selects the option from the drop-down menu    Yes    id=sendFilter
+    And the user selects the option from the drop-down menu    Successful    id=fundingFilter
+    When the user clicks the button/link    jQuery=button:contains("Filter")
+    Then the user should see the element    jQuery=td:nth-child(2):contains("68")
+    And the user should not see the element    jQuery=td:nth-child(2):contains("70")
+    And the user clicks the button/link    jQuery=.button:contains("Clear all filters")
+    And the user should see the element    jQuery=td:nth-child(2):contains("70")
+    [Teardown]    The user clicks the button/link    link=Competition
+
+Checking release feedback button state is correct
+    [Documentation]    INFUND-7950
+    [Tags]
+    Given the user clicks the button/link    link=Input and review funding decision
+    And the user selects the checkbox    app-row-3
+    And the user clicks the button/link    jQuery=button:contains("On hold")
+    When the user clicks the button/link    jQuery=.link-back:contains("Competition")
+    Then the user should see that the element is disabled    jQuery=button:contains("Release feedback")
+    [Teardown]    User sends the notification to enable release feedback
 
 Release feedback
     [Documentation]    INFUND-8050
@@ -87,8 +113,8 @@ User can see feedback to individual questions
     [Documentation]    INFUND-8005
     [Tags]
     Given the user clicks the button/link    jQuery=a:contains("6. Innovation")
-    Then the user should see the element     jQuery=h3:contains("Your answer") ~ p:contains("fifth")
-    And the user should see the element      jQuery=h4:contains("Assessor 1") ~ p:contains("This is the innovation feedback")
+    Then the user should see the element    jQuery=h3:contains("Your answer") ~ p:contains("This is the applicant response for innovation.")
+    And the user should see the element    jQuery=h4:contains("Assessor 1") ~ p:contains("This is the innovation feedback")
     [Teardown]    the user clicks the button/link    jQuery=.link-back:contains("Feedback overview")
 
 The finance details are shown
@@ -99,10 +125,10 @@ The finance details are shown
     And the user should not see the element    jQuery=.collapsible div[aria-hidden="true"]
 
 Selecting the dashboard link takes user back to the dashboard
-   [Documentation]    INFUND-8876
-   [Tags]
-   Given the user clicks the button/link    jQuery=.link-back:contains("Dashboard")
-   Then the user should see the element     jQuery=h1:contains("Your dashboard")
+    [Documentation]    INFUND-8876
+    [Tags]
+    Given the user clicks the button/link    jQuery=.link-back:contains("Dashboard")
+    Then the user should see the element    jQuery=h1:contains("Your dashboard")
 
 *** Keywords ***
 the overall scores are correct
@@ -136,3 +162,16 @@ the application details are correct
     the user should see the element    jQuery=p:contains("Project start date: ")
     the user should see the element    jQuery=p:contains("Duration")
     the user should see the element    jQuery=h3:contains("Total project cost")
+
+User sends the notification to enable release feedback
+    the user clicks the button/link    link=Input and review funding decision
+    the user selects the checkbox    app-row-3
+    the user clicks the button/link    jQuery=button:contains("Unsuccessful")
+    the user clicks the button/link    jQuery=.link-back:contains("Competition")
+    the user clicks the button/link    jQuery=button:contains("Manage funding notifications")
+    the user selects the checkbox     app-row-70
+    the user clicks the button/link    jQuery=button:contains("Write and send email")
+    the user enters text to a text field    id=subject    Subject
+    the user enters text to a text field    jQuery=.editor    Text
+    the user clicks the button/link    jQuery=button:contains("Send email to all applicants")
+    the user clicks the button/link    jQuery=.link-back:contains("Competition")

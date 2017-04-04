@@ -21,7 +21,6 @@ public class Ethnicity implements Serializable {
     private boolean active;
 
     public Ethnicity() {
-        // default constructor
     }
 
     public Ethnicity(String name, String description, int priority) {

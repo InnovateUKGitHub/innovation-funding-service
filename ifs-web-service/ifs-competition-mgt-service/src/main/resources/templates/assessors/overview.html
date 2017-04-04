@@ -8,7 +8,7 @@
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main id="content">
+        <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" />
 
@@ -119,7 +119,7 @@
 
                     <div class="grid-row">
                         <div class="column-half">
-                            <a href="?page=0" class="button button-clear">Clear filters</a>
+                            <a href="?page=0" class="button button-clear no-margin">Clear filters</a>
                         </div>
 
                         <div class="column-half alignright">

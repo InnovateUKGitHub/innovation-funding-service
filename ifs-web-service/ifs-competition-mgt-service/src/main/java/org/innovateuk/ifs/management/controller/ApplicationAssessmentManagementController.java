@@ -11,10 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 
@@ -36,7 +33,7 @@ public class ApplicationAssessmentManagementController {
     private ManageApplicationsModelPopulator manageApplicationsPopulator;
 
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public String manageApplications(Model model,
                                      @PathVariable("competitionId") long competitionId,
                                      @RequestParam MultiValueMap<String, String> queryParams,

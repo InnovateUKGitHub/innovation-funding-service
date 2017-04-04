@@ -27,10 +27,10 @@ Comp Admin starts a new Competition
     # Then continue with the applying to this Competition, in order to see the new Fields applied
     Given the user navigates to the page    ${CA_UpcomingComp}
     When the user clicks the button/link    jQuery=.button:contains("Create competition")
-    Then the user fills in the CS Initial details    ${compWithoutGrowth}    ${day}    ${month}    ${year}
+    Then the user fills in the CS Initial details    ${compWithoutGrowth}  ${tomorrowday}  ${month}  ${nextyear}
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility
-    And the user fills in the CS Milestones    ${todayday}    ${day}    ${month}    ${nextyear}
+    And the user fills in the CS Milestones  ${tomorrowday}  ${dayAfterTomorrow}  ${month}  ${nextyear}
 
 Comp Admin fills in the Milestone Dates and can see them formatted afterwards
     [Documentation]    INFUND-7820
@@ -86,8 +86,8 @@ Applicant fills in the Application Details
     Given the user should see the element    jQuery=h1:contains("Application overview")
     When the user clicks the button/link    link=Application details
     Then the user enters text to a text field    css=#application_details-title    ${applicationTitle}
-    And the user selects technical feasibility and no to resubmission and an innovation area
-    And the user enters text to a text field    css=#application_details-startdate_day    ${day}
+    And the user selects feasibility studies and no to resubmission and an innovation area
+    And the user enters text to a text field    css=#application_details-startdate_day    ${tomorrowday}
     And the user enters text to a text field    css=#application_details-startdate_month    ${month}
     And the user enters text to a text field    css=#application_details-startdate_year    ${nextyear}
     And the user enters text to a text field    css=#application_details-duration    24
@@ -110,10 +110,10 @@ Once the project growth table is selected
     [Setup]    log in as a different user    &{Comp_admin1_credentials}
     Given the user navigates to the page    ${CA_UpcomingComp}
     When the user clicks the button/link    jQuery=.button:contains("Create competition")
-    Then the user fills in the CS Initial details    Competition with growth table    ${day}    ${month}    ${year}
+    Then the user fills in the CS Initial details    Competition with growth table  ${tomorrowday}  ${month}  ${nextyear}
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility
-    And the user fills in the CS Milestones    ${todayday}    ${day}    ${month}    ${nextyear}
+    And the user fills in the CS Milestones  ${tomorrowday}  ${dayAfterTomorrow}  ${month}  ${nextyear}
     When the user decides about the growth table    yes    Yes
     Then the user marks the Application as done
     And the user fills in the CS Assessors
@@ -275,7 +275,7 @@ Applicant can view and edit project growth table
 Newly created collaborator can view and edit project Growth table
     [Documentation]  INFUND-8426
     [Tags]
-    [Setup]  Invite a non-existing collaborator in Appplication with Growth table
+    [Setup]  Invite a non-existing collaborator in Application with Growth table
     When the user navigates to the growth table finances
     and the user clicks the button/link     link=Your organisation
     and the user selects medium organisation size
@@ -291,7 +291,7 @@ Invite Collaborator in Application with Growth table
     # TODO INFUND-8561
     [Setup]  the user navigates to the page             ${dashboard_url}
     Given the lead applicant invites an existing user   ${compWITHGrowth}  ${collaborator1_credentials["email"]}
-    When the user reads his email and clicks the link   ${collaborator1_credentials["email"]}  Invitation to collaborate in ${compWITHGrowth}  participate in their application
+    When the user reads his email and clicks the link   ${collaborator1_credentials["email"]}  Invitation to collaborate in ${compWITHGrowth}  You will be joining as part of the organisation    3
     Then the user should see the element                jQuery=h1:contains("We have found an account with the invited email address")
     And the user clicks the button/link                 link=Sign into the Innovation Funding Service.
     When guest user log-in                              &{collaborator1_credentials}
@@ -321,10 +321,10 @@ Non-lead can can edit and remark Organisation as Complete
 
 *** Keywords ***
 Custom Suite Setup
-    ${todayday} =    get today day
-    Set suite variable    ${todayday}
-    ${day} =    get tomorrow day
-    Set suite variable    ${day}
+    ${tomorrowday} =    get tomorrow day
+    Set suite variable    ${tomorrowday}
+    ${dayAfterTomorrow} =  get the day after tomorrow
+    Set suite variable    ${dayAfterTomorrow}
     ${month} =    get tomorrow month
     set suite variable    ${month}
     ${year} =    get tomorrow year
@@ -333,12 +333,12 @@ Custom Suite Setup
     Set suite variable    ${nextyear}
     ${tomorrowfull} =    get tomorrow full
     Set suite variable    ${tomorrowfull}
-    ${tomorrow_nextyear} =    get tomorrow full next year
-    Set suite variable    ${tomorrow_nextyear}
+    ${dateDayAfterNextYear} =  get the day after tomorrow full next year
+    Set suite variable    ${dateDayAfterNextYear}
     Delete the emails from both test mailboxes
 
 the user should see the dates in full format
-    the user should see the element    jQuery=td:contains("Allocate assessors") ~ td:contains("${tomorrow_nextyear}")
+    the user should see the element    jQuery=td:contains("Allocate assessors") ~ td:contains("${dateDayAfterNextYear}")
 
 the the user should see that the funding depends on the research area
     the user should see the element    jQuery=h3:contains("Your funding") + p:contains("You must select a research category in application details ")
@@ -346,12 +346,12 @@ the the user should see that the funding depends on the research area
 the user should see his finances empty
     the user should see the element    jQuery=thead:contains("Total project costs") ~ *:contains("£0")
 
-the user selects technical feasibility and no to resubmission and an innovation area
+the user selects feasibility studies and no to resubmission and an innovation area
     the user clicks the button/link    jQuery=legend:contains("Research category")
-    the user clicks the button/link    jQuery=button:contains("Choose your research category")
+    the user clicks the button/link    jQuery=button:contains("Choose your research")
     the user clicks the button twice   jQuery=label[for^="researchCategoryChoice"]:contains("Feasibility studies")
     the user clicks the button/link    jQuery=button:contains(Save)
-    the user clicks the button/link    jQuery=button:contains("Change your innovation area")
+    the user clicks the button/link    jQuery=button:contains("Choose your innovation area")
     the user clicks the button twice   jQuery=label[for="innovationAreaChoice-5"]
     the user clicks the button/link    jQuery=button:contains(Save)
     the user clicks the button twice   jQuery=label[for="application.resubmission-no"]
@@ -419,7 +419,7 @@ the user should view the project growth table
     the user should see the element    jQuery=td input[value="15000"]
 
 the user can edit the project growth table
-    the user clicks the button/link    css=button.extra-margin.buttonlink
+    the user clicks the button/link    jQuery=button.buttonlink:contains('Edit your organisation')
     then the user selects the radio button    financePosition-organisationSize    ${SMALL_ORGANISATION_SIZE}
     the user enters text to a text field    jQuery=tr:nth-child(1) .form-control    4000
     the user enters text to a text field    jQuery=td input[value="65000"]    5000
@@ -460,7 +460,7 @@ the user navigates to the growth table finances
     the user clicks the button/link    jQuery=a:contains('Untitled application'):last
     the user clicks the button/link  link=Your finances
 
-Invite a non-existing collaborator in Appplication with Growth table
+Invite a non-existing collaborator in Application with Growth table
     the user clicks the button/link      jQuery=a:contains("Application Overview")
     the user clicks the button/link       jQuery=a:contains("view team members and add collaborators")
     the user clicks the button/link       jQuery=a:contains("Add partner organisation")
@@ -474,14 +474,14 @@ Invite a non-existing collaborator in Appplication with Growth table
     newly invited collaborator can create account and sign in
 
 Newly invited collaborator can create account and sign in
-    the user reads his email and clicks the link     liam@innovate.com  Invitation to collaborate in ${compWITHGrowth}  participate in their application
+    the user reads his email and clicks the link     liam@innovate.com  Invitation to collaborate in ${compWITHGrowth}  You will be joining as part of the organisation    3
     the user clicks the button/link      jQuery=a:contains("Yes, accept invitation")
     the user should see the element      jquery=h1:contains("Choose your organisation type")
     the user completes the new account creation
 
 the user completes the new account creation
     the user selects the radio button    organisationType  radio-1
-     #TODO change the radio button option to radio-4 once INFUND-8896 is fixed
+     #TODO change the radio button option to radio-4 once INFUND-9078 is fixed
     the user clicks the button/link     jQuery=button:contains("Continue")
     the user should see the element     jQuery=span:contains("Create your account")
     the user enters text to a text field     id=organisationSearchName   innovate
@@ -497,8 +497,8 @@ the user completes the new account creation
     the user enters text to a text field     jQuery=input[id="firstName"]   liam
     the user enters text to a text field     JQuery=input[id="lastName"]   smithson
     the user enters text to a text field     jQuery=input[id="phoneNumber"]   077712567890
-    the user enters text to a text field     jQuery=input[id="password"]  Research123
-    the user enters text to a text field    jQuery=input[id="retypedPassword"]   Research123
+    the user enters text to a text field     jQuery=input[id="password"]  ${correct_password}
+    the user enters text to a text field    jQuery=input[id="retypedPassword"]  ${correct_password}
     the user selects the checkbox      termsAndConditions
     the user clicks the button/link     jQuery=button:contains("Create account")
     the user should see the text in the page    Please verify your email address
@@ -507,5 +507,5 @@ the user completes the new account creation
     the user clicks the button/link     link=Sign in
     then the user should see the text in the page      Sign in
     the user enters text to a text field      jQuery=input[id="username"]   liam@innovate.com
-    the user enters text to a text field      jQuery=input[id="password"]  Research123
+    the user enters text to a text field      jQuery=input[id="password"]  ${correct_password}
     the user clicks the button/link         jQuery=button:contains("Sign in")

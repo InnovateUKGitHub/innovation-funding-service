@@ -13,6 +13,16 @@
           th:attr="data-competition=${competition.id}" data-section="initial"
           method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
 
+        <div class="error-summary" th:if="${#fields.hasGlobalErrors()}">
+            <h2 class="heading-medium error-summary-heading">
+                Unable to save section
+            </h2>
+
+            <ul class="error-summary-list">
+                <li th:each="err : ${#fields.globalErrors()}" th:text="${err}"></li>
+            </ul>
+        </div>
+
         <fieldset th:if="${editable}" id="section-1-edit">
 
             <legend class="visuallyhidden">Initial details</legend>

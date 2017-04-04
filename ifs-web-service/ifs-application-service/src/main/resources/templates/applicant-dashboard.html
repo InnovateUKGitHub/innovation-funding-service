@@ -10,7 +10,7 @@
     <th:block th:insert="fragments/layout :: body-start" />
     <th:block th:insert="fragments/layout :: global-header" />
 
-    <main id="content">
+    <main tabindex="-1" id="content">
         <th:block th:insert="fragments/layout :: main-content-start" />
 
         <div class="event-alert is-open" th:each="notification:${notifications}">
@@ -49,7 +49,7 @@
 
             <section class="in-progress" th:unless="${applicationsInProcess.isEmpty()}">
                 <div class="progress-list">
-                  <h2 class="heading-medium">Application in progress</h2>
+                    <h2 class="heading-medium" th:text="${#lists.size(applicationsInProcess) == 1} ? 'Application in progress' : 'Applications in progress'"/>
                     <ul>
                         <li class="status-2-col" th:each="app : ${applicationsInProcess}" th:classappend="${applicationsAssigned?.contains(app.id) ? 'assigned-to-me' : '' }">
                             <th:block th:unless="${applicationStatuses.get(app.getId()).getName() == 'submitted'}">
@@ -131,7 +131,7 @@
                         <a href="/profile/view">view and edit your profile details</a>
                     </li>
                     <li>
-                        <a href="/info/terms-and-conditions">read the terms and conditions</a>
+                        read the <a href="/info/terms-and-conditions" target="_blank">terms and conditions</a> (this link will open in a new window.)
                     </li>
                 </ul>
             </section>

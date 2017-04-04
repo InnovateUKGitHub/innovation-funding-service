@@ -72,7 +72,7 @@
         </header>
 
 
-        <main id="content">
+        <main tabindex="-1" id="content">
             
             <div class="phase-banner">
                 <p>

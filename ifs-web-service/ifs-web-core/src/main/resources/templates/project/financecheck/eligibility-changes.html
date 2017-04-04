@@ -3,11 +3,11 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Finance Checks'"/>
 </head>
-<body th:with="context='project'" class="project spend-profile">
+<body>
 <th:block th:insert="fragments/layout :: body-start"/>
 <th:block th:insert="fragments/layout :: global-header"/>
 
-<main id="content">
+<main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start"/>
 
     <div th:if="${model.internal}"
@@ -110,8 +110,8 @@
                 <tbody>
 
                 <th:block th:each="rowType : ${model.changes.keySet()}">
-                    <th:block th:each="changePairLst : ${model.changes.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).getByTypeName(rowType.type))}">
-                        <th:block th:each="changePair : ${changePairLst}" th:with="typeOfChange=${changePair.typeOfChange.typeName},rowTypeName=${rowType.name}">
+                    <th:block th:each="changePairLst : ${model.changes.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).getByTypeName(rowType.type).get())}">
+                        <th:block th:each="changePair : ${changePairLst}" th:with="typeOfChange=${changePair.typeOfChange.typeName},rowTypeName=${rowType.name},workingDays=${model.projectWorkingDaysPerYearCostItem.labourDays}">
                             <th:block th:insert="project/financecheck/fragments/changes :: ${rowType.type}"/>
                         </th:block>
                     </th:block>

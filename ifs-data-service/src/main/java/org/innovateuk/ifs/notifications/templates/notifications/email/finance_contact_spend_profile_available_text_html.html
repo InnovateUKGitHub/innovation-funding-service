@@ -1,0 +1,12 @@
+<#import "layout/default.html" as layout>
+    <@layout.default>
+    <p style="margin: 0 0 1em 0;">Dear ${notificationTarget.name},</p>
+    <p style="margin: 0 0 1em 0;">The finance checks for all partners in the project have now been completed. We have created a flat spend profile for your organisation's contribution to the project. This spend profile is available through your <a href="${dashboardUrl}">Innovate UK dashboard</a>.</p>
+
+    <p style="margin: 0 0 1em 0;">As the designated finance contact for your organisation, you will be responsible for completing your spend profile.</p>
+
+    <p style="margin: 0 0 1em 0;">If you have any other questions around these documents please contact the competitions team using the details below.</p>
+
+    <p style="margin: 0 0 1em 0;">Yours sincerely,</p>
+    <@layout.senderHTML />
+</@layout.default>

@@ -124,7 +124,7 @@ the user can see the option to upload a file on the page
     the user should see the text in the page    Upload
 
 the user can view this file without any errors
-    the user clicks the button/link    link=testing.pdf(7 KB)
+    the user clicks the button/link    link=testing.pdf(10 KB)
     the user should not see an error in the page
     the user goes back to the previous page
 
@@ -167,7 +167,7 @@ the applicant edits the Subcontracting costs section
     The user enters text to a text field    css=.form-row:nth-child(1) [name^="subcontracting-country-"]    Romania
     The user enters text to a text field    css=.form-row:nth-child(1) [name^="subcontracting-role"]    Contractor
     the user selects the checkbox    css=#agree-state-aid-page
-    the user clicks the button/link    jQuery=.button:contains("Mark as complete")
+    the user clicks the button/link    jQuery=button:contains("Mark as complete")
 
 the user should see the correct finances change
     Wait Until Element Contains Without Screenshots    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(1)    £${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS_PLUS_2000}

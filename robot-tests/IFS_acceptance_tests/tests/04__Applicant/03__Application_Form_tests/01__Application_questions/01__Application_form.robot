@@ -32,14 +32,14 @@ Application details: Previous submission
 
 Application details: Research category
     [Documentation]    INFUND-6823
-    Given The user clicks the button/link   jQuery=button:contains("Choose your research category")
+    Given The user clicks the button/link    jQuery=button:contains("Choose your research category")
     Then the user should see the element    jQuery=label:contains("Industrial research")
     And the user should see the element    jQuery=label:contains("Feasibility studies")
     And the user should see the element    jQuery=label:contains("Experimental development")
-    and the user clicks the button/link     jQuery=button:contains(Save)
-    Then the user should see an error       This field cannot be left blank
-    and the user clicks the button twice   jQuery=label[for^="researchCategoryChoice"]:contains("Feasibility studies")
-    and the user clicks the button/link     jQuery=button:contains(Save)
+    and the user clicks the button/link    jQuery=button:contains(Save)
+    Then the user should see an error    This field cannot be left blank
+    and the user clicks the button twice    jQuery=label[for^="researchCategoryChoice"]:contains("Feasibility studies")
+    and the user clicks the button/link    jQuery=button:contains(Save)
     And the finance summary page should show a warning
 
 Autosave in the form questions
@@ -85,46 +85,6 @@ Mark a question as incomplete
     Then the text box should be editable
     And the button state should change to 'Mark as complete'
     And the question should not be marked as complete on the application overview page
-
-Navigation of the form sections
-    [Documentation]    INFUND-189
-    [Tags]    HappyPath
-    And the user clicks the button/link    link=Application details
-    Then the user should see the text in the page    Enter the full title of your project
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    Please provide a short summary of your project.
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    Please provide a brief description of your project
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    If your application doesn't align with the scope
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    What should I include in the business opportunity section
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    What should I include in the market opportunity section
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    What should I include in the project exploitation section
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    What should I include in the benefits section
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    Describe the areas of work
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    Explain how your project is innovative
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    We recognise that many of the projects we fund are risky
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    Describe your capability to develop and exploit this technology
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    Tell us the total costs of the project and how
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    What should I include in the financial support from Innovate UK section
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    Only your organisation can see this level of detail.
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    To determine the level of funding you are eligible
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    Enter your funding level
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    This is the financial overview of all partners
 
 Review and submit button
     [Tags]
@@ -198,11 +158,7 @@ the question should not be marked as complete on the application overview page
     the user should see the element    jQuery=#section-184 li:nth-child(2)
     the user should not see the element    jQuery=#section-184 li:nth-child(2) span:contains("Complete")
 
-The applicant navigates to the next section
-    The user clicks the button/link    css=.next .pagination-label
-    Run Keyword And Ignore Error Without Screenshots    confirm action
-
 the finance summary page should show a warning
     The user clicks the button/link    link=Application Overview
     The user clicks the button/link    link=Your finances
-    the user should see the element  jQuery=h3:contains("Your funding") + p:contains("You must select a research category in application details ")
+    the user should see the element    jQuery=h3:contains("Your funding") + p:contains("You must select a research category in application details ")

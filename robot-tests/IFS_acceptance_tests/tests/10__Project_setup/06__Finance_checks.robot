@@ -67,7 +67,15 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...
 ...               INFUND-7577 Finance Checks - Overheads displayed in the expanded Overheads section of the partner’s project finances and Project Finance user can Edit, Save, Change selection from 0% to 20% to Calculate overhead, contains spreadsheet when uploaded
 ...
-...               INFUND-8787 The Finance checks status in the external Project Setup dashboard can change to being enabled to all partners in the partner organisation as soon as the Finance Contact has been provided in Project Details.
+...               INFUND-7578 Organisation details - Headcount and Turnover
+...
+...               INFUND-7579 Maximum research participation exceeded
+...
+...               INFUND-7580 The participation levels of this project are within the required range
+...
+...               INFUND-8787 The Finance checks status in the external Project Setup dashboard.
+...
+...               INFUND-4846 As a Project finance team member, I want to view Finance overview and Finance summaries for the consortium
 
 Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 Suite Teardown    the user closes the browser
@@ -161,6 +169,7 @@ Project finance user can upload a pdf file
     Then the user uploads the file      name=attachment    ${valid_pdf}
     And the user should see the text in the page    ${valid_pdf}
 
+
 Project finance can remove the file
     [Documentation]    INFUND-4840
     [Tags]
@@ -168,11 +177,13 @@ Project finance can remove the file
     Then the user should not see the text in the page    ${valid_pdf}
     And the user should not see an error in the page
 
+
 Project finance can re-upload the file
     [Documentation]    INFUND-4840
     [Tags]
     When the user uploads the file    name=attachment    ${valid_pdf}
     Then the user should see the text in the page    ${valid_pdf}
+
 
 Project finance user can view the file
     [Documentation]    INFUND-4840
@@ -181,25 +192,25 @@ Project finance user can view the file
     And the file has been scanned for viruses
     When the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
-    And the user goes back to the previous page ignoring form submission
-    [Teardown]    the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
+    And the user goes back to the initial page after having checked the attachment
+
 
 Project finance user can upload more than one file
     [Documentation]    INFUND-4840
     [Tags]
     When the user uploads the file      name=attachment    ${valid_pdf}
-    Then the user should see the element    jQuery=a:contains("testing.pdf"):nth-of-type(2)
+    Then the user should see the element    jQuery=a:contains("${valid_pdf}"):nth-of-type(2)
 
-Project finance user can still view both files
+Project finance user can still view and delete both files
     [Documentation]    INFUND-4840
     [Tags]
-    When the user clicks the button/link    jQuery=a:contains("testing.pdf"):nth-of-type(1)
+    When the user clicks the button/link    jQuery=a:contains("${valid_pdf}"):nth-of-type(1)
     Then the user should not see an error in the page
-    And the user goes back to the previous page ignoring form submission
+    And the user goes back to the initial page after having checked the attachment
     And the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
-    When the user clicks the button/link    jQuery=a:contains("testing.pdf"):nth-of-type(2)
+    When the user clicks the button/link    jQuery=a:contains("${valid_pdf}"):nth-of-type(1)
     Then the user should not see an error in the page
-    And the user goes back to the previous page ignoring form submission
+    And the user goes back to the initial page after having checked the attachment
     And the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
 
 Post new query server side validations
@@ -212,7 +223,7 @@ Post new query server side validations
 Post new query client side validations
     [Documentation]    INFUND-4840
     [Tags]
-    When the user enters text to a text field    id=queryTitle    this is a title
+    When the user enters text to a text field    id=queryTitle    an eligibility query's title
     Then the user should not see the element    jQuery=label[for="queryTitle"] span:nth-child(2) span:contains(This field cannot be left blank.)
     When the user enters text to a text field    css=.editor    this is some query text
     Then the user should not see the element    jQuery=label[for="query] span:nth-child(2) span:contains(This field cannot be left blank.)
@@ -237,7 +248,7 @@ Query can be re-entered
     [Documentation]    INFUND-4840
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Post a new query")
-    And the user enters text to a text field    id=queryTitle    this is a title
+    And the user enters text to a text field    id=queryTitle    an eligibility query's title
     And the user enters text to a text field    css=.editor    this is some query text
     And the user uploads the file    name=attachment    ${valid_pdf}
     And the user uploads the file    name=attachment    ${valid_pdf}
@@ -269,7 +280,8 @@ Project finance user can add another query
     [Tags]
     Given the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(6)
     When the user clicks the button/link    jQuery=.button:contains("Post a new query")
-    And the user enters text to a text field    id=queryTitle    another query title
+    And the user enters text to a text field    id=queryTitle    a viability query's title
+    And the user selects the option from the drop-down menu    VIABILITY    id=section
     And the user enters text to a text field    css=.editor    another query body
     And the user clicks the button/link    jQuery=.button:contains("Post Query")
     Then the user should not see an error in the page
@@ -277,8 +289,36 @@ Project finance user can add another query
 Queries show in reverse chronological order
     [Documentation]    INFUND-4840
     [Tags]
-    When the user should see the element    jQuery=h2:nth-of-type(4):contains("this is a title")    #
-    And the user should see the element    jQuery=h2:nth-of-type(3):contains("another query title")
+    Given the user should see the element   jQuery=#querySection
+    And the user should see the element     jQuery=.queries-list .query:nth-of-type(1) h2:contains("a viability query's title")
+    And the user should see the element     jQuery=.queries-list .query:nth-of-type(2) h2:contains("an eligibility query's title")
+
+Project finance user can filter queries by Eligibility section
+    [Documentation]  INFUND-4844
+    [Tags]
+    Given the user selects the option from the drop-down menu    Eligibility only    id=querySection
+    Then the user should see the element       jQuery=.queries-list .query:nth-of-type(2) h2:contains("an eligibility query's title")
+    And the user should see the element       jQuery=.queries-list .query:nth-of-type(2) h3:contains("Eligibility")
+    And the user should not see the element    jQuery=.queries-list .query:nth-of-type(1) h2:contains("a viability query's title")
+    And the user should not see the element    jQuery=.queries-list .query:nth-of-type(1) h3:contains("Viability")
+
+Project finance user can filter queries by Viability section
+    [Documentation]  INFUND-4844
+    [Tags]
+    Given the user selects the option from the drop-down menu    Viability only    id=querySection
+    Then the user should see the element   jQuery=.queries-list .query:nth-of-type(1) h2:contains("a viability query's title")
+    And the user should see the element    jQuery=.queries-list .query:nth-of-type(1) h3:contains("Viability")
+    And the user should not see the element      jQuery=.queries-list .query:nth-of-type(2) h2:contains("an eligibility query's title")
+    And the user should not see the element      jQuery=.queries-list .query:nth-of-type(2) h3:contains("Eligibility")
+
+Project finance user can view all queries back
+    [Documentation]  INFUND-4844
+    [Tags]
+    Given the user selects the option from the drop-down menu    All    id=querySection
+    Then the user should see the element     jQuery=.queries-list .query:nth-of-type(1) h2:contains("a viability query's title")
+    And the user should see the element    jQuery=.queries-list .query:nth-of-type(1) h3:contains("Viability")
+    And the user should see the element      jQuery=.queries-list .query:nth-of-type(2) h2:contains("an eligibility query's title")
+    And the user should see the element    jQuery=.queries-list .query:nth-of-type(2) h3:contains("Eligibility")
 
 Non finance contact can view query
     [Documentation]    INFUND-4843, INFUND-8787
@@ -286,23 +326,46 @@ Non finance contact can view query
     Given log in as a different user    steve.smith@empire.com    ${short_password}
     When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     Then the user should see the element    link=Finance checks
-    #  TODO The below line can be uncommented once 8787 is done
-    # And the user should not see the element    flag status for finance checks
+
+Finance contact can view Finance checks status in the external Project Setup dashboard
+    [Documentation]     INFUND-8787
+    [Tags]
+    When the user should see the element    link=Finance checks
+    Then the user should see the element    jQuery=ul li.require-action:nth-of-type(5):contains("We will review your financial information.")
+    And the user should see the element     jQuery=ul li.require-action:nth-of-type(5):contains("To be completed")
+
+Academic user can view Finance checks status in the external Project Setup dashboard
+    [Documentation]     INFUND-8787
+    [Tags]
+    Given log in as a different user    pete.tom@egg.com    ${short_password}
+    When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
+    Then the user should see the element    link=Finance checks
+    And the user should see the element     jQuery=ul li.waiting:nth-of-type(5):contains("We will review your financial information.")
+    And the user should see the element     jQuery=ul li.waiting:nth-of-type(5):contains("Awaiting review")
+
+Non Lead Partner can view Finance checks status in the external Project Setup dashboard
+    [Documentation]     INFUND-8787
+    [Tags]
+    Given log in as a different user    jessica.doe@ludlow.co.uk    ${short_password}
+    When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
+    Then the user should see the element    link=Finance checks
+    And the user should see the element     jQuery=ul li.waiting:nth-of-type(5):contains("We will review your financial information.")
+    And the user should see the element     jQuery=ul li.waiting:nth-of-type(5):contains("Awaiting review")
 
 Finance checks section status updated for finance contact
-    [Documentation]    INFUND-4843
+    [Documentation]    INFUND-4843, INFUND 8787
     [Tags]
     Given log in as a different user    ${test_mailbox_one}+fundsuccess@gmail.com    ${short_password}
     When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     Then the user should see the element    link=Finance checks
-    #  TODO The below line can be uncommented once 8787 is done
-    # And the user should see the element    flag status for finance checks
+    And the user should see the element     jQuery=ul li.require-action:nth-of-type(5):contains("We will review your financial information.")
+    And the user should see the element     jQuery=ul li.require-action:nth-of-type(5):contains("To be completed")
 
 Finance contact can view query
     [Documentation]    INFUND-4843
     [Tags]
     When the user clicks the button/link    link=Finance checks
-    Then the user should see the text in the page    this is a title
+    Then the user should see the text in the page    an eligibility query's title
     And the user should see the text in the page    this is some query text
 
 Finance contact can view the project finance user's uploads
@@ -313,13 +376,13 @@ Finance contact can view the project finance user's uploads
     And the user goes back to the previous page
     When the user clicks the button/link    jQuery=a:contains("${valid_pdf}"):nth-of-type(2)
     Then the user should not see an error in the page
-    And the user goes back to the previous page ignoring form submission
+    And the user goes back to the previous page
 
 Queries show in reverse chronological order for finance contact
     [Documentation]    INFUND-4843
     [Tags]
-    When the user should see the element    jQuery=#content h2:nth-of-type(3):contains("this is a title")
-    And the user should see the element    jQuery=#content h2:nth-of-type(2):contains("another query title")
+    When the user should see the element    jQuery=#content h2:nth-of-type(3):contains("an eligibility query's title")
+    And the user should see the element    jQuery=#content h2:nth-of-type(2):contains("a viability query's title")
 
 Large pdf uploads not allowed for query response
     [Documentation]    INFUND-4843
@@ -329,10 +392,9 @@ Large pdf uploads not allowed for query response
     Then the user should see the text in the page    ${too_large_pdf_validation_error}
     [Teardown]    the user goes back to the previous page
 
-#TODO Pending tag to be removed with resolution of INFUND-8855
 Non pdf uploads not allowed for query response
     [Documentation]    INFUND-4843
-    [Tags]  Pending
+    [Tags]
     When the user uploads the file      name=attachment    ${text_file}
     Then the user should see the text in the page    ${wrong_filetype_validation_error}
 
@@ -346,39 +408,38 @@ Finance contact can remove the file
     [Documentation]    INFUND-4840
     [Tags]
     When the user clicks the button/link    name=removeAttachment
-    Then the user should not see the element    jQuery=.extra-margin a:contains("${valid_pdf}")
+    Then the user should not see the element    jQuery=form a:contains("${valid_pdf}")
     And the user should not see an error in the page
 
 Finance contact can re-upload the file
     [Documentation]    INFUND-4840
     [Tags]
     When the user uploads the file    name=attachment    ${valid_pdf}
-    Then the user should see the element    jQuery=.extra-margin a:contains("${valid_pdf}")
+    Then the user should see the element    jQuery=form a:contains("${valid_pdf}")
 
 Finance contact can view the file
     [Documentation]    INFUND-4843
     [Tags]
     Given the user should see the element    link=${valid_pdf}
     And the file has been scanned for viruses
-    When the user clicks the button/link    jQuery=.extra-margin a:contains("${valid_pdf}")
-    Then the user should not see an error in the page
-    [Teardown]    the user goes back to the previous page ignoring form submission
+    When the user clicks the button/link    jQuery=a:contains("${valid_pdf}")
+    Then the user goes back to the initial page after having checked the attachment
 
 Finance contact can upload more than one file
     [Documentation]    INFUND-4843
     [Tags]
     Then the user uploads the file      name=attachment    ${valid_pdf}
-    And the user should see the element    jQuery=.extra-margin a:contains("testing.pdf"):nth-of-type(2)
+    And the user should see the element    jQuery=form a:contains("${valid_pdf}"):nth-of-type(2)
 
 Finance contact can still view both files
     [Documentation]    INFUND-4843
     [Tags]
-    When the user clicks the button/link    jQuery=.extra-margin a:contains("${valid_pdf}"):nth-of-type(1)
+    When the user clicks the button/link    jQuery=form a:contains("${valid_pdf}"):nth-of-type(1)
     Then the user should not see an error in the page
-    And the user goes back to the previous page ignoring form submission
-    When the user clicks the button/link    jQuery=.extra-margin a:contains("${valid_pdf}"):nth-of-type(2)
+    And the user goes back to the initial page after having checked the attachment
+    When the user clicks the button/link    jQuery=form a:contains("${valid_pdf}"):nth-of-type(2)
     Then the user should not see an error in the page
-    And the user goes back to the previous page ignoring form submission
+    And the user goes back to the initial page after having checked the attachment
 
 Response to query server side validations
     [Documentation]    INFUND-4843
@@ -421,13 +482,6 @@ Respond to older query
     When the user clicks the button/link    jQuery=.button:contains("Post response")
     When the user should not see the element    css=.editor
 
-Finance checks section status changes to hourglass
-    [Documentation]    INFUND-4843
-    [Tags]
-    When the user clicks the button/link    link=Project setup status
-    #  TODO The below line can be uncommented once 8787 is done
-    # Then the user should see the element    flag status for finance checks
-
 Queries raised column updates to 'view'
     [Documentation]    INFUND-4843
     [Tags]
@@ -447,12 +501,12 @@ Project finance user can view the response
 Project finance user can view the finance contact's uploaded files
     [Documentation]    INFUND-4843
     [Tags]
-    When the user clicks the button/link    jQuery=a:contains("${valid_pdf}"):nth-of-type(3)
+    When the user clicks the button/link    jQuery=.panel a:contains("${valid_pdf}"):nth-of-type(1)
     Then the user should not see an error in the page
-    And the user goes back to the previous page ignoring form submission
-    When the user clicks the button/link    jQuery=a:contains("${valid_pdf}"):nth-of-type(4)
+    And the user goes back to the previous page
+    When the user clicks the button/link    jQuery=.panel a:contains("${valid_pdf}"):nth-of-type(2)
     Then the user should not see an error in the page
-    And the user goes back to the previous page ignoring form submission
+    And the user goes back to the previous page
 
 Project finance user can continue the conversation
     [Documentation]    INFUND-7752
@@ -516,50 +570,50 @@ Non pdf uploads not allowed for notes
     When the user uploads the file      name=attachment    ${text_file}
     Then the user should see the text in the page    ${wrong_filetype_validation_error}
 
-Finance contact can upload a pdf file to notes
+Project finance can upload a pdf file to notes
     [Documentation]    INFUND-4845
     [Tags]
     Then the user uploads the file      name=attachment   ${valid_pdf}
     And the user should see the text in the page    ${valid_pdf}
 
-Finance contact can remove the file from notes
+Project finance can remove the file from notes
     [Documentation]    INFUND-4845
     [Tags]
     When the user clicks the button/link    name=removeAttachment
-    Then the user should not see the element    jQuery=.extra-margin a:contains("${valid_pdf}")
+    Then the user should not see the element    jQuery=form a:contains("${valid_pdf}")
     And the user should not see an error in the page
 
-Finance contact can re-upload the file to notes
+Project finance can re-upload the file to notes
     [Documentation]    INFUND-4845
     [Tags]
     When the user uploads the file    name=attachment    ${valid_pdf}
-    Then the user should see the element    jQuery=.extra-margin a:contains("${valid_pdf}")
+    Then the user should see the element    jQuery=form a:contains("${valid_pdf}")
 
-Finance contact can view the file in notes
+Project finance can view the file in notes
     [Documentation]    INFUND-4845
     [Tags]
     Given the user should see the element    link=${valid_pdf}
     And the file has been scanned for viruses
-    When the user clicks the button/link    jQuery=.extra-margin a:contains("${valid_pdf}")
+    When the user clicks the button/link    jQuery=a:contains("${valid_pdf}")
     Then the user should not see an error in the page
-    And the user goes back to the previous page ignoring form submission
-    [Teardown]    the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
+    And the user goes back to the initial page after having checked the attachment
+    And the user should see the element    jQuery=button:contains("Save note")
 
-Finance contact can upload more than one file to notes
+Project finance can upload more than one file to notes
     [Documentation]    INFUND-4845
     [Tags]
     Then the user uploads the file      name=attachment    ${valid_pdf}
-    And the user should see the element    jQuery=.extra-margin li:nth-of-type(2) a:contains("${valid_pdf}")
+    And the user should see the element    jQuery=form li:nth-of-type(2) a:contains("${valid_pdf}")
 
-Finance contact can still view both files in notes
+Project finance can still view both files in notes
     [Documentation]    INFUND-4845
     [Tags]
-    When the user clicks the button/link    jQuery=.extra-margin li:nth-of-type(1) a:contains("${valid_pdf}")
+    When the user clicks the button/link    jQuery=li:nth-of-type(1) a:contains("${valid_pdf}")
     Then the user should not see an error in the page
-    And the user goes back to the previous page ignoring form submission
-    When the user clicks the button/link    jQuery=.extra-margin li:nth-of-type(2) a:contains("${valid_pdf}")
+    And the user goes back to the initial page after having checked the attachment
+    When the user clicks the button/link    jQuery=li:nth-of-type(2) a:contains("${valid_pdf}")
     Then the user should not see an error in the page
-    And the user goes back to the previous page ignoring form submission
+    And the user goes back to the initial page after having checked the attachment
     And the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
 
 Create new note server side validations
@@ -572,7 +626,7 @@ Create new note server side validations
 Create new note client side validations
     [Documentation]    INFUND-4845
     [Tags]
-    When the user enters text to a text field    id=noteTitle    this is a title
+    When the user enters text to a text field    id=noteTitle    an eligibility query's title
     Then the user should not see the element    jQuery=label[for="noteTitle"] span:nth-child(2) span:contains(This field cannot be left blank.)
     When the user enters text to a text field    css=.editor    this is some note text
     Then the user should not see the element    jQuery=label[for="note"] span:nth-child(2) span:contains(This field cannot be left blank.)
@@ -597,7 +651,7 @@ Note can be re-entered
     [Documentation]    INFUND-4845
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Create a new note")
-    And the user enters text to a text field    id=noteTitle    this is a title
+    And the user enters text to a text field    id=noteTitle    an eligibility query's title
     And the user enters text to a text field    css=.editor    this is some note text
     And the user uploads the file    name=attachment    ${valid_pdf}
     And the user uploads the file    name=attachment    ${valid_pdf}
@@ -617,7 +671,7 @@ Note sections are no longer editable
 Project finance user can comment on the note
     [Documentation]    INFUND-7756
     [Tags]
-    When the user should see the text in the page    this is a title
+    When the user should see the text in the page    an eligibility query's title
     And the user should see the text in the page    this is some note text
     And the user should see the element    id=post-new-comment
 
@@ -627,7 +681,7 @@ Large pdf uploads not allowed for note comments
     Given the user clicks the button/link    id=post-new-comment
     When the user uploads the file     name=attachment    ${too_large_pdf}
     Then the user should see the text in the page    ${too_large_pdf_validation_error}
-    [Teardown]    the user goes back to the previous page ignoring form submission
+    [Teardown]    the user goes back to the previous page
 
 Non pdf uploads not allowed for note comments
     [Documentation]    INFUND-7756
@@ -645,41 +699,40 @@ Finance contact can remove the file from note comments
     [Documentation]    INFUND-7756
     [Tags]
     When the user clicks the button/link    name=removeAttachment
-    Then the user should not see the element    jQuery=.extra-margin a:contains("${valid_pdf}")
+    Then the user should not see the element    jQuery=form a:contains("${valid_pdf}")
     And the user should not see an error in the page
 
 Finance contact can re-upload the file to note comments
     [Documentation]    INFUND-7756
     [Tags]
     When the user uploads the file    name=attachment    ${valid_pdf}
-    Then the user should see the element    jQuery=.extra-margin a:contains("${valid_pdf}")
+    Then the user should see the element    jQuery=form a:contains("${valid_pdf}")
 
 Finance contact can view the file in note comments
     [Documentation]    INFUND-7756
     [Tags]
     Given the user should see the element    link=${valid_pdf}
     And the file has been scanned for viruses
-    When the user clicks the button/link    jQuery=.extra-margin a:contains("${valid_pdf}")
-    Then the user should not see an error in the page
-    And the user goes back to the previous page ignoring form submission
-    [Teardown]   the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
+    When the user clicks the button/link    jQuery=form a:contains("${valid_pdf}")
+    And the user goes back to the initial page after having checked the attachment
+    And the user should see the element    jQuery=button:contains("Save comment")
 
 Finance contact can upload more than one file to note comments
     [Documentation]    INFUND-7756
     [Tags]
     Then the user uploads the file      name=attachment    ${valid_pdf}
-    And the user should see the element    jQuery=.extra-margin li:nth-of-type(2) a:contains("${valid_pdf}")
+    And the user should see the element    jQuery=form li:nth-of-type(2) a:contains("${valid_pdf}")
 
 Finance contact can still view both files in note comments
     [Documentation]    INFUND-7756
     [Tags]
-    When the user clicks the button/link    jQuery=.extra-margin li:nth-of-type(1) a:contains("${valid_pdf}")
+    When the user clicks the button/link    jQuery=form li:nth-of-type(1) a:contains("${valid_pdf}")
     Then the user should not see an error in the page
-    And the user goes back to the previous page ignoring form submission
-    When the user clicks the button/link    jQuery=.extra-margin li:nth-of-type(2) a:contains("${valid_pdf}")
+    And the user goes back to the initial page after having checked the attachment
+    When the user clicks the button/link    jQuery=form li:nth-of-type(2) a:contains("${valid_pdf}")
     Then the user should not see an error in the page
-    And the user goes back to the previous page ignoring form submission
-    And the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
+    And the user goes back to the initial page after having checked the attachment
+    And the user should see the element    jQuery=button:contains("Save comment")
 
 Note comments server side validations
     [Documentation]    INFUND-7756
@@ -725,6 +778,78 @@ Project Finance user can view academic Jes form
     Then the user should not see an error in the page
     [Teardown]    the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
 
+Proj finance can see the within limit research participation level
+    [Documentation]    INFUND-7580
+    [Tags]
+    When the user clicks the button/link  link=Project finance overview
+    Then the user should see the text in the element   css=.list-eligibility dt:nth-of-type(1)   Maximum research participation
+    And the user should see the text in the element    css=.list-eligibility dd:nth-of-type(1)    100 %
+    And the user should see the text in the element    css=.list-eligibility dt:nth-of-type(2)    Current research participation
+    And the user should see the text in the element    css=.list-eligibility dd:nth-of-type(2)    0.2 %
+    And the user should see the text in the page       The research participation levels of this project are within the required range.
+    When the user clicks the button/link               link=Finance checks
+    And the user should not see the text in the page   The research participation levels of this project are within the required range.
+
+Proj finance can see the maximum research participation level
+    [Documentation]    INFUND-7579
+    [Tags]
+    When the user navigates to the page                ${server}/project-setup-management/project/${ELBOW_GREASE_PROJECT_ID}/finance-check
+    Then the user should see the text in the element   css=.list-eligibility dt:nth-of-type(1)   Maximum research participation
+    And the user should see the text in the element    css=.list-eligibility dd:nth-of-type(1)    50 %
+    And the user should see the text in the element    css=.list-eligibility dt:nth-of-type(2)    Current research participation
+    And the user should see the text in the element    css=.list-eligibility dd:nth-of-type(2)    66.71 %
+    And the user should see the text in the page       Maximum research participation exceeded
+    When the user clicks the button/link               link=Project finance overview
+    Then the user should see the text in the element   css=.list-eligibility dt:nth-of-type(1)   Maximum research participation
+    And the user should see the text in the element    css=.list-eligibility dd:nth-of-type(1)    50 %
+    And the user should see the text in the element    css=.list-eligibility dt:nth-of-type(2)    Current research participation
+    And the user should see the text in the element    css=.list-eligibility dd:nth-of-type(2)    66.71 %
+    And the user should see the text in the page       Maximum research participation exceeded
+    And the user should see the text in the page       Please seek confirmation that the project is still eligible for funding.
+    When the user clicks the button/link               link=Finance checks
+    And the user should see the text in the page        Maximum research participation exceeded
+    [Teardown]    the user navigates to the page       ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+
+Project finance user can view finance overview for the consortium
+    [Documentation]    INFUND-4846
+    [Tags]
+    When the user clicks the button/link    link=Project finance overview
+    Then the user should see the text in the element    css=#content h1:nth-of-type(1)  Finance overview
+    And the user should see the text in the element     css=#content h3:nth-of-type(1)  Overview
+    Then the user verifies the table heading for Overview section
+    # the below figures are listed as:       RowNumber  StartDate      Duration    TotalProjectCost    GrantAppliedFor     OtherPublicSectorFunding    Total%Grant
+    And the categories are verified for Overview section    1   1 Oct 2020  3 months    £ 503,248   £ 145,497    £ 6,170     29%
+
+Project finance user can view Finance summaries for the consortium
+    [Documentation]    INFUND-4846
+    [Tags]
+    Given the user should see the text in the element   css=#content h3:nth-of-type(2)      Finance summaries
+    When the user verifies the table heading for Finance summaries section
+    Then the user should see the text in the element    css=#content div:nth-of-type(3) table tbody tr:nth-of-type(1) th:nth-of-type(1) strong      Empire Ltd
+    # the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
+    And the categories are verified for Finance summaries section   1   £ 301,355   30%     £ 90,406    £ 3,702     £ 207,246
+    Then the user should see the text in the element    css=#content div:nth-of-type(3) table tbody tr:nth-of-type(2) th:nth-of-type(1) strong      EGGS
+    And the categories are verified for Finance summaries section   2   £ 990   0%  £ 0     £ 0     £ 990
+    Then the user should see the text in the element    css=#content div:nth-of-type(3) table tbody tr:nth-of-type(3) th:nth-of-type(1) strong      Ludlow
+    And the categories are verified for Finance summaries section   3   £ 200,903   30%     £ 60,271    £ 2,468     £ 138,164
+    Then the user should see the text in the element    css=#content div:nth-of-type(3) table tfoot tr:nth-of-type(1) th:nth-of-type(1)     Total
+    And the Total calculation for Finance summaries are verified    1   £ 503,248   £ 150,677    £ 6,170     £ 346,401
+    [Teardown]    the user navigates to the page       ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+
+Project finance can see finance breakdown for different categories
+       [Documentation]    INFUND-4846
+       [Tags]
+       When the user clicks the button/link               link=Project finance overview
+       Then the user should see the text in the element   css=.form-group tbody tr:nth-of-type(1) th strong  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
+       # the below figures are in this order Total 	Labour 	Overheads 	Materials 	Capital usage 	Subcontracting cost  Travel and subsistence  Other Costs
+       And all the categories are verified   1   £ 301,355  £ 4,622  £ 0  £ 150,300  £ 828  £ 135,000  £ 8,955  £ 1,650
+       When the user should see the text in the element   css=.form-group tbody tr:nth-of-type(2) th strong  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
+       Then all the categories are verified  2   £ 990      £ 286 	 £ 154 	£ 66     £ 0    £ 0        £ 44     £ 440
+       When the user should see the text in the element   css=.form-group tbody tr:nth-of-type(3) th strong  ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
+       Then all the categories are verified  3   £ 200,903 	£ 3,081   £ 0   £ 100,200  £ 552  £ 90,000   £ 5,970  £ 1,100
+       And the user should see the text in the element  css=.form-group tfoot tr:nth-of-type(1) td:nth-of-type(1) strong   	£ 503,248
+       [Teardown]    the user navigates to the page       ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+
 Viability checks are populated in the table
     [Documentation]    INFUND-4822, INFUND-7095
     [Tags]
@@ -738,9 +863,11 @@ Viability checks are populated in the table
 Project finance user can see the viability check page for the lead partner
     [Documentation]    INFUND-4831, INFUND-4830, INFUND-4825
     [Tags]
-    when the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")    # clicking the review button for the lead partner
+    When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")    # clicking the review button for the lead partner
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
     And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_COMPANY_NUMBER}
+    And the user should see the text in the element  css=.standard-definition-list dd:nth-of-type(3)  ${PROJECT_SETUP_APPLICATION_1_LEAD_COMPANY_TURNOVER}   #turnover
+    And the user should see the text in the element    css=.standard-definition-list dd:nth-of-type(4)  ${PROJECT_SETUP_APPLICATION_1_LEAD_COMPANY_HEADCOUNT}    #headcount
 
 Project finance user can see the lead partner's information
     [Documentation]    INFUND-4825
@@ -805,11 +932,13 @@ Confirming viability should update on the finance checks page
     Then the user should see the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Approved")
 
 Project finance user can see the viability checks for the industrial partner
-    [Documentation]    INFUND-4831, INFUND-4830
+    [Documentation]    INFUND-4831, INFUND-4830, INFUND-7578
     [Tags]
     When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(3) td:nth-child(2) a:contains("Review")
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
     And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_NUMBER}
+    And the user should see the text in the element  css=.standard-definition-list dd:nth-of-type(3)  ${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_TURNOVER}
+    And the user should see the text in the element    css=.standard-definition-list dd:nth-of-type(4)  ${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_HEADCOUNT}
 
 Checking the approve viability checkbox enables RAG selection but not confirm viability button for partner
     [Documentation]    INFUND-4831, INFUND-4856, INFUND-4830
@@ -947,13 +1076,13 @@ Project finance user can amend all sections of eligibility for lead
 
 Project Finance user can view three Radio Button Options when expanded Lead-Partner's "Overhead costs" section
     [Documentation]     INFUND-7577
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Overhead costs")
     Then the user should see the three Radio Button Options
 
 Project Finance user can Edit and Save Lead-Partner's 20%-of-labour-costs option
     [Documentation]     INFUND-7577
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     Then the user clicks the button/link    jQuery=label[data-target="overhead-default-percentage"]
     And the user should see the element     jQuery=section:nth-of-type(2) button span:contains("£ 12,120")
@@ -969,7 +1098,7 @@ Project Finance user can Edit and Save Lead-Partner's 20%-of-labour-costs option
 
 Project Finance user can Edit and Save Lead-Partner's No-overhead-costs option
     [Documentation]     INFUND-7577
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     Then the user clicks the button/link    jQuery=label[data-target="overhead-none"]
     And the user should see the element     jQuery=h3:contains("No overhead costs")
@@ -981,7 +1110,7 @@ Project Finance user can Edit and Save Lead-Partner's No-overhead-costs option
 
 Project Finance user can Edit, enters invalid values and saves in Lead-Partner's Calculate-overheads option
     [Documentation]     INFUND-7577
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     Then the user clicks the button/link    jQuery=label[data-target="overhead-total"]
     And the user should see the element     jQuery=h3:contains("Uploaded spreadsheet")
@@ -997,7 +1126,7 @@ Project Finance user can Edit, enters invalid values and saves in Lead-Partner's
 
 Project Finance user can provide overhead value for Lead-Partner manually instead of calculations from spreadsheet.
     [Documentation]     INFUND-7577
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    css=a.eligibility-0
     Then the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     And the user enters text to a text field     jQuery=section:nth-of-type(2) input[id^="cost-overheads"][id$="calculate"]  1954
@@ -1089,13 +1218,13 @@ Project finance user can amend all sections of eligibility for partner
 
 Project Finance user can view three Radio Button Options when expanded Partner's "Overhead costs" section
     [Documentation]     INFUND-7577
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Overhead costs")
     Then the user should see the three Radio Button Options
 
 Project Finance user can Edit and Save Partner's 20%-of-labour-costs option
     [Documentation]     INFUND-7577
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     Then the user clicks the button/link    jQuery=label[data-target="overhead-default-percentage"]
     And the user should see the element     jQuery=section:nth-of-type(2) button span:contains("£ 11,956")
@@ -1111,7 +1240,7 @@ Project Finance user can Edit and Save Partner's 20%-of-labour-costs option
 
 Project Finance user can Edit and Save Partner's No-overhead-costs option
     [Documentation]     INFUND-7577
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     Then the user clicks the button/link    jQuery=label[data-target="overhead-none"]
     And the user should see the element     jQuery=h3:contains("No overhead costs")
@@ -1123,7 +1252,7 @@ Project Finance user can Edit and Save Partner's No-overhead-costs option
 
 Project Finance user can Edit, enters invalid values and saves in Partner's Calculate-overheads option
     [Documentation]     INFUND-7577
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     Then the user clicks the button/link    jQuery=label[data-target="overhead-total"]
     And the user should see the element     jQuery=h3:contains("Uploaded spreadsheet")
@@ -1139,7 +1268,7 @@ Project Finance user can Edit, enters invalid values and saves in Partner's Calc
 
 Project Finance user can provide overhead value for Partner manually instead of calculations from spreadsheet.
     [Documentation]     INFUND-7577
-    [Tags]    HappyPath
+    [Tags]
     When the user clicks the button/link    css=a.eligibility-2
     Then the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     And the user enters text to a text field     jQuery=section:nth-of-type(2) input[id^="cost-overheads"][id$="calculate"]  9078
@@ -1194,7 +1323,7 @@ Confirming eligibility should show info on a readonly page for partner
     And the user should not see the element    id=rag-rating
     And the user should not see the checkbox    project-eligible
 
-Confirming eligibility should update on the finance checks page
+Confirming partner eligibility should update on the finance checks page
     [Documentation]    INFUND-4823, INFUND-7076
     [Tags]
     When the user clicks the button/link    link=Finance checks
@@ -1210,6 +1339,20 @@ Project finance user can see updated finance overview after partner changes to e
     And the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(4)    £ 91,157
     And the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(6)    28%
 
+Project finance can see updated finance breakdown for different categories
+       [Documentation]    INFUND-4846
+       [Tags]
+       When the user clicks the button/link   link=Project finance overview
+       Then the user should see the text in the element   css=.form-group tbody tr:nth-of-type(1) th strong  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
+       # the below figures are in this order Total 	Labour 	Overheads 	Materials 	Capital usage 	Subcontracting cost  Travel and subsistence  Other Costs
+       And all the categories are verified  1   £ 206,867 	 £ 60,602  £ 1,954 	£ 52,100   £ 10,376   £ 65,000  £ 4,985   £ 11,850
+       When the user should see the text in the element   css=.form-group tbody tr:nth-of-type(2) th strong  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
+       Then all the categories are verified  2   £ 990 	     £ 286 	   £ 154    £ 66       £ 0 	      £ 0 	    £ 44      £ 440
+       When the user should see the text in the element   css=.form-group tbody tr:nth-of-type(3) th strong  ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
+       Then all the categories are verified  3   £ 114,256   £ 59,778  £ 9,078  £ 2,000    £ 10,100   £ 20,000  £ 2,000   £ 11,300
+       And the user should see the text in the element  css=.form-group tfoot tr:nth-of-type(1) td:nth-of-type(1) strong   	£ 322,113
+       [Teardown]    the user navigates to the page       ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+
 Project finance can approve academic eligibility
     [Documentation]    INFUND-4428
     [Tags]      HappyPath
@@ -1224,6 +1367,31 @@ Project finance can approve academic eligibility
     And the user should not see the element    id=rag-rating
     And the user should not see the checkbox    project-eligible
     When the user clicks the button/link    link=Finance checks
+
+Project finance user can view Updated finance overview for the consortium
+    [Documentation]    INFUND-4846
+    [Tags]
+    When the user clicks the button/link    link=Project finance overview
+    Then the user should see the text in the element    css=#content h1:nth-of-type(1)  Finance overview
+    And the user should see the text in the element     css=#content h3:nth-of-type(1)  Overview
+    Then the user verifies the table heading for Overview section
+    # the below figures are listed as:       RowNumber  StartDate      Duration    TotalProjectCost    GrantAppliedFor     OtherPublicSectorFunding    Total%Grant
+    And the categories are verified for Overview section    1   1 Oct 2020  3 months    £ 322,113   £ 91,157    £ 6,170     28%
+
+Project finance user can view Updated Finance summaries for the consortium
+    [Documentation]    INFUND-4846
+    [Tags]
+    Given the user should see the text in the element   css=#content h3:nth-of-type(2)      Finance summaries
+    When the user verifies the table heading for Finance summaries section
+    Then the user should see the text in the element    css=#content div:nth-of-type(3) table tbody tr:nth-of-type(1) th:nth-of-type(1) strong      Empire Ltd
+    # the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
+    And the categories are verified for Finance summaries section   1   £ 206,867   30%     £ 62,060    £ 3,702     £ 141,105
+    Then the user should see the text in the element    css=#content div:nth-of-type(3) table tbody tr:nth-of-type(2) th:nth-of-type(1) strong      EGGS
+    And the categories are verified for Finance summaries section   2   £ 990   0%  £ 0     £ 0     £ 990
+    Then the user should see the text in the element    css=#content div:nth-of-type(3) table tbody tr:nth-of-type(3) th:nth-of-type(1) strong      Ludlow
+    And the categories are verified for Finance summaries section   3   £ 114,256   30%     £ 34,277    £ 2,468     £ 77,511
+    Then the user should see the text in the element    css=#content div:nth-of-type(3) table tfoot tr:nth-of-type(1) th:nth-of-type(1)     Total
+    And the Total calculation for Finance summaries are verified    1   £ 322,113   £ 96,337    £ 6,170     £ 219,606
 
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
     [Documentation]    INFUND-4428
@@ -1258,24 +1426,49 @@ Other internal users do not have access to Finance checks
     Then the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check    You do not have the necessary permissions for your request
 
 Finance contact can access the external view of the finance checks page
-    [Documentation]    INFUND-7573
+    [Documentation]    INFUND-7573, INFUND 8787
     [Tags]    HappyPath
     [Setup]    Log in as a different user    ${test_mailbox_one}+fundsuccess@gmail.com    Passw0rd
     Given the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
+    Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
+    And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
     When the user clicks the button/link    link=Finance checks
     And the user should not see an error in the page
+    And the user should see the text in the page   The finance checks have been completed and your finances approved.
 
-Non finance contact can view finance checks page
+Lead-Partner can view finance checks page
     [Documentation]    INFUND-7573, INFUND 8787
     [Tags]
     [Setup]    Log in as a different user   steve.smith@empire.com    Passw0rd
     When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
-    Then the user should see the element    link=Finance checks
-    And the user clicks the button/link     link=Finance checks
-    Then the user should see the text in the page   The finance checks have been completed and your finances approved.
+    Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
+    And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
+    Then the user clicks the button/link     link=Finance checks
+    And the user should see the text in the page   The finance checks have been completed and your finances approved.
+
+Academic user can view Finance checks page
+    [Documentation]     INFUND-8787
+    [Tags]
+    Given log in as a different user    pete.tom@egg.com    ${short_password}
+    When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
+    Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
+    And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
+    Then the user clicks the button/link    link=Finance checks
+    And the user should see the text in the page   The finance checks have been completed and your finances approved.
+
+Non Lead Partner can view Finance checks page
+    [Documentation]     INFUND-8787
+    [Tags]
+    Given log in as a different user    jessica.doe@ludlow.co.uk    ${short_password}
+    When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
+    Then the user should see the element    jQuery=ul li.complete:nth-of-type(5):contains("We will review your financial information.")
+    And the user should see the element     jQuery=ul li.complete:nth-of-type(5):contains("Completed")
+    Then the user clicks the button/link    link=Finance checks
+    And the user should see the text in the page   The finance checks have been completed and your finances approved.
 
 *** Keywords ***
-the table row has expected values
+
+the table row has expected values   
     the user sees the text in the element    jQuery=.table-overview tbody td:nth-child(2)    3 months
     the user sees the text in the element    jQuery=.table-overview tbody td:nth-child(3)    £ 503,248
     the user sees the text in the element    jQuery=.table-overview tbody td:nth-child(4)    £ 145,497
@@ -1288,7 +1481,7 @@ Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     bank details are approved for all businesses
 
 the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
-    guest user log-in    lee.bowman@innovateuk.test    Passw0rd
+    guest user log-in  &{internal_finance_credentials}
     the user navigates to the page    ${COMP_MANAGEMENT_PROJECT_SETUP}
     ${update_comp}    ${value}=    Run Keyword And Ignore Error Without Screenshots    the user should not see the text in the page    ${FUNDERS_PANEL_COMPETITION_NAME}
     run keyword if    '${update_comp}' == 'PASS'    the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
@@ -1312,7 +1505,7 @@ the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project se
     the user should see the text in the page    Manage funding applications
 
 the users fill out project details
-    When Log in as a different user    jessica.doe@ludlow.co.uk    Passw0rd
+    When Log in as a different user  &{collaborator1_credentials}
     Then the user navigates to the page    ${la_fromage_overview}
     And the user clicks the button/link    link=Project details
     Then the user should see the text in the page    Finance contacts
@@ -1320,7 +1513,7 @@ the users fill out project details
     And the user clicks the button/link    link=Ludlow
     And the user selects the radio button    financeContact    financeContact1
     And the user clicks the button/link    jQuery=.button:contains("Save")
-    When Log in as a different user    pete.tom@egg.com    Passw0rd
+    When Log in as a different user  &{collaborator2_credentials}
     Then the user navigates to the page    ${la_fromage_overview}
     And the user clicks the button/link    link=Project details
     Then the user should see the text in the page    Finance contacts
@@ -1328,7 +1521,7 @@ the users fill out project details
     And the user clicks the button/link    link=EGGS
     And the user selects the radio button    financeContact    financeContact1
     And the user clicks the button/link    jQuery=.button:contains("Save")
-    When Log in as a different user    steve.smith@empire.com    Passw0rd
+    When Log in as a different user  &{lead_applicant_credentials}
     Then the user navigates to the page    ${la_fromage_overview}
     And the user clicks the button/link    link=Project details
     Then the user should see the text in the page    Finance contacts
@@ -1375,6 +1568,8 @@ partner submits his bank details
     the user selects the radio button     addressType    REGISTERED
     the user clicks the button/link       jQuery=.button:contains("Submit bank account details")
     the user clicks the button/link       jQuery=.button:contains("Submit")
+    the user should see the element       jQuery=dt:contains("Account number") + dd:contains("*****795")
+    # Added this readonly check to verify that the bank details are indeed marked as done
 
 the project finance user has approved bank details
     Guest user log-in  &{internal_finance_credentials}
@@ -1692,6 +1887,56 @@ Project finance user amends other costs details in eligibility for lead
     And the user should see the element           jQuery=section:nth-of-type(7) a:contains("Edit")
     And the user should not see the element       jQuery=section:nth-of-type(7) button[name=save-eligibility]
 
-the user goes back to the previous page ignoring form submission
-    the user goes back to the previous page
-    the user reloads the page
+the user goes back to the initial page after having checked the attachment
+    the user should not see an error in the page
+    Select Window    #this goes back to the initial page
+
+the user verifies the table heading for Overview section
+    the user should see the text in the element     css=.table-overview tr:nth-of-type(1) th:nth-of-type(1)      Start date
+    the user should see the text in the element     css=.table-overview tr:nth-of-type(1) th:nth-of-type(2)      Duration
+    the user should see the text in the element     css=.table-overview tr:nth-of-type(1) th:nth-of-type(3)      Total project cost
+    the user should see the text in the element     css=.table-overview tr:nth-of-type(1) th:nth-of-type(4)      Grant applied for
+    the user should see the text in the element     css=.table-overview tr:nth-of-type(1) th:nth-of-type(5)      Other public sector funding
+    the user should see the text in the element     css=.table-overview tr:nth-of-type(1) th:nth-of-type(6)      Total % grant
+
+the categories are verified for Overview section
+    [Arguments]  ${row_number}  ${start_date}  ${duration}  ${total_project_cost}  ${grant_applied_for}  ${other_public_sector_fund}  ${total_percent_grant}
+    the user should see the text in the element     css=.table-overview tr:nth-of-type(${row_number}) td:nth-of-type(1)  ${start_date}
+    the user should see the text in the element     css=.table-overview tr:nth-of-type(${row_number}) td:nth-of-type(2)  ${duration}
+    the user should see the text in the element     css=.table-overview tr:nth-of-type(${row_number}) td:nth-of-type(3)  ${total_project_cost}
+    the user should see the text in the element     css=.table-overview tr:nth-of-type(${row_number}) td:nth-of-type(4)  ${grant_applied_for}
+    the user should see the text in the element     css=.table-overview tr:nth-of-type(${row_number}) td:nth-of-type(5)  ${other_public_sector_fund}
+    the user should see the text in the element     css=.table-overview tr:nth-of-type(${row_number}) td:nth-of-type(6)  ${total_percent_grant}
+
+the user verifies the table heading for Finance summaries section
+    the user should see the text in the element     css=#content div:nth-of-type(3) thead tr:nth-of-type(1) th:nth-of-type(1)   Partner
+    the user should see the text in the element     css=#content div:nth-of-type(3) thead tr:nth-of-type(1) th:nth-of-type(2)   Total costs
+    the user should see the text in the element     css=#content div:nth-of-type(3) thead tr:nth-of-type(1) th:nth-of-type(3)   % Grant
+    the user should see the text in the element     css=#content div:nth-of-type(3) thead tr:nth-of-type(1) th:nth-of-type(4)   Funding sought
+    the user should see the text in the element     css=#content div:nth-of-type(3) thead tr:nth-of-type(1) th:nth-of-type(5)   Other public sector funding
+    the user should see the text in the element     css=#content div:nth-of-type(3) thead tr:nth-of-type(1) th:nth-of-type(6)   Contribution to project
+
+the categories are verified for Finance summaries section
+    [Arguments]  ${row_number}  ${total_costs}  ${percentage_grant}  ${funding_sought}  ${other_public_sector_funding}  ${contribution_to_project}
+    the user should see the text in the element     css=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(1) strong   ${total_costs}
+    the user should see the text in the element     css=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(2)  ${percentage_grant}
+    the user should see the text in the element     css=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(3)  ${funding_sought}
+    the user should see the text in the element     css=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(4)  ${other_public_sector_funding}
+    the user should see the text in the element     css=#content div:nth-of-type(3) tbody tr:nth-of-type(${row_number}) td:nth-of-type(5)  ${contribution_to_project}
+
+the Total calculation for Finance summaries are verified
+    [Arguments]  ${row_number}  ${allPartners_totalcost}   ${allPartners_fundingSought}   ${allPartners_otherPublicSectorFunding}  ${allPartners_contributionToProject}
+    the user should see the text in the element     css=#content div:nth-of-type(3) table tfoot tr:nth-of-type(${row_number}) td:nth-of-type(1) strong  ${allPartners_totalcost}
+    the user should see the text in the element     css=#content div:nth-of-type(3) table tfoot tr:nth-of-type(${row_number}) td:nth-of-type(3) strong  ${allPartners_fundingSought}
+    the user should see the text in the element     css=#content div:nth-of-type(3) table tfoot tr:nth-of-type(${row_number}) td:nth-of-type(4) strong  ${allPartners_otherPublicSectorFunding}
+    the user should see the text in the element     css=#content div:nth-of-type(3) table tfoot tr:nth-of-type(${row_number}) td:nth-of-type(5) strong  ${allPartners_contributionToProject}
+all the categories are verified
+    [Arguments]  ${row_number}  ${total}  ${labour}  ${overheads}  ${materials}  ${capital_usage}  ${subcontracting}  ${travel}   ${other_costs}
+    the user should see the text in the element   css=.form-group tbody tr:nth-of-type(${row_number}) td:nth-of-type(1) strong  ${total}
+    the user should see the text in the element   css=.form-group tbody tr:nth-of-type(${row_number}) td:nth-of-type(2)  ${labour}
+    the user should see the text in the element   css=.form-group tbody tr:nth-of-type(${row_number}) td:nth-of-type(3)  ${overheads}
+    the user should see the text in the element   css=.form-group tbody tr:nth-of-type(${row_number}) td:nth-of-type(4)  ${materials}
+    the user should see the text in the element   css=.form-group tbody tr:nth-of-type(${row_number}) td:nth-of-type(5)  ${capital_usage}
+    the user should see the text in the element   css=.form-group tbody tr:nth-of-type(${row_number}) td:nth-of-type(6)  ${subcontracting}
+    the user should see the text in the element   css=.form-group tbody tr:nth-of-type(${row_number}) td:nth-of-type(7)  ${travel}
+    the user should see the text in the element   css=.form-group tbody tr:nth-of-type(${row_number}) td:nth-of-type(8)  ${other_costs}

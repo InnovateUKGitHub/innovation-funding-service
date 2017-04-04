@@ -14,7 +14,7 @@ services:
         aliases:
           - hub
   chrome:
-    image: selenium/node-chrome-debug:3.0.1-dysprosium
+    image: davidrums/node-chrome-debug-proxy:3.0.1-dysprosium
     environment:
       - NODE_MAX_SESSION=20
       - NODE_MAX_INSTANCES=20
@@ -30,13 +30,12 @@ services:
       - '5900'
     links:
       - "hub:hub"
-    external_links:
-      - innovationfundingservice_shib_1:ifs-local-dev
     depends_on:
       - hub
     networks:
       - selenium-network
       - innovationfundingservice_ifs
+
 networks:
   selenium-network:
     driver: bridge

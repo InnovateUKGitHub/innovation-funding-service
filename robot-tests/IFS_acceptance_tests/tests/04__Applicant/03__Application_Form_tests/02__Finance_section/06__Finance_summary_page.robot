@@ -100,7 +100,7 @@ Green check should show when the finances are complete
 Alert shows If the academic research participation is too high
     [Documentation]    INFUND-1436
     [Tags]    Email
-    [Setup]    Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    participate in their application
+    [Setup]    Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation
     Given guest user log-in    ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
     And The user navigates to the academic application finances
     And The user clicks the button/link       link=Your project costs

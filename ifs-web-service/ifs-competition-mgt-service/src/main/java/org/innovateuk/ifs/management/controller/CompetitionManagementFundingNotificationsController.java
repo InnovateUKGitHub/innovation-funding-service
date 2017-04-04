@@ -45,7 +45,7 @@ public class CompetitionManagementFundingNotificationsController {
     @Autowired
     private ApplicationFundingDecisionService applicationFundingService;
 
-    @GetMapping(value = "/funding/send")
+    @GetMapping("/funding/send")
     public String sendNotifications(Model model,
                                @PathVariable("competitionId") Long competitionId,
                                @RequestParam("application_ids") List<Long> applicationIds) {
@@ -54,7 +54,7 @@ public class CompetitionManagementFundingNotificationsController {
         return getFundingDecisionPage(model, form, competitionId, applicationIds);
     }
 
-    @PostMapping(value = "/funding/send")
+    @PostMapping("/funding/send")
     public String sendNotificationsSubmit(Model model,
                                     @PathVariable("competitionId") Long competitionId,
                                     @ModelAttribute("form") @Valid NotificationEmailsForm form,
@@ -76,7 +76,7 @@ public class CompetitionManagementFundingNotificationsController {
         return FUNDING_DECISION_NOTIFICATION_VIEW;
     }
 
-    @GetMapping(value = "/manage-funding-applications")
+    @GetMapping("/manage-funding-applications")
     public String applications(Model model,
                                @RequestParam MultiValueMap<String, String> params,
                                @PathVariable("competitionId") Long competitionId,
@@ -92,7 +92,7 @@ public class CompetitionManagementFundingNotificationsController {
 
     }
 
-    @PostMapping(value = "/manage-funding-applications")
+    @PostMapping("/manage-funding-applications")
     public String selectApplications(Model model,
                                      @RequestParam MultiValueMap<String, String> params,
                                      @PathVariable("competitionId") Long competitionId,
