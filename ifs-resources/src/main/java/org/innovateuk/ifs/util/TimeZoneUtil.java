@@ -1,16 +1,15 @@
 package org.innovateuk.ifs.util;
 
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 public class TimeZoneUtil {
 
-    private static final ZoneId UK_TIME_ZONE = ZoneId.of("Europe/London");
+    public static final ZoneId UK_TIME_ZONE = ZoneId.of("Europe/London");
 
-    public static LocalDateTime toUkTimeZone(ZonedDateTime zonedDateTime) {
+    public static ZonedDateTime toUkTimeZone(ZonedDateTime zonedDateTime) {
         if (zonedDateTime != null) {
-            return zonedDateTime.withZoneSameInstant(UK_TIME_ZONE).toLocalDateTime();
+            return zonedDateTime.withZoneSameInstant(UK_TIME_ZONE);
         }
         return null;
     }

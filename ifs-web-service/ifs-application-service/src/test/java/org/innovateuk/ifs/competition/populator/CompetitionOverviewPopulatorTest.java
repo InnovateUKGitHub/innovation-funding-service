@@ -101,9 +101,9 @@ public class CompetitionOverviewPopulatorTest {
 
         assertEquals(publicContentResource.getShortDescription(), viewModel.getShortDescription());
         assertEquals(publicContentResource.getCompetitionId(), viewModel.getCompetitionId());
-        assertEquals(openDate.toLocalDateTime(), viewModel.getCompetitionOpenDate());
-        assertEquals(closeDate.toLocalDateTime(), viewModel.getCompetitionCloseDate());
-        assertEquals(closeDate.minusDays(7).toLocalDateTime(), viewModel.getRegistrationCloseDate());
+        assertEquals(openDate, viewModel.getCompetitionOpenDate());
+        assertEquals(closeDate, viewModel.getCompetitionCloseDate());
+        assertEquals(closeDate.minusDays(7), viewModel.getRegistrationCloseDate());
         assertEquals(competitionTitle, viewModel.getCompetitionTitle());
         assertEquals(nonIfsUrl, viewModel.getNonIfsUrl());
         assertEquals(true, viewModel.isUserIsLoggedIn());
@@ -117,8 +117,8 @@ public class CompetitionOverviewPopulatorTest {
 
         assertEquals(null, viewModel.getShortDescription());
         assertEquals(null, viewModel.getCompetitionId());
-        assertEquals(openDate.toLocalDateTime(), viewModel.getCompetitionOpenDate());
-        assertEquals(closeDate.toLocalDateTime(), viewModel.getCompetitionCloseDate());
+        assertEquals(openDate, viewModel.getCompetitionOpenDate());
+        assertEquals(closeDate, viewModel.getCompetitionCloseDate());
         assertEquals(competitionTitle, viewModel.getCompetitionTitle());
         assertEquals(true, viewModel.isUserIsLoggedIn());
     }
@@ -129,8 +129,8 @@ public class CompetitionOverviewPopulatorTest {
 
         assertEquals(null, viewModel.getShortDescription());
         assertEquals(null, viewModel.getCompetitionId());
-        assertEquals(openDate.toLocalDateTime(), viewModel.getCompetitionOpenDate());
-        assertEquals(closeDate.toLocalDateTime(), viewModel.getCompetitionCloseDate());
+        assertEquals(openDate, viewModel.getCompetitionOpenDate());
+        assertEquals(closeDate, viewModel.getCompetitionCloseDate());
         assertEquals(competitionTitle, viewModel.getCompetitionTitle());
         assertEquals(true, viewModel.isUserIsLoggedIn());
     }

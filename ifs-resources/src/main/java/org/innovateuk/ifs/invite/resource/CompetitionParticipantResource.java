@@ -6,7 +6,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.time.Clock;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.ZonedDateTime;
 
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
@@ -163,7 +163,7 @@ public class CompetitionParticipantResource {
 
     @JsonIgnore
     public long getAssessmentDaysLeft() {
-        return DAYS.between(LocalDateTime.now(clock), assessorDeadlineDate);
+        return DAYS.between(ZonedDateTime.now(clock), assessorDeadlineDate);
     }
 
     @JsonIgnore

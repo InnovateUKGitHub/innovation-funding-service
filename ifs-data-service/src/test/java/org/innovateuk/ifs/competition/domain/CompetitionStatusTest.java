@@ -1,40 +1,30 @@
 package org.innovateuk.ifs.competition.domain;
 
-import org.innovateuk.ifs.competition.domain.Competition.DateProvider;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.*;
 
 public class CompetitionStatusTest {
 
 	private Competition competition;
     
-    private DateProvider dateProvider;
-
-    private LocalDateTime currentDate;
-    private LocalDateTime future;
-    private LocalDateTime past;
+    private ZonedDateTime currentDate;
+    private ZonedDateTime future;
+    private ZonedDateTime past;
 	
     @Before
     public void setUp() {
-    	currentDate = LocalDateTime.now();
-    	future = currentDate.plusNanos(1);
-    	past = currentDate.minusNanos(1);
+    	currentDate = ZonedDateTime.now();
+    	future = currentDate.plusMinutes(1);
+    	past = currentDate.minusMinutes(1);
     	
-    	dateProvider = mock(DateProvider.class);
-    	when(dateProvider.provideDate()).thenReturn(currentDate);
-    	
+
     	competition = new Competition();
         competition.setSetupComplete(true);
-    	competition.setDateProvider(dateProvider);
     }
 
     @Test

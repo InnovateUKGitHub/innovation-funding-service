@@ -46,7 +46,7 @@ import org.mockito.Mock;
 import java.io.File;
 import java.io.InputStream;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -211,9 +211,9 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withProjectUsers(pu).
                 withApplication(application).
                 withPartnerOrganisations(po).
-                withDateSubmitted(LocalDateTime.now()).
+                withDateSubmitted(ZonedDateTime.now()).
                 withOtherDocumentsApproved(ApprovalType.APPROVED).
-                withSpendProfileSubmittedDate(LocalDateTime.now()).
+                withSpendProfileSubmittedDate(ZonedDateTime.now()).
                 build();
 
         puResource = newProjectUserResource().
@@ -843,7 +843,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     @Test
     public void testSubmitProjectDetails() {
 
-        LocalDateTime now = LocalDateTime.now();
+        ZonedDateTime now = ZonedDateTime.now();
 
         when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
         when(projectDetailsWorkflowHandlerMock.submitProjectDetails(project, leadPartnerProjectUser)).thenReturn(true);
@@ -857,7 +857,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     @Test
     public void testSubmitProjectDetailsButSubmissionNotAllowed() {
 
-        LocalDateTime now = LocalDateTime.now();
+        ZonedDateTime now = ZonedDateTime.now();
 
         when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
         when(projectDetailsWorkflowHandlerMock.submitProjectDetails(project, leadPartnerProjectUser)).thenReturn(false);
@@ -1027,7 +1027,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         List<ProjectUser> pu = Collections.singletonList(projectUserToSet);
 
         Project projectInDB = newProject().withId(projectId).withProjectUsers(pu)
-                .withOtherDocumentsApproved(ApprovalType.UNSET).withOtherDocumentsSubmittedDate(LocalDateTime.now()).build();
+                .withOtherDocumentsApproved(ApprovalType.UNSET).withOtherDocumentsSubmittedDate(ZonedDateTime.now()).build();
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
 
@@ -1115,7 +1115,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         Long projectId = 1L;
 
-        Project projectInDB = newProject().withId(projectId).withOtherDocumentsSubmittedDate(LocalDateTime.now()).build();
+        Project projectInDB = newProject().withId(projectId).withOtherDocumentsSubmittedDate(ZonedDateTime.now()).build();
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
         when(projectGrantOfferServiceMock.generateGrantOfferLetterIfReady(1L)).thenReturn(serviceSuccess());
@@ -1338,7 +1338,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         assertSetDocumentsDateTimeIfProjectManagerAndFilesExist(
                 project::setCollaborationAgreement,
                 project::setExploitationPlan,
-                () -> service.saveDocumentsSubmitDateTime(project.getId(), LocalDateTime.now()));
+                () -> service.saveDocumentsSubmitDateTime(project.getId(), ZonedDateTime.now()));
 
         assertNotNull(project.getCollaborationAgreement());
         assertNotNull(project.getExploitationPlan());
@@ -1362,7 +1362,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(projectUserRepositoryMock.findByProjectId(project.getId())).thenReturn(projectUsers);
         when(projectRepositoryMock.findOne(project.getId())).thenReturn(project);
 
-        ServiceResult<Void> result = service.saveDocumentsSubmitDateTime(project.getId(), LocalDateTime.now());
+        ServiceResult<Void> result = service.saveDocumentsSubmitDateTime(project.getId(), ZonedDateTime.now());
 
         assertTrue(result.isFailure());
         assertNull(project.getCollaborationAgreement());
@@ -1798,7 +1798,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT).withUser(u).withOrganisation(o).withInvite(newInvite().build()).build(1);
         List<PartnerOrganisation> po = newPartnerOrganisation().withOrganisation(o).withLeadOrganisation(Boolean.TRUE).build(1);
-        Project p = newProject().withProjectUsers(pu).withApplication(application).withPartnerOrganisations(po).withDateSubmitted(LocalDateTime.now()).withOtherDocumentsApproved(ApprovalType.APPROVED).withGrantOfferLetter(golFile).build();
+        Project p = newProject().withProjectUsers(pu).withApplication(application).withPartnerOrganisations(po).withDateSubmitted(ZonedDateTime.now()).withOtherDocumentsApproved(ApprovalType.APPROVED).withGrantOfferLetter(golFile).build();
         List<ProjectUserResource> puResource = newProjectUserResource().withProject(p.getId()).withOrganisation(o.getId()).withRole(partnerRole.getId()).withRoleName(PROJECT_PARTNER.getName()).build(1);
 
         BankDetails bankDetails = newBankDetails().withOrganisation(o).withApproval(Boolean.TRUE).build();
@@ -1827,7 +1827,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT).withUser(u).withOrganisation(o).withInvite(newInvite().build()).build(1);
         List<PartnerOrganisation> po = newPartnerOrganisation().withOrganisation(o).withLeadOrganisation(Boolean.TRUE).build(1);
-        Project p = newProject().withProjectUsers(pu).withApplication(application).withPartnerOrganisations(po).withDateSubmitted(LocalDateTime.now()).withOtherDocumentsApproved(ApprovalType.APPROVED).withGrantOfferLetter(golFile).withSignedGrantOfferLetter(golFile).build();
+        Project p = newProject().withProjectUsers(pu).withApplication(application).withPartnerOrganisations(po).withDateSubmitted(ZonedDateTime.now()).withOtherDocumentsApproved(ApprovalType.APPROVED).withGrantOfferLetter(golFile).withSignedGrantOfferLetter(golFile).build();
         List<ProjectUserResource> puResource = newProjectUserResource().withProject(p.getId()).withOrganisation(o.getId()).withRole(partnerRole.getId()).withRoleName(PROJECT_PARTNER.getName()).build(1);
 
         BankDetails bankDetails = newBankDetails().withOrganisation(o).withApproval(Boolean.TRUE).build();
@@ -1874,7 +1874,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT).withUser(u).withOrganisation(nonLeadOrg).withInvite(newInvite().build()).build(1);
         List<PartnerOrganisation> po = newPartnerOrganisation().withOrganisation(nonLeadOrg).withLeadOrganisation(Boolean.FALSE).build(1);
-        Project p = newProject().withProjectUsers(pu).withApplication(application).withPartnerOrganisations(po).withOtherDocumentsApproved(ApprovalType.APPROVED).withGrantOfferLetter(golFile).withSignedGrantOfferLetter(golFile).withDateSubmitted(LocalDateTime.now()).build();
+        Project p = newProject().withProjectUsers(pu).withApplication(application).withPartnerOrganisations(po).withOtherDocumentsApproved(ApprovalType.APPROVED).withGrantOfferLetter(golFile).withSignedGrantOfferLetter(golFile).withDateSubmitted(ZonedDateTime.now()).build();
         List<ProjectUserResource> puResource = newProjectUserResource().withProject(p.getId()).withOrganisation(nonLeadOrg.getId()).withRole(partnerRole.getId()).withRoleName(PROJECT_PARTNER.getName()).build(1);
 
         BankDetails bankDetails = newBankDetails().withOrganisation(o).withApproval(Boolean.TRUE).build();
@@ -1912,7 +1912,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT).withUser(u).withOrganisation(o).withInvite(newInvite().build()).build(1);
         List<PartnerOrganisation> po = newPartnerOrganisation().withOrganisation(o).withLeadOrganisation(Boolean.TRUE).build(1);
-        Project p = newProject().withProjectUsers(pu).withApplication(application).withPartnerOrganisations(po).withDateSubmitted(LocalDateTime.now()).withOtherDocumentsApproved(ApprovalType.APPROVED).withGrantOfferLetter(golFile).withSignedGrantOfferLetter(golFile).withOfferSubmittedDate(LocalDateTime.now()).build();
+        Project p = newProject().withProjectUsers(pu).withApplication(application).withPartnerOrganisations(po).withDateSubmitted(ZonedDateTime.now()).withOtherDocumentsApproved(ApprovalType.APPROVED).withGrantOfferLetter(golFile).withSignedGrantOfferLetter(golFile).withOfferSubmittedDate(ZonedDateTime.now()).build();
         List<ProjectUserResource> puResource = newProjectUserResource().withProject(p.getId()).withOrganisation(o.getId()).withRole(partnerRole.getId()).withRoleName(PROJECT_PARTNER.getName()).build(1);
 
         spendProfile.setApproval(ApprovalType.APPROVED);

@@ -6,10 +6,6 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResour
 import org.innovateuk.ifs.publiccontent.domain.PublicContent;
 import org.mapstruct.Mapper;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-
 @Mapper(
     config = GlobalMapperConfig.class,
     uses = {
@@ -32,17 +28,4 @@ public abstract class PublicContentMapper extends BaseMapper<PublicContent, Publ
         return object.getId();
     }
 
-    public ZonedDateTime localDateTimeToZonedDateTime(LocalDateTime value) {
-        if (value == null) {
-            return null;
-        }
-        return value.atZone(ZoneId.systemDefault());
-    }
-
-    public LocalDateTime zonedDateTimeToLocalDateTime(ZonedDateTime value) {
-        if (value == null) {
-            return null;
-        }
-        return value.toLocalDateTime();
-    }
 }

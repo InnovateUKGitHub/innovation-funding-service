@@ -26,7 +26,6 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -151,8 +150,8 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
         assertEquals(competition.getName(), model.getCompetitionTitle());
         assertEquals("Juggling Craziness (CRD3359)", model.getCompetition());
         assertEquals("Competition Technologist", model.getLeadTechnologist());
-        assertEquals(competition.getAssessorAcceptsDate(), model.getAcceptDeadline().atZone(ZoneId.systemDefault()));
-        assertEquals(competition.getAssessorDeadlineDate(), model.getSubmitDeadline().atZone(ZoneId.systemDefault()));
+        assertEquals(competition.getAssessorAcceptsDate(), model.getAcceptDeadline());
+        assertEquals(competition.getAssessorDeadlineDate(), model.getSubmitDeadline());
         assertEquals(expectedSubmitted, model.getSubmitted());
         assertEquals(expectedOutstanding, model.getOutstanding());
         assertTrue(model.isSubmitVisible());
@@ -239,8 +238,8 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
         assertEquals(competition.getName(), model.getCompetitionTitle());
         assertEquals("Juggling Craziness (CRD3359)", model.getCompetition());
         assertEquals("Competition Technologist", model.getLeadTechnologist());
-        assertEquals(competition.getAssessorAcceptsDate(), model.getAcceptDeadline().atZone(ZoneId.systemDefault()));
-        assertEquals(competition.getAssessorDeadlineDate(), model.getSubmitDeadline().atZone(ZoneId.systemDefault()));
+        assertEquals(competition.getAssessorAcceptsDate(), model.getAcceptDeadline());
+        assertEquals(competition.getAssessorDeadlineDate(), model.getSubmitDeadline());
         assertEquals(expectedSubmitted, model.getSubmitted());
         assertEquals(expectedOutstanding, model.getOutstanding());
         assertFalse(model.isSubmitVisible());
@@ -275,8 +274,8 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
         assertEquals(competition.getName(), model.getCompetitionTitle());
         assertEquals("Juggling Craziness (CRD3359)", model.getCompetition());
         assertEquals("Competition Technologist", model.getLeadTechnologist());
-        assertEquals(competition.getAssessorAcceptsDate(), model.getAcceptDeadline().atZone(ZoneId.systemDefault()));
-        assertEquals(competition.getAssessorDeadlineDate(), model.getSubmitDeadline().atZone(ZoneId.systemDefault()));
+        assertEquals(competition.getAssessorAcceptsDate(), model.getAcceptDeadline());
+        assertEquals(competition.getAssessorDeadlineDate(), model.getSubmitDeadline());
         assertTrue(model.getSubmitted().isEmpty());
         assertTrue(model.getOutstanding().isEmpty());
         assertFalse(model.isSubmitVisible());

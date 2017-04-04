@@ -19,7 +19,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -52,7 +51,7 @@ public class MilestonesSectionSaverTest {
     public void testSaveMilestone() {
         MilestonesForm competitionSetupForm = new MilestonesForm();
 
-        ZonedDateTime milestoneDate = LocalDateTime.of(2017, 1, 1, 0, 0).atZone(ZoneId.systemDefault());
+        ZonedDateTime milestoneDate = ZonedDateTime.of(2017, 1, 1, 0, 0, 0, 0, ZoneId.systemDefault());
 
         CompetitionResource competition = newCompetitionResource()
                 .withMilestones(asList(1L))
@@ -160,7 +159,7 @@ public class MilestonesSectionSaverTest {
 
         CompetitionResource competition = newCompetitionResource().withId(2L).build();
         competition.setMilestones(Arrays.asList(10L));
-        when(competitionSetupMilestoneService.isMilestoneDateValid(1, 12, LocalDateTime.now().plusYears(1).getYear())).thenReturn(Boolean.TRUE);
+        when(competitionSetupMilestoneService.isMilestoneDateValid(1, 12, ZonedDateTime.now().plusYears(1).getYear())).thenReturn(Boolean.TRUE);
 
         ServiceResult<Void> result = service.autoSaveSectionField(competition, form, fieldName, "THREE_PM", Optional.empty());
 
@@ -170,7 +169,7 @@ public class MilestonesSectionSaverTest {
     @Test
     public void testAutoSaveTimeWithEmptyDateCompetitionSetupSection() {
         String fieldName =  "milestoneEntries[BRIEFING_EVENT].time";
-        when(milestoneService.getMilestoneByTypeAndCompetitionId(MilestoneType.BRIEFING_EVENT, 2L)).thenReturn(newMilestoneResource().withDate(null).build());
+        when(milestoneService.getMilestoneByTypeAndCompetitionId(MilestoneType.BRIEFING_EVENT, 2L)).thenReturn(newMilestoneResource().build());
         MilestonesForm form = new MilestonesForm();
 
         CompetitionResource competition = newCompetitionResource().withId(2L).build();
@@ -201,7 +200,7 @@ public class MilestonesSectionSaverTest {
         return newMilestoneResource()
                 .withId(1L)
                 .withName(MilestoneType.OPEN_DATE)
-                .withDate(LocalDateTime.of(LocalDateTime.now().plusYears(1).getYear(), 12, 1, 0, 0).atZone(ZoneId.systemDefault()))
+                .withDate(ZonedDateTime.of(ZonedDateTime.now().plusYears(1).getYear(), 12, 1, 0, 0, 0, 0, ZoneId.systemDefault()))
                 .withCompetitionId(1L).build();
     }
 

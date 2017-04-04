@@ -20,7 +20,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -78,23 +78,23 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
     private static final String EXISTING_COMPETITION_NAME = "Connected digital additive manufacturing";
     private static final long RESEARCH_CATEGORY_ID_ONE = 33L;
 
-    private final LocalDateTime now = LocalDateTime.now();
-    private final LocalDateTime eightDaysAgo = now.minusDays(8);
-    private final LocalDateTime sevenDaysAgo = now.minusDays(7);
-    private final LocalDateTime sixDaysAgo = now.minusDays(6);
-    private final LocalDateTime fiveDaysAgo = now.minusDays(5);
-    private final LocalDateTime fourDaysAgo = now.minusDays(4);
-    private final LocalDateTime threeDaysAgo = now.minusDays(3);
-    private final LocalDateTime twoDaysAgo = now.minusDays(2);
-    private final LocalDateTime oneDayAgo = now.minusDays(1);
-    private final LocalDateTime oneDayAhead = now.plusDays(1);
-    private final LocalDateTime twoDaysAhead = now.plusDays(2);
-    private final LocalDateTime threeDaysAhead = now.plusDays(3);
-    private final LocalDateTime fourDaysAhead = now.plusDays(4);
-    private final LocalDateTime fiveDaysAhead = now.plusDays(5);
-    private final LocalDateTime sixDaysAhead = now.plusDays(6);
-    private final LocalDateTime sevenDaysAhead = now.plusDays(7);
-    private final LocalDateTime eightDaysAhead = now.plusDays(8);
+    private final ZonedDateTime now = ZonedDateTime.now();
+    private final ZonedDateTime eightDaysAgo = now.minusDays(8);
+    private final ZonedDateTime sevenDaysAgo = now.minusDays(7);
+    private final ZonedDateTime sixDaysAgo = now.minusDays(6);
+    private final ZonedDateTime fiveDaysAgo = now.minusDays(5);
+    private final ZonedDateTime fourDaysAgo = now.minusDays(4);
+    private final ZonedDateTime threeDaysAgo = now.minusDays(3);
+    private final ZonedDateTime twoDaysAgo = now.minusDays(2);
+    private final ZonedDateTime oneDayAgo = now.minusDays(1);
+    private final ZonedDateTime oneDayAhead = now.plusDays(1);
+    private final ZonedDateTime twoDaysAhead = now.plusDays(2);
+    private final ZonedDateTime threeDaysAhead = now.plusDays(3);
+    private final ZonedDateTime fourDaysAhead = now.plusDays(4);
+    private final ZonedDateTime fiveDaysAhead = now.plusDays(5);
+    private final ZonedDateTime sixDaysAhead = now.plusDays(6);
+    private final ZonedDateTime sevenDaysAhead = now.plusDays(7);
+    private final ZonedDateTime eightDaysAhead = now.plusDays(8);
 
     @Override
     @Autowired
@@ -145,25 +145,25 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         List<CompetitionResource> competitions = checkCompetitionCount(5);
 
         // Generate number 1 in this month year combination
-        RestResult<String> generatedCode = controller.generateCompetitionCode(LocalDateTime.of(2016, 6, 5, 12, 0).atZone(ZoneId.systemDefault()), competitions.get(0).getId());
+        RestResult<String> generatedCode = controller.generateCompetitionCode(ZonedDateTime.of(2016, 6, 5, 12, 0,0,0, ZoneId.systemDefault()), competitions.get(0).getId());
         assertTrue(generatedCode.isSuccess());
         assertEquals("1606-1", generatedCode.getSuccessObject());
         flushAndClearSession();
 
 
         // Generate number 2 in this month year combination
-        generatedCode = controller.generateCompetitionCode(LocalDateTime.of(2016, 6, 5, 12, 0).atZone(ZoneId.systemDefault()), competitions.get(1).getId());
+        generatedCode = controller.generateCompetitionCode(ZonedDateTime.of(2016, 6, 5, 12, 0,0,0, ZoneId.systemDefault()), competitions.get(1).getId());
         assertTrue(generatedCode.isSuccess());
         assertEquals("1606-2", generatedCode.getSuccessObject());
         flushAndClearSession();
 
         // Generate number 3 in this month year combination
-        generatedCode = controller.generateCompetitionCode(LocalDateTime.of(2016, 6, 5, 12, 0).atZone(ZoneId.systemDefault()), competitions.get(2).getId());
+        generatedCode = controller.generateCompetitionCode(ZonedDateTime.of(2016, 6, 5, 12, 0,0,0, ZoneId.systemDefault()), competitions.get(2).getId());
         assertTrue(generatedCode.isSuccess());
         assertEquals("1606-3", generatedCode.getSuccessObject());
 
         // if generated twice the first code should not be updated.
-        generatedCode = controller.generateCompetitionCode(LocalDateTime.of(2020, 11, 11, 12, 0).atZone(ZoneId.systemDefault()), competitions.get(2).getId());
+        generatedCode = controller.generateCompetitionCode(ZonedDateTime.of(2020, 11, 11, 12, 0,0,0, ZoneId.systemDefault()), competitions.get(2).getId());
         assertTrue(generatedCode.isSuccess());
         assertEquals("1606-3", generatedCode.getSuccessObject());
 
@@ -594,14 +594,14 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         return assessments.stream().map(Assessment::getId).collect(Collectors.toList());
     }
 
-    private CompetitionResource createWithDates(LocalDateTime startDate,
-                                                LocalDateTime endDate,
-                                                LocalDateTime assessorAcceptsDate,
-                                                LocalDateTime assessorsNotifiedDate,
-                                                LocalDateTime assessmentClosedDate,
-                                                LocalDateTime fundersPanelDate,
-                                                LocalDateTime fundersPanelEndDate,
-                                                LocalDateTime releaseFeedbackDate
+    private CompetitionResource createWithDates(ZonedDateTime startDate,
+                                                ZonedDateTime endDate,
+                                                ZonedDateTime assessorAcceptsDate,
+                                                ZonedDateTime assessorsNotifiedDate,
+                                                ZonedDateTime assessmentClosedDate,
+                                                ZonedDateTime fundersPanelDate,
+                                                ZonedDateTime fundersPanelEndDate,
+                                                ZonedDateTime releaseFeedbackDate
     ) {
         CompetitionResource comp = controller.create().getSuccessObjectOrThrowException();
 
@@ -621,15 +621,15 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         return controller.getCompetitionById(comp.getId()).getSuccessObjectOrThrowException();
     }
 
-    private List<Milestone> createNewMilestones(CompetitionResource comp, LocalDateTime startDate,
-                                                LocalDateTime endDate, LocalDateTime assessorAcceptsDate,
-                                                LocalDateTime fundersPanelDate, LocalDateTime fundersPanelEndDate,
-                                                LocalDateTime releaseFeedbackDate, LocalDateTime assessorsNotifiedDate,
-                                                LocalDateTime assessmentClosedDate) {
+    private List<Milestone> createNewMilestones(CompetitionResource comp, ZonedDateTime startDate,
+                                                ZonedDateTime endDate, ZonedDateTime assessorAcceptsDate,
+                                                ZonedDateTime fundersPanelDate, ZonedDateTime fundersPanelEndDate,
+                                                ZonedDateTime releaseFeedbackDate, ZonedDateTime assessorsNotifiedDate,
+                                                ZonedDateTime assessmentClosedDate) {
 
         return EnumSet.allOf(MilestoneType.class).stream().map(milestoneType -> {
             Competition competition = assignCompetitionId(comp);
-            final LocalDateTime milestoneDate;
+            final ZonedDateTime milestoneDate;
             switch (milestoneType) {
                 case OPEN_DATE:
                     milestoneDate = startDate;
@@ -656,7 +656,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
                     milestoneDate = fundersPanelEndDate;
                     break;
                 default:
-                    milestoneDate = LocalDateTime.now();
+                    milestoneDate = ZonedDateTime.now();
             }
             return new Milestone(milestoneType, milestoneDate, competition);
         }).collect(Collectors.toList());

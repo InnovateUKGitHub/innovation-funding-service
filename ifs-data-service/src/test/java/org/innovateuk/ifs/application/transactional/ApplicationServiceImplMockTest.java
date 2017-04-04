@@ -41,7 +41,7 @@ import org.mockito.Mock;
 
 import java.io.File;
 import java.io.InputStream;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -1197,7 +1197,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     public void setApplicationFundingEmailDateTime() throws Exception {
 
         Long applicationId = 1L;
-        LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
+        ZonedDateTime tomorrow = ZonedDateTime.now().plusDays(1);
         ApplicationResource newApplication = newApplicationResource().build();
 
         Supplier<Application> applicationExpectations = () -> argThat(lambdaMatches(created -> {
@@ -1214,7 +1214,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     public void setApplicationFundingEmailDateTime_Failure() throws Exception {
 
         Long applicationId = 1L;
-        LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
+        ZonedDateTime tomorrow = ZonedDateTime.now().plusDays(1);
         ApplicationResource newApplication = newApplicationResource().build();
 
         Supplier<Application> applicationExpectations = () -> argThat(lambdaMatches(created -> {

@@ -6,7 +6,7 @@ import org.innovateuk.ifs.project.finance.workflow.financechecks.resource.Financ
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -48,7 +48,7 @@ public class FinanceCheckProcessResourceBuilder extends BaseBuilder<FinanceCheck
         return withArray((p, financeCheckResource) -> financeCheckResource.setInternalParticipant(p), internalParticipant);
     }
 
-    public FinanceCheckProcessResourceBuilder withModifiedDate(LocalDateTime... modifiedDate) {
+    public FinanceCheckProcessResourceBuilder withModifiedDate(ZonedDateTime... modifiedDate) {
         return withArray((d, financeCheckResource) -> financeCheckResource.setModifiedDate(d), modifiedDate);
     }
 }

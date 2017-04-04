@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -123,7 +123,7 @@ public class ProjectController {
 
     @RequestMapping(value = "/{projectId}/setApplicationDetailsSubmitted", method = POST)
     public RestResult<Void> setApplicationDetailsSubmitted(@PathVariable("projectId") final Long projectId){
-        return projectService.submitProjectDetails(projectId, LocalDateTime.now()).toPostResponse();
+        return projectService.submitProjectDetails(projectId, ZonedDateTime.now()).toPostResponse();
     }
 
     @RequestMapping(value = "/{projectId}/isSubmitAllowed", method = GET)
@@ -267,7 +267,7 @@ public class ProjectController {
 
     @RequestMapping(value = "/{projectId}/partner/documents/submit", method = POST)
     public RestResult<Void>setPartnerDocumentsSubmitted(@PathVariable("projectId") final Long projectId) {
-        return projectService.saveDocumentsSubmitDateTime(projectId, LocalDateTime.now()).toPostResponse();
+        return projectService.saveDocumentsSubmitDateTime(projectId, ZonedDateTime.now()).toPostResponse();
     }
 
     @RequestMapping(value = "/{projectId}/partners", method = POST)

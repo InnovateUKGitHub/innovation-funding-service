@@ -33,7 +33,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.List;
@@ -107,7 +107,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
                         process.getActivityState(),
                         projectUserMapper.mapToResource(process.getParticipant()),
                         userMapper.mapToResource(process.getInternalParticipant()),
-                        LocalDateTime.ofInstant(process.getLastModified().toInstant(), ZoneId.systemDefault()),
+                        ZonedDateTime.ofInstant(process.getLastModified().toInstant(), ZoneId.systemDefault()),
                         false));
     }
 

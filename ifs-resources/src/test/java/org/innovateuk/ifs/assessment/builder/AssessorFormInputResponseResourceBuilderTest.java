@@ -3,7 +3,7 @@ package org.innovateuk.ifs.assessment.builder;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.junit.Test;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
@@ -19,7 +19,7 @@ public class AssessorFormInputResponseResourceBuilderTest {
         Long expectedFormInput = 4L;
         String expectedValue = "Feedback";
         Integer expectedFormInputMaxWordCount = 100;
-        LocalDateTime expectedUpdatedDate = LocalDateTime.parse("2016-07-12T16:10:50.21");
+        ZonedDateTime expectedUpdatedDate = ZonedDateTime.parse("2016-07-12T16:10:50.21");
 
         AssessorFormInputResponseResource assessorFormInputResponse = newAssessorFormInputResponseResource()
                 .withId(expectedId)
@@ -48,7 +48,7 @@ public class AssessorFormInputResponseResourceBuilderTest {
         Long[] expectedFormInputs = {7L, 8L};
         String[] expectedValues = {"Sample message 1", "Sample message 2"};
         Integer[] expectedFormInputMaxWordCounts = {100, 200};
-        LocalDateTime[] expectedUpdatedDates = {LocalDateTime.parse("2016-07-12T16:10:50.21"), LocalDateTime.parse("2016-07-12T16:15:25.42")};
+        ZonedDateTime[] expectedUpdatedDates = {ZonedDateTime.parse("2016-07-12T16:10:50.21"), ZonedDateTime.parse("2016-07-12T16:15:25.42")};
 
         List<AssessorFormInputResponseResource> assessorFormInputResponses = newAssessorFormInputResponseResource()
                 .withId(expectedIds)

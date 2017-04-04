@@ -18,6 +18,7 @@ import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.util.EntityLookupCallbacks;
+import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -173,7 +174,9 @@ public class AssessorFeedbackServiceImpl extends BaseTransactionalService implem
         Map<String, Object> globalArguments = new HashMap<>();
         globalArguments.put("competitionName", competition.getName());
         globalArguments.put("dashboardUrl", webBaseUrl);
-        globalArguments.put("feedbackDate", competition.getAssessorFeedbackDate());
+        if (competition.getAssessorFeedbackDate() != null) {
+            globalArguments.put("feedbackDate", TimeZoneUtil.toUkTimeZone(competition.getAssessorFeedbackDate()).toLocalDateTime());
+        }
 
         List<Pair<NotificationTarget, Map<String, Object>>> notificationTargetSpecificArgumentList = simpleMap(notificationTargetsByApplicationId, pair -> {
 

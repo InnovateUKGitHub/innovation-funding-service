@@ -62,7 +62,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -207,7 +207,7 @@ public class ProjectFinanceChecksController {
                                 attachmentResources.add(fileEntry.getSuccessObject());
                             }
                         });
-                        PostResource post = new PostResource(null, loggedInUser, form.getResponse(), attachmentResources, LocalDateTime.now());
+                        PostResource post = new PostResource(null, loggedInUser, form.getResponse(), attachmentResources, ZonedDateTime.now());
 
                         ValidationMessages errors = new ValidationMessages();
                         ServiceResult<Void> saveResult = financeCheckService.saveQueryPost(post, queryId);

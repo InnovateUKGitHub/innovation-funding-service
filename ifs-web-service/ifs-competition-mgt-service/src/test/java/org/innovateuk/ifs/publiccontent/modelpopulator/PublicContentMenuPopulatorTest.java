@@ -60,6 +60,6 @@ public class PublicContentMenuPopulatorTest {
 
         assertThat(viewModel.getSections(), equalTo(sections));
         assertThat(viewModel.getCompetition(), equalTo(competition));
-        assertThat(viewModel.getPublishDate(), equalTo(date.toLocalDateTime()));
+        assertThat(viewModel.getPublishDate(), equalTo(date));
     }
 }

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 
 import java.time.DateTimeException;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
@@ -38,7 +38,7 @@ public class PastMMYYYYValidator extends BaseValidator {
                 TemporalAccessor date = formatter.parse(responseValue); // This does not throw parse exceptions for invalid months.
                 int year = date.get(YEAR); //
                 int month = date.get(MONTH_OF_YEAR); // This throws if it has an invalid month.
-                TemporalAccessor now = LocalDateTime.now();
+                TemporalAccessor now = ZonedDateTime.now();
                 if (date.get(YEAR) > now.get(YEAR) ||
                         (date.get(YEAR) == now.get(YEAR) && date.get(MONTH_OF_YEAR) > now.get(MONTH_OF_YEAR))) {
                     rejectValue(errors, "value", "validation.standard.past.mm.yyyy.not.past.format");

@@ -1,15 +1,16 @@
 package org.innovateuk.ifs.project.finance.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.project.projectdetails.controller.FinanceCheckController;
 import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
+import org.innovateuk.ifs.project.projectdetails.controller.FinanceCheckController;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -78,7 +79,7 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
                 withInternalParticipant(newUserResource().withFirstName("John").withLastName("Doe").withEmail("john.doe@innovateuk.gov.uk").build()).
                 withParticipant(newProjectUserResource().withUserName("Steve Smith").withEmail("steve.smith@empire.com").withProject(123L).withOrganisation(456L).build()).
                 withState(PENDING).
-                withModifiedDate(LocalDateTime.of(2016, 10, 04, 12, 10, 02)).
+                withModifiedDate(ZonedDateTime.of(2016, 10, 04, 12, 10, 2, 0, ZoneId.systemDefault())).
                 build();
 
         when(financeCheckServiceMock.getFinanceCheckApprovalStatus(123L, 456L)).thenReturn(serviceSuccess(status));

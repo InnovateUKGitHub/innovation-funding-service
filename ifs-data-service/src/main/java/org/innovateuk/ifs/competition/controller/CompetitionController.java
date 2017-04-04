@@ -9,7 +9,7 @@ import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
 

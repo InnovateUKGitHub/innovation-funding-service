@@ -6,7 +6,7 @@ import org.innovateuk.ifs.user.domain.Profile;
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.junit.Test;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
@@ -25,7 +25,7 @@ public class ProfileBuilderTest {
         String expectedSkillsAreas = "skills areas";
         BusinessType expectedBusinessType = BUSINESS;
         Agreement expectedAgreement = newAgreement().build();
-        LocalDateTime expectedAgreementSignedDate = LocalDateTime.now();
+        ZonedDateTime expectedAgreementSignedDate = ZonedDateTime.now();
         
         Profile profile = newProfile()
                 .withId(expectedId)
@@ -51,7 +51,7 @@ public class ProfileBuilderTest {
         String[] expectedSkillsAreas = {"skills areas 1", "skills areas 2"};
         BusinessType[] expectedBusinessTypes = {BUSINESS, ACADEMIC};
         Agreement[] expectedContracts = newAgreement().buildArray(2, Agreement.class);
-        LocalDateTime[] expectedAgreementSignedDates = {LocalDateTime.now(), LocalDateTime.now().plusDays(1L)};
+        ZonedDateTime[] expectedAgreementSignedDates = {ZonedDateTime.now(), ZonedDateTime.now().plusDays(1L)};
 
         List<Profile> profiles = newProfile()
                 .withId(expectedIds)

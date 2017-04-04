@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -227,12 +227,12 @@ public class CompetitionResource {
 
     @JsonIgnore
     public long getDaysLeft() {
-        return DAYS.between(LocalDateTime.now(), this.endDate);
+        return DAYS.between(ZonedDateTime.now(), this.endDate);
     }
 
     @JsonIgnore
     public long getAssessmentDaysLeft() {
-        return DAYS.between(LocalDateTime.now(), this.assessorDeadlineDate);
+        return DAYS.between(ZonedDateTime.now(), this.assessorDeadlineDate);
     }
 
     @JsonIgnore
@@ -242,7 +242,7 @@ public class CompetitionResource {
 
     @JsonIgnore
     public boolean isClosingSoon() {
-        long hoursToGo = CLOSING_SOON_CHRONOUNIT.between(LocalDateTime.now(), this.endDate);
+        long hoursToGo = CLOSING_SOON_CHRONOUNIT.between(ZonedDateTime.now(), this.endDate);
         return isOpen() && hoursToGo < CLOSING_SOON_AMOUNT;
     }
 

@@ -57,7 +57,7 @@ public class CompetitionSetupMilestoneServiceImplTest {
                 .build());
 
         LinkedMap<String, MilestoneRowForm> newMilestones = new LinkedMap<>();
-        MilestoneRowForm milestoneRowForm = new MilestoneRowForm(MilestoneType.SUBMISSION_DATE, LocalDateTime.MIN);
+        MilestoneRowForm milestoneRowForm = new MilestoneRowForm(MilestoneType.SUBMISSION_DATE, LocalDateTime.MIN.atZone(ZoneId.systemDefault()));
         newMilestones.put(MilestoneType.SUBMISSION_DATE.name(), milestoneRowForm);
 
         when(milestoneService.updateMilestones(anyListOf(MilestoneResource.class))).thenReturn(serviceSuccess());
@@ -74,7 +74,7 @@ public class CompetitionSetupMilestoneServiceImplTest {
     @Test
     public void validateMilestoneDatesTrue() {
         LinkedMap<String, MilestoneRowForm> milestones = new LinkedMap<>();
-        MilestoneRowForm milestoneRowForm = new MilestoneRowForm(MilestoneType.SUBMISSION_DATE, LocalDateTime.MIN);
+        MilestoneRowForm milestoneRowForm = new MilestoneRowForm(MilestoneType.SUBMISSION_DATE, LocalDateTime.MIN.atZone(ZoneId.systemDefault()));
         milestones.put(MilestoneType.SUBMISSION_DATE.name(), milestoneRowForm);
 
         List<Error> result = service.validateMilestoneDates(milestones);
@@ -85,7 +85,7 @@ public class CompetitionSetupMilestoneServiceImplTest {
     @Test
     public void validateMilestoneDatesFalse() {
         LinkedMap<String, MilestoneRowForm> milestones = new LinkedMap<>();
-        MilestoneRowForm milestoneRowForm = new MilestoneRowForm(MilestoneType.SUBMISSION_DATE, LocalDateTime.MAX);
+        MilestoneRowForm milestoneRowForm = new MilestoneRowForm(MilestoneType.SUBMISSION_DATE, LocalDateTime.MAX.atZone(ZoneId.systemDefault()));
         milestones.put(MilestoneType.SUBMISSION_DATE.name(), milestoneRowForm);
 
         List<Error> result = service.validateMilestoneDates(milestones);

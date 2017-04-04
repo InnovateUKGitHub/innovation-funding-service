@@ -11,7 +11,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
@@ -39,8 +38,8 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
     @Test
     public void testCompetitionOverview() throws Exception {
         final Long compId = 20L;
-        final ZonedDateTime openDate = LocalDateTime.of(2017,1,1,0,0).atZone(ZoneId.systemDefault());
-        final ZonedDateTime closeDate = LocalDateTime.of(2017,1,1,0,0).atZone(ZoneId.systemDefault());
+        final ZonedDateTime openDate = ZonedDateTime.of(2017,1,1,0,0,0,0, ZoneId.systemDefault());
+        final ZonedDateTime closeDate = ZonedDateTime.of(2017,1,1,0,0,0,0, ZoneId.systemDefault());
         final String competitionTitle = "Title of competition";
         final PublicContentResource publicContentResource = newPublicContentResource().build();
 

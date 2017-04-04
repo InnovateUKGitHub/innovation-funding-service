@@ -5,7 +5,7 @@ import org.innovateuk.ifs.project.finance.resource.FinanceCheckState;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * A resource representing the current state of a Finance Check process
@@ -19,7 +19,7 @@ public class FinanceCheckProcessResource extends BaseProcessResource<FinanceChec
         super();
     }
 
-    public FinanceCheckProcessResource(FinanceCheckState currentState, ProjectUserResource participant, UserResource internalParticipant, LocalDateTime modifiedDate, boolean canApprove) {
+    public FinanceCheckProcessResource(FinanceCheckState currentState, ProjectUserResource participant, UserResource internalParticipant, ZonedDateTime modifiedDate, boolean canApprove) {
         super(currentState, participant, internalParticipant, modifiedDate);
         this.canApprove = canApprove;
     }

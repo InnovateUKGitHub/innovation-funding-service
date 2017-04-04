@@ -6,14 +6,14 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
-import org.innovateuk.ifs.competitionsetup.form.MilestonesForm;
 import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
+import org.innovateuk.ifs.competitionsetup.form.MilestonesForm;
+import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.DateTimeException;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -79,7 +79,7 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
     @Override
     public Boolean isMilestoneDateValid(Integer day, Integer month, Integer year) {
         try{
-            LocalDateTime.of(year, month, day, 0,0);
+            TimeZoneUtil.fromUkTimeZone(year, month, day);
             if (year > 9999) {
                     return false;
             }

@@ -13,7 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.ZoneId;
 import java.util.HashSet;
 import java.util.Set;
@@ -108,7 +108,7 @@ public class EligibilitySectionSaverTest {
 		MilestoneResource milestone = new MilestoneResource();
 		milestone.setId(10L);
 		milestone.setType(MilestoneType.OPEN_DATE);
-		milestone.setDate(LocalDateTime.of(2020, 12, 1, 0, 0).atZone(ZoneId.systemDefault()));
+		milestone.setDate(ZonedDateTime.of(2020, 12, 1, 0, 0, 0, 0, ZoneId.systemDefault()));
 		milestone.setCompetitionId(1L);
 		return milestone;
 	}

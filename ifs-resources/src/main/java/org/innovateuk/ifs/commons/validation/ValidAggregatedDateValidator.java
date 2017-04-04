@@ -4,14 +4,15 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.validation.constraints.ValidAggregatedDate;
+import org.innovateuk.ifs.util.TimeZoneUtil;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 
 /**
- * A validator that asserts that the aggregation of day, month and year attributes can be combined into a a valid {@link LocalDateTime}.
+ * A validator that asserts that the aggregation of day, month and year attributes can be combined into a a valid {@link ZonedDateTime}.
  */
 public class ValidAggregatedDateValidator implements ConstraintValidator<ValidAggregatedDate, Object> {
     private ValidAggregatedDate validAggregatedDate;
@@ -39,13 +40,13 @@ public class ValidAggregatedDateValidator implements ConstraintValidator<ValidAg
             return false;
         }
 
-        LocalDateTime localDate;
+        ZonedDateTime localDate;
 
         try {
-            localDate = LocalDateTime.of(yearValue, monthValue, dayValue, 0, 0);
+            localDate = TimeZoneUtil.fromUkTimeZone(yearValue, monthValue, dayValue);
         }
         catch(Exception e) {
-            LOG.info("Cannot create LocalDateTime from aggregated date properties", e);
+            LOG.info("Cannot create ZonedDateTime from aggregated date properties", e);
             return false;
         }
 

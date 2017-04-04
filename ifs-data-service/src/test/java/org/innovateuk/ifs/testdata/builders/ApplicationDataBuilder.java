@@ -19,7 +19,7 @@ import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -158,7 +158,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
             applicationService.updateApplicationStatus(data.getApplication().getId(), ApplicationStatusConstants.SUBMITTED.getId()).
                     getSuccessObjectOrThrowException();
 
-            applicationService.saveApplicationSubmitDateTime(data.getApplication().getId(), LocalDateTime.now()).getSuccessObjectOrThrowException();
+            applicationService.saveApplicationSubmitDateTime(data.getApplication().getId(), ZonedDateTime.now()).getSuccessObjectOrThrowException();
             applicationService.sendNotificationApplicationSubmitted(data.getApplication().getId()).getSuccessObjectOrThrowException();
         });
     }

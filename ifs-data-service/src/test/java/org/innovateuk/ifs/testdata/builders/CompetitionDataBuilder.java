@@ -15,9 +15,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -258,66 +256,66 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
-    public CompetitionDataBuilder withOpenDate(LocalDateTime date) {
+    public CompetitionDataBuilder withOpenDate(ZonedDateTime date) {
         return withMilestoneUpdate(date, OPEN_DATE);
     }
 
-    public CompetitionDataBuilder withBriefingDate(LocalDateTime date) {
+    public CompetitionDataBuilder withBriefingDate(ZonedDateTime date) {
         return withMilestoneUpdate(date, BRIEFING_EVENT);
     }
 
-    public CompetitionDataBuilder withSubmissionDate(LocalDateTime date) {
+    public CompetitionDataBuilder withSubmissionDate(ZonedDateTime date) {
         return withMilestoneUpdate(date, SUBMISSION_DATE);
     }
 
-    public CompetitionDataBuilder withAllocateAssesorsDate(LocalDateTime date) {
+    public CompetitionDataBuilder withAllocateAssesorsDate(ZonedDateTime date) {
         return withMilestoneUpdate(date, ALLOCATE_ASSESSORS);
     }
 
-    public CompetitionDataBuilder withAssessorBriefingDate(LocalDateTime date) {
+    public CompetitionDataBuilder withAssessorBriefingDate(ZonedDateTime date) {
         return withMilestoneUpdate(date, ASSESSOR_BRIEFING);
     }
 
-    public CompetitionDataBuilder withAssessorsNotifiedDate(LocalDateTime date) {
+    public CompetitionDataBuilder withAssessorsNotifiedDate(ZonedDateTime date) {
         return withMilestoneUpdate(date, ASSESSORS_NOTIFIED);
     }
 
-    public CompetitionDataBuilder withAssessorAcceptsDate(LocalDateTime date) {
+    public CompetitionDataBuilder withAssessorAcceptsDate(ZonedDateTime date) {
         return withMilestoneUpdate(date, ASSESSOR_ACCEPTS);
     }
 
-    public CompetitionDataBuilder withAssessorEndDate(LocalDateTime date) {
+    public CompetitionDataBuilder withAssessorEndDate(ZonedDateTime date) {
         return withMilestoneUpdate(date, ASSESSOR_DEADLINE);
     }
 
-    public CompetitionDataBuilder withAssessmentClosedDate(LocalDateTime date) {
+    public CompetitionDataBuilder withAssessmentClosedDate(ZonedDateTime date) {
         return withMilestoneUpdate(date, ASSESSMENT_CLOSED);
     }
 
-    public CompetitionDataBuilder withLineDrawDate(LocalDateTime date) {
+    public CompetitionDataBuilder withLineDrawDate(ZonedDateTime date) {
         return withMilestoneUpdate(date, LINE_DRAW);
     }
 
-    public CompetitionDataBuilder withAsessmentPanelDate(LocalDateTime date) {
+    public CompetitionDataBuilder withAsessmentPanelDate(ZonedDateTime date) {
         return withMilestoneUpdate(date, ASSESSMENT_PANEL);
     }
 
-    public CompetitionDataBuilder withPanelDate(LocalDateTime date) {
+    public CompetitionDataBuilder withPanelDate(ZonedDateTime date) {
         return withMilestoneUpdate(date, PANEL_DATE);
     }
 
-    public CompetitionDataBuilder withFundersPanelDate(LocalDateTime date) {
+    public CompetitionDataBuilder withFundersPanelDate(ZonedDateTime date) {
         return withMilestoneUpdate(date, FUNDERS_PANEL);
     }
 
-    public CompetitionDataBuilder withFundersPanelEndDate(LocalDateTime date) {
+    public CompetitionDataBuilder withFundersPanelEndDate(ZonedDateTime date) {
         return withMilestoneUpdate(date, NOTIFICATIONS);
     }
-    public CompetitionDataBuilder withReleaseFeedbackDate(LocalDateTime date) {
+    public CompetitionDataBuilder withReleaseFeedbackDate(ZonedDateTime date) {
         return withMilestoneUpdate(date, RELEASE_FEEDBACK);
     }
 
-    private CompetitionDataBuilder withMilestoneUpdate(LocalDateTime date, MilestoneType milestoneType) {
+    private CompetitionDataBuilder withMilestoneUpdate(ZonedDateTime date, MilestoneType milestoneType) {
 
         if (date == null) {
             return this;
@@ -332,10 +330,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 milestone = milestoneService.create(milestoneType, data.getCompetition().getId()).getSuccessObjectOrThrowException();
             }
 
-
-
-            milestone.setDate(ZonedDateTime.of(date.getYear(), date.getMonthValue(), date.getDayOfMonth(),
-                    date.getHour(), date.getMinute(), date.getSecond(), date.getNano(), ZoneId.of("Europe/London")));
+            milestone.setDate(date);
             milestoneService.updateMilestone(milestone);
 
             data.addOriginalMilestone(milestone);

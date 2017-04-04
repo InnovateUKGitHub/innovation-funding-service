@@ -14,7 +14,7 @@ import org.innovateuk.threads.resource.QueryResource;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 

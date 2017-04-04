@@ -10,7 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
@@ -83,7 +83,7 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
         assertTrue(milestoneResult.isSuccess());
         MilestoneResource milestone = milestoneResult.getSuccessObject();
         assertNotNull(milestone);
-        assertEquals(LocalDateTime.of(2036, 3, 15, 9, 0).atZone(ZoneId.systemDefault()), milestone.getDate());
+        assertEquals(ZonedDateTime.of(2036, 3, 15, 9, 0, 0, 0, ZoneId.systemDefault()), milestone.getDate());
     }
 
     @Test
@@ -136,27 +136,27 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
 
         //Open date
         MilestoneResource milestone = milestones.get(0);
-        milestone.setDate(LocalDateTime.of(2036, 03, 15, 9, 0).atZone(ZoneId.systemDefault()));
+        milestone.setDate(ZonedDateTime.of(2036, 03, 15, 9, 0,0,0, ZoneId.systemDefault()));
 
         //Submission date
         milestone = milestones.get(1);
-        milestone.setDate(LocalDateTime.of(2036, 03, 15, 9, 0).atZone(ZoneId.systemDefault()));
+        milestone.setDate(ZonedDateTime.of(2036, 03, 15, 9, 0,0,0, ZoneId.systemDefault()));
 
         //Funders panel date
         milestone = milestones.get(2);
-        milestone.setDate(LocalDateTime.of(2036, 03, 15, 9, 0).atZone(ZoneId.systemDefault()));
+        milestone.setDate(ZonedDateTime.of(2036, 03, 15, 9, 0,0,0, ZoneId.systemDefault()));
 
         //Assesors accepts date
         milestone = milestones.get(3);
-        milestone.setDate(LocalDateTime.of(2036, 03, 15, 9, 0).atZone(ZoneId.systemDefault()));
+        milestone.setDate(ZonedDateTime.of(2036, 03, 15, 9, 0,0,0, ZoneId.systemDefault()));
 
         //Assessor deadline date
         milestone = milestones.get(4);
-        milestone.setDate(LocalDateTime.of(2036, 03, 15, 9, 0).atZone(ZoneId.systemDefault()));
+        milestone.setDate(ZonedDateTime.of(2036, 03, 15, 9, 0,0,0, ZoneId.systemDefault()));
 
         //Notifications date
         milestone = milestones.get(5);
-        milestone.setDate(LocalDateTime.of(2036, 03, 15, 9, 0).atZone(ZoneId.systemDefault()));
+        milestone.setDate(ZonedDateTime.of(2036, 03, 15, 9, 0,0,0, ZoneId.systemDefault()));
 
         RestResult<Void> milestoneResult = controller.saveMilestones(milestones);
         assertTrue(milestoneResult.isSuccess());
@@ -171,10 +171,10 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
 
         milestones.sort((c1, c2) -> c1.getType().compareTo(c2.getType()));
 
-        LocalDateTime milestoneDate = LocalDateTime.now();
+        ZonedDateTime milestoneDate = ZonedDateTime.now();
         milestones.forEach(milestone -> {
             assertNull(milestone.getDate());
-            milestone.setDate(milestoneDate.plusDays(1).atZone(ZoneId.systemDefault()));
+            milestone.setDate(milestoneDate.plusDays(1));
         });
 
         RestResult<Void> milestoneResult = controller.saveMilestones(milestones);
@@ -187,8 +187,8 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
 
         assertNotNull(milestone);
 
-        LocalDateTime milestoneDate = LocalDateTime.now();
-        milestone.setDate(milestoneDate.plusMonths(1).atZone(ZoneId.systemDefault()));
+        ZonedDateTime milestoneDate = ZonedDateTime.now();
+        milestone.setDate(milestoneDate.plusMonths(1));
 
         RestResult<Void> result = controller.saveMilestone(milestone);
         assertTrue(result.isSuccess());

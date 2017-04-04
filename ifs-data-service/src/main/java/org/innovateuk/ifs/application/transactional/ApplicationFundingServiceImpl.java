@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -90,7 +90,7 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
                     return fundedEmailSendResult.andOnSuccess(() ->
                             aggregate(simpleMap(
                                     notificationResource.calculateApplicationIds(), applicationId ->
-                                            applicationService.setApplicationFundingEmailDateTime(applicationId, LocalDateTime.now()))))
+                                            applicationService.setApplicationFundingEmailDateTime(applicationId, ZonedDateTime.now()))))
                             .andOnSuccessReturnVoid();
                 });
     }

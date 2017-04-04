@@ -34,7 +34,7 @@ import org.springframework.util.StringUtils;
 import java.util.*;
 
 import static java.lang.String.format;
-import static java.time.LocalDateTime.now;
+import static java.time.ZonedDateTime.now;
 import static java.util.Collections.singletonList;
 import static java.util.Objects.requireNonNull;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;

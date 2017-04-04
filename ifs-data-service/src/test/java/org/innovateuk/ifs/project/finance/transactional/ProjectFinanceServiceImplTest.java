@@ -30,7 +30,7 @@ import org.mockito.Mock;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 import static java.util.Arrays.asList;
@@ -518,7 +518,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
     public void rejectSpendProfile() {
         Long projectId = 4234L;
         List<SpendProfile> spendProfileList = getSpendProfilesAndSetWhenSpendProfileRepositoryMock(projectId);
-        Project project = newProject().withId(projectId).withDuration(3L).withTargetStartDate(LocalDate.of(2018, 3, 1)).withSpendProfileSubmittedDate(LocalDateTime.now()).build();
+        Project project = newProject().withId(projectId).withDuration(3L).withTargetStartDate(LocalDate.of(2018, 3, 1)).withSpendProfileSubmittedDate(ZonedDateTime.now()).build();
 
 
         when(projectGrantOfferServiceMock.generateGrantOfferLetterIfReady(projectId)).thenReturn(serviceSuccess());
@@ -766,7 +766,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
     @Test
     public void testCompleteSpendProfilesReviewFailureWhenAlreadySubmitted() {
         Project projectInDb = new Project();
-        projectInDb.setSpendProfileSubmittedDate(LocalDateTime.now());
+        projectInDb.setSpendProfileSubmittedDate(ZonedDateTime.now());
         SpendProfile spendProfileInDb = new SpendProfile();
         spendProfileInDb.setMarkedAsComplete(true);
         projectInDb.setSpendProfiles(asList(spendProfileInDb));

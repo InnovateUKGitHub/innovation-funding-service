@@ -13,7 +13,7 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -86,7 +86,7 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
         return withArray((duration, application) -> application.setDurationInMonths(duration), durationInMonths);
     }
 
-    public ApplicationBuilder withManageFundingEmailDate(LocalDateTime... manageFundingEmailDates) {
+    public ApplicationBuilder withManageFundingEmailDate(ZonedDateTime... manageFundingEmailDates) {
         return withArray((fundingEmailDate, application) -> application.setManageFundingEmailDate(fundingEmailDate), manageFundingEmailDates);
     }
 

@@ -7,7 +7,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -90,8 +90,8 @@ public class AlertRestServiceImplTest extends BaseRestServiceUnitTest<AlertRestS
         alert.setId(123L); //to check
         alert.setMessage("Sample message");
         alert.setType(AlertType.MAINTENANCE);
-        alert.setValidFromDate(LocalDateTime.parse("2016-05-06T21:00:00.00"));
-        alert.setValidToDate(LocalDateTime.parse("2016-05-06T21:05:00.00"));
+        alert.setValidFromDate(ZonedDateTime.parse("2016-05-06T21:00:00.00"));
+        alert.setValidToDate(ZonedDateTime.parse("2016-05-06T21:05:00.00"));
         return alert;
     }
 

@@ -5,7 +5,7 @@ import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -22,8 +22,8 @@ public class AlertResourceBuilderTest {
         final Long expectedId = 9999L;
         final String expectedMessage = "Sample message";
         final AlertType expectedType = AlertType.MAINTENANCE;
-        final LocalDateTime expectedValidFromDate = LocalDateTime.parse("2016-05-06T21:00:00.00");
-        final LocalDateTime expectedValidToDate = LocalDateTime.parse("2016-05-06T21:05:00.00");
+        final ZonedDateTime expectedValidFromDate = ZonedDateTime.parse("2016-05-06T21:00:00.00");
+        final ZonedDateTime expectedValidToDate = ZonedDateTime.parse("2016-05-06T21:05:00.00");
         final AlertResource alertResource = AlertResourceBuilder
                 .newAlertResource()
                 .withId(expectedId)
@@ -45,8 +45,8 @@ public class AlertResourceBuilderTest {
         final Long[] expectedIds = { 8888L, 9999L };
         final String[] expectedMessages = { "Sample message 1", "Sample message 2" };
         final AlertType[] expectedTypes = { AlertType.MAINTENANCE, AlertType.MAINTENANCE };
-        final LocalDateTime[] expectedValidFromDates = { LocalDateTime.parse("2016-05-06T21:00:00.00"), LocalDateTime.parse("2016-05-06T22:00:00.00") };
-        final LocalDateTime[] expectedValidToDates = { LocalDateTime.parse("2016-05-06T21:05:00.00"), LocalDateTime.parse("2016-05-06T22:05:00.00") };
+        final ZonedDateTime[] expectedValidFromDates = { ZonedDateTime.parse("2016-05-06T21:00:00.00"), ZonedDateTime.parse("2016-05-06T22:00:00.00") };
+        final ZonedDateTime[] expectedValidToDates = { ZonedDateTime.parse("2016-05-06T21:05:00.00"), ZonedDateTime.parse("2016-05-06T22:05:00.00") };
         final List<AlertResource> alertResources = AlertResourceBuilder
                 .newAlertResource()
                 .withId(expectedIds)

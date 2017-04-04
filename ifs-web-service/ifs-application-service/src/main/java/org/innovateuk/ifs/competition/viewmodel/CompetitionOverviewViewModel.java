@@ -3,7 +3,7 @@ package org.innovateuk.ifs.competition.viewmodel;
 import org.innovateuk.ifs.competition.viewmodel.publiccontent.AbstractPublicSectionContentViewModel;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -29,7 +29,7 @@ public class CompetitionOverviewViewModel {
         this.competitionTitle = competitionTitle;
     }
 
-    public LocalDateTime getCompetitionOpenDate() {
+    public ZonedDateTime getCompetitionOpenDate() {
         return TimeZoneUtil.toUkTimeZone(competitionOpenDate);
     }
 
@@ -37,11 +37,11 @@ public class CompetitionOverviewViewModel {
         this.competitionOpenDate = competitionOpenDate;
     }
 
-    public LocalDateTime getRegistrationCloseDate() {
+    public ZonedDateTime getRegistrationCloseDate() {
         return TimeZoneUtil.toUkTimeZone(competitionCloseDate.minusDays(7));
     }
 
-    public LocalDateTime getCompetitionCloseDate() {
+    public ZonedDateTime getCompetitionCloseDate() {
         return TimeZoneUtil.toUkTimeZone(competitionCloseDate);
     }
 
@@ -102,7 +102,7 @@ public class CompetitionOverviewViewModel {
     }
 
     public boolean isShowClosedMessage() {
-        return nonIfs ?  getRegistrationCloseDate().isBefore(LocalDateTime.now()) :
+        return nonIfs ?  getRegistrationCloseDate().isBefore(ZonedDateTime.now()) :
                 competitionCloseDate.isBefore(ZonedDateTime.now());
     }
 

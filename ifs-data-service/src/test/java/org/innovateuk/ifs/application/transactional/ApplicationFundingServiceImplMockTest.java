@@ -28,7 +28,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -151,7 +151,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
                 when(processRoleRepositoryMock.findByApplicationIdAndRoleId(processRole.getApplicationId(), processRole.getRole().getId())).thenReturn(singletonList(processRole))
         );
         when(notificationServiceMock.sendNotification(createNotificationExpectationsWithGlobalArgs(expectedFundingNotification), eq(EMAIL))).thenReturn(serviceSuccess());
-        when(applicationServiceMock.setApplicationFundingEmailDateTime(any(Long.class), any(LocalDateTime.class))).thenReturn(serviceSuccess(new ApplicationResource()));
+        when(applicationServiceMock.setApplicationFundingEmailDateTime(any(Long.class), any(ZonedDateTime.class))).thenReturn(serviceSuccess(new ApplicationResource()));
 
         ServiceResult<Void> result = service.notifyLeadApplicantsOfFundingDecisions(notificationResource);
         assertTrue(result.isSuccess());
@@ -159,9 +159,9 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
         verify(notificationServiceMock).sendNotification(createNotificationExpectationsWithGlobalArgs(expectedFundingNotification), eq(EMAIL));
         verifyNoMoreInteractions(notificationServiceMock);
 
-        verify(applicationServiceMock).setApplicationFundingEmailDateTime(eq(application1.getId()), any(LocalDateTime.class));
-        verify(applicationServiceMock).setApplicationFundingEmailDateTime(eq(application2.getId()), any(LocalDateTime.class));
-        verify(applicationServiceMock).setApplicationFundingEmailDateTime(eq(application3.getId()), any(LocalDateTime.class));
+        verify(applicationServiceMock).setApplicationFundingEmailDateTime(eq(application1.getId()), any(ZonedDateTime.class));
+        verify(applicationServiceMock).setApplicationFundingEmailDateTime(eq(application2.getId()), any(ZonedDateTime.class));
+        verify(applicationServiceMock).setApplicationFundingEmailDateTime(eq(application3.getId()), any(ZonedDateTime.class));
         verifyNoMoreInteractions(applicationServiceMock);
     }
 
@@ -215,7 +215,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
         );
 
         when(notificationServiceMock.sendNotification(createSimpleNotificationExpectations(expectedFundingNotification), eq(EMAIL))).thenReturn(serviceSuccess());
-        when(applicationServiceMock.setApplicationFundingEmailDateTime(any(Long.class), any(LocalDateTime.class))).thenReturn(serviceSuccess(new ApplicationResource()));
+        when(applicationServiceMock.setApplicationFundingEmailDateTime(any(Long.class), any(ZonedDateTime.class))).thenReturn(serviceSuccess(new ApplicationResource()));
 
         ServiceResult<Void> result = service.notifyLeadApplicantsOfFundingDecisions(notificationResource);
         assertTrue(result.isSuccess());
@@ -223,8 +223,8 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
         verify(notificationServiceMock).sendNotification(createSimpleNotificationExpectations(expectedFundingNotification), eq(EMAIL));
         verifyNoMoreInteractions(notificationServiceMock);
 
-        verify(applicationServiceMock).setApplicationFundingEmailDateTime(eq(application1.getId()), any(LocalDateTime.class));
-        verify(applicationServiceMock).setApplicationFundingEmailDateTime(eq(application2.getId()), any(LocalDateTime.class));
+        verify(applicationServiceMock).setApplicationFundingEmailDateTime(eq(application1.getId()), any(ZonedDateTime.class));
+        verify(applicationServiceMock).setApplicationFundingEmailDateTime(eq(application2.getId()), any(ZonedDateTime.class));
         verifyNoMoreInteractions(applicationServiceMock);
     }
     
@@ -282,7 +282,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
 
         assertTrue(result.isSuccess());
         verify(applicationRepositoryMock).findByCompetitionId(competitionId);
-        verify(applicationServiceMock, never()).setApplicationFundingEmailDateTime(any(Long.class), any(LocalDateTime.class));
+        verify(applicationServiceMock, never()).setApplicationFundingEmailDateTime(any(Long.class), any(ZonedDateTime.class));
     }
 
     public static Notification createNotificationExpectationsWithGlobalArgs(Notification expectedNotification) {

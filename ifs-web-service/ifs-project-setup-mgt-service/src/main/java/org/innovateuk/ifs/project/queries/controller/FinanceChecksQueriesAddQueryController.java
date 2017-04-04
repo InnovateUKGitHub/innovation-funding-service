@@ -39,7 +39,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -143,11 +143,11 @@ public class FinanceChecksQueriesAddQueryController {
                 }
             });
 
-            PostResource post = new PostResource(null, loggedInUser, form.getQuery(), attachmentResources, LocalDateTime.now());
+            PostResource post = new PostResource(null, loggedInUser, form.getQuery(), attachmentResources, ZonedDateTime.now());
 
             List<PostResource> posts = new ArrayList<>();
             posts.add(post);
-            QueryResource query = new QueryResource(null, projectFinance.getId(), posts, section, form.getQueryTitle(), true, LocalDateTime.now());
+            QueryResource query = new QueryResource(null, projectFinance.getId(), posts, section, form.getQueryTitle(), true, ZonedDateTime.now());
             ServiceResult<Long> result = financeCheckService.saveQuery(query);
             validationHandler.addAnyErrors(result);
             return validationHandler.addAnyErrors(validationMessages, fieldErrorsToFieldErrors(), asGlobalErrors()).

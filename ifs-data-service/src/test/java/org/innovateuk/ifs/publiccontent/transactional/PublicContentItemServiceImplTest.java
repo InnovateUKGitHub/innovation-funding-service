@@ -19,7 +19,7 @@ import org.mockito.Mock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.ZoneId;
 import java.util.*;
 
@@ -221,7 +221,7 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
 
         Competition competition = newCompetition().withId(competitionId).withMilestones(
                 newMilestone()
-                        .withDate(LocalDateTime.of(2017,1,2,3,4), LocalDateTime.of(2017,3,2,1,4))
+                        .withDate(ZonedDateTime.of(2017,1,2,3,4,0,0,ZoneId.systemDefault()), ZonedDateTime.of(2017,3,2,1,4,0,0,ZoneId.systemDefault()))
                         .withType(MilestoneType.OPEN_DATE, MilestoneType.SUBMISSION_DATE)
                         .build(2)
         ).build();
@@ -236,8 +236,8 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
 
         PublicContentItemResource resultObject = result.getSuccessObject();
 
-        assertEquals(competition.getEndDate().atZone(ZoneId.systemDefault()), resultObject.getCompetitionCloseDate());
-        assertEquals(competition.getStartDate().atZone(ZoneId.systemDefault()), resultObject.getCompetitionOpenDate());
+        assertEquals(competition.getEndDate(), resultObject.getCompetitionCloseDate());
+        assertEquals(competition.getStartDate(), resultObject.getCompetitionOpenDate());
         assertEquals(competition.getName(), resultObject.getCompetitionTitle());
         assertEquals(publicContentResource, resultObject.getPublicContentResource());
 

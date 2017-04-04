@@ -6,7 +6,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * ViewModel of an UpcomingCompetition.
@@ -16,9 +16,9 @@ public class UpcomingCompetitionViewModel {
     private long competitionId;
     private String competitionName;
     private String competitionDescription;
-    private LocalDateTime assessmentPeriodDateFrom;
-    private LocalDateTime assessmentPeriodDateTo;
-    private LocalDateTime assessorBriefingDate;
+    private ZonedDateTime assessmentPeriodDateFrom;
+    private ZonedDateTime assessmentPeriodDateTo;
+    private ZonedDateTime assessorBriefingDate;
     private BigDecimal assessorPay;
 
     public UpcomingCompetitionViewModel(CompetitionResource competitionResource) {
@@ -51,27 +51,27 @@ public class UpcomingCompetitionViewModel {
         this.competitionDescription = competitionDescription;
     }
 
-    public LocalDateTime getAssessmentPeriodDateFrom() {
+    public ZonedDateTime getAssessmentPeriodDateFrom() {
         return assessmentPeriodDateFrom;
     }
 
-    public void setAssessmentPeriodDateFrom(LocalDateTime assessmentPeriodDateFrom) {
+    public void setAssessmentPeriodDateFrom(ZonedDateTime assessmentPeriodDateFrom) {
         this.assessmentPeriodDateFrom = assessmentPeriodDateFrom;
     }
 
-    public LocalDateTime getAssessmentPeriodDateTo() {
+    public ZonedDateTime getAssessmentPeriodDateTo() {
         return assessmentPeriodDateTo;
     }
 
-    public void setAssessmentPeriodDateTo(LocalDateTime assessmentPeriodDateTo) {
+    public void setAssessmentPeriodDateTo(ZonedDateTime assessmentPeriodDateTo) {
         this.assessmentPeriodDateTo = assessmentPeriodDateTo;
     }
 
-    public LocalDateTime getAssessorBriefingDate() {
+    public ZonedDateTime getAssessorBriefingDate() {
         return assessorBriefingDate;
     }
 
-    public void setAssessorBriefingDate(LocalDateTime assessorBriefingDate) {
+    public void setAssessorBriefingDate(ZonedDateTime assessorBriefingDate) {
         this.assessorBriefingDate = assessorBriefingDate;
     }
 

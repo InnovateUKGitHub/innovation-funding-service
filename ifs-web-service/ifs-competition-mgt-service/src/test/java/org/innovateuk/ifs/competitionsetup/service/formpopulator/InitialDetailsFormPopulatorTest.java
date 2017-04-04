@@ -13,7 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +55,7 @@ public class InitialDetailsFormPopulatorTest {
 				.withExecutive(5L)
 				.withInnovationAreas(innovationAreas)
 				.withLeadTechnologist(7L)
-				.withStartDate(LocalDateTime.of(2000, 1, 2, 3, 4).atZone(ZoneId.systemDefault()))
+				.withStartDate(ZonedDateTime.of(2000, 1, 2, 3, 4, 0, 0, ZoneId.systemDefault()))
 				.withCompetitionCode("code")
 				.withPafCode("paf")
 				.withName("name")

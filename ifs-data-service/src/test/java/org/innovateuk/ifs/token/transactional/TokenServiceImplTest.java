@@ -10,12 +10,12 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED;
 import static org.innovateuk.ifs.token.resource.TokenType.RESET_PASSWORD;
 import static org.innovateuk.ifs.token.resource.TokenType.VERIFY_EMAIL_ADDRESS;
-import static java.time.LocalDateTime.now;
+import static java.time.ZonedDateTime.now;
 import static java.util.Optional.of;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.junit.Assert.assertEquals;
@@ -135,7 +135,7 @@ public class TokenServiceImplTest extends BaseUnitTestMocksTest {
      *
      * @return
      */
-    private LocalDateTime expiredTokenDate() {
+    private ZonedDateTime expiredTokenDate() {
         return now().minusMinutes(EMAIL_TOKEN_VALIDITY_MINS);
     }
 
@@ -144,7 +144,7 @@ public class TokenServiceImplTest extends BaseUnitTestMocksTest {
      *
      * @return
      */
-    private LocalDateTime recentTokenDate() {
+    private ZonedDateTime recentTokenDate() {
         return now().minusMinutes(EMAIL_TOKEN_VALIDITY_MINS - 1);
     }
 }

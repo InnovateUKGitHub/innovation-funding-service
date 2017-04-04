@@ -6,7 +6,7 @@ import org.innovateuk.ifs.invite.resource.ParticipantStatusResource;
 import org.innovateuk.ifs.invite.resource.RejectionReasonResource;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
@@ -43,6 +43,6 @@ public class CompetitionParticipantResourceDocs {
             .withTotalAssessments(4L)
             .withRejectionReason(new RejectionReasonResource("conflict", true, 1))
             .withRejectionReasonComment("Reason comment")
-            .withAssessorAcceptsDate(LocalDateTime.now().plusDays(35))
-            .withAssessorDeadlineDate(LocalDateTime.now().plusDays(40));
+            .withAssessorAcceptsDate(ZonedDateTime.now().plusDays(35))
+            .withAssessorDeadlineDate(ZonedDateTime.now().plusDays(40));
 }

@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-import static java.time.LocalDateTime.now;
+import static java.time.ZonedDateTime.now;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toSet;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;

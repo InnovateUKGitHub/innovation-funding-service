@@ -9,7 +9,6 @@ import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 
 import java.time.DateTimeException;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.Set;
 
@@ -32,13 +31,13 @@ public class MilestoneRowForm {
 
     private MilestoneType milestoneType;
     private String dayOfWeek;
-    private LocalDateTime date;
+    private ZonedDateTime date;
 
     public MilestoneRowForm() {
 
     }
 
-    public MilestoneRowForm(MilestoneType milestoneType, LocalDateTime dateTime) {
+    public MilestoneRowForm(MilestoneType milestoneType, ZonedDateTime dateTime) {
         this.setMilestoneType(milestoneType);
         if(dateTime != null) {
             this.setDay(dateTime.getDayOfMonth());
@@ -46,7 +45,7 @@ public class MilestoneRowForm {
             this.setYear(dateTime.getYear());
             this.setDate(dateTime);
             if (isTimeOption()) {
-                this.setTime(MilestoneTime.fromLocalDateTime(dateTime));
+                this.setTime(MilestoneTime.fromZonedDateTime(dateTime));
             }
         } else {
             if (isTimeOption()) {
@@ -102,18 +101,18 @@ public class MilestoneRowForm {
 
     public boolean editableForCompetition(CompetitionResource competitionResource) {
         return competitionResource.isNonIfs() ||
-                !(competitionResource.isSetupAndLive() && date.isBefore(LocalDateTime.now()));
+                !(competitionResource.isSetupAndLive() && date.isBefore(ZonedDateTime.now()));
     }
 
     public boolean isTimeOption() {
         return WITH_TIME_TYPES.contains(milestoneType);
     }
 
-    public LocalDateTime getDate() {
+    public ZonedDateTime getDate() {
         return date;
     }
 
-    public void setDate(LocalDateTime date) {
+    public void setDate(ZonedDateTime date) {
         this.date = date;
     }
 
@@ -143,7 +142,7 @@ public class MilestoneRowForm {
     private String getMilestoneDate (Integer day, Integer month, Integer year) {
         if (day != null && month != null && year != null) {
             try {
-                return LocalDateTime.of(year, month, day, 0, 0).getDayOfWeek().name();
+                return TimeZoneUtil.fromUkTimeZone(year, month, day).getDayOfWeek().name();
             } catch (DateTimeException ex) {
                 LOG.error("Invalid date");
                 LOG.debug(ex.getMessage());
@@ -151,18 +150,6 @@ public class MilestoneRowForm {
         }
 
         return null;
-    }
-
-    public LocalDateTime getMilestoneAsDateTime() {
-        if (day != null && month != null && year != null){
-            if ( time != null && isTimeOption()) {
-                return LocalDateTime.of(year, month, day, time.getHour(), 0);
-            } else {
-                return LocalDateTime.of(year, month, day, 0, 0);
-            }
-        } else {
-            return null;
-        }
     }
 
     public ZonedDateTime getMilestoneAsZonedDateTime() {

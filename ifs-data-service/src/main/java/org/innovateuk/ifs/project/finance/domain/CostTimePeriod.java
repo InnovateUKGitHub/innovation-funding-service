@@ -4,7 +4,7 @@ import org.innovateuk.ifs.project.finance.resource.TimeUnit;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Map;
 
@@ -89,11 +89,11 @@ public class CostTimePeriod {
         return durationUnit;
     }
 
-    public LocalDateTime getStartDateTime(LocalDateTime from) {
+    public ZonedDateTime getStartDateTime(ZonedDateTime from) {
         return from.plus(offsetAmount, offsetAsChronoUnit());
     }
 
-    public LocalDateTime getEndDateTime(LocalDateTime from) {
+    public ZonedDateTime getEndDateTime(ZonedDateTime from) {
         return getStartDateTime(from).plus(durationAmount, durationAsChronoUnit());
     }
 

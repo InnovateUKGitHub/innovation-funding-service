@@ -14,12 +14,14 @@ import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.junit.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.File;
 import java.io.InputStream;
-import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoField;
 import java.util.Arrays;
 import java.util.List;
@@ -265,7 +267,7 @@ public class AssessorFeedbackServiceImplTest extends BaseServiceUnitTest<Assesso
     @Test
     public void testNotifyLeadApplicantsOfAssessorFeedback() {
 
-        Competition competition = newCompetition().withId(111L).withAssessorFeedbackDate(LocalDateTime.of(2017, 5, 3, 0, 0)).build();
+        Competition competition = newCompetition().withId(111L).withAssessorFeedbackDate(ZonedDateTime.of(2017, 5, 3, 0, 0,0,0, ZoneId.systemDefault())).build();
 
         Application fundedApplication1 = newApplication().withApplicationStatus(APPROVED).build();
         Application unfundedApplication2 = newApplication().withApplicationStatus(REJECTED).build();
@@ -289,7 +291,7 @@ public class AssessorFeedbackServiceImplTest extends BaseServiceUnitTest<Assesso
         Map<String, Object> expectedGlobalNotificationArguments = asMap(
                 "competitionName", competition.getName(),
                 "dashboardUrl", webBaseUrl,
-                "feedbackDate", competition.getAssessorFeedbackDate());
+                "feedbackDate", TimeZoneUtil.toUkTimeZone(competition.getAssessorFeedbackDate()).toLocalDateTime());
 
         List<NotificationTarget> expectedFundedLeadApplicants = asList(fundedApplication1LeadApplicantTarget, fundedApplication3LeadApplicantTarget);
 

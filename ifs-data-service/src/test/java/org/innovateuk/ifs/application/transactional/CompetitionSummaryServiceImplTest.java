@@ -9,7 +9,8 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 import static org.innovateuk.ifs.application.builder.CompletedPercentageResourceBuilder.newCompletedPercentageResource;
 import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.CREATED_AND_OPEN_STATUS_IDS;
@@ -18,8 +19,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
 import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 public class CompetitionSummaryServiceImplTest extends BaseUnitTestMocksTest {
@@ -37,7 +37,7 @@ public class CompetitionSummaryServiceImplTest extends BaseUnitTestMocksTest {
                 .withId(COMP_ID)
                 .withName("compname")
                 .withCompetitionStatus(IN_ASSESSMENT)
-                .withEndDate(LocalDateTime.of(2016, 5, 23, 8, 30))
+                .withEndDate(ZonedDateTime.of(2016, 5, 23, 8, 30, 0, 0, ZoneId.systemDefault()))
                 .build();
 
         when(competitionRepositoryMock.findById(COMP_ID)).thenReturn(competition);
@@ -87,7 +87,7 @@ public class CompetitionSummaryServiceImplTest extends BaseUnitTestMocksTest {
         assertEquals(1, summaryResource.getApplicationsInProgress());
         assertEquals(5, summaryResource.getApplicationsSubmitted());
         assertEquals(78, summaryResource.getApplicationsNotSubmitted());
-        assertEquals(LocalDateTime.of(2016, 5, 23, 8, 30), summaryResource.getApplicationDeadline());
+        assertEquals(ZonedDateTime.of(2016, 5, 23, 8, 30, 0, 0, ZoneId.systemDefault()), summaryResource.getApplicationDeadline());
         assertEquals(10, summaryResource.getAssessorsInvited());
         assertEquals(8, summaryResource.getApplicationsFunded());
     }

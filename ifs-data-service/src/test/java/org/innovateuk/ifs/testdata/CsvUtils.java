@@ -24,7 +24,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Function;
@@ -245,7 +245,7 @@ class CsvUtils {
         String ownerName;
         String innovationAreaName;
         String sentByEmail;
-        LocalDateTime sentOn;
+        ZonedDateTime sentOn;
 
         private InviteLine(List<String> line) {
             int i = 0;
@@ -327,7 +327,7 @@ class CsvUtils {
         Integer durationInMonths;
         String leadApplicant;
         List<String> collaborators;
-        LocalDateTime submittedDate;
+        ZonedDateTime submittedDate;
         ApplicationStatusConstants status;
         boolean markFinancesComplete;
         String researchCategory;
@@ -412,21 +412,21 @@ class CsvUtils {
         Integer researchRatio;
         Boolean resubmission;
         Boolean multiStream;
-        LocalDateTime openDate;
-        LocalDateTime briefingDate;
-        LocalDateTime submissionDate;
-        LocalDateTime allocateAssessorDate;
-        LocalDateTime assessorBriefingDate;
-        LocalDateTime assessorsNotifiedDate;
-        LocalDateTime assessorAcceptsDate;
-        LocalDateTime assessorEndDate;
-        LocalDateTime assessmentClosedDate;
-        LocalDateTime drawLineDate;
-        LocalDateTime assessmentPanelDate;
-        LocalDateTime panelDate;
-        LocalDateTime fundersPanelDate;
-        LocalDateTime fundersPanelEndDate;
-        LocalDateTime releaseFeedback;
+        ZonedDateTime openDate;
+        ZonedDateTime briefingDate;
+        ZonedDateTime submissionDate;
+        ZonedDateTime allocateAssessorDate;
+        ZonedDateTime assessorBriefingDate;
+        ZonedDateTime assessorsNotifiedDate;
+        ZonedDateTime assessorAcceptsDate;
+        ZonedDateTime assessorEndDate;
+        ZonedDateTime assessmentClosedDate;
+        ZonedDateTime drawLineDate;
+        ZonedDateTime assessmentPanelDate;
+        ZonedDateTime panelDate;
+        ZonedDateTime fundersPanelDate;
+        ZonedDateTime fundersPanelEndDate;
+        ZonedDateTime releaseFeedback;
         String leadTechnologist;
         String compExecutive;
         boolean setupComplete;
@@ -531,7 +531,7 @@ class CsvUtils {
 
     static class PublicContentDateLine {
         String competitionName;
-        LocalDateTime date;
+        ZonedDateTime date;
         String content;
 
         private PublicContentDateLine(List<String> line) {
@@ -716,14 +716,14 @@ class CsvUtils {
         return LocalDate.parse(s, DATE_PATTERN);
     }
 
-    private static LocalDateTime nullableDateTime(String s) {
+    private static ZonedDateTime nullableDateTime(String s) {
         String value = nullable(s);
 
         if (value == null) {
             return null;
         }
 
-        return LocalDateTime.parse(s, DATE_TIME_PATTERN);
+        return ZonedDateTime.parse(s, DATE_TIME_PATTERN);
     }
 
     private static Integer nullableInteger(String s) {
