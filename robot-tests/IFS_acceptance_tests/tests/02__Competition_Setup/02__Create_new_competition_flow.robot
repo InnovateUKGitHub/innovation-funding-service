@@ -605,6 +605,8 @@ the resubmission should not have a default selection
 The user enters valid data in the initial details
     Given the user enters text to a text field                css=#title  Competition title
     When the user selects the option from the drop-down menu  Sector  id=competitionTypeId
+    And the user selects the option from the drop-down menu   Infrastructure systems  id=innovationSectorCategoryId
+    And the user selects the option from the drop-down menu   Offshore wind  id=innovationAreaCategoryId-0
     And the user selects the option from the drop-down menu   Emerging and enabling technologies  id=innovationSectorCategoryId
     And the user selects the option from the drop-down menu   Satellite Applications  id=innovationAreaCategoryId-0
     And the user enters text to a text field    id=openingDateDay    01

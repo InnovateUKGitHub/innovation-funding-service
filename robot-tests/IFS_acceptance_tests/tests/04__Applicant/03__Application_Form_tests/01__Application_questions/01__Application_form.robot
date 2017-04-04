@@ -42,6 +42,38 @@ Application details: Research category
     and the user clicks the button/link     jQuery=button:contains(Save)
     And the finance summary page should show a warning
 
+Application details: Innovation Area - Materials and manufacturing
+    [Documentation]    INFUND-8115
+    Given the user clicks the button/link    link=Application Overview
+    And the user clicks the button/link    link=Application details
+    and The user clicks the button/link   jQuery=button:contains("Choose your innovation area")
+    Then the user should see the element    jQuery=label:contains("Composite materials"):contains("New composite materials with enhanced or new properties and performance.")
+    And the user should see the element    jQuery=label:contains("My innovation area is not listed")
+    And the user should see the element    jQuery=a:contains("Cancel")
+    and the user clicks the button/link    jQuery=button:contains(Save)
+    #Then the user should see an error       This field cannot be left blank
+    #TODO : INFUND-9097
+    and the user clicks the button/link   jQuery=label:contains("Metals / metallurgy")
+    and the user clicks the button/link     jQuery=button:contains(Save)
+    Then the user should see the element     jQuery=button:contains("Change your innovation area")
+
+Application details: Innovation Area - Infrastructe
+    [Documentation]    INFUND-8443
+    [Tags]  MySQL
+    [Setup]  Set the competition innovation sector to Infrastructure
+    Given the user clicks the button/link   jQuery=button:contains("Change your innovation area")
+    Then the user should see the element    jQuery=label:contains("Energy efficiency"):contains("Improve energy end-use efficiency, for example, in buildings, domestic appliances, industrial processes or vehicles.")
+    And the user should see the element    jQuery=label:contains("My innovation area is not listed")
+    And the user should see the element    jQuery=a:contains("Cancel")
+    and the user clicks the button/link    jQuery=button:contains(Save)
+    #Then the user should see an error       This field cannot be left blank
+    #TODO : INFUND-9097
+    and the user clicks the button/link   jQuery=label:contains("Energy systems")
+    and the user clicks the button/link     jQuery=button:contains(Save)
+    Then the user should see the element     jQuery=button:contains("Change your innovation area")
+    [Teardown]  Set the competition innovation sector to Materials and manufacturing
+
+
 Autosave in the form questions
     [Documentation]    INFUND-189
     [Tags]    HappyPath
@@ -206,3 +238,11 @@ the finance summary page should show a warning
     The user clicks the button/link    link=Application Overview
     The user clicks the button/link    link=Your finances
     the user should see the element  jQuery=h3:contains("Your funding") + p:contains("You must select a research category in application details ")
+
+Set the competition innovation sector to Infrastructure
+    Connect to Database    @{database}
+    Execute sql string    UPDATE `${database_name}`.`category_link` SET category_id=(SELECT id FROM `${database_name}`.`category` WHERE `name` = 'Infrastructure systems') WHERE class_name = "org.innovateuk.ifs.competition.domain.Competition#innovationSector" AND class_pk = '${OPEN_COMPETITION}'
+
+Set the competition innovation sector to Materials and manufacturing
+    Connect to Database    @{database}
+    execute sql string    UPDATE `${database_name}`.`category_link` SET category_id=(SELECT id FROM `${database_name}`.`category` WHERE `name` = 'Materials and manufacturing') WHERE class_name = "org.innovateuk.ifs.competition.domain.Competition#innovationSector" AND class_pk = '${OPEN_COMPETITION}';
