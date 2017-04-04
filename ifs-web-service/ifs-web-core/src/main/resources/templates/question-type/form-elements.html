@@ -302,7 +302,7 @@
 </th:block>
 
 <th:block th:fragment="assign-buttons">
-    <div th:class="(${currentUser.id == questionAssignee?.assigneeUserId} ? 'assign-container action-required' : 'assign-container')"
+    <div th:class="(${currentUser.id == questionAssignee?.assigneeUserId} or ${questionAssignee?.assignee == null} ? 'assign-container action-required' : 'assign-container')"
          th:if="${question.isAssignEnabled()}">
         <th:block th:insert="question-type/form-elements :: assign-button-body" />
     </div>
@@ -328,16 +328,16 @@
         </span>
     </th:block>
 
-    <div class="assign-button-container">
+    <th:block th:if="${questionAssignee?.assignee == null} ">
+        <span class="action-required" th:if="${leadApplicant?.id == currentUser.id}">
+            Assigned to
+        </span>
+        <span class="secondary-notification" th:unless="${leadApplicant?.id == currentUser.id}">
+            Assigned to <span th:text="${name}" th:with="name=${leadApplicant?.getName()}"></span>
+        </span>
+    </th:block>
 
-        <th:block th:if="${questionAssignee?.assignee == null} ">
-            <span class="action-required" th:if="${leadApplicant?.id == currentUser.id}">
-              <strong>Assigned to you</strong>
-            </span>
-            <span class="secondary-notification" th:unless="${leadApplicant?.id == currentUser.id}">
-              Assigned to <span th:text="${name}" th:with="name=${leadApplicant?.getName()}"></span>
-            </span>
-        </th:block>
+    <div class="assign-button-container">
 
         <div class="assign-button">
             <th:block th:insert="question-type/form-elements :: assigned-to"/>
@@ -398,7 +398,9 @@
 
   <th:block th:if="${questionAssignee?.assignee == null}">
     <span class="action-required" th:if="${leadApplicant?.id == currentUser.id}">
-      <strong>Assigned to you</strong>
+        <th:block th:text="${fullButtonText == TRUE} ? 'Assign this question to someone else' : 'you'"
+                  th:if="${question.isAssignEnabled()}">ASSIGN BUTTON TEXT</th:block>
+        <th:block th:unless="${question.isAssignEnabled()}">Assigned to you</th:block>
     </span>
     <span class="secondary-notification" th:unless="${leadApplicant?.id == currentUser.id}">
       Assigned to <span th:text="${name}" th:with="name=${leadApplicant?.getName()}"></span>
