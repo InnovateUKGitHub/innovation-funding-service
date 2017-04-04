@@ -7,12 +7,12 @@
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main id="content">
+<main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
     <div th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}" th:remove="tag"></div>
 
     <div class="page-title">
-        <th:block th:insert="fragments/elements :: project-title (projectId=${model.projectId}, projectName=${model.projectName})" />
+        <th:block th:insert="fragments/elements :: project-title (projectName=${model.projectName})" />
         <h1 class="heading-xlarge">Grant offer letter</h1>
     </div>
 

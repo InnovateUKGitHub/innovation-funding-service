@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 /**
  * {@code SubContractingCost} implements {@link FinanceRowItem}
  */
-public class SubContractingCost implements FinanceRowItem {
+public class SubContractingCost extends AbstractFinanceRowItem {
     private Long id;
 
     @NotNull(message = NOT_BLANK_MESSAGE)

@@ -13,7 +13,7 @@
             <div th:replace="finance/finance-summary :: research_participation_alert"></div>
         </div>
 
-        <h2 class="heading-medium">Finances Summary</h2>
+        <h2 class="heading-medium">Finances summary</h2>
         <th:block th:insert="finance/finance-summary :: application_finances_summary" />
         <!--/* <div class="icon icon-information"></div><span>Please provide your financial breakdown in the <a th:href="@{/application/{id}/form/section/7/(id=${currentApplication.getId()})}" >Your finances</a> section.</span> */-->
         <h2 class="heading-medium">Project cost breakdown</h2>
@@ -250,7 +250,7 @@
         </div>
         <div th:if="${researchParticipationPercentage &gt; currentCompetition.maxResearchRatio}" class="warning-alert">
             <h2 class="heading-small no-margin">The participation levels of this project are not within the required range</h2>
-            <p>You will not be able to submit this application until the research participation is <span th:text="${currentCompetition.maxResearchRatio}"></span>% or less.</p>
+            <p>Your research partner costs must be <span th:text="${currentCompetition.maxResearchRatio}"></span>% or less of the total project costs.</p>
         </div>
     </th:block>
 </html>

@@ -1,0 +1,179 @@
+package org.innovateuk.ifs.project.sections;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.user.resource.OrganisationResource;
+
+import static org.innovateuk.ifs.project.sections.SectionAccess.*;
+
+/**
+ * This is a helper class for determining whether or not a given Project Setup section is available to access
+ */
+public class ProjectSetupSectionAccessibilityHelper {
+
+    private static final Log LOG = LogFactory.getLog(ProjectSetupSectionAccessibilityHelper.class);
+
+    private ProjectSetupProgressChecker projectSetupProgressChecker;
+
+    public ProjectSetupSectionAccessibilityHelper(ProjectTeamStatusResource projectTeamStatus) {
+        this.projectSetupProgressChecker = new ProjectSetupProgressChecker(projectTeamStatus);
+    }
+
+    public SectionAccess canAccessCompaniesHouseSection(OrganisationResource organisation) {
+
+        if (projectSetupProgressChecker.isCompaniesHouseSectionRequired(organisation)) {
+            return ACCESSIBLE;
+        }
+
+        LOG.debug("No need to access Companies House section if not a Business Organisation");
+        return NOT_REQUIRED;
+    }
+
+    public SectionAccess canAccessProjectDetailsSection(OrganisationResource organisation) {
+
+        if (isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
+                "Unable to access Project Details section until Companies House details are complete for Organisation")) {
+            return ACCESSIBLE;
+        }
+
+        return NOT_ACCESSIBLE;
+    }
+
+    public SectionAccess canAccessMonitoringOfficerSection(OrganisationResource organisation) {
+
+        if (!isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
+                "Unable to access Monitoring Officer section until Companies House details are complete for Organisation")) {
+            return NOT_ACCESSIBLE;
+        }
+
+        if (!projectSetupProgressChecker.isProjectDetailsSubmitted()) {
+            return fail("Unable to access Monitoring Officer section until Project Details are submitted");
+        }
+
+        return ACCESSIBLE;
+    }
+
+    public SectionAccess canAccessBankDetailsSection(OrganisationResource organisation) {
+
+        if (!isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
+                "Unable to access Bank Details section until Companies House information is complete")) {
+            return NOT_ACCESSIBLE;
+        }
+
+        if(!projectSetupProgressChecker.isOrganisationRequiringFunding(organisation)){
+            return NOT_ACCESSIBLE;
+        }
+
+        if (!projectSetupProgressChecker.isFinanceContactSubmitted(organisation)) {
+
+            return fail("Unable to access Bank Details section until this Partner Organisation has submitted " +
+                    "its Finance Contact");
+        }
+
+        return ACCESSIBLE;
+    }
+
+    public SectionAccess canAccessFinanceChecksSection(OrganisationResource organisation) {
+
+        if (!isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
+                "Unable to access Bank Details section until Companies House information is complete")) {
+            return NOT_ACCESSIBLE;
+        }
+
+        if (!projectSetupProgressChecker.isProjectDetailsSubmitted()) {
+            return fail("Unable to access Finance Checks section until the Project Details section is complete");
+        }
+
+        if (!projectSetupProgressChecker.isFinanceContactSubmitted(organisation)) {
+
+            return fail("Unable to access Bank Details section until this Partner Organisation has submitted " +
+                    "its Finance Contact");
+        }
+
+        return ACCESSIBLE;
+    }
+
+    public SectionAccess canAccessSpendProfileSection(OrganisationResource organisation) {
+
+        if (!isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
+                "Unable to access Spend Profile section until Companies House information is complete")) {
+            return NOT_ACCESSIBLE;
+        }
+
+        if (!projectSetupProgressChecker.isProjectDetailsSubmitted()) {
+
+            return fail("Unable to access Spend Profile section until the Project Details section is complete");
+        }
+
+        if (!isBankDetailsApproved(organisation)) {
+
+            return fail("Unable to access Spend Profile section until this Organisation's Bank Details have been " +
+                    "approved or queried");
+        }
+
+        if (!projectSetupProgressChecker.isSpendProfileGenerated()) {
+
+            return fail("Unable to access Spend Profile section until this Partner Organisation has had its " +
+                    "Spend Profile generated");
+        }
+
+        return ACCESSIBLE;
+    }
+
+    public SectionAccess canAccessOtherDocumentsSection(OrganisationResource organisation) {
+
+        if (projectSetupProgressChecker.isLeadPartnerOrganisation(organisation)) {
+            return ACCESSIBLE;
+        }
+
+        if (isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
+                "Non-lead Partners are unable to access Other Documents section until their Companies House information " +
+                        "is complete")) {
+            return ACCESSIBLE;
+        }
+
+        return NOT_ACCESSIBLE;
+    }
+
+    public SectionAccess canAccessGrantOfferLetterSection(OrganisationResource organisation) {
+
+        if (projectSetupProgressChecker.isSpendProfileApproved() && projectSetupProgressChecker.isOtherDocumentsApproved()
+                && projectSetupProgressChecker.isGrantOfferLetterAvailable() && projectSetupProgressChecker.isGrantOfferLetterSent()) {
+            return ACCESSIBLE;
+        }
+
+        return NOT_ACCESSIBLE;
+    }
+
+    public boolean isProjectDetailsSubmitted() {
+        return projectSetupProgressChecker.isProjectDetailsSubmitted();
+    }
+
+    public boolean isFinanceContactSubmitted(OrganisationResource organisationResource) {
+        return projectSetupProgressChecker.isFinanceContactSubmitted(organisationResource);
+    }
+
+    private boolean isBankDetailsApproved(OrganisationResource organisation) {
+        return projectSetupProgressChecker.isBankDetailsApproved(organisation);
+    }
+
+    private SectionAccess fail(String message) {
+        LOG.info(message);
+        return NOT_ACCESSIBLE;
+    }
+
+    private boolean isCompaniesHouseSectionIsUnnecessaryOrComplete(OrganisationResource organisation, String failureMessage) {
+
+        if (!projectSetupProgressChecker.isCompaniesHouseSectionRequired(organisation)) {
+            return true;
+        }
+
+        if (projectSetupProgressChecker.isCompaniesHouseDetailsComplete(organisation)) {
+            return true;
+        }
+
+        LOG.info(failureMessage);
+        return false;
+    }
+}

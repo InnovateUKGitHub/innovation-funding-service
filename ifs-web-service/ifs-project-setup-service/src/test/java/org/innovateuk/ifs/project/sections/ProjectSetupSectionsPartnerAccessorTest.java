@@ -20,7 +20,7 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
     private ProjectSetupProgressChecker projectSetupProgressCheckerMock;
 
     @InjectMocks
-    private ProjectSetupSectionsAccessibilityHelper accessor;
+    private ProjectSetupSectionAccessibilityHelper accessor;
 
     private OrganisationResource organisation = newOrganisationResource().build();
 

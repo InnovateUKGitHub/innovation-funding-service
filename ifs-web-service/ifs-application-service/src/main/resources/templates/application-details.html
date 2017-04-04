@@ -9,7 +9,7 @@
 <th:block th:insert="fragments/layout :: global-header" />
 
 
-<main id="content">
+<main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}"  th:remove="tag"></div>
 
@@ -18,13 +18,15 @@
   	<th:block th:insert="fragments/elements :: competition-status-message (app=${currentApplication}, competition=${currentCompetition})" />
 
     <div class="page-title">
-        <th:block th:insert="fragments/elements :: application-title (applicationId=${currentApplication.id},applicationName=${currentApplication.name})" />
+        <th:block th:insert="fragments/elements :: application-title (applicationName=${currentApplication.name})" />
         <h1 class="heading-xlarge">Application overview</h1>
     </div>
 
     <div class="grid-row">
         <div class="column-half">
           <dl class="font-xsmall">
+            <dt>Application number:</dt>
+            <dd th:text="${currentApplication.id}" />
             <dt>Competition:</dt>
             <dd th:text="${currentCompetition.name}" />
             <dt>Funding body:</dt>
@@ -41,7 +43,7 @@
         <div class="column-half">
             <ul class="list list-bullet">
                 <li><a th:href="@{/application/{applicationId}/team(applicationId=${currentApplication.id})}">view team members and add collaborators</a></li>
-                <li><a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${currentCompetition.id})}">view conditions of grant offer</a></li>
+                <li><a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${currentCompetition.id})}">view the grant terms and conditions</a></li>
             </ul>
         </div>
     </div>

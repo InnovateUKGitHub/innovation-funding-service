@@ -12,6 +12,7 @@ Guest user navigates to Front Door
     [Setup]  the user navigates to the page  ${frontDoor}
     When the user should see the element     jQuery=h1:contains("Innovation competitions")
     And the user should see the element      jQuery=p:contains("Browse upcoming and live competitions.")
+    And the user should see the element      jQuery=a:contains("signing up for competition updates")
     When the user should see the element     css=#keywords
     Then the user should see the element     css=#innovation-area
     When the user clicks the button/link     link=Contact us
@@ -50,7 +51,7 @@ Guest user can see the public information of a competition
     And the user should see the element      jQuery=strong:contains("Competition opens") + span:contains("Friday 15 April 2016")
     And the user should see the element      jQuery=li:contains("Competition closes")
     And the user should see the element      jQuery=li:contains("Friday 9 September 2067")
-    And the user should see the text in the page      Or sign in to continue an existing application
+    And the user should see the text in the page      Or sign in to continue an existing application.
     And the user should see the element      jQuery=.button:contains("Start new application")
 
 Guest user can see the public Summary of the competition

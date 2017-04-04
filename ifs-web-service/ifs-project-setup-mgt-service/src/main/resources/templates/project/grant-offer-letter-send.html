@@ -11,7 +11,7 @@
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main id="content">
+<main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
 
     <div th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{id}/status (id=${model.competitionSummary.competitionId})}" th:remove="tag"></div>
@@ -42,7 +42,7 @@
         </th:block>
     </th:block>
 
-    <h2 th:insert="fragments/elements :: project-title (projectId=${model.applicationId}, projectName=${model.projectName})" th:remove="tag" />
+    <h2 th:insert="fragments/elements :: project-title (projectName=${model.projectName})" th:remove="tag" />
 
     <h2 class="heading-medium">Grant offer letter</h2>
 

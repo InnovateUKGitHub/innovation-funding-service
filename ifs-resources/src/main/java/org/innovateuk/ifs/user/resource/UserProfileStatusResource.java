@@ -14,7 +14,6 @@ public class UserProfileStatusResource {
     private boolean agreementComplete;
 
     UserProfileStatusResource() {
-        // default constructor
     }
 
     public UserProfileStatusResource(Long user, boolean skillsComplete, boolean affiliationsComplete, boolean agreementComplete) {

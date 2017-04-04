@@ -3,7 +3,6 @@ package org.innovateuk.ifs.project.finance.service;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.project.finance.resource.*;
-import org.innovateuk.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
 import org.springframework.stereotype.Service;
 
 /**
@@ -40,12 +39,6 @@ public class FinanceCheckRestServiceImpl extends BaseRestService implements Fina
     public RestResult<Void> approveFinanceCheck(Long projectId, Long organisationId) {
         String url = FinanceCheckURIs.BASE_URL + "/" + projectId + FinanceCheckURIs.ORGANISATION_PATH + "/" + organisationId + FinanceCheckURIs.PATH + "/approve";
         return postWithRestResult(url, Void.class);
-    }
-
-    @Override
-    public RestResult<FinanceCheckProcessResource> getFinanceCheckApprovalStatus(Long projectId, Long organisationId) {
-        String url = FinanceCheckURIs.BASE_URL + "/" + projectId + FinanceCheckURIs.ORGANISATION_PATH + "/" + organisationId + FinanceCheckURIs.PATH + "/status";
-        return getWithRestResult(url, FinanceCheckProcessResource.class);
     }
 
     @Override

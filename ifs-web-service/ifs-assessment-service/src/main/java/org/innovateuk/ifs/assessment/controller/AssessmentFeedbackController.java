@@ -71,7 +71,7 @@ public class AssessmentFeedbackController {
     @Autowired
     private MessageSource messageSource;
 
-    @RequestMapping(value = "/question/{questionId}", method = RequestMethod.GET)
+    @GetMapping("/question/{questionId}")
     public String getQuestion(Model model,
                               @ModelAttribute(FORM_ATTR_NAME) Form form,
                               @PathVariable("assessmentId") Long assessmentId,
@@ -87,7 +87,7 @@ public class AssessmentFeedbackController {
         return doViewQuestion(model, assessmentId, question);
     }
 
-    @RequestMapping(value = "/formInput/{formInputId}", method = RequestMethod.POST)
+    @PostMapping("/formInput/{formInputId}")
     public @ResponseBody JsonNode updateFormInputResponse(
             @PathVariable("assessmentId") Long assessmentId,
             @PathVariable("formInputId") Long formInputId,
@@ -100,7 +100,7 @@ public class AssessmentFeedbackController {
         }
     }
 
-    @RequestMapping(value = "/question/{questionId}", method = RequestMethod.POST)
+    @PostMapping("/question/{questionId}")
     public String save(
             Model model,
             @ModelAttribute(FORM_ATTR_NAME) Form form,
