@@ -17,7 +17,7 @@
     <div th:unless="${summaryModel.isExternalView()}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})},currentCompetition=null" />
 
     <div class="page-title">
-        <th:block th:insert="fragments/elements :: project-title (projectId=${summaryModel.projectId}, projectName=${summaryModel.projectName})" />
+        <th:block th:insert="fragments/elements :: project-title (projectName=${summaryModel.projectName})" />
         <h1 class="heading-xlarge">
             <th:block th:text="${summaryModel.organisationName}" />
             <small th:if="${summaryModel.leadPartnerOrganisation}">(Lead Partner)</small>

@@ -16,7 +16,7 @@
     <div th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${model.project.getId()})}" th:remove="tag"></div>
 
     <div class="page-title">
-        <th:block th:insert="fragments/elements :: project-title (projectId=${model.app.id}, projectName=${model.project.name})" />
+        <th:block th:insert="fragments/elements :: project-title (projectName=${model.project.name})" />
         <h1 class="heading-xlarge">Project details</h1>
     </div>
 
