@@ -10,4 +10,4 @@ spec:
        storage: 20G
   selector:
     matchLabels:
-      demo: "sysint"
+      sysint: "sysint"
