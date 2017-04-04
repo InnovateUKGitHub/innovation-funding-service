@@ -50,6 +50,11 @@ task osUpgradeDemo(type:Exec) {
     args = [openshiftEnv, "demo", project.version]
 }
 
+task osUpgradeSysint(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-upgrade.sh'
+    args = [openshiftEnv, "sysint", project.version]
+}
+
 task robotTestsFilter (type: Copy) {
     from 'robot-tests/IFS_acceptance_tests/resources/variables/'
     into 'robot-tests/IFS_acceptance_tests/resources/variables/'

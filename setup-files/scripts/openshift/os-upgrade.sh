@@ -9,6 +9,7 @@ VERSION=$3
 if [[ ${TARGET} == "production" ]]; then PROJECT="production"; fi
 if [[ ${TARGET} == "demo" ]]; then PROJECT="demo"; fi
 if [[ ${TARGET} == "uat" ]]; then PROJECT="uat"; fi
+if [[ ${TARGET} == "sysint" ]]; then PROJECT="sysint"; fi
 
 if [[ (${TARGET} == "local") ]]
 then
