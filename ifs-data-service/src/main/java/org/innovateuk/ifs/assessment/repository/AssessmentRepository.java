@@ -20,42 +20,42 @@ import java.util.Set;
  */
 public interface AssessmentRepository extends ProcessRepository<Assessment>, PagingAndSortingRepository<Assessment, Long> {
 
-    static final String FEEDBACK_COMPLETE = "SELECT CASE WHEN COUNT(fi.id) = 0" +
-            "  THEN 'TRUE'" +
-            "       ELSE 'FALSE' END AS feedback_complete " +
-            "FROM Application a" +
-            "  INNER JOIN Competition c" +
-            "    ON a.competition.id = c.id" +
-            "  INNER JOIN Assessment p" +
-            "    ON a.id = p.target.id" +
-            "  INNER JOIN Question q" +
-            "    ON q.competition.id = c.id" +
-            "  INNER JOIN FormInput fi" +
-            "    ON fi.question.id = q.id " +
+    static final String FEEDBACK_COMPLETE = "SELECT CASE WHEN COUNT(formInput.id) = 0" +
+            "  THEN TRUE" +
+            "       ELSE FALSE END AS feedback_complete " +
+            "FROM Application application" +
+            "  INNER JOIN Competition competition" +
+            "    ON application.competition.id = competition.id" +
+            "  INNER JOIN Assessment assessment" +
+            "    ON application.id = assessment.target.id" +
+            "  INNER JOIN Question question" +
+            "    ON question.competition.id = competition.id" +
+            "  INNER JOIN FormInput formInput" +
+            "    ON formInput.question.id = question.id " +
             "WHERE NOT EXISTS(" +
             "    SELECT 1 AS response" +
-            "    FROM Assessment p" +
-            "      INNER JOIN AssessorFormInputResponse afir" +
-            "        ON afir.assessment.id = p.id" +
-            "    WHERE afir.value IS NOT NULL" +
-            "          AND afir.formInput.id = fi.id" +
-            "          AND p.id = :id" +
+            "    FROM Assessment assessment" +
+            "      INNER JOIN AssessorFormInputResponse assessorFormInputResponse" +
+            "        ON assessorFormInputResponse.assessment.id = assessment.id" +
+            "    WHERE assessorFormInputResponse.value IS NOT NULL" +
+            "          AND assessorFormInputResponse.formInput.id = formInput.id" +
+            "          AND assessment.id = :id" +
             ")" +
-            "      AND fi.scope = 'ASSESSMENT'" +
-            "      AND fi.active = TRUE" +
-            "      AND p.id = :id";
+            "      AND formInput.scope = 'ASSESSMENT'" +
+            "      AND formInput.active = TRUE" +
+            "      AND assessment.id = :id";
 
     static final String TOTAL_SCORE = "SELECT NEW org.innovateuk.ifs.assessment.resource.AssessmentTotalScoreResource(" +
-            "  CAST(COALESCE(SUM(afir.value),0) AS int)," +
-            "  CAST(SUM(q.assessorMaximumScore) AS int)) " +
-            "FROM Assessment a" +
-            "  JOIN a.target.competition.questions q" +
-            "  JOIN q.formInputs fi" +
-            "  LEFT JOIN a.responses afir" +
-            "    ON afir.formInput.id = fi " +
-            "WHERE fi.type = org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_SCORE" +
-            "  AND fi.active = TRUE" +
-            "  AND a.id = :id";
+            "  CAST(COALESCE(SUM(assessorFormInputResponse.value),0) AS int)," +
+            "  CAST(SUM(question.assessorMaximumScore) AS int)) " +
+            "FROM Assessment assessment" +
+            "  JOIN assessment.target.competition.questions question" +
+            "  JOIN question.formInputs formInput" +
+            "  LEFT JOIN assessment.responses assessorFormInputResponse" +
+            "    ON assessorFormInputResponse.formInput.id = formInput " +
+            "WHERE formInput.type = org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_SCORE" +
+            "  AND formInput.active = TRUE" +
+            "  AND assessment.id = :id";
 
     @Override
     Set<Assessment> findAll();
