@@ -28,11 +28,18 @@ public class ResearchCategoryValidator extends BaseValidator {
 
         if (ASSESSOR_RESEARCH_CATEGORY == response.getFormInput().getType()) {
             List<ResearchCategory> researchCategories = researchCategoryRepository.findAll();
-            String value = response.getValue();
+            Long value;
+
+            try {
+                value = Long.parseLong(response.getValue());
+            } catch (NumberFormatException exception) {
+                rejectValue(errors, "value", "validation.assessor.category.invalidCategory");
+                return;
+            }
 
             List<ResearchCategory> matchingCategories = researchCategories
                     .stream()
-                    .filter(category -> category.getName().equals(value))
+                    .filter(category -> value.equals(category.getId()))
                     .collect(toList());
 
             if (matchingCategories.isEmpty()) {
