@@ -13,7 +13,7 @@
             <th:block th:insert="fragments/assessment :: assessment-header-deadline-sub (linkTitle='Back to your assessment overview',linkClass='link-back',linkUrl=@{/{id}(id=${model.assessmentId})},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft})" />
 
             <div class="page-title">
-                <th:block th:insert="fragments/elements :: application-title (applicationId=${model.applicationId},applicationName=${model.applicationName})" />
+                <th:block th:insert="fragments/elements :: application-title (applicationName=${model.applicationName})" />
                 <h1 class="heading-xlarge" th:text="${'Assessment summary'}" />
             </div>
 

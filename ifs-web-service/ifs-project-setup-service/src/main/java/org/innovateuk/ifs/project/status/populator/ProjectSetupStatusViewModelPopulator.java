@@ -9,7 +9,7 @@ import org.innovateuk.ifs.project.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
-import org.innovateuk.ifs.project.sections.ProjectSetupSectionsAccessibilityHelper;
+import org.innovateuk.ifs.project.sections.ProjectSetupSectionAccessibilityHelper;
 import org.innovateuk.ifs.project.sections.ProjectSetupSectionStatus;
 import org.innovateuk.ifs.project.sections.SectionAccess;
 import org.innovateuk.ifs.project.sections.SectionStatus;
@@ -47,7 +47,7 @@ public class ProjectSetupStatusViewModelPopulator {
         OrganisationResource organisation = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
         ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId, Optional.empty());
         ProjectPartnerStatusResource ownOrganisation = teamStatus.getPartnerStatusForOrganisation(organisation.getId()).get();
-        ProjectSetupSectionsAccessibilityHelper statusAccessor = new ProjectSetupSectionsAccessibilityHelper(teamStatus);
+        ProjectSetupSectionAccessibilityHelper statusAccessor = new ProjectSetupSectionAccessibilityHelper(teamStatus);
         ProjectSetupSectionStatus sectionStatus = new ProjectSetupSectionStatus();
 
         boolean isLeadPartner = teamStatus.getLeadPartnerStatus().getOrganisationId().equals(organisation.getId());
