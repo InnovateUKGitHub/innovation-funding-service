@@ -105,8 +105,8 @@
                     <h2 class="heading-medium">Previous applications</h2>
                     <ul>
                         <li th:each="app : ${applicationsFinished}"
-                            th:with="statusName=${applicationStatuses.get(app.id).name()}"
-                            th:class="${statusName == 'APPROVED'} ? 'positive' : 'negative'">
+                            th:with="status=${applicationStatuses.get(app.id)}"
+                            th:class="${status == T(org.innovateuk.ifs.application.resource.ApplicationStatus.APPROVED} ? 'positive' : 'negative'">
                             <div class="task">
                                 <h3 class="heading-small">
                                     <a th:href="@{/application/{id}/summary(id=${app.getId()})}" th:text="${app.name}">placeholder</a>
@@ -117,9 +117,9 @@
                                 </ul>
                             </div>
                             <div class="status">
-                                <p th:if="${statusName == 'REJECTED'}" class="status-msg msg-progress">Unsuccessful</p>
-                                <p th:if="${statusName == 'APPROVED'}" class="status-msg msg-progress">Successful</p>
-                                <p th:if="${statusName == 'CREATED' || statusName == 'OPEN'}" class="status-msg msg-progress not-submitted">Not submitted</p>
+                                <p th:if="${status == T(org.innovateuk.ifs.application.resource.ApplicationStatus).REJECTED}" class="status-msg msg-progress">Unsuccessful</p>
+                                <p th:if="${status == T(org.innovateuk.ifs.application.resource.ApplicationStatus).APPROVED}" class="status-msg msg-progress">Successful</p>
+                                <p th:if="${status == T(org.innovateuk.ifs.application.resource.ApplicationStatus).CREATED or status == T(org.innovateuk.ifs.application.resource.ApplicationStatus.OPEN}" class="status-msg msg-progress not-submitted">Not submitted</p>
                             </div>
                         </li>
                     </ul>
