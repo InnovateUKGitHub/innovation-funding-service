@@ -58,7 +58,7 @@ public class ApplicationInviteController {
     }
 
     @DeleteMapping("/removeInvite/{inviteId}")
-    public RestResult<Void> removeApplicationInvite(@PathVariable("inviteId") Long applicationInviteResourceId) {
+    public RestResult<Void> removeApplicationInvite(@PathVariable("inviteId") long applicationInviteResourceId) {
         return inviteService.removeApplicationInvite(applicationInviteResourceId).toDeleteResponse();
     }
 
