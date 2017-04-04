@@ -101,7 +101,9 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
     private List<String> getPartnerOrganisationNames(Application application) {
         return application.getProcessRoles().stream()
                 .filter(ProcessRole::isCollaborator)
-                .map(processRole -> organisationRepository.findOne(processRole.getOrganisationId()).getName())
+                .map(ProcessRole::getOrganisationId)
+                .distinct()
+                .map(orgId -> organisationRepository.findOne(orgId).getName())
                 .sorted(Collator.getInstance())
                 .collect(toList());
     }
