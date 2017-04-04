@@ -34,19 +34,19 @@ public class CompetitionParticipantResourceBuilder extends BaseBuilder<Competiti
     }
 
     public CompetitionParticipantResourceBuilder withId(Long... ids) {
-        return withArray((id, competitionParticipantResource) -> setField("id", id, competitionParticipantResource), ids);
+        return withArraySetFieldByReflection("id", ids);
     }
 
     public CompetitionParticipantResourceBuilder withUser(Long... users) {
-        return withArray((user, competitionParticipantResource) -> setField("userId", user, competitionParticipantResource), users);
+        return withArraySetFieldByReflection("userId", users);
     }
 
     public CompetitionParticipantResourceBuilder withCompetition(Long... competitions) {
-        return withArray((competition, competitionParticipantResource) -> setField("competitionId", competition, competitionParticipantResource), competitions);
+        return withArraySetFieldByReflection("competitionId", competitions);
     }
 
     public CompetitionParticipantResourceBuilder withInvite(CompetitionInviteResource... invites) {
-        return withArray((invite, competitionParticipantResource) -> setField("invite", invite, competitionParticipantResource), invites);
+        return withArraySetFieldByReflection("invite", invites);
     }
 
     public CompetitionParticipantResourceBuilder withInvite(Builder<CompetitionInviteResource, ?> invite) {
@@ -54,39 +54,43 @@ public class CompetitionParticipantResourceBuilder extends BaseBuilder<Competiti
     }
 
     public CompetitionParticipantResourceBuilder withRejectionReason(RejectionReasonResource... rejectionReasons) {
-        return withArray((reason, competitionParticipantResource) -> setField("rejectionReason", reason, competitionParticipantResource), rejectionReasons);
+        return withArraySetFieldByReflection("rejectionReason", rejectionReasons);
     }
 
     public CompetitionParticipantResourceBuilder withRejectionReasonComment(String... rejectionReasonComments) {
-        return withArray((reasonComment, competitionParticipantResource) -> setField("rejectionReasonComment", reasonComment, competitionParticipantResource), rejectionReasonComments);
+        return withArraySetFieldByReflection("rejectionReasonComment", rejectionReasonComments);
     }
 
     public CompetitionParticipantResourceBuilder withCompetitionParticipantRole(CompetitionParticipantRoleResource... roles) {
-        return withArray((role, competitionParticipantResource) -> setField("role", role, competitionParticipantResource), roles);
+        return withArraySetFieldByReflection("role", roles);
     }
 
     public CompetitionParticipantResourceBuilder withStatus(ParticipantStatusResource... statuses) {
-        return withArray((status, competitionParticipantResource) -> setField("status", status, competitionParticipantResource), statuses);
+        return withArraySetFieldByReflection("status", statuses);
     }
 
     public CompetitionParticipantResourceBuilder withCompetitionName(String... competitionNames) {
-        return withArray((competitionName, competitionParticipantResource) -> setField("competitionName", competitionName, competitionParticipantResource), competitionNames);
+        return withArraySetFieldByReflection("competitionName", competitionNames);
     }
 
     public CompetitionParticipantResourceBuilder withAssessorAcceptsDate(LocalDateTime... assessorAcceptsDates) {
-        return withArray((assessorAcceptsDate, competitionParticipantResource) -> setField("assessorAcceptsDate", assessorAcceptsDate, competitionParticipantResource), assessorAcceptsDates);
+        return withArraySetFieldByReflection("assessorAcceptsDate", assessorAcceptsDates);
     }
 
     public CompetitionParticipantResourceBuilder withAssessorDeadlineDate(LocalDateTime... assessorDeadlineDates) {
-        return withArray((assessorDeadlineDate, competitionParticipantResource) -> setField("assessorDeadlineDate", assessorDeadlineDate, competitionParticipantResource), assessorDeadlineDates);
+        return withArraySetFieldByReflection("assessorDeadlineDate", assessorDeadlineDates);
     }
 
     public CompetitionParticipantResourceBuilder withSubmittedAssessments(Long... submittedAssessmentCounts) {
-        return withArray((submittedAssessments, competitionParticipantResource) -> setField("submittedAssessments", submittedAssessments, competitionParticipantResource), submittedAssessmentCounts);
+        return withArraySetFieldByReflection("submittedAssessments", submittedAssessmentCounts);
     }
 
     public CompetitionParticipantResourceBuilder withTotalAssessments(Long... totalAssessmentCounts) {
-        return withArray((totalAssessments, competitionParticipantResource) -> setField("totalAssessments", totalAssessments, competitionParticipantResource), totalAssessmentCounts);
+        return withArraySetFieldByReflection("totalAssessments", totalAssessmentCounts);
+    }
+
+    public CompetitionParticipantResourceBuilder withPendingAssessments(Long... pendingAssessmentCounts) {
+        return withArraySetFieldByReflection("pendingAssessments", pendingAssessmentCounts);
     }
 
     public CompetitionParticipantResourceBuilder withCompetitionStatus(CompetitionStatus... competitionStatuses) {

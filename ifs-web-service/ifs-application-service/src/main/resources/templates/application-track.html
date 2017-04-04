@@ -7,92 +7,87 @@
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main id="content">
+<main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication},linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}" />
 
     <div class="page-title">
-              <th:block th:insert="fragments/elements :: application-title (applicationId=${currentApplication.id},applicationName=${currentApplication.name})" />
-              <h1 class="heading-xlarge">Application status</h1>
+      <th:block th:insert="fragments/elements :: application-title (applicationId=${currentApplication.id},applicationName=${currentApplication.name})" />
+      <h1 class="heading-xlarge">Application status</h1>
     </div>
 
-    <ul class="ifs-progress-list">
-    	<li class="complete">
-          <div class="progress-status"></div>
-          <div class="progress-info">
-                <h2 class="heading-medium">Submitted application</h2>
-                <p>Your application '<strong th:text="${currentApplication.name}" />' was submitted into the competition '<strong th:text="${currentCompetition.name}"/>'
-                    <th:block th:if="${currentApplication.submittedDate != null}">
-                      on
-                      <th:block th:text="${#temporals.monthName(currentApplication.submittedDate)}" />
-                      <th:block th:insert="fragments/elements :: ordinal-day (date=${currentApplication.submittedDate})" />
-                      at
-                      <th:block th:text="${#strings.toLowerCase(#temporals.format(currentApplication.submittedDate, 'hh:mma'))}" />.
-                    </th:block>
-                </p>
-                <p class="linkbar">
-                  <a th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}">View application</a>
-                  <a th:href="@{/application/{id}/print(id=${currentApplication.getId()})}">Print Application</a>
-                </p>
-          </div>
-    	</li>
-    	<li class="current">
-        <div class="progress-status"></div>
-        <div class="progress-info">
-    			<h2 class="heading-medium">Assessment process</h2>
-    			<p>Your application is currently in the process of being assessed. Once the competition submission deadline is reached, all application submitted to the competition are sent for assessment.</p>
+    <div class="submitted-panel">
+      <h2 class="heading-xlarge no-margin">Application submitted</h2>
+      <ul>
+        <li>Application number: <span th:text="${currentApplication.id}" /></li>
+        <li>
+          Your application for the competition '<span th:text="${currentCompetition.name}" />' was submitted
+          <th:block th:if="${currentApplication.submittedDate != null}">
+            on
+            <th:block th:text="${#temporals.monthName(currentApplication.submittedDate)}" />
+            <th:block th:insert="fragments/elements :: ordinal-day (date=${currentApplication.submittedDate})" />
+            at
+            <th:block th:text="${#strings.toLowerCase(#temporals.format(currentApplication.submittedDate, 'hh:mma'))}" />.
+          </th:block>
+        </li>
+      </ul>
+      <ul class="panel-links">
+        <li><a th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}">View application</a></li>
+        <li><a th:href="@{/application/{id}/print(id=${currentApplication.getId()})}">Print Application</a></li>
+      </ul>
+    </div>
 
-    			<ul class="list list-bullet">
-    				<li>Your application is currently being assessed independently by experts from both business and academia.</li>
-    				<li>Each application is assessed by up to five Assessors and against the same set of gateway and criteria questions.</li>
-    				<li>Each assesor is reqiuired to complete and submit a score-sheet with comments for each application they are assigned to assess.</li>
-    			</ul>
-    		</div>
-    	</li>
-    	<li>
-        <div class="progress-status"></div>
-        <div class="progress-info">
-    				<h2 class="heading-medium">Decision notification</h2>
-    				<p>You will be notified of our decision by
-            <strong th:if="${currentCompetition.fundersPanelDate != null}">
-              <th:block th:insert="fragments/elements :: ordinal-day (date=${currentCompetition.fundersPanelDate})" />
-              <th:block th:text="${#temporals.monthName(currentCompetition.fundersPanelDate)}" />
-              <th:block th:text="${#temporals.year(currentCompetition.fundersPanelDate)}" />
-            </strong>.
-          </p>
-<p>We will email you and your project partners to tell you our decision.</p>
-	</div>
-    	</li>
+    <h2 class="heading-large">What happens next?</h2>
+
+    <h3 class="heading-medium">Assessment process</h3>
+    <p>Once the competition submission deadline is reached your application will be sent for assessment. This is subject to eligibility. The assessment process follows these steps:</p>
+    <ul class="list list-bullet">
+      <li>eligible applications will be assessed independently by expert assessors</li>
+      <li>each application is assessed by up to 5 assessors and against the same set criteria</li>
+      <li>the assessor will score each question and provide feedback to justify those scores</li>
+      <li>a panel process is held to moderate and ratify the outcome of the decision</li>
     </ul>
-  <hr />
 
+    <h3 class="heading-medium">Decision notification</h3>
+    <p>You and your project partners will be emailed notification of the decision by
+      <strong th:if="${currentCompetition.fundersPanelDate != null}">
+        <th:block th:insert="fragments/elements :: ordinal-day (date=${currentCompetition.fundersPanelDate})" />
+        <th:block th:text="${#temporals.monthName(currentCompetition.fundersPanelDate)}" />
+        <th:block th:text="${#temporals.year(currentCompetition.fundersPanelDate)}" /></strong>.
+    </p>
 
+    <div class="grid-row">
+      <div class="column-half">
+        <h3 class="heading-medium">If your application is successful</h3>
+        <p>If you are successful with this application you
+          will be asked to set up your project. The Project Manager and finance contacts for each organisation in your project will be asked for further information including:</p>
+        <ul class="list list-bullet">
+          <li>project location</li>
+          <li>your organisation’s bank (BACS) details</li>
+          <li>a profile of your project spend</li>
+          <li>collaboration agreement (collaborative projects only)</li>
+          <li>exploitation plan</li>
+        </ul>
+      </div>
+      <div class="column-half">
+        <h3 class="heading-medium">If your application is unsuccessful</h3>
+        <p>If you are unsuccessful with your application, you will be able to view the feedback from the assessors.</p>
+        <p>Sometimes your application will have scored well and will receive positive comments from the assessors. The average score however, will not be above the funding threshold for the competition.</p>
+      </div>
+    </div>
 
-    <ul class="grid-row ifs-progress-list">
-    	<li class="column-half successful">
-          <div class="progress-status"></div>
-          <div class="progress-info">
-            <h2 class="heading-medium">If your application is successful</h2>
-						<p>If you are successful with this application you will need to provide a series of documents before the project can begin, including</p>
-						<ul class="list list-bullet">
-							<li>a collaboration agreement</li>
-							<li>financial forecasts</li>
-							<li>your bank (BACS) details</li>
-							<li>a detailed project plan</li>
-							<li>milestone and risk register</li>
-							<li>an exploitation plan</li>
-						</ul>
-    		</div>
-    	</li>
-    	<li class="column-half unsuccessful">
-          <div class="progress-status"></div>
-          <div class="progress-info">
-            <h2 class="heading-medium">If your application is unsuccessful</h2>
-						<p>If you are unsuccessful with your application, you will be able to see feedback from the assessors.</p>
-						<p>Sometimes your application will have scored well and will receive positive comments from the assessors, but not highly enough to be above the funding threshold for the competition.</p>
-    		</div>
-    	</li>
-    </ul>
+    <h3 class="heading-medium">Application feedback</h3>
+    <p>Application feedback will be provided by
+      <strong th:if="${currentCompetition.releaseFeedbackDate != null}">
+        <th:block th:insert="fragments/elements :: ordinal-day (date=${currentCompetition.releaseFeedbackDate})" />
+        <th:block th:text="${#temporals.monthName(currentCompetition.releaseFeedbackDate)}" />
+        <th:block th:text="${#temporals.year(currentCompetition.releaseFeedbackDate)}" /></strong>.
+      <br />We will email you when this becomes available.
+    </p>
+
+    <div class="extra-margin">
+      <a href="/applicant/dashboard" class="button">Return to dashboard</a>
+    </div>
 
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>

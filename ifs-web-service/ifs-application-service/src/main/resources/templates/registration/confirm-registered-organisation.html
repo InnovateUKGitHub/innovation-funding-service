@@ -8,7 +8,7 @@
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main id="content">
+<main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
 
     <h1 class="heading-large">Confirm your organisation</h1>
@@ -24,7 +24,7 @@
             <p th:text="${model.organisationType}"></p>
             <h3 class="heading-small">Registered name</h3>
             <p th:text="${model.registrationName}"></p>
-            <th:block th:if="${model.registrationNumberNotEmpty}">
+            <th:block th:if="${model.registrationNumberNotEmptyAndNotResearch}">
                 <h3 class="heading-small">Registration number</h3>
                 <p th:text="${model.registrationNumber}"></p>
             </th:block>

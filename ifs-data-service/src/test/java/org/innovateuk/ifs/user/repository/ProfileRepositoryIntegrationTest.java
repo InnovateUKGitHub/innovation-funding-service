@@ -25,7 +25,7 @@ public class ProfileRepositoryIntegrationTest extends BaseRepositoryIntegrationT
     public void saveWithInnovationArea() {
         loginPaulPlum();
 
-        InnovationArea innovationArea = innovationAreaRepository.findByName("Emerging Technology");
+        InnovationArea innovationArea = innovationAreaRepository.findByName("Emerging technology");
         Profile profile = newProfile().build();
         Profile savedProfile = repository.save(profile);
         savedProfile.addInnovationArea(innovationArea);

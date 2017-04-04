@@ -10,10 +10,13 @@ import org.innovateuk.ifs.project.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
-import org.innovateuk.ifs.project.finance.domain.SpendProfile;
-import org.innovateuk.ifs.project.finance.repository.SpendProfileRepository;
-import org.innovateuk.ifs.project.finance.transactional.FinanceCheckService;
-import org.innovateuk.ifs.project.finance.workflow.financechecks.configuration.FinanceCheckWorkflowHandler;
+import org.innovateuk.ifs.project.finance.resource.EligibilityState;
+import org.innovateuk.ifs.project.finance.resource.ViabilityState;
+import org.innovateuk.ifs.project.financecheck.domain.SpendProfile;
+import org.innovateuk.ifs.project.financecheck.repository.SpendProfileRepository;
+import org.innovateuk.ifs.project.financecheck.service.FinanceCheckService;
+import org.innovateuk.ifs.project.financecheck.workflow.financechecks.configuration.EligibilityWorkflowHandler;
+import org.innovateuk.ifs.project.financecheck.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
 import org.innovateuk.ifs.project.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.mapper.ProjectUserMapper;
@@ -80,7 +83,10 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
     private GOLWorkflowHandler golWorkflowHandler;
 
     @Autowired
-    private FinanceCheckWorkflowHandler financeCheckWorkflowHandler;
+    private ViabilityWorkflowHandler viabilityWorkflowHandler;
+
+    @Autowired
+    private EligibilityWorkflowHandler eligibilityWorkflowHandler;
 
     @Autowired
     protected PartnerOrganisationRepository partnerOrganisationRepository;
@@ -148,21 +154,16 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
         }
     }
 
-    protected ProjectActivityStates createFinanceCheckStatus(final Project project, final Organisation organisation, ProjectActivityStates bankDetailsStatus, boolean isAwaitingResponse) {
-
+    protected ProjectActivityStates createFinanceCheckStatus(final Project project, final Organisation organisation, boolean isAwaitingResponse) {
         PartnerOrganisation partnerOrg = partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(project.getId(), organisation.getId());
-
-            if (financeChecksAndBankDetailsComplete(bankDetailsStatus, partnerOrg)) {
+            if (EligibilityState.APPROVED.equals(eligibilityWorkflowHandler.getState(partnerOrg)) &&
+                    asList(ViabilityState.APPROVED, ViabilityState.NOT_APPLICABLE).contains(viabilityWorkflowHandler.getState(partnerOrg))) {
                 return COMPLETE;
             }
             if (isAwaitingResponse) {
                 return ACTION_REQUIRED;
             }
             return PENDING;
-    }
-
-    private boolean financeChecksAndBankDetailsComplete(ProjectActivityStates bankDetailsStatus, PartnerOrganisation partnerOrg) {
-        return financeCheckWorkflowHandler.isApproved(partnerOrg) && asList(COMPLETE, NOT_REQUIRED).contains(bankDetailsStatus);
     }
 
     protected ProjectActivityStates createLeadSpendProfileStatus(final Project project, final ProjectActivityStates spendProfileStatus, final Optional<SpendProfile> spendProfile) {

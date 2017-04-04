@@ -19,7 +19,6 @@ import org.innovateuk.ifs.invite.domain.ProjectInvite;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
-import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
@@ -29,9 +28,11 @@ import org.innovateuk.ifs.project.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
-import org.innovateuk.ifs.project.finance.domain.CostCategoryType;
-import org.innovateuk.ifs.project.finance.domain.SpendProfile;
-import org.innovateuk.ifs.project.finance.transactional.CostCategoryTypeStrategy;
+import org.innovateuk.ifs.project.finance.resource.EligibilityState;
+import org.innovateuk.ifs.project.finance.resource.ViabilityState;
+import org.innovateuk.ifs.project.financecheck.domain.CostCategoryType;
+import org.innovateuk.ifs.project.financecheck.domain.SpendProfile;
+import org.innovateuk.ifs.project.financecheck.transactional.CostCategoryTypeStrategy;
 import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.user.builder.UserBuilder;
@@ -42,6 +43,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.File;
 import java.io.InputStream;
@@ -98,6 +100,7 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
@@ -109,6 +112,9 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
     @Mock
     private FinanceChecksGenerator financeChecksGeneratorMock;
+
+    @Mock
+    private EmailService projectEmailService;
 
     private Long projectId = 123L;
     private Long applicationId = 456L;
@@ -133,6 +139,8 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     private MonitoringOfficerResource monitoringOfficerResource;
     private BankDetails bankDetails;
     private SpendProfile spendProfile;
+
+    private static final String webBaseUrl = "https://ifs-local-dev/dashboard";
 
     @Before
     public void setUp() {
@@ -197,6 +205,8 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         u = newUser().
                 withEmailAddress("a@b.com").
+                withFirstName("A").
+                withLastName("B").
                 build();
 
         pu = newProjectUser().
@@ -634,6 +644,8 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 .build();
 
 
+        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newInvite().withEmailAddress("a@b.com").withName("A B").build());
+
         when(projectRepositoryMock.findOne(projectId)).thenThrow(new IllegalArgumentException());
 
         ServiceResult<Void> result = null;
@@ -646,7 +658,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
             assertTrue(e instanceof IllegalArgumentException);
 
             assertNull(result);
-            verify(notificationServiceMock, never()).sendNotification(any(), any());
+            verify(projectEmailService, never()).sendEmail(any(), any(), any());
 
             // This exception flow is the only expected flow, so return from here and assertFalse if no exception
             return;
@@ -676,10 +688,16 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
 
-        when(notificationServiceMock.sendNotification(any(), any())).
+        NotificationTarget to = new ExternalUserNotificationTarget("A B", "a@b.com");
+        Map<String, Object> globalArgs = new HashMap<>();
+        globalArgs.put("projectName", "Project 1");
+        globalArgs.put("leadOrganisation", organisation.getName());
+        globalArgs.put("inviteOrganisationName", "Invite Organisation 1");
+        globalArgs.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + inviteResource.getHash());
+        when(projectEmailService.sendEmail(singletonList(to), globalArgs, ProjectServiceImpl.Notifications.INVITE_PROJECT_MANAGER)).
                 thenReturn(serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE)));
 
-        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newInvite().build());
+        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newInvite().withEmailAddress("a@b.com").withName("A B").build());
 
         ServiceResult<Void> result = service.inviteProjectManager(projectId, inviteResource);
 
@@ -707,11 +725,15 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
 
-        when(notificationServiceMock.sendNotification(any(), any())).thenReturn(serviceSuccess());
+        NotificationTarget to = new ExternalUserNotificationTarget("A B", "a@b.com");
+        Map<String, Object> globalArgs = new HashMap<>();
+        globalArgs.put("projectName", "Project 1");
+        globalArgs.put("leadOrganisation", organisation.getName());
+        globalArgs.put("inviteOrganisationName", "Invite Organisation 1");
+        globalArgs.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + inviteResource.getHash());
+        when(projectEmailService.sendEmail(singletonList(to), globalArgs, ProjectServiceImpl.Notifications.INVITE_PROJECT_MANAGER)).thenReturn(serviceSuccess());
 
-        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newInvite().build());
-
-        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newInvite().build());
+        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newInvite().withEmailAddress("a@b.com").withName("A B").build());
 
         ServiceResult<Void> result = service.inviteProjectManager(projectId, inviteResource);
 
@@ -736,11 +758,18 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 .withApplication(application)
                 .build();
 
+        NotificationTarget to = new ExternalUserNotificationTarget("A B", "a@b.com");
+
         when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
 
-        when(notificationServiceMock.sendNotification(any(), any())).thenReturn(serviceSuccess());
+        Map<String, Object> globalArgs = new HashMap<>();
+        globalArgs.put("projectName", "Project 1");
+        globalArgs.put("leadOrganisation", organisation.getName());
+        globalArgs.put("inviteOrganisationName", "Invite Organisation 1");
+        globalArgs.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + inviteResource.getHash());
+        when(projectEmailService.sendEmail(singletonList(to), globalArgs, ProjectServiceImpl.Notifications.INVITE_FINANCE_CONTACT)).thenReturn(serviceSuccess());
 
-        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newInvite().build());
+        when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newInvite().withName("A B").withEmailAddress("a@b.com").build());
 
         ServiceResult<Void> result = service.inviteFinanceContact(projectId, inviteResource);
 
@@ -1388,7 +1417,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
     @Test
     public void testInviteProjectFinanceUser(){
-        InviteProjectResource invite = newInviteProjectResource().build();
+        InviteProjectResource invite = newInviteProjectResource().withInviteOrganisationName("Invite Organisation 1").build();
         ProcessRole[] roles = newProcessRole()
                 .withOrganisationId(o.getId())
                 .withRole(LEADAPPLICANT)
@@ -1396,19 +1425,24 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 .toArray(new ProcessRole[0]);
         Application a = newApplication().withProcessRoles(roles).build();
 
-        Project project = newProject().withId(projectId).withApplication(a).build();
+        Project project = newProject().withId(projectId).withName("Project 1").withApplication(a).build();
+
+        NotificationTarget to = new ExternalUserNotificationTarget("A B", "a@b.com");
 
         when(organisationRepositoryMock.findOne(o.getId())).thenReturn(o);
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
-        when(notificationServiceMock.sendNotification(any(), eq(EMAIL))).thenReturn(serviceSuccess());
-        when(inviteProjectMapperMock.mapToDomain(invite)).thenReturn(newInvite().build());
+        Map<String, Object> globalArgs = new HashMap<>();
+        globalArgs.put("projectName", "Project 1");
+        globalArgs.put("leadOrganisation", organisation.getName());
+        globalArgs.put("inviteOrganisationName", "Invite Organisation 1");
+        globalArgs.put("inviteUrl", webBaseUrl + "/project-setup/accept-invite/" + invite.getHash());
+        when(projectEmailService.sendEmail(singletonList(to), globalArgs, ProjectServiceImpl.Notifications.INVITE_FINANCE_CONTACT)).thenReturn(serviceSuccess());
+        when(inviteProjectMapperMock.mapToDomain(invite)).thenReturn(newInvite().withEmailAddress("a@b.com").withName("A B").build());
 
         ServiceResult<Void> success = service.inviteFinanceContact(project.getId(), invite);
 
         assertTrue(success.isSuccess());
     }
-
-
 
     @Test
     public void testAddPartnerOrganisationNotOnProject(){
@@ -1677,7 +1711,14 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).withGrantOfferLetter(golFile).build();
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(p);
-        when(notificationServiceMock.sendNotification(any(), eq(EMAIL))).thenReturn(serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE)));
+
+        NotificationTarget to = new ExternalUserNotificationTarget("A B", "a@b.com");
+
+        Map<String, Object> expectedNotificationArguments = asMap(
+                "dashboardUrl", "https://ifs-local-dev/dashboard"
+        );
+
+        when(projectEmailService.sendEmail(singletonList(to), expectedNotificationArguments, ProjectServiceImpl.Notifications.GRANT_OFFER_LETTER_PROJECT_MANAGER)).thenReturn(serviceFailure(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE));
 
         ServiceResult<Void> result = service.sendGrantOfferLetter(projectId);
 
@@ -1701,7 +1742,14 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).withGrantOfferLetter(golFile).build();
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(p);
-        when(notificationServiceMock.sendNotification(any(), eq(EMAIL))).thenReturn(serviceSuccess());
+
+        NotificationTarget to = new ExternalUserNotificationTarget("A B", "a@b.com");
+
+        Map<String, Object> expectedNotificationArguments = asMap(
+                "dashboardUrl", "https://ifs-local-dev/dashboard"
+        );
+
+        when(projectEmailService.sendEmail(singletonList(to), expectedNotificationArguments, ProjectServiceImpl.Notifications.GRANT_OFFER_LETTER_PROJECT_MANAGER)).thenReturn(serviceSuccess());
 
         User user = UserBuilder.newUser().build();
         setLoggedInUser(newUserResource().withId(user.getId()).build());
@@ -1721,9 +1769,15 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER).withUser(u).withOrganisation(o).withInvite(newInvite().build()).build(1);
         Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).withGrantOfferLetter(golFile).build();
 
-
         when(projectRepositoryMock.findOne(projectId)).thenReturn(p);
-        when(notificationServiceMock.sendNotification(any(), eq(EMAIL))).thenReturn(serviceSuccess());
+
+        NotificationTarget to = new ExternalUserNotificationTarget("A B", "a@b.com");
+
+        Map<String, Object> expectedNotificationArguments = asMap(
+                "dashboardUrl", "https://ifs-local-dev/dashboard"
+        );
+
+        when(projectEmailService.sendEmail(singletonList(to), expectedNotificationArguments, ProjectServiceImpl.Notifications.GRANT_OFFER_LETTER_PROJECT_MANAGER)).thenReturn(serviceSuccess());
 
         User user = UserBuilder.newUser().build();
         setLoggedInUser(newUserResource().withId(user.getId()).build());
@@ -1811,7 +1865,8 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(po.get(0));
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(bankDetails);
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.ofNullable(spendProfile));
-        when(financeCheckWorkflowHandlerMock.isApproved(po.get(0))).thenReturn(Boolean.TRUE);
+        when(eligibilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(EligibilityState.APPROVED);
+        when(viabilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(ViabilityState.APPROVED);
         when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(Boolean.FALSE));
         when(golWorkflowHandlerMock.isAlreadySent(p)).thenReturn(Boolean.TRUE);
 
@@ -1840,7 +1895,8 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(po.get(0));
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(bankDetails);
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.ofNullable(spendProfile));
-        when(financeCheckWorkflowHandlerMock.isApproved(po.get(0))).thenReturn(Boolean.TRUE);
+        when(eligibilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(EligibilityState.APPROVED);
+        when(viabilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(ViabilityState.APPROVED);
         when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(Boolean.FALSE));
         when(golWorkflowHandlerMock.isAlreadySent(p)).thenReturn(Boolean.FALSE);
 
@@ -1887,7 +1943,8 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), nonLeadOrg.getId())).thenReturn(po.get(0));
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(anyLong(), anyLong())).thenReturn(bankDetails);
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), nonLeadOrg.getId())).thenReturn(Optional.ofNullable(spendProfile));
-        when(financeCheckWorkflowHandlerMock.isApproved(po.get(0))).thenReturn(Boolean.TRUE);
+        when(eligibilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(EligibilityState.APPROVED);
+        when(viabilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(ViabilityState.APPROVED);
         when(golWorkflowHandlerMock.isAlreadySent(p)).thenReturn(Boolean.TRUE);
 
         // Same flow but when GOL is in Ready To Approve state.
@@ -1924,7 +1981,8 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(po.get(0));
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(bankDetails);
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.ofNullable(spendProfile));
-        when(financeCheckWorkflowHandlerMock.isApproved(po.get(0))).thenReturn(Boolean.TRUE);
+        when(eligibilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(EligibilityState.APPROVED);
+        when(viabilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(ViabilityState.APPROVED);
         when(golWorkflowHandlerMock.isAlreadySent(p)).thenReturn(Boolean.TRUE);
         when(golWorkflowHandlerMock.isReadyToApprove(p)).thenReturn(Boolean.TRUE);
         when(golWorkflowHandlerMock.isApproved(p)).thenReturn(Boolean.TRUE);
@@ -1953,15 +2011,14 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER).withUser(u).withOrganisation(o).withInvite(newInvite().build()).build(1);
         Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).build();
 
-        NotificationTarget target = new ExternalUserNotificationTarget(u.getName(), u.getEmail());
-        Notification notification = new Notification(systemNotificationSourceMock, singletonList(target), ProjectServiceImpl.Notifications.PROJECT_LIVE, emptyMap());
+        NotificationTarget to = new ExternalUserNotificationTarget("A B", "a@b.com");
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(p);
         when(golWorkflowHandlerMock.isReadyToApprove(p)).thenReturn(Boolean.TRUE);
         when(userRepositoryMock.findOne(u.getId())).thenReturn(u);
         when(golWorkflowHandlerMock.grantOfferLetterApproved(p, u)).thenReturn(Boolean.TRUE);
         when(projectWorkflowHandlerMock.grantOfferLetterApproved(p, p.getProjectUsersWithRole(PROJECT_MANAGER).get(0))).thenReturn(Boolean.TRUE);
-        when(notificationServiceMock.sendNotification(notification, EMAIL)).thenReturn(serviceSuccess());
+        when(projectEmailService.sendEmail(singletonList(to), emptyMap(), ProjectServiceImpl.Notifications.PROJECT_LIVE)).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(projectId, ApprovalType.APPROVED);
 
@@ -1969,7 +2026,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         verify(golWorkflowHandlerMock).isReadyToApprove(p);
         verify(golWorkflowHandlerMock).grantOfferLetterApproved(p, u);
         verify(projectWorkflowHandlerMock).grantOfferLetterApproved(p, p.getProjectUsersWithRole(PROJECT_MANAGER).get(0));
-        verify(notificationServiceMock).sendNotification(notification, EMAIL);
+        verify(projectEmailService).sendEmail(singletonList(to), emptyMap(), ProjectServiceImpl.Notifications.PROJECT_LIVE);
 
         assertTrue(result.isSuccess());
     }
@@ -1984,15 +2041,14 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         pu.addAll(fc);
         Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).build();
 
-        NotificationTarget target = new ExternalUserNotificationTarget(u.getName(), u.getEmail());
-        Notification notification = new Notification(systemNotificationSourceMock, singletonList(target), ProjectServiceImpl.Notifications.PROJECT_LIVE, emptyMap());
+        NotificationTarget to = new ExternalUserNotificationTarget("A B", "a@b.com");
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(p);
         when(golWorkflowHandlerMock.isReadyToApprove(p)).thenReturn(Boolean.TRUE);
         when(userRepositoryMock.findOne(u.getId())).thenReturn(u);
         when(golWorkflowHandlerMock.grantOfferLetterApproved(p, u)).thenReturn(Boolean.TRUE);
         when(projectWorkflowHandlerMock.grantOfferLetterApproved(p, p.getProjectUsersWithRole(PROJECT_MANAGER).get(0))).thenReturn(Boolean.TRUE);
-        when(notificationServiceMock.sendNotification(notification, EMAIL)).thenReturn(serviceSuccess());
+        when(projectEmailService.sendEmail(singletonList(to), emptyMap(), ProjectServiceImpl.Notifications.PROJECT_LIVE)).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.approveOrRejectSignedGrantOfferLetter(projectId, ApprovalType.APPROVED);
 
@@ -2000,7 +2056,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         verify(golWorkflowHandlerMock).isReadyToApprove(p);
         verify(golWorkflowHandlerMock).grantOfferLetterApproved(p, u);
         verify(projectWorkflowHandlerMock).grantOfferLetterApproved(p, p.getProjectUsersWithRole(PROJECT_MANAGER).get(0));
-        verify(notificationServiceMock).sendNotification(notification, EMAIL);
+        when(projectEmailService.sendEmail(singletonList(to), emptyMap(), ProjectServiceImpl.Notifications.PROJECT_LIVE)).thenReturn(serviceSuccess());
 
         assertTrue(result.isSuccess());
     }
@@ -2230,7 +2286,71 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(po.get(0));
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(bankDetails);
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.ofNullable(spendProfile));
-        when(financeCheckWorkflowHandlerMock.isApproved(po.get(0))).thenReturn(Boolean.TRUE);
+        when(eligibilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(EligibilityState.APPROVED);
+        when(viabilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(ViabilityState.APPROVED);
+        when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(Boolean.FALSE));
+
+        ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
+
+        assertTrue(result.isSuccess() && ACTION_REQUIRED.equals(result.getSuccessObject().getLeadPartnerStatus().getSpendProfileStatus()));
+    }
+
+    @Test
+    public void testSpendProfileRequiresEligibility() {
+
+        p.setSpendProfileSubmittedDate(null);
+
+        when(projectRepositoryMock.findOne(p.getId())).thenReturn(p);
+        when(projectUserRepositoryMock.findByProjectId(p.getId())).thenReturn(pu);
+        when(projectUserMapperMock.mapToResource(pu.get(0))).thenReturn(puResource.get(0));
+        when(organisationRepositoryMock.findOne(o.getId())).thenReturn(o);
+        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(po.get(0));
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(bankDetails);
+        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.ofNullable(spendProfile));
+        when(eligibilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(EligibilityState.REVIEW);
+        when(viabilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(ViabilityState.APPROVED);
+        when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(Boolean.FALSE));
+
+        ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
+
+        assertTrue(result.isSuccess() && NOT_STARTED.equals(result.getSuccessObject().getLeadPartnerStatus().getSpendProfileStatus()));
+    }
+
+    @Test
+    public void testSpendProfileRequiresViability() {
+
+        p.setSpendProfileSubmittedDate(null);
+
+        when(projectRepositoryMock.findOne(p.getId())).thenReturn(p);
+        when(projectUserRepositoryMock.findByProjectId(p.getId())).thenReturn(pu);
+        when(projectUserMapperMock.mapToResource(pu.get(0))).thenReturn(puResource.get(0));
+        when(organisationRepositoryMock.findOne(o.getId())).thenReturn(o);
+        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(po.get(0));
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(bankDetails);
+        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.ofNullable(spendProfile));
+        when(eligibilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(EligibilityState.APPROVED);
+        when(viabilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(ViabilityState.REVIEW);
+        when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(Boolean.FALSE));
+
+        ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
+
+        assertTrue(result.isSuccess() && NOT_STARTED.equals(result.getSuccessObject().getLeadPartnerStatus().getSpendProfileStatus()));
+    }
+
+    @Test
+    public void testSpendProfileNotSubmittedViabilityNotApplicable() {
+
+        p.setSpendProfileSubmittedDate(null);
+
+        when(projectRepositoryMock.findOne(p.getId())).thenReturn(p);
+        when(projectUserRepositoryMock.findByProjectId(p.getId())).thenReturn(pu);
+        when(projectUserMapperMock.mapToResource(pu.get(0))).thenReturn(puResource.get(0));
+        when(organisationRepositoryMock.findOne(o.getId())).thenReturn(o);
+        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(po.get(0));
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(bankDetails);
+        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.ofNullable(spendProfile));
+        when(eligibilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(EligibilityState.APPROVED);
+        when(viabilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(ViabilityState.NOT_APPLICABLE);
         when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(Boolean.FALSE));
 
         ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
@@ -2250,7 +2370,8 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(po.get(0));
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(bankDetails);
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.ofNullable(spendProfile));
-        when(financeCheckWorkflowHandlerMock.isApproved(po.get(0))).thenReturn(Boolean.TRUE);
+        when(eligibilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(EligibilityState.APPROVED);
+        when(viabilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(ViabilityState.APPROVED);
         when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(Boolean.FALSE));
 
         ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
@@ -2268,7 +2389,8 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(po.get(0));
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(bankDetails);
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.ofNullable(spendProfile));
-        when(financeCheckWorkflowHandlerMock.isApproved(po.get(0))).thenReturn(Boolean.TRUE);
+        when(eligibilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(EligibilityState.APPROVED);
+        when(viabilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(ViabilityState.APPROVED);
         when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(Boolean.FALSE));
 
         ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
@@ -2288,7 +2410,8 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(po.get(0));
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(bankDetails);
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.ofNullable(spendProfile));
-        when(financeCheckWorkflowHandlerMock.isApproved(po.get(0))).thenReturn(Boolean.TRUE);
+        when(eligibilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(EligibilityState.APPROVED);
+        when(viabilityWorkflowHandlerMock.getState(po.get(0))).thenReturn(ViabilityState.APPROVED);
         when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(Boolean.FALSE));
 
         ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
@@ -2315,6 +2438,9 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
     @Override
     protected ProjectService supplyServiceUnderTest() {
-        return new ProjectServiceImpl();
+
+        ProjectServiceImpl projectService =  new ProjectServiceImpl();
+        ReflectionTestUtils.setField(projectService, "webBaseUrl", webBaseUrl);
+        return projectService;
     }
 }

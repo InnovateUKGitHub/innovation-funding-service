@@ -10,8 +10,8 @@ import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
-import org.innovateuk.ifs.project.finance.domain.SpendProfile;
-import org.innovateuk.ifs.project.finance.transactional.ProjectFinanceService;
+import org.innovateuk.ifs.project.financecheck.domain.SpendProfile;
+import org.innovateuk.ifs.project.financecheck.transactional.SpendProfileService;
 import org.innovateuk.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
@@ -51,7 +51,7 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
     private ProjectUsersHelper projectUsersHelper;
 
     @Autowired
-    private ProjectFinanceService projectFinanceService;
+    private SpendProfileService spendProfileService;
 
     @Autowired
     private ProjectDetailsWorkflowHandler projectDetailsWorkflowHandler;
@@ -181,7 +181,7 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
 
     private ProjectActivityStates getSpendProfileStatus(Project project, ProjectActivityStates financeCheckStatus) {
 
-        ApprovalType approvalType = projectFinanceService.getSpendProfileStatusByProjectId(project.getId()).getSuccessObject();
+        ApprovalType approvalType = spendProfileService.getSpendProfileStatusByProjectId(project.getId()).getSuccessObject();
         switch (approvalType) {
             case APPROVED:
                 return COMPLETE;
@@ -234,7 +234,7 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
 
     private ProjectActivityStates getGrantOfferLetterStatus(Project project) {
 
-        ApprovalType spendProfileApprovalType = projectFinanceService.getSpendProfileStatusByProjectId(project.getId()).getSuccessObject();
+        ApprovalType spendProfileApprovalType = spendProfileService.getSpendProfileStatusByProjectId(project.getId()).getSuccessObject();
 
         if (project.getOfferSubmittedDate() == null && ApprovalType.APPROVED.equals(spendProfileApprovalType)) {
             return PENDING;

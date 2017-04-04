@@ -62,15 +62,15 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
         String skillAreas = "skill1 skill2 skill3";
 
         List<InnovationAreaResource> innovationAreaResources = CollectionFunctions.combineLists(
-                setUpInnovationAreasForSector("Emerging and enabling technologies",
+                setUpInnovationAreasForSector("Emerging and enabling",
                         "Data", "Cyber Security"),
                 setUpInnovationAreasForSector("Health and life sciences",
-                        "Bioscience", "Enhanced Food Quality"));
+                        "Biosciences", "Independent living and wellbeing"));
         UserResource userResource = setUpProfileSkills(businessType, skillAreas, innovationAreaResources);
 
         Map<String, List<String>> expectedInnovationAreas = new LinkedHashMap<>();
-        expectedInnovationAreas.put("Emerging and enabling technologies", asList("Data", "Cyber Security"));
-        expectedInnovationAreas.put("Health and life sciences", asList("Bioscience", "Enhanced Food Quality"));
+        expectedInnovationAreas.put("Emerging and enabling", asList("Data", "Cyber Security"));
+        expectedInnovationAreas.put("Health and life sciences", asList("Biosciences", "Independent living and wellbeing"));
 
         AssessorProfileSkillsViewModel expectedModel = new AssessorProfileSkillsViewModel(expectedInnovationAreas,
                 skillAreas, businessType);
@@ -88,11 +88,11 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
         BusinessType businessType = BUSINESS;
         String skillAreas = "skill1 skill2 skill3";
 
-        List<InnovationAreaResource> innovationAreaResources = setUpInnovationAreasForSector("Emerging and enabling technologies", "Data", "Cyber Security");
+        List<InnovationAreaResource> innovationAreaResources = setUpInnovationAreasForSector("Emerging and enabling", "Data", "Cyber Security");
         UserResource userResource = setUpProfileSkills(businessType, skillAreas, innovationAreaResources);
 
         Map<String, List<String>> expectedInnovationAreas = new LinkedHashMap<>();
-        expectedInnovationAreas.put("Emerging and enabling technologies", asList("Data", "Cyber Security"));
+        expectedInnovationAreas.put("Emerging and enabling", asList("Data", "Cyber Security"));
 
         AssessorProfileEditSkillsViewModel expectedModel = new AssessorProfileEditSkillsViewModel(expectedInnovationAreas);
 
@@ -131,11 +131,11 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
         BusinessType businessType = BUSINESS;
         String skillAreas = RandomStringUtils.random(5001);
 
-        List<InnovationAreaResource> innovationAreaResources = setUpInnovationAreasForSector("Emerging and enabling technologies", "Data", "Cyber Security");
+        List<InnovationAreaResource> innovationAreaResources = setUpInnovationAreasForSector("Emerging and enabling", "Data", "Cyber Security");
         UserResource userResource = setUpProfileSkills(ACADEMIC, "skill1 skill2 skill3", innovationAreaResources);
 
         Map<String, List<String>> expectedInnovationAreas = new LinkedHashMap<>();
-        expectedInnovationAreas.put("Emerging and enabling technologies", asList("Data", "Cyber Security"));
+        expectedInnovationAreas.put("Emerging and enabling", asList("Data", "Cyber Security"));
 
         AssessorProfileEditSkillsViewModel expectedModel = new AssessorProfileEditSkillsViewModel(expectedInnovationAreas);
 
@@ -172,11 +172,11 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
         BusinessType businessType = BUSINESS;
         String skillAreas = String.join(" ", nCopies(101, "skill"));
 
-        List<InnovationAreaResource> innovationAreaResources = setUpInnovationAreasForSector("Emerging and enabling technologies", "Data", "Cyber Security");
+        List<InnovationAreaResource> innovationAreaResources = setUpInnovationAreasForSector("Emerging and enabling", "Data", "Cyber Security");
         UserResource userResource = setUpProfileSkills(ACADEMIC, "skill1 skill2 skill3", innovationAreaResources);
 
         Map<String, List<String>> expectedInnovationAreas = new LinkedHashMap<>();
-        expectedInnovationAreas.put("Emerging and enabling technologies", asList("Data", "Cyber Security"));
+        expectedInnovationAreas.put("Emerging and enabling", asList("Data", "Cyber Security"));
 
         AssessorProfileEditSkillsViewModel expectedModel = new AssessorProfileEditSkillsViewModel(expectedInnovationAreas);
 
@@ -212,11 +212,11 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
     public void submitSkills_incomplete() throws Exception {
         String skillAreas = String.join(" ", nCopies(100, "skill"));
 
-        List<InnovationAreaResource> innovationAreaResources = setUpInnovationAreasForSector("Emerging and enabling technologies", "Data", "Cyber Security");
+        List<InnovationAreaResource> innovationAreaResources = setUpInnovationAreasForSector("Emerging and enabling", "Data", "Cyber Security");
         UserResource userResource = setUpProfileSkills(ACADEMIC, "skill1 skill2 skill3", innovationAreaResources);
 
         Map<String, List<String>> expectedInnovationAreas = new LinkedHashMap<>();
-        expectedInnovationAreas.put("Emerging and enabling technologies", asList("Data", "Cyber Security"));
+        expectedInnovationAreas.put("Emerging and enabling", asList("Data", "Cyber Security"));
 
         AssessorProfileEditSkillsViewModel expectedModel = new AssessorProfileEditSkillsViewModel(expectedInnovationAreas);
 
