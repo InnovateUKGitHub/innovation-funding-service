@@ -54,7 +54,7 @@ include::{snippets}/project/update-start-date-but-date-in-past/http-response.ado
 include::{snippets}/project/update-start-date-but-date-not-first-of-month/http-response.adoc[]
 
 
-=== Set project manager
+=== Set Project Manager
 ==== Success case
 
 ===== Request
@@ -68,7 +68,7 @@ include::{snippets}/project/set-project-manager/http-response.adoc[]
 include::{snippets}/project/set-project-manager/curl-request.adoc[]
 
 ==== Failure cases
-===== Invalid project manager specified
+===== Invalid Project Manager specified
 include::{snippets}/project/set-project-manager-but-invalid-project-manager/http-request.adoc[]
 
 
