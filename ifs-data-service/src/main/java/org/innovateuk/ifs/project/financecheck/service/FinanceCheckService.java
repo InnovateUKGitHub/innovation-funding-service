@@ -3,12 +3,11 @@ package org.innovateuk.ifs.project.financecheck.service;
 import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.project.financecheck.domain.FinanceCheck;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckOverviewResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
-import org.innovateuk.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
+import org.innovateuk.ifs.project.financecheck.domain.FinanceCheck;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,11 +20,6 @@ public interface FinanceCheckService {
     @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "VIEW", securedType = FinanceCheck.class, description = "Project finance user should be able to view any finance check")
     ServiceResult<FinanceCheckResource> getByProjectAndOrganisation(ProjectOrganisationCompositeId key);
-
-    // TODO: Open this up to partners for updating status on project setup status page
-    @PreAuthorize("hasAuthority('project_finance')")
-    @SecuredBySpring(value = "VIEW", securedType = FinanceCheck.class, description = "Project finance users have the ability to view the current status of Finance Checks approvals" )
-    ServiceResult<FinanceCheckProcessResource> getFinanceCheckApprovalStatus(Long projectId, Long organisationId);
 
     @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "VIEW", securedType = FinanceCheckSummaryResource.class, description = "Project finance users have the ability to view a summary of finance checks status for all partners" )
