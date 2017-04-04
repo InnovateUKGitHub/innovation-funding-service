@@ -182,6 +182,10 @@ include::assessment.adoc[]
 == User
 include::user.adoc[]
 
+[[organisation]]
+== Organisation
+include::organisation.adoc[]
+
 [[forminputresponsefileupload]]
 == FormInputResponse File Upload
 include::forminputresponsefileupload.adoc[]
