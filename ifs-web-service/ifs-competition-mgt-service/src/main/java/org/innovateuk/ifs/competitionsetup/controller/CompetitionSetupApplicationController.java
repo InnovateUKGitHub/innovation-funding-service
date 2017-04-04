@@ -259,7 +259,6 @@ public class CompetitionSetupApplicationController {
         return questionView;
     }
 
-
     private void setupQuestionToModel(final CompetitionResource competition, final Optional<Long> questionId, Model model, CompetitionSetupSubsection subsection, boolean isEditable, CompetitionSetupForm form) {
         CompetitionSetupSection section = APPLICATION_FORM;
 
