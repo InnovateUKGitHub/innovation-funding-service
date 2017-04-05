@@ -421,6 +421,12 @@ IFS.core.formValidation = (function () {
       var d = dateGroup.find('.day input')
       var m = dateGroup.find('.month input')
       var y = dateGroup.find('.year input')
+      var h
+      if (field.closest('tr').find('.time select').length > 0) {
+        h = dateGroup.find('.time option[data-time]:selected').attr('data-time')
+      } else {
+        h = dateGroup.find('.time [data-time]').attr('data-time')
+      }
       var addWeekDay = dateGroup.find('.js-addWeekDay')
 
       var allFields = d.add(m).add(y)
@@ -435,6 +441,11 @@ IFS.core.formValidation = (function () {
         var day = parseInt(d.val(), 10)
         var year = parseInt(y.val(), 10)
         var date = new Date(year, month - 1, day) // parse as date to check if it is a valid date
+        if (h !== undefined) {
+          date.setHours(h, 0, 0, 0)
+        } else {
+          date.setHours(0, 0, 0, 0)
+        }
 
         if ((date.getDate() === day) && (date.getMonth() + 1 === month) && (date.getFullYear() === year)) {
           valid = true
@@ -443,7 +454,7 @@ IFS.core.formValidation = (function () {
 
           allFields.attr('data-date', day + '-' + month + '-' + year)
           // adding day of week which is not really validation
-          // so could be better of somehwere else
+          // so could be better of somewhere else
           if (addWeekDay.length) {
             var days = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat']
             var weekday = days[date.getDay()]
@@ -493,9 +504,16 @@ IFS.core.formValidation = (function () {
         var futureDay = parseInt(futureDateString[0], 10)
         var futureMonth = parseInt(futureDateString[1], 10) - 1
         var futureYear = parseInt(futureDateString[2], 10)
+        var futureHour = futureDateString.length > 2 ? parseInt(futureDateString[3], 10) : false
         futureDate = new Date(futureYear, futureMonth, futureDay)
       }
-      if (futureDate.setHours(0, 0, 0, 0) <= date.setHours(0, 0, 0, 0)) {
+      if (futureHour) {
+        futureDate.setHours(futureHour, 0, 0, 0)
+      } else {
+        futureDate.setHours(0, 0, 0, 0)
+      }
+
+      if (futureDate <= date) {
         if (showMessage) { IFS.core.formValidation.setValid(allFields, futureErrorMessage) }
         return true
       } else {

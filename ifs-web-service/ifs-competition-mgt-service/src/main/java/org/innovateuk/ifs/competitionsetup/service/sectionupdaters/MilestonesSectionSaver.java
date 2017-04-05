@@ -25,6 +25,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -68,7 +69,7 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
         Map<String, MilestoneRowForm> filteredMilestoneEntries = milestoneEntries;
 
         //If competition is already set up only allow to save of future milestones.
-        if (Boolean.TRUE.equals(competition.getSetupComplete())) {
+        if (TRUE.equals(competition.getSetupComplete())) {
             List<MilestoneType> futureTypes = milestones.stream()
                     .filter(milestoneResource -> milestoneResource.getDate() == null || LocalDateTime.now().isBefore(milestoneResource.getDate()))
                     .map(milestoneResource -> milestoneResource.getType())
