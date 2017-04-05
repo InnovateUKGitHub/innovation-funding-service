@@ -416,7 +416,7 @@ Other partners can see who needs to provide Bank Details
     [Setup]    log in as a different user   &{lead_applicant_credentials}
     Given the user navigates to the page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/team-status
     Then the user should see the element    jQuery=#table-project-status tr:nth-child(3) td.status.na:nth-child(4)
-    And the user should see the element     jQuery=#table-project-status tr:nth-child(2) td:nth-child(4):contains("-")
+    And the user should see the element     jQuery=#table-project-status tr:nth-child(2) td:nth-child(4):contains("")
 
 Option to invite a finance contact
     [Documentation]    INFUND-3579
