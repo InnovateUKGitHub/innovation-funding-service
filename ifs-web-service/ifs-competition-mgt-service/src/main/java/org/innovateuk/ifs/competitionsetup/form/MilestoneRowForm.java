@@ -47,10 +47,8 @@ public class MilestoneRowForm {
             if (isTimeOption()) {
                 this.setTime(MilestoneTime.fromLocalDateTime(dateTime));
             }
-        } else {
-            if (isTimeOption()) {
-                this.setTime(MilestoneTime.TWELVE_PM);
-            }
+        } else if (isTimeOption() || isMiddayTime()) {
+            this.setTime(MilestoneTime.TWELVE_PM);
         }
     }
 
