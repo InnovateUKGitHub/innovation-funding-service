@@ -1398,9 +1398,59 @@ Project finance user can view Lead-partner's Changes-from-submitted-finances in 
     Given the user clicks the button/link       link=Eligibility
     When the user clicks the button/link        link=View changes to finances
     Then the user verifies the table heading for Changes-from-submitted-finances
-    And the revised categories are verified for Other-costs Section
+
+Project finance user can view Lead-partner's Changes-from-submitted-finances for Other-costs Section
+    [Documentation]    INFUND-4837
+    [Tags]
+    # the below figures are listed as:     RowNumber      Action      Section
+    Given the user verifies the Action and Section for Changes-from-submitted-finances      1    Change    Other costs
+    Then the revised categories are verified for Other-costs Section
+
+Project finance user can view Lead-partner's Changes-from-submitted-finances for Capital-usage Section
+    [Documentation]    INFUND-4837
+    [Tags]
+    Given the user clicks the button/link       link=Eligibility
+    When the user clicks the button/link        link=View changes to finances
+    # the below figures are listed as:     RowNumber      Action      Section
+    Then the user verifies the Action and Section for Changes-from-submitted-finances       7    Change    Capital usage
+    And the user verifies the table heading for specified Section
+    # the below figures are listed as:      RowNumber       Detail      Submitted     Updated
+    Then the revised categories are verified for specified Section       8   New or existing     Existing    New
+    And the revised categories are verified for specified Section        10  Net present value   1060    10600
+    And the revised categories are verified for specified Section        11  Residual value      600     500
+    And the revised categories are verified for specified Section        12  Utilisation     60      50
+    And the revised categories are verified for specified Section        13  Net cost    276.00      5050.00
+    # the below figures are listed as:      RowNumber       Cost
+    Then the revised cost is verified for the specified section     14      4,774
+
+Project finance user can view Lead-partner's Changes-from-submitted-finances for Overheads Section
+    [Documentation]    INFUND-4837
+    [Tags]
 
 
+Project finance user can view Lead-partner's Changes-from-submitted-finances for Materials Section
+    [Documentation]    INFUND-4837
+    [Tags]
+
+
+Project finance user can view Lead-partner's Changes-from-submitted-finances for Travel-and-subsistence Section
+    [Documentation]    INFUND-4837
+    [Tags]
+
+
+Project finance user can view Lead-partner's Changes-from-submitted-finances for Labour Section
+    [Documentation]    INFUND-4837
+    [Tags]
+
+
+Project finance user can view Lead-partner's Changes-from-submitted-finances for Subcontracting Section
+    [Documentation]    INFUND-4837
+    [Tags]
+
+
+Project finance user can view Lead-partner's Overall cost difference after Changes-from-submitted-finances
+    [Documentation]    INFUND-4837
+    [Tags]
 
 
 
@@ -1942,6 +1992,7 @@ the Total calculation for Finance summaries are verified
     the user should see the text in the element     css=#content div:nth-of-type(3) table tfoot tr:nth-of-type(${row_number}) td:nth-of-type(3) strong  ${allPartners_fundingSought}
     the user should see the text in the element     css=#content div:nth-of-type(3) table tfoot tr:nth-of-type(${row_number}) td:nth-of-type(4) strong  ${allPartners_otherPublicSectorFunding}
     the user should see the text in the element     css=#content div:nth-of-type(3) table tfoot tr:nth-of-type(${row_number}) td:nth-of-type(5) strong  ${allPartners_contributionToProject}
+
 all the categories are verified
     [Arguments]  ${row_number}  ${total}  ${labour}  ${overheads}  ${materials}  ${capital_usage}  ${subcontracting}  ${travel}   ${other_costs}
     the user should see the text in the element   css=.form-group tbody tr:nth-of-type(${row_number}) td:nth-of-type(1) strong  ${total}
@@ -1952,6 +2003,11 @@ all the categories are verified
     the user should see the text in the element   css=.form-group tbody tr:nth-of-type(${row_number}) td:nth-of-type(6)  ${subcontracting}
     the user should see the text in the element   css=.form-group tbody tr:nth-of-type(${row_number}) td:nth-of-type(7)  ${travel}
     the user should see the text in the element   css=.form-group tbody tr:nth-of-type(${row_number}) td:nth-of-type(8)  ${other_costs}
+
+
+
+
+
 
 the user verifies the table heading for Project finances section
     the user should see the text in the element     css=#content div:nth-of-type(3) thead tr:nth-of-type(1) th:nth-of-type(1)   Total costs
@@ -2001,9 +2057,17 @@ the user verifies the table heading for Changes-from-submitted-finances
     the user should see the text in the element     css=#content div:nth-of-type(5) thead tr:nth-of-type(1) th:nth-of-type(5)   Updated
     the user should see the text in the element     css=#content div:nth-of-type(5) thead tr:nth-of-type(1) th:nth-of-type(6)   Cost
 
+the user verifies the Action and Section for Changes-from-submitted-finances
+    [Arguments]  ${row_number}  ${action}  ${section}
+    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(${row_number}) td:nth-of-type(1)   ${action}
+    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(${row_number}) td:nth-of-type(2)   ${section}
+
+the revised cost is verified for the specified section
+    [Arguments]  ${row_number}  ${cost}
+    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(${row_number}) td:nth-of-type(1)   ${cost}
+
 the revised categories are verified for Other-costs Section
-    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(1) td:nth-of-type(1)   Change
-    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(1) td:nth-of-type(2)   Other costs
+                                                    #content div:nth-of-type(5) tbody tr:nth-of-type(${row_number}) td:nth-of-type(1)
     the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(1) th:nth-of-type(1)   Description and justification of cost
     the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(1) td:nth-of-type(3)   Some more costs
     the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(1) td:nth-of-type(4)   some other costs
@@ -2011,3 +2075,19 @@ the revised categories are verified for Other-costs Section
     the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(2) td:nth-of-type(1)   550
     the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(2) td:nth-of-type(2)   5000
     the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(3) td:nth-of-type(1)   4,450
+
+
+
+the user verifies the table heading for specified Section
+    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(7) th:nth-of-type(1)   Item description
+    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(7) td:nth-of-type(3)   Depreciating Stuff
+    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(7) td:nth-of-type(4)   test
+
+# the below figures are listed as:     RowNumber   Action   Section   Detail   Submitted    Updated    Cost
+the revised categories are verified for specified Section
+    [Arguments]  ${row_number}  ${detail}  ${submitted}  ${updated}
+    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(${row_number}) th:nth-of-type(1)   ${detail}
+    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(${row_number}) td:nth-of-type(1)   ${submitted}
+    the user should see the text in the element     css=#content div:nth-of-type(5) tbody tr:nth-of-type(${row_number}) td:nth-of-type(2)   ${updated}
+
+
