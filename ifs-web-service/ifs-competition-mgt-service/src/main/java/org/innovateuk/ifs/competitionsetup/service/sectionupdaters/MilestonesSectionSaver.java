@@ -96,18 +96,13 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
 
     private LinkedMap<String,MilestoneRowForm> updateMilestoneTimeForRequiredMilestones(LinkedMap<String, MilestoneRowForm> milestoneEntries) {
 	    milestoneEntries.forEach((s, milestoneRowForm) -> {
-	        if(isMilestoneDuringMidday(milestoneRowForm)) {
+	        if(milestoneRowForm.isMiddayTime()) {
                 milestoneRowForm.setTime(MilestoneTime.TWELVE_PM);
                 milestoneEntries.put(s, milestoneRowForm);
             }
         });
 
 	    return milestoneEntries;
-    }
-
-    private boolean isMilestoneDuringMidday(MilestoneRowForm milestoneRowForm) {
-	    return (milestoneRowForm.getMilestoneType().equals(MilestoneType.ASSESSOR_ACCEPTS)
-                || milestoneRowForm.getMilestoneType().equals(MilestoneType.ASSESSOR_DEADLINE));
     }
 
     protected ServiceResult<Void> handleIrregularAutosaveCase(CompetitionResource competitionResource, String fieldName, String value, Optional<Long> questionId) {

@@ -33,13 +33,14 @@ IFS.competitionManagement.milestones = (function () {
     },
     milestonesSetFutureDate: function (field) {
       setTimeout(function () {
-        var nextRow = field.closest('tr').next('tr')
+        var currentRow = field.closest('tr')
+        var nextRow = currentRow.next('tr')
         var date = field.attr('data-date')
         var time
-        if (field.closest('tr').find('.time select').length > 0) {
-          time = field.closest('tr').find('.time option:selected').data('time')
+        if (currentRow.find('.time select').length > 0) {
+          time = currentRow.find('.time option:selected').attr('data-time')
         } else {
-          time = field.closest('tr').find('.time [data-time]').data('time')
+          time = currentRow.find('.time [data-time]').attr('data-time')
         }
         if (nextRow.length) {
           nextRow.attr({'data-future-date': date + (time !== undefined ? '-' + time : '')})

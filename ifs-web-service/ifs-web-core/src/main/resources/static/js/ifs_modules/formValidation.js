@@ -423,9 +423,9 @@ IFS.core.formValidation = (function () {
       var y = dateGroup.find('.year input')
       var h
       if (field.closest('tr').find('.time select').length > 0) {
-        h = dateGroup.find('.time option[data-time]:selected').data('time')
+        h = dateGroup.find('.time option[data-time]:selected').attr('data-time')
       } else {
-        h = dateGroup.find('.time [data-time]').data('time')
+        h = dateGroup.find('.time [data-time]').attr('data-time')
       }
       var addWeekDay = dateGroup.find('.js-addWeekDay')
 
@@ -504,10 +504,10 @@ IFS.core.formValidation = (function () {
         var futureDay = parseInt(futureDateString[0], 10)
         var futureMonth = parseInt(futureDateString[1], 10) - 1
         var futureYear = parseInt(futureDateString[2], 10)
-        var futureHour = parseInt(futureDateString[3], 10)
+        var futureHour = futureDateString.length > 2 ? parseInt(futureDateString[3], 10) : false
         futureDate = new Date(futureYear, futureMonth, futureDay)
       }
-      if (!isNaN(futureHour)) {
+      if (futureHour) {
         futureDate.setHours(futureHour, 0, 0, 0)
       } else {
         futureDate.setHours(0, 0, 0, 0)
