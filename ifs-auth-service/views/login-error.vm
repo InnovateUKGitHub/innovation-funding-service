@@ -19,7 +19,7 @@
 
 #if ($message)
     <section class="error-summary" role="group" aria-labelledby="error-summary-heading" tabindex="-1">
-        <h1 class="heading-medium error-summary-heading" id="error-summary-heading">Your sign in was unsuccessful because of the following issues</h1>
+        <h1 class="heading-medium error-summary-heading" id="error-summary-heading">Your sign in was unsuccessful because of the following issue(s)</h1>
         <ul class="error-summary-list">
             <li>$encoder.encodeForHTML($message)</li>
         </ul>

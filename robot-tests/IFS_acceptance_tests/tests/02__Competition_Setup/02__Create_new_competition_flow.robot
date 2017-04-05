@@ -437,31 +437,23 @@ Application: Finances
     When the user clicks the button/link     link=Finances
     Then the user should see the element     jQuery=dt:contains("Include project growth table") ~ dd:contains("No")
 
-Application: Mark as done and the Edit again
-    [Documentation]    INFUND-3000
-    [Tags]  Pending
-    [Setup]    The user clicks the button/link    jQuery=.grid-row div:nth-child(2) label:contains(Yes)
-    # TODO Pending INFUND-5964
-    Given the user moves focus and waits for autosave
-    When The user clicks the button/link    jQuery=.button[value="Save and close"]
-    Then The user should see the text in the page    Test title
-    And the user should see the text in the page    Subtitle test
-    And the user should see the text in the page    Test guidance title
-    And the user should see the text in the page    Guidance text test
-    And the user should see the text in the page    150
-    And the user should see the text in the page    Yes
-    And The user clicks the button/link    jQuery=button:contains(Done)
+Application: Mark as done should display green tick
+    [Documentation]    INFUND-5964
+    [Setup]    the user navigates to the page   ${landingPage}
+    Given The user clicks the button/link       jQuery=button:contains(Done)
+    Then The user should not see the element    jQuery=button:contains(Done)
+    And The user clicks the button/link         link=Competition setup
+    Then the user should see the element        css=img[title='The "Application" section is done']
 
-# TODO see pending test cases below related ton INFUND-7643. They can be unblocked when INFUND-6942 is implemented
-Application: should have a green check
-    [Documentation]  INFUND-6773
-    [Tags]  HappyPath  Pending
-    # TODO Pending due to INFUND-7643
-    Given the user navigates to the page    ${landingPage}
-    When The user clicks the button/link    jQuery=.button:contains("Done")
-    And The user clicks the button/link     link=Competition setup
-    And the user should see the element     jQuery=li:contains("Application") > img[alt$="section is done"]
-    And The user should see the element    jQuery=.button:contains("Save")
+Application: Edit again should mark as incomplete
+    [Documentation]    INFUND-5964
+    [Setup]    the user navigates to the page   ${landingPage}
+    Given the user clicks the button/link       link=Application details
+    When the user clicks the button/link        jQuery=a:contains("Edit this question")
+    And The user clicks the button/link         jQuery=button:contains("Save and close")
+    Then The user should see the element        jQuery=button:contains(Done)
+    And The user clicks the button/link         link=Competition setup
+    Then the user should not see the element    css=img[title='The "Application" section is done']
 
 Ready To Open button is visible when the user re-opens a section
     [Documentation]    INFUND-4468
