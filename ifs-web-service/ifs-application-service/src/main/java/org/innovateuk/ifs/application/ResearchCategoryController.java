@@ -50,14 +50,16 @@ public class ResearchCategoryController {
         ResearchCategoryViewModel researchCategoryViewModel = researchCategoryPopulator.populate(applicationId, questionId);
 
         model.addAttribute("model", researchCategoryViewModel);
+        model.addAttribute("form", new ResearchCategoryForm());
 
         return "application/research-categories";
     }
 
     @PostMapping
     public String submitResearchCategoryChoice(@ModelAttribute("form") @Valid ResearchCategoryForm researchCategoryForm,
+                                               BindingResult bindingResult,
                                                HttpServletResponse response,
-                                               BindingResult bindingResult, ValidationHandler validationHandler,
+                                               ValidationHandler validationHandler,
                                                Model model, @PathVariable Long applicationId, @PathVariable Long questionId) {
 
         ResearchCategoryViewModel researchCategoryViewModel = researchCategoryPopulator.populate(applicationId, questionId);

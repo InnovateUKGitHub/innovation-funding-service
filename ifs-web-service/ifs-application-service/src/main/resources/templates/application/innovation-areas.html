@@ -20,16 +20,23 @@
             </div>
 
             <form method="post" th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}">
-                <div class="form-group">
+                <div class="form-group" th:classappend="${#fields.hasErrors('*{__innovationAreaChoice__}')} ? 'error'">
                     <fieldset>
                         <legend class="extra-margin-bottom">
                             <span class="visuallyhidden">
                                 Choose the primary innovation area for your project. This will help us to select suitable assessors for your application.
                             </span>
+                            <span th:if="${#fields.hasErrors('innovationAreaChoice')}" th:remove="tag">
+                                <span class="error-message"  th:each="err : ${#fields.errors('innovationAreaChoice')}" th:text="${err}" />
+                            </span>
                         </legend>
                         <th:block th:each="innovationArea : ${model.availableInnovationAreas}">
                             <label class="block-label selection-button-radio" th:for="${'innovationAreaChoice-'+innovationArea.id}">
-                                <input type="radio" name="innovationAreaChoice" th:id="${'innovationAreaChoice-'+innovationArea.id}" th:value="${innovationArea.id}" th:checked="${model.selectedInnovationAreaId} == ${innovationArea.id}" required="required">
+                                <input type="radio" name="innovationAreaChoice" required="required"
+                                       th:id="${'innovationAreaChoice-'+innovationArea.id}"
+                                       th:value="${innovationArea.id}"
+                                       th:checked="${model.selectedInnovationAreaId} == ${innovationArea.id}"
+                                       th:attr="data-required-errormessage=#{validation.application.innovationarea.category.required}">
                                 <th:block th:text="${innovationArea.name}" />
                                 <span class="form-hint" th:text="${innovationArea.description}">description</span>
                             </label>

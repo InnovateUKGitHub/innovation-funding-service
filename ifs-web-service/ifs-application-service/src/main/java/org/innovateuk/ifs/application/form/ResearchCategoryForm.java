@@ -2,16 +2,17 @@ package org.innovateuk.ifs.application.form;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 
 import javax.validation.constraints.NotNull;
 
 /**
- * Beam serves as a container for form parameters.
+ * Bean serves as a container for form parameters.
  */
 
-public class ResearchCategoryForm {
+public class ResearchCategoryForm extends BaseBindingResultTarget {
     @NotNull(message = "{validation.application.research.category.required}")
-    String researchCategoryChoice;
+    private String researchCategoryChoice;
 
     public String getResearchCategoryChoice() {
         return researchCategoryChoice;

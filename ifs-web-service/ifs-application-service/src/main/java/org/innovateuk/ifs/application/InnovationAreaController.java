@@ -42,13 +42,14 @@ public class InnovationAreaController {
         InnovationAreaViewModel innovationAreaViewModel = innovationAreaPopulator.populate(applicationId, questionId);
 
         model.addAttribute("model", innovationAreaViewModel);
+        model.addAttribute("form", new InnovationAreaForm());
 
         return "application/innovation-areas";
     }
 
     @PostMapping
-    public String submitInnovationAreaChoice(@ModelAttribute("form") @Valid InnovationAreaForm innovationAreaForm, HttpServletResponse response,
-                                             BindingResult bindingResult, ValidationHandler validationHandler, Model model, @PathVariable Long applicationId, @PathVariable Long questionId) {
+    public String submitInnovationAreaChoice(@Valid @ModelAttribute("form") InnovationAreaForm innovationAreaForm, BindingResult bindingResult, HttpServletResponse response,
+                                             ValidationHandler validationHandler, Model model, @PathVariable Long applicationId, @PathVariable Long questionId) {
         InnovationAreaViewModel innovationAreaViewModel = innovationAreaPopulator.populate(applicationId, questionId);
 
         model.addAttribute("model", innovationAreaViewModel);

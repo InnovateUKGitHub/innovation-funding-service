@@ -17,7 +17,7 @@
     </div>
 
     <form method="post" th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}">
-        <div class="form-group">
+        <div class="form-group" th:classappend="${#fields.hasErrors('*{__researchCategoryChoice__}')} ? 'error'">
             <div class="message-alert extra-margin-bottom" th:if="${model.hasApplicationFinances}">
                 <h2 class="heading-small no-margin">What type of research are you undertaking in this project?</h2>
                 <p>The type of research affects the level of funding a business can receive under UK state aid rules.
@@ -31,10 +31,17 @@
                     <span class="form-hint">What type of research is your project undertaking? Further guidance is available from <a
                         href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#categories-of-research-and-development"
                         target="_blank">Innovate UK funding rules</a>.</span>
+                    <span th:if="${#fields.hasErrors('researchCategoryChoice')}" th:remove="tag">
+                        <span class="error-message"  th:each="err : ${#fields.errors('researchCategoryChoice')}" th:text="${err}" />
+                    </span>
                 </legend>
                 <th:block th:each="researchCategory : ${model.availableResearchCategories}">
                     <label class="block-label selection-button-radio" th:for="${'researchCategoryChoice-'+researchCategory.id}">
-                        <input type="radio" name="researchCategoryChoice" th:id="${'researchCategoryChoice-'+researchCategory.id}" th:value="${researchCategory.id}" th:checked="${model.selectedResearchCategoryId} == ${researchCategory.id}" required="required">
+                        <input type="radio" name="researchCategoryChoice" required="required"
+                               th:id="${'researchCategoryChoice-'+researchCategory.id}"
+                               th:value="${researchCategory.id}"
+                               th:checked="${model.selectedResearchCategoryId} == ${researchCategory.id}"
+                               th:attr="data-required-errormessage=#{validation.application.research.category.required}">
                         <th:block th:text="${researchCategory.name}" />
                         <span class="form-hint" th:text="${researchCategory.description}">description</span>
                     </label>
