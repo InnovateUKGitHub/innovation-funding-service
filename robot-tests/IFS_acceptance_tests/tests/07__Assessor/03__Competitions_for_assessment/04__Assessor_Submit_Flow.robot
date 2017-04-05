@@ -259,12 +259,6 @@ User Saves the Assessment as Not Recommended
     And the application should have the correct status    css=.progress-list li:nth-child(5)    Assessed
     And the application should have the correct status    css=.progress-list li:nth-child(6)    Assessed
 
-Submit Validation
-    [Documentation]    INFUND-5739
-    When The user clicks the button/link    jQuery=button:contains("Submit assessments")
-    And the user clicks the button/link    jQuery=button:contains("Yes I want to submit the assessments")
-    Then The user should see the text in the page    There was a problem submitting some of your assessments.
-
 Submit Assessments
     [Documentation]    INFUND-5739
     ...
@@ -292,7 +286,7 @@ Progress of the applications in Dashboard
     ${PENDING_LIST}=    Get Webelements    jQuery=.my-applications .in-progress li:contains("Pending")
     ${EXPECTED_TOTAL_PENDING}=    Get Length    ${PENDING_LIST}
     When The user navigates to the page    ${assessor_dashboard_url}
-    Then the progress of the applications should be correct    ${EXPECTED_TOTAL_ACCEPTED}  ${EXPECTED_TOTAL_PENDING}
+    Then the progress of the applications should be correct    ${EXPECTED_TOTAL_ACCEPTED}    ${EXPECTED_TOTAL_PENDING}
 
 *** Keywords ***
 the collapsible button should contain
@@ -378,7 +372,7 @@ the application should have the correct status
     element should contain    ${APPLICATION}    ${STATUS}
 
 the progress of the applications should be correct
-    [Arguments]    ${EXPECTED_TOTAL_ACCEPTED}  ${EXPECTED_TOTAL_PENDING}
+    [Arguments]    ${EXPECTED_TOTAL_ACCEPTED}    ${EXPECTED_TOTAL_PENDING}
     ${TOTAL_PENDING}=    Get text    css=.action-required .pending-applications    #gets the pending apps
     Should Be Equal As Integers    ${TOTAL_PENDING}    ${EXPECTED_TOTAL_PENDING}
     ${TOTAL_ACCEPTED}=    Get text    css=.action-required .accepted-applications    #gets the total number

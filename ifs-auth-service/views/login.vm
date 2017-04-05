@@ -72,22 +72,22 @@
       <div id="global-cookie-message">
           <p>GOV.UK uses cookies to make the site simpler. <a href="https://www.gov.uk/help/cookies">Find out more about cookies</a></p>
       </div>
-
-    <header role="banner" id="global-header">
+      <header role="banner" id="global-header" class="with-proposition">
         <div class="header-wrapper">
-            <div class="header-global">
-                <div>
-                    <div class="header-logo">
-                        <a href="https://www.gov.uk" title="Go to the GOV.UK homepage" id="logo" class="content">
-                            <img src="$resourcesDomain/images/gov.uk_logotype_crown.png" width="35" height="31" alt="GOV.UK">
-                            GOV.UK
-                        </a>
-                    </div>
-                    <p class="innovate-title">Innovation Funding Service</p>
+              <div class="header-global">
+                <div class="header-logo">
+                    <a href="https://www.gov.uk/" title="Go to the GOV.UK homepage" id="logo" class="content">
+                      <img src="$resourcesDomain/images/gov.uk_logotype_crown_invert_trans.png" alt="" width="36" height="32"> GOV.UK
+                    </a>
                 </div>
-            </div>
-        </div>
-    </header>
+              </div>
+              <div class="header-proposition">
+                <div class="content">
+                  <p id="proposition-name" class="no-margin">Innovation Funding Service</p>
+                </div>
+              </div>
+          </div>
+      </header>
     <div class="phase-banner grid-container">
       <p>
         <strong class="phase-tag">BETA</strong>
@@ -105,12 +105,12 @@
 
             #if ($passwordEnabled)
               <div class="form-group">
-                <label for="username" class="form-label"><span>E-mail address</span></label>
+                <label for="username" class="form-label"><span>Email address</span></label>
                 <input class="form-control" id="username" name="j_username" type="email"
                 	value="#if($username)$encoder.encodeForHTML($username)#end"
                     required="required"
-                    data-required-errormessage="Please enter your e-mail address."
-                    data-email-errormessage="Please enter a valid e-mail address." />
+                    data-required-errormessage="Please enter your email address."
+                    data-email-errormessage="Please enter a valid email address." />
               </div>
 
               <div class="form-group">
