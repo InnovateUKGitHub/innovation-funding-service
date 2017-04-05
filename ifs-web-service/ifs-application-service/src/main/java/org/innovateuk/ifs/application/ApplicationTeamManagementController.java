@@ -233,12 +233,11 @@ public class ApplicationTeamManagementController {
                 )
                 .orElse(Collections.emptyList());
 
-        form.getMarkedForRemoval().addAll(existingApplicantIds);
-
-        return updateInvitesByOrganisation(organisationId, form, applicationId).handleSuccessOrFailure(
-                failure -> getUpdateOrganisation(model, applicationId, organisationId, loggedInUser, form),
-                success -> format("redirect:/application/%s/team", applicationId)
-        );
+        return processAnyFailuresOrSucceed(simpleMap(existingApplicantIds, applicationService::removeCollaborator))
+                .handleSuccessOrFailure(
+                        failure -> getUpdateOrganisation(model, applicationId, organisationId, loggedInUser, form),
+                        success -> format("redirect:/application/%s/team", applicationId)
+                );
     }
 
     @PostMapping(params = {"deleteOrganisation", "inviteOrganisation"})
@@ -253,12 +252,11 @@ public class ApplicationTeamManagementController {
                 .map(ApplicationInviteResource::getId)
                 .collect(Collectors.toList());
 
-        form.getMarkedForRemoval().addAll(existingApplicantIds);
-
-        return updateInvitesByInviteOrganisation(inviteOrganisationId, form, applicationId).handleSuccessOrFailure(
-                failure -> getUpdateOrganisation(model, applicationId, inviteOrganisationId, loggedInUser, form),
-                success -> format("redirect:/application/%s/team", applicationId)
-        );
+        return processAnyFailuresOrSucceed(simpleMap(existingApplicantIds, applicationService::removeCollaborator))
+                .handleSuccessOrFailure(
+                        failure -> getUpdateOrganisationByInviteOrganisation(model, applicationId, inviteOrganisationId, loggedInUser, form),
+                        success -> format("redirect:/application/%s/team", applicationId)
+                );
     }
 
     private ServiceResult<InviteResultsResource> updateInvitesByOrganisation(long organisationId,

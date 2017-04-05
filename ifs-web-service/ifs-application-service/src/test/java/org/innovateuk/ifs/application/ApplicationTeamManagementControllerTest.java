@@ -902,16 +902,12 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         when(applicationService.removeCollaborator(isA(Long.class))).thenReturn(serviceSuccess());
 
         setLoggedInUser(leadApplicant);
-        MvcResult mockResult = mockMvc.perform(post("/application/{applicationId}/team/update", applicationResource.getId())
+        mockMvc.perform(post("/application/{applicationId}/team/update", applicationResource.getId())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("organisation", organisation.getId().toString())
                 .param("deleteOrganisation", ""))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/application/%s/team", applicationResource.getId())))
-                .andReturn();
-
-        ApplicationTeamUpdateForm formResult = (ApplicationTeamUpdateForm) mockResult.getModelAndView().getModel().get("form");
-        assertEquals(2, formResult.getMarkedForRemoval().size());
+                .andExpect(redirectedUrl(format("/application/%s/team", applicationResource.getId())));
 
         InOrder inOrder = inOrder(applicationService, inviteOrganisationRestService, userService, inviteRestService);
         inOrder.verify(inviteOrganisationRestService).getByOrganisationIdWithInvitesForApplication(organisation.getId(), applicationResource.getId());
@@ -931,16 +927,12 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         when(applicationService.removeCollaborator(isA(Long.class))).thenReturn(serviceSuccess());
 
         setLoggedInUser(leadApplicant);
-        MvcResult mockResult = mockMvc.perform(post("/application/{applicationId}/team/update", applicationResource.getId())
+        mockMvc.perform(post("/application/{applicationId}/team/update", applicationResource.getId())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("inviteOrganisation", inviteOrganisationResource.getId().toString())
                 .param("deleteOrganisation", ""))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/application/%s/team", applicationResource.getId())))
-                .andReturn();
-
-        ApplicationTeamUpdateForm formResult = (ApplicationTeamUpdateForm) mockResult.getModelAndView().getModel().get("form");
-        assertEquals(2, formResult.getMarkedForRemoval().size());
+                .andExpect(redirectedUrl(format("/application/%s/team", applicationResource.getId())));
 
         InOrder inOrder = inOrder(applicationService, inviteOrganisationRestService, userService, inviteRestService);
         inOrder.verify(inviteOrganisationRestService).getById(inviteOrganisationResource.getId());
