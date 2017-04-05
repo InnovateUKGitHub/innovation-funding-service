@@ -783,6 +783,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                         line.multiStream, line.collaborationLevel, line.leadApplicantType, line.researchRatio, line.resubmission, null).
                 withNewMilestones().
                 withReleaseFeedbackDate(line.releaseFeedback).
+                withFeedbackReleasedDate(line.feedbackReleased).
                 withPublicContent(line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
                         line.competitionDescription, line.fundingType, line.projectSize, line.keywords)
 
@@ -809,6 +810,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                 withFundersPanelDate(line.fundersPanelDate).
                 withFundersPanelEndDate(line.fundersPanelEndDate).
                 withReleaseFeedbackDate(line.releaseFeedback).
+                withFeedbackReleasedDate(line.feedbackReleased).
                 withPublicContent(line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
                 line.competitionDescription, line.fundingType, line.projectSize, line.keywords);
     }

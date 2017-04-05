@@ -103,9 +103,7 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 
 	int countByCompetitionIdAndApplicationStatusIn(long competitionId, Collection<ApplicationStatus> submittedStatuses);
 
-	int countByCompetitionIdAndApplicationStatusInAndAssessorFeedbackFileEntryIsNull(long competitionId, Collection<ApplicationStatus> applicationStatuses);
-
-	int countByCompetitionIdAndApplicationStatusNotInAndCompletionGreaterThan(long competitionId, Collection<ApplicationStatus> submittedStatuses, BigDecimal limit);
+	int countByCompetitionIdAndApplicationStatusNotInAndCompletionGreaterThan(Long competitionId, Collection<ApplicationStatus> submittedStatuses, BigDecimal limit);
 
 	int countByCompetitionIdAndApplicationStatusInAndCompletionLessThanEqual(long competitionId, Collection<ApplicationStatus> submittedStatuses, BigDecimal limit);
 

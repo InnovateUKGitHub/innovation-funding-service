@@ -18,22 +18,30 @@
   </th:block>
 </th:block>
 
-<th:block th:fragment="project-status-table(status)">
+<th:block th:fragment="project-status-table(status, columnType)">
     <th:block th:switch="${status.name()}">
         <td th:case="'COMPLETE'" class="status ok">
           <th:block th:if="${url}">
-              <a th:href="${url}"><span class="visuallyhidden">Stage complete</span></a>
+              <a th:href="${url}">
+                  <th:block th:text="${columnType == 'MO' ? 'Assigned' : 'Complete'}">Assigned</th:block>
+              </a>
           </th:block>
           <th:block th:unless="${url}">
-              <span class="visuallyhidden">Stage complete</span>
+            <th:block th:text="${columnType == 'MO' ? 'Assigned' : 'Complete'}">Assigned</th:block>
           </th:block>
         </td>
         <td th:case="'ACTION_REQUIRED'" class="status action">
             <th:block th:if="${url}">
-                <a th:href="${url}"><span class="visuallyhidden">Requires action</span></a>
+                <a th:href="${url}">
+                  <th:block th:if="${columnType == 'project-details'}">Incomplete</th:block>
+                  <th:block th:if="${columnType == 'MO'}">Assign</th:block>
+                  <th:block th:unless="${columnType == 'project-details' OR columnType == 'MO'}">Review</th:block>
+                </a>
             </th:block>
             <th:block th:unless="${url}">
-              <span class="visuallyhidden">Requires action</span>
+              <th:block th:if="${columnType == 'project-details'}">Incomplete</th:block>
+              <th:block th:if="${columnType == 'MO'}">Assign</th:block>
+              <th:block th:unless="${columnType == 'project-details' OR columnType == 'MO'}">Review</th:block>
             </th:block>
         </td>
         <td th:case="'NOT_STARTED'" class="status">
@@ -45,20 +53,18 @@
         <td th:case="'PENDING'" class="status waiting">
           <th:block th:if="${url}">
               <a th:href="${url}">
-                <span class="visuallyhidden">Awaiting review from Innovate UK</span>
+                <span th:text="${columnType == 'project-details' ? 'Incomplete' : 'Pending'}">Incomplete</span>
               </a>
           </th:block>
           <th:block th:unless="${url}">
-            <span class="visuallyhidden">Awaiting review from Innovate UK</span>
+              <span th:text="${columnType == 'project-details' ? 'Incomplete' : 'Pending'}">Incomplete</span>
           </th:block>
         </td>
         <td th:case="'REJECTED'" class="status rejected">
             <th:block th:if="${url}">
-                <a th:href="${url}"><span class="visuallyhidden">Stage rejected - requires action</span></a>
+                <a th:href="${url}">Rejected</a>
             </th:block>
-            <th:block th:unless="${url}">
-                <span class="visuallyhidden">Stage rejected</span>
-            </th:block>
+            <th:block th:unless="${url}">Rejected</th:block>
         </td>
         <td th:case="*"></td><!--/* just in case there is a different status we put out an empty td to not break the table */-->
     </th:block>
