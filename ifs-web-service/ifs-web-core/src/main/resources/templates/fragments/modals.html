@@ -78,26 +78,6 @@
     </div>
 </th:block>
 
-<!-- Publish assessor feedback modal window -->
-<th:block th:fragment="modal-submit-assessor-feedback">
-    <div class="modal-submit-assessor-feedback" role="dialog" aria-hidden="true">
-        <th:block th:insert="fragments/modals :: close-button" />
-
-        <h2 class="heading-medium no-margin">Publish assessor feedback</h2>
-        <p>This will inform applicants that assessor feedback is available.</p>
-        <p>This step cannot be undone.</p>
-        <hr />
-        <div>
-            <form method="post" action="#" id="submit-assessor-feedback-form"
-                  th:action="@{/competition/{competitionId}/assessorfeedbacksubmit(competitionId=${competitionSummary.getCompetitionId()})}">
-                <button class="button" name="publish" value="publish" type="submit">Publish assessor feedback</button>
-                <button type="button" class="js-close buttonlink">Cancel</button>
-            </form>
-        </div>
-    </div>
-</th:block>
-
-
 <!-- save monotiring officer -->
 <th:block th:fragment="modal-assign-mo">
     <div class="modal-assign-mo" role="dialog" aria-hidden="true">
@@ -135,7 +115,7 @@
 <th:block th:fragment="modal-bank-details">
     <div class="modal-bank" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
-        <h2 class="heading-medium no-margin">Submit Bank Details</h2>
+        <h2 class="heading-medium no-margin">Submit bank details</h2>
         <p>Your bank details will now be submitted to Innovate UK.</p>
         <hr />
         <div method="post">
@@ -226,7 +206,7 @@
         <th:block th:insert="fragments/modals :: close-button" />
         <div class="modal-content">
             <h2 class="heading-medium no-margin">Reject documents</h2>
-            <p>If these documents are rejected, the project manager will be informed along with the reason for rejection.
+            <p>If these documents are rejected, the Project Manager will be informed along with the reason for rejection.
                 They will then need to provide new versions of the documents before the project can begin.</p>
         </div>
         <hr />

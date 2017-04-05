@@ -260,7 +260,7 @@ The lead applicant should have the correct status
     the user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(3):contains("Lead")
 
 the applicant cannot assign to pending invitees
-    the user clicks the button/link    jQuery=button:contains("Assigned to")
+    the user clicks the button/link    jQuery=button:contains("Assign this question to someone else")
     the user should not see the element    jQuery=button:contains("Adrian Booth")
 
 the status of the people should be correct in the Manage contributors page
