@@ -12,6 +12,7 @@ import org.innovateuk.ifs.project.sections.SectionAccess;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.utils.AuthorisationUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -37,12 +38,7 @@ import static org.innovateuk.ifs.user.resource.OrganisationTypeEnum.BUSINESS;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.isA;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRulesTest<ProjectSetupSectionsPermissionRules> {
 
@@ -52,11 +48,15 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
     @Mock
     private ProjectSetupSectionAccessibilityHelper accessor;
 
+    @Mock
+    private AuthorisationUtil authorisationUtil;
+
     private UserResource user = newUserResource().build();
 
     @Before
     public void setupAccessorLookup() {
         when(accessorSupplier.apply(isA(ProjectTeamStatusResource.class))).thenReturn(accessor);
+        when(authorisationUtil.userIsPartnerInOrganisationForProject(isA(Long.class), isA(Long.class), isA(Long.class))).thenReturn(true);
     }
 
     @Test
@@ -167,7 +167,7 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
 
         assertFalse(rules.partnerCanAccessFinanceChecksSection(123L, user));
 
-        verify(accessor).canAccessFinanceChecksSection(any());
+        verify(authorisationUtil).userIsPartnerInOrganisationForProject(any(), any(), any());
     }
 
     @Test
@@ -284,12 +284,12 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
         when(projectServiceMock.getProjectUsersForProject(123L)).thenReturn(
                 newProjectUserResource().withUser(user.getId()).withOrganisation(456L).withRoleName(PARTNER).build(1));
 
-        when(projectServiceMock.getProjectTeamStatus(123L, Optional.of(user.getId()))).thenThrow(new ForbiddenActionException());
+        when(authorisationUtil.userIsPartnerInOrganisationForProject(123L, 456L, user.getId())).thenReturn(false);
 
         assertFalse(ruleCheck.get());
 
         verify(projectServiceMock).getProjectUsersForProject(123L);
-        verify(projectServiceMock).getProjectTeamStatus(123L, Optional.of(user.getId()));
+        verifyZeroInteractions(projectServiceMock);
     }
 
     private void assertScenariousForSections(BiFunction<ProjectSetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> accessorCheck, Supplier<Boolean> ruleCheck) {

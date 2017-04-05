@@ -116,7 +116,7 @@ public class ProjectSetupSectionsPermissionRules {
 
             ProjectTeamStatusResource teamStatus;
 
-            if(authorisationUtil.userIsPartnerInOrganisationForProject(projectId, pu.getOrganisation(), user.getId())) {
+            if(!authorisationUtil.userIsPartnerInOrganisationForProject(projectId, pu.getOrganisation(), user.getId())) {
                 LOG.warn("User " + user.getId() + " is not a Partner on an Organisation for Project " + projectId + ".  Denying access to Project Setup");
                 return false;
             }
