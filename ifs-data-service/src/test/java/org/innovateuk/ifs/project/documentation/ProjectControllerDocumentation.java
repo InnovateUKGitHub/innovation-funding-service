@@ -176,7 +176,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                 .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("id").description("Id of the project"),
-                                parameterWithName("projectManagerId").description("User id of the project manager being assigned")
+                                parameterWithName("projectManagerId").description("User id of the Project Manager being assigned")
                         )
                 ));
     }
@@ -193,7 +193,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                 .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("id").description("Id of the project"),
-                                parameterWithName("projectManagerId").description("User id of the project manager being assigned")
+                                parameterWithName("projectManagerId").description("User id of the Project Manager being assigned")
                         )
                 ));
     }
