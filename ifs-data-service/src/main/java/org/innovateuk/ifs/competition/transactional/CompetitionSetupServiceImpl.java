@@ -292,21 +292,21 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
             formInput.setQuestion(question);
             formInput.setId(null);
             formInput.setFormValidators(copy);
-            formInput.setActive(setFormInputActive(competition, question, formInput));
+            formInput.setActive(isSectorCompScopeQuestion(competition, question, formInput) ? false : formInput.getActive());
             formInputRepository.save(formInput);
             formInput.setGuidanceRows(createFormInputGuidanceRows(formInput, formInput.getGuidanceRows()));
             return formInput;
         };
     }
 
-    private boolean setFormInputActive(Competition competition, Question question, FormInput formInput) {
+    private boolean isSectorCompScopeQuestion(Competition competition, Question question, FormInput formInput) {
         if (competition.getCompetitionType().getName().equals("Sector") &&
                 ofNullable(question.getShortName()).filter(name -> name.equals("Scope")).isPresent()) {
             if (formInput.getType() == ASSESSOR_APPLICATION_IN_SCOPE || formInput.getDescription().equals("Feedback")) {
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
     private Competition setDefaultAssessorPayAndCount(Competition competition) {
