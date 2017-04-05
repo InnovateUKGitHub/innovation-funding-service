@@ -106,7 +106,7 @@
                     <ul>
                         <li th:each="app : ${applicationsFinished}"
                             th:with="status=${applicationStatuses.get(app.id)}"
-                            th:class="${status == T(org.innovateuk.ifs.application.resource.ApplicationStatus.APPROVED)} ? 'positive' : 'negative'">
+                            th:class="${status == T(org.innovateuk.ifs.application.resource.ApplicationStatus).APPROVED} ? 'positive' : 'negative'">
                             <div class="task">
                                 <h3 class="heading-small">
                                     <a th:href="@{/application/{id}/summary(id=${app.getId()})}" th:text="${app.name}">placeholder</a>

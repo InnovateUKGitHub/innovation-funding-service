@@ -212,7 +212,7 @@
 
 <!-- =========================== Element: Competition status warning ================ -->
 <th:block th:fragment="competition-status-message (app, competition)">
-		<div class="warning-alert"  th:if="${(app.applicationStatus == T(org.innovateuk.ifs.application.resource.ApplicationStatus).CREATED or app.applicationStatus == T(org.innovateuk.ifs.application.resource.ApplicationStatus).OPEN) and competition.competitionStatus != T(org.innovateuk.ifs.application.resource.ApplicationStatus).OPEN}">
+		<div class="warning-alert"  th:if="${(app.applicationStatus == T(org.innovateuk.ifs.application.resource.ApplicationStatus).CREATED or app.applicationStatus == T(org.innovateuk.ifs.application.resource.ApplicationStatus).OPEN) and competition.competitionStatus.name() != 'OPEN'}">
         <h2 class="heading-small no-margin">Application not submitted</h2>
         <p>This application has not been entered into the competition <th:block th:text="${competition.name}" /> as it was not submitted before the competition deadline.</p>
     </div>
