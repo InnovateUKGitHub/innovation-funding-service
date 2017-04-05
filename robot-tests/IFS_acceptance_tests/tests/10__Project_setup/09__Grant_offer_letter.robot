@@ -359,7 +359,7 @@ Internal user can download the signed GOL
     [Documentation]    INFUND-6377
     [Tags]  Download
     Given the user navigates to the page  ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
-    Then the user should see the element  jQuery=#content > p:nth-child(11) > a
+    Then the user should see the element  jQuery=h2:contains("Signed grant offer letter") + .upload-section a
     And the user downloads the file  ${Comp_admin1_credentials["email"]}  ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/signed-grant-offer-letter  ${DOWNLOAD_FOLDER}/testing.pdf
     [Teardown]    remove the file from the operating system  testing.pdf
 
