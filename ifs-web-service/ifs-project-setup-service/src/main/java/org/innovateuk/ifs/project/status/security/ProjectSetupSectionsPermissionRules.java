@@ -14,6 +14,7 @@ import org.innovateuk.ifs.project.sections.SectionAccess;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.utils.AuthorisationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -33,6 +34,9 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 public class ProjectSetupSectionsPermissionRules {
 
     private static final Log LOG = LogFactory.getLog(ProjectSetupSectionsPermissionRules.class);
+
+    @Autowired
+    AuthorisationUtil authorisationUtil;
 
     @Autowired
     private ProjectService projectService;
@@ -57,8 +61,8 @@ public class ProjectSetupSectionsPermissionRules {
         return doSectionCheck(projectId, user, ProjectSetupSectionAccessibilityHelper::canAccessBankDetailsSection);
     }
 
-    @PermissionRule(value = "ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL", description = "A partner can access the Bank Details " +
-            "section when their Companies House details are complete or not required, and the Project Details have been submitted")
+    @PermissionRule(value = "ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL", description = "A partner can access the finance details " +
+            " when their Companies House details are complete or not required, and the Project Details have been submitted")
     public boolean partnerCanAccessFinanceChecksSection(Long projectId, UserResource user) {
             return doSectionCheck(projectId, user, ProjectSetupSectionAccessibilityHelper::canAccessFinanceChecksSection);
     }
@@ -112,12 +116,12 @@ public class ProjectSetupSectionsPermissionRules {
 
             ProjectTeamStatusResource teamStatus;
 
-            try {
-                teamStatus = projectService.getProjectTeamStatus(projectId, Optional.of(user.getId()));
-            } catch (ForbiddenActionException e) {
-                LOG.error("User " + user.getId() + " is not a Partner on an Organisation for Project " + projectId + ".  Denying access to Project Setup");
+            if(authorisationUtil.userIsPartnerInOrganisationForProject(projectId, pu.getOrganisation(), user.getId())) {
+                LOG.warn("User " + user.getId() + " is not a Partner on an Organisation for Project " + projectId + ".  Denying access to Project Setup");
                 return false;
             }
+
+            teamStatus = projectService.getProjectTeamStatus(projectId, Optional.of(user.getId()));
 
             ProjectPartnerStatusResource partnerStatusForUser = teamStatus.getPartnerStatusForOrganisation(pu.getOrganisation()).get();
 

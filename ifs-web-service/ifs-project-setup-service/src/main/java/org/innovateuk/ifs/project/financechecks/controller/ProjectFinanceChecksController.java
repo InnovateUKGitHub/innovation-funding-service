@@ -34,6 +34,7 @@ import org.innovateuk.ifs.project.financechecks.viewmodel.ProjectFinanceChecksVi
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.thread.viewmodel.ThreadPostViewModel;
 import org.innovateuk.ifs.thread.viewmodel.ThreadViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -123,6 +124,9 @@ public class ProjectFinanceChecksController {
 
     @Autowired
     private FinanceHandler financeHandler;
+
+    @Autowired
+    private FinanceUtil financeUtil;
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping
@@ -396,7 +400,7 @@ public class ProjectFinanceChecksController {
                 FinanceChecksQueryConstraints.MAX_QUERY_WORDS,
                 FinanceChecksQueryConstraints.MAX_QUERY_CHARACTERS,
                 queryId,
-                PROJECT_FINANCE_CHECKS_BASE_URL);
+                PROJECT_FINANCE_CHECKS_BASE_URL, financeUtil.isUsingJesFinances(organisationResource.getOrganisationType()));
     }
 
     private boolean isApproved(final ProjectOrganisationCompositeId compositeId) {
