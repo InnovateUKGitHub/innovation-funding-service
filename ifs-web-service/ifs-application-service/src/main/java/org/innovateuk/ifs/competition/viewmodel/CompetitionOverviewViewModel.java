@@ -20,6 +20,8 @@ public class CompetitionOverviewViewModel {
     private List<AbstractPublicSectionContentViewModel> allSections;
     private boolean userIsLoggedIn = false;
 
+    private boolean competitionSetupComplete;
+
     public String getCompetitionTitle() {
         return competitionTitle;
     }
@@ -101,7 +103,11 @@ public class CompetitionOverviewViewModel {
     }
 
     public boolean isShowNotOpenYetMessage() {
-        return getCompetitionOpenDate().isAfter(LocalDateTime.now());
+        if (nonIfs) {
+            return getCompetitionOpenDate().isAfter(LocalDateTime.now());
+        } else {
+            return isCompetitionSetupComplete();
+        }
     }
 
     public boolean isShowClosedMessage() {
@@ -129,5 +135,13 @@ public class CompetitionOverviewViewModel {
 
     public boolean isShowSignInText() {
         return !nonIfs && !isDisableApplyButton();
+    }
+
+    public boolean isCompetitionSetupComplete() {
+        return competitionSetupComplete;
+    }
+
+    public void setCompetitionSetupComplete(boolean competitionSetupComplete) {
+        this.competitionSetupComplete = competitionSetupComplete;
     }
 }

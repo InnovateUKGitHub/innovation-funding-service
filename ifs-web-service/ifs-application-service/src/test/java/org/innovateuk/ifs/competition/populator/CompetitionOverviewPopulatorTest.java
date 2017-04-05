@@ -97,7 +97,7 @@ public class CompetitionOverviewPopulatorTest {
                 .withCompetitionId(23523L)
                 .build();
 
-        CompetitionOverviewViewModel viewModel = populator.populateViewModel(setupPublicContent(publicContentResource), true);
+        CompetitionOverviewViewModel viewModel = populator.populateViewModel(setupPublicContent(publicContentResource), true, true);
 
         assertEquals(publicContentResource.getShortDescription(), viewModel.getShortDescription());
         assertEquals(publicContentResource.getCompetitionId(), viewModel.getCompetitionId());
@@ -107,13 +107,14 @@ public class CompetitionOverviewPopulatorTest {
         assertEquals(competitionTitle, viewModel.getCompetitionTitle());
         assertEquals(nonIfsUrl, viewModel.getNonIfsUrl());
         assertEquals(true, viewModel.isUserIsLoggedIn());
+        assertEquals(true, viewModel.isCompetitionSetupComplete());
     }
 
     @Test
     public void populateViewModelTest_EmptyPublicContentResource() throws Exception {
         PublicContentResource publicContentResource = newPublicContentResource().build();
 
-        CompetitionOverviewViewModel viewModel = populator.populateViewModel(setupPublicContent(publicContentResource), true);
+        CompetitionOverviewViewModel viewModel = populator.populateViewModel(setupPublicContent(publicContentResource), true, false);
 
         assertEquals(null, viewModel.getShortDescription());
         assertEquals(null, viewModel.getCompetitionId());
@@ -121,11 +122,12 @@ public class CompetitionOverviewPopulatorTest {
         assertEquals(closeDate, viewModel.getCompetitionCloseDate());
         assertEquals(competitionTitle, viewModel.getCompetitionTitle());
         assertEquals(true, viewModel.isUserIsLoggedIn());
+        assertEquals(false, viewModel.isCompetitionSetupComplete());
     }
 
     @Test
     public void populateViewModelTest_NullPublicContentResource() throws Exception {
-        CompetitionOverviewViewModel viewModel = populator.populateViewModel(setupPublicContent(null), true);
+        CompetitionOverviewViewModel viewModel = populator.populateViewModel(setupPublicContent(null), true, true);
 
         assertEquals(null, viewModel.getShortDescription());
         assertEquals(null, viewModel.getCompetitionId());
@@ -133,6 +135,7 @@ public class CompetitionOverviewPopulatorTest {
         assertEquals(closeDate, viewModel.getCompetitionCloseDate());
         assertEquals(competitionTitle, viewModel.getCompetitionTitle());
         assertEquals(true, viewModel.isUserIsLoggedIn());
+        assertEquals(true, viewModel.isCompetitionSetupComplete());
     }
 
 

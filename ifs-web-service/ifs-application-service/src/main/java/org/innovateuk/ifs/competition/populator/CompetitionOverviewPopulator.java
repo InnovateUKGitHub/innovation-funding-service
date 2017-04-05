@@ -30,7 +30,7 @@ public class CompetitionOverviewPopulator {
         sectionModelPopulators = populators.stream().collect(Collectors.toMap(p -> p.getType(), Function.identity()));
     }
 
-    public CompetitionOverviewViewModel populateViewModel(PublicContentItemResource publicContentItemResource, boolean userIsLoggedIn) {
+    public CompetitionOverviewViewModel populateViewModel(PublicContentItemResource publicContentItemResource, boolean userIsLoggedIn, boolean competitionSetupIsComplete) {
         CompetitionOverviewViewModel viewModel = new CompetitionOverviewViewModel();
 
         viewModel.setCompetitionOpenDate(publicContentItemResource.getCompetitionOpenDate());
@@ -40,6 +40,7 @@ public class CompetitionOverviewPopulator {
         viewModel.setNonIfsUrl(publicContentItemResource.getNonIfsUrl());
         viewModel.setNonIfs(publicContentItemResource.getNonIfs());
         viewModel.setUserIsLoggedIn(userIsLoggedIn);
+        viewModel.setCompetitionSetupComplete(competitionSetupIsComplete);
 
         if(null != publicContentItemResource.getPublicContentResource()) {
             viewModel.setShortDescription(publicContentItemResource.getPublicContentResource().getShortDescription());
