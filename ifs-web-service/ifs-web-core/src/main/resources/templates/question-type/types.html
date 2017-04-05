@@ -265,10 +265,9 @@
             <!--/* end of edit template */-->
             <th:block th:if="${readonly or appIsClosed}">
                 <th:block th:if="${markedAsComplete.contains(question.id)}">
-                    <div class="success-alert extra-margin-bottom">
-                        Application details is marked as complete
-                    </div>
+                    <div class="success-alert extra-margin-bottom">Application details are marked as complete</div>
                 </th:block>
+
                 <dl class="readonly-data">
                     <dt>Application title</dt>
                     <dd th:text="${currentApplication.name}"></dd>
