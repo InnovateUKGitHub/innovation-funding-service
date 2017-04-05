@@ -485,8 +485,9 @@ IFS.core.formValidation = (function () {
       var allFields = dateGroup.find('.day input, .month input, .year input')
       var futureDate
       if (jQuery.trim(dateGroup.attr('data-future-date')).length === 0) {
-        // if no future date is set we assume today
+        // if no future date is set we assume tomorrow
         futureDate = new Date()
+        futureDate.setDate(futureDate.getDate() + 1)
       } else {
         var futureDateString = dateGroup.attr('data-future-date').split('-')
         var futureDay = parseInt(futureDateString[0], 10)

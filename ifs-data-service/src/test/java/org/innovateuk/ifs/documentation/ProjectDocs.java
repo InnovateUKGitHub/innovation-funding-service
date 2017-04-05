@@ -20,15 +20,15 @@ public class ProjectDocs {
             fieldWithPath("durationInMonths").description("Duration that the project is expected to last"),
             fieldWithPath("name").description("The Project's name"),
             fieldWithPath("projectUsers").description("The ids of users with Roles on the Project"),
-            fieldWithPath("documentsSubmittedDate").description("Date that partner documents were submitted by the project manager. Null means the details have not yet been submitted"),
-            fieldWithPath("offerSubmittedDate").description("Date that grant offer letter documents were submitted by the Lead partner or project manager. Null means the details have not yet been submitted"),
+            fieldWithPath("documentsSubmittedDate").description("Date that partner documents were submitted by the Project Manager. Null means the details have not yet been submitted"),
+            fieldWithPath("offerSubmittedDate").description("Date that grant offer letter documents were submitted by the Lead partner or Project Manager. Null means the details have not yet been submitted"),
             fieldWithPath("collaborationAgreement").description("Id of the File Entry that contains the Collaboration Agreement of the partner organisations"),
             fieldWithPath("exploitationPlan").description("Id of the File Entry that contains the Exploitation Plan of the partner organisations"),
             fieldWithPath("signedGrantOfferLetter").description("Id of the File Entry that contains the Signed Grant Offer Letter"),
             fieldWithPath("additionalContractFile").description("Id of the File Entry that contains the additional contract file"),
             fieldWithPath("grantOfferLetter").description("Id of the File Entry that contains the generated Grant Offer Letter"),
             fieldWithPath("otherDocumentsApproved").description("Flag which indicates if Other Documents - Collaboration agreement and Exploitation plan, are approved or not"),
-            fieldWithPath("spendProfileSubmittedDate").description("Flag which indicates if Spend Profile has been review and submitted by the project manager.")
+            fieldWithPath("spendProfileSubmittedDate").description("Flag which indicates if Spend Profile has been review and submitted by the Project Manager.")
     };
 
     public static final FieldDescriptor[] projectStatusResourceFields = {
