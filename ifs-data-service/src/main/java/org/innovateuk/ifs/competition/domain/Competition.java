@@ -157,7 +157,7 @@ public class Competition implements ProcessActivity {
                 return IN_ASSESSMENT;
             } else if (!isMilestoneReached(MilestoneType.NOTIFICATIONS)) {
                 return CompetitionStatus.FUNDERS_PANEL;
-            } else if (!isMilestoneReached(MilestoneType.RELEASE_FEEDBACK)) {
+            } else if (!isMilestoneReached(MilestoneType.FEEDBACK_RELEASED)) {
                 return ASSESSOR_FEEDBACK;
             } else {
                 return PROJECT_SETUP;
@@ -632,7 +632,7 @@ public class Competition implements ProcessActivity {
     }
 
     public void releaseFeedback(LocalDateTime date) {
-        setMilestoneDate(MilestoneType.RELEASE_FEEDBACK, date);
+        setMilestoneDate(MilestoneType.FEEDBACK_RELEASED, date);
     }
 
     public void closeAssessment(LocalDateTime date) {

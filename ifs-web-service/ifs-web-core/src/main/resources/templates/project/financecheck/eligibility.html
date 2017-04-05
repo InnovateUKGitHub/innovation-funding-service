@@ -17,7 +17,7 @@
     <div th:unless="${summaryModel.isExternalView()}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})},currentCompetition=null" />
 
     <div class="page-title">
-        <th:block th:insert="fragments/elements :: project-title (projectId=${summaryModel.projectId}, projectName=${summaryModel.projectName})" />
+        <th:block th:insert="fragments/elements :: project-title (projectName=${summaryModel.projectName})" />
         <h1 class="heading-xlarge">
             <th:block th:text="${summaryModel.organisationName}" />
             <small th:if="${summaryModel.leadPartnerOrganisation}">(Lead Partner)</small>
@@ -36,7 +36,7 @@
         </th:block>
     </th:block>
 
-    <h2 class="heading-medium">Finances Overview</h2>
+    <h2 class="heading-medium">Finances overview</h2>
     <div class="table-overflow">
         <table class="table-overview">
             <thead>
@@ -69,7 +69,7 @@
     <th:block th:unless="${summaryModel.usingJesFinances}">
         <th:block th:if="${summaryModel.isExternalView()}">
             <h2 class="heading-medium">Detailed finances</h2>
-            <p>Changes made to your finances will be visible here. Please review this section carefully as you are responsible for the accuracy of any approved finances.</p>
+            <p>These are your project finances. Changes that result from discussions with Innovate UK will be reflected here. Substantial changes to your project costs should be discussed with your Project Manager.</p>
             <p><a th:href="@{/project/{projectId}/partner-organisation/{organisationId}/finance-checks/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}">View changes to finances</a></p>
         </th:block>
 

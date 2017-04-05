@@ -10,7 +10,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import java.util.List;
 
 /**
- * view model for the "select project manager contact" page
+ * view model for the "select Project Manager contact" page
  */
 public class SelectProjectManagerViewModel {
     private List<ProjectUserInviteModel> organisationUsers;
