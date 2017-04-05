@@ -810,7 +810,14 @@
                               <option th:each="time : ${T(org.innovateuk.ifs.competitionsetup.form.MilestoneTime).values()}"
                                       th:text="${time.display}" th:value="${time}" th:attr="data-time=${time.hour}" th:selected="${time == milestoneEntry.value.time}"></option>
                           </select>
-                          <span th:if="${milestoneEntry.value.middayTime}" data-time="12">12:00 pm</span>
+                          <th:block th:if="${milestoneEntry.value.middayTime}" >
+                              12:00 pm
+                            <input type="hidden"
+                                data-time="12"
+                                th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
+                                th:id="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
+                                th:value="${T(org.innovateuk.ifs.competitionsetup.form.MilestoneTime).TWELVE_PM}">
+                          </th:block>
                       </td>
                       <td class="js-addWeekDay" th:text="${milestoneEntry.value.dayOfWeek}"></td>
                       <td class="day">

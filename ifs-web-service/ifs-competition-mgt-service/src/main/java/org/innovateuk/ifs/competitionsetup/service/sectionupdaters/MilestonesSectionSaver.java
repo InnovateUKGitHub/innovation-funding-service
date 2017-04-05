@@ -53,7 +53,7 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
 	@Override
 	protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
         MilestonesForm milestonesForm = (MilestonesForm) competitionSetupForm;
-        LinkedMap<String, MilestoneRowForm> milestoneEntries = updateMilestoneTimeForRequiredMilestones(milestonesForm.getMilestoneEntries());
+        LinkedMap<String, MilestoneRowForm> milestoneEntries = milestonesForm.getMilestoneEntries();
 
         List<Error> errors = returnErrorsFoundOnSave(milestoneEntries, competition);
         if(!errors.isEmpty()) {
@@ -93,17 +93,6 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
 
     @Override
     public boolean supportsForm(Class<? extends CompetitionSetupForm> clazz) { return MilestonesForm.class.equals(clazz); }
-
-    private LinkedMap<String,MilestoneRowForm> updateMilestoneTimeForRequiredMilestones(LinkedMap<String, MilestoneRowForm> milestoneEntries) {
-	    milestoneEntries.forEach((s, milestoneRowForm) -> {
-	        if(milestoneRowForm.isMiddayTime()) {
-                milestoneRowForm.setTime(MilestoneTime.TWELVE_PM);
-                milestoneEntries.put(s, milestoneRowForm);
-            }
-        });
-
-	    return milestoneEntries;
-    }
 
     protected ServiceResult<Void> handleIrregularAutosaveCase(CompetitionResource competitionResource, String fieldName, String value, Optional<Long> questionId) {
         List<Error> errors = updateMilestoneWithValueByFieldname(competitionResource, fieldName, value);
