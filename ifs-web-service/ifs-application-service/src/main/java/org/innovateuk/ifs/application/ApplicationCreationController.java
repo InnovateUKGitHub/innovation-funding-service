@@ -20,15 +20,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.time.ZonedDateTime;
 
 import static java.lang.String.format;
-import static java.time.LocalDateTime.now;
 import static org.innovateuk.ifs.registration.AbstractAcceptInviteController.INVITE_HASH;
 
 /**
- ZonedDateTimeZonedDateTime * This controller will handle all requests that are related to the create of a application.
+ * This controller will handle all requests that are related to the create of a application.
  * This is used when the users want create a new application and that also includes the creation of the organisation.
  * These URLs are publicly available, since there user might not have a account yet.
  * <p>
