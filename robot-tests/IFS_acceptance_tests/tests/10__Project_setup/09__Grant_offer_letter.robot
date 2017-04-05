@@ -380,7 +380,7 @@ Internal user accepts signed grant offer letter
     [Tags]    HappyPath
     [Setup]    log in as a different user    &{internal_finance_credentials}
     Given the user navigates to the page      ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status
-    When the user clicks the button/link     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.action
+    When the user clicks the button/link     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.action a:contains("Review")
     Then the user should not see the text in the page  "Confirm receipt of signed grant offer letter"
     And the user clicks the button/link    jQuery=#content .button:contains("Accept signed grant offer letter")
     And the user clicks the button/link     jQuery=.modal-accept-signed-gol .button:contains("Accept signed grant offer letter")
