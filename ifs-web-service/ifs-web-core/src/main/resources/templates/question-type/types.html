@@ -89,17 +89,19 @@
                 ${(currentUser.getId() != questionAssignee?.assigneeUserId and  questionAssignee?.assignee!=null) or
                 (questionAssignee?.assignee==null and !userIsLeadApplicant and !subFinanceSection)} ? 'readonly' : 'edit',
          mayRemove=${viewmode == 'edit'},
+         inputField='formInput['+${formInput.id}+']',
+         validationField=${inputField},
          removeName='remove_uploaded_file',
          saveName='upload_file'">
 
         <h3 class="heading-small no-margin" th:text="${formInput.getDescription()}">Project management appendix</h3>
         <th:block th:if="${viewmode=='edit'}" th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
-        <th:block th:insert="question-type/types :: fileupload-fragment(${viewmode},${downloadUrl},${filename}, 'formInput['+${formInput.id}+']',${mayRemove}, ${removeName}, ${saveName})" />
+        <th:block th:insert="question-type/types :: fileupload-fragment(${viewmode},${downloadUrl},${filename}, ${inputField}, ${validationField}, ${mayRemove}, ${removeName}, ${saveName})" />
     </div>
 
 
 
-    <th:block th:fragment="fileupload-fragment(viewmode,downloadUrl,filename,inputField,mayRemove,removeName,saveName)">
+    <th:block th:fragment="fileupload-fragment(viewmode,downloadUrl,filename,inputField,validationField,mayRemove,removeName,saveName)">
         <!--/* viewmode (string) readonly / edit
                DownloadUrl (string) url where to download the file
                fileName (string)  filename of the uploaded file
@@ -122,10 +124,10 @@
                 #fields.hasErrors('notBindedField') will throw an exception, and there is no quick way of checking if a
                 field has been binded
             */-->
-            <div th:classappend="${noErrors == null} ? (${#fields.hasErrors('__${inputField}__')} ? 'error')">
-                <th:block th:if="${noErrors == null}">
-                    <th:block th:if="${#fields.hasErrors('__${inputField}__')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('__${inputField}__')}" th:text="${err}"/>
+            <div th:classappend="${!#strings.isEmpty(validationField)} ? (${#fields.hasErrors('__${validationField}__')} ? 'error')">
+                <th:block th:if="${!#strings.isEmpty(validationField)}">
+                    <th:block th:if="${#fields.hasErrors('__${validationField}__')}">
+                        <span class="error-message" th:each="err : ${#fields.errors('__${validationField}__')}" th:text="${err}"/>
                     </th:block>
                 </th:block>
                 <!--/* ugly way for dealing with array kind of inputFields to a valid id formInput[1010] -> formInput-1010 */-->

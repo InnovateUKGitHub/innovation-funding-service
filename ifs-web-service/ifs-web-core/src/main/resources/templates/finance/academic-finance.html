@@ -283,14 +283,15 @@
      th:with="viewmode=${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))) ? 'readonly' : 'edit'},
          downloadUrl='/application/'+ ${model.application.currentApplication.id} + '/form/' + ${model.financeViewModel.applicationFinanceId} + '/finance-download',
          filename=${filename},
-         inputField='formInput[jes-upload]',
+         inputField='jes-upload',
+         validationField='formInput[jes-upload]',
          mayRemove=true,
          removeName='remove_finance_document',
-         saveName='jes-upload'">
+         saveName='upload_file'">
     <div class="upload-section">
          <h3 class="heading-small no-margin" th:text="${formInput.getDescription()}">Upload a pdf copy of the Je-S output form once you have a status of 'With Council'.</h3>
          <th:block th:if="${viewmode=='edit'}" th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
-         <th:block th:insert="question-type/types :: fileupload-fragment(${viewmode},${downloadUrl},${filename},${inputField},${mayRemove}, ${removeName}, ${saveName})" />
+         <th:block th:insert="question-type/types :: fileupload-fragment(${viewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
     </div>
 </th:block>
 </html>

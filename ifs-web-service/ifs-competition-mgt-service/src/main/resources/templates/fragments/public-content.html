@@ -311,10 +311,11 @@
                                downloadUrl=@{/competition/setup/public-content/{sectionPath}/{compId}/edit/{groupId}(sectionPath=${model.section.type.path},compId=${model.competition.id},groupId=${contentGroup.id})},
                                filename=${model.hasAttachment(contentGroup.id) ? model.fileName(contentGroup.id) : ''},
                                inputField='contentGroups[__${index}__].attachment',
+                               validationField=${inputField},
                                mayRemove=true,
                                removeName='removeFile',
                                saveName='uploadFile'">
-                    <th:block th:with="removeValue=${contentGroup.id}" th:insert="question-type/types :: fileupload-fragment(${uploadViewmode},${downloadUrl},${filename},${inputField},${mayRemove},${removeName},${saveName})" />
+                    <th:block th:with="removeValue=${contentGroup.id}" th:insert="question-type/types :: fileupload-fragment(${uploadViewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
                 </th:block>
             </div>
             <button type="button" class="buttonlink" th:if="${index > 0 or model.section.type.allowEmptyContentGroups}" data-remove-row="contentGroup">Remove section</button>

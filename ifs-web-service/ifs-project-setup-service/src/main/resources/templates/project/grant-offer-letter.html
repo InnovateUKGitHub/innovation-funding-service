@@ -92,10 +92,11 @@
                                downloadUrl=@{/project/{id}/offer/signed-grant-offer-letter(id=${model.projectId})},
                                filename=${model.signedGrantOfferLetterFile?.filename},
                                inputField='signedGrantOfferLetter',
+                               validationField=${inputField},
                                mayRemove=true,
                                removeName='removeSignedGrantOfferLetterClicked',
                                saveName='uploadSignedGrantOfferLetterClicked'">
-                    <th:block th:insert="question-type/types :: fileupload-fragment(${uploadViewmode},${downloadUrl},${filename},${inputField},${mayRemove},${removeName},${saveName})" />
+                    <th:block th:insert="question-type/types :: fileupload-fragment(${uploadViewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
                 </th:block>
             </div>
 

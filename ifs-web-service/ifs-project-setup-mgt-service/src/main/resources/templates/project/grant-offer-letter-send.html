@@ -56,10 +56,11 @@
                        downloadUrl=@{/project/{id}/grant-offer-letter/grant-offer-letter(id=${model.projectId})},
                        filename=${model.grantOfferLetterFile?.filename},
                        inputField='grantOfferLetter',
+                       validationField=${inputField},
                        mayRemove=${model.showRemoveOfferLetterButton},
                        removeName='removeGrantOfferLetterClicked',
                        saveName='uploadGrantOfferLetterClicked'">
-            <th:block th:insert="question-type/types :: fileupload-fragment(${uploadViewmode},${downloadUrl},${filename},${inputField},${mayRemove},${removeName},${saveName})" />
+            <th:block th:insert="question-type/types :: fileupload-fragment(${uploadViewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
         </th:block>
     </form>
     </div>
@@ -87,10 +88,11 @@
                            downloadUrl=@{/project/{id}/grant-offer-letter/additional-contract(id=${model.projectId})},
                            filename=${model.additionalContractFile?.filename},
                            inputField='annex',
+                           validationField=${inputField},
                            mayRemove=false,
                            removeName='',
                            saveName='uploadAnnexClicked'">
-                <th:block th:insert="question-type/types :: fileupload-fragment(${uploadViewmode},${downloadUrl},${filename},${inputField},${mayRemove},${removeName},${saveName})" />
+                <th:block th:insert="question-type/types :: fileupload-fragment(${uploadViewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
             </th:block>
         </form>
     </div>
