@@ -75,33 +75,6 @@ public class AssessorFeedbackRestServiceImplTest extends BaseRestServiceUnitTest
 
         setupDeleteWithRestResultVerifications(expectedUrl);
     }
-    
-    @Test
-    public void testFeedbackUploaded() {
-
-        String expectedUrl = assessorFeedbackRestURL + "/assessorFeedbackUploaded?competitionId=123";
-
-        setupGetWithRestResultExpectations(expectedUrl, Boolean.class, true);
-
-        // now run the method under test
-        RestResult<Boolean> result = service.feedbackUploaded(123L);
-
-        assertTrue(result.isSuccess());
-        Assert.assertEquals(Boolean.TRUE, result.getSuccessObject());
-    }
-    
-    @Test
-    public void testSubmitAssessorFeedback() {
-
-        String expectedUrl = assessorFeedbackRestURL + "/submitAssessorFeedback/123";
-
-        setupPostWithRestResultExpectations(expectedUrl, null, HttpStatus.OK);
-
-        // now run the method under test
-        RestResult<Void> result = service.submitAssessorFeedback(123L);
-
-        assertTrue(result.isSuccess());
-    }
 
     @Override
     protected AssessorFeedbackRestServiceImpl registerRestServiceUnderTest() {

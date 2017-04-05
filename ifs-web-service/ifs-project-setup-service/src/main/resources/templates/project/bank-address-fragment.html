@@ -26,24 +26,17 @@
             </label>
         </div>
 
-        <div class="form-block" th:if="${model.bankAddress}">
-            <label class="block-label selection-button-radio" for="address-use-bank" data-target="bankAddress">
-                <input id="address-use-bank" type="radio" name="bank-address-group" required="required" th:attr="data-required-errormessage=#{validation.bankdetailsresource.organisationaddress.required}" value="BANK_DETAILS" th:field="*{addressType}"/>
-                Use bank address (<strong th:text="${model.bankAddress?.postcode}">SN1 2EE</strong>)
-            </label>
-        </div>
-
         <div class="form-block">
             <label class="block-label selection-button-radio" for="address-add-bank" data-target="custom-postcode">
                 <input id="address-add-bank" type="radio" name="bank-address-group" required="required" th:attr="data-required-errormessage=#{validation.bankdetailsresource.organisationaddress.required}" value="ADD_NEW" th:field="*{addressType}"/>
-                Enter an alternative banking address
+                Enter an alternative billing address
             </label>
         </div>
       </div>
     </fieldset>
 
     <div id="registeredAddress" class="boxed extra-margin" th:if="${model.registeredAddress}">
-        <h3 class="heading-medium no-margin-top">Confirm bank address</h3>
+        <h3 class="heading-medium no-margin-top">Confirm billing address</h3>
         <p>
           <span th:each="addressLine : ${model.registeredAddress.getNonEmptyLines()}" th:remove="tag">
               <span th:text="${addressLine}" th:remove="tag">An address line</span><br />
@@ -51,7 +44,7 @@
         </p>
     </div>
     <div id="operatingAddress" class="boxed extra-margin" th:if="${model.operatingAddress}">
-        <h3 class="heading-medium no-margin-top" th:text="${(address != null and address == 'bankDetails' ? 'Confirm organisation address' : 'Confirm banking address')}">LOCATION TITLE</h3>
+        <h3 class="heading-medium no-margin-top" th:text="${(address != null and address == 'bankDetails' ? 'Confirm organisation address' : 'Confirm billing address')}">LOCATION TITLE</h3>
         <p>
           <span th:each="addressLine : ${model.operatingAddress.getNonEmptyLines()}" th:remove="tag">
               <span th:text="${addressLine}" th:remove="tag">An address line</span><br />

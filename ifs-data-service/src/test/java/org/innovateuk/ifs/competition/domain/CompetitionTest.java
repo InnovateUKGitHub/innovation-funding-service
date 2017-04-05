@@ -210,7 +210,7 @@ public class CompetitionTest {
     }
 
     @Test
-    public void competitionStatusReleaseFeedback() {
+    public void competitionStatusFeedbackReleased() {
         competition.setEndDate(LocalDateTime.now().minusDays(7));
         competition.setAssessorAcceptsDate(LocalDateTime.now().minusDays(6));
         competition.notifyAssessors(LocalDateTime.now().minusDays(5));
@@ -218,6 +218,7 @@ public class CompetitionTest {
         competition.setFundersPanelDate(LocalDateTime.now().minusDays(3));
         competition.setFundersPanelEndDate(LocalDateTime.now().minusDays(2));
         competition.setReleaseFeedbackDate(LocalDateTime.now().minusDays(1));
+        competition.releaseFeedback(LocalDateTime.now().minusDays(1));
         assertEquals(PROJECT_SETUP, competition.getCompetitionStatus());
     }
 }
