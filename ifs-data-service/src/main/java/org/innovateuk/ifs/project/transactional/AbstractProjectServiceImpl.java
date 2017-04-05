@@ -156,14 +156,18 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
 
     protected ProjectActivityStates createFinanceCheckStatus(final Project project, final Organisation organisation, boolean isAwaitingResponse) {
         PartnerOrganisation partnerOrg = partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(project.getId(), organisation.getId());
-            if (EligibilityState.APPROVED.equals(eligibilityWorkflowHandler.getState(partnerOrg)) &&
-                    asList(ViabilityState.APPROVED, ViabilityState.NOT_APPLICABLE).contains(viabilityWorkflowHandler.getState(partnerOrg))) {
+            if (financeChecksApproved(partnerOrg)) {
                 return COMPLETE;
             }
             if (isAwaitingResponse) {
                 return ACTION_REQUIRED;
             }
             return PENDING;
+    }
+
+    private boolean financeChecksApproved(PartnerOrganisation partnerOrg) {
+        return asList(EligibilityState.APPROVED, EligibilityState.NOT_APPLICABLE).contains(eligibilityWorkflowHandler.getState(partnerOrg)) &&
+                asList(ViabilityState.APPROVED, ViabilityState.NOT_APPLICABLE).contains(viabilityWorkflowHandler.getState(partnerOrg));
     }
 
     protected ProjectActivityStates createLeadSpendProfileStatus(final Project project, final ProjectActivityStates spendProfileStatus, final Optional<SpendProfile> spendProfile) {

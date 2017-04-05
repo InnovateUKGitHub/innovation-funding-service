@@ -153,7 +153,7 @@
                     <fieldset>
                         <legend>
                             <span class="heading-medium">Estimated timescales</span>
-                            <span class="form-hint">Project start date</span>
+                            <span class="form-hint">When do you wish to start your project?</span>
                             <th:block th:insert="question-type/form-elements :: form-hint (hint='For example: 31 12 2015')"  />
                             <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.startDate')"  />
                         </legend>
@@ -202,7 +202,7 @@
                     <fieldset>
                         <legend>
                             <span class="form-label form-label-bold">Is this application a resubmission of a previous application?</span>
-                            <th:block th:insert="question-type/form-elements :: form-hint (hint='Let us know if this is an application you have previously submitted to Innovate UK in another competition.')" />
+                            <th:block th:insert="question-type/form-elements :: form-hint (hint='Let us know if this application has been previously submitted to Innovate UK.')" />
                             <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.resubmission')" />
                         </legend>
                         <label class="block-label selection-button-radio "
@@ -268,7 +268,7 @@
                     Application details are marked as complete
                 </div>
                 <dl class="readonly-data">
-                    <dt>Project title</dt>
+                    <dt>Application title</dt>
                     <dd th:text="${currentApplication.name}"></dd>
                 </dl>
                 <h2 class="heading-medium">Estimated timescales</h2>
