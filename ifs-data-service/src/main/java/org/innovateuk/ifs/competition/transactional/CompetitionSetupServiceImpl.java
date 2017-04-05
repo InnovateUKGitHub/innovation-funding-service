@@ -53,8 +53,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 @Service
 public class CompetitionSetupServiceImpl extends BaseTransactionalService implements CompetitionSetupService {
     private static final Log LOG = LogFactory.getLog(CompetitionSetupServiceImpl.class);
-    @Autowired
-    private CompetitionService competitionService;
+
     @Autowired
     private CompetitionMapper competitionMapper;
     @Autowired
