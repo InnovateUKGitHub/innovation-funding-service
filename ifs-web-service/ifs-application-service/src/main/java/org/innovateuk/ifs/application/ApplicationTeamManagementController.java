@@ -241,18 +241,20 @@ public class ApplicationTeamManagementController {
         return processAnyFailuresOrSucceed(simpleMap(form.getMarkedForRemoval(), applicationService::removeCollaborator))
                 .andOnSuccess(() -> invites.isEmpty() ?
                         serviceSuccess(new InviteResultsResource()) :
-                        inviteRestService.createInvitesByOrganisation(organisationId, invites).toServiceResult());
+                        inviteRestService.createInvitesByOrganisation(organisationId, invites).toServiceResult()
+                );
     }
 
     private ServiceResult<InviteResultsResource> updateInvitesByInviteOrganisation(long inviteOrganisationId,
                                                                                    ApplicationTeamUpdateForm form,
                                                                                    long applicationId) {
-        return processAnyFailuresOrSucceed(simpleMap(form.getMarkedForRemoval(), applicationService::removeCollaborator))
-                .andOnSuccess(() -> {
-                    List<ApplicationInviteResource> invites = createInvites(form, applicationId, inviteOrganisationId);
+        List<ApplicationInviteResource> invites = createInvites(form, applicationId, inviteOrganisationId);
 
-                    return inviteRestService.saveInvites(invites).toServiceResult();
-                });
+        return processAnyFailuresOrSucceed(simpleMap(form.getMarkedForRemoval(), applicationService::removeCollaborator))
+                .andOnSuccess(() -> invites.isEmpty() ?
+                        serviceSuccess(new InviteResultsResource()) :
+                        inviteRestService.saveInvites(invites).toServiceResult()
+                );
     }
 
     private List<ApplicationInviteResource> createInvites(ApplicationTeamUpdateForm applicationTeamUpdateForm,
