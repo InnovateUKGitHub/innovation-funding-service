@@ -108,107 +108,7 @@ public class AssessorFeedbackServiceSecurityTest extends BaseServiceSecurityTest
             verify(rules).applicationTeamCanSeeAndDownloadPublishedAssessorFeedbackForTheirApplications(application, getLoggedInUser());
         });
     }
-    
-    @Test
-	public void test_assessorFeedbackUploaded_allowedIfGlobalCompAdminRole() {
 
-		RoleResource compAdminRole = newRoleResource().withType(COMP_ADMIN).build();
-		setLoggedInUser(newUserResource().withRolesGlobal(singletonList(compAdminRole)).build());
-		classUnderTest.assessorFeedbackUploaded(COMPETITION_ID);
-	}
-
-	@Test
-	public void test_assessorFeedbackUploaded_deniedIfNotLoggedIn() {
-
-		setLoggedInUser(null);
-		try {
-			classUnderTest.assessorFeedbackUploaded(COMPETITION_ID);
-			fail("Should not have been able to check if assessor feedback uploaded without first logging in");
-		} catch (AccessDeniedException e) {
-			// expected behaviour
-		}
-	}
-
-	@Test
-	public void test_assessorFeedbackUploaded_deniedIfNoGlobalRolesAtAll() {
-
-		try {
-			classUnderTest.assessorFeedbackUploaded(COMPETITION_ID);
-			fail("Should not have been able to check if assessor feedback uploaded without the global comp admin role");
-		} catch (AccessDeniedException e) {
-			// expected behaviour
-		}
-	}
-
-	@Test
-	public void test_assessorFeedbackUploaded_deniedIfNotCorrectGlobalRoles() {
-
-		List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type != COMP_ADMIN && type != PROJECT_FINANCE)
-				.collect(toList());
-
-		nonCompAdminRoles.forEach(role -> {
-
-			setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
-
-			try {
-				classUnderTest.assessorFeedbackUploaded(COMPETITION_ID);
-				fail("Should not have been able to check if assessor feedback uploaded without the global Comp Admin role");
-			} catch (AccessDeniedException e) {
-				// expected behaviour
-			}
-		});
-	}
-
-	@Test
-	public void test_submitAssessorFeedback_allowedIfGlobalCompAdminRole() {
-
-		RoleResource compAdminRole = newRoleResource().withType(COMP_ADMIN).build();
-		setLoggedInUser(newUserResource().withRolesGlobal(singletonList(compAdminRole)).build());
-		classUnderTest.submitAssessorFeedback(COMPETITION_ID);
-	}
-
-	@Test
-	public void test_submitAssessorFeedback_deniedIfNotLoggedIn() {
-
-		setLoggedInUser(null);
-		try {
-			classUnderTest.submitAssessorFeedback(COMPETITION_ID);
-			fail("Should not have been able to submit assessor feedback without first logging in");
-		} catch (AccessDeniedException e) {
-			// expected behaviour
-		}
-	}
-
-	@Test
-	public void test_submitAssessorFeedback_deniedIfNoGlobalRolesAtAll() {
-
-		try {
-			classUnderTest.submitAssessorFeedback(COMPETITION_ID);
-			fail("Should not have been able to submit assessor feedback without the global comp admin role");
-		} catch (AccessDeniedException e) {
-			// expected behaviour
-		}
-	}
-
-	@Test
-	public void test_submitAssessorFeedback_deniedIfNotCorrectGlobalRoles() {
-
-		List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type != COMP_ADMIN && type != PROJECT_FINANCE)
-				.collect(toList());
-
-		nonCompAdminRoles.forEach(role -> {
-
-			setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
-
-			try {
-				classUnderTest.submitAssessorFeedback(COMPETITION_ID);
-				fail("Should not have been able to submit assessor feedback without the global Comp Admin role");
-			} catch (AccessDeniedException e) {
-				// expected behaviour
-			}
-		});
-	}
-	
     @Override
     protected Class<? extends AssessorFeedbackService> getClassUnderTest() {
         return TestAssessorFeedbackService.class;
@@ -238,21 +138,6 @@ public class AssessorFeedbackServiceSecurityTest extends BaseServiceSecurityTest
 
         @Override
         public ServiceResult<FileEntryResource> getAssessorFeedbackFileEntryDetails(long applicationId) {
-            return null;
-        }
-
-		@Override
-		public ServiceResult<Boolean> assessorFeedbackUploaded(long competitionId) {
-			return null;
-		}
-
-		@Override
-		public ServiceResult<Void> submitAssessorFeedback(long competitionId) {
-			return null;
-		}
-
-        @Override
-        public ServiceResult<Void> notifyLeadApplicantsOfAssessorFeedback(long competitionId) {
             return null;
         }
     }

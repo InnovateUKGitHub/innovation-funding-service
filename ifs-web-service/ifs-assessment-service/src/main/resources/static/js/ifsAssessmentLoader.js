@@ -24,6 +24,11 @@ IFS.assessment.loadOrder = {
     },
     finalize: function () {}
   },
+  'assessor-comp-dashboard': {
+    init: function () {
+      IFS.assessment.formCheckboxToggleSubmit.init()
+    }
+  },
   'declaration-form': {
     init: function () {
       IFS.assessment.repeatableDeclarationRows.init()
