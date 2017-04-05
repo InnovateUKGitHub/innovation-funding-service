@@ -410,8 +410,14 @@
     <div class="modal-delete-organisation" role="dialog" aria-hidden="true">
         <th:block th:insert="fragments/modals :: close-button" />
         <h2 class="heading-medium no-margin">Delete organisation</h2>
-        <p>Are you sure you wish to remove this organisation from the application. The innovate funding system will not inform collaborators of their removal, this action should be discussed with all applicants beforehand.</p>
-        <p>This will remove all collaborators, and they will no longer be able to access this application. It will also delete the organisations financial details, and any assigned questions will be returned to you as the lead applicant.</p>
+
+        <p>Are you sure you wish to remove the entire organisation from this project? This will also remove team
+            members associated with that organisation. The organisation's finance information will be deleted and any
+            assigned questions will be returned to you.</p>
+
+        <p>The organisation will not be notified of this action through this service. You should therefore discuss this
+            with them beforehand.</p>
+
         <hr />
         <div>
             <button class="button large"
