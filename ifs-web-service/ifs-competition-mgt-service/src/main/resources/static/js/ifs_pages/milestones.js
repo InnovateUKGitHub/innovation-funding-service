@@ -35,8 +35,14 @@ IFS.competitionManagement.milestones = (function () {
       setTimeout(function () {
         var nextRow = field.closest('tr').next('tr')
         var date = field.attr('data-date')
+        var time
+        if (field.closest('tr').find('.time select').length > 0) {
+          time = field.closest('tr').find('.time option:selected').data('time')
+        } else {
+          time = field.closest('tr').find('.time [data-time]').data('time')
+        }
         if (nextRow.length) {
-          nextRow.attr({'data-future-date': date})
+          nextRow.attr({'data-future-date': date + (time !== undefined ? '-' + time : '')})
           if (jQuery.trim(date.length) !== 0) {
             var input = nextRow.find('.day input')
             IFS.core.formValidation.checkDate(input, true)

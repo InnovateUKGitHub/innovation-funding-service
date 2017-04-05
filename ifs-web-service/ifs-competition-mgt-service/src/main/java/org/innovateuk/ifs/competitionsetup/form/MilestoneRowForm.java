@@ -20,6 +20,7 @@ import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 public class MilestoneRowForm {
 	private static final Log LOG = LogFactory.getLog(MilestoneRowForm.class);
 	private static final Set<MilestoneType> WITH_TIME_TYPES = asSet(MilestoneType.SUBMISSION_DATE);
+    private static final Set<MilestoneType> WITH_MIDDAY_TIME = asSet(MilestoneType.ASSESSOR_ACCEPTS, MilestoneType.ASSESSOR_DEADLINE);
 
     @Range(min=2000, max = 9999, message="{validation.nonifs.detailsform.yyyy.range.format}")
     private Integer year;
@@ -106,6 +107,10 @@ public class MilestoneRowForm {
         return WITH_TIME_TYPES.contains(milestoneType);
     }
 
+    public boolean isMiddayTime() {
+        return WITH_MIDDAY_TIME.contains(milestoneType);
+    }
+
     public LocalDateTime getDate() {
         return date;
     }
@@ -152,7 +157,7 @@ public class MilestoneRowForm {
 
     public LocalDateTime getMilestoneAsDateTime() {
         if (day != null && month != null && year != null){
-            if ( time != null && isTimeOption()) {
+            if (time != null && (isTimeOption() || isMiddayTime())) {
                 return LocalDateTime.of(year, month, day, time.getHour(), 0);
             } else {
                 return LocalDateTime.of(year, month, day, 0, 0);

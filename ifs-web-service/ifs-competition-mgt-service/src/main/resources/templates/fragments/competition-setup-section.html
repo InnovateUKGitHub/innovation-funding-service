@@ -814,8 +814,9 @@
                                   th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
                                   th:readonly="${!milestoneEntry.value.editableForCompetition(competition)}">
                               <option th:each="time : ${T(org.innovateuk.ifs.competitionsetup.form.MilestoneTime).values()}"
-                                      th:text="${time.display}" th:value="${time}" th:selected="${time == milestoneEntry.value.time}"></option>
+                                      th:text="${time.display}" th:value="${time}" th:attr="data-time=${time.hour}" th:selected="${time == milestoneEntry.value.time}"></option>
                           </select>
+                          <span th:if="${milestoneEntry.value.middayTime}" data-time="12">12:00 pm</span>
                       </td>
                       <td class="js-addWeekDay" th:text="${milestoneEntry.value.dayOfWeek}"></td>
                       <td class="day">
@@ -877,7 +878,10 @@
                     <tr th:each="milestoneEntry : ${competitionSetupForm.milestoneEntries}"
                         th:if="${milestoneEntry.value.milestoneType.presetDate}">
                         <td th:text="${milestoneEntry.value.milestoneType.milestoneDescription}"></td>
-                        <td><th:block th:if="${milestoneEntry.value.timeOption}" th:text="${milestoneEntry.value.time.display}"/></td>
+                        <td>
+                            <th:block th:if="${milestoneEntry.value.timeOption}" th:text="${milestoneEntry.value.time.display}"/>
+                            <th:block th:if="${milestoneEntry.value.middayTime}">12:00 pm</th:block>
+                        </td>
                         <td th:text="${milestoneEntry.value.dayOfWeek}"></td>
                         <td th:text="${#temporals.format(milestoneEntry.value.date, 'd MMMM yyyy')}"></td>
                     </tr>
