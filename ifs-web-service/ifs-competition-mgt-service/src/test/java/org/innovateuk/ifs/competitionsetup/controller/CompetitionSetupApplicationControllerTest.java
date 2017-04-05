@@ -171,7 +171,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         question.setType(ASSESSED_QUESTION);
         when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(QUESTIONS))).thenReturn(serviceFailure(Collections.emptyList()));
         when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(question));
-        mockMvc.perform(post(URL_PREFIX +"/question")
+        mockMvc.perform(post(URL_PREFIX +"/question/" + questionId + "/edit")
                 .param("question.type", ASSESSED_QUESTION.name())
                 .param("question.questionId", questionId.toString()))
                 .andExpect(status().isOk())
@@ -191,7 +191,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(question));
 
 
-        mockMvc.perform(post(URL_PREFIX +"/question")
+        mockMvc.perform(post(URL_PREFIX +"/question/" + questionId + "/edit")
                 .param("question.questionId", questionId.toString())
                 .param("question.type", SCOPE.name()))
                 .andExpect(status().isOk())
@@ -211,7 +211,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(QUESTIONS))).thenReturn(serviceFailure(Collections.emptyList()));
         when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(question));
 
-        mockMvc.perform(post(URL_PREFIX + "/question")
+        mockMvc.perform(post(URL_PREFIX + "/question/" + questionId + "/edit")
                 .param("question.type", ASSESSED_QUESTION.name())
                 .param("question.questionId", questionId.toString())
                 .param("question.title", "My Title")
@@ -248,7 +248,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(question));
 
 
-        mockMvc.perform(post(URL_PREFIX + "/question")
+        mockMvc.perform(post(URL_PREFIX + "/question/" + questionId + "/edit")
                 .param("question.type", SCOPE.name())
                 .param("question.questionId", questionId.toString())
                 .param("question.title", "My Title")
@@ -283,7 +283,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(QUESTIONS))).thenReturn(serviceFailure(Collections.emptyList()));
         when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(question));
 
-        mockMvc.perform(post(URL_PREFIX + "/question")
+        mockMvc.perform(post(URL_PREFIX + "/question/" + questionId + "/edit")
                 .param("question.type", ASSESSED_QUESTION.name())
                 .param("question.questionId", questionId.toString())
                 .param("question.title", "My Title")
@@ -321,7 +321,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(QUESTIONS))).thenReturn(serviceFailure(Collections.emptyList()));
         when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(question));
 
-        MvcResult result = mockMvc.perform(post(URL_PREFIX + "/question")
+        MvcResult result = mockMvc.perform(post(URL_PREFIX + "/question/" + questionId + "/edit")
                 .param("question.questionId", questionId.toString())
                 .param("question.writtenFeedback", "true")
                 .param("question.assessmentGuidanceTitle", "")
@@ -354,7 +354,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
         when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(question));
 
-        MvcResult result = mockMvc.perform(post(URL_PREFIX + "/question")
+        MvcResult result = mockMvc.perform(post(URL_PREFIX + "/question/" + questionId + "/edit")
                 .param("question.questionId", questionId.toString())
                 .param("question.writtenGuidance", "false")
                 .param("question.guidanceTitle", "")
@@ -387,7 +387,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
         when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(question));
 
-        MvcResult result = mockMvc.perform(post(URL_PREFIX + "/question")
+        MvcResult result = mockMvc.perform(post(URL_PREFIX + "/question/" + questionId + "/edit")
                 .param("question.questionId", questionId.toString())
                 .param("question.writtenFeedback", "true")
                 .param("question.assessmentGuidanceTitle", "")
@@ -417,7 +417,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
         when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(question));
 
-        MvcResult result = mockMvc.perform(post(URL_PREFIX + "/question")
+        MvcResult result = mockMvc.perform(post(URL_PREFIX + "/question/" + questionId + "/edit")
                 .param("question.questionId", questionId.toString())
                 .param("question.writtenGuidance", "false")
                 .param("question.guidanceTitle", "")
@@ -444,7 +444,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
         when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(PROJECT_DETAILS))).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post(URL_PREFIX + "/question")
+        mockMvc.perform(post(URL_PREFIX + "/question/" + questionId + "/edit")
                 .param("question.type", SCOPE.name())
                 .param("question.questionId", questionId.toString())
                 .param("question.title", "My Title")
