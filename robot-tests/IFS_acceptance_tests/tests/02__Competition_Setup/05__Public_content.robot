@@ -357,7 +357,7 @@ The guest user can see updated date information
    Given the user clicks the button/link    link=Dates
    And the user should see the element    jQuery=dt:contains("1 February ${nextyear}") + dd:contains("Competition opens")
    And the user should see the element    jQuery=dt:contains("1 February ${nextyear}") + dd:contains("Competition closes")
-   And the user should see the element    jQuery=dt:contains("2 February ${nextyear}") + dd:contains("Applicants notified")
+   And the user should see the element    jQuery=dt:contains("3 February ${nextyear}") + dd:contains("Applicants notified")
    And the user should see the element    jQuery=dt:contains("12 December ${nextyear}") + dd:contains("Content 1")
    And the user should see the element    jQuery=dt:contains("20 December ${nextyear}") + dd:contains("Content 2")
 

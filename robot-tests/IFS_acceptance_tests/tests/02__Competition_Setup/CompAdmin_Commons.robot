@@ -94,7 +94,7 @@ the user fills in the CS Milestones
     the user enters text to a text field  jQuery=th:contains("Assessor accepts") ~ td.day input  ${dayAfterTomorrow}
     the user enters text to a text field  jQuery=th:contains("Assessor accepts") ~ td.month input  ${month}
     the user enters text to a text field  jQuery=th:contains("Assessor accepts") ~ td.year input  ${nextyear}
-    the user enters text to a text field  jQuery=th:contains("Assessor deadline") ~ td.day input  ${twoDaysForward}
+    the user enters text to a text field  jQuery=th:contains("Assessor deadline") ~ td.day input  ${dayAfterTomorrow}
     the user enters text to a text field  jQuery=th:contains("Assessor deadline") ~ td.month input  ${month}
     the user enters text to a text field  jQuery=th:contains("Assessor deadline") ~ td.year input  ${nextyear}
     the user enters text to a text field  jQuery=th:contains("Line draw") ~ td.day input  ${twoDaysForward}
