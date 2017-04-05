@@ -33,7 +33,7 @@
             <dd>Innovate UK</dd>
             <dt>Application deadline:</dt>
             <dd>
-              <th:block th:text="${#ifsUtil.displayTime(currentCompetition.endDate)}" />
+              <th:block th:text="${#strings.toLowerCase(#temporals.format(currentCompetition.endDate, 'hh:mma '))}" />
               <th:block th:text="${#temporals.format(currentCompetition.endDate, 'EEEE d MMMM yyyy')}" />
             </dd>
           </dl>
