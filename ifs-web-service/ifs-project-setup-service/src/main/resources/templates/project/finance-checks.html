@@ -28,7 +28,7 @@
     </th:block>
 
     <ul>
-        <li th:if="${model.isAcademic()}">
+        <li th:if="${!model.isAcademic()}">
             <a th:href="@{/project/{projectId}/partner-organisation/{organisationId}/finance-checks/eligibility(projectId=${model.projectId},organisationId=${model.organisationId})}"
                class="heading-medium">View finances</a>
         </li>

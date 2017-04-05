@@ -81,7 +81,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 @RequestMapping(ProjectFinanceChecksController.PROJECT_FINANCE_CHECKS_BASE_URL)
 public class ProjectFinanceChecksController {
 
-    public static final String PROJECT_FINANCE_CHECKS_BASE_URL = "/project/{projectId}/partner-organisation/{organisationId}/finance-checks";
+    public static final String PROJECT_FINANCE_CHECKS_BASE_URL = "/project/{projectId}/finance-checks";
 
     private static final String ATTACHMENT_COOKIE = "query_new_response_attachments";
     private static final String FORM_ATTR = "form";
@@ -128,7 +128,7 @@ public class ProjectFinanceChecksController {
     @Autowired
     private FinanceUtil financeUtil;
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
+    @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping
     public String viewFinanceChecks(Model model,
                                     @PathVariable("projectId") final Long projectId,
