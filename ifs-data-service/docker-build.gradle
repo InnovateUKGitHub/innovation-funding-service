@@ -39,7 +39,7 @@ ext.ifsDataServiceRestBaseURL="http://data-service:8080"
 
 ext.postcodeLookupKey=""
 
-ext.ifsFileStorageLocation="/tmp/uploads"
+ext.ifsFileStorageLocation="/mnt/ifs_storage"
 
 ext.ifsWebBaseURL="https://ifs.local-dev"
 

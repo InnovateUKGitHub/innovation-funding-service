@@ -78,26 +78,6 @@
     </div>
 </th:block>
 
-<!-- Publish assessor feedback modal window -->
-<th:block th:fragment="modal-submit-assessor-feedback">
-    <div class="modal-submit-assessor-feedback" role="dialog" aria-hidden="true">
-        <th:block th:insert="fragments/modals :: close-button" />
-
-        <h2 class="heading-medium no-margin">Publish assessor feedback</h2>
-        <p>This will inform applicants that assessor feedback is available.</p>
-        <p>This step cannot be undone.</p>
-        <hr />
-        <div>
-            <form method="post" action="#" id="submit-assessor-feedback-form"
-                  th:action="@{/competition/{competitionId}/assessorfeedbacksubmit(competitionId=${competitionSummary.getCompetitionId()})}">
-                <button class="button" name="publish" value="publish" type="submit">Publish assessor feedback</button>
-                <button type="button" class="js-close buttonlink">Cancel</button>
-            </form>
-        </div>
-    </div>
-</th:block>
-
-
 <!-- save monotiring officer -->
 <th:block th:fragment="modal-assign-mo">
     <div class="modal-assign-mo" role="dialog" aria-hidden="true">
@@ -151,8 +131,7 @@
         <th:block th:insert="fragments/modals :: close-button" />
 
         <h2 class="heading-medium no-margin">Generate spend profile</h2>
-        <p>This will generate a flat spend profile for all project partners. This assumes that finance checks have
-            been completed for all partners and this section will be locked.</p>
+        <p>This will generate a flat spend profile for all project partners. This assumes that finance checks have been completed for all partners and this section will be locked.</p>
         <p>Partners will be notified that they can now create their spend profile.</p>
         <hr />
         <div method="post">
@@ -169,12 +148,12 @@
         <h2 class="heading-medium no-margin">Submit documents</h2>
         <p>Are you sure that you wish to submit your documents to Innovate UK?</p>
         <hr />
-        <div>
-            <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}+'/submit'}" method="post">
-                <button class="button" name="submit-other-documents">Submit</button>
-            </form>
-            <button type="button" class="js-close buttonlink">Cancel</button>
-        </div>
+        <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}+'/submit'}" method="post">
+            <div>
+                <button class="button" name="submit-other-documents" type="submit">Submit</button>
+                <button type="button" class="js-close buttonlink">Cancel</button>
+            </div>
+        </form>
     </div>
 </th:block>
 

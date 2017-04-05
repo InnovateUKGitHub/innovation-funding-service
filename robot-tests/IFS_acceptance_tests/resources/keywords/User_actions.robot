@@ -176,4 +176,3 @@ The user should not see the text in the element
     Wait Until Element Is Visible Without Screenshots    ${element}
     Wait Until Element Does Not Contain Without Screenshots    ${element}    ${text}
     the user should not see an error in the page
-
