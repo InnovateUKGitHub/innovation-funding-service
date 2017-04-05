@@ -131,8 +131,7 @@
         <th:block th:insert="fragments/modals :: close-button" />
 
         <h2 class="heading-medium no-margin">Generate spend profile</h2>
-        <p>This will generate a flat spend profile for all project partners. This assumes that finance checks have
-            been completed for all partners and this section will be locked.</p>
+        <p>This will generate a flat spend profile for all project partners. This assumes that finance checks have been completed for all partners and this section will be locked.</p>
         <p>Partners will be notified that they can now create their spend profile.</p>
         <hr />
         <div method="post">
@@ -149,12 +148,12 @@
         <h2 class="heading-medium no-margin">Submit documents</h2>
         <p>Are you sure that you wish to submit your documents to Innovate UK?</p>
         <hr />
-        <div>
-            <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}+'/submit'}" method="post">
-                <button class="button" name="submit-other-documents">Submit</button>
-            </form>
-            <button type="button" class="js-close buttonlink">Cancel</button>
-        </div>
+        <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}+'/submit'}" method="post">
+            <div>
+                <button class="button" name="submit-other-documents" type="submit">Submit</button>
+                <button type="button" class="js-close buttonlink">Cancel</button>
+            </div>
+        </form>
     </div>
 </th:block>
 
