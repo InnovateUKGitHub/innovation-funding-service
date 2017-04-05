@@ -10,7 +10,6 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectio
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.viewmodel.publiccontent.section.DatesViewModel;
 import org.innovateuk.ifs.competition.viewmodel.publiccontent.section.submodel.DateViewModel;
-import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

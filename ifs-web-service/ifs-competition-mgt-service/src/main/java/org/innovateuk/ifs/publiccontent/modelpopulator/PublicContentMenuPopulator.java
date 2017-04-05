@@ -4,7 +4,6 @@ import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.publiccontent.service.PublicContentService;
 import org.innovateuk.ifs.publiccontent.viewmodel.PublicContentMenuViewModel;
-import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

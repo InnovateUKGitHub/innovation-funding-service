@@ -4,7 +4,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
 import org.innovateuk.ifs.nonifs.form.NonIfsDetailsForm;
-import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.stereotype.Service;
 
 /**
