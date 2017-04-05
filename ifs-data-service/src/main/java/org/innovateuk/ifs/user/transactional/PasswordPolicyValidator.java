@@ -12,6 +12,7 @@ import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -97,18 +98,35 @@ public class PasswordPolicyValidator {
         public List<Pattern> apply(String currentExcludedRegexPattern) {
 
             String currentExcludedWordWithNumericalReplacements = currentExcludedRegexPattern.toLowerCase();
-
+            currentExcludedWordWithNumericalReplacements = excludeWordFromSpecialCharacters(currentExcludedWordWithNumericalReplacements);
             for (Map.Entry<String, String> replacement : interchangeableLettersAndNumbers.entrySet()) {
                 String searchString = format("([%s])", replacement.getKey());
                 String replacementString = format("[$1%s]", replacement.getValue());
                 currentExcludedWordWithNumericalReplacements =
                         currentExcludedWordWithNumericalReplacements.replaceAll(searchString, replacementString);
             }
-
             Pattern currentExcludedWordWithNumericalReplacementsPattern =
                     Pattern.compile(currentExcludedWordWithNumericalReplacements, CASE_INSENSITIVE);
-
             return singletonList(currentExcludedWordWithNumericalReplacementsPattern);
+        }
+
+        private String excludeWordFromSpecialCharacters(String inputString) {
+            StringBuffer resultString = new StringBuffer();
+            Pattern pattern = Pattern.compile("[a-zA-Z0-9\\s]*");
+            Matcher matcher = pattern.matcher(inputString);
+            if(!matcher.matches()) {
+                Pattern regex = Pattern.compile("[^*?\\\\]+|(\\*)|(\\?)|(\\\\)");
+                Matcher regexMatcher = regex.matcher(inputString);
+                while (regexMatcher.find()) {
+                    if (regexMatcher.group(1) != null) regexMatcher.appendReplacement(resultString, ".*");
+                    else if (regexMatcher.group(2) != null) regexMatcher.appendReplacement(resultString, ".");
+                    else if (regexMatcher.group(3) != null) regexMatcher.appendReplacement(resultString, "\\\\\\\\");
+                    else regexMatcher.appendReplacement(resultString, "\\\\Q" + regexMatcher.group(0) + "\\\\E");
+                }
+                regexMatcher.appendTail(resultString);
+                inputString = regexMatcher.toString();
+            }
+            return inputString;
         }
     }
 
