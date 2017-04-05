@@ -13,9 +13,4 @@ public interface AssessorFeedbackRestService {
     RestResult<ByteArrayResource> getAssessorFeedbackFile(Long applicationId);
 
     RestResult<FileEntryResource> getAssessorFeedbackFileDetails(Long applicationId);
-    
-    RestResult<Boolean> feedbackUploaded(Long competitionId);
-    
-    RestResult<Void> submitAssessorFeedback(Long competitionId);
-   
 }
