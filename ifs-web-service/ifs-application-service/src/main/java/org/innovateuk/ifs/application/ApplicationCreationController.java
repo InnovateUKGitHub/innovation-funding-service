@@ -4,7 +4,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.registration.OrganisationCreationController;
 import org.innovateuk.ifs.registration.RegistrationController;
 import org.innovateuk.ifs.util.CookieUtil;
@@ -19,7 +21,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.time.ZonedDateTime;
+
 import static java.lang.String.format;
+import static java.time.LocalDateTime.now;
 import static org.innovateuk.ifs.registration.AbstractAcceptInviteController.INVITE_HASH;
 
 /**
@@ -46,12 +51,20 @@ public class ApplicationCreationController {
     private UserAuthenticationService userAuthenticationService;
 
     @Autowired
+    private CompetitionService competitionService;
+
+    @Autowired
     private CookieUtil cookieUtil;
 
     @GetMapping("/check-eligibility/{competitionId}")
     public String checkEligibility(Model model,
                                    @PathVariable(COMPETITION_ID) Long competitionId,
                                    HttpServletResponse response) {
+        PublicContentItemResource publicContentItem = competitionService
+                .getPublicContentOfCompetition(competitionId);
+        if (!isCompetitionReady(publicContentItem)) {
+            return "redirect:/competition/search";
+        }
         model.addAttribute(COMPETITION_ID, competitionId);
         cookieUtil.saveToCookie(response, COMPETITION_ID, String.valueOf(competitionId));
         cookieUtil.removeCookie(response, INVITE_HASH);
@@ -90,5 +103,13 @@ public class ApplicationCreationController {
 
         }
         return null;
+    }
+
+    private boolean isCompetitionReady(PublicContentItemResource publicContentItem) {
+        if (publicContentItem.getNonIfs()) {
+            return false;
+        }
+        return (publicContentItem.getCompetitionOpenDate().isBefore(ZonedDateTime.now()) &&
+                publicContentItem.getCompetitionCloseDate().isAfter(ZonedDateTime.now()));
     }
 }

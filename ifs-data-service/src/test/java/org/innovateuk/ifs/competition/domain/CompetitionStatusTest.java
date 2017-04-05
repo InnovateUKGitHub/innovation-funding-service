@@ -175,7 +175,7 @@ public class CompetitionStatusTest {
     }
     
     @Test
-    public void competitionStatusAssessorFeedbackIfFundersPanelEndDateMetAndAssessorFeedbackDateNotSet(){
+    public void competitionStatusAssessorFeedbackIfFundersPanelEndDateMetAndFeedbackReleasedDateNotSet(){
     	competition.setStartDate(past);
     	competition.setEndDate(past);
     	competition.setFundersPanelDate(past);
@@ -189,7 +189,7 @@ public class CompetitionStatusTest {
     }
     
     @Test
-    public void competitionStatusProjectSetupIfReleaseFeedbackDateInPast(){
+    public void competitionStatusProjectSetupIfFeedbackReleasedDateInPast(){
     	competition.setStartDate(past);
     	competition.setEndDate(past);
         competition.setFundersPanelDate(past);
@@ -197,13 +197,14 @@ public class CompetitionStatusTest {
         competition.closeAssessment(past);
     	competition.setFundersPanelEndDate(past);
     	competition.setReleaseFeedbackDate(past);
+    	competition.releaseFeedback(past);
 
         assertEquals(CompetitionStatus.PROJECT_SETUP, competition.getCompetitionStatus());
         assertTrue(competition.getCompetitionStatus().isFeedbackReleased());
     }
     
     @Test
-    public void competitionStatusProjectSetupIfReleaseFeedbackDateMet(){
+    public void competitionStatusProjectSetupIfFeedbackReleasedDateMet(){
     	competition.setStartDate(past);
     	competition.setEndDate(past);
         competition.setFundersPanelDate(past);
@@ -211,6 +212,7 @@ public class CompetitionStatusTest {
         competition.closeAssessment(past);
     	competition.setFundersPanelEndDate(past);
     	competition.setReleaseFeedbackDate(currentDate);
+    	competition.releaseFeedback(currentDate);
 
         assertEquals(CompetitionStatus.PROJECT_SETUP, competition.getCompetitionStatus());
         assertTrue(competition.getCompetitionStatus().isFeedbackReleased());

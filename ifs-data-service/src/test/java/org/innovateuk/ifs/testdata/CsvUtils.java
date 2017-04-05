@@ -429,6 +429,7 @@ class CsvUtils {
         ZonedDateTime fundersPanelDate;
         ZonedDateTime fundersPanelEndDate;
         ZonedDateTime releaseFeedback;
+        ZonedDateTime feedbackReleased;
         String leadTechnologist;
         String compExecutive;
         boolean setupComplete;
@@ -479,6 +480,7 @@ class CsvUtils {
             fundersPanelDate = nullableDateTime(line.get(i++));
             fundersPanelEndDate = nullableDateTime(line.get(i++));
             releaseFeedback = nullableDateTime(line.get(i++));
+            feedbackReleased = nullableDateTime(line.get(i++));
             leadTechnologist = nullable((line.get(i++)));
             compExecutive = nullable((line.get(i++)));
             setupComplete = nullableBoolean(line.get(i++));

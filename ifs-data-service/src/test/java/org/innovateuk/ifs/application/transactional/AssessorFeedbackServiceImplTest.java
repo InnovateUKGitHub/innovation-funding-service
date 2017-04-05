@@ -4,55 +4,22 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
-import org.innovateuk.ifs.notifications.resource.Notification;
-import org.innovateuk.ifs.notifications.resource.NotificationTarget;
-import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
-import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.Role;
-import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.junit.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.File;
 import java.io.InputStream;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.temporal.ChronoField;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 import java.util.function.Supplier;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyMap;
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.application.constant.ApplicationStatusConstants.APPROVED;
-import static org.innovateuk.ifs.application.constant.ApplicationStatusConstants.REJECTED;
-import static org.innovateuk.ifs.application.transactional.ApplicationFundingServiceImplMockTest.createNotificationExpectationsWithGlobalArgs;
-import static org.innovateuk.ifs.application.transactional.ApplicationFundingServiceImplMockTest.createSimpleNotificationExpectations;
-import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.FUNDING_DECISIONS_MADE_STATUS_IDS;
-import static org.innovateuk.ifs.application.transactional.AssessorFeedbackServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED;
-import static org.innovateuk.ifs.application.transactional.AssessorFeedbackServiceImpl.Notifications.APPLICATION_NOT_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
-import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
-import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
-import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 public class AssessorFeedbackServiceImplTest extends BaseServiceUnitTest<AssessorFeedbackServiceImpl> {
@@ -227,179 +194,6 @@ public class AssessorFeedbackServiceImplTest extends BaseServiceUnitTest<Assesso
 
         verify(applicationRepositoryMock).findOne(application.getId());
         verifyNoMoreInteractions(addressRepositoryMock);
-    }
-    
-    @Test
-    public void testFeedbackUploadedNotUploaded() {
-    	
-    	when(applicationRepositoryMock.countByCompetitionIdAndApplicationStatusIdInAndAssessorFeedbackFileEntryIsNull(123L, Arrays.asList(3L, 4L, 2L))).thenReturn(5);
-    	
-    	ServiceResult<Boolean> result = service.assessorFeedbackUploaded(123L);
-    	
-    	assertTrue(result.isSuccess());
-    	assertFalse(result.getSuccessObject());
-    }
-    
-    @Test
-    public void testFeedbackUploadedIsUploaded() {
-    	
-    	when(applicationRepositoryMock.countByCompetitionIdAndApplicationStatusIdInAndAssessorFeedbackFileEntryIsNull(123L, Arrays.asList(3L, 4L, 2L))).thenReturn(0);
-    	
-    	ServiceResult<Boolean> result = service.assessorFeedbackUploaded(123L);
-    	
-    	assertTrue(result.isSuccess());
-    	assertTrue(result.getSuccessObject());
-    }
-    
-    @Test
-    public void testSubmitAssessorFeedback() {
-    	
-    	Competition competition = newCompetition().withId(123L).build();
-    	when(competitionRepositoryMock.findOne(123L)).thenReturn(competition);
-    	
-    	ServiceResult<Void> result = service.submitAssessorFeedback(123L);
-    	
-    	assertTrue(result.isSuccess());
-    	assertNotNull(competition.getReleaseFeedbackDate());
-    	assertEquals("release feedback date is set to the start of the current second", 0, competition.getReleaseFeedbackDate().get(ChronoField.MILLI_OF_SECOND));
-    }
-
-    @Test
-    public void testNotifyLeadApplicantsOfAssessorFeedback() {
-
-        Competition competition = newCompetition().withId(111L).withAssessorFeedbackDate(ZonedDateTime.of(2017, 5, 3, 0, 0,0,0, ZoneId.systemDefault())).build();
-
-        Application fundedApplication1 = newApplication().withApplicationStatus(APPROVED).build();
-        Application unfundedApplication2 = newApplication().withApplicationStatus(REJECTED).build();
-        Application fundedApplication3 = newApplication().withApplicationStatus(APPROVED).build();
-
-        User fundedApplication1LeadApplicant = newUser().build();
-        User unfundedApplication2LeadApplicant = newUser().build();
-        User fundedApplication3LeadApplicant = newUser().build();
-
-        Role leadApplicantRole = newRole().with(id(456L)).build();
-
-        List<ProcessRole> leadApplicantProcessRoles = newProcessRole().
-                withUser(fundedApplication1LeadApplicant, unfundedApplication2LeadApplicant, fundedApplication3LeadApplicant).
-                withApplication(fundedApplication1, unfundedApplication2, fundedApplication3).
-                withRole(leadApplicantRole, leadApplicantRole, leadApplicantRole).
-                build(3);
-
-        UserNotificationTarget fundedApplication1LeadApplicantTarget = new UserNotificationTarget(fundedApplication1LeadApplicant);
-        UserNotificationTarget fundedApplication3LeadApplicantTarget = new UserNotificationTarget(fundedApplication3LeadApplicant);
-
-        Map<String, Object> expectedGlobalNotificationArguments = asMap(
-                "competitionName", competition.getName(),
-                "dashboardUrl", webBaseUrl,
-                "feedbackDate", TimeZoneUtil.toUkTimeZone(competition.getAssessorFeedbackDate()).toLocalDateTime());
-
-        List<NotificationTarget> expectedFundedLeadApplicants = asList(fundedApplication1LeadApplicantTarget, fundedApplication3LeadApplicantTarget);
-
-        Map<NotificationTarget, Map<String, Object>> expectedFundedNotificationTargetSpecificArguments = asMap(
-                fundedApplication1LeadApplicantTarget, asMap(
-                        "applicationName", fundedApplication1.getName(),
-                        "applicationNumber", fundedApplication1.getId()
-                ),
-                fundedApplication3LeadApplicantTarget, asMap(
-                        "applicationName", fundedApplication3.getName(),
-                        "applicationNumber", fundedApplication3.getId())
-        );
-
-        Notification expectedFundedNotification = new Notification(systemNotificationSourceMock, expectedFundedLeadApplicants, APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
-                expectedGlobalNotificationArguments, expectedFundedNotificationTargetSpecificArguments);
-
-        UserNotificationTarget unfundedApplication2LeadApplicantTarget = new UserNotificationTarget(unfundedApplication2LeadApplicant);
-        List<NotificationTarget> expectedUnfundedLeadApplicants = singletonList(unfundedApplication2LeadApplicantTarget);
-
-        Map<NotificationTarget, Map<String, Object>> expectedUnfundedNotificationTargetSpecificArguments = asMap(
-                unfundedApplication2LeadApplicantTarget, asMap(
-                        "applicationName", unfundedApplication2.getName(),
-                        "applicationNumber", unfundedApplication2.getId())
-        );
-
-        Notification expectedUnfundedNotification = new Notification(systemNotificationSourceMock, expectedUnfundedLeadApplicants, APPLICATION_NOT_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
-                expectedGlobalNotificationArguments, expectedUnfundedNotificationTargetSpecificArguments);
-
-        when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
-
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusIdIn(competition.getId(), FUNDING_DECISIONS_MADE_STATUS_IDS)).
-                thenReturn(asList(fundedApplication1, unfundedApplication2, fundedApplication3));
-
-        when(roleRepositoryMock.findOneByName(LEADAPPLICANT.getName())).thenReturn(leadApplicantRole);
-
-        leadApplicantProcessRoles.forEach(processRole ->
-                when(processRoleRepositoryMock.findByApplicationIdAndRoleId(processRole.getApplicationId(), processRole.getRole().getId())).thenReturn(singletonList(processRole))
-        );
-
-        asList(fundedApplication1, unfundedApplication2, fundedApplication3).forEach(application ->
-                when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application)
-        );
-
-        when(notificationServiceMock.sendNotification(createNotificationExpectationsWithGlobalArgs(expectedFundedNotification), eq(EMAIL))).thenReturn(serviceSuccess());
-        when(notificationServiceMock.sendNotification(createNotificationExpectationsWithGlobalArgs(expectedUnfundedNotification), eq(EMAIL))).thenReturn(serviceSuccess());
-
-        ServiceResult<Void> result = service.notifyLeadApplicantsOfAssessorFeedback(competition.getId());
-        assertTrue(result.isSuccess());
-
-        verify(notificationServiceMock).sendNotification(createNotificationExpectationsWithGlobalArgs(expectedFundedNotification), eq(EMAIL));
-        verify(notificationServiceMock).sendNotification(createNotificationExpectationsWithGlobalArgs(expectedUnfundedNotification), eq(EMAIL));
-        verifyNoMoreInteractions(notificationServiceMock);
-    }
-
-    @Test
-    public void testNotifyLeadApplicantsOfAssessorFeedbackAndJustLeadApplicants() {
-
-        Competition competition = newCompetition().withId(111L).build();
-
-        Application fundedApplication1 = newApplication().withApplicationStatus(APPROVED).build();
-        Application unfundedApplication2 = newApplication().withApplicationStatus(REJECTED).build();
-
-        // add some collaborators into the mix - they should not receive Notifications
-        User fundedApplication1LeadApplicant = newUser().build();
-        User fundedApplication1Collaborator = newUser().build();
-        User unfundedApplication2LeadApplicant = newUser().build();
-        User unfundedApplication2Collaborator = newUser().build();
-
-        Role leadApplicantRole = newRole().with(id(456L)).build();
-        Role collaboratorRole = newRole().with(id(789L)).build();
-
-        List<ProcessRole> allProcessRoles = newProcessRole().
-                withUser(fundedApplication1LeadApplicant, fundedApplication1Collaborator, unfundedApplication2LeadApplicant, unfundedApplication2Collaborator).
-                withApplication(fundedApplication1, fundedApplication1, unfundedApplication2, unfundedApplication2).
-                withRole(leadApplicantRole, collaboratorRole, leadApplicantRole, collaboratorRole).
-                build(3);
-
-        List<NotificationTarget> expectedFundedLeadApplicants = singletonList(new UserNotificationTarget(fundedApplication1LeadApplicant));
-        Notification expectedFundedNotification =
-                new Notification(systemNotificationSourceMock, expectedFundedLeadApplicants, APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED, emptyMap());
-
-        List<NotificationTarget> expectedUnfundedLeadApplicants = singletonList(new UserNotificationTarget(unfundedApplication2LeadApplicant));
-        Notification expectedUnfundedNotification = new Notification(systemNotificationSourceMock, expectedUnfundedLeadApplicants, APPLICATION_NOT_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED, emptyMap());
-
-        when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
-
-        when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusIdIn(competition.getId(), FUNDING_DECISIONS_MADE_STATUS_IDS)).
-                thenReturn(asList(fundedApplication1, unfundedApplication2));
-
-        asList(fundedApplication1, unfundedApplication2).forEach(application ->
-                when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application)
-        );
-
-        when(roleRepositoryMock.findOneByName(LEADAPPLICANT.getName())).thenReturn(leadApplicantRole);
-
-        allProcessRoles.forEach(processRole ->
-                when(processRoleRepositoryMock.findByApplicationIdAndRoleId(processRole.getApplicationId(), processRole.getRole().getId())).thenReturn(singletonList(processRole))
-        );
-
-        when(notificationServiceMock.sendNotification(createSimpleNotificationExpectations(expectedFundedNotification), eq(EMAIL))).thenReturn(serviceSuccess());
-        when(notificationServiceMock.sendNotification(createSimpleNotificationExpectations(expectedUnfundedNotification), eq(EMAIL))).thenReturn(serviceSuccess());
-
-        ServiceResult<Void> result = service.notifyLeadApplicantsOfAssessorFeedback(competition.getId());
-        assertTrue(result.isSuccess());
-
-        verify(notificationServiceMock).sendNotification(createSimpleNotificationExpectations(expectedFundedNotification), eq(EMAIL));
-        verify(notificationServiceMock).sendNotification(createSimpleNotificationExpectations(expectedUnfundedNotification), eq(EMAIL));
-        verifyNoMoreInteractions(notificationServiceMock);
     }
 
     @Override

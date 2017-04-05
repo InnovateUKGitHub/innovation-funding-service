@@ -33,6 +33,7 @@ public abstract class CompetitionParticipantMapper extends BaseMapper<Competitio
             @Mapping(source = "process.assessorDeadlineDate", target = "assessorDeadlineDate"),
             @Mapping(target = "totalAssessments", ignore = true),
             @Mapping(target = "submittedAssessments", ignore = true),
+            @Mapping(target = "pendingAssessments", ignore = true),
             @Mapping(source = "process.competitionStatus", target = "competitionStatus"),
     })
     @Override

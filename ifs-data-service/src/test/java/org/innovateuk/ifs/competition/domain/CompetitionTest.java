@@ -12,14 +12,12 @@ import org.mockito.Mock;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.ZonedDateTime;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.TestCase.assertFalse;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class CompetitionTest {
     private Competition competition;
@@ -211,7 +209,7 @@ public class CompetitionTest {
     }
 
     @Test
-    public void competitionStatusReleaseFeedback() {
+    public void competitionStatusFeedbackReleased() {
         competition.setEndDate(ZonedDateTime.now().minusDays(7));
         competition.setAssessorAcceptsDate(ZonedDateTime.now().minusDays(6));
         competition.notifyAssessors(ZonedDateTime.now().minusDays(5));
@@ -219,6 +217,7 @@ public class CompetitionTest {
         competition.setFundersPanelDate(ZonedDateTime.now().minusDays(3));
         competition.setFundersPanelEndDate(ZonedDateTime.now().minusDays(2));
         competition.setReleaseFeedbackDate(ZonedDateTime.now().minusDays(1));
+        competition.releaseFeedback(ZonedDateTime.now().minusDays(1));
         assertEquals(PROJECT_SETUP, competition.getCompetitionStatus());
     }
 }

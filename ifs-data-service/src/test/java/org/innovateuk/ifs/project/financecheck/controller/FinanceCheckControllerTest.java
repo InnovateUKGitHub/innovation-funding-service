@@ -1,24 +1,19 @@
 package org.innovateuk.ifs.project.financecheck.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.project.projectdetails.controller.FinanceCheckController;
 import org.innovateuk.ifs.project.finance.resource.*;
-import org.innovateuk.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
+import org.innovateuk.ifs.project.projectdetails.controller.FinanceCheckController;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.junit.Test;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.project.finance.builder.FinanceCheckProcessResourceBuilder.newFinanceCheckProcessResource;
-import static org.innovateuk.ifs.project.finance.builder.FinanceCheckResourceBuilder.newFinanceCheckResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStatusResourceBuilder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
+import static org.innovateuk.ifs.project.finance.builder.FinanceCheckResourceBuilder.newFinanceCheckResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckSummaryResourceBuilder.newFinanceCheckSummaryResource;
-
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -58,20 +53,6 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expected)));
         verify(financeCheckServiceMock).getFinanceCheckEligibilityDetails(projectId, organisationId);
-    }
-
-    @Test
-    public void testGetFinanceCheckApprovalStatus() throws Exception {
-        Long projectId = 123L;
-        Long organisationId = 456L;
-        FinanceCheckProcessResource expected = newFinanceCheckProcessResource().build();
-        when(financeCheckServiceMock.getFinanceCheckApprovalStatus(projectId, organisationId)).thenReturn(serviceSuccess(expected));
-
-        mockMvc.perform(get(FinanceCheckURIs.BASE_URL + "/{projectId}" + FinanceCheckURIs.ORGANISATION_PATH + "/{organisationId}" +  FinanceCheckURIs.PATH + "/status", projectId, organisationId))
-                .andExpect(status().isOk())
-                .andExpect(content().json(toJson(expected)));
-
-        verify(financeCheckServiceMock).getFinanceCheckApprovalStatus(projectId, organisationId);
     }
 
     @Test

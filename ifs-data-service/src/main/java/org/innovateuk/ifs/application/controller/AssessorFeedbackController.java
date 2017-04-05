@@ -72,21 +72,4 @@ public class AssessorFeedbackController {
 
         return assessorFeedbackService.deleteAssessorFeedbackFileEntry(applicationId).toDeleteResponse();
     }
-    
-    @GetMapping(value = "/assessorFeedbackUploaded", produces = "application/json")
-    public RestResult<Boolean> assessorFeedbackUploaded(
-            @RequestParam("competitionId") long competitionId) {
-
-        ServiceResult<Boolean> uploadedResult = assessorFeedbackService.assessorFeedbackUploaded(competitionId);
-        return uploadedResult.toGetResponse();
-    }
-    
-    @PostMapping(value = "/submitAssessorFeedback/{competitionId}", produces = "application/json")
-    public RestResult<Void> submitAssessorFeedback(
-            @PathVariable("competitionId") long competitionId) {
-
-        return assessorFeedbackService.submitAssessorFeedback(competitionId).andOnSuccess(() ->
-               assessorFeedbackService.notifyLeadApplicantsOfAssessorFeedback(competitionId)).
-               toPostResponse();
-    }
 }

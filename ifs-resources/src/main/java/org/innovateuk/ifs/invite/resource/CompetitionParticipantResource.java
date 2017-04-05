@@ -1,16 +1,16 @@
 package org.innovateuk.ifs.invite.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 
 import java.time.Clock;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static java.time.temporal.ChronoUnit.DAYS;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 
 /**
  * DTO for {@link org.innovateuk.ifs.invite.domain.CompetitionParticipant}s.
@@ -28,6 +28,7 @@ public class CompetitionParticipantResource {
     private String competitionName;
     private ZonedDateTime assessorAcceptsDate;
     private ZonedDateTime assessorDeadlineDate;
+    private long pendingAssessments;
     private long submittedAssessments;
     private long totalAssessments;
     private CompetitionStatus competitionStatus;
@@ -138,6 +139,14 @@ public class CompetitionParticipantResource {
         this.totalAssessments = totalAssessments;
     }
 
+    public long getPendingAssessments() {
+        return pendingAssessments;
+    }
+
+    public void setPendingAssessments(long pendingAssessments) {
+        this.pendingAssessments = pendingAssessments;
+    }
+
     public CompetitionStatus getCompetitionStatus() {
         return competitionStatus;
     }
@@ -204,6 +213,9 @@ public class CompetitionParticipantResource {
         CompetitionParticipantResource that = (CompetitionParticipantResource) o;
 
         return new EqualsBuilder()
+                .append(pendingAssessments, that.pendingAssessments)
+                .append(submittedAssessments, that.submittedAssessments)
+                .append(totalAssessments, that.totalAssessments)
                 .append(id, that.id)
                 .append(competitionId, that.competitionId)
                 .append(userId, that.userId)
@@ -215,9 +227,8 @@ public class CompetitionParticipantResource {
                 .append(competitionName, that.competitionName)
                 .append(assessorAcceptsDate, that.assessorAcceptsDate)
                 .append(assessorDeadlineDate, that.assessorDeadlineDate)
-                .append(submittedAssessments, that.submittedAssessments)
-                .append(totalAssessments, that.totalAssessments)
                 .append(competitionStatus, that.competitionStatus)
+                .append(clock, that.clock)
                 .isEquals();
     }
 
@@ -235,9 +246,11 @@ public class CompetitionParticipantResource {
                 .append(competitionName)
                 .append(assessorAcceptsDate)
                 .append(assessorDeadlineDate)
-                .append(competitionStatus)
+                .append(pendingAssessments)
                 .append(submittedAssessments)
                 .append(totalAssessments)
+                .append(competitionStatus)
+                .append(clock)
                 .toHashCode();
     }
 }

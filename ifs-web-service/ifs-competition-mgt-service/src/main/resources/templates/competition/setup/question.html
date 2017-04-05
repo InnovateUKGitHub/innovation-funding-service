@@ -36,7 +36,7 @@
     <form th:if="${editable}"
           method="post"
           th:object="${competitionSetupForm}"
-          th:action="@{'/competition/setup/{competitionId}/section/application/question/{questionId}/edit'(competitionId=${competition.id},questionId=${questionId})}" novalidate="novalidate"
+          th:action="@{'/competition/setup/{competitionId}/section/application/question/{questionId}/edit'(competitionId=${competition.id}, questionId=${competitionSetupForm.question.questionId})}" novalidate="novalidate"
           data-autosave="compSetup"
           data-th-attr="data-competition=${competition.id}, data-objectId=${competitionSetupForm.question.questionId},
           data-subsection=${competitionSetupForm.question.type == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).SCOPE ? 'project' : 'question'}"

@@ -38,8 +38,8 @@ Overhead costs
     [Tags]
     # Check for No overheads costs option
     When the user clicks the button/link    jQuery=button:contains("Overhead costs")
-    And The user clicks the button/link     jQuery=label:contains("No overhead costs")
-    then the user should see the element     jQuery=h3:contains("No overhead costs")
+    And The user clicks the button/link    jQuery=label:contains("No overhead costs")
+    then the user should see the element    jQuery=h3:contains("No overhead costs")
     # Check for 20% Labour costs option
     When the user clicks the button/link    jQuery=button:contains("Overhead costs")
     then the user chooses 20% overheads option
@@ -79,7 +79,7 @@ Subcontracting costs
     [Documentation]    INFUND-192, INFUND-736, INFUND-2303, INFUND-6390
     [Tags]
     When the applicant edits the Subcontracting costs section
-    Then the user should see the element  jQuery=button:contains("Subcontracting") > *:contains("£ 200")
+    Then the user should see the element    jQuery=button:contains("Subcontracting") > *:contains("£ 200")
     [Teardown]    the user clicks the button/link    jQuery=button:contains("Subcontracting costs")
 
 Travel and subsistence
@@ -258,17 +258,8 @@ Admin costs total should be correct
     Element Should Contain    jQuery=button:contains("Overhead costs")    ${ADMIN_VALUE}
 
 the total costs should reflect overheads
-     [Arguments]    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
-     Textfield Value Should Be    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
-
-the grant value should be correct in the finance summary page
-    The user navigates to the next page
-    the user should see the element    css=.finance-summary tr:nth-of-type(1) td:nth-of-type(2)
-    Wait Until Element Contains Without Screenshots    css=.finance-summary tr:nth-of-type(1) td:nth-of-type(2)    25
-
-The user navigates to the next page
-    The user clicks the button/link    css=.next .pagination-label
-    Run Keyword And Ignore Error Without Screenshots    confirm action
+    [Arguments]    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
+    Textfield Value Should Be    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
 
 The row should be removed
     [Arguments]    ${ROW}
