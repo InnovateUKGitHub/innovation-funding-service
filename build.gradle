@@ -201,7 +201,6 @@ task prepareComposeFile (type: Copy) {
 
 task dockerTidy(type:Exec) {
     executable = 'setup-files/scripts/docker/docker_tidy_up.sh'
-    print project.version
     args = [project.version]
 }
 

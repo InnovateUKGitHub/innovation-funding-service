@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
-<!-- ===========================Question - other funding  =========================== --> 
+<!-- ===========================Question - other funding  =========================== -->
 
 <div th:fragment="finance-question-other-funding">
 	<fieldset class="collapsible-content">
@@ -60,7 +60,7 @@
 				<a href="#">Add another funder</a>
 			</div>
 		</th:block>
-		
+
 		<div class="alignright extra-margin" th:unless="${param.status != null and param.status[0] == 'approved' or status == 'partnerView'}">
 			<th:block th:if="${param.status == null or param.status[0] != 'edit-other'}">
 				<a th:href="@{'?status=edit-other'}" class="button button-secondary">Edit</a>
@@ -73,12 +73,12 @@
 	</fieldset>
 </div>
 
-<!-- ===========================Question - labour  =========================== --> 
+<!-- ===========================Question - labour  =========================== -->
 
 <div th:fragment="finance-question-labour">
 	<fieldset class="collapsible-content">
 		<legend class="visuallyhidden">Labour</legend>
-		
+
 		<p>Labour costs of all individuals you have working on your project.</p>
 
 		<table>
@@ -123,7 +123,7 @@
 					<td th:unless="${param.status == null or param.status[0] != 'edit-labour'}">&nbsp;</td>
 				</tr>
 			</tfoot>
-			
+
 			<th:block th:unless="${param.status != null and param.status[0] == 'approved' or status == 'partnerView'}">
 				<tbody>
 					<tr>
@@ -188,7 +188,7 @@
 					</tr>
 				</tbody>
 			</th:block>
-					
+
 		</table>
 
 		<th:block th:if="${param.status != null and param.status[0] == 'edit-labour'}">
@@ -212,10 +212,10 @@
 
 
 
-<!-- ===========================Question - admin support  =========================== --> 
+<!-- ===========================Question - admin support  =========================== -->
 
 <div th:fragment="finance-question-admin-support">
-	
+
 	<p>Administration support costs are related expenses incurred as a result of delivering the project.</p>
 
 	<fieldset class="extra-margin">
@@ -247,7 +247,7 @@
 	</fieldset>
 
 	<fieldset class="collapsible-content">
-		
+
 		<legend class="visuallyhidden">Support details</legend>
 
 		<div id="admin-support-1">
@@ -255,7 +255,7 @@
 		</div>
 
 		<div id="admin-support-2">
-			
+
 			<table>
 				<tbody>
 					<tr>
@@ -301,7 +301,7 @@
 		</div>
 
 		<div id="admin-support-4">
-			
+
 			<table>
 				<tbody>
 					<tr>
@@ -338,14 +338,14 @@
 
 </div>
 
-<!-- ===========================Question - admin support  =========================== --> 
+<!-- ===========================Question - admin support  =========================== -->
 
 <div th:fragment="finance-question-materials">
 	<fieldset class="collapsible-content">
 		<legend class="visuallyhidden">Materials</legend>
 
 		<p>The costs of materials used on your project</p>
-		
+
 		<table id="materials-costs-table">
 			<thead>
 				<tr>
@@ -463,18 +463,18 @@
 		</div>
 
 	</fieldset>
-	
+
 </div>
 
 
-<!-- ===========================Question -  Capital usage  =========================== --> 
+<!-- ===========================Question -  Capital usage  =========================== -->
 
 <div th:fragment="finance-question-capital">
 	<fieldset class="collapsible-content">
 		<legend class="visuallyhidden">Capital usage</legend>
 
 		<p>Details of capital equipment and tools you will buy for, or use on, your project.</p>
-		
+
 		<div class="table-overflow">
 			<table id="capital-usage-table">
 				<thead>
@@ -533,7 +533,7 @@
 					<td class="numeric">
 						<input type="text" id="cap-usage-row-1-costs" name="cap-usage-row-1-costs" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-cap-usage'}" value="" aria-labelledby="cap-usage-costs" />
 					</td>
-					
+
 					<td th:unless="${param.status == null or param.status[0] != 'edit-cap-usage'}">
 						<a href="#">Remove</a>
 					</td>
@@ -564,7 +564,7 @@
 </div>
 
 
-<!-- ===========================Question -  Subcontracting costs  =========================== --> 
+<!-- ===========================Question -  Subcontracting costs  =========================== -->
 
 
 <div th:fragment="finance-question-subcontracting">
@@ -572,12 +572,12 @@
 		<legend class="visuallyhidden">Subcontracting costs</legend>
 
 		<p>Subcontracting costs relate to work carried out by third party organisations. These organisations are not part of your project or collaboration.</p>
-		
+
 		<div class="table-overflow">
 			<table id="subcontracting-table">
 				<thead>
 					<th scope="col" id="subcontracting-name">
-						Suncontractor name
+						Subcontractor name
 					</th>
 					<th scope="col" id="subcontracting-country">
 						Country
@@ -613,7 +613,7 @@
 						<td class="numeric">
 							<input type="text" id="subcontracting-row-1-costs" name="subcontracting-row-1-costs" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-subcontracting'}" value="150,000" aria-labelledby="subcontracting-costs" />
 						</td>
-						
+
 						<td th:unless="${param.status == null or param.status[0] != 'edit-subcontracting'}">
 							<a href="#">Remove</a>
 						</td>
@@ -653,14 +653,14 @@
 	</fieldset>
 </div>
 
-<!-- ===========================Question - Travel and subsistence  =========================== --> 
+<!-- ===========================Question - Travel and subsistence  =========================== -->
 
 <div th:fragment="finance-question-travel">
 	<fieldset class="collapsible-content">
 		<legend class="visuallyhidden">Travel and sudsistence</legend>
 
 		<p>Itemised travel and subsistence costs that relate only to this project</p>
-		
+
 		<div class="table-overflow">
 			<table id="travel-table">
 				<thead>
@@ -701,7 +701,7 @@
 						<td class="numeric">
 							<input type="text" id="travel-row-1-total" name="travel-row-1-total" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-travel'}" value="" aria-labelledby="travel-total" />
 						</td>
-						
+
 						<td th:unless="${param.status == null or param.status[0] != 'edit-travel'}">
 							<a href="#">Remove</a>
 						</td>
@@ -730,14 +730,14 @@
 	</fieldset>
 </div>
 
-<!-- ===========================Question - Other costs  =========================== --> 
+<!-- ===========================Question - Other costs  =========================== -->
 
 <div th:fragment="finance-question-other">
 	<fieldset class="collapsible-content">
 		<legend class="visuallyhidden">Other costs</legend>
 
 		<p>Costs that do not fit under the other cost headings. You should describe each type of cost and explain why you have included it.</p>
-		
+
 		<div class="table-overflow">
 			<table id="other-costs-table">
 				<thead>
@@ -766,7 +766,7 @@
 						<td class="numeric">
 							<input type="text" id="other-row-1-cost" name="other-row-1-cost" class="form-control width-full" th:readonly="${param.status == null or param.status[0] != 'edit-other'}" value="" aria-labelledby="other-cost" />
 						</td>
-						
+
 						<td th:unless="${param.status == null or param.status[0] != 'edit-other'}">
 							<a href="#">Remove</a>
 						</td>
@@ -796,7 +796,7 @@
 </div>
 
 
-<!-- ===========================Table showing all changes to question answers  =========================== --> 
+<!-- ===========================Table showing all changes to question answers  =========================== -->
 
 <div th:fragment="finance-question-changes">
 
@@ -826,7 +826,7 @@
 	</div>
 
 	<h2 class="heading-medium">Section changes</h2>
-	
+
 	<div class="table-overflow">
 		<table>
 			<thead>
@@ -853,7 +853,7 @@
 			</tbody>
 		</table>
 	</div>
-	
+
 	<h2 class="heading-medium">Changes from submitted finances</h2>
 
 	<div class="table-overflow">
@@ -902,7 +902,7 @@
 						-&pound;50,000
 					</td>
 				</tr>
-		
+
 				<tr class="item-changed">
 					<td>Change</td>
 					<td>Admin support costs</td>
@@ -915,7 +915,7 @@
 						-&pound;3,000
 					</td>
 				</tr>
-		
+
 				<tr>
 					<td rowspan="4">Change</td>
 					<td rowspan="4">Materials</td>
@@ -943,7 +943,7 @@
 						-&pound;345
 					</td>
 				</tr>
-		
+
 				<tr>
 					<td rowspan="7">Remove</td>
 					<td rowspan="7">Capital usage</td>
@@ -986,11 +986,11 @@
 						-&pound;4,000
 					</td>
 				</tr>
-				
+
 				<tr>
 					<td rowspan="4">Change</td>
 					<td rowspan="4">Subcontracting costs</td>
-					<th scope="row">Suncontractor name</th>
+					<th scope="row">Subcontractor name</th>
 					<td>Paul Davidson</td>
 					<td colspan="2">Paul Davidson</td>
 				</tr>
@@ -1014,8 +1014,8 @@
 						-&pound;2,000
 					</td>
 				</tr>
-		
-		
+
+
 				<tr>
 					<td rowspan="4">Change</td>
 					<td rowspan="4">Travel and subsistance</td>
@@ -1043,7 +1043,7 @@
 						-&pound;500
 					</td>
 				</tr>
-		
+
 				<tr>
 					<td rowspan="2">New</td>
 					<td rowspan="2">Other costs</td>
@@ -1061,7 +1061,7 @@
 						&pound;3,700
 					</td>
 				</tr>
-		
+
 			</tbody>
 		</table>
 	</div>

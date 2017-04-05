@@ -314,6 +314,9 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     public CompetitionDataBuilder withReleaseFeedbackDate(LocalDateTime date) {
         return withMilestoneUpdate(date, RELEASE_FEEDBACK);
     }
+    public CompetitionDataBuilder withFeedbackReleasedDate(LocalDateTime date) {
+        return withMilestoneUpdate(date, FEEDBACK_RELEASED);
+    }
 
     private CompetitionDataBuilder withMilestoneUpdate(LocalDateTime date, MilestoneType milestoneType) {
 
