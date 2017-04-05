@@ -126,7 +126,8 @@ the user cannot login with the invalid email
     Input Text    id=username    ${invalid_email_addy}
     Input Password    id=password    Passw0rd123
     Click Button    css=button[name="_eventId_proceed"]
-    The user should see the text in the page    Please enter a valid e-mail address
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    The user should see the text in the page    Please enter a valid e-mail address
+    Run Keyword If    '${status}' == 'FAIL'    The user should see the text in the page    Please enter a valid email address    
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');
     Click Button    css=button[name="_eventId_proceed"]
     The user should see the text in the page    ${unsuccessful_login_message}
