@@ -30,7 +30,6 @@ import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.util.TimeZoneUtil.toUkTimeZone;
 
 /**
  * Competition setup section saver for the milestones section.
@@ -141,7 +140,7 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
             year = Integer.parseInt(dateParts[2]);
 
             if(null != currentDate) {
-                hour = toUkTimeZone(milestone.getDate()).getHour();
+                hour = milestone.getDate().getHour();
             }
         }
 

@@ -143,7 +143,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
 			}
 		}
 
-	    MilestoneRowForm milestoneEntry = new MilestoneRowForm(MilestoneType.OPEN_DATE, TimeZoneUtil.toUkTimeZone(openingDate));
+	    MilestoneRowForm milestoneEntry = new MilestoneRowForm(MilestoneType.OPEN_DATE, openingDate);
 
 
         List<MilestoneResource> milestones = milestoneService.getAllMilestonesByCompetitionId(competitionId);

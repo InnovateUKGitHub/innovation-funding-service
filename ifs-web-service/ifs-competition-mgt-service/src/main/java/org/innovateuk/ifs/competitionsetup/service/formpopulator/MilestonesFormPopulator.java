@@ -1,15 +1,14 @@
 package org.innovateuk.ifs.competitionsetup.service.formpopulator;
 
+import org.apache.commons.collections4.map.LinkedMap;
 import org.innovateuk.ifs.application.service.MilestoneService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
-import org.innovateuk.ifs.competitionsetup.form.MilestonesForm;
 import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
+import org.innovateuk.ifs.competitionsetup.form.MilestonesForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
-import org.apache.commons.collections4.map.LinkedMap;
-import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,7 +55,7 @@ public class MilestonesFormPopulator implements CompetitionSetupFormPopulator {
     }
 
     private MilestoneRowForm populateMilestoneFormEntries(MilestoneResource milestone) {
-        return new MilestoneRowForm(milestone.getType(), TimeZoneUtil.toUkTimeZone(milestone.getDate()));
+        return new MilestoneRowForm(milestone.getType(), milestone.getDate());
     }
 }
 

@@ -19,7 +19,7 @@ public class JacksonZoneDateDeserializerModule extends SimpleModule {
             @Override
             public ZonedDateTime deserialize(JsonParser p, DeserializationContext context) throws IOException, JsonProcessingException {
                 ZonedDateTime standardResult = InstantDeserializer.ZONED_DATE_TIME.deserialize(p, context);
-                return standardResult.withZoneSameInstant(TimeZoneUtil.UK_TIME_ZONE);
+                return TimeZoneUtil.toUkTimeZone(standardResult);
             }
         });
     }

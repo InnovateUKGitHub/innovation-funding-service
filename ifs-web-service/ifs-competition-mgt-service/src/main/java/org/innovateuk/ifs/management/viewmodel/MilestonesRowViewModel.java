@@ -2,7 +2,6 @@ package org.innovateuk.ifs.management.viewmodel;
 
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
-import org.innovateuk.ifs.util.TimeZoneUtil;
 
 import java.time.ZonedDateTime;
 
@@ -17,7 +16,7 @@ public class MilestonesRowViewModel {
 
     public MilestonesRowViewModel(MilestoneResource milestoneResource) {
         this.milestoneType = milestoneResource.getType();
-        this.dateTime = TimeZoneUtil.toUkTimeZone(milestoneResource.getDate());
+        this.dateTime = milestoneResource.getDate();
         if (this.dateTime != null) {
             this.passed = ZonedDateTime.now().isAfter(dateTime);
         } else {

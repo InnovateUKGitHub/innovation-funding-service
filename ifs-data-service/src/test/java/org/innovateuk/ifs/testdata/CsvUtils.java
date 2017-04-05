@@ -16,6 +16,7 @@ import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.Gender;
 import org.innovateuk.ifs.user.resource.UserStatus;
+import org.innovateuk.ifs.util.TimeZoneUtil;
 
 import java.io.File;
 import java.io.FileReader;
@@ -24,6 +25,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -723,7 +725,7 @@ class CsvUtils {
             return null;
         }
 
-        return ZonedDateTime.parse(s, DATE_TIME_PATTERN);
+        return LocalDateTime.parse(s, DATE_TIME_PATTERN).atZone(TimeZoneUtil.UK_TIME_ZONE);
     }
 
     private static Integer nullableInteger(String s) {

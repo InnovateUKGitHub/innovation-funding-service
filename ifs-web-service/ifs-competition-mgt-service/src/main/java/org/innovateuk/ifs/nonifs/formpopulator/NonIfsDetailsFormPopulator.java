@@ -19,9 +19,9 @@ public class NonIfsDetailsFormPopulator {
         form.setInnovationSectorCategoryId(competitionResource.getInnovationSector());
         form.setInnovationAreaCategoryId(competitionResource.getInnovationAreas().stream().findAny().orElse(null));
         form.setUrl(competitionResource.getNonIfsUrl());
-        form.setApplicantNotifiedDate(new MilestoneRowForm(MilestoneType.RELEASE_FEEDBACK, TimeZoneUtil.toUkTimeZone(competitionResource.getReleaseFeedbackDate())));
-        form.setOpenDate(new MilestoneRowForm(MilestoneType.OPEN_DATE, TimeZoneUtil.toUkTimeZone(competitionResource.getStartDate())));
-        form.setCloseDate(new MilestoneRowForm(MilestoneType.SUBMISSION_DATE, TimeZoneUtil.toUkTimeZone(competitionResource.getEndDate())));
+        form.setApplicantNotifiedDate(new MilestoneRowForm(MilestoneType.RELEASE_FEEDBACK, competitionResource.getReleaseFeedbackDate()));
+        form.setOpenDate(new MilestoneRowForm(MilestoneType.OPEN_DATE, competitionResource.getStartDate()));
+        form.setCloseDate(new MilestoneRowForm(MilestoneType.SUBMISSION_DATE, competitionResource.getEndDate()));
         return form;
     }
 }

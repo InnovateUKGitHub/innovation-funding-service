@@ -1,9 +1,7 @@
 package org.innovateuk.ifs.competition.viewmodel;
 
 import org.innovateuk.ifs.competition.viewmodel.publiccontent.AbstractPublicSectionContentViewModel;
-import org.innovateuk.ifs.util.TimeZoneUtil;
 
-import java.time.ZonedDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -30,7 +28,7 @@ public class CompetitionOverviewViewModel {
     }
 
     public ZonedDateTime getCompetitionOpenDate() {
-        return TimeZoneUtil.toUkTimeZone(competitionOpenDate);
+        return competitionOpenDate;
     }
 
     public void setCompetitionOpenDate(ZonedDateTime competitionOpenDate) {
@@ -38,11 +36,11 @@ public class CompetitionOverviewViewModel {
     }
 
     public ZonedDateTime getRegistrationCloseDate() {
-        return TimeZoneUtil.toUkTimeZone(competitionCloseDate.minusDays(7));
+        return competitionCloseDate.minusDays(7);
     }
 
     public ZonedDateTime getCompetitionCloseDate() {
-        return TimeZoneUtil.toUkTimeZone(competitionCloseDate);
+        return competitionCloseDate;
     }
 
     public void setCompetitionCloseDate(ZonedDateTime competitionCloseDate) {

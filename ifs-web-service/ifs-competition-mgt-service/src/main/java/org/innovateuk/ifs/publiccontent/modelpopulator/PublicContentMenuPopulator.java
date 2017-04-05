@@ -23,7 +23,7 @@ public class PublicContentMenuPopulator {
     public PublicContentMenuViewModel populate(Long competitionId) {
         PublicContentResource publicContent = publicContentService.getCompetitionById(competitionId);
         PublicContentMenuViewModel viewModel = new PublicContentMenuViewModel();
-        viewModel.setPublishDate(TimeZoneUtil.toUkTimeZone(publicContent.getPublishDate()));
+        viewModel.setPublishDate(publicContent.getPublishDate());
         viewModel.setSections(publicContent.getContentSections());
         viewModel.setCompetition(competitionService.getById(competitionId));
         return viewModel;

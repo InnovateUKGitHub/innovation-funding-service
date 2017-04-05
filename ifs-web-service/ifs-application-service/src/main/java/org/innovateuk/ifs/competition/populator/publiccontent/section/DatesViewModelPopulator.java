@@ -60,7 +60,7 @@ public class DatesViewModelPopulator extends AbstractPublicContentSectionViewMod
         if(competitionCloseDateMilestone.isPresent()) {
             registrationClosesDate.setMustBeStrong(false);
             registrationClosesDate.setContent("Registration closes");
-            registrationClosesDate.setDateTime(TimeZoneUtil.toUkTimeZone(competitionCloseDateMilestone.get().getDate().minusDays(7)));
+            registrationClosesDate.setDateTime(competitionCloseDateMilestone.get().getDate().minusDays(7));
         }
 
         return registrationClosesDate;
@@ -72,7 +72,7 @@ public class DatesViewModelPopulator extends AbstractPublicContentSectionViewMod
         milestonesNeeded.forEach(milestoneResource -> {
             DateViewModel publicContentDate = new DateViewModel();
 
-            publicContentDate.setDateTime(TimeZoneUtil.toUkTimeZone(milestoneResource.getDate()));
+            publicContentDate.setDateTime(milestoneResource.getDate());
             publicContentDate.setMustBeStrong(Boolean.FALSE);
             switch (milestoneResource.getType()) {
                 case OPEN_DATE:
