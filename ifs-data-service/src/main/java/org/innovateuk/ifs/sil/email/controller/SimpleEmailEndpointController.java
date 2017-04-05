@@ -8,6 +8,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,7 +26,6 @@ import java.util.Properties;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.springframework.http.HttpStatus.ACCEPTED;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * A simple endpoint to allow stubbing of the SIL outbound email endpoint for non-integration test environments
@@ -61,7 +61,7 @@ public class SimpleEmailEndpointController {
     @Value("${sil.stub.smtp.starttls.enable:false}")
     private Boolean tlsEnabled;
 
-    @RequestMapping(method = POST)
+    @PostMapping
     public RestResult<Void> sendMail(@RequestBody SilEmailMessage message) {
 
         SilEmailBody plainTextBody = simpleFilter(message.getBody(), body -> "text/plain".equals(body.getContentType())).get(0);

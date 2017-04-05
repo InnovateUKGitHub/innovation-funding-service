@@ -103,8 +103,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     private FormInputResponse existingFormInputResponse;
     private List<FormInputResponse> existingFormInputResponses;
     private FormInputResponse unlinkedFormInputFileEntry;
-
-    private Long applicationId = 123L;
+    private Long organisationId = 456L;
 
     @Before
     public void setUp() throws Exception {
@@ -135,7 +134,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         Competition competition = newCompetition().build();
         User user = newUser().build();
-        Organisation organisation = newOrganisation().with(name("testOrganisation")).build();
+        Organisation organisation = newOrganisation().with(name("testOrganisation")).withId(organisationId).build();
         Role leadApplicantRole = newRole().withType(LEADAPPLICANT).build();
         ProcessRole processRole = newProcessRole().withUser(user).withRole(leadApplicantRole).withOrganisationId(organisation.getId()).build();
         ApplicationStatus applicationStatus = newApplicationStatus().withName(CREATED).build();
@@ -686,109 +685,6 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         ApplicationResource created = service.createApplicationByApplicationNameForUserIdAndCompetitionId(applicationName, competitionId, userId).getSuccessObject();
         assertEquals(newApplication, created);
-    }
-
-    private void setupFinancialAndNonFinancialTestData(boolean isIncludeGrowthTable, boolean noResponse, boolean noInput) {
-        Long competitionId = 456L;
-        Long turnoverFormInputId = 678L;
-        Long staffCountFormInputId = 987L;
-        Competition comp = new Competition();
-        comp.setId(competitionId);
-        Application app = new Application();
-        app.setId(applicationId);
-        app.setCompetition(comp);
-        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(app);
-
-        FormInputResponse headcount = newFormInputResponse().withValue("1").build();
-        FormInputResponse turnover = newFormInputResponse().withValue("2").build();
-
-        FormInput staffCountFormInput = newFormInput().withType(STAFF_COUNT).withActive(!isIncludeGrowthTable).withId(staffCountFormInputId).withResponses(!isIncludeGrowthTable ? asList(headcount) : emptyList()).build();
-        FormInput staffTurnoverFormInput = newFormInput().withType(STAFF_TURNOVER).withActive(!isIncludeGrowthTable).withId(turnoverFormInputId).withResponses(!isIncludeGrowthTable ? asList(turnover) : emptyList()).build();
-        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_TURNOVER))).thenReturn(noInput ? emptyList() : asList(staffTurnoverFormInput));
-        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_COUNT))).thenReturn(noInput ? emptyList() : asList(staffCountFormInput));
-        when(formInputResponseRepositoryMock.findByApplicationIdAndFormInputId(applicationId, turnoverFormInputId)).thenReturn(noResponse ? emptyList() : asList(turnover));
-        when(formInputResponseRepositoryMock.findByApplicationIdAndFormInputId(applicationId, staffCountFormInputId)).thenReturn(noResponse ? emptyList() : asList(headcount));
-
-        FormInput financialYearEnd = newFormInput().withType(FINANCIAL_YEAR_END).withActive(isIncludeGrowthTable).withId(turnoverFormInputId).withResponses(isIncludeGrowthTable ? asList(turnover) : emptyList()).build();
-        List<FormInput> financialOverviewRows = newFormInput().withType(FINANCIAL_OVERVIEW_ROW).withActive(isIncludeGrowthTable).build(4);
-        FormInput financialCount = newFormInput().withType(FormInputType.FINANCIAL_STAFF_COUNT).withActive(isIncludeGrowthTable).withId(staffCountFormInputId).withResponses(isIncludeGrowthTable ? asList(headcount) : emptyList()).build();
-        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_YEAR_END))).thenReturn(noInput ? emptyList() : asList(financialYearEnd));
-        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_OVERVIEW_ROW))).thenReturn(financialOverviewRows);
-        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_STAFF_COUNT))).thenReturn(noInput ? emptyList() : asList(financialCount));
-        when(formInputResponseRepositoryMock.findByApplicationIdAndFormInputId(applicationId, turnoverFormInputId)).thenReturn(noResponse ? emptyList() : asList(turnover));
-        when(formInputResponseRepositoryMock.findByApplicationIdAndFormInputId(applicationId, staffCountFormInputId)).thenReturn(noResponse ? emptyList() : asList(headcount));
-    }
-    @Test
-    public void test_GetTurnoverNonFinancial() {
-        setupFinancialAndNonFinancialTestData(false, false, false);
-
-        ServiceResult<Long> result = service.getTurnoverByApplicationId(applicationId);
-
-        assertTrue(result.isSuccess());
-        assertEquals(2L, result.getSuccessObject().longValue());
-    }
-
-    @Test
-    public void test_GetHeadcountNonFinancial() {
-        setupFinancialAndNonFinancialTestData(false, false, false);
-
-        ServiceResult<Long> result = service.getHeadCountByApplicationId(applicationId);
-
-        assertTrue(result.isSuccess());
-        assertEquals(1L, result.getSuccessObject().longValue());
-    }
-
-    @Test
-    public void test_GetTurnoverFinancial() {
-        setupFinancialAndNonFinancialTestData(true, false, false);
-        ServiceResult<Long> result = service.getTurnoverByApplicationId(applicationId);
-
-        assertTrue(result.isSuccess());
-        assertEquals(2L, result.getSuccessObject().longValue());
-    }
-
-    @Test
-    public void test_GetHeadcountFinancial() {
-        setupFinancialAndNonFinancialTestData(true, false, false);
-
-        ServiceResult<Long> result = service.getHeadCountByApplicationId(applicationId);
-
-        assertTrue(result.isSuccess());
-        assertEquals(1L, result.getSuccessObject().longValue());
-    }
-
-    @Test
-    public void test_GetHeadcountFinancialNoHeadcountResponse() {
-        setupFinancialAndNonFinancialTestData(true, true, false);
-
-        ServiceResult<Long> result = service.getHeadCountByApplicationId(applicationId);
-
-        assertTrue(result.isFailure());
-    }
-
-    @Test
-    public void test_GetHeadcountFinancialNoHeadcountInput() {
-        setupFinancialAndNonFinancialTestData(true, false, true);
-
-        ServiceResult<Long> result = service.getHeadCountByApplicationId(applicationId);
-
-        assertTrue(result.isFailure());
-    }
-
-    @Test
-    public void test_GetTurnoverFinancialNoTurnoverResponse() {
-        setupFinancialAndNonFinancialTestData(true, true, false);
-        ServiceResult<Long> result = service.getTurnoverByApplicationId(applicationId);
-
-        assertTrue(result.isFailure());
-    }
-
-    @Test
-    public void test_GetTurnoverFinancialNoTurnoverInput() {
-        setupFinancialAndNonFinancialTestData(true, false, true);
-        ServiceResult<Long> result = service.getTurnoverByApplicationId(applicationId);
-
-        assertTrue(result.isFailure());
     }
 
     @Test

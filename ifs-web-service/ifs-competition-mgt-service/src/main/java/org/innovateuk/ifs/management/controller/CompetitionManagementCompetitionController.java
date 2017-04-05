@@ -7,9 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * This controller will handle all Competition Management requests that are related to a Competition.
@@ -25,7 +26,7 @@ public class CompetitionManagementCompetitionController {
     @Autowired
     private CompetitionInFlightModelPopulator competitionInFlightModelPopulator;
 
-    @RequestMapping(value = "/{competitionId}", method = RequestMethod.GET)
+    @GetMapping("/{competitionId}")
     public String competition(Model model, @PathVariable("competitionId") Long competitionId) {
         CompetitionResource competition = competitionService.getById(competitionId);
         if (competition.getCompetitionStatus().isInFlight()) {
@@ -36,19 +37,19 @@ public class CompetitionManagementCompetitionController {
         }
     }
 
-    @RequestMapping(value = "/{competitionId}/close-assessment", method = RequestMethod.POST)
+    @PostMapping("/{competitionId}/close-assessment")
     public String closeAssessment(@PathVariable("competitionId") Long competitionId) {
         competitionService.closeAssessment(competitionId).getSuccessObjectOrThrowException();
         return "redirect:/competition/" + competitionId;
     }
 
-    @RequestMapping(value = "/{competitionId}/notify-assessors", method = RequestMethod.POST)
+    @PostMapping("/{competitionId}/notify-assessors")
     public String notifyAssessors(@PathVariable("competitionId") Long competitionId) {
         competitionService.notifyAssessors(competitionId).getSuccessObjectOrThrowException();
         return "redirect:/competition/" + competitionId;
     }
 
-    @RequestMapping(value = "/{competitionId}/release-feedback", method = RequestMethod.POST)
+    @PostMapping("/{competitionId}/release-feedback")
     public String releaseFeedback(@PathVariable("competitionId") Long competitionId) {
         competitionService.releaseFeedback(competitionId);
         return "redirect:/dashboard/project-setup";

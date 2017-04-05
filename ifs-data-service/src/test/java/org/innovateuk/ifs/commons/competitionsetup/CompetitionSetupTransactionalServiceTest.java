@@ -1,31 +1,64 @@
 package org.innovateuk.ifs.commons.competitionsetup;
 
 
+import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
 
 import java.util.List;
 
+import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.resource.FormInputType.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyList;
+import static org.mockito.Mockito.when;
 
-public class CompetitionSetupTransactionalServiceTest {
+public class CompetitionSetupTransactionalServiceTest extends BaseServiceUnitTest<CompetitionSetupTransactionalService>{
+
+    private Long competitionId = 123L;
+    private FormInput staffCountFormInput;
+    private FormInput staffTurnoverFormInput;
+    private FormInput yearEnd;
+    private List<FormInput> overviewRows;
+    private FormInput count;
+
+    @Override
+    protected CompetitionSetupTransactionalService supplyServiceUnderTest() {
+        return new CompetitionSetupTransactionalServiceImpl();
+    }
+
+    @Before
+    public void setUp() throws Exception {
+        staffCountFormInput = newFormInput().withType(STAFF_COUNT).withActive(true).build();
+        staffTurnoverFormInput = newFormInput().withType(STAFF_TURNOVER).withActive(true).build();
+        yearEnd = newFormInput().withType(FINANCIAL_YEAR_END).withActive(true).build();
+        overviewRows = newFormInput().withType(FINANCIAL_OVERVIEW_ROW).withActive(true, true, true, true).build(4);
+        count = newFormInput().withType(FormInputType.FINANCIAL_STAFF_COUNT).withActive(true).build();
+    }
+
     @Test
     public void test_GetForCompetitionErrorCountTurnover() {
         // Should never happen but check that reasonable error codes get returned in the event that the database
         // becomes inconsistent
 
         // Turnover and count - these should always be in sync - but here we test when they are not.
-        FormInput staffCountFormInput = newFormInput().withType(STAFF_COUNT).withActive(true).build();
-        FormInput staffTurnoverFormInput = newFormInput().withType(STAFF_TURNOVER).withActive(false).build();
+        staffTurnoverFormInput = newFormInput().withType(STAFF_TURNOVER).withActive(false).build();
+
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_COUNT))).thenReturn(asList(staffCountFormInput));
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_TURNOVER))).thenReturn(asList(staffTurnoverFormInput));
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_STAFF_COUNT))).thenReturn(asList(count));
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_YEAR_END))).thenReturn(asList(yearEnd));
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_OVERVIEW_ROW))).thenReturn(overviewRows);
 
         // Method under test
-        TestCompetitionSetupTransactionalService service = new TestCompetitionSetupTransactionalService();
-        ServiceResult<Boolean> shouldBeFailure = service.isIncludeGrowthTableByCountAndTurnover(staffCountFormInput, staffTurnoverFormInput);
+        ServiceResult<Boolean> shouldBeFailure = service.isIncludeGrowthTable(competitionId);
 
         // Assertions
         assertTrue(shouldBeFailure.isFailure());
@@ -40,13 +73,16 @@ public class CompetitionSetupTransactionalServiceTest {
         // becomes inconsistent
 
         // Financial inputs - these should always be in sync - but here we test when they are not.
-        FormInput yearEnd = newFormInput().withType(FINANCIAL_YEAR_END).withActive(true).build();
-        List<FormInput> overviewRows = newFormInput().withType(FINANCIAL_OVERVIEW_ROW).withActive(true, true, true, false /*Inconsistent*/).build(4);
-        FormInput count = newFormInput().withType(FormInputType.FINANCIAL_STAFF_COUNT).withActive(true).build();
+        overviewRows = newFormInput().withType(FINANCIAL_OVERVIEW_ROW).withActive(true, true, true, false /*Inconsistent*/).build(4);
+
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_COUNT))).thenReturn(asList(staffCountFormInput));
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_TURNOVER))).thenReturn(asList(staffTurnoverFormInput));
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_STAFF_COUNT))).thenReturn(asList(count));
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_YEAR_END))).thenReturn(asList(yearEnd));
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_OVERVIEW_ROW))).thenReturn(overviewRows);
 
         // Method under test
-        TestCompetitionSetupTransactionalService service = new TestCompetitionSetupTransactionalService();
-        ServiceResult<Boolean> shouldBeFailure = service.isIncludeGrowthTableByFinance(yearEnd, overviewRows, count);
+        ServiceResult<Boolean> shouldBeFailure = service.isIncludeGrowthTable(competitionId);
 
         // Assertions
         assertTrue(shouldBeFailure.isFailure());
@@ -60,11 +96,14 @@ public class CompetitionSetupTransactionalServiceTest {
         // becomes inconsistent
 
         // Not consistent
-        boolean byFinance = false;
-        boolean byCountAndTurnover = true;
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_COUNT))).thenReturn(asList(staffCountFormInput));
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_TURNOVER))).thenReturn(asList(staffTurnoverFormInput));
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_STAFF_COUNT))).thenReturn(asList(count));
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_YEAR_END))).thenReturn(asList(yearEnd));
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_OVERVIEW_ROW))).thenReturn(overviewRows);
+
         // Method under test
-        TestCompetitionSetupTransactionalService service = new TestCompetitionSetupTransactionalService();
-        ServiceResult<Boolean> shouldBeFailure = service.isIncludeGrowthTableByCountTurnoverAndFinance(byFinance, byCountAndTurnover);
+        ServiceResult<Boolean> shouldBeFailure = service.isIncludeGrowthTable(competitionId);
 
         // Assertions
         assertTrue(shouldBeFailure.isFailure());
@@ -72,20 +111,4 @@ public class CompetitionSetupTransactionalServiceTest {
         assertEquals("include.growth.table.count.turnover.finance.input.active.not.consistent", shouldBeFailure.getErrors().get(0).getErrorKey());
     }
 
-    public static class TestCompetitionSetupTransactionalService extends CompetitionSetupTransactionalService {
-        @Override
-        ServiceResult<Boolean> isIncludeGrowthTableByFinance(FormInput yearEnd, List<FormInput> overviewRows, FormInput count) {
-            return super.isIncludeGrowthTableByFinance(yearEnd, overviewRows, count);
-        }
-
-        @Override
-        ServiceResult<Boolean> isIncludeGrowthTableByCountAndTurnover(FormInput count, FormInput turnover) {
-            return super.isIncludeGrowthTableByCountAndTurnover(count, turnover);
-        }
-
-        @Override
-        ServiceResult<Boolean> isIncludeGrowthTableByCountTurnoverAndFinance(boolean byCountAndTurnover, boolean byFinance) {
-            return super.isIncludeGrowthTableByCountTurnoverAndFinance(byCountAndTurnover, byFinance);
-        }
-    }
 }

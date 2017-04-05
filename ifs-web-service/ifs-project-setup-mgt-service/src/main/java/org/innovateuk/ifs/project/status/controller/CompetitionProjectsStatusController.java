@@ -22,8 +22,6 @@ import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-
 /**
  * This RestController exposes ways of fetching the current status of a competition projects in a view-friendly
  * format  using {@link CompetitionProjectStatusViewModel}
@@ -48,7 +46,7 @@ public class CompetitionProjectsStatusController {
 
     @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "EXPORT_BANK_DETAILS", description = "Project finance users should be able export bank details")
-    @RequestMapping(value = "/bank-details/export", method = GET)
+    @GetMapping("/bank-details/export")
     public void exportBankDetails(Model model, @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                   @PathVariable Long competitionId, HttpServletResponse response) throws IOException {
 

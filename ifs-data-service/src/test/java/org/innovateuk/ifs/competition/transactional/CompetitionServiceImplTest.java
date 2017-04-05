@@ -18,9 +18,9 @@ import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
 
+import static java.time.LocalDateTime.now;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_RELEASE_FEEDBACK;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_INVITE_CLOSED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
@@ -155,7 +155,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         assertEquals(size, response.getSize());
 
         CompetitionSearchResultItem expectedSearchResult = new CompetitionSearchResultItem(competition.getId(),
-                competition.getName(), Collections.EMPTY_SET, 0, "", CompetitionStatus.COMPETITION_SETUP, competitionType,0,null);
+                competition.getName(), Collections.EMPTY_SET, 0, "", CompetitionStatus.COMPETITION_SETUP, competitionType, 0, null);
         assertEquals(singletonList(expectedSearchResult), response.getContent());
     }
 
@@ -177,7 +177,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         Long competitionId = 1L;
         List<Milestone> milestones = newMilestone()
                 .withDate(ZonedDateTime.now().minusDays(1))
-                .withType(OPEN_DATE,SUBMISSION_DATE,ASSESSORS_NOTIFIED).build(3);
+                .withType(OPEN_DATE, SUBMISSION_DATE, ASSESSORS_NOTIFIED).build(3);
         milestones.addAll(newMilestone()
                 .withDate(ZonedDateTime.now().plusDays(1))
                 .withType(NOTIFICATIONS, ASSESSOR_DEADLINE)
@@ -189,7 +189,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
         service.closeAssessment(competitionId);
 
-        assertEquals(CompetitionStatus.FUNDERS_PANEL,competition.getCompetitionStatus());
+        assertEquals(CompetitionStatus.FUNDERS_PANEL, competition.getCompetitionStatus());
     }
 
 
@@ -198,7 +198,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         Long competitionId = 1L;
         List<Milestone> milestones = newMilestone()
                 .withDate(ZonedDateTime.now().minusDays(1))
-                .withType(OPEN_DATE,SUBMISSION_DATE,ALLOCATE_ASSESSORS).build(3);
+                .withType(OPEN_DATE, SUBMISSION_DATE, ALLOCATE_ASSESSORS).build(3);
         milestones.addAll(newMilestone()
                 .withDate(ZonedDateTime.now().plusDays(1))
                 .withType(ASSESSMENT_CLOSED)
@@ -211,7 +211,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
         service.notifyAssessors(competitionId);
 
-        assertEquals(CompetitionStatus.IN_ASSESSMENT,competition.getCompetitionStatus());
+        assertEquals(CompetitionStatus.IN_ASSESSMENT, competition.getCompetitionStatus());
     }
 
 
@@ -290,5 +290,83 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         assertTrue(response.isFailure());
         assertTrue(response.getFailure().is(new Error(COMPETITION_CANNOT_RELEASE_FEEDBACK)));
         assertEquals(CompetitionStatus.ASSESSOR_FEEDBACK, competition.getCompetitionStatus());
+    }
+
+    @Test
+    public void manageInformState() throws Exception {
+        Long competitionId = 1L;
+        List<Milestone> milestones = newMilestone()
+                .withDate(ZonedDateTime.now().minusDays(1))
+                .withType(OPEN_DATE,
+                        SUBMISSION_DATE,
+                        ALLOCATE_ASSESSORS,
+                        ASSESSORS_NOTIFIED,
+                        ASSESSMENT_CLOSED,
+                        ASSESSMENT_PANEL,
+                        PANEL_DATE,
+                        FUNDERS_PANEL)
+                .build(9);
+        milestones.addAll(newMilestone()
+                .withDate(ZonedDateTime.now().plusDays(1))
+                .withType(RELEASE_FEEDBACK)
+                .build(1));
+
+        Competition competition = newCompetition().withSetupComplete(true)
+                .withMilestones(milestones)
+                .build();
+
+        assertEquals(CompetitionStatus.FUNDERS_PANEL, competition.getCompetitionStatus());
+
+        CompetitionFundedKeyStatisticsResource keyStatistics = new CompetitionFundedKeyStatisticsResource();
+        keyStatistics.setApplicationsAwaitingDecision(0);
+        keyStatistics.setApplicationsSubmitted(5);
+        keyStatistics.setApplicationsNotifiedOfDecision(5);
+
+        when(competitionRepositoryMock.findById(competitionId)).thenReturn(competition);
+        when(competitionKeyStatisticsServiceMock.getFundedKeyStatisticsByCompetition(competitionId)).thenReturn(serviceSuccess(keyStatistics));
+
+        ServiceResult<Void> response = service.manageInformState(competitionId);
+
+        assertTrue(response.isSuccess());
+        assertEquals(CompetitionStatus.ASSESSOR_FEEDBACK, competition.getCompetitionStatus());
+    }
+
+    @Test
+    public void manageInformState_noStateChange() throws Exception {
+        Long competitionId = 1L;
+        List<Milestone> milestones = newMilestone()
+                .withDate(ZonedDateTime.now().minusDays(1))
+                .withType(OPEN_DATE,
+                        SUBMISSION_DATE,
+                        ALLOCATE_ASSESSORS,
+                        ASSESSORS_NOTIFIED,
+                        ASSESSMENT_CLOSED,
+                        ASSESSMENT_PANEL,
+                        PANEL_DATE,
+                        FUNDERS_PANEL)
+                .build(9);
+        milestones.addAll(newMilestone()
+                .withDate(ZonedDateTime.now().plusDays(1))
+                .withType(RELEASE_FEEDBACK)
+                .build(1));
+
+        Competition competition = newCompetition().withSetupComplete(true)
+                .withMilestones(milestones)
+                .build();
+
+        assertEquals(CompetitionStatus.FUNDERS_PANEL, competition.getCompetitionStatus());
+
+        CompetitionFundedKeyStatisticsResource keyStatistics = new CompetitionFundedKeyStatisticsResource();
+        keyStatistics.setApplicationsAwaitingDecision(0);
+        keyStatistics.setApplicationsSubmitted(5);
+        keyStatistics.setApplicationsNotifiedOfDecision(4);
+
+        when(competitionRepositoryMock.findById(competitionId)).thenReturn(competition);
+        when(competitionKeyStatisticsServiceMock.getFundedKeyStatisticsByCompetition(competitionId)).thenReturn(serviceSuccess(keyStatistics));
+
+        ServiceResult<Void> response = service.manageInformState(competitionId);
+
+        assertTrue(response.isSuccess());
+        assertEquals(CompetitionStatus.FUNDERS_PANEL, competition.getCompetitionStatus());
     }
 }

@@ -16,7 +16,7 @@ Academic organisations search
     And the user clicks the button/link    jQuery=.button:contains("Yes, accept invitation")
     When the user selects the radio button    organisationType    2
     And the user clicks the button/link    jQuery=.button:contains("Continue")
-    And The user should see the text in the page    Your organisation must be on Je-S before we will consider you to be a research organisation
+    And The user should see the text in the page    Your organisation must be registered on Je-S before we will consider you to be a research organisation
     And the user clicks the button/link    jQuery=.button:contains("Search")
     Then the user should see an error    Please enter an organisation name to search.
     When the user enters text to a text field    id=organisationSearchName    abcd

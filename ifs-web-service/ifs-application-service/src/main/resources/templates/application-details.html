@@ -9,7 +9,7 @@
 <th:block th:insert="fragments/layout :: global-header" />
 
 
-<main id="content">
+<main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}"  th:remove="tag"></div>
 
@@ -41,7 +41,7 @@
         <div class="column-half">
             <ul class="list list-bullet">
                 <li><a th:href="@{/application/{applicationId}/team(applicationId=${currentApplication.id})}">view team members and add collaborators</a></li>
-                <li><a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${currentCompetition.id})}">view conditions of grant offer</a></li>
+                <li><a th:href="@{/competition/{competitionId}/info/terms-and-conditions(competitionId=${currentCompetition.id})}">view the grant terms and conditions</a></li>
             </ul>
         </div>
     </div>

@@ -5,7 +5,6 @@ import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.competition.resource.AvailableAssessorsSortFieldType;
 import org.innovateuk.ifs.management.controller.CompetitionManagementApplicationController.ApplicationOverviewOrigin;
 import org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
-import org.innovateuk.ifs.management.form.AvailableAssessorsForm;
 import org.innovateuk.ifs.management.model.ApplicationAssessmentProgressModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.ApplicationAssessmentProgressRemoveViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
@@ -37,7 +33,7 @@ public class CompetitionManagementApplicationAssessmentProgressController {
     @Autowired
     private AssessmentRestService assessmentRestService;
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public String applicationProgress(Model model,
                                       @PathVariable("applicationId") Long applicationId,
                                       @RequestParam MultiValueMap<String, String> queryParams,
@@ -46,7 +42,7 @@ public class CompetitionManagementApplicationAssessmentProgressController {
         return doProgressView(model, applicationId, filterInnovationArea, queryParams, page);
     }
 
-    @RequestMapping(path = "/assign/{assessorId}", method = RequestMethod.POST)
+    @PostMapping(path = "/assign/{assessorId}")
     public String assignAssessor(@PathVariable("competitionId") Long competitionId,
                                  @PathVariable("applicationId") Long applicationId,
                                  @PathVariable("assessorId") Long assessorId,
@@ -55,7 +51,7 @@ public class CompetitionManagementApplicationAssessmentProgressController {
         return format("redirect:/competition/%s/application/%s/assessors?sortField=%s", competitionId, applicationId, sortField);
     }
 
-    @RequestMapping(value = "/withdraw/{assessmentId}", method = RequestMethod.POST)
+    @PostMapping("/withdraw/{assessmentId}")
     public String withdrawAssessment(@PathVariable("competitionId") Long competitionId,
                                      @PathVariable("applicationId") Long applicationId,
                                      @PathVariable("assessmentId") Long assessmentId,
@@ -64,7 +60,7 @@ public class CompetitionManagementApplicationAssessmentProgressController {
         return format("redirect:/competition/%s/application/%s/assessors?sortField=%s", competitionId, applicationId, sortField);
     }
 
-    @RequestMapping(value = "/withdraw/{assessmentId}/confirm", method = RequestMethod.GET)
+    @GetMapping(value = "/withdraw/{assessmentId}/confirm")
     public String withdrawAssessmentConfirm(
             Model model,
             @PathVariable("competitionId") Long competitionId,

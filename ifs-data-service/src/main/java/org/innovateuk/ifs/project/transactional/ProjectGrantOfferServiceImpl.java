@@ -27,8 +27,8 @@ import org.innovateuk.ifs.finance.transactional.FinanceRowService;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
-import org.innovateuk.ifs.project.finance.transactional.FinanceCheckService;
-import org.innovateuk.ifs.project.finance.transactional.ProjectFinanceService;
+import org.innovateuk.ifs.project.financecheck.service.FinanceCheckService;
+import org.innovateuk.ifs.project.financecheck.transactional.SpendProfileService;
 import org.innovateuk.ifs.project.gol.YearlyGOLProfileTable;
 import org.innovateuk.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
 import org.innovateuk.ifs.project.mapper.ProjectMapper;
@@ -96,7 +96,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     private FileService fileService;
 
     @Autowired
-    private ProjectFinanceService projectFinanceService;
+    private SpendProfileService spendProfileService;
 
     @Autowired
     private FileEntryMapper fileEntryMapper;
@@ -231,7 +231,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
 
     private boolean isProjectReadyForGrantOffer(Long projectId) {
         Optional<Project> project = getProject(projectId).getOptionalSuccessObject();
-        ApprovalType spendProfileApproval = projectFinanceService.getSpendProfileStatusByProjectId(projectId).getSuccessObject();
+        ApprovalType spendProfileApproval = spendProfileService.getSpendProfileStatusByProjectId(projectId).getSuccessObject();
 
         return project.map(project1 -> ApprovalType.APPROVED.equals(spendProfileApproval) && ApprovalType.APPROVED.equals(project1.getOtherDocumentsApproved()) && project1.getGrantOfferLetter() == null).orElse(false);
     }
@@ -513,8 +513,8 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         return organisations.stream()
                 .collect(toMap(Organisation::getName, organisation -> {
                     ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(project.getId(), organisation.getId());
-                    if (projectFinanceService.getSpendProfileTable(projectOrganisationCompositeId).isSuccess()) {
-                        return projectFinanceService.getSpendProfileTable(projectOrganisationCompositeId).getSuccessObject();
+                    if (spendProfileService.getSpendProfileTable(projectOrganisationCompositeId).isSuccess()) {
+                        return spendProfileService.getSpendProfileTable(projectOrganisationCompositeId).getSuccessObject();
                     }
                     return new SpendProfileTableResource();
                 }));

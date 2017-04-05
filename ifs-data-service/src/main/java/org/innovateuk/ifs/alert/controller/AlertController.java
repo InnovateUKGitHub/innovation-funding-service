@@ -19,32 +19,32 @@ public class AlertController {
     @Autowired
     private AlertService alertService;
 
-    @GetMapping(value = "/findAllVisible")
+    @GetMapping("/findAllVisible")
     public RestResult<List<AlertResource>> findAllVisible() {
         return alertService.findAllVisible().toGetResponse();
     }
 
-    @GetMapping(value = "/findAllVisible/{type}")
+    @GetMapping("/findAllVisible/{type}")
     public RestResult<List<AlertResource>> findAllVisibleByType(@PathVariable("type") AlertType type) {
         return alertService.findAllVisibleByType(type).toGetResponse();
     }
 
-    @GetMapping(value = "/{id}")
+    @GetMapping("/{id}")
     public RestResult<AlertResource> findById(@PathVariable("id") Long id) {
         return alertService.findById(id).toGetResponse();
     }
 
-    @PostMapping(value = "/")
+    @PostMapping("/")
     public RestResult<AlertResource> create(@RequestBody AlertResource alertResource) {
         return alertService.create(alertResource).toPostCreateResponse();
     }
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping("/{id}")
     public RestResult<Void> delete(@PathVariable("id") Long id) {
         return alertService.delete(id).toDeleteResponse();
     }
 
-    @DeleteMapping(value = "/delete/{type}")
+    @DeleteMapping("/delete/{type}")
     public RestResult<Void> deleteAllByType(@PathVariable("type") AlertType type) {
         return alertService.deleteAllByType(type).toDeleteResponse();
     }

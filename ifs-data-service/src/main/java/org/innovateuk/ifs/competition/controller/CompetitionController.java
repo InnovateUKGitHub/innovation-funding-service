@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.ZonedDateTime;
-import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
@@ -29,7 +28,7 @@ public class CompetitionController {
     @Autowired
     private ApplicationService applicationService;
 
-    @GetMapping(value = "/{id}")
+    @GetMapping("/{id}")
     public RestResult<CompetitionResource> getCompetitionById(@PathVariable("id") final Long id) {
         return competitionService.getCompetitionById(id).toGetResponse();
     }
@@ -39,57 +38,57 @@ public class CompetitionController {
         return competitionService.findAll().toGetResponse();
     }
 
-    @GetMapping(value = "/live")
+    @GetMapping("/live")
     public RestResult<List<CompetitionSearchResultItem>> live() {
         return competitionService.findLiveCompetitions().toGetResponse();
     }
 
-    @GetMapping(value = "/project-setup")
+    @GetMapping("/project-setup")
     public RestResult<List<CompetitionSearchResultItem>> projectSetup() {
         return competitionService.findProjectSetupCompetitions().toGetResponse();
     }
 
-    @GetMapping(value = "/upcoming")
+    @GetMapping("/upcoming")
     public RestResult<List<CompetitionSearchResultItem>> upcoming() {
         return competitionService.findUpcomingCompetitions().toGetResponse();
     }
 
-    @GetMapping(value = "/non-ifs")
+    @GetMapping("/non-ifs")
     public RestResult<List<CompetitionSearchResultItem>> nonIfs() {
         return competitionService.findNonIfsCompetitions().toGetResponse();
     }
 
-    @GetMapping(value = "/search/{page}/{size}")
+    @GetMapping("/search/{page}/{size}")
     public RestResult<CompetitionSearchResult> search(@RequestParam("searchQuery") String searchQuery,
                                                       @PathVariable("page") int page,
                                                       @PathVariable("size") int size) {
         return competitionService.searchCompetitions(searchQuery, page, size).toGetResponse();
     }
 
-    @GetMapping(value = "/count")
+    @GetMapping("/count")
     public RestResult<CompetitionCountResource> count() {
         return competitionService.countCompetitions().toGetResponse();
     }
 
-    @PutMapping(value = "/{id}")
+    @PutMapping("/{id}")
     public RestResult<CompetitionResource> saveCompetition(@RequestBody CompetitionResource competitionResource,
                                                            @PathVariable("id") final Long id) {
         return competitionSetupService.update(id, competitionResource).toGetResponse();
     }
 
-    @PutMapping(value = "/{id}/close-assessment")
+    @PutMapping("/{id}/close-assessment")
     public RestResult<Void> closeAssessment(@PathVariable("id") final Long id) {
         return competitionService.closeAssessment(id).toPutResponse();
     }
 
-    @PostMapping(value = "/{id}/initialise-form/{competitionTypeId}")
+    @PostMapping("/{id}/initialise-form/{competitionTypeId}")
     public RestResult<Void> initialiseForm(@PathVariable("id") Long competitionId,
                                            @PathVariable("competitionTypeId") Long competitionType) {
         return competitionSetupService.copyFromCompetitionTypeTemplate(competitionId, competitionType).toPostResponse();
     }
 
 
-    @PostMapping(value = "/generateCompetitionCode/{id}")
+    @PostMapping("/generateCompetitionCode/{id}")
     public RestResult<String> generateCompetitionCode(@RequestBody ZonedDateTime dateTime, @PathVariable("id") final Long id) {
         return competitionSetupService.generateCompetitionCode(id, dateTime).toGetResponse();
     }
@@ -106,36 +105,36 @@ public class CompetitionController {
         return competitionSetupService.markSectionInComplete(competitionId, section).toGetResponse();
     }
 
-    @PostMapping(value = "/{id}/mark-as-setup")
+    @PostMapping("/{id}/mark-as-setup")
     public RestResult<Void> markAsSetup(@PathVariable("id") final Long competitionId) {
         return competitionSetupService.markAsSetup(competitionId).toPostResponse();
     }
 
-    @PostMapping(value = "/{id}/return-to-setup")
+    @PostMapping("/{id}/return-to-setup")
     public RestResult<Void> returnToSetup(@PathVariable("id") final Long competitionId) {
         return competitionSetupService.returnToSetup(competitionId).toPostResponse();
     }
 
-    @PostMapping(value = "")
+    @PostMapping
     public RestResult<CompetitionResource> create() {
         return competitionSetupService.create().toPostCreateResponse();
     }
 
 
-    @PostMapping(value = "/non-ifs")
+    @PostMapping("/non-ifs")
     public RestResult<CompetitionResource> createNonIfs() {
         return competitionSetupService.createNonIfs().toPostCreateResponse();
     }
 
 
-    @PutMapping(value = "/{id}/notify-assessors")
+    @PutMapping("/{id}/notify-assessors")
     public RestResult<Void> notifyAssessors(@PathVariable("id") final long competitionId) {
         return competitionService.notifyAssessors(competitionId)
                 .andOnSuccess(() -> assessmentService.notifyAssessorsByCompetition(competitionId))
                 .toPutResponse();
     }
 
-    @PutMapping(value = "/{id}/release-feedback")
+    @PutMapping("/{id}/release-feedback")
     public RestResult<Void> releaseFeedback(@PathVariable("id") final long competitionId) {
         return competitionService.releaseFeedback(competitionId)
                 .andOnSuccess(() -> applicationService.notifyApplicantsByCompetition(competitionId))
