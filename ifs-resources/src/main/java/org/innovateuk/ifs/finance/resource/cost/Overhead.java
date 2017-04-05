@@ -15,8 +15,8 @@ import java.util.Optional;
  *
  */
 @FieldRequiredIf(required = "calculationFile", argument = "useTotalOption", predicate = true, message = Overhead.FINANCE_OVERHEAD_FILE_REQUIRED, groups=Overhead.TotalCost.class)
-public class Overhead implements FinanceRowItem {
-    public final static String FINANCE_OVERHEAD_FILE_REQUIRED = "{validation.finance.overhead.file.required}";
+public class Overhead extends AbstractFinanceRowItem {
+    final static String FINANCE_OVERHEAD_FILE_REQUIRED = "{validation.finance.overhead.file.required}";
 
     public interface RateNotZero{}
     public interface TotalCost{}

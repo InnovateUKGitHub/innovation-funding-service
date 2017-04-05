@@ -12,8 +12,6 @@ import java.util.concurrent.Future;
 public interface UserRestService {
     RestResult<UserResource> retrieveUserResourceByUid(String uid);
 
-    RestResult<UserResource> findUserByEmailForAnonymousUserFlow(String email);
-
     RestResult<UserResource> retrieveUserById(Long id);
     RestResult<List<UserResource>> findAll();
 
@@ -24,7 +22,6 @@ public interface UserRestService {
     RestResult<List<UserResource>> findAssignableUsers(Long applicationId);
     RestResult<UserResource> findUserByEmail(String email);
     Future<RestResult<ProcessRoleResource[]>> findAssignableProcessRoles(Long applicationId);
-    RestResult<List<UserResource>> findRelatedUsers(Long applicationId);
     RestResult<Boolean> userHasApplicationForCompetition(Long userId, Long competitionId);
 
     Future<RestResult<ProcessRoleResource>> findProcessRoleById(Long processRoleId);

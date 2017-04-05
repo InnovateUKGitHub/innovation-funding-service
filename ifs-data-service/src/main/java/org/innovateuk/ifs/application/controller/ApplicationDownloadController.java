@@ -21,10 +21,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -55,7 +52,7 @@ public class ApplicationDownloadController {
     private Integer rowCount = 0;
     private Integer headerCount = 0;
 
-    @RequestMapping("/downloadByCompetition/{competitionId}")
+    @GetMapping("/downloadByCompetition/{competitionId}")
     public @ResponseBody ResponseEntity<ByteArrayResource> getDownloadByCompetitionId(@PathVariable("competitionId") Long competitionId) throws IOException {
         ServiceResult<List<Application>> applicationsResult = applicationService.getApplicationsByCompetitionIdAndStatus(competitionId, SUBMITTED_STATUS_IDS);
         

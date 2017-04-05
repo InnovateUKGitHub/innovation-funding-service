@@ -48,8 +48,6 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
 import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * This Controller handles finance check queries activity for the finance team members
@@ -81,7 +79,7 @@ public class FinanceChecksQueriesAddQueryController {
 
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
-    @RequestMapping(method = GET)
+    @GetMapping
     public String viewNewQuery(@PathVariable final Long projectId,
                                @PathVariable final Long organisationId,
                                @RequestParam(value = "query_section", required = false) final String querySection,
@@ -102,7 +100,7 @@ public class FinanceChecksQueriesAddQueryController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
-    @RequestMapping(method = POST)
+    @PostMapping
     public String saveQuery(@PathVariable final Long projectId,
                             @PathVariable final Long organisationId,
                             @RequestParam(value = "query_section", required = false) final String querySection,
@@ -159,7 +157,7 @@ public class FinanceChecksQueriesAddQueryController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
-    @RequestMapping(method = POST, params = "uploadAttachment")
+    @PostMapping(params = "uploadAttachment")
     public String saveNewQueryAttachment(Model model,
                                          @PathVariable final Long projectId,
                                          @PathVariable final Long organisationId,
@@ -194,10 +192,8 @@ public class FinanceChecksQueriesAddQueryController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
-    @RequestMapping(value = "/attachment/{attachmentId}", method = GET)
-    public
-    @ResponseBody
-    ResponseEntity<ByteArrayResource> downloadAttachment(@PathVariable Long projectId,
+    @GetMapping("/attachment/{attachmentId}")
+    public @ResponseBody ResponseEntity<ByteArrayResource> downloadAttachment(@PathVariable Long projectId,
                                                          @PathVariable Long organisationId,
                                                          @PathVariable Long attachmentId,
                                                          @ModelAttribute("loggedInUser") UserResource loggedInUser,
@@ -221,7 +217,7 @@ public class FinanceChecksQueriesAddQueryController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
-    @RequestMapping(method = POST, params="removeAttachment")
+    @PostMapping(params="removeAttachment")
     public String removeAttachment(@PathVariable Long projectId,
                                    @PathVariable Long organisationId,
                                    @RequestParam(value = "query_section", required = false) final String querySection,
@@ -247,7 +243,7 @@ public class FinanceChecksQueriesAddQueryController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
-    @RequestMapping(value="/cancel", method = GET)
+    @GetMapping("/cancel")
     public String cancelNewForm(@PathVariable Long projectId,
                                 @PathVariable Long organisationId,
                                 @RequestParam(value = "query_section", required = false) String querySection,

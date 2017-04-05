@@ -15,12 +15,14 @@ public class ProjectFinanceCheckSummaryViewModel {
 
     public boolean isShowEnabledGenerateSpendProfilesButton() {
         return financeCheckSummaryResource.isFinanceChecksAllApproved() &&
+                financeCheckSummaryResource.isBankDetailsApproved() &&
                !financeCheckSummaryResource.isSpendProfilesGenerated();
     }
 
     public boolean isShowDisabledGenerateSpendProfilesButton() {
-        return !financeCheckSummaryResource.isFinanceChecksAllApproved()
-                && !financeCheckSummaryResource.isSpendProfilesGenerated();
+        return (!financeCheckSummaryResource.isFinanceChecksAllApproved() ||
+                !financeCheckSummaryResource.isBankDetailsApproved()) &&
+                !financeCheckSummaryResource.isSpendProfilesGenerated();
     }
 
     public boolean isShowSpendProfilesGeneratedMessage() {

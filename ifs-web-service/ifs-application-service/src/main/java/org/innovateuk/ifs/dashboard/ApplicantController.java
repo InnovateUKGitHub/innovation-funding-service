@@ -17,8 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -54,7 +54,7 @@ public class ApplicantController {
     @Autowired
     private ProjectService projectService;
 
-    @RequestMapping(value="/dashboard", method= RequestMethod.GET)
+    @GetMapping("/dashboard")
     public String dashboard(Model model, HttpServletRequest request) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
 
@@ -64,11 +64,13 @@ public class ApplicantController {
         List<ApplicationResource> finished = applicationService.getFinished(user.getId());
 
         List<ProjectResource> projectsInSetup = projectService.findByUser(user.getId()).getSuccessObject();
-        
-        Map<Long, CompetitionResource> competitions = createCompetitionMap(inProgress, finished);
+
+        List<ApplicationResource> applicationsForProjectsInSetup = getApplicationsForProjectsInSetup(projectsInSetup);
+
+        Map<Long, CompetitionResource> competitions = createCompetitionMap(inProgress, finished, applicationsForProjectsInSetup);
         Map<Long, ApplicationStatusResource> applicationStatusMap = createApplicationStatusMap(inProgress, finished);
 
-        model.addAttribute("applicationsInProcess", inProgress);
+        model.addAttribute("applicationsInProgress", inProgress);
         model.addAttribute("applicationsAssigned", getAssignedApplications(inProgress, user));
         model.addAttribute("applicationsFinished", finished);
         model.addAttribute("projectsInSetup", projectsInSetup);
@@ -113,9 +115,12 @@ public class ApplicantController {
             .collect(
                 Collectors.toMap(
                     ApplicationResource::getId,
-                    application -> competitionService.getById(application.getCompetition())
-                )
+                    application -> competitionService.getById(application.getCompetition()), (p1, p2) -> p1)
             );
     }
 
+    private final List<ApplicationResource> getApplicationsForProjectsInSetup(List<ProjectResource> resources){
+
+        return resources.stream().map(project -> applicationService.getById(project.getApplication())).collect(Collectors.toList());
+    }
 }

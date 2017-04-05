@@ -3,7 +3,6 @@ package org.innovateuk.ifs.project.financecheck.service;
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.competitionsetup.CompetitionSetupTransactionalService;
-import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
@@ -16,43 +15,33 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.finance.resource.*;
-import org.innovateuk.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
 import org.innovateuk.ifs.project.financecheck.domain.*;
-import org.innovateuk.ifs.project.financecheck.repository.FinanceCheckProcessRepository;
 import org.innovateuk.ifs.project.financecheck.repository.FinanceCheckRepository;
 import org.innovateuk.ifs.project.financecheck.transactional.SpendProfileService;
-import org.innovateuk.ifs.project.financecheck.workflow.financechecks.configuration.FinanceCheckWorkflowHandler;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.transactional.AbstractProjectServiceImpl;
 import org.innovateuk.ifs.project.transactional.ProjectService;
-import org.innovateuk.ifs.user.domain.OrganisationType;
 import org.innovateuk.ifs.user.mapper.UserMapper;
-import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.util.GraphBuilderContext;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.innovateuk.threads.resource.QueryResource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-import static java.math.BigDecimal.ONE;
 import static java.math.BigDecimal.ZERO;
 import static java.math.RoundingMode.HALF_EVEN;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
-import static org.innovateuk.ifs.commons.service.ServiceResult.*;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.form.resource.FormInputType.*;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.NOT_REQUIRED;
@@ -69,12 +58,6 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     @Autowired
     private FinanceCheckRepository financeCheckRepository;
-
-    @Autowired
-    private FinanceCheckWorkflowHandler financeCheckWorkflowHandler;
-
-    @Autowired
-    private FinanceCheckProcessRepository financeCheckProcessRepository;
 
     @Autowired
     private UserMapper userMapper;
@@ -114,26 +97,6 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     }
 
     @Override
-    public ServiceResult<FinanceCheckProcessResource> getFinanceCheckApprovalStatus(Long projectId, Long organisationId) {
-        return getPartnerOrganisation(projectId, organisationId).andOnSuccess(this::getFinanceCheckApprovalStatus);
-    }
-
-    private ServiceResult<FinanceCheckProcessResource> getFinanceCheckApprovalStatus(PartnerOrganisation partnerOrganisation) {
-
-        return findFinanceCheckProcess(partnerOrganisation).andOnSuccessReturn(process ->
-                new FinanceCheckProcessResource(
-                        process.getActivityState(),
-                        projectUserMapper.mapToResource(process.getParticipant()),
-                        userMapper.mapToResource(process.getInternalParticipant()),
-                        LocalDateTime.ofInstant(process.getLastModified().toInstant(), ZoneId.systemDefault()),
-                        false));
-    }
-
-    private ServiceResult<FinanceCheckProcess> findFinanceCheckProcess(PartnerOrganisation partnerOrganisation) {
-        return find(financeCheckProcessRepository.findOneByTargetId(partnerOrganisation.getId()), notFoundError(FinanceCheckProcess.class, partnerOrganisation.getId()));
-    }
-
-    @Override
     public ServiceResult<FinanceCheckSummaryResource> getFinanceCheckSummary(Long projectId) {
         Project project = projectRepository.findOne(projectId);
         Application application = project.getApplication();
@@ -142,7 +105,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         final PartnerOrganisation leadPartner = simpleFindFirst(partnerOrganisations, PartnerOrganisation::isLeadOrganisation).get();
         final List<PartnerOrganisation> sortedPartnersList = new PrioritySorting<>(partnerOrganisations, leadPartner, po -> po.getOrganisation().getName()).unwrap();
         Optional<SpendProfile> spendProfile = spendProfileRepository.findOneByProjectIdAndOrganisationId(projectId, partnerOrganisations.get(0).getOrganisation().getId());
-        boolean financeChecksAllApproved = getFinanceCheckApprovalStatus(projectId);
+        boolean bankDetailsApproved = getBankDetailsApprovalStatus(projectId);
 
         FinanceCheckOverviewResource overviewResource = getFinanceCheckOverview(projectId).getSuccessObjectOrThrowException();
 
@@ -150,7 +113,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         LocalDate spendProfileGeneratedDate = spendProfile.map(p -> LocalDate.from(p.getGeneratedDate().toInstant().atOffset(ZoneOffset.UTC))).orElse(null);
 
         return serviceSuccess(new FinanceCheckSummaryResource(overviewResource, competition.getId(), competition.getName(),
-                spendProfile.isPresent(), getPartnerStatuses(sortedPartnersList, projectId), financeChecksAllApproved,
+                spendProfile.isPresent(), getPartnerStatuses(sortedPartnersList, projectId), bankDetailsApproved,
                 spendProfileGeneratedBy, spendProfileGeneratedDate));
     }
 
@@ -200,9 +163,9 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         );
     }
 
-    private boolean getFinanceCheckApprovalStatus(Long projectId) {
+    private boolean getBankDetailsApprovalStatus(Long projectId) {
         ServiceResult<ProjectTeamStatusResource> teamStatusResult = projectService.getProjectTeamStatus(projectId, Optional.empty());
-        return teamStatusResult.isSuccess() && !simpleFindFirst(teamStatusResult.getSuccessObject().getPartnerStatuses(), s -> !asList(COMPLETE, NOT_REQUIRED).contains(s.getFinanceChecksStatus())).isPresent();
+        return teamStatusResult.isSuccess() && !simpleFindFirst(teamStatusResult.getSuccessObject().getPartnerStatuses(), s -> !asList(COMPLETE, NOT_REQUIRED).contains(s.getBankDetailsStatus())).isPresent();
     }
 
     private List<FinanceCheckPartnerStatusResource> getPartnerStatuses(List<PartnerOrganisation> partnerOrganisations, Long projectId) {
@@ -285,18 +248,6 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         EligibilityResource eligibilityDetails = spendProfileService.getEligibility(compositeId).getSuccessObjectOrThrowException();
 
         return Pair.of(eligibilityDetails.getEligibility(), eligibilityDetails.getEligibilityRagStatus());
-    }
-
-    private FinanceCheck mapToDomain(FinanceCheckResource financeCheckResource) {
-        FinanceCheck fc = financeCheckRepository.findByProjectIdAndOrganisationId(financeCheckResource.getProject(), financeCheckResource.getOrganisation());
-        for (CostResource cr : financeCheckResource.getCostGroup().getCosts()) {
-            Optional<Cost> oc = fc.getCostGroup().getCostById(cr.getId());
-            if (oc.isPresent()) {
-                Cost c = oc.get();
-                c.setValue(cr.getValue());
-            }
-        }
-        return fc;
     }
 
     private FinanceCheckResource mapToResource(FinanceCheck fc) {

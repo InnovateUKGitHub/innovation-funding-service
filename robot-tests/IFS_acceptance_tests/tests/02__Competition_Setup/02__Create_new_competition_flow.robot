@@ -95,8 +95,8 @@ Initial details - User enters valid values and marks as done
     And the user should see the text in the page    1/12/${nextyear}
     And the user should see the text in the page    Ian Cooper
     And the user should see the text in the page    Competition title
-    And the user should see the text in the page    Emerging and enabling technologies
-    And the user should see the text in the page    Satellite Applications
+    And the user should see the text in the page    Emerging and enabling
+    And the user should see the text in the page    Satellite applications
     And the user should see the text in the page    Sector
     And the user should see the text in the page    Yes
     And the user should see the element             jQuery=.button:contains("Edit")
@@ -108,7 +108,7 @@ Initial details - Sector competitions allow multiple innovation areas
     When the user enters multiple innovation areas
     And the user clicks the button/link              jQuery=.button:contains("Done")
     Then The user should see the text in the page    Space technology
-    And The user should see the text in the page     Creative Industries
+    And The user should see the text in the page     Creative industries
 
 Initial Details - User can remove an innovation area
     [Documentation]    INFUND-6478, INFUND-6479
@@ -135,9 +135,9 @@ Initial details - Comp Type and Date should not be editable
     Then the user should see the text in the page   1/12/${nextyear}
     And the user should see the text in the page    Ian Cooper
     And the user should see the text in the page    Test competition
-    And the user should see the text in the page    Emerging and enabling technologies
-    And the user should see the text in the page    Creative Industries
-    And the user should see the text in the page    Satellite Applications
+    And the user should see the text in the page    Emerging and enabling
+    And the user should see the text in the page    Creative industries
+    And the user should see the text in the page    Satellite applications
     And the user should see the text in the page    Yes
 
 
@@ -437,31 +437,23 @@ Application: Finances
     When the user clicks the button/link     link=Finances
     Then the user should see the element     jQuery=dt:contains("Include project growth table") ~ dd:contains("No")
 
-Application: Mark as done and the Edit again
-    [Documentation]    INFUND-3000
-    [Tags]  Pending
-    [Setup]    The user clicks the button/link    jQuery=.grid-row div:nth-child(2) label:contains(Yes)
-    # TODO Pending INFUND-5964
-    Given the user moves focus and waits for autosave
-    When The user clicks the button/link    jQuery=.button[value="Save and close"]
-    Then The user should see the text in the page    Test title
-    And the user should see the text in the page    Subtitle test
-    And the user should see the text in the page    Test guidance title
-    And the user should see the text in the page    Guidance text test
-    And the user should see the text in the page    150
-    And the user should see the text in the page    Yes
-    And The user clicks the button/link    jQuery=button:contains(Done)
+Application: Mark as done should display green tick
+    [Documentation]    INFUND-5964
+    [Setup]    the user navigates to the page   ${landingPage}
+    Given The user clicks the button/link       jQuery=button:contains(Done)
+    Then The user should not see the element    jQuery=button:contains(Done)
+    And The user clicks the button/link         link=Competition setup
+    Then the user should see the element        css=img[title='The "Application" section is done']
 
-# TODO see pending test cases below related ton INFUND-7643. They can be unblocked when INFUND-6942 is implemented
-Application: should have a green check
-    [Documentation]  INFUND-6773
-    [Tags]  HappyPath  Pending
-    # TODO Pending due to INFUND-7643
-    Given the user navigates to the page    ${landingPage}
-    When The user clicks the button/link    jQuery=.button:contains("Done")
-    And The user clicks the button/link     link=Competition setup
-    And the user should see the element     jQuery=li:contains("Application") > img[alt$="section is done"]
-    And The user should see the element    jQuery=.button:contains("Save")
+Application: Edit again should mark as incomplete
+    [Documentation]    INFUND-5964
+    [Setup]    the user navigates to the page   ${landingPage}
+    Given the user clicks the button/link       link=Application details
+    When the user clicks the button/link        jQuery=a:contains("Edit this question")
+    And The user clicks the button/link         jQuery=button:contains("Save and close")
+    Then The user should see the element        jQuery=button:contains(Done)
+    And The user clicks the button/link         link=Competition setup
+    Then the user should not see the element    css=img[title='The "Application" section is done']
 
 Ready To Open button is visible when the user re-opens a section
     [Documentation]    INFUND-4468
@@ -605,8 +597,10 @@ the resubmission should not have a default selection
 The user enters valid data in the initial details
     Given the user enters text to a text field                css=#title  Competition title
     When the user selects the option from the drop-down menu  Sector  id=competitionTypeId
-    And the user selects the option from the drop-down menu   Emerging and enabling technologies  id=innovationSectorCategoryId
-    And the user selects the option from the drop-down menu   Satellite Applications  id=innovationAreaCategoryId-0
+    And the user selects the option from the drop-down menu   Infrastructure systems  id=innovationSectorCategoryId
+    And the user selects the option from the drop-down menu   Offshore wind  id=innovationAreaCategoryId-0
+    And the user selects the option from the drop-down menu   Emerging and enabling  id=innovationSectorCategoryId
+    And the user selects the option from the drop-down menu   Satellite applications  id=innovationAreaCategoryId-0
     And the user enters text to a text field    id=openingDateDay    01
     And the user enters text to a text field    Id=openingDateMonth    12
     And the user enters text to a text field    id=openingDateYear  ${nextyear}
@@ -669,4 +663,4 @@ the user enters multiple innovation areas
     the user clicks the button/link    jQuery=.buttonlink:contains("+ add another innovation area")
     the user selects the option from the drop-down menu    Space technology    id=innovationAreaCategoryId-1
     the user clicks the button/link    jQuery=.buttonlink:contains("+ add another innovation area")
-    the user selects the option from the drop-down menu    Creative Industries    id=innovationAreaCategoryId-2
+    the user selects the option from the drop-down menu    Creative industries    id=innovationAreaCategoryId-2

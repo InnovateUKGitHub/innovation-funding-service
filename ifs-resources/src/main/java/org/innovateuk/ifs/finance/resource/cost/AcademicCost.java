@@ -3,7 +3,7 @@ package org.innovateuk.ifs.finance.resource.cost;
 import javax.validation.constraints.DecimalMin;
 import java.math.BigDecimal;
 
-public class AcademicCost implements FinanceRowItem {
+public class AcademicCost extends AbstractFinanceRowItem {
     private Long id;
     private String name;
 

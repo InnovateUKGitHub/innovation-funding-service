@@ -25,7 +25,7 @@ public class ProjectPermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "UPDATE_BASIC_PROJECT_SETUP_DETAILS",
-            description = "The lead partners can update the basic project details, like start date, address, project manager")
+            description = "The lead partners can update the basic project details, like start date, address, Project Manager")
     public boolean leadPartnersCanUpdateTheBasicProjectDetails(ProjectResource project, UserResource user) {
         return isLeadPartner(project.getId(), user.getId());
     }
@@ -103,7 +103,7 @@ public class ProjectPermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "SUBMIT_OTHER_DOCUMENTS",
-            description = "Only a project manager can submit completed partner documents")
+            description = "Only a Project Manager can submit completed partner documents")
     public boolean onlyProjectManagerCanMarkDocumentsAsSubmit(ProjectResource project, UserResource user) {
         return isProjectManager(project.getId(), user.getId());
     }

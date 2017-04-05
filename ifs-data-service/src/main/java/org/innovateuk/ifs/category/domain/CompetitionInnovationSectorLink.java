@@ -18,7 +18,6 @@ public class CompetitionInnovationSectorLink extends CategoryLink<Competition, I
     private Competition competition;
 
     CompetitionInnovationSectorLink() {
-        // default constructor
     }
 
     public CompetitionInnovationSectorLink(Competition competition, InnovationSector category) {

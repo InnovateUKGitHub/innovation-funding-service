@@ -11,10 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.function.Supplier;
@@ -37,7 +34,7 @@ public class AssessorCompetitionDashboardController {
     @Autowired
     private AssessmentService assessmentService;
 
-    @RequestMapping(value = "/dashboard/competition/{competitionId}", method = RequestMethod.GET)
+    @GetMapping("/dashboard/competition/{competitionId}")
     public String competitionDashboard(final Model model,
                                        @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                        @PathVariable("competitionId") final Long competitionId,
@@ -47,7 +44,7 @@ public class AssessorCompetitionDashboardController {
         return "assessor-competition-dashboard";
     }
 
-    @RequestMapping(value = "/dashboard/competition/{competitionId}", method = RequestMethod.POST)
+    @PostMapping("/dashboard/competition/{competitionId}")
     public String submitAssessments(Model model,
                                     @PathVariable("competitionId") Long competitionId,
                                     @ModelAttribute("loggedInUser") UserResource loggedInUser,
@@ -68,7 +65,7 @@ public class AssessorCompetitionDashboardController {
         );
     }
 
-    @RequestMapping(value = "/dashboard/confirm-competition/{competitionId}", method = RequestMethod.POST)
+    @PostMapping("/dashboard/confirm-competition/{competitionId}")
     public String confirmSubmitAssessments(Model model,
                                            @PathVariable("competitionId") final Long competitionId,
                                            @ModelAttribute("loggedInUser") UserResource loggedInUser,

@@ -130,7 +130,7 @@ public class AssessmentFeedbackModelPopulator {
     private List<FormInputResource> formatGuidanceScores(List<FormInputResource> assessorInputs) {
         if (assessorInputs != null) {
             for (FormInputResource input : assessorInputs) {
-                if (ASSESSOR_SCORE.equals(input.getType()) && input.getGuidanceRows() != null) {
+                if (TEXTAREA.equals(input.getType()) && input.getGuidanceRows() != null) {
                     for (GuidanceRowResource row : input.getGuidanceRows()) {
                         row.setSubject(row.getSubject().replace(",", " to "));
                     }

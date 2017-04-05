@@ -5,14 +5,9 @@ import org.innovateuk.ifs.alert.resource.AlertType;
 import org.innovateuk.ifs.alert.transactional.AlertService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
  * Exposes CRUD operations through a REST API to manage {@link org.innovateuk.ifs.alert.domain.Alert} related data.
@@ -24,32 +19,32 @@ public class AlertController {
     @Autowired
     private AlertService alertService;
 
-    @RequestMapping(value = "/findAllVisible", method = GET)
+    @GetMapping("/findAllVisible")
     public RestResult<List<AlertResource>> findAllVisible() {
         return alertService.findAllVisible().toGetResponse();
     }
 
-    @RequestMapping(value = "/findAllVisible/{type}", method = GET)
+    @GetMapping("/findAllVisible/{type}")
     public RestResult<List<AlertResource>> findAllVisibleByType(@PathVariable("type") AlertType type) {
         return alertService.findAllVisibleByType(type).toGetResponse();
     }
 
-    @RequestMapping(value = "/{id}", method = GET)
+    @GetMapping("/{id}")
     public RestResult<AlertResource> findById(@PathVariable("id") Long id) {
         return alertService.findById(id).toGetResponse();
     }
 
-    @RequestMapping(value = "/", method = POST)
+    @PostMapping("/")
     public RestResult<AlertResource> create(@RequestBody AlertResource alertResource) {
         return alertService.create(alertResource).toPostCreateResponse();
     }
 
-    @RequestMapping(value = "/{id}", method = DELETE)
+    @DeleteMapping(value = "/{id}")
     public RestResult<Void> delete(@PathVariable("id") Long id) {
         return alertService.delete(id).toDeleteResponse();
     }
 
-    @RequestMapping(value = "/delete/{type}", method = DELETE)
+    @DeleteMapping(value = "/delete/{type}")
     public RestResult<Void> deleteAllByType(@PathVariable("type") AlertType type) {
         return alertService.deleteAllByType(type).toDeleteResponse();
     }

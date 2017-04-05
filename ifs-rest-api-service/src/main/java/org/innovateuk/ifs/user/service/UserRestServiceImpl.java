@@ -80,15 +80,6 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
-    public RestResult<UserResource> findUserByEmailForAnonymousUserFlow(String email) {
-        if(StringUtils.isEmpty(email)) {
-            return restFailure(CommonErrors.notFoundError(UserResource.class, email));
-        }
-
-        return getWithRestResultAnonymous(userRestURL + "/findByEmail/" + email + "/", UserResource.class);
-    }
-
-    @Override
     public RestResult<UserResource> retrieveUserById(Long id) {
         if(id == null || id.equals(0L)) {
             return restFailure(CommonErrors.notFoundError(UserResource.class, id));
@@ -131,11 +122,6 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     @Override
     public Future<RestResult<ProcessRoleResource[]>> findAssignableProcessRoles(Long applicationId){
         return getWithRestResultAsync(processRoleRestURL + "/findAssignable/" + applicationId, ProcessRoleResource[].class);
-    }
-
-    @Override
-    public RestResult<List<UserResource>> findRelatedUsers(Long applicationId){
-        return getWithRestResult(userRestURL + "/findRelatedUsers/"+applicationId, userListType());
     }
 
     @Override

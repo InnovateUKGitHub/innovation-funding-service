@@ -33,13 +33,14 @@
     <div th:fragment="textarea"  class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.getId()}__]')} ? error : ''">
 
         <th:block th:if="${!userIsLeadApplicant}">
-            <div class="assign-container assign-container--alert" th:classappend="(${currentUser.getId() == questionAssignee?.assigneeUserId} ? 'assign-alert')">
-                <th:block th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
-                          th:include="question-type/form-elements :: current-assignee"/>
-            </div>
+            <th:block th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}">
+                <div class="assign-container" th:classappend="${currentUser.id == questionAssignee?.assigneeUserId} ? 'assign-alert' : 'assigned-alert'">
+                    <th:block th:include="question-type/form-elements :: current-assignee"/>
+                </div>
+            </th:block>
         </th:block>
 
-        <th:block th:insert="question-type/form-elements :: assign-buttons-dialog" th:unless="${readonly} or ${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} or ${!userIsLeadApplicant}"/>
+        <th:block th:insert="question-type/form-elements :: assign-buttons-dialog" th:unless="${readonly} or ${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} or ${!userIsLeadApplicant}" th:with="fullButtonText=${TRUE}"/>
 
         <div th:unless="${readonly}" class="textarea-header">
 
@@ -152,7 +153,7 @@
                     <fieldset>
                         <legend>
                             <span class="heading-medium">Estimated timescales</span>
-                            <span class="form-hint">Project start date</span>
+                            <span class="form-hint">When do you wish to start your project?</span>
                             <th:block th:insert="question-type/form-elements :: form-hint (hint='For example: 31 12 2015')"  />
                             <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.startDate')"  />
                         </legend>
@@ -192,15 +193,16 @@
                             <span class="heading-medium">Innovation area</span>
                             <th:block th:insert="question-type/form-elements :: form-hint (hint='This is the primary innovation area for your project. This will help Innovate UK select suitable assessors for your application.')" />
                         </legend>
-                        Chosen innovation area: <th:block th:text="${model.questionApplicationViewModel.selectedInnovationAreaName}" /><br/>
-                        <button class="buttonlink" name="submit-section-redirect" th:value="${'/form/question/' + question.id + '/innovation-area'}" type="submit">Change your innovation area</button>
+                        <span th:if="${model.questionApplicationViewModel.selectedInnovationAreaName != null}">Chosen innovation area: <th:block th:text="${model.questionApplicationViewModel.selectedInnovationAreaName}"/></span><br/>
+                        <button class="buttonlink" name="submit-section-redirect" th:value="${'/form/question/' + question.id + '/innovation-area'}"
+                                type="submit"><span th:text="${model.questionApplicationViewModel.selectedInnovationAreaName != null ? 'Change your innovation area' : 'Choose your innovation area'}">Choose your innovation area</span></button>
                     </fieldset>
                 </div>
                 <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.resubmission__}')} ? 'error'">
                     <fieldset>
                         <legend>
                             <span class="form-label form-label-bold">Is this application a resubmission of a previous application?</span>
-                            <th:block th:insert="question-type/form-elements :: form-hint (hint='Let us know if this is an application you have previously submitted to Innovate UK in another competition.')" />
+                            <th:block th:insert="question-type/form-elements :: form-hint (hint='Let us know if this application has been previously submitted to Innovate UK.')" />
                             <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.resubmission')" />
                         </legend>
                         <label class="block-label selection-button-radio "
@@ -262,11 +264,12 @@
             </th:block>
             <!--/* end of edit template */-->
             <th:block th:if="${readonly or appIsClosed}">
-                <div class="success-alert extra-margin-bottom">
-                    Application details is marked as complete
-                </div>
+                <th:block th:if="${markedAsComplete.contains(question.id)}">
+                    <div class="success-alert extra-margin-bottom">Application details are marked as complete</div>
+                </th:block>
+
                 <dl class="readonly-data">
-                    <dt>Project title</dt>
+                    <dt>Application title</dt>
                     <dd th:text="${currentApplication.name}"></dd>
                 </dl>
                 <h2 class="heading-medium">Estimated timescales</h2>
@@ -292,10 +295,13 @@
                 </dl>
             </th:block>
             <th:block th:unless="${(currentUser.id != questionAssignee?.assigneeUserId and questionAssignee?.assignee!=null) or (questionAssignee?.assignee==null and !userIsLeadApplicant)}">
-                <p th:unless="${appIsClosed}">
-                    <th:block th:if="${readonly}" th:insert="question-type/form-elements :: form-edit-question-button" />
-                    <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons" />
-                </p>
+                <div class="form-footer" th:unless="${appIsClosed}">
+                    <div class="form-footer__actions">
+                        <th:block th:if="${readonly}"
+                                  th:insert="question-type/form-elements :: form-edit-question-button"/>
+                        <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons"/>
+                    </div>
+                </div>
             </th:block>
         </th:block>
     </th:block>
