@@ -26,6 +26,11 @@ class ProjectSetupProgressChecker {
         return COMPLETE.equals(projectStatus.getProjectDetailsStatus());
     }
 
+    public boolean canAccessMonitoringOfficer() {
+        return COMPLETE.equals(projectStatus.getMonitoringOfficerStatus())
+                || ACTION_REQUIRED.equals(projectStatus.getMonitoringOfficerStatus());
+    }
+
     public boolean isBankDetailsApproved() {
         return COMPLETE.equals(projectStatus.getBankDetailsStatus());
     }
