@@ -63,13 +63,13 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
         viewModel.setCompetitionSetupComplete(true);
         viewModel.setNonIfs(false);
 
-        when(overviewPopulator.populateViewModel(any(PublicContentItemResource.class), anyBoolean(), eq(true))).thenReturn(viewModel);
+        when(overviewPopulator.populateViewModel(any(PublicContentItemResource.class), anyBoolean())).thenReturn(viewModel);
 
         mockMvc.perform(get("/competition/{id}/overview", compId))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", viewModel))
                 .andExpect(view().name("competition/overview"));
-        assertEquals(true, viewModel.isShowNotOpenYetMessage());
+        assertEquals(false, viewModel.isShowNotOpenYetMessage());
     }
 
     @Test
@@ -153,13 +153,49 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
         viewModel.setCompetitionSetupComplete(false);
         viewModel.setNonIfs(false);
 
-        when(overviewPopulator.populateViewModel(any(PublicContentItemResource.class), anyBoolean(), eq(false))).thenReturn(viewModel);
+        when(overviewPopulator.populateViewModel(any(PublicContentItemResource.class), anyBoolean())).thenReturn(viewModel);
 
         mockMvc.perform(get("/competition/{id}/overview", compId))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", viewModel))
                 .andExpect(view().name("competition/overview"));
-        assertEquals(false, viewModel.isShowNotOpenYetMessage());
+        assertEquals(true, viewModel.isShowNotOpenYetMessage());
+    }
+
+    @Test
+    public void testCompetitionOverviewSetupNotCompleteCompetitionNotOpen() throws Exception {
+        final Long compId = 20L;
+        final LocalDateTime openDate = LocalDateTime.of(LocalDateTime.now().getYear() + 1,1,1,0,0);
+        final LocalDateTime closeDate = LocalDateTime.of(LocalDateTime.now().getYear() + 1,1,1,0,0);
+        final String competitionTitle = "Title of competition";
+        final PublicContentResource publicContentResource = newPublicContentResource().build();
+
+        PublicContentItemResource publicContentItem = newPublicContentItemResource()
+                .withCompetitionOpenDate(openDate)
+                .withCompetitionCloseDate(closeDate)
+                .withCompetitionTitle(competitionTitle)
+                .withContentSection(publicContentResource)
+                .withNonIfs(false)
+                .build();
+        when(competitionService.getPublicContentOfCompetition(compId)).thenReturn(publicContentItem);
+
+        CompetitionResource compResource = newCompetitionResource().withSetupComplete(false).build();
+        when(competitionService.getPublishedById(compId)).thenReturn(compResource);
+
+        CompetitionOverviewViewModel viewModel = new CompetitionOverviewViewModel();
+        viewModel.setCompetitionOpenDate(openDate);
+        viewModel.setCompetitionCloseDate(closeDate);
+        viewModel.setCompetitionTitle("Title");
+        viewModel.setCompetitionSetupComplete(false);
+        viewModel.setNonIfs(false);
+
+        when(overviewPopulator.populateViewModel(any(PublicContentItemResource.class), anyBoolean())).thenReturn(viewModel);
+
+        mockMvc.perform(get("/competition/{id}/overview", compId))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("model", viewModel))
+                .andExpect(view().name("competition/overview"));
+        assertEquals(true, viewModel.isShowNotOpenYetMessage());
     }
 
     @Test
@@ -189,7 +225,7 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
         viewModel.setCompetitionSetupComplete(true);
         viewModel.setNonIfs(true);
 
-        when(overviewPopulator.populateViewModel(any(PublicContentItemResource.class), anyBoolean(), eq(true))).thenReturn(viewModel);
+        when(overviewPopulator.populateViewModel(any(PublicContentItemResource.class), anyBoolean())).thenReturn(viewModel);
 
         mockMvc.perform(get("/competition/{id}/overview", compId))
                 .andExpect(status().isOk())

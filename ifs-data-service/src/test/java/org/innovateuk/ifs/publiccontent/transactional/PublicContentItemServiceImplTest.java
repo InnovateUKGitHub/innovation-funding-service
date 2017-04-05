@@ -218,7 +218,7 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
     public void testByCompetitionId() {
         Long competitionId = 4L;
 
-        Competition competition = newCompetition().withId(competitionId).withMilestones(
+        Competition competition = newCompetition().withNonIfs(false).withId(competitionId).withSetupComplete(true).withMilestones(
                 newMilestone()
                         .withDate(LocalDateTime.of(2017,1,2,3,4), LocalDateTime.of(2017,3,2,1,4))
                         .withType(MilestoneType.OPEN_DATE, MilestoneType.SUBMISSION_DATE)
@@ -239,6 +239,38 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
         assertEquals(competition.getStartDate(), resultObject.getCompetitionOpenDate());
         assertEquals(competition.getName(), resultObject.getCompetitionTitle());
         assertEquals(publicContentResource, resultObject.getPublicContentResource());
+        assertEquals(competition.getSetupComplete(), resultObject.getSetupComplete());
+
+        verify(publicContentRepository, only()).findByCompetitionId(competitionId);
+        verify(competitionRepository, only()).findById(competitionId);
+    }
+
+    @Test
+    public void testByCompetitionIdNonIfs() {
+        Long competitionId = 4L;
+
+        Competition competition = newCompetition().withNonIfs(true).withId(competitionId).withSetupComplete(true).withMilestones(
+                newMilestone()
+                        .withDate(LocalDateTime.of(2017,1,2,3,4), LocalDateTime.of(2017,3,2,1,4))
+                        .withType(MilestoneType.OPEN_DATE, MilestoneType.SUBMISSION_DATE)
+                        .build(2)
+        ).build();
+        PublicContent publicContent = newPublicContent().withCompetitionId(competitionId).build();
+        PublicContentResource publicContentResource = newPublicContentResource().withCompetitionId(competitionId).build();
+        when(competitionRepository.findById(competitionId)).thenReturn(competition);
+        when(publicContentRepository.findByCompetitionId(competitionId)).thenReturn(publicContent);
+        when(publicContentMapper.mapToResource(publicContent)).thenReturn(publicContentResource);
+
+        ServiceResult<PublicContentItemResource> result = service.byCompetitionId(competitionId);
+        assertTrue(result.isSuccess());
+
+        PublicContentItemResource resultObject = result.getSuccessObject();
+
+        assertEquals(competition.getEndDate(), resultObject.getCompetitionCloseDate());
+        assertEquals(competition.getStartDate(), resultObject.getCompetitionOpenDate());
+        assertEquals(competition.getName(), resultObject.getCompetitionTitle());
+        assertEquals(publicContentResource, resultObject.getPublicContentResource());
+        assertEquals(true, resultObject.getSetupComplete());
 
         verify(publicContentRepository, only()).findByCompetitionId(competitionId);
         verify(competitionRepository, only()).findById(competitionId);

@@ -37,8 +37,12 @@
             </div>
             <th:block>
                 <p class="extra-margin-top">
-                    <a class="button"
-                       th:disabled="${model.disableApplyButton}"
+                    <button th:if="${model.disableApplyButton}"
+                            class="button"
+                            disabled="disabled"
+                            th:text="${model.applyButtonText}"/>
+                    <a th:unless="${model.disableApplyButton}"
+                       class="button"
                        th:href="${model.applyButtonUrl}"
                        th:text="${model.applyButtonText}">
                     </a>

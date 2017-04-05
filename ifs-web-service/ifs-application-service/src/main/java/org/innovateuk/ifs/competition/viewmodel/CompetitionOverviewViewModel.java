@@ -106,7 +106,7 @@ public class CompetitionOverviewViewModel {
         if (nonIfs) {
             return getCompetitionOpenDate().isAfter(LocalDateTime.now());
         } else {
-            return isCompetitionSetupComplete();
+            return !isCompetitionSetupComplete() || getCompetitionOpenDate().isAfter(LocalDateTime.now());
         }
     }
 

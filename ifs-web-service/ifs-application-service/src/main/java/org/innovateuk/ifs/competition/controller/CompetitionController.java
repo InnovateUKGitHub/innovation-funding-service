@@ -48,8 +48,7 @@ public class CompetitionController {
 
         model.addAttribute("model", overviewPopulator.populateViewModel(
                 publicContentItem,
-                userIsLoggedIn(request),
-                competitionService.getPublishedById(competitionId).getSetupComplete()));
+                userIsLoggedIn(request)));
         return TEMPLATE_PATH + "overview";
     }
 
