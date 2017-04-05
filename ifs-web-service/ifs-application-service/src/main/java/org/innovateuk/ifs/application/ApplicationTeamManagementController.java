@@ -190,6 +190,34 @@ public class ApplicationTeamManagementController {
         return getUpdateOrganisationByInviteOrganisation(model, applicationId, inviteOrganisationId, loggedInUser, form);
     }
 
+    @GetMapping(params = {"deleteOrganisation", "organisation"})
+    public String confirmDeleteOrganisation(Model model,
+                                            @PathVariable("applicationId") long applicationId,
+                                            @RequestParam("organisation") long organisationId,
+                                            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+        model.addAttribute("model", applicationTeamManagementModelPopulator.populateModelByOrganisationId(
+                applicationId,
+                organisationId,
+                loggedInUser.getId()
+        ));
+
+        return "application-team/delete-org";
+    }
+
+    @GetMapping(params = {"deleteOrganisation", "inviteOrganisation"})
+    public String confirmDeleteInviteOrganisation(Model model,
+                                                  @PathVariable("applicationId") long applicationId,
+                                                  @RequestParam("inviteOrganisation") long inviteOrganisationId,
+                                                  @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+        model.addAttribute("model", applicationTeamManagementModelPopulator.populateModelByInviteOrganisationId(
+                applicationId,
+                inviteOrganisationId,
+                loggedInUser.getId()
+        ));
+
+        return "application-team/delete-org";
+    }
+
     @PostMapping(params = {"deleteOrganisation", "organisation"})
     public String deleteOrganisation(Model model,
                                      @PathVariable("applicationId") Long applicationId,

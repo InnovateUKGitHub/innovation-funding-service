@@ -825,6 +825,72 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
     }
 
     @Test
+    public void confirmDeleteOrganisation() throws Exception {
+        Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
+        ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
+        Map<String, UserResource> usersMap = setupUserResources();
+        InviteOrganisationResource inviteOrganisationResource = setupOrganisationInviteForNonLeadOrg(applicationResource.getId(), usersMap, organisationsMap);
+        OrganisationResource organisation = organisationsMap.get("Ludlow");
+
+        UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
+
+        setLoggedInUser(leadApplicant);
+        MvcResult mockResult = mockMvc.perform(get("/application/{applicationId}/team/update", applicationResource.getId())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("organisation", organisation.getId().toString())
+                .param("deleteOrganisation", ""))
+                .andExpect(status().isOk())
+                .andExpect(view().name("application-team/delete-org"))
+                .andReturn();
+
+        ApplicationTeamManagementViewModel model = (ApplicationTeamManagementViewModel) mockResult.getModelAndView().getModel().get("model");
+        assertEquals(organisation.getName(), model.getOrganisationName());
+        assertEquals(applicationResource.getName(), model.getApplicationName());
+        assertEquals(organisation.getId(), model.getOrganisationId());
+
+        InOrder inOrder = inOrder(applicationService, inviteOrganisationRestService, userService, inviteRestService);
+        inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
+        inOrder.verify(inviteOrganisationRestService).getByOrganisationIdWithInvitesForApplication(organisation.getId(), applicationResource.getId());
+        inOrder.verify(applicationService).getById(applicationResource.getId());
+        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
+        inOrder.verify(userService).findById(leadApplicant.getId());
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void confirmDeleteInviteOrganisation() throws Exception {
+        Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
+        ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
+        Map<String, UserResource> usersMap = setupUserResources();
+        InviteOrganisationResource inviteOrganisationResource = setupOrganisationInviteWithAnUnconfirmedOrganisation(usersMap);
+        OrganisationResource organisation = organisationsMap.get("Ludlow");
+
+        UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
+
+        setLoggedInUser(leadApplicant);
+        MvcResult mockResult = mockMvc.perform(get("/application/{applicationId}/team/update", applicationResource.getId())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("inviteOrganisation", inviteOrganisationResource.getId().toString())
+                .param("deleteOrganisation", ""))
+                .andExpect(status().isOk())
+                .andExpect(view().name("application-team/delete-org"))
+                .andReturn();
+
+        ApplicationTeamManagementViewModel model = (ApplicationTeamManagementViewModel) mockResult.getModelAndView().getModel().get("model");
+        assertEquals(organisation.getName(), model.getOrganisationName());
+        assertEquals(applicationResource.getName(), model.getApplicationName());
+        assertEquals(inviteOrganisationResource.getId(), model.getInviteOrganisationId());
+
+        InOrder inOrder = inOrder(applicationService, inviteOrganisationRestService, userService, inviteRestService);
+        inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
+        inOrder.verify(inviteOrganisationRestService).getById(inviteOrganisationResource.getId());
+        inOrder.verify(applicationService).getById(applicationResource.getId());
+        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
+        inOrder.verify(userService).findById(leadApplicant.getId());
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
     public void deleteOrganisation_loggedInUserIsLead() throws Exception {
         Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
         ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
