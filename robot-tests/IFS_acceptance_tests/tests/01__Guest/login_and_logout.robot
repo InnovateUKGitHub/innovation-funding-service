@@ -149,7 +149,7 @@ the user is not logged-in
     the user should not see the element    link=Sign out
 
 the guest user should get an error message
-    the user should see the text in the page    Your email/password combination doesn't seem to work
+    the user should see the text in the page    Your username/password combination doesn't seem to work
     the user should not see the element    link=Sign out
 
 the user should be logged-in as an Assessor
