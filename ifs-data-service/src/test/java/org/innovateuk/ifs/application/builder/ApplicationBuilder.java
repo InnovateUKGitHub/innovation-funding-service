@@ -1,10 +1,9 @@
 package org.innovateuk.ifs.application.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.domain.ApplicationStatus;
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
+import org.innovateuk.ifs.application.resource.ApplicationStatus;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -51,15 +50,6 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
 
     public ApplicationBuilder withApplicationStatus(ApplicationStatus... applicationStatus) {
         return withArray((applicationState, application) -> application.setApplicationStatus(applicationState), applicationStatus);
-    }
-
-    public ApplicationBuilder withApplicationStatus(ApplicationStatusConstants... applicationStatus) {
-        return withArray((applicationState, application) -> {
-
-            ApplicationStatus status = new ApplicationStatus(applicationState.getId(), applicationState.getName());
-            application.setApplicationStatus(status);
-
-        }, applicationStatus);
     }
 
     public ApplicationBuilder withStartDate(LocalDate... dates) {

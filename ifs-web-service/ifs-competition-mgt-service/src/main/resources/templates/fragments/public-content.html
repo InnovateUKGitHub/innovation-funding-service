@@ -307,21 +307,16 @@
                               th:attr="data-required-errormessage=#{validation.publiccontent.contentgroup.content.required}"></textarea>
             </div>
             <div class="form-group upload-section">
-                <div class="form-group" th:classappend="${#fields.hasErrors('contentGroups[__${index}__].attachment')} ? 'error':''">
-                <th:block th:unless="${model.hasAttachment(contentGroup.id)}">
-                    <input type="file" th:id="${'file-upload-'+index}" class="inputfile" th:field="*{contentGroups[__${index}__].attachment}"/>
-                    <label th:for="${'file-upload-'+index}" class="button-secondary extra-margin">+ Upload</label>
-                    <button class="button-secondary" type="submit" name="uploadFile" th:attr="data-for-file-upload=${'file-upload-'+index}" th:value="${index}">Save</button>
-                    <p class="uploaded-file">No file currently uploaded</p>
+                <th:block th:with="uploadViewmode='edit',
+                               downloadUrl=@{/competition/setup/public-content/{sectionPath}/{compId}/edit/{groupId}(sectionPath=${model.section.type.path},compId=${model.competition.id},groupId=${contentGroup.id})},
+                               filename=${model.hasAttachment(contentGroup.id) ? model.fileName(contentGroup.id) : ''},
+                               inputField='contentGroups[__${index}__].attachment',
+                               validationField=${inputField},
+                               mayRemove=true,
+                               removeName='removeFile',
+                               saveName='uploadFile'">
+                    <th:block th:with="removeValue=${contentGroup.id}" th:insert="question-type/types :: fileupload-fragment(${uploadViewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
                 </th:block>
-                <th:block th:if="${model.hasAttachment(contentGroup.id)}">
-                    <p class="uploaded-file">
-                        <a th:href="@{/competition/setup/public-content/{sectionPath}/{compId}/edit/{groupId}(sectionPath=${model.section.type.path},compId=${model.competition.id},groupId=${contentGroup.id})}"
-                           th:text="${model.fileName(contentGroup.id)}">Filename.pdf</a>
-                    </p>
-                    <button class="button-secondary" type="submit" name="removeFile" th:value="${contentGroup.id}">remove</button>
-                </th:block>
-                </div>
             </div>
             <button type="button" class="buttonlink" th:if="${index > 0 or model.section.type.allowEmptyContentGroups}" data-remove-row="contentGroup">Remove section</button>
         </div>

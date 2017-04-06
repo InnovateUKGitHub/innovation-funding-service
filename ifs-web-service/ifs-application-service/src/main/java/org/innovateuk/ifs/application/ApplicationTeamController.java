@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application;
 
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.populator.ApplicationTeamModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
@@ -17,8 +16,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import static java.lang.String.format;
-import static org.innovateuk.ifs.application.constant.ApplicationStatusConstants.CREATED;
-import static org.innovateuk.ifs.application.constant.ApplicationStatusConstants.OPEN;
+import static org.innovateuk.ifs.application.resource.ApplicationStatus.CREATED;
+import static org.innovateuk.ifs.application.resource.ApplicationStatus.OPEN;
 
 /**
  * This controller will handle all requests that are related to the read only view of the application team.
@@ -64,8 +63,8 @@ public class ApplicationTeamController {
     }
 
     private void changeApplicationStatusToOpen(ApplicationResource applicationResource) {
-        if (CREATED == ApplicationStatusConstants.getFromId(applicationResource.getApplicationStatus())) {
-            applicationService.updateStatus(applicationResource.getId(), OPEN.getId()).getSuccessObjectOrThrowException();
+        if (CREATED == applicationResource.getApplicationStatus()) {
+            applicationService.updateStatus(applicationResource.getId(), OPEN).getSuccessObjectOrThrowException();
         }
     }
 }

@@ -59,7 +59,7 @@ Application overview button
     ...
     ...    INFUND-841
     [Tags]
-    When the user clicks the button/link    link=Application Overview
+    When the user clicks the button/link    link=Application overview
     Then the user redirects to the page    Please provide information about your project.    Application overview
 
 *** Keywords ***

@@ -27,7 +27,7 @@ Submit button disabled when application is incomplete
     Given the user navigates to the page    ${DASHBOARD_URL}
     When the user clicks the button/link    link=${application_name}
     And the user clicks the button/link    link=Your finances
-    And the user clicks the button/link    link= Application Overview
+    And the user clicks the button/link    link= Application overview
     And the user clicks the button/link    jQuery=.button:contains("Review and submit")
     Then the submit button should be disabled
 
