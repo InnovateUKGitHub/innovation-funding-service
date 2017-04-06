@@ -27,7 +27,7 @@ Resource          ../../../resources/defaultResources.robot
 User cannot accept/reject an invite to an application that has been withdrawn
     [Documentation]    INFUND-4797
     [Tags]
-    When the user navigates to the page    ${server}/assessment/134/assignment
+    When the user navigates to the page    ${server}/assessment/109/assignment
     Then the user should see the text in the page    Invitation withdrawn
     [Teardown]    the user clicks the button/link    jQuery=#proposition-links a:contains(My dashboard)
 
