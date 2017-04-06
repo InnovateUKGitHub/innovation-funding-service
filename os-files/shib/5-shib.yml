@@ -21,7 +21,7 @@ items:
           deploymentconfig: shib
       spec:
         containers:
-        - image: innovateuk/ifs-shib-sp:0.4.0.1
+        - image: innovateuk/ifs-shib-sp:0.5.2
           name: shib
           imagePullPolicy: IfNotPresent
           env:
