@@ -791,7 +791,7 @@
                       class="date-group form-group-row"
                       data-future-date=""
                       th:attr="data-date-invalid-errormessage=${milestoneEntry.value.milestoneType.milestoneDescription + ': please enter a valid date'},
-                               data-date-future-errormessage=${milestoneEntry.value.milestoneType.milestoneDescription  + ': please enter a future date that is after the previous milestone'}">
+                               data-date-future-errormessage=${milestoneEntry.value.milestoneType.milestoneDescription  + ': please enter a future date' + (milestoneEntry.value.milestoneType.openDate ? '' : ' that is after the previous milestone')}">
 
                       <th scope="row" th:id="${'milestone-' + milestoneEntry.key}">
                         <span th:text="${milestoneEntry.value.milestoneType.milestoneDescription}" />

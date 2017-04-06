@@ -43,6 +43,10 @@ public enum MilestoneType {
         return presetDate;
     }
 
+    public boolean isOpenDate() {
+        return this.equals(OPEN_DATE);
+    }
+
     public static MilestoneType[] presetValues() {
         return Stream.of(values()).filter(MilestoneType::isPresetDate).toArray(length -> new MilestoneType[length]);
     }
