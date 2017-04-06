@@ -88,20 +88,15 @@
                         <p>Unable to upload? Contact Customer Support on 0300 321 4357.</p>
                     </div>
                 </details>
-
-                <!-- /* file is not uploaded */-->
-                <div th:classappend="${#fields.hasErrors('signedGrantOfferLetter') ? 'error' : ''}" th:unless="${model.signedGrantOfferLetterFile}">
-                    <th:block th:if="${#fields.hasErrors('signedGrantOfferLetter')}">
-                        <span class="error-message" th:each="err : ${#fields.errors('signedGrantOfferLetter')}" th:text="${err}"/>
-                    </th:block>
-                    <input th:field="*{signedGrantOfferLetter}" type="file" class="inputfile"/>
-                    <label for="signedGrantOfferLetter" class="button-secondary extra-margin">+ Upload</label>
-                    <button name="uploadSignedGrantOfferLetterClicked" class="button-secondary" type="submit" data-for-file-upload="signedGrantOfferLetter">Save</button>
-                </div>
-                <!--/* file is uploaded */-->
-                <th:block th:if="${model.signedGrantOfferLetterFile}">
-                    <a th:href="@{/project/{id}/offer/signed-grant-offer-letter(id=${model.projectId})}" class="uploaded-file" th:text="${model.signedGrantOfferLetterFile.filename}">The-uploaded-file-example.pdf</a>
-                    <button name="removeSignedGrantOfferLetterClicked" class="button-secondary no-margin-right" type="submit">Remove</button>
+                <th:block th:with="uploadViewmode='edit',
+                               downloadUrl=@{/project/{id}/offer/signed-grant-offer-letter(id=${model.projectId})},
+                               filename=${model.signedGrantOfferLetterFile?.filename},
+                               inputField='signedGrantOfferLetter',
+                               validationField=${inputField},
+                               mayRemove=true,
+                               removeName='removeSignedGrantOfferLetterClicked',
+                               saveName='uploadSignedGrantOfferLetterClicked'">
+                    <th:block th:insert="question-type/types :: fileupload-fragment(${uploadViewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
                 </th:block>
             </div>
 
