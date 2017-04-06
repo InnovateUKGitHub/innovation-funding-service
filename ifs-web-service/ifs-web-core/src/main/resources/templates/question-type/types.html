@@ -201,7 +201,7 @@
                 <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.resubmission__}')} ? 'error'">
                     <fieldset>
                         <legend>
-                            <span class="form-label form-label-bold">Is this application a resubmission of a previous application?</span>
+                            <span class="form-label form-label-bold">Is this application a resubmission?</span>
                             <th:block th:insert="question-type/form-elements :: form-hint (hint='Let us know if this application has been previously submitted to Innovate UK.')" />
                             <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.resubmission')" />
                         </legend>
@@ -283,7 +283,7 @@
                     <dt>Innovation area</dt>
                     <dd th:text="${currentApplication.innovationArea.name} ?: 'Not listed'"></dd>
                     <th:block th:unless="${currentApplication.resubmission == null}">
-                        <dt>Is this application a resubmission of a previous application?</dt>
+                        <dt>Is this application a resubmission?</dt>
                         <dd th:text="${currentApplication.resubmission ? 'Yes' : 'No'}"></dd>
                         <th:block th:if="${currentApplication.resubmission == true}">
                             <dt>Previous application number</dt>
