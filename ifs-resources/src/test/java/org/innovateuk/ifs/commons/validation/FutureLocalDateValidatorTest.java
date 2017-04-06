@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class FutureLocalDateValidatorTest {
@@ -49,14 +50,15 @@ public class FutureLocalDateValidatorTest {
     }
 
     @Test
-    public void testCurrentDateIsValid() {
+    public void testCurrentDateIsInvalid() {
         LocalDate today = LocalDate.now();
 
         TestLocalDateForm futureLocalDateForm = new TestLocalDateForm();
         futureLocalDateForm.setLocalDate(today);
         Set<ConstraintViolation<TestLocalDateForm>> violations = validator.validate(futureLocalDateForm);
 
-        assertTrue(violations.isEmpty());
+        assertFalse(violations.isEmpty());
+        assertEquals(violations.iterator().next().getMessageTemplate(), "{validation.project.start.date.not.in.future}");
     }
 
     @Test

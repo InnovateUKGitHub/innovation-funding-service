@@ -2,9 +2,10 @@ package org.innovateuk.ifs.competitionsetup.form;
 
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Range;
+import org.innovateuk.ifs.commons.validation.constraints.FutureLocalDate;
 
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -14,8 +15,6 @@ public class InitialDetailsForm extends CompetitionSetupForm {
 
     @NotNull(message = "{validation.initialdetailsform.executiveuserid.required}")
     private Long executiveUserId;
-
-    private LocalDateTime openingDate;
 
     @NotNull(message = "{validation.initialdetailsform.openingdateday.required}")
     @Range(min=1, max=31, message= "{validation.initialdetailsform.openingdateday.range}")
@@ -54,12 +53,13 @@ public class InitialDetailsForm extends CompetitionSetupForm {
         this.executiveUserId = executiveUserId;
     }
 
-    public LocalDateTime getOpeningDate() {
-        return openingDate;
-    }
+    @FutureLocalDate
+    public LocalDate getOpeningDate() {
+        if (openingDateYear == null || openingDateMonth == null || openingDateDay == null) {
+            return null;
+        }
 
-    public void setOpeningDate(LocalDateTime openingDate) {
-        this.openingDate = openingDate;
+        return LocalDate.of(openingDateYear, openingDateMonth, openingDateDay);
     }
 
     public Integer getOpeningDateDay() {
