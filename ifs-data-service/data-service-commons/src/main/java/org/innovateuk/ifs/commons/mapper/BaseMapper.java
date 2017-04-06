@@ -44,5 +44,4 @@ public abstract class BaseMapper<D, R, I extends Serializable> {
             throw new IllegalStateException("Attempt to invoke non-existent default constructor on " + clazz.getName());
         }
     }
-
 }

@@ -6,7 +6,6 @@ import org.innovateuk.ifs.competitionsetup.service.modelpopulator.CompetitionSet
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import java.time.ZonedDateTime;
 import java.util.Optional;
 
 /**
@@ -22,6 +21,5 @@ public class ApplicationQuestionModelPopulator implements CompetitionSetupSubsec
 
 	@Override
 	public void populateModel(Model model, CompetitionResource competitionResource, Optional<Long> objectId) {
-		objectId.ifPresent((questionId) -> model.addAttribute("questionId", questionId));
     }
 }
