@@ -40,7 +40,7 @@ items:
           - name: HTTPPORT
             value: "9080"
           - name: LDAPURL
-            value: "ldap://oldap5.demo.org.iuk.local:389"
+            value: "ldap://oldap.demo.org.iuk.local:389"
           - name: LDAPUSESTARTTLS
             value: "false"
           - name: LDAPBASEDN
