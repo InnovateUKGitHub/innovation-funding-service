@@ -292,14 +292,14 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
             formInput.setQuestion(question);
             formInput.setId(null);
             formInput.setFormValidators(copy);
-            formInput.setActive(isSectorCompScopeQuestion(competition, question, formInput) ? false : formInput.getActive());
+            formInput.setActive(isSectorCompetitionWithScopeQuestion(competition, question, formInput) ? false : formInput.getActive());
             formInputRepository.save(formInput);
             formInput.setGuidanceRows(createFormInputGuidanceRows(formInput, formInput.getGuidanceRows()));
             return formInput;
         };
     }
 
-    private boolean isSectorCompScopeQuestion(Competition competition, Question question, FormInput formInput) {
+    private boolean isSectorCompetitionWithScopeQuestion(Competition competition, Question question, FormInput formInput) {
         if (competition.getCompetitionType().isSector() && question.isScope()) {
             if (formInput.getType() == ASSESSOR_APPLICATION_IN_SCOPE || formInput.getDescription().equals(FEEDBACK)) {
                 return true;
