@@ -218,8 +218,8 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
     public void testByCompetitionId() {
         Long competitionId = 4L;
 
-        Competition competition = newCompetition().withNonIfs(false).withId(competitionId).withSetupComplete(true).withMilestones(
-                newMilestone()
+        Competition competition = newCompetition().withNonIfs(false).withId(competitionId).withSetupComplete(true)
+                .withMilestones(newMilestone()
                         .withDate(LocalDateTime.of(2017,1,2,3,4), LocalDateTime.of(2017,3,2,1,4))
                         .withType(MilestoneType.OPEN_DATE, MilestoneType.SUBMISSION_DATE)
                         .build(2)

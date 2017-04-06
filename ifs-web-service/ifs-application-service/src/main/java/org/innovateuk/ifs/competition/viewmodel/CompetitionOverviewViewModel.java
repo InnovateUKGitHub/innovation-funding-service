@@ -19,7 +19,6 @@ public class CompetitionOverviewViewModel {
     private Boolean nonIfs;
     private List<AbstractPublicSectionContentViewModel> allSections;
     private boolean userIsLoggedIn = false;
-
     private boolean competitionSetupComplete;
 
     public String getCompetitionTitle() {
