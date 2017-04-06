@@ -43,6 +43,7 @@ public class ResearchCategoryValidatorTest {
 
         List<ResearchCategory> researchCategories = newResearchCategory()
                 .withName("Feasibility studies", "Industrial research", "Experimental development")
+                .withId(1L, 2L, 3L)
                 .build(3);
 
         when(researchCategoryRepositoryMock.findAll()).thenReturn(researchCategories);
@@ -52,14 +53,14 @@ public class ResearchCategoryValidatorTest {
 
     @Test
     public void validate() {
-        formInputResponse.setValue("Feasibility studies");
+        formInputResponse.setValue("1");
         validator.validate(formInputResponse, bindingResult);
         assertFalse(bindingResult.hasErrors());
     }
 
     @Test
     public void validate_invalid() {
-        formInputResponse.setValue("RESEARCH CATEGORY");
+        formInputResponse.setValue("4");
         validator.validate(formInputResponse, bindingResult);
         assertTrue(bindingResult.hasErrors());
         assertEquals(1, bindingResult.getAllErrors().size());
@@ -78,7 +79,7 @@ public class ResearchCategoryValidatorTest {
     @Test
     public void validate_wrongQuestionType() {
         formInputResponse.getFormInput().setType(FormInputType.ASSESSOR_SCORE);
-        formInputResponse.setValue("Feasibility studies");
+        formInputResponse.setValue("1");
         validator.validate(formInputResponse, bindingResult);
         assertFalse(bindingResult.hasErrors());
     }
