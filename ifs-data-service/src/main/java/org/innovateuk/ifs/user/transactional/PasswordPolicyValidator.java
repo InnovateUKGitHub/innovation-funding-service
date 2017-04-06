@@ -112,6 +112,7 @@ public class PasswordPolicyValidator {
                     Pattern.compile(excludePattern, CASE_INSENSITIVE);
             return singletonList(currentExcludedWordWithNumericalReplacementsPattern);
         }
+
     }
 
     @PostConstruct
