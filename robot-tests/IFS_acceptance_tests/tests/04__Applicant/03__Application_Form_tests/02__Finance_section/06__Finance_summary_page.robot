@@ -13,7 +13,7 @@ Documentation     INFUND-524 As an applicant I want to see the finance summary u
 Suite Setup       Guest user log-in  &{lead_applicant_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        Applicant  Failing
-# TODO This file fails on full run, need to make small amends
+# TODO This fails because of Finance Summary/Summaries link
 Default Tags
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../FinanceSection_Commons.robot
@@ -207,5 +207,5 @@ the user fills in the funding information with bigger amount
     the user clicks the button/link       jQuery=button:contains("Mark as complete")
 
 the user expands the Finance summaries
-    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery=button:contains("Finances summaries")[aria-expanded="false"]
-    run keyword if  '${status}'=='PASS'  the user clicks the button/link  jQuery=button:contains("Finances summaries")[aria-expanded="false"]
+    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery=button:contains("Finances summary")[aria-expanded="false"]
+    run keyword if  '${status}'=='PASS'  the user clicks the button/link  jQuery=button:contains("Finances summary")[aria-expanded="false"]

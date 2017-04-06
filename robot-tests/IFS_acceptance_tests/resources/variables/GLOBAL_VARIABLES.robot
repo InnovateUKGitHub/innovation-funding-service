@@ -117,7 +117,7 @@ ${UNTITLED_APPLICATION_DASHBOARD_LINK}    Untitled application (start here)
 ${UNTITLED_APPLICATION_NAME}    Untitled application
 ${OPEN_COMPETITION_LINK}    ${OPEN_COMPETITION_NAME}
 
-${unsuccessful_login_message}    Your sign in was unsuccessful because of the following issue(s)
+${unsuccessful_login_message}    Your sign in was unsuccessful because of the following issues
 ${application_name}    Submit test application
 ${Competition_E2E}    Evolution of the global phosphorus cycle
 ${test_title}     test title
