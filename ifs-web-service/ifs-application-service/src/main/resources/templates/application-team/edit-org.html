@@ -5,6 +5,7 @@
     </head>
 
     <body class="app-org-invite" th:with="context='applicant'">
+        <th:block th:insert="fragments/modals :: modal-overlay" />
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
