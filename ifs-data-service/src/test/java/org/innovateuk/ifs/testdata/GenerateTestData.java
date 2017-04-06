@@ -4,7 +4,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.flywaydb.core.Flyway;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
+import org.innovateuk.ifs.application.resource.ApplicationStatus;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
@@ -492,8 +492,8 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     private List<Pair<String, FundingDecision>> createFundingDecisionsFromCsv(String competitionName) {
         List<ApplicationLine> matchingApplications = simpleFilter(applicationLines, a -> a.competitionName.equals(competitionName));
-        List<ApplicationLine> applicationsWithDecisions = simpleFilter(matchingApplications, a -> asList(ApplicationStatusConstants.APPROVED, ApplicationStatusConstants.REJECTED).contains(a.status));
-        return simpleMap(applicationsWithDecisions, ma -> Pair.of(ma.title, ma.status == ApplicationStatusConstants.APPROVED ? FundingDecision.FUNDED : FundingDecision.UNFUNDED));
+        List<ApplicationLine> applicationsWithDecisions = simpleFilter(matchingApplications, a -> asList(ApplicationStatus.APPROVED, ApplicationStatus.REJECTED).contains(a.status));
+        return simpleMap(applicationsWithDecisions, ma -> Pair.of(ma.title, ma.status == ApplicationStatus.APPROVED ? FundingDecision.FUNDED : FundingDecision.UNFUNDED));
     }
 
     private void createCompetitionWithApplications(CompetitionLine competitionLine, Optional<Long> competitionId) {
@@ -585,7 +585,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                     invite.status, invite.ownerName);
         }
 
-        if (line.status != ApplicationStatusConstants.CREATED) {
+        if (line.status != ApplicationStatus.CREATED) {
             baseBuilder = baseBuilder.beginApplication();
         }
 
