@@ -3,7 +3,7 @@
 
 <!-- ===========================Front door - repeating content group  =========================== -->
 <th:block th:fragment="content-group(section, competitionId)">
-    <div class="grid-row" th:each="contentGroup : ${section.contentGroupsOrdered}">
+    <div class="grid-row extra-margin-bottom" th:each="contentGroup : ${section.contentGroupsOrdered}">
         <div class="column-third">
             <h3 class="heading-medium no-margin" th:text="${contentGroup.heading}"></h3>
         </div>
@@ -24,7 +24,7 @@
     <section id="summary">
         <h2 class="heading-medium">Summary</h2>
         <div>
-            <div class="grid-row">
+            <div class="grid-row extra-margin-bottom">
                 <div class="column-third">
                     <h3 class="heading-medium no-margin">Description</h3>
                 </div>
@@ -32,7 +32,7 @@
                     <div class="wysiwyg-styles" ifs:utext="${section.description}"></div>
                 </div>
             </div>
-            <div class="grid-row">
+            <div class="grid-row extra-margin-bottom">
                 <div class="column-third">
                     <h3 class="heading-medium no-margin">Funding type</h3>
                 </div>
@@ -40,7 +40,7 @@
                     <p th:text="${section.fundingType}"></p>
                 </div>
             </div>
-            <div class="grid-row">
+            <div class="grid-row extra-margin-bottom">
                 <div class="column-third">
                     <h3 class="heading-medium no-margin">Project size</h3>
                 </div>
