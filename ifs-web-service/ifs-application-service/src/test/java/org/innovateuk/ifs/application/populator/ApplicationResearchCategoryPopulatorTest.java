@@ -52,8 +52,8 @@ public class ApplicationResearchCategoryPopulatorTest extends BaseUnitTest {
         Long questionId = 1L;
         Long applicationId = 2L;
         String competitionName = "COMP_NAME";
-
         List<ApplicationFinanceResource> applicationFinanceResource = newApplicationFinanceResource().withApplication(applicationId).build(3);
+
         List<ResearchCategoryResource> researchCategories = newResearchCategoryResource().withId(1L, 2L, 3L).build(3);
         ApplicationResource applicationResource = newApplicationResource().withId(applicationId)
                 .withCompetitionName(competitionName).withResearchCategory(researchCategories.get(0)).build();
@@ -78,6 +78,7 @@ public class ApplicationResearchCategoryPopulatorTest extends BaseUnitTest {
         String competitionName = "COMP_NAME";
 
         List<ApplicationFinanceResource> applicationFinanceResource = newApplicationFinanceResource().withApplication(applicationId).build(3);
+
         List<ResearchCategoryResource> researchCategories = newResearchCategoryResource().withId(1L, 2L, 3L).build(3);
         ApplicationResource applicationResource = newApplicationResource().withId(applicationId)
                 .withCompetitionName(competitionName).withResearchCategory(researchCategories.get(0)).build();
