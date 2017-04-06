@@ -26,6 +26,7 @@ import java.math.BigInteger;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -726,9 +727,12 @@ class CsvUtils {
         if (value == null) {
             return null;
         }
-        LocalDateTime localDateTime = LocalDateTime.parse(s, DATE_TIME_PATTERN);
-        return ZonedDateTime.of(localDateTime,
+        ZonedDateTime ukZonedDateTime = ZonedDateTime.of(LocalDateTime.parse(s, DATE_TIME_PATTERN),
                 TimeZoneUtil.UK_TIME_ZONE);
+        //Depending on the timezone where this class is run the database will save the same timezone.
+        //Want to save the UTC value into the database.
+        ZonedDateTime utcValue = ukZonedDateTime.withZoneSameInstant(ZoneId.of("UTC"));
+        return ZonedDateTime.of(utcValue.toLocalDateTime(), ZoneId.systemDefault());
     }
 
     private static Integer nullableInteger(String s) {

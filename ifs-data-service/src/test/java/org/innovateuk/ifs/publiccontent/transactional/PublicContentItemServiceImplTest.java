@@ -19,9 +19,13 @@ import org.mockito.Mock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.*;
+import java.time.ZonedDateTime;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -33,9 +37,7 @@ import static org.innovateuk.ifs.publiccontent.builder.KeywordBuilder.newKeyword
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentBuilder.newPublicContent;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.innovateuk.ifs.publiccontent.transactional.PublicContentItemServiceImpl.MAX_ALLOWED_KEYWORDS;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
@@ -221,7 +223,7 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
 
         Competition competition = newCompetition().withNonIfs(false).withId(competitionId).withSetupComplete(true)
                 .withMilestones(newMilestone()
-                        .withDate(LocalDateTime.of(2017,1,2,3,4), LocalDateTime.of(2017,3,2,1,4))
+                        .withDate(LocalDateTime.of(2017,1,2,3,4).atZone(ZoneId.systemDefault()), LocalDateTime.of(2017,3,2,1,4).atZone(ZoneId.systemDefault()))
                         .withType(MilestoneType.OPEN_DATE, MilestoneType.SUBMISSION_DATE)
                         .build(2)
         ).build();
