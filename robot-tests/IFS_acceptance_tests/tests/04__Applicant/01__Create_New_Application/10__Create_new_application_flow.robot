@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation     INNFUND-669 As an applicant I want to create a new application so that I can submit an entry into a relevant competition
+Documentation     INFUND-669 As an applicant I want to create a new application so that I can submit an entry into a relevant competition
 ...
 ...               INFUND-1163 As an applicant I want to create a new application so that I can submit an entry into a relevant competition
 ...
