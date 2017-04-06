@@ -12,6 +12,7 @@ import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static java.lang.String.format;
@@ -96,6 +97,8 @@ public class PasswordPolicyValidator {
         @Override
         public List<Pattern> apply(String currentExcludedRegexPattern) {
 
+            boolean containSpecialCharacters = Pattern.compile("[a-zA-Z0-9-.*\\s]*").matcher(currentExcludedRegexPattern).matches();
+
             String currentExcludedWordWithNumericalReplacements = currentExcludedRegexPattern.toLowerCase();
             for (Map.Entry<String, String> replacement : interchangeableLettersAndNumbers.entrySet()) {
                 String searchString = format("([%s])", replacement.getKey());
@@ -103,8 +106,10 @@ public class PasswordPolicyValidator {
                 currentExcludedWordWithNumericalReplacements =
                         currentExcludedWordWithNumericalReplacements.replaceAll(searchString, replacementString);
             }
+            String excludePattern = containSpecialCharacters ? currentExcludedWordWithNumericalReplacements :
+                    Pattern.quote(currentExcludedWordWithNumericalReplacements);
             Pattern currentExcludedWordWithNumericalReplacementsPattern =
-                    Pattern.compile(Pattern.quote(currentExcludedWordWithNumericalReplacements), CASE_INSENSITIVE);
+                    Pattern.compile(excludePattern, CASE_INSENSITIVE);
             return singletonList(currentExcludedWordWithNumericalReplacementsPattern);
         }
     }
