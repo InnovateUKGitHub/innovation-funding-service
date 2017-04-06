@@ -174,8 +174,8 @@ Eligibility Autosave
     and the user clicks the button/link    link=Eligibility
     Then the user should see the correct details in the eligibility form
 
-Milestones: Server side validations
-    [Documentation]    INFUND-2993
+Milestones: Server side validations, submission time is default
+    [Documentation]    INFUND-2993, INFUND-7632
     [Tags]    HappyPath
     [Setup]    The user navigates to the Validation competition
     Given the user clicks the button/link    link=Milestones
@@ -183,13 +183,15 @@ Milestones: Server side validations
     And the users waits until the page is autosaved
     And the user clicks the button/link    jQuery=button:contains(Done)
     Then Validation summary should be visible
+    Then the user should see the text in the element    jQuery=tr:nth-of-type(3) td:nth-of-type(1) option:selected    12:00 pm
 
-Milestones: Client side validations
-    [Documentation]    INFUND-2993
+Milestones: Client side validations, submission time is non-default
+    [Documentation]    INFUND-2993, INFUND-7632
     [Tags]    HappyPath
     When the user fills the milestones with valid data
     Then The user should not see the text in the page    please enter a future date that is after the previous milestone
     Then The user should not see the text in the page    please enter a valid date
+    Then the user should see the text in the element    jQuery=tr:nth-of-type(3) td:nth-of-type(1) option:selected    10:00 am
 
 Milestones: Autosave
     [Tags]
@@ -311,6 +313,7 @@ the user fills the milestones with valid data
     The user enters text to a text field    name=milestoneEntries[SUBMISSION_DATE].day    12
     The user enters text to a text field    name=milestoneEntries[SUBMISSION_DATE].month    1
     The user enters text to a text field    name=milestoneEntries[SUBMISSION_DATE].year    2019
+    The user selects the index from the drop-down menu    1    id=milestoneEntries[SUBMISSION_DATE].time
     The user enters text to a text field    name=milestoneEntries[ALLOCATE_ASSESSORS].day    13
     The user enters text to a text field    name=milestoneEntries[ALLOCATE_ASSESSORS].month    1
     The user enters text to a text field    name=milestoneEntries[ALLOCATE_ASSESSORS].year    2019
