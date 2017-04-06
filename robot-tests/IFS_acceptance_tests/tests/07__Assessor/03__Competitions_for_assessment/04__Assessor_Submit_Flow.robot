@@ -267,6 +267,7 @@ Submit Assessments
     ...    INFUND-6358
     [Tags]    HappyPath
     Given the user should see the element    jQuery=.in-progress li:nth-child(6):contains("Intelligent Building")
+    And the user should see that the element is disabled    id=submit-assessment-button
     When the user clicks the button/link    css=.in-progress li:nth-child(6) .selection-button-checkbox
     And the user clicks the button/link    jQuery=button:contains("Submit assessments")
     And The user clicks the button/link    jQuery=button:contains("Cancel")
