@@ -6,3 +6,9 @@
   display: block;
   margin-bottom:5px;
 }
+//conflict between gds styles and our own,
+//GDS uses aria-hidden just for hiding from screenreaders, we also use it as dipslay:none;
+//therefore this (ie) fallback for the arrow in the summary/details isn't showing while it should (infund-9115)
+summary > .arrow[aria-hidden="true"]{
+  display:inline;
+}
