@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.form.InnovationAreaForm;
 import org.innovateuk.ifs.application.populator.ApplicationInnovationAreaPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationInnovationAreaRestService;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.viewmodel.InnovationAreaViewModel;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -37,9 +38,21 @@ public class InnovationAreaController {
     @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
+    @Autowired
+    private ApplicationRestService applicationRestService;
+
+    @Autowired
+    private ApplicationDetailsEditableValidator applicationDetailsEditableValidator;
+
     @GetMapping
-    public String getInnovationAreas(Model model, @PathVariable Long applicationId, @PathVariable Long questionId) {
-        InnovationAreaViewModel innovationAreaViewModel = innovationAreaPopulator.populate(applicationId, questionId);
+    public String getInnovationAreas(Model model, @PathVariable("applicationId") Long applicationId, @PathVariable("questionId") Long questionId) {
+        ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccessObject();
+
+        if(!applicationDetailsEditableValidator.questionAndApplicationHaveAllowedState(questionId, applicationResource)) {
+            return "forbidden";
+        }
+
+        InnovationAreaViewModel innovationAreaViewModel = innovationAreaPopulator.populate(applicationResource, questionId);
 
         model.addAttribute("model", innovationAreaViewModel);
         model.addAttribute("form", new InnovationAreaForm());
@@ -50,7 +63,13 @@ public class InnovationAreaController {
     @PostMapping
     public String submitInnovationAreaChoice(@Valid @ModelAttribute("form") InnovationAreaForm innovationAreaForm, BindingResult bindingResult, HttpServletResponse response,
                                              ValidationHandler validationHandler, Model model, @PathVariable Long applicationId, @PathVariable Long questionId) {
-        InnovationAreaViewModel innovationAreaViewModel = innovationAreaPopulator.populate(applicationId, questionId);
+        ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccessObject();
+
+        if(!applicationDetailsEditableValidator.questionAndApplicationHaveAllowedState(questionId, applicationResource)) {
+            return "forbidden";
+        }
+
+        InnovationAreaViewModel innovationAreaViewModel = innovationAreaPopulator.populate(applicationResource, questionId);
 
         model.addAttribute("model", innovationAreaViewModel);
 
@@ -63,6 +82,8 @@ public class InnovationAreaController {
             });
         });
     }
+
+
 
     private RestResult<ApplicationResource> saveInnovationAreaChoice(Long applicationId, InnovationAreaForm innovationAreaForm) {
         if(innovationAreaForm.getInnovationAreaChoice().equals("NOT_APPLICABLE")) {

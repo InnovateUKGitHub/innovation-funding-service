@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.form.ResearchCategoryForm;
 import org.innovateuk.ifs.application.populator.ApplicationResearchCategoryPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationResearchCategoryRestService;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.viewmodel.ResearchCategoryViewModel;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
@@ -28,7 +29,6 @@ import java.util.function.Supplier;
 @RequestMapping(ApplicationFormController.APPLICATION_BASE_URL+"{applicationId}/form/question/{questionId}/research-category")
 @PreAuthorize("hasAuthority('applicant')")
 public class ResearchCategoryController {
-
     private static String APPLICATION_SAVED_MESSAGE = "applicationSaved";
 
     @Autowired
@@ -38,14 +38,25 @@ public class ResearchCategoryController {
     private ApplicationResearchCategoryRestService applicationResearchCategoryRestService;
 
     @Autowired
-    private CookieFlashMessageFilter cookieFlashMessageFilter;
+    private UserAuthenticationService userAuthenticationService;
 
     @Autowired
-    private UserAuthenticationService userAuthenticationService;
+    private ApplicationDetailsEditableValidator applicationDetailsEditableValidator;
+
+    @Autowired
+    private ApplicationRestService applicationRestService;
+
+    @Autowired
+    private CookieFlashMessageFilter cookieFlashMessageFilter;
 
     @GetMapping
     public String getResearchCategories(Model model, @PathVariable Long applicationId, @PathVariable Long questionId,
                                         HttpServletRequest request) {
+        ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccessObject();
+
+        if(!applicationDetailsEditableValidator.questionAndApplicationHaveAllowedState(questionId, applicationResource)) {
+            return "forbidden";
+        }
 
         ResearchCategoryViewModel researchCategoryViewModel = researchCategoryPopulator.populate(applicationId, questionId);
 
@@ -61,6 +72,11 @@ public class ResearchCategoryController {
                                                HttpServletResponse response,
                                                ValidationHandler validationHandler,
                                                Model model, @PathVariable Long applicationId, @PathVariable Long questionId) {
+        ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccessObject();
+
+        if(!applicationDetailsEditableValidator.questionAndApplicationHaveAllowedState(questionId, applicationResource)) {
+            return "forbidden";
+        }
 
         ResearchCategoryViewModel researchCategoryViewModel = researchCategoryPopulator.populate(applicationId, questionId);
 
