@@ -34,7 +34,6 @@ public class ApplicationNavigationPopulator {
     private ApplicationService applicationService;
 
     public NavigationViewModel addNavigation(SectionResource section, Long applicationId) {
-
         return addNavigation(section, applicationId, null);
     }
 
