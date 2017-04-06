@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.financecheck.transactional;
 
-import org.apache.commons.lang3.time.DateUtils;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
@@ -18,7 +17,6 @@ import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.financecheck.domain.*;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.transactional.EmailService;
-import org.innovateuk.ifs.project.util.DateUtil;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.OrganisationType;
 import org.innovateuk.ifs.user.domain.User;
@@ -35,6 +33,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
 
@@ -912,7 +911,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         ViabilityProcess viabilityProcess = new ViabilityProcess(viabilityApprovalUser, partnerOrganisationInDB,
                 new ActivityState(ActivityType.PROJECT_SETUP_VIABILITY, viabilityStateInDB.getBackingState()));
         if (viabilityApprovalDate != null) {
-            viabilityProcess.setLastModified(DateUtils.toCalendar(DateUtil.asDate(viabilityApprovalDate)));
+            viabilityProcess.setLastModified(viabilityApprovalDate.atStartOfDay(ZoneId.systemDefault()));
         }
 
         when(viabilityWorkflowHandlerMock.getProcess(partnerOrganisationInDB)).thenReturn(viabilityProcess);
@@ -1017,7 +1016,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         EligibilityProcess eligibilityProcess = new EligibilityProcess(eligibilityApprovalUser, partnerOrganisationInDB,
                 new ActivityState(ActivityType.PROJECT_SETUP_ELIGIBILITY, eligibilityStateInDB.getBackingState()));
         if (eligibilityApprovalDate != null) {
-            eligibilityProcess.setLastModified(DateUtils.toCalendar(DateUtil.asDate(eligibilityApprovalDate)));
+            eligibilityProcess.setLastModified(eligibilityApprovalDate.atStartOfDay(ZoneId.systemDefault()));
         }
 
         when(eligibilityWorkflowHandlerMock.getProcess(partnerOrganisationInDB)).thenReturn(eligibilityProcess);
