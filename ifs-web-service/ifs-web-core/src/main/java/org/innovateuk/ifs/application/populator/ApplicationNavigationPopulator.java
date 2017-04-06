@@ -138,7 +138,7 @@ public class ApplicationNavigationPopulator {
             String backURL = "/application/" + applicationId;
 
             if(!application.isOpen() || !application.getCompetitionStatus().equals(CompetitionStatus.OPEN)){
-                model.addAttribute("backTitle", "Application Summary");
+                model.addAttribute("backTitle", "Application summary");
                 backURL += "/summary";
             } else {
                 model.addAttribute("backTitle", "Application Overview");

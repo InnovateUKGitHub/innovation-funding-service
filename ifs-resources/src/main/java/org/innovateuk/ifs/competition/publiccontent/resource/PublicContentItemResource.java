@@ -10,6 +10,7 @@ public class PublicContentItemResource {
     private LocalDateTime competitionCloseDate;
     private String nonIfsUrl;
     private Boolean isNonIfs;
+    private Boolean setupComplete;
 
     public PublicContentItemResource() {
     }
@@ -69,4 +70,11 @@ public class PublicContentItemResource {
         isNonIfs = nonIfs;
     }
 
+    public Boolean getSetupComplete() {
+        return setupComplete;
+    }
+
+    public void setSetupComplete(Boolean setupComplete) {
+        this.setupComplete = setupComplete;
+    }
 }
