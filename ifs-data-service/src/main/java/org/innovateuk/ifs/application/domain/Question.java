@@ -210,4 +210,7 @@ public class Question {
     	return queriedType.equals(type);
     }
 
+    public boolean isScope() {
+        return this.shortName != null ? this.shortName.equals("Scope") : false;
+    }
 }

@@ -78,6 +78,8 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
     public static final BigDecimal DEFAULT_ASSESSOR_PAY = new BigDecimal(100);
 
+    private static final String FEEDBACK = "Feedback";
+
     @Override
     public ServiceResult<String> generateCompetitionCode(Long id, LocalDateTime dateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYMM");
@@ -197,7 +199,6 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
             return serviceFailure(new Error(COMPETITION_NO_TEMPLATE));
         }
 
-
         List<Section> sectionsWithoutParentSections = template.getSections().stream()
                 .filter(s -> s.getParentSection() == null)
                 .collect(Collectors.toList());
@@ -299,9 +300,8 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     }
 
     private boolean isSectorCompScopeQuestion(Competition competition, Question question, FormInput formInput) {
-        if (competition.getCompetitionType().getName().equals("Sector") &&
-                ofNullable(question.getShortName()).filter(name -> name.equals("Scope")).isPresent()) {
-            if (formInput.getType() == ASSESSOR_APPLICATION_IN_SCOPE || formInput.getDescription().equals("Feedback")) {
+        if (competition.getCompetitionType().isSector() && question.isScope()) {
+            if (formInput.getType() == ASSESSOR_APPLICATION_IN_SCOPE || formInput.getDescription().equals(FEEDBACK)) {
                 return true;
             }
         }

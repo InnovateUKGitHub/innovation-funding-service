@@ -66,6 +66,10 @@ public class CompetitionType {
 
     public void setTemplate(Competition template) { this.template = template; }
 
+    public boolean isSector() {
+        return this.name.equals("Sector");
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
