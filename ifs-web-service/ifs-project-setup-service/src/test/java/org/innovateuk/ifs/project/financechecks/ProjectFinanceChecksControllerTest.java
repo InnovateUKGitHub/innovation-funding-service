@@ -12,6 +12,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.finance.resource.Eligibility;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
@@ -25,8 +26,10 @@ import org.innovateuk.ifs.project.financechecks.viewmodel.ProjectFinanceChecksVi
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.threads.resource.QueryResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,10 +41,7 @@ import org.springframework.ui.Model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.service.Futures.settable;
@@ -51,6 +51,7 @@ import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.n
 import static org.innovateuk.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
+import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.junit.Assert.*;
@@ -171,8 +172,9 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
         when(projectService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
         when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
         when(financeCheckServiceMock.getQueries(any())).thenReturn(ServiceResult.serviceSuccess(Collections.emptyList()));
+        when(projectService.getProjectUsersForProject(projectId)).thenReturn(newProjectUserResource().withUser(loggedInUser.getId()).withOrganisation(organisationId).withRoleName(UserRoleType.PARTNER.getName()).build(1));
 
-        MvcResult result = mockMvc.perform(get("/project/123/partner-organisation/234/finance-checks")).
+        MvcResult result = mockMvc.perform(get("/project/123/finance-checks")).
                 andExpect(view().name("project/finance-checks")).
                 andReturn();
 
@@ -202,13 +204,14 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
         OrganisationResource partnerOrganisation = newOrganisationResource().withId(organisationId).build();
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().build();
 
+        when(projectService.getProjectUsersForProject(projectId)).thenReturn(newProjectUserResource().withUser(loggedInUser.getId()).withOrganisation(organisationId).withRoleName(UserRoleType.PARTNER.getName()).build(1));
         when(projectService.getById(projectId)).thenReturn(project);
         when(organisationService.getOrganisationById(organisationId)).thenReturn(partnerOrganisation);
         when(projectService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
         when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
         when(financeCheckServiceMock.getQueries(projectFinanceResource.getId())).thenReturn(ServiceResult.serviceSuccess(Collections.singletonList(sampleQuery())));
 
-        MvcResult result = mockMvc.perform(get("/project/123/partner-organisation/234/finance-checks")).
+        MvcResult result = mockMvc.perform(get("/project/123/finance-checks")).
                 andExpect(view().name("project/finance-checks")).
                 andReturn();
 
@@ -226,8 +229,9 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
         setUpViewEligibilityMocking(eligibility);
 
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
+        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(newProjectUserResource().withUser(loggedInUser.getId()).withOrganisation(industrialOrganisation.getId()).withRoleName(UserRoleType.PARTNER.getName()).build(1));
 
-        MvcResult result = mockMvc.perform(get("/project/" + project.getId() + " /partner-organisation/" + industrialOrganisation.getId() + "/finance-checks/eligibility")).
+        MvcResult result = mockMvc.perform(get("/project/" + project.getId() + "/finance-checks/eligibility")).
                 andExpect(status().isOk()).
                 andExpect(view().name("project/financecheck/eligibility")).
                 andReturn();
@@ -255,8 +259,9 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
 
     @Test
     public void testEligibilityChanges() throws Exception {
+        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(newProjectUserResource().withUser(loggedInUser.getId()).withOrganisation(industrialOrganisation.getId()).withRoleName(UserRoleType.PARTNER.getName()).build(1));
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
-        mockMvc.perform(get("/project/" + project.getId() + " /partner-organisation/" + industrialOrganisation.getId() + "/finance-checks/eligibility/changes"))
+        mockMvc.perform(get("/project/" + project.getId() + "/finance-checks/eligibility/changes"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("project/financecheck/eligibility-changes"))
                 .andReturn();
