@@ -19,6 +19,7 @@ import org.innovateuk.ifs.validator.transactional.ValidatorService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.*;
@@ -43,6 +44,9 @@ public class ValidationUtil {
     private ValidatorService validatorService;
     private MinRowCountValidator minRowCountValidator;
     private SpendProfileCostValidator spendProfileCostValidator;
+
+    @Autowired
+    ApplicationContext context;
 
 
     @Autowired
@@ -114,7 +118,7 @@ public class ValidationUtil {
                     try {
                         // Sometimes we want to allow the user to enter a empty response. Then we can ignore the NotEmptyValidator .
                         if (!(ignoreEmpty && v.getClazzName().equals(NotEmptyValidator.class.getName()))) {
-                            validator = (Validator) Class.forName(v.getClazzName()).getConstructor().newInstance();
+                            validator = (Validator) context.getBean(Class.forName(v.getClazzName()));
                             binder.addValidators(validator);
                         }
                     } catch (Exception e) {
