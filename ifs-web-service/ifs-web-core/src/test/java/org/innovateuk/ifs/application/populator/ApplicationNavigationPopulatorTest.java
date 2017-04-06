@@ -78,7 +78,7 @@ public class ApplicationNavigationPopulatorTest {
 
         target.addAppropriateBackURLToModel(applicationId, model, null);
         verify(model).addAttribute(eq("backURL"), contains("/application/1"));
-        verify(model).addAttribute(eq("backTitle"), contains("Application Overview"));
+        verify(model).addAttribute(eq("backTitle"), eq("Application overview"));
     }
 
     @Test
@@ -128,7 +128,7 @@ public class ApplicationNavigationPopulatorTest {
         target.addAppropriateBackURLToModel(applicationId, model, section);
 
         verify(model).addAttribute(eq("backURL"), contains("/application/1"));
-        verify(model).addAttribute(eq("backTitle"), contains("Application Overview"));
+        verify(model).addAttribute(eq("backTitle"), eq("Application overview"));
     }
 
     @Test
