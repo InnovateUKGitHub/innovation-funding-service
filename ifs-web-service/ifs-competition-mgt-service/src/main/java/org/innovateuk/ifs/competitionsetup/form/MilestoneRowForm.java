@@ -21,6 +21,7 @@ import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 public class MilestoneRowForm {
 	private static final Log LOG = LogFactory.getLog(MilestoneRowForm.class);
 	private static final Set<MilestoneType> WITH_TIME_TYPES = asSet(MilestoneType.SUBMISSION_DATE);
+    private static final Set<MilestoneType> WITH_MIDDAY_TIME = asSet(MilestoneType.ASSESSOR_ACCEPTS, MilestoneType.ASSESSOR_DEADLINE);
 
     @Range(min=2000, max = 9999, message="{validation.nonifs.detailsform.yyyy.range.format}")
     private Integer year;
@@ -47,10 +48,8 @@ public class MilestoneRowForm {
             if (isTimeOption()) {
                 this.setTime(MilestoneTime.fromZonedDateTime(dateTime));
             }
-        } else {
-            if (isTimeOption()) {
-                this.setTime(MilestoneTime.TWELVE_PM);
-            }
+        } else if (isTimeOption() || isMiddayTime()) {
+            this.setTime(MilestoneTime.TWELVE_PM);
         }
     }
 
@@ -112,6 +111,10 @@ public class MilestoneRowForm {
         return date;
     }
 
+    public boolean isMiddayTime() {
+        return WITH_MIDDAY_TIME.contains(milestoneType);
+    }
+
     public void setDate(ZonedDateTime date) {
         this.date = date;
     }
@@ -155,7 +158,7 @@ public class MilestoneRowForm {
     public ZonedDateTime getMilestoneAsZonedDateTime() {
 
         if (day != null && month != null && year != null){
-            if ( time != null && isTimeOption()) {
+            if ( time != null && (isTimeOption() || isMiddayTime())) {
                 return TimeZoneUtil.fromUkTimeZone(year, month, day, time.getHour());
             } else {
                 return TimeZoneUtil.fromUkTimeZone(year, month, day);
