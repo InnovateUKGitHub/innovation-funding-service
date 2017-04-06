@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.testdata.builders;
 
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationStatus;
 import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.category.domain.InnovationArea;
@@ -20,7 +20,8 @@ import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
@@ -148,14 +149,14 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
     public ApplicationDataBuilder beginApplication() {
 
         return asLeadApplicant(data ->
-                applicationService.updateApplicationStatus(data.getApplication().getId(), ApplicationStatusConstants.OPEN.getId()).
+                applicationService.updateApplicationStatus(data.getApplication().getId(), ApplicationStatus.OPEN).
                         getSuccessObjectOrThrowException());
     }
 
     public ApplicationDataBuilder submitApplication() {
 
         return asLeadApplicant(data -> {
-            applicationService.updateApplicationStatus(data.getApplication().getId(), ApplicationStatusConstants.SUBMITTED.getId()).
+            applicationService.updateApplicationStatus(data.getApplication().getId(), ApplicationStatus.SUBMITTED).
                     getSuccessObjectOrThrowException();
 
             applicationService.saveApplicationSubmitDateTime(data.getApplication().getId(), LocalDateTime.now()).getSuccessObjectOrThrowException();

@@ -22,7 +22,7 @@ public class ApplicationFundingDecisionValidator {
     }
 
     private boolean hasBeenSubmitted(Application application) {
-        boolean hasBeenSubmitted = ApplicationSummaryServiceImpl.SUBMITTED_STATUS_IDS.contains(application.getApplicationStatus().getId());;
+        boolean hasBeenSubmitted = ApplicationSummaryServiceImpl.SUBMITTED_STATUSES.contains(application.getApplicationStatus());
 
         return hasBeenSubmitted;
     }
