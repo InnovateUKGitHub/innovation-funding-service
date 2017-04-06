@@ -726,8 +726,9 @@ class CsvUtils {
         if (value == null) {
             return null;
         }
-
-        return LocalDateTime.parse(s, DATE_TIME_PATTERN).atZone(TimeZoneUtil.UK_TIME_ZONE);
+        LocalDateTime localDateTime = LocalDateTime.parse(s, DATE_TIME_PATTERN);
+        return ZonedDateTime.of(localDateTime,
+                TimeZoneUtil.UK_TIME_ZONE);
     }
 
     private static Integer nullableInteger(String s) {

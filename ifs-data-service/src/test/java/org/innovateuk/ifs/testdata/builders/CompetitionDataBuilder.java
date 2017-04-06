@@ -15,7 +15,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 
 import java.math.BigDecimal;
-import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -211,7 +210,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         ZonedDateTime submissionDeadline = submissionDateMilestone.getDate();
 
         final long daysPassedSinceSubmissionEnded;
-        if (LocalTime.now().isAfter(submissionDeadline.toLocalTime())) {
+        if (ZonedDateTime.now().withZoneSameInstant(submissionDeadline.getZone()).toLocalTime().isAfter(submissionDeadline.toLocalTime())) {
             daysPassedSinceSubmissionEnded = submissionDeadline.until(now, ChronoUnit.DAYS) + 1;
         } else {
             daysPassedSinceSubmissionEnded = submissionDeadline.until(now, ChronoUnit.DAYS);

@@ -47,6 +47,7 @@ import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Supplier;
@@ -402,7 +403,11 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             notificationArguments.put("applicationName", application.getName());
             notificationArguments.put("applicationId", application.getId());
             notificationArguments.put("competitionName", competition.getName());
-            notificationArguments.put("assesmentEndDate", TimeZoneUtil.toUkTimeZone(competition.getFundersPanelDate()).toLocalDateTime());
+            LocalDateTime assesmentEndDate = null;
+            if (competition.getFundersPanelDate() != null) {
+                assesmentEndDate = TimeZoneUtil.toUkTimeZone(competition.getFundersPanelDate()).toLocalDateTime();
+            }
+            notificationArguments.put("assesmentEndDate", assesmentEndDate);
 
             Notification notification = new Notification(from, singletonList(to), Notifications.APPLICATION_SUBMITTED, notificationArguments);
             return notificationService.sendNotification(notification, EMAIL);
