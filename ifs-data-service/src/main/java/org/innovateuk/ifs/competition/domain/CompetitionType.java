@@ -8,6 +8,9 @@ import java.util.List;
 
 @Entity
 public class CompetitionType {
+
+    private static final String SECTOR = "Sector";
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -67,7 +70,7 @@ public class CompetitionType {
     public void setTemplate(Competition template) { this.template = template; }
 
     public boolean isSector() {
-        return this.name.equals("Sector");
+        return this.name.equals(SECTOR);
     }
 
     @Override

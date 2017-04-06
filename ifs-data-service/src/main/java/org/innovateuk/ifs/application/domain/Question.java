@@ -15,6 +15,9 @@ import java.util.List;
  */
 @Entity
 public class Question {
+
+    private static final String SCOPE = "Scope";
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -211,6 +214,6 @@ public class Question {
     }
 
     public boolean isScope() {
-        return this.shortName != null ? this.shortName.equals("Scope") : false;
+        return this.shortName != null && this.shortName.equals(SCOPE);
     }
 }
