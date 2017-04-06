@@ -2,8 +2,6 @@ package org.innovateuk.ifs.dashboard;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationStatusResource;
-import org.innovateuk.ifs.dashboard.ApplicantController;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.After;
@@ -70,7 +68,6 @@ public class ApplicantControllerTest extends BaseControllerMockMVCTest<Applicant
         List<ApplicationResource> progressMap = applications.subList(0,1);
         when(applicationService.getInProgress(applicant.getId())).thenReturn(progressMap);
         when(applicationService.getAssignedQuestionsCount(eq(progressMap.get(0).getId()), anyLong())).thenReturn(2);
-        when(applicationStatusService.getApplicationStatusById(progressMap.get(0).getApplicationStatus())).thenReturn(restSuccess(new ApplicationStatusResource(1L,"CREATED")));
         when(projectService.findByUser(applicant.getId())).thenReturn(serviceSuccess(Collections.singletonList(new ProjectResource())));
         when(applicationService.getById(anyLong())).thenReturn(new ApplicationResource());
 
@@ -95,7 +92,6 @@ public class ApplicantControllerTest extends BaseControllerMockMVCTest<Applicant
 
         when(applicationService.getAssignedQuestionsCount(eq(progressMap.get(0).getId()), anyLong())).thenReturn(2);
         when(processRoleService.findProcessRole(this.users.get(1).getId(), progressMap.get(0).getId())).thenReturn(processRoles.get(0));
-        when(applicationStatusService.getApplicationStatusById(progressMap.get(0).getApplicationStatus())).thenReturn(restSuccess(new ApplicationStatusResource(1L,"CREATED")));
         when(projectService.findByUser(collabUsers.getId())).thenReturn(serviceSuccess(Collections.singletonList(new ProjectResource())));
         when(applicationService.getById(anyLong())).thenReturn(new ApplicationResource());
 
