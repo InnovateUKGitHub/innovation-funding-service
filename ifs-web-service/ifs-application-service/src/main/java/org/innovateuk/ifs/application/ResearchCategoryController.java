@@ -58,7 +58,7 @@ public class ResearchCategoryController {
             return "forbidden";
         }
 
-        ResearchCategoryViewModel researchCategoryViewModel = researchCategoryPopulator.populate(applicationId, questionId);
+        ResearchCategoryViewModel researchCategoryViewModel = researchCategoryPopulator.populate(applicationResource, questionId);
 
         model.addAttribute("model", researchCategoryViewModel);
         model.addAttribute("form", new ResearchCategoryForm());
@@ -78,7 +78,7 @@ public class ResearchCategoryController {
             return "forbidden";
         }
 
-        ResearchCategoryViewModel researchCategoryViewModel = researchCategoryPopulator.populate(applicationId, questionId);
+        ResearchCategoryViewModel researchCategoryViewModel = researchCategoryPopulator.populate(applicationResource, questionId);
 
         model.addAttribute("model", researchCategoryViewModel);
 

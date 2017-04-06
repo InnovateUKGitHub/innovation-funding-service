@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.application;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.populator.ApplicationInnovationAreaPopulator;
+import org.innovateuk.ifs.application.populator.ApplicationResearchCategoryPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.viewmodel.InnovationAreaViewModel;
+import org.innovateuk.ifs.application.viewmodel.ResearchCategoryViewModel;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
@@ -16,23 +16,19 @@ import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-public class InnovationAreaControllerTest extends BaseControllerMockMVCTest<InnovationAreaController> {
+public class ResearchCategoryControllerTest extends BaseControllerMockMVCTest<ResearchCategoryController> {
     @Override
-    protected InnovationAreaController supplyControllerUnderTest() {
-        return new InnovationAreaController();
+    protected ResearchCategoryController supplyControllerUnderTest() {
+        return new ResearchCategoryController();
     }
 
     @Mock
-    private ApplicationInnovationAreaPopulator applicationInnovationAreaPopulator;
+    private ApplicationResearchCategoryPopulator applicationInnovationAreaPopulator;
 
     @Mock
     private CookieFlashMessageFilter cookieFlashMessageFilter;
@@ -46,14 +42,14 @@ public class InnovationAreaControllerTest extends BaseControllerMockMVCTest<Inno
         Long questionId = 2L;
 
         ApplicationResource applicationResource = newApplicationResource().withId(applicationId).build();
-        InnovationAreaViewModel innovationAreaViewModel = new InnovationAreaViewModel();
+        ResearchCategoryViewModel researchCategoryViewModel = new ResearchCategoryViewModel();
 
         when(applicationDetailsEditableValidator.questionAndApplicationHaveAllowedState(questionId, applicationResource)).thenReturn(true);
         when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(newApplicationResource().withId(applicationId).build()));
-        when(applicationInnovationAreaPopulator.populate(applicationResource, questionId)).thenReturn(innovationAreaViewModel);
+        when(applicationInnovationAreaPopulator.populate(applicationResource, questionId)).thenReturn(researchCategoryViewModel);
 
-        MvcResult result = mockMvc.perform(get(ApplicationFormController.APPLICATION_BASE_URL+"1/form/question/2/innovation-area"))
-                .andExpect(view().name("application/innovation-areas"))
+        MvcResult result = mockMvc.perform(get(ApplicationFormController.APPLICATION_BASE_URL+"1/form/question/2/research-category"))
+                .andExpect(view().name("application/research-categories"))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
 
@@ -68,49 +64,24 @@ public class InnovationAreaControllerTest extends BaseControllerMockMVCTest<Inno
 
         ApplicationResource applicationResource = newApplicationResource().withId(applicationId).build();
 
-        InnovationAreaViewModel innovationAreaViewModel = new InnovationAreaViewModel();
+        ResearchCategoryViewModel researchCategoryViewModel = new ResearchCategoryViewModel();
 
         when(applicationDetailsEditableValidator.questionAndApplicationHaveAllowedState(questionId, applicationResource)).thenReturn(true);
         when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(newApplicationResource().withId(applicationId).build()));
-        when(applicationInnovationAreaPopulator.populate(applicationResource, questionId)).thenReturn(innovationAreaViewModel);
-        when(applicationInnovationAreaRestService.saveApplicationInnovationAreaChoice(applicationId, innovationAreaId)).thenReturn(restSuccess(newApplicationResource().build()));
+        when(applicationInnovationAreaPopulator.populate(applicationResource, questionId)).thenReturn(researchCategoryViewModel);
+        when(applicationResearchCategoryRestService.saveApplicationResearchCategoryChoice(applicationId, innovationAreaId)).thenReturn(restSuccess(newApplicationResource().build()));
 
 
-        MvcResult result = mockMvc.perform(post(ApplicationFormController.APPLICATION_BASE_URL+"1/form/question/2/innovation-area")
-        .param("innovationAreaChoice", innovationAreaId.toString()))
+        MvcResult result = mockMvc.perform(post(ApplicationFormController.APPLICATION_BASE_URL+"1/form/question/2/research-category")
+                .param("researchCategoryChoice", innovationAreaId.toString()))
                 .andExpect(view().name("redirect:/application/1/form/question/2"))
                 .andExpect(status().is3xxRedirection())
                 .andReturn();
 
         verify(applicationInnovationAreaPopulator).populate(any(), any());
         verify(cookieFlashMessageFilter).setFlashMessage(any(),any());
-        verify(applicationInnovationAreaRestService).saveApplicationInnovationAreaChoice(applicationId, innovationAreaId);
+        verify(applicationResearchCategoryRestService).saveApplicationResearchCategoryChoice(applicationId, innovationAreaId);
     }
-
-    @Test
-    public void submitInnovationAreaChoice_choiceNotApplicableShouldCallServiceAndRedirectToApplicationDetails() throws Exception {
-        Long applicationId = 1L;
-        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).build();
-        Long questionId = 2L;
-
-        InnovationAreaViewModel innovationAreaViewModel = new InnovationAreaViewModel();
-
-        when(applicationDetailsEditableValidator.questionAndApplicationHaveAllowedState(questionId, applicationResource)).thenReturn(true);
-        when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(newApplicationResource().withId(applicationId).build()));
-        when(applicationInnovationAreaPopulator.populate(applicationResource, questionId)).thenReturn(innovationAreaViewModel);
-        when(applicationInnovationAreaRestService.setApplicationInnovationAreaToNotApplicable(applicationId)).thenReturn(restSuccess(newApplicationResource().build()));
-
-
-        MvcResult result = mockMvc.perform(post(ApplicationFormController.APPLICATION_BASE_URL+"1/form/question/2/innovation-area")
-                .param("innovationAreaChoice", "NOT_APPLICABLE"))
-                .andExpect(view().name("redirect:/application/1/form/question/2"))
-                .andExpect(status().is3xxRedirection())
-                .andReturn();
-
-        verify(applicationInnovationAreaPopulator).populate(any(), any());
-        verify(cookieFlashMessageFilter).setFlashMessage(any(),any());
-        verify(applicationInnovationAreaRestService).setApplicationInnovationAreaToNotApplicable(applicationId);
-}
 
     @Test
     public void submitInnovationAreaChoice_restServiceErrorShouldResultInErrorOnInnovationAreasPage() throws Exception {
@@ -120,19 +91,18 @@ public class InnovationAreaControllerTest extends BaseControllerMockMVCTest<Inno
 
         Long nonExistentInnovationAreaId = 3L;
 
-        InnovationAreaViewModel innovationAreaViewModel = new InnovationAreaViewModel();
-
         RestResult<ApplicationResource> result = restFailure(new Error("", HttpStatus.NOT_FOUND));
+
+        ResearchCategoryViewModel researchCategoryViewModel = new ResearchCategoryViewModel();
 
         when(applicationDetailsEditableValidator.questionAndApplicationHaveAllowedState(questionId, applicationResource)).thenReturn(true);
         when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(newApplicationResource().withId(applicationId).build()));
-        when(applicationInnovationAreaPopulator.populate(applicationResource, questionId)).thenReturn(innovationAreaViewModel);
-        when(applicationInnovationAreaRestService.saveApplicationInnovationAreaChoice(applicationId, nonExistentInnovationAreaId)).thenReturn(result);
+        when(applicationInnovationAreaPopulator.populate(applicationResource, questionId)).thenReturn(researchCategoryViewModel);
+        when(applicationResearchCategoryRestService.saveApplicationResearchCategoryChoice(applicationId, nonExistentInnovationAreaId)).thenReturn(result);
 
-
-        MvcResult mvcResult = mockMvc.perform(post(ApplicationFormController.APPLICATION_BASE_URL+"1/form/question/2/innovation-area")
-                .param("innovationAreaChoice", nonExistentInnovationAreaId.toString()))
-                .andExpect(view().name("application/innovation-areas"))
+        MvcResult mvcResult = mockMvc.perform(post(ApplicationFormController.APPLICATION_BASE_URL+"1/form/question/2/research-category")
+                .param("researchCategoryChoice", nonExistentInnovationAreaId.toString()))
+                .andExpect(view().name("application/research-categories"))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
 
@@ -140,24 +110,24 @@ public class InnovationAreaControllerTest extends BaseControllerMockMVCTest<Inno
         verifyZeroInteractions(cookieFlashMessageFilter);
     }
 
-   @Test
+    @Test
     public void submitInnovationAreaChoice_missingChoiceShouldThrowError() throws Exception {
         Long applicationId = 1L;
         ApplicationResource applicationResource = newApplicationResource().withId(applicationId).build();
 
         Long questionId = 2L;
 
-        InnovationAreaViewModel innovationAreaViewModel = new InnovationAreaViewModel();
+        ResearchCategoryViewModel researchCategoryViewModel = new ResearchCategoryViewModel();
 
         when(applicationDetailsEditableValidator.questionAndApplicationHaveAllowedState(questionId, applicationResource)).thenReturn(true);
         when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(newApplicationResource().withId(applicationId).build()));
-        when(applicationInnovationAreaPopulator.populate(applicationResource, questionId)).thenReturn(innovationAreaViewModel);
+        when(applicationInnovationAreaPopulator.populate(applicationResource, questionId)).thenReturn(researchCategoryViewModel);
 
-        MvcResult mvcResult = mockMvc.perform(post(ApplicationFormController.APPLICATION_BASE_URL+"1/form/question/2/innovation-area"))
-                .andExpect(view().name("application/innovation-areas"))
+        MvcResult mvcResult = mockMvc.perform(post(ApplicationFormController.APPLICATION_BASE_URL+"1/form/question/2/research-category"))
+                .andExpect(view().name("application/research-categories"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(model().hasErrors())
-                .andExpect(model().attributeHasFieldErrors("form", "innovationAreaChoice"))
+                .andExpect(model().attributeHasFieldErrors("form", "researchCategoryChoice"))
                 .andReturn();
 
         verify(applicationInnovationAreaPopulator).populate(any(), any());
@@ -172,12 +142,10 @@ public class InnovationAreaControllerTest extends BaseControllerMockMVCTest<Inno
 
         Long questionId = 2L;
 
-        InnovationAreaViewModel innovationAreaViewModel = new InnovationAreaViewModel();
-
         when(applicationDetailsEditableValidator.questionAndApplicationHaveAllowedState(questionId, applicationResource)).thenReturn(false);
         when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(newApplicationResource().withId(applicationId).build()));
 
-        MvcResult mvcResult = mockMvc.perform(post(ApplicationFormController.APPLICATION_BASE_URL+"1/form/question/2/innovation-area"))
+        MvcResult mvcResult = mockMvc.perform(post(ApplicationFormController.APPLICATION_BASE_URL+"1/form/question/2/research-category"))
                 .andExpect(view().name("forbidden"))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();

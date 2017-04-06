@@ -23,17 +23,16 @@ public class ApplicationResearchCategoryPopulator extends BaseModelPopulator {
     @Autowired
     private FinanceService financeService;
 
-    public ResearchCategoryViewModel populate(Long applicationId, Long questionId) {
-        ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccessObject();
+    public ResearchCategoryViewModel populate(ApplicationResource applicationResource, Long questionId) {
 
         ResearchCategoryViewModel researchCategoryViewModel = new ResearchCategoryViewModel();
         researchCategoryViewModel.setAvailableResearchCategories(categoryRestService.getResearchCategories().getSuccessObject());
         researchCategoryViewModel.setQuestionId(questionId);
-        researchCategoryViewModel.setApplicationId(applicationId);
+        researchCategoryViewModel.setApplicationId(applicationResource.getId());
         researchCategoryViewModel.setCurrentCompetitionName(applicationResource.getCompetitionName());
 
         setResearchCategoryChoice(applicationResource, researchCategoryViewModel);
-        setHasApplicationFinances(researchCategoryViewModel, applicationId);
+        setHasApplicationFinances(researchCategoryViewModel, applicationResource.getId());
 
         return researchCategoryViewModel;
     }

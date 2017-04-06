@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.BaseUnitTest;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.viewmodel.ResearchCategoryViewModel;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
@@ -27,15 +28,16 @@ public class ApplicationResearchCategoryPopulatorTest extends BaseUnitTest {
         Long questionId = 1L;
         Long applicationId = 2L;
         String competitionName = "COMP_NAME";
+
         List<ApplicationFinanceResource> applicationFinanceResource = newApplicationFinanceResource().withApplication(applicationId).withOrganisationSize(1L).build(3);
         List<ResearchCategoryResource> researchCategories = newResearchCategoryResource().withId(1L, 2L, 3L).build(3);
+        ApplicationResource applicationResource = newApplicationResource().withId(applicationId)
+                .withCompetitionName(competitionName).withResearchCategory(researchCategories.get(0)).build();
 
-        when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(newApplicationResource()
-                .withCompetitionName(competitionName).withResearchCategory(researchCategories.get(0)).build()));
         when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(researchCategories));
         when(financeService.getApplicationFinanceDetails(applicationId)).thenReturn(applicationFinanceResource);
 
-        ResearchCategoryViewModel researchCategoryViewModel = populator.populate(applicationId, questionId);
+        ResearchCategoryViewModel researchCategoryViewModel = populator.populate(applicationResource, questionId);
 
         assertEquals(questionId, researchCategoryViewModel.getQuestionId());
         assertEquals(applicationId, researchCategoryViewModel.getApplicationId());
@@ -50,15 +52,16 @@ public class ApplicationResearchCategoryPopulatorTest extends BaseUnitTest {
         Long questionId = 1L;
         Long applicationId = 2L;
         String competitionName = "COMP_NAME";
-        List<ApplicationFinanceResource> applicationFinanceResource = newApplicationFinanceResource().withApplication(applicationId).withOrganisationSize(null).build(3);
-        List<ResearchCategoryResource> researchCategories = newResearchCategoryResource().withId(1L, 2L, 3L).build(3);
 
-        when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(newApplicationResource()
-                .withCompetitionName(competitionName).withResearchCategory(researchCategories.get(0)).build()));
+        List<ApplicationFinanceResource> applicationFinanceResource = newApplicationFinanceResource().withApplication(applicationId).build(3);
+        List<ResearchCategoryResource> researchCategories = newResearchCategoryResource().withId(1L, 2L, 3L).build(3);
+        ApplicationResource applicationResource = newApplicationResource().withId(applicationId)
+                .withCompetitionName(competitionName).withResearchCategory(researchCategories.get(0)).build();
+
         when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(researchCategories));
         when(financeService.getApplicationFinanceDetails(applicationId)).thenReturn(applicationFinanceResource);
 
-        ResearchCategoryViewModel researchCategoryViewModel = populator.populate(applicationId, questionId);
+        ResearchCategoryViewModel researchCategoryViewModel = populator.populate(applicationResource, questionId);
 
         assertEquals(questionId, researchCategoryViewModel.getQuestionId());
         assertEquals(applicationId, researchCategoryViewModel.getApplicationId());
@@ -73,15 +76,16 @@ public class ApplicationResearchCategoryPopulatorTest extends BaseUnitTest {
         Long questionId = 1L;
         Long applicationId = 2L;
         String competitionName = "COMP_NAME";
-        List<ApplicationFinanceResource> applicationFinanceResource = newApplicationFinanceResource().withApplication(applicationId).withOrganisationSize(null).build(3);
-        List<ResearchCategoryResource> researchCategories = newResearchCategoryResource().withId(1L, 2L, 3L).build(3);
 
-        when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(newApplicationResource()
-                .withCompetitionName(competitionName).withResearchCategory(researchCategories.get(0)).build()));
+        List<ApplicationFinanceResource> applicationFinanceResource = newApplicationFinanceResource().withApplication(applicationId).build(3);
+        List<ResearchCategoryResource> researchCategories = newResearchCategoryResource().withId(1L, 2L, 3L).build(3);
+        ApplicationResource applicationResource = newApplicationResource().withId(applicationId)
+                .withCompetitionName(competitionName).withResearchCategory(researchCategories.get(0)).build();
+
         when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(newResearchCategoryResource().build(3)));
         when(financeService.getApplicationFinanceDetails(applicationId)).thenReturn(applicationFinanceResource);
 
-        ResearchCategoryViewModel researchCategoryViewModel = populator.populate(applicationId, questionId);
+        ResearchCategoryViewModel researchCategoryViewModel = populator.populate(applicationResource, questionId);
 
         assertEquals(questionId, researchCategoryViewModel.getQuestionId());
         assertEquals(applicationId, researchCategoryViewModel.getApplicationId());
