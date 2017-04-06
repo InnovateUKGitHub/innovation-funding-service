@@ -357,7 +357,7 @@ The guest user can see updated date information
    Given the user clicks the button/link    link=Dates
    And the user should see the element    jQuery=dt:contains("1 February ${nextyear}") + dd:contains("Competition opens")
    And the user should see the element    jQuery=dt:contains("1 February ${nextyear}") + dd:contains("Competition closes")
-   And the user should see the element    jQuery=dt:contains("2 February ${nextyear}") + dd:contains("Applicants notified")
+   And the user should see the element    jQuery=dt:contains("3 February ${nextyear}") + dd:contains("Applicants notified")
    And the user should see the element    jQuery=dt:contains("12 December ${nextyear}") + dd:contains("Content 1")
    And the user should see the element    jQuery=dt:contains("20 December ${nextyear}") + dd:contains("Content 2")
 
@@ -393,7 +393,7 @@ User creates a new competition
     Given the user navigates to the page    ${CA_UpcomingComp}
     When the user clicks the button/link    jQuery=.button:contains("Create competition")
     When the user fills in the CS Initial details      ${competition_name}  01  02  ${nextyear}
-    And the user fills in the CS Milestones    01  02  02  ${nextyear}
+    And the user fills in the CS Milestones    01  02  03  02  ${nextyear}
 
 the user enters valid data in the summary details
     The user enters text to a text field    css=.editor  This is a Summary description

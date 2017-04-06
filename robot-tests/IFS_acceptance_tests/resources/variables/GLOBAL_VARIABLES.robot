@@ -155,4 +155,3 @@ ${CLOSED_COMPETITION_NAME}    Machine learning for transport infrastructure
 ${UPCOMING_COMPETITION_TO_ASSESS_NAME}    Home and industrial efficiency programme
 ${UPCOMING_COMPETITION_TO_ASSESS_ID}    11
 ${CURRENTLY_WAITING_UNTIL}      false
-

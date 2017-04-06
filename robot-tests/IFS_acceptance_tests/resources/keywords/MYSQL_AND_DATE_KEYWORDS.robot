@@ -77,6 +77,11 @@ get the day after tomorrow
     ${aftertomorrow} =    Add time To Date  ${today}  2 days  result_format=%d  exclude_millis=true
     [Return]  ${aftertomorrow}
 
+get two days after tomorrow
+    ${today}=    get time
+    ${twoaftertomorrow} =    Add time To Date  ${today}  3 days  result_format=%d  exclude_millis=true
+    [Return]  ${twoaftertomorrow}
+
 get the day after tomorrow full next year
     ${today} =    get time
     ${tommorow} =  Add time To Date  ${today}  2 days  result_format=%-d %B  exclude_millis=true
