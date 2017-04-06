@@ -46,6 +46,7 @@ Application details: Innovation Area - Materials and manufacturing
     [Documentation]    INFUND-8115
     Given the user clicks the button/link    link=Application Overview
     And the user clicks the button/link    link=Application details
+    and the user should not see the element      jQuery=button:contains("Change your innovation area")
     and The user clicks the button/link   jQuery=button:contains("Choose your innovation area")
     Then the user should see the element    jQuery=label:contains("Composite materials"):contains("New composite materials with enhanced or new properties and performance.")
     And the user should see the element    jQuery=label:contains("My innovation area is not listed")

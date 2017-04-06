@@ -111,7 +111,7 @@ Reset password
     When the user clicks the forgot psw link
     And the user enters text to a text field    id=id_email    ${test_mailbox_one}+changepsw@gmail.com
     And the user clicks the button/link    css=input.button
-    Then the user should see the text in the page    If your email address is recognised, you’ll receive an email with instructions about how to reset your password.
+    Then the user should see the text in the page    If your email address is recognised and valid, you’ll receive a notification with instructions about how to reset your password. If you do not receive a notification, please check your junk folder or try again.
     And the user reads his email from the default mailbox and clicks the link    ${test_mailbox_one}+changepsw@gmail.com    Reset your password    If you didn't request this
     And the user should see the text in the page    Password reset
     # TODO INFUND-5582
