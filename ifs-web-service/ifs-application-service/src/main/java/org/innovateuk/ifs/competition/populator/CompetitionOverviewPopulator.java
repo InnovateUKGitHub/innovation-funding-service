@@ -40,6 +40,7 @@ public class CompetitionOverviewPopulator {
         viewModel.setNonIfsUrl(publicContentItemResource.getNonIfsUrl());
         viewModel.setNonIfs(publicContentItemResource.getNonIfs());
         viewModel.setUserIsLoggedIn(userIsLoggedIn);
+        viewModel.setCompetitionSetupComplete(publicContentItemResource.getSetupComplete());
 
         if(null != publicContentItemResource.getPublicContentResource()) {
             viewModel.setShortDescription(publicContentItemResource.getPublicContentResource().getShortDescription());

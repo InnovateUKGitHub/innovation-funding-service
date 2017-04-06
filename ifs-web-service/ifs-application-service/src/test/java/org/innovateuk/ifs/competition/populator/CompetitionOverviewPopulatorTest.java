@@ -107,6 +107,7 @@ public class CompetitionOverviewPopulatorTest {
         assertEquals(competitionTitle, viewModel.getCompetitionTitle());
         assertEquals(nonIfsUrl, viewModel.getNonIfsUrl());
         assertEquals(true, viewModel.isUserIsLoggedIn());
+        assertEquals(true, viewModel.isCompetitionSetupComplete());
     }
 
     @Test
@@ -121,6 +122,7 @@ public class CompetitionOverviewPopulatorTest {
         assertEquals(closeDate, viewModel.getCompetitionCloseDate());
         assertEquals(competitionTitle, viewModel.getCompetitionTitle());
         assertEquals(true, viewModel.isUserIsLoggedIn());
+        assertEquals(true, viewModel.isCompetitionSetupComplete());
     }
 
     @Test
@@ -133,6 +135,7 @@ public class CompetitionOverviewPopulatorTest {
         assertEquals(closeDate, viewModel.getCompetitionCloseDate());
         assertEquals(competitionTitle, viewModel.getCompetitionTitle());
         assertEquals(true, viewModel.isUserIsLoggedIn());
+        assertEquals(true, viewModel.isCompetitionSetupComplete());
     }
 
 
@@ -144,6 +147,7 @@ public class CompetitionOverviewPopulatorTest {
                 .withContentSection(publicContentResource)
                 .withNonIfsUrl(nonIfsUrl)
                 .withNonIfs(Boolean.FALSE)
+                .withSetupComplete(Boolean.TRUE)
                 .build();
 
         return publicContentItem;
