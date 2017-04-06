@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application;
 
-import org.innovateuk.ifs.application.finance.view.FundingLevelResetHandler;
 import org.innovateuk.ifs.application.form.ResearchCategoryForm;
 import org.innovateuk.ifs.application.populator.ApplicationResearchCategoryPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -10,7 +9,6 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -49,9 +47,7 @@ public class ResearchCategoryController {
     public String getResearchCategories(Model model, @PathVariable Long applicationId, @PathVariable Long questionId,
                                         HttpServletRequest request) {
 
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-
-        ResearchCategoryViewModel researchCategoryViewModel = researchCategoryPopulator.populate(applicationId, questionId, user.getId());
+        ResearchCategoryViewModel researchCategoryViewModel = researchCategoryPopulator.populate(applicationId, questionId);
 
         model.addAttribute("model", researchCategoryViewModel);
 
@@ -60,13 +56,11 @@ public class ResearchCategoryController {
 
     @PostMapping
     public String submitResearchCategoryChoice(@ModelAttribute("form") @Valid ResearchCategoryForm researchCategoryForm,
-                                               HttpServletRequest request, HttpServletResponse response,
+                                               HttpServletResponse response,
                                                BindingResult bindingResult, ValidationHandler validationHandler,
                                                Model model, @PathVariable Long applicationId, @PathVariable Long questionId) {
 
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-
-        ResearchCategoryViewModel researchCategoryViewModel = researchCategoryPopulator.populate(applicationId, questionId, user.getId());
+        ResearchCategoryViewModel researchCategoryViewModel = researchCategoryPopulator.populate(applicationId, questionId);
 
         model.addAttribute("model", researchCategoryViewModel);
 

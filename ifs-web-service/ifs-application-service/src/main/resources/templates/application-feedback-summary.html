@@ -17,33 +17,11 @@
             <th:block th:insert="fragments/elements :: competition-closing-warning (competition=${currentCompetition})" />
 
             <div class="page-title">
-                <th:block th:insert="fragments/elements :: application-title (applicationId=${currentApplication.id},applicationName=${currentApplication.name})" />
+                <th:block th:insert="fragments/elements :: application-title (applicationName=${currentApplication.name})" />
                 <h1 class="heading-xlarge no-margin">Feedback overview</h1>
             </div>
 
             <th:block th:insert="fragments/elements :: competition-status-message (app=${currentApplication}, competition=${currentCompetition})" />
-
-            <h2 class="heading-medium">Overall scores</h2>
-            <div class="table-overflow">
-                <table th:each="section : ${sections.values()}" th:if="${!section.name.equals('Project details') && !section.name.equals('Finances')}">
-                    <thead>
-                        <tr>
-                            <th class="width-150" scope="row">Question</th>
-                            <th th:each="question : ${sectionQuestions.get(section.id)}" scope="col">
-                                <a th:text="|Q${question.questionNumber}|">Q1</a>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th class="width-150" scope="row">Score</th>
-                            <td th:each="question : ${sectionQuestions.get(section.id)}">
-                                <span th:text="${scores.scores.get(question.id)}" th:remove="tag" />
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
 
             <h2 class="heading-medium no-margin-bottom">Application details</h2>
             <p class="form-hint">Assessors do not provide scores on these sections of the application.</p>
@@ -53,6 +31,9 @@
                     <div class="column-half">
                         <h3 class="heading-small">Project title</h3>
                         <p th:text="${currentApplication.name}">Machine learning in robots</p>
+
+                        <h3 class="heading-small">Application number</h3>
+                        <p th:text="${currentApplication.id}">Machine learning in robots</p>
 
                         <h3 class="heading-small">Lead organisation</h3>
                         <p th:text="${leadOrganisation.name}">Aptrans Ltd</p>

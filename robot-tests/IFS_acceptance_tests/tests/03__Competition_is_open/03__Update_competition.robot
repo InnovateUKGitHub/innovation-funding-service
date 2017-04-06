@@ -87,6 +87,7 @@ Finances are editable (Ready to Open)
     And the user should see the element    jquery=h1:contains("Application finances")
     When the user clicks the button/link    jQuery=.button:contains("Edit this question")
     Then the user clicks the button/link    jQuery=.button:contains("Save and close")
+    And the user clicks the button/link     jQuery=.button:contains("Done")
     [Teardown]    the user clicks the button/link    link=Competition setup
 
 Eligibility is editable (Ready to Open)

@@ -26,7 +26,6 @@ public class FinanceCheckDocs {
             fieldWithPath("otherPublicSectorFunding").description("Other public sector funding available for the project"),
             fieldWithPath("totalPercentageGrant").description("Total percentage of grant through IFS"),
             fieldWithPath("spendProfilesGenerated").description("Flag to signify if spend profiles have already been generated using these finance checks"),
-            fieldWithPath("financeChecksAllApproved").description("Flag to signify if all finance checks have been approved"),
             fieldWithPath("spendProfileGeneratedBy").description("Name of internal IFS user who generated spend profile"),
             fieldWithPath("spendProfileGeneratedDate").description("Date when internal user generated spend profile from finance checks"),
             fieldWithPath("bankDetailsApproved").description("Flag to signify if all bank details are already approved"),
