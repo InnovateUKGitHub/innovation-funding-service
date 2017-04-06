@@ -50,7 +50,7 @@ public class ApplicationResearchCategoryPopulatorTest extends BaseUnitTest {
         Long questionId = 1L;
         Long applicationId = 2L;
         String competitionName = "COMP_NAME";
-        List<ApplicationFinanceResource> applicationFinanceResource = newApplicationFinanceResource().withApplication(applicationId).withOrganisationSize(null).build(3);
+        List<ApplicationFinanceResource> applicationFinanceResource = newApplicationFinanceResource().withApplication(applicationId).withOrganisationSize((Long[]) null).build(3);
         List<ResearchCategoryResource> researchCategories = newResearchCategoryResource().withId(1L, 2L, 3L).build(3);
 
         when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(newApplicationResource()
@@ -73,7 +73,7 @@ public class ApplicationResearchCategoryPopulatorTest extends BaseUnitTest {
         Long questionId = 1L;
         Long applicationId = 2L;
         String competitionName = "COMP_NAME";
-        List<ApplicationFinanceResource> applicationFinanceResource = newApplicationFinanceResource().withApplication(applicationId).withOrganisationSize(null).build(3);
+        List<ApplicationFinanceResource> applicationFinanceResource = newApplicationFinanceResource().withApplication(applicationId).withOrganisationSize((Long[]) null).build(3);
         List<ResearchCategoryResource> researchCategories = newResearchCategoryResource().withId(1L, 2L, 3L).build(3);
 
         when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(newApplicationResource()

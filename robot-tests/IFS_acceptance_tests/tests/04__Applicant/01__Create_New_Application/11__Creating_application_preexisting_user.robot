@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation     INNFUND-1040: As an applicant I want to be able to create more than one application so that i can enter the same competition more than once
+Documentation     INFUND-1040: As an applicant I want to be able to create more than one application so that i can enter the same competition more than once
 Suite Setup       Delete the emails from both test mailboxes
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
