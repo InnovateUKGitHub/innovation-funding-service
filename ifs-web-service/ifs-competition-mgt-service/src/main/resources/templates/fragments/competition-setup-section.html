@@ -235,7 +235,11 @@
                 </p>
             </div>
 
-            <button class="button">Done</button>
+            <input type="hidden" name="unrestricted" value="1" th:if="${#strings.isEmpty(restrictInitialDetailsEdit)}" />
+
+            <button class="button">
+                Done
+            </button>
         </th:block>
 
         <th:block th:if="${!editable}" id="section-1-">

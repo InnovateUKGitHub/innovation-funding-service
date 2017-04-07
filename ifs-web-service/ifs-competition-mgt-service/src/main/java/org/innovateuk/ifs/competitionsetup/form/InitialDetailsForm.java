@@ -14,19 +14,26 @@ import java.util.List;
  */
 public class InitialDetailsForm extends CompetitionSetupForm {
 
+    /**
+     * Validation group for when the user input is 'unrestricted'
+     * and additional fields may be editable
+     * i.e. when first creating the competition.
+     */
+    public interface Unrestricted {}
+
     @NotNull(message = "{validation.initialdetailsform.executiveuserid.required}")
     private Long executiveUserId;
 
     @NotNull(message = "{validation.initialdetailsform.openingdateday.required}")
-    @Range(min=1, max=31, message= "{validation.initialdetailsform.openingdateday.range}")
+    @Range(min=1, max=31, message= "{validation.initialdetailsform.openingdateday.range}", groups = Unrestricted.class)
     private Integer openingDateDay;
 
     @NotNull(message = "{validation.initialdetailsform.openingdatemonth.required}")
-    @Range(min=1, max=12, message= "{validation.initialdetailsform.openingdatemonth.range}")
+    @Range(min=1, max=12, message= "{validation.initialdetailsform.openingdatemonth.range}", groups = Unrestricted.class)
     private Integer openingDateMonth;
 
     @NotNull(message = "{validation.initialdetailsform.openingdateyear.required}")
-    @Range(min=1900, max=9999, message= "{validation.initialdetailsform.openingdateyear.range}")
+    @Range(min=1900, max=9999, message= "{validation.initialdetailsform.openingdateyear.range}", groups = Unrestricted.class)
     private Integer openingDateYear;
 
     @NotEmpty(message = "{validation.standard.title.required}")
@@ -38,7 +45,7 @@ public class InitialDetailsForm extends CompetitionSetupForm {
     @NotEmpty(message = "{validation.initialdetailsform.innovationareacategoryid.required}")
     private List<Long> innovationAreaCategoryIds;
 
-    @NotNull(message = "{validation.initialdetailsform.competitiontypeid.required}")
+    @NotNull(message = "{validation.initialdetailsform.competitiontypeid.required}", groups = Unrestricted.class)
     private Long competitionTypeId;
 
     @NotNull(message = "{validation.initialdetailsform.leadtechnologistuserid.required}")
@@ -54,7 +61,7 @@ public class InitialDetailsForm extends CompetitionSetupForm {
         this.executiveUserId = executiveUserId;
     }
 
-    @FutureLocalDate
+    @FutureLocalDate(groups = Unrestricted.class)
     public LocalDate getOpeningDate() {
         if (openingDateYear == null || openingDateMonth == null || openingDateDay == null) {
             return null;
