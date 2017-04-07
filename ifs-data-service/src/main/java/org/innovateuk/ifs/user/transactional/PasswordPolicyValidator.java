@@ -101,7 +101,6 @@ public class PasswordPolicyValidator {
              * The Regex (a-zA-Z0-9-.*\s]*) check for all the characters which can include in the patterns to be checked in the password.
              * These patterns could be first name, last name, organisation....
              * The pattern includes alpha numerics, *, -,  spaces.
-             * Please find excludePattern regex in application.properties.
              */
             boolean containNoSpecialCharacters = Pattern.compile("[a-zA-Z0-9-.*\\s]*").matcher(currentExcludedRegexPattern).matches();
 
