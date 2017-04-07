@@ -13,9 +13,17 @@
           th:attr="data-competition=${competition.id}" data-section="initial"
           method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
 
-        <fieldset th:if="${editable}" id="section-1-edit">
+        <div class="error-summary" th:if="${#fields.hasGlobalErrors()}">
+            <h2 class="heading-medium error-summary-heading">
+                Unable to save section
+            </h2>
 
-            <legend class="visuallyhidden">Initial details</legend>
+            <ul class="error-summary-list">
+                <li th:each="err : ${#fields.globalErrors()}" th:text="${err}"></li>
+            </ul>
+        </div>
+
+        <th:block th:if="${editable}" id="section-1-edit">
             <div th:class="${#fields.hasErrors('title')}? 'form-group error':'form-group'">
                 <label class="form-label" for="title">
                     <span class="form-label-bold">Competition title</span>
@@ -118,65 +126,70 @@
                 </div>
             </th:block>
             <input type="hidden" name="autosaveInnovationAreaIds" />
-            <button class="buttonlink" type="button" data-add-row="innovationArea">+ add another innovation area</button>
+            <div class="form-group">
+                <button class="buttonlink" type="button" data-add-row="innovationArea">+ add another innovation area</button>
+            </div>
 
-            <fieldset>
-                <div id="openingDate" th:class="${#fields.hasErrors('openingDate*')}? 'form-group error':'form-group'">
-                  <h3 class="heading-small no-margin">Opening date</h3>
-                  <legend>
-                      <span class="visuallyhidden">Opening date</span>
-                      <span th:if="${#fields.hasErrors('openingDate*')}" th:remove="tag">
+            <div id="openingDate" th:class="${#fields.hasErrors('openingDate*')}? 'form-group error':'form-group'">
+                <fieldset>
+                    <legend>
+                      <span class="heading-small">Opening date</span>
+                      <th:block th:if="${#fields.hasErrors('openingDate*')}">
                             <span class="error-message"  th:each="err : ${#fields.errors('openingDate*')}" th:text="${err}" />
-                      </span>
-                  </legend>
-                  <p class="form-hint">You are able to edit this date if needed in the milestones section.</p>
-                  <div class="date-group" data-future-date="">
-                      <input type="hidden" name="openingDate" />
-                      <div class="day">
-                          <label class="form-label" for="competitionSetupForm.openingDateDay">
-                              <div>Day</div>
-                          </label>
-                          <input th:readonly="${isSetupAndLive}"
+                      </th:block>
+                    </legend>
+                    <p class="form-hint">You are able to edit this date if needed in the milestones section.</p>
+                    <div class="date-group" data-future-date="">
+                        <input type="hidden" name="openingDate" />
+                        <div class="day">
+                            <label class="form-label" for="openingDateDay">
+                                <span>Day</span>
+                            </label>
+                            <input th:readonly="${isSetupAndLive}"
                                  th:class="${#fields.hasErrors('openingDateDay') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                  type="number"
                                  placeholder="DD"
+                                 min="1"
+                                 max="31"
                                  required="required"
                                  th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateday.required}"
                                  th:disabled="${!#strings.isEmpty(restrictInitialDetailsEdit)}"
                                  th:field="${competitionSetupForm.openingDateDay}" />
-                          <input th:if="${!#strings.isEmpty(restrictInitialDetailsEdit)}" type="hidden" th:field="${competitionSetupForm.openingDateDay}" />
-                      </div>
+                            <input th:if="${!#strings.isEmpty(restrictInitialDetailsEdit)}" type="hidden" th:field="${competitionSetupForm.openingDateDay}" />
+                        </div>
 
-                      <div class="month">
-                          <label class="form-label" for="competitionSetupForm.openingDateMonth">
-                              <span>Month</span>
-                          </label>
-                          <input th:readonly="${isSetupAndLive}" th:class="${#fields.hasErrors('openingDateMonth') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                        <div class="month">
+                            <label class="form-label" for="openingDateMonth">
+                                <span>Month</span>
+                            </label>
+                            <input th:readonly="${isSetupAndLive}" th:class="${#fields.hasErrors('openingDateMonth') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                  type="number"
                                  placeholder="MM"
                                  required="required"
+                                 min="1"
+                                 max="12"
                                  th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdatemonth.required}"
                                  th:disabled="${!#strings.isEmpty(restrictInitialDetailsEdit)}"
                                  th:field="${competitionSetupForm.openingDateMonth}" />
-                          <input th:if="${!#strings.isEmpty(restrictInitialDetailsEdit)}" type="hidden" th:field="${competitionSetupForm.openingDateMonth}" />
-                      </div>
+                            <input th:if="${!#strings.isEmpty(restrictInitialDetailsEdit)}" type="hidden" th:field="${competitionSetupForm.openingDateMonth}" />
+                        </div>
 
-                      <div class="year">
-                          <label class="form-label" for="competitionSetupForm.openingDateYear">
-                              <span>Year</span>
-                          </label>
-                          <input th:readonly="${isSetupAndLive}" th:class="${#fields.hasErrors('openingDateYear') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
+                        <div class="year">
+                            <label class="form-label" for="openingDateYear">
+                                <span>Year</span>
+                            </label>
+                            <input th:readonly="${isSetupAndLive}" th:class="${#fields.hasErrors('openingDateYear') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
                                  type="number"
                                  placeholder="YYYY"
                                  required="required"
                                  th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateyear.required}"
                                  th:disabled="${!#strings.isEmpty(restrictInitialDetailsEdit)}"
                                  th:field="${competitionSetupForm.openingDateYear}" />
-                          <input th:if="${!#strings.isEmpty(restrictInitialDetailsEdit)}" type="hidden" th:field="${competitionSetupForm.openingDateYear}" />
-                      </div>
-                  </div>
-                </div>
-            </fieldset>
+                            <input th:if="${!#strings.isEmpty(restrictInitialDetailsEdit)}" type="hidden" th:field="${competitionSetupForm.openingDateYear}" />
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
 
             <div th:class="${#fields.hasErrors('leadTechnologistUserId')}? 'form-group error':'form-group'">
                 <label class="form-label" for="leadTechnologistUserId">
@@ -212,8 +225,6 @@
                 </select>
             </div>
 
-
-
             <div class="form-group" th:attr="aria-hidden=${competitionSetupForm.competitionTypeId == null ? 'true' : 'false'}" id="stateAid">
                 <h3 class="heading-small">State aid</h3>
                 <p>
@@ -225,10 +236,9 @@
             </div>
 
             <button class="button">Done</button>
-        </fieldset>
+        </th:block>
 
-        <fieldset th:if="${!editable}" id="section-1-">
-
+        <th:block th:if="${!editable}" id="section-1-">
             <dl class="standard-definition-list">
                 <dt>Competition title</dt>
                 <dd th:text="${competitionSetupForm.title}"></dd>
@@ -262,7 +272,7 @@
                </dl>
 
             <button th:unless="${preventEdit}" type="submit" class="button">Edit</button>
-        </fieldset>
+        </th:block>
 
     </form>
     <ul class="pagination" th:if="${isInitialComplete}">
@@ -792,20 +802,24 @@
                              required="required"
                              th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].milestoneType'"
                              th:value="${milestoneEntry.key}" />
-                      <input type="hidden"
-                             required="required"
-                             th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].editable'"
-                             th:value="${milestoneEntry.value.editable}" />
                       <td class="time">
                           <select th:if="${milestoneEntry.value.timeOption}"
                                   th:id="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
                                   class="form-control width-large"
                                   required="required"
                                   th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
-                                  th:readonly="${!milestoneEntry.value.editable}">
+                                  th:readonly="${!milestoneEntry.value.editableForCompetition(competition)}">
                               <option th:each="time : ${T(org.innovateuk.ifs.competitionsetup.form.MilestoneTime).values()}"
-                                      th:text="${time.display}" th:value="${time}" th:selected="${time == milestoneEntry.value.time}"></option>
+                                      th:text="${time.display}" th:value="${time}" th:attr="data-time=${time.hour}" th:selected="${time == milestoneEntry.value.time}"></option>
                           </select>
+                          <th:block th:if="${milestoneEntry.value.middayTime}" >
+                              12:00 pm
+                            <input type="hidden"
+                                data-time="12"
+                                th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
+                                th:id="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
+                                th:value="${T(org.innovateuk.ifs.competitionsetup.form.MilestoneTime).TWELVE_PM}">
+                          </th:block>
                       </td>
                       <td class="js-addWeekDay" th:text="${milestoneEntry.value.dayOfWeek}"></td>
                       <td class="day">
@@ -820,7 +834,7 @@
                                            data-date=${milestoneEntry.value.day+'-'+milestoneEntry.value.month+'-'+milestoneEntry.value.year}"
                                  th:value="${milestoneEntry.value.day}"
                                  th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].day'"
-                                 th:readonly="${!milestoneEntry.value.editable}" />
+                                 th:readonly="${!milestoneEntry.value.editableForCompetition(competition)}" />
                       </td>
                       <td class="month">
                           <input type="number"
@@ -832,7 +846,7 @@
                                 th:attr="aria-labelledby=${'milestone-' + milestoneEntry.key},data-date=${milestoneEntry.value.day+'-'+milestoneEntry.value.month+'-'+milestoneEntry.value.year}"
                                 th:value="${milestoneEntry.value.month}"
                                 th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].month'"
-                                th:readonly="${!milestoneEntry.value.editable}"/>
+                                th:readonly="${!milestoneEntry.value.editableForCompetition(competition)}"/>
                       </td>
                       <td class="year" >
                           <input type="number"
@@ -844,7 +858,7 @@
                                  class="form-control width-small"
                                  th:value="${milestoneEntry.value.year}"
                                  th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].year'"
-                                 th:readonly="${!milestoneEntry.value.editable}" />
+                                 th:readonly="${!milestoneEntry.value.editableForCompetition(competition)}" />
                           </td>
                     </tr>
                 </tbody>
@@ -867,7 +881,10 @@
                     <tr th:each="milestoneEntry : ${competitionSetupForm.milestoneEntries}"
                         th:if="${milestoneEntry.value.milestoneType.presetDate}">
                         <td th:text="${milestoneEntry.value.milestoneType.milestoneDescription}"></td>
-                        <td><th:block th:if="${milestoneEntry.value.timeOption}" th:text="${milestoneEntry.value.time.display}"/></td>
+                        <td>
+                            <th:block th:if="${milestoneEntry.value.timeOption}" th:text="${milestoneEntry.value.time.display}"/>
+                            <th:block th:if="${milestoneEntry.value.middayTime}">12:00 pm</th:block>
+                        </td>
                         <td th:text="${milestoneEntry.value.dayOfWeek}"></td>
                         <td th:text="${#temporals.format(milestoneEntry.value.date, 'd MMMM yyyy')}"></td>
                     </tr>

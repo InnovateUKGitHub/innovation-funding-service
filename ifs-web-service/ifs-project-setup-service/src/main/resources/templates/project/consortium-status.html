@@ -9,7 +9,7 @@
 <th:block th:insert="fragments/layout :: global-header" />
 
 
-<main id="content">
+<main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
     <div th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${model.projectId})}" th:remove="tag"></div>
 
@@ -35,9 +35,8 @@
               </tr>
             </thead>
             <tbody>
-              <tr th:insert="project/fragments :: consortium-partner-status-row(${model.projectTeamStatusResource.leadPartnerStatus})" th:if="${model.projectTeamStatusResource.leadPartnerStatus}"/>
-              <th:block th:each="partner : ${model.projectTeamStatusResource.otherPartnersStatuses}">
-                  <tr th:insert="project/fragments :: consortium-partner-status-row(${partner})"/>
+              <th:block th:each="partner : ${model.projectTeamStatusResource.partnerStatuses}">
+                  <tr th:insert="project/fragments :: consortium-partner-status-row(${partner}, ${model.projectTeamStatusResource.isLeadOrganisation(partner.organisationId)})"/>
               </th:block>
               </tbody>
         </table>

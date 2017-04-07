@@ -7,7 +7,7 @@ Documentation     -INFUND-408: As an applicant, and I am on the application over
 ...
 ...               -INFUND-32: As an applicant and I am on the MyApplications page, I can view the status of all my current applications, so I know what actions I need to take
 ...
-...               -INFUND-1072: As an Applicant I want to see the Application Overview page redesigned so that they meet the agreed style
+...               -INFUND-1072: As an Applicant I want to see the Application overview page redesigned so that they meet the agreed style
 ...
 ...               -INFUND-1162: As an applicant I want the ability to have a printable version of my application for review, so I can print and download it for offline use.
 Suite Setup       log in and create new application if there is not one already
@@ -22,7 +22,7 @@ Resource          ../../../resources/defaultResources.robot
 Navigation to the Overview page
     [Tags]    HappyPath
     When the user navigates to the overview page of the Robot test application
-    Then the user should see the text in the page  Please provide Innovate UK with information about your project
+    Then the user should see the text in the page  Please provide information about your project.
     And the user should see the element            jQuery=h1:contains("Application overview")
 
 Review and submit button
@@ -66,9 +66,9 @@ User can print the application
 
 *** Keywords ***
 the applicant can see the overview page divided in three sections
-    the user should see the element  jQuery=#section-1 h2:contains("Project details")
-    the user should see the element  jQuery=#section-2 h2:contains("Application questions")
-    the user should see the element  jQuery=#section-6 h2:contains("Finances")
+    the user should see the element  jQuery=#section-184 h2:contains("Project details")
+    the user should see the element  jQuery=#section-185 h2:contains("Application questions")
+    the user should see the element  jQuery=#section-186 h2:contains("Finances")
 
 the user should get a new print window
     Select Window    Title=Print Application - Innovation Funding Service

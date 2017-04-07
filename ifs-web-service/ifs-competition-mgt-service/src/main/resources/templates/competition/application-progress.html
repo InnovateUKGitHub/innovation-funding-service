@@ -10,7 +10,7 @@
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main id="content">
+        <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
 
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Allocate applications',linkClass='link-back',linkUrl=@{/assessment/competition/{competitionId}(competitionId=${model.competitionId})}" />
@@ -36,7 +36,7 @@
                 </div>
                 <div class="column-quarter">
                     <h3 class="heading-small">Innovation area</h3>
-                    <span th:text="${model.applicationInnovationArea} ? ${model.applicationInnovationArea} : 'Not listed.'"></span>
+                    <span th:text="${model.applicationInnovationArea} ? ${model.applicationInnovationArea} : 'Not listed'"></span>
                 </div>
             </div>
             <div class="extra-margin">

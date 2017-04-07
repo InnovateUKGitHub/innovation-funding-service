@@ -11,12 +11,12 @@
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main id="content">
+<main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
     <div th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${model.project.getId()})}" th:remove="tag"></div>
 
     <div class="page-title">
-        <th:block th:insert="fragments/elements :: project-title (projectId=${model.app.id}, projectName=${model.project.name})" />
+        <th:block th:insert="fragments/elements :: project-title (projectName=${model.project.name})" />
         <h1 class="heading-xlarge">Project details</h1>
     </div>
 
@@ -100,11 +100,18 @@
         </thead>
         <tbody>
             <tr th:each="organisation: ${model.partnerOrganisations}">
-
                 <td>
-                    <a th:if="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly()}" th:href="@{/project/{id}/details/finance-contact?organisation={orgId}(id=${model.project.getId()},orgId=${organisation.id})}" th:text="${organisation.name}">organisation name</a>
-                    <th:block th:if="${model.isUserPartnerInOrganisation(organisation.id) and model.isReadOnly()}" th:text="${organisation.name}">organisation name</th:block>
-                    <th:block th:unless="${model.isUserPartnerInOrganisation(organisation.id)}" th:text="${organisation.name}">organisation name</th:block>
+                    <th:block th:if="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly()}">
+                        <a th:href="@{/project/{id}/details/finance-contact?organisation={orgId}(id=${model.project.getId()},orgId=${organisation.id})}" th:text="${organisation.name}">organisation name</a>
+                        <th:block th:if="${organisation.name.equals(model.leadOrganisation.name)}"> (Lead)</th:block></th:block>
+                    <th:block th:if="${model.isUserPartnerInOrganisation(organisation.id) and model.isReadOnly()}">
+                        <th:block th:text="${organisation.name}">organisation name</th:block>
+                        <th:block th:if="${organisation.name.equals(model.leadOrganisation.name)}"> (Lead)</th:block>
+                    </th:block>
+                    <th:block th:unless="${model.isUserPartnerInOrganisation(organisation.id)}">
+                        <th:block th:text="${organisation.name}">organisation name</th:block>
+                        <th:block th:if="${organisation.name.equals(model.leadOrganisation.name)}"> (Lead)</th:block>
+                    </th:block>
                 </td>
                 <td>
                   <th:block th:unless="${model.getFinanceContactForPartnerOrganisation(organisation.id) == null}">

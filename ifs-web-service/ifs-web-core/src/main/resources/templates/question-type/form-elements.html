@@ -38,7 +38,7 @@
         <summary>
             <span class="summary" th:text="${guidable.getGuidanceTitle()}"/>
         </summary>
-        <div class="panel" ifs:utext="${guidable.getGuidanceAnswer()}"/>
+        <div class="panel wysiwyg-styles" ifs:utext="${guidable.getGuidanceAnswer()}"/>
     </details>
 </th:block>
 <!-- ========================= input field type text =========================== -->
@@ -231,7 +231,7 @@
                         <!--/* if  readonly we show the edit form button */-->
                         <th:block th:if="${readonly}" th:include="question-type/form-elements :: form-edit-question-button" />
                     </th:block>
-                    
+
                 </th:block>
 
                 <th:block th:insert="question-type/form-elements :: ready-for-review" th:if="${!userIsLeadApplicant}" th:with="displayBlock=${true}" />
@@ -260,28 +260,30 @@
 </th:block>
 <!-- ========================= Current Assignee =========================== -->
 <th:block th:fragment="current-assignee">
-    <div class="assignee" th:if="(${currentUser.getId() == questionAssignee?.assignedByUserId} and ${questionAssignee?.assignee})" th:classappend="(${currentUser.getId() == questionAssignee?.assigneeUserId} ? 'assigned-to-me')">
-      <span th:if="${questionAssignee?.assigneeUserId == leadApplicant?.getId()}">You have reassigned this question to</span>
-      <span th:unless="${questionAssignee?.assigneeUserId == leadApplicant?.getId()}">You have assigned this question to</span>
-      <span th:text="${(currentUser.getId() == questionAssignee.assigneeUserId) ? 'you' : questionAssignee?.assigneeName}" />
+    <div class="assignee" th:if="(${currentUser.id == questionAssignee?.assignedByUserId} and ${questionAssignee?.assignee})"
+         th:classappend="(${currentUser.id == questionAssignee?.assigneeUserId} ? 'assigned-to-me')"
+         th:unless="${leadApplicant?.id == currentUser.id}">
+      <span th:if="${questionAssignee?.assigneeUserId == leadApplicant?.id}">You have reassigned this question to</span>
+      <span th:unless="${questionAssignee?.assigneeUserId == leadApplicant?.id}">You have assigned this question to</span>
+      <span th:text="${currentUser.id == questionAssignee.assigneeUserId} ? 'you' : ${questionAssignee?.assigneeName}" />
     </div>
-    <div class="assignee" th:if="${questionAssignee?.assignee}" th:unless="${currentUser.getId() == questionAssignee?.assignedByUserId}" th:classappend="(${currentUser.getId() == questionAssignee?.assigneeUserId} ? 'assigned-to-me')" >
-        <th:block th:if="${questionAssignee?.assignedByUserId != leadApplicant?.getId()}">This question has been reassigned to
-          <span th:text="${(currentUser.getId() == questionAssignee.assigneeUserId) ? 'you' : questionAssignee?.assigneeName}"/> by
-          <span th:text="${(currentUser.getId() == questionAssignee?.assignedByUserId) ? 'you' : questionAssignee?.assignedByName}"/>
-        </th:block>
-        <th:block th:unless="${questionAssignee?.assignedByUserId != leadApplicant?.getId()}">This question is assigned to
-          <span th:text="${(currentUser.getId() == questionAssignee.assigneeUserId) ? 'you' : questionAssignee?.assigneeName}"/>
+
+    <div class="assignee" th:if="${questionAssignee?.assignee}"
+         th:unless="${currentUser.id == questionAssignee?.assignedByUserId}"
+         th:classappend="${currentUser.id == questionAssignee?.assigneeUserId} ? 'assigned-to-me'">
+        <th:block th:unless="${questionAssignee?.assignedByUserId != leadApplicant?.id}">This question is assigned to
+          <span th:text="${currentUser.id == questionAssignee.assigneeUserId} ? 'you' : ${questionAssignee?.assigneeName}"/>
         </th:block>
     </div>
+
 </th:block>
 <!-- ========================= Assign / reassign buttons =========================== -->
 <th:block th:fragment="ready-for-review">
-  <div class="ready-for-review-container" th:if="${question.isAssignEnabled()} and ${currentUser.getId() == questionAssignee?.assigneeUserId}">
+  <div class="ready-for-review-container" th:if="${question.isAssignEnabled()} and ${currentUser.id == questionAssignee?.assigneeUserId}">
     <button th:if="${question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id)}"
             type="submit"
             name="assign_question"
-            th:value="${question.getId()}+'_'+${questionAssignee?.assignedBy}"
+            th:value="${question.id}+'_'+${questionAssignee?.assignedBy}"
             th:class="'buttonlink'">Assign to lead for review
     </button>
   </div>
@@ -289,7 +291,7 @@
 
 <th:block th:fragment="assign-buttons-dialog">
 
-    <div th:class="(${currentUser.getId() == questionAssignee?.assigneeUserId} ? 'assign-container assign-alert' : 'assign-container assigned-alert')"
+    <div th:class="(${currentUser.id == questionAssignee?.assigneeUserId} or ${questionAssignee?.assignee == null} ? 'assign-container assign-alert' : 'assign-container assigned-alert')"
          th:if="${question.isAssignEnabled()}">
         <th:block th:insert="question-type/form-elements :: assign-button-body" />
     </div>
@@ -300,8 +302,7 @@
 </th:block>
 
 <th:block th:fragment="assign-buttons">
-
-    <div th:class="(${currentUser.getId() == questionAssignee?.assigneeUserId} ? 'assign-container action-required' : 'assign-container')"
+    <div th:class="(${currentUser.id == questionAssignee?.assigneeUserId} or ${questionAssignee?.assignee == null} ? 'assign-container action-required' : 'assign-container')"
          th:if="${question.isAssignEnabled()}">
         <th:block th:insert="question-type/form-elements :: assign-button-body" />
     </div>
@@ -313,50 +314,95 @@
 
 <!-- ========================= Assign - make selection =========================== -->
 <th:block th:fragment="assign-button-body">
+    <th:block th:if="${questionAssignee?.assignee != null}">
+        <span class="action-required" th:if="${questionAssignee?.assigneeUserId == currentUser.id}">
+          <th:block th:if="${questionAssignee?.assignedByUserId == leadApplicant?.id}"
+                    th:text="${fullButtonText} ? 'Assigned to you.' : 'Assigned to'">Assigned to you </th:block>
+          <th:block th:unless="${questionAssignee?.assignedByUserId == leadApplicant?.id}"
+                    th:text="${fullButtonText} ? 'Reassigned to you.' : 'Reassigned to'">Reassigned to you </th:block>
+        </span>
+        <span class="secondary-notification"
+              th:unless="${questionAssignee?.assigneeUserId == currentUser.id}"
+              th:text="${fullButtonText} ? |Assigned to ${name}. | : 'Assigned to'"
+              th:with="name=${questionAssignee?.getAssigneeName()}">
+        </span>
+    </th:block>
 
-    <div class="assign-button">
-        <th:block th:insert="question-type/form-elements :: assigned-to" />
+    <th:block th:if="${questionAssignee?.assignee == null}">
+        <span class="action-required" th:if="${leadApplicant?.id == currentUser.id}">
+            <th:block th:text="${fullButtonText} ? 'Assigned to you.' : 'Assigned to'">Assigned to you</th:block>
+        </span>
+        <span class="secondary-notification" th:unless="${leadApplicant?.id == currentUser.id}">
+            Assigned to <span th:text="${name}" th:with="name=${leadApplicant?.getName()}"></span>
+        </span>
+    </th:block>
+
+    <div class="assign-button-container">
+
+        <div class="assign-button">
+            <th:block th:insert="question-type/form-elements :: assigned-to"/>
+        </div>
+
+        <div class="assign-team">
+            <!--/* Reassign question */-->
+            <select name="assign_question" class="prog-menu">
+                <th:block th:each="assignableUser : ${assignableUsers}">
+                    <option th:value="${question.id}+'_'+${assignableUser.getId()}"
+                            th:unless="${(questionAssignee?.assigneeUserId == assignableUser.getUser()) or ((questionAssignee?.assignee == null) and (leadApplicant?.id == assignableUser.getUser()))}"
+                            th:text="${assignableUser.userName}"
+                    />
+                    <option th:if="${(questionAssignee?.assigneeUserId == assignableUser.getUser()) or ((questionAssignee?.assignee == null) and (leadApplicant?.id == assignableUser.getUser()))}"
+                            th:text="${assignableUser?.userName}"
+                            selected="selected"
+                            disabled="disabled"/>
+                </th:block>
+                <th:block th:each="pendingAssignableUser : ${pendingAssignableUsers}">
+                    <option th:text="${pendingAssignableUser.name + ' (pending)'}"  disabled="disabled"/>
+                </th:block>
+            </select>
+            <button type="submit">Reassign</button>
+        </div>
+        <th:block th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} or ${hideAssignedTo}"
+                  th:include="question-type/form-elements :: current-assignee" />
+
     </div>
-    <div class="assign-team">
-        <!--/* Reassign question */-->
-        <select name="assign_question" class="prog-menu">
-            <th:block th:each="assignableUser : ${assignableUsers}">
-                <option th:value="${question.getId()}+'_'+${assignableUser.getId()}"
-                        th:unless="${(questionAssignee?.assigneeUserId == assignableUser.getUser()) or ((questionAssignee?.assignee == null) and (leadApplicant?.getId() == assignableUser.getUser()))}"
-                        th:text="${assignableUser.userName}"
-                />
-                <option th:if="${(questionAssignee?.assigneeUserId == assignableUser.getUser()) or ((questionAssignee?.assignee == null) and (leadApplicant?.getId() == assignableUser.getUser()))}"
-                        th:text="${assignableUser?.userName}"
-                        selected="selected"
-                        disabled="disabled"/>
-            </th:block>
-            <th:block th:each="pendingAssignableUser : ${pendingAssignableUsers}">
-                <option th:text="${pendingAssignableUser.name + ' (pending)'}"  disabled="disabled"/>
-            </th:block>
-        </select>
-        <button type="submit">Reassign</button>
-    </div>
-    <th:block th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} or ${hideAssignedTo}"
-              th:include="question-type/form-elements :: current-assignee" />
 
 </th:block>
 
 <!-- ========================= Assigned to =========================== -->
 <th:block th:fragment="assigned-to">
-  <th:block th:if="${questionAssignee?.assignee != null} ">
-    <span class="action-required" th:if="${questionAssignee?.assigneeUserId == currentUser.getId()}">
-      <strong th:if="${questionAssignee?.assignedByUserId == leadApplicant?.getId()}">Assigned to you</strong>
-      <strong th:unless="${questionAssignee?.assignedByUserId == leadApplicant?.getId()}">Reassigned to you</strong>
-    </span>
-    <span class="secondary-notification" th:unless="${questionAssignee?.assigneeUserId == currentUser.getId()}">
-      Assigned to <span th:text="${name}" th:with="name=${questionAssignee?.getAssigneeName()}"></span>
-    </span>
+  <th:block th:if="${questionAssignee?.assignee} ">
+
+    <th:block th:if="${(leadApplicant?.id == currentUser.id)}">
+        <span class="action-required" th:if="${questionAssignee?.assigneeUserId == currentUser.id}">
+            <th:block th:if="${questionAssignee?.assignedByUserId == leadApplicant?.id}"
+                      th:text="${fullButtonText == TRUE} ? 'Assign this question to someone else' : 'you'">ASSIGN BUTTON TEXT</th:block>
+            <th:block th:unless="${questionAssignee?.assignedByUserId == leadApplicant?.id}"
+                      th:text="${fullButtonText == TRUE} ? 'Assign this question to someone else' : 'you'">REASSIGN BUTTON TEXT</th:block>
+        </span>
+    </th:block>
+
+    <th:block th:unless="${(leadApplicant?.id == currentUser.id)}">
+        <span class="action-required" th:if="${questionAssignee?.assigneeUserId == currentUser.id}">
+            <th:block th:if="${questionAssignee?.assignedByUserId == leadApplicant?.id}">Assigned to you</th:block>
+            <th:block th:unless="${questionAssignee?.assignedByUserId == leadApplicant?.id}">Reassigned to you</th:block>
+        </span>
+    </th:block>
+
+    <span class="secondary-notification secondary-notification-button" th:unless="${questionAssignee?.assigneeUserId == currentUser.id}">
+        <th:block th:unless="${leadApplicant?.id == currentUser.id}">Assigned to</th:block>
+        <span th:text="${fullButtonText == TRUE} ? 'Assign this question to someone else' : ${name}"
+              th:with="name=${questionAssignee?.getAssigneeName()}"></span>
+        </span>
   </th:block>
-  <th:block th:if="${questionAssignee?.assignee == null} ">
-    <span class="action-required" th:if="${(leadApplicant?.getId() == currentUser.getId())}">
-      <strong>Assigned to you</strong>
+
+  <th:block th:if="${questionAssignee?.assignee == null}">
+    <span class="action-required" th:if="${leadApplicant?.id == currentUser.id}">
+        <th:block th:text="${fullButtonText == TRUE} ? 'Assign this question to someone else' : 'you'"
+                  th:if="${question.isAssignEnabled()}">ASSIGN BUTTON TEXT</th:block>
+        <th:block th:unless="${question.isAssignEnabled()}">Assigned to you</th:block>
     </span>
-    <span class="secondary-notification" th:unless="${(leadApplicant?.getId() == currentUser.getId())}">
+    <span class="secondary-notification" th:unless="${leadApplicant?.id == currentUser.id}">
       Assigned to <span th:text="${name}" th:with="name=${leadApplicant?.getName()}"></span>
     </span>
   </th:block>
@@ -443,8 +489,10 @@
 
 <!-- ===========================Form: readonly file download link =========================== -->
 <th:block th:fragment="readonly-file-download (filename, filesizeKbytes, fileDescription, downloadURL)" class="form-group download extra-margin">
-    <h3 class="heading-small no-margin" th:text="${fileDescription}">View the file:</h3>
-    <a href="#" th:href="${downloadURL}" th:text="${filename + ' (' + filesizeKbytes + ' KB)'}">10294856feedback.pdf (161.96 KB)</a>
+    <div class="form-group download">
+        <h3 class="heading-small no-margin" th:text="${fileDescription}">View the file:</h3>
+        <a href="#" th:href="${downloadURL}" th:text="${filename + ' (' + filesizeKbytes + ' KB)'}">10294856feedback.pdf (161.96 KB)</a>
+    </div>
 </th:block>
 
 </html>

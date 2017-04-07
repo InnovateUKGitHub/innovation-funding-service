@@ -9,8 +9,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 
 public class FinanceCheckSummaryResourceBuilder extends BaseBuilder<FinanceCheckSummaryResource, FinanceCheckSummaryResourceBuilder> {
 
@@ -80,8 +80,8 @@ public class FinanceCheckSummaryResourceBuilder extends BaseBuilder<FinanceCheck
     }
 
 
-    public FinanceCheckSummaryResourceBuilder withFinanceChecksAllApproved(Boolean... financeChecksAllApprovedLst) {
-        return withArray((financeChecksAllApproved, financeCheckResource) -> setField("financeChecksAllApproved", financeChecksAllApproved, financeCheckResource), financeChecksAllApprovedLst);
+    public FinanceCheckSummaryResourceBuilder withBankDetailslApproved(Boolean... bankDetailslApprovedLst) {
+        return withArray((bankDetailslApproved, financeCheckResource) -> setField("bankDetailsApproved", bankDetailslApproved, financeCheckResource), bankDetailslApprovedLst);
     }
 
 

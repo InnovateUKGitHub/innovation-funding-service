@@ -27,10 +27,10 @@ Comp Admin starts a new Competition
     # Then continue with the applying to this Competition, in order to see the new Fields applied
     Given the user navigates to the page    ${CA_UpcomingComp}
     When the user clicks the button/link    jQuery=.button:contains("Create competition")
-    Then the user fills in the CS Initial details    ${compWithoutGrowth}    ${day}    ${month}    ${year}
+    Then the user fills in the CS Initial details    ${compWithoutGrowth}  ${tomorrowday}  ${month}  ${nextyear}
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility
-    And the user fills in the CS Milestones    ${todayday}    ${day}    ${month}    ${nextyear}
+    And the user fills in the CS Milestones  ${tomorrowday}  ${dayAfterTomorrow}  ${twoDaysAfterTomorrow}  ${month}  ${nextyear}
 
 Comp Admin fills in the Milestone Dates and can see them formatted afterwards
     [Documentation]    INFUND-7820
@@ -66,7 +66,7 @@ Competition is Open to Applications
     The competitions date changes so it is now Open    ${compWithoutGrowth}
 
 Create new Application for this Competition
-    [Tags]    HappyPath
+    [Tags]    HappyPath  MySQL
     Lead Applicant applies to the new created competition    ${compWithoutGrowth}
 
 Applicant visits his Finances
@@ -86,13 +86,13 @@ Applicant fills in the Application Details
     Given the user should see the element    jQuery=h1:contains("Application overview")
     When the user clicks the button/link    link=Application details
     Then the user enters text to a text field    css=#application_details-title    ${applicationTitle}
-    And the user selects technical feasibility and no to resubmission and an innovation area
-    And the user enters text to a text field    css=#application_details-startdate_day    ${day}
+    And the user selects feasibility studies and no to resubmission and an innovation area
+    And the user enters text to a text field    css=#application_details-startdate_day    ${tomorrowday}
     And the user enters text to a text field    css=#application_details-startdate_month    ${month}
     And the user enters text to a text field    css=#application_details-startdate_year    ${nextyear}
     And the user enters text to a text field    css=#application_details-duration    24
     When The user clicks the button/link    jQuery=button[name="mark_as_complete"]
-    Then the user clicks the button/link    link=Application Overview
+    Then the user clicks the button/link    link=Application overview
     And the user should see the element     jQuery=li:contains("Application details") > .task-status-complete
 
 Turnover and Staff count fields
@@ -110,10 +110,10 @@ Once the project growth table is selected
     [Setup]    log in as a different user    &{Comp_admin1_credentials}
     Given the user navigates to the page    ${CA_UpcomingComp}
     When the user clicks the button/link    jQuery=.button:contains("Create competition")
-    Then the user fills in the CS Initial details    Competition with growth table    ${day}    ${month}    ${year}
+    Then the user fills in the CS Initial details    Competition with growth table  ${tomorrowday}  ${month}  ${nextyear}
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility
-    And the user fills in the CS Milestones    ${todayday}    ${day}    ${month}    ${nextyear}
+    And the user fills in the CS Milestones  ${tomorrowday}  ${dayAfterTomorrow}  ${twoDaysAfterTomorrow}  ${month}  ${nextyear}
     When the user decides about the growth table    yes    Yes
     Then the user marks the Application as done
     And the user fills in the CS Assessors
@@ -128,7 +128,7 @@ Once the project growth table is selected
 
 As next step the Applicant cannot see the turnover field
     [Documentation]    INFUND-6393, INFUND-6395
-    [Tags]
+    [Tags]  MySQL
     Given Lead Applicant applies to the new created competition    ${compWITHGrowth}
     When the user clicks the button/link    link=Your finances
     And the user clicks the button/link    link=Your organisation
@@ -158,10 +158,10 @@ Organisation client side validation when no
     Given the user selects medium organisation size
     When the user enters text to a text field    jQuery=label:contains("Turnover") + input    -33
     And the user moves focus to the element    jQuery=label:contains("Full time employees") + input
-    Then the user should see the element    jQuery=span:contains("Turnover") ~ .error-message:contains("This field should be 0 or higher.")
+    Then the user should see a field and summary error      This field should be 0 or higher.
     And the user enters text to a text field    jQuery=label:contains("Full time employees") + input    ${empty}
     When the user moves focus to the element    jQuery=button:contains("Mark as complete")
-    And the user should see the element    jQuery=span:contains("Full time employees") ~ .error-message:contains("This field cannot be left blank.")
+    Then the user should see a field and summary error      This field cannot be left blank.
     When the user enters text to a text field    jQuery=label:contains("Turnover") + input    150
     And the user enters text to a text field    jQuery=label:contains("employees") + input    0
     And the user moves focus to the element    jQuery=button:contains("Mark as complete")
@@ -216,30 +216,26 @@ Organisation client side validation when yes
     [Documentation]    INFUND-6395
     [Tags]
     When the user enters text to a text field    css=input[name$="month"]    42
-    And the user enters text to a text field    css=input[name$="year"]    ${nextyear}
-    Then the user should see the element    jQuery=.error-message:contains("Please enter a valid date.")
+    Then the user should see a field and summary error      Please enter a valid date.
     When the user enters text to a text field    css=input[name$="month"]    12
-    Then the user should see the element    jQuery=.error-message:contains("Please enter a past date.")
-    And the user should not see the element    jQuery=.error-message:contains("Please enter a valid date.")
+    And the user enters text to a text field    css=input[name$="year"]    ${nextyear}
+    Then the user should see a field and summary error      Please enter a past date.
     When the user enters text to a text field    css=input[name$="year"]    2016
     And the user enters value to field    Annual turnover    ${EMPTY}
-    And the user moves focus to the element    jQuery=button:contains("Mark as complete")
-    Then the user should not see the element    jQuery=.error-message:contains("Please enter a past date.")
-    And the user should see an error message in the field    Annual turnover    This field cannot be left blank.
+    Then the user should see a field and summary error      This field cannot be left blank.
     When the user enters value to field    Annual turnover    8.5
     And the user moves focus to the element    jQuery=td:contains("Annual profit") + td input
-    Then the user should see an error message in the field    Annual turnover    This field can only accept whole numbers.
-    # TODO such error messages should also trigger Error summary INFUND-8056
+    Then the user should see a field and summary error      This field can only accept whole numbers.
     And the user enters value to field    Annual profit    -5
     When the user enters value to field    Annual export    ${empty}
-    Then the user should see an error message in the field    Annual export    This field cannot be left blank.
+    Then the user should see a field and summary error      This field cannot be left blank.
     When the user enters value to field    Research and development spend    6666666666666666666666666666666666666666666
     And the user moves focus to the element    jQuery=label:contains("employees") + input
     Then the user should see an error message in the field    Research and development spend    This field should be 2147483647 or lower.
     # TODO This error message will be different after INFUND-8080
     And the user enters value to field    Research and development spend    2147483647
     When the user enters text to a text field    jQuery=label:contains("employees") + input    22.4
-    Then the user should see an error message in the field    employees    This field can only accept whole numbers.
+    Then the user should see a field and summary error      This field can only accept whole numbers.
     And the user should not see the element    jQuery=span:contains("Research and development spend") + *:contains("This field should be 2147483647 or lower.")
     When the user enters text to a text field    jQuery=label:contains("employees") + input    1
     Then the user should not see the element    jQuery=span:contains("employees") + .error-message
@@ -274,6 +270,20 @@ Applicant can view and edit project growth table
     Then the user should view the project growth table
     And the user can edit the project growth table
     And the user populates the project growth table
+    and the user clicks the button/link     jQuery=button:contains("Mark as complete")
+
+Newly created collaborator can view and edit project Growth table
+    [Documentation]  INFUND-8426
+    [Tags]
+    [Setup]  Invite a non-existing collaborator in Application with Growth table
+    When the user navigates to the growth table finances
+    and the user clicks the button/link     link=Your organisation
+    and the user selects medium organisation size
+    then the user enters text to a text field    css=input[name$="month"]    12
+    and the user enters text to a text field    css=input[name$="year"]    2016
+    and the user populates the project growth table
+    and the user clicks the button/link      jQuery=button:contains("Mark as complete")
+    and the user should not see an error in the page
 
 Invite Collaborator in Application with Growth table
     [Documentation]  INFUND-8518
@@ -281,7 +291,7 @@ Invite Collaborator in Application with Growth table
     # TODO INFUND-8561
     [Setup]  the user navigates to the page             ${dashboard_url}
     Given the lead applicant invites an existing user   ${compWITHGrowth}  ${collaborator1_credentials["email"]}
-    When the user reads his email and clicks the link   ${collaborator1_credentials["email"]}  Invitation to collaborate in ${compWITHGrowth}  participate in their application
+    When the user reads his email and clicks the link   ${collaborator1_credentials["email"]}  Invitation to collaborate in ${compWITHGrowth}  You will be joining as part of the organisation    3
     Then the user should see the element                jQuery=h1:contains("We have found an account with the invited email address")
     And the user clicks the button/link                 link=Sign into the Innovation Funding Service.
     When guest user log-in                              &{collaborator1_credentials}
@@ -311,10 +321,12 @@ Non-lead can can edit and remark Organisation as Complete
 
 *** Keywords ***
 Custom Suite Setup
-    ${todayday} =    get today day
-    Set suite variable    ${todayday}
-    ${day} =    get tomorrow day
-    Set suite variable    ${day}
+    ${tomorrowday} =    get tomorrow day
+    Set suite variable    ${tomorrowday}
+    ${dayAfterTomorrow} =  get the day after tomorrow
+    Set suite variable    ${dayAfterTomorrow}
+    ${twoDaysAfterTomorrow} =  get two days after tomorrow
+    Set suite variable    ${twoDaysAfterTomorrow}
     ${month} =    get tomorrow month
     set suite variable    ${month}
     ${year} =    get tomorrow year
@@ -323,12 +335,12 @@ Custom Suite Setup
     Set suite variable    ${nextyear}
     ${tomorrowfull} =    get tomorrow full
     Set suite variable    ${tomorrowfull}
-    ${tomorrow_nextyear} =    get tomorrow full next year
-    Set suite variable    ${tomorrow_nextyear}
+    ${dateDayAfterNextYear} =  get the day after tomorrow full next year
+    Set suite variable    ${dateDayAfterNextYear}
     Delete the emails from both test mailboxes
 
 the user should see the dates in full format
-    the user should see the element    jQuery=td:contains("Allocate assessors") ~ td:contains("${tomorrow_nextyear}")
+    the user should see the element    jQuery=td:contains("Allocate assessors") ~ td:contains("${dateDayAfterNextYear}")
 
 the the user should see that the funding depends on the research area
     the user should see the element    jQuery=h3:contains("Your funding") + p:contains("You must select a research category in application details ")
@@ -336,16 +348,16 @@ the the user should see that the funding depends on the research area
 the user should see his finances empty
     the user should see the element    jQuery=thead:contains("Total project costs") ~ *:contains("£0")
 
-the user selects technical feasibility and no to resubmission and an innovation area
-    # Often those labels need double click. Thus i made a separate keyword to looks more tidy
-    the user clicks the button/link    jQuery=button:contains(Change your innovation area)
-    the user clicks the button/link    jQuery=label[for="innovationAreaChoice-5"]
-    the user clicks the button/link    jQuery=label[for="innovationAreaChoice-5"]
+the user selects feasibility studies and no to resubmission and an innovation area
+    the user clicks the button/link    jQuery=legend:contains("Research category")
+    the user clicks the button/link    jQuery=button:contains("Choose your research")
+    the user clicks the button twice   jQuery=label[for^="researchCategoryChoice"]:contains("Feasibility studies")
     the user clicks the button/link    jQuery=button:contains(Save)
-    the user clicks the button/link    jQuery=label[for="financePosition-cat-33"]
-    the user clicks the button/link    jQuery=label[for="financePosition-cat-33"]
-    the user clicks the button/link    jQuery=label[for="application.resubmission-no"]
-    the user clicks the button/link    jQuery=label[for="application.resubmission-no"]
+    the user clicks the button/link    jQuery=button:contains("Choose your innovation area")
+    the user clicks the button twice   jQuery=label[for="innovationAreaChoice-5"]
+    the user clicks the button/link    jQuery=button:contains(Save)
+    the user clicks the button twice   jQuery=label[for="application.resubmission-no"]
+
 
 the user decides about the growth table
     [Arguments]    ${edit}    ${read}
@@ -371,7 +383,6 @@ The competitions date changes so it is now Open
 
 Lead Applicant applies to the new created competition
     [Arguments]    ${competition}
-    Connect to Database    @{database}
     log in as a different user    &{lead_applicant_credentials}
     ${competitionId} =    get comp id from comp title    ${competition}
     the user navigates to the page    ${server}/competition/${competitionId}/info/eligibility
@@ -409,7 +420,7 @@ the user should view the project growth table
     the user should see the element    jQuery=td input[value="15000"]
 
 the user can edit the project growth table
-    the user clicks the button/link    css=button.extra-margin.buttonlink
+    the user clicks the button/link    jQuery=button.buttonlink:contains('Edit your organisation')
     then the user selects the radio button    financePosition-organisationSize    ${SMALL_ORGANISATION_SIZE}
     the user enters text to a text field    jQuery=tr:nth-child(1) .form-control    4000
     the user enters text to a text field    jQuery=td input[value="65000"]    5000
@@ -436,7 +447,7 @@ the user can edit resubmit and read only of the organisation
 the lead applicant invites an existing user
     [Arguments]  ${comp_title}  ${EMAIL_INVITED}
     the user clicks the button/link    link=${comp_title}
-    the user clicks the button/link    link=view and add participants to your application
+    the user clicks the button/link    link=view team members and add collaborators
     the user clicks the button/link    link=Invite new contributors
     the user clicks the button/link    jQuery=button:contains('Add additional partner organisation')
     Input Text                         name=organisations[1].organisationName    innovate
@@ -449,3 +460,53 @@ the user navigates to the growth table finances
     the user navigates to the page  ${DASHBOARD_URL}
     the user clicks the button/link    jQuery=a:contains('Untitled application'):last
     the user clicks the button/link  link=Your finances
+
+Invite a non-existing collaborator in Application with Growth table
+    the user clicks the button/link      jQuery=a:contains("Application overview")
+    the user clicks the button/link       jQuery=a:contains("view team members and add collaborators")
+    the user clicks the button/link       jQuery=a:contains("Add partner organisation")
+    the user should see the element       jQuery=h1:contains(Add organisation)
+    the user enters text to a text field      id=organisationName    innovate
+    the user enters text to a text field       id=applicants0.name    liam
+    the user enters text to a text field       id=applicants0.email    liam@innovate.com
+    the user clicks the button/link        jQuery=button:contains("Add organisation and invite applicants")
+    the user should not see an error in the page
+    the user logs out if they are logged in
+    newly invited collaborator can create account and sign in
+
+Newly invited collaborator can create account and sign in
+    the user reads his email and clicks the link     liam@innovate.com  Invitation to collaborate in ${compWITHGrowth}  You will be joining as part of the organisation    3
+    the user clicks the button/link      jQuery=a:contains("Yes, accept invitation")
+    the user should see the element      jquery=h1:contains("Choose your organisation type")
+    the user completes the new account creation
+
+the user completes the new account creation
+    the user selects the radio button    organisationType  radio-1
+     #TODO change the radio button option to radio-4 once INFUND-9078 is fixed
+    the user clicks the button/link     jQuery=button:contains("Continue")
+    the user should see the element     jQuery=span:contains("Create your account")
+    the user enters text to a text field     id=organisationSearchName   innovate
+    the user clicks the button/link        jQuery=button:contains("Search")
+    wait for autosave
+    the user clicks the button/link        jQuery=a:contains("INNOVATE LTD")
+    the user selects the checkbox     address-same
+    wait for autosave
+    the user clicks the button/link     jQuery=button:contains("Save organisation and continue")
+    then the user should not see an error in the page
+    the user clicks the button/link     jQuery=a:contains("Confirm")
+    the user should be redirected to the correct page    ${SERVER}/registration/register
+    the user enters text to a text field     jQuery=input[id="firstName"]   liam
+    the user enters text to a text field     JQuery=input[id="lastName"]   smithson
+    the user enters text to a text field     jQuery=input[id="phoneNumber"]   077712567890
+    the user enters text to a text field     jQuery=input[id="password"]  ${correct_password}
+    the user enters text to a text field    jQuery=input[id="retypedPassword"]  ${correct_password}
+    the user selects the checkbox      termsAndConditions
+    the user clicks the button/link     jQuery=button:contains("Create account")
+    the user should see the text in the page    Please verify your email address
+    the user reads his email and clicks the link      liam@innovate.com   Please verify your email address    Once verified you can sign into your account.
+    the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
+    the user clicks the button/link     link=Sign in
+    then the user should see the text in the page      Sign in
+    the user enters text to a text field      jQuery=input[id="username"]   liam@innovate.com
+    the user enters text to a text field      jQuery=input[id="password"]  ${correct_password}
+    the user clicks the button/link         jQuery=button:contains("Sign in")

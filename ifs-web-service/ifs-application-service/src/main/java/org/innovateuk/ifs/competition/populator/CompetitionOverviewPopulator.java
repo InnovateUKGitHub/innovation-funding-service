@@ -8,7 +8,6 @@ import org.innovateuk.ifs.competition.viewmodel.publiccontent.AbstractPublicSect
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -41,12 +40,7 @@ public class CompetitionOverviewPopulator {
         viewModel.setNonIfsUrl(publicContentItemResource.getNonIfsUrl());
         viewModel.setNonIfs(publicContentItemResource.getNonIfs());
         viewModel.setUserIsLoggedIn(userIsLoggedIn);
-
-        if(publicContentItemResource.getNonIfs()) {
-            viewModel.setShowApplyButton(nonIfsCompetitionIsOpen(viewModel.getCompetitionOpenDate(), viewModel.getRegistrationCloseDate()));
-        } else {
-            viewModel.setShowApplyButton(publicContentItemResource.getCompetitionIsOpen());
-        }
+        viewModel.setCompetitionSetupComplete(publicContentItemResource.getSetupComplete());
 
         if(null != publicContentItemResource.getPublicContentResource()) {
             viewModel.setShortDescription(publicContentItemResource.getPublicContentResource().getShortDescription());
@@ -70,10 +64,6 @@ public class CompetitionOverviewPopulator {
         });
 
         return sectionViewModels;
-    }
-
-    private Boolean nonIfsCompetitionIsOpen(LocalDateTime competitionOpenDate, LocalDateTime registrationCloseDate) {
-        return LocalDateTime.now().isAfter(competitionOpenDate) && LocalDateTime.now().isBefore(registrationCloseDate);
     }
 
     private AbstractPublicContentSectionViewModelPopulator getPopulator(PublicContentSectionType sectionType) {

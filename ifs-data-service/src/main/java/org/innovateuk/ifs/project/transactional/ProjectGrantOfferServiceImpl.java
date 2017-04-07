@@ -24,10 +24,11 @@ import org.innovateuk.ifs.file.service.FileTemplateRenderer;
 import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.transactional.FinanceRowService;
+import org.innovateuk.ifs.util.PrioritySorting;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
-import org.innovateuk.ifs.project.finance.transactional.FinanceCheckService;
-import org.innovateuk.ifs.project.finance.transactional.ProjectFinanceService;
+import org.innovateuk.ifs.project.financecheck.service.FinanceCheckService;
+import org.innovateuk.ifs.project.financecheck.transactional.SpendProfileService;
 import org.innovateuk.ifs.project.gol.YearlyGOLProfileTable;
 import org.innovateuk.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
 import org.innovateuk.ifs.project.mapper.ProjectMapper;
@@ -60,15 +61,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Supplier;
 
-import static java.util.stream.Collectors.toCollection;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
-
 import static java.io.File.separator;
+import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.*;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GRANT_OFFER_LETTER_CANNOT_BE_REMOVED;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_UNABLE_TO_CONVERT_TO_PDF;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_ALREADY_COMPLETE;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapValue;
@@ -99,7 +96,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     private FileService fileService;
 
     @Autowired
-    private ProjectFinanceService projectFinanceService;
+    private SpendProfileService spendProfileService;
 
     @Autowired
     private FileEntryMapper fileEntryMapper;
@@ -234,7 +231,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
 
     private boolean isProjectReadyForGrantOffer(Long projectId) {
         Optional<Project> project = getProject(projectId).getOptionalSuccessObject();
-        ApprovalType spendProfileApproval = projectFinanceService.getSpendProfileStatusByProjectId(projectId).getSuccessObject();
+        ApprovalType spendProfileApproval = spendProfileService.getSpendProfileStatusByProjectId(projectId).getSuccessObject();
 
         return project.map(project1 -> ApprovalType.APPROVED.equals(spendProfileApproval) && ApprovalType.APPROVED.equals(project1.getOtherDocumentsApproved()) && project1.getGrantOfferLetter() == null).orElse(false);
     }
@@ -251,15 +248,6 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         }
     }
 
-    private final List<String> organisationsListWithLeadOnTopAndPartnersAlphabeticallyOrdered(List<String> organisationNames, Organisation leadOrganisation) {
-        final List<String> organisations = organisationNames.stream()
-                .filter(po -> !po.equals(leadOrganisation.getName()))
-                .map(po -> StringEscapeUtils.escapeXml10(po))
-                .sorted().collect(toList());
-        organisations.add(0, StringEscapeUtils.escapeXml10(leadOrganisation.getName()));
-        return organisations;
-    }
-
     private Map<String, Object> getTemplateData(Project project) {
         ProcessRole leadProcessRole = project.getApplication().getLeadApplicantProcessRole();
         Organisation leadOrganisation = organisationRepository.findOne(leadProcessRole.getOrganisationId());
@@ -267,11 +255,10 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         final List<String> addresses = getAddresses(project);
         List<String> organisationNames = new LinkedList<>();
         YearlyGOLProfileTable yearlyGolProfileTable = getYearlyGOLProfileTableExcludingNonAcademicUnfundedNonLeadPartners(project, leadOrganisation, organisationNames);
-        final List<String> organisations = organisationsListWithLeadOnTopAndPartnersAlphabeticallyOrdered(organisationNames, leadOrganisation);
-        templateReplacements.put("SortedOrganisations", organisations);
+        templateReplacements.put("SortedOrganisations", sortedOrganisations(organisationNames, leadOrganisation.getName()));
         templateReplacements.put("LeadContact", project.getApplication().getLeadApplicant().getName());
         templateReplacements.put("LeadOrgName", leadOrganisation.getName());
-        templateReplacements.put("Address1", addresses.size() == 0 ? "" : addresses.get(0));
+        templateReplacements.put("Address1", addresses.isEmpty() ? "" : addresses.get(0));
         templateReplacements.put("Address2", addresses.size() < 2 ? "" : addresses.get(1));
         templateReplacements.put("Address3", addresses.size() < 3 ? "" : addresses.get(2));
         templateReplacements.put("TownCity", addresses.size() < 4 ? "" : addresses.get(3));
@@ -285,6 +272,10 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         templateReplacements.put("ApplicationNumber", project.getApplication().getId());
         templateReplacements.put("TableData", yearlyGolProfileTable);
         return templateReplacements;
+    }
+
+    private List<String> sortedOrganisations(List<String> orgs, String lead) {
+        return new PrioritySorting<>(orgs, lead, identity()).unwrap().stream().map(StringEscapeUtils::escapeXml10).collect(toList());
     }
 
     private List<String> getAddresses(Project project) {
@@ -522,8 +513,8 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         return organisations.stream()
                 .collect(toMap(Organisation::getName, organisation -> {
                     ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(project.getId(), organisation.getId());
-                    if (projectFinanceService.getSpendProfileTable(projectOrganisationCompositeId).isSuccess()) {
-                        return projectFinanceService.getSpendProfileTable(projectOrganisationCompositeId).getSuccessObject();
+                    if (spendProfileService.getSpendProfileTable(projectOrganisationCompositeId).isSuccess()) {
+                        return spendProfileService.getSpendProfileTable(projectOrganisationCompositeId).getSuccessObject();
                     }
                     return new SpendProfileTableResource();
                 }));

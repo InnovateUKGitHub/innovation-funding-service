@@ -16,6 +16,7 @@ import org.innovateuk.ifs.project.spendprofile.viewmodel.ProjectSpendProfileProj
 import org.innovateuk.ifs.project.spendprofile.viewmodel.ProjectSpendProfileViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,21 +24,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * This controller will handle all requests that are related to spend profile.
@@ -46,8 +44,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @RequestMapping("/" + ProjectSpendProfileController.BASE_DIR + "/{projectId}/partner-organisation/{organisationId}/spend-profile")
 public class ProjectSpendProfileController {
 
-    public static final String BASE_DIR = "project";
-    public static final String REVIEW_TEMPLATE_NAME = "spend-profile-review";
+    static final String BASE_DIR = "project";
+    private static final String REVIEW_TEMPLATE_NAME = "spend-profile-review";
     private static final String FORM_ATTR_NAME = "form";
 
     @Autowired
@@ -73,7 +71,7 @@ public class ProjectSpendProfileController {
     private FinanceUtil financeUtil;
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
-    @RequestMapping(method = GET)
+    @GetMapping
     public String viewSpendProfile(Model model,
                                    @PathVariable("projectId") final Long projectId,
                                    @PathVariable("organisationId") final Long organisationId,
@@ -86,7 +84,7 @@ public class ProjectSpendProfileController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
-    @RequestMapping(value = "/review", method = GET)
+    @GetMapping("/review")
     public String reviewSpendProfilePage(Model model,
                                          @PathVariable("projectId") final Long projectId,
                                          @PathVariable("organisationId") final Long organisationId,
@@ -98,7 +96,7 @@ public class ProjectSpendProfileController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
-    @RequestMapping(value = "/edit", method = GET)
+    @GetMapping("/edit")
     public String editSpendProfile(Model model,
                                    HttpServletRequest request,
                                    @ModelAttribute(FORM_ATTR_NAME) SpendProfileForm form,
@@ -127,7 +125,7 @@ public class ProjectSpendProfileController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
-    @RequestMapping(value = "/edit", method = POST)
+    @PostMapping("/edit")
     public String saveSpendProfile(Model model,
                                    @ModelAttribute(FORM_ATTR_NAME) SpendProfileForm form,
                                    @SuppressWarnings("unused") BindingResult bindingResult,
@@ -167,7 +165,7 @@ public class ProjectSpendProfileController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION') && hasPermission(#projectId, 'MARK_SPEND_PROFILE_INCOMPLETE')")
-    @RequestMapping(value = "/incomplete", method = POST)
+    @PostMapping("/incomplete")
     public String markAsActionRequiredSpendProfile(Model model,
                                                    @ModelAttribute(FORM_ATTR_NAME) SpendProfileForm form,
                                                    BindingResult bindingResult,
@@ -185,7 +183,7 @@ public class ProjectSpendProfileController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
-    @RequestMapping(value = "/complete", method = POST)
+    @PostMapping("/complete")
     public String markAsCompleteSpendProfile(Model model,
                                              @PathVariable("projectId") final Long projectId,
                                              @PathVariable("organisationId") final Long organisationId,
@@ -195,7 +193,7 @@ public class ProjectSpendProfileController {
 
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
-    @RequestMapping(value = "/confirm", method = GET)
+    @GetMapping("/confirm")
     public String viewConfirmSpendProfilePage(@PathVariable("projectId") Long projectId,
                                               @PathVariable("organisationId") Long organisationId,
                                               Model model,
@@ -206,7 +204,7 @@ public class ProjectSpendProfileController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
-    @RequestMapping(value = "/incomplete", method = GET)
+    @GetMapping("/incomplete")
     public String viewConfirmEditSpendProfilePage(@PathVariable("projectId") Long projectId,
                                               @PathVariable("organisationId") Long organisationId,
                                               Model model,
@@ -250,12 +248,9 @@ public class ProjectSpendProfileController {
     }
 
     private Map<String, Boolean> getPartnersSpendProfileProgress(Long projectId, List<OrganisationResource> partnerOrganisations) {
-        HashMap<String, Boolean> partnerProgressMap = new HashMap<>();
-        partnerOrganisations.stream().forEach(organisation -> {
-            Optional<SpendProfileResource> spendProfile = projectFinanceService.getSpendProfile(projectId, organisation.getId());
-            partnerProgressMap.put(organisation.getName(), spendProfile.get().isMarkedAsComplete());
-        });
-        return partnerProgressMap;
+        return partnerOrganisations.stream().collect(Collectors.toMap(OrganisationResource::getName,
+                o -> projectFinanceService.getSpendProfile(projectId, o.getId()).map(SpendProfileResource::isMarkedAsComplete).orElse(false),
+                (v1,v2)->v1, LinkedHashMap::new));
     }
 
     private String markSpendProfileComplete(Model model,
@@ -315,16 +310,20 @@ public class ProjectSpendProfileController {
                                                                                                    final UserResource loggedInUser) {
         ProjectResource projectResource = projectService.getById(projectId);
 
-        List<OrganisationResource> partnerOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
+        final OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
 
-        Map<String, Boolean> partnersSpendProfileProgress = getPartnersSpendProfileProgress(projectId, partnerOrganisations);
+        List<OrganisationResource> organisations = new PrioritySorting<>(projectService.getPartnerOrganisationsForProject(projectId),
+                leadOrganisation, OrganisationResource::getName).unwrap();
 
-        Map<String, Boolean> editablePartners = determineEditablePartners(projectId, partnerOrganisations, loggedInUser);
+        Map<String, Boolean> partnersSpendProfileProgress = getPartnersSpendProfileProgress(projectId, organisations);
+
+        Map<String, Boolean> editablePartners = determineEditablePartners(projectId, organisations, loggedInUser);
 
         return new ProjectSpendProfileProjectSummaryViewModel(projectId,
                 projectResource.getApplication(), projectResource.getName(),
                 partnersSpendProfileProgress,
-                partnerOrganisations,
+                organisations,
+                leadOrganisation,
                 projectResource.getSpendProfileSubmittedDate() != null,
                 editablePartners,
                 isApproved(projectId));

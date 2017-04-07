@@ -6,6 +6,7 @@ Suite Setup       Run Keywords    Guest user log-in    &{Comp_admin1_credentials
 ...               AND    User creates a new competition for Application tests
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
+Resource          CompAdmin_Commons.robot
 
 *** Test Cases ***
 Business opportunity Server-side validations setup questions
@@ -152,13 +153,13 @@ The user should see the correct inputs in assesment questions
     Should Be Equal    ${input_value}    This is a justification
 
 User creates a new competition for Application tests
-    Given the user clicks the button/link    id=section-3
+    Given the user navigates to the page    ${CA_UpcomingComp}
     When the user clicks the button/link    jQuery=.button:contains("Create competition")
-    And the user clicks the button/link    link=Initial details
+    And the user clicks the button/link     link=Initial details
     And the user enters text to a text field    id=title    Test competition
     And the user selects the option from the drop-down menu    Programme    id=competitionTypeId
     And the user selects the option from the drop-down menu    Health and life sciences    id=innovationSectorCategoryId
-    And the user selects the option from the drop-down menu    Advanced Therapies    id=innovationAreaCategoryId-0
+    And the user selects the option from the drop-down menu    Advanced therapies    id=innovationAreaCategoryId-0
     And the user enters text to a text field    id=openingDateDay    01
     And the user enters text to a text field    Id=openingDateMonth    12
     And the user enters text to a text field    id=openingDateYear    2017

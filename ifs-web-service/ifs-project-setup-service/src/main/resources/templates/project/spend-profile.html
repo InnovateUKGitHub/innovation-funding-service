@@ -10,7 +10,7 @@
 <th:block th:insert="fragments/modals :: modal-confirm-allow-spend-profile-edits (orgName=${model.organisationName})"/>
 <th:block th:insert="fragments/modals :: modal-overlay" />
 
-<main id="content" class="no-grid">
+<main tabindex="-1" id="content" class="no-grid">
     <div class="grid-container">
         <th:block th:insert="fragments/layout :: main-content-start" />
         <th:block th:unless="${model.projectManager}" th:insert="fragments/layout :: header-sub"
@@ -19,7 +19,7 @@
              th:with="linkTitle='Spend profile overview',linkClass='link-back',linkUrl=@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile(projectId=${model.projectId},organisationId=${model.organisationId})}" />
 
         <div class="page-title">
-            <th:block th:insert="fragments/elements :: project-title (projectId=${model.applicationId}, projectName=${model.projectName})" />
+            <th:block th:insert="fragments/elements :: project-title (projectName=${model.projectName})" />
             <h1 class="heading-xlarge">Spend profile</h1>
         </div>
 
@@ -46,7 +46,7 @@
         <th:block
             th:if="${model.markedAsComplete and !model.submitted and !model.leadPartner and form==null}">
             <div class="success-alert extra-margin-bottom">
-                <p>Your spend profile has been sent to the lead partner. It will be reviewed and sent to us.
+                <p>Your spend profile has been sent to the lead partner. They will review and submit to Innovate UK.
                 </p>
             </div>
         </th:block>

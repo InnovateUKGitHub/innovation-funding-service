@@ -7,14 +7,23 @@
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main id="content">
+<main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
     <div th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=${url}" th:remove="tag"></div>
 
     <div class="page-title">
-        <th:block th:insert="fragments/elements :: project-title (projectId=${model.applicationId}, projectName=${model.projectName})" />
+        <th:block th:insert="fragments/elements :: project-title (projectName=${model.projectName})" />
         <h1 class="heading-xlarge">Project setup status</h1>
     </div>
+
+    <dl class="font-xsmall extra-margin-bottom">
+        <dt>Project number:</dt>
+        <dd th:text="${model.applicationId}" />
+        <dt>Competition:</dt>
+        <dd th:text="${model.competitionName}" />
+        <dt>Funding body:</dt>
+        <dd>Innovate UK</dd>
+    </dl>
 
     <th:block th:if="${model.projectComplete}">
         <div class="success-alert extra-margin-bottom">
@@ -46,7 +55,7 @@
                         <a th:href="${'/application/' + model.applicationId + '/summary'}" class="buttonlink">View
                             application and feedback</a>
                         <a th:href="${'/competition/' + model.competitionId + '/info/terms-and-conditions'}"
-                           class="buttonlink">View terms and conditions of grant offer</a>
+                           class="buttonlink">View the grant terms and conditions</a>
                     </p>
                 </div>
                 <th:block th:insert="project/fragments :: project-setup-status-indicator('complete')"/>

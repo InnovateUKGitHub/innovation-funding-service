@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.projectdetails.controller;
 
 import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.util.PrioritySorting;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -11,20 +12,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
@@ -46,7 +42,7 @@ public class ProjectDetailsController {
     @Autowired
     private OrganisationService organisationService;
 
-    @RequestMapping(value = "/{projectId}/details", method = RequestMethod.GET)
+    @GetMapping("/{projectId}/details")
     public String viewProjectDetails(@PathVariable("competitionId") final Long competitionId,
                                      @PathVariable("projectId") final Long projectId, Model model,
                                      @ModelAttribute("loggedInUser") UserResource loggedInUser) {
@@ -55,7 +51,7 @@ public class ProjectDetailsController {
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());
         OrganisationResource leadOrganisationResource = projectService.getLeadOrganisation(projectId);
 
-        List<OrganisationResource> partnerOrganisations = getPartnerOrganisations(projectUsers);
+        List<OrganisationResource> partnerOrganisations = sortedOrganisations(getPartnerOrganisations(projectUsers), leadOrganisationResource);
 
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource,
                 competitionId,
@@ -67,18 +63,16 @@ public class ProjectDetailsController {
     }
 
     private List<OrganisationResource> getPartnerOrganisations(final List<ProjectUserResource> projectRoles) {
-
-        final Comparator<OrganisationResource> compareById =
-                Comparator.comparingLong(OrganisationResource::getId);
-
-        final Supplier<SortedSet<OrganisationResource>> supplier = () -> new TreeSet<>(compareById);
-
-        SortedSet<OrganisationResource> organisationSet = projectRoles.stream()
+        return  projectRoles.stream()
                 .filter(uar -> uar.getRoleName().equals(PARTNER.getName()))
                 .map(uar -> organisationService.getOrganisationById(uar.getOrganisation()))
-                .collect(Collectors.toCollection(supplier));
+                .collect(Collectors.toList());
+    }
 
-        return new ArrayList<>(organisationSet);
+    private List<OrganisationResource> sortedOrganisations(List<OrganisationResource> organisations,
+                                                           OrganisationResource lead)
+    {
+        return new PrioritySorting<>(organisations, lead, OrganisationResource::getName).unwrap();
     }
 
     private Optional<ProjectUserResource> getProjectManager(List<ProjectUserResource> projectUsers) {

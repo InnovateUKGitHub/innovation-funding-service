@@ -1,8 +1,8 @@
 *** Settings ***
 Documentation     INFUND-39: As an applicant and I am on the application overview, I can select a section of the application, so I can see the status of each subsection in this section
 ...
-...               INFUND-1072: As an Applicant I want to see the Application Overview page redesigned so that they meet the agreed style
-Suite Setup       Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    participate in their project
+...               INFUND-1072: As an Applicant I want to see the Application overview page redesigned so that they meet the agreed style
+Suite Setup       Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Email    Applicant
 Resource          ../../../resources/defaultResources.robot
@@ -31,8 +31,8 @@ Re-assign is possible from the overview page
 
 *** Keywords ***
 the Applicant edits the Project summary
-    Clear Element Text    css=#form-input-11 .editor
-    The user enters text to a text field    css=#form-input-11 .editor    Check last updated date@#$
+    Clear Element Text    css=#form-input-1039 .editor
+    The user enters text to a text field    css=#form-input-1039 .editor    Check last updated date@#$
     Focus    css=.app-submit-btn
     wait for autosave
 
@@ -50,7 +50,7 @@ the applicant assigns the Project Summary question from the overview page
 
 the applicant assigns the Project Summary
     [Arguments]    ${assignee_name}
-    the user clicks the button/link    css=#form-input-11 .assign-button button
+    the user clicks the button/link    css=#form-input-1039 .assign-button button
     the user clicks the button/link    jQuery=button:contains("${assignee_name}")
 
 a blue flag should be visible for the Project Summary in overview page
@@ -61,4 +61,4 @@ the blue flag should not be visible
     the user should not see the element    jQuery=li:contains("Project summary") > .action-required
 
 the assign button should say Assigned to you
-    Element Should Contain    jQuery=li:contains("Project summary") > .assign-container button strong    you
+    Element Should Contain    jQuery=li:contains("Project summary") > .assign-container.action-required button    you

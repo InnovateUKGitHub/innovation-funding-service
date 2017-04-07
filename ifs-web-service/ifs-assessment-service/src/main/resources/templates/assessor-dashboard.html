@@ -8,7 +8,7 @@
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main id="content">
+        <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
 
             <div class="page-title">
@@ -77,7 +77,32 @@
                                     <h3 class="heading-small"><a
                                         th:href="@{/assessor/dashboard/competition/{competitionId}(competitionId=${activeCompetition.competitionId})}"
                                         th:text="${activeCompetition.displayLabel}"/></h3>
-                                    <div class="action-required">
+                                    <div th:if="${activeCompetition.progressTotal == 0 && activeCompetition.pendingAssessments == 0}">
+                                        <strong>
+                                            There are currently no assessments for you to review.
+                                        </strong>
+                                    </div>
+
+                                    <div th:if="${activeCompetition.progressTotal == 0 && activeCompetition.pendingAssessments > 0}" class="action-required">
+                                        <strong>
+                                            <span th:text="${activeCompetition.pendingAssessments}" class="pending-applications">
+                                                COUNT
+                                            </span> applications awaiting acceptance
+                                        </strong>
+                                    </div>
+
+                                    <div th:if="${activeCompetition.progressTotal - activeCompetition.progressAssessed > 0 && activeCompetition.pendingAssessments > 0}" class="action-required">
+                                        <strong>
+                                            <span th:text="${activeCompetition.pendingAssessments}" class="pending-applications">
+                                                COUNT
+                                            </span> applications awaiting acceptance &nbsp; | &nbsp;
+                                            <span th:text="${activeCompetition.progressTotal - activeCompetition.progressAssessed}" class="accepted-applications">
+                                                COUNT
+                                            </span> applications to assess
+                                        </strong>
+                                    </div>
+
+                                    <div th:if="${activeCompetition.progressTotal - activeCompetition.progressAssessed > 0 && activeCompetition.pendingAssessments == 0}" class="action-required">
                                         <strong>
                                             <span th:text="${activeCompetition.progressTotal - activeCompetition.progressAssessed}" class="accepted-applications">
                                                 COUNT
@@ -128,7 +153,7 @@
                 </div>
             </div>
 
-            <h2 class="heading-medium">Your assessor agreement</h2>
+            <h2 class="heading-medium">Your assessor details</h2>
             <ul class="list list-bullet">
                 <li>
                     <a th:href="@{/profile/skills}">your skills</a>

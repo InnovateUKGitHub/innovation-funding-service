@@ -7,7 +7,7 @@
     <th:block th:insert="fragments/layout :: global-header" />
 
     <th:block th:insert="fragments/layout :: body-start" />
-    <main id="content">
+    <main tabindex="-1" id="content">
         <th:block th:insert="fragments/layout :: main-content-start" />
         <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to all competitions',linkClass='link-back',linkUrl='/competition/search'" />
 
@@ -17,7 +17,7 @@
         <p class="wysiwyg-styles" ifs:utext="${model.shortDescription}"></p>
 
         <ul class="list">
-            <li><strong>Competition opens:</strong> <span th:text="${#temporals.format(model.competitionOpenDate, 'EEEE d MMM yyyy')}"></span></li>
+            <li><strong>Competition opens:</strong> <span th:text="${#temporals.format(model.competitionOpenDate, 'EEEE d MMMM yyyy')}"></span></li>
 
             <li th:unless="${model.nonIfs}" th:with="date=${#temporals.format(model.competitionCloseDate, 'EEEE d MMMM yyyy')},
                          time=${#strings.toLowerCase(#temporals.format(model.competitionCloseDate, ' h:mma'))}">
@@ -29,37 +29,31 @@
 
         </ul>
         <div>
-            <div th:unless="${model.showApplyButton}" class="warning-alert">
+            <div th:if="${model.showNotOpenYetMessage}" class="warning-alert">
+                This competition has not yet opened.
+            </div>
+            <div th:if="${model.showClosedMessage}" class="warning-alert">
                 This competition is now closed.
             </div>
-            <th:block th:unless="${model.nonIfs}">
-                <p class="extra-margin-top" th:with="loggedInUrl=@{/application/create-authenticated/{competitionId}(competitionId=${model.competitionId})},notLoggedInUrl=@{/application/create/check-eligibility/{competitionId}(competitionId=${model.competitionId})}">
-                    <a class="button"
-                       th:if="${model.showApplyButton}"
-                       th:href="${model.userIsLoggedIn ? loggedInUrl : notLoggedInUrl}">
-                        Start new application
+            <th:block>
+                <p class="extra-margin-top">
+                    <a class="button disabled" aria-disabled="true"
+                       th:if="${model.disableApplyButton}"
+                       th:text="${model.applyButtonText}">
                     </a>
-                    <button th:unless="${model.showApplyButton}" class="button" disabled="disabled">
-                        Start new application
-                    </button>
+                    <a class="button"
+                       th:unless="${model.disableApplyButton}"
+                       th:href="${model.applyButtonUrl}"
+                       th:text="${model.applyButtonText}">
+                    </a>
                 </p>
-                <p class="extra-margin" th:if="${model.showApplyButton}">
+                <p class="extra-margin" th:if="${model.showSignInText}">
                     <th:block th:unless="${model.userIsLoggedIn}">
-                        Or <a th:href="@{/}" >Sign in</a> to continue an existing application
+                        Or <a th:href="@{/}" >sign in</a> to continue an existing application.
                     </th:block>
                     <th:block th:if="${model.userIsLoggedIn}">
-                        Or go to your <a th:href="@{/}">dashboard</a> to continue an existing application
+                        Or go to <a th:href="@{/}">your dashboard</a> to continue an existing application.
                     </th:block>
-                </p>
-            </th:block>
-            <th:block th:if="${model.nonIfs}">
-                <p class="extra-margin">
-                    <a th:href="${model.nonIfsUrl}" th:if="${model.showApplyButton}" class="button">
-                        Register and apply online
-                    </a>
-                    <button th:unless="${model.showApplyButton}" class="button" disabled="disabled">
-                        Register and apply online
-                    </button>
                 </p>
             </th:block>
         </div>

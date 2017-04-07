@@ -37,9 +37,7 @@
         <nav>
             <a th:if="${linkTitle != null and linkUrl != null}" th:class="${linkClass} ?: ''" th:href="${linkUrl}" th:text="${linkTitle}" />
         </nav>
-        <div class="deadline" th:if="${daysPercentage != null and daysLeft != null}">Days left to submit&nbsp;&nbsp;
-            <th:block th:insert="fragments/elements :: pie-small" th:with="daysPercentage=${daysPercentage},daysLeft=${daysLeft}" />
-        </div>
+        <div class="deadline" th:if="${daysPercentage != null and daysLeft != null}">Days left to submit <span th:text="${daysLeft}"></span></div>
     </div>
 </div>
 
@@ -82,7 +80,7 @@
         <div th:unless="${question.isComplete()}" class="section-status section-incomplete">Incomplete</div>
 
         <div class="section-score" th:if="${question.scoreFormInputExists}">
-            Score:
+            Score
             <span th:text="|${question.scoreGiven}/${question.scorePossible}|" th:if="${question.scoreGiven}" th:remove="tag" />
             <span th:unless="${question.scoreGiven}" th:remove="tag">N/A</span>
         </div>

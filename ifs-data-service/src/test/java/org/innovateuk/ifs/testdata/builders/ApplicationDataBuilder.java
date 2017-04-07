@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.testdata.builders;
 
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationStatus;
 import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.category.domain.InnovationArea;
@@ -20,7 +20,8 @@ import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
@@ -52,7 +53,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
 
                 ResearchCategoryMapper researchCategoryMapper = new ResearchCategoryMapperImpl();
                 ResearchCategory category = researchCategoryRepository.findByName(researchCategory);
-                created.setResearchCategories(Collections.singleton(researchCategoryMapper.mapToResource(category)));
+                created.setResearchCategory(researchCategoryMapper.mapToResource(category));
                 created.setResubmission(resubmission);
                 created = applicationService.saveApplicationDetails(created.getId(), created)
                         .getSuccessObjectOrThrowException();
@@ -112,7 +113,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
             List<Organisation> organisations = organisationRepository.findByUsersId(collaborator.getId());
             Organisation organisation = organisations.get(0);
 
-            ApplicationInviteResource singleInvite = doInviteCollaborator(data, Optional.of(organisation.getId()), organisation.getName(),
+            ApplicationInviteResource singleInvite = doInviteCollaborator(data, organisation.getName(),
                     Optional.of(collaborator.getId()), collaborator.getEmail(), collaborator.getName(), Optional.empty());
 
             doAs(systemRegistrar(), () -> inviteService.acceptInvite(singleInvite.getHash(), collaborator.getId()));
@@ -124,7 +125,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
         return asLeadApplicant(data -> {
             Organisation organisation = retrieveOrganisationByName(organisationName);
             Optional<Long> organisationId = organisation != null ? Optional.of(organisation.getId()) : Optional.empty();
-            doInviteCollaborator(data, organisationId, organisationName, Optional.empty(), email, name, Optional.of(hash));
+            doInviteCollaborator(data, organisationName, Optional.empty(), email, name, Optional.of(hash));
         });
     }
 
@@ -148,14 +149,14 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
     public ApplicationDataBuilder beginApplication() {
 
         return asLeadApplicant(data ->
-                applicationService.updateApplicationStatus(data.getApplication().getId(), ApplicationStatusConstants.OPEN.getId()).
+                applicationService.updateApplicationStatus(data.getApplication().getId(), ApplicationStatus.OPEN).
                         getSuccessObjectOrThrowException());
     }
 
     public ApplicationDataBuilder submitApplication() {
 
         return asLeadApplicant(data -> {
-            applicationService.updateApplicationStatus(data.getApplication().getId(), ApplicationStatusConstants.SUBMITTED.getId()).
+            applicationService.updateApplicationStatus(data.getApplication().getId(), ApplicationStatus.SUBMITTED).
                     getSuccessObjectOrThrowException();
 
             applicationService.saveApplicationSubmitDateTime(data.getApplication().getId(), LocalDateTime.now()).getSuccessObjectOrThrowException();
@@ -163,7 +164,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
         });
     }
 
-    private ApplicationInviteResource doInviteCollaborator(ApplicationData data, Optional<Long> organisationId, String organisationName, Optional<Long> userId, String email, String name, Optional<String> hash) {
+    private ApplicationInviteResource doInviteCollaborator(ApplicationData data, String organisationName, Optional<Long> userId, String email, String name, Optional<String> hash) {
 
         ApplicationInviteResourceBuilder baseApplicationInviteBuilder =
                 userId.map(id -> newApplicationInviteResource().withUsers(id)).orElse(newApplicationInviteResource());
@@ -182,7 +183,6 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                 build(1);
 
         inviteService.createApplicationInvites(newInviteOrganisationResource().
-                withOrganisation(organisationId.map(id -> id).orElse(null)).
                 withOrganisationName(organisationName).
                 withInviteResources(applicationInvite).
                 build()).getSuccessObjectOrThrowException();

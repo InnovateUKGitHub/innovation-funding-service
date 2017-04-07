@@ -8,12 +8,12 @@
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main id="content" th:with="baseUrl=@{${model.baseUrl}(projectId=${model.projectId},organisationId=${model.organisationId})}">
+        <main tabindex="-1" id="content" th:with="baseUrl=@{${model.baseUrl}(projectId=${model.projectId},organisationId=${model.organisationId})}">
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})},currentCompetition=null" />
 
             <div class="page-title">
-                <th:block th:insert="fragments/elements :: project-title (projectId=${model.projectId}, projectName=${model.projectName})" />
+                <th:block th:insert="fragments/elements :: project-title (projectName=${model.projectName})" />
                 <h1 class="heading-xlarge">
                     <th:block th:text="${model.organisationName}" />
                     <small th:if="${model.leadPartnerOrganisation}">(Lead Partner)</small>
@@ -113,11 +113,11 @@
                             </div>
                         </div>
 
-                        <th:block th:if="${model.newAttachmentLinks.size() > 0}">
+                        <th:block th:unless="${model.newAttachmentLinks.isEmpty()}">
                             <h3 class="heading-small">Supporting documentation</h3>
                             <ul>
                                 <li th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
-                                    <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId)}">filename</a>
+                                    <a target="_blank" th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId)}">filename</a>
                                     <button name="removeAttachment" class="buttonlink" th:value="${attachmentId}">Remove</button><br />
                                 </li>
                             </ul>
@@ -125,7 +125,7 @@
 
                         <fieldset>
                             <div class="upload-section">
-                                <legend class="heading-small no-margin">Upload supporting documentation</legend>
+                                <legend class="heading-small no-margin">Upload supporting documentation in pdf format</legend>
                                 <th:block th:if="${#fields.hasErrors('attachment')}">
                                     <span>
                                         <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />

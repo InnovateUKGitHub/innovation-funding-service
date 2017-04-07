@@ -1,13 +1,11 @@
 package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.application.builder.ApplicationStatusBuilder;
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.domain.ApplicationStatus;
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.mapper.FundingDecisionMapper;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationStatus;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.NotificationResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -20,6 +18,7 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.util.MapFunctions;
+import org.innovateuk.ifs.validator.ApplicationFundingDecisionValidator;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -36,7 +35,6 @@ import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.application.constant.ApplicationStatusConstants.*;
 import static org.innovateuk.ifs.application.resource.FundingDecision.FUNDED;
 import static org.innovateuk.ifs.application.resource.FundingDecision.UNDECIDED;
 import static org.innovateuk.ifs.application.transactional.ApplicationFundingServiceImpl.Notifications.APPLICATION_FUNDING;
@@ -61,6 +59,9 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
 
     @Mock
     private FundingDecisionMapper fundingDecisionMapper;
+
+    @Mock
+    private ApplicationFundingDecisionValidator applicationFundingDecisionValidator;
     
     private ApplicationStatus approvedStatus;
     private ApplicationStatus rejectedStatus;
@@ -77,13 +78,10 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
 
     @Before
     public void setup() {
-    	approvedStatus = ApplicationStatusBuilder.newApplicationStatus().build();
-    	rejectedStatus = ApplicationStatusBuilder.newApplicationStatus().build();
-    	openStatus = ApplicationStatusBuilder.newApplicationStatus().build();
+    	approvedStatus = ApplicationStatus.APPROVED;
+    	rejectedStatus = ApplicationStatus.REJECTED;
+    	openStatus = ApplicationStatus.OPEN;
 
-    	when(applicationStatusRepositoryMock.findOne(ApplicationStatusConstants.APPROVED.getId())).thenReturn(approvedStatus);
-    	when(applicationStatusRepositoryMock.findOne(ApplicationStatusConstants.REJECTED.getId())).thenReturn(rejectedStatus);
-    	
     	competition = newCompetition().withAssessorFeedbackDate("01/02/2017 17:30:00").withCompetitionStatus(CompetitionStatus.FUNDERS_PANEL).withId(123L).build();
     	when(competitionRepositoryMock.findOne(123L)).thenReturn(competition);
     	
@@ -101,10 +99,11 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
 
     @Test
     public void testNotifyLeadApplicantsOfFundingDecisions() {
-        
-        Application application1 = newApplication().build();
-        Application application2 = newApplication().build();
-        Application application3 = newApplication().build();
+        Competition competition = newCompetition().build();
+
+        Application application1 = newApplication().withCompetition(competition).build();
+        Application application2 = newApplication().withCompetition(competition).build();
+        Application application3 = newApplication().withCompetition(competition).build();
 
         User application1LeadApplicant = newUser().build();
         User application2LeadApplicant = newUser().build();
@@ -138,9 +137,6 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
         List<Long> applicationIds = asList(application1.getId(), application2.getId(), application3.getId());
         List<Application> applications = asList(application1, application2, application3);
         when(applicationRepositoryMock.findAll(applicationIds)).thenReturn(applications);
-        when(applicationStatusRepositoryMock.findOne(APPROVED.getId())).thenReturn(ApplicationStatusBuilder.newApplicationStatus().withName(APPROVED).build());
-        when(applicationStatusRepositoryMock.findOne(REJECTED.getId())).thenReturn(ApplicationStatusBuilder.newApplicationStatus().withName(REJECTED).build());
-        when(applicationStatusRepositoryMock.findOne(SUBMITTED.getId())).thenReturn(ApplicationStatusBuilder.newApplicationStatus().withName(SUBMITTED).build());
 
         when(roleRepositoryMock.findOneByName(LEADAPPLICANT.getName())).thenReturn(leadApplicantRole);
         leadApplicantProcessRoles.forEach(processRole ->
@@ -148,6 +144,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
         );
         when(notificationServiceMock.sendNotification(createNotificationExpectationsWithGlobalArgs(expectedFundingNotification), eq(EMAIL))).thenReturn(serviceSuccess());
         when(applicationServiceMock.setApplicationFundingEmailDateTime(any(Long.class), any(LocalDateTime.class))).thenReturn(serviceSuccess(new ApplicationResource()));
+        when(competitionServiceMock.manageInformState(competition.getId())).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.notifyLeadApplicantsOfFundingDecisions(notificationResource);
         assertTrue(result.isSuccess());
@@ -164,8 +161,10 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     @Test
     public void testNotifyLeadApplicantsOfFundingDecisionsAndJustLeadApplicants() {
 
-        Application application1 = newApplication().build();
-        Application application2 = newApplication().build();
+        Competition competition = newCompetition().build();
+
+        Application application1 = newApplication().withCompetition(competition).build();
+        Application application2 = newApplication().withCompetition(competition).build();
 
         // add some collaborators into the mix - they should not receive Notifications
         User application1LeadApplicant = newUser().build();
@@ -197,8 +196,6 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
         List<Long> applicationIds = asList(application1.getId(), application2.getId());
         List<Application> applications = asList(application1, application2);
         when(applicationRepositoryMock.findAll(applicationIds)).thenReturn(applications);
-        when(applicationStatusRepositoryMock.findOne(APPROVED.getId())).thenReturn(ApplicationStatusBuilder.newApplicationStatus().withName(APPROVED).build());
-        when(applicationStatusRepositoryMock.findOne(REJECTED.getId())).thenReturn(ApplicationStatusBuilder.newApplicationStatus().withName(REJECTED).build());
 
         asList(application1, application2).forEach(application ->
                 when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application)
@@ -212,6 +209,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
 
         when(notificationServiceMock.sendNotification(createSimpleNotificationExpectations(expectedFundingNotification), eq(EMAIL))).thenReturn(serviceSuccess());
         when(applicationServiceMock.setApplicationFundingEmailDateTime(any(Long.class), any(LocalDateTime.class))).thenReturn(serviceSuccess(new ApplicationResource()));
+        when(competitionServiceMock.manageInformState(competition.getId())).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.notifyLeadApplicantsOfFundingDecisions(notificationResource);
         assertTrue(result.isSuccess());
@@ -230,6 +228,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
     	Application application1 = newApplication().withId(1L).withCompetition(competition).withFundingDecision(FundingDecisionStatus.FUNDED).withApplicationStatus(openStatus).build();
      	Application application2 = newApplication().withId(2L).withCompetition(competition).withFundingDecision(FundingDecisionStatus.UNFUNDED).withApplicationStatus(openStatus).build();
     	when(applicationRepositoryMock.findByCompetitionId(competition.getId())).thenReturn(asList(application1, application2));
+        when(applicationFundingDecisionValidator.isValid(any())).thenReturn(true);
 
     	Map<Long, FundingDecision> decision = asMap(1L, UNDECIDED);
     	
@@ -251,6 +250,8 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
         Long competitionId = competition.getId();
         Application application1 = newApplication().withId(applicationId).withCompetition(competition).withFundingDecision(FundingDecisionStatus.FUNDED).withApplicationStatus(openStatus).build();
         when(applicationRepositoryMock.findByCompetitionId(competitionId)).thenReturn(asList(application1));
+        when(applicationFundingDecisionValidator.isValid(any())).thenReturn(true);
+
 
         Map<Long, FundingDecision> applicationDecisions = asMap(applicationId, UNDECIDED);
 
@@ -267,6 +268,7 @@ public class ApplicationFundingServiceImplMockTest extends BaseServiceUnitTest<A
         Long competitionId = competition.getId();
         Application application1 = newApplication().withId(applicationId).withCompetition(competition).withFundingDecision(FundingDecisionStatus.FUNDED).withApplicationStatus(openStatus).build();
         when(applicationRepositoryMock.findByCompetitionId(competitionId)).thenReturn(asList(application1));
+        when(applicationFundingDecisionValidator.isValid(any())).thenReturn(true);
 
         Map<Long, FundingDecision> applicationDecisions = asMap(applicationId, FUNDED);
 

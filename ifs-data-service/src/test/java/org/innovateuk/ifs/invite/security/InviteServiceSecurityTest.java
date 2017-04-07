@@ -14,7 +14,6 @@ import org.springframework.security.access.method.P;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder.newInvite;
@@ -27,7 +26,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-
 
 /**
  * Testing how the secured methods in InviteService interact with Spring Security
@@ -75,7 +73,6 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
                 });
     }
 
-
     @Test
     public void testFindOne() {
         final long inviteId = 1L;
@@ -91,8 +88,7 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
     public void testGetInvitesByApplication() {
         long applicationId = 1L;
         final ServiceResult<List<InviteOrganisationResource>> results = classUnderTest.getInvitesByApplication(applicationId);
-        verify(inviteOrganisationPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).leadApplicantCanViewOrganisationInviteToTheApplication(any(InviteOrganisationResource.class), any(UserResource.class));
-        verify(inviteOrganisationPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).collaboratorCanViewOrganisationInviteToTheApplication(any(InviteOrganisationResource.class), any(UserResource.class));
+        verify(inviteOrganisationPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).consortiumCanViewAnyInviteOrganisation(any(InviteOrganisationResource.class), any(UserResource.class));
         assertTrue(results.getSuccessObject().isEmpty());
     }
 
@@ -170,7 +166,7 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
         }
 
         @Override
-        public ServiceResult<Void> removeApplicationInvite(Long applicationInviteId) {
+        public ServiceResult<Void> removeApplicationInvite(long applicationInviteId) {
             return null;
         }
     }

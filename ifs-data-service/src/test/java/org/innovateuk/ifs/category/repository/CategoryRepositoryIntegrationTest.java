@@ -26,9 +26,9 @@ public class CategoryRepositoryIntegrationTest extends BaseRepositoryIntegration
     @Test
     public void findAll() {
         List<Category> categories = asList(
-                repository.save(newInnovationArea().with(id(null)).build()),
-                repository.save(newInnovationSector().with(id(null)).build()),
-                repository.save(newResearchCategory().with(id(null)).build())
+                repository.save(newInnovationArea().withName("name").with(id(null)).build()),
+                repository.save(newInnovationSector().withName("name").with(id(null)).build()),
+                repository.save(newResearchCategory().withName("name").with(id(null)).build())
         );
 
         flushAndClearSession();

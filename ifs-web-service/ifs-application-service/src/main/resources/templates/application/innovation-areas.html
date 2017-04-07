@@ -7,7 +7,7 @@
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main id="content">
+        <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/application/{applicationId}/form/question/{questionId}(applicationId=${model.applicationId},questionId=${model.questionId})}" />
 
@@ -15,7 +15,7 @@
                 <p class="subtitle" th:text="${model.currentCompetitionName}">Competition title</p>
                 <h1 class="heading-xlarge">Innovation areas</h1>
                 <p>
-                    Choose the primary innovation area for your project. This will help us to select suitable assessors for your application, if you need help choosing, read our <a href="#">guidance on the innovation areas.</a>
+                    Choose the primary innovation area for your project. This will help us to select suitable assessors for your application.
                 </p>
             </div>
 

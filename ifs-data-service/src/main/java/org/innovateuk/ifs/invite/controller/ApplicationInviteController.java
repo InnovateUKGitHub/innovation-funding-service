@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 
 import static org.innovateuk.ifs.invite.resource.ApplicationInviteConstants.GET_USER_BY_HASH_MAPPING;
 
@@ -28,47 +27,47 @@ public class ApplicationInviteController {
     @Autowired
     private InviteService inviteService;
 
-    @RequestMapping("/createApplicationInvites")
+    @PostMapping("/createApplicationInvites")
     public RestResult<InviteResultsResource> createApplicationInvites(@RequestBody InviteOrganisationResource inviteOrganisationResource) {
         return inviteService.createApplicationInvites(inviteOrganisationResource).toPostCreateResponse();
     }
 
-    @RequestMapping("/getInviteByHash/{hash}")
+    @GetMapping("/getInviteByHash/{hash}")
     public RestResult<ApplicationInviteResource> getInviteByHash(@PathVariable("hash") String hash) {
         return inviteService.getInviteByHash(hash).toGetResponse();
     }
 
-    @RequestMapping("/getInviteOrganisationByHash/{hash}")
+    @GetMapping("/getInviteOrganisationByHash/{hash}")
     public RestResult<InviteOrganisationResource> getInviteOrganisationByHash(@PathVariable("hash") String hash) {
         return inviteService.getInviteOrganisationByHash(hash).toGetResponse();
     }
 
-    @RequestMapping("/getInvitesByApplicationId/{applicationId}")
+    @GetMapping("/getInvitesByApplicationId/{applicationId}")
     public RestResult<List<InviteOrganisationResource>> getInvitesByApplication(@PathVariable("applicationId") Long applicationId) {
         return inviteService.getInvitesByApplication(applicationId).toGetResponse();
     }
 
-    @RequestMapping(value = "/saveInvites", method = RequestMethod.POST)
+    @PostMapping("/saveInvites")
     public RestResult<InviteResultsResource> saveInvites(@RequestBody List<ApplicationInviteResource> inviteResources) {
         return inviteService.saveInvites(inviteResources).toPostCreateResponse();
     }
 
-    @RequestMapping(value = "/acceptInvite/{hash}/{userId}", method = RequestMethod.PUT)
+    @PutMapping("/acceptInvite/{hash}/{userId}")
     public RestResult<Void> acceptInvite( @PathVariable("hash") String hash, @PathVariable("userId") Long userId) {
         return inviteService.acceptInvite(hash, userId).toPutResponse();
     }
 
-    @RequestMapping(value = "/removeInvite/{inviteId}", method = RequestMethod.DELETE)
-    public RestResult<Void> removeApplicationInvite(@PathVariable("inviteId") Long applicationInviteResourceId) {
+    @DeleteMapping("/removeInvite/{inviteId}")
+    public RestResult<Void> removeApplicationInvite(@PathVariable("inviteId") long applicationInviteResourceId) {
         return inviteService.removeApplicationInvite(applicationInviteResourceId).toDeleteResponse();
     }
 
-    @RequestMapping(value = "/checkExistingUser/{hash}", method = RequestMethod.GET)
+    @GetMapping("/checkExistingUser/{hash}")
     public RestResult<Boolean> checkExistingUser( @PathVariable("hash") String hash) {
         return inviteService.checkUserExistingByInviteHash(hash).toGetResponse();
     }
 
-    @RequestMapping(value = GET_USER_BY_HASH_MAPPING + "{hash}", method = RequestMethod.GET)
+    @GetMapping(GET_USER_BY_HASH_MAPPING + "{hash}")
     public RestResult<UserResource> getUser( @PathVariable("hash") String hash) {
         return inviteService.getUserByInviteHash(hash).toGetResponse();
     }

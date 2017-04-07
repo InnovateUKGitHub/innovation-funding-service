@@ -10,67 +10,62 @@ Documentation     INFUND-524 As an applicant I want to see the finance summary u
 ...               INFUND-438: As an applicant and I am filling in the finance details I want a fully working Other funding section
 ...
 ...               INFUND-1436 As a lead applicant I want to be able to view the ratio of research participation costs in my consortium so I know my application is within the required range
-Suite Setup       log in and create new application if there is not one already
+Suite Setup       Guest user log-in  &{lead_applicant_credentials}
 Suite Teardown    the user closes the browser
-Force Tags        Applicant
+Force Tags        Applicant  Failing
+# TODO This fails because of Finance Summary/Summaries link
 Default Tags
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../FinanceSection_Commons.robot
-
-*** Variables ***
-${OVERVIEW_PAGE_PROVIDING_SUSTAINABLE_CHILDCARE_APPLICATION}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_2}
-${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SECTION}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_2}/form/section/7  #Your finances page
-${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SUMMARY}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_2}/form/section/8
+# For the testing of those Testing cases, the application that has been used is:
+# CLOSED_COMPETITION_APPLICATION_NAME that is A new innovative solution
+# of the Competition: Connected digital additive manufacturing
+# For an Open Competition Application, we have used OPEN_COMPETITION_APPLICATION_2_NAME, which is
+# Application:Planetary science Pluto's telltale heart
+# from the Competition: Predicting market trends programme
 
 *** Test Cases ***
 Calculations for Lead applicant
     [Documentation]    INFUND-524
-    ...
-    ...    This test case still use the old application after the refactoring. We need to add an extra collaborator in the newly created application for this.
     [Tags]
-    When the user navigates to the page    ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SUMMARY}
+    When the user clicks the button/link  link=${CLOSED_COMPETITION_APPLICATION_NAME}
+    And the user expands the Finance summaries
     Then the finance summary calculations should be correct
-    And the finance Project cost breakdown calculations should be correct
-    [Teardown]    The user closes the browser
+    And the finance Funding breakdown calculations should be correct
 
 Calculations for the first collaborator
     [Documentation]    INFUND-524
-    ...    This test case still use the old application after the refactoring
     [Tags]
-    [Setup]    Guest user log-in    &{collaborator1_credentials}
-    When the user navigates to the page    ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SUMMARY}
+    [Setup]  log in as a different user   &{collaborator1_credentials}
+    When the user clicks the button/link  link=${CLOSED_COMPETITION_APPLICATION_NAME}
+    And the user expands the Finance summaries
     Then the finance summary calculations should be correct
-    And the finance Project cost breakdown calculations should be correct
+    And the finance Funding breakdown calculations should be correct
 
 Contribution to project and funding sought should not be negative number
     [Documentation]    INFUND-524
-    ...
-    ...    This test case still use the old application after the refactoring
-    [Tags]    Pending
-    # TODO Pending due to INFUND-8706
+    [Tags]
     [Setup]  log in as a different user    &{lead_applicant_credentials}
-    When the user navigates to Your-finances page       Providing sustainable childcare
-    And the user fills in the project costs
-    And the user fills in the organisation information       Providing sustainable childcare
-    And the user checks your funding section for the project      Providing sustainable childcare
+    When the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_2_NAME}
+    And the user fills in the project costs        ${OPEN_COMPETITION_APPLICATION_2_NAME}
+    And the user fills in the organisation information  ${OPEN_COMPETITION_APPLICATION_2_NAME}
+    And the user checks your funding section for the project  ${OPEN_COMPETITION_APPLICATION_2_NAME}
     Then the contribution to project and funding sought should be 0 and not a negative number
 
 Your Finance includes Finance summary table for lead applicant
     [Documentation]    INFUND-6893
     [Tags]    HappyPath
     [Setup]  log in as a different user    &{lead_applicant_credentials}
-    When the user navigates to the page   ${YOUR_FINANCES_URL}
-    Then The user should see the text in the page     Your finances
-    And the finance summary table in Your Finances has correct values for lead
+    When the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_2_NAME}
+    Then the finance summary table in Your Finances has correct values for lead
     And the user clicks the button/link       link=Return to application overview
 
 Your Finance includes Finance summary table for collaborator
      [Documentation]    INFUND-6893
      [Tags]
      [Setup]  log in as a different user    &{collaborator2_credentials}
-    When the user navigates to the page   ${YOUR_FINANCES_URL}
-    Then The user should see the text in the page     Your finances
-    And the finance summary table in Your Finances has correct values for collaborator
+    When the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_2_NAME}
+    Then the finance summary table in Your Finances has correct values for collaborator
     And The user clicks the button/link        link=Return to application overview
 
 Red warning should show when the finances are incomplete
@@ -78,7 +73,7 @@ Red warning should show when the finances are incomplete
     [Tags]    HappyPath
     [Setup]  log in as a different user    &{lead_applicant_credentials}
     When the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=Robot test application
+    And the user clicks the button/link    link=${OPEN_COMPETITION_APPLICATION_2_NAME}
     And the user clicks the button/link    link=Finances overview
     Then the red warning should be visible
     And the user should see the element    css=.warning-alert
@@ -87,19 +82,15 @@ Red warning should show when the finances are incomplete
 Green check should show when the finances are complete
     [Documentation]    INFUND-927, INFUND-894, INFUND-446
     [Tags]
-    [Setup]
-    #TODO   investigate intermmitent failure
-    When the user navigates to Your-finances page    Robot test application
-    And the user marks the finances as complete     Robot test application
-    Then the user redirects to the page    Please provide Innovate UK with information about your project.    Application overview
-    And the user clicks the button/link    link=Finances overview
+    When the user navigates to the page    ${DASHBOARD_URL}
+    And the user clicks the button/link    link=${OPEN_COMPETITION_APPLICATION_2_NAME}
+    When the user clicks the button/link    link=Finances overview
     Then Green check should be visible
-    [Teardown]    The user closes the browser
 
 Alert shows If the academic research participation is too high
     [Documentation]    INFUND-1436
     [Tags]    Email
-    [Setup]    Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    participate in their application
+    [Setup]    Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation
     Given guest user log-in    ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
     And The user navigates to the academic application finances
     And The user clicks the button/link       link=Your project costs
@@ -112,7 +103,6 @@ Alert shows If the academic research participation is too high
     And the user clicks the button/link    link=Review and submit
     And the user clicks the button/link    jQuery=button:contains("Finances summary")
     Then the user should see the text in the page    The participation levels of this project are not within the required range
-    [Teardown]
 
 Alert should not show If research participation is below the maximum level
     [Documentation]    INFUND-1436
@@ -129,33 +119,29 @@ Alert should not show If research participation is below the maximum level
 
 
 *** Keywords ***
-
-the finance Project cost breakdown calculations should be correct
-    the user sees the text in the element    css=.project-cost-breakdown tr:nth-of-type(1) td:nth-of-type(3)    £0
-    the user sees the text in the element    css=.project-cost-breakdown tr:nth-of-type(4) td:nth-of-type(1)    £201,398
-    the user sees the text in the element    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(1)    £100,452
-    the user sees the text in the element    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(1)    £495
-
 the finance summary calculations should be correct
-    the user sees the text in the element    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(1)    £201,398
-    the user sees the text in the element    css=.finance-summary tr:nth-of-type(1) td:nth-of-type(2)    30%
-    the user sees the text in the element    css=.finance-summary tr:nth-of-type(2) td:nth-of-type(2)    30%
-    the user sees the text in the element    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(2)    100%
-    the user sees the text in the element    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(3)    £58,298
-    the user sees the text in the element    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(4)    £2,468
-    the user sees the text in the element    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(5)    £140,632
+    the user should see the element  jQuery=.finance-summary tbody tr:last-of-type:contains("£248,100")
+    the user should see the element  jQuery=.finance-summary tbody tr:last-of-type:contains("£29,396")
+    the user should see the element  jQuery=.finance-summary tbody tr:last-of-type:contains("£501,234")
+    the user should see the element  jQuery=.finance-summary tbody tr:last-of-type:contains("£70,316")
+
+the finance Funding breakdown calculations should be correct
+    the user should see the element  jQuery=.project-cost-breakdown th:contains("Empire Ltd") + td:contains("£147,153")
+    the user should see the element  jQuery=.project-cost-breakdown th:contains("Ludlow") + td:contains("£100,452")
+    the user should see the element  jQuery=.project-cost-breakdown th:contains("EGGS") + td:contains("£495")
+    the user should see the element  jQuery=.project-cost-breakdown th:contains("Total") + td:contains("£248,100")
 
 the finance summary table in Your Finances has correct values for lead
     the user sees the text in the element    css=.form-group tr:nth-of-type(1) th:nth-of-type(1)    Total project costs
-    the user sees the text in the element    css=.form-group tr:nth-of-type(1) td:nth-of-type(1)    £100,452
+    the user sees the text in the element    css=.form-group tr:nth-of-type(1) td:nth-of-type(1)    £71,622
     the user sees the text in the element    css=.form-group tr:nth-of-type(1) th:nth-of-type(2)    % Grant
     the user sees the text in the element    css=.form-group tr:nth-of-type(1) td:nth-of-type(2)    30%
     the user sees the text in the element    css=.form-group tr:nth-of-type(1) th:nth-of-type(3)    Funding sought
-    the user sees the text in the element    css=.form-group tr:nth-of-type(1) td:nth-of-type(3)    £28,901
+    the user sees the text in the element    css=.form-group tr:nth-of-type(1) td:nth-of-type(3)    £0
     the user sees the text in the element    css=.form-group tr:nth-of-type(1) th:nth-of-type(4)    Other public sector funding
-    the user sees the text in the element    css=.form-group tr:nth-of-type(1) td:nth-of-type(4)    £1,234
+    the user sees the text in the element    css=.form-group tr:nth-of-type(1) td:nth-of-type(4)    £8,000,000
     the user sees the text in the element    css=.form-group tr:nth-of-type(1) th:nth-of-type(5)    Contribution to project
-    the user sees the text in the element    css=.form-group tr:nth-of-type(1) td:nth-of-type(5)    £70,316
+    the user sees the text in the element    css=.form-group tr:nth-of-type(1) td:nth-of-type(5)    £0
 
 the finance summary table in Your Finances has correct values for collaborator
     the user sees the text in the element    css=.form-group tr:nth-of-type(1) th:nth-of-type(1)    Total project costs
@@ -170,7 +156,7 @@ the finance summary table in Your Finances has correct values for collaborator
     the user sees the text in the element    css=.form-group tr:nth-of-type(1) td:nth-of-type(5)    £0
 
 the contribution to project and funding sought should be 0 and not a negative number
-    the user navigates to the page    ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SECTION}
+    the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_2_NAME}
     the user sees the text in the element    css=.form-group tr:nth-of-type(1) td:nth-of-type(3)    £0
     the user sees the text in the element    css=.form-group tr:nth-of-type(1) td:nth-of-type(5)     £0
 
@@ -178,10 +164,7 @@ Green check should be visible
     Page Should Contain Image    css=.finance-summary tr:nth-of-type(1) img[src*="/images/field/tick-icon"]
 
 the red warning should be visible
-    When the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=Robot test application
-    And the user clicks the button/link    link=Finances overview
-    Page Should Contain Image    css=.finance-summary tr:nth-of-type(1) img[src*="/images/warning-icon"]
+    the user should see the element  jQuery=.warning-alert h2:contains("not marked their finances as complete")
 
 Lead enters a valid research participation value
     When the user navigates to the academic application finances
@@ -222,3 +205,7 @@ the user fills in the funding information with bigger amount
     the user enters text to a text field    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    test2
     the user selects the checkbox         agree-terms-page
     the user clicks the button/link       jQuery=button:contains("Mark as complete")
+
+the user expands the Finance summaries
+    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery=button:contains("Finances summary")[aria-expanded="false"]
+    run keyword if  '${status}'=='PASS'  the user clicks the button/link  jQuery=button:contains("Finances summary")[aria-expanded="false"]

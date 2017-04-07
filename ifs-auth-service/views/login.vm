@@ -72,51 +72,45 @@
       <div id="global-cookie-message">
           <p>GOV.UK uses cookies to make the site simpler. <a href="https://www.gov.uk/help/cookies">Find out more about cookies</a></p>
       </div>
-
-    <header role="banner" id="global-header">
+      <header role="banner" id="global-header" class="with-proposition">
         <div class="header-wrapper">
-            <div class="header-global">
-                <div>
-                    <div class="header-logo">
-                        <a href="https://www.gov.uk" title="Go to the GOV.UK homepage" id="logo" class="content">
-                            <img src="$resourcesDomain/images/gov.uk_logotype_crown.png" width="35" height="31" alt="GOV.UK">
-                            GOV.UK
-                        </a>
-                    </div>
-                    <p class="innovate-title">Innovation Funding Service</p>
+              <div class="header-global">
+                <div class="header-logo">
+                    <a href="https://www.gov.uk/" title="Go to the GOV.UK homepage" id="logo" class="content">
+                      <img src="$resourcesDomain/images/gov.uk_logotype_crown_invert_trans.png" alt="" width="36" height="32"> GOV.UK
+                    </a>
                 </div>
-            </div>
-        </div>
-    </header>
+              </div>
+              <div class="header-proposition">
+                <div class="content">
+                  <p id="proposition-name" class="no-margin">Innovation Funding Service</p>
+                </div>
+              </div>
+          </div>
+      </header>
     <div class="phase-banner grid-container">
       <p>
         <strong class="phase-tag">BETA</strong>
         <span>This is a new service – your <a href="mailto:IFSfeedback@innovateuk.gov.uk">feedback</a> will help us to improve it.</span>
       </p>
     </div>
-    <main id="content">
+    <main tabindex="-1" id="content">
       #parse("login-error.vm")
 
-            <h1 class="heading-large">Sign into Innovation Funding Service</h1>
-            <p>Enter the email address and password you used to create your Innovation Funding Service account.</p>
-
+            <h1 class="heading-large">Innovation Funding Service</h1>
+            <h2 class="heading-medium">Sign in</h2>
             <form action="$flowExecutionUrl" method="post">
 
             #set ($serviceName = $rpUIContext.serviceName)
-            #if ($serviceName && !$rpContext.getRelyingPartyId().contains($serviceName))
-              <legend class="visuallyhidden">
-                Sign in
-              </legend>
-            #end
 
             #if ($passwordEnabled)
               <div class="form-group">
-                <label for="username" class="form-label"><span>E-mail address</span></label>
+                <label for="username" class="form-label"><span>Email address</span></label>
                 <input class="form-control" id="username" name="j_username" type="email"
                 	value="#if($username)$encoder.encodeForHTML($username)#end"
                     required="required"
-                    data-required-errormessage="Please enter your e-mail address."
-                    data-email-errormessage="Please enter a valid e-mail address." />
+                    data-required-errormessage="Please enter your email address."
+                    data-email-errormessage="Please enter a valid email address." />
               </div>
 
               <div class="form-group">
@@ -229,7 +223,7 @@
                 var emailField = jQuery("[type='email']").first();
                 var passwordField = jQuery("[type='password']").first();
                 var button = jQuery("button[type='submit']").first();
-                var valid = IFS.formValidation.checkEmail(emailField, false) && IFS.formValidation.checkRequired(passwordField, false);
+                var valid = IFS.core.formValidation.checkEmail(emailField, false) && IFS.core.formValidation.checkRequired(passwordField, false);
                 if (valid) {
                     button.get(0).childNodes[0].nodeValue='#springMessageText("idp.login.pleasewait", "Signing in, please wait...")';
                 }

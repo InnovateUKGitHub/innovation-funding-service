@@ -1,5 +1,9 @@
 package org.innovateuk.ifs.registration.service;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -15,17 +19,13 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
+import org.springframework.web.bind.annotation.*;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.registration.service.AcceptProjectInviteController.*;
+import static org.innovateuk.ifs.registration.service.AcceptProjectInviteController.INVITE_HASH;
+import static org.innovateuk.ifs.registration.service.AcceptProjectInviteController.errorMessages;
+import static org.innovateuk.ifs.registration.service.AcceptProjectInviteController.populateModelWithErrorsAndReturnErrorView;
 
 @Controller
 @PreAuthorize("permitAll")
@@ -54,7 +54,7 @@ public class ProjectRegistrationController {
     private static final String REGISTRATION_SUCCESS_VIEW = "project/registration/successful";
     private static final String REGISTRATION_REGISTER_VIEW = "project/registration/register";
 
-    @RequestMapping(value = REGISTER_MAPPING, method = RequestMethod.GET)
+    @GetMapping(REGISTER_MAPPING)
     public String registerForm(Model model,
                                HttpServletRequest request,
                                HttpServletResponse response,
@@ -72,7 +72,7 @@ public class ProjectRegistrationController {
         ).getSuccessObject();
     }
 
-    @RequestMapping(value = REGISTER_MAPPING, method = RequestMethod.POST)
+    @PostMapping(REGISTER_MAPPING)
     public String registerFormSubmit(@Valid @ModelAttribute("registrationForm") RegistrationForm registrationForm,
                                      BindingResult bindingResult,
                                      HttpServletRequest request,
@@ -99,14 +99,14 @@ public class ProjectRegistrationController {
                 return restSuccess(REGISTRATION_SUCCESS_VIEW);
             } else {
                 result.getErrors().forEach(error -> bindingResult.reject("registration." + error.getErrorKey()));
-                return restSuccess(REGISTER_MAPPING);
+                return restSuccess(REGISTRATION_REGISTER_VIEW);
             }
 
         }).getSuccessObject();
     }
 
     private boolean emailExists(String email) {
-        return userService.findUserByEmailForAnonymousUserFlow(email).isPresent();
+        return userService.findUserByEmail(email).isPresent();
     }
 
     private ServiceResult<UserResource> createUser(RegistrationForm registrationForm, Long organisationId) {

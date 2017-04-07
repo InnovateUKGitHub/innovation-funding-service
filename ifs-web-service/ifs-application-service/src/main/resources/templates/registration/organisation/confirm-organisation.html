@@ -8,21 +8,23 @@
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main id="content">
+<main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='javascript:history.back()',currentApplication=${currentApplication}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to confirm operating address',linkClass='link-back',linkUrl='javascript:history.back()',currentApplication=${currentApplication}" />
 
     <h1 class="heading-xlarge">
         <span class="heading-secondary">Create your account</span>
         Confirm your organisation
     </h1>
 
-    <p class="form-hint icon-info-small-blue">Please check that the details below carefully, as this information cannot be edited after your account has been created.</p>
+    <div class="message-alert">
+        <p>Your organisation must be UK based to receive funding from Innovate UK.</p>
+    </div>
 
-
+    <h2 class="heading-medium no-margin-bottom">Confirm your organisation details are correct</h2>
     <th:block th:insert="fragments/addresses :: organisation-details" th:with="confirmDetails=true" />
 
-    <a th:href="@{/organisation/create/save-organisation}" name="save-organisation" class="button button-large">Save and continue</a>
+    <a th:href="@{/organisation/create/save-organisation}" name="save-organisation" class="button button-large">Confirm</a>
 
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>

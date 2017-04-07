@@ -14,7 +14,7 @@ items:
       type: Rolling
       rollingParams:
         timeoutSeconds: 600
-        maxSurge: 2
+        maxSurge: 1 #So Flyway runs on one thread at a time
         maxUnavailable: 0
     template:
       metadata:
@@ -49,7 +49,7 @@ items:
             limits:
               memory: 1500M
           volumeMounts:
-          - mountPath: /tmp/uploads
+          - mountPath: /mnt/ifs_storage
             name: dir-1
         volumes:
           - name: dir-1

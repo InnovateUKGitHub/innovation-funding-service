@@ -17,9 +17,9 @@ public class CompetitionOverviewViewModel {
     private String shortDescription;
     private String nonIfsUrl;
     private Boolean nonIfs;
-    private Boolean showApplyButton;
     private List<AbstractPublicSectionContentViewModel> allSections;
     private boolean userIsLoggedIn = false;
+    private boolean competitionSetupComplete;
 
     public String getCompetitionTitle() {
         return competitionTitle;
@@ -93,19 +93,54 @@ public class CompetitionOverviewViewModel {
         this.nonIfs = nonIfs;
     }
 
-    public Boolean getShowApplyButton() {
-        return showApplyButton;
-    }
-
-    public void setShowApplyButton(Boolean showApplyButton) {
-        this.showApplyButton = showApplyButton;
-    }
-
     public boolean isUserIsLoggedIn() {
         return userIsLoggedIn;
     }
 
     public void setUserIsLoggedIn(boolean userIsLoggedIn) {
         this.userIsLoggedIn = userIsLoggedIn;
+    }
+
+    public boolean isShowNotOpenYetMessage() {
+        if (nonIfs) {
+            return getCompetitionOpenDate().isAfter(LocalDateTime.now());
+        } else {
+            return !isCompetitionSetupComplete() || getCompetitionOpenDate().isAfter(LocalDateTime.now());
+        }
+    }
+
+    public boolean isShowClosedMessage() {
+        return nonIfs ?  getRegistrationCloseDate().isBefore(LocalDateTime.now()) :
+                getCompetitionCloseDate().isBefore(LocalDateTime.now());
+    }
+
+    public boolean isDisableApplyButton() {
+        return isShowNotOpenYetMessage() || isShowClosedMessage();
+    }
+
+    public String getApplyButtonUrl() {
+        if (nonIfs) {
+            return nonIfsUrl;
+        } else if (userIsLoggedIn) {
+            return "/application/create-authenticated/" + competitionId;
+        } else {
+            return "/application/create/check-eligibility/" + competitionId;
+        }
+    }
+
+    public String getApplyButtonText() {
+        return nonIfs ? "Register and apply online" : "Start new application";
+    }
+
+    public boolean isShowSignInText() {
+        return !nonIfs && !isDisableApplyButton();
+    }
+
+    public boolean isCompetitionSetupComplete() {
+        return competitionSetupComplete;
+    }
+
+    public void setCompetitionSetupComplete(boolean competitionSetupComplete) {
+        this.competitionSetupComplete = competitionSetupComplete;
     }
 }

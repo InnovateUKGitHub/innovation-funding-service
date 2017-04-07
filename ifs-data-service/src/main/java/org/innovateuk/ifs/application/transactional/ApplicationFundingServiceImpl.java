@@ -2,12 +2,14 @@ package org.innovateuk.ifs.application.transactional;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.domain.ApplicationStatus;
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.mapper.FundingDecisionMapper;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.application.resource.ApplicationStatus;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.NotificationResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
@@ -16,14 +18,15 @@ import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.util.EntityLookupCallbacks;
+import org.innovateuk.ifs.validator.ApplicationFundingDecisionValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.application.constant.ApplicationStatusConstants.*;
 import static org.innovateuk.ifs.application.resource.FundingDecision.FUNDED;
 import static org.innovateuk.ifs.application.resource.FundingDecision.UNFUNDED;
 import static org.innovateuk.ifs.application.transactional.ApplicationFundingServiceImpl.Notifications.APPLICATION_FUNDING;
@@ -48,6 +51,15 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
     @Autowired
     private ApplicationService applicationService;
 
+    @Autowired
+    private ApplicationFundingDecisionValidator applicationFundingDecisionValidator;
+
+    @Autowired
+    private ApplicationRepository applicationRepository;
+
+    @Autowired
+    private CompetitionService competitionService;
+
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
@@ -60,9 +72,9 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<Void> saveFundingDecisionData(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
         return getCompetition(competitionId).andOnSuccess(competition -> {
-            List<Application> applicationsForCompetition = findAllApplicationsForCompetition(competitionId);
+            List<Application> allowedApplicationForCompetition = findAllowedApplicationsForCompetition(competitionId);
 
-            return saveFundingDecisionData(applicationsForCompetition, applicationFundingDecisions);
+            return saveFundingDecisionData(allowedApplicationForCompetition, applicationFundingDecisions);
         });
     }
 
@@ -70,7 +82,7 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<Void> notifyLeadApplicantsOfFundingDecisions(NotificationResource notificationResource) {
 
-        setApplicationStatus(notificationResource.getFundingDecisions());
+        List<Application> applications = setApplicationStatus(notificationResource.getFundingDecisions());
 
         List<ServiceResult<Pair<Long, NotificationTarget>>> fundingNotificationTargets = getLeadApplicantNotificationTargets(notificationResource.calculateApplicationIds());
         ServiceResult<List<Pair<Long, NotificationTarget>>> aggregatedFundingTargets = aggregate(fundingNotificationTargets);
@@ -82,15 +94,24 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
                     Notification fundingNotification = createFundingDecisionNotification(notificationResource, aggregatedFundingTargets.getSuccessObject(), APPLICATION_FUNDING);
                     ServiceResult<Void> fundedEmailSendResult = notificationService.sendNotification(fundingNotification, EMAIL);
 
-                    return fundedEmailSendResult.andOnSuccess(() ->
+                    ServiceResult<Void> setEmailDateTimeResult = fundedEmailSendResult.andOnSuccess(() ->
                             aggregate(simpleMap(
-                                    notificationResource.calculateApplicationIds(), applicationId ->
-                                            applicationService.setApplicationFundingEmailDateTime(applicationId, LocalDateTime.now()))))
+                                    applications, application ->
+                                            applicationService.setApplicationFundingEmailDateTime(application.getId(), LocalDateTime.now()))))
                             .andOnSuccessReturnVoid();
+                    return setEmailDateTimeResult.andOnSuccess(() -> {
+                        if (!applications.isEmpty()) {
+                            return competitionService.manageInformState(
+                                    applications.get(0)
+                                            .getCompetition()
+                                            .getId());
+                        }
+                        return serviceSuccess();
+                    });
                 });
     }
 
-    private void setApplicationStatus(Map<Long, FundingDecision> applicationFundingDecisions) {
+    private List<Application> setApplicationStatus(Map<Long, FundingDecision> applicationFundingDecisions) {
 
         List<Long> applicationIds = new ArrayList<>(applicationFundingDecisions.keySet());
         List<Application> applications = findApplicationsByIds(applicationIds);
@@ -100,18 +121,21 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
             ApplicationStatus status = statusFromDecision(applicationFundingDecision);
             app.setApplicationStatus(status);
         });
+        return applications;
     }
 
     private List<Application> findApplicationsByIds(List<Long> applicationIds) {
         return (List) applicationRepository.findAll(applicationIds);
     }
 
-    private List<Application> findSubmittedApplicationsForCompetition(Long competitionId) {
-        return applicationRepository.findByCompetitionIdAndApplicationStatusId(competitionId, SUBMITTED.getId());
-    }
+    private List<Application> findAllowedApplicationsForCompetition(Long competitionId) {
+        List<Application> applicationsInCompetition = applicationRepository.findByCompetitionId(competitionId);
 
-    private List<Application> findAllApplicationsForCompetition(Long competitionId) {
-        return applicationRepository.findByCompetitionId(competitionId);
+        List<Application> allowedApplications = applicationsInCompetition.stream()
+                .filter(application -> applicationFundingDecisionValidator.isValid(application))
+                .collect(Collectors.toList());
+
+        return allowedApplications;
     }
 
     private ServiceResult<Void> saveFundingDecisionData(List<Application> applicationsForCompetition, Map<Long, FundingDecision> applicationDecisions) {
@@ -149,7 +173,7 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
 
         Map<String, Object> globalArguments = new HashMap<>();
         globalArguments.put("subject", notificationResource.getSubject());
-        globalArguments.put("message",  notificationResource.getMessageBody());
+        globalArguments.put("message", notificationResource.getMessageBody());
 
         List<NotificationTarget> notificationTargets = simpleMap(notificationTargetsByApplicationId, Pair::getValue);
         return new Notification(systemNotificationSource, notificationTargets, notificationType, globalArguments);
@@ -164,11 +188,11 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
 
     private ApplicationStatus statusFromDecision(FundingDecision applicationFundingDecision) {
         if (FUNDED.equals(applicationFundingDecision)) {
-            return applicationStatusRepository.findOne(APPROVED.getId());
+            return ApplicationStatus.APPROVED;
         } else if (UNFUNDED.equals(applicationFundingDecision)) {
-            return applicationStatusRepository.findOne(REJECTED.getId());
+            return ApplicationStatus.REJECTED;
         } else {
-            return applicationStatusRepository.findOne(SUBMITTED.getId());
+            return ApplicationStatus.SUBMITTED;
         }
     }
 }

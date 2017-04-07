@@ -1,7 +1,7 @@
 Email,Hash,Name,Status,Type,Target,Owner,Innovation Area,Sent By,Sent On
-worth.email.test+invite2@gmail.com,6f315d6e-fb2a-4c9e-94e0-7054b4b8f6c8,John,SENT,APPLICATION,A novel solution to an old problem,Nomensa,Agri Productivity,John Doe,2016-06-24 00:00:00
-worth.email.test+invite1@gmail.com,78aa4567-0b70-41da-8310-a0940644d0bf,Rogier,SENT,APPLICATION,A novel solution to an old problem,Worth Internet Systems,Bioscience,John Doe,2016-06-24 00:00:00
-worth.email.test+david.peters@gmail.com,396d0782-01d9-48d0-97ce-ff729eb555b0,David Peters,SENT,COMPETITION,Sustainable living models for the future,Mo Juggling Mo Problems Ltd,Satellite Applications,John Doe,2016-06-24 00:00:00
-worth.email.test+thomas.fister@gmail.com,9c2cc102-b934-4f54-9be8-6b864cdfc6e2,Thomas Fister,SENT,COMPETITION,Sustainable living models for the future,Mo Juggling Mo Problems Ltd,Satellite Applications,John Doe,2016-06-24 00:00:00
+worth.email.test+david.peters@gmail.com,396d0782-01d9-48d0-97ce-ff729eb555b0,David Peters,SENT,COMPETITION,Sustainable living models for the future,Mo Juggling Mo Problems Ltd,Satellite applications,John Doe,2016-06-24 00:00:00
+worth.email.test+thomas.fister@gmail.com,9c2cc102-b934-4f54-9be8-6b864cdfc6e2,Thomas Fister,SENT,COMPETITION,Sustainable living models for the future,Mo Juggling Mo Problems Ltd,Satellite applications,John Doe,2016-06-24 00:00:00
 worth.email.test+jeremy.alufson@gmail.com,dcc0d48a-ceae-40e8-be2a-6fd1708bd9b7,Jeremy Alufson,SENT,COMPETITION,Photonics for health,Mo Juggling Mo Problems Ltd,Energy Systems,John Doe,2016-08-24 00:00:00
 worth.email.test+jeremy.alufson@gmail.com,1ec7d388-3639-44a9-ae62-16ad991dc92c,Jeremy Alufson,SENT,COMPETITION,Sustainable living models for the future,Mo Juggling Mo Problems Ltd,Offshore Renewable Energy,John Doe,2016-06-24 00:00:00
+worth.email.test+invite2@gmail.com,6f315d6e-fb2a-4c9e-94e0-7054b4b8f6c9,John,SENT,APPLICATION,Climate science the history of Greenland's ice,Nomensa,Digital health,John Doe,2016-06-24 00:00:00
+worth.email.test+invite1@gmail.com,78aa4567-0b70-41da-8310-a0940644d0ba,Rogier,SENT,APPLICATION,Climate science the history of Greenland's ice,Worth Internet Systems,Biosciences,John Doe,2016-06-24 00:00:00

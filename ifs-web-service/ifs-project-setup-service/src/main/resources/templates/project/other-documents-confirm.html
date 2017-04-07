@@ -7,13 +7,13 @@
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main id="content">
+<main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
     <div th:insert="fragments/layout :: header-sub"
          th:with="linkTitle='Back',linkClass='link-back',linkUrl=@{/project/{projectId}/partner/documents/(projectId=${model.projectId})}"
          th:remove="tag"/>
     <div class="page-title">
-        <th:block th:insert="fragments/elements :: project-title (projectId=${model.projectId}, projectName=${model.projectName})" />
+        <th:block th:insert="fragments/elements :: project-title (projectName=${model.projectName})" />
         <h1 class="heading-xlarge">Submit other documents</h1>
     </div>
     <p>Are you sure that you wish to submit your documents to Innovate UK?</p>

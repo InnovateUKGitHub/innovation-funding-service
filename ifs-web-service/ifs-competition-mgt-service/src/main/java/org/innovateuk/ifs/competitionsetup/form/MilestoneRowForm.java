@@ -4,10 +4,14 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.validator.constraints.Range;
 import org.innovateuk.ifs.commons.validation.constraints.ValidAggregatedDate;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
+import java.util.Set;
+
+import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 
 /**
  * Milestone Form Entry for the Milestones form.
@@ -15,6 +19,8 @@ import java.time.LocalDateTime;
 @ValidAggregatedDate(yearField="year", monthField="month", dayField="day", message="{validation.standard.date.format}")
 public class MilestoneRowForm {
 	private static final Log LOG = LogFactory.getLog(MilestoneRowForm.class);
+	private static final Set<MilestoneType> WITH_TIME_TYPES = asSet(MilestoneType.SUBMISSION_DATE);
+    private static final Set<MilestoneType> WITH_MIDDAY_TIME = asSet(MilestoneType.ASSESSOR_ACCEPTS, MilestoneType.ASSESSOR_DEADLINE);
 
     @Range(min=2000, max = 9999, message="{validation.nonifs.detailsform.yyyy.range.format}")
     private Integer year;
@@ -25,7 +31,6 @@ public class MilestoneRowForm {
 
     private MilestoneType milestoneType;
     private String dayOfWeek;
-    private boolean editable;
     private LocalDateTime date;
 
     public MilestoneRowForm() {
@@ -38,11 +43,11 @@ public class MilestoneRowForm {
             this.setDay(dateTime.getDayOfMonth());
             this.setMonth(dateTime.getMonth().getValue());
             this.setYear(dateTime.getYear());
-            this.setTime(MilestoneTime.fromLocalDateTime(dateTime));
             this.setDate(dateTime);
-            this.editable = LocalDateTime.now().isBefore(dateTime);
-        } else {
-            this.editable = true;
+            if (isTimeOption()) {
+                this.setTime(MilestoneTime.fromLocalDateTime(dateTime));
+            }
+        } else if (isTimeOption() || isMiddayTime()) {
             this.setTime(MilestoneTime.TWELVE_PM);
         }
     }
@@ -91,16 +96,17 @@ public class MilestoneRowForm {
         return milestoneType.name();
     }
 
-    public boolean isEditable() {
-        return editable;
-    }
-
-    public void setEditable(boolean editable) {
-        this.editable = editable;
+    public boolean editableForCompetition(CompetitionResource competitionResource) {
+        return competitionResource.isNonIfs() ||
+                !(competitionResource.isSetupAndLive() && date.isBefore(LocalDateTime.now()));
     }
 
     public boolean isTimeOption() {
-        return MilestoneType.SUBMISSION_DATE.equals(milestoneType);
+        return WITH_TIME_TYPES.contains(milestoneType);
+    }
+
+    public boolean isMiddayTime() {
+        return WITH_MIDDAY_TIME.contains(milestoneType);
     }
 
     public LocalDateTime getDate() {
@@ -149,7 +155,7 @@ public class MilestoneRowForm {
 
     public LocalDateTime getMilestoneAsDateTime() {
         if (day != null && month != null && year != null){
-            if ( time != null) {
+            if (time != null && (isTimeOption() || isMiddayTime())) {
                 return LocalDateTime.of(year, month, day, time.getHour(), 0);
             } else {
                 return LocalDateTime.of(year, month, day, 0, 0);

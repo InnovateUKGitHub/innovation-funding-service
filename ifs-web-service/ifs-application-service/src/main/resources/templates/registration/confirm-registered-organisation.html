@@ -8,42 +8,42 @@
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main id="content">
+<main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
 
-    <!--  Confirm the organisation that is already linked to the user, is also the organisation to accept the invite wihtl.-->
     <h1 class="heading-large">Confirm your organisation</h1>
+    <p>The lead applicant has invited you to participate on this application as part of the following organisation:
+        <strong th:text="${model.partOfOrganisation}"></strong></p>
 
+    <p>Please review the organisation details below and confirm that they are correct.</p>
 
-    <h2 class="heading-medium">Your organisation</h2>
+    <h2 class="heading-medium no-margin-bottom">Confirm your organisation details are correct</h2>
     <fieldset>
-        <legend class="visuallyhidden" th:text="${organisation.organisationTypeName + ' Organisation'}">Organisation</legend>
         <div class="form-block">
-            <h3 class="heading-small">Organisation name</h3>
-            <p th:text="${organisation.name}">Nomensa</p>
-
-            <div th:if="${organisation.companyHouseNumber}" th:remove="tag">
+            <h3 class="heading-small">Organisation type</h3>
+            <p th:text="${model.organisationType}"></p>
+            <h3 class="heading-small">Registered name</h3>
+            <p th:text="${model.registrationName}"></p>
+            <th:block th:if="${model.registrationNumberNotEmptyAndNotResearch}">
                 <h3 class="heading-small">Registration number</h3>
-                <p th:text="${organisation.companyHouseNumber}">0123456789</p>
-            </div>
-
+                <p th:text="${model.registrationNumber}"></p>
+            </th:block>
             <div>
-                <h3 class="heading-small">Address</h3>
-                <div th:text="${organisationAddress?.addressLine1}"></div>
-                <div th:text="${organisationAddress?.addressLine2}"></div>
-                <div th:text="${organisationAddress?.addressLine3}"></div>
-                <div th:text="${organisationAddress?.town}"></div>
-                <div th:text="${organisationAddress?.county}"></div>
-                <div th:text="${organisationAddress?.postcode}"></div>
+                <h3 class="heading-small">Registered Address</h3>
+                <div th:text="${model.organisationAddress?.addressLine1}"></div>
+                <div th:text="${model.organisationAddress?.addressLine2}"></div>
+                <div th:text="${model.organisationAddress?.addressLine3}"></div>
+                <div th:text="${model.organisationAddress?.town}"></div>
+                <div th:text="${model.organisationAddress?.county}"></div>
+                <div th:text="${model.organisationAddress?.postcode}"></div>
             </div>
         </div>
     </fieldset>
 
-
-    <p>If this is not the correct organisation <a th:href="${'mailto:'+ invite.leadApplicantEmail}">email the application lead</a></p>
+    <p>If this is not the correct organisation, please <a th:href="${'mailto:'+ model.emailLeadApplicant}">email the lead applicant</a>.</p>
     <p><strong>Please note</strong>, if you are representing a different organisation then you will need to make a new account.</p>
 
-    <a th:href="${acceptInviteUrl}" class="button button-large extra-margin">Continue to application</a>
+    <a th:href="${model.registerUrl}" class="button button-large extra-margin">Confirm and accept invitation</a>
 
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>

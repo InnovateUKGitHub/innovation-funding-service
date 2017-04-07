@@ -2,8 +2,8 @@ package org.innovateuk.ifs.application.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationStatus;
 import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
-
 /**
  * ApplicationController exposes Application data and operations through a REST API.
  */
@@ -27,39 +25,39 @@ public class ApplicationController {
     @Autowired
     private ApplicationService applicationService;
 
-    @RequestMapping("/{id}")
+    @GetMapping("/{id}")
     public RestResult<ApplicationResource> getApplicationById(@PathVariable("id") final Long id) {
-            return applicationService.getApplicationById(id).toGetResponse();
+        return applicationService.getApplicationById(id).toGetResponse();
     }
 
-    @RequestMapping("/")
+    @GetMapping("/")
     public RestResult<List<ApplicationResource>> findAll() {
         return applicationService.findAll().toGetResponse();
     }
 
-    @RequestMapping("/findByUser/{userId}")
+    @GetMapping("/findByUser/{userId}")
     public RestResult<List<ApplicationResource>> findByUserId(@PathVariable("userId") final Long userId) {
         return applicationService.findByUserId(userId).toGetResponse();
     }
 
-    @RequestMapping("/saveApplicationDetails/{id}")
+    @PostMapping("/saveApplicationDetails/{id}")
     public RestResult<Void> saveApplicationDetails(@PathVariable("id") final Long id,
                                                    @RequestBody ApplicationResource application) {
 
         return applicationService.saveApplicationDetails(id, application).toPostResponse();
     }
 
-    @RequestMapping("/getProgressPercentageByApplicationId/{applicationId}")
+    @GetMapping("/getProgressPercentageByApplicationId/{applicationId}")
     public RestResult<CompletedPercentageResource> getProgressPercentageByApplicationId(@PathVariable("applicationId") final Long applicationId) {
         return applicationService.getProgressPercentageByApplicationId(applicationId).toGetResponse();
     }
 
-    @RequestMapping(value = "/updateApplicationStatus", method = RequestMethod.PUT)
+    @PutMapping("/updateApplicationStatus")
     public RestResult<Void> updateApplicationStatus(@RequestParam("applicationId") final Long id,
-                                                          @RequestParam("statusId") final Long statusId) {
-        ServiceResult<ApplicationResource> updateStatusResult = applicationService.updateApplicationStatus(id, statusId);
+                                                    @RequestParam("status") final ApplicationStatus status) {
+        ServiceResult<ApplicationResource> updateStatusResult = applicationService.updateApplicationStatus(id, status);
 
-        if(updateStatusResult.isSuccess() && ApplicationStatusConstants.SUBMITTED.getId().equals(statusId)){
+        if (updateStatusResult.isSuccess() && ApplicationStatus.SUBMITTED == status) {
             applicationService.saveApplicationSubmitDateTime(id, LocalDateTime.now());
             applicationService.sendNotificationApplicationSubmitted(id);
         }
@@ -68,21 +66,21 @@ public class ApplicationController {
     }
 
 
-    @RequestMapping("/applicationReadyForSubmit/{applicationId}")
-    public RestResult<ObjectNode> applicationReadyForSubmit(@PathVariable("applicationId") final Long id){
+    @GetMapping("/applicationReadyForSubmit/{applicationId}")
+    public RestResult<ObjectNode> applicationReadyForSubmit(@PathVariable("applicationId") final Long id) {
         return applicationService.applicationReadyForSubmit(id).toGetResponse();
     }
 
 
-    @RequestMapping("/getApplicationsByCompetitionIdAndUserId/{competitionId}/{userId}/{role}")
+    @GetMapping("/getApplicationsByCompetitionIdAndUserId/{competitionId}/{userId}/{role}")
     public RestResult<List<ApplicationResource>> getApplicationsByCompetitionIdAndUserId(@PathVariable("competitionId") final Long competitionId,
-                                                                     @PathVariable("userId") final Long userId,
-                                                                     @PathVariable("role") final UserRoleType role) {
+                                                                                         @PathVariable("userId") final Long userId,
+                                                                                         @PathVariable("role") final UserRoleType role) {
 
         return applicationService.getApplicationsByCompetitionIdAndUserId(competitionId, userId, role).toGetResponse();
     }
 
-    @RequestMapping(value = "/createApplicationByName/{competitionId}/{userId}", method = POST)
+    @PostMapping("/createApplicationByName/{competitionId}/{userId}")
     public RestResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(
             @PathVariable("competitionId") final Long competitionId,
             @PathVariable("userId") final Long userId,
@@ -92,15 +90,5 @@ public class ApplicationController {
         ServiceResult<ApplicationResource> applicationResult =
                 applicationService.createApplicationByApplicationNameForUserIdAndCompetitionId(name, competitionId, userId);
         return applicationResult.toPostCreateResponse();
-    }
-
-    @RequestMapping("/turnover/{applicationId}")
-    public RestResult<Long> getTurnoverByApplicationId(@PathVariable("applicationId") final Long applicationId) {
-        return applicationService.getTurnoverByApplicationId(applicationId).toGetResponse();
-    }
-
-    @RequestMapping("/headcount/{applicationId}")
-    public RestResult<Long> getHeadCountByApplicationId(@PathVariable("applicationId") final Long applicationId) {
-        return applicationService.getHeadCountByApplicationId(applicationId).toGetResponse();
     }
 }

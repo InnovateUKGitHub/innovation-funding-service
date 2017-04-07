@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.application.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Immutable;
 import org.hibernate.annotations.Where;
+import org.innovateuk.ifs.application.resource.ApplicationStatus;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -33,6 +33,10 @@ public class ApplicationStatistics {
 
     private Long competition;
 
+    @Column(name="status")
+    @Enumerated(EnumType.STRING)
+    private ApplicationStatus applicationStatus;
+
     @OneToMany(mappedBy = "applicationId")
     private List<ProcessRole> processRoles = new ArrayList<>();
 
@@ -45,24 +49,16 @@ public class ApplicationStatistics {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public Long getCompetition() {
         return competition;
     }
 
-    public void setCompetition(Long competition) {
-        this.competition = competition;
+    public ApplicationStatus getApplicationStatus() {
+        return applicationStatus;
     }
 
     private Optional<ProcessRole> getLeadProcessRole() {
@@ -77,16 +73,8 @@ public class ApplicationStatistics {
         return processRoles;
     }
 
-    public void setProcessRoles(List<ProcessRole> processRoles) {
-        this.processRoles = processRoles;
-    }
-
     public List<Assessment> getAssessments() {
         return assessments;
-    }
-
-    public void setAssessments(List<Assessment> assessments) {
-        this.assessments = assessments;
     }
 
     public int getAssessors() {

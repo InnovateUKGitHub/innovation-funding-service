@@ -61,20 +61,22 @@ Competition brief link can be seen
     [Documentation]    INFUND-5494
     [Tags]
     When the user clicks the button/link    link=${UPCOMING_COMPETITION_TO_ASSESS_NAME}
-    Then the user should see the element    link=See competition brief
+    Then the user should see the element    link=See competition brief (opens in a new window)
 
 User can view the competition brief
     [Documentation]    INFUND-5494
     [Tags]
-    When the user clicks the button/link    link=See competition brief
-    Then the user should not see an error in the page
+    When the user clicks the button/link    link=See competition brief (opens in a new window)
+    Then The user should get a competition brief window
+    And the user should not see an error in the page
     And the user should see the text in the page    ${UPCOMING_COMPETITION_TO_ASSESS_NAME}
     And the user should see the text in the page    Competition opens
     And the user should see the text in the page    Competition closes
+    And the user should see the text in the page    Or go to your dashboard to continue an existing application.
     And the user should see the element    jQuery=.button:contains("Start new application")
-    Then the user goes back to the previous page
-    And the user clicks the button/link    link=Assessor dashboard
+    And The user closes the competition brief
     [Teardown]
+    And the user clicks the button/link    link=Assessor dashboard
 
 Calculation of the Upcoming competitions and Invitations to assess should be correct
     [Documentation]    INFUND-7107
@@ -192,7 +194,7 @@ Registered user should not allowed to accept other assessor invite
     Then The user should see permissions error message
 
 The user should not be able to accept or reject the same applications
-    [Documentation]    NFUND-5165
+    [Documentation]    INFUND-5165
     [Tags]
     Then the assessor shouldn't be able to accept the rejected competition
     And the assessor shouldn't be able to reject the rejected competition
@@ -251,3 +253,10 @@ Close the competition in assessment
     Log in as a different user    &{Comp_admin1_credentials}
     The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     The user clicks the button/link    jQuery=.button:contains("Close assessment")
+
+The user should get a competition brief window
+    Select Window   title=Competition Overview - Innovation Funding Service
+
+The user closes the competition brief
+    Close Window
+    Select Window

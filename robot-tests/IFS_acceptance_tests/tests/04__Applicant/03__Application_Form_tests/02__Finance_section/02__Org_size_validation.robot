@@ -138,7 +138,9 @@ Funding section can be completed with under 50%
 The user marks their organisation as
     [Arguments]    ${org_size}
     the user selects the radio button    financePosition-organisationSize  ${org_size}
-    the user clicks the button/link    jQuery=.button:contains("Mark as complete")
+    the user enters text to a text field    jQuery=label:contains("Turnover") + input    150
+    the user enters text to a text field    jQuery=label:contains("employees") + input    0
+    the user clicks the button/link    jQuery=button:contains("Mark as complete")
     the user should not see the element  jQuery=.error-message
     the user should see the text in the page    Please complete your project finances.
 
@@ -151,7 +153,7 @@ the user completes the funding section with funding level
     the user enters text to a text field    css=[name*=other_funding-securedDate]    12-2008
     the user enters text to a text field    css=[name*=other_funding-fundingAmount]    20000
     the user selects the checkbox    termsAgreed
-    the user clicks the button/link    jQuery=.button:contains("Mark as complete")
+    the user clicks the button/link    jQuery=button:contains("Mark as complete")
 
 the funding section has been reset including funding level
     [Arguments]    ${funding_level}

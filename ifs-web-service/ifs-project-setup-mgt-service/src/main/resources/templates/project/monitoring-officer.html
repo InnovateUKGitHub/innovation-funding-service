@@ -9,7 +9,7 @@
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main id="content">
+<main tabindex="-1" id="content">
 	<th:block th:insert="fragments/layout :: main-content-start" />
 
 	<div th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{id}/status (id=${model.competitionSummary.competitionId})}" th:remove="tag"></div>
@@ -140,7 +140,10 @@
 		<th:block th:if="${model.partnerOrganisationNames}">
 			<h3 class="heading-medium no-margin">Project partners</h3>
 			<ul class="list list-bullet">
-				<li th:each="organisationName : ${model.partnerOrganisationNames}" th:text="${organisationName}">Company A (Lead)</li>
+				<li th:each="organisationName : ${model.partnerOrganisationNames}">
+                    <th:block th:text="${organisationName}">organisation name</th:block>
+                    <th:block th:if="${organisationName.equals(model.leadOrganisationName)}"> (Lead)</th:block>
+                </li>
 			</ul>
 		</th:block>
 

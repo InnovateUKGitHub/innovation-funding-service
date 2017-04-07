@@ -6,7 +6,7 @@
     <body th:with="context='applicant'" class="create-application-eligibility">
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
-        <main id="content">
+        <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
             <h1 class="heading-xlarge no-margin-bottom">Invitation to collaborate</h1>
             <p>You have been invited to join an application in the competition '
@@ -25,7 +25,7 @@
                 <p>If this is not the correct organisation, please email the lead applicant at <a th:href="${'mailto:' + model.leadApplicantEmail}" th:text="${model.leadApplicantEmail}"></a></p>
 
                 <h2 class="heading-medium">We have found an account with the invited email address</h2>
-                <p>Please continue or sign in with your existing email to accept the invitation.</p>
+                <p>Please sign in or continue to accept the invitation.</p>
                 <a th:href="@{/accept-invite-authenticated/confirm-invited-organisation}" class="button">Continue or sign in</a>
                 <p>If you do not wish to accept this invitation, please let the lead applicant know.</p>
             </div>

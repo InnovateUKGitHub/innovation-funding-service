@@ -29,13 +29,13 @@ Submit button should be disabled
     [Documentation]    INFUND-2742, INFUND-2312, INFUND-3175
     [Tags]
     When the user navigates to the page    ${SERVER}/application/${IN_ASSESSMENT_APPLICATION_1}/summary
-    Then the user should see the text in the page    This competition has already closed, you are no longer able to submit your application
+    Then the user should see the text in the page    Registration is now closed, you are no longer able to submit your application.
     And the user should not see the element    jQuery=.button:contains("Submit application")
     And the user should not see the element    jQuery=.button:contains("Review and submit")
 
 Applicant shouldn't see the Mark as complete-Edit-Save buttons
     [Documentation]    INFUND-3740
-    [Tags]    Failing
+    [Tags]
     Given the user navigates to the page    ${SERVER}/application/${IN_ASSESSMENT_APPLICATION_1}/summary
     When The user clicks the button/link    jQuery=button:contains(Project summary)
     Then The user should not see the element    jQuery=.button:contains(Mark as complete)
@@ -47,7 +47,7 @@ Already submitted application should not show error when the competition is clos
     [Documentation]    INFUND-3175
     [Tags]
     When the user navigates to the page    ${dashboard_url}
-    And the user clicks the button/link    link=${OPEN_COMPETITION_APPLICATION_3_TITLE}
+    And the user clicks the button/link    link=${OPEN_COMPETITION_APPLICATION_3_NAME}
     Then the user should not see the text in the page    Application not submitted
 
 *** Keywords ***

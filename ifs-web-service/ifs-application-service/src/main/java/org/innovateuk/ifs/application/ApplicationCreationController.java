@@ -4,7 +4,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.registration.OrganisationCreationController;
 import org.innovateuk.ifs.registration.RegistrationController;
 import org.innovateuk.ifs.util.CookieUtil;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -19,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import static java.lang.String.format;
+import static java.time.LocalDateTime.now;
 import static org.innovateuk.ifs.registration.AbstractAcceptInviteController.INVITE_HASH;
 
 /**
@@ -45,12 +49,20 @@ public class ApplicationCreationController {
     private UserAuthenticationService userAuthenticationService;
 
     @Autowired
+    private CompetitionService competitionService;
+
+    @Autowired
     private CookieUtil cookieUtil;
 
-    @RequestMapping("/check-eligibility/{competitionId}")
+    @GetMapping("/check-eligibility/{competitionId}")
     public String checkEligibility(Model model,
                                    @PathVariable(COMPETITION_ID) Long competitionId,
                                    HttpServletResponse response) {
+        PublicContentItemResource publicContentItem = competitionService
+                .getPublicContentOfCompetition(competitionId);
+        if (!isCompetitionReady(publicContentItem)) {
+            return "redirect:/competition/search";
+        }
         model.addAttribute(COMPETITION_ID, competitionId);
         cookieUtil.saveToCookie(response, COMPETITION_ID, String.valueOf(competitionId));
         cookieUtil.removeCookie(response, INVITE_HASH);
@@ -59,12 +71,12 @@ public class ApplicationCreationController {
         return "create-application/check-eligibility";
     }
 
-    @RequestMapping("/your-details")
+    @GetMapping("/your-details")
     public String checkEligibility() {
         return "create-application/your-details";
     }
 
-    @RequestMapping("/initialize-application")
+    @GetMapping("/initialize-application")
     public String initializeApplication(HttpServletRequest request,
                                         HttpServletResponse response) {
         log.info("get competition id");
@@ -89,5 +101,13 @@ public class ApplicationCreationController {
 
         }
         return null;
+    }
+
+    private boolean isCompetitionReady(PublicContentItemResource publicContentItem) {
+        if (publicContentItem.getNonIfs()) {
+            return false;
+        }
+        return (publicContentItem.getCompetitionOpenDate().isBefore(now()) &&
+                publicContentItem.getCompetitionCloseDate().isAfter(now()));
     }
 }

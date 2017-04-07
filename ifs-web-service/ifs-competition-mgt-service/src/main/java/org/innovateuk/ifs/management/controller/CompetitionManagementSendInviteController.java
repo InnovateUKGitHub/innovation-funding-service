@@ -48,7 +48,7 @@ public class CompetitionManagementSendInviteController {
         return "assessors/send-invites";
     }
 
-    @PostMapping(value = "/send")
+    @PostMapping("/send")
     public String sendEmail(Model model,
                             @PathVariable("inviteId") long inviteId,
                             @ModelAttribute("form") @Valid SendInviteForm form,

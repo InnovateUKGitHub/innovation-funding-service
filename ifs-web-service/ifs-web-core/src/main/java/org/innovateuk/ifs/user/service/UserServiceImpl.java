@@ -189,8 +189,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Void sendPasswordResetNotification(String email) {
-        return userRestService.sendPasswordResetNotification(email).getSuccessObjectOrThrowException();
+    public void sendPasswordResetNotification(String email) {
+            userRestService.sendPasswordResetNotification(email);
     }
 
     @Override
@@ -207,10 +207,5 @@ public class UserServiceImpl implements UserService {
     public Optional<UserResource> findUserByEmail(String email) {
         return userRestService.findUserByEmail(email).getOptionalSuccessObject();
     }
-
-    @Override
-    public Optional<UserResource> findUserByEmailForAnonymousUserFlow(String email) {
-        return userRestService.findUserByEmail(email).getOptionalSuccessObject();
-    }
-
+    
 }

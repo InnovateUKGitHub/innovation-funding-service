@@ -34,18 +34,4 @@ public class AssessorFeedbackRestServiceImpl extends BaseRestService implements 
         String url = restUrl + "/assessorFeedbackDocument/fileentry?applicationId=" + applicationId;
         return getWithRestResult(url, FileEntryResource.class);
     }
-
-	@Override
-	public RestResult<Boolean> feedbackUploaded(Long competitionId) {
-		String url = restUrl + "/assessorFeedbackUploaded?competitionId=" + competitionId;
-        return getWithRestResult(url, Boolean.class);
-	}
-
-	@Override
-	public RestResult<Void> submitAssessorFeedback(Long competitionId) {
-		String url = restUrl + "/submitAssessorFeedback/" + competitionId;
-        return postWithRestResult(url, Void.class);
-	}
-
-
 }

@@ -8,7 +8,7 @@
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main id="content">
+        <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" />
 
@@ -16,45 +16,19 @@
                 <h1 class="heading-xlarge">Assessor agreement</h1>
             </div>
 
-            <div th:object="${form}" th:remove="tag">
+            <p>Please read through all of the terms of service before agreeing.</p>
 
-                <div class="error-summary" th:if="${#fields.hasErrors('*')}">
-                    <h1 class="heading-medium error-summary-heading">
-                        You were unable to sign the agreement
-                    </h1>
-                    <ul class="error-summary-list">
-                        <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
-                    </ul>
-                </div>
+            <!--/* TODO INFUND-8899 ifs:utext is stripping relative links in the text. Switching to using th:utext. */-->
+            <div th:utext="${model.text}" />
 
-                <p>Please read through all of the terms of service before agreeing.</p>
+            <p class="form-hint">You can access this assessor agreement at any time from your profile. <a href="/assessment/documents/New simple assessor agreement.pdf">Download assessor agreement</a>.</p>
 
-                <!--/* TODO INFUND-8899 ifs:utext is stripping relative links in the text. Switching to using th:utext. */-->
-                <div th:utext="${model.text}" />
+            <form class="extra-margin" th:action="@{/profile/agreement}" method="post" th:unless="${model.currentAgreement}">
+                <p>By creating an account with us you agree to the terms and conditions contained in this assessor agreement.</p>
 
-                <p class="form-hint">You can access this assessor agreement at any time from your profile. <a href="/assessment/documents/New simple assessor agreement.pdf">Download assessor agreement</a>.</p>
-
-                <form class="extra-margin" th:action="@{/profile/agreement}" th:object="${form}" method="post" th:unless="${model.currentAgreement}">
-                    <div class="form-group" th:classappend="${#fields.hasErrors('agreesToTerms')}? error">
-                        <fieldset>
-                            <legend>
-                                <span class="visuallyhidden">Assessor agreement</span>
-                                <span th:if="${#fields.hasErrors('agreesToTerms')}" th:remove="tag">
-                                    <span class="error-message"  th:each="err : ${#fields.errors('agreesToTerms')}" th:text="${err}" />
-                                </span>
-                            </legend>
-                            <label class="block-label selection-button-checkbox">
-                                <input th:attr="data-required-errormessage=#{validation.assessorprofileagreementform.terms.required}" required="required" type="checkbox" th:field="*{agreesToTerms}" />
-                                I agree to and sign the agreement for becoming an assessor
-                            </label>
-                        </fieldset>
-                    </div>
-
-                    <button class="button button-large extra-margin-right" type="submit">Save and return to assessor dashboard</button>
-                    <a th:href="@{/assessor/dashboard}">Cancel</a>
-                </form>
-
-            </div>
+                <button class="button button-large extra-margin-right" type="submit">Save and return to assessor dashboard</button>
+                <a th:href="@{/assessor/dashboard}">Cancel</a>
+            </form>
 
             <p class="extra-margin" th:text="|You signed the assessor agreement on ${#temporals.format(model.agreementSignedDate, 'd MMMM yyyy')}.|" th:if="${model.currentAgreement}">
                 <span class="icon icon-important"></span>

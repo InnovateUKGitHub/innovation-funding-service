@@ -33,13 +33,14 @@
     <div th:fragment="textarea"  class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.getId()}__]')} ? error : ''">
 
         <th:block th:if="${!userIsLeadApplicant}">
-            <div class="assign-container assign-container--alert" th:classappend="(${currentUser.getId() == questionAssignee?.assigneeUserId} ? 'assign-alert')">
-                <th:block th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}"
-                          th:include="question-type/form-elements :: current-assignee"/>
-            </div>
+            <th:block th:unless="${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)}">
+                <div class="assign-container" th:classappend="${currentUser.id == questionAssignee?.assigneeUserId} ? 'assign-alert' : 'assigned-alert'">
+                    <th:block th:include="question-type/form-elements :: current-assignee"/>
+                </div>
+            </th:block>
         </th:block>
 
-        <th:block th:insert="question-type/form-elements :: assign-buttons-dialog" th:unless="${readonly} or ${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} or ${!userIsLeadApplicant}"/>
+        <th:block th:insert="question-type/form-elements :: assign-buttons-dialog" th:unless="${readonly} or ${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} or ${!userIsLeadApplicant}" th:with="fullButtonText=${TRUE}"/>
 
         <div th:unless="${readonly}" class="textarea-header">
 
@@ -79,37 +80,70 @@
     </div>
 
     <!-- ===========================Form: Fileupload =========================== -->
-    <div th:fragment="fileupload" class="upload-section" th:classappend="${#fields.hasErrors('formInput[__${formInput.getId()}__]')} ? error : ''"
-         th:with="currentUser=${#authentication.getDetails()},validationId='formInput['+${question.getId()}+']',
-         noFileUploaded=${noFileUploaded != false and ((#strings.isEmpty(response?.getFilename())) and (question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id) and (questionAssignee?.assigneeUserId == currentUser?.getId() or (questionAssignee?.getAssignee() == null))))},
-         downloadURL=${downloadURL != null ? downloadURL : '/application/' + currentApplication.id + '/form/question/' + question.id + '/forminput/' + formInput.id + '/download'},
-         compManagementDownloadURL=${currentApplication.id} + '/forminput/' + ${formInput.id} + '/download',
-         filename=${filename != null ? filename : response?.getFilename()},
-         removeName=${removeName != null}? ${removeName} : 'remove_uploaded_file',
-         readonly=${readonly} or
+    <div th:fragment="fileupload" class="upload-section"
+         th:with="
+         filename=${response?.getFilename()},
+         downloadUrl=${isCompManagementDownload} ? @{${currentApplication.id + '/forminput/' + formInput.id + '/download'}} : @{${'/application/' + currentApplication.id + '/form/question/' + question.id + '/forminput/' + formInput.id + '/download'}},
+         viewmode=${readonly} or
                 ${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} or
                 ${(currentUser.getId() != questionAssignee?.assigneeUserId and  questionAssignee?.assignee!=null) or
-		 		(questionAssignee?.assignee==null and !userIsLeadApplicant and !subFinanceSection)}">
-        <h3 class="heading-small no-margin" th:text="${formInput.getDescription()}">Project management appendix</h3>
+                (questionAssignee?.assignee==null and !userIsLeadApplicant and !subFinanceSection)} ? 'readonly' : 'edit',
+         mayRemove=${viewmode == 'edit'},
+         inputField='formInput['+${formInput.id}+']',
+         validationField=${inputField},
+         removeName='remove_uploaded_file',
+         saveName='upload_file'">
 
-        <th:block th:unless="${readonly}" th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
-        <input th:unless="${readonly}" th:if="${noFileUploaded}" type="file" th:id="${formInput.getId()}" th:name="${name != null} ? ${name} : 'formInput['+${formInput.getId()}+']'" class="inputfile"/>
-        <label th:unless="${readonly}" th:if="${noFileUploaded}" th:for="${formInput.getId()}" class="button-secondary extra-margin">+ Upload</label>
-        <button th:unless="${readonly}" th:if="${noFileUploaded}" name="upload_file" class="button-secondary" type="submit" th:attr='data-for-file-upload=${formInput.getId()}'>Save</button>
-        <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" />
-        <div th:if="${!#strings.isEmpty(filename)}">
-            <div>
-                <a th:if="${isCompManagementDownload}" th:href="@{${compManagementDownloadURL}}" class="uploaded-file" th:text="${filename}">The-uploaded-file-example.pdf</a>
-                <a th:unless="${isCompManagementDownload}" th:href="@{${downloadURL}}" class="uploaded-file" th:text="${filename}">The-uploaded-file-example.pdf</a>
-            </div>
-            <div th:unless="${readonly}" class="alignleft" th:if="${(not question.isMarkAsCompletedEnabled() or (question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id) and (questionAssignee?.assigneeUserId == currentUser?.getId() or (questionAssignee?.getAssignee() == null))))}">
-                <button class="button-secondary no-margin-right" type="submit" th:name="${removeName}">Remove</button>
-            </div>
-        </div>
-        <div th:unless="${!#strings.isEmpty(filename)}">
-            <p class="uploaded-file">No file currently uploaded</p>
-        </div>
+        <h3 class="heading-small no-margin" th:text="${formInput.getDescription()}">Project management appendix</h3>
+        <th:block th:if="${viewmode=='edit'}" th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
+        <th:block th:insert="question-type/types :: fileupload-fragment(${viewmode},${downloadUrl},${filename}, ${inputField}, ${validationField}, ${mayRemove}, ${removeName}, ${saveName})" />
     </div>
+
+
+
+    <th:block th:fragment="fileupload-fragment(viewmode,downloadUrl,filename,inputField,validationField,mayRemove,removeName,saveName)">
+        <!--/* viewmode (string) readonly / edit
+               DownloadUrl (string) url where to download the file
+               fileName (string)  filename of the uploaded file
+               inputField (string) input field to bind on
+               mayRemove (boolean) allowed to remove files
+               removeName (string) name attribute that has to be send to the controller for removing this file,
+               saveName (string) name attribute of the submit action for this particulair upload
+         */-->
+        <!--/* file upload has been submitted to innovate uk or marked as complete */-->
+        <th:block th:if="${viewmode == 'readonly'}">
+            <p th:if="${#strings.isEmpty(filename)}" class="uploaded-file">No file currently uploaded</p>
+            <a th:unless="${#strings.isEmpty(filename)}" class="uploaded-file" th:href="${downloadUrl}"  th:text="${filename}">The-uploaded-file-example.pdf</a>
+        </th:block>
+        <!--/* file upload can still be changed */-->
+        <th:block th:if="${viewmode == 'edit'}">
+            <!--/*
+                noErrors is an optional flag to give to the fragment with th:with=${noErrors=true},
+                Not all sections had properly binded the upload field, which caused problems with getting the errors.
+                (i.e. the overheads section in finances)
+                #fields.hasErrors('notBindedField') will throw an exception, and there is no quick way of checking if a
+                field has been binded
+            */-->
+            <div th:classappend="${!#strings.isEmpty(validationField)} ? (${#fields.hasErrors('__${validationField}__')} ? 'error')">
+                <th:block th:if="${!#strings.isEmpty(validationField)}">
+                    <th:block th:if="${#fields.hasErrors('__${validationField}__')}">
+                        <span class="error-message" th:each="err : ${#fields.errors('__${validationField}__')}" th:text="${err}"/>
+                    </th:block>
+                </th:block>
+                <!--/* ugly way for dealing with array kind of inputFields to a valid id formInput[1010] -> formInput-1010 */-->
+                <th:block th:if="${#strings.isEmpty(filename)}" th:with="formInputId=${#strings.replace(#strings.replace(inputField,'[','-'),']','')}">
+                    <p class="uploaded-file">No file currently uploaded</p>
+                    <input type="file"  th:id="${formInputId}" th:name="${inputField}" class="inputfile"/>
+                    <label th:for="${formInputId}" class="button-secondary extra-margin">+ Upload</label>
+                    <button th:name="${saveName}" class="button-secondary" type="submit" th:attr="data-for-file-upload=${formInputId}">Save</button>
+                </th:block>
+                <th:block th:unless="${#strings.isEmpty(filename)}">
+                    <a class="uploaded-file" th:href="${downloadUrl}" th:text="${filename}">The-uploaded-file-example.pdf</a>
+                    <button th:if="${mayRemove}" th:name="${removeName}" th:value="${removeValue != null} ? ${removeValue}" class="button-secondary" type="submit">Remove</button>
+                </th:block>
+            </div>
+        </th:block>
+    </th:block>
 
     <!-- ===========================Form: Percentage =========================== -->
 
@@ -135,8 +169,8 @@
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.name__}')} ? 'error'">
                     <label for="application_details-title">
-                        <span class="form-label form-label-bold">Project title</span>
-                        <th:block th:insert="question-type/form-elements :: form-hint (hint='Enter the full title of your project')" />
+                        <span class="form-label form-label-bold">Application title</span>
+                        <th:block th:insert="question-type/form-elements :: form-hint (hint='Enter the full title of your proposed project.')" />
                     </label>
                     <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.name')" />
                     <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
@@ -152,7 +186,7 @@
                     <fieldset>
                         <legend>
                             <span class="heading-medium">Estimated timescales</span>
-                            <span class="form-hint">Project start date</span>
+                            <span class="form-hint">When do you wish to start your project?</span>
                             <th:block th:insert="question-type/form-elements :: form-hint (hint='For example: 31 12 2015')"  />
                             <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.startDate')"  />
                         </legend>
@@ -173,47 +207,35 @@
                     <!--/* this is solved with a pattern because setting a number and min="" and max="" doesn't support one message (your project should last between 1 and 36 months).
                     This could be fixed by doing a total refactor of javascript or set two different messages (Your project should be more than 1, less than 36), or like this with a regex */-->
                 </div>
-                <div class="form-group" th:classappend="${#fields.hasErrors('*{application.researchCategoryId}')} ? 'error'">
-                    <div class="message-alert extra-margin-bottom" th:if="${hasApplicationFinances}">
-                        <h2 class="heading-small no-margin">Research category determines funding</h2>
-                        <p>The research category is used to calculate the funding for all collaborators in the application.</p>
-                    </div>
+
+                <div class="form-group">
                     <fieldset>
                         <legend>
                             <span class="heading-medium">Research category</span>
-                            <th:block th:insert="question-type/form-elements :: form-hint (hint='Please confirm the research category for your project, further guidance is available from the &lt;a href=https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#funding-rules>Innovate UK funding rules.&lt;/a&gt;')" />
-                            <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.researchCategoryId')" />
+                            <th:block th:insert="question-type/form-elements :: form-hint (hint='The type of research affects the level of funding a business can receive under UK state aid rules. Changing the research category will reset the funding level for all business participants.')" />
                         </legend>
-                        <label class="block-label selection-button-radio"
-                               th:classappend="${cat.id == rsCategoryId} ? 'selected'"
-                               th:each="cat : ${researchCategories}"
-                               th:for="${'financePosition-cat-' + cat.id}">
-                            <input th:value="${cat.id}"
-                                       type="radio"
-                                       th:name="application.researchCategoryId"
-                                       th:id="${'financePosition-cat-' + cat.id}"
-                                       th:checked="${cat.id == rsCategoryId}"
-                                       required="required"
-                                       th:attr="data-required-errormessage=#{validation.application.research.category.required}"/>
-                            <th:block th:text="${cat.name}" />
-                        </label>
+                        <span th:if="${model.questionApplicationViewModel.selectedResearchCategoryName != null}">Chosen research category: <th:block th:text="${model.questionApplicationViewModel.selectedResearchCategoryName}"/></span><br/>
+                        <button class="buttonlink" name="submit-section-redirect" th:value="${'/form/question/' + question.id + '/research-category'}"
+                                type="submit"><span th:text="${model.questionApplicationViewModel.selectedResearchCategoryName != null ? 'Change your research category' : 'Choose your research category'}">Choose your research category</span></button>
                     </fieldset>
                 </div>
+
                 <div class="form-group">
                     <fieldset>
                         <legend>
                             <span class="heading-medium">Innovation area</span>
                             <th:block th:insert="question-type/form-elements :: form-hint (hint='This is the primary innovation area for your project. This will help Innovate UK select suitable assessors for your application.')" />
                         </legend>
-                        Chosen innovation area: <th:block th:text="${model.questionApplicationViewModel.selectedInnovationAreaName}" /><br/>
-                        <button class="buttonlink" name="submit-section-redirect" th:value="${'/form/question/' + question.id + '/innovation-area'}" type="submit">Change your innovation area</button>
+                        <span th:if="${model.questionApplicationViewModel.selectedInnovationAreaName != null}">Chosen innovation area: <th:block th:text="${model.questionApplicationViewModel.selectedInnovationAreaName}"/></span><br/>
+                        <button class="buttonlink" name="submit-section-redirect" th:value="${'/form/question/' + question.id + '/innovation-area'}"
+                                type="submit"><span th:text="${model.questionApplicationViewModel.selectedInnovationAreaName != null ? 'Change your innovation area' : 'Choose your innovation area'}">Choose your innovation area</span></button>
                     </fieldset>
                 </div>
                 <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.resubmission__}')} ? 'error'">
                     <fieldset>
                         <legend>
-                            <span class="form-label form-label-bold">Is this application a resubmission of a previous application?</span>
-                            <th:block th:insert="question-type/form-elements :: form-hint (hint='Let us know if this is an application you have previously submitted to Innovate UK in another competition.')" />
+                            <span class="form-label form-label-bold">Is this application a resubmission?</span>
+                            <th:block th:insert="question-type/form-elements :: form-hint (hint='Let us know if this application has been previously submitted to Innovate UK.')" />
                             <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.resubmission')" />
                         </legend>
                         <label class="block-label selection-button-radio "
@@ -275,11 +297,12 @@
             </th:block>
             <!--/* end of edit template */-->
             <th:block th:if="${readonly or appIsClosed}">
-                <div class="success-alert extra-margin-bottom">
-                    Application details is marked as complete
-                </div>
+                <th:block th:if="${markedAsComplete.contains(question.id)}">
+                    <div class="success-alert extra-margin-bottom">Application details are marked as complete</div>
+                </th:block>
+
                 <dl class="readonly-data">
-                    <dt>Project title</dt>
+                    <dt>Application title</dt>
                     <dd th:text="${currentApplication.name}"></dd>
                 </dl>
                 <h2 class="heading-medium">Estimated timescales</h2>
@@ -288,16 +311,12 @@
                     <dd th:if="${currentApplication.startDate}" th:text="${#temporals.format(currentApplication.startDate, 'd MMMM yyyy')}"></dd>
                     <dt>Duration in months</dt>
                     <dd><th:block th:text="${currentApplication.durationInMonths}"/> months</dd>
-                    <th:block th:unless="${rsCategoryId == null}">
-                        <dt>Research category</dt>
-                        <th:block th:each="cat : ${researchCategories}">
-                            <dd th:if="${cat.id == rsCategoryId}" th:text="${cat.name}" />
-                        </th:block>
-                    </th:block>
+                    <dt>Research category</dt>
+                    <dd th:text="${currentApplication.researchCategory.name}"></dd>
                     <dt>Innovation area</dt>
-                    <dd th:text="${currentApplication.innovationArea.name} ?: 'Not Listed'"></dd>
+                    <dd th:text="${currentApplication.innovationArea.name} ?: 'Not listed'"></dd>
                     <th:block th:unless="${currentApplication.resubmission == null}">
-                        <dt>Is this application a resubmission of a previous application?</dt>
+                        <dt>Is this application a resubmission?</dt>
                         <dd th:text="${currentApplication.resubmission ? 'Yes' : 'No'}"></dd>
                         <th:block th:if="${currentApplication.resubmission == true}">
                             <dt>Previous application number</dt>
@@ -309,10 +328,13 @@
                 </dl>
             </th:block>
             <th:block th:unless="${(currentUser.id != questionAssignee?.assigneeUserId and questionAssignee?.assignee!=null) or (questionAssignee?.assignee==null and !userIsLeadApplicant)}">
-                <p th:unless="${appIsClosed}">
-                    <th:block th:if="${readonly}" th:insert="question-type/form-elements :: form-edit-question-button" />
-                    <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons" />
-                </p>
+                <div class="form-footer" th:unless="${appIsClosed}">
+                    <div class="form-footer__actions">
+                        <th:block th:if="${readonly}"
+                                  th:insert="question-type/form-elements :: form-edit-question-button"/>
+                        <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons"/>
+                    </div>
+                </div>
             </th:block>
         </th:block>
     </th:block>

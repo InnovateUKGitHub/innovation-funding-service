@@ -10,40 +10,40 @@
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main id="content">
+        <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/assessment :: assessment-header-deadline-sub (linkTitle='Back to your competition dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard/competition/{competitionId}(competitionId=${model.competitionId})},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft})" />
 
             <div class="page-title">
-                <th:block th:insert="fragments/elements :: application-title (applicationId=${model.applicationId},applicationName=${model.applicationName})" />
+                <th:block th:insert="fragments/elements :: application-title (applicationName=${model.applicationName})" />
                 <h1 class="heading-xlarge">Assessment overview</h1>
             </div>
+
 
             <section th:each="section,iterStat : ${model.sections}">
                 <h2 th:text="${section.name}" th:class="${iterStat.first} ? 'bold-medium': 'heading-medium no-margin-bottom'"/>
                 <p class="form-hint" th:text="${section.guidance}" />
-                <ul class="list-overview">
-                    <li class="grid-row section" th:each="question : ${section.questions}">
-                        <div class="column-two-thirds">
+                <ul class="task-list">
+                    <li th:each="question : ${section.questions}" th:class="${question.responseRequired} ? '': 'read-only'">
+                        <div class="task">
                             <h3 class="heading-small">
                                 <a th:href="@{/{assessmentId}/question/{questionId}(assessmentId=${model.assessmentId},questionId=${question.questionId})}"
                                    th:text="${questionNumber} + ${question.questionName}"
                                    th:with="questionNumber=${question.questionNumber} ? ${question.questionNumber} + '. ' : ''"/>
                             </h3>
                         </div>
-                        <div class="column-third">
-                            <div class="score" th:if="${question.scoreResponse}" th:text="|Score ${question.scoreResponse} / ${question.maximumScore}|"></div>
-                            <p th:unless="${question.responseRequired}" class="form-hint">No score required</p>
-                            <div class="score" th:if="${question.scopeResponse}"> In scope? <strong th:text="${question.scopeResponse ? 'Yes' : 'No'}" /></div>
-                            <img class="section-status" th:if="${question.assessed}" th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done-right.png')}" width="30" height="30" th:alt="'The &quot;'+${question.questionName}+'&quot; section has been assessed'" />
-                        </div>
+                        <span th:if="${question.scoreResponse}" class="notification" th:text="|Score ${question.scoreResponse} / ${question.maximumScore}|"></span>
+                        <span th:if="${question.scopeResponse}" class="notification">In scope</span>
+                        <div th:if="${question.assessed}" class="task-status-complete"><span>Complete</span></div>
+                        <div th:unless="${question.responseRequired}" class="task-status"><span>No score required</span></div>
                     </li>
-                    <li class="grid-row section" th:if="${iterStat.last}">
-                        <div class="column-two-thirds">
+                    <li th:if="${iterStat.last}" class="read-only">
+                        <div class="task">
                             <h3 class="heading-small">
                                 <a th:href="@{/{id}/finances(id=${model.assessmentId})}">Finances overview</a>
                             </h3>
                         </div>
+                        <div class="task-status"><span>No score required</span></div>
                     </li>
                 </ul>
             </section>

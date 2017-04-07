@@ -8,11 +8,11 @@
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main id="content">
+<main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
 
     <h1 class="heading-large">Sorry, you are unable to accept this invitation.</h1>
-    <p>You are signed in with a different email address than the one which the invite was sent. Please sign out and sign back in with the correct email address.</p>
+    <p>You are signed in with a different email address. Please sign out and sign back in using the email address that the invite was sent to.</p>
 
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>

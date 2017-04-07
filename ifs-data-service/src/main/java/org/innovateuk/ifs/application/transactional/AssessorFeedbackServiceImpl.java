@@ -1,52 +1,34 @@
 package org.innovateuk.ifs.application.transactional;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.transactional.FileService;
-import org.innovateuk.ifs.notifications.resource.Notification;
-import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
-import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.util.EntityLookupCallbacks;
-import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.InputStream;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.FUNDING_DECISIONS_MADE_STATUS_IDS;
-import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATUS_IDS;
-import static org.innovateuk.ifs.application.transactional.AssessorFeedbackServiceImpl.Notifications.APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED;
-import static org.innovateuk.ifs.application.transactional.AssessorFeedbackServiceImpl.Notifications.APPLICATION_NOT_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED;
+import static org.innovateuk.ifs.application.resource.ApplicationStatus.APPROVED;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_DETERMINE_NOTIFICATION_TARGETS;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
-import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
-import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 @Service
 public class AssessorFeedbackServiceImpl extends BaseTransactionalService implements AssessorFeedbackService {
 
-    private static final Predicate<Application> applicationApprovedFilter = application -> application.getApplicationStatus().isApproved();
+    private static final Predicate<Application> applicationApprovedFilter = application -> APPROVED == application.getApplicationStatus();
 
     enum Notifications {
         APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
@@ -119,83 +101,6 @@ public class AssessorFeedbackServiceImpl extends BaseTransactionalService implem
                 getAssessorFeedbackFileEntry(application).andOnSuccess(fileEntry ->
                 fileService.deleteFile(fileEntry.getId()).andOnSuccessReturnVoid(() ->
                 removeAssessorFeedbackFileFromApplication(application))));
-    }
-    
-	@Override
-	public ServiceResult<Boolean> assessorFeedbackUploaded(long competitionId) {
-		long countNotUploaded = applicationRepository.countByCompetitionIdAndApplicationStatusIdInAndAssessorFeedbackFileEntryIsNull(competitionId, SUBMITTED_STATUS_IDS);
-		boolean allUploaded = countNotUploaded == 0L;
-		return serviceSuccess(allUploaded);
-	}
-
-	@Override
-	public ServiceResult<Void> submitAssessorFeedback(long competitionId) {
-		return getCompetition(competitionId).andOnSuccessReturnVoid(competition ->
-			competition.setReleaseFeedbackDate(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS))
-		);
-	}
-
-    @Override
-    public ServiceResult<Void> notifyLeadApplicantsOfAssessorFeedback(long competitionId) {
-        return getCompetition(competitionId).andOnSuccess(competition -> getCompetitionOnSuccessToNotifyLeadApplicantsOfAssessorFeedback(competition, competitionId));
-    }
-
-    private ServiceResult<Void> getCompetitionOnSuccessToNotifyLeadApplicantsOfAssessorFeedback (Competition competition, long competitionId) {
-        List<Application> applicationsToPublishAssessorFeedbackFor = applicationRepository.findByCompetitionIdAndApplicationStatusIdIn(competitionId, FUNDING_DECISIONS_MADE_STATUS_IDS);
-
-        Pair<List<Application>, List<Application>> applicationsByFundingSuccess = simplePartition(applicationsToPublishAssessorFeedbackFor, applicationApprovedFilter);
-        List<Application> successfulApplications = applicationsByFundingSuccess.getLeft();
-        List<Application> unsuccessfulApplications = applicationsByFundingSuccess.getRight();
-
-        List<ServiceResult<Pair<Long, NotificationTarget>>> successfulApplicationTargets = getLeadApplicantNotificationTargets(simpleMap(successfulApplications, Application::getId));
-        List<ServiceResult<Pair<Long, NotificationTarget>>> unsuccessfulApplicationTargets = getLeadApplicantNotificationTargets(simpleMap(unsuccessfulApplications, Application::getId));
-
-        ServiceResult<List<Pair<Long, NotificationTarget>>> aggregatedFundedTargets = aggregate(successfulApplicationTargets);
-        ServiceResult<List<Pair<Long, NotificationTarget>>> aggregatedUnfundedTargets = aggregate(unsuccessfulApplicationTargets);
-
-        if (aggregatedFundedTargets.isSuccess() && aggregatedUnfundedTargets.isSuccess()) {
-
-            Notification fundedNotification = createFundingDecisionNotification(competition, aggregatedFundedTargets.getSuccessObject(), APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED);
-            Notification unfundedNotification = createFundingDecisionNotification(competition, aggregatedUnfundedTargets.getSuccessObject(), APPLICATION_NOT_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED);
-
-            ServiceResult<Void> fundedEmailSendResult = notificationService.sendNotification(fundedNotification, EMAIL);
-            ServiceResult<Void> unfundedEmailSendResult = notificationService.sendNotification(unfundedNotification, EMAIL);
-
-            return processAnyFailuresOrSucceed(fundedEmailSendResult, unfundedEmailSendResult);
-
-        } else {
-            return serviceFailure(NOTIFICATIONS_UNABLE_TO_DETERMINE_NOTIFICATION_TARGETS);
-        }
-    }
-
-    private Notification createFundingDecisionNotification(Competition competition, List<Pair<Long, NotificationTarget>> notificationTargetsByApplicationId, Notifications notificationType) {
-
-        Map<String, Object> globalArguments = new HashMap<>();
-        globalArguments.put("competitionName", competition.getName());
-        globalArguments.put("dashboardUrl", webBaseUrl);
-        globalArguments.put("feedbackDate", competition.getAssessorFeedbackDate());
-
-        List<Pair<NotificationTarget, Map<String, Object>>> notificationTargetSpecificArgumentList = simpleMap(notificationTargetsByApplicationId, pair -> {
-
-            Long applicationId = pair.getKey();
-            Application application = applicationRepository.findOne(applicationId);
-
-            Map<String, Object> perNotificationTargetArguments = new HashMap<>();
-            perNotificationTargetArguments.put("applicationName", application.getName());
-            perNotificationTargetArguments.put("applicationNumber", application.getId());
-            return Pair.of(pair.getValue(), perNotificationTargetArguments);
-        });
-
-        List<NotificationTarget> notificationTargets = simpleMap(notificationTargetsByApplicationId, Pair::getValue);
-        Map<NotificationTarget, Map<String, Object>> notificationTargetSpecificArguments = pairsToMap(notificationTargetSpecificArgumentList);
-        return new Notification(systemNotificationSource, notificationTargets, notificationType, globalArguments, notificationTargetSpecificArguments);
-    }
-
-    private List<ServiceResult<Pair<Long, NotificationTarget>>> getLeadApplicantNotificationTargets(List<Long> applicationIds) {
-        return simpleMap(applicationIds, applicationId -> {
-            ServiceResult<ProcessRole> leadApplicantResult = getProcessRoles(applicationId, LEADAPPLICANT).andOnSuccess(EntityLookupCallbacks::getOnlyElementOrFail);
-            return leadApplicantResult.andOnSuccessReturn(leadApplicant -> Pair.of(applicationId, new UserNotificationTarget(leadApplicant.getUser())));
-        });
     }
 
     private void removeAssessorFeedbackFileFromApplication(Application application) {

@@ -16,15 +16,15 @@
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main id="content">
+        <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
 
-            <th:block th:if="${currentApplication.isOpen() and currentCompetition.isOpen()}" th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication},linkTitle='Application Overview',linkClass='link-back',linkUrl=@{/application/{id}(id=${currentApplication.id})}"/>
+            <th:block th:if="${currentApplication.isOpen() and currentCompetition.isOpen()}" th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication},linkTitle='Application overview',linkClass='link-back',linkUrl=@{/application/{id}(id=${currentApplication.id})}"/>
 
             <th:block th:insert="fragments/elements :: competition-closing-warning (competition=${currentCompetition})" />
 
             <div class="page-title">
-                <th:block th:insert="fragments/elements :: application-title (applicationId=${currentApplication.id},applicationName=${currentApplication.name})" />
+                <th:block th:insert="fragments/elements :: application-title (applicationName=${currentApplication.name})" />
                 <h1 th:if="${currentApplication.isOpen()}" class="heading-xlarge no-margin">Application summary</h1>
                 <h1 th:unless="${currentApplication.isOpen()}" class="heading-xlarge no-margin">Application overview</h1>
             </div>
@@ -41,16 +41,15 @@
 
             <div th:if="${!currentCompetition.isOpen() and !currentApplication.hasBeenSubmitted()}">
                 <div class="warning-alert">
-                    This competition has already closed, you are no longer able to submit your application.
+                    Registration is now closed, you are no longer able to submit your application.
                 </div>
             </div>
             <div th:if="${currentCompetition.isOpen() and currentApplication.isOpen()}">
                 <hr/>
 
                 <th:block th:if="${userIsLeadApplicant}">
-                    <div>
-                        <span class="icon icon-information"></span>
-                        <span> You will not be able to make changes to your application or resubmit after this point.</span>
+                    <div class="message-alert">
+                        <p>You will not be able to make changes to your application or resubmit after this point.</p>
                     </div>
                     <div class="alignright-button">
                         <a th:if="${applicationReadyForSubmit}" id="submit-application-button" class="button large no-margin-right" data-js-modal="modal-confirm-submit-application"
@@ -60,8 +59,9 @@
                 </th:block>
 
                 <th:block th:unless="${userIsLeadApplicant}">
-                  <span class="icon icon-information"></span>
-                  <span>All sections must be marked as complete before the application can be submitted. Only the lead applicant is able to submit the application.</span>
+                    <div class="message-alert">
+                        <p>All sections must be marked as complete before the application can be submitted. Only the lead applicant is able to submit the application.</p>
+                    </div>
                 </th:block>
             </div>
             <th:block th:insert="fragments/layout :: main-content-end" />

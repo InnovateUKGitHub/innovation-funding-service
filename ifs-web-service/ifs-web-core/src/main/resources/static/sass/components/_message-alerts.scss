@@ -22,78 +22,74 @@ Large message panel
 */
 
 %alert-panel {
-	padding: 20px 20px 20px 60px;
-	border-style: solid;
-	border-width: 0 0 0 5px;
-	margin: 10px 0;
-	background-color: $grey-4;
-	background-repeat: no-repeat;
-	background-position: 20px 50%;
-	background-size: 20px 20px;
-	clear: both;
-	p, .heading-small, ul, ol {
-		margin: 0;
-	}
-	@include media-down(mobile){
-		p a {
-			margin-left: 0;
-		}
-	}
+  padding: 20px 20px 20px 60px;
+  border-style: solid;
+  border-width: 0 0 0 5px;
+  margin: 10px 0;
+  background-color: $grey-4;
+  background-repeat: no-repeat;
+  background-position: 20px 50%;
+  background-size: 20px 20px;
+  clear: both;
+
+  p, .heading-small, .heading-medium, ul, ol {
+    margin: 0;
+  }
+
+ 	@include media-down(mobile) {
+    padding: 20px 10px 20px 30px;
+    background-position: 8px 50%;
+    background-size: 16px 16px;
+
+    p a {
+      margin-left: 0;
+    }
+ 	}
+
 }
+
 .success-alert {
-	@extend %alert-panel;
-	background-image: url('../images/icons/icon-messages/tick-icon.png');
-	color: $button-colour;
-	border-color: $button-colour;
+  @extend %alert-panel;
+  background-image: url('../images/icons/icon-messages/tick-icon.png');
+  color: $button-colour;
+  border-color: $button-colour;
 }
+
 .fail-alert {
-	@extend %alert-panel;
-	background-image: url('../images/icons/icon-messages/cross-icon.png');
-	color: $red;
-	border-color: $red;
+  @extend %alert-panel;
+  background-image: url('../images/icons/icon-messages/cross-icon.png');
+  color: $red;
+  border-color: $red;
 }
+
 .warning-alert {
-	@extend %alert-panel;
-	background-image: url('../images/icons/icon-messages/alert-icon.png');
-	color: $red;
-	border-color: $red;
+  @extend %alert-panel;
+  background-image: url('../images/icons/icon-messages/alert-icon.png');
+  color: $red;
+  border-color: $red;
 }
+
 .message-alert,
 .icon-info {
-	@extend %alert-panel;
-	background-image: url('../images/icons/icon-messages/info-icon.png');
-	border-color: $link-colour;
+  @extend %alert-panel;
+  background-image: url('../images/icons/icon-messages/info-icon.png');
+  border-color: $link-colour;
 }
+
 .assign-alert {
-	@extend %alert-panel;
-	background-image: url('../images/icons/icon-messages/edit-icon.png');
-	border-color: $text-colour;
+  @extend %alert-panel;
+  background-image: url('../images/icons/icon-messages/edit-icon.png');
+  border-color: $text-colour;
 }
+
 .assigned-alert {
-	@extend %alert-panel;
-	border-color: $text-colour;
+  @extend %alert-panel;
+  border-color: $text-colour;
+  padding-left: 30px;
 }
+
 .declare-alert {
-	@extend %alert-panel;
-	background-image: url('../images/icons/icon-messages/declare-icon.png');
-	border-color: $text-colour;
-}
-
-/* SG
-
-# IFS/Small Alert Dialog
-Small dialog warning usually used as a warning before submitting a form
-
-```
-<p class="form-hint icon-info-small-blue">Only you can see this level of detail</p>
-
- ```
-*/
-
-.icon-info-small-blue{
-	background: url(../images/icons/icon-messages/info-icon.png) no-repeat;
-	clear: both;
-	display: block;
-	min-height: 35px;
-	padding-left: 50px;
+  @extend %alert-panel;
+  background-image: url('../images/icons/icon-messages/declare-icon.png');
+  border-color: $text-colour;
 }

@@ -4,13 +4,14 @@
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Confirm rejection'" />
     </head>
 
-    <body th:with="context='assessment'" class="reject-invitation-confirm">
+    <body th:with="context='assessment'" th:class="${model.assessmentState.name() == 'PENDING' ? 'assessment-reject-confirm' : 'reject-invitation-confirm'}">
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main id="content">
+        <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
-            <th:block th:insert="fragments/assessment :: assessment-header-sub (linkTitle='Back to your assessment overview',linkClass='link-back',linkUrl=@{/{assessmentId}(assessmentId=${model.assessmentId})})" />
+            <th:block th:if="${model.assessmentState.name() == 'PENDING'}" th:insert="fragments/assessment :: assessment-header-sub (linkTitle='Back to your assigned application',linkClass='link-back',linkUrl=@{/{assessmentId}/assignment(assessmentId=${model.assessmentId})})" />
+            <th:block th:unless="${model.assessmentState.name() == 'PENDING'}" th:insert="fragments/assessment :: assessment-header-sub (linkTitle='Back to your assessment overview',linkClass='link-back',linkUrl=@{/{assessmentId}(assessmentId=${model.assessmentId})})" />
 
             <div class="page-title">
                 <th:block th:insert="fragments/elements :: application-title (applicationId=${model.applicationId},applicationName=${model.applicationName})" />

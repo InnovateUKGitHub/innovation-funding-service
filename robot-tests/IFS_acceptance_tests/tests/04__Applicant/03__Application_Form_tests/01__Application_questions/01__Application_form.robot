@@ -32,10 +32,48 @@ Application details: Previous submission
 
 Application details: Research category
     [Documentation]    INFUND-6823
+    Given The user clicks the button/link    jQuery=button:contains("Choose your research category")
     Then the user should see the element    jQuery=label:contains("Industrial research")
     And the user should see the element    jQuery=label:contains("Feasibility studies")
     And the user should see the element    jQuery=label:contains("Experimental development")
+    and the user clicks the button/link    jQuery=button:contains(Save)
+    Then the user should see an error    This field cannot be left blank
+    and the user clicks the button twice    jQuery=label[for^="researchCategoryChoice"]:contains("Feasibility studies")
+    and the user clicks the button/link    jQuery=button:contains(Save)
     And the finance summary page should show a warning
+
+Application details: Innovation Area - Materials and manufacturing
+    [Documentation]    INFUND-8115
+    Given the user clicks the button/link    link=Application overview
+    And the user clicks the button/link    link=Application details
+    and the user should not see the element      jQuery=button:contains("Change your innovation area")
+    and The user clicks the button/link   jQuery=button:contains("Choose your innovation area")
+    Then the user should see the element    jQuery=label:contains("Composite materials"):contains("New composite materials with enhanced or new properties and performance.")
+    And the user should see the element    jQuery=label:contains("My innovation area is not listed")
+    And the user should see the element    jQuery=a:contains("Cancel")
+    and the user clicks the button/link    jQuery=button:contains(Save)
+    #Then the user should see an error       This field cannot be left blank
+    #TODO : INFUND-9097
+    and the user clicks the button/link   jQuery=label:contains("Metals / metallurgy")
+    and the user clicks the button/link     jQuery=button:contains(Save)
+    Then the user should see the element     jQuery=button:contains("Change your innovation area")
+
+Application details: Innovation Area - Infrastructe
+    [Documentation]    INFUND-8443
+    [Tags]  MySQL
+    [Setup]  Set the competition innovation sector to Infrastructure
+    Given the user clicks the button/link   jQuery=button:contains("Change your innovation area")
+    Then the user should see the element    jQuery=label:contains("Energy efficiency"):contains("Improve energy end-use efficiency, for example, in buildings, domestic appliances, industrial processes or vehicles.")
+    And the user should see the element    jQuery=label:contains("My innovation area is not listed")
+    And the user should see the element    jQuery=a:contains("Cancel")
+    and the user clicks the button/link    jQuery=button:contains(Save)
+    #Then the user should see an error       This field cannot be left blank
+    #TODO : INFUND-9097
+    and the user clicks the button/link   jQuery=label:contains("Energy systems")
+    and the user clicks the button/link     jQuery=button:contains(Save)
+    Then the user should see the element     jQuery=button:contains("Change your innovation area")
+    [Teardown]  Set the competition innovation sector to Materials and manufacturing
+
 
 Autosave in the form questions
     [Documentation]    INFUND-189
@@ -59,7 +97,7 @@ Word count works
 Guidance of the questions
     [Documentation]    INFUND-190
     [Tags]
-    When the user clicks the button/link    css=#form-input-11 .summary
+    When the user clicks the button/link    css=#form-input-1039 .summary
     Then the user should see the element    css=#details-content-0 p
 
 Marking a question as complete
@@ -76,50 +114,10 @@ Mark a question as incomplete
     ...    INFUND-202
     [Tags]    HappyPath
     Given the user clicks the button/link    link=Project summary
-    When the user clicks the button/link    css=#form-input-11 div.form-footer .form-footer__actions > button[name="mark_as_incomplete"]
+    When the user clicks the button/link    css=#form-input-1039 div.form-footer .form-footer__actions > button[name="mark_as_incomplete"]
     Then the text box should be editable
     And the button state should change to 'Mark as complete'
     And the question should not be marked as complete on the application overview page
-
-Navigation of the form sections
-    [Documentation]    INFUND-189
-    [Tags]    HappyPath
-    And the user clicks the button/link    link=Application details
-    Then the user should see the text in the page    Enter the full title of your project
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    Please provide a short summary of your project.
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    Please provide a brief description of your project
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    If your application doesn't align with the scope
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    What should I include in the business opportunity section
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    What should I include in the market opportunity section
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    What should I include in the project exploitation section
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    What should I include in the benefits section
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    Describe the areas of work
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    Explain how your project is innovative
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    We recognise that many of the projects we fund are risky
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    Describe your capability to develop and exploit this technology
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    Tell us the total costs of the project and how
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    What should I include in the financial support from Innovate UK section
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    Only your organisation can see this level of detail.
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    To determine the level of funding you are eligible
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    Enter your funding level
-    When the applicant navigates to the next section
-    Then the user should see the text in the page    This is the financial overview of all partners
 
 Review and submit button
     [Tags]
@@ -131,73 +129,77 @@ Review and submit button
 
 *** Keywords ***
 the text should be visible
-    Wait Until Element Contains Without Screenshots    css=#form-input-11 .editor    I am a robot
+    Wait Until Element Contains Without Screenshots    css=#form-input-1039 .editor    I am a robot
 
 The user clicks the section link and is redirected to the correct section
     [Arguments]    ${link}    ${url}
     The user clicks the button/link    link=${link}
     The user should be redirected to the correct page    ${url}
-    The user clicks the button/link    link=Application Overview
+    The user clicks the button/link    link=Application overview
 
 the Applicant edits the Project summary
-    Clear Element Text    css=#form-input-11 .editor
-    Press Key    css=#form-input-11 .editor    \\8
+    Clear Element Text    css=#form-input-1039 .editor
+    Press Key    css=#form-input-1039 .editor    \\8
     Focus    css=.app-submit-btn
-    Wait Until Element Contains Without Screenshots    css=#form-input-11 .count-down    400
-    Focus    css=#form-input-11 .editor
-    The user enters text to a text field    css=#form-input-11 .editor    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris test @.
+    Wait Until Element Contains Without Screenshots    css=#form-input-1039 .count-down    400
+    Focus    css=#form-input-1039 .editor
+    The user enters text to a text field    css=#form-input-1039 .editor    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris test @.
     Focus    css=.app-submit-btn
     wait for autosave
 
 the word count should be correct for the Project summary
-    Wait Until Element Contains Without Screenshots    css=#form-input-11 .count-down    369
+    Wait Until Element Contains Without Screenshots    css=#form-input-1039 .count-down    369
 
 the Applicant edits the Project description question (300 words)
-    Clear Element Text    css=#form-input-11 .editor
-    Press Key    css=#form-input-11 .editor    \\8
-    The user enters text to a text field    css=#form-input-11 .editor    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac dui quis mi consectetuer lacinia. Nam pretium turpis et arcu. Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Praesent adipiscing. Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero. Cras id dui. Aenean ut
+    Clear Element Text    css=#form-input-1039 .editor
+    Press Key    css=#form-input-1039 .editor    \\8
+    The user enters text to a text field    css=#form-input-1039 .editor    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus. Nullam accumsan lorem in dui. Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac dui quis mi consectetuer lacinia. Nam pretium turpis et arcu. Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris. Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Praesent adipiscing. Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero. Cras id dui. Aenean ut
     Focus    css=.app-submit-btn
     wait for autosave
 
 the text box should turn to green
-    the user should see the element    css=#form-input-11 div.success-alert
-    Element Should Be Disabled    css=#form-input-11 textarea
+    the user should see the element    css=#form-input-1039 div.success-alert
+    Element Should Be Disabled    css=#form-input-1039 textarea
 
 the button state should change to 'Edit'
     the user should see the element    jQuery=button:contains("Edit")
 
 the word count for the Project description question should be correct (100 words)
-    Element Should Contain    css=#form-input-11 .count-down    100
+    Element Should Contain    css=#form-input-1039 .count-down    100
 
 the Applicant edits Project summary and marks it as complete
-    focus    css=#form-input-11 .editor
-    Clear Element Text    css=#form-input-11 .editor
-    Press Key    css=#form-input-11 .editor    \\8
-    focus    css=#form-input-11 .editor
-    The user enters text to a text field    css=#form-input-11 .editor    Hi, I’m a robot @#$@#$@#$
-    the user clicks the button/link    css=#form-input-11 .form-footer .form-footer__actions button[name="mark_as_complete"]
+    focus    css=#form-input-1039 .editor
+    Clear Element Text    css=#form-input-1039 .editor
+    Press Key    css=#form-input-1039 .editor    \\8
+    focus    css=#form-input-1039 .editor
+    The user enters text to a text field    css=#form-input-1039 .editor    Hi, I’m a robot @#$@#$@#$
+    the user clicks the button/link    css=#form-input-1039 .form-footer .form-footer__actions button[name="mark_as_complete"]
 
 the question should be marked as complete on the application overview page
-    The user clicks the button/link    link=Application Overview
-    The user should see the element    jQuery=#section-1 li:nth-child(2) span:contains("Complete")
+    The user clicks the button/link    link=Application overview
+    The user should see the element    jQuery=#section-184 li:nth-child(2) span:contains("Complete")
 
 the text box should be editable
-    Wait Until Element Is Enabled Without Screenshots    css=#form-input-11 textarea
+    Wait Until Element Is Enabled Without Screenshots    css=#form-input-1039 textarea
 
 the button state should change to 'Mark as complete'
     the user should see the element    jQuery=button:contains("Mark as complete")
 
 the question should not be marked as complete on the application overview page
-    The user clicks the button/link    link=Application Overview
+    The user clicks the button/link    link=Application overview
     Run Keyword And Ignore Error Without Screenshots    confirm action
-    the user should see the element    jQuery=#section-1 li:nth-child(2)
-    the user should not see the element    jQuery=#section-1 li:nth-child(2) span:contains("Complete")
-
-The applicant navigates to the next section
-    The user clicks the button/link    css=.next .pagination-label
-    Run Keyword And Ignore Error Without Screenshots    confirm action
+    the user should see the element    jQuery=#section-184 li:nth-child(2)
+    the user should not see the element    jQuery=#section-184 li:nth-child(2) span:contains("Complete")
 
 the finance summary page should show a warning
-    The user clicks the button/link    link=Application Overview
+    The user clicks the button/link    link=Application overview
     The user clicks the button/link    link=Your finances
-    the user should see the element  jQuery=h3:contains("Your funding") + p:contains("You must select a research category in application details ")
+    the user should see the element    jQuery=h3:contains("Your funding") + p:contains("You must select a research category in application details ")
+
+Set the competition innovation sector to Infrastructure
+    Connect to Database    @{database}
+    Execute sql string    UPDATE `${database_name}`.`category_link` SET category_id=(SELECT id FROM `${database_name}`.`category` WHERE `name` = 'Infrastructure systems') WHERE class_name = "org.innovateuk.ifs.competition.domain.Competition#innovationSector" AND class_pk = '${OPEN_COMPETITION}'
+
+Set the competition innovation sector to Materials and manufacturing
+    Connect to Database    @{database}
+    execute sql string    UPDATE `${database_name}`.`category_link` SET category_id=(SELECT id FROM `${database_name}`.`category` WHERE `name` = 'Materials and manufacturing') WHERE class_name = "org.innovateuk.ifs.competition.domain.Competition#innovationSector" AND class_pk = '${OPEN_COMPETITION}';

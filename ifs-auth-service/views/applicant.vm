@@ -1,8 +1,8 @@
 
-            <h2 class="heading-small">My username and/or password isn't working</h2>
-            <p>The Innovation Funding Service (IFS) will not accept your sign in details for the previous Innovate UK process.</p>
+            <h2 class="heading-small">My email and/or password isn't working</h2>
+            <p>If you applied previously using the old service, you will need to create a new account.</p>
             #if ($passwordEnabled)
-              <p><a href="$resourcesDomain/login/reset-password">Forgotten your password</a></p>
+              <p><a href="$resourcesDomain/login/reset-password">Forgotten your password?</a></p>
             #end
-            <h2 class="heading-small">I don't have an Innovation Funding Service account</h2>
-            <p>Please create a new IFS account by visiting our <a href="$resourcesDomain/competition/search">competitions listings page</a>.</p>
+            <h2 class="heading-small">I don't have an Innovation Funding Service Account</h2>
+            <p>Please create a new account by visiting our <a href="$resourcesDomain/competition/search">competitions listings page</a>.</p>

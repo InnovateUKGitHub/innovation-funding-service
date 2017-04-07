@@ -7,13 +7,13 @@
   <th:block th:insert="fragments/layout :: body-start" />
   <th:block th:insert="fragments/layout :: global-header" />
 
-<main id="content">
+<main tabindex="-1" id="content">
   <th:block th:insert="fragments/layout :: main-content-start" />
   <div th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${project.id})}" th:remove="tag"></div>
 
   <div class="page-title">
       <p class="subtitle" th:text="${applicationId}"/>
-      <h1 class="heading-xlarge">Submit Bank Details</h1>
+      <h1 class="heading-xlarge">Submit bank details</h1>
   </div>
 
     <form th:object="${form}" th:action="@{/project/{id}/bank-details(id=${project.id})}" method="post">

@@ -24,6 +24,7 @@ Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
+Resource          CompAdmin_Commons.robot
 
 *** Test Cases ***
 Initial details: server-side validations
@@ -31,10 +32,10 @@ Initial details: server-side validations
     ...
     ...    IFUND-3888
     [Tags]    HappyPath
-    Given the user clicks the button/link    id=section-3
+    Given the user navigates to the page   ${CA_UpcomingComp}
     And the user clicks the button/link    jQuery=.button:contains("Create competition")
     And The user clicks the button/link    link=Initial details
-    When the user clicks the button/link    jQuery=.button:contains("Done")
+    When the user clicks the button/link   jQuery=.button:contains("Done")
     Then the user should see an error    Please enter a title.
     And the user should see an error    Please select a competition type.
     And the user should see an error    Please select an innovation sector.
@@ -57,7 +58,7 @@ Initial details: client-side validations
     Then the user should not see the error any more    Please select a competition type.
     When the user selects the option from the drop-down menu    Health and life sciences    id=innovationSectorCategoryId
     Then the user should not see the error any more    Please select an innovation sector.
-    When the user selects the option from the drop-down menu    Advanced Therapies    id=innovationAreaCategoryId-0
+    When the user selects the option from the drop-down menu    Advanced therapies    id=innovationAreaCategoryId-0
     Then the user should not see the error any more    Please select an innovation area.
     When the user enters text to a text field    id=openingDateDay    01
     #Then the user should not see the error any more    Please enter an opening day.
@@ -173,8 +174,8 @@ Eligibility Autosave
     and the user clicks the button/link    link=Eligibility
     Then the user should see the correct details in the eligibility form
 
-Milestones: Server side validations
-    [Documentation]    INFUND-2993
+Milestones: Server side validations, submission time is default
+    [Documentation]    INFUND-2993, INFUND-7632
     [Tags]    HappyPath
     [Setup]    The user navigates to the Validation competition
     Given the user clicks the button/link    link=Milestones
@@ -182,13 +183,15 @@ Milestones: Server side validations
     And the users waits until the page is autosaved
     And the user clicks the button/link    jQuery=button:contains(Done)
     Then Validation summary should be visible
+    Then the user should see the text in the element    jQuery=tr:nth-of-type(3) td:nth-of-type(1) option:selected    12:00 pm
 
-Milestones: Client side validations
-    [Documentation]    INFUND-2993
+Milestones: Client side validations, submission time is non-default
+    [Documentation]    INFUND-2993, INFUND-7632
     [Tags]    HappyPath
     When the user fills the milestones with valid data
     Then The user should not see the text in the page    please enter a future date that is after the previous milestone
     Then The user should not see the text in the page    please enter a valid date
+    Then the user should see the text in the element    jQuery=tr:nth-of-type(3) td:nth-of-type(1) option:selected    10:00 am
 
 Milestones: Autosave
     [Tags]
@@ -310,6 +313,7 @@ the user fills the milestones with valid data
     The user enters text to a text field    name=milestoneEntries[SUBMISSION_DATE].day    12
     The user enters text to a text field    name=milestoneEntries[SUBMISSION_DATE].month    1
     The user enters text to a text field    name=milestoneEntries[SUBMISSION_DATE].year    2019
+    The user selects the index from the drop-down menu    1    id=milestoneEntries[SUBMISSION_DATE].time
     The user enters text to a text field    name=milestoneEntries[ALLOCATE_ASSESSORS].day    13
     The user enters text to a text field    name=milestoneEntries[ALLOCATE_ASSESSORS].month    1
     The user enters text to a text field    name=milestoneEntries[ALLOCATE_ASSESSORS].year    2019
@@ -348,7 +352,7 @@ the user should see the correct values in the initial details form
     Should Be Equal    ${input_value}    Validations Test
     Page Should Contain    Programme
     Page Should Contain    Health and life sciences
-    Page Should Contain    Advanced Therapies
+    Page Should Contain    Advanced therapies
     ${input_value} =    Get Value    id=openingDateDay
     Should Be Equal As Strings    ${input_value}    1
     ${input_value} =    Get Value    Id=openingDateMonth
@@ -420,7 +424,7 @@ The user enters valid data in the initial details
     Given the user enters text to a text field    id=title    Validations Test
     And the user selects the option from the drop-down menu    Programme    id=competitionTypeId
     And the user selects the option from the drop-down menu    Health and life sciences    id=innovationSectorCategoryId
-    And the user selects the option from the drop-down menu    Advanced Therapies    id=innovationAreaCategoryId-0
+    And the user selects the option from the drop-down menu    Advanced therapies    id=innovationAreaCategoryId-0
     And the user enters text to a text field    id=openingDateDay    01
     And the user enters text to a text field    Id=openingDateMonth    12
     And the user enters text to a text field    id=openingDateYear    2017

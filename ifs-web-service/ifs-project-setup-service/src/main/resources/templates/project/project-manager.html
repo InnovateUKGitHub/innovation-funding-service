@@ -8,12 +8,12 @@
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main id="content">
+        <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/project/{projectId}/details(projectId=${model.projectId})}" />
 
             <div class="page-title">
-                <th:block th:insert="fragments/elements :: project-title (projectId=${model.app.id}, projectName=${model.projectName})" />
+                <th:block th:insert="fragments/elements :: project-title (projectName=${model.projectName})" />
                 <h1 class="heading-xlarge">Project Manager</h1>
             </div>
 

@@ -1,14 +1,14 @@
-=== Get by Id with invites for Application
+=== Get by Id
 ==== Request
-include::{snippets}/invite-organisation/get-by-id-with-invites-for-application/http-request.adoc[]
-include::{snippets}/invite-organisation/get-by-id-with-invites-for-application/path-parameters.adoc[]
+include::{snippets}/invite-organisation/get-by-id/http-request.adoc[]
+include::{snippets}/invite-organisation/get-by-id/path-parameters.adoc[]
 
 ==== Response
-include::{snippets}/invite-organisation/get-by-id-with-invites-for-application/http-response.adoc[]
-include::{snippets}/invite-organisation/get-by-id-with-invites-for-application/response-fields.adoc[]
+include::{snippets}/invite-organisation/get-by-id/http-response.adoc[]
+include::{snippets}/invite-organisation/get-by-id/response-fields.adoc[]
 
 ==== Curl Example
-include::{snippets}/invite-organisation/get-by-id-with-invites-for-application/curl-request.adoc[]
+include::{snippets}/invite-organisation/get-by-id/curl-request.adoc[]
 
 === Get by Organisation Id with invites for Application
 ==== Request

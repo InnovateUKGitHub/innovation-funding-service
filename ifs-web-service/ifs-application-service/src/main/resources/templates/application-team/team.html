@@ -8,14 +8,14 @@
         <th:block th:insert="fragments/layout :: body-start"/>
         <th:block th:insert="fragments/layout :: global-header"/>
 
-        <main id="content">
+        <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start"/>
             <th:block th:insert="fragments/layout :: header-sub"
                       th:with="linkTitle='Application overview',linkClass='link-back',linkUrl=@{/application/{applicationId}(applicationId=${model.applicationId})}"/>
 
             <div class="page-title">
                 <th:block
-                    th:insert="fragments/elements :: application-title (applicationId=${model.applicationId},applicationName=${model.applicationName})"/>
+                    th:insert="fragments/elements :: application-title (applicationName=${model.applicationName})"/>
                 <h1 class="heading-xlarge">Application team</h1>
             </div>
 
@@ -24,7 +24,7 @@
             <p th:unless="${model.applicationCanBegin}">To change the lead applicant please email Innovate UK <a href="mailto:support@innovateuk.gov.uk">support@innovateuk.gov.uk</a>.</p>
 
             <div th:if="${model.applicationCanBegin}" class="message-alert">
-                <h2 class="heading-medium no-margin-bottom">As the lead applicant you can:</h2>
+                <h2 class="heading-small">As the lead applicant you can:</h2>
                 <ul class="list-bullet">
                     <li>add collaborating and contributing organisations and individuals</li>
                     <li>manage organisations and individuals</li>
@@ -33,7 +33,10 @@
             </div>
 
             <th:block th:each="organisation : ${model.organisations}">
-                <h2 class="heading-medium" th:text="${organisation.lead} ? ${organisation.name} + ', Lead organisation' : ${organisation.name}">Empire Ltd, Lead organisation</h2>
+                <h2 class="heading-medium">
+                    <th:block th:text="${organisation.name}">Organisation name</th:block>
+                    <th:block th:if="${organisation.lead}"> (Lead)</th:block>
+                </h2>
 
                 <table class="table-overflow">
                     <thead>

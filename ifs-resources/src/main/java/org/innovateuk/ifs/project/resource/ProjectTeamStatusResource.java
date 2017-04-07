@@ -29,13 +29,18 @@ public class ProjectTeamStatusResource {
     }
 
     @JsonIgnore
-    public ProjectPartnerStatusResource getLeadPartnerStatus(){
+    public ProjectPartnerStatusResource getLeadPartnerStatus() {
         return partnerStatuses.stream().filter(status -> status instanceof ProjectLeadStatusResource).findFirst().orElse(null);
     }
 
     @JsonIgnore
     public List<ProjectPartnerStatusResource> getOtherPartnersStatuses(){
         return partnerStatuses.stream().filter(status -> !(status instanceof ProjectLeadStatusResource)).collect(Collectors.toList());
+    }
+
+    @JsonIgnore
+    public boolean isLeadOrganisation(Long organisationId) {
+        return !partnerStatuses.isEmpty() && partnerStatuses.get(0).getOrganisationId().equals(organisationId);
     }
 
     @JsonIgnore

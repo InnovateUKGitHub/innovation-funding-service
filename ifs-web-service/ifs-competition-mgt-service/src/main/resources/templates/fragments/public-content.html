@@ -1,6 +1,5 @@
     <!-- =================== Public content section - Competition information and search  ============================== -->
 <div th:fragment="section-search(model, form)" xmlns:th="http://www.w3.org/1999/html">
-    <p>This information is used for search results and the opening section of the competition page.</p>
     <th:block th:if="${model.readOnly}">
         <dl class="readonly-list">
             <dt>Short description</dt>
@@ -14,6 +13,7 @@
         </dl>
     </th:block>
     <th:block th:unless="${model.readOnly}">
+        <p>This information is used for search results and the opening section of the competition page.</p>
         <fieldset>
             <div class="form-group">
                 <label class="form-label-bold" for="short-description">
@@ -66,7 +66,6 @@
 
 <!-- =================== Public content section - Summary  ========================================================= -->
 <div th:fragment="section-summary(model, form)" xmlns:th="http://www.w3.org/1999/html">
-    <p>Text entered into this section will appear in the summary tab.</p>
     <th:block th:if="${model.readOnly}">
         <dl class="readonly-data">
             <dt>Competition description</dt>
@@ -79,6 +78,7 @@
         <th:block th:include="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" />
     </th:block>
     <th:block th:unless="${model.readOnly}">
+        <p>Text entered into this section will appear in the summary tab.</p>
         <fieldset>
             <div class="form-group">
                 <label class="form-label-bold" for="description">
@@ -133,11 +133,11 @@
 
 <!-- =================== Public content section - Eligibility  ===================================================== -->
 <div th:fragment="section-eligibility(model, form)" xmlns:th="http://www.w3.org/1999/html">
-    <p>Text entered into this section will appear within the eligibility tab.</p>
     <th:block th:if="${model.readOnly}">
         <th:block th:include="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" />
     </th:block>
     <th:block th:unless="${model.readOnly}">
+        <p>Text entered into this section will appear within the eligibility tab.</p>
         <h2 class="heading-medium no-margin">Content</h2>
         <th:block th:include="fragments/public-content :: content-groups(form=${form},model=${model})" />
     </th:block>
@@ -154,6 +154,7 @@
         </dl>
     </div>
     <th:block th:unless="${model.readOnly}">
+        <p>Text entered into this section will appear within the dates tab.</p>
         <hr />
         <p>Generated automatically from the competition milestones.</p>
         <dl>
@@ -259,12 +260,15 @@
         <th:block th:include="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" />
     </th:block>
     <th:block th:unless="${model.readOnly}">
+        <p>Text entered into this section will appear within the scope tab.</p>
         <h2 class="heading-medium no-margin">Content</h2>
         <th:block th:include="fragments/public-content :: content-groups(form=${form},model=${model})" />
     </th:block>
 </div>
 
+<!-- =================== Public content section - Supporting information  ========================================== -->
 <div th:fragment="section-supporting-information(model, form)" xmlns:th="http://www.w3.org/1999/html">
+    <p>Text entered into this section will appear within the supporting information tab.</p>
     <th:block th:if="${model.readOnly}">
         <th:block th:include="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" />
     </th:block>
@@ -274,11 +278,13 @@
     </th:block>
 </div>
 
+<!-- =================== Public content section - How to apply  ==================================================== -->
 <div th:fragment="section-how-to-apply(model, form)" xmlns:th="http://www.w3.org/1999/html">
     <th:block th:if="${model.readOnly}">
         <th:block th:include="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" />
     </th:block>
     <th:block th:unless="${model.readOnly}">
+        <p>Text entered into this section will appear within the how to apply tab.</p>
         <h2 class="heading-medium">Content</h2>
         <th:block th:include="fragments/public-content :: content-groups(form=${form},model=${model})" />
     </th:block>
@@ -301,21 +307,16 @@
                               th:attr="data-required-errormessage=#{validation.publiccontent.contentgroup.content.required}"></textarea>
             </div>
             <div class="form-group upload-section">
-                <div class="form-group" th:classappend="${#fields.hasErrors('contentGroups[__${index}__].attachment')} ? 'error':''">
-                <th:block th:unless="${model.hasAttachment(contentGroup.id)}">
-                    <input type="file" th:id="${'file-upload-'+index}" class="inputfile" th:field="*{contentGroups[__${index}__].attachment}"/>
-                    <label th:for="${'file-upload-'+index}" class="button-secondary extra-margin">+ Upload</label>
-                    <button class="button-secondary" type="submit" name="uploadFile" th:attr="data-for-file-upload=${'file-upload-'+index}" th:value="${index}">Save</button>
-                    <p class="uploaded-file">No file currently uploaded</p>
+                <th:block th:with="uploadViewmode='edit',
+                               downloadUrl=@{/competition/setup/public-content/{sectionPath}/{compId}/edit/{groupId}(sectionPath=${model.section.type.path},compId=${model.competition.id},groupId=${contentGroup.id})},
+                               filename=${model.hasAttachment(contentGroup.id) ? model.fileName(contentGroup.id) : ''},
+                               inputField='contentGroups[__${index}__].attachment',
+                               validationField=${inputField},
+                               mayRemove=true,
+                               removeName='removeFile',
+                               saveName='uploadFile'">
+                    <th:block th:with="removeValue=${contentGroup.id}" th:insert="question-type/types :: fileupload-fragment(${uploadViewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
                 </th:block>
-                <th:block th:if="${model.hasAttachment(contentGroup.id)}">
-                    <p class="uploaded-file">
-                        <a th:href="@{/competition/setup/public-content/{sectionPath}/{compId}/edit/{groupId}(sectionPath=${model.section.type.path},compId=${model.competition.id},groupId=${contentGroup.id})}"
-                           th:text="${model.fileName(contentGroup.id)}">Filename.pdf</a>
-                    </p>
-                    <button class="button-secondary" type="submit" name="removeFile" th:value="${contentGroup.id}">remove</button>
-                </th:block>
-                </div>
             </div>
             <button type="button" class="buttonlink" th:if="${index > 0 or model.section.type.allowEmptyContentGroups}" data-remove-row="contentGroup">Remove section</button>
         </div>

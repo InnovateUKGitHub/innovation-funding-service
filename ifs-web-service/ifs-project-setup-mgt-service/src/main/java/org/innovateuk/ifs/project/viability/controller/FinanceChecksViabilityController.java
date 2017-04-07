@@ -8,6 +8,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.resource.OrganisationSizeResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.finance.service.OrganisationDetailsRestService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.finance.resource.Viability;
@@ -21,9 +22,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -33,8 +32,6 @@ import java.util.function.Supplier;
 
 import static java.math.RoundingMode.HALF_EVEN;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * This controller serves the Viability page where internal users can confirm the viability of a partner organisation's
@@ -52,22 +49,22 @@ public class FinanceChecksViabilityController {
     private OrganisationService organisationService;
 
     @Autowired
-    private ProjectFinanceService financeService;
+    private OrganisationDetailsRestService organisationDetailsService;
 
     @Autowired
-    private ApplicationService applicationService;
+    private ProjectFinanceService financeService;
 
     @Autowired
     private OrganisationSizeService organisationSizeService;
 
-    @RequestMapping(method = GET)
+    @GetMapping
     public String viewViability(@PathVariable("projectId") Long projectId,
                                 @PathVariable("organisationId") Long organisationId, Model model) {
 
         return doViewViability(projectId, organisationId, model, getViabilityForm(projectId, organisationId));
     }
 
-    @RequestMapping(method = POST, params = "save-and-continue")
+    @PostMapping(params = "save-and-continue")
     public String saveAndContinue(@PathVariable("projectId") Long projectId,
                                   @PathVariable("organisationId") Long organisationId,
                                   @ModelAttribute("form") FinanceChecksViabilityForm form,
@@ -80,7 +77,7 @@ public class FinanceChecksViabilityController {
         return doSaveViability(projectId, organisationId, Viability.REVIEW, form, validationHandler, model, successView);
     }
 
-    @RequestMapping(method = POST, params = "confirm-viability")
+    @PostMapping(params = "confirm-viability")
     public String confirmViability(@PathVariable("projectId") Long projectId,
                                    @PathVariable("organisationId") Long organisationId,
                                    @ModelAttribute("form") FinanceChecksViabilityForm form,
@@ -155,12 +152,12 @@ public class FinanceChecksViabilityController {
         String companyRegistrationNumber = organisation.getCompanyHouseNumber();
 
         Long headCount = null;
-        RestResult<Long> headCountResult = applicationService.getHeadCount(projectService.getById(projectId).getApplication());
+        RestResult<Long> headCountResult = organisationDetailsService.getHeadCount(projectService.getById(projectId).getApplication(), organisationId);
         if (headCountResult.isSuccess()) {
             headCount = headCountResult.getSuccessObject();
         }
         Long turnover = null;
-        RestResult<Long> turnOverResult = applicationService.getTurnover(projectService.getById(projectId).getApplication());
+        RestResult<Long> turnOverResult = organisationDetailsService.getTurnover(projectService.getById(projectId).getApplication(), organisationId);
         if (turnOverResult.isSuccess()) {
             turnover = turnOverResult.getSuccessObject();
         }

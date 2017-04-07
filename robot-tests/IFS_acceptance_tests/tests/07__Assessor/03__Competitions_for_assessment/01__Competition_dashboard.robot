@@ -27,7 +27,7 @@ Resource          ../../../resources/defaultResources.robot
 User cannot accept/reject an invite to an application that has been withdrawn
     [Documentation]    INFUND-4797
     [Tags]
-    When the user navigates to the page    ${server}/assessment/128/assignment
+    When the user navigates to the page    ${server}/assessment/109/assignment
     Then the user should see the text in the page    Invitation withdrawn
     [Teardown]    the user clicks the button/link    jQuery=#proposition-links a:contains(My dashboard)
 
@@ -55,18 +55,19 @@ Details of the competition are visible
 Competition brief link can be seen
     [Documentation]    INFUND-5494
     [Tags]
-    Then the user should see the element    link=competition brief
+    Then the user should see the element    link=View competition brief (opens in a new window)
 
 User can view the competition brief
     [Documentation]    INFUND-5494
     [Tags]
-    When the user clicks the button/link    link=competition brief
-    Then the user should not see an error in the page
+    When the user clicks the button/link    link=View competition brief (opens in a new window)
+    Then the user should get a competition brief window
+    And the user should not see an error in the page
     And the user should see the text in the page    ${IN_ASSESSMENT_COMPETITION_NAME}
     And the user should see the text in the page    Competition opens
     And the user should see the text in the page    Competition closes
     And the user should see the element    jQuery=.button:contains("Start new application")
-    [Teardown]    the user goes back to the previous page
+    [Teardown]    the user closes the competition brief
 
 Applications should have correct status and order
     [Documentation]    INFUND-6040
@@ -122,8 +123,8 @@ Check the comp admin see the assessor has rejected the application
     [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
     Given the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the user clicks the button/link    jQuery=a:contains("Assessor management: Assignments")
-    And the user should see the element    jQuery=tr:nth-child(4) td:nth-child(2):contains("Park living")
-    And the user clicks the button/link    jQuery=tr:nth-child(4) a:contains(View progress)
+    And the user should see the element    jQuery=tr:nth-child(1) td:nth-child(2):contains("Park living")
+    And the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
     And the user should see the text in the page    Rejected (1)
     And the user should see the element    jQuery=.assessors-rejected td:nth-child(6):contains("Not my area of expertise")
     And the user should see the element    jQuery=.assessors-rejected td:nth-child(6):contains("Unable to assess the application as i'm on holiday.")
@@ -147,3 +148,10 @@ The order of the applications should be correct according to the status
     element should contain    css=.progress-list li:nth-child(4) .msg-progress    Accepted
     element should contain    css=.progress-list li:nth-child(5) .msg-progress    Accepted
     element should contain    css=.progress-list li:nth-child(6) .msg-progress    Accepted
+
+The user should get a competition brief window
+    Select Window   title=Competition Overview - Innovation Funding Service
+
+The user closes the competition brief
+    Close Window
+    Select Window

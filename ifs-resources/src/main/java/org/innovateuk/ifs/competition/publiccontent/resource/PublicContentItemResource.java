@@ -6,11 +6,11 @@ import java.time.LocalDateTime;
 public class PublicContentItemResource {
     private PublicContentResource publicContentResource;
     private String competitionTitle;
-    private Boolean competitionIsOpen;
     private LocalDateTime competitionOpenDate;
     private LocalDateTime competitionCloseDate;
     private String nonIfsUrl;
     private Boolean isNonIfs;
+    private Boolean setupComplete;
 
     public PublicContentItemResource() {
     }
@@ -70,11 +70,11 @@ public class PublicContentItemResource {
         isNonIfs = nonIfs;
     }
 
-    public Boolean getCompetitionIsOpen() {
-        return competitionIsOpen;
+    public Boolean getSetupComplete() {
+        return setupComplete;
     }
 
-    public void setCompetitionIsOpen(Boolean competitionIsOpen) {
-        this.competitionIsOpen = competitionIsOpen;
+    public void setSetupComplete(Boolean setupComplete) {
+        this.setupComplete = setupComplete;
     }
 }

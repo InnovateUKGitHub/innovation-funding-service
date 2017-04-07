@@ -15,7 +15,7 @@ If user from the list is not registered shouldn't be able to login
     Given the user navigates to the page    ${LOGIN_URL}
     When the guest user enters the log in credentials    ${test_mailbox_one}+admin2@gmail.com    Passw0rd
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
-    Then the user should see the text in the page    Your username/password combination doesn't seem to work
+    Then the user should see the text in the page    Your email/password combination doesn't seem to work
 
 Registration for a user who is in the list
     [Documentation]    INFUND-2129
@@ -36,10 +36,10 @@ User creates new account verifies email and login
     the user clicks the button/link    LINK=INNOVATE LTD
     the user selects the checkbox    address-same
     the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
-    the user clicks the button/link    jQuery=.button:contains("Save and continue")
+    the user clicks the button/link    jQuery=.button:contains("Confirm")
     the user enters the details and clicks the create account    ${CREATE_ACCOUNT_EMAIL}
     the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
-    the user reads his email from the default mailbox and clicks the link    ${CREATE_ACCOUNT_EMAIL}    Please verify your email address    If you did not request an account with us
+    the user reads his email from the default mailbox and clicks the link    ${CREATE_ACCOUNT_EMAIL}    Please verify your email address    Once verified you can sign into your account
     the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     the user clicks the button/link    jQuery=.button:contains("Sign in")
     the guest user inserts user email & password    ${CREATE_ACCOUNT_EMAIL}    Passw0rd123

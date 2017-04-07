@@ -8,7 +8,7 @@
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main id="content">
+        <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="currentApplication=${model.application.currentApplication},linkTitle=${backTitle},linkClass='link-back',linkUrl=${backURL}" />
 
@@ -26,7 +26,7 @@
                     <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
                 </th:block>
 
-                <div class="error-summary" th:if="${#fields.hasErrors('*')}">
+                <div class="error-summary" th:attr="aria-hidden=${!#fields.hasAnyErrors()}">
                     <h2 class="heading-medium error-summary-heading">There is a problem on this page</h2>
                     <ul class="error-summary-list">
                         <th:block th:each="err : ${#fields.errors('*')}" th:with="markAsCompleteError=#{application.validation.MarkAsCompleteFailed}">
@@ -40,9 +40,7 @@
                      questionAssignee=(${model.assignable.questionAssignee}), markedAsComplete=(${model.application.markedAsComplete}), userIsLeadApplicant=(${model.userIsLeadApplicant}),
                      currentApplication=(${model.application.currentApplication}), currentUser=(${model.currentUser}), assignableUsers=(${model.assignable.assignableUsers}),
                      pendingAssignableUsers=(${model.assignable.pendingAssignableUsers}), leadOrganisation=(${model.leadOrganisation}), pendingOrganisationNames=(${model.pendingOrganisationNames}),
-                     applicationOrganisations=(${model.applicationOrganisations}), leadApplicant=(${model.leadApplicant}),
-                     researchCategories=(${model.application.researchCategories}), rsCategoryId=(${model.application.researchCategoryId}),
-                     hasApplicationFinances=(${model.application.hasApplicationFinances}), subFinanceSection=${false}">
+                     applicationOrganisations=(${model.applicationOrganisations}), leadApplicant=(${model.leadApplicant}), subFinanceSection=${false}">
 
                     <th:block th:if="${formInput.type.displayableQuestionType}">
                         <div th:replace="question-type/types :: ${formInput.type.nameLower}" />
@@ -52,7 +50,7 @@
                     <p class="subtitle" th:if="${model.currentSection.getDescription()}" th:text="${model.currentSection.getDescription()}" />
                     <th:block th:unless="${model.hasFinanceView}">
                         <div class="warning-alert">
-                            This competition has already closed, you are no longer able to submit your application.
+                            Registration is now closed, you are no longer able to submit your application.
                         </div>
                     </th:block>
 
@@ -102,12 +100,11 @@
                         </th:block>
                     </th:block>
 
-                    <th:block>
-                        <div th:replace="finance/your-finances-sub-sections :: your_finances" />
-                    </th:block>
+                    <th:block th:include="finance/your-finances-sub-sections :: your_finances" />
 
-                    <div th:replace="finance/your-finances-sub-sections :: agree_terms" />
-                    <div th:replace="finance/your-finances-sub-sections :: subsection_buttons" />
+                    <th:block th:include="finance/your-finances-sub-sections :: agree_terms" />
+
+                    <th:block th:include="finance/your-finances-sub-sections :: subsection_buttons" />
 
                 </th:block>
 
@@ -122,21 +119,6 @@
                         <button th:unless="${model.isSection}" type="submit" class="button app-submit-btn" name="submit-section">Save and return to application overview</button>
                     </th:block>
                 </th:block>
-
-                <ul class="pagination" th:if="${model.navigation.hasNavigation}">
-                    <li class="prev" th:if="${model.navigation.previousUrl}">
-                        <a th:href="@{${model.navigation.previousUrl}}" rel="prev" title="Navigate to previous part">
-                            <span class="pagination-label">Previous</span>
-                            <span class="pagination-part-title" th:text="${model.navigation.previousText}">Business proposition</span>
-                        </a>
-                    </li>
-                    <li class="next" th:if="${model.navigation.nextUrl}">
-                        <a th:href="@{${model.navigation.nextUrl}}" rel="next" title="Navigate to next part">
-                            <span class="pagination-label">Next</span>
-                            <span class="pagination-part-title" th:text="${model.navigation.nextText}">Funding</span>
-                        </a>
-                    </li>
-                </ul>
             </form>
             <input type="hidden" id="cacheTest" value="" />
 

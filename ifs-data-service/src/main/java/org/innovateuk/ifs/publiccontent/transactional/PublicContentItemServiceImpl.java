@@ -11,7 +11,6 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemPa
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.MilestoneRepository;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.publiccontent.domain.Keyword;
 import org.innovateuk.ifs.publiccontent.domain.PublicContent;
 import org.innovateuk.ifs.publiccontent.mapper.PublicContentMapper;
@@ -20,6 +19,7 @@ import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -29,6 +29,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
@@ -79,7 +80,11 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
         if(innovationAreaId.isPresent() && searchString.isPresent()) {
             List<Long> competitionsIdsInInnovationArea = getFilteredCompetitionIds(innovationAreaId);
             Set<Long> keywordsFound = getFilteredPublicContentIds(searchString.get());
-            publicContentPage = publicContentRepository.findAllPublishedForOpenCompetitionByKeywordsAndInnovationId(keywordsFound, competitionsIdsInInnovationArea, getPageable(pageNumber, pageSize));
+            if (!keywordsFound.isEmpty()) {
+                publicContentPage = publicContentRepository.findAllPublishedForOpenCompetitionByKeywordsAndInnovationId(keywordsFound, competitionsIdsInInnovationArea, getPageable(pageNumber, pageSize));
+            } else {
+                publicContentPage = new PageImpl<Competition>(emptyList());
+            }
         }
         else if(innovationAreaId.isPresent()) {
             List<Long> competitionsIdsInInnovationArea = getFilteredCompetitionIds(innovationAreaId);
@@ -88,7 +93,11 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
         else if(searchString.isPresent())
         {
             Set<Long> keywordsFound = getFilteredPublicContentIds(searchString.get());
-            publicContentPage = publicContentRepository.findAllPublishedForOpenCompetitionByKeywords(keywordsFound, getPageable(pageNumber, pageSize));
+            if (!keywordsFound.isEmpty()) {
+                publicContentPage = publicContentRepository.findAllPublishedForOpenCompetitionByKeywords(keywordsFound, getPageable(pageNumber, pageSize));
+            } else {
+                publicContentPage = new PageImpl<Competition>(emptyList());
+            }
         }
         else {
             publicContentPage = publicContentRepository.findAllPublishedForOpenCompetition(getPageable(pageNumber, pageSize));
@@ -171,9 +180,9 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
         publicContentItemResource.setCompetitionOpenDate(competition.getStartDate());
         publicContentItemResource.setCompetitionCloseDate(competition.getEndDate());
         publicContentItemResource.setCompetitionTitle(competition.getName());
-        publicContentItemResource.setCompetitionIsOpen(CompetitionStatus.OPEN.equals(competition.getCompetitionStatus()));
         publicContentItemResource.setNonIfs(competition.isNonIfs());
         publicContentItemResource.setNonIfsUrl(competition.getNonIfsUrl());
+        publicContentItemResource.setSetupComplete(competition.isNonIfs() ? Boolean.TRUE : competition.getSetupComplete());
 
         return publicContentItemResource;
     }

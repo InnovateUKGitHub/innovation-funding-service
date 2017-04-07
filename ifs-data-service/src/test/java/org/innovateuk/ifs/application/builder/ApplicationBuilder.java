@@ -1,17 +1,18 @@
 package org.innovateuk.ifs.application.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.domain.ApplicationStatus;
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
+import org.innovateuk.ifs.application.resource.ApplicationStatus;
 import org.innovateuk.ifs.category.domain.InnovationArea;
+import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -51,15 +52,6 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
         return withArray((applicationState, application) -> application.setApplicationStatus(applicationState), applicationStatus);
     }
 
-    public ApplicationBuilder withApplicationStatus(ApplicationStatusConstants... applicationStatus) {
-        return withArray((applicationState, application) -> {
-
-            ApplicationStatus status = new ApplicationStatus(applicationState.getId(), applicationState.getName());
-            application.setApplicationStatus(status);
-
-        }, applicationStatus);
-    }
-
     public ApplicationBuilder withStartDate(LocalDate... dates) {
         return withArray((date, application) -> application.setStartDate(date), dates);
     }
@@ -84,6 +76,10 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
         return withArray((duration, application) -> application.setDurationInMonths(duration), durationInMonths);
     }
 
+    public ApplicationBuilder withManageFundingEmailDate(LocalDateTime... manageFundingEmailDates) {
+        return withArray((fundingEmailDate, application) -> application.setManageFundingEmailDate(fundingEmailDate), manageFundingEmailDates);
+    }
+
     @Override
     public void postProcess(int index, Application built) {
 
@@ -103,5 +99,9 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
 
     public ApplicationBuilder withNoInnovationAreaApplicable(Boolean... noInnovationAreaApplicable) {
         return withArray((noApplicable, application) -> application.setNoInnovationAreaApplicable(noApplicable), noInnovationAreaApplicable);
+    }
+
+    public ApplicationBuilder withResearchCategory(ResearchCategory... researchCategories) {
+        return withArray((researchCategory, application) -> application.setResearchCategory(researchCategory), researchCategories);
     }
 }

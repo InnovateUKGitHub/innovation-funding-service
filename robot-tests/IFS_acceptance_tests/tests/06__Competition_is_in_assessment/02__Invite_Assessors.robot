@@ -26,6 +26,8 @@ Documentation     INFUND-6604 As a member of the competitions team I can view th
 ...               INFUND-6388 As a member of the competitions team I can see the key statistics on the Invite Assessors dashboard so that I can easily see how invitations are progressing
 ...
 ...               INFUND-6403 Filter and Pagination on 'Find' tab of Invite dashboard
+...
+...               INFUND-6453 Filter and pagination on 'Overview' tab of Invite assessors dashboard
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin    Assessor
@@ -38,8 +40,18 @@ Check the initial key statistics
     Given the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the user clicks the button/link    jQuery=a:contains("Invite assessors to assess the competition")
     And the user clicks the button/link    link=Overview
-    #TODO check as part of INFUND-6453 testing
-    #And the key statistics are calculated
+
+Filtering in the Invite Overview page
+    [Documentation]    INFUND-6453
+    [Tags]
+    Given the user selects the option from the drop-down menu    Assembly / disassembly / joining    id=filterInnovationArea
+    And the user selects the option from the drop-down menu    Invite declined    id=filterStatus
+    And the user selects the option from the drop-down menu    Yes    id=filterContract
+    When the user clicks the button/link    jQuery=button:contains(Filter)
+    Then the user should see the element    jQuery=td:contains("Josephine")
+    And the user should not see the element    jQuery=td:contains("No")
+    And the user clicks the button/link    jQuery=a:contains("Clear filters")
+    And the user should not see the element    jQuery=td:contains("Josephine")
 
 The User can Add and Remove Assessors
     [Documentation]    INFUND-6602 INFUND-6604 INFUND-6392 INFUND-6412 INFUND-6388
@@ -51,8 +63,8 @@ The User can Add and Remove Assessors
     Then The user should see the text in the page    will.smith@gmail.com
     And The user should see the text in the page    Will Smith
     And The user should see the element    jQuery=td:contains("Will Smith") ~ td .yes
-    And the user should see the element    jQuery=td:contains("Will Smith") ~ td:nth-child(3):contains("Precision Medicine")
-    And the user should see the element    jQuery=td:contains("Will Smith") ~ td:nth-child(3):contains("Advanced Materials")
+    And the user should see the element    jQuery=td:contains("Will Smith") ~ td:nth-child(3):contains("Precision medicine")
+    And the user should see the element    jQuery=td:contains("Will Smith") ~ td:nth-child(3):contains("Nanotechnology / nanomaterials")
     And the user should see the element    jQuery=td:contains("Will Smith") ~ td:nth-child(3):contains("Energy systems")
     And the calculations of the Assessors on invite list should be correct
     When The user clicks the button/link    link=Invite
@@ -96,7 +108,7 @@ The user can select the profile link
     Then the user should see the text in the page    will.smith@gmail.com
     And the user should see the text in the page    028572565937
     And the user should see the text in the page    Solar energy research
-    And the user should see the text in the page    Precision Medicine
+    And the user should see the text in the page    Precision medicine
     And the user should see the text in the page    Business
     [Teardown]    The user clicks the button/link    link=Back
 
@@ -107,7 +119,7 @@ Innovation sector and area are correct
     And the user should see the element    jQuery=.standard-definition-list dt:contains("Innovation sector")
     And the user should see the element    jQuery=.standard-definition-list dt:contains("Innovation area")
     And the user should see the element    jQuery=.standard-definition-list dd:contains("Materials and manufacturing")
-    And the user should see the element    jQuery=.standard-definition-list dd:contains("Satellite Applications")
+    And the user should see the element    jQuery=.standard-definition-list dd:contains("Satellite applications")
 
 Invite Individual Assessors
     [Documentation]    INFUND-6414
@@ -141,14 +153,14 @@ Invite non-registered users
     And The user should not see the text in the page    Please enter a name.    #check for the client side validation
     And The user enters text to a text field    css=#invite-table tr:nth-of-type(1) td:nth-of-type(2) input    ${test_mailbox_one}+OlivierGiroud@gmail.com
     And The user should not see the text in the page    Please enter a name.    #check for the client side validation
-    And the user selects the option from the drop-down menu    Emerging and enabling technologies    css=.js-progressive-group-select
-    And the user selects the option from the drop-down menu    Emerging Technology    id=grouped-innovation-area
+    And the user selects the option from the drop-down menu    Emerging and enabling    css=.js-progressive-group-select
+    And the user selects the option from the drop-down menu    Emerging technology    id=grouped-innovation-area
     And The user should not see the text in the page    Please enter an innovation sector and area.    #check for the client side validation
     And the user clicks the button/link    jQuery=.button:contains("Add assessors to list")
     Then the user should see the element    css=.no
     And The user should see the element    jQuery=td:contains("Olivier Giroud")
     And The user should see the element    jQuery=td:contains("Olivier Giroud") ~ td:contains(${test_mailbox_one}+OlivierGiroud@gmail.com)
-    And The user should see the element    jQuery=td:contains("Olivier Giroud") ~ td:contains("Emerging Technology")
+    And The user should see the element    jQuery=td:contains("Olivier Giroud") ~ td:contains("Emerging technology")
     And The user should see the element    jQuery=td:contains("Olivier Giroud") ~ td .button:contains("Remove")
 
 Assessor overview information
@@ -157,17 +169,17 @@ Assessor overview information
     ...    INFUND-6449
     [Tags]
     Given The user clicks the button/link    link=Overview
-    And the user clicks the button/link      jQuery=.pagination-label:contains("Next")
+    And the user clicks the button/link    jQuery=.pagination-label:contains("Next")
     Then the user should see the element    jQuery=td:contains("Paul Plum") ~ td:contains("Invite accepted")
-    And the user clicks the button/link      jQuery=.pagination-label:contains("Next")
+    And the user clicks the button/link    jQuery=.pagination-label:contains("Next")
     And the user should see the element    jQuery=td:contains("Will Smith") ~ td:nth-of-type(5):contains("Awaiting response")
     And the user should see the element    jQuery=td:contains("Will Smith") ~ td:nth-of-type(6):contains("Invite sent:")
-    And the user clicks the button/link      jQuery=.pagination-label:contains("Previous")
+    And the user clicks the button/link    jQuery=.pagination-label:contains("Previous")
     And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:nth-of-type(5):contains("Invite declined")
     And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:contains("Academic")
     And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:contains("Yes")
     And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:contains("Invite declined as not available")
-    And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:contains("Manufacturing Readiness")
+    And the user should see the element    jQuery=td:contains("Josephine Peters") ~ td:contains("Assembly / disassembly / joining")
 
 *** Keywords ***
 The key statistics are calculated

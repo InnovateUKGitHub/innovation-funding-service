@@ -8,38 +8,14 @@
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main id="content">
+        <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/assessment :: assessment-header-deadline-sub (linkTitle='Back to your assessment overview',linkClass='link-back',linkUrl=@{/{id}(id=${model.assessmentId})},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft})" />
 
             <div class="page-title">
-                <th:block th:insert="fragments/elements :: application-title (applicationId=${model.applicationId},applicationName=${model.applicationName})" />
+                <th:block th:insert="fragments/elements :: application-title (applicationName=${model.applicationName})" />
                 <h1 class="heading-xlarge" th:text="${'Assessment summary'}" />
             </div>
-
-            <h2 class="heading-medium">Overall scores</h2>
-            <div class="table-overflow">
-                <table>
-                    <thead>
-                        <tr>
-                            <th class="width-150" scope="row">Question</th>
-                            <th th:each="question : ${model.questionsForScoreOverview}" scope="col">
-                                <a th:href="@{/{id}/question/{quid}(id=${model.assessmentId}, quid=${question.questionId})}" th:text="${question.displayLabelShort}">Q1</a>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th class="width-150" scope="row">Score</th>
-                            <td th:each="question : ${model.questionsForScoreOverview}">
-                                <span th:text="${question.scoreGiven}" th:remove="tag" />
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <th:block th:insert="fragments/assessment :: assessment-summary-total-score((totalGiven=${model.totalScoreGiven}, totalPossible=${model.totalScorePossible}, totalPercentage=${model.totalScorePercentage}))" />
 
             <h2 class="heading-medium">Review assessment</h2>
             <div class="collapsible section-overview">

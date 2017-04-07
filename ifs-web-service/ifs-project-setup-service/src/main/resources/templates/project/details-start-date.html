@@ -8,18 +8,18 @@
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main id="content">
+        <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/project/{id}/details(id=${model.projectId})}" />
 
             <div class="page-title">
-                <th:block th:insert="fragments/elements :: project-title (projectId=${model.applicationId}, projectName=${model.projectName})" />
+                <th:block th:insert="fragments/elements :: project-title (projectName=${model.projectName})" />
                 <h1 class="heading-xlarge">Target start date</h1>
             </div>
 
             <p>The following steps need to be taken before your project can begin. If required, the start date can be changed later.</p>
 
-            <p><strong>The project can only start when:</strong></p>
+            <p>The project can only start when:</p>
 
             <ol class="list list-number">
                 <li>You have provided the documents we need.</li>
@@ -28,7 +28,7 @@
             </ol>
 
             <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${form}" method="post">
-                <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('projectStartDate') ? 'error' : ''}">
+                <div class="form-group" th:classappend="${#fields.hasErrors('projectStartDate') ? 'error' : ''}">
                     <fieldset>
                         <legend>
                             <span class="heading-medium">Target start date</span>
