@@ -261,6 +261,8 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                 .withName("IO systems", "Acme Ltd.", "Liquid Dynamics", "Piezo Electrics")
                 .buildArray(4, Organisation.class);
 
+        Long[] orgIds = Stream.of(0,1,2,3,1,2,3).map(x -> organisations[x].getId()).toArray(Long[]::new);
+
         Application application = newApplication()
                 .withName("Progressive machines")
                 .withInnovationArea(newInnovationArea()
@@ -271,9 +273,9 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                         .withCompetitionStatus(FUNDERS_PANEL)
                         .build())
                 .withProcessRoles(newProcessRole()
-                        .withRole(COMP_ADMIN, LEADAPPLICANT, COLLABORATOR, COLLABORATOR, COLLABORATOR, COLLABORATOR )
-                        .withOrganisationId(simpleMapArray(organisations, Organisation::getId, Long.class))
-                        .buildArray(6, ProcessRole.class))
+                        .withRole(COMP_ADMIN, LEADAPPLICANT, COLLABORATOR, COLLABORATOR, COLLABORATOR, COLLABORATOR, COLLABORATOR )
+                        .withOrganisationId(orgIds)
+                        .buildArray(7, ProcessRole.class))
                 .build();
 
         ApplicationAssessmentSummaryResource expected = newApplicationAssessmentSummaryResource()
