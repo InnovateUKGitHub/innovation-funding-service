@@ -103,7 +103,7 @@ Funding Information is editable (Open)
     [Documentation]    INFUND-7083
     [Tags]    HappyPath
     [Setup]    The user clicks the button/link    jQuery=a:contains(My dashboard)
-    Given the user clicks the button/link    link=${open_competition_link_2}
+    Given the user clicks the button/link    link=${OPEN_COMPETITION_NAME_2}
     And the user clicks the button/link    jQuery=a:contains(and update competition setup)
     When the user clicks the button/link    link=Funding information
     And the user should see the element    jquery=h1:contains("Funding information")
@@ -287,7 +287,7 @@ Custom suite setup
 
 The user moves the open date to the past
     Connect to Database    @{database}
-    Change the open date of the Competition in the database to one day before    ${open_competition_link_2}
+    Change the open date of the Competition in the database to one day before  ${OPEN_COMPETITION_NAME_2}
 
 there is a future Notifications date
     [Documentation]    There are no testing data for `milestone`.`type`="NOTIFICATIONS". So i am using MySQL to create a future date
