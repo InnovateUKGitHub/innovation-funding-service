@@ -7,7 +7,7 @@
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content" th:with="baseUrl=@{${model.baseUrl}(projectId=${model.projectId},organisationId=${model.organisationId})}">
+<main tabindex="-1" id="content" th:with="baseUrl=@{${model.baseUrl}(projectId=${model.projectId})}">
     <th:block th:insert="fragments/layout :: main-content-start" />
 
     <div th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${model.projectId})}" th:remove="tag"></div>
@@ -29,11 +29,11 @@
 
     <ul>
         <li th:if="${!model.isAcademic()}">
-            <a th:href="@{/project/{projectId}/partner-organisation/{organisationId}/finance-checks/eligibility(projectId=${model.projectId},organisationId=${model.organisationId})}"
+            <a th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}"
                class="heading-medium">View finances</a>
         </li>
         <li>
-            <a th:href="@{/project/{projectId}/partner-organisation/{organisationId}/finance-checks/overview(projectId=${model.projectId},organisationId=${model.organisationId})}"
+            <a th:href="@{/project/{projectId}/finance-checks/overview(projectId=${model.projectId})}"
                class="heading-medium">Project finance overview</a>
         </li>
     </ul>
