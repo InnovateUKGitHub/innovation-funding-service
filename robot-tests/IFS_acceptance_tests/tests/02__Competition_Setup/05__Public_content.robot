@@ -17,7 +17,7 @@ Documentation     INFUND-6914 Create 'Public content' menu page for "Front Door"
 
 Suite Setup       Custom suite setup
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        CompAdmin
+Force Tags        CompAdmin  MySQL
 Resource          ../../resources/defaultResources.robot
 Resource          CompAdmin_Commons.robot
 
@@ -373,7 +373,6 @@ Guest user can see the updated How-to-apply information
 
 *** Keywords ***
 Custom suite setup
-    Connect to Database  @{database}
     Guest user log-in    &{Comp_admin1_credentials}
     ${nextyear} =  get next year
     Set suite variable  ${nextyear}

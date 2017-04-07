@@ -20,6 +20,7 @@ RUN pip install robotframework && \
 	pip install simplejson requests && \
 	pip install robotframework-databaselibrary && \
 	pip install pymysql && \
+	pip install MySQL-python && \
 	pip install pdfminer
 
 WORKDIR robot-tests
