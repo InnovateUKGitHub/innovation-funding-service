@@ -12,17 +12,18 @@ import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.util.CollectionFunctions.*;
-import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 import static java.util.stream.Collectors.summingInt;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
+import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 /**
@@ -96,20 +97,27 @@ public class PasswordPolicyValidator {
         @Override
         public List<Pattern> apply(String currentExcludedRegexPattern) {
 
-            String currentExcludedWordWithNumericalReplacements = currentExcludedRegexPattern.toLowerCase();
+            /**
+             * The Regex (a-zA-Z0-9-.*\s]*) check for all the characters which can include in the patterns to be checked in the password.
+             * These patterns could be first name, last name, organisation....
+             * The pattern includes alpha numerics, *, -,  spaces.
+             */
+            boolean containNoSpecialCharacters = Pattern.compile("[a-zA-Z0-9-.*\\s]*").matcher(currentExcludedRegexPattern).matches();
 
+            String currentExcludedWordWithNumericalReplacements = currentExcludedRegexPattern.toLowerCase();
             for (Map.Entry<String, String> replacement : interchangeableLettersAndNumbers.entrySet()) {
                 String searchString = format("([%s])", replacement.getKey());
                 String replacementString = format("[$1%s]", replacement.getValue());
                 currentExcludedWordWithNumericalReplacements =
                         currentExcludedWordWithNumericalReplacements.replaceAll(searchString, replacementString);
             }
-
+            String excludePattern = containNoSpecialCharacters ? currentExcludedWordWithNumericalReplacements :
+                    Pattern.quote(currentExcludedWordWithNumericalReplacements);
             Pattern currentExcludedWordWithNumericalReplacementsPattern =
-                    Pattern.compile(currentExcludedWordWithNumericalReplacements, CASE_INSENSITIVE);
-
+                    Pattern.compile(excludePattern, CASE_INSENSITIVE);
             return singletonList(currentExcludedWordWithNumericalReplacementsPattern);
         }
+
     }
 
     @PostConstruct
