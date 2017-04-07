@@ -143,7 +143,7 @@ public class ProjectFinanceChecksController {
                                     @PathVariable("projectId") final Long projectId,
                                     @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        Long organisationId = getUsersOrganisationId(projectId, loggedInUser);
+        Long organisationId = getOrganisationIdFromUser(projectId, loggedInUser);
 
         ProjectOrganisationCompositeId projectComposite = new ProjectOrganisationCompositeId(projectId, organisationId);
 
@@ -161,7 +161,7 @@ public class ProjectFinanceChecksController {
                                   HttpServletResponse response,
                                   @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        Long organisationId = getUsersOrganisationId(projectId, loggedInUser);
+        Long organisationId = getOrganisationIdFromUser(projectId, loggedInUser);
 
         ProjectOrganisationCompositeId projectComposite = new ProjectOrganisationCompositeId(projectId, organisationId);
 
@@ -189,7 +189,7 @@ public class ProjectFinanceChecksController {
                                HttpServletRequest request,
                                HttpServletResponse response) {
 
-        Long organisationId = getUsersOrganisationId(projectId, loggedInUser);
+        Long organisationId = getOrganisationIdFromUser(projectId, loggedInUser);
 
         ProjectOrganisationCompositeId projectComposite = new ProjectOrganisationCompositeId(projectId, organisationId);
 
@@ -253,7 +253,7 @@ public class ProjectFinanceChecksController {
                                             HttpServletResponse response,
                                             @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        Long organisationId = getUsersOrganisationId(projectId, loggedInUser);
+        Long organisationId = getOrganisationIdFromUser(projectId, loggedInUser);
 
         ProjectOrganisationCompositeId projectComposite = new ProjectOrganisationCompositeId(projectId, organisationId);
 
@@ -288,7 +288,7 @@ public class ProjectFinanceChecksController {
                                                                  @PathVariable Long attachmentId,
                                                                  @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                                                  HttpServletRequest request) {
-        Long organisationId = getUsersOrganisationId(projectId, loggedInUser);
+        Long organisationId = getOrganisationIdFromUser(projectId, loggedInUser);
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
         Optional<ByteArrayResource> content = Optional.empty();
         Optional<FileEntryResource> fileDetails = Optional.empty();
@@ -338,7 +338,7 @@ public class ProjectFinanceChecksController {
                                    HttpServletRequest request,
                                    HttpServletResponse response,
                                    Model model) {
-        Long organisationId = getUsersOrganisationId(projectId, loggedInUser);
+        Long organisationId = getOrganisationIdFromUser(projectId, loggedInUser);
 
         ProjectOrganisationCompositeId projectComposite = new ProjectOrganisationCompositeId(projectId, organisationId);
 
@@ -362,7 +362,7 @@ public class ProjectFinanceChecksController {
                                 HttpServletRequest request,
                                 HttpServletResponse response,
                                 @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        Long organisationId = getUsersOrganisationId(projectId, loggedInUser);
+        Long organisationId = getOrganisationIdFromUser(projectId, loggedInUser);
 
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
         attachments.forEach(( id -> financeCheckService.deleteFile(id)));
@@ -376,7 +376,7 @@ public class ProjectFinanceChecksController {
     @GetMapping("/eligibility")
     public String viewExternalEligibilityPage(@PathVariable("projectId") final Long projectId, @ModelAttribute(FORM_ATTR) ApplicationForm form, BindingResult bindingResult, Model model, HttpServletRequest request, @ModelAttribute("loggedInUser") UserResource loggedInUser){
         ProjectResource project = projectService.getById(projectId);
-        Long organisationId = getUsersOrganisationId(projectId, loggedInUser);
+        Long organisationId = getOrganisationIdFromUser(projectId, loggedInUser);
         ApplicationResource application = applicationService.getById(project.getApplication());
         OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
@@ -391,7 +391,7 @@ public class ProjectFinanceChecksController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping("/eligibility/changes")
     public String viewExternalEligibilityChanges(@PathVariable("projectId") final Long projectId, Model model, @ModelAttribute("loggedInUser") UserResource loggedInUser){
-        Long organisationId = getUsersOrganisationId(projectId, loggedInUser);
+        Long organisationId = getOrganisationIdFromUser(projectId, loggedInUser);
         ProjectResource project = projectService.getById(projectId);
         OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
         return doViewEligibilityChanges(project, organisation, loggedInUser.getId(), model);
@@ -568,7 +568,7 @@ public class ProjectFinanceChecksController {
         return "project/financecheck/eligibility-changes";
     }
 
-    private Long getUsersOrganisationId(Long projectId, UserResource user) throws GeneralUnexpectedErrorException {
+    private Long getOrganisationIdFromUser(Long projectId, UserResource user) throws GeneralUnexpectedErrorException {
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
         Optional<ProjectUserResource> projectUser = simpleFindFirst(projectUsers, pu ->
                 user.getId().equals(pu.getUser()) && UserRoleType.PARTNER.getName().equals(pu.getRoleName()));
