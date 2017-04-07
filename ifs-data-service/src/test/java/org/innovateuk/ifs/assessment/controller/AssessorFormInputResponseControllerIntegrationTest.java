@@ -96,7 +96,7 @@ public class AssessorFormInputResponseControllerIntegrationTest extends BaseCont
                 .withFormInput(formInputId)
                 .withValue(newValue)
                 .build();
-        RestResult<ValidationMessages> updateResult = controller.updateFormInputResponse(updatedAssessorResponse);
+        RestResult<Void> updateResult = controller.updateFormInputResponse(updatedAssessorResponse);
         assertTrue(updateResult.isSuccess());
 
         RestResult<List<AssessorFormInputResponseResource>> allResponsesAfterResult = controller.getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId);
@@ -121,7 +121,7 @@ public class AssessorFormInputResponseControllerIntegrationTest extends BaseCont
                 .build();
 
         loginSteveSmith();
-        RestResult<ValidationMessages> updateResult = controller.updateFormInputResponse(updatedAssessorResponse);
+        RestResult<Void> updateResult = controller.updateFormInputResponse(updatedAssessorResponse);
         assertTrue(updateResult.isFailure());
         assertTrue(updateResult.getFailure().is(forbiddenError(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION)));
     }

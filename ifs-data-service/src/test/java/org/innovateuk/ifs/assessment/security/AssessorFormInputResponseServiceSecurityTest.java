@@ -84,18 +84,6 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
     }
 
     @Test
-    public void saveUpdatedFormInputResponse() {
-        Long assessorFormInputResponseId = 2L;
-        AssessorFormInputResponseResource response = newAssessorFormInputResponseResource().build();
-
-        when(assessorFormInputResponseLookupStrategy.getAssessorFormInputResponseResource(assessorFormInputResponseId)).thenReturn(newAssessorFormInputResponseResource().withId(assessorFormInputResponseId).build());
-        assertAccessDenied(
-                () -> classUnderTest.saveUpdatedFormInputResponse(response),
-                () -> verify(assessorFormInputResponsePermissionRules).userCanUpdateAssessorFormInputResponse(isA(AssessorFormInputResponseResource.class), isA(UserResource.class))
-        );
-    }
-
-    @Test
     public void getApplicationAggregateScores() {
         long applicationId = 2;
 
@@ -141,12 +129,7 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
         }
 
         @Override
-        public ServiceResult<AssessorFormInputResponseResource> updateFormInputResponse(AssessorFormInputResponseResource response) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> saveUpdatedFormInputResponse(AssessorFormInputResponseResource response) {
+        public ServiceResult<Void> updateFormInputResponse(AssessorFormInputResponseResource response) {
             return null;
         }
 

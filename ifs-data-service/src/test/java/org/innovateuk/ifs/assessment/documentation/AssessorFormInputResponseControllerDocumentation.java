@@ -98,11 +98,9 @@ public class AssessorFormInputResponseControllerDocumentation extends BaseContro
                 .build();
 
         BindingResult bindingResult = new DataBinder(mappedResponse).getBindingResult();
-        ValidationMessages expected = new ValidationMessages(bindingResult);
-        when(assessorFormInputResponseServiceMock.updateFormInputResponse(response)).thenReturn(serviceSuccess(response));
+        when(assessorFormInputResponseServiceMock.updateFormInputResponse(response)).thenReturn(serviceSuccess());
         when(assessorFormInputResponseServiceMock.mapToFormInputResponse(response)).thenReturn(mappedResponse);
         when(validationUtilMock.validateResponse(mappedResponse, true)).thenReturn(bindingResult);
-        when(assessorFormInputResponseServiceMock.saveUpdatedFormInputResponse(response)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/assessorFormInputResponse")
                 .contentType(APPLICATION_JSON)

@@ -93,23 +93,14 @@ public class AssessorFormInputResponseControllerTest extends BaseControllerMockM
                 .withValue(value)
                 .build();
 
-        BindingResult bindingResult = new DataBinder(mappedResponse).getBindingResult();
-        ValidationMessages expected = new ValidationMessages(bindingResult);
-        when(assessorFormInputResponseServiceMock.updateFormInputResponse(response)).thenReturn(serviceSuccess(response));
-        when(assessorFormInputResponseServiceMock.mapToFormInputResponse(response)).thenReturn(mappedResponse);
-        when(validationUtilMock.validateResponse(mappedResponse, true)).thenReturn(bindingResult);
-        when(assessorFormInputResponseServiceMock.saveUpdatedFormInputResponse(response)).thenReturn(serviceSuccess());
+        when(assessorFormInputResponseServiceMock.updateFormInputResponse(response)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/assessorFormInputResponse")
                 .contentType(APPLICATION_JSON)
                 .content(toJson(response)))
-                .andExpect(status().isOk())
-                .andExpect(content().string(toJson(expected)));
+                .andExpect(status().isOk());
 
         verify(assessorFormInputResponseServiceMock).updateFormInputResponse(response);
-        verify(assessorFormInputResponseServiceMock).mapToFormInputResponse(response);
-        verify(validationUtilMock).validateResponse(mappedResponse, true);
-        verify(assessorFormInputResponseServiceMock).saveUpdatedFormInputResponse(response);
     }
 
     @Test
