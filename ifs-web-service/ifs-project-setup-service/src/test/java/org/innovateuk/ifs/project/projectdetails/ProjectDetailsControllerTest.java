@@ -19,9 +19,11 @@ import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.utils.UserOrganisationUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
@@ -67,6 +69,9 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     private static final String SAVE_FC = "save_fc";
     private static final String INVITE_FC = "invite_fc";
     private static final String SAVE_PM = "save_pm";
+
+    @Mock
+    public UserOrganisationUtil userOrganisationUtil;
 
 	@Before
 	public void setUp() {
@@ -436,6 +441,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectService.saveProjectInvite(any())).thenReturn(serviceSuccess());
         when(competitionService.getById(competitionId)).thenReturn(competitionResource);
         when(applicationService.getById(projectResource.getApplication())).thenReturn(applicationResource);
+        when(userOrganisationUtil.userIsPartnerInOrganisationForProject(projectId, organisationId, loggedInUser.getId())).thenReturn(true);
 
         InviteStatus testStatus = CREATED;
 
@@ -630,6 +636,8 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectService.getProjectUsersForProject(projectId)).thenReturn(availableUsers);
         when(projectService.getInvitesByProject(projectId)).thenReturn(serviceSuccess(existingInvites));
 
+        when(userOrganisationUtil.userIsPartnerInOrganisationForProject(projectId, organisationId, loggedInUser.getId())).thenReturn(true);
+
         MvcResult result = mockMvc.perform(get("/project/{id}/details/finance-contact", projectId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("organisation", String.valueOf(organisationId)))
@@ -676,6 +684,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectService.getById(projectId)).thenReturn(projectResource);
         when(projectService.getProjectUsersForProject(projectId)).thenReturn(availableUsers);
         when(projectService.getInvitesByProject(projectId)).thenReturn(serviceSuccess(existingInvites));
+        when(userOrganisationUtil.userIsPartnerInOrganisationForProject(projectId, organisationId, loggedInUser.getId())).thenReturn(true);
 
         MvcResult result = mockMvc.perform(get("/project/{id}/details/finance-contact", projectId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)

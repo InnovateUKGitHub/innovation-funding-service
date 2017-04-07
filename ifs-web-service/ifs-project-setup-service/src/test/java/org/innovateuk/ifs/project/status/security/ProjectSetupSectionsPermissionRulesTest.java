@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.status.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
+import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
@@ -24,6 +25,7 @@ import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.CANNOT_GET_ANY_USERS_FOR_PROJECT;
 import static org.innovateuk.ifs.project.builder.ProjectLeadStatusResourceBuilder.newProjectLeadStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
@@ -47,6 +49,9 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
     @Mock
     private ProjectSetupSectionAccessibilityHelper accessor;
 
+    @Mock
+    private UserOrganisationUtil userOrganisationUtil;
+
     private UserResource user = newUserResource().build();
 
     @Before
@@ -54,12 +59,12 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
         when(accessorSupplier.apply(isA(ProjectTeamStatusResource.class))).thenReturn(accessor);
     }
 
-    @Test
+    @Test(expected = ForbiddenActionException.class)
     public void testCompaniesHouseSectionAccess() {
         assertScenariousForSections(ProjectSetupSectionAccessibilityHelper::canAccessCompaniesHouseSection, () -> rules.partnerCanAccessCompaniesHouseSection(123L, user));
     }
 
-    @Test
+    @Test(expected = ForbiddenActionException.class)
     public void testProjectDetailsSectionAccess() {
         assertScenariousForSections(ProjectSetupSectionAccessibilityHelper::canAccessProjectDetailsSection, () -> rules.partnerCanAccessProjectDetailsSection(123L, user));
     }
@@ -131,7 +136,7 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().withPartnerStatuses(Collections.singletonList(partnerStatus)).build();
 
-        when(projectServiceMock.getProjectUsersForProject(projectId)).thenReturn(pu);
+        when(userOrganisationUtil.getOrganisationIdFromUser(projectId, user)).thenReturn(organisationId);
         when(projectServiceMock.getProjectTeamStatus(projectId, Optional.of(user.getId()))).thenReturn(teamStatus);
         when(accessor.canAccessFinanceChecksSection(any())).thenReturn(ACCESSIBLE);
 
@@ -159,6 +164,7 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
         when(projectServiceMock.getProjectUsersForProject(projectId)).thenReturn(pu);
         when(projectServiceMock.getProjectTeamStatus(projectId, Optional.of(user.getId()))).thenReturn(teamStatus);
         when(accessor.canAccessFinanceChecksSection(any())).thenReturn(NOT_ACCESSIBLE);
+        when(userOrganisationUtil.getOrganisationIdFromUser(projectId, user)).thenReturn(organisationId);
 
         assertFalse(rules.partnerCanAccessFinanceChecksSection(123L, user));
 
@@ -182,13 +188,12 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().withPartnerStatuses(Collections.singletonList(partnerStatus)).build();
 
-        when(projectServiceMock.getProjectUsersForProject(projectId)).thenReturn(pu);
+        when(userOrganisationUtil.getOrganisationIdFromUser(projectId, user)).thenReturn(organisationId);
         when(projectServiceMock.getProjectTeamStatus(projectId, Optional.of(user.getId()))).thenReturn(teamStatus);
         when(accessor.canAccessFinanceChecksSection(any())).thenReturn(ACCESSIBLE);
 
         assertTrue(rules.partnerCanAccessFinanceChecksSection(123L, user));
 
-        verify(projectServiceMock).getProjectUsersForProject(projectId);
         verify(projectServiceMock).getProjectTeamStatus(projectId, Optional.of(user.getId()));
     }
 
@@ -208,7 +213,7 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
                 withRoleName(PARTNER).
                 build(1);
 
-        when(projectServiceMock.getProjectUsersForProject(123L)).thenReturn(projectUsers);
+        when(userOrganisationUtil.getOrganisationIdFromUser(123L, user)).thenReturn(456L);
 
         when(projectServiceMock.getProjectTeamStatus(123L, Optional.of(user.getId()))).thenReturn(teamStatus);
 
@@ -221,7 +226,6 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
 
         assertTrue(ruleCheck.get());
 
-        verify(projectServiceMock).getProjectUsersForProject(123L);
         verify(projectServiceMock).getProjectTeamStatus(123L, Optional.of(user.getId()));
     }
 
@@ -249,6 +253,8 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
 
         when(projectServiceMock.getProjectTeamStatus(123L, Optional.of(user.getId()))).thenReturn(teamStatus);
 
+        when(userOrganisationUtil.getOrganisationIdFromUser(123L, user)).thenReturn(789L);
+
         OrganisationResource expectedOrganisation = new OrganisationResource();
         expectedOrganisation.setId(789L);
         expectedOrganisation.setOrganisationType(
@@ -258,29 +264,23 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
 
         assertTrue(ruleCheck.get());
 
-        verify(projectServiceMock).getProjectUsersForProject(123L);
         verify(projectServiceMock).getProjectTeamStatus(123L, Optional.of(user.getId()));
         accessorCheck.apply(verify(accessor), expectedOrganisation);
     }
 
     private void assertNotOnProjectExpectations(Supplier<Boolean> ruleCheck) {
-        when(projectServiceMock.getProjectUsersForProject(123L)).thenReturn(
-                newProjectUserResource().withUser(999L).withOrganisation(456L).withRoleName(PARTNER).build(1));
+        when(userOrganisationUtil.getOrganisationIdFromUser(123L, user)).thenThrow(new ForbiddenActionException(CANNOT_GET_ANY_USERS_FOR_PROJECT.getErrorKey(), singletonList(123L)));
 
         assertFalse(ruleCheck.get());
 
-        verify(projectServiceMock).getProjectUsersForProject(123L);
         verify(projectServiceMock, never()).getProjectTeamStatus(123L, Optional.of(user.getId()));
     }
 
     private void assertForbiddenExpectations(Supplier<Boolean> ruleCheck) {
-
-        when(projectServiceMock.getProjectUsersForProject(123L)).thenReturn(
-                newProjectUserResource().withUser(user.getId()).withOrganisation(456L).withRoleName(PARTNER).build(1));
+        when(userOrganisationUtil.getOrganisationIdFromUser(123L, user)).thenThrow(new ForbiddenActionException(CANNOT_GET_ANY_USERS_FOR_PROJECT.getErrorKey(), singletonList(123L)));
 
         assertFalse(ruleCheck.get());
 
-        verify(projectServiceMock).getProjectUsersForProject(123L);
         verifyZeroInteractions(projectServiceMock);
     }
 
