@@ -6,7 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
+import org.innovateuk.ifs.application.resource.ApplicationStatus;
 import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
@@ -330,7 +330,7 @@ class CsvUtils {
         String leadApplicant;
         List<String> collaborators;
         ZonedDateTime submittedDate;
-        ApplicationStatusConstants status;
+        ApplicationStatus status;
         boolean markFinancesComplete;
         String researchCategory;
         String innovationArea;
@@ -347,7 +347,7 @@ class CsvUtils {
             String collaboratorString = nullable(line.get(i++));
             collaborators = collaboratorString != null ? asList(collaboratorString.split(",")) : emptyList();
             submittedDate = nullableDateTime(line.get(i++));
-            status = ApplicationStatusConstants.getFromName(line.get(i++));
+            status = ApplicationStatus.valueOf(line.get(i++).toUpperCase());
             markFinancesComplete = nullableBoolean(line.get(i++));
             researchCategory = nullable(line.get(i++));
             innovationArea = nullable(line.get(i++));

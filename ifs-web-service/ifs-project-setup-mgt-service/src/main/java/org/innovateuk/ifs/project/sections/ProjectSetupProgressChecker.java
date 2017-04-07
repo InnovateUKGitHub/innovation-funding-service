@@ -1,11 +1,10 @@
 package org.innovateuk.ifs.project.sections;
 
-import org.innovateuk.ifs.application.finance.model.UserRole;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
-import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 
+import java.util.Arrays;
 import java.util.Map;
 
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
@@ -24,6 +23,10 @@ class ProjectSetupProgressChecker {
 
     public boolean isProjectDetailsSubmitted() {
         return COMPLETE.equals(projectStatus.getProjectDetailsStatus());
+    }
+
+    public boolean canAccessMonitoringOfficer() {
+        return Arrays.asList(COMPLETE, ACTION_REQUIRED).contains(projectStatus.getMonitoringOfficerStatus());
     }
 
     public boolean isBankDetailsApproved() {

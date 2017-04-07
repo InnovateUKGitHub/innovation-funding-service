@@ -223,9 +223,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected OrganisationRepository organisationRepositoryMock;
 
     @Mock
-    protected ApplicationStatusRepository applicationStatusRepositoryMock;
-
-    @Mock
     protected ApplicationStatisticsRepository applicationStatisticsRepositoryMock;
 
     @Mock

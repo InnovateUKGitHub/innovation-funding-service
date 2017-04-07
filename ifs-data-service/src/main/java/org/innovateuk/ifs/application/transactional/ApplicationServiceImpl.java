@@ -5,16 +5,11 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.domain.ApplicationStatus;
 import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.domain.Section;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
-import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryId;
-import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -131,11 +126,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         application.setName(applicationName);
         application.setStartDate(null);
 
-        String name = ApplicationStatusConstants.CREATED.getName();
-
-        List<ApplicationStatus> applicationStatusList = applicationStatusRepository.findByName(name);
-        ApplicationStatus applicationStatus = applicationStatusList.get(0);
-        application.setApplicationStatus(applicationStatus);
+        application.setApplicationStatus(ApplicationStatus.CREATED);
         application.setDurationInMonths(3L);
         application.setCompetition(competition);
 
@@ -383,9 +374,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<ApplicationResource> updateApplicationStatus(final Long id,
-                                                                      final Long statusId) {
-        return find(application(id), applicationStatus(statusId)).andOnSuccess((application, applicationStatus) -> {
-            application.setApplicationStatus(applicationStatus);
+                                                                      final ApplicationStatus status) {
+        return find(application(id)).andOnSuccess((application) -> {
+            application.setApplicationStatus(status);
             applicationRepository.save(application);
             return serviceSuccess(applicationMapper.mapToResource(application));
         });
@@ -473,8 +464,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<List<Application>> getApplicationsByCompetitionIdAndStatus(Long competitionId, Collection<Long> applicationStatusId) {
-        List<Application> applicationResults = applicationRepository.findByCompetitionIdAndApplicationStatusIdIn(competitionId, applicationStatusId);
+    public ServiceResult<List<Application>> getApplicationsByCompetitionIdAndStatus(Long competitionId, Collection<ApplicationStatus> applicationStatuses) {
+        List<Application> applicationResults = applicationRepository.findByCompetitionIdAndApplicationStatusIn(competitionId, applicationStatuses);
         return serviceSuccess(applicationResults);
     }
 

@@ -7,7 +7,6 @@ import org.innovateuk.ifs.application.UserApplicationRole;
 import org.innovateuk.ifs.application.builder.QuestionResourceBuilder;
 import org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder;
 import org.innovateuk.ifs.application.builder.SectionResourceBuilder;
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.finance.model.UserRole;
 import org.innovateuk.ifs.application.finance.service.FinanceRowService;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
@@ -89,7 +88,6 @@ import static java.util.Collections.singletonList;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.application.builder.ApplicationStatusResourceBuilder.newApplicationStatusResource;
 import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.application.service.Futures.settable;
@@ -142,8 +140,6 @@ public class BaseUnitTest {
     public FormInputService formInputService;
     @Mock
     public ApplicationService applicationService;
-    @Mock
-    public ApplicationStatusRestService applicationStatusService;
     @Mock
     public CompetitionsRestService competitionRestService;
     @Mock
@@ -267,11 +263,6 @@ public class BaseUnitTest {
     public List<ProcessRoleResource> assessorProcessRoleResources;
     public List<ProcessRoleResource> applicantRoles;
     public ApplicationFinanceResource applicationFinanceResource;
-    public ApplicationStatusResource submittedApplicationStatus;
-    public ApplicationStatusResource createdApplicationStatus;
-    public ApplicationStatusResource approvedApplicationStatus;
-    public ApplicationStatusResource rejectedApplicationStatus;
-    public ApplicationStatusResource openApplicationStatus;
     public List<ProcessRoleResource> processRoles;
 
     public List<ProcessRoleResource> application1ProcessRoles;
@@ -552,26 +543,20 @@ public class BaseUnitTest {
         assessorAndApplicant.setRoles(asList(applicantRole, assessorRole));
     }
 
-    public void setupApplicationWithRoles() {
-        openApplicationStatus = newApplicationStatusResource().with(status -> status.setId(ApplicationStatusConstants.OPEN.getId())).withName(ApplicationStatusConstants.OPEN.getName()).build();
-        createdApplicationStatus = newApplicationStatusResource().with(status -> status.setId(ApplicationStatusConstants.CREATED.getId())).withName(ApplicationStatusConstants.CREATED.getName()).build();
-        submittedApplicationStatus = newApplicationStatusResource().with(status -> status.setId(ApplicationStatusConstants.SUBMITTED.getId())).withName(ApplicationStatusConstants.SUBMITTED.getName()).build();
-        approvedApplicationStatus = newApplicationStatusResource().with(status -> status.setId(ApplicationStatusConstants.APPROVED.getId())).withName(ApplicationStatusConstants.APPROVED.getName()).build();
-        rejectedApplicationStatus = newApplicationStatusResource().with(status -> status.setId(ApplicationStatusConstants.REJECTED.getId())).withName(ApplicationStatusConstants.REJECTED.getName()).build();
-
+    public void setupApplicationWithRoles(){
         // Build the backing applications.
 
         List<ApplicationResource> applicationResources = asList(
                 newApplicationResource().with(id(1L)).with(name("Rovel Additive Manufacturing Process")).withStartDate(LocalDate.now().plusMonths(3))
-                        .withApplicationStatus(ApplicationStatusConstants.CREATED).withResearchCategory(newResearchCategoryResource().build()).build(),
+                        .withApplicationStatus(ApplicationStatus.CREATED).withResearchCategory(newResearchCategoryResource().build()).build(),
                 newApplicationResource().with(id(2L)).with(name("Providing sustainable childcare")).withStartDate(LocalDate.now().plusMonths(4))
-                        .withApplicationStatus(ApplicationStatusConstants.SUBMITTED).withResearchCategory(newResearchCategoryResource().build()).build(),
+                        .withApplicationStatus(ApplicationStatus.SUBMITTED).withResearchCategory(newResearchCategoryResource().build()).build(),
                 newApplicationResource().with(id(3L)).with(name("Mobile Phone Data for Logistics Analytics")).withStartDate(LocalDate.now().plusMonths(5))
-                        .withApplicationStatus(ApplicationStatusConstants.APPROVED).withResearchCategory(newResearchCategoryResource().build()).build(),
+                        .withApplicationStatus(ApplicationStatus.APPROVED).withResearchCategory(newResearchCategoryResource().build()).build(),
                 newApplicationResource().with(id(4L)).with(name("Using natural gas to heat homes")).withStartDate(LocalDate.now().plusMonths(6))
-                        .withApplicationStatus(ApplicationStatusConstants.REJECTED).withResearchCategory(newResearchCategoryResource().build()).build(),
+                        .withApplicationStatus(ApplicationStatus.REJECTED).withResearchCategory(newResearchCategoryResource().build()).build(),
                 newApplicationResource().with(id(5L)).with(name("Rovel Additive Manufacturing Process Ltd")).withStartDate(LocalDate.now().plusMonths(3))
-                        .withApplicationStatus(ApplicationStatusConstants.CREATED).withResearchCategory(newResearchCategoryResource().build()).build()
+                        .withApplicationStatus(ApplicationStatus.CREATED).withResearchCategory(newResearchCategoryResource().build()).build()
         );
 
         Map<Long, ApplicationResource> idsToApplicationResources = applicationResources.stream().collect(toMap(a -> a.getId(), a -> a));
