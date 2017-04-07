@@ -27,4 +27,5 @@ public abstract class PublicContentMapper extends BaseMapper<PublicContent, Publ
         }
         return object.getId();
     }
+
 }

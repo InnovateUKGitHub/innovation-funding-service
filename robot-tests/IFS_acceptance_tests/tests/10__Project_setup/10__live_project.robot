@@ -172,8 +172,7 @@ Project dashboard shows message that the project is live for academic partner
 
 Status indicators should not show for academic partner
     [Documentation]    INFUND-6376
-    [Tags]    Pending
-    # TODO Pending due to INFUND-7922
+    [Tags]
     When the user should not see the element    link=status of my partners
     And the user should not see the element    css.complete
     And the user should not see the element    css=.action
@@ -181,8 +180,7 @@ Status indicators should not show for academic partner
 
 Project details section is read-only for academic partner
     [Documentation]    INFUND-6376
-    [Tags]    Pending
-    # TODO Pending due to INFUND-7924
+    [Tags]
     When the user clicks the button/link    link=Project details
     Then the user should not see the element    link=Target start date
     And the user should not see the element    link=Project address

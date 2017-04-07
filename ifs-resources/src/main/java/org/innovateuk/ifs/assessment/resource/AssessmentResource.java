@@ -4,13 +4,13 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.time.LocalDate;
-import java.util.Calendar;
+import java.time.ZonedDateTime;
 
 public class AssessmentResource {
     private Long id;
     private String event;
     private AssessmentStates assessmentState;
-    private Calendar lastModified;
+    private ZonedDateTime lastModified;
     private LocalDate startDate;
     private LocalDate endDate;
     private AssessmentFundingDecisionOutcomeResource fundingDecision;
@@ -45,11 +45,11 @@ public class AssessmentResource {
         this.assessmentState = assessmentState;
     }
 
-    public Calendar getLastModified() {
+    public ZonedDateTime getLastModified() {
         return lastModified;
     }
 
-    public void setLastModified(Calendar lastModified) {
+    public void setLastModified(ZonedDateTime lastModified) {
         this.lastModified = lastModified;
     }
 

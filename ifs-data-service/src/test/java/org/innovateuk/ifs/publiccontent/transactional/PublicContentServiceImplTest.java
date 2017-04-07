@@ -17,7 +17,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -177,7 +177,7 @@ public class PublicContentServiceImplTest extends BaseServiceUnitTest<PublicCont
         when(publicContent.getContentSections()).thenReturn(newContentSection().withStatus(PublicContentStatus.COMPLETE).build(1));
         when(publicContent.getId()).thenReturn(1L);
         when(publicContent.getCompetitionId()).thenReturn(COMPETITION_ID);
-        when(publicContent.getPublishDate()).thenReturn(LocalDateTime.now());
+        when(publicContent.getPublishDate()).thenReturn(ZonedDateTime.now());
         mockPublicMilestonesValid(true);
 
         ServiceResult<Void> result = service.updateSection(publicContentResource, PublicContentSectionType.SEARCH);

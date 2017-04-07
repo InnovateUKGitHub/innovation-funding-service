@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.domain;
 
+import org.innovateuk.ifs.application.resource.ApplicationStatus;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.form.domain.FormInput;
@@ -17,7 +18,7 @@ import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnov
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class ApplicationTest {
     private Application application;
@@ -33,7 +34,7 @@ public class ApplicationTest {
     public void setUp() throws Exception {
         id = 0L;
         name = "testApplicationName";
-        applicationStatus = new ApplicationStatus();
+        applicationStatus = ApplicationStatus.CREATED;
         competition = new Competition();
         applicationFinances = new ArrayList<>();
 

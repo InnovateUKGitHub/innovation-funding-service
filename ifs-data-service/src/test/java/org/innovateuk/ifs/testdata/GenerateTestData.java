@@ -4,7 +4,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.flywaydb.core.Flyway;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
+import org.innovateuk.ifs.application.resource.ApplicationStatus;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
@@ -52,7 +52,7 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -81,7 +81,7 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_TECHNOLOGIST;
 import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -492,8 +492,8 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     private List<Pair<String, FundingDecision>> createFundingDecisionsFromCsv(String competitionName) {
         List<ApplicationLine> matchingApplications = simpleFilter(applicationLines, a -> a.competitionName.equals(competitionName));
-        List<ApplicationLine> applicationsWithDecisions = simpleFilter(matchingApplications, a -> asList(ApplicationStatusConstants.APPROVED, ApplicationStatusConstants.REJECTED).contains(a.status));
-        return simpleMap(applicationsWithDecisions, ma -> Pair.of(ma.title, ma.status == ApplicationStatusConstants.APPROVED ? FundingDecision.FUNDED : FundingDecision.UNFUNDED));
+        List<ApplicationLine> applicationsWithDecisions = simpleFilter(matchingApplications, a -> asList(ApplicationStatus.APPROVED, ApplicationStatus.REJECTED).contains(a.status));
+        return simpleMap(applicationsWithDecisions, ma -> Pair.of(ma.title, ma.status == ApplicationStatus.APPROVED ? FundingDecision.FUNDED : FundingDecision.UNFUNDED));
     }
 
     private void createCompetitionWithApplications(CompetitionLine competitionLine, Optional<Long> competitionId) {
@@ -516,7 +516,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                     withApplications(applicationBuilders).
                     restoreOriginalMilestones();
 
-            if (competitionLine.fundersPanelEndDate != null && competitionLine.fundersPanelEndDate.isBefore(LocalDateTime.now())) {
+            if (competitionLine.fundersPanelEndDate != null && competitionLine.fundersPanelEndDate.isBefore(ZonedDateTime.now())) {
 
                 withApplications = withApplications.
                         moveCompetitionIntoFundersPanelStatus().
@@ -585,7 +585,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                     invite.status, invite.ownerName);
         }
 
-        if (line.status != ApplicationStatusConstants.CREATED) {
+        if (line.status != ApplicationStatus.CREATED) {
             baseBuilder = baseBuilder.beginApplication();
         }
 
@@ -906,7 +906,7 @@ public class GenerateTestData extends BaseIntegrationTest {
 
         Optional<User> existingUser = userRepository.findByEmail(line.emailAddress);
         Optional<User> sentBy = userRepository.findByEmail("john.doe@innovateuk.test");
-        Optional<LocalDateTime> sentOn = Optional.of(LocalDateTime.now());
+        Optional<ZonedDateTime> sentOn = Optional.of(ZonedDateTime.now());
 
         for (InviteLine invite : assessorInvitesForThisAssessor) {
             builder = builder.withInviteToAssessCompetition(

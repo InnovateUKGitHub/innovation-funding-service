@@ -24,7 +24,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -219,7 +219,7 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
 
     @Test
     public void setApplicationDetailsSubmitted() throws Exception {
-        when(projectServiceMock.submitProjectDetails(isA(Long.class), isA(LocalDateTime.class))).thenReturn(serviceSuccess());
+        when(projectServiceMock.submitProjectDetails(isA(Long.class), isA(ZonedDateTime.class))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/setApplicationDetailsSubmitted", 123L))
                 .andExpect(status().isOk())

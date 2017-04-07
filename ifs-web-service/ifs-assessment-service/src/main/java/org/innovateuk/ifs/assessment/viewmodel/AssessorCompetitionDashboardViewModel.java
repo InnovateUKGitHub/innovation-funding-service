@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.assessment.viewmodel;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
@@ -12,13 +12,13 @@ public class AssessorCompetitionDashboardViewModel {
     private String competitionTitle;
     private String competition;
     private String leadTechnologist;
-    private LocalDateTime acceptDeadline;
-    private LocalDateTime submitDeadline;
+    private ZonedDateTime acceptDeadline;
+    private ZonedDateTime submitDeadline;
     private List<AssessorCompetitionDashboardApplicationViewModel> submitted;
     private List<AssessorCompetitionDashboardApplicationViewModel> outstanding;
     private boolean submitVisible;
 
-    public AssessorCompetitionDashboardViewModel(long competitionId, String competitionTitle, String competition, String leadTechnologist, LocalDateTime acceptDeadline, LocalDateTime submitDeadline, List<AssessorCompetitionDashboardApplicationViewModel> submitted, List<AssessorCompetitionDashboardApplicationViewModel> outstanding, boolean submitVisible) {
+    public AssessorCompetitionDashboardViewModel(long competitionId, String competitionTitle, String competition, String leadTechnologist, ZonedDateTime acceptDeadline, ZonedDateTime submitDeadline, List<AssessorCompetitionDashboardApplicationViewModel> submitted, List<AssessorCompetitionDashboardApplicationViewModel> outstanding, boolean submitVisible) {
         this.competitionId = competitionId;
         this.competitionTitle = competitionTitle;
         this.competition = competition;
@@ -50,11 +50,11 @@ public class AssessorCompetitionDashboardViewModel {
         return leadTechnologist;
     }
 
-    public LocalDateTime getAcceptDeadline() {
+    public ZonedDateTime getAcceptDeadline() {
         return acceptDeadline;
     }
 
-    public LocalDateTime getSubmitDeadline() {
+    public ZonedDateTime getSubmitDeadline() {
         return submitDeadline;
     }
 

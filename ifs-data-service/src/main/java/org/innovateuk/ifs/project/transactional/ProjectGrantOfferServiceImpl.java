@@ -56,7 +56,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Supplier;
@@ -263,7 +263,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         templateReplacements.put("Address3", addresses.size() < 3 ? "" : addresses.get(2));
         templateReplacements.put("TownCity", addresses.size() < 4 ? "" : addresses.get(3));
         templateReplacements.put("PostCode", addresses.size() < 5 ? "" : addresses.get(4));
-        templateReplacements.put("Date", LocalDateTime.now().toString());
+        templateReplacements.put("Date", ZonedDateTime.now().toString());
         templateReplacements.put("CompetitionName", project.getApplication().getCompetition().getName());
         templateReplacements.put("ProjectTitle", project.getName());
         templateReplacements.put("ProjectStartDate", project.getTargetStartDate() != null ?
@@ -422,7 +422,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
             if (!golWorkflowHandler.sign(project)) {
                 return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_CANNOT_SET_SIGNED_STATE);
             }
-            project.setOfferSubmittedDate(LocalDateTime.now());
+            project.setOfferSubmittedDate(ZonedDateTime.now());
             return serviceSuccess();
         });
     }

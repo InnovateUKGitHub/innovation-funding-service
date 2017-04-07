@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * QuestionStatus defines the model and relations that are stored in the database.
@@ -29,7 +29,7 @@ public class QuestionStatus {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="assigneeId", referencedColumnName="id")
     private ProcessRole assignee;
-    private LocalDateTime assignedDate;
+    private ZonedDateTime assignedDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="applicationId", referencedColumnName="id")
@@ -51,7 +51,7 @@ public class QuestionStatus {
         this.question = question;
     }
 
-    public QuestionStatus(Question question, Application application, ProcessRole assignee, ProcessRole assignedBy, LocalDateTime assignedDate) {
+    public QuestionStatus(Question question, Application application, ProcessRole assignee, ProcessRole assignedBy, ZonedDateTime assignedDate) {
         this.question = question;
         this.application = application;
         this.assignee = assignee;
@@ -84,7 +84,7 @@ public class QuestionStatus {
         return assignedBy;
     }
 
-    public LocalDateTime getAssignedDate() {
+    public ZonedDateTime getAssignedDate() {
         return assignedDate;
     }
 
@@ -96,7 +96,7 @@ public class QuestionStatus {
         this.markedAsComplete = false;
     }
 
-    public void setAssignee(ProcessRole assignee, ProcessRole assignedBy, LocalDateTime assignedDate) {
+    public void setAssignee(ProcessRole assignee, ProcessRole assignedBy, ZonedDateTime assignedDate) {
         this.assignedDate = assignedDate;
         this.assignee = assignee;
         this.assignedBy = assignedBy;

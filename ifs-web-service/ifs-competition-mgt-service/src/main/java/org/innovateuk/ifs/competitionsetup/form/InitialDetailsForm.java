@@ -4,7 +4,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
@@ -15,7 +15,7 @@ public class InitialDetailsForm extends CompetitionSetupForm {
     @NotNull(message = "{validation.initialdetailsform.executiveuserid.required}")
     private Long executiveUserId;
 
-    private LocalDateTime openingDate;
+    private ZonedDateTime openingDate;
 
     @NotNull(message = "{validation.initialdetailsform.openingdateday.required}")
     @Range(min=1, max=31, message= "{validation.initialdetailsform.openingdateday.range}")
@@ -54,11 +54,11 @@ public class InitialDetailsForm extends CompetitionSetupForm {
         this.executiveUserId = executiveUserId;
     }
 
-    public LocalDateTime getOpeningDate() {
+    public ZonedDateTime getOpeningDate() {
         return openingDate;
     }
 
-    public void setOpeningDate(LocalDateTime openingDate) {
+    public void setOpeningDate(ZonedDateTime openingDate) {
         this.openingDate = openingDate;
     }
 

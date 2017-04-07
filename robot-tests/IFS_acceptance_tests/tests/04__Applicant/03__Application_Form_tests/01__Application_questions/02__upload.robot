@@ -104,7 +104,7 @@ Questions can be assigned with appendices
     And the user should see the text in the page    ${valid_pdf}
     When the user assigns the question to the collaborator    Arsene Wenger
     Then the user should not see the text in the page    Remove
-    And the user clicks the button/link    link=Application Overview
+    And the user clicks the button/link    link=Application overview
     Then the user clicks the button/link    link=6. Innovation
     And the user assigns the question to the collaborator    Arsene Wenger
 

@@ -24,16 +24,15 @@
           Your application for the competition '<span th:text="${currentCompetition.name}" />' was submitted
           <th:block th:if="${currentApplication.submittedDate != null}">
             on
-            <th:block th:text="${#temporals.monthName(currentApplication.submittedDate)}" />
-            <th:block th:insert="fragments/elements :: ordinal-day (date=${currentApplication.submittedDate})" />
+            <th:block th:text="${#temporals.format(currentApplication.submittedDate, 'd MMM yyyy')}"></th:block>
             at
-            <th:block th:text="${#strings.toLowerCase(#temporals.format(currentApplication.submittedDate, 'hh:mma'))}" />.
+            <th:block th:text="${#strings.toLowerCase(#temporals.format(currentApplication.submittedDate, 'h:mma'))}" />.
           </th:block>
         </li>
       </ul>
       <ul class="panel-links">
         <li><a th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}">View application</a></li>
-        <li><a th:href="@{/application/{id}/print(id=${currentApplication.getId()})}">Print Application</a></li>
+        <li><a th:href="@{/application/{id}/print(id=${currentApplication.getId()})}">Print application</a></li>
       </ul>
     </div>
 
@@ -50,10 +49,7 @@
 
     <h3 class="heading-medium">Decision notification</h3>
     <p>You and your project partners will be emailed notification of the decision by
-      <strong th:if="${currentCompetition.fundersPanelDate != null}">
-        <th:block th:insert="fragments/elements :: ordinal-day (date=${currentCompetition.fundersPanelDate})" />
-        <th:block th:text="${#temporals.monthName(currentCompetition.fundersPanelDate)}" />
-        <th:block th:text="${#temporals.year(currentCompetition.fundersPanelDate)}" /></strong>.
+      <strong th:if="${currentCompetition.fundersPanelEndDate != null}" th:text="${#temporals.format(currentCompetition.fundersPanelEndDate, 'd MMM yyyy')}"></strong>.
     </p>
 
     <div class="grid-row">
@@ -78,10 +74,7 @@
 
     <h3 class="heading-medium">Application feedback</h3>
     <p>Application feedback will be provided by
-      <strong th:if="${currentCompetition.releaseFeedbackDate != null}">
-        <th:block th:insert="fragments/elements :: ordinal-day (date=${currentCompetition.releaseFeedbackDate})" />
-        <th:block th:text="${#temporals.monthName(currentCompetition.releaseFeedbackDate)}" />
-        <th:block th:text="${#temporals.year(currentCompetition.releaseFeedbackDate)}" /></strong>.
+      <strong th:if="${currentCompetition.releaseFeedbackDate != null}" th:text="${#temporals.format(currentCompetition.releaseFeedbackDate, 'd MMM yyyy')}"></strong>.
       <br />We will email you when this becomes available.
     </p>
 

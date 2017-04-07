@@ -5,7 +5,7 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectio
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentStatus;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
@@ -13,17 +13,17 @@ import java.util.List;
  */
 public class PublicContentMenuViewModel {
 
-    private LocalDateTime publishDate;
+    private ZonedDateTime publishDate;
 
     private List<PublicContentSectionResource> sections;
 
     private CompetitionResource competition;
 
-    public LocalDateTime getPublishDate() {
+    public ZonedDateTime getPublishDate() {
         return publishDate;
     }
 
-    public void setPublishDate(LocalDateTime publishDate) {
+    public void setPublishDate(ZonedDateTime publishDate) {
         this.publishDate = publishDate;
     }
 

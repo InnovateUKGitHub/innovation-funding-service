@@ -15,13 +15,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentSectionResourceBuilder.newPublicContentSectionResource;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -48,7 +48,7 @@ public class SummaryViewModelPopulatorTest {
                 .withSummary(DESCRIPTION)
                 .withFundingType(FUNDING_TYPE)
                 .withProjectSize(PROJECT_SIZE)
-                .withPublishDate(LocalDateTime.now())
+                .withPublishDate(ZonedDateTime.now())
                 .withCompetitionId(COMPETITION_ID)
                 .withContentSections(asList(section)).build();
 
