@@ -39,10 +39,12 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_EDITABLE;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NO_TEMPLATE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_APPLICATION_IN_SCOPE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -51,8 +53,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 @Service
 public class CompetitionSetupServiceImpl extends BaseTransactionalService implements CompetitionSetupService {
     private static final Log LOG = LogFactory.getLog(CompetitionSetupServiceImpl.class);
-    @Autowired
-    private CompetitionService competitionService;
+
     @Autowired
     private CompetitionMapper competitionMapper;
     @Autowired
@@ -76,6 +77,8 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     private EntityManager entityManager;
 
     public static final BigDecimal DEFAULT_ASSESSOR_PAY = new BigDecimal(100);
+
+    private static final String FEEDBACK = "Feedback";
 
     @Override
     public ServiceResult<String> generateCompetitionCode(Long id, ZonedDateTime dateTime) {
@@ -196,7 +199,6 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
             return serviceFailure(new Error(COMPETITION_NO_TEMPLATE));
         }
 
-
         List<Section> sectionsWithoutParentSections = template.getSections().stream()
                 .filter(s -> s.getParentSection() == null)
                 .collect(Collectors.toList());
@@ -290,19 +292,26 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
             formInput.setQuestion(question);
             formInput.setId(null);
             formInput.setFormValidators(copy);
+            formInput.setActive(isSectorCompetitionWithScopeQuestion(competition, question, formInput) ? false : formInput.getActive());
             formInputRepository.save(formInput);
             formInput.setGuidanceRows(createFormInputGuidanceRows(formInput, formInput.getGuidanceRows()));
             return formInput;
         };
     }
 
+    private boolean isSectorCompetitionWithScopeQuestion(Competition competition, Question question, FormInput formInput) {
+        if (competition.getCompetitionType().isSector() && question.isScope()) {
+            if (formInput.getType() == ASSESSOR_APPLICATION_IN_SCOPE || formInput.getDescription().equals(FEEDBACK)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     private Competition setDefaultAssessorPayAndCount(Competition competition) {
         if (competition.getAssessorCount() == null) {
             Optional<AssessorCountOption> defaultAssessorOption = competitionTypeAssessorOptionRepository.findByCompetitionTypeIdAndDefaultOptionTrue(competition.getCompetitionType().getId());
-            if (defaultAssessorOption.isPresent()) {
-                competition.setAssessorCount(defaultAssessorOption.get().getOptionValue());
-            }
+            defaultAssessorOption.ifPresent(assessorCountOption -> competition.setAssessorCount(assessorCountOption.getOptionValue()));
         }
 
         if (competition.getAssessorPay() == null) {
