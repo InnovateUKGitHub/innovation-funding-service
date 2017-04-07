@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 public class QueryResource {
@@ -14,13 +14,13 @@ public class QueryResource {
     public final FinanceChecksSectionType section;
     public final String title;
     public final boolean awaitingResponse;
-    public final LocalDateTime createdOn;
+    public final ZonedDateTime createdOn;
 
     @JsonCreator
     public QueryResource(@JsonProperty("id") Long id, @JsonProperty("contextClassPk") Long contextClassPk,
                          @JsonProperty("posts") List<PostResource> posts, @JsonProperty("section") FinanceChecksSectionType section,
                          @JsonProperty("title") String title, @JsonProperty("awaitingResponse") boolean awaitingResponse,
-                         @JsonProperty("createdOn") LocalDateTime createdOn) {
+                         @JsonProperty("createdOn") ZonedDateTime createdOn) {
         this.id = id;
         this.contextClassPk = contextClassPk;
         this.posts = posts;

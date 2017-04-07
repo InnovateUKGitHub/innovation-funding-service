@@ -12,7 +12,6 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
-import org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.finance.resource.Eligibility;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
@@ -26,7 +25,6 @@ import org.innovateuk.ifs.project.financechecks.viewmodel.ProjectFinanceChecksVi
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
-import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -41,8 +39,11 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.ui.Model;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.*;
+import java.time.ZonedDateTime;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.service.Futures.settable;
@@ -192,7 +193,7 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
     }
 
     private QueryResource sampleQuery() {
-        return new QueryResource(null, null, Collections.emptyList(), null, null, false, LocalDateTime.now());
+        return new QueryResource(null, null, Collections.emptyList(), null, null, false, ZonedDateTime.now());
     }
 
     @Test

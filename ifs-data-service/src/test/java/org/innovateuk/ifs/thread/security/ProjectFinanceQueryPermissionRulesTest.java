@@ -9,7 +9,7 @@ import org.innovateuk.threads.resource.QueryResource;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -35,7 +35,7 @@ public class ProjectFinanceQueryPermissionRulesTest extends BasePermissionRulesT
         partner = getUserWithRole(PARTNER);
 
         queryResource = queryWithoutPosts();
-        queryResource.posts.add(new PostResource(1L, projectFinanceUser, "The body", new ArrayList<>(), LocalDateTime.now()));
+        queryResource.posts.add(new PostResource(1L, projectFinanceUser, "The body", new ArrayList<>(), ZonedDateTime.now()));
 
         incorrectPartner = newUserResource().withId(1993L).withRolesGlobal(newRoleResource()
                 .withType(PARTNER).build(1)).build();
@@ -44,7 +44,7 @@ public class ProjectFinanceQueryPermissionRulesTest extends BasePermissionRulesT
 
     private QueryResource queryWithoutPosts() {
         return new QueryResource(1L, 22L, new ArrayList<>(),
-                FinanceChecksSectionType.VIABILITY, "First Query", true, LocalDateTime.now());
+                FinanceChecksSectionType.VIABILITY, "First Query", true, ZonedDateTime.now());
     }
 
     @Override

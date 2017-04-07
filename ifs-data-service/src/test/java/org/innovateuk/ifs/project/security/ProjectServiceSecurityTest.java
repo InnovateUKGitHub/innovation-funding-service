@@ -25,7 +25,7 @@ import org.springframework.security.access.method.P;
 
 import java.io.InputStream;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -552,7 +552,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         }
 
         @Override
-        public ServiceResult<Void> submitProjectDetails(Long id, LocalDateTime date) {
+        public ServiceResult<Void> submitProjectDetails(Long id, ZonedDateTime date) {
             return null;
         }
 
@@ -562,7 +562,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         }
 
         @Override
-        public ServiceResult<Void> saveDocumentsSubmitDateTime(Long projectId, LocalDateTime date) {
+        public ServiceResult<Void> saveDocumentsSubmitDateTime(Long projectId, ZonedDateTime date) {
             return null;
         }
 

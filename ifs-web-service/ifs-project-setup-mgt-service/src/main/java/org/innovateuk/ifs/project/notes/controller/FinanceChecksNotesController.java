@@ -41,7 +41,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -183,7 +183,7 @@ public class FinanceChecksNotesController {
                                 attachmentResources.add(fileEntry.getSuccessObject());
                             }
                         });
-                        PostResource post = new PostResource(null, loggedInUser, form.getComment(), attachmentResources, LocalDateTime.now());
+                        PostResource post = new PostResource(null, loggedInUser, form.getComment(), attachmentResources, ZonedDateTime.now());
 
                         ServiceResult<Void> saveResult = financeCheckService.saveNotePost(post, noteId);
                         validationHandler.addAnyErrors(saveResult);

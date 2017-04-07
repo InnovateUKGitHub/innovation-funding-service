@@ -1,16 +1,16 @@
 package org.innovateuk.ifs.alert.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
-import org.innovateuk.ifs.alert.resource.AlertType;
 import org.innovateuk.ifs.alert.resource.AlertResource;
+import org.innovateuk.ifs.alert.resource.AlertType;
+import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
 /**
@@ -27,8 +27,8 @@ public class AlertResourceBuilder extends BaseBuilder<AlertResource, AlertResour
                 .with(BaseBuilderAmendFunctions.uniqueIds())
                 .withMessage("Sample message")
                 .withType(AlertType.MAINTENANCE)
-                .withValidFromDate(LocalDateTime.parse("2016-05-06T21:00:00.00"))
-                .withValidToDate(LocalDateTime.parse("2016-05-06T21:05:00.00"));
+                .withValidFromDate(LocalDateTime.parse("2016-05-06T21:00:00.00").atZone(ZoneId.of("UTC")))
+                .withValidToDate(LocalDateTime.parse("2016-05-06T21:05:00.00").atZone(ZoneId.of("UTC")));
     }
 
     @Override
@@ -53,11 +53,11 @@ public class AlertResourceBuilder extends BaseBuilder<AlertResource, AlertResour
         return withArray((type, alertResource) -> BaseBuilderAmendFunctions.setField("type", type, alertResource), types);
     }
 
-    public AlertResourceBuilder withValidFromDate(final LocalDateTime... validFromDates) {
+    public AlertResourceBuilder withValidFromDate(final ZonedDateTime... validFromDates) {
         return withArray((validFromDate, alertResource) -> BaseBuilderAmendFunctions.setField("validFromDate", validFromDate, alertResource), validFromDates);
     }
 
-    public AlertResourceBuilder withValidToDate(final LocalDateTime... validToDates) {
+    public AlertResourceBuilder withValidToDate(final ZonedDateTime... validToDates) {
         return withArray((validToDate, alertResource) -> BaseBuilderAmendFunctions.setField("validToDate", validToDate, alertResource), validToDates);
     }
 }
