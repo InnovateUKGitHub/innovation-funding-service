@@ -13,7 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,7 +45,7 @@ public class PublicContentMenuPopulatorTest {
                         .stream()
                 .map(type -> newPublicContentSectionResource().withType(type).build())
                 .collect(Collectors.toList());
-        LocalDateTime date = LocalDateTime.now();
+        ZonedDateTime date = ZonedDateTime.now();
 
         PublicContentResource publicContent = newPublicContentResource()
                 .withContentSections(sections)

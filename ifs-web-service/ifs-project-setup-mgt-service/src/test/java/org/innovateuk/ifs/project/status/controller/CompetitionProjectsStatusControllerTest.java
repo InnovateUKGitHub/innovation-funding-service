@@ -6,7 +6,7 @@ import org.innovateuk.ifs.project.status.viewmodel.CompetitionProjectStatusViewM
 import org.junit.Test;
 import org.springframework.core.io.ByteArrayResource;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 import static org.innovateuk.ifs.project.builder.CompetitionProjectsStatusResourceBuilder.newCompetitionProjectsStatusResource;
@@ -47,7 +47,7 @@ public class CompetitionProjectsStatusControllerTest extends BaseControllerMockM
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(("text/csv")))
                 .andExpect(header().string("Content-Type", "text/csv"))
-                .andExpect(header().string("Content-disposition", "attachment;filename=" + String.format("Bank_details_%s_%s.csv", competitionId, LocalDateTime.now().format(formatter))))
+                .andExpect(header().string("Content-disposition", "attachment;filename=" + String.format("Bank_details_%s_%s.csv", competitionId, ZonedDateTime.now().format(formatter))))
                 .andExpect(content().string("My content!"));
 
         verify(bankDetailsService).downloadByCompetition(123L);

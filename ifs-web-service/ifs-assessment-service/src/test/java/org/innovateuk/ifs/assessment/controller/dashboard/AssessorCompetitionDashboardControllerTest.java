@@ -26,7 +26,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -363,8 +363,8 @@ public class AssessorCompetitionDashboardControllerTest extends BaseControllerMo
     }
 
     private CompetitionResource buildTestCompetition() {
-        LocalDateTime assessorAcceptsDate = LocalDateTime.now().minusDays(2);
-        LocalDateTime assessorDeadlineDate = LocalDateTime.now().plusDays(4);
+        ZonedDateTime assessorAcceptsDate = ZonedDateTime.now().minusDays(2);
+        ZonedDateTime assessorDeadlineDate = ZonedDateTime.now().plusDays(4);
 
         return newCompetitionResource()
                 .withName("Juggling Craziness")

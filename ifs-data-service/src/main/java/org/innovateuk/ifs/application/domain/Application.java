@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.domain;
 
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
+import org.innovateuk.ifs.application.resource.ApplicationStatus;
 import org.innovateuk.ifs.category.domain.ApplicationInnovationAreaLink;
 import org.innovateuk.ifs.category.domain.ApplicationResearchCategoryLink;
 import org.innovateuk.ifs.category.domain.InnovationArea;
@@ -21,10 +21,9 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -39,11 +38,11 @@ public class Application implements ProcessActivity {
 
     private String name;
     private LocalDate startDate;
-    private LocalDateTime submittedDate;
+    private ZonedDateTime submittedDate;
     private Boolean resubmission;
     private String previousApplicationNumber;
     private String previousApplicationTitle;
-    private LocalDateTime manageFundingEmailDate;
+    private ZonedDateTime manageFundingEmailDate;
 
     @Min(0)
     private Long durationInMonths; // in months
@@ -57,8 +56,8 @@ public class Application implements ProcessActivity {
     @OneToMany(mappedBy = "application")
     private List<ApplicationFinance> applicationFinances = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "applicationStatusId", referencedColumnName = "id")
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "status")
     private ApplicationStatus applicationStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -89,7 +88,6 @@ public class Application implements ProcessActivity {
     private Boolean stateAidAgreed;
 
     public Application() {
-        /*default constructor*/
     }
 
     public Application(Long id, String name, ApplicationStatus applicationStatus) {
@@ -186,11 +184,11 @@ public class Application implements ProcessActivity {
         }
     }
 
-    public LocalDateTime getManageFundingEmailDate() {
+    public ZonedDateTime getManageFundingEmailDate() {
         return manageFundingEmailDate;
     }
 
-    public void setManageFundingEmailDate(LocalDateTime manageFundingEmailDate) {
+    public void setManageFundingEmailDate(ZonedDateTime manageFundingEmailDate) {
         this.manageFundingEmailDate = manageFundingEmailDate;
     }
 
@@ -239,19 +237,18 @@ public class Application implements ProcessActivity {
     }
 
     public boolean isOpen() {
-        return Objects.equals(applicationStatus.getId(), ApplicationStatusConstants.OPEN.getId());
+        return applicationStatus == ApplicationStatus.OPEN;
     }
-
 
     public void setInvites(List<ApplicationInvite> invites) {
         this.invites = invites;
     }
 
-    public LocalDateTime getSubmittedDate() {
+    public ZonedDateTime getSubmittedDate() {
         return submittedDate;
     }
 
-    public void setSubmittedDate(LocalDateTime submittedDate) {
+    public void setSubmittedDate(ZonedDateTime submittedDate) {
         this.submittedDate = submittedDate;
     }
 

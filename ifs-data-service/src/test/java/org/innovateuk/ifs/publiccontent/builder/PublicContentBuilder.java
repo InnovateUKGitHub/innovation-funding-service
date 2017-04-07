@@ -6,7 +6,7 @@ import org.innovateuk.ifs.publiccontent.domain.ContentSection;
 import org.innovateuk.ifs.publiccontent.domain.Keyword;
 import org.innovateuk.ifs.publiccontent.domain.PublicContent;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -33,7 +33,7 @@ public class PublicContentBuilder extends BaseBuilder<PublicContent, PublicConte
         return with(publicContent -> setField("id", id, publicContent));
     }
 
-    public PublicContentBuilder withPublishDate(LocalDateTime publishDate) {
+    public PublicContentBuilder withPublishDate(ZonedDateTime publishDate) {
         return with(publicContent -> setField("publishDate", publishDate, publicContent));
     }
 

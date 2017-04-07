@@ -5,16 +5,11 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.domain.ApplicationStatus;
 import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.domain.Section;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
-import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryId;
-import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -39,6 +34,7 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,6 +43,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -129,11 +126,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         application.setName(applicationName);
         application.setStartDate(null);
 
-        String name = ApplicationStatusConstants.CREATED.getName();
-
-        List<ApplicationStatus> applicationStatusList = applicationStatusRepository.findByName(name);
-        ApplicationStatus applicationStatus = applicationStatusList.get(0);
-        application.setApplicationStatus(applicationStatus);
+        application.setApplicationStatus(ApplicationStatus.CREATED);
         application.setDurationInMonths(3L);
         application.setCompetition(competition);
 
@@ -185,7 +178,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
         return find(processRole(processRoleId), () -> getFormInput(formInputId), application(applicationId)).andOnSuccess((processRole, formInput, application) -> {
 
-            FormInputResponse newFormInputResponse = new FormInputResponse(LocalDateTime.now(), fileEntry, processRole, formInput, application);
+            FormInputResponse newFormInputResponse = new FormInputResponse(ZonedDateTime.now(), fileEntry, processRole, formInput, application);
             formInputResponseRepository.save(newFormInputResponse);
             FormInputResponseFileEntryResource fileEntryResource = new FormInputResponseFileEntryResource(FileEntryResourceAssembler.valueOf(fileEntry), formInputId, applicationId, processRoleId);
             return serviceSuccess(fileEntryResource);
@@ -353,7 +346,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<ApplicationResource> saveApplicationSubmitDateTime(final Long id, LocalDateTime date) {
+    public ServiceResult<ApplicationResource> saveApplicationSubmitDateTime(final Long id, ZonedDateTime date) {
         return getOpenApplication(id).andOnSuccessReturn(existingApplication -> {
             existingApplication.setSubmittedDate(date);
             Application savedApplication = applicationRepository.save(existingApplication);
@@ -362,7 +355,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<ApplicationResource> setApplicationFundingEmailDateTime(final Long applicationId, final LocalDateTime fundingEmailDateTime) {
+    public ServiceResult<ApplicationResource> setApplicationFundingEmailDateTime(final Long applicationId, final ZonedDateTime fundingEmailDateTime) {
         return getApplication(applicationId).andOnSuccessReturn(application -> {
             application.setManageFundingEmailDate(fundingEmailDateTime);
             Application savedApplication = applicationRepository.save(application);
@@ -381,9 +374,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<ApplicationResource> updateApplicationStatus(final Long id,
-                                                                      final Long statusId) {
-        return find(application(id), applicationStatus(statusId)).andOnSuccess((application, applicationStatus) -> {
-            application.setApplicationStatus(applicationStatus);
+                                                                      final ApplicationStatus status) {
+        return find(application(id)).andOnSuccess((application) -> {
+            application.setApplicationStatus(status);
             applicationRepository.save(application);
             return serviceSuccess(applicationMapper.mapToResource(application));
         });
@@ -401,7 +394,11 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             notificationArguments.put("applicationName", application.getName());
             notificationArguments.put("applicationId", application.getId());
             notificationArguments.put("competitionName", competition.getName());
-            notificationArguments.put("assesmentEndDate", competition.getFundersPanelDate());
+            LocalDateTime assesmentEndDate = null;
+            if (competition.getFundersPanelDate() != null) {
+                assesmentEndDate = TimeZoneUtil.toUkTimeZone(competition.getFundersPanelDate()).toLocalDateTime();
+            }
+            notificationArguments.put("assesmentEndDate", assesmentEndDate);
 
             Notification notification = new Notification(from, singletonList(to), Notifications.APPLICATION_SUBMITTED, notificationArguments);
             return notificationService.sendNotification(notification, EMAIL);
@@ -467,8 +464,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<List<Application>> getApplicationsByCompetitionIdAndStatus(Long competitionId, Collection<Long> applicationStatusId) {
-        List<Application> applicationResults = applicationRepository.findByCompetitionIdAndApplicationStatusIdIn(competitionId, applicationStatusId);
+    public ServiceResult<List<Application>> getApplicationsByCompetitionIdAndStatus(Long competitionId, Collection<ApplicationStatus> applicationStatuses) {
+        List<Application> applicationResults = applicationRepository.findByCompetitionIdAndApplicationStatusIn(competitionId, applicationStatuses);
         return serviceSuccess(applicationResults);
     }
 

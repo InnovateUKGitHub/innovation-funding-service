@@ -8,14 +8,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.time.ZoneId;
 import java.util.List;
 
-
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.alertResourceListType;
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.alertResourceListType;
+import static org.junit.Assert.*;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -90,8 +88,8 @@ public class AlertRestServiceImplTest extends BaseRestServiceUnitTest<AlertRestS
         alert.setId(123L); //to check
         alert.setMessage("Sample message");
         alert.setType(AlertType.MAINTENANCE);
-        alert.setValidFromDate(LocalDateTime.parse("2016-05-06T21:00:00.00"));
-        alert.setValidToDate(LocalDateTime.parse("2016-05-06T21:05:00.00"));
+        alert.setValidFromDate(LocalDateTime.parse("2016-05-06T21:00:00.00").atZone(ZoneId.systemDefault()));
+        alert.setValidToDate(LocalDateTime.parse("2016-05-06T21:05:00.00").atZone(ZoneId.systemDefault()));
         return alert;
     }
 

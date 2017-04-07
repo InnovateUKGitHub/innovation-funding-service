@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Spy;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.AgreementResourceBuilder.newAgreementResource;
@@ -37,7 +37,7 @@ public class AssessorProfileAgreementControllerTest extends BaseControllerMockMV
         UserResource user = newUserResource().build();
         setLoggedInUser(user);
 
-        LocalDateTime expectedAgreementSignedDate = LocalDateTime.now();
+        ZonedDateTime expectedAgreementSignedDate = ZonedDateTime.now();
         String expectedText = "Agreement text...";
 
         ProfileAgreementResource profileAgreementResource = newProfileAgreementResource()

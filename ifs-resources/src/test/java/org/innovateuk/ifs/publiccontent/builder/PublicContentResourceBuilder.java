@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.publiccontent.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.ContentEventResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionResource;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -28,7 +28,7 @@ public class PublicContentResourceBuilder extends BaseBuilder<PublicContentResou
         return with(publicContent -> setField("competitionId", competitionId, publicContent));
     }
 
-    public PublicContentResourceBuilder withPublishDate(LocalDateTime publishDate) {
+    public PublicContentResourceBuilder withPublishDate(ZonedDateTime publishDate) {
         return with(publicContent -> setField("publishDate", publishDate, publicContent));
     }
 

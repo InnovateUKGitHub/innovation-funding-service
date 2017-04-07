@@ -9,7 +9,7 @@ import org.innovateuk.ifs.commons.util.AuditableEntity;
 import org.innovateuk.ifs.user.resource.BusinessType;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -40,13 +40,13 @@ public class Profile extends AuditableEntity {
     @JoinColumn(name = "agreement_id", referencedColumnName = "id")
     private Agreement agreement;
 
-    private LocalDateTime agreementSignedDate;
+    private ZonedDateTime agreementSignedDate;
 
     public Profile() {
         // no-arg constructor
     }
 
-    public void signAgreement(Agreement agreement, LocalDateTime signedDate) {
+    public void signAgreement(Agreement agreement, ZonedDateTime signedDate) {
         if (agreement == null) {
             throw new NullPointerException("agreement cannot be null");
         }
@@ -112,11 +112,11 @@ public class Profile extends AuditableEntity {
         this.agreement = agreement;
     }
 
-    public LocalDateTime getAgreementSignedDate() {
+    public ZonedDateTime getAgreementSignedDate() {
         return agreementSignedDate;
     }
 
-    public void setAgreementSignedDate(LocalDateTime agreementSignedDate) {
+    public void setAgreementSignedDate(ZonedDateTime agreementSignedDate) {
         this.agreementSignedDate = agreementSignedDate;
     }
 

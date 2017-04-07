@@ -13,11 +13,11 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
@@ -47,7 +47,7 @@ public class MenuModelPopulatorTest {
 				.withResearchCategories(CollectionFunctions.asLinkedSet(2L, 3L))
 				.build();
 
-		LocalDateTime today = LocalDateTime.now();
+		ZonedDateTime today = ZonedDateTime.now();
 		PublicContentResource publicContentResource = newPublicContentResource().withPublishDate(today).build();
 		when(publicContentService.getCompetitionById(any(Long.class))).thenReturn(publicContentResource);
 

@@ -10,7 +10,7 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Entity
@@ -24,13 +24,13 @@ public final class Query extends Thread {
         super();
     }
     public Query(Long id, Long classPk, String className, List<Post> posts, FinanceChecksSectionType sectionType,
-                       String title, LocalDateTime createdOn) {
+                       String title, ZonedDateTime createdOn) {
         super(id, classPk, className, posts, title, createdOn);
         this.section = sectionType;
     }
 
     public Query(Long id, Long classPk, List<Post> posts, FinanceChecksSectionType sectionType,
-                 String title, LocalDateTime createdOn) {
+                 String title, ZonedDateTime createdOn) {
         super(id, classPk, null, posts, title, createdOn);
         this.section = sectionType;
     }

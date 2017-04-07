@@ -2,10 +2,10 @@ package org.innovateuk.ifs.application.transactional;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.domain.ApplicationStatus;
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.mapper.FundingDecisionMapper;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.application.resource.ApplicationStatus;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.NotificationResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -23,11 +23,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.application.constant.ApplicationStatusConstants.*;
 import static org.innovateuk.ifs.application.resource.FundingDecision.FUNDED;
 import static org.innovateuk.ifs.application.resource.FundingDecision.UNFUNDED;
 import static org.innovateuk.ifs.application.transactional.ApplicationFundingServiceImpl.Notifications.APPLICATION_FUNDING;
@@ -98,7 +97,7 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
                     ServiceResult<Void> setEmailDateTimeResult = fundedEmailSendResult.andOnSuccess(() ->
                             aggregate(simpleMap(
                                     applications, application ->
-                                            applicationService.setApplicationFundingEmailDateTime(application.getId(), LocalDateTime.now()))))
+                                            applicationService.setApplicationFundingEmailDateTime(application.getId(), ZonedDateTime.now()))))
                             .andOnSuccessReturnVoid();
                     return setEmailDateTimeResult.andOnSuccess(() -> {
                         if (!applications.isEmpty()) {
@@ -189,11 +188,11 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
 
     private ApplicationStatus statusFromDecision(FundingDecision applicationFundingDecision) {
         if (FUNDED.equals(applicationFundingDecision)) {
-            return applicationStatusRepository.findOne(APPROVED.getId());
+            return ApplicationStatus.APPROVED;
         } else if (UNFUNDED.equals(applicationFundingDecision)) {
-            return applicationStatusRepository.findOne(REJECTED.getId());
+            return ApplicationStatus.REJECTED;
         } else {
-            return applicationStatusRepository.findOne(SUBMITTED.getId());
+            return ApplicationStatus.SUBMITTED;
         }
     }
 }

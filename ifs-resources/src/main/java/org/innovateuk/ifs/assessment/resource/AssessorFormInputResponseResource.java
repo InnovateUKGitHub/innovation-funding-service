@@ -4,7 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.validation.constraints.Size;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * Response class defines the model in which the response made by an Assessor on a Form Input is stored.
@@ -19,12 +19,12 @@ public class AssessorFormInputResponseResource {
     @Size(max = 5000, message = "{validation.field.too.many.characters}")
     private String value;
     private Integer formInputMaxWordCount;
-    private LocalDateTime updatedDate;
+    private ZonedDateTime updatedDate;
 
     public AssessorFormInputResponseResource() {
     }
 
-    public AssessorFormInputResponseResource(Long id, Long assessment, Long question, Long formInput, String value, Integer formInputMaxWordCount, LocalDateTime updatedDate) {
+    public AssessorFormInputResponseResource(Long id, Long assessment, Long question, Long formInput, String value, Integer formInputMaxWordCount, ZonedDateTime updatedDate) {
         this.id = id;
         this.assessment = assessment;
         this.question = question;
@@ -82,11 +82,11 @@ public class AssessorFormInputResponseResource {
         this.formInputMaxWordCount = formInputMaxWordCount;
     }
 
-    public LocalDateTime getUpdatedDate() {
+    public ZonedDateTime getUpdatedDate() {
         return updatedDate;
     }
 
-    public void setUpdatedDate(LocalDateTime updatedDate) {
+    public void setUpdatedDate(ZonedDateTime updatedDate) {
         this.updatedDate = updatedDate;
     }
 

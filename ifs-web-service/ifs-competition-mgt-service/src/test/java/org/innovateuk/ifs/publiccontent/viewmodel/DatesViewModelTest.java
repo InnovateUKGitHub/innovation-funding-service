@@ -6,7 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -24,15 +24,15 @@ public class DatesViewModelTest {
         viewModel = new DatesViewModel();
 
         DateViewModel dateViewModel1 = new DateViewModel();
-        dateViewModel1.setDateTime(LocalDateTime.now());
+        dateViewModel1.setDateTime(ZonedDateTime.now());
         dateViewModel1.setContent("Date 1");
 
         DateViewModel dateViewModel2 = new DateViewModel();
-        dateViewModel2.setDateTime(LocalDateTime.now().minusDays(2));
+        dateViewModel2.setDateTime(ZonedDateTime.now().minusDays(2));
         dateViewModel2.setContent("Date 2");
 
         DateViewModel dateViewModel3 = new DateViewModel();
-        dateViewModel3.setDateTime(LocalDateTime.now().plusDays(3));
+        dateViewModel3.setDateTime(ZonedDateTime.now().plusDays(3));
         dateViewModel3.setContent("Date 3");
 
         viewModel.setPublicContentDates(asList(dateViewModel1, dateViewModel2, dateViewModel3));
@@ -50,11 +50,11 @@ public class DatesViewModelTest {
     @Test
     public void getSortedEventsWithNullTest() {
         DateViewModel dateViewModel1 = new DateViewModel();
-        dateViewModel1.setDateTime(LocalDateTime.now());
+        dateViewModel1.setDateTime(ZonedDateTime.now());
         dateViewModel1.setContent("Date 1");
 
         DateViewModel dateViewModel2 = new DateViewModel();
-        dateViewModel2.setDateTime(LocalDateTime.now().minusDays(2));
+        dateViewModel2.setDateTime(ZonedDateTime.now().minusDays(2));
         dateViewModel2.setContent("Date 2");
 
         DateViewModel dateViewModel3 = new DateViewModel();
@@ -62,7 +62,7 @@ public class DatesViewModelTest {
         dateViewModel3.setContent("Date 3");
 
         DateViewModel dateViewModel4 = new DateViewModel();
-        dateViewModel4.setDateTime(LocalDateTime.now().plusDays(3));
+        dateViewModel4.setDateTime(ZonedDateTime.now().plusDays(3));
         dateViewModel4.setContent("Date 4");
 
         viewModel.setPublicContentDates(asList(dateViewModel1, dateViewModel2, dateViewModel3, dateViewModel4));

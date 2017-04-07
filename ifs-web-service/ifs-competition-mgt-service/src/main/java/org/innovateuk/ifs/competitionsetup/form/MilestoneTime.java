@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.form;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import static java.util.Arrays.stream;
 
@@ -36,7 +36,7 @@ public enum MilestoneTime {
         return hour;
     }
 
-    public static MilestoneTime fromLocalDateTime(LocalDateTime dateTime) {
+    public static MilestoneTime fromZonedDateTime(ZonedDateTime dateTime) {
         return stream(MilestoneTime.values())
                 .filter(milestoneTime -> milestoneTime.getHour() == dateTime.getHour())
                 .findAny()

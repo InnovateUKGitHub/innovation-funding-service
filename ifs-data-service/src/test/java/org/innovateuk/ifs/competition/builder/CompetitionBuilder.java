@@ -9,6 +9,8 @@ import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -37,30 +39,30 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return with(competition -> setField("setupComplete", setupComplete, competition));
     }
 
-    public CompetitionBuilder withStartDate(LocalDateTime startDate) {
+    public CompetitionBuilder withStartDate(ZonedDateTime startDate) {
         return with(competition -> setField("startDate", startDate, competition));
     }
-    public CompetitionBuilder withEndDate(LocalDateTime endDate) {
+    public CompetitionBuilder withEndDate(ZonedDateTime endDate) {
         return with(competition -> setField("endDate", endDate, competition));
     }
 
-    public CompetitionBuilder withAssessorAcceptsDate(LocalDateTime assessorAcceptsDate) {
+    public CompetitionBuilder withAssessorAcceptsDate(ZonedDateTime assessorAcceptsDate) {
         return with(competition -> setField("assessorAcceptsDate", assessorAcceptsDate, competition));
     }
 
-    public CompetitionBuilder withAssessorDeadlineDate(LocalDateTime assessorDeadlineDate) {
+    public CompetitionBuilder withAssessorDeadlineDate(ZonedDateTime assessorDeadlineDate) {
         return with(competition -> setField("assessorDeadlineDate", assessorDeadlineDate, competition));
     }
 
-    public CompetitionBuilder withReleaseFeedbackDate(LocalDateTime releaseFeedbackDate) {
+    public CompetitionBuilder withReleaseFeedbackDate(ZonedDateTime releaseFeedbackDate) {
         return with(competition -> setField("releaseFeedbackDate", releaseFeedbackDate, competition));
     }
 
-    public CompetitionBuilder withFundersPanelDate(LocalDateTime fundersPanelDate) {
+    public CompetitionBuilder withFundersPanelDate(ZonedDateTime fundersPanelDate) {
         return with(competition -> setField("fundersPanelDate", fundersPanelDate, competition));
     }
 
-    public CompetitionBuilder withFundersPanelEndDate(LocalDateTime endDate) {
+    public CompetitionBuilder withFundersPanelEndDate(ZonedDateTime endDate) {
         return with(competition -> competition.setFundersPanelEndDate(endDate));
     }
 
@@ -96,11 +98,11 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return with(competition -> setField("status", status, competition));
     }
 
-    public CompetitionBuilder withAssessorsNotifiedDate(LocalDateTime... dates) {
+    public CompetitionBuilder withAssessorsNotifiedDate(ZonedDateTime... dates) {
         return withArray((date, competition) -> competition.notifyAssessors(date), dates);
     }
 
-    public CompetitionBuilder withAssessmentClosedDate(LocalDateTime... dates) {
+    public CompetitionBuilder withAssessmentClosedDate(ZonedDateTime... dates) {
         return withArray((date, competition) -> competition.closeAssessment(date), dates);
     }
 
@@ -120,7 +122,7 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
     }
 
     public CompetitionBuilder withCompetitionStatus(CompetitionStatus status) {
-        LocalDateTime now = LocalDateTime.now();
+        ZonedDateTime now = ZonedDateTime.now();
         if(READY_TO_OPEN.equals(status)) {
     		return withSetupComplete(true)
                     .withStartDate(now.plusDays(1L));
@@ -165,7 +167,7 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
             }
         }
 
-    public CompetitionBuilder withAssessorFeedbackDate(LocalDateTime... endDate) {
+    public CompetitionBuilder withAssessorFeedbackDate(ZonedDateTime... endDate) {
         return withArray((date, competition) -> competition.setAssessorFeedbackDate(date), endDate);
     }
 
@@ -176,7 +178,7 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
      * @return
      */
     public CompetitionBuilder withAssessorFeedbackDate(String... endDate) {
-        return withArray((date, competition) -> competition.setAssessorFeedbackDate(LocalDateTime.parse(date, DATE_FORMAT)), endDate);
+        return withArray((date, competition) -> competition.setAssessorFeedbackDate(LocalDateTime.parse(date, DATE_FORMAT).atZone(ZoneId.systemDefault())), endDate);
     }
 
     @Override

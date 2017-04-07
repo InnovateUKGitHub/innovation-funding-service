@@ -1,42 +1,43 @@
 
-.list-overview{
+.list-overview {
+  margin-left: 0;
+  padding: 0;
+  list-style-type: none;
 
-		margin-left: 0;
-    padding: 0;
-    list-style-type: none;
+  > li {
+    border-top: 1px solid $border-colour;
 
-    > li{
-        border-top: 1px solid $border-colour;
-    }
-    > li:last-child{
-        border-bottom: 1px solid $border-colour;
-    }
-
-    > li.grid-row {
-    	min-height: 30px;
-        margin: 0
-
-    }
-    h3.heading-small {
-       margin: 10px 0;
+    &:last-child {
+      border-bottom: 1px solid $border-colour;
     }
 
-    .assign-container{
-       	font-size: 14px;
-        padding: 10px 0;
-
-    	.assign-team{
-    		margin-top: 0;
-    		margin-bottom: 10px;
-    	}
+    &.grid-row {
+      min-height: 30px;
+      margin: 0
     }
+  }
 
-    .grid-row {
+  h2.heading-small,
+  h3.heading-small {
+    margin: 10px 0;
+  }
 
-      .column-third {
-        padding: 12px 0 0 20px;
-      }
+  .assign-container {
+    font-size: 14px;
+    padding: 10px 0;
+
+    .assign-team {
+      margin-top: 0;
+      margin-bottom: 10px;
     }
+  }
+
+  .grid-row {
+
+    .column-third {
+      padding: 12px 15px 0 20px;
+    }
+  }
 }
 
 /*
@@ -56,164 +57,186 @@
 */
 
 
-.eligibility{
-    border: 1px solid $border-colour;
-    padding: 20px 20px 10px 20px;
+.eligibility {
+  border: 1px solid $border-colour;
+  padding: 20px 20px 10px 20px;
 
-    &.warning{
-        border: 1px solid $red;
-    }
+  &.warning {
+    border: 1px solid $red;
+  }
 }
 
 
-.list-eligibility{
-    overflow: auto;
-    @include core-24;
-    dt{
-        display: block;
-        float: left;
-        width: 50%;
-				font-weight:normal;
-        margin-bottom: 0.5em;
-        @include media-down(tablet) {
-            width: 70%;
-        }
+.list-eligibility {
+  @include core-24;
+  overflow: auto;
+
+  dt {
+    display: block;
+    float: left;
+    width: 50%;
+    font-weight: normal;
+    margin-bottom: 0.5em;
+
+    @include media-down(tablet) {
+      width: 70%;
+    }
+  }
+
+  dd {
+    display: block;
+    float: left;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+
+    &.warning {
+      color: $red;
     }
 
-    dd {
-        display: block;
-        float: left;
-        font-weight: bold;
-        margin-bottom: 0.5em;
-    }
-    dd.warning {
-        color: $red;
-    }
-    dd + dt {
+    & + dt {
       clear: both;
     }
+  }
 }
 
-dl dd,
-dl dt {
-	display: block;
+dl {
+
+  dd,
+  dt {
+    display: block;
+  }
 }
 
 dl dt,
 dl dt.font-small {
-	font-weight:bold;
+  font-weight:bold;
 }
+
 dl dd {
-	margin-bottom:0.5em;
+  margin-bottom:0.5em;
 }
 
 .dl-left {
-	overflow: hidden;
+  overflow: hidden;
 
-	dd,dt {
-		line-height:1.5;
-		font-weight:normal;
-	}
-	dd {
-		float:left;
-		font-weight:bold;
-		clear:left;
-		margin-right:5px;
-		@include media-down(tablet) {
-				display:block;
-				float:none;
-				margin: 0;
-		}
-	}
+  dd,
+  dt {
+    line-height:1.5;
+    font-weight:normal;
+  }
 
+  dd {
+    float:left;
+    font-weight:bold;
+    clear:left;
+    margin-right:5px;
+
+    @include media-down(tablet) {
+      display:block;
+      float:none;
+      margin: 0;
+    }
+  }
 }
-
 
 ol.list-alpha {
   counter-reset: item;
-	padding:15px 0;
+  padding:15px 0;
 
-	li {
-		display: block;
-		padding:10px 0 10px 45px;
-	  counter-increment: item;
-	}
-	li:before {
-			position: absolute;
-			content: counter(item, upper-alpha);
-			margin-left:-45px; //negative of the ol li padding
-	}
+  li {
+    display: block;
+    padding:10px 0 10px 45px;
+    counter-increment: item;
+
+    &:before {
+      position: absolute;
+      content: counter(item, upper-alpha);
+      margin-left:-45px; //negative of the ol li padding
+    }
+  }
 }
+
 //todo clean a lot up over here
 ol.roman,
-ol.lower-alpha{
-	padding-left:25px;
+ol.lower-alpha {
+  padding-left:25px;
 }
+
 ol.list.roman {
   list-style-type: lower-roman;
 }
+
 ol.list.lower-alpha {
-	list-style-type: lower-alpha;
+  list-style-type: lower-alpha;
 }
 
 ol.list-counted {
-	counter-reset: item;
-	padding:15px 0;
-	li {
-		display: block;
-		padding:10px 0;
-	}
+  counter-reset: item;
+  padding:15px 0;
 
-	li:before {
-		 content: counters(item, ".") ". ";
-		 counter-increment: item
-	}
+  li {
+    display: block;
+    padding:10px 0;
+  }
 
-	li.list-bold:before,
-	li.list-bold > span {
-			font-weight: bold;
-	}
+  li:before {
+    content: counters(item, '.') '. ';
+    counter-increment: item
+  }
 
-	ol {
-		counter-reset: item;
-	}
-	ol ol {
-		padding-left:15px;
-	}
-	> li > ol {
-		 margin-left:-45px;
-	}
-	//making sure the text columns are straight
-	li {
-		padding-left: 45px;
-		&:before {
-			position: absolute;
-			margin-left:-45px; //negative of the ol li padding
-		}
-	}
-	ol li	li {
-			padding-left: 55px;
-			&:before {
-				margin-left:-55px;
-			}
-		}
-	ol ol ol {
-			margin-left:-20px;
-	}
-	ol ol	ol li {
-			padding-left: 70px;
-			&:before {
-				margin-left:-70px;
-			}
-		}
+  li.list-bold:before,
+  li.list-bold > span {
+    font-weight: bold;
+  }
 
+  ol {
+    counter-reset: item;
+  }
+
+  ol ol {
+    padding-left:15px;
+  }
+
+  > li > ol {
+    margin-left:-45px;
+  }
+
+  //making sure the text columns are straight
+  li {
+    padding-left: 45px;
+
+    &:before {
+      position: absolute;
+      margin-left:-45px; //negative of the ol li padding
+    }
+  }
+
+  ol li li {
+    padding-left: 55px;
+
+    &:before {
+      margin-left:-55px;
+    }
+  }
+
+  ol ol ol {
+    margin-left:-20px;
+  }
+
+  ol ol  ol li {
+    padding-left: 70px;
+
+    &:before {
+      margin-left:-70px;
+    }
+  }
 }
 
-.standard-definition-list{
+.standard-definition-list {
   @include core-19;
   overflow: auto;
 
-  dt{
+  dt {
     display: block;
     float: left;
     margin-bottom: 0.5em;
@@ -226,79 +249,86 @@ ol.list-counted {
     }
   }
 
-  dd{
+  dd {
     display: block;
     float: left;
     font-weight: normal;
     margin-bottom: 0.5em;
 
-    &.warning{
+    &.warning {
       color: $red;
     }
 
-    & + dt{
+    & + dt {
       clear: both;
     }
 
-    & + dd{
+    & + dd {
       clear: both;
       margin-left: 250px;
     }
   }
 
-  &.reduced-width{
+  &.reduced-width {
     margin-top: 0.5em;
 
-    dt{
+    dt {
       margin-bottom: 0.3em;
       width: 25%;
     }
 
-    dd{
+    dd {
       margin-bottom: 0.3em
     }
   }
 
   &.column-definition-list {
+
     dt {
       margin-right: 15px;
       max-width: none;
       width: 33%;
     }
 
-    dd{
-      & + dd{
+    dd {
+
+      & + dd {
         margin-left: 330px;
       }
     }
   }
 }
 
-.comp-list{
-    li {
-        border-top:1px solid $border-colour;
-				overflow: hidden;
-		}
-    li:last-child {
-        border-bottom:1px solid $border-colour;
-    }
-    .status{
-        display:block;
-				color: $secondary-text-colour;
-        background: $panel-colour;
-        padding: 12px;
-        text-align: center;
-        margin-top: 1.2em;
-        font-weight: bold;
-    }
+.comp-list {
+
+  li {
+    border-top:1px solid $border-colour;
+    overflow: hidden;
+  }
+
+  li:last-child {
+    border-bottom:1px solid $border-colour;
+  }
+
+  .status {
+    display:block;
+    color: $secondary-text-colour;
+    background: $panel-colour;
+    padding: 12px;
+    text-align: center;
+    margin-top: 1.2em;
+    font-weight: bold;
+  }
 }
 
-dl.readonly-data{
+dl.readonly-data {
+  margin-bottom:1em;
+
   dt:first-of-type {
     margin-top:0;
   }
+
   dt {
     margin-top: 1em;
   }
-  margin-bottom:1em;
 }

@@ -4,10 +4,10 @@ import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.junit.Test;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
-import static java.time.LocalDateTime.now;
+import static java.time.ZonedDateTime.now;
 import static org.innovateuk.ifs.application.builder.CompetitionSummaryResourceBuilder.newCompetitionSummaryResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.CLOSED;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
@@ -20,7 +20,7 @@ public class CompetitionSummaryResourceBuilderTest {
         long competitionId = 1L;
         String competitionName = "Competition Name";
         CompetitionStatus competitionStatus = IN_ASSESSMENT;
-        LocalDateTime applicationDeadline = now();
+        ZonedDateTime applicationDeadline = now();
         int totalNumberOfApplications = 100;
         int applicationsStarted = 20;
         int applicationsInProgress = 30;
@@ -64,7 +64,7 @@ public class CompetitionSummaryResourceBuilderTest {
         long[] competitionId = {1L, 2L};
         String[] competitionName = {"Competition Name 1", "Competition Name 2"};
         CompetitionStatus[] competitionStatus = {IN_ASSESSMENT, CLOSED};
-        LocalDateTime[] applicationDeadline = {now().minusDays(1L), now().minusDays(5L)};
+        ZonedDateTime[] applicationDeadline = {now().minusDays(1L), now().minusDays(5L)};
         int[] totalNumberOfApplications = {100, 200};
         int[] applicationsStarted = {20, 40};
         int[] applicationsInProgress = {30, 60};

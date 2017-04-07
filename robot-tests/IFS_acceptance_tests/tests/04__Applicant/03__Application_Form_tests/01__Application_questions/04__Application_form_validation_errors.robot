@@ -114,7 +114,7 @@ Application details server side
 Empty text area
     [Documentation]    INFUND-43
     [Tags]
-    [Setup]    The user clicks the button/link    link=Application Overview
+    [Setup]    The user clicks the button/link    link=Application overview
     Given the user clicks the button/link    link=Project summary
     When the applicant clears the text area of the "Project Summary"
     When the user clicks the button/link    jQuery=Button:contains("Mark as complete")

@@ -2,8 +2,8 @@ package org.innovateuk.ifs.application.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationStatus;
 import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -12,7 +12,7 @@ import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
@@ -27,7 +27,7 @@ public class ApplicationController {
 
     @GetMapping("/{id}")
     public RestResult<ApplicationResource> getApplicationById(@PathVariable("id") final Long id) {
-            return applicationService.getApplicationById(id).toGetResponse();
+        return applicationService.getApplicationById(id).toGetResponse();
     }
 
     @GetMapping("/")
@@ -54,11 +54,11 @@ public class ApplicationController {
 
     @PutMapping("/updateApplicationStatus")
     public RestResult<Void> updateApplicationStatus(@RequestParam("applicationId") final Long id,
-                                                          @RequestParam("statusId") final Long statusId) {
-        ServiceResult<ApplicationResource> updateStatusResult = applicationService.updateApplicationStatus(id, statusId);
+                                                    @RequestParam("status") final ApplicationStatus status) {
+        ServiceResult<ApplicationResource> updateStatusResult = applicationService.updateApplicationStatus(id, status);
 
-        if(updateStatusResult.isSuccess() && ApplicationStatusConstants.SUBMITTED.getId().equals(statusId)){
-            applicationService.saveApplicationSubmitDateTime(id, LocalDateTime.now());
+        if (updateStatusResult.isSuccess() && ApplicationStatus.SUBMITTED == status) {
+            applicationService.saveApplicationSubmitDateTime(id, ZonedDateTime.now());
             applicationService.sendNotificationApplicationSubmitted(id);
         }
 
@@ -67,15 +67,15 @@ public class ApplicationController {
 
 
     @GetMapping("/applicationReadyForSubmit/{applicationId}")
-    public RestResult<ObjectNode> applicationReadyForSubmit(@PathVariable("applicationId") final Long id){
+    public RestResult<ObjectNode> applicationReadyForSubmit(@PathVariable("applicationId") final Long id) {
         return applicationService.applicationReadyForSubmit(id).toGetResponse();
     }
 
 
     @GetMapping("/getApplicationsByCompetitionIdAndUserId/{competitionId}/{userId}/{role}")
     public RestResult<List<ApplicationResource>> getApplicationsByCompetitionIdAndUserId(@PathVariable("competitionId") final Long competitionId,
-                                                                     @PathVariable("userId") final Long userId,
-                                                                     @PathVariable("role") final UserRoleType role) {
+                                                                                         @PathVariable("userId") final Long userId,
+                                                                                         @PathVariable("role") final UserRoleType role) {
 
         return applicationService.getApplicationsByCompetitionIdAndUserId(competitionId, userId, role).toGetResponse();
     }

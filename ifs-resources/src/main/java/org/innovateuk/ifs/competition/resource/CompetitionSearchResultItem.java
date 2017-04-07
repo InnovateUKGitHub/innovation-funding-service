@@ -3,7 +3,7 @@ package org.innovateuk.ifs.competition.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Set;
 
 /**
@@ -19,7 +19,7 @@ public class CompetitionSearchResultItem {
     private CompetitionStatus competitionStatus;
     private String competitionTypeName;
     private Integer projectsCount;
-    private LocalDateTime publishDate;
+    private ZonedDateTime publishDate;
 
     // for JSON marshalling
     CompetitionSearchResultItem() {
@@ -27,7 +27,7 @@ public class CompetitionSearchResultItem {
 
     public CompetitionSearchResultItem(Long id, String name, Set<String> innovationAreaNames, Integer numberOfApplications,
                                        String startDateDisplay, CompetitionStatus competitionStatus,
-                                       String competitionTypeName, Integer projectsCount, LocalDateTime publishDate) {
+                                       String competitionTypeName, Integer projectsCount, ZonedDateTime publishDate) {
         this.id = id;
         this.name = name;
         this.innovationAreaNames = innovationAreaNames;
@@ -103,11 +103,11 @@ public class CompetitionSearchResultItem {
         this.projectsCount = projectsCount;
     }
 
-    public LocalDateTime getPublishDate() {
+    public ZonedDateTime getPublishDate() {
         return publishDate;
     }
 
-    public void setPublishDate(LocalDateTime publishDate) {
+    public void setPublishDate(ZonedDateTime publishDate) {
         this.publishDate = publishDate;
     }
 

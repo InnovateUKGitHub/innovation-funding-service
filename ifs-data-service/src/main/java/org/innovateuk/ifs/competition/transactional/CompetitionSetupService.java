@@ -7,14 +7,14 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
 import org.springframework.security.access.prepost.PreAuthorize;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 public interface CompetitionSetupService {
 
     @SecuredBySpring(value = "GENERATE_COMP_CODE", description = "Only those with either comp admin or project finance roles can generate competition codes")
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
-    ServiceResult<String> generateCompetitionCode(Long id, LocalDateTime dateTime);
+    ServiceResult<String> generateCompetitionCode(Long id, ZonedDateTime dateTime);
 
     @SecuredBySpring(value = "UPDATE", description = "Only those with either comp admin or project finance roles can update competitions")
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
