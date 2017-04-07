@@ -39,7 +39,7 @@ public class ProjectSetupSectionInternalUser {
     }
 
     public SectionAccess canAccessMonitoringOfficerSection(UserResource userResource) {
-        if (!projectSetupProgressChecker.isProjectDetailsSubmitted()) {
+        if (!projectSetupProgressChecker.canAccessMonitoringOfficer()) {
             return fail("Unable to access Monitoring Officer section until Project Details are submitted");
         }
 
