@@ -14,7 +14,6 @@ import org.innovateuk.ifs.project.sections.SectionAccess;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
-import org.innovateuk.ifs.utils.AuthorisationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -34,9 +33,6 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 public class ProjectSetupSectionsPermissionRules {
 
     private static final Log LOG = LogFactory.getLog(ProjectSetupSectionsPermissionRules.class);
-
-    @Autowired
-    AuthorisationUtil authorisationUtil;
 
     @Autowired
     private ProjectService projectService;
@@ -116,12 +112,12 @@ public class ProjectSetupSectionsPermissionRules {
 
             ProjectTeamStatusResource teamStatus;
 
-            if(!authorisationUtil.userIsPartnerInOrganisationForProject(projectId, pu.getOrganisation(), user.getId())) {
-                LOG.warn("User " + user.getId() + " is not a Partner on an Organisation for Project " + projectId + ".  Denying access to Project Setup");
+            try {
+                teamStatus = projectService.getProjectTeamStatus(projectId, Optional.of(user.getId()));
+            } catch (ForbiddenActionException e) {
+                LOG.error("User " + user.getId() + " is not a Partner on an Organisation for Project " + projectId + ".  Denying access to Project Setup");
                 return false;
             }
-
-            teamStatus = projectService.getProjectTeamStatus(projectId, Optional.of(user.getId()));
 
             ProjectPartnerStatusResource partnerStatusForUser = teamStatus.getPartnerStatusForOrganisation(pu.getOrganisation()).get();
 
