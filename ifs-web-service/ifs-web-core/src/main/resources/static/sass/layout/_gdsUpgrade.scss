@@ -12,3 +12,8 @@
 summary > .arrow[aria-hidden="true"]{
   display:inline;
 }
+
+[tabindex]:focus {
+  outline-offset: 0;
+  outline: 3px solid $yellow;
+}
