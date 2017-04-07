@@ -4,7 +4,7 @@ import org.innovateuk.ifs.competition.builder.MilestoneResourceBuilder;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import static org.innovateuk.ifs.competition.builder.MilestoneResourceBuilder.newMilestoneResource;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -19,7 +19,7 @@ public class MilestoneResourceDocs {
 
     public static final MilestoneResourceBuilder milestoneResourceBuilder = newMilestoneResource()
             .withId(1L)
-            .withDate(LocalDateTime.now())
+            .withDate(ZonedDateTime.now())
             .withName(MilestoneType.OPEN_DATE)
             .withCompetitionId(1L);
 }

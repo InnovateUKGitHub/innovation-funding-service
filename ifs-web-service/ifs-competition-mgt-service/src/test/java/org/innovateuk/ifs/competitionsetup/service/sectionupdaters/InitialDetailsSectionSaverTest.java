@@ -19,12 +19,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
-import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -61,7 +63,7 @@ public class InitialDetailsSectionSaverTest {
         Long innovationAreaId = 4L;
         Long innovationSectorId = 5L;
 
-        LocalDateTime openingDate = LocalDateTime.of(2020, 12, 1, 0, 0);
+        ZonedDateTime openingDate = ZonedDateTime.of(2020, 12, 1, 0, 0, 0, 0, ZoneId.systemDefault());
 
         InitialDetailsForm competitionSetupForm = new InitialDetailsForm();
         competitionSetupForm.setTitle("title");
@@ -123,7 +125,7 @@ public class InitialDetailsSectionSaverTest {
         when(competitionSetupMilestoneService.createMilestonesForCompetition(anyLong())).thenReturn(serviceSuccess(asList(getMilestone())));
         when(competitionSetupMilestoneService.updateMilestonesForCompetition(anyList(), anyMap(), anyLong())).thenReturn(serviceSuccess());
 
-        ServiceResult<Void> result = service.autoSaveSectionField(competition, null, "openingDate", "20-10-" + (LocalDateTime.now().getYear() + 1), null);
+        ServiceResult<Void> result = service.autoSaveSectionField(competition, null, "openingDate", "20-10-" + (ZonedDateTime.now().getYear() + 1), null);
 
         assertTrue(result.isSuccess());
         verify(competitionService).update(competition);
@@ -163,8 +165,8 @@ public class InitialDetailsSectionSaverTest {
         Long competitionTypeId = 3L;
         Long innovationSectorId = 4L;
 
-        LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
-        LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
+        ZonedDateTime yesterday = ZonedDateTime.now().minusDays(1);
+        ZonedDateTime tomorrow = ZonedDateTime.now().plusDays(1);
 
         CompetitionResource competition = newCompetitionResource()
                 .withSetupComplete(true)
@@ -194,7 +196,7 @@ public class InitialDetailsSectionSaverTest {
         MilestoneResource milestone = new MilestoneResource();
         milestone.setId(10L);
         milestone.setType(MilestoneType.OPEN_DATE);
-        milestone.setDate(LocalDateTime.of(2020, 12, 1, 0, 0));
+        milestone.setDate(ZonedDateTime.of(2020, 12, 1, 0, 0, 0, 0, ZoneId.systemDefault()));
         milestone.setCompetitionId(1L);
         return milestone;
     }

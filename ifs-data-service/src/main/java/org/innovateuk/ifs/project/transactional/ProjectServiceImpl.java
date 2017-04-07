@@ -69,7 +69,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.InputStream;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -280,7 +280,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
-    public ServiceResult<Void> submitProjectDetails(final Long projectId, LocalDateTime date) {
+    public ServiceResult<Void> submitProjectDetails(final Long projectId, ZonedDateTime date) {
 
         return getProject(projectId).andOnSuccess(project ->
                 getCurrentlyLoggedInPartner(project).andOnSuccess(projectUser -> {
@@ -303,7 +303,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
-    public ServiceResult<Void> saveDocumentsSubmitDateTime(Long projectId, LocalDateTime date) {
+    public ServiceResult<Void> saveDocumentsSubmitDateTime(Long projectId, ZonedDateTime date) {
 
         return getProject(projectId).andOnSuccess(project ->
                 retrieveUploadedDocuments(projectId).handleSuccessOrFailure(
@@ -311,7 +311,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                         success -> setDocumentsSubmittedDate(project, date)));
     }
 
-    private ServiceResult<Void> setDocumentsSubmittedDate(Project project, LocalDateTime date) {
+    private ServiceResult<Void> setDocumentsSubmittedDate(Project project, ZonedDateTime date) {
         project.setDocumentsSubmittedDate(date);
         return serviceSuccess();
     }
@@ -789,7 +789,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     private boolean handleInviteSuccess(ProjectInvite projectInvite) {
-        inviteProjectRepository.save(projectInvite.send(loggedInUserSupplier.get(), LocalDateTime.now()));
+        inviteProjectRepository.save(projectInvite.send(loggedInUserSupplier.get(), ZonedDateTime.now()));
         return true;
     }
 

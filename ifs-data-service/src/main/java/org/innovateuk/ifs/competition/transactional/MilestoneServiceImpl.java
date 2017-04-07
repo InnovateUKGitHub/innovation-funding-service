@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -126,7 +126,7 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
         ValidationMessages vm = new ValidationMessages();
 
         milestones.forEach(m -> {
-            if(m.getDate() != null && m.getDate().isBefore(LocalDateTime.now())) {
+            if(m.getDate() != null && m.getDate().isBefore(ZonedDateTime.now())) {
                 Error error = new Error("error.milestone.pastdate", HttpStatus.BAD_REQUEST);
                 vm.addError(error);
             }

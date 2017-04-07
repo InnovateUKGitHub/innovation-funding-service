@@ -23,10 +23,10 @@ import org.springframework.validation.DataBinder;
 import org.springframework.validation.FieldError;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
-import static java.time.LocalDateTime.now;
+import static java.time.ZonedDateTime.now;
 import static java.util.Collections.nCopies;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.QuestionBuilder.newQuestion;
@@ -105,7 +105,7 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
         Long formInputId = 2L;
         String value = "New feedback";
         String oldValue = "Old feedback";
-        LocalDateTime oldUpdatedDate = now().minusHours(1);
+        ZonedDateTime oldUpdatedDate = now().minusHours(1);
         AssessorFormInputResponse existingAssessorFormInputResponse = newAssessorFormInputResponse().build();
         AssessorFormInputResponseResource existingAssessorFormInputResponseResource = newAssessorFormInputResponseResource()
                 .withId(3L)
@@ -354,7 +354,7 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
         Long formInputId = 2L;
         String value = "Value that won't be touched";
         String oldValue = "Value that won't be touched";
-        LocalDateTime oldUpdatedDate = now().minusHours(1);
+        ZonedDateTime oldUpdatedDate = now().minusHours(1);
         AssessorFormInputResponse existingAssessorFormInputResponse = newAssessorFormInputResponse().build();
         AssessorFormInputResponseResource existingAssessorFormInputResponseResource = newAssessorFormInputResponseResource()
                 .withAssessment(assessmentId)
@@ -413,7 +413,7 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
         Long formInputId = 2L;
         String value = "1";
         String oldValue = "1";
-        LocalDateTime oldUpdatedDate = now().minusHours(1);
+        ZonedDateTime oldUpdatedDate = now().minusHours(1);
         AssessorFormInputResponse existingAssessorFormInputResponse = newAssessorFormInputResponse().build();
         AssessorFormInputResponseResource existingAssessorFormInputResponseResource = newAssessorFormInputResponseResource()
                 .withAssessment(assessmentId)

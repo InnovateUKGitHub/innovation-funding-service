@@ -3,7 +3,7 @@ package org.innovateuk.ifs.assessment.viewmodel.profile;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * Holder of model attributes for the Assessor Profile Agreement view.
@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 public class AssessorProfileAgreementViewModel {
 
     private boolean currentAgreement;
-    private LocalDateTime agreementSignedDate;
+    private ZonedDateTime agreementSignedDate;
     private String text;
 
     public boolean isCurrentAgreement() {
@@ -22,11 +22,11 @@ public class AssessorProfileAgreementViewModel {
         this.currentAgreement = currentAgreement;
     }
 
-    public LocalDateTime getAgreementSignedDate() {
+    public ZonedDateTime getAgreementSignedDate() {
         return agreementSignedDate;
     }
 
-    public void setAgreementSignedDate(LocalDateTime agreementSignedDate) {
+    public void setAgreementSignedDate(ZonedDateTime agreementSignedDate) {
         this.agreementSignedDate = agreementSignedDate;
     }
 

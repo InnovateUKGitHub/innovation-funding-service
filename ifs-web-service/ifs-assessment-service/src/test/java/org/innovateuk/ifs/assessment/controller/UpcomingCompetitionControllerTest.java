@@ -12,7 +12,7 @@ import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.mockito.Mockito.verify;
@@ -38,7 +38,7 @@ public class UpcomingCompetitionControllerTest extends BaseControllerMockMVCTest
 
     @Test
     public void viewSummary_loggedIn() throws Exception {
-        LocalDateTime dateTime = LocalDateTime.now();
+        ZonedDateTime dateTime = ZonedDateTime.now();
 
         CompetitionResource competitionResource = newCompetitionResource()
                 .withId(1L)

@@ -4,7 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -15,7 +15,7 @@ public class CompetitionSummaryResource {
     private long competitionId;
     private String competitionName;
     private CompetitionStatus competitionStatus;
-    private LocalDateTime applicationDeadline;
+    private ZonedDateTime applicationDeadline;
     private int totalNumberOfApplications;
     private int applicationsStarted;
     private int applicationsInProgress;
@@ -24,7 +24,7 @@ public class CompetitionSummaryResource {
     private int applicationsFunded;
     private int ineligibleApplications;
     private int assessorsInvited;
-    private LocalDateTime assessorDeadline;
+    private ZonedDateTime assessorDeadline;
 
     public long getCompetitionId() {
         return competitionId;
@@ -42,11 +42,11 @@ public class CompetitionSummaryResource {
         this.competitionName = competitionName;
     }
 
-    public LocalDateTime getApplicationDeadline() {
+    public ZonedDateTime getApplicationDeadline() {
         return applicationDeadline;
     }
 
-    public void setApplicationDeadline(LocalDateTime applicationDeadline) {
+    public void setApplicationDeadline(ZonedDateTime applicationDeadline) {
         this.applicationDeadline = applicationDeadline;
     }
 
@@ -129,11 +129,11 @@ public class CompetitionSummaryResource {
         this.assessorsInvited = assessorsInvited;
     }
 
-    public LocalDateTime getAssessorDeadline() {
+    public ZonedDateTime getAssessorDeadline() {
         return assessorDeadline;
     }
 
-    public void setAssessorDeadline(LocalDateTime assessorDeadline) {
+    public void setAssessorDeadline(ZonedDateTime assessorDeadline) {
         this.assessorDeadline = assessorDeadline;
     }
 

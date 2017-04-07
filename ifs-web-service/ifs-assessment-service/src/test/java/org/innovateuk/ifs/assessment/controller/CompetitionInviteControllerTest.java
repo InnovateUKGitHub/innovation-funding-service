@@ -23,7 +23,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import static java.lang.Boolean.FALSE;
@@ -84,9 +84,9 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
     @Test
     public void acceptInvite_notLoggedInAndExistingUser() throws Exception {
         setLoggedInUser(null);
-        LocalDateTime acceptsDate = LocalDateTime.now();
-        LocalDateTime deadlineDate = LocalDateTime.now().plusDays(1);
-        LocalDateTime briefingDate = LocalDateTime.now().plusDays(2);
+        ZonedDateTime acceptsDate = ZonedDateTime.now();
+        ZonedDateTime deadlineDate = ZonedDateTime.now().plusDays(1);
+        ZonedDateTime briefingDate = ZonedDateTime.now().plusDays(2);
         BigDecimal assessorPay = BigDecimal.TEN;
 
         CompetitionInviteResource inviteResource = newCompetitionInviteResource()
@@ -147,9 +147,9 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
 
     @Test
     public void openInvite() throws Exception {
-        LocalDateTime acceptsDate = LocalDateTime.now();
-        LocalDateTime deadlineDate = LocalDateTime.now().plusDays(1);
-        LocalDateTime briefingDate = LocalDateTime.now().plusDays(2);
+        ZonedDateTime acceptsDate = ZonedDateTime.now();
+        ZonedDateTime deadlineDate = ZonedDateTime.now().plusDays(1);
+        ZonedDateTime briefingDate = ZonedDateTime.now().plusDays(2);
         BigDecimal assessorPay = BigDecimal.TEN;
         CompetitionInviteResource inviteResource = newCompetitionInviteResource().withCompetitionName("my competition")
                 .withAcceptsDate(acceptsDate).withDeadlineDate(deadlineDate)

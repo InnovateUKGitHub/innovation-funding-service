@@ -3,7 +3,7 @@ package org.innovateuk.ifs.publiccontent.builder;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.competition.publiccontent.resource.ContentEventResource;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -29,7 +29,7 @@ public class ContentEventResourceBuilder extends BaseBuilder<ContentEventResourc
         return with(event -> setField("publicContent", publicContent, event));
     }
 
-    public ContentEventResourceBuilder withDate(LocalDateTime date) {
+    public ContentEventResourceBuilder withDate(ZonedDateTime date) {
         return with(event -> setField("date", date, event));
     }
 

@@ -5,13 +5,12 @@ import org.innovateuk.ifs.Builder;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.invite.resource.*;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
 public class CompetitionParticipantResourceBuilder extends BaseBuilder<CompetitionParticipantResource, CompetitionParticipantResourceBuilder> {
 
@@ -73,11 +72,11 @@ public class CompetitionParticipantResourceBuilder extends BaseBuilder<Competiti
         return withArraySetFieldByReflection("competitionName", competitionNames);
     }
 
-    public CompetitionParticipantResourceBuilder withAssessorAcceptsDate(LocalDateTime... assessorAcceptsDates) {
+    public CompetitionParticipantResourceBuilder withAssessorAcceptsDate(ZonedDateTime... assessorAcceptsDates) {
         return withArraySetFieldByReflection("assessorAcceptsDate", assessorAcceptsDates);
     }
 
-    public CompetitionParticipantResourceBuilder withAssessorDeadlineDate(LocalDateTime... assessorDeadlineDates) {
+    public CompetitionParticipantResourceBuilder withAssessorDeadlineDate(ZonedDateTime... assessorDeadlineDates) {
         return withArraySetFieldByReflection("assessorDeadlineDate", assessorDeadlineDates);
     }
 
