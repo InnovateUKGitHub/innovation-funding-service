@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 
 import static org.innovateuk.ifs.invite.builder.CompetitionParticipantResourceBuilder.newCompetitionParticipantResource;
 import static org.junit.Assert.*;
@@ -31,33 +32,33 @@ public class CompetitionParticipantResourceTest {
     public void setUp() throws Exception {
         competitionParticipant = newCompetitionParticipantResource()
                 .withCompetitionStatus(CompetitionStatus.CLOSED)
-                .withAssessorAcceptsDate(LocalDate.now().atStartOfDay().minusDays(2))
-                .withAssessorDeadlineDate(LocalDate.now().atStartOfDay().plusDays(4))
+                .withAssessorAcceptsDate(LocalDate.now().atStartOfDay().minusDays(2).atZone(ZoneId.systemDefault()))
+                .withAssessorDeadlineDate(LocalDate.now().atStartOfDay().plusDays(4).atZone(ZoneId.systemDefault()))
                 .build();
         competitionParticipantEndingToday = newCompetitionParticipantResource()
                 .withCompetitionStatus(CompetitionStatus.CLOSED)
-                .withAssessorAcceptsDate(LocalDate.now().atStartOfDay().minusDays(2))
-                .withAssessorDeadlineDate(LocalDate.now().atStartOfDay())
+                .withAssessorAcceptsDate(LocalDate.now().atStartOfDay().minusDays(2).atZone(ZoneId.systemDefault()))
+                .withAssessorDeadlineDate(LocalDate.now().atStartOfDay().atZone(ZoneId.systemDefault()))
                 .build();
         competitionParticipantEndingTommorrow = newCompetitionParticipantResource()
                 .withCompetitionStatus(CompetitionStatus.CLOSED)
-                .withAssessorAcceptsDate(LocalDate.now().atStartOfDay().minusDays(2))
-                .withAssessorDeadlineDate(LocalDate.now().atStartOfDay().plusDays(1))
+                .withAssessorAcceptsDate(LocalDate.now().atStartOfDay().minusDays(2).atZone(ZoneId.systemDefault()))
+                .withAssessorDeadlineDate(LocalDate.now().atStartOfDay().plusDays(1).atZone(ZoneId.systemDefault()))
                 .build();
         competitionParticipantEndedYesterday = newCompetitionParticipantResource()
                 .withCompetitionStatus(CompetitionStatus.CLOSED)
-                .withAssessorAcceptsDate(LocalDate.now().atStartOfDay().minusDays(2))
-                .withAssessorDeadlineDate(LocalDate.now().atStartOfDay().minusDays(1))
+                .withAssessorAcceptsDate(LocalDate.now().atStartOfDay().minusDays(2).atZone(ZoneId.systemDefault()))
+                .withAssessorDeadlineDate(LocalDate.now().atStartOfDay().minusDays(1).atZone(ZoneId.systemDefault()))
                 .build();
         competitionParticipantStartedToday = newCompetitionParticipantResource()
                 .withCompetitionStatus(CompetitionStatus.CLOSED)
-                .withAssessorAcceptsDate(LocalDate.now().atStartOfDay())
-                .withAssessorDeadlineDate(LocalDate.now().atStartOfDay().plusDays(6))
+                .withAssessorAcceptsDate(LocalDate.now().atStartOfDay().atZone(ZoneId.systemDefault()))
+                .withAssessorDeadlineDate(LocalDate.now().atStartOfDay().plusDays(6).atZone(ZoneId.systemDefault()))
                 .build();
         competitionParticipantStartingTommorrow = newCompetitionParticipantResource()
                 .withCompetitionStatus(CompetitionStatus.CLOSED)
-                .withAssessorAcceptsDate(LocalDate.now().atStartOfDay().plusDays(1))
-                .withAssessorDeadlineDate(LocalDate.now().atStartOfDay().plusDays(7))
+                .withAssessorAcceptsDate(LocalDate.now().atStartOfDay().plusDays(1).atZone(ZoneId.systemDefault()))
+                .withAssessorDeadlineDate(LocalDate.now().atStartOfDay().plusDays(7).atZone(ZoneId.systemDefault()))
                 .build();
 
         competitionParticipantCompetitionSetup = newCompetitionParticipantResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();

@@ -59,9 +59,9 @@
                             <dt>Eligibility:</dt>
                             <dd class="wysiwyg-styles" ifs:utext="${publicContentItem.publicContentResource?.eligibilitySummary}"></dd>
                             <dt>Opens:</dt>
-                            <dd th:text="${#temporals.format(publicContentItem.competitionOpenDate, 'dd MMMM yyyy')}" />
+                            <dd th:text="${#temporals.format(publicContentItem.competitionOpenDate, 'd MMMM yyyy')}" />
                             <dt>Closes:</dt>
-                            <dd th:text="${#temporals.format(publicContentItem.competitionCloseDate, 'dd MMMM yyyy')}" />
+                            <dd th:text="${#temporals.format(publicContentItem.competitionCloseDate, 'd MMMM yyyy')}" />
                         </dl>
                         <hr th:unless="${iteration.last}"/>
                     </li>

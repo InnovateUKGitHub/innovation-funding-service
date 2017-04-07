@@ -10,7 +10,7 @@ import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -88,7 +88,7 @@ ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
         return withArray((users, project) -> project.setProjectUsers(users), projectUsers);
     }
 
-    public ProjectBuilder withDateSubmitted(LocalDateTime... dates) {
+    public ProjectBuilder withDateSubmitted(ZonedDateTime... dates) {
         return withArray((date, project) -> project.setSpendProfileSubmittedDate(date), dates);
     }
 
@@ -101,15 +101,15 @@ ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
         return withArray((approval, project) -> project.setOtherDocumentsApproved(approval), approved);
     }
 
-    public ProjectBuilder withOfferSubmittedDate(LocalDateTime... dates){
+    public ProjectBuilder withOfferSubmittedDate(ZonedDateTime... dates){
         return withArray ((date, project) -> project.setOfferSubmittedDate(date), dates);
     }
 
-    public ProjectBuilder withOtherDocumentsSubmittedDate(LocalDateTime date) {
+    public ProjectBuilder withOtherDocumentsSubmittedDate(ZonedDateTime date) {
         return with (project -> project.setDocumentsSubmittedDate(date));
     }
 
-    public ProjectBuilder withSpendProfileSubmittedDate(LocalDateTime date) {
+    public ProjectBuilder withSpendProfileSubmittedDate(ZonedDateTime date) {
         return with (project -> project.setSpendProfileSubmittedDate(date));
     }
 

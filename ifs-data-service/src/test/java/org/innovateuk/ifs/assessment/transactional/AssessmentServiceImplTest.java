@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.lang.String.format;
-import static java.time.LocalDateTime.now;
+import static java.time.ZonedDateTime.now;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -420,7 +420,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
                 new UserNotificationTarget(users.get(1))
         );
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
 
         Notification expectedNotification1 = new Notification(
                 systemNotificationSourceMock,
@@ -505,7 +505,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         EmailContent emailContent = newEmailContentResource().build();
         NotificationTarget recipient = new UserNotificationTarget(user);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
 
         Notification expectedNotification = new Notification(
                 systemNotificationSourceMock,

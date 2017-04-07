@@ -9,7 +9,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  *
@@ -36,7 +36,7 @@ public abstract class AuditableEntity implements Auditable {
     private User createdBy;
 
     @CreatedDate
-    private LocalDateTime createdOn;
+    private ZonedDateTime createdOn;
 
     @LastModifiedBy
     @ManyToOne(fetch = FetchType.LAZY)
@@ -44,7 +44,7 @@ public abstract class AuditableEntity implements Auditable {
     private User modifiedBy;
 
     @LastModifiedDate
-    private LocalDateTime modifiedOn;
+    private ZonedDateTime modifiedOn;
 
     @Override
     public User getCreatedBy() {
@@ -52,7 +52,7 @@ public abstract class AuditableEntity implements Auditable {
     }
 
     @Override
-    public LocalDateTime getCreatedOn() {
+    public ZonedDateTime getCreatedOn() {
         return createdOn;
     }
 
@@ -62,7 +62,7 @@ public abstract class AuditableEntity implements Auditable {
     }
 
     @Override
-    public LocalDateTime getModifiedOn() {
+    public ZonedDateTime getModifiedOn() {
         return modifiedOn;
     }
 }

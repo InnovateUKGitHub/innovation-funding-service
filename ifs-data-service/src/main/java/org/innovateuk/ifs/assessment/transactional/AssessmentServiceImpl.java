@@ -21,6 +21,7 @@ import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
@@ -178,7 +179,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
 
     private ServiceResult<Void> sendNotification(User user, Competition competition) {
         NotificationTarget recipient = new UserNotificationTarget(user);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
         Notification notification = new Notification(
                 systemNotificationSource,
                 singletonList(recipient),
@@ -186,8 +187,8 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
                 asMap(
                         "name", user.getName(),
                         "competitionName", competition.getName(),
-                        "acceptsDeadline", competition.getAssessorAcceptsDate().format(formatter),
-                        "assessmentDeadline", competition.getAssessorDeadlineDate().format(formatter),
+                        "acceptsDeadline", TimeZoneUtil.toUkTimeZone(competition.getAssessorAcceptsDate()).format(formatter),
+                        "assessmentDeadline", TimeZoneUtil.toUkTimeZone(competition.getAssessorDeadlineDate()).format(formatter),
                         "competitionUrl", format("%s/assessor/dashboard/competition/%s", webBaseUrl + WEB_CONTEXT, competition.getId()))
         );
 

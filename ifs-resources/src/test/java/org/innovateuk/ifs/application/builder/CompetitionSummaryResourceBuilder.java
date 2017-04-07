@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.builder;
 
 import static java.util.Collections.emptyList;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -42,7 +42,7 @@ public class CompetitionSummaryResourceBuilder extends BaseBuilder<CompetitionSu
         return withArray((competitionState, competition) -> competition.setCompetitionStatus(competitionState), competitionStatus);
     }
 
-    public CompetitionSummaryResourceBuilder withApplicationDeadline(LocalDateTime... applicationDeadlines) {
+    public CompetitionSummaryResourceBuilder withApplicationDeadline(ZonedDateTime... applicationDeadlines) {
         return withArraySetFieldByReflection("applicationDeadline", applicationDeadlines);
     }
 

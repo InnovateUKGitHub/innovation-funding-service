@@ -7,7 +7,7 @@ import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,10 +34,10 @@ public class Post {
     private List<Attachment> attachments;
 
     @CreatedDate
-    private LocalDateTime createdOn;
+    private ZonedDateTime createdOn;
 
     public Post(){}
-    public Post(Long id, User author, String body, List<Attachment> attachments, LocalDateTime createdOn) {
+    public Post(Long id, User author, String body, List<Attachment> attachments, ZonedDateTime createdOn) {
         this.id = id;
         this.author = author;
         this.body = body;
@@ -61,7 +61,7 @@ public class Post {
         return body;
     }
 
-    public final LocalDateTime createdOn() {
+    public final ZonedDateTime createdOn() {
         return createdOn;
     }
 }

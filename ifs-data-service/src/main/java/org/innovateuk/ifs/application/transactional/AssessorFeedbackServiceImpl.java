@@ -21,9 +21,10 @@ import java.io.InputStream;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import static org.innovateuk.ifs.application.resource.ApplicationStatus.APPROVED;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.service.ServiceResult.*;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.application.resource.ApplicationStatus.APPROVED;
 
 @Service
 public class AssessorFeedbackServiceImpl extends BaseTransactionalService implements AssessorFeedbackService {

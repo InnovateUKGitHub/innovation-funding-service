@@ -52,7 +52,7 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -81,7 +81,7 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_TECHNOLOGIST;
 import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -516,7 +516,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                     withApplications(applicationBuilders).
                     restoreOriginalMilestones();
 
-            if (competitionLine.fundersPanelEndDate != null && competitionLine.fundersPanelEndDate.isBefore(LocalDateTime.now())) {
+            if (competitionLine.fundersPanelEndDate != null && competitionLine.fundersPanelEndDate.isBefore(ZonedDateTime.now())) {
 
                 withApplications = withApplications.
                         moveCompetitionIntoFundersPanelStatus().
@@ -906,7 +906,7 @@ public class GenerateTestData extends BaseIntegrationTest {
 
         Optional<User> existingUser = userRepository.findByEmail(line.emailAddress);
         Optional<User> sentBy = userRepository.findByEmail("john.doe@innovateuk.test");
-        Optional<LocalDateTime> sentOn = Optional.of(LocalDateTime.now());
+        Optional<ZonedDateTime> sentOn = Optional.of(ZonedDateTime.now());
 
         for (InviteLine invite : assessorInvitesForThisAssessor) {
             builder = builder.withInviteToAssessCompetition(

@@ -4,7 +4,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.invite.resource.*;
 import org.junit.Test;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
@@ -25,8 +25,8 @@ public class CompetitionParticipantResourceBuilderTest {
         CompetitionParticipantRoleResource expectedRole = CompetitionParticipantRoleResource.ASSESSOR;
         ParticipantStatusResource expectedStatus = ParticipantStatusResource.ACCEPTED;
         String expectedCompetitionName = "Juggling Craziness";
-        LocalDateTime expectedAssessorAcceptsDate = LocalDateTime.now().minusDays(1);
-        LocalDateTime expectedAssessorDeadlineDate = LocalDateTime.now().plusDays(2);
+        ZonedDateTime expectedAssessorAcceptsDate = ZonedDateTime.now().minusDays(1);
+        ZonedDateTime expectedAssessorDeadlineDate = ZonedDateTime.now().plusDays(2);
         long expectedTotalAssessments = 4L;
         long expectedSubmittedAssessments = 1L;
         long expectedPendingAssessments = 2L;
@@ -79,8 +79,8 @@ public class CompetitionParticipantResourceBuilderTest {
         CompetitionParticipantRoleResource[] expectedRoles = {CompetitionParticipantRoleResource.ASSESSOR, CompetitionParticipantRoleResource.ASSESSOR};
         ParticipantStatusResource[] expectedStatuses = {ParticipantStatusResource.ACCEPTED, ParticipantStatusResource.ACCEPTED};
         String[] expectedCompetitionNames = {"Juggling Craziness", "Advanced Juggling"};
-        LocalDateTime[] expectedAssessorAcceptsDates = {LocalDateTime.now().minusDays(1), LocalDateTime.now().plusDays(3)};
-        LocalDateTime[] expectedAssessorDeadlineDates = {LocalDateTime.now().plusDays(2), LocalDateTime.now().plusDays(5)};
+        ZonedDateTime[] expectedAssessorAcceptsDates = {ZonedDateTime.now().minusDays(1), ZonedDateTime.now().plusDays(3)};
+        ZonedDateTime[] expectedAssessorDeadlineDates = {ZonedDateTime.now().plusDays(2), ZonedDateTime.now().plusDays(5)};
         Long[] expectedTotalAssessments = {4L, 5L};
         Long[] expectedSubmittedAssessments = {1L, 2L};
         Long[] expectedPendingAssessments = {2L, 3L};

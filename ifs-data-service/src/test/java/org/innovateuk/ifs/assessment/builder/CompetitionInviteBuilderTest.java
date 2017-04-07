@@ -7,7 +7,7 @@ import org.innovateuk.ifs.invite.domain.CompetitionInvite;
 import org.innovateuk.ifs.user.domain.User;
 import org.junit.Test;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
@@ -31,7 +31,7 @@ public class CompetitionInviteBuilderTest {
         String expectedName = "paul plum";
         InnovationArea expectedInnovationArea = newInnovationArea().withName("Machine Learning").build();
         User expectedSentBy = newUser().withId(6L).build();
-        LocalDateTime expectedSentOn = LocalDateTime.now();
+        ZonedDateTime expectedSentOn = ZonedDateTime.now();
 
         CompetitionInvite invite = newCompetitionInvite()
                 .withId(expectedId)
@@ -70,7 +70,7 @@ public class CompetitionInviteBuilderTest {
         String[] expectedNames = { "paul plum", "steve smith" };
         InnovationArea[] expectedInnovationAreas = newInnovationArea().withName("Machine Learning", "Photonics").buildArray(2, InnovationArea.class);
         User[] expectedSentBy = newUser().withId(6L, 12L).buildArray(2, User.class);
-        LocalDateTime[] expectedSentOn = { LocalDateTime.now(), LocalDateTime.now().plusMinutes(1) };
+        ZonedDateTime[] expectedSentOn = { ZonedDateTime.now(), ZonedDateTime.now().plusMinutes(1) };
 
         List<CompetitionInvite> invites = newCompetitionInvite()
                 .withId(expectedIds)

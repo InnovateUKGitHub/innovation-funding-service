@@ -5,13 +5,13 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.threads.resource.PostResource;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 public class ThreadPostViewModel extends PostResource {
     private String username;
 
-    public ThreadPostViewModel(Long id, UserResource author, String body, List<AttachmentResource> attachments, LocalDateTime createdOn) {
+    public ThreadPostViewModel(Long id, UserResource author, String body, List<AttachmentResource> attachments, ZonedDateTime createdOn) {
         super(id, author, body, attachments, createdOn);
     }
 

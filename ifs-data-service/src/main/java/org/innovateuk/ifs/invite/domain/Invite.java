@@ -9,7 +9,7 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 import static java.util.Objects.requireNonNull;
@@ -49,7 +49,7 @@ public abstract class Invite<T extends ProcessActivity, I extends Invite<T,I>> {
     private InviteStatus status;
 
     @Column
-    private LocalDateTime sentOn;
+    private ZonedDateTime sentOn;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="sentBy", referencedColumnName="id")
@@ -139,7 +139,7 @@ public abstract class Invite<T extends ProcessActivity, I extends Invite<T,I>> {
         this.user = user;
     }
 
-    public LocalDateTime getSentOn() {
+    public ZonedDateTime getSentOn() {
         if (InviteStatus.CREATED == getStatus()) {
             throw new IllegalStateException("cannot get sentOn for an unsent Invite");
         }
@@ -158,7 +158,7 @@ public abstract class Invite<T extends ProcessActivity, I extends Invite<T,I>> {
 
     public abstract void setTarget(T target);
 
-    public I send(User sentBy, LocalDateTime sentOn) {
+    public I send(User sentBy, ZonedDateTime sentOn) {
         this.sentBy = requireNonNull(sentBy, "sentBy cannot be null");
         this.sentOn = requireNonNull(sentOn, "sendOn cannot be null");
         setStatus(InviteStatus.SENT);

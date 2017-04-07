@@ -38,7 +38,7 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Supplier;
@@ -648,7 +648,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         templateArgs.put("TownCity", "Swindon&");
         templateArgs.put("PostCode", "SN1 1AA'");
         templateArgs.put("ProjectStartDate", project.getTargetStartDate().format(DateTimeFormatter.ofPattern(GRANT_OFFER_LETTER_DATE_FORMAT)));
-        templateArgs.put("Date", LocalDateTime.now().toString());
+        templateArgs.put("Date", ZonedDateTime.now().toString());
 
         Map<String, Integer> organisationAndGrantPercentageMap = new HashMap<>();
         organisationAndGrantPercentageMap.put("OrgLeader&amp;", new Integer("30"));
@@ -988,7 +988,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         templateArgs.put("TownCity", "Swindon");
         templateArgs.put("PostCode", "SN1 1AA");
         templateArgs.put("ProjectStartDate",project.getTargetStartDate().format(DateTimeFormatter.ofPattern(GRANT_OFFER_LETTER_DATE_FORMAT)));
-        templateArgs.put("Date", LocalDateTime.now().toString());
+        templateArgs.put("Date", ZonedDateTime.now().toString());
 
         Map<String, Integer> organisationAndGrantPercentageMap = new HashMap<>();
         organisationAndGrantPercentageMap.put(o1.getName(), new Integer("0"));

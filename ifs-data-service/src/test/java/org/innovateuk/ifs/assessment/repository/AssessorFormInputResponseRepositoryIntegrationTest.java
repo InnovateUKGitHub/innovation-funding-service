@@ -18,6 +18,8 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
@@ -88,7 +90,7 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
                 .withAssessment(assessment, assessment)
                 .withFormInput(formInputs.get(0), formInputs.get(1))
                 .withValue("Sample response 1", "Sample response 2")
-                .withUpdatedDate(LocalDateTime.parse("2016-07-12T16:10:50.21"), LocalDateTime.parse("2016-07-12T16:15:25.42"))
+                .withUpdatedDate(LocalDateTime.parse("2016-07-12T16:10:50.21").atZone(ZoneId.systemDefault()), LocalDateTime.parse("2016-07-12T16:15:25.42").atZone(ZoneId.systemDefault()))
                 .build(2).stream().map(assessorFormInputResponse -> repository.save(assessorFormInputResponse)).collect(toList());
 
         List<AssessorFormInputResponse> found = repository.findAll();
@@ -132,7 +134,7 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
                 .withAssessment(savedAssessments.get(0), savedAssessments.get(0), savedAssessments.get(0), savedAssessments.get(0), savedAssessments.get(1), savedAssessments.get(1), savedAssessments.get(1), savedAssessments.get(1))
                 .withFormInput(formInputs.get(0), formInputs.get(1), formInputs.get(2), formInputs.get(3), formInputs.get(0), formInputs.get(1), formInputs.get(2), formInputs.get(3))
                 .withValue("Sample response 1", "Sample response 2", "Sample response 3", "Sample response 4", "Sample response 5", "Sample response 6", "Sample response 7", "Sample response 8")
-                .withUpdatedDate(LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now())
+                .withUpdatedDate(ZonedDateTime.now(), ZonedDateTime.now(), ZonedDateTime.now(), ZonedDateTime.now(), ZonedDateTime.now(), ZonedDateTime.now(), ZonedDateTime.now(), ZonedDateTime.now())
                 .build(8).stream().map(assessorFormInputResponse -> repository.save(assessorFormInputResponse)).collect(toList());
 
         // There should be four responses found for each of the questions
@@ -176,7 +178,7 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
                 .withAssessment(assessment, assessment, assessment, assessment)
                 .withFormInput(formInputs.get(0), formInputs.get(1), formInputs.get(2), formInputs.get(3))
                 .withValue("Sample response 1", "Sample response 2", "Sample response 3", "Sample response 4")
-                .withUpdatedDate(LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now())
+                .withUpdatedDate(ZonedDateTime.now(), ZonedDateTime.now(), ZonedDateTime.now(), ZonedDateTime.now())
                 .build(4).stream().map(assessorFormInputResponse -> repository.save(assessorFormInputResponse)).collect(toList());
 
         // There should be two responses found for each of the questions
@@ -223,7 +225,7 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
                 .withAssessment(savedAssessments.get(0), savedAssessments.get(0), savedAssessments.get(1), savedAssessments.get(1))
                 .withFormInput(formInputs.get(0), formInputs.get(1), formInputs.get(0), formInputs.get(1))
                 .withValue("Sample response 1", "Sample response 2", "Sample response 3", "Sample response 4")
-                .withUpdatedDate(LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now())
+                .withUpdatedDate(ZonedDateTime.now(), ZonedDateTime.now(), ZonedDateTime.now(), ZonedDateTime.now())
                 .build(4).stream().map(assessorFormInputResponse -> repository.save(assessorFormInputResponse)).collect(toList());
 
         // There should be a response found for each of the form inputs, for each assessment
@@ -271,7 +273,7 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
                 .withAssessment(savedAssessments.get(0), savedAssessments.get(0), savedAssessments.get(1), savedAssessments.get(1))
                 .withFormInput(formInputs.get(0), formInputs.get(1), formInputs.get(0), formInputs.get(1))
                 .withValue("Sample response 1", "Sample response 2", "Sample response 3", "Sample response 4")
-                .withUpdatedDate(LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now())
+                .withUpdatedDate(ZonedDateTime.now(), ZonedDateTime.now(), ZonedDateTime.now(), ZonedDateTime.now())
                 .build(4).stream().map(assessorFormInputResponse -> repository.save(assessorFormInputResponse)).collect(toList());
 
         // There should be a response found for each of the form inputs, for each assessment
@@ -315,7 +317,7 @@ public class AssessorFormInputResponseRepositoryIntegrationTest extends BaseRepo
                 .withAssessment(savedAssessments.get(0), savedAssessments.get(0),savedAssessments.get(0), savedAssessments.get(1), savedAssessments.get(1), savedAssessments.get(1))
                 .withFormInput(formInputs.get(0), formInputs.get(1), formInputs.get(2), formInputs.get(0), formInputs.get(1), formInputs.get(2))
                 .withValue("Sample response 1", "Sample response 2", "Sample response 3", "Sample response 4", "Sample response 5", "Sample response 6")
-                .withUpdatedDate(LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now())
+                .withUpdatedDate(ZonedDateTime.now(), ZonedDateTime.now(), ZonedDateTime.now(), ZonedDateTime.now(), ZonedDateTime.now(), ZonedDateTime.now())
                 .build(6).stream().map(assessorFormInputResponse -> repository.save(assessorFormInputResponse)).collect(toList());
 
         List<AssessorFormInputResponse> expected = saved.stream().filter(x -> !x.getFormInput().equals(formInputs.get(2))).collect(toList());
