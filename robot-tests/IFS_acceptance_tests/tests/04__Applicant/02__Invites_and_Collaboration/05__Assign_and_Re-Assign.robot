@@ -70,7 +70,7 @@ Collaborator should see the terms and conditions from the overview page
     ...
     ...    This test depends on the previous test suite to run first
     [Tags]    Email
-    Given the user clicks the button/link    link=Application Overview
+    Given the user clicks the button/link    link=Application overview
     When The user clicks the button/link    link= view the grant terms and conditions
     Then the user should see the text in the page    Terms and conditions of an Innovate UK grant award
     And the user should see the text in the page    Entire agreement

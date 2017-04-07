@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.competition.resource;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 public class MilestoneResource {
     private Long id;
     private MilestoneType type;
-    private LocalDateTime date;
+    private ZonedDateTime date;
     private Long competitionId;
 
 
@@ -25,11 +25,11 @@ public class MilestoneResource {
         this.type = milestoneType;
     }
 
-    public LocalDateTime getDate() {
+    public ZonedDateTime getDate() {
         return date;
     }
 
-    public void setDate(LocalDateTime date) {
+    public void setDate(ZonedDateTime date) {
         this.date = date;
     }
 

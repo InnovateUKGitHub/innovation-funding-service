@@ -32,7 +32,7 @@ import org.springframework.util.StringUtils;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Consumer;
@@ -78,7 +78,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     public static final BigDecimal DEFAULT_ASSESSOR_PAY = new BigDecimal(100);
 
     @Override
-    public ServiceResult<String> generateCompetitionCode(Long id, LocalDateTime dateTime) {
+    public ServiceResult<String> generateCompetitionCode(Long id, ZonedDateTime dateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYMM");
         Competition competition = competitionRepository.findById(id);
         String datePart = formatter.format(dateTime);

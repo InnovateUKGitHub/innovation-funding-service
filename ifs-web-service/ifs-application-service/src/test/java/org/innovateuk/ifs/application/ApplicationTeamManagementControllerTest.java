@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.application;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.form.ApplicantInviteForm;
 import org.innovateuk.ifs.application.form.ApplicationTeamUpdateForm;
 import org.innovateuk.ifs.application.populator.ApplicationTeamManagementModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationStatus;
 import org.innovateuk.ifs.application.viewmodel.ApplicationTeamManagementApplicantRowViewModel;
 import org.innovateuk.ifs.application.viewmodel.ApplicationTeamManagementViewModel;
 import org.innovateuk.ifs.commons.error.Error;
@@ -33,7 +33,7 @@ import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.application.constant.ApplicationStatusConstants.OPEN;
+import static org.innovateuk.ifs.application.resource.ApplicationStatus.OPEN;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -945,7 +945,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         return setupApplicationResource(organisationsMap, OPEN);
     }
 
-    private ApplicationResource setupApplicationResource(Map<String, OrganisationResource> organisationsMap, ApplicationStatusConstants applicationStatus) {
+    private ApplicationResource setupApplicationResource(Map<String, OrganisationResource> organisationsMap, ApplicationStatus applicationStatus) {
         ApplicationResource applicationResource = newApplicationResource()
                 .withName("Application name")
                 .withApplicationStatus(applicationStatus)

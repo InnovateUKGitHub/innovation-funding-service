@@ -6,7 +6,7 @@ import org.springframework.data.annotation.CreatedDate;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -37,12 +37,12 @@ public abstract class Thread {
     private List<Post> posts;
 
     @CreatedDate
-    private LocalDateTime createdOn;
+    private ZonedDateTime createdOn;
 
     Thread() {
     }
 
-    Thread(Long id, Long classPk, String className, List<Post> posts, String title, LocalDateTime createdOn) {
+    Thread(Long id, Long classPk, String className, List<Post> posts, String title, ZonedDateTime createdOn) {
         this.id = id;
         this.classPk = classPk;
         this.className = className;
@@ -86,7 +86,7 @@ public abstract class Thread {
         return title;
     }
 
-    public LocalDateTime createdOn() {
+    public ZonedDateTime createdOn() {
         return createdOn;
     }
 

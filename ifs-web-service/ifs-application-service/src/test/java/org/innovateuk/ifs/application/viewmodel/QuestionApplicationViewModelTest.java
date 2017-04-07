@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.viewmodel;
 
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationStatus;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -25,7 +25,7 @@ public class QuestionApplicationViewModelTest {
 
     @Before
     public void setup(){
-        ApplicationResource currentApplication = newApplicationResource().withApplicationStatus(ApplicationStatusConstants.SUBMITTED.getId()).build();
+        ApplicationResource currentApplication = newApplicationResource().withApplicationStatus(ApplicationStatus.SUBMITTED).build();
         CompetitionResource competitionResource = newCompetitionResource().withCompetitionStatus(CompetitionStatus.CLOSED).build();
         OrganisationResource userOrganisation = newOrganisationResource().build();
 

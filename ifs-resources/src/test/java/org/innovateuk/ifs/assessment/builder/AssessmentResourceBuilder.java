@@ -9,6 +9,7 @@ import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.workflow.resource.ProcessEvent;
 
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -45,7 +46,7 @@ public class AssessmentResourceBuilder extends BaseBuilder<AssessmentResource, A
         return withArray((processEvent, object) -> setField("event", processEvent.name(), object), processEvents);
     }
 
-    public AssessmentResourceBuilder withLastModifiedDate(Calendar... value) {
+    public AssessmentResourceBuilder withLastModifiedDate(ZonedDateTime... value) {
         return withArraySetFieldByReflection("lastModified", value);
     }
 

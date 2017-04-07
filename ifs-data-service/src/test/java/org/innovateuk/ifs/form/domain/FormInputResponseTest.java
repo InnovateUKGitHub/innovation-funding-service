@@ -5,12 +5,12 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import static org.junit.Assert.assertEquals;
 
 public class FormInputResponseTest {
-    private LocalDateTime updateDate = LocalDateTime.now();
+    private ZonedDateTime updateDate = ZonedDateTime.now();
     private String value = "";
     private ProcessRole updatedBy = null;
     private FormInput formInput = null;

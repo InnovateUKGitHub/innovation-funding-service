@@ -11,7 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -20,7 +20,7 @@ import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEn
 import static org.innovateuk.ifs.publiccontent.builder.ContentGroupResourceBuilder.newContentGroupResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentSectionResourceBuilder.newPublicContentSectionResource;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 /**
@@ -60,7 +60,7 @@ public class AbstractViewModelPopulatorTest {
                 .withContentGroups(asList(contentGroup)).build();
         PublicContentResource contentResource = newPublicContentResource()
                 .withCompetitionId(competitionId)
-                .withPublishDate(LocalDateTime.now())
+                .withPublishDate(ZonedDateTime.now())
                 .withContentSections(asList(contentSection)).build();
         boolean readOnly = true;
         CompetitionResource competitionResource = newCompetitionResource().build();

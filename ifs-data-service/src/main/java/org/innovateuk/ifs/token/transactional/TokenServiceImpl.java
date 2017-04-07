@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -68,7 +68,7 @@ public class TokenServiceImpl implements TokenService {
 
     private boolean isTokenValid(final Token token) {
         // Prefer the updated time over the created time in case the token has been refreshed
-        final LocalDateTime tokenDateTime = token.getUpdated() == null ? token.getCreated() : token.getUpdated();
-        return ChronoUnit.MINUTES.between(tokenDateTime, LocalDateTime.now()) < emailTokenValidityMins;
+        final ZonedDateTime tokenDateTime = token.getUpdated() == null ? token.getCreated() : token.getUpdated();
+        return ChronoUnit.MINUTES.between(tokenDateTime, ZonedDateTime.now()) < emailTokenValidityMins;
     }
 }

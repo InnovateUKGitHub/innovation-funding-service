@@ -6,7 +6,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -24,7 +24,7 @@ public class MilestoneBuilder extends BaseBuilder<Milestone, MilestoneBuilder> {
         return new MilestoneBuilder(emptyList()).with(uniqueIds());
     }
 
-    public MilestoneBuilder withDate(LocalDateTime... dates) {
+    public MilestoneBuilder withDate(ZonedDateTime... dates) {
         return withArraySetFieldByReflection("date", dates);
     }
 

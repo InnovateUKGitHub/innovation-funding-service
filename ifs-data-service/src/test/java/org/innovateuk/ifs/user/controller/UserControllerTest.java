@@ -11,7 +11,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.time.LocalDateTime.now;
+import static java.time.ZonedDateTime.now;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.hamcrest.Matchers.hasSize;

@@ -14,6 +14,7 @@ import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.PublicContentResourceDocs.publicContentResourceBuilder;
 import static org.innovateuk.ifs.documentation.PublicContentResourceDocs.publicContentResourceFields;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -77,7 +78,7 @@ public class PublicContentControllerDocumentation extends BaseControllerMockMVCT
     public void updateSection() throws Exception {
         PublicContentResource resource = publicContentResourceBuilder.build();
 
-        when(publicContentService.updateSection(resource, PublicContentSectionType.DATES)).thenReturn(serviceSuccess());
+        when(publicContentService.updateSection(any(), any())).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/public-content/update-section/{section}/{id}", PublicContentSectionType.DATES.name(), resource.getId(), "json")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -97,7 +98,7 @@ public class PublicContentControllerDocumentation extends BaseControllerMockMVCT
     public void markSectionAsComplete() throws Exception {
         PublicContentResource resource = publicContentResourceBuilder.build();
 
-        when(publicContentService.markSectionAsComplete(resource, PublicContentSectionType.DATES)).thenReturn(serviceSuccess());
+        when(publicContentService.markSectionAsComplete(any(), any())).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/public-content/mark-section-as-complete/{section}/{id}", PublicContentSectionType.DATES.name(), resource.getId(), "json")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)

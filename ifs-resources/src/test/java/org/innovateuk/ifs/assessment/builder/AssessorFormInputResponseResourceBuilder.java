@@ -4,7 +4,7 @@ import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -59,7 +59,7 @@ public class AssessorFormInputResponseResourceBuilder extends BaseBuilder<Assess
         return withArray((formInputMaxWordCount, assessorFormInputResponse) -> BaseBuilderAmendFunctions.setField("formInputMaxWordCount", formInputMaxWordCount, assessorFormInputResponse), formInputMaxWordCounts);
     }
 
-    public AssessorFormInputResponseResourceBuilder withUpdatedDate(LocalDateTime... updatedDates) {
+    public AssessorFormInputResponseResourceBuilder withUpdatedDate(ZonedDateTime... updatedDates) {
         return withArray((updatedDate, assessorFormInputResponse) -> BaseBuilderAmendFunctions.setField("updatedDate", updatedDate, assessorFormInputResponse), updatedDates);
     }
 }

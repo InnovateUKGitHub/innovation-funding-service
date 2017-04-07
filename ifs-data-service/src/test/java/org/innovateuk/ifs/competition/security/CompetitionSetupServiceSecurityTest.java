@@ -10,7 +10,7 @@ import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -106,7 +106,7 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
     public static class TestCompetitionSetupService implements CompetitionSetupService {
 
         @Override
-        public ServiceResult<String> generateCompetitionCode(Long id, LocalDateTime dateTime) {
+        public ServiceResult<String> generateCompetitionCode(Long id, ZonedDateTime dateTime) {
             return null;
         }
 
