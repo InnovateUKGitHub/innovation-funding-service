@@ -420,7 +420,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
                 new UserNotificationTarget(users.get(1))
         );
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
 
         Notification expectedNotification1 = new Notification(
                 systemNotificationSourceMock,
@@ -505,7 +505,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         EmailContent emailContent = newEmailContentResource().build();
         NotificationTarget recipient = new UserNotificationTarget(user);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
 
         Notification expectedNotification = new Notification(
                 systemNotificationSourceMock,
