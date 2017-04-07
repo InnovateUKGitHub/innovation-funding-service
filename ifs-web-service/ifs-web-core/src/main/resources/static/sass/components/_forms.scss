@@ -33,8 +33,12 @@ input[disabled]{
   background: none;
 
   &:focus{
-      outline: none;
-      outline-offset: 0;
+    outline: none;
+    outline-offset: 0;
+  }
+
+  .app-form &{
+    font-weight: bold;
   }
 }
 
