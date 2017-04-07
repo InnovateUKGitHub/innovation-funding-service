@@ -3,7 +3,7 @@ package org.innovateuk.ifs.publiccontent.domain;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
@@ -18,7 +18,7 @@ public class PublicContent {
 
     private Long competitionId;
 
-    private LocalDateTime publishDate;
+    private ZonedDateTime publishDate;
 
     private String shortDescription;
 
@@ -59,11 +59,11 @@ public class PublicContent {
         this.competitionId = competitionId;
     }
 
-    public LocalDateTime getPublishDate() {
+    public ZonedDateTime getPublishDate() {
         return publishDate;
     }
 
-    public void setPublishDate(LocalDateTime publishDate) {
+    public void setPublishDate(ZonedDateTime publishDate) {
         this.publishDate = publishDate;
     }
 

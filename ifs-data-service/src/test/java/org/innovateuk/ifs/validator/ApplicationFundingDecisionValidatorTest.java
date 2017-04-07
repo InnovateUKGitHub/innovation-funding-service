@@ -6,11 +6,11 @@ import org.innovateuk.ifs.application.resource.ApplicationStatus;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import static junit.framework.TestCase.assertFalse;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class ApplicationFundingDecisionValidatorTest {
     private ApplicationFundingDecisionValidator validator;
@@ -58,7 +58,7 @@ public class ApplicationFundingDecisionValidatorTest {
         Application application = newApplication()
                 .withFundingDecision(FundingDecisionStatus.FUNDED)
                 .withApplicationStatus(ApplicationStatus.APPROVED)
-                .withManageFundingEmailDate(LocalDateTime.now()).build();
+                .withManageFundingEmailDate(ZonedDateTime.now()).build();
 
         boolean result = validator.isValid(application);
 
@@ -70,7 +70,7 @@ public class ApplicationFundingDecisionValidatorTest {
         Application application = newApplication()
                 .withFundingDecision(FundingDecisionStatus.UNFUNDED)
                 .withApplicationStatus(ApplicationStatus.REJECTED)
-                .withManageFundingEmailDate(LocalDateTime.now()).build();
+                .withManageFundingEmailDate(ZonedDateTime.now()).build();
 
         boolean result = validator.isValid(application);
 

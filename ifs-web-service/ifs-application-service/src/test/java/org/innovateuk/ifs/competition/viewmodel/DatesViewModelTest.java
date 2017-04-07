@@ -10,7 +10,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -38,9 +38,9 @@ public class DatesViewModelTest {
 
     @Test
     public void getSortedEventsTest() {
-        DateViewModel closeDate = new DateViewModel(LocalDateTime.now().plusDays(2), "Close", FALSE);
-        DateViewModel openDate = new DateViewModel(LocalDateTime.now().minusDays(1), "Open", TRUE);
-        DateViewModel nowDate = new DateViewModel(LocalDateTime.now(), "Now", FALSE);
+        DateViewModel closeDate = new DateViewModel(ZonedDateTime.now().plusDays(2), "Close", FALSE);
+        DateViewModel openDate = new DateViewModel(ZonedDateTime.now().minusDays(1), "Open", TRUE);
+        DateViewModel nowDate = new DateViewModel(ZonedDateTime.now(), "Now", FALSE);
 
         viewModel.setPublicContentDates(asList(closeDate, openDate, nowDate));
         List<DateViewModel> resultOne = viewModel.getSortedEvents();

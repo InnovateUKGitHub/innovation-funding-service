@@ -1568,7 +1568,7 @@ partner submits his bank details
     the user selects the radio button     addressType    REGISTERED
     the user clicks the button/link       jQuery=.button:contains("Submit bank account details")
     the user clicks the button/link       jQuery=.button:contains("Submit")
-    the user should see the element       jQuery=dt:contains("Account number") + dd:contains("*****795")
+    wait until element is visible         jQuery=dt:contains("Account number") + dd:contains("*****795")
     # Added this readonly check to verify that the bank details are indeed marked as done
 
 the project finance user has approved bank details

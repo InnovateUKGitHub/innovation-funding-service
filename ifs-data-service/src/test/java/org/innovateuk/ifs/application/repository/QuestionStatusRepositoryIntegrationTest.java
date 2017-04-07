@@ -9,20 +9,19 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
 import static com.google.common.collect.Sets.newHashSet;
-import static java.time.LocalDateTime.now;
 import static java.util.Arrays.asList;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 public class QuestionStatusRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<QuestionStatusRepository> {
 
@@ -73,11 +72,11 @@ public class QuestionStatusRepositoryIntegrationTest extends BaseRepositoryInteg
                 .build();
 
         QuestionStatus completedQuestionStatus = new QuestionStatus(questions.get(0), application, targetProcessRole, true);
-        completedQuestionStatus.setAssignee(otherProcessRole, otherProcessRole, now());
+        completedQuestionStatus.setAssignee(otherProcessRole, otherProcessRole, ZonedDateTime.now());
 
         List<QuestionStatus> questionStatusesToSave = asList(
-                new QuestionStatus(questions.get(1), application, targetProcessRole, otherProcessRole, now()),
-                new QuestionStatus(questions.get(2), application, otherProcessRole, targetProcessRole, now()),
+                new QuestionStatus(questions.get(1), application, targetProcessRole, otherProcessRole, ZonedDateTime.now()),
+                new QuestionStatus(questions.get(2), application, otherProcessRole, targetProcessRole, ZonedDateTime.now()),
                 completedQuestionStatus
         );
 

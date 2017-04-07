@@ -9,7 +9,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -61,7 +61,7 @@ public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource,
         return withArray((name, application) -> setField("name", name, application), names);
     }
 
-    public ApplicationResourceBuilder withSubmittedDate(LocalDateTime... submittedDates) {
+    public ApplicationResourceBuilder withSubmittedDate(ZonedDateTime... submittedDates) {
         return withArray((submittedDate, application) -> setField("submittedDate", submittedDate, application), submittedDates);
     }
 

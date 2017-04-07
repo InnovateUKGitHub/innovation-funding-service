@@ -3,7 +3,7 @@ package org.innovateuk.ifs.commons.util;
 import org.innovateuk.ifs.config.audit.AuditConfig;
 import org.innovateuk.ifs.user.domain.User;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * An Entity supplying read-only auditable properties.
@@ -20,9 +20,9 @@ import java.time.LocalDateTime;
 public interface Auditable {
     User getCreatedBy();
 
-    LocalDateTime getCreatedOn();
+    ZonedDateTime getCreatedOn();
 
     User getModifiedBy();
 
-    LocalDateTime getModifiedOn();
+    ZonedDateTime getModifiedOn();
 }

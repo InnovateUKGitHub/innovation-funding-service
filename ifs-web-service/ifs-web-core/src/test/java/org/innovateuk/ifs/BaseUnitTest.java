@@ -76,7 +76,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -400,7 +400,7 @@ public class BaseUnitTest {
 
     public void setupCompetition() {
         competitionResource = newCompetitionResource().with(id(competitionId)).with(name("Competition x")).with(description("Description afds")).
-                withStartDate(LocalDateTime.now().minusDays(2)).withEndDate(LocalDateTime.now().plusDays(5)).withCompetitionStatus(CompetitionStatus.OPEN)
+                withStartDate(ZonedDateTime.now().minusDays(2)).withEndDate(ZonedDateTime.now().plusDays(5)).withCompetitionStatus(CompetitionStatus.OPEN)
                 .build();
 
         QuestionResourceBuilder questionResourceBuilder = newQuestionResource().withCompetition(competitionResource.getId());

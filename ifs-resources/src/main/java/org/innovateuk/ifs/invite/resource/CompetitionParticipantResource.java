@@ -1,15 +1,16 @@
 package org.innovateuk.ifs.invite.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static java.time.temporal.ChronoUnit.DAYS;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 
 /**
  * DTO for {@link org.innovateuk.ifs.invite.domain.CompetitionParticipant}s.
@@ -25,8 +26,8 @@ public class CompetitionParticipantResource {
     private CompetitionParticipantRoleResource role;
     private ParticipantStatusResource status;
     private String competitionName;
-    private LocalDateTime assessorAcceptsDate;
-    private LocalDateTime assessorDeadlineDate;
+    private ZonedDateTime assessorAcceptsDate;
+    private ZonedDateTime assessorDeadlineDate;
     private long pendingAssessments;
     private long submittedAssessments;
     private long totalAssessments;
@@ -106,19 +107,19 @@ public class CompetitionParticipantResource {
         this.status = status;
     }
 
-    public LocalDateTime getAssessorAcceptsDate() {
+    public ZonedDateTime getAssessorAcceptsDate() {
         return assessorAcceptsDate;
     }
 
-    public void setAssessorAcceptsDate(LocalDateTime assessorAcceptsDate) {
+    public void setAssessorAcceptsDate(ZonedDateTime assessorAcceptsDate) {
         this.assessorAcceptsDate = assessorAcceptsDate;
     }
 
-    public LocalDateTime getAssessorDeadlineDate() {
+    public ZonedDateTime getAssessorDeadlineDate() {
         return assessorDeadlineDate;
     }
 
-    public void setAssessorDeadlineDate(LocalDateTime assessorDeadlineDate) {
+    public void setAssessorDeadlineDate(ZonedDateTime assessorDeadlineDate) {
         this.assessorDeadlineDate = assessorDeadlineDate;
     }
 
@@ -171,7 +172,7 @@ public class CompetitionParticipantResource {
 
     @JsonIgnore
     public long getAssessmentDaysLeft() {
-        return DAYS.between(LocalDateTime.now(clock), assessorDeadlineDate);
+        return DAYS.between(ZonedDateTime.now(clock), assessorDeadlineDate);
     }
 
     @JsonIgnore

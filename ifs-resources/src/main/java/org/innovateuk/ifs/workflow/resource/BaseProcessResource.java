@@ -3,7 +3,7 @@ package org.innovateuk.ifs.workflow.resource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.workflow.resource.ProcessStates;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * Base class for transferring basic information about a Process
@@ -13,14 +13,14 @@ public abstract class BaseProcessResource<StateType extends ProcessStates, Parti
     private StateType currentState;
     private ParticipantType participant;
     private UserResource internalParticipant;
-    private LocalDateTime modifiedDate;
+    private ZonedDateTime modifiedDate;
 
     // for JSON marshalling
     protected BaseProcessResource() {
 
     }
 
-    protected BaseProcessResource(StateType currentState, ParticipantType participant, UserResource internalParticipant, LocalDateTime modifiedDate) {
+    protected BaseProcessResource(StateType currentState, ParticipantType participant, UserResource internalParticipant, ZonedDateTime modifiedDate) {
         this.currentState = currentState;
         this.participant = participant;
         this.internalParticipant = internalParticipant;
@@ -51,11 +51,11 @@ public abstract class BaseProcessResource<StateType extends ProcessStates, Parti
         this.internalParticipant = internalParticipant;
     }
 
-    public LocalDateTime getModifiedDate() {
+    public ZonedDateTime getModifiedDate() {
         return modifiedDate;
     }
 
-    public void setModifiedDate(LocalDateTime modifiedDate) {
+    public void setModifiedDate(ZonedDateTime modifiedDate) {
         this.modifiedDate = modifiedDate;
     }
 }

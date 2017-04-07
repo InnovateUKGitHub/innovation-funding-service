@@ -12,7 +12,7 @@ import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
@@ -58,7 +58,7 @@ public class ApplicationController {
         ServiceResult<ApplicationResource> updateStatusResult = applicationService.updateApplicationStatus(id, status);
 
         if (updateStatusResult.isSuccess() && ApplicationStatus.SUBMITTED == status) {
-            applicationService.saveApplicationSubmitDateTime(id, LocalDateTime.now());
+            applicationService.saveApplicationSubmitDateTime(id, ZonedDateTime.now());
             applicationService.sendNotificationApplicationSubmitted(id);
         }
 

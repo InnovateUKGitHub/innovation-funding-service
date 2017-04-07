@@ -5,7 +5,7 @@ import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.idBasedNames;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
@@ -45,6 +45,6 @@ public class ApplicationSummaryDocs {
                     withGrantRequested(new BigDecimal("500"), new BigDecimal("1000"), new BigDecimal("1500"), new BigDecimal("2000"), new BigDecimal("2500")).
                     withInnovationArea("Earth Observation", "Internet of Things", "Data", "Cyber Security", "User Experience").
                     withLeadApplicant("A lead user").
-                    withManageFundingEmailDate(LocalDateTime.now()).
+                    withManageFundingEmailDate(ZonedDateTime.now()).
                     withNumberOfPartners(1, 2, 3, 4, 5);
 }

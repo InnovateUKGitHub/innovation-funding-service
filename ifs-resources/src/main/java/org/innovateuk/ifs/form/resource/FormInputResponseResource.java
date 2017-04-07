@@ -6,11 +6,11 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 public class FormInputResponseResource {
     private Long id;
-    private LocalDateTime updateDate;
+    private ZonedDateTime updateDate;
     private String value;
     private Long updatedBy;
     private Long updatedByUser;
@@ -26,7 +26,7 @@ public class FormInputResponseResource {
     public FormInputResponseResource() {
     	// no-arg constructor
     }
-    public FormInputResponseResource(LocalDateTime updateDate, String value, ProcessRoleResource updatedBy, Long formInput, ApplicationResource application) {
+    public FormInputResponseResource(ZonedDateTime updateDate, String value, ProcessRoleResource updatedBy, Long formInput, ApplicationResource application) {
         this.updateDate = updateDate;
         this.value = value;
         this.updatedBy = updatedBy.getId();
@@ -35,7 +35,7 @@ public class FormInputResponseResource {
     }
 
 
-    public FormInputResponseResource(LocalDateTime updateDate, FileEntryResource fileEntry, ProcessRoleResource updatedBy, Long formInput, ApplicationResource application) {
+    public FormInputResponseResource(ZonedDateTime updateDate, FileEntryResource fileEntry, ProcessRoleResource updatedBy, Long formInput, ApplicationResource application) {
         this.updateDate = updateDate;
         this.fileEntry = fileEntry.getId();
         this.updatedBy = updatedBy.getId();
@@ -67,11 +67,11 @@ public class FormInputResponseResource {
         this.application = application;
     }
 
-    public LocalDateTime getUpdateDate() {
+    public ZonedDateTime getUpdateDate() {
         return updateDate;
     }
 
-    public void setUpdateDate(LocalDateTime updateDate) {
+    public void setUpdateDate(ZonedDateTime updateDate) {
         this.updateDate = updateDate;
     }
 
