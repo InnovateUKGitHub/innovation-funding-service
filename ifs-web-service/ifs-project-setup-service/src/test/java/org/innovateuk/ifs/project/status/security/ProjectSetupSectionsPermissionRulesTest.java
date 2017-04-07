@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.status.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
-import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
@@ -12,7 +11,7 @@ import org.innovateuk.ifs.project.sections.SectionAccess;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.utils.AuthorisationUtil;
+import org.innovateuk.ifs.utils.UserOrganisationUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -48,15 +47,11 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
     @Mock
     private ProjectSetupSectionAccessibilityHelper accessor;
 
-    @Mock
-    private AuthorisationUtil authorisationUtil;
-
     private UserResource user = newUserResource().build();
 
     @Before
     public void setupAccessorLookup() {
         when(accessorSupplier.apply(isA(ProjectTeamStatusResource.class))).thenReturn(accessor);
-        when(authorisationUtil.userIsPartnerInOrganisationForProject(isA(Long.class), isA(Long.class), isA(Long.class))).thenReturn(true);
     }
 
     @Test
@@ -167,7 +162,6 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
 
         assertFalse(rules.partnerCanAccessFinanceChecksSection(123L, user));
 
-        verify(authorisationUtil).userIsPartnerInOrganisationForProject(any(), any(), any());
     }
 
     @Test
@@ -283,8 +277,6 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
 
         when(projectServiceMock.getProjectUsersForProject(123L)).thenReturn(
                 newProjectUserResource().withUser(user.getId()).withOrganisation(456L).withRoleName(PARTNER).build(1));
-
-        when(authorisationUtil.userIsPartnerInOrganisationForProject(123L, 456L, user.getId())).thenReturn(false);
 
         assertFalse(ruleCheck.get());
 
