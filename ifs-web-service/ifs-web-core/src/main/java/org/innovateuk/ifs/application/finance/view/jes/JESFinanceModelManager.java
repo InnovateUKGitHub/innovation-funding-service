@@ -64,7 +64,6 @@ public class JESFinanceModelManager implements FinanceModelManager {
             .put(FormInputType.OVERHEADS, asList("indirect_costs"))
             .build();
 
-
     @Override
     public void addOrganisationFinanceDetails(Model model, Long applicationId, List<QuestionResource> costsQuestions, Long userId, Form form, Long organisationId) {
         ApplicationFinanceResource applicationFinanceResource = getOrganisationFinances(applicationId, userId);
@@ -130,7 +129,7 @@ public class JESFinanceModelManager implements FinanceModelManager {
         ApplicationFinanceResource applicationFinanceResource = getOrganisationFinances(applicationId, userId);
         Map<FinanceRowType, FinanceRowCostCategory> organisationFinanceDetails = applicationFinanceResource.getFinanceOrganisationDetails();
         organisationFinanceDetails.forEach((financeRowType, financeRowCostCategory) -> {
-            if (financeRowCostCategory.getCosts().isEmpty() && !FinanceRowType.ACADEMIC.equals(financeRowType)) {
+            if (costNeedsInitialising(financeRowType, financeRowCostCategory)) {
                 ApplicationResource applicationResource = applicationService.getById(applicationFinanceResource.getApplication());
                 QuestionResource questionResource = questionService.getQuestionByCompetitionIdAndFormInputType(applicationResource.getCompetition(), financeRowType.getFormInputType()).getSuccessObject();
                 List<String> costNames = TYPE_TO_COSTS.get(financeRowType.getFormInputType());
@@ -142,7 +141,10 @@ public class JESFinanceModelManager implements FinanceModelManager {
                 }
             }
         });
+    }
 
+    private boolean costNeedsInitialising(FinanceRowType financeRowType, FinanceRowCostCategory financeRowCostCategory) {
+        return financeRowCostCategory.getCosts().isEmpty() && !FinanceRowType.ACADEMIC.equals(financeRowType);
     }
 
     @Override
@@ -179,7 +181,6 @@ public class JESFinanceModelManager implements FinanceModelManager {
         if(total!=null) {
             totalValue = total.toPlainString();
         }
-
 
         switch (key) {
             case "tsb_reference":
