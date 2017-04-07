@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -103,16 +104,16 @@ public class AlertServiceImplTest extends BaseServiceUnitTest<AlertService> {
         final AlertResource alertResource =
                 newAlertResource()
                 .withMessage("Sample to be created")
-                .withValidFromDate(LocalDateTime.parse("2016-05-06T21:00:00.00"))
-                .withValidToDate(LocalDateTime.parse("2016-05-06T21:05:00.00"))
+                .withValidFromDate(LocalDateTime.parse("2016-05-06T21:00:00.00").atZone(ZoneId.systemDefault()))
+                .withValidToDate(LocalDateTime.parse("2016-05-06T21:05:00.00").atZone(ZoneId.systemDefault()))
                 .build();
 
         final AlertResource response =
                 newAlertResource()
                 .withId(9999L)
                 .withMessage("Sample to be created")
-                .withValidFromDate(LocalDateTime.parse("2016-05-06T21:00:00.00"))
-                .withValidToDate(LocalDateTime.parse("2016-05-06T21:05:00.00"))
+                .withValidFromDate(LocalDateTime.parse("2016-05-06T21:00:00.00").atZone(ZoneId.systemDefault()))
+                .withValidToDate(LocalDateTime.parse("2016-05-06T21:05:00.00").atZone(ZoneId.systemDefault()))
                 .build();
 
         when(alertRestService.create(alertResource)).thenReturn(restSuccess(response));

@@ -5,7 +5,7 @@ import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 import org.junit.Test;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
@@ -20,9 +20,9 @@ public class CompetitionInviteResourceBuilderTest {
     public void buildOne() {
         Long expectedId = 7L;
         String expectedCompetitionName = "Juggling craziness";
-        LocalDateTime expectedAcceptsDate = LocalDateTime.now().plusDays(1);
-        LocalDateTime expectedDeadlineDate = LocalDateTime.now();
-        LocalDateTime expectedBriefingDate = LocalDateTime.now().minusDays(1);
+        ZonedDateTime expectedAcceptsDate = ZonedDateTime.now().plusDays(1);
+        ZonedDateTime expectedDeadlineDate = ZonedDateTime.now();
+        ZonedDateTime expectedBriefingDate = ZonedDateTime.now().minusDays(1);
         BigDecimal expectedAssessorPay = BigDecimal.ONE;
         String expectedEmail = "tom@poly.io";
         String expectedHash = "inviteHash";
@@ -55,9 +55,9 @@ public class CompetitionInviteResourceBuilderTest {
     public void buildMany() {
         Long[] expectedIds = {7L, 13L};
         String[] expectedCompetitionNames = {"Juggling craziness", "Intermediate Juggling"};
-        LocalDateTime[] expectedAcceptsDates = {LocalDateTime.now().plusDays(1), LocalDateTime.now().plusDays(1).plusHours(1)};
-        LocalDateTime[] expectedDeadlineDates = {LocalDateTime.now(), LocalDateTime.now().plusHours(1)};
-        LocalDateTime[] expectedBriefingDates = {LocalDateTime.now().minusDays(1), LocalDateTime.now().minusDays(1).plusHours(1)};
+        ZonedDateTime[] expectedAcceptsDates = {ZonedDateTime.now().plusDays(1), ZonedDateTime.now().plusDays(1).plusHours(1)};
+        ZonedDateTime[] expectedDeadlineDates = {ZonedDateTime.now(), ZonedDateTime.now().plusHours(1)};
+        ZonedDateTime[] expectedBriefingDates = {ZonedDateTime.now().minusDays(1), ZonedDateTime.now().minusDays(1).plusHours(1)};
         BigDecimal[] expectedAssessorPays = {BigDecimal.ONE, BigDecimal.TEN};
         String[] expectedEmails = {"tom@poly.io", "steve.smith@empire.com"};
         String[] expectedHashes = {"hash1", "hash2"};

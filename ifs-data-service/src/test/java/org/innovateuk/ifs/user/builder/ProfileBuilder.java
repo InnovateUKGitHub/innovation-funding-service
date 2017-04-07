@@ -7,7 +7,7 @@ import org.innovateuk.ifs.user.domain.Agreement;
 import org.innovateuk.ifs.user.domain.Profile;
 import org.innovateuk.ifs.user.resource.BusinessType;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -66,7 +66,7 @@ public class ProfileBuilder extends BaseBuilder<Profile, ProfileBuilder> {
         return withArray((agreement, profile) -> setField("agreement", agreement, profile), agreements);
     }
 
-    public ProfileBuilder withAgreementSignedDate(LocalDateTime... agreementSignedDates) {
+    public ProfileBuilder withAgreementSignedDate(ZonedDateTime... agreementSignedDates) {
         return withArray((agreementSignedDate, profile) -> setField("agreementSignedDate", agreementSignedDate, profile), agreementSignedDates);
     }
 

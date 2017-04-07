@@ -50,7 +50,7 @@ import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -480,7 +480,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
                 return serviceFailure(SPEND_PROFILES_MUST_BE_COMPLETE_BEFORE_SUBMISSION);
             }
 
-            project.setSpendProfileSubmittedDate(LocalDateTime.now());
+            project.setSpendProfileSubmittedDate(ZonedDateTime.now());
             updateApprovalOfSpendProfile(projectId, ApprovalType.UNSET);
             return serviceSuccess();
         });
@@ -549,7 +549,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         ViabilityResource viabilityResource = new ViabilityResource(convertViabilityState(viabilityProcess.getActivityState()), projectFinance.getViabilityStatus());
 
         if (viabilityProcess.getLastModified() != null) {
-            viabilityResource.setViabilityApprovalDate(LocalDateTime.ofInstant(viabilityProcess.getLastModified().toInstant(), ZoneId.systemDefault()).toLocalDate());
+            viabilityResource.setViabilityApprovalDate(ZonedDateTime.ofInstant(viabilityProcess.getLastModified().toInstant(), ZoneId.systemDefault()).toLocalDate());
         }
 
         setViabilityApprovalUser(viabilityResource, viabilityProcess.getInternalParticipant());
@@ -609,7 +609,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         EligibilityResource eligibilityResource = new EligibilityResource(convertEligibilityState(eligibilityProcess.getActivityState()), projectFinance.getEligibilityStatus());
 
         if (eligibilityProcess.getLastModified() != null) {
-            eligibilityResource.setEligibilityApprovalDate(LocalDateTime.ofInstant(eligibilityProcess.getLastModified().toInstant(), ZoneId.systemDefault()).toLocalDate());
+            eligibilityResource.setEligibilityApprovalDate(ZonedDateTime.ofInstant(eligibilityProcess.getLastModified().toInstant(), ZoneId.systemDefault()).toLocalDate());
         }
 
         setEligibilityApprovalUser(eligibilityResource, eligibilityProcess.getInternalParticipant());

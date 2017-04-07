@@ -1,10 +1,11 @@
 package org.innovateuk.ifs.notifications.service;
 
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.notifications.resource.UserNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
-import org.apache.commons.lang3.StringUtils;
+import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -12,15 +13,15 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 
+import static java.io.File.separator;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilterNot;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static java.io.File.separator;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  *
@@ -55,7 +56,7 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
         Map<String, Object> templateArguments = asMap(
                 "applicationName", "My Application",
                 "competitionName", "Competition 123",
-                "feedbackDate", LocalDateTime.of(2017, 6, 3, 14, 29, 00),
+                "feedbackDate", ZonedDateTime.of(2017, 6, 3, 14, 29, 0, 0, TimeZoneUtil.UK_TIME_ZONE).toLocalDateTime(),
                 "dashboardUrl", "https://ifs-local-dev/dashboard"
         );
 
@@ -70,7 +71,7 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
         Map<String, Object> templateArguments = asMap(
                 "applicationName", "My Application",
                 "competitionName", "Competition 123",
-                "feedbackDate", LocalDateTime.of(2017, 6, 3, 14, 29, 00),
+                "feedbackDate", ZonedDateTime.of(2017, 6, 3, 14, 29, 0, 0, TimeZoneUtil.UK_TIME_ZONE).toLocalDateTime(),
                 "dashboardUrl", "https://ifs-local-dev/dashboard"
         );
 

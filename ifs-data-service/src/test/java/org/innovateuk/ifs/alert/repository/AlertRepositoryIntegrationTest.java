@@ -7,10 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 
+import static java.time.ZonedDateTime.now;
 import static org.innovateuk.ifs.alert.resource.AlertType.MAINTENANCE;
-import static java.time.LocalDateTime.now;
 import static org.junit.Assert.*;
 
 public class AlertRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<AlertRepository> {
@@ -34,11 +36,11 @@ public class AlertRepositoryIntegrationTest extends BaseRepositoryIntegrationTes
     @Rollback
     public void test_findAllVisible() throws Exception {
         // save new alerts with date ranges that should make them visible now
-        LocalDateTime now = now();
-        LocalDateTime oneSecondAgo = now.minusSeconds(1);
-        LocalDateTime oneDayAgo = now.minusDays(1);
-        LocalDateTime oneHourAhead = now.plusHours(1);
-        LocalDateTime oneDayAhead = now.plusDays(1);
+        ZonedDateTime now = now();
+        ZonedDateTime oneSecondAgo = now.minusSeconds(1);
+        ZonedDateTime oneDayAgo = now.minusDays(1);
+        ZonedDateTime oneHourAhead = now.plusHours(1);
+        ZonedDateTime oneDayAhead = now.plusDays(1);
 
         Alert visible1 = new Alert("Sample message", MAINTENANCE, oneDayAgo, oneDayAhead);
         Alert visible2 = new Alert("Sample message", MAINTENANCE, oneSecondAgo, oneHourAhead);
@@ -57,11 +59,11 @@ public class AlertRepositoryIntegrationTest extends BaseRepositoryIntegrationTes
     @Rollback
     public void test_findAllVisibleByType() throws Exception {
         // save new alerts with date ranges that should make them visible now
-        LocalDateTime now = now();
-        LocalDateTime oneSecondAgo = now.minusSeconds(1);
-        LocalDateTime oneDayAgo = now.minusDays(1);
-        LocalDateTime oneHourAhead = now.plusHours(1);
-        LocalDateTime oneDayAhead = now.plusDays(1);
+        ZonedDateTime now = now();
+        ZonedDateTime oneSecondAgo = now.minusSeconds(1);
+        ZonedDateTime oneDayAgo = now.minusDays(1);
+        ZonedDateTime oneHourAhead = now.plusHours(1);
+        ZonedDateTime oneDayAhead = now.plusDays(1);
 
         Alert visible1 = new Alert("Sample message", MAINTENANCE, oneDayAgo, oneDayAhead);
         Alert visible2 = new Alert("Sample message", MAINTENANCE, oneSecondAgo, oneHourAhead);
@@ -91,14 +93,14 @@ public class AlertRepositoryIntegrationTest extends BaseRepositoryIntegrationTes
         assertEquals(id, alert.getId());
         assertEquals("Sample message", alert.getMessage());
         assertEquals(MAINTENANCE, alert.getType());
-        assertEquals(LocalDateTime.parse("2016-05-06T21:00:00.00"), alert.getValidFromDate());
-        assertEquals(LocalDateTime.parse("2016-05-06T21:05:00.00"), alert.getValidToDate());
+        assertEquals(LocalDateTime.parse("2016-05-06T21:00:00.00").atZone(ZoneId.systemDefault()), alert.getValidFromDate());
+        assertEquals(LocalDateTime.parse("2016-05-06T21:05:00.00").atZone(ZoneId.systemDefault()), alert.getValidToDate());
     }
 
     @Test
     @Rollback
     public void test_save() throws Exception {
-        Alert alertResource = new Alert("Sample message for save", MAINTENANCE, LocalDateTime.parse("2016-05-06T21:00:00.00"), LocalDateTime.parse("2016-05-06T21:05:00.00"));
+        Alert alertResource = new Alert("Sample message for save", MAINTENANCE, LocalDateTime.parse("2016-05-06T21:00:00.00").atZone(ZoneId.systemDefault()), LocalDateTime.parse("2016-05-06T21:05:00.00").atZone(ZoneId.systemDefault()));
         Alert saved = repository.save(alertResource);
 
         assertNotNull(saved.getId());
@@ -109,7 +111,7 @@ public class AlertRepositoryIntegrationTest extends BaseRepositoryIntegrationTes
     @Rollback
     public void test_delete() throws Exception {
         // save a new alert
-        Alert alertResource = new Alert("Sample message for delete", MAINTENANCE, LocalDateTime.parse("2016-05-06T21:00:00.00"), LocalDateTime.parse("2016-05-06T21:05:00.00"));
+        Alert alertResource = new Alert("Sample message for delete", MAINTENANCE, LocalDateTime.parse("2016-05-06T21:00:00.00").atZone(ZoneId.systemDefault()), LocalDateTime.parse("2016-05-06T21:05:00.00").atZone(ZoneId.systemDefault()));
         Alert saved = repository.save(alertResource);
 
         // check that it can be found

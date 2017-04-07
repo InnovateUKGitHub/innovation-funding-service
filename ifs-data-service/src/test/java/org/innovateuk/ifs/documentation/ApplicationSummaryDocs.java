@@ -1,19 +1,12 @@
 package org.innovateuk.ifs.documentation;
 
-import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.builder.ApplicationSummaryResourceBuilder;
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.resource.FundingDecision;
-import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
-import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
-import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.idBasedNames;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -52,6 +45,6 @@ public class ApplicationSummaryDocs {
                     withGrantRequested(new BigDecimal("500"), new BigDecimal("1000"), new BigDecimal("1500"), new BigDecimal("2000"), new BigDecimal("2500")).
                     withInnovationArea("Earth Observation", "Internet of Things", "Data", "Cyber Security", "User Experience").
                     withLeadApplicant("A lead user").
-                    withManageFundingEmailDate(LocalDateTime.now()).
+                    withManageFundingEmailDate(ZonedDateTime.now()).
                     withNumberOfPartners(1, 2, 3, 4, 5);
 }

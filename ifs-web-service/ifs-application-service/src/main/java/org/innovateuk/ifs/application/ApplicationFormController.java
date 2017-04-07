@@ -45,6 +45,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.AjaxResult;
+import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.core.io.ByteArrayResource;
@@ -928,7 +929,7 @@ public class ApplicationFormController {
         if (updatedApplication.getStartDate() != null) {
             LOG.debug("setApplicationDetails date 123: " + updatedApplication.getStartDate().toString());
             if (updatedApplication.getStartDate().isEqual(LocalDate.MIN)
-                    || updatedApplication.getStartDate().isBefore(LocalDate.now())) {
+                    || updatedApplication.getStartDate().isBefore(LocalDate.now(TimeZoneUtil.UK_TIME_ZONE))) {
                 // user submitted a empty date field or date before today
                 application.setStartDate(null);
             } else {

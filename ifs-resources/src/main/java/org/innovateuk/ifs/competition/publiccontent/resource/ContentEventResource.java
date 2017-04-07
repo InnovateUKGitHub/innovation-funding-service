@@ -4,7 +4,7 @@ package org.innovateuk.ifs.competition.publiccontent.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * The resource for competition public content event.
@@ -15,7 +15,7 @@ public class ContentEventResource {
 
     private Long publicContent;
 
-    private LocalDateTime date;
+    private ZonedDateTime date;
 
     private String content;
 
@@ -35,11 +35,11 @@ public class ContentEventResource {
         this.publicContent = publicContent;
     }
 
-    public LocalDateTime getDate() {
+    public ZonedDateTime getDate() {
         return date;
     }
 
-    public void setDate(LocalDateTime date) {
+    public void setDate(ZonedDateTime date) {
         this.date = date;
     }
 

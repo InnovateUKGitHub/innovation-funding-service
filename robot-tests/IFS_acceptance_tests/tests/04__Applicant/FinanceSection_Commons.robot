@@ -93,7 +93,7 @@ the user marks the finances as complete
     the user fills in the organisation information  ${Application}
     the user checks Your Funding section     ${Application}
     the user should see all finance subsections complete
-    the user clicks the button/link  link=Application Overview
+    the user clicks the button/link  link=Application overview
     the user should see the element  jQuery=li:contains("Your finances") > .task-status-complete
 
 the user fills in the project costs

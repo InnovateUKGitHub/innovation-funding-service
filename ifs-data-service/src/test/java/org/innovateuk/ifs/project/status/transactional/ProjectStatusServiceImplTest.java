@@ -23,7 +23,7 @@ import org.innovateuk.ifs.user.domain.*;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -355,7 +355,7 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
     public void getProjectStatusResourceByProjectGolPrecursorsCompleteAndGolApproved() {
         Long projectId = 2345L;
 
-        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, ApprovalType.APPROVED, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, LocalDateTime.now());
+        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, ApprovalType.APPROVED, Boolean.FALSE, Boolean.FALSE, Boolean.TRUE, ZonedDateTime.now());
 
         when(financeRowServiceMock.organisationSeeksFunding(any(Long.class), any(Long.class), any(Long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
 
@@ -388,7 +388,7 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
     public void getProjectStatusResourceByProjectGolPrecursorsCompleteAndGolSent() {
         Long projectId = 2345L;
 
-        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, ApprovalType.APPROVED, Boolean.FALSE, Boolean.TRUE, Boolean.FALSE, LocalDateTime.now());
+        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, ApprovalType.APPROVED, Boolean.FALSE, Boolean.TRUE, Boolean.FALSE, ZonedDateTime.now());
         when(financeRowServiceMock.organisationSeeksFunding(any(Long.class), any(Long.class), any(Long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
@@ -420,7 +420,7 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
     public void getProjectStatusResourceByProjectGolPrecursorsCompleteAndSignedGolSubmitted() {
         Long projectId = 2345L;
 
-        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, ApprovalType.APPROVED, Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, LocalDateTime.now());
+        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, ApprovalType.APPROVED, Boolean.TRUE, Boolean.FALSE, Boolean.FALSE, ZonedDateTime.now());
         when(financeRowServiceMock.organisationSeeksFunding(any(Long.class), any(Long.class), any(Long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
@@ -452,7 +452,7 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
     public void getProjectStatusResourceByProjectGolPrecursorsCompleteAndGolReadyToSend() {
         Long projectId = 2345L;
 
-        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, ApprovalType.APPROVED, Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, LocalDateTime.now());
+        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, ApprovalType.APPROVED, Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, ZonedDateTime.now());
         when(financeRowServiceMock.organisationSeeksFunding(any(Long.class), any(Long.class), any(Long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
@@ -484,7 +484,7 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
     public void getProjectStatusResourceByProjectOtherDocumentsRejected() {
         Long projectId = 2345L;
 
-        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, ApprovalType.REJECTED, Boolean.FALSE, Boolean.TRUE, Boolean.FALSE, LocalDateTime.now());
+        Project project = createProjectStatusResource(projectId, ApprovalType.APPROVED, ApprovalType.REJECTED, Boolean.FALSE, Boolean.TRUE, Boolean.FALSE, ZonedDateTime.now());
         when(financeRowServiceMock.organisationSeeksFunding(any(Long.class), any(Long.class), any(Long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
@@ -624,7 +624,7 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
 
     private Project createProjectStatusResource(Long projectId, ApprovalType spendProfileStatus,
                                                 ApprovalType otherDocsApproved, Boolean golReadyToApprove, Boolean golIsSent, Boolean golIsApproved,
-                                                LocalDateTime otherDocsSubmittedDate) {
+                                                ZonedDateTime otherDocsSubmittedDate) {
 
         Application application = newApplication().build();
         Organisation organisation = newOrganisation().build();

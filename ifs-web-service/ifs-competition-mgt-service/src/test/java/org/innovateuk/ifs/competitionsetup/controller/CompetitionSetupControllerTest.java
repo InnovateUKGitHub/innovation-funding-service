@@ -25,7 +25,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 
-import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 import static java.util.Arrays.asList;
@@ -222,7 +223,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
     @Test
     public void generateCompetitionCode() throws Exception {
-        LocalDateTime time = LocalDateTime.of(2016, 12, 1, 0, 0);
+        ZonedDateTime time = ZonedDateTime.of(2016, 12, 1, 0, 0, 0, 0, ZoneId.systemDefault());
         CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).withName("Test competition").withCompetitionCode("Code").withCompetitionType(2L).build();
         competition.setStartDate(time);
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);

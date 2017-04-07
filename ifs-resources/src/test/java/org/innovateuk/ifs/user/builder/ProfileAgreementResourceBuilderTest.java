@@ -4,7 +4,7 @@ import org.innovateuk.ifs.user.resource.AgreementResource;
 import org.innovateuk.ifs.user.resource.ProfileAgreementResource;
 import org.junit.Test;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import static org.innovateuk.ifs.user.builder.AgreementResourceBuilder.newAgreementResource;
@@ -18,7 +18,7 @@ public class ProfileAgreementResourceBuilderTest {
         Long expectedUser = 1L;
         AgreementResource agreementResource = newAgreementResource().build();
         boolean expectedCurrentAgreement = true;
-        LocalDateTime expectedAgreementSignedDate = LocalDateTime.now();
+        ZonedDateTime expectedAgreementSignedDate = ZonedDateTime.now();
 
         ProfileAgreementResource profileAgreementResource = newProfileAgreementResource()
                 .withUser(expectedUser)
@@ -38,7 +38,7 @@ public class ProfileAgreementResourceBuilderTest {
         Long[] expectedUsers = {1L, 2L};
         AgreementResource[] expectedContracts = newAgreementResource().buildArray(2, AgreementResource.class);
         Boolean[] expectedCurrentAgreements = {true, false};
-        LocalDateTime[] expectedAgreementSignedDates = {LocalDateTime.now(), LocalDateTime.now()};
+        ZonedDateTime[] expectedAgreementSignedDates = {ZonedDateTime.now(), ZonedDateTime.now()};
 
         List<ProfileAgreementResource> profileAgreementResources = newProfileAgreementResource()
                 .withUser(expectedUsers)

@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -75,8 +75,8 @@ public class PublicContentItemControllerDocumentation extends BaseControllerMock
     public void byCompetitionId() throws Exception {
         final Long id = 1L;
         final PublicContentItemResource expected = new PublicContentItemResource();
-        expected.setCompetitionOpenDate(LocalDateTime.now());
-        expected.setCompetitionCloseDate(LocalDateTime.now());
+        expected.setCompetitionOpenDate(ZonedDateTime.now());
+        expected.setCompetitionCloseDate(ZonedDateTime.now());
         expected.setCompetitionTitle("Random title");
         expected.setPublicContentResource(newPublicContentResource().build());
 
