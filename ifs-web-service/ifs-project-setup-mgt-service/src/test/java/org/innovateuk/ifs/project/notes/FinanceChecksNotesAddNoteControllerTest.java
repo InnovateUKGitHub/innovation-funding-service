@@ -29,7 +29,7 @@ import org.springframework.validation.BindingResult;
 
 import javax.servlet.http.Cookie;
 import java.net.URLEncoder;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -116,11 +116,11 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
 
         assertEquals(1, saveNoteArgumentCaptor.getAllValues().get(0).posts.size());
         assertEquals("Title", saveNoteArgumentCaptor.getAllValues().get(0).title);
-        assertTrue(LocalDateTime.now().compareTo(saveNoteArgumentCaptor.getAllValues().get(0).createdOn) >= 0);
+        assertTrue(ZonedDateTime.now().compareTo(saveNoteArgumentCaptor.getAllValues().get(0).createdOn) >= 0);
         assertEquals("Query text", saveNoteArgumentCaptor.getAllValues().get(0).posts.get(0).body);
         assertEquals(loggedInUser, saveNoteArgumentCaptor.getAllValues().get(0).posts.get(0).author);
         assertEquals(0, saveNoteArgumentCaptor.getAllValues().get(0).posts.get(0).attachments.size());
-        assertTrue(LocalDateTime.now().compareTo(saveNoteArgumentCaptor.getAllValues().get(0).createdOn) >= 0);
+        assertTrue(ZonedDateTime.now().compareTo(saveNoteArgumentCaptor.getAllValues().get(0).createdOn) >= 0);
 
         FinanceChecksNotesAddNoteForm form = (FinanceChecksNotesAddNoteForm) result.getModelAndView().getModel().get("form");
         assertEquals("Title", form.getNoteTitle());

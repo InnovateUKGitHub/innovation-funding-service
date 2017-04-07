@@ -15,7 +15,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -41,7 +41,7 @@ public class ApplicationResource {
 
     @FutureLocalDate(message = "{validation.project.start.date.not.in.future}")
     private LocalDate startDate;
-    private LocalDateTime submittedDate;
+    private ZonedDateTime submittedDate;
 
     @Min(value=MIN_DURATION_IN_MONTHS, message ="{validation.application.details.duration.in.months.max.digits}")
     @Max(value=MAX_DURATION_IN_MONTHS, message ="{validation.application.details.duration.in.months.max.digits}")
@@ -186,11 +186,11 @@ public class ApplicationResource {
         this.competitionName = competitionName;
     }
 
-    public LocalDateTime getSubmittedDate() {
+    public ZonedDateTime getSubmittedDate() {
         return submittedDate;
     }
 
-    public void setSubmittedDate(LocalDateTime submittedDate) {
+    public void setSubmittedDate(ZonedDateTime submittedDate) {
         this.submittedDate = submittedDate;
     }
 

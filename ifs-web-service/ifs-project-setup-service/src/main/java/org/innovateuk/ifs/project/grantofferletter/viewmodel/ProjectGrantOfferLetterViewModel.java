@@ -3,7 +3,7 @@ package org.innovateuk.ifs.project.grantofferletter.viewmodel;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.BasicProjectDetailsViewModel;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * A view model that backs the Project grant offer letter page
@@ -17,13 +17,13 @@ public class ProjectGrantOfferLetterViewModel implements BasicProjectDetailsView
     private FileDetailsViewModel grantOfferLetterFile;
     private FileDetailsViewModel signedGrantOfferLetterFile;
     private FileDetailsViewModel additionalContractFile;
-    private LocalDateTime submitDate;
+    private ZonedDateTime submitDate;
     private boolean offerApproved;
     private boolean isGrantOfferLetterSent;
 
     public ProjectGrantOfferLetterViewModel(Long projectId, String projectName, boolean leadPartner, FileDetailsViewModel grantOfferLetterFile,
                                             FileDetailsViewModel signedGrantOfferLetterFile, FileDetailsViewModel additionalContractFile,
-                                            LocalDateTime submitDate, boolean offerApproved, boolean projectManager, boolean isGrantOfferLetterSent) {
+                                            ZonedDateTime submitDate, boolean offerApproved, boolean projectManager, boolean isGrantOfferLetterSent) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.leadPartner = leadPartner;
@@ -82,11 +82,11 @@ public class ProjectGrantOfferLetterViewModel implements BasicProjectDetailsView
         return signedGrantOfferLetterFile != null;
     }
 
-    public LocalDateTime getSubmitDate() {
+    public ZonedDateTime getSubmitDate() {
         return submitDate;
     }
 
-    public void setSubmitDate(LocalDateTime submitDate) {
+    public void setSubmitDate(ZonedDateTime submitDate) {
         this.submitDate = submitDate;
     }
 

@@ -20,7 +20,7 @@ import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -99,7 +99,7 @@ public class PublicContentServiceImpl extends BaseTransactionalService implement
     }
 
     private ServiceResult<Void> publish(PublicContent publicContent) {
-        return validToPublish(publicContent).andOnSuccessReturnVoid(() ->  publicContent.setPublishDate(LocalDateTime.now()));
+        return validToPublish(publicContent).andOnSuccessReturnVoid(() ->  publicContent.setPublishDate(ZonedDateTime.now()));
     }
 
     private ServiceResult<Void> validToPublish(PublicContent publicContent) {

@@ -14,7 +14,7 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -101,7 +101,7 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
                 andOnSuccess((user, formInput, application) ->
                 getOrCreateResponse(application, formInput, userAppRole).andOnSuccessReturn(response -> {
                     if (!response.getValue().equals(htmlUnescapedValue)) {
-                        response.setUpdateDate(LocalDateTime.now());
+                        response.setUpdateDate(ZonedDateTime.now());
                         response.setUpdatedBy(userAppRole);
                     }
                     response.setValue(htmlUnescapedValue);
@@ -129,7 +129,7 @@ public class FormInputServiceImpl extends BaseTransactionalService implements Fo
 
         return existingResponse != null && existingResponse.isPresent() ?
                 serviceSuccess(existingResponse.get()) :
-                serviceSuccess(new FormInputResponse(LocalDateTime.now(), "", userAppRole, formInput, application));
+                serviceSuccess(new FormInputResponse(ZonedDateTime.now(), "", userAppRole, formInput, application));
     }
 
     private Supplier<ServiceResult<FormInput>> formInput(Long id) {

@@ -9,12 +9,13 @@ import org.innovateuk.ifs.publiccontent.form.section.DatesForm;
 import org.innovateuk.ifs.publiccontent.form.section.subform.Date;
 import org.innovateuk.ifs.publiccontent.saver.AbstractPublicContentFormSaver;
 import org.innovateuk.ifs.publiccontent.saver.PublicContentFormSaver;
+import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Saver for the dates form.
@@ -36,7 +37,7 @@ public class DatesFormSaver extends AbstractPublicContentFormSaver<DatesForm> im
                 ContentEventResource eventResource = new ContentEventResource();
                 eventResource.setContent(date.getContent());
                 eventResource.setId(date.getId());
-                eventResource.setDate(LocalDateTime.of(date.getYear(), date.getMonth(), date.getDay(), 0, 0));
+                eventResource.setDate(TimeZoneUtil.fromUkTimeZone(date.getYear(), date.getMonth(), date.getDay()));
                 eventResource.setPublicContent(publicContentId);
                 contentEventResources.add(eventResource);
             });

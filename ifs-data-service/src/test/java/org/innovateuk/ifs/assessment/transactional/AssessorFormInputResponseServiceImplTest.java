@@ -18,11 +18,11 @@ import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
 
-import static java.time.LocalDateTime.now;
+import static java.time.ZonedDateTime.now;
 import static java.util.Collections.nCopies;
 import static org.innovateuk.ifs.application.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
@@ -100,7 +100,7 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
         Long formInputId = 2L;
         String value = "New feedback";
         String oldValue = "Old feedback";
-        LocalDateTime oldUpdatedDate = now().minusHours(1);
+        ZonedDateTime oldUpdatedDate = now().minusHours(1);
         AssessorFormInputResponse existingAssessorFormInputResponse = newAssessorFormInputResponse().build();
         AssessorFormInputResponseResource existingAssessorFormInputResponseResource = newAssessorFormInputResponseResource()
                 .withAssessment(assessmentId)
@@ -143,7 +143,7 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
         Long assessmentId = 1L;
         Long formInputId = 2L;
         String value = "New feedback";
-        LocalDateTime oldUpdatedDate = now().minusHours(1);
+        ZonedDateTime oldUpdatedDate = now().minusHours(1);
         AssessorFormInputResponseResource updatedAssessorFormInputResponseResource = newAssessorFormInputResponseResource()
                 .withAssessment(assessmentId)
                 .withFormInput(formInputId)
@@ -175,7 +175,7 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
         Long assessmentId = 1L;
         Long formInputId = 2L;
         String value = null;
-        LocalDateTime oldUpdatedDate = now().minusHours(1);
+        ZonedDateTime oldUpdatedDate = now().minusHours(1);
         AssessorFormInputResponseResource updatedAssessorFormInputResponseResource = newAssessorFormInputResponseResource()
                 .withAssessment(assessmentId)
                 .withFormInput(formInputId)
@@ -207,7 +207,7 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
         Long assessmentId = 1L;
         Long formInputId = 2L;
         String value = "";
-        LocalDateTime oldUpdatedDate = now().minusHours(1);
+        ZonedDateTime oldUpdatedDate = now().minusHours(1);
         AssessorFormInputResponseResource updatedAssessorFormInputResponseResource = newAssessorFormInputResponseResource()
                 .withAssessment(assessmentId)
                 .withFormInput(formInputId)
@@ -284,7 +284,7 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
         Long formInputId = 2L;
         String value = "Value shouldn't have been touched.";
         String oldValue = "Value shouldn't have been touched.";
-        LocalDateTime oldUpdatedDate = now().minusHours(1);
+        ZonedDateTime oldUpdatedDate = now().minusHours(1);
         AssessorFormInputResponse existingAssessorFormInputResponse = newAssessorFormInputResponse().build();
         AssessorFormInputResponseResource existingAssessorFormInputResponseResource = newAssessorFormInputResponseResource()
                 .withAssessment(assessmentId)
@@ -331,7 +331,7 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
         Long formInputId = 2L;
         String value = "1";
         String oldValue = "1";
-        LocalDateTime oldUpdatedDate = now().minusHours(1);
+        ZonedDateTime oldUpdatedDate = now().minusHours(1);
         AssessorFormInputResponse existingAssessorFormInputResponse = newAssessorFormInputResponse().build();
         AssessorFormInputResponseResource existingAssessorFormInputResponseResource = newAssessorFormInputResponseResource()
                 .withAssessment(assessmentId)

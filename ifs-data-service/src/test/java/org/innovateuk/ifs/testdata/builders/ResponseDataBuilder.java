@@ -16,7 +16,7 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
@@ -65,11 +65,11 @@ public class ResponseDataBuilder extends BaseDataBuilder<ApplicationQuestionResp
                         ProcessRole processRoleEntity = processRoleRepository.findOne(processRole.getId());
                         Application application = applicationRepository.findOne(data.getApplication().getId());
                         FormInput formInputEntity = formInputRepository.findOne(input.getId());
-                        return new FormInputResponse(LocalDateTime.now(), fileEntry, processRoleEntity, formInputEntity, application);
+                        return new FormInputResponse(ZonedDateTime.now(), fileEntry, processRoleEntity, formInputEntity, application);
                     });
 
                     formInputResponse.setFileEntry(fileEntry);
-                    formInputResponse.setUpdateDate(LocalDateTime.now());
+                    formInputResponse.setUpdateDate(ZonedDateTime.now());
                     formInputResponseRepository.save(formInputResponse);
                 });
             });

@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -175,10 +176,10 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     public void closeAssessment() throws Exception {
         Long competitionId = 1L;
         List<Milestone> milestones = newMilestone()
-                .withDate(now().minusDays(1))
+                .withDate(ZonedDateTime.now().minusDays(1))
                 .withType(OPEN_DATE, SUBMISSION_DATE, ASSESSORS_NOTIFIED).build(3);
         milestones.addAll(newMilestone()
-                .withDate(now().plusDays(1))
+                .withDate(ZonedDateTime.now().plusDays(1))
                 .withType(NOTIFICATIONS, ASSESSOR_DEADLINE)
                 .build(2));
         Competition competition = newCompetition().withSetupComplete(true)
@@ -196,10 +197,10 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     public void notifyAssessors() throws Exception {
         Long competitionId = 1L;
         List<Milestone> milestones = newMilestone()
-                .withDate(now().minusDays(1))
+                .withDate(ZonedDateTime.now().minusDays(1))
                 .withType(OPEN_DATE, SUBMISSION_DATE, ALLOCATE_ASSESSORS).build(3);
         milestones.addAll(newMilestone()
-                .withDate(now().plusDays(1))
+                .withDate(ZonedDateTime.now().plusDays(1))
                 .withType(ASSESSMENT_CLOSED)
                 .build(1));
 
@@ -218,7 +219,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     public void releaseFeedback() throws Exception {
         Long competitionId = 1L;
         List<Milestone> milestones = newMilestone()
-                .withDate(now().minusDays(1))
+                .withDate(ZonedDateTime.now().minusDays(1))
                 .withType(OPEN_DATE,
                         SUBMISSION_DATE,
                         ALLOCATE_ASSESSORS,
@@ -230,7 +231,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
                         NOTIFICATIONS)
                 .build(9);
         milestones.addAll(newMilestone()
-                .withDate(now().plusDays(1))
+                .withDate(ZonedDateTime.now().plusDays(1))
                 .withType(RELEASE_FEEDBACK)
                 .build(1));
 
@@ -256,7 +257,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     public void releaseFeedback_cantRelease() throws Exception {
         Long competitionId = 1L;
         List<Milestone> milestones = newMilestone()
-                .withDate(now().minusDays(1))
+                .withDate(ZonedDateTime.now().minusDays(1))
                 .withType(OPEN_DATE,
                         SUBMISSION_DATE,
                         ALLOCATE_ASSESSORS,
@@ -268,7 +269,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
                         NOTIFICATIONS)
                 .build(9);
         milestones.addAll(newMilestone()
-                .withDate(now().plusDays(1))
+                .withDate(ZonedDateTime.now().plusDays(1))
                 .withType(RELEASE_FEEDBACK)
                 .build(1));
 
@@ -295,7 +296,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     public void manageInformState() throws Exception {
         Long competitionId = 1L;
         List<Milestone> milestones = newMilestone()
-                .withDate(now().minusDays(1))
+                .withDate(ZonedDateTime.now().minusDays(1))
                 .withType(OPEN_DATE,
                         SUBMISSION_DATE,
                         ALLOCATE_ASSESSORS,
@@ -306,7 +307,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
                         FUNDERS_PANEL)
                 .build(9);
         milestones.addAll(newMilestone()
-                .withDate(now().plusDays(1))
+                .withDate(ZonedDateTime.now().plusDays(1))
                 .withType(RELEASE_FEEDBACK)
                 .build(1));
 
@@ -334,7 +335,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     public void manageInformState_noStateChange() throws Exception {
         Long competitionId = 1L;
         List<Milestone> milestones = newMilestone()
-                .withDate(now().minusDays(1))
+                .withDate(ZonedDateTime.now().minusDays(1))
                 .withType(OPEN_DATE,
                         SUBMISSION_DATE,
                         ALLOCATE_ASSESSORS,
@@ -345,7 +346,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
                         FUNDERS_PANEL)
                 .build(9);
         milestones.addAll(newMilestone()
-                .withDate(now().plusDays(1))
+                .withDate(ZonedDateTime.now().plusDays(1))
                 .withType(RELEASE_FEEDBACK)
                 .build(1));
 

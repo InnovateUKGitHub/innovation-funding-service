@@ -19,7 +19,7 @@ import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
@@ -31,6 +31,7 @@ import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
+
 
 /**
  * Generates an Application for a Competition.  Additionally generates finances for each Organisationn on the Application
@@ -159,7 +160,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
             applicationService.updateApplicationStatus(data.getApplication().getId(), ApplicationStatus.SUBMITTED).
                     getSuccessObjectOrThrowException();
 
-            applicationService.saveApplicationSubmitDateTime(data.getApplication().getId(), LocalDateTime.now()).getSuccessObjectOrThrowException();
+            applicationService.saveApplicationSubmitDateTime(data.getApplication().getId(), ZonedDateTime.now()).getSuccessObjectOrThrowException();
             applicationService.sendNotificationApplicationSubmitted(data.getApplication().getId()).getSuccessObjectOrThrowException();
         });
     }

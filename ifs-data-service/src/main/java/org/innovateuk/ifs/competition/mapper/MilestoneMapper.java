@@ -36,4 +36,5 @@ public abstract class MilestoneMapper extends BaseMapper<Milestone, MilestoneRes
     public Milestone build() {
         return createDefault(Milestone.class);
     }
+
 }

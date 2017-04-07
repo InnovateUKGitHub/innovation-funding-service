@@ -18,8 +18,7 @@ import org.innovateuk.ifs.user.resource.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.Clock;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -62,8 +61,6 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
 
     @Autowired
     private InnovationAreaMapper innovationAreaMapper;
-
-    private Clock clock = Clock.systemDefaultZone();
 
     @Override
     public ServiceResult<ProfileSkillsResource> getProfileSkills(long userId) {
@@ -118,7 +115,7 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
 
     private void updateProfileAgreement(User user, Agreement agreement) {
         Profile profile = getOrCreateUserProfile(user);
-        profile.setAgreementSignedDate(LocalDateTime.now(clock));
+        profile.setAgreementSignedDate(ZonedDateTime.now());
         profile.setAgreement(agreement);
         profileRepository.save(profile);
     }

@@ -20,7 +20,7 @@ import org.springframework.security.access.method.P;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
@@ -349,7 +349,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         }
 
         @Override
-        public ServiceResult<ApplicationResource> saveApplicationSubmitDateTime(@P("applicationId") Long id, LocalDateTime date) {
+        public ServiceResult<ApplicationResource> saveApplicationSubmitDateTime(@P("applicationId") Long id, ZonedDateTime date) {
             return null;
         }
 
@@ -398,7 +398,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
             return null;
         }
 
-        @Override public ServiceResult<ApplicationResource> setApplicationFundingEmailDateTime(@P("applicationId") final Long applicationId, final LocalDateTime fundingEmailDate) {
+        @Override public ServiceResult<ApplicationResource> setApplicationFundingEmailDateTime(@P("applicationId") final Long applicationId, final ZonedDateTime fundingEmailDate) {
             return null;
         }
     }
