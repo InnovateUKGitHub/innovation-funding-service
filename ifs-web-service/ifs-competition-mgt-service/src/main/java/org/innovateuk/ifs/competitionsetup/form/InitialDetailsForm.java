@@ -3,10 +3,12 @@ package org.innovateuk.ifs.competitionsetup.form;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Range;
 import org.innovateuk.ifs.commons.validation.constraints.FutureLocalDate;
+import org.innovateuk.ifs.commons.validation.constraints.FutureZonedDateTime;
+import org.innovateuk.ifs.util.TimeZoneUtil;
 
 import javax.validation.constraints.NotNull;
 import java.time.DateTimeException;
-import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
@@ -61,14 +63,14 @@ public class InitialDetailsForm extends CompetitionSetupForm {
         this.executiveUserId = executiveUserId;
     }
 
-    @FutureLocalDate(groups = Unrestricted.class)
-    public LocalDate getOpeningDate() {
+    @FutureZonedDateTime(message = "{validation.standard.date.future}", groups = Unrestricted.class)
+    public ZonedDateTime getOpeningDate() {
         if (openingDateYear == null || openingDateMonth == null || openingDateDay == null) {
             return null;
         }
 
         try {
-            return LocalDate.of(openingDateYear, openingDateMonth, openingDateDay);
+            return TimeZoneUtil.fromUkTimeZone(openingDateYear, openingDateMonth, openingDateDay);
         } catch (DateTimeException e) {
             return null;
         }

@@ -235,12 +235,13 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     }
 
     @Test
-    public void submitSectionInitialDetailsInvalidWithRequiredFieldsEmpty() throws Exception {
+    public void submitUnrestrictedSectionInitialDetailsInvalidWithRequiredFieldsEmpty() throws Exception {
         CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
-        MvcResult mvcResult = mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial"))
+        MvcResult mvcResult = mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial")
+                .param("unrestricted", "1"))
                 .andExpect(status().isOk())
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors(COMPETITION_SETUP_FORM_KEY,
@@ -289,7 +290,55 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     }
 
     @Test
-    public void submitSectionInitialDetailsWithInvalidOpenDate() throws Exception {
+    public void submitSectionInitialDetailsInvalidWithRequiredFieldsEmpty() throws Exception {
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+
+        MvcResult mvcResult = mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial"))
+                .andExpect(status().isOk())
+                .andExpect(model().hasErrors())
+                .andExpect(model().attributeHasFieldErrors(COMPETITION_SETUP_FORM_KEY,
+                        "executiveUserId",
+                        "title",
+                        "leadTechnologistUserId",
+                        "openingDateDay",
+                        "openingDateMonth",
+                        "openingDateYear",
+                        "innovationSectorCategoryId",
+                        "innovationAreaCategoryIds"))
+                .andExpect(view().name("competition/setup"))
+                .andReturn();
+
+        InitialDetailsForm initialDetailsForm = (InitialDetailsForm) mvcResult.getModelAndView().getModel().get(COMPETITION_SETUP_FORM_KEY);
+
+        BindingResult bindingResult = initialDetailsForm.getBindingResult();
+
+        bindingResult.getAllErrors();
+        assertEquals(0, bindingResult.getGlobalErrorCount());
+        assertEquals(8, bindingResult.getFieldErrorCount());
+        assertTrue(bindingResult.hasFieldErrors("executiveUserId"));
+        assertEquals("Please select a competition executive.", bindingResult.getFieldError("executiveUserId").getDefaultMessage());
+        assertTrue(bindingResult.hasFieldErrors("title"));
+        assertEquals("Please enter a title.", bindingResult.getFieldError("title").getDefaultMessage());
+        assertTrue(bindingResult.hasFieldErrors("leadTechnologistUserId"));
+        assertEquals("Please select an Innovation Lead.", bindingResult.getFieldError("leadTechnologistUserId").getDefaultMessage());
+        assertTrue(bindingResult.hasFieldErrors("openingDateDay"));
+        assertEquals("Please enter an opening day.", bindingResult.getFieldError("openingDateDay").getDefaultMessage());
+        assertTrue(bindingResult.hasFieldErrors("openingDateMonth"));
+        assertEquals("Please enter an opening month.", bindingResult.getFieldError("openingDateMonth").getDefaultMessage());
+        assertTrue(bindingResult.hasFieldErrors("openingDateYear"));
+        assertEquals("Please enter an opening year.", bindingResult.getFieldError("openingDateYear").getDefaultMessage());
+        assertTrue(bindingResult.hasFieldErrors("innovationSectorCategoryId"));
+        assertEquals("Please select an innovation sector.", bindingResult.getFieldError("innovationSectorCategoryId").getDefaultMessage());
+        assertTrue(bindingResult.hasFieldErrors("innovationAreaCategoryIds"));
+        assertEquals("Please select an innovation area.", bindingResult.getFieldError("innovationAreaCategoryIds").getDefaultMessage());
+
+        verify(competitionService, never()).update(competition);
+    }
+
+    @Test
+    public void submitUnrestrictedSectionInitialDetailsWithInvalidOpenDate() throws Exception {
         CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
@@ -307,7 +356,8 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("innovationAreaCategoryIds", "1", "2", "3")
                 .param("competitionTypeId", "1")
                 .param("leadTechnologistUserId", "1")
-                .param("title", "My competition"))
+                .param("title", "My competition")
+                .param("unrestricted", "1"))
                 .andExpect(status().isOk())
                 .andExpect(model().hasErrors())
                 .andExpect(model().errorCount(1))
@@ -331,7 +381,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     }
 
     @Test
-    public void submitSectionInitialDetailsWithInvalidFieldsExceedRangeMax() throws Exception {
+    public void submitUnrestrictedSectionInitialDetailsWithInvalidFieldsExceedRangeMax() throws Exception {
         CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
@@ -349,7 +399,8 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("innovationAreaCategoryIds", "1", "2", "3")
                 .param("competitionTypeId", "1")
                 .param("leadTechnologistUserId", "1")
-                .param("title", "My competition"))
+                .param("title", "My competition")
+                .param("unrestricted", "1"))
                 .andExpect(status().isOk())
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors(COMPETITION_SETUP_FORM_KEY,
@@ -390,7 +441,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     }
 
     @Test
-    public void submitSectionInitialDetailsWithInvalidFieldsExceedRangeMin() throws Exception {
+    public void submitUnrestrictedSectionInitialDetailsWithInvalidFieldsExceedRangeMin() throws Exception {
         CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
@@ -408,7 +459,8 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("innovationAreaCategoryIds", "1", "2", "3")
                 .param("competitionTypeId", "1")
                 .param("leadTechnologistUserId", "1")
-                .param("title", "My competition"))
+                .param("title", "My competition")
+                .param("unrestricted", "1"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeHasFieldErrors(COMPETITION_SETUP_FORM_KEY,
                         "openingDateDay",
