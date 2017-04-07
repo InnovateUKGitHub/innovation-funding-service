@@ -17,7 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 import static junit.framework.TestCase.assertFalse;
@@ -756,7 +756,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .build(1))
                 .build();
 
-        project = newProjectResource().withApplication(application).withDocumentsSubmittedDate(LocalDateTime.now()).build();
+        project = newProjectResource().withApplication(application).withDocumentsSubmittedDate(ZonedDateTime.now()).build();
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
         /*List<ProjectUserResource> projectUsers = newProjectUserResource()
@@ -790,7 +790,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .build(1))
                 .build();
 
-        project = newProjectResource().withApplication(application).withDocumentsSubmittedDate(LocalDateTime.now()).withOtherDocumentsApproved(ApprovalType.REJECTED).build();
+        project = newProjectResource().withApplication(application).withDocumentsSubmittedDate(ZonedDateTime.now()).withOtherDocumentsApproved(ApprovalType.REJECTED).build();
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
         List<ProjectUserResource> projectUsers = newProjectUserResource()
@@ -829,7 +829,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .build(1))
                 .build();
 
-        project = newProjectResource().withApplication(application).withDocumentsSubmittedDate(LocalDateTime.now()).withOtherDocumentsApproved(ApprovalType.REJECTED).build();
+        project = newProjectResource().withApplication(application).withDocumentsSubmittedDate(ZonedDateTime.now()).withOtherDocumentsApproved(ApprovalType.REJECTED).build();
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
         ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
@@ -855,7 +855,7 @@ public class ProjectSetupStatusViewModelPopulatorTest extends BaseUnitTest {
                         .build(1))
                 .build();
 
-        project = newProjectResource().withApplication(application).withDocumentsSubmittedDate(LocalDateTime.now()).withOtherDocumentsApproved(ApprovalType.APPROVED).build();
+        project = newProjectResource().withApplication(application).withDocumentsSubmittedDate(ZonedDateTime.now()).withOtherDocumentsApproved(ApprovalType.APPROVED).build();
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
         ProjectSetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);

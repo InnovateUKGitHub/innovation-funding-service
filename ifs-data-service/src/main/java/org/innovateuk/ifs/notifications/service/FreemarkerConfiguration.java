@@ -1,14 +1,14 @@
 package org.innovateuk.ifs.notifications.service;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-
-import org.innovateuk.ifs.Application;
-
-import org.springframework.context.annotation.Bean;
-
 import freemarker.template.Configuration;
 import freemarker.template.TemplateExceptionHandler;
+import org.innovateuk.ifs.Application;
+import org.innovateuk.ifs.util.TimeZoneUtil;
+import org.springframework.context.annotation.Bean;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.TimeZone;
 
 @org.springframework.context.annotation.Configuration
 public class FreemarkerConfiguration {
@@ -27,6 +27,7 @@ public class FreemarkerConfiguration {
         cfg.setDefaultEncoding("UTF-8");
 
         cfg.setLocale(java.util.Locale.UK);
+        cfg.setTimeZone(TimeZone.getTimeZone(TimeZoneUtil.UK_TIME_ZONE));
         // Sets how errors will appear.
         // During web page *development* TemplateExceptionHandler.HTML_DEBUG_HANDLER is better.
         cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);

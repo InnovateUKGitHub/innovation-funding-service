@@ -15,6 +15,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -35,7 +37,7 @@ public class DatesFormSaverTest {
     @Test
     public void testMarkAsComplete() {
         final Long publicContentId = 1L;
-        LocalDateTime localDateTime = LocalDateTime.now();
+        ZonedDateTime localDateTime = ZonedDateTime.now();
         String content = "content";
         DatesForm form = new DatesForm();
         Date date = new Date();
@@ -57,7 +59,7 @@ public class DatesFormSaverTest {
         verify(publicContentService).markSectionAsComplete(resource, PublicContentSectionType.DATES);
 
         assertThat(resource.getContentEvents().size(), equalTo(1));
-        assertThat(resource.getContentEvents().get(0).getDate(), equalTo(LocalDateTime.of(localDateTime.toLocalDate(), LocalTime.MIDNIGHT)));
+        assertThat(resource.getContentEvents().get(0).getDate(), equalTo(LocalDateTime.of(localDateTime.toLocalDate(), LocalTime.MIDNIGHT).atZone(ZoneId.systemDefault())));
         assertThat(resource.getContentEvents().get(0).getContent(), equalTo(content));
     }
 }

@@ -126,7 +126,9 @@
                 </div>
             </th:block>
             <input type="hidden" name="autosaveInnovationAreaIds" />
-            <button class="buttonlink" type="button" data-add-row="innovationArea">+ add another innovation area</button>
+            <div class="form-group">
+                <button class="buttonlink" type="button" data-add-row="innovationArea">+ add another innovation area</button>
+            </div>
 
             <div id="openingDate" th:class="${#fields.hasErrors('openingDate*')}? 'form-group error':'form-group'">
                 <fieldset>

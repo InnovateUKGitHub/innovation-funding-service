@@ -1,9 +1,8 @@
 package org.innovateuk.ifs.dashboard;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationStatusResource;
+import org.innovateuk.ifs.application.resource.ApplicationStatus;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.ApplicationStatusRestService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -43,9 +42,6 @@ public class ApplicantController {
     private ProcessRoleService processRoleService;
 
     @Autowired
-    private ApplicationStatusRestService applicationStatusService;
-
-    @Autowired
     private UserAuthenticationService userAuthenticationService;
 
     @Autowired
@@ -68,7 +64,7 @@ public class ApplicantController {
         List<ApplicationResource> applicationsForProjectsInSetup = getApplicationsForProjectsInSetup(projectsInSetup);
 
         Map<Long, CompetitionResource> competitions = createCompetitionMap(inProgress, finished, applicationsForProjectsInSetup);
-        Map<Long, ApplicationStatusResource> applicationStatusMap = createApplicationStatusMap(inProgress, finished);
+        Map<Long, ApplicationStatus> applicationStatusMap = createApplicationStatusMap(inProgress, finished);
 
         model.addAttribute("applicationsInProgress", inProgress);
         model.addAttribute("applicationsAssigned", getAssignedApplications(inProgress, user));
@@ -99,12 +95,12 @@ public class ApplicantController {
 
     // TODO DW - INFUND-1555 - handle rest result
     @SafeVarargs
-    private final Map<Long, ApplicationStatusResource> createApplicationStatusMap(List<ApplicationResource>... resources){
+    private final Map<Long, ApplicationStatus> createApplicationStatusMap(List<ApplicationResource>... resources){
         return combineLists(resources).stream()
             .collect(
                 Collectors.toMap(
                     ApplicationResource::getId,
-                    application -> applicationStatusService.getApplicationStatusById(application.getApplicationStatus()).getSuccessObjectOrThrowException()
+                    application -> application.getApplicationStatus()
                 )
             );
     }

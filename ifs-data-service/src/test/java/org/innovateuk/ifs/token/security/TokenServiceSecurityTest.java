@@ -13,7 +13,7 @@ import org.junit.Test;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.token.resource.TokenType.RESET_PASSWORD;
 import static org.innovateuk.ifs.token.resource.TokenType.VERIFY_EMAIL_ADDRESS;
-import static java.time.LocalDateTime.now;
+import static java.time.ZonedDateTime.now;
 import static org.mockito.Mockito.*;
 
 public class TokenServiceSecurityTest extends BaseServiceSecurityTest<TokenService> {

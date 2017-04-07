@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.management.viewmodel;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
@@ -8,12 +8,12 @@ import java.util.List;
  */
 public class SubmittedApplicationsViewModel extends BaseApplicationsViewModel<SubmittedApplicationsRowViewModel> {
 
-    private LocalDateTime assessmentDeadline;
+    private ZonedDateTime assessmentDeadline;
     private int applicationsSubmitted;
 
     public SubmittedApplicationsViewModel(long competitionId,
                                           String competitionName,
-                                          LocalDateTime assessmentDeadline,
+                                          ZonedDateTime assessmentDeadline,
                                           int applicationsSubmitted,
                                           String sorting,
                                           String filter,
@@ -24,7 +24,7 @@ public class SubmittedApplicationsViewModel extends BaseApplicationsViewModel<Su
         this.applicationsSubmitted = applicationsSubmitted;
     }
 
-    public LocalDateTime getAssessmentDeadline() {
+    public ZonedDateTime getAssessmentDeadline() {
         return assessmentDeadline;
     }
 

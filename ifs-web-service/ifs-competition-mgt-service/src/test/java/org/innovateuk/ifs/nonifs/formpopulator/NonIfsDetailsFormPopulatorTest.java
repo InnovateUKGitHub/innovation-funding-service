@@ -8,7 +8,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
@@ -22,9 +22,9 @@ public class NonIfsDetailsFormPopulatorTest {
     private static final Long INNOVATION_SECTOR = 1L;
     private static final Long INNOVATION_AREA = 2L;
     private static final String COMPETITION_URL = "COMPETITION_URL";
-    private static final LocalDateTime NOTIFIED = LocalDateTime.now().plusDays(1);
-    private static final LocalDateTime OPEN = LocalDateTime.now().plusDays(2);
-    private static final LocalDateTime CLOSE = LocalDateTime.now().plusDays(3);
+    private static final ZonedDateTime NOTIFIED = ZonedDateTime.now().plusDays(1);
+    private static final ZonedDateTime OPEN = ZonedDateTime.now().plusDays(2);
+    private static final ZonedDateTime CLOSE = ZonedDateTime.now().plusDays(3);
 
     @InjectMocks
     private NonIfsDetailsFormPopulator target;

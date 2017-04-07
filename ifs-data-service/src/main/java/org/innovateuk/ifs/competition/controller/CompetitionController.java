@@ -9,7 +9,7 @@ import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
@@ -89,7 +89,7 @@ public class CompetitionController {
 
 
     @PostMapping("/generateCompetitionCode/{id}")
-    public RestResult<String> generateCompetitionCode(@RequestBody LocalDateTime dateTime, @PathVariable("id") final Long id) {
+    public RestResult<String> generateCompetitionCode(@RequestBody ZonedDateTime dateTime, @PathVariable("id") final Long id) {
         return competitionSetupService.generateCompetitionCode(id, dateTime).toGetResponse();
     }
 

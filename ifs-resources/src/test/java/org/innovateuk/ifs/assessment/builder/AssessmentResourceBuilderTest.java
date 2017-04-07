@@ -1,23 +1,22 @@
 package org.innovateuk.ifs.assessment.builder;
 
-import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentFundingDecisionOutcomeResource;
+import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.workflow.resource.ProcessEvent;
 import org.junit.Test;
 
 import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.time.ZonedDateTime;
 import java.util.List;
 
-import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeResourceBuilder.newAssessmentRejectOutcomeResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOutcomeResourceBuilder.newAssessmentFundingDecisionOutcomeResource;
+import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeResourceBuilder.newAssessmentRejectOutcomeResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.resource.AssessmentStates.OPEN;
 import static org.innovateuk.ifs.assessment.resource.AssessmentStates.READY_TO_SUBMIT;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class AssessmentResourceBuilderTest {
 
@@ -26,7 +25,7 @@ public class AssessmentResourceBuilderTest {
         Long expectedId = 1L;
         ProcessEvent expectedEvent = ProcessEvent.ASSESSMENT;
         AssessmentStates expectedStatus = OPEN;
-        Calendar expectedLastModifiedDate = GregorianCalendar.getInstance();
+        ZonedDateTime expectedLastModifiedDate = ZonedDateTime.now();
         LocalDate expectedStartDate = LocalDate.now().minusDays(2);
         LocalDate expectedEndDate = LocalDate.now().minusDays(1);
         AssessmentFundingDecisionOutcomeResource expectedFundingDecision = newAssessmentFundingDecisionOutcomeResource().build();
@@ -70,7 +69,7 @@ public class AssessmentResourceBuilderTest {
         Long[] expectedIds = {1L, 2L};
         ProcessEvent[] expectedEvents = {ProcessEvent.ASSESSMENT, ProcessEvent.ANOTHER_ONE};
         AssessmentStates[] expectedStatuss = {OPEN, READY_TO_SUBMIT};
-        Calendar[] expectedLastModifiedDates = {GregorianCalendar.getInstance(), GregorianCalendar.getInstance()};
+        ZonedDateTime[] expectedLastModifiedDates = {ZonedDateTime.now(), ZonedDateTime.now()};
         LocalDate[] expectedStartDates = {LocalDate.now().minusDays(2), LocalDate.now().minusDays(3)};
         LocalDate[] expectedEndDates = {LocalDate.now().minusDays(1), LocalDate.now().minusDays(2)};
         AssessmentFundingDecisionOutcomeResource[] expectedFundingDecisions = newAssessmentFundingDecisionOutcomeResource()

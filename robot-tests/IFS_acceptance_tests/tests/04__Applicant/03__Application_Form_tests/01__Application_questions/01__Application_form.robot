@@ -44,8 +44,9 @@ Application details: Research category
 
 Application details: Innovation Area - Materials and manufacturing
     [Documentation]    INFUND-8115
-    Given the user clicks the button/link    link=Application Overview
+    Given the user clicks the button/link    link=Application overview
     And the user clicks the button/link    link=Application details
+    and the user should not see the element      jQuery=button:contains("Change your innovation area")
     and The user clicks the button/link   jQuery=button:contains("Choose your innovation area")
     Then the user should see the element    jQuery=label:contains("Composite materials"):contains("New composite materials with enhanced or new properties and performance.")
     And the user should see the element    jQuery=label:contains("My innovation area is not listed")
@@ -134,7 +135,7 @@ The user clicks the section link and is redirected to the correct section
     [Arguments]    ${link}    ${url}
     The user clicks the button/link    link=${link}
     The user should be redirected to the correct page    ${url}
-    The user clicks the button/link    link=Application Overview
+    The user clicks the button/link    link=Application overview
 
 the Applicant edits the Project summary
     Clear Element Text    css=#form-input-1039 .editor
@@ -175,7 +176,7 @@ the Applicant edits Project summary and marks it as complete
     the user clicks the button/link    css=#form-input-1039 .form-footer .form-footer__actions button[name="mark_as_complete"]
 
 the question should be marked as complete on the application overview page
-    The user clicks the button/link    link=Application Overview
+    The user clicks the button/link    link=Application overview
     The user should see the element    jQuery=#section-184 li:nth-child(2) span:contains("Complete")
 
 the text box should be editable
@@ -185,13 +186,13 @@ the button state should change to 'Mark as complete'
     the user should see the element    jQuery=button:contains("Mark as complete")
 
 the question should not be marked as complete on the application overview page
-    The user clicks the button/link    link=Application Overview
+    The user clicks the button/link    link=Application overview
     Run Keyword And Ignore Error Without Screenshots    confirm action
     the user should see the element    jQuery=#section-184 li:nth-child(2)
     the user should not see the element    jQuery=#section-184 li:nth-child(2) span:contains("Complete")
 
 the finance summary page should show a warning
-    The user clicks the button/link    link=Application Overview
+    The user clicks the button/link    link=Application overview
     The user clicks the button/link    link=Your finances
     the user should see the element    jQuery=h3:contains("Your funding") + p:contains("You must select a research category in application details ")
 

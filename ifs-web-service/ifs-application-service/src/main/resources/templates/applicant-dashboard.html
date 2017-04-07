@@ -51,9 +51,10 @@
                 <div class="progress-list">
                     <h2 class="heading-medium" th:text="${#lists.size(applicationsInProgress) == 1} ? 'Application in progress' : 'Applications in progress'"/>
                     <ul>
-                        <li class="status-2-col" th:each="app : ${applicationsInProgress}" th:classappend="${applicationsAssigned?.contains(app.id) ? 'assigned-to-me' : '' }">
-                            <th:block th:unless="${applicationStatuses.get(app.getId()).getName() == 'submitted'}">
-                                <div class="task" th:with="created=${T(org.innovateuk.ifs.application.constant.ApplicationStatusConstants).CREATED.name == app.applicationStatusName}">
+                        <li class="status-2-col" th:each="app : ${applicationsInProgress}" th:classappend="${applicationsAssigned?.contains(
+                        app.id) ? 'assigned-to-me' : '' }">
+                            <th:block th:unless="${applicationStatuses.get(app.getId()) == T(org.innovateuk.ifs.application.resource.ApplicationStatus).SUBMITTED}">
+                                <div class="task" th:with="created=${T(org.innovateuk.ifs.application.resource.ApplicationStatus).CREATED == app.applicationStatus}">
                                     <h3 class="heading-small" th:with="teamUrl=@{/application/{id}/team(id=${app.getId()})}, formUrl=@{/application/{id}(id=${app.getId()})}, noTitle=#{ifs.application.dashboard.no_title}">
                                         <a th:href="${created ? teamUrl : formUrl}"
                                             th:text="${#strings.isEmpty(app.name) ? noTitle : app.name}"/>
@@ -79,7 +80,7 @@
                                     <span class="status-msg msg-progress" th:text="${applicationProgress.get(app.getId())}+'% complete'">PERCENTAGE COMPLETE</span>
                                 </div>
                             </th:block>
-                            <th:block th:if="${applicationStatuses.get(app.getId()).getName() == 'submitted'}">
+                            <th:block th:if="${applicationStatuses.get(app.getId()) == T(org.innovateuk.ifs.application.resource.ApplicationStatus).SUBMITTED}">
                                 <div class="task">
                                     <h3 class="heading-small">
                                         <a th:href="@{/application/{id}/track(id=${app.getId()})}" th:text="${app.name}">placeholder</a>
@@ -104,8 +105,8 @@
                     <h2 class="heading-medium">Previous applications</h2>
                     <ul>
                         <li th:each="app : ${applicationsFinished}"
-                            th:with="statusName=${applicationStatuses.get(app.id).name}"
-                            th:class="${statusName == 'approved'} ? 'positive' : 'negative'">
+                            th:with="status=${applicationStatuses.get(app.id)}"
+                            th:class="${status == T(org.innovateuk.ifs.application.resource.ApplicationStatus).APPROVED} ? 'positive' : 'negative'">
                             <div class="task">
                                 <h3 class="heading-small">
                                     <a th:href="@{/application/{id}/summary(id=${app.getId()})}" th:text="${app.name}">placeholder</a>
@@ -116,9 +117,9 @@
                                 </ul>
                             </div>
                             <div class="status">
-                                <p th:if="${statusName == 'rejected'}" class="status-msg msg-progress">Unsuccessful</p>
-                                <p th:if="${statusName == 'approved'}" class="status-msg msg-progress">Successful</p>
-                                <p th:if="${statusName == 'created' || statusName == 'open'}" class="status-msg msg-progress not-submitted">Not submitted</p>
+                                <p th:if="${status == T(org.innovateuk.ifs.application.resource.ApplicationStatus).REJECTED}" class="status-msg msg-progress">Unsuccessful</p>
+                                <p th:if="${status == T(org.innovateuk.ifs.application.resource.ApplicationStatus).APPROVED}" class="status-msg msg-progress">Successful</p>
+                                <p th:if="${status == T(org.innovateuk.ifs.application.resource.ApplicationStatus).CREATED or status == T(org.innovateuk.ifs.application.resource.ApplicationStatus).OPEN}" class="status-msg msg-progress not-submitted">Not submitted</p>
                             </div>
                         </li>
                     </ul>
