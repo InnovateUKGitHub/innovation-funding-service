@@ -7,12 +7,9 @@ import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResourc
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.junit.Test;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.DataBinder;
 
 import java.util.Collections;
 import java.util.List;
@@ -146,7 +143,7 @@ public class AssessorFormInputResponseControllerTest extends BaseControllerMockM
     @Test
     public void getApplicationAggregateScores() throws Exception {
         long applicationId = 7;
-        ApplicationAssessmentAggregateResource expected = new ApplicationAssessmentAggregateResource(5, 3, Collections.emptyMap(),20L);
+        ApplicationAssessmentAggregateResource expected = new ApplicationAssessmentAggregateResource(5, 3, Collections.emptyMap(), 20L);
 
         when(assessorFormInputResponseServiceMock.getApplicationAggregateScores(applicationId)).thenReturn(serviceSuccess(expected));
 

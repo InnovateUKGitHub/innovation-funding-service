@@ -3,7 +3,6 @@ package org.innovateuk.ifs.assessment.controller;
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

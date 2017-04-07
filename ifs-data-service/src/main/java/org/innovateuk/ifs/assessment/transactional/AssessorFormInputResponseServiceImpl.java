@@ -18,7 +18,6 @@ import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.util.AssessorScoreAverageCollector;
-import org.innovateuk.ifs.validator.AssessorScoreValidator;
 import org.innovateuk.ifs.validator.util.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -91,7 +90,7 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
         }
         createdResponse.setValue(value);
 
-        BindingResult result = validationUtil.validateResponse(mapToFormInputResponse(createdResponse),true);
+        BindingResult result = validationUtil.validateResponse(mapToFormInputResponse(createdResponse), true);
 
         if (result.hasErrors()) {
             return serviceFailure(new ValidationMessages(result).getErrors());
@@ -131,7 +130,7 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
                 }
             }
         }
-        return serviceSuccess(new ApplicationAssessmentAggregateResource(totalScope, totalInScope,avgScores,averagePercentage));
+        return serviceSuccess(new ApplicationAssessmentAggregateResource(totalScope, totalInScope, avgScores, averagePercentage));
     }
 
     @Override

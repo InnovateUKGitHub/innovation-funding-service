@@ -98,7 +98,7 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
     public void getAssessmentAggregateFeedback() {
         long applicationId = 1L;
         long questionId = 2L;
-        when (applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(newApplicationResource().build());
+        when(applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(newApplicationResource().build());
         assertAccessDenied(
                 () -> classUnderTest.getAssessmentAggregateFeedback(applicationId, questionId),
                 () -> verify(applicationPermissionRules).usersConnectedToTheApplicationCanView(isA(ApplicationResource.class), isA(UserResource.class))
@@ -120,7 +120,7 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
     public static class TestAssessorFormInputResponseService implements AssessorFormInputResponseService {
         @Override
         public ServiceResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponses(Long assessmentId) {
-           return null;
+            return null;
         }
 
         @Override

@@ -21,11 +21,9 @@ import org.mockito.InjectMocks;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 
 import static java.time.LocalDateTime.now;
@@ -38,13 +36,10 @@ import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseRes
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
-import static org.innovateuk.ifs.commons.service.ServiceResult.aggregate;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
-import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_RESEARCH_CATEGORY;
-import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_SCORE;
-import static org.innovateuk.ifs.form.resource.FormInputType.TEXTAREA;
+import static org.innovateuk.ifs.form.resource.FormInputType.*;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.*;
@@ -501,7 +496,7 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
 
         assertEquals(2, scores.getTotalScope());
         assertEquals(1, scores.getInScope());
-        assertEquals(2,scores.getScores().keySet().size());
+        assertEquals(2, scores.getScores().keySet().size());
         assertTrue(scores.getScores().containsKey(1L));
         assertTrue(new BigDecimal("2").equals(scores.getScores().get(1L)));
         assertTrue(scores.getScores().containsKey(2L));
@@ -528,7 +523,7 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
 
         List<AssessorFormInputResponse> assessorFormInputResponses = newAssessorFormInputResponse()
                 .withFormInput(formInputs)
-                .withValue("2","Feedback 1", "4", "Feedback 2")
+                .withValue("2", "Feedback 1", "4", "Feedback 2")
                 .build(4);
 
         when(assessorFormInputResponseRepositoryMock.findByAssessmentTargetIdAndFormInputQuestionId(applicationId, questionId)).thenReturn(assessorFormInputResponses);
