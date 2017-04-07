@@ -15,6 +15,7 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.application.resource.ApplicationStatus.CREATED;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.idBasedNames;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder.newApplicationInvite;
@@ -64,7 +65,7 @@ public class InviteOrganisationRepositoryIntegrationTest extends BaseRepositoryI
         inviteOrgApplication1Org2 = inviteOrganisations.get(1);
         inviteOrgApplication2Org1 = inviteOrganisations.get(2);
 
-        List<Application> applications = newApplication().build(2)
+        List<Application> applications = newApplication().withApplicationStatus(CREATED).build(2)
                 .stream().map(application -> applicationRepository.save(application)).collect(toList());
         application1 = applications.get(0);
         application2 = applications.get(1);

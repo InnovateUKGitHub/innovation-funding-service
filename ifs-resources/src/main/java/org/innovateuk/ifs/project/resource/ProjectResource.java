@@ -5,7 +5,7 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 
 import javax.validation.constraints.Digits;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 public class ProjectResource {
@@ -16,8 +16,8 @@ public class ProjectResource {
     private LocalDate targetStartDate;
     private AddressResource address;
     private String name;
-    private LocalDateTime documentsSubmittedDate;
-    private LocalDateTime offerSubmittedDate;
+    private ZonedDateTime documentsSubmittedDate;
+    private ZonedDateTime offerSubmittedDate;
     private List<Long> projectUsers;
     private Long collaborationAgreement;
     private Long exploitationPlan;
@@ -25,7 +25,7 @@ public class ProjectResource {
     private Long grantOfferLetter;
     private Long additionalContractFile;
     private ApprovalType otherDocumentsApproved;
-    private LocalDateTime spendProfileSubmittedDate;
+    private ZonedDateTime spendProfileSubmittedDate;
 
     @Digits(integer = MAX_DURATION_IN_MONTHS_DIGITS, fraction = 0, message="{validation.application.details.duration.in.months.max.digits}")
     private Long durationInMonths;
@@ -96,19 +96,19 @@ public class ProjectResource {
         this.application = application;
     }
 
-    public LocalDateTime getDocumentsSubmittedDate() {
+    public ZonedDateTime getDocumentsSubmittedDate() {
         return documentsSubmittedDate;
     }
 
-    public void setDocumentsSubmittedDate(LocalDateTime documentsSubmittedDate) {
+    public void setDocumentsSubmittedDate(ZonedDateTime documentsSubmittedDate) {
         this.documentsSubmittedDate = documentsSubmittedDate;
     }
 
-    public LocalDateTime getOfferSubmittedDate() {
+    public ZonedDateTime getOfferSubmittedDate() {
         return offerSubmittedDate;
     }
 
-    public void setOfferSubmittedDate(LocalDateTime offerSubmittedDate) {
+    public void setOfferSubmittedDate(ZonedDateTime offerSubmittedDate) {
         this.offerSubmittedDate = offerSubmittedDate;
     }
 
@@ -160,11 +160,11 @@ public class ProjectResource {
         this.otherDocumentsApproved = otherDocumentsApproved;
     }
 
-    public LocalDateTime getSpendProfileSubmittedDate() {
+    public ZonedDateTime getSpendProfileSubmittedDate() {
         return spendProfileSubmittedDate;
     }
 
-    public void setSpendProfileSubmittedDate(LocalDateTime spendProfileSubmittedDate) {
+    public void setSpendProfileSubmittedDate(ZonedDateTime spendProfileSubmittedDate) {
         this.spendProfileSubmittedDate = spendProfileSubmittedDate;
     }
 }

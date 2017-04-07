@@ -37,7 +37,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.ui.Model;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
@@ -185,7 +185,7 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
     }
 
     private QueryResource sampleQuery() {
-        return new QueryResource(null, null, Collections.emptyList(), null, null, false, LocalDateTime.now());
+        return new QueryResource(null, null, Collections.emptyList(), null, null, false, ZonedDateTime.now());
     }
 
     @Test

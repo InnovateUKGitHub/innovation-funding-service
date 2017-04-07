@@ -5,7 +5,7 @@ import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.user.resource.AgreementResource;
 import org.innovateuk.ifs.user.resource.ProfileAgreementResource;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -48,7 +48,7 @@ public class ProfileAgreementResourceBuilder extends BaseBuilder<ProfileAgreemen
         return withArray((currentAgreement, profileAgreementResource) -> setField("currentAgreement", currentAgreement, profileAgreementResource), currentAgreements);
     }
 
-    public ProfileAgreementResourceBuilder withAgreementSignedDate(LocalDateTime... agreementSignedDates) {
+    public ProfileAgreementResourceBuilder withAgreementSignedDate(ZonedDateTime... agreementSignedDates) {
         return withArray((agreementSignedDate, profileAgreementResource) -> setField("agreementSignedDate", agreementSignedDate, profileAgreementResource), agreementSignedDates);
     }
 }

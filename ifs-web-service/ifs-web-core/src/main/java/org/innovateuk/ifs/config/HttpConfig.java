@@ -16,6 +16,7 @@ import org.springframework.http.client.AsyncClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsAsyncClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.client.RestTemplate;
 
@@ -38,7 +39,14 @@ public class HttpConfig {
 
     @Bean
     public RestTemplate restTemplate() {
-        return new RestTemplate(httpRequestFactory());
+        return configureRestTemplate(new RestTemplate(httpRequestFactory()));
+    }
+
+    private RestTemplate configureRestTemplate(RestTemplate restTemplate) {
+        restTemplate.getMessageConverters().stream().filter(m -> m.getClass().getName().equals(MappingJackson2HttpMessageConverter.class.getName())).forEach(m -> {
+            ((MappingJackson2HttpMessageConverter) m).getObjectMapper().registerModule(new JacksonZoneDateDeserializerModule());
+        });
+        return restTemplate;
     }
 
     @Bean

@@ -8,14 +8,13 @@ import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.MilestoneResourceBuilder.newMilestoneResource;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneService> {
@@ -30,7 +29,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 
     @Test
     public void test_getAllMilestonesByCompetitionId() {
-        LocalDateTime milestoneDate = LocalDateTime.now();
+        ZonedDateTime milestoneDate = ZonedDateTime.now();
 
         List<MilestoneResource> milestonesList = new ArrayList<>();
         milestonesList.add(getNewOpenDateMilestone(milestoneDate));
@@ -49,7 +48,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
     @Test
     public void test_getMilestoneByTypeAndCompetitionId() {
 
-        LocalDateTime milestoneDate = LocalDateTime.now();
+        ZonedDateTime milestoneDate = ZonedDateTime.now();
         MilestoneResource milestoneResource = getNewBriefingEventMilestone(milestoneDate);
 
         when(milestoneRestService.getMilestoneByTypeAndCompetitionId(MilestoneType.BRIEFING_EVENT, 1L)).thenReturn(restSuccess(milestoneResource));
@@ -63,7 +62,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 
     @Test
     public void test_create() {
-        LocalDateTime milestoneDate = LocalDateTime.now();
+        ZonedDateTime milestoneDate = ZonedDateTime.now();
 
         when(milestoneRestService.create(MilestoneType.OPEN_DATE, 1L)).thenReturn(restSuccess(getNewOpenDateMilestone(milestoneDate)));
 
@@ -77,7 +76,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 
     @Test
     public void test_updateMilestones() {
-        LocalDateTime milestoneDate = LocalDateTime.now();
+        ZonedDateTime milestoneDate = ZonedDateTime.now();
 
         List<MilestoneResource> milestonesList = new ArrayList<>();
         milestonesList.add(getNewOpenDateMilestone(milestoneDate));
@@ -91,7 +90,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 
     @Test
     public void test_updateMilestone() {
-        LocalDateTime milestoneDate = LocalDateTime.now();
+        ZonedDateTime milestoneDate = ZonedDateTime.now();
         MilestoneResource milestone = getNewBriefingEventMilestone(milestoneDate);
 
         when(milestoneRestService.updateMilestone(milestone)).thenReturn(restSuccess());
@@ -100,7 +99,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
         assertTrue(result.isSuccess());
     }
 
-    private MilestoneResource getNewOpenDateMilestone(LocalDateTime milestoneDate) {
+    private MilestoneResource getNewOpenDateMilestone(ZonedDateTime milestoneDate) {
 
         MilestoneResource milestoneResource = newMilestoneResource()
                 .withId(1L)
@@ -111,7 +110,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
         return milestoneResource;
     }
 
-    private MilestoneResource getNewBriefingEventMilestone(LocalDateTime milestoneDate) {
+    private MilestoneResource getNewBriefingEventMilestone(ZonedDateTime milestoneDate) {
 
         MilestoneResource milestoneResource = newMilestoneResource()
                 .withId(2L)

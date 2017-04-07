@@ -14,7 +14,7 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -91,7 +91,7 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
         long projectId = 123L;
 
         ProjectResource project = newProjectResource()
-                .withDocumentsSubmittedDate(LocalDateTime.now())
+                .withDocumentsSubmittedDate(ZonedDateTime.now())
                 .withOtherDocumentsApproved(ApprovalType.APPROVED)
                 .withId(projectId)
                 .build();
@@ -243,7 +243,7 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
         long projectId = 123L;
 
         ProjectResource project = newProjectResource().withId(projectId)
-                .withDocumentsSubmittedDate(LocalDateTime.now()).withOtherDocumentsApproved(ApprovalType.UNSET).build();
+                .withDocumentsSubmittedDate(ZonedDateTime.now()).withOtherDocumentsApproved(ApprovalType.UNSET).build();
         List<OrganisationResource> partnerOrganisations = newOrganisationResource().build(3);
 
         when(projectService.getById(projectId)).thenReturn(project);

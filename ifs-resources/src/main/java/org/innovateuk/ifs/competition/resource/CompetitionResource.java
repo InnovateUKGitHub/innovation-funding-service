@@ -6,7 +6,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -25,15 +26,15 @@ public class CompetitionResource {
 
     private String name;
     private String description;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
-    private LocalDateTime assessorAcceptsDate;
-    private LocalDateTime assessorDeadlineDate;
-    private LocalDateTime releaseFeedbackDate;
-    private LocalDateTime fundersPanelDate;
-    private LocalDateTime fundersPanelEndDate;
-    private LocalDateTime assessorFeedbackDate;
-    private LocalDateTime assessorBriefingDate;
+    private ZonedDateTime startDate;
+    private ZonedDateTime endDate;
+    private ZonedDateTime assessorAcceptsDate;
+    private ZonedDateTime assessorDeadlineDate;
+    private ZonedDateTime releaseFeedbackDate;
+    private ZonedDateTime fundersPanelDate;
+    private ZonedDateTime fundersPanelEndDate;
+    private ZonedDateTime assessorFeedbackDate;
+    private ZonedDateTime assessorBriefingDate;
     private CompetitionStatus competitionStatus;
     @Min(0)
     @Max(100)
@@ -82,7 +83,7 @@ public class CompetitionResource {
         // no-arg constructor
     }
 
-    public CompetitionResource(Long id, List<Long> applications, List<Long> questions, List<Long> sections, String name, String description, LocalDateTime startDate, LocalDateTime endDate) {
+    public CompetitionResource(Long id, List<Long> applications, List<Long> questions, List<Long> sections, String name, String description, ZonedDateTime startDate, ZonedDateTime endDate) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -90,7 +91,7 @@ public class CompetitionResource {
         this.endDate = endDate;
     }
 
-    public CompetitionResource(long id, String name, String description, LocalDateTime startDate, LocalDateTime endDate) {
+    public CompetitionResource(long id, String name, String description, ZonedDateTime startDate, ZonedDateTime endDate) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -105,12 +106,12 @@ public class CompetitionResource {
 
     @JsonIgnore
     public boolean isSetupAndLive() {
-        return Boolean.TRUE.equals(setupComplete) && startDate.isBefore(LocalDateTime.now());
+        return Boolean.TRUE.equals(setupComplete) && startDate.isBefore(ZonedDateTime.now());
     }
 
     @JsonIgnore
     public boolean isSetupAndAfterNotifications() {
-        return Boolean.TRUE.equals(setupComplete) && fundersPanelDate.isBefore(LocalDateTime.now());
+        return Boolean.TRUE.equals(setupComplete) && fundersPanelDate.isBefore(ZonedDateTime.now());
     }
 
     public CompetitionStatus getCompetitionStatus() {
@@ -145,19 +146,19 @@ public class CompetitionResource {
         this.name = name;
     }
 
-    public LocalDateTime getEndDate() {
+    public ZonedDateTime getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDateTime endDate) {
+    public void setEndDate(ZonedDateTime endDate) {
         this.endDate = endDate;
     }
 
-    public LocalDateTime getStartDate() {
+    public ZonedDateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDateTime startDate) {
+    public void setStartDate(ZonedDateTime startDate) {
         this.startDate = startDate;
     }
 
@@ -169,69 +170,69 @@ public class CompetitionResource {
         return displayDate(getStartDate(), START_DATE_FORMAT);
     }
 
-    private String displayDate(LocalDateTime date, DateTimeFormatter formatter) {
+    private String displayDate(ZonedDateTime date, DateTimeFormatter formatter) {
         if (date != null) {
             return date.format(formatter);
         }
         return "";
     }
 
-    public LocalDateTime getAssessorAcceptsDate() {
+    public ZonedDateTime getAssessorAcceptsDate() {
         return assessorAcceptsDate;
     }
 
-    public void setAssessorAcceptsDate(LocalDateTime assessorAcceptsDate) {
+    public void setAssessorAcceptsDate(ZonedDateTime assessorAcceptsDate) {
         this.assessorAcceptsDate = assessorAcceptsDate;
     }
 
-    public LocalDateTime getAssessorDeadlineDate() {
+    public ZonedDateTime getAssessorDeadlineDate() {
         return assessorDeadlineDate;
     }
 
-    public void setAssessorDeadlineDate(LocalDateTime assessorDeadlineDate) {
+    public void setAssessorDeadlineDate(ZonedDateTime assessorDeadlineDate) {
         this.assessorDeadlineDate = assessorDeadlineDate;
     }
 
-    public LocalDateTime getReleaseFeedbackDate() {
+    public ZonedDateTime getReleaseFeedbackDate() {
         return releaseFeedbackDate;
     }
 
-    public void setReleaseFeedbackDate(LocalDateTime releaseFeedbackDate) {
+    public void setReleaseFeedbackDate(ZonedDateTime releaseFeedbackDate) {
         this.releaseFeedbackDate = releaseFeedbackDate;
     }
 
-    public LocalDateTime getFundersPanelDate() {
+    public ZonedDateTime getFundersPanelDate() {
         return fundersPanelDate;
     }
 
-    public void setFundersPanelDate(LocalDateTime fundersPanelDate) {
+    public void setFundersPanelDate(ZonedDateTime fundersPanelDate) {
         this.fundersPanelDate = fundersPanelDate;
     }
 
-    public LocalDateTime getAssessorFeedbackDate() {
+    public ZonedDateTime getAssessorFeedbackDate() {
         return assessorFeedbackDate;
     }
 
-    public void setAssessorFeedbackDate(LocalDateTime assessorFeedbackDate) {
+    public void setAssessorFeedbackDate(ZonedDateTime assessorFeedbackDate) {
         this.assessorFeedbackDate = assessorFeedbackDate;
     }
 
-    public LocalDateTime getAssessorBriefingDate() {
+    public ZonedDateTime getAssessorBriefingDate() {
         return assessorBriefingDate;
     }
 
-    public void setAssessorBriefingDate(LocalDateTime assessorBriefingDate) {
+    public void setAssessorBriefingDate(ZonedDateTime assessorBriefingDate) {
         this.assessorBriefingDate = assessorBriefingDate;
     }
 
     @JsonIgnore
     public long getDaysLeft() {
-        return DAYS.between(LocalDateTime.now(), this.endDate);
+        return DAYS.between(ZonedDateTime.now(), this.endDate);
     }
 
     @JsonIgnore
     public long getAssessmentDaysLeft() {
-        return DAYS.between(LocalDateTime.now(), this.assessorDeadlineDate);
+        return DAYS.between(ZonedDateTime.now(), this.assessorDeadlineDate);
     }
 
     @JsonIgnore
@@ -241,7 +242,7 @@ public class CompetitionResource {
 
     @JsonIgnore
     public boolean isClosingSoon() {
-        long hoursToGo = CLOSING_SOON_CHRONOUNIT.between(LocalDateTime.now(), this.endDate);
+        long hoursToGo = CLOSING_SOON_CHRONOUNIT.between(ZonedDateTime.now(), this.endDate);
         return isOpen() && hoursToGo < CLOSING_SOON_AMOUNT;
     }
 
@@ -285,11 +286,11 @@ public class CompetitionResource {
         this.academicGrantPercentage = academicGrantPercentage;
     }
 
-    public LocalDateTime getFundersPanelEndDate() {
+    public ZonedDateTime getFundersPanelEndDate() {
         return fundersPanelEndDate;
     }
 
-    public void setFundersPanelEndDate(LocalDateTime fundersPanelEndDate) {
+    public void setFundersPanelEndDate(ZonedDateTime fundersPanelEndDate) {
         this.fundersPanelEndDate = fundersPanelEndDate;
     }
 

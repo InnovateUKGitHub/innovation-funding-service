@@ -19,7 +19,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.io.InputStream;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -72,13 +72,13 @@ public interface ProjectService {
     ServiceResult<List<ProjectUserResource>> getProjectUsers(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'UPDATE_BASIC_PROJECT_SETUP_DETAILS')")
-    ServiceResult<Void> submitProjectDetails(Long projectId, LocalDateTime date);
+    ServiceResult<Void> submitProjectDetails(Long projectId, ZonedDateTime date);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'UPDATE_FINANCE_CONTACT')")
     ServiceResult<Boolean> isSubmitAllowed(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'SUBMIT_OTHER_DOCUMENTS')")
-    ServiceResult<Void> saveDocumentsSubmitDateTime(Long projectId, LocalDateTime date);
+    ServiceResult<Void> saveDocumentsSubmitDateTime(Long projectId, ZonedDateTime date);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'READ')")
     ServiceResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId, Long userId);

@@ -11,17 +11,17 @@ import org.innovateuk.ifs.publiccontent.repository.ContentEventRepository;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PUBLIC_CONTENT_IDS_INCONSISTENT;
 import static org.innovateuk.ifs.publiccontent.builder.ContentEventBuilder.newContentEvent;
-import static org.innovateuk.ifs.publiccontent.builder.PublicContentBuilder.newPublicContent;
 import static org.innovateuk.ifs.publiccontent.builder.ContentEventResourceBuilder.newContentEventResource;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.innovateuk.ifs.publiccontent.builder.PublicContentBuilder.newPublicContent;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 public class ContentEventServiceImplTest extends BaseServiceUnitTest<ContentEventServiceImpl> {
@@ -44,7 +44,7 @@ public class ContentEventServiceImplTest extends BaseServiceUnitTest<ContentEven
         List<ContentEventResource> resources = newContentEventResource()
                 .withId(1L)
                 .withContent("Content")
-                .withDate(LocalDateTime.of(2017, 1, 1, 1, 1))
+                .withDate(ZonedDateTime.of(2017, 1, 1, 1, 1, 0, 0, ZoneId.systemDefault()))
                 .withPublicContent(publicContentId)
                 .build(2);
 
@@ -52,7 +52,7 @@ public class ContentEventServiceImplTest extends BaseServiceUnitTest<ContentEven
         List<ContentEvent> domains = newContentEvent()
                 .withId(1L)
                 .withContent("Content")
-                .withDate(LocalDateTime.of(2017, 1, 1, 1, 1))
+                .withDate(ZonedDateTime.of(2017, 1, 1, 1, 1, 0, 0, ZoneId.systemDefault()))
                 .withPublicContent(publicContent)
                 .build(2);
 
@@ -72,7 +72,7 @@ public class ContentEventServiceImplTest extends BaseServiceUnitTest<ContentEven
         List<ContentEventResource> resources = newContentEventResource()
                 .withId(1L)
                 .withContent("Content")
-                .withDate(LocalDateTime.of(2017, 1, 1, 1, 1))
+                .withDate(ZonedDateTime.of(2017, 1, 1, 1, 1, 0, 0, ZoneId.systemDefault()))
                 .withPublicContent(2L)
                 .build(2);
 
@@ -80,7 +80,7 @@ public class ContentEventServiceImplTest extends BaseServiceUnitTest<ContentEven
         List<ContentEvent> domains = newContentEvent()
                 .withId(1L)
                 .withContent("Content")
-                .withDate(LocalDateTime.of(2017, 1, 1, 1, 1))
+                .withDate(ZonedDateTime.of(2017, 1, 1, 1, 1, 0, 0, ZoneId.systemDefault()))
                 .withPublicContent(publicContent)
                 .build(2);
 

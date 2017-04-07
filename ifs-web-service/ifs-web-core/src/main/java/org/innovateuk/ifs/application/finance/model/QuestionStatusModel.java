@@ -4,7 +4,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 public class QuestionStatusModel {
     private Long id;
@@ -16,7 +16,7 @@ public class QuestionStatusModel {
     private QuestionResource question;
 
     private ProcessRoleResource assignee;
-    private LocalDateTime assignedDate;
+    private ZonedDateTime assignedDate;
 
     private ApplicationResource application;
 
@@ -34,7 +34,7 @@ public class QuestionStatusModel {
         this.question = question;
     }
 
-    public QuestionStatusModel(QuestionResource question, ApplicationResource application, ProcessRoleResource assignee, ProcessRoleResource assignedBy, LocalDateTime assignedDate) {
+    public QuestionStatusModel(QuestionResource question, ApplicationResource application, ProcessRoleResource assignee, ProcessRoleResource assignedBy, ZonedDateTime assignedDate) {
         this.question = question;
         this.application = application;
         this.assignee = assignee;
@@ -63,11 +63,11 @@ public class QuestionStatusModel {
         return assignedBy;
     }
 
-    public LocalDateTime getAssignedDate() {
+    public ZonedDateTime getAssignedDate() {
         return assignedDate;
     }
 
-    public void setAssignee(ProcessRoleResource assignee, ProcessRoleResource assignedBy, LocalDateTime assignedDate) {
+    public void setAssignee(ProcessRoleResource assignee, ProcessRoleResource assignedBy, ZonedDateTime assignedDate) {
         this.assignedDate = assignedDate;
         this.assignee = assignee;
         this.assignedBy = assignedBy;

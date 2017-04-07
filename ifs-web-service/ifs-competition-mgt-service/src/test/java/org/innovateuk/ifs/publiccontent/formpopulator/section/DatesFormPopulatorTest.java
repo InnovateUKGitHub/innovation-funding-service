@@ -8,7 +8,8 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import static org.innovateuk.ifs.publiccontent.builder.ContentEventResourceBuilder.newContentEventResource;
@@ -26,7 +27,7 @@ public class DatesFormPopulatorTest {
         List<ContentEventResource> contentEvents = newContentEventResource()
                 .withId(1L)
                 .withPublicContent(2L)
-                .withDate(LocalDateTime.of(2017,1,1,0,0))
+                .withDate(ZonedDateTime.of(2017,1,1,0,0,0,0,ZoneId.systemDefault()))
                 .withContent("Some Content")
                 .build(2);
 

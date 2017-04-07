@@ -100,6 +100,12 @@ Valid login as Project Finance role
     Then the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
     # note that this has been updated as per the most recent requirements.
     # project finance users now use the same dashboard as other internal users
+
+Page not found
+    [Documentation]    INFUND-8712
+    Given the user navigates to the page    ${SERVER}/ibble/dibble
+    Then the user should see the text in the page    Page not found
+    And the user should see the text in the page    Please check the web address or search term you entered for any errors. You can return to your dashboard or go back to the Innovate UK homepage.
     [Teardown]    the user closes the browser
 
 Reset password

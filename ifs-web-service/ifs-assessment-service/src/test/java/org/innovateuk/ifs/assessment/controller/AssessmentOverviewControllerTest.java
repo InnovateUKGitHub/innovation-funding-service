@@ -13,7 +13,6 @@ import org.innovateuk.ifs.assessment.model.AssessmentOverviewModelPopulator;
 import org.innovateuk.ifs.assessment.model.RejectAssessmentModelPopulator;
 import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
-import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.service.AssessmentService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseService;
@@ -39,13 +38,12 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
-import static java.time.LocalDateTime.now;
 import static java.util.Arrays.asList;
 import static java.util.Collections.nCopies;
 import static java.util.Collections.singletonList;
@@ -108,8 +106,8 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         long applicationId = 1L;
 
         CompetitionResource competition = newCompetitionResource()
-                .withAssessorAcceptsDate(now().minusDays(2))
-                .withAssessorDeadlineDate(now().plusDays(4))
+                .withAssessorAcceptsDate(ZonedDateTime.now().minusDays(2))
+                .withAssessorDeadlineDate(ZonedDateTime.now().plusDays(4))
                 .build();
 
         AssessmentResource assessment = newAssessmentResource()
@@ -303,7 +301,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         setupCompetition();
         setupApplicationWithRoles();
 
-        LocalDateTime now = now();
+        ZonedDateTime now = ZonedDateTime.now();
 
         CompetitionResource competitionResource = newCompetitionResource()
                 .withAssessorAcceptsDate(now.minusDays(2))

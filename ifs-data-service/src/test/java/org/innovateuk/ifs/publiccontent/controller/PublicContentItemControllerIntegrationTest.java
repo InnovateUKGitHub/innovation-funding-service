@@ -19,7 +19,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -190,7 +190,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
     private void setupKeywords() {
         PublicContent publicContentResult = publicContentRepository.save(newPublicContent()
                 .withCompetitionId(1L)
-                .withPublishDate(LocalDateTime.now().minusDays(1))
+                .withPublishDate(ZonedDateTime.now().minusDays(1))
                 .build());
 
         Keyword keywordOne = newKeyword().withKeyword("keyword").withPublicContent(publicContentResult).build();

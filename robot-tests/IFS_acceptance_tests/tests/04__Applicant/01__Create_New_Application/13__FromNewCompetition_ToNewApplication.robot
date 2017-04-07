@@ -66,7 +66,7 @@ Competition is Open to Applications
     The competitions date changes so it is now Open    ${compWithoutGrowth}
 
 Create new Application for this Competition
-    [Tags]    HappyPath
+    [Tags]    HappyPath  MySQL
     Lead Applicant applies to the new created competition    ${compWithoutGrowth}
 
 Applicant visits his Finances
@@ -92,7 +92,7 @@ Applicant fills in the Application Details
     And the user enters text to a text field    css=#application_details-startdate_year    ${nextyear}
     And the user enters text to a text field    css=#application_details-duration    24
     When The user clicks the button/link    jQuery=button[name="mark_as_complete"]
-    Then the user clicks the button/link    link=Application Overview
+    Then the user clicks the button/link    link=Application overview
     And the user should see the element     jQuery=li:contains("Application details") > .task-status-complete
 
 Turnover and Staff count fields
@@ -128,7 +128,7 @@ Once the project growth table is selected
 
 As next step the Applicant cannot see the turnover field
     [Documentation]    INFUND-6393, INFUND-6395
-    [Tags]
+    [Tags]  MySQL
     Given Lead Applicant applies to the new created competition    ${compWITHGrowth}
     When the user clicks the button/link    link=Your finances
     And the user clicks the button/link    link=Your organisation
@@ -383,7 +383,6 @@ The competitions date changes so it is now Open
 
 Lead Applicant applies to the new created competition
     [Arguments]    ${competition}
-    Connect to Database    @{database}
     log in as a different user    &{lead_applicant_credentials}
     ${competitionId} =    get comp id from comp title    ${competition}
     the user navigates to the page    ${server}/competition/${competitionId}/info/eligibility
@@ -463,7 +462,7 @@ the user navigates to the growth table finances
     the user clicks the button/link  link=Your finances
 
 Invite a non-existing collaborator in Application with Growth table
-    the user clicks the button/link      jQuery=a:contains("Application Overview")
+    the user clicks the button/link      jQuery=a:contains("Application overview")
     the user clicks the button/link       jQuery=a:contains("view team members and add collaborators")
     the user clicks the button/link       jQuery=a:contains("Add partner organisation")
     the user should see the element       jQuery=h1:contains(Add organisation)
