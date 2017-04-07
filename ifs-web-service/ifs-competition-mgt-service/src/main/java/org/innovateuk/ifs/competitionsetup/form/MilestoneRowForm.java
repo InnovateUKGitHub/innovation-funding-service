@@ -107,6 +107,10 @@ public class MilestoneRowForm {
         return WITH_TIME_TYPES.contains(milestoneType);
     }
 
+    public boolean isOpenDate() {
+        return MilestoneType.OPEN_DATE.equals(milestoneType);
+    }
+
     public ZonedDateTime getDate() {
         return date;
     }
