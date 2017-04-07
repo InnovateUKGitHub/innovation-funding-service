@@ -6,11 +6,9 @@ import org.innovateuk.ifs.project.status.security.ProjectSetupSectionsPermission
 import org.innovateuk.ifs.project.financechecks.controller.ProjectFinanceChecksController;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
-import org.springframework.ui.Model;
 
 import java.util.function.Consumer;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 
@@ -23,7 +21,7 @@ public class ProjectFinanceChecksControllerSecurityTest extends BaseProjectSetup
 
         @Test
         public void testPublicMethods() {
-            assertSecured(() -> classUnderTest.viewFinanceChecks(any(Model.class), any(Long.class), isA(UserResource.class)));
+            assertSecured(() -> classUnderTest.viewFinanceChecks(null,123L, null));
         }
 
         @Override
