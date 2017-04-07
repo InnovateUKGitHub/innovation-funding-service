@@ -40,6 +40,12 @@ Overhead costs
     When the user clicks the button/link    jQuery=button:contains("Overhead costs")
     And The user clicks the button/link    jQuery=label:contains("No overhead costs")
     then the user should see the element    jQuery=h3:contains("No overhead costs")
+    then the user clicks the button/link    jQuery=button:contains("Overhead costs")
+    # Check for calculate overheads
+    When the user clicks the button/link    jQuery=button:contains("Overhead costs")
+    then the user clicks the button/link    css=label[data-target="overhead-total"]
+    and the user should see the element    jQuery=a:contains("overhead calculation spreadsheet.xlsx")
+    and the user should see the element    jQuery=a:contains("overhead calculation spreadsheet.ods")
     # Check for 20% Labour costs option
     When the user clicks the button/link    jQuery=button:contains("Overhead costs")
     then the user chooses 20% overheads option

@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.service.sectionupdaters;
 
 import com.google.common.collect.Lists;
-import org.hamcrest.CoreMatchers;
+import org.hamcrest.*;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
@@ -17,7 +17,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigInteger;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -125,8 +125,8 @@ public class AdditionalInfoSectionSaverTest {
 		String oldActivityCode = "oldBudgetCode";
 		String oldBudgetCode = "oldActivityCode";
 
-		LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
-		LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
+		ZonedDateTime yesterday = ZonedDateTime.now().minusDays(1);
+		ZonedDateTime tomorrow = ZonedDateTime.now().plusDays(1);
 
 		CompetitionFunderResource funderResource1 = newCompetitionFunderResource()
 				.withFunder("Funder 1")
@@ -179,7 +179,7 @@ public class AdditionalInfoSectionSaverTest {
 		String newActivityCode = "newActivityCode";
 		String newBudgetCode = "newBudgetCoce";
 
-		LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
+		ZonedDateTime yesterday = ZonedDateTime.now().minusDays(1);
 
 		AdditionalInfoForm competitionSetupForm = new AdditionalInfoForm(newPafNumber, newActivityCode, newBudgetCode, Collections.emptyList());
 

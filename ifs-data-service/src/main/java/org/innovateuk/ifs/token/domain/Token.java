@@ -12,7 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -32,17 +32,17 @@ public class Token {
     @CreatedDate
     @DateTimeFormat
     @Column(updatable = false)
-    private LocalDateTime created;
+    private ZonedDateTime created;
 
     @LastModifiedDate
     @DateTimeFormat
-    private LocalDateTime updated;
+    private ZonedDateTime updated;
 
     @Convert(converter = JpaConverterJson.class)
     @Column( length = 5000 )
     JsonNode extraInfo;
 
-    public Token(TokenType type, String className, Long classPk, String hash, LocalDateTime created, JsonNode extraInfo) {
+    public Token(TokenType type, String className, Long classPk, String hash, ZonedDateTime created, JsonNode extraInfo) {
         this.type = type;
         this.className = className;
         this.classPk = classPk;
@@ -95,19 +95,19 @@ public class Token {
         this.hash = hash;
     }
 
-    public LocalDateTime getCreated() {
+    public ZonedDateTime getCreated() {
         return created;
     }
 
-    public void setCreated(LocalDateTime created) {
+    public void setCreated(ZonedDateTime created) {
         this.created = created;
     }
 
-    public LocalDateTime getUpdated() {
+    public ZonedDateTime getUpdated() {
         return updated;
     }
 
-    public void setUpdated(LocalDateTime updated) {
+    public void setUpdated(ZonedDateTime updated) {
         this.updated = updated;
     }
 

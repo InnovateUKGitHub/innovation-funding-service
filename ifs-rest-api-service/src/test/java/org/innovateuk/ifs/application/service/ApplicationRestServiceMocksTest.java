@@ -1,19 +1,18 @@
 package org.innovateuk.ifs.application.service;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-
+import org.innovateuk.ifs.application.resource.ApplicationStatus;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.service.Futures.settable;
@@ -112,10 +111,10 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
     @Test
     public void test_updateApplicationStatus() {
 
-        String expectedUrl = applicationRestURL + "/updateApplicationStatus?applicationId=123&statusId=456";
+        String expectedUrl = applicationRestURL + "/updateApplicationStatus?applicationId=123&status=APPROVED";
         setupPutWithRestResultExpectations(expectedUrl, Void.class, null, null);
         // now run the method under test
-        service.updateApplicationStatus(123L, 456L);
+        service.updateApplicationStatus(123L, ApplicationStatus.APPROVED);
     }
 
     @Test

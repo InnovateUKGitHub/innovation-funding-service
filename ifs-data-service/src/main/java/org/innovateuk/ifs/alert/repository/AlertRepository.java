@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
@@ -20,10 +20,10 @@ public interface AlertRepository extends CrudRepository<Alert, Long> {
     List<Alert> findAll();
 
     @Query("SELECT a FROM Alert a WHERE :time >= a.validFromDate AND :time <= a.validToDate")
-    List<Alert> findAllVisible(@Param("time") LocalDateTime now);
+    List<Alert> findAllVisible(@Param("time") ZonedDateTime now);
 
     @Query("SELECT a FROM Alert a WHERE a.type = :type AND :time >= a.validFromDate AND :time <= a.validToDate")
-    List<Alert> findAllVisibleByType(@Param("type") AlertType type, @Param("time") LocalDateTime now);
+    List<Alert> findAllVisibleByType(@Param("type") AlertType type, @Param("time") ZonedDateTime now);
 
     void deleteByType(@Param("type") AlertType type);
 

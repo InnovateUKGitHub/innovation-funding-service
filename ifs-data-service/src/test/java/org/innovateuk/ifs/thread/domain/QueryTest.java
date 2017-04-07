@@ -9,7 +9,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +27,7 @@ public class QueryTest {
     private List<Post> posts;
     private FinanceChecksSectionType section;
     private String title;
-    private LocalDateTime createdOn;
+    private ZonedDateTime createdOn;
 
     @Before
     public void setUp() throws Exception {
@@ -37,7 +37,7 @@ public class QueryTest {
         posts = new ArrayList<>();
         section = FinanceChecksSectionType.VIABILITY;
         title = "Test Query Title";
-        createdOn = LocalDateTime.now();
+        createdOn = ZonedDateTime.now();
 
         query = new Query(id, classPk, className, posts, section, title, createdOn);
     }

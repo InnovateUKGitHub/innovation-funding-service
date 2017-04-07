@@ -7,7 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import static javax.persistence.EnumType.STRING;
 
@@ -29,16 +29,16 @@ public class Alert {
 
     @NotNull
     @DateTimeFormat
-    private LocalDateTime validFromDate;
+    private ZonedDateTime validFromDate;
 
     @NotNull
     @DateTimeFormat
-    private LocalDateTime validToDate;
+    private ZonedDateTime validToDate;
 
     public Alert() {
     }
 
-    public Alert(final String message, final AlertType type, final LocalDateTime validFromDate, final LocalDateTime validToDate) {
+    public Alert(final String message, final AlertType type, final ZonedDateTime validFromDate, final ZonedDateTime validToDate) {
         this.message = message;
         this.type = type;
         this.validFromDate = validFromDate;
@@ -69,19 +69,19 @@ public class Alert {
         this.type = type;
     }
 
-    public LocalDateTime getValidFromDate() {
+    public ZonedDateTime getValidFromDate() {
         return validFromDate;
     }
 
-    public void setValidFromDate(LocalDateTime validFromDate) {
+    public void setValidFromDate(ZonedDateTime validFromDate) {
         this.validFromDate = validFromDate;
     }
 
-    public LocalDateTime getValidToDate() {
+    public ZonedDateTime getValidToDate() {
         return validToDate;
     }
 
-    public void setValidToDate(LocalDateTime validToDate) {
+    public void setValidToDate(ZonedDateTime validToDate) {
         this.validToDate = validToDate;
     }
 

@@ -40,7 +40,7 @@ import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.EnumSet;
 import java.util.List;
@@ -427,7 +427,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     @Override
     public ServiceResult<Void> sendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource) {
         return getById(inviteId).andOnSuccess(invite -> {
-            competitionParticipantRepository.save(new CompetitionParticipant(invite.send(loggedInUserSupplier.get(), LocalDateTime.now())));
+            competitionParticipantRepository.save(new CompetitionParticipant(invite.send(loggedInUserSupplier.get(), ZonedDateTime.now())));
 
             if (invite.isNewAssessorInvite()) {
                 userRepository.findByEmail(invite.getEmail()).ifPresent(this::addAssessorRoleToUser);

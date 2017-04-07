@@ -1822,7 +1822,6 @@ Project finance user amends materials details in eligibility for lead
 Project finance user amends capital usage details in eligibility for lead
     When the user clicks the button/link            jQuery=section:nth-of-type(4) button:contains("Capital usage")
     Then the user should see the element            jQuery=section:nth-of-type(4) button span:contains("0%")
-    And the user should see the element            jQuery=section:nth-of-type(4) input[value*='828']
     When the user clicks the button/link            jQuery=section:nth-of-type(4) a:contains("Edit")
     And the user adds capital usage data into row   1  test  10600  500  50
     Then verify percentage and total                4  2%  5602

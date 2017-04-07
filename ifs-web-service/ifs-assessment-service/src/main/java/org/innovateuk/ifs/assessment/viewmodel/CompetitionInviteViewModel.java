@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.assessment.viewmodel;
 
-import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * ViewModel of a CompetitionInvite.
@@ -14,9 +14,9 @@ public class CompetitionInviteViewModel {
 
     private final String competitionInviteHash;
     private final String competitionName;
-    private final LocalDateTime acceptsDate;
-    private final LocalDateTime deadlineDate;
-    private final LocalDateTime briefingDate;
+    private final ZonedDateTime acceptsDate;
+    private final ZonedDateTime deadlineDate;
+    private final ZonedDateTime briefingDate;
     private final BigDecimal assessorPay;
     private final boolean userLoggedIn;
 
@@ -38,15 +38,15 @@ public class CompetitionInviteViewModel {
         return competitionName;
     }
 
-    public LocalDateTime getAcceptsDate() {
+    public ZonedDateTime getAcceptsDate() {
         return acceptsDate;
     }
 
-    public LocalDateTime getDeadlineDate() {
+    public ZonedDateTime getDeadlineDate() {
         return deadlineDate;
     }
 
-    public LocalDateTime getBriefingDate() {
+    public ZonedDateTime getBriefingDate() {
         return briefingDate;
     }
 

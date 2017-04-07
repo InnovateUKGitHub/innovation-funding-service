@@ -10,14 +10,12 @@ import org.innovateuk.ifs.user.domain.*;
 import org.innovateuk.ifs.user.resource.*;
 import org.junit.Test;
 import org.mockito.InOrder;
-import org.springframework.test.util.ReflectionTestUtils;
 
-import java.time.Clock;
-import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.time.ZoneId.systemDefault;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -331,7 +329,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
 
         AgreementResource currentAgreementResource = newAgreementResource().build();
 
-        LocalDateTime agreementSignedDate = LocalDateTime.now();
+        ZonedDateTime agreementSignedDate = ZonedDateTime.now();
 
         Profile profile = newProfile()
                 .withAgreement(currentAgreement)
@@ -395,7 +393,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
                 .withUser(existingUser.getId())
                 .withAgreement(currentAgreementResource)
                 .withCurrentAgreement(false)
-                .withAgreementSignedDate((LocalDateTime) null)
+                .withAgreementSignedDate((ZonedDateTime) null)
                 .build();
 
         ProfileAgreementResource response = service.getProfileAgreement(existingUser.getId()).getSuccessObject();
@@ -428,7 +426,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
                 .withUser(existingUser.getId())
                 .withAgreement(currentAgreementResource)
                 .withCurrentAgreement(false)
-                .withAgreementSignedDate((LocalDateTime) null)
+                .withAgreementSignedDate((ZonedDateTime) null)
                 .build();
 
         ProfileAgreementResource response = service.getProfileAgreement(existingUser.getId()).getSuccessObject();
@@ -459,7 +457,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
                 .withUser(existingUser.getId())
                 .withAgreement(currentAgreementResource)
                 .withCurrentAgreement(false)
-                .withAgreementSignedDate((LocalDateTime) null)
+                .withAgreementSignedDate((ZonedDateTime) null)
                 .build();
 
         ProfileAgreementResource response = service.getProfileAgreement(existingUser.getId()).getSuccessObject();
@@ -474,12 +472,11 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
 
     @Test
     public void updateProfileAgreement() throws Exception {
-        LocalDateTime expectedAgreementSignedDate = LocalDateTime.of(2016, 10, 11, 12, 13, 14);
-        setClockToTime(expectedAgreementSignedDate);
+        ZonedDateTime expectedAgreementSignedDate = ZonedDateTime.of(2016, 10, 11, 12, 13, 14, 0, ZoneId.systemDefault());
 
         Profile profile = newProfile()
                 .withAgreement(newAgreement().build())
-                .withAgreementSignedDate((LocalDateTime) null)
+                .withAgreementSignedDate((ZonedDateTime) null)
                 .build();
         User existingUser = newUser()
                 .withProfileId(profile.getId())
@@ -524,8 +521,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
 
     @Test
     public void updateProfileAgreement_noAgreement() throws Exception {
-        LocalDateTime expectedAgreementSignedDate = LocalDateTime.of(2016, 10, 11, 12, 13, 14);
-        setClockToTime(expectedAgreementSignedDate);
+        ZonedDateTime expectedAgreementSignedDate = ZonedDateTime.of(2016, 10, 11, 12, 13, 14, 0, ZoneId.systemDefault());
 
         // Profile has no agreement or signed date
         Profile initialProfile = newProfile()
@@ -555,19 +551,18 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
         inOrder.verify(userRepositoryMock).findOne(existingUser.getId());
         inOrder.verify(agreementRepositoryMock).findByCurrentTrue();
         inOrder.verify(profileRepositoryMock, times(2)).findOne(updatedProfile.getId());
-        inOrder.verify(profileRepositoryMock).save(updatedProfile);
+        inOrder.verify(profileRepositoryMock).save(any(Profile.class));
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
     public void updateProfileAgreement_noCurrentAgreement() throws Exception {
-        LocalDateTime expectedAgreementSignedDate = LocalDateTime.of(2016, 10, 11, 12, 13, 14);
-        setClockToTime(expectedAgreementSignedDate);
+        ZonedDateTime expectedAgreementSignedDate = ZonedDateTime.of(2016, 10, 11, 12, 13, 14, 0, ZoneId.systemDefault());
 
         // Profile has a agreement and a signed date, but not the current one
         Profile initialProfile = newProfile()
                 .withAgreement(newAgreement().withId(1L).build())
-                .withAgreementSignedDate(LocalDateTime.now())
+                .withAgreementSignedDate(ZonedDateTime.now())
                 .build();
         User existingUser = newUser()
                 .withProfileId(initialProfile.getId())
@@ -595,7 +590,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
         inOrder.verify(userRepositoryMock).findOne(existingUser.getId());
         inOrder.verify(agreementRepositoryMock).findByCurrentTrue();
         inOrder.verify(profileRepositoryMock, times(2)).findOne(updatedProfile.getId());
-        inOrder.verify(profileRepositoryMock).save(updatedProfile);
+        inOrder.verify(profileRepositoryMock).save(any(Profile.class));
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -605,7 +600,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
                 .build();
         Profile profile = newProfile()
                 .withAgreement(currentAgreement)
-                .withAgreementSignedDate(LocalDateTime.now())
+                .withAgreementSignedDate(ZonedDateTime.now())
                 .build();
         User existingUser = newUser()
                 .withProfileId(profile.getId())
@@ -626,8 +621,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
 
     @Test
     public void updateProfileAgreement_userDoesNotHaveProfileYet() throws Exception {
-        LocalDateTime expectedAgreementSignedDate = LocalDateTime.of(2016, 10, 11, 12, 13, 14);
-        setClockToTime(expectedAgreementSignedDate);
+        ZonedDateTime expectedAgreementSignedDate = ZonedDateTime.of(2016, 10, 11, 12, 13, 14, 0, ZoneId.systemDefault());
 
         User existingUser = newUser()
                 .withId(1L)
@@ -660,7 +654,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
         inOrder.verify(userRepositoryMock).findOne(existingUser.getId());
         inOrder.verify(agreementRepositoryMock).findByCurrentTrue();
         inOrder.verify(profileRepositoryMock).findOne(profileId);
-        inOrder.verify(profileRepositoryMock).save(profileWithAgreement);
+        inOrder.verify(profileRepositoryMock).save(any(Profile.class));
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -682,7 +676,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
     public void getUserProfileStatus_complete() throws Exception {
         Profile profile = newProfile()
                 .withSkillsAreas("skills")
-                .withAgreementSignedDate(LocalDateTime.now())
+                .withAgreementSignedDate(ZonedDateTime.now())
                 .build();
         User user = newUser()
                 .withAffiliations(asList(newAffiliation().build()))
@@ -766,7 +760,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
     @Test
     public void getUserProfileStatus_agreementComplete() throws Exception {
         Profile profile = newProfile()
-                .withAgreementSignedDate(LocalDateTime.now())
+                .withAgreementSignedDate(ZonedDateTime.now())
                 .build();
         User user = newUser()
                 .withProfileId(profile.getId())
@@ -924,10 +918,5 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
             assertEquals(userId, user.getId());
             assertEquals(affiliations, user.getAffiliations());
         });
-    }
-
-    private void setClockToTime(LocalDateTime time) {
-        Clock clock = Clock.fixed(time.atZone(systemDefault()).toInstant(), systemDefault());
-        ReflectionTestUtils.setField(service, "clock", clock, Clock.class);
     }
 }

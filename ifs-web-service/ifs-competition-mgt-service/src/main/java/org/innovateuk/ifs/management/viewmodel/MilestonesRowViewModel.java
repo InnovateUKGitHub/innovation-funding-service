@@ -3,21 +3,22 @@ package org.innovateuk.ifs.management.viewmodel;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+
 
 /**
  * Row model for the milestones on the in flight dashboard
  */
 public class MilestonesRowViewModel {
     private MilestoneType milestoneType;
-    private LocalDateTime dateTime;
+    private ZonedDateTime dateTime;
     private boolean passed;
 
     public MilestonesRowViewModel(MilestoneResource milestoneResource) {
         this.milestoneType = milestoneResource.getType();
         this.dateTime = milestoneResource.getDate();
         if (this.dateTime != null) {
-            this.passed = LocalDateTime.now().isAfter(dateTime);
+            this.passed = ZonedDateTime.now().isAfter(dateTime);
         } else {
             this.passed = false;
         }
@@ -27,7 +28,7 @@ public class MilestonesRowViewModel {
         return milestoneType;
     }
 
-    public LocalDateTime getDateTime() {
+    public ZonedDateTime getDateTime() {
         return dateTime;
     }
 

@@ -30,7 +30,7 @@ import org.springframework.validation.BindingResult;
 
 import javax.servlet.http.Cookie;
 import java.net.URLEncoder;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -122,11 +122,11 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
         assertEquals("Title", saveQueryArgumentCaptor.getAllValues().get(0).title);
         assertEquals(org.innovateuk.threads.resource.FinanceChecksSectionType.ELIGIBILITY, saveQueryArgumentCaptor.getAllValues().get(0).section);
         assertEquals(true, saveQueryArgumentCaptor.getAllValues().get(0).awaitingResponse);
-        assertTrue(LocalDateTime.now().compareTo(saveQueryArgumentCaptor.getAllValues().get(0).createdOn) >= 0);
+        assertTrue(ZonedDateTime.now().compareTo(saveQueryArgumentCaptor.getAllValues().get(0).createdOn) >= 0);
         assertEquals("Query text", saveQueryArgumentCaptor.getAllValues().get(0).posts.get(0).body);
         assertEquals(loggedInUser, saveQueryArgumentCaptor.getAllValues().get(0).posts.get(0).author);
         assertEquals(0, saveQueryArgumentCaptor.getAllValues().get(0).posts.get(0).attachments.size());
-        assertTrue(LocalDateTime.now().compareTo(saveQueryArgumentCaptor.getAllValues().get(0).createdOn) >= 0);
+        assertTrue(ZonedDateTime.now().compareTo(saveQueryArgumentCaptor.getAllValues().get(0).createdOn) >= 0);
 
         FinanceChecksQueriesAddQueryForm form = (FinanceChecksQueriesAddQueryForm) result.getModelAndView().getModel().get("form");
         assertEquals("Title", form.getQueryTitle());
