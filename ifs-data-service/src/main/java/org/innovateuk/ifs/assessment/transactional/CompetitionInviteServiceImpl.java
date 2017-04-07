@@ -138,7 +138,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
             if (invite.getStatus() != CREATED) {
                 return ServiceResult.serviceFailure(new Error(COMPETITION_INVITE_ALREADY_SENT, invite.getTarget().getName()));
             }
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
             NotificationTarget notificationTarget = new ExternalUserNotificationTarget(invite.getName(), invite.getEmail());
 
             AssessorInviteToSendResource resource = toSendMapper.mapToResource(invite);
