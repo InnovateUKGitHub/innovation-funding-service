@@ -24,9 +24,7 @@
           Your application for the competition '<span th:text="${currentCompetition.name}" />' was submitted
           <th:block th:if="${currentApplication.submittedDate != null}">
             on
-            <th:block th:insert="fragments/elements :: ordinal-day (date=${currentApplication.submittedDate})" />
-            <th:block th:text="${#temporals.monthName(currentApplication.submittedDate)}" />
-            <th:block th:text="${#temporals.year(currentApplication.submittedDate)}" />
+            <th:block th:text="${#temporals.format(currentApplication.submittedDate, 'd MMM yyyy')}"></th:block>
             at
             <th:block th:text="${#strings.toLowerCase(#temporals.format(currentApplication.submittedDate, 'h:mma'))}" />.
           </th:block>
