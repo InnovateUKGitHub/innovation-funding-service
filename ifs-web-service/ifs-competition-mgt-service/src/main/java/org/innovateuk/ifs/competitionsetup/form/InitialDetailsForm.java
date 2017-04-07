@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.Range;
 import org.innovateuk.ifs.commons.validation.constraints.FutureLocalDate;
 
 import javax.validation.constraints.NotNull;
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -59,7 +60,11 @@ public class InitialDetailsForm extends CompetitionSetupForm {
             return null;
         }
 
-        return LocalDate.of(openingDateYear, openingDateMonth, openingDateDay);
+        try {
+            return LocalDate.of(openingDateYear, openingDateMonth, openingDateDay);
+        } catch (DateTimeException e) {
+            return null;
+        }
     }
 
     public Integer getOpeningDateDay() {
