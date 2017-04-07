@@ -7,13 +7,13 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 
-import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.milestoneResourceListType;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static org.springframework.http.HttpStatus.CREATED;
 
 public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<MilestoneRestServiceImpl> {
@@ -112,7 +112,7 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
         assertNotNull(response);
         Assert.assertEquals(returnedResponse, response);
 
-        LocalDateTime date = LocalDateTime.now();
+        ZonedDateTime date = ZonedDateTime.now();
         response.setDate(date);
 
         setupPutWithRestResultExpectations(milestonesRestURL + "/", Void.class, response, null, HttpStatus.OK);
@@ -121,15 +121,15 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
     }
 
     private MilestoneResource getOpenDateMilestone() {
-        return milestone(1L, MilestoneType.OPEN_DATE, LocalDateTime.now(), competitionId);
+        return milestone(1L, MilestoneType.OPEN_DATE, ZonedDateTime.now(), competitionId);
 
     }
 
     private MilestoneResource getBriefingEventMilestone() {
-        return milestone(1L, MilestoneType.BRIEFING_EVENT, LocalDateTime.of(2026,3,15,9,0), competitionId);
+        return milestone(1L, MilestoneType.BRIEFING_EVENT, ZonedDateTime.of(2026,3,15,9,0,0,0,ZoneId.systemDefault()), competitionId);
     }
 
-    private MilestoneResource milestone(Long id, MilestoneType type, LocalDateTime date, Long competitionId) {
+    private MilestoneResource milestone(Long id, MilestoneType type, ZonedDateTime date, Long competitionId) {
         MilestoneResource milestone = new MilestoneResource();
         milestone.setId(id);
         milestone.setType(type);

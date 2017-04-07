@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.assessment.builder;
 
-import org.innovateuk.ifs.assessment.domain.AssessmentRejectOutcome;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentFundingDecisionOutcome;
+import org.innovateuk.ifs.assessment.domain.AssessmentRejectOutcome;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
@@ -11,8 +11,7 @@ import org.innovateuk.ifs.workflow.resource.ProcessStates;
 import org.junit.Test;
 
 import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
@@ -21,7 +20,7 @@ import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeBuild
 import static org.innovateuk.ifs.assessment.resource.AssessmentStates.READY_TO_SUBMIT;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class AssessmentBuilderTest {
 
@@ -30,7 +29,7 @@ public class AssessmentBuilderTest {
         Long expectedId = 1L;
         ProcessEvent expectedEvent = ProcessEvent.ASSESSMENT;
         ProcessStates expectedStatus = AssessmentStates.OPEN;
-        Calendar expectedLastModifiedDate = GregorianCalendar.getInstance();
+        ZonedDateTime expectedLastModifiedDate = ZonedDateTime.now();
         LocalDate expectedStartDate = LocalDate.now().minusDays(2);
         LocalDate expectedEndDate = LocalDate.now().minusDays(1);
         ProcessRole expectedProcessRole = newProcessRole().build();
@@ -65,7 +64,7 @@ public class AssessmentBuilderTest {
         Long[] expectedIds = {1L, 2L};
         ProcessEvent[] expectedEvents = {ProcessEvent.ASSESSMENT, ProcessEvent.ANOTHER_ONE};
         ProcessStates[] expectedStatuss = {AssessmentStates.OPEN, READY_TO_SUBMIT};
-        Calendar[] expectedLastModifiedDates = {GregorianCalendar.getInstance(), GregorianCalendar.getInstance()};
+        ZonedDateTime[] expectedLastModifiedDates = {ZonedDateTime.now(), ZonedDateTime.now()};
         LocalDate[] expectedStartDates = {LocalDate.now().minusDays(2), LocalDate.now().minusDays(3)};
         LocalDate[] expectedEndDates = {LocalDate.now().minusDays(1), LocalDate.now().minusDays(2)};
         ProcessRole[] expectedProcessRoles = newProcessRole().buildArray(2, ProcessRole.class);

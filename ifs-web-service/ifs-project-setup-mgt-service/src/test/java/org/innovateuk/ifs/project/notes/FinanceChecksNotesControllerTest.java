@@ -35,7 +35,7 @@ import org.springframework.validation.BindingResult;
 
 import javax.servlet.http.Cookie;
 import java.net.URLEncoder;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -117,19 +117,19 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
 
         UserResource user1 = new UserResource();
         user1.setId(18L);
-        PostResource firstPost = new PostResource(null, user1, "Question", Arrays.asList(new AttachmentResource(23L, "file1.txt", "txt", 1L)), LocalDateTime.now().plusMinutes(10L));
+        PostResource firstPost = new PostResource(null, user1, "Question", Arrays.asList(new AttachmentResource(23L, "file1.txt", "txt", 1L)), ZonedDateTime.now().plusMinutes(10L));
         UserResource user2 = new UserResource();
         user2.setId(55L);
-        PostResource firstResponse = new PostResource(null, user2, "Response", new ArrayList<>(), LocalDateTime.now().plusMinutes(20L));
-        thread = new NoteResource(1L, projectFinanceId, Arrays.asList(firstPost, firstResponse), "Query title", LocalDateTime.now());
+        PostResource firstResponse = new PostResource(null, user2, "Response", new ArrayList<>(), ZonedDateTime.now().plusMinutes(20L));
+        thread = new NoteResource(1L, projectFinanceId, Arrays.asList(firstPost, firstResponse), "Query title", ZonedDateTime.now());
 
-        PostResource firstPost2 = new PostResource(null, user1, "Question2", new ArrayList<>(), LocalDateTime.now().plusMinutes(15L));
-        thread2 = new NoteResource(3L, projectFinanceId, Arrays.asList(firstPost2), "Query2 title", LocalDateTime.now());
+        PostResource firstPost2 = new PostResource(null, user1, "Question2", new ArrayList<>(), ZonedDateTime.now().plusMinutes(15L));
+        thread2 = new NoteResource(3L, projectFinanceId, Arrays.asList(firstPost2), "Query2 title", ZonedDateTime.now());
 
-        PostResource firstPost1 = new PostResource(null, user1, "Question3", new ArrayList<>(), LocalDateTime.now());
-        PostResource firstResponse1 = new PostResource(null, user2, "Response3", new ArrayList<>(), LocalDateTime.now().plusMinutes(10L));
+        PostResource firstPost1 = new PostResource(null, user1, "Question3", new ArrayList<>(), ZonedDateTime.now());
+        PostResource firstResponse1 = new PostResource(null, user2, "Response3", new ArrayList<>(), ZonedDateTime.now().plusMinutes(10L));
 
-        thread3 = new NoteResource(5L, projectFinanceId, Arrays.asList(firstPost1, firstResponse1), "Query title3", LocalDateTime.now());
+        thread3 = new NoteResource(5L, projectFinanceId, Arrays.asList(firstPost1, firstResponse1), "Query title3", ZonedDateTime.now());
 
         notes = Arrays.asList(thread2, thread, thread3);
     }
@@ -160,14 +160,14 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         assertEquals("Question", noteViewModel.getNotes().get(0).getViewModelPosts().get(0).body);
         assertEquals(financeTeamUserId, noteViewModel.getNotes().get(0).getViewModelPosts().get(0).author.getId());
         assertEquals("A Z - Innovate (Finance team)", noteViewModel.getNotes().get(0).getViewModelPosts().get(0).getUsername());
-        assertTrue(LocalDateTime.now().plusMinutes(10L).isAfter(noteViewModel.getNotes().get(0).getViewModelPosts().get(0).createdOn));
+        assertTrue(ZonedDateTime.now().plusMinutes(10L).isAfter(noteViewModel.getNotes().get(0).getViewModelPosts().get(0).createdOn));
         assertEquals(1, noteViewModel.getNotes().get(0).getViewModelPosts().get(0).attachments.size());
         assertEquals(23L, noteViewModel.getNotes().get(0).getViewModelPosts().get(0).attachments.get(0).id.longValue());
         assertEquals("file1.txt", noteViewModel.getNotes().get(0).getViewModelPosts().get(0).attachments.get(0).name);
         assertEquals("Response", noteViewModel.getNotes().get(0).getViewModelPosts().get(1).body);
         assertEquals(applicantFinanceContactUserId, noteViewModel.getNotes().get(0).getViewModelPosts().get(1).author.getId());
         assertEquals("B Z - Org1", noteViewModel.getNotes().get(0).getViewModelPosts().get(1).getUsername());
-        assertTrue(LocalDateTime.now().plusMinutes(20L).isAfter(noteViewModel.getNotes().get(0).getViewModelPosts().get(1).createdOn));
+        assertTrue(ZonedDateTime.now().plusMinutes(20L).isAfter(noteViewModel.getNotes().get(0).getViewModelPosts().get(1).createdOn));
         assertEquals(0, noteViewModel.getNotes().get(0).getViewModelPosts().get(1).attachments.size());
         assertEquals("Query2 title", noteViewModel.getNotes().get(1).getTitle());
         assertEquals(applicantOrganisationId, noteViewModel.getNotes().get(1).getOrganisationId());
@@ -177,7 +177,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         assertEquals("Question2", noteViewModel.getNotes().get(1).getViewModelPosts().get(0).body);
         assertEquals(financeTeamUserId, noteViewModel.getNotes().get(1).getViewModelPosts().get(0).author.getId());
         assertEquals("A Z - Innovate (Finance team)", noteViewModel.getNotes().get(1).getViewModelPosts().get(0).getUsername());
-        assertTrue(LocalDateTime.now().plusMinutes(15L).isAfter(noteViewModel.getNotes().get(1).getViewModelPosts().get(0).createdOn));
+        assertTrue(ZonedDateTime.now().plusMinutes(15L).isAfter(noteViewModel.getNotes().get(1).getViewModelPosts().get(0).createdOn));
         assertEquals(0, noteViewModel.getNotes().get(1).getViewModelPosts().get(0).attachments.size());
 
         assertEquals("Query title3", noteViewModel.getNotes().get(2).getTitle());
@@ -188,12 +188,12 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         assertEquals("Question3", noteViewModel.getNotes().get(2).getViewModelPosts().get(0).body);
         assertEquals(financeTeamUserId, noteViewModel.getNotes().get(2).getViewModelPosts().get(0).author.getId());
         assertEquals("A Z - Innovate (Finance team)", noteViewModel.getNotes().get(2).getViewModelPosts().get(0).getUsername());
-        assertTrue(LocalDateTime.now().isAfter(noteViewModel.getNotes().get(2).getViewModelPosts().get(0).createdOn));
+        assertTrue(ZonedDateTime.now().isAfter(noteViewModel.getNotes().get(2).getViewModelPosts().get(0).createdOn));
         assertEquals(0, noteViewModel.getNotes().get(2).getViewModelPosts().get(0).attachments.size());
         assertEquals("Response3", noteViewModel.getNotes().get(2).getViewModelPosts().get(1).body);
         assertEquals(applicantFinanceContactUserId, noteViewModel.getNotes().get(2).getViewModelPosts().get(1).author.getId());
         assertEquals("B Z - Org1", noteViewModel.getNotes().get(2).getViewModelPosts().get(1).getUsername());
-        assertTrue(LocalDateTime.now().plusMinutes(10L).isAfter(noteViewModel.getNotes().get(2).getViewModelPosts().get(1).createdOn));
+        assertTrue(ZonedDateTime.now().plusMinutes(10L).isAfter(noteViewModel.getNotes().get(2).getViewModelPosts().get(1).createdOn));
         assertEquals(0, noteViewModel.getNotes().get(2).getViewModelPosts().get(1).attachments.size());
     }
 
@@ -276,7 +276,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         assertEquals("Query text", savePostArgumentCaptor.getAllValues().get(0).body);
         assertEquals(loggedInUser, savePostArgumentCaptor.getAllValues().get(0).author);
         assertEquals(0, savePostArgumentCaptor.getAllValues().get(0).attachments.size());
-        assertTrue(LocalDateTime.now().compareTo(savePostArgumentCaptor.getAllValues().get(0).createdOn) >= 0);
+        assertTrue(ZonedDateTime.now().compareTo(savePostArgumentCaptor.getAllValues().get(0).createdOn) >= 0);
 
         FinanceChecksNotesAddCommentForm form = (FinanceChecksNotesAddCommentForm) result.getModelAndView().getModel().get("form");
         assertEquals("Query text", form.getComment());

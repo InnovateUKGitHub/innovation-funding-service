@@ -5,7 +5,7 @@ import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -47,7 +47,7 @@ public class ApplicationSummaryResourceBuilder extends BaseBuilder<ApplicationSu
         return withArraySetFieldByReflection("leadApplicant", leadApplicant);
     }
 
-    public ApplicationSummaryResourceBuilder withManageFundingEmailDate(LocalDateTime... manageFundingEmailDate) {
+    public ApplicationSummaryResourceBuilder withManageFundingEmailDate(ZonedDateTime... manageFundingEmailDate) {
         return withArraySetFieldByReflection("manageFundingEmailDate", manageFundingEmailDate);
     }
 

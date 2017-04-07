@@ -2,9 +2,8 @@ package org.innovateuk.ifs.alert.resource;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * Represents an alert which is displayed to users.
@@ -14,15 +13,13 @@ public class AlertResource {
     private Long id;
     private String message;
     private AlertType type;
-    @DateTimeFormat
-    private LocalDateTime validFromDate;
-    @DateTimeFormat
-    private LocalDateTime validToDate;
+    private ZonedDateTime validFromDate;
+    private ZonedDateTime validToDate;
 
     public AlertResource() {
     }
 
-    public AlertResource(final Long id, final String message, final AlertType type, final LocalDateTime validFromDate, final LocalDateTime validToDate) {
+    public AlertResource(final Long id, final String message, final AlertType type, final ZonedDateTime validFromDate, final ZonedDateTime validToDate) {
         this.id = id;
         this.message = message;
         this.type = type;
@@ -54,19 +51,19 @@ public class AlertResource {
         this.type = type;
     }
 
-    public LocalDateTime getValidFromDate() {
+    public ZonedDateTime getValidFromDate() {
         return validFromDate;
     }
 
-    public void setValidFromDate(final LocalDateTime validFromDate) {
+    public void setValidFromDate(final ZonedDateTime validFromDate) {
         this.validFromDate = validFromDate;
     }
 
-    public LocalDateTime getValidToDate() {
+    public ZonedDateTime getValidToDate() {
         return validToDate;
     }
 
-    public void setValidToDate(final LocalDateTime validToDate) {
+    public void setValidToDate(final ZonedDateTime validToDate) {
         this.validToDate = validToDate;
     }
 

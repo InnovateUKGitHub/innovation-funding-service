@@ -2,15 +2,15 @@ package org.innovateuk.ifs.token.resource;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 public class TokenResource {
     private Long id;
     private String className;
     private Long classPk;
     private String hash;
-    private LocalDateTime created;
-    private LocalDateTime updated;
+    private ZonedDateTime created;
+    private ZonedDateTime updated;
     private JsonNode extraInfo;
     private TokenType type;
 
@@ -54,19 +54,19 @@ public class TokenResource {
         this.extraInfo = extraInfo;
     }
 
-    public LocalDateTime getCreated() {
+    public ZonedDateTime getCreated() {
         return created;
     }
 
-    public void setCreated(LocalDateTime created) {
+    public void setCreated(ZonedDateTime created) {
         this.created = created;
     }
 
-    public LocalDateTime getUpdated() {
+    public ZonedDateTime getUpdated() {
         return updated;
     }
 
-    public void setUpdated(LocalDateTime updated) {
+    public void setUpdated(ZonedDateTime updated) {
         this.updated = updated;
     }
 

@@ -2,7 +2,7 @@ package org.innovateuk.ifs.thread.viewmodel;
 
 import org.innovateuk.threads.resource.FinanceChecksSectionType;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 public class ThreadViewModel {
@@ -39,11 +39,11 @@ public class ThreadViewModel {
         this.awaitingResponse = awaitingResponse;
     }
 
-    public LocalDateTime getCreatedOn() {
+    public ZonedDateTime getCreatedOn() {
         return createdOn;
     }
 
-    public void setCreatedOn(LocalDateTime createdOn) {
+    public void setCreatedOn(ZonedDateTime createdOn) {
         this.createdOn = createdOn;
     }
 
@@ -76,7 +76,7 @@ public class ThreadViewModel {
     private FinanceChecksSectionType sectionType;
     private String title;
     private boolean awaitingResponse;
-    private LocalDateTime createdOn;
+    private ZonedDateTime createdOn;
     private Long id;
     private Long organisationId;
     private Long projectId;

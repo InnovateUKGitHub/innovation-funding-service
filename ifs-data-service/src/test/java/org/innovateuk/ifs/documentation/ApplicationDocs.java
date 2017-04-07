@@ -9,7 +9,7 @@ import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -40,7 +40,7 @@ public class ApplicationDocs {
             .withId(1L)
             .withName("application name")
             .withStartDate(LocalDate.now())
-            .withSubmittedDate(LocalDateTime.now())
+            .withSubmittedDate(ZonedDateTime.now())
             .withDurationInMonths(1L)
             .withApplicationStatus(ApplicationStatus.OPEN)
             .withCompetition(1L)

@@ -17,15 +17,15 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -161,7 +161,7 @@ public class CompetitionSetupServiceImplTest {
 
 		CompetitionResource competitionResource = newCompetitionResource()
 				.withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
-				.withStartDate(LocalDateTime.now().plusDays(1)).build();
+				.withStartDate(ZonedDateTime.now().plusDays(1)).build();
 		competitionResource.setSectionSetupStatus(testSectionStatus);
 
 		assertTrue(service.isCompetitionReadyToOpen(competitionResource));
@@ -179,7 +179,7 @@ public class CompetitionSetupServiceImplTest {
 
 		CompetitionResource competitionResource = newCompetitionResource()
 				.withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
-				.withStartDate(LocalDateTime.now().plusDays(1)).build();
+				.withStartDate(ZonedDateTime.now().plusDays(1)).build();
 		competitionResource.setSectionSetupStatus(testSectionStatus);
 
 		assertFalse(service.isCompetitionReadyToOpen(competitionResource));
@@ -242,8 +242,8 @@ public class CompetitionSetupServiceImplTest {
 	public void testPopulateModel() {
 		Model model = new ExtendedModelMap();
 
-		LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
-		LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
+		ZonedDateTime yesterday = ZonedDateTime.now().minusDays(1);
+		ZonedDateTime tomorrow = ZonedDateTime.now().plusDays(1);
 
 		CompetitionSetupSection competitionSetupSection = CompetitionSetupSection.ADDITIONAL_INFO;
 
@@ -269,8 +269,8 @@ public class CompetitionSetupServiceImplTest {
 	public void testPopulateModel_competitionNotSetupAndLive() {
 		Model model = new ExtendedModelMap();
 
-		LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
-		LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
+		ZonedDateTime yesterday = ZonedDateTime.now().minusDays(1);
+		ZonedDateTime tomorrow = ZonedDateTime.now().plusDays(1);
 
 		CompetitionSetupSection competitionSetupSection = CompetitionSetupSection.ADDITIONAL_INFO;
 

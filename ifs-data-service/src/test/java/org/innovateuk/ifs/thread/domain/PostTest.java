@@ -14,7 +14,7 @@ import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,7 +29,7 @@ public class PostTest {
     private User author;
     private String body;
     private List<Attachment> attachments;
-    private LocalDateTime createdOn;
+    private ZonedDateTime createdOn;
 
     @Before
     public void setup() {
@@ -37,7 +37,7 @@ public class PostTest {
         author = newUser().withId(43L).build();
         body = "Post body";
         attachments = new ArrayList<>();
-        createdOn = LocalDateTime.now();
+        createdOn = ZonedDateTime.now();
         post = new Post(id, author, body, attachments, createdOn);
     }
 

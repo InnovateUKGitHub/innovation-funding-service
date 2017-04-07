@@ -4,7 +4,7 @@ import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.publiccontent.domain.ContentEvent;
 import org.innovateuk.ifs.publiccontent.domain.PublicContent;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -27,7 +27,7 @@ public class ContentEventBuilder extends BaseBuilder<ContentEvent, ContentEventB
         return with(contentEvent -> setField("id", id, contentEvent));
     }
 
-    public ContentEventBuilder withDate(LocalDateTime date) {
+    public ContentEventBuilder withDate(ZonedDateTime date) {
         return with(contentEvent -> setField("date", date, contentEvent));
     }
 
