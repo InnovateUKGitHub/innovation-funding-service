@@ -92,7 +92,7 @@ Applicant fills in the Application Details
     And the user enters text to a text field    css=#application_details-startdate_year    ${nextyear}
     And the user enters text to a text field    css=#application_details-duration    24
     When The user clicks the button/link    jQuery=button[name="mark_as_complete"]
-    Then the user clicks the button/link    link=Application Overview
+    Then the user clicks the button/link    link=Application overview
     And the user should see the element     jQuery=li:contains("Application details") > .task-status-complete
 
 Turnover and Staff count fields
@@ -462,7 +462,7 @@ the user navigates to the growth table finances
     the user clicks the button/link  link=Your finances
 
 Invite a non-existing collaborator in Application with Growth table
-    the user clicks the button/link      jQuery=a:contains("Application Overview")
+    the user clicks the button/link      jQuery=a:contains("Application overview")
     the user clicks the button/link       jQuery=a:contains("view team members and add collaborators")
     the user clicks the button/link       jQuery=a:contains("Add partner organisation")
     the user should see the element       jQuery=h1:contains(Add organisation)
