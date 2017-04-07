@@ -57,7 +57,7 @@ public class JESFinanceModelManager implements FinanceModelManager {
 
     private static Map<FormInputType, List<String>> TYPE_TO_COSTS = new ImmutableMap.Builder<FormInputType, List<String>>()
             .put(FormInputType.YOUR_FINANCE, asList("tsb_reference"))
-            .put(FormInputType.LABOUR, asList("incurred_staff", "incurred_other_costs", "exceptions_staff"))
+            .put(FormInputType.LABOUR, asList("incurred_staff", "allocated_investigators", "exceptions_staff"))
             .put(FormInputType.TRAVEL, asList("incurred_travel_subsistence"))
             .put(FormInputType.MATERIALS, asList("incurred_other_costs"))
             .put(FormInputType.OTHER_COSTS, asList("allocated_estates_costs", "allocated_other_costs", "exceptions_other_costs"))
