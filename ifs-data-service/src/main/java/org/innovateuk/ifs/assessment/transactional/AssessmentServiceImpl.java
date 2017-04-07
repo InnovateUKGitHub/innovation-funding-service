@@ -179,7 +179,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
 
     private ServiceResult<Void> sendNotification(User user, Competition competition) {
         NotificationTarget recipient = new UserNotificationTarget(user);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
         Notification notification = new Notification(
                 systemNotificationSource,
                 singletonList(recipient),

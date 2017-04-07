@@ -66,7 +66,7 @@ Competition is Open to Applications
     The competitions date changes so it is now Open    ${compWithoutGrowth}
 
 Create new Application for this Competition
-    [Tags]    HappyPath
+    [Tags]    HappyPath  MySQL
     Lead Applicant applies to the new created competition    ${compWithoutGrowth}
 
 Applicant visits his Finances
@@ -128,7 +128,7 @@ Once the project growth table is selected
 
 As next step the Applicant cannot see the turnover field
     [Documentation]    INFUND-6393, INFUND-6395
-    [Tags]
+    [Tags]  MySQL
     Given Lead Applicant applies to the new created competition    ${compWITHGrowth}
     When the user clicks the button/link    link=Your finances
     And the user clicks the button/link    link=Your organisation
@@ -383,7 +383,6 @@ The competitions date changes so it is now Open
 
 Lead Applicant applies to the new created competition
     [Arguments]    ${competition}
-    Connect to Database    @{database}
     log in as a different user    &{lead_applicant_credentials}
     ${competitionId} =    get comp id from comp title    ${competition}
     the user navigates to the page    ${server}/competition/${competitionId}/info/eligibility

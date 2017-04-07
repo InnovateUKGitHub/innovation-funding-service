@@ -21,7 +21,7 @@ items:
           deploymentconfig: idp
       spec:
         containers:
-        - image: innovateuk/ifs-shib-idp:0.5.4
+        - image: innovateuk/ifs-shib-idp:0.5.2
           name: idp
           imagePullPolicy: IfNotPresent
           env:
@@ -40,7 +40,7 @@ items:
           - name: HTTPPORT
             value: "9080"
           - name: LDAPURL
-            value: "ldap://oldap.demo.org.iuk.local:389"
+            value: "ldap://oldap.sysint.org.iuk.local:389"
           - name: LDAPUSESTARTTLS
             value: "false"
           - name: LDAPBASEDN
@@ -52,7 +52,7 @@ items:
           - name: LDAPUSERFILTER
             value: "(&(mail={user})(!(employeeType=inactive)))"
           - name: LDAPRURL
-            value: "ldap://oldap.demo.org.iuk.local:389"
+            value: "ldap://oldap.sysint.org.iuk.local:389"
           - name: LDAPRBASEDN
             value: "dc=int,dc=g2g3digital,dc=net"
           - name: LDAPRBINDDN

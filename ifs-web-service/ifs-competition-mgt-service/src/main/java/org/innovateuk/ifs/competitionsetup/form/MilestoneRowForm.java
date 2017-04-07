@@ -23,7 +23,7 @@ public class MilestoneRowForm {
 	private static final Set<MilestoneType> WITH_TIME_TYPES = asSet(MilestoneType.SUBMISSION_DATE);
     private static final Set<MilestoneType> WITH_MIDDAY_TIME = asSet(MilestoneType.ASSESSOR_ACCEPTS, MilestoneType.ASSESSOR_DEADLINE);
 
-    @Range(min=2000, max = 9999, message="{validation.nonifs.detailsform.yyyy.range.format}")
+    @Range(min=2000, max = 9999, message = "{validation.standard.date.format}")
     private Integer year;
     private Integer month;
     private Integer day;
@@ -105,6 +105,10 @@ public class MilestoneRowForm {
 
     public boolean isTimeOption() {
         return WITH_TIME_TYPES.contains(milestoneType);
+    }
+
+    public boolean isFirstMilestone() {
+        return MilestoneType.OPEN_DATE.equals(milestoneType);
     }
 
     public ZonedDateTime getDate() {
