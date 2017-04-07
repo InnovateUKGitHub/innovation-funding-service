@@ -51,10 +51,7 @@
 
     <h3 class="heading-medium">Decision notification</h3>
     <p>You and your project partners will be emailed notification of the decision by
-      <strong th:if="${currentCompetition.fundersPanelEndDate != null}">
-        <th:block th:insert="fragments/elements :: ordinal-day (date=${currentCompetition.fundersPanelEndDate})" />
-        <th:block th:text="${#temporals.monthName(currentCompetition.fundersPanelEndDate)}" />
-        <th:block th:text="${#temporals.year(currentCompetition.fundersPanelEndDate)}" /></strong>.
+      <strong th:if="${currentCompetition.fundersPanelEndDate != null}" th:text="${#temporals.format(currentCompetition.fundersPanelEndDate, 'd MMM yyyy')}"></strong>.
     </p>
 
     <div class="grid-row">
@@ -79,10 +76,7 @@
 
     <h3 class="heading-medium">Application feedback</h3>
     <p>Application feedback will be provided by
-      <strong th:if="${currentCompetition.releaseFeedbackDate != null}">
-        <th:block th:insert="fragments/elements :: ordinal-day (date=${currentCompetition.releaseFeedbackDate})" />
-        <th:block th:text="${#temporals.monthName(currentCompetition.releaseFeedbackDate)}" />
-        <th:block th:text="${#temporals.year(currentCompetition.releaseFeedbackDate)}" /></strong>.
+      <strong th:if="${currentCompetition.releaseFeedbackDate != null}" th:text="${#temporals.format(currentCompetition.releaseFeedbackDate, 'd MMM yyyy')}"></strong>.
       <br />We will email you when this becomes available.
     </p>
 
