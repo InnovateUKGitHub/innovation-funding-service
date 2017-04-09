@@ -134,8 +134,7 @@ public class ProjectFinanceChecksController {
     private FinanceUtil financeUtil;
 
     @Autowired
-    private
-    UserOrganisationUtil userOrganisationUtil;
+    private UserOrganisationUtil userOrganisationUtil;
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping
