@@ -52,9 +52,6 @@ public class AssessorRegistrationController {
     private AssessorService assessorService;
 
     @Autowired
-    private EthnicityRestService ethnicityRestService;
-
-    @Autowired
     private AssessorRegistrationBecomeAnAssessorModelPopulator becomeAnAssessorModelPopulator;
 
     @Autowired
@@ -230,11 +227,6 @@ public class AssessorRegistrationController {
 
     private String doViewYourDetails(Model model, String inviteHash) {
         model.addAttribute("model", yourDetailsModelPopulator.populateModel(inviteHash));
-        model.addAttribute("ethnicityOptions", getEthnicityOptions());
         return "registration/register";
-    }
-
-    private List<EthnicityResource> getEthnicityOptions() {
-        return ethnicityRestService.findAllActive().getSuccessObjectOrThrowException();
     }
 }

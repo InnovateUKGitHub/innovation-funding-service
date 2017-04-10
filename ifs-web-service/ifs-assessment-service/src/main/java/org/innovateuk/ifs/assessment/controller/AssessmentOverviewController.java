@@ -51,9 +51,6 @@ public class AssessmentOverviewController {
     private AssessmentService assessmentService;
 
     @Autowired
-    private UserAuthenticationService userAuthenticationService;
-
-    @Autowired
     private FormInputResponseService formInputResponseService;
 
     @Autowired
