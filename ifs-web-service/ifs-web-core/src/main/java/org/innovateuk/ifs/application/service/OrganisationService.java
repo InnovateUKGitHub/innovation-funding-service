@@ -2,9 +2,11 @@ package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,4 +35,8 @@ public interface OrganisationService {
     Long getOrganisationType(Long userId, Long applicationId);
 
     Optional<OrganisationResource> getOrganisationForUser(Long userId, List<ProcessRoleResource> userApplicationRoles);
+
+    boolean userIsPartnerInOrganisationForProject(Long projectId, Long organisationId, Long userId);
+
+    Long getOrganisationIdFromUser(Long projectId, UserResource user) throws ForbiddenActionException;
 }

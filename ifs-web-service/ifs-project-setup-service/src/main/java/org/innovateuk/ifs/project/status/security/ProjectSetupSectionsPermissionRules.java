@@ -2,8 +2,8 @@ package org.innovateuk.ifs.project.status.security;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
-import org.innovateuk.ifs.commons.error.exception.GeneralUnexpectedErrorException;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.project.ProjectService;
@@ -14,8 +14,6 @@ import org.innovateuk.ifs.project.sections.ProjectSetupSectionAccessibilityHelpe
 import org.innovateuk.ifs.project.sections.SectionAccess;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
-import org.innovateuk.ifs.utils.UserOrganisationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -40,7 +38,7 @@ public class ProjectSetupSectionsPermissionRules {
     private ProjectService projectService;
 
     @Autowired
-    private UserOrganisationUtil userOrganisationUtil;
+    private OrganisationService organisationService;
 
     private ProjectSetupSectionPartnerAccessorSupplier accessorSupplier = new ProjectSetupSectionPartnerAccessorSupplier();
 
@@ -108,7 +106,7 @@ public class ProjectSetupSectionsPermissionRules {
 
     private boolean doSectionCheck(Long projectId, UserResource user, BiFunction<ProjectSetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> sectionCheckFn) {
         try {
-            Long organisationId = userOrganisationUtil.getOrganisationIdFromUser(projectId, user);
+            Long organisationId = organisationService.getOrganisationIdFromUser(projectId, user);
 
             ProjectTeamStatusResource teamStatus;
 

@@ -14,14 +14,13 @@ import org.innovateuk.ifs.form.AddressForm;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
-import org.innovateuk.ifs.util.PrioritySorting;
 import org.innovateuk.ifs.organisation.service.OrganisationAddressRestService;
 import org.innovateuk.ifs.project.AddressLookupBaseController;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.projectdetails.form.FinanceContactForm;
 import org.innovateuk.ifs.project.projectdetails.form.ProjectDetailsAddressForm;
-import org.innovateuk.ifs.project.projectdetails.form.ProjectManagerForm;
 import org.innovateuk.ifs.project.projectdetails.form.ProjectDetailsStartDateForm;
+import org.innovateuk.ifs.project.projectdetails.form.ProjectManagerForm;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.*;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
@@ -29,7 +28,7 @@ import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.sections.ProjectSetupSectionAccessibilityHelper;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.utils.UserOrganisationUtil;
+import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -46,6 +45,7 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.*;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
@@ -54,7 +54,6 @@ import static org.innovateuk.ifs.project.projectdetails.viewmodel.ProjectUserInv
 import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
-import static java.util.stream.Collectors.toList;
 /**
  * This controller will handle all requests that are related to project details.
  */
@@ -80,9 +79,6 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
     @Autowired
     private OrganisationAddressRestService organisationAddressRestService;
-
-    @Autowired
-    private UserOrganisationUtil userOrganisationUtil;
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
     @GetMapping("/{projectId}/details")
@@ -438,7 +434,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
             return redirectToProjectDetails(projectId);
         }
 
-        if(!userOrganisationUtil.userIsPartnerInOrganisationForProject(projectId, organisation, loggedInUser.getId())){
+        if(!organisationService.userIsPartnerInOrganisationForProject(projectId, organisation, loggedInUser.getId())){
             return redirectToProjectDetails(projectId);
         }
 

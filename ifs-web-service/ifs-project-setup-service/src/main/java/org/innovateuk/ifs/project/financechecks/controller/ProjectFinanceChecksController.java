@@ -46,7 +46,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
-import org.innovateuk.ifs.utils.UserOrganisationUtil;
 import org.innovateuk.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.threads.resource.PostResource;
 import org.innovateuk.threads.resource.QueryResource;
@@ -133,16 +132,13 @@ public class ProjectFinanceChecksController {
     @Autowired
     private FinanceUtil financeUtil;
 
-    @Autowired
-    private UserOrganisationUtil userOrganisationUtil;
-
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping
     public String viewFinanceChecks(Model model,
                                     @PathVariable("projectId") final Long projectId,
                                     @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        Long organisationId = userOrganisationUtil.getOrganisationIdFromUser(projectId, loggedInUser);
+        Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
 
         ProjectOrganisationCompositeId projectComposite = new ProjectOrganisationCompositeId(projectId, organisationId);
 
@@ -160,7 +156,7 @@ public class ProjectFinanceChecksController {
                                   HttpServletResponse response,
                                   @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        Long organisationId = userOrganisationUtil.getOrganisationIdFromUser(projectId, loggedInUser);
+        Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
 
         ProjectOrganisationCompositeId projectComposite = new ProjectOrganisationCompositeId(projectId, organisationId);
 
@@ -188,7 +184,7 @@ public class ProjectFinanceChecksController {
                                HttpServletRequest request,
                                HttpServletResponse response) {
 
-        Long organisationId = userOrganisationUtil.getOrganisationIdFromUser(projectId, loggedInUser);
+        Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
 
         ProjectOrganisationCompositeId projectComposite = new ProjectOrganisationCompositeId(projectId, organisationId);
 
@@ -252,7 +248,7 @@ public class ProjectFinanceChecksController {
                                             HttpServletResponse response,
                                             @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        Long organisationId = userOrganisationUtil.getOrganisationIdFromUser(projectId, loggedInUser);
+        Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
 
         ProjectOrganisationCompositeId projectComposite = new ProjectOrganisationCompositeId(projectId, organisationId);
 
@@ -287,7 +283,7 @@ public class ProjectFinanceChecksController {
                                                                  @PathVariable Long attachmentId,
                                                                  @ModelAttribute("loggedInUser") UserResource loggedInUser,
                                                                  HttpServletRequest request) {
-        Long organisationId = userOrganisationUtil.getOrganisationIdFromUser(projectId, loggedInUser);
+        Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
         Optional<ByteArrayResource> content = Optional.empty();
         Optional<FileEntryResource> fileDetails = Optional.empty();
@@ -337,7 +333,7 @@ public class ProjectFinanceChecksController {
                                    HttpServletRequest request,
                                    HttpServletResponse response,
                                    Model model) {
-        Long organisationId = userOrganisationUtil.getOrganisationIdFromUser(projectId, loggedInUser);
+        Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
 
         ProjectOrganisationCompositeId projectComposite = new ProjectOrganisationCompositeId(projectId, organisationId);
 
@@ -361,7 +357,7 @@ public class ProjectFinanceChecksController {
                                 HttpServletRequest request,
                                 HttpServletResponse response,
                                 @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        Long organisationId = userOrganisationUtil.getOrganisationIdFromUser(projectId, loggedInUser);
+        Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
 
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
         attachments.forEach(( id -> financeCheckService.deleteFile(id)));
@@ -375,7 +371,7 @@ public class ProjectFinanceChecksController {
     @GetMapping("/eligibility")
     public String viewExternalEligibilityPage(@PathVariable("projectId") final Long projectId, @ModelAttribute(FORM_ATTR) ApplicationForm form, BindingResult bindingResult, Model model, HttpServletRequest request, @ModelAttribute("loggedInUser") UserResource loggedInUser){
         ProjectResource project = projectService.getById(projectId);
-        Long organisationId = userOrganisationUtil.getOrganisationIdFromUser(projectId, loggedInUser);
+        Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
         ApplicationResource application = applicationService.getById(project.getApplication());
         OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
@@ -390,7 +386,7 @@ public class ProjectFinanceChecksController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping("/eligibility/changes")
     public String viewExternalEligibilityChanges(@PathVariable("projectId") final Long projectId, Model model, @ModelAttribute("loggedInUser") UserResource loggedInUser){
-        Long organisationId = userOrganisationUtil.getOrganisationIdFromUser(projectId, loggedInUser);
+        Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
         ProjectResource project = projectService.getById(projectId);
         OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
         return doViewEligibilityChanges(project, organisation, loggedInUser.getId(), model);
