@@ -16,15 +16,15 @@
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main id="content">
+        <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
 
-            <th:block th:if="${currentApplication.isOpen() and currentCompetition.isOpen()}" th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication},linkTitle='Application Overview',linkClass='link-back',linkUrl=@{/application/{id}(id=${currentApplication.id})}"/>
+            <th:block th:if="${currentApplication.isOpen() and currentCompetition.isOpen()}" th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication},linkTitle='Application overview',linkClass='link-back',linkUrl=@{/application/{id}(id=${currentApplication.id})}"/>
 
             <th:block th:insert="fragments/elements :: competition-closing-warning (competition=${currentCompetition})" />
 
             <div class="page-title">
-                <th:block th:insert="fragments/elements :: application-title (applicationId=${currentApplication.id},applicationName=${currentApplication.name})" />
+                <th:block th:insert="fragments/elements :: application-title (applicationName=${currentApplication.name})" />
                 <h1 th:if="${currentApplication.isOpen()}" class="heading-xlarge no-margin">Application summary</h1>
                 <h1 th:unless="${currentApplication.isOpen()}" class="heading-xlarge no-margin">Application overview</h1>
             </div>

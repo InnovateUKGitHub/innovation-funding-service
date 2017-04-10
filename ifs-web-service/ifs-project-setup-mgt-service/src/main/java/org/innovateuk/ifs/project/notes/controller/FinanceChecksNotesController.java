@@ -41,7 +41,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -86,7 +86,7 @@ public class FinanceChecksNotesController {
 
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
-    @RequestMapping(method = GET)
+    @GetMapping
     public String showPage(@PathVariable Long projectId,
                            @PathVariable Long organisationId,
                            Model model) {
@@ -96,7 +96,7 @@ public class FinanceChecksNotesController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
-    @RequestMapping(value = "/attachment/{attachmentId}", method = GET)
+    @GetMapping(value = "/attachment/{attachmentId}")
     public
     @ResponseBody
     ResponseEntity<ByteArrayResource> downloadAttachment(@PathVariable Long projectId,
@@ -120,7 +120,7 @@ public class FinanceChecksNotesController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
-    @RequestMapping(value = "/{noteId}/new-comment", method = GET)
+    @GetMapping("/{noteId}/new-comment")
     public String viewNewComment(@PathVariable Long projectId,
                                   @PathVariable Long organisationId,
                                   @PathVariable Long noteId,
@@ -141,7 +141,7 @@ public class FinanceChecksNotesController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
-    @RequestMapping(value = "/{noteId}/new-comment", method = POST)
+    @PostMapping(value = "/{noteId}/new-comment")
     public String saveComment(Model model,
                                @PathVariable("projectId") final Long projectId,
                                @PathVariable final Long organisationId,
@@ -183,7 +183,7 @@ public class FinanceChecksNotesController {
                                 attachmentResources.add(fileEntry.getSuccessObject());
                             }
                         });
-                        PostResource post = new PostResource(null, loggedInUser, form.getComment(), attachmentResources, LocalDateTime.now());
+                        PostResource post = new PostResource(null, loggedInUser, form.getComment(), attachmentResources, ZonedDateTime.now());
 
                         ServiceResult<Void> saveResult = financeCheckService.saveNotePost(post, noteId);
                         validationHandler.addAnyErrors(saveResult);
@@ -196,7 +196,7 @@ public class FinanceChecksNotesController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
-    @RequestMapping(value = "/{noteId}/new-comment", method = POST, params = "uploadAttachment")
+    @PostMapping(value = "/{noteId}/new-comment", params = "uploadAttachment")
     public String saveNewCommentAttachment(Model model,
                                             @PathVariable("projectId") final Long projectId,
                                             @PathVariable Long organisationId,
@@ -230,10 +230,8 @@ public class FinanceChecksNotesController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
-    @RequestMapping(value = "/{noteId}/new-comment/attachment/{attachmentId}", method = GET)
-    public
-    @ResponseBody
-    ResponseEntity<ByteArrayResource> downloadResponseAttachment(@PathVariable Long projectId,
+    @GetMapping("/{noteId}/new-comment/attachment/{attachmentId}")
+    public @ResponseBody ResponseEntity<ByteArrayResource> downloadResponseAttachment(@PathVariable Long projectId,
                                                                  @PathVariable Long organisationId,
                                                                  @PathVariable Long noteId,
                                                                  @PathVariable Long attachmentId,
@@ -257,7 +255,7 @@ public class FinanceChecksNotesController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
-    @RequestMapping(value = "/{noteId}/new-comment", params = "removeAttachment", method = POST)
+    @PostMapping(value = "/{noteId}/new-comment", params = "removeAttachment")
     public String removeAttachment(@PathVariable Long projectId,
                                    @PathVariable Long organisationId,
                                    @PathVariable Long noteId,
@@ -283,7 +281,7 @@ public class FinanceChecksNotesController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
-    @RequestMapping(value="/{noteId}/new-comment/cancel", method = GET)
+    @GetMapping("/{noteId}/new-comment/cancel")
     public String cancelNewForm(@PathVariable Long projectId,
                                 @PathVariable Long organisationId,
                                 @PathVariable Long noteId,

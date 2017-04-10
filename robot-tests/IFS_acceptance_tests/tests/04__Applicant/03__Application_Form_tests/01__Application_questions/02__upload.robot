@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     INFUND-832
 ...               INFUND-409
-Suite Setup       Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    participate in their application
+Suite Setup       Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Upload    Applicant    Email
 Resource          ../../../../resources/defaultResources.robot
@@ -42,8 +42,7 @@ Large pdf uploads not allowed
 
 Non pdf uploads not allowed
     [Documentation]    INFUND-832
-    [Tags]    Pending
-    # TODO Pending due to INFUND-5344
+    [Tags]
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=5. Technical approach
@@ -105,7 +104,7 @@ Questions can be assigned with appendices
     And the user should see the text in the page    ${valid_pdf}
     When the user assigns the question to the collaborator    Arsene Wenger
     Then the user should not see the text in the page    Remove
-    And the user clicks the button/link    link=Application Overview
+    And the user clicks the button/link    link=Application overview
     Then the user clicks the button/link    link=6. Innovation
     And the user assigns the question to the collaborator    Arsene Wenger
 

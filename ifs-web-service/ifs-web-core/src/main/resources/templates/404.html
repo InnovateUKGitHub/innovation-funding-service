@@ -8,7 +8,7 @@
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main id="content">
+<main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
 
     <h1 class="heading-large">Page not found</h1>
@@ -24,7 +24,7 @@
 
     <div>
         <span>
-            Please check the web address or search term you entered for any errors.  You can return to <a th:href="${userDashboardLink}">your application</a> or go back to the <a href="https://www.gov.uk/government/organisations/innovate-uk">Innovate UK homepage</a>.
+            Please check the web address or search term you entered for any errors. You can return to <a th:href="${userDashboardLink}">your dashboard</a> or go back to the <a href="https://www.gov.uk/government/organisations/innovate-uk">Innovate UK homepage</a>.
         </span>
     </div>
 

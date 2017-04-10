@@ -5,7 +5,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * Response class defines the model in which the response made by an Assessor on a {@link FormInput} is stored.
@@ -33,7 +33,7 @@ public class AssessorFormInputResponse {
 
     @NotNull
     @DateTimeFormat
-    private LocalDateTime updatedDate;
+    private ZonedDateTime updatedDate;
 
     public Long getId() {
         return id;
@@ -67,11 +67,11 @@ public class AssessorFormInputResponse {
         this.value = value;
     }
 
-    public LocalDateTime getUpdatedDate() {
+    public ZonedDateTime getUpdatedDate() {
         return updatedDate;
     }
 
-    public void setUpdatedDate(LocalDateTime updatedDate) {
+    public void setUpdatedDate(ZonedDateTime updatedDate) {
         this.updatedDate = updatedDate;
     }
 }

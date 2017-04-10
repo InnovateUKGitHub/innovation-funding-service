@@ -58,7 +58,7 @@ Initial details: client-side validations
     Then the user should not see the error any more    Please select a competition type.
     When the user selects the option from the drop-down menu    Health and life sciences    id=innovationSectorCategoryId
     Then the user should not see the error any more    Please select an innovation sector.
-    When the user selects the option from the drop-down menu    Advanced Therapies    id=innovationAreaCategoryId-0
+    When the user selects the option from the drop-down menu    Advanced therapies    id=innovationAreaCategoryId-0
     Then the user should not see the error any more    Please select an innovation area.
     When the user enters text to a text field    id=openingDateDay    01
     #Then the user should not see the error any more    Please enter an opening day.
@@ -174,8 +174,8 @@ Eligibility Autosave
     and the user clicks the button/link    link=Eligibility
     Then the user should see the correct details in the eligibility form
 
-Milestones: Server side validations
-    [Documentation]    INFUND-2993
+Milestones: Server side validations, submission time is default
+    [Documentation]    INFUND-2993, INFUND-7632
     [Tags]    HappyPath
     [Setup]    The user navigates to the Validation competition
     Given the user clicks the button/link    link=Milestones
@@ -183,13 +183,15 @@ Milestones: Server side validations
     And the users waits until the page is autosaved
     And the user clicks the button/link    jQuery=button:contains(Done)
     Then Validation summary should be visible
+    Then the user should see the text in the element    jQuery=tr:nth-of-type(3) td:nth-of-type(1) option:selected    12:00 pm
 
-Milestones: Client side validations
-    [Documentation]    INFUND-2993
+Milestones: Client side validations, submission time is non-default
+    [Documentation]    INFUND-2993, INFUND-7632
     [Tags]    HappyPath
     When the user fills the milestones with valid data
-    Then The user should not see the text in the page    please enter a future date that is after the previous milestone
-    Then The user should not see the text in the page    please enter a valid date
+    Then The user should not see the text in the page    Please enter a future date that is after the previous milestone.
+    Then The user should not see the text in the page    Please enter a valid date.
+    Then the user should see the text in the element    jQuery=tr:nth-of-type(3) td:nth-of-type(1) option:selected    10:00 am
 
 Milestones: Autosave
     [Tags]
@@ -288,18 +290,18 @@ the user fills the milestones with invalid data
     The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].year    2018
 
 Validation summary should be visible
-    Then The user should see the text in the page    2. Briefing event: please enter a future date that is after the previous milestone
-    And the user should see the text in the page    3. Submission date: please enter a future date that is after the previous milestone
-    And the user should see the text in the page    4. Allocate assessors: please enter a future date that is after the previous milestone
-    And the user should see the text in the page    5. Assessor briefing: please enter a future date that is after the previous milestone
-    And the user should see the text in the page    6. Assessor accepts: please enter a future date that is after the previous milestone
-    And the user should see the text in the page    7. Assessor deadline: please enter a future date that is after the previous milestone
-    And the user should see the text in the page    8. Line draw: please enter a future date that is after the previous milestone
-    And the user should see the text in the page    9. Assessment panel: please enter a future date that is after the previous milestone
-    And the user should see the text in the page    10. Panel date: please enter a future date that is after the previous milestone
-    And the user should see the text in the page    11. Funders panel: please enter a future date that is after the previous milestone
-    And the user should see the text in the page    12. Notifications: please enter a future date that is after the previous milestone
-    And the user should see the text in the page    13. Release feedback: please enter a future date that is after the previous milestone
+    Then The user should see the text in the page    2. Briefing event: Please enter a future date that is after the previous milestone.
+    And the user should see the text in the page    3. Submission date: Please enter a future date that is after the previous milestone.
+    And the user should see the text in the page    4. Allocate assessors: Please enter a future date that is after the previous milestone.
+    And the user should see the text in the page    5. Assessor briefing: Please enter a future date that is after the previous milestone.
+    And the user should see the text in the page    6. Assessor accepts: Please enter a future date that is after the previous milestone.
+    And the user should see the text in the page    7. Assessor deadline: Please enter a future date that is after the previous milestone.
+    And the user should see the text in the page    8. Line draw: Please enter a future date that is after the previous milestone.
+    And the user should see the text in the page    9. Assessment panel: Please enter a future date that is after the previous milestone.
+    And the user should see the text in the page    10. Panel date: Please enter a future date that is after the previous milestone.
+    And the user should see the text in the page    11. Funders panel: Please enter a future date that is after the previous milestone.
+    And the user should see the text in the page    12. Notifications: Please enter a future date that is after the previous milestone.
+    And the user should see the text in the page    13. Release feedback: Please enter a future date that is after the previous milestone.
 
 the user fills the milestones with valid data
     The user enters text to a text field    name=milestoneEntries[OPEN_DATE].day    10
@@ -311,6 +313,7 @@ the user fills the milestones with valid data
     The user enters text to a text field    name=milestoneEntries[SUBMISSION_DATE].day    12
     The user enters text to a text field    name=milestoneEntries[SUBMISSION_DATE].month    1
     The user enters text to a text field    name=milestoneEntries[SUBMISSION_DATE].year    2019
+    The user selects the index from the drop-down menu    1    id=milestoneEntries[SUBMISSION_DATE].time
     The user enters text to a text field    name=milestoneEntries[ALLOCATE_ASSESSORS].day    13
     The user enters text to a text field    name=milestoneEntries[ALLOCATE_ASSESSORS].month    1
     The user enters text to a text field    name=milestoneEntries[ALLOCATE_ASSESSORS].year    2019
@@ -349,7 +352,7 @@ the user should see the correct values in the initial details form
     Should Be Equal    ${input_value}    Validations Test
     Page Should Contain    Programme
     Page Should Contain    Health and life sciences
-    Page Should Contain    Advanced Therapies
+    Page Should Contain    Advanced therapies
     ${input_value} =    Get Value    id=openingDateDay
     Should Be Equal As Strings    ${input_value}    1
     ${input_value} =    Get Value    Id=openingDateMonth
@@ -421,7 +424,7 @@ The user enters valid data in the initial details
     Given the user enters text to a text field    id=title    Validations Test
     And the user selects the option from the drop-down menu    Programme    id=competitionTypeId
     And the user selects the option from the drop-down menu    Health and life sciences    id=innovationSectorCategoryId
-    And the user selects the option from the drop-down menu    Advanced Therapies    id=innovationAreaCategoryId-0
+    And the user selects the option from the drop-down menu    Advanced therapies    id=innovationAreaCategoryId-0
     And the user enters text to a text field    id=openingDateDay    01
     And the user enters text to a text field    Id=openingDateMonth    12
     And the user enters text to a text field    id=openingDateYear    2017

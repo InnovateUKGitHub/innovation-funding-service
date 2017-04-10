@@ -1,9 +1,8 @@
 package org.innovateuk.ifs.dashboard;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationStatusResource;
+import org.innovateuk.ifs.application.resource.ApplicationStatus;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.ApplicationStatusRestService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -17,8 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -43,9 +42,6 @@ public class ApplicantController {
     private ProcessRoleService processRoleService;
 
     @Autowired
-    private ApplicationStatusRestService applicationStatusService;
-
-    @Autowired
     private UserAuthenticationService userAuthenticationService;
 
     @Autowired
@@ -54,7 +50,7 @@ public class ApplicantController {
     @Autowired
     private ProjectService projectService;
 
-    @RequestMapping(value="/dashboard", method= RequestMethod.GET)
+    @GetMapping("/dashboard")
     public String dashboard(Model model, HttpServletRequest request) {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
 
@@ -64,11 +60,13 @@ public class ApplicantController {
         List<ApplicationResource> finished = applicationService.getFinished(user.getId());
 
         List<ProjectResource> projectsInSetup = projectService.findByUser(user.getId()).getSuccessObject();
-        
-        Map<Long, CompetitionResource> competitions = createCompetitionMap(inProgress, finished);
-        Map<Long, ApplicationStatusResource> applicationStatusMap = createApplicationStatusMap(inProgress, finished);
 
-        model.addAttribute("applicationsInProcess", inProgress);
+        List<ApplicationResource> applicationsForProjectsInSetup = getApplicationsForProjectsInSetup(projectsInSetup);
+
+        Map<Long, CompetitionResource> competitions = createCompetitionMap(inProgress, finished, applicationsForProjectsInSetup);
+        Map<Long, ApplicationStatus> applicationStatusMap = createApplicationStatusMap(inProgress, finished);
+
+        model.addAttribute("applicationsInProgress", inProgress);
         model.addAttribute("applicationsAssigned", getAssignedApplications(inProgress, user));
         model.addAttribute("applicationsFinished", finished);
         model.addAttribute("projectsInSetup", projectsInSetup);
@@ -97,12 +95,12 @@ public class ApplicantController {
 
     // TODO DW - INFUND-1555 - handle rest result
     @SafeVarargs
-    private final Map<Long, ApplicationStatusResource> createApplicationStatusMap(List<ApplicationResource>... resources){
+    private final Map<Long, ApplicationStatus> createApplicationStatusMap(List<ApplicationResource>... resources){
         return combineLists(resources).stream()
             .collect(
                 Collectors.toMap(
                     ApplicationResource::getId,
-                    application -> applicationStatusService.getApplicationStatusById(application.getApplicationStatus()).getSuccessObjectOrThrowException()
+                    application -> application.getApplicationStatus()
                 )
             );
     }
@@ -113,9 +111,12 @@ public class ApplicantController {
             .collect(
                 Collectors.toMap(
                     ApplicationResource::getId,
-                    application -> competitionService.getById(application.getCompetition())
-                )
+                    application -> competitionService.getById(application.getCompetition()), (p1, p2) -> p1)
             );
     }
 
+    private final List<ApplicationResource> getApplicationsForProjectsInSetup(List<ProjectResource> resources){
+
+        return resources.stream().map(project -> applicationService.getById(project.getApplication())).collect(Collectors.toList());
+    }
 }

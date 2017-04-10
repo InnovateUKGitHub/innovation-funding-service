@@ -23,38 +23,38 @@ public class OrganisationController {
     @Autowired
     private OrganisationService organisationService;
 
-    @RequestMapping("/findByApplicationId/{applicationId}")
+    @GetMapping("/findByApplicationId/{applicationId}")
     public RestResult<Set<OrganisationResource>> findByApplicationId(@PathVariable("applicationId") final Long applicationId) {
         return organisationService.findByApplicationId(applicationId).toGetResponse();
     }
 
-    @RequestMapping("/findById/{organisationId}")
+    @GetMapping("/findById/{organisationId}")
     public RestResult<OrganisationResource> findById(@PathVariable("organisationId") final Long organisationId) {
         return organisationService.findById(organisationId).toGetResponse();
     }
 
-    @RequestMapping("/getPrimaryForUser/{userId}")
+    @GetMapping("/getPrimaryForUser/{userId}")
     public RestResult<OrganisationResource> getPrimaryForUser(@PathVariable("userId") final Long userId) {
         return organisationService.getPrimaryForUser(userId).toGetResponse();
     }
 
-    @RequestMapping(value = "/create", method = RequestMethod.POST)
+    @PostMapping("/create")
     public RestResult<OrganisationResource> create(@RequestBody OrganisationResource organisation) {
         return organisationService.create(organisation).toPostCreateResponse();
     }
 
-    @RequestMapping(value = "/update", method = RequestMethod.PUT)
+    @PutMapping("/update")
     public RestResult<OrganisationResource> saveResource(@RequestBody OrganisationResource organisationResource) {
         return organisationService.update(organisationResource).toPutWithBodyResponse();
     }
 
-    @RequestMapping(value = "/updateNameAndRegistration/{organisationId}", method = RequestMethod.POST)
+    @PostMapping("/updateNameAndRegistration/{organisationId}")
     public RestResult<OrganisationResource> updateNameAndRegistration(@PathVariable("organisationId") Long organisationId, @RequestParam(value = "name") String name, @RequestParam(value = "registration") String registration) {
         return organisationService.updateOrganisationNameAndRegistration(organisationId, name, registration).toPostCreateResponse();
     }
 
     // TODO DW - INFUND-1555 - do we want to be returning an OrganisationResource from this call?
-    @RequestMapping(value = "/addAddress/{organisationId}", method = RequestMethod.POST)
+    @PostMapping("/addAddress/{organisationId}")
     public RestResult<OrganisationResource> addAddress(@PathVariable("organisationId") final Long organisationId, @RequestParam("addressType") final OrganisationAddressType addressType, @RequestBody AddressResource address) {
         return organisationService.addAddress(organisationId, addressType, address).toPutWithBodyResponse();
     }

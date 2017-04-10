@@ -8,7 +8,7 @@ import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
 import static java.util.Arrays.asList;
 
 /**
- * Component to check the progress of Project Setup.  This is used by the {@link ProjectSetupSectionsAccessibilityHelper} to
+ * Component to check the progress of Project Setup.  This is used by the {@link ProjectSetupSectionAccessibilityHelper} to
  * determine which sections are available at a given time
  */
 class ProjectSetupProgressChecker {

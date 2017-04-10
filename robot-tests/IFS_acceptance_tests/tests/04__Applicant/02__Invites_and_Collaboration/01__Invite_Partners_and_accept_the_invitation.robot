@@ -22,6 +22,8 @@ Documentation     INFUND-901: As a lead applicant I want to invite application c
 ...               INFUND-7979 As an lead applicant I want to add a new organisation
 ...
 ...               INFUND-7977 As a non lead applicant I want to edit my application team
+...
+...               INFUND-8590 Lead applicant can Delete a partner Organisation
 Suite Setup       log in and create new application for collaboration if there is not one already
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
@@ -29,7 +31,7 @@ Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
 ${application_name}    Invite robot test application
-${INVITE_COLLABORATORS2_PAGE}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_3}/contributors/invite?newApplication
+${INVITE_COLLABORATORS2_PAGE}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_3_NUMBER}/contributors/invite?newApplication
 
 *** Test Cases ***
 Application team page
@@ -49,9 +51,12 @@ Lead Adds/Removes rows
     [Documentation]    INFUND-901
     ...
     ...    INFUND-7974
+    ...
+    ...    INFUND-8590
     [Tags]    HappyPath
     When The user clicks the button/link    jquery=a:contains("Update Empire Ltd")
     And the user clicks the button/link    jQuery=button:contains("Add new applicant")
+    And The user should not see the element    jQuery=.modal-delete-organisation button:contains('Delete organisation')
     Then The user should see the element    jQuery=.table-overflow tr:nth-of-type(2) td:nth-of-type(1)
     And The user clicks the button/link    jQuery=button:contains('Remove')
     Then The user should not see the element    jQuery=.table-overflow tr:nth-of-type(2) td:nth-of-type(1)
@@ -92,6 +97,8 @@ Lead Adds/Removes partner organisation
     ...    INFUND-7973
     ...
     ...    INFUND-7979
+    ...
+    ...    INFUND-8590
     [Tags]    HappyPath
     When The user clicks the button/link    jQuery=a:contains('Add partner organisation')
     And The user enters text to a text field    name=organisationName    Fannie May
@@ -99,7 +106,7 @@ Lead Adds/Removes partner organisation
     And The user enters text to a text field    name=applicants[0].email    ewan+10@hiveit.co.uk
     And The user clicks the button/link    jQuery=button:contains("Add organisation and invite applicants")
     And the user clicks the button/link    jQuery=a:contains("Update Fannie May")
-    Then The user clicks the button/link    jQuery=button:contains('Delete organisation')
+    Then The user clicks the button/link    jQuery=a:contains('Delete organisation')
     And The user clicks the button/link     jQuery=.modal-delete-organisation button:contains('Delete organisation')
     Then The user should not see the text in the page    Fannie May
     And the user should see the text in the page    Application team
@@ -160,7 +167,7 @@ Business organisation (partner accepts invitation)
     ...    INFUND-2336
     [Tags]    HappyPath    Email    SmokeTest
     [Setup]    The guest user opens the browser
-    When the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    participate in their application
+    When the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation    3
     And the user clicks the button/link    jQuery=.button:contains("Yes, accept invitation")
     And the user selects the radio button    organisationType    1
     And the user clicks the button/link    jQuery=.button:contains("Continue")
@@ -242,7 +249,7 @@ Registered partner should not create new org but should follow the create accoun
     [Documentation]    INFUND-1463
     [Tags]    Email
     [Setup]    The guest user opens the browser
-    When the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    participate in their application
+    When the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    You will be joining as part of the organisation    3
     And the user should see the text in the page    Join an application
     And the user clicks the button/link    jQuery=.button:contains("Yes, accept invitation")
     And the user should see the text in the page    Confirm your organisation
@@ -260,7 +267,7 @@ The lead applicant should have the correct status
     the user should see the element    jQuery=.table-overflow tr:nth-child(1) td:nth-child(3):contains("Lead")
 
 the applicant cannot assign to pending invitees
-    the user clicks the button/link    jQuery=button:contains("Assigned to")
+    the user clicks the button/link    jQuery=button:contains("Assign this question to someone else")
     the user should not see the element    jQuery=button:contains("Adrian Booth")
 
 the status of the people should be correct in the Manage contributors page

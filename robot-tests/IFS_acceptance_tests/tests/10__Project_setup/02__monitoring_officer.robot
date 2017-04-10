@@ -56,7 +56,7 @@ Comp admin can view the Supporting information details on MO page
     Then the user should see the text in the page    Monitoring Officer
     And the user should see the text in the page    Supporting information
     And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_TITLE}
-    And the user should see the text in the page    Satellite Applications
+    And the user should see the text in the page    Satellite applications
     And the user should see the text in the page    Empire Road
     And the user should see the text in the page    Sheffield
     And the user should see the text in the page    S1 2ED
@@ -74,7 +74,7 @@ Project finance user can view MO page, and go on to assign MO
     Then the user should see the text in the page    Monitoring Officer
     And the user should see the text in the page    Supporting information
     And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_TITLE}
-    And the user should see the text in the page    Satellite Applications
+    And the user should see the text in the page    Satellite applications
     And the user should see the text in the page    Empire Road
     And the user should see the text in the page    Sheffield
     And the user should see the text in the page    S1 2ED
@@ -93,7 +93,6 @@ MO server-side validation
     When the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
     Then the user should see an error    Please enter a first name.
     And the user should see an error    Please enter a last name.
-    And the user should see an error    Please enter a valid email address.
     And the user should see an error    Please enter an email address.
     And the user should see an error    Please enter a phone number.
     And the user should see an error    Please enter a valid phone number.

@@ -8,7 +8,7 @@
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main id="content">
+<main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
 
     <div class="page-title">
@@ -16,7 +16,7 @@
         <h1 class="heading-xlarge no-margin" >Choose your organisation type</h1>
     </div>
 
-    <p>You have been invited to collaborate as part of the organisation:
+    <p>You are participating in this competition as part of the organisation
         <strong>
             <span th:if="${model.inviteOrganisationNameConfirmed}" th:text="${model.inviteOrganisationNameConfirmed}"></span>
             <span th:unless="${model.inviteOrganisationNameConfirmed}" th:text="${model.inviteOrganisationName}"></span>

@@ -111,10 +111,12 @@
     <!-- ===========================Subsection buttons =========================== -->
     <th:block th:fragment="subsection_buttons">
         <th:block th:if="${model.subFinanceSection}">
-            <div th:unless="${readonly}">
-                <button id="mark-all-as-complete" th:unless="${model.sectionsMarkedAsComplete.contains(model.currentSection.id)}" type="submit" name="mark_section_as_complete" class="button">Mark as complete</button>
-                <button th:if="${model.sectionsMarkedAsComplete.contains(model.currentSection.id)}" type="submit" name="mark_section_as_incomplete" class="extra-margin buttonlink"
-                        th:text="${'Edit ' + #strings.toLowerCase(model.currentSection.name)}">Edit</button>
+            <div th:unless="${readonly}" class="form-footer">
+                <div class="form-footer__actions">
+                    <button id="mark-all-as-complete" th:unless="${model.sectionsMarkedAsComplete.contains(model.currentSection.id)}" type="submit" name="mark_section_as_complete" class="buttonlink">Mark as complete</button>
+                    <button th:if="${model.sectionsMarkedAsComplete.contains(model.currentSection.id)}" type="submit" name="mark_section_as_incomplete" class="buttonlink"
+                            th:text="${'Edit ' + #strings.toLowerCase(model.currentSection.name)}">Edit</button>
+                </div>
             </div>
             <div>
                 <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.currentApplication.id}, sectionId=${model.currentSection.getParentSection()})}" class="button-secondary extra-margin">
@@ -178,7 +180,7 @@
                 <tbody>
                 <tr th:if="${hasOrganisationFinance}" th:with="organisationFinance=${model.financeOverview.organisationFinances.get(organisationId)}">
                     <td class="numeric"><strong>&pound;<th:block th:text="${#numbers.formatDecimal(organisationFinance.total, 0, 'COMMA', 0, 'POINT')}" /></strong></td>
-                    <td class="numeric">&pound;<th:block th:text="${organisationFinance.grantClaimPercentage}+'%'" /></td>
+                    <td class="numeric"><th:block th:text="${organisationFinance.grantClaimPercentage}+'%'" /></td>
                     <td class="numeric">&pound;<th:block th:text="${#numbers.formatDecimal(organisationFinance.totalFundingSought, 0, 'COMMA', 0, 'POINT')}" /></td>
                     <td class="numeric">&pound;<th:block th:text="${#numbers.formatDecimal(organisationFinance.totalOtherFunding, 0, 'COMMA', 0, 'POINT')}" /></td>
                     <td class="numeric">&pound;<th:block th:text="${#numbers.formatDecimal(organisationFinance.totalContribution, 0, 'COMMA', 0, 'POINT')}" /></td>

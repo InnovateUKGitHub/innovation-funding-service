@@ -18,7 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -134,14 +134,14 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<Void> closeAssessment(long competitionId) {
         Competition competition = competitionRepository.findById(competitionId);
-        competition.closeAssessment(LocalDateTime.now());
+        competition.closeAssessment(ZonedDateTime.now());
         return serviceSuccess();
     }
 
     @Override
     public ServiceResult<Void> notifyAssessors(long competitionId) {
         Competition competition = competitionRepository.findById(competitionId);
-        competition.notifyAssessors(LocalDateTime.now());
+        competition.notifyAssessors(ZonedDateTime.now());
         return serviceSuccess();
     }
 
@@ -152,10 +152,22 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
                         .getSuccessObjectOrThrowException();
         if (keyStatisticsResource.isCanReleaseFeedback()) {
             Competition competition = competitionRepository.findById(competitionId);
-            competition.releaseFeedback(LocalDateTime.now());
+            competition.releaseFeedback(ZonedDateTime.now());
             return serviceSuccess();
         } else {
             return serviceFailure(new Error(COMPETITION_CANNOT_RELEASE_FEEDBACK));
         }
+    }
+
+    @Override
+    public ServiceResult<Void> manageInformState(long competitionId) {
+        CompetitionFundedKeyStatisticsResource keyStatisticsResource =
+                competitionKeyStatisticsService.getFundedKeyStatisticsByCompetition(competitionId)
+                .getSuccessObjectOrThrowException();
+        if (keyStatisticsResource.isCanReleaseFeedback()) {
+            Competition competition = competitionRepository.findById(competitionId);
+            competition.setFundersPanelEndDate(ZonedDateTime.now());
+        }
+        return serviceSuccess();
     }
 }

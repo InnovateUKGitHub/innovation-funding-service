@@ -259,12 +259,6 @@ User Saves the Assessment as Not Recommended
     And the application should have the correct status    css=.progress-list li:nth-child(5)    Assessed
     And the application should have the correct status    css=.progress-list li:nth-child(6)    Assessed
 
-Submit Validation
-    [Documentation]    INFUND-5739
-    When The user clicks the button/link    jQuery=button:contains("Submit assessments")
-    And the user clicks the button/link    jQuery=button:contains("Yes I want to submit the assessments")
-    Then The user should see the text in the page    There was a problem submitting some of your assessments.
-
 Submit Assessments
     [Documentation]    INFUND-5739
     ...
@@ -273,6 +267,7 @@ Submit Assessments
     ...    INFUND-6358
     [Tags]    HappyPath
     Given the user should see the element    jQuery=.in-progress li:nth-child(6):contains("Intelligent Building")
+    And the user should see that the element is disabled    id=submit-assessment-button
     When the user clicks the button/link    css=.in-progress li:nth-child(6) .selection-button-checkbox
     And the user clicks the button/link    jQuery=button:contains("Submit assessments")
     And The user clicks the button/link    jQuery=button:contains("Cancel")
@@ -289,8 +284,10 @@ Progress of the applications in Dashboard
     [Tags]    HappyPath
     ${ACCEPTED_LIST}=    Get Webelements    jQuery=.my-applications .in-progress li:not(:contains("Pending"))
     ${EXPECTED_TOTAL_ACCEPTED}=    Get Length    ${ACCEPTED_LIST}
+    ${PENDING_LIST}=    Get Webelements    jQuery=.my-applications .in-progress li:contains("Pending")
+    ${EXPECTED_TOTAL_PENDING}=    Get Length    ${PENDING_LIST}
     When The user navigates to the page    ${assessor_dashboard_url}
-    Then the progress of the applications should be correct    ${EXPECTED_TOTAL_ACCEPTED}
+    Then the progress of the applications should be correct    ${EXPECTED_TOTAL_ACCEPTED}    ${EXPECTED_TOTAL_PENDING}
 
 *** Keywords ***
 the collapsible button should contain
@@ -376,6 +373,8 @@ the application should have the correct status
     element should contain    ${APPLICATION}    ${STATUS}
 
 the progress of the applications should be correct
-    [Arguments]    ${EXPECTED_TOTAL_ACCEPTED}
+    [Arguments]    ${EXPECTED_TOTAL_ACCEPTED}    ${EXPECTED_TOTAL_PENDING}
+    ${TOTAL_PENDING}=    Get text    css=.action-required .pending-applications    #gets the pending apps
+    Should Be Equal As Integers    ${TOTAL_PENDING}    ${EXPECTED_TOTAL_PENDING}
     ${TOTAL_ACCEPTED}=    Get text    css=.action-required .accepted-applications    #gets the total number
     Should Be Equal As Integers    ${TOTAL_ACCEPTED}    ${EXPECTED_TOTAL_ACCEPTED}

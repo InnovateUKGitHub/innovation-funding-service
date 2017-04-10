@@ -6,10 +6,10 @@
 <body th:with="context='applicant'" class="public-content">
     <th:block th:include="fragments/layout :: body-start" />
     <th:block th:include="fragments/layout :: global-header" />
-    <main id="content">
+    <main tabindex="-1" id="content">
         <th:block th:include="fragments/layout :: main-content-start" />
         <h1 class="heading-large">Innovation competitions</h1>
-        <p>Browse upcoming and live competitions. Find out when new competitions are launched by <a href="#">signing up for competition updates</a>.</p>
+        <p>Browse upcoming and live competitions. Find out when new competitions are launched by <a href="http://info.innovateuk.org/emailpref">signing up for competition updates</a>.</p>
         <div class="grid-row">
             <div class="column-third">
                 <form method="GET">
@@ -18,6 +18,7 @@
                             <legend>
                                 Filter competitions
                             </legend>
+                            <hr class="no-margin" />
                             <div class="form-group extra-margin">
                                 <label class="form-label" for="keywords">Keywords</label>
                                 <input th:value="${model.searchKeywords}" class="form-control width-full" id="keywords" name="keywords" type="text" />
@@ -37,7 +38,7 @@
                 </form>
             </div>
             <div class="column-two-thirds">
-                <p class="extra-margin-bottom" th:text="${model.totalResults == 1 ? '1 competition found' : model.totalResults+' competitions found' }"></p>
+                <p class="no-margin" th:text="${model.totalResults == 1 ? '1 competition' : model.totalResults+' competitions' }"></p>
                 <th:block th:if="${model.totalResults == 0}">
                     <div class="extra-margin-bottom">
                         <h2 class="heading-large">Please try:</h2>
@@ -47,6 +48,7 @@
                         </ul>
                     </div>
                 </th:block>
+                <hr class="no-margin-top" />
                 <ul th:unless="${model.totalResults == 0}">
                    <li th:each="(publicContentItem, iteration : ${model.publicContentItems})">
                        <h2 class="heading-medium no-margin-top extra-margin-bottom">
@@ -57,9 +59,9 @@
                             <dt>Eligibility:</dt>
                             <dd class="wysiwyg-styles" ifs:utext="${publicContentItem.publicContentResource?.eligibilitySummary}"></dd>
                             <dt>Opens:</dt>
-                            <dd th:text="${#temporals.format(publicContentItem.competitionOpenDate, 'dd MMMM yyyy')}" />
+                            <dd th:text="${#temporals.format(publicContentItem.competitionOpenDate, 'd MMMM yyyy')}" />
                             <dt>Closes:</dt>
-                            <dd th:text="${#temporals.format(publicContentItem.competitionCloseDate, 'dd MMMM yyyy')}" />
+                            <dd th:text="${#temporals.format(publicContentItem.competitionCloseDate, 'd MMMM yyyy')}" />
                         </dl>
                         <hr th:unless="${iteration.last}"/>
                     </li>

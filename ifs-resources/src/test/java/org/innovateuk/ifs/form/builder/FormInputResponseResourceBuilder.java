@@ -4,7 +4,7 @@ import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -67,7 +67,7 @@ public class FormInputResponseResourceBuilder extends BaseBuilder<FormInputRespo
         return with(response -> response.setFormInputMaxWordCount(formInputMaxWordCount));
     }
 
-    public FormInputResponseResourceBuilder withUpdateDate(LocalDateTime dateTime) {
+    public FormInputResponseResourceBuilder withUpdateDate(ZonedDateTime dateTime) {
         return with(response -> response.setUpdateDate(dateTime));
     }
 

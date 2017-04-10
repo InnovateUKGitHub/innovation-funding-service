@@ -30,12 +30,13 @@ import org.springframework.data.domain.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
-import static java.time.LocalDateTime.now;
+import static java.time.ZonedDateTime.now;
 import static java.time.format.DateTimeFormatter.ofPattern;
 import static java.util.Arrays.asList;
 import static java.util.Collections.*;
@@ -158,8 +159,8 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         String email = "john@email.com";
         String name = "John Barnes";
 
-        LocalDateTime acceptsDate = LocalDateTime.of(2016, 12, 20, 12, 0, 0);
-        LocalDateTime deadlineDate = LocalDateTime.of(2017, 1, 17, 12, 0, 0);
+        ZonedDateTime acceptsDate = ZonedDateTime.of(2016, 12, 20, 12, 0,0,0, ZoneId.systemDefault());
+        ZonedDateTime deadlineDate = ZonedDateTime.of(2017, 1, 17, 12, 0,0,0, ZoneId.systemDefault());
 
         Competition competition = newCompetition()
                 .withName("my competition")
@@ -1707,7 +1708,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         Long innovationArea = 2L;
         ParticipantStatus status = ParticipantStatus.PENDING;
         Boolean compliant = true;
-        LocalDateTime agreementSignedDate = now().minusDays(5);
+        ZonedDateTime agreementSignedDate = now().minusDays(5);
 
         List<InnovationArea> innovationAreas = newInnovationArea()
                 .withName("Innovation 1", "Innovation 2")

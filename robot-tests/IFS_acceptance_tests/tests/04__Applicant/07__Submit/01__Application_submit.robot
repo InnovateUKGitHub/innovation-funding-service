@@ -27,7 +27,7 @@ Submit button disabled when application is incomplete
     Given the user navigates to the page    ${DASHBOARD_URL}
     When the user clicks the button/link    link=${application_name}
     And the user clicks the button/link    link=Your finances
-    And the user clicks the button/link    link= Application Overview
+    And the user clicks the button/link    link= Application overview
     And the user clicks the button/link    jQuery=.button:contains("Review and submit")
     Then the submit button should be disabled
 
@@ -35,22 +35,22 @@ Applicant has read only view after submission
     [Documentation]    INFUND-7405, INFUND-8599
     [Tags]    HappyPath
     When the user navigates to the page    ${DASHBOARD_URL}
-    and the user clicks the button/link      link=${application_name}
+    and the user clicks the button/link    link=${application_name}
     then the applicant completes the application details    Application details
-    and the user clicks the button/link     link=Return to application overview
-    and the user clicks the button/link     link=Your finances
+    and the user clicks the button/link    link=Return to application overview
+    and the user clicks the button/link    link=Your finances
     and the user marks the finances as complete    ${application_name}
-    when the user clicks the button/link     link=Review and submit
-    then the user should not see the element     css=input
+    when the user clicks the button/link    link=Review and submit
+    then the user should not see the element    css=input
 
 Your Project costs section is read-only once application is submitted
-    [Documentation]     INFUND-6788,INFUND-7405
+    [Documentation]    INFUND-6788,INFUND-7405
     [Tags]
-    When the user navigates to Your-finances page     ${application_name}
+    When the user navigates to Your-finances page    ${application_name}
     then the user clicks the button/link    link=Your project costs
-    and the user should not see the element     css=input
+    and the user should not see the element    css=input
     When the user clicks the button/link    jQuery=button:contains("Overhead costs")
-    then the user should not see the element      css=input
+    then the user should not see the element    css=input
 
 Submit flow (complete application)
     [Documentation]    INFUND-205
@@ -62,7 +62,7 @@ Submit flow (complete application)
     ...    INFUND-4010
     [Tags]    HappyPath    Email    SmokeTest
     [Setup]    Delete the emails from both test mailboxes
-    Given log in as a different user    ${submit_test_email}  ${correct_password}
+    Given log in as a different user    ${submit_test_email}    ${correct_password}
     And the user navigates to the page    ${SERVER}
     And the user clicks the button/link    link=${application_name}
     When the user clicks the button/link    link=Review and submit
@@ -95,8 +95,8 @@ Status of the submitted application
     Then the user should see the text in the page    Application submitted
     And the user clicks the button/link    Link=${application_name}
     And the user should see the element    Link=View application
-    And the user should see the element    Link=Print Application
-    When the user clicks the button/link    Link=Print Application
+    And the user should see the element    Link=Print application
+    When the user clicks the button/link    Link=Print application
     Then the user should be redirected to the correct page without the usual headers    print
 
 *** Keywords ***
@@ -132,7 +132,7 @@ the applicant accepts the terms and conditions
     the user selects the checkbox    agree-state-aid-page
 
 the applicant marks the first section as complete
-    Given the user navigates to the page  ${DASHBOARD_URL}
+    Given the user navigates to the page    ${DASHBOARD_URL}
     the user clicks the button/link    link=${application_name}
     the applicant completes the application details
 

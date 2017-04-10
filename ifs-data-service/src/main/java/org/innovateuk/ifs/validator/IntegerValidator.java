@@ -3,6 +3,7 @@ package org.innovateuk.ifs.validator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 
 import java.math.BigDecimal;
@@ -15,6 +16,7 @@ import static org.innovateuk.ifs.commons.rest.ValidationMessages.rejectValue;
 /**
  * This class validates the FormInputResponse, it checks that there is a number present and that it is an integer.
  */
+@Component
 public class IntegerValidator extends BaseValidator {
     private static final Log LOG = LogFactory.getLog(IntegerValidator.class);
 

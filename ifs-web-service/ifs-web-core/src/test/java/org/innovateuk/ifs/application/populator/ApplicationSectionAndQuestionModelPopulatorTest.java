@@ -3,7 +3,6 @@ package org.innovateuk.ifs.application.populator;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.builder.QuestionResourceBuilder;
 import org.innovateuk.ifs.application.builder.QuestionStatusResourceBuilder;
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.*;
@@ -115,7 +114,7 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
     @Test
     public void testAddAssignableDetails() {
         ApplicationResource application = ApplicationResourceBuilder.newApplicationResource()
-                .withApplicationStatus(ApplicationStatusConstants.OPEN).build();
+                .withApplicationStatus(ApplicationStatus.OPEN).build();
         Long userId = 1L;
         Long organisationId = 3L;
         Optional<SectionResource> section = Optional.of(newSectionResource().build());

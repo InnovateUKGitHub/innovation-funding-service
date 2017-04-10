@@ -5,15 +5,16 @@
     </head>
 
     <body class="app-org-invite" th:with="context='applicant'">
+        <th:block th:insert="fragments/modals :: modal-overlay" />
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
-        <main id="content">
+        <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Application team',linkClass='link-back',linkUrl=@{/application/{applicationId}/team(applicationId=${model.applicationId})}" />
 
             <div class="page-title">
-                <th:block th:insert="fragments/elements :: application-title (applicationId=${model.applicationId},applicationName=${model.applicationName})" />
+                <th:block th:insert="fragments/elements :: application-title (applicationName=${model.applicationName})" />
                 <h1 class="heading-xlarge" th:text="|Update ${model.organisationName}|">Update Empire Ltd</h1>
             </div>
 
@@ -52,7 +53,7 @@
                             <td th:text="${applicant.email}">steve.smith@empire.com</td>
                             <td th:text="${applicant.lead} ? 'Lead' : (${applicant.pending} ? 'Invite pending' : '')">Lead</td>
                             <td class="alignright">
-                                <button th:if="${applicant.removable and applicantStat.count > 1}"
+                                <button th:if="${applicant.removable and applicantStat.size > 1}"
                                         th:value="${applicant.applicationInviteId}"
                                         class="buttonlink"
                                         name="markForRemoval"
@@ -122,15 +123,15 @@
                     </button>
                 </p>
 
-                <div th:if="${model.userLeadApplicant and !model.leadOrganisation and #lists.size(model.applicants) < 2}">
+                <div th:if="${model.userLeadApplicant and !model.leadOrganisation}">
                     <div class="alignright">
-                        <button name="deleteLastApplicant"
-                                type="submit"
-                                class="button-secondary"
-                                data-js-modal="modal-delete-organisation"
-                                th:value="${model.applicants.get(0).applicationInviteId}">
+                        <a th:href="${model.inviteOrganisationId} ?
+                        @{/application/{applicationId}/team/update(applicationId=${model.applicationId}, inviteOrganisation=${model.inviteOrganisationId}, deleteOrganisation='')} :
+                        @{/application/{applicationId}/team/update(applicationId=${model.applicationId}, organisation=${model.organisationId}, deleteOrganisation='')}"
+                           class="button-secondary"
+                           data-js-modal="modal-delete-organisation">
                             Delete organisation
-                        </button>
+                        </a>
                     </div>
 
                     <th:block th:insert="fragments/modals :: modal-delete-organisation" />
@@ -140,11 +141,12 @@
                 <p th:if="${model.userLeadApplicant}">You should not remove members of your team without discussing this action with them first. Members who are removed may not receive a notification from Innovate UK.</p>
 
                 <p class="extra-margin">
-                    <button class="button" name="save_contributors" type="submit">Update organisation</button>
+                    <button class="button" name="updateOrganisation" type="submit">Update organisation</button>
                     <a th:href="@{/application/{applicationId}/team(applicationId=${model.applicationId})}" class="button button-clear">Cancel</a>
                 </p>
 
                 <input type="hidden" th:field="*{markedForRemoval}" />
+                <input type="hidden" th:field="*{existingApplicants}" />
             </form>
 
             <th:block th:insert="fragments/layout :: main-content-end" />

@@ -207,9 +207,9 @@ public class NonIfsCompetitionControllerTest extends BaseControllerMockMVCTest<N
                 mvcResult.getModelAndView().getModelMap(), "form"
         );
 
-        assertEquals("Please enter a year between 2000 and 9999.", bindingResult.getFieldError("openDate.year").getDefaultMessage());
-        assertEquals("Please enter a year between 2000 and 9999.", bindingResult.getFieldError("applicantNotifiedDate.year").getDefaultMessage());
-        assertEquals("Please enter a year between 2000 and 9999.", bindingResult.getFieldError("closeDate.year").getDefaultMessage());
+        assertEquals("Please enter a valid date.", bindingResult.getFieldError("openDate.year").getDefaultMessage());
+        assertEquals("Please enter a valid date.", bindingResult.getFieldError("applicantNotifiedDate.year").getDefaultMessage());
+        assertEquals("Please enter a valid date.", bindingResult.getFieldError("closeDate.year").getDefaultMessage());
 
         verifyZeroInteractions(nonIfsDetailsFormSaver);
 

@@ -14,10 +14,14 @@ public class SendNotificationsViewModel {
     private List<ApplicationSummaryResource> applications;
     private long competitionId;
     private String competitionName;
-    private CompetitionInFlightStatsViewModel keyStatistics;
+    private long successfulRecipientsCount;
+    private long unsuccessfulRecipientsCount;
+    private long onHoldRecipientsCount;
 
-    public SendNotificationsViewModel(List<ApplicationSummaryResource> applications, CompetitionInFlightStatsViewModel keyStatistics, long competitionId, String competitionName) {
-        this.keyStatistics = keyStatistics;
+    public SendNotificationsViewModel(List<ApplicationSummaryResource> applications, long successfulRecipientsCount, long unsuccessfulRecipientsCount, long onHoldRecipientsCount, long competitionId, String competitionName) {
+        this.successfulRecipientsCount = successfulRecipientsCount;
+        this.unsuccessfulRecipientsCount = unsuccessfulRecipientsCount;
+        this.onHoldRecipientsCount = onHoldRecipientsCount;
         this.applications = applications;
         this.competitionId = competitionId;
         this.competitionName = competitionName;
@@ -35,8 +39,16 @@ public class SendNotificationsViewModel {
         return applications != null ? applications : Collections.emptyList();
     }
 
-    public CompetitionInFlightStatsViewModel getKeyStatistics() {
-        return keyStatistics;
+    public long getSuccessfulRecipientsCount() {
+        return successfulRecipientsCount;
+    }
+
+    public long getUnsuccessfulRecipientsCount() {
+        return unsuccessfulRecipientsCount;
+    }
+
+    public long getOnHoldRecipientsCount() {
+        return onHoldRecipientsCount;
     }
 
     public Map<Long, FundingDecision> getFundingDecisions() {

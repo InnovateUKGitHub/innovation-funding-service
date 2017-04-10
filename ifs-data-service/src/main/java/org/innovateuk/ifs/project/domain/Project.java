@@ -5,7 +5,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.invite.domain.ProcessActivity;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
-import org.innovateuk.ifs.project.finance.domain.SpendProfile;
+import org.innovateuk.ifs.project.financecheck.domain.SpendProfile;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.user.domain.Organisation;
 
@@ -13,7 +13,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -47,11 +47,11 @@ public class Project implements ProcessActivity {
 
     private String name;
 
-    private LocalDateTime documentsSubmittedDate;
+    private ZonedDateTime documentsSubmittedDate;
 
-    private LocalDateTime offerSubmittedDate;
+    private ZonedDateTime offerSubmittedDate;
 
-    private LocalDateTime spendProfileSubmittedDate;
+    private ZonedDateTime spendProfileSubmittedDate;
 
     @OneToMany(mappedBy="project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProjectUser> projectUsers = new ArrayList<>();
@@ -90,7 +90,7 @@ public class Project implements ProcessActivity {
     public Project() {}
 
     public Project(Long id, Application application, LocalDate targetStartDate, Address address,
-                   Long durationInMonths, String name, LocalDateTime documentsSubmittedDate,
+                   Long durationInMonths, String name, ZonedDateTime documentsSubmittedDate,
                    ApprovalType otherDocumentsApproved) {
 
         this.id = id;
@@ -207,19 +207,19 @@ public class Project implements ProcessActivity {
         this.partnerOrganisations.addAll(partnerOrganisations);
     }
 
-    public LocalDateTime getDocumentsSubmittedDate() {
+    public ZonedDateTime getDocumentsSubmittedDate() {
         return documentsSubmittedDate;
     }
 
-    public void setDocumentsSubmittedDate(LocalDateTime documentsSubmittedDate) {
+    public void setDocumentsSubmittedDate(ZonedDateTime documentsSubmittedDate) {
         this.documentsSubmittedDate = documentsSubmittedDate;
     }
 
-    public LocalDateTime getOfferSubmittedDate() {
+    public ZonedDateTime getOfferSubmittedDate() {
         return offerSubmittedDate;
     }
 
-    public void setOfferSubmittedDate(LocalDateTime offerSubmittedDate) {
+    public void setOfferSubmittedDate(ZonedDateTime offerSubmittedDate) {
         this.offerSubmittedDate = offerSubmittedDate;
     }
 
@@ -271,11 +271,11 @@ public class Project implements ProcessActivity {
         this.otherDocumentsApproved = otherDocumentsApproved;
     }
 
-    public LocalDateTime getSpendProfileSubmittedDate() {
+    public ZonedDateTime getSpendProfileSubmittedDate() {
         return spendProfileSubmittedDate;
     }
 
-    public void setSpendProfileSubmittedDate(LocalDateTime spendProfileSubmittedDate) {
+    public void setSpendProfileSubmittedDate(ZonedDateTime spendProfileSubmittedDate) {
         this.spendProfileSubmittedDate = spendProfileSubmittedDate;
     }
 

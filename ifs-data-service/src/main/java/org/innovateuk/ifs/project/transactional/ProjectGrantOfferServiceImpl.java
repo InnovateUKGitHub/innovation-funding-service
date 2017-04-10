@@ -27,8 +27,8 @@ import org.innovateuk.ifs.finance.transactional.FinanceRowService;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
-import org.innovateuk.ifs.project.finance.transactional.FinanceCheckService;
-import org.innovateuk.ifs.project.finance.transactional.ProjectFinanceService;
+import org.innovateuk.ifs.project.financecheck.service.FinanceCheckService;
+import org.innovateuk.ifs.project.financecheck.transactional.SpendProfileService;
 import org.innovateuk.ifs.project.gol.YearlyGOLProfileTable;
 import org.innovateuk.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
 import org.innovateuk.ifs.project.mapper.ProjectMapper;
@@ -56,7 +56,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Supplier;
@@ -96,7 +96,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     private FileService fileService;
 
     @Autowired
-    private ProjectFinanceService projectFinanceService;
+    private SpendProfileService spendProfileService;
 
     @Autowired
     private FileEntryMapper fileEntryMapper;
@@ -231,7 +231,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
 
     private boolean isProjectReadyForGrantOffer(Long projectId) {
         Optional<Project> project = getProject(projectId).getOptionalSuccessObject();
-        ApprovalType spendProfileApproval = projectFinanceService.getSpendProfileStatusByProjectId(projectId).getSuccessObject();
+        ApprovalType spendProfileApproval = spendProfileService.getSpendProfileStatusByProjectId(projectId).getSuccessObject();
 
         return project.map(project1 -> ApprovalType.APPROVED.equals(spendProfileApproval) && ApprovalType.APPROVED.equals(project1.getOtherDocumentsApproved()) && project1.getGrantOfferLetter() == null).orElse(false);
     }
@@ -263,7 +263,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         templateReplacements.put("Address3", addresses.size() < 3 ? "" : addresses.get(2));
         templateReplacements.put("TownCity", addresses.size() < 4 ? "" : addresses.get(3));
         templateReplacements.put("PostCode", addresses.size() < 5 ? "" : addresses.get(4));
-        templateReplacements.put("Date", LocalDateTime.now().toString());
+        templateReplacements.put("Date", ZonedDateTime.now().toString());
         templateReplacements.put("CompetitionName", project.getApplication().getCompetition().getName());
         templateReplacements.put("ProjectTitle", project.getName());
         templateReplacements.put("ProjectStartDate", project.getTargetStartDate() != null ?
@@ -422,7 +422,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
             if (!golWorkflowHandler.sign(project)) {
                 return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_CANNOT_SET_SIGNED_STATE);
             }
-            project.setOfferSubmittedDate(LocalDateTime.now());
+            project.setOfferSubmittedDate(ZonedDateTime.now());
             return serviceSuccess();
         });
     }
@@ -513,8 +513,8 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         return organisations.stream()
                 .collect(toMap(Organisation::getName, organisation -> {
                     ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(project.getId(), organisation.getId());
-                    if (projectFinanceService.getSpendProfileTable(projectOrganisationCompositeId).isSuccess()) {
-                        return projectFinanceService.getSpendProfileTable(projectOrganisationCompositeId).getSuccessObject();
+                    if (spendProfileService.getSpendProfileTable(projectOrganisationCompositeId).isSuccess()) {
+                        return spendProfileService.getSpendProfileTable(projectOrganisationCompositeId).getSuccessObject();
                     }
                     return new SpendProfileTableResource();
                 }));

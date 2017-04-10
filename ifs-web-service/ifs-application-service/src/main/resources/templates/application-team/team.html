@@ -8,14 +8,14 @@
         <th:block th:insert="fragments/layout :: body-start"/>
         <th:block th:insert="fragments/layout :: global-header"/>
 
-        <main id="content">
+        <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start"/>
             <th:block th:insert="fragments/layout :: header-sub"
                       th:with="linkTitle='Application overview',linkClass='link-back',linkUrl=@{/application/{applicationId}(applicationId=${model.applicationId})}"/>
 
             <div class="page-title">
                 <th:block
-                    th:insert="fragments/elements :: application-title (applicationId=${model.applicationId},applicationName=${model.applicationName})"/>
+                    th:insert="fragments/elements :: application-title (applicationName=${model.applicationName})"/>
                 <h1 class="heading-xlarge">Application team</h1>
             </div>
 

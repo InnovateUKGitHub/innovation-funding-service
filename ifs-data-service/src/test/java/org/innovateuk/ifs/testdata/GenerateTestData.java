@@ -4,18 +4,19 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.flywaydb.core.Flyway;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
+import org.innovateuk.ifs.application.resource.ApplicationStatus;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.email.resource.EmailAddress;
 import org.innovateuk.ifs.email.service.EmailService;
-import org.innovateuk.ifs.finance.repository.OrganisationSizeRepository;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.notifications.service.senders.email.EmailNotificationSender;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
+import org.innovateuk.ifs.publiccontent.domain.PublicContent;
+import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.innovateuk.ifs.sil.experian.resource.AccountDetails;
 import org.innovateuk.ifs.sil.experian.resource.SILBankDetails;
 import org.innovateuk.ifs.sil.experian.resource.ValidationResult;
@@ -51,7 +52,7 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -132,7 +133,7 @@ public class GenerateTestData extends BaseIntegrationTest {
     private BankDetailsService bankDetailsService;
 
     @Autowired
-    private OrganisationSizeRepository organisationSizeRepository;
+    private PublicContentRepository publicContentRepository;
 
     private CompetitionDataBuilder competitionDataBuilder;
     private CompetitionFunderDataBuilder competitionFunderDataBuilder;
@@ -285,7 +286,7 @@ public class GenerateTestData extends BaseIntegrationTest {
     public void generateTestData() throws IOException {
 
         long before = System.currentTimeMillis();
-
+        fixUpDatabase();
         createInternalUsers();
         createExternalUsers();
         createCompetitions();
@@ -445,6 +446,21 @@ public class GenerateTestData extends BaseIntegrationTest {
         publicContentDateDataBuilder.withPublicContentDate(line.competitionName, line.date, line.content)
                 .build();
     }
+
+    /**
+     * We might need to fix up the database before we start generating data.
+     * This can happen if for example we have pushed something out to live that would make this generation step fail.
+     * Note that if we make a fix is made here it will most likely need a corresponding fix in sql script
+     * VX_Y_Z__Remove_old_competition.sql
+     * To repeat the fix when running up the full flyway mechanism
+     */
+    private void fixUpDatabase() {
+        // Remove the public content that is in place for competition one so that generation does not fail with
+        // PUBLIC_CONTENT_ALREADY_INITIALISED
+        PublicContent publicContentForCompetitionOne = publicContentRepository.findByCompetitionId(1L);
+        publicContentRepository.delete(publicContentForCompetitionOne.getId());
+    }
+
     private void createInternalUsers() {
         internalUserLines.forEach(line -> {
 
@@ -476,8 +492,8 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     private List<Pair<String, FundingDecision>> createFundingDecisionsFromCsv(String competitionName) {
         List<ApplicationLine> matchingApplications = simpleFilter(applicationLines, a -> a.competitionName.equals(competitionName));
-        List<ApplicationLine> applicationsWithDecisions = simpleFilter(matchingApplications, a -> asList(ApplicationStatusConstants.APPROVED, ApplicationStatusConstants.REJECTED).contains(a.status));
-        return simpleMap(applicationsWithDecisions, ma -> Pair.of(ma.title, ma.status == ApplicationStatusConstants.APPROVED ? FundingDecision.FUNDED : FundingDecision.UNFUNDED));
+        List<ApplicationLine> applicationsWithDecisions = simpleFilter(matchingApplications, a -> asList(ApplicationStatus.APPROVED, ApplicationStatus.REJECTED).contains(a.status));
+        return simpleMap(applicationsWithDecisions, ma -> Pair.of(ma.title, ma.status == ApplicationStatus.APPROVED ? FundingDecision.FUNDED : FundingDecision.UNFUNDED));
     }
 
     private void createCompetitionWithApplications(CompetitionLine competitionLine, Optional<Long> competitionId) {
@@ -500,7 +516,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                     withApplications(applicationBuilders).
                     restoreOriginalMilestones();
 
-            if (competitionLine.fundersPanelEndDate != null && competitionLine.fundersPanelEndDate.isBefore(LocalDateTime.now())) {
+            if (competitionLine.fundersPanelEndDate != null && competitionLine.fundersPanelEndDate.isBefore(ZonedDateTime.now())) {
 
                 withApplications = withApplications.
                         moveCompetitionIntoFundersPanelStatus().
@@ -569,7 +585,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                     invite.status, invite.ownerName);
         }
 
-        if (line.status != ApplicationStatusConstants.CREATED) {
+        if (line.status != ApplicationStatus.CREATED) {
             baseBuilder = baseBuilder.beginApplication();
         }
 
@@ -767,6 +783,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                         line.multiStream, line.collaborationLevel, line.leadApplicantType, line.researchRatio, line.resubmission, null).
                 withNewMilestones().
                 withReleaseFeedbackDate(line.releaseFeedback).
+                withFeedbackReleasedDate(line.feedbackReleased).
                 withPublicContent(line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
                         line.competitionDescription, line.fundingType, line.projectSize, line.keywords)
 
@@ -793,6 +810,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                 withFundersPanelDate(line.fundersPanelDate).
                 withFundersPanelEndDate(line.fundersPanelEndDate).
                 withReleaseFeedbackDate(line.releaseFeedback).
+                withFeedbackReleasedDate(line.feedbackReleased).
                 withPublicContent(line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
                 line.competitionDescription, line.fundingType, line.projectSize, line.keywords);
     }
@@ -888,7 +906,7 @@ public class GenerateTestData extends BaseIntegrationTest {
 
         Optional<User> existingUser = userRepository.findByEmail(line.emailAddress);
         Optional<User> sentBy = userRepository.findByEmail("john.doe@innovateuk.test");
-        Optional<LocalDateTime> sentOn = Optional.of(LocalDateTime.now());
+        Optional<ZonedDateTime> sentOn = Optional.of(ZonedDateTime.now());
 
         for (InviteLine invite : assessorInvitesForThisAssessor) {
             builder = builder.withInviteToAssessCompetition(

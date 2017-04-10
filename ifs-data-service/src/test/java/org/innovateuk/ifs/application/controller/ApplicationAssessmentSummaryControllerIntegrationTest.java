@@ -6,7 +6,6 @@ import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationAssessmentSummaryResource;
 import org.innovateuk.ifs.application.resource.ApplicationAssessorPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.junit.Test;
@@ -16,10 +15,10 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.application.resource.ApplicationStatus.CREATED;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class ApplicationAssessmentSummaryControllerIntegrationTest extends BaseControllerIntegrationTest<ApplicationAssessmentSummaryController> {
 
@@ -66,6 +65,7 @@ public class ApplicationAssessmentSummaryControllerIntegrationTest extends BaseC
                 .with(id(null))
                 .withCompetition(competition)
                 .withName("Progressive machines")
+                .withApplicationStatus(CREATED)
                 .build());
 
         flushAndClearSession();

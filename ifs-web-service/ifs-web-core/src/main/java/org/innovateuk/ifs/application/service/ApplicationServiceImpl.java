@@ -1,8 +1,7 @@
 package org.innovateuk.ifs.application.service;
 
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.application.resource.ApplicationStatus;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -19,8 +18,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.application.service.Futures.call;
 import static java.util.stream.Collectors.toMap;
+import static org.innovateuk.ifs.application.service.Futures.call;
 
 /**
  * This class contains methods to retrieve and store {@link ApplicationResource} related data,
@@ -84,15 +83,15 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
     
     private boolean applicationStatusInProgress(ApplicationResource a) {
-    	return appStatusIn(a, ApplicationStatusConstants.CREATED, ApplicationStatusConstants.OPEN);
+    	return appStatusIn(a, ApplicationStatus.CREATED, ApplicationStatus.OPEN);
     }
 
 	private boolean applicationStatusFinished(ApplicationResource a) {
-		return appStatusIn(a, ApplicationStatusConstants.APPROVED, ApplicationStatusConstants.REJECTED);
+		return appStatusIn(a, ApplicationStatus.APPROVED, ApplicationStatus.REJECTED);
     }
 	
     private boolean applicationStatusSubmitted(ApplicationResource a) {
-    	return a.getApplicationStatus().equals(ApplicationStatusConstants.SUBMITTED.getId());
+    	return a.getApplicationStatus() == ApplicationStatus.SUBMITTED;
     }
     
     private boolean competitionOpen(ApplicationResource a) {
@@ -110,9 +109,9 @@ public class ApplicationServiceImpl implements ApplicationService {
     	return compStatusIn(competition, CompetitionStatus.ASSESSOR_FEEDBACK, CompetitionStatus.PROJECT_SETUP);
 	}
     
-    private boolean appStatusIn(ApplicationResource app, ApplicationStatusConstants... statuses) {
-    	for(ApplicationStatusConstants status: statuses) {
-    		if(status.getId().equals(app.getApplicationStatus())) {
+    private boolean appStatusIn(ApplicationResource app, ApplicationStatus... statuses) {
+    	for(ApplicationStatus status: statuses) {
+    		if (status == app.getApplicationStatus()) {
     			return true;
     		}
     	}
@@ -151,8 +150,8 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public ServiceResult<Void> updateStatus(Long applicationId, Long statusId) {
-        return applicationRestService.updateApplicationStatus(applicationId, statusId).toServiceResult();
+    public ServiceResult<Void> updateStatus(Long applicationId, ApplicationStatus status) {
+        return applicationRestService.updateApplicationStatus(applicationId, status).toServiceResult();
     }
 
     @Override
@@ -189,15 +188,5 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Override
     public ServiceResult<Void> removeCollaborator(Long applicationInviteId) {
         return inviteRestService.removeApplicationInvite(applicationInviteId).toServiceResult();
-    }
-
-    @Override
-    public RestResult<Long> getTurnover(Long applicationId) {
-        return applicationRestService.getTurnover(applicationId);
-    }
-
-    @Override
-    public RestResult<Long> getHeadCount(Long applicationId) {
-        return applicationRestService.getHeadCount(applicationId);
     }
 }

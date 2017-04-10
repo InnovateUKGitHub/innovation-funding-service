@@ -3,10 +3,11 @@ package org.innovateuk.ifs.project.spendprofile.controller;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.ApplicationSummaryService;
+import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.controller.CaseInsensitiveConverter;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.project.spendprofile.form.ProjectSpendProfileApprovalForm;
 import org.innovateuk.ifs.project.spendprofile.viewmodel.ProjectSpendProfileApprovalViewModel;
@@ -21,15 +22,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.function.Supplier;
-
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * This Controller handles Spend Profile activity for the Internal Competition team members
@@ -45,7 +42,7 @@ public class ProjectSpendProfileApprovalController {
     private ApplicationService applicationService;
 
     @Autowired
-    private ApplicationSummaryService applicationSummaryService;
+    private ApplicationSummaryRestService applicationSummaryRestService;
 
     @Autowired
     private CompetitionService competitionService;
@@ -56,14 +53,19 @@ public class ProjectSpendProfileApprovalController {
     @Autowired
     private ProjectFinanceService projectFinanceService;
 
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(ApprovalType.class, new CaseInsensitiveConverter<>(ApprovalType.class));
+    }
+
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
-    @RequestMapping(value = "/approval", method = GET)
+    @GetMapping("/approval")
     public String viewSpendProfileApproval(@PathVariable Long projectId, Model model) {
         return doViewSpendProfileApproval(projectId, model);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
-    @RequestMapping(value = "/approval/{approvalType}", method = POST)
+    @PostMapping("/approval/{approvalType}")
     public String saveSpendProfileApproval(@PathVariable Long projectId,
                                            @PathVariable ApprovalType approvalType,
                                            @ModelAttribute ProjectSpendProfileApprovalForm form,
@@ -89,7 +91,7 @@ public class ProjectSpendProfileApprovalController {
     private ProjectSpendProfileApprovalViewModel populateSpendProfileApprovalViewModel(Long projectId) {
         ProjectResource project = projectService.getById(projectId);
         ApplicationResource application = applicationService.getById(project.getApplication());
-        CompetitionSummaryResource competitionSummary = applicationSummaryService.getCompetitionSummaryByCompetitionId(application.getCompetition());
+        CompetitionSummaryResource competitionSummary = applicationSummaryRestService.getCompetitionSummary(application.getCompetition()).getSuccessObjectOrThrowException();
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         String leadTechnologist = competition.getLeadTechnologist() != null ? userService.findById(competition.getLeadTechnologist()).getName() : "";
         ApprovalType approvalType = projectFinanceService.getSpendProfileStatusByProjectId(projectId);

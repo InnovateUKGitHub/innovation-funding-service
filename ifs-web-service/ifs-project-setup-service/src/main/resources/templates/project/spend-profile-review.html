@@ -9,13 +9,13 @@
 <th:block th:insert="fragments/layout :: global-header" />
 
 
-<main id="content">
+<main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
     <div th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${model.projectId})}" th:remove="tag"></div>
 
 
     <div class="page-title">
-            <th:block th:insert="fragments/elements :: project-title (projectId=${model.applicationId}, projectName=${model.projectName})"/>
+            <th:block th:insert="fragments/elements :: project-title (projectName=${model.projectName})"/>
         <h1 class="heading-xlarge">Spend profile</h1>
     </div>
 
@@ -92,7 +92,7 @@
 
         <p class="extra-margin">Please review each partner's spend profile once they are marked as complete.</p>
 
-        <a th:href="@{/project/{id}/spend-profile/total(id=${model.projectId})}" class="button">Review spend profiles</a>
+        <a th:href="@{/project/{id}/spend-profile/total(id=${model.projectId})}" class="button">Review and send total project spend profile</a>
 
     </div>
 

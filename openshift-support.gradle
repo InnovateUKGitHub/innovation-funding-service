@@ -30,6 +30,16 @@ task osDeployDemo(type:Exec) {
     args = [openshiftEnv, "demo", project.version]
 }
 
+task osDeploySysint(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-deploy.sh'
+    args = [openshiftEnv, "sysint", project.version]
+}
+
+task osUpgradeRemote(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-upgrade.sh'
+    args = [openshiftEnv, "remote", project.version]
+}
+
 task osUpgradeProduction(type:Exec) {
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "production", project.version]
@@ -43,6 +53,11 @@ task osUpgradeUat(type:Exec) {
 task osUpgradeDemo(type:Exec) {
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "demo", project.version]
+}
+
+task osUpgradeSysint(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-upgrade.sh'
+    args = [openshiftEnv, "sysint", project.version]
 }
 
 task robotTestsFilter (type: Copy) {
@@ -63,11 +78,11 @@ task osTestRemote(type:Exec) {
 
 task osStopTests(type:Exec) {
     executable = 'setup-files/scripts/openshift/os-stop-tests.sh'
-    args = [openshiftEnv]
+    args = []
 }
 
 task osTestResults(type:Exec) {
     executable = 'setup-files/scripts/openshift/os-test-results.sh'
-    args = [openshiftEnv]
+    args = []
 }
 
