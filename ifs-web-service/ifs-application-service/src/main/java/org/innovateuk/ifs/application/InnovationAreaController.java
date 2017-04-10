@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationInnovationAreaRestService;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.viewmodel.InnovationAreaViewModel;
+import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
@@ -48,9 +49,7 @@ public class InnovationAreaController {
     public String getInnovationAreas(Model model, @PathVariable("applicationId") Long applicationId, @PathVariable("questionId") Long questionId) {
         ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccessObject();
 
-        if(!applicationDetailsEditableValidator.questionAndApplicationHaveAllowedState(questionId, applicationResource)) {
-            return "forbidden";
-        }
+        checkIfAllowed(questionId, applicationResource);
 
         InnovationAreaViewModel innovationAreaViewModel = innovationAreaPopulator.populate(applicationResource, questionId);
 
@@ -65,9 +64,7 @@ public class InnovationAreaController {
                                              ValidationHandler validationHandler, Model model, @PathVariable Long applicationId, @PathVariable Long questionId) {
         ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId).getSuccessObject();
 
-        if(!applicationDetailsEditableValidator.questionAndApplicationHaveAllowedState(questionId, applicationResource)) {
-            return "forbidden";
-        }
+        checkIfAllowed(questionId, applicationResource);
 
         InnovationAreaViewModel innovationAreaViewModel = innovationAreaPopulator.populate(applicationResource, questionId);
 
@@ -83,6 +80,7 @@ public class InnovationAreaController {
         });
     }
 
+
     private RestResult<ApplicationResource> saveInnovationAreaChoice(Long applicationId, InnovationAreaForm innovationAreaForm) {
         if(innovationAreaForm.getInnovationAreaChoice().equals("NOT_APPLICABLE")) {
             return applicationInnovationAreaRestService.setApplicationInnovationAreaToNotApplicable(applicationId);
@@ -90,6 +88,12 @@ public class InnovationAreaController {
         else {
             Long innovationAreaId = Long.valueOf(innovationAreaForm.getInnovationAreaChoice());
             return applicationInnovationAreaRestService.saveApplicationInnovationAreaChoice(applicationId, innovationAreaId);
+        }
+    }
+
+    private void checkIfAllowed(Long questionId, ApplicationResource applicationResource) throws ForbiddenActionException {
+        if(!applicationDetailsEditableValidator.questionAndApplicationHaveAllowedState(questionId, applicationResource)) {
+            throw new ForbiddenActionException();
         }
     }
 }
