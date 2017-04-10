@@ -46,7 +46,7 @@ public class ConfirmOrganisationInviteOrganisationViewModel {
     }
 
     public Boolean getRegistrationNumberNotEmptyAndNotResearch() {
-        return !registrationNumber.isEmpty() && !OrganisationTypeEnum.isResearch(organisationTypeId);
+        return registrationNumber != null && !registrationNumber.isEmpty() && !OrganisationTypeEnum.isResearch(organisationTypeId);
     }
 
     public String getEmailLeadApplicant() {

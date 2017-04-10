@@ -3,7 +3,7 @@ package org.innovateuk.ifs.project.grantofferletter.controller;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.ApplicationSummaryService;
+import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.CaseInsensitiveConverter;
@@ -47,7 +47,7 @@ public class ProjectGrantOfferLetterSendController {
     private ApplicationService applicationService;
 
     @Autowired
-    private ApplicationSummaryService applicationSummaryService;
+    private ApplicationSummaryRestService applicationSummaryRestService;
 
     private static final String FORM_ATTR = "form";
 
@@ -202,7 +202,7 @@ public class ProjectGrantOfferLetterSendController {
     private ProjectGrantOfferLetterSendViewModel populateGrantOfferLetterSendViewModel(Long projectId) {
         ProjectResource project = projectService.getById(projectId);
         ApplicationResource application = applicationService.getById(project.getApplication());
-        CompetitionSummaryResource competitionSummary = applicationSummaryService.getCompetitionSummaryByCompetitionId(application.getCompetition());
+        CompetitionSummaryResource competitionSummary = applicationSummaryRestService.getCompetitionSummary(application.getCompetition()).getSuccessObjectOrThrowException();
 
         Optional<FileEntryResource> grantOfferFileDetails = projectService.getGrantOfferFileDetails(projectId);
 

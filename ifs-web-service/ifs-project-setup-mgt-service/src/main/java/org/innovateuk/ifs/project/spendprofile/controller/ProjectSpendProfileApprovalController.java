@@ -3,7 +3,7 @@ package org.innovateuk.ifs.project.spendprofile.controller;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.ApplicationSummaryService;
+import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -42,7 +42,7 @@ public class ProjectSpendProfileApprovalController {
     private ApplicationService applicationService;
 
     @Autowired
-    private ApplicationSummaryService applicationSummaryService;
+    private ApplicationSummaryRestService applicationSummaryRestService;
 
     @Autowired
     private CompetitionService competitionService;
@@ -91,7 +91,7 @@ public class ProjectSpendProfileApprovalController {
     private ProjectSpendProfileApprovalViewModel populateSpendProfileApprovalViewModel(Long projectId) {
         ProjectResource project = projectService.getById(projectId);
         ApplicationResource application = applicationService.getById(project.getApplication());
-        CompetitionSummaryResource competitionSummary = applicationSummaryService.getCompetitionSummaryByCompetitionId(application.getCompetition());
+        CompetitionSummaryResource competitionSummary = applicationSummaryRestService.getCompetitionSummary(application.getCompetition()).getSuccessObjectOrThrowException();
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         String leadTechnologist = competition.getLeadTechnologist() != null ? userService.findById(competition.getLeadTechnologist()).getName() : "";
         ApprovalType approvalType = projectFinanceService.getSpendProfileStatusByProjectId(projectId);
