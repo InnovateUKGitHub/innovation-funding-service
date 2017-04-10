@@ -203,8 +203,6 @@ public class BaseUnitTest {
     @Mock
     public BankDetailsService bankDetailsService;
     @Mock
-    public ApplicationSummaryService applicationSummaryService;
-    @Mock
     public RejectionReasonRestService rejectionReasonRestService;
     @Mock
     public FinanceCheckService financeCheckServiceMock;

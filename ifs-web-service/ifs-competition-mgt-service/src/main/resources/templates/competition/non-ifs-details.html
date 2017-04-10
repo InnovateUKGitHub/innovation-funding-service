@@ -127,6 +127,8 @@
                                    type="number"
                                    placeholder="YYYY"
                                    required="required"
+                                   min="2000"
+                                   max="9999"
                                    th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateyear.required}"
                                    th:field="${form.openDate.year}" />
                         </div>
@@ -183,6 +185,8 @@
                                    type="number"
                                    placeholder="YYYY"
                                    required="required"
+                                   min="2000"
+                                   max="9999"
                                    th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateyear.required}"
                                    th:field="${form.closeDate.year}" />
                         </div>
@@ -252,6 +256,8 @@
                                    type="number"
                                    placeholder="YYYY"
                                    required="required"
+                                   min="2000"
+                                   max="9999"
                                    th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateyear.required}"
                                    th:field="${form.applicantNotifiedDate.year}" />
                         </div>

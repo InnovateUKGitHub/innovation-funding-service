@@ -3,7 +3,7 @@ package org.innovateuk.ifs.monitoringofficer.controller;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.ApplicationSummaryService;
+import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -58,7 +58,7 @@ public class ProjectMonitoringOfficerController {
     private CompetitionService competitionService;
 
     @Autowired
-    private ApplicationSummaryService applicationSummaryService;
+    private ApplicationSummaryRestService applicationSummaryRestService;
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_MONITORING_OFFICER_SECTION')")
     @GetMapping
@@ -154,7 +154,7 @@ public class ProjectMonitoringOfficerController {
         ProjectResource projectResource = projectService.getById(projectId);
         ApplicationResource application = applicationService.getById(projectResource.getApplication());
         CompetitionResource competition = competitionService.getById(application.getCompetition());
-        CompetitionSummaryResource competitionSummary = applicationSummaryService.getCompetitionSummaryByCompetitionId(application.getCompetition());
+        CompetitionSummaryResource competitionSummary = applicationSummaryRestService.getCompetitionSummary(application.getCompetition()).getSuccessObjectOrThrowException();
         String projectManagerName = getProjectManagerName(projectResource);
 
         final OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
