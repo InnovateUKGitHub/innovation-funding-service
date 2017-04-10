@@ -126,7 +126,7 @@
                 <div class="task">
                     <h2 class="heading-small">
                         <a th:if="${model.financeChecksSection.accessible}"
-                           th:href="@{/project/{id}/partner-organisation/{organisationId}/finance-checks(id=${model.projectId}, organisationId=${model.getOrganisationId()})}">Finance
+                           th:href="@{/project/{id}/finance-checks(id=${model.projectId})}">Finance
                             checks</a>
                         <th:block th:unless="${model.financeChecksSection.accessible}">Finance checks
                             <th:block th:if="${model.financeChecksSection.notRequired}">(not required)</th:block>

@@ -22,6 +22,7 @@ public class ProjectFinanceChecksViewModel {
     private int maxQueryCharacters;
     private Long queryId;
     private String baseUrl;
+    private boolean isAcademic;
 
     public ProjectFinanceChecksViewModel(ProjectResource project, OrganisationResource organisation,
                                          List<ThreadViewModel> queries, boolean approved,
@@ -29,7 +30,8 @@ public class ProjectFinanceChecksViewModel {
                                          int maxQueryWords,
                                          int maxQueryCharacters,
                                          Long queryId,
-                                         String baseUrl) {
+                                         String baseUrl,
+                                         boolean isAcademic) {
         this.projectId = project.getId();
         this.organisationId = organisation.getId();
         this.projectName = project.getName();
@@ -40,6 +42,7 @@ public class ProjectFinanceChecksViewModel {
         this.maxQueryCharacters = maxQueryCharacters;
         this.queryId = queryId;
         this.baseUrl = baseUrl;
+        this.isAcademic = isAcademic;
     }
 
     public Long getProjectId() {
@@ -121,5 +124,13 @@ public class ProjectFinanceChecksViewModel {
 
     public void setBaseUrl(String baseUrl) {
         this.baseUrl = baseUrl;
+    }
+
+    public boolean isAcademic() {
+        return isAcademic;
+    }
+
+    public void setAcademic(boolean academic) {
+        isAcademic = academic;
     }
 }

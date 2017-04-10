@@ -17,7 +17,7 @@
 
     <div th:unless="${model.internal}"
          th:include="fragments/layout :: header-sub"
-         th:with="linkTitle='Eligibility',linkClass='link-back',linkUrl=@{/project/{projectId}/partner-organisation/{orgId}/finance-checks/eligibility(projectId=${model.projectId},orgId=${model.organisationId})}"
+         th:with="linkTitle='Eligibility',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}"
          th:remove="tag"></div>
 
     <div class="page-title">
@@ -125,7 +125,7 @@
     <hr/>
 
     <a th:if="${model.internal}" class="button button-secondary" th:href="@{/project/{projectId}/finance-check/organisation/{orgId}/eligibility(projectId=${model.projectId},orgId=${model.organisationId})}">Return to eligibility</a>
-    <a th:unless="${model.internal}" class="button button-secondary" th:href="@{/project/{projectId}/partner-organisation/{orgId}/finance-checks/eligibility(projectId=${model.projectId},orgId=${model.organisationId})}">Return to eligibility</a>
+    <a th:unless="${model.internal}" class="button button-secondary" th:href="@{/project/{projectId}/finance-checks/eligibility(projectId=${model.projectId})}">Return to eligibility</a>
 
     <th:block th:insert="fragments/layout :: main-content-end"/>
 </main>

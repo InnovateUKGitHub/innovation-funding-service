@@ -7,6 +7,7 @@ import org.innovateuk.ifs.publiccontent.form.section.DatesForm;
 import org.innovateuk.ifs.publiccontent.form.section.subform.Date;
 import org.innovateuk.ifs.publiccontent.saver.section.DatesFormSaver;
 import org.innovateuk.ifs.publiccontent.service.PublicContentService;
+import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -15,13 +16,12 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -59,7 +59,7 @@ public class DatesFormSaverTest {
         verify(publicContentService).markSectionAsComplete(resource, PublicContentSectionType.DATES);
 
         assertThat(resource.getContentEvents().size(), equalTo(1));
-        assertThat(resource.getContentEvents().get(0).getDate(), equalTo(LocalDateTime.of(localDateTime.toLocalDate(), LocalTime.MIDNIGHT).atZone(ZoneId.systemDefault())));
+        assertThat(resource.getContentEvents().get(0).getDate(), equalTo(LocalDateTime.of(localDateTime.toLocalDate(), LocalTime.MIDNIGHT).atZone(TimeZoneUtil.UK_TIME_ZONE)));
         assertThat(resource.getContentEvents().get(0).getContent(), equalTo(content));
     }
 }
